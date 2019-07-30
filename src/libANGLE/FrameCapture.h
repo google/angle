@@ -110,10 +110,10 @@ class FrameCapture final : angle::NonCopyable
     size_t mReadBufferSize;
 };
 
-template <typename CaptureFuncT, typename ValidationFuncT, typename... ArgsT>
+template <typename CaptureFuncT, typename... ArgsT>
 void CaptureCallToFrameCapture(const char *entryPointName,
                                CaptureFuncT captureFunc,
-                               ValidationFuncT validationFunc,
+                               bool isCallValid,
                                gl::Context *context,
                                ArgsT... captureParams)
 {
@@ -121,7 +121,6 @@ void CaptureCallToFrameCapture(const char *entryPointName,
     if (!frameCapture->enabled())
         return;
 
-    bool isCallValid = validationFunc(context, captureParams...);
     CallCapture call = captureFunc(context, isCallValid, captureParams...);
     frameCapture->captureCall(context, std::move(call));
 }

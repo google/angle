@@ -83,9 +83,8 @@ constexpr ANGLE_INLINE ReturnType GetDefaultReturnValue()
 }
 
 #if ANGLE_CAPTURE_ENABLED
-#    define ANGLE_CAPTURE(Func, ...)                                                         \
-        CaptureCallToFrameCapture("gl" ANGLE_STRINGIFY(Func), Capture##Func, Validate##Func, \
-                                  __VA_ARGS__)
+#    define ANGLE_CAPTURE(Func, ...) \
+        CaptureCallToFrameCapture("gl" ANGLE_STRINGIFY(Func), Capture##Func, __VA_ARGS__)
 #else
 #    define ANGLE_CAPTURE(...)
 #endif  // ANGLE_CAPTURE_ENABLED

@@ -35,12 +35,13 @@ void GL_APIENTRY BindBuffersBase(GLenum target, GLuint first, GLsizei count, con
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BindBuffersBase, context, target, first, count, buffers);
-        if (context->skipValidation() ||
-            ValidateBindBuffersBase(context, target, first, count, buffers))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateBindBuffersBase(context, target, first, count, buffers));
+        if (isCallValid)
         {
             context->bindBuffersBase(target, first, count, buffers);
         }
+        ANGLE_CAPTURE(BindBuffersBase, isCallValid, context, target, first, count, buffers);
     }
 }
 
@@ -60,12 +61,15 @@ void GL_APIENTRY BindBuffersRange(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BindBuffersRange, context, target, first, count, buffers, offsets, sizes);
-        if (context->skipValidation() ||
-            ValidateBindBuffersRange(context, target, first, count, buffers, offsets, sizes))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBindBuffersRange(context, target, first, count, buffers, offsets, sizes));
+        if (isCallValid)
         {
             context->bindBuffersRange(target, first, count, buffers, offsets, sizes);
         }
+        ANGLE_CAPTURE(BindBuffersRange, isCallValid, context, target, first, count, buffers,
+                      offsets, sizes);
     }
 }
 
@@ -77,11 +81,13 @@ void GL_APIENTRY BindImageTextures(GLuint first, GLsizei count, const GLuint *te
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BindImageTextures, context, first, count, textures);
-        if (context->skipValidation() || ValidateBindImageTextures(context, first, count, textures))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateBindImageTextures(context, first, count, textures));
+        if (isCallValid)
         {
             context->bindImageTextures(first, count, textures);
         }
+        ANGLE_CAPTURE(BindImageTextures, isCallValid, context, first, count, textures);
     }
 }
 
@@ -93,11 +99,13 @@ void GL_APIENTRY BindSamplers(GLuint first, GLsizei count, const GLuint *sampler
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BindSamplers, context, first, count, samplers);
-        if (context->skipValidation() || ValidateBindSamplers(context, first, count, samplers))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBindSamplers(context, first, count, samplers));
+        if (isCallValid)
         {
             context->bindSamplers(first, count, samplers);
         }
+        ANGLE_CAPTURE(BindSamplers, isCallValid, context, first, count, samplers);
     }
 }
 
@@ -109,11 +117,13 @@ void GL_APIENTRY BindTextures(GLuint first, GLsizei count, const GLuint *texture
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BindTextures, context, first, count, textures);
-        if (context->skipValidation() || ValidateBindTextures(context, first, count, textures))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBindTextures(context, first, count, textures));
+        if (isCallValid)
         {
             context->bindTextures(first, count, textures);
         }
+        ANGLE_CAPTURE(BindTextures, isCallValid, context, first, count, textures);
     }
 }
 
@@ -131,12 +141,15 @@ void GL_APIENTRY BindVertexBuffers(GLuint first,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BindVertexBuffers, context, first, count, buffers, offsets, strides);
-        if (context->skipValidation() ||
-            ValidateBindVertexBuffers(context, first, count, buffers, offsets, strides))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBindVertexBuffers(context, first, count, buffers, offsets, strides));
+        if (isCallValid)
         {
             context->bindVertexBuffers(first, count, buffers, offsets, strides);
         }
+        ANGLE_CAPTURE(BindVertexBuffers, isCallValid, context, first, count, buffers, offsets,
+                      strides);
     }
 }
 
@@ -149,11 +162,13 @@ void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BufferStorage, context, target, size, data, flags);
-        if (context->skipValidation() || ValidateBufferStorage(context, target, size, data, flags))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateBufferStorage(context, target, size, data, flags));
+        if (isCallValid)
         {
             context->bufferStorage(target, size, data, flags);
         }
+        ANGLE_CAPTURE(BufferStorage, isCallValid, context, target, size, data, flags);
     }
 }
 
@@ -168,12 +183,13 @@ ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const voi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(ClearTexImage, context, texture, level, format, type, data);
-        if (context->skipValidation() ||
-            ValidateClearTexImage(context, texture, level, format, type, data))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateClearTexImage(context, texture, level, format, type, data));
+        if (isCallValid)
         {
             context->clearTexImage(texture, level, format, type, data);
         }
+        ANGLE_CAPTURE(ClearTexImage, isCallValid, context, texture, level, format, type, data);
     }
 }
 
@@ -199,15 +215,17 @@ void GL_APIENTRY ClearTexSubImage(GLuint texture,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(ClearTexSubImage, context, texture, level, xoffset, yoffset, zoffset, width,
-                      height, depth, format, type, data);
-        if (context->skipValidation() ||
-            ValidateClearTexSubImage(context, texture, level, xoffset, yoffset, zoffset, width,
-                                     height, depth, format, type, data))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateClearTexSubImage(context, texture, level, xoffset, yoffset, zoffset, width,
+                                      height, depth, format, type, data));
+        if (isCallValid)
         {
             context->clearTexSubImage(texture, level, xoffset, yoffset, zoffset, width, height,
                                       depth, format, type, data);
         }
+        ANGLE_CAPTURE(ClearTexSubImage, isCallValid, context, texture, level, xoffset, yoffset,
+                      zoffset, width, height, depth, format, type, data);
     }
 }
 }  // namespace gl

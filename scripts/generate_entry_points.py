@@ -121,11 +121,12 @@ template_entry_point_no_return = """void GL_APIENTRY {name}{explicit_context_suf
     Context *context = {context_getter};
     if (context)
     {{{assert_explicit_context}{packed_gl_enum_conversions}
-        ANGLE_CAPTURE({name}, {validate_params});
-        if (context->skipValidation() || Validate{name}({validate_params}))
+        bool isCallValid = (context->skipValidation() || Validate{name}({validate_params}));
+        if (isCallValid)
         {{
             context->{name_lower_no_suffix}({internal_params});
         }}
+        ANGLE_CAPTURE({name}, isCallValid, {validate_params});
     }}
 }}
 """
@@ -138,8 +139,8 @@ template_entry_point_with_return = """{return_type}GL_APIENTRY {name}{explicit_c
     {return_type} returnValue;
     if (context)
     {{{assert_explicit_context}{packed_gl_enum_conversions}
-        ANGLE_CAPTURE({name}, {validate_params});
-        if (context->skipValidation() || Validate{name}({validate_params}))
+        bool isCallValid = (context->skipValidation() || Validate{name}({validate_params}));
+        if (isCallValid)
         {{
             returnValue = context->{name_lower_no_suffix}({internal_params});
         }}
@@ -147,6 +148,7 @@ template_entry_point_with_return = """{return_type}GL_APIENTRY {name}{explicit_c
         {{
             returnValue = GetDefaultReturnValue<EntryPoint::{name}, {return_type}>();
         }}
+        ANGLE_CAPTURE({name}, isCallValid, {validate_params});
     }}
     else
     {{

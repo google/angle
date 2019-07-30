@@ -32,11 +32,13 @@ void GL_APIENTRY BeginQueryIndexed(GLenum target, GLuint index, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BeginQueryIndexed, context, target, index, id);
-        if (context->skipValidation() || ValidateBeginQueryIndexed(context, target, index, id))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBeginQueryIndexed(context, target, index, id));
+        if (isCallValid)
         {
             context->beginQueryIndexed(target, index, id);
         }
+        ANGLE_CAPTURE(BeginQueryIndexed, isCallValid, context, target, index, id);
     }
 }
 
@@ -47,11 +49,13 @@ void GL_APIENTRY BindTransformFeedback(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BindTransformFeedback, context, target, id);
-        if (context->skipValidation() || ValidateBindTransformFeedback(context, target, id))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBindTransformFeedback(context, target, id));
+        if (isCallValid)
         {
             context->bindTransformFeedback(target, id);
         }
+        ANGLE_CAPTURE(BindTransformFeedback, isCallValid, context, target, id);
     }
 }
 
@@ -63,12 +67,13 @@ void GL_APIENTRY BlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeA
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BlendEquationSeparatei, context, buf, modeRGB, modeAlpha);
-        if (context->skipValidation() ||
-            ValidateBlendEquationSeparatei(context, buf, modeRGB, modeAlpha))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateBlendEquationSeparatei(context, buf, modeRGB, modeAlpha));
+        if (isCallValid)
         {
             context->blendEquationSeparatei(buf, modeRGB, modeAlpha);
         }
+        ANGLE_CAPTURE(BlendEquationSeparatei, isCallValid, context, buf, modeRGB, modeAlpha);
     }
 }
 
@@ -79,11 +84,13 @@ void GL_APIENTRY BlendEquationi(GLuint buf, GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BlendEquationi, context, buf, mode);
-        if (context->skipValidation() || ValidateBlendEquationi(context, buf, mode))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendEquationi(context, buf, mode));
+        if (isCallValid)
         {
             context->blendEquationi(buf, mode);
         }
+        ANGLE_CAPTURE(BlendEquationi, isCallValid, context, buf, mode);
     }
 }
 
@@ -98,12 +105,15 @@ BlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BlendFuncSeparatei, context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
-        if (context->skipValidation() ||
-            ValidateBlendFuncSeparatei(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBlendFuncSeparatei(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha));
+        if (isCallValid)
         {
             context->blendFuncSeparatei(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
         }
+        ANGLE_CAPTURE(BlendFuncSeparatei, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
+                      dstAlpha);
     }
 }
 
@@ -114,11 +124,13 @@ void GL_APIENTRY BlendFunci(GLuint buf, GLenum src, GLenum dst)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BlendFunci, context, buf, src, dst);
-        if (context->skipValidation() || ValidateBlendFunci(context, buf, src, dst))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendFunci(context, buf, src, dst));
+        if (isCallValid)
         {
             context->blendFunci(buf, src, dst);
         }
+        ANGLE_CAPTURE(BlendFunci, isCallValid, context, buf, src, dst);
     }
 }
 
@@ -129,11 +141,13 @@ void GL_APIENTRY DeleteTransformFeedbacks(GLsizei n, const GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DeleteTransformFeedbacks, context, n, ids);
-        if (context->skipValidation() || ValidateDeleteTransformFeedbacks(context, n, ids))
+        bool isCallValid =
+            (context->skipValidation() || ValidateDeleteTransformFeedbacks(context, n, ids));
+        if (isCallValid)
         {
             context->deleteTransformFeedbacks(n, ids);
         }
+        ANGLE_CAPTURE(DeleteTransformFeedbacks, isCallValid, context, n, ids);
     }
 }
 
@@ -146,11 +160,13 @@ void GL_APIENTRY DrawArraysIndirect(GLenum mode, const void *indirect)
     if (context)
     {
         PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
-        ANGLE_CAPTURE(DrawArraysIndirect, context, modePacked, indirect);
-        if (context->skipValidation() || ValidateDrawArraysIndirect(context, modePacked, indirect))
+        bool isCallValid         = (context->skipValidation() ||
+                            ValidateDrawArraysIndirect(context, modePacked, indirect));
+        if (isCallValid)
         {
             context->drawArraysIndirect(modePacked, indirect);
         }
+        ANGLE_CAPTURE(DrawArraysIndirect, isCallValid, context, modePacked, indirect);
     }
 }
 
@@ -164,12 +180,14 @@ void GL_APIENTRY DrawElementsIndirect(GLenum mode, GLenum type, const void *indi
     {
         PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
         DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
-        ANGLE_CAPTURE(DrawElementsIndirect, context, modePacked, typePacked, indirect);
-        if (context->skipValidation() ||
-            ValidateDrawElementsIndirect(context, modePacked, typePacked, indirect))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDrawElementsIndirect(context, modePacked, typePacked, indirect));
+        if (isCallValid)
         {
             context->drawElementsIndirect(modePacked, typePacked, indirect);
         }
+        ANGLE_CAPTURE(DrawElementsIndirect, isCallValid, context, modePacked, typePacked, indirect);
     }
 }
 
@@ -180,11 +198,13 @@ void GL_APIENTRY DrawTransformFeedback(GLenum mode, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawTransformFeedback, context, mode, id);
-        if (context->skipValidation() || ValidateDrawTransformFeedback(context, mode, id))
+        bool isCallValid =
+            (context->skipValidation() || ValidateDrawTransformFeedback(context, mode, id));
+        if (isCallValid)
         {
             context->drawTransformFeedback(mode, id);
         }
+        ANGLE_CAPTURE(DrawTransformFeedback, isCallValid, context, mode, id);
     }
 }
 
@@ -195,12 +215,13 @@ void GL_APIENTRY DrawTransformFeedbackStream(GLenum mode, GLuint id, GLuint stre
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawTransformFeedbackStream, context, mode, id, stream);
-        if (context->skipValidation() ||
-            ValidateDrawTransformFeedbackStream(context, mode, id, stream))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateDrawTransformFeedbackStream(context, mode, id, stream));
+        if (isCallValid)
         {
             context->drawTransformFeedbackStream(mode, id, stream);
         }
+        ANGLE_CAPTURE(DrawTransformFeedbackStream, isCallValid, context, mode, id, stream);
     }
 }
 
@@ -211,11 +232,13 @@ void GL_APIENTRY EndQueryIndexed(GLenum target, GLuint index)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(EndQueryIndexed, context, target, index);
-        if (context->skipValidation() || ValidateEndQueryIndexed(context, target, index))
+        bool isCallValid =
+            (context->skipValidation() || ValidateEndQueryIndexed(context, target, index));
+        if (isCallValid)
         {
             context->endQueryIndexed(target, index);
         }
+        ANGLE_CAPTURE(EndQueryIndexed, isCallValid, context, target, index);
     }
 }
 
@@ -226,11 +249,13 @@ void GL_APIENTRY GenTransformFeedbacks(GLsizei n, GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GenTransformFeedbacks, context, n, ids);
-        if (context->skipValidation() || ValidateGenTransformFeedbacks(context, n, ids))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGenTransformFeedbacks(context, n, ids));
+        if (isCallValid)
         {
             context->genTransformFeedbacks(n, ids);
         }
+        ANGLE_CAPTURE(GenTransformFeedbacks, isCallValid, context, n, ids);
     }
 }
 
@@ -249,14 +274,15 @@ void GL_APIENTRY GetActiveSubroutineName(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetActiveSubroutineName, context, program, shadertype, index, bufsize, length,
-                      name);
-        if (context->skipValidation() ||
-            ValidateGetActiveSubroutineName(context, program, shadertype, index, bufsize, length,
-                                            name))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetActiveSubroutineName(context, program, shadertype, index,
+                                                            bufsize, length, name));
+        if (isCallValid)
         {
             context->getActiveSubroutineName(program, shadertype, index, bufsize, length, name);
         }
+        ANGLE_CAPTURE(GetActiveSubroutineName, isCallValid, context, program, shadertype, index,
+                      bufsize, length, name);
     }
 }
 
@@ -275,15 +301,16 @@ void GL_APIENTRY GetActiveSubroutineUniformName(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetActiveSubroutineUniformName, context, program, shadertype, index, bufsize,
-                      length, name);
-        if (context->skipValidation() ||
-            ValidateGetActiveSubroutineUniformName(context, program, shadertype, index, bufsize,
-                                                   length, name))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetActiveSubroutineUniformName(context, program, shadertype,
+                                                                   index, bufsize, length, name));
+        if (isCallValid)
         {
             context->getActiveSubroutineUniformName(program, shadertype, index, bufsize, length,
                                                     name);
         }
+        ANGLE_CAPTURE(GetActiveSubroutineUniformName, isCallValid, context, program, shadertype,
+                      index, bufsize, length, name);
     }
 }
 
@@ -301,13 +328,15 @@ void GL_APIENTRY GetActiveSubroutineUniformiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetActiveSubroutineUniformiv, context, program, shadertype, index, pname,
-                      values);
-        if (context->skipValidation() || ValidateGetActiveSubroutineUniformiv(
-                                             context, program, shadertype, index, pname, values))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetActiveSubroutineUniformiv(
+                                              context, program, shadertype, index, pname, values));
+        if (isCallValid)
         {
             context->getActiveSubroutineUniformiv(program, shadertype, index, pname, values);
         }
+        ANGLE_CAPTURE(GetActiveSubroutineUniformiv, isCallValid, context, program, shadertype,
+                      index, pname, values);
     }
 }
 
@@ -321,12 +350,13 @@ void GL_APIENTRY GetProgramStageiv(GLuint program, GLenum shadertype, GLenum pna
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetProgramStageiv, context, program, shadertype, pname, values);
-        if (context->skipValidation() ||
-            ValidateGetProgramStageiv(context, program, shadertype, pname, values))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetProgramStageiv(context, program, shadertype, pname, values));
+        if (isCallValid)
         {
             context->getProgramStageiv(program, shadertype, pname, values);
         }
+        ANGLE_CAPTURE(GetProgramStageiv, isCallValid, context, program, shadertype, pname, values);
     }
 }
 
@@ -340,12 +370,13 @@ void GL_APIENTRY GetQueryIndexediv(GLenum target, GLuint index, GLenum pname, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetQueryIndexediv, context, target, index, pname, params);
-        if (context->skipValidation() ||
-            ValidateGetQueryIndexediv(context, target, index, pname, params))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetQueryIndexediv(context, target, index, pname, params));
+        if (isCallValid)
         {
             context->getQueryIndexediv(target, index, pname, params);
         }
+        ANGLE_CAPTURE(GetQueryIndexediv, isCallValid, context, target, index, pname, params);
     }
 }
 
@@ -358,9 +389,9 @@ GLuint GL_APIENTRY GetSubroutineIndex(GLuint program, GLenum shadertype, const G
     GLuint returnValue;
     if (context)
     {
-        ANGLE_CAPTURE(GetSubroutineIndex, context, program, shadertype, name);
-        if (context->skipValidation() ||
-            ValidateGetSubroutineIndex(context, program, shadertype, name))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetSubroutineIndex(context, program, shadertype, name));
+        if (isCallValid)
         {
             returnValue = context->getSubroutineIndex(program, shadertype, name);
         }
@@ -368,6 +399,7 @@ GLuint GL_APIENTRY GetSubroutineIndex(GLuint program, GLenum shadertype, const G
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineIndex, GLuint>();
         }
+        ANGLE_CAPTURE(GetSubroutineIndex, isCallValid, context, program, shadertype, name);
     }
     else
     {
@@ -387,9 +419,9 @@ GLint GL_APIENTRY GetSubroutineUniformLocation(GLuint program,
     GLint returnValue;
     if (context)
     {
-        ANGLE_CAPTURE(GetSubroutineUniformLocation, context, program, shadertype, name);
-        if (context->skipValidation() ||
-            ValidateGetSubroutineUniformLocation(context, program, shadertype, name))
+        bool isCallValid = (context->skipValidation() || ValidateGetSubroutineUniformLocation(
+                                                             context, program, shadertype, name));
+        if (isCallValid)
         {
             returnValue = context->getSubroutineUniformLocation(program, shadertype, name);
         }
@@ -397,6 +429,8 @@ GLint GL_APIENTRY GetSubroutineUniformLocation(GLuint program,
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineUniformLocation, GLint>();
         }
+        ANGLE_CAPTURE(GetSubroutineUniformLocation, isCallValid, context, program, shadertype,
+                      name);
     }
     else
     {
@@ -413,12 +447,13 @@ void GL_APIENTRY GetUniformSubroutineuiv(GLenum shadertype, GLint location, GLui
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetUniformSubroutineuiv, context, shadertype, location, params);
-        if (context->skipValidation() ||
-            ValidateGetUniformSubroutineuiv(context, shadertype, location, params))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetUniformSubroutineuiv(context, shadertype, location, params));
+        if (isCallValid)
         {
             context->getUniformSubroutineuiv(shadertype, location, params);
         }
+        ANGLE_CAPTURE(GetUniformSubroutineuiv, isCallValid, context, shadertype, location, params);
     }
 }
 
@@ -430,11 +465,13 @@ void GL_APIENTRY GetUniformdv(GLuint program, GLint location, GLdouble *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetUniformdv, context, program, location, params);
-        if (context->skipValidation() || ValidateGetUniformdv(context, program, location, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetUniformdv(context, program, location, params));
+        if (isCallValid)
         {
             context->getUniformdv(program, location, params);
         }
+        ANGLE_CAPTURE(GetUniformdv, isCallValid, context, program, location, params);
     }
 }
 
@@ -446,8 +483,8 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
     GLboolean returnValue;
     if (context)
     {
-        ANGLE_CAPTURE(IsTransformFeedback, context, id);
-        if (context->skipValidation() || ValidateIsTransformFeedback(context, id))
+        bool isCallValid = (context->skipValidation() || ValidateIsTransformFeedback(context, id));
+        if (isCallValid)
         {
             returnValue = context->isTransformFeedback(id);
         }
@@ -455,6 +492,7 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
         }
+        ANGLE_CAPTURE(IsTransformFeedback, isCallValid, context, id);
     }
     else
     {
@@ -470,11 +508,12 @@ void GL_APIENTRY MinSampleShading(GLfloat value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(MinSampleShading, context, value);
-        if (context->skipValidation() || ValidateMinSampleShading(context, value))
+        bool isCallValid = (context->skipValidation() || ValidateMinSampleShading(context, value));
+        if (isCallValid)
         {
             context->minSampleShading(value);
         }
+        ANGLE_CAPTURE(MinSampleShading, isCallValid, context, value);
     }
 }
 
@@ -486,11 +525,13 @@ void GL_APIENTRY PatchParameterfv(GLenum pname, const GLfloat *values)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PatchParameterfv, context, pname, values);
-        if (context->skipValidation() || ValidatePatchParameterfv(context, pname, values))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePatchParameterfv(context, pname, values));
+        if (isCallValid)
         {
             context->patchParameterfv(pname, values);
         }
+        ANGLE_CAPTURE(PatchParameterfv, isCallValid, context, pname, values);
     }
 }
 
@@ -501,11 +542,13 @@ void GL_APIENTRY PatchParameteri(GLenum pname, GLint value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PatchParameteri, context, pname, value);
-        if (context->skipValidation() || ValidatePatchParameteri(context, pname, value))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePatchParameteri(context, pname, value));
+        if (isCallValid)
         {
             context->patchParameteri(pname, value);
         }
+        ANGLE_CAPTURE(PatchParameteri, isCallValid, context, pname, value);
     }
 }
 
@@ -516,11 +559,12 @@ void GL_APIENTRY PauseTransformFeedback()
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PauseTransformFeedback, context);
-        if (context->skipValidation() || ValidatePauseTransformFeedback(context))
+        bool isCallValid = (context->skipValidation() || ValidatePauseTransformFeedback(context));
+        if (isCallValid)
         {
             context->pauseTransformFeedback();
         }
+        ANGLE_CAPTURE(PauseTransformFeedback, isCallValid, context);
     }
 }
 
@@ -531,11 +575,12 @@ void GL_APIENTRY ResumeTransformFeedback()
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(ResumeTransformFeedback, context);
-        if (context->skipValidation() || ValidateResumeTransformFeedback(context))
+        bool isCallValid = (context->skipValidation() || ValidateResumeTransformFeedback(context));
+        if (isCallValid)
         {
             context->resumeTransformFeedback();
         }
+        ANGLE_CAPTURE(ResumeTransformFeedback, isCallValid, context);
     }
 }
 
@@ -546,11 +591,12 @@ void GL_APIENTRY Uniform1d(GLint location, GLdouble x)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Uniform1d, context, location, x);
-        if (context->skipValidation() || ValidateUniform1d(context, location, x))
+        bool isCallValid = (context->skipValidation() || ValidateUniform1d(context, location, x));
+        if (isCallValid)
         {
             context->uniform1d(location, x);
         }
+        ANGLE_CAPTURE(Uniform1d, isCallValid, context, location, x);
     }
 }
 
@@ -562,11 +608,13 @@ void GL_APIENTRY Uniform1dv(GLint location, GLsizei count, const GLdouble *value
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Uniform1dv, context, location, count, value);
-        if (context->skipValidation() || ValidateUniform1dv(context, location, count, value))
+        bool isCallValid =
+            (context->skipValidation() || ValidateUniform1dv(context, location, count, value));
+        if (isCallValid)
         {
             context->uniform1dv(location, count, value);
         }
+        ANGLE_CAPTURE(Uniform1dv, isCallValid, context, location, count, value);
     }
 }
 
@@ -577,11 +625,13 @@ void GL_APIENTRY Uniform2d(GLint location, GLdouble x, GLdouble y)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Uniform2d, context, location, x, y);
-        if (context->skipValidation() || ValidateUniform2d(context, location, x, y))
+        bool isCallValid =
+            (context->skipValidation() || ValidateUniform2d(context, location, x, y));
+        if (isCallValid)
         {
             context->uniform2d(location, x, y);
         }
+        ANGLE_CAPTURE(Uniform2d, isCallValid, context, location, x, y);
     }
 }
 
@@ -593,11 +643,13 @@ void GL_APIENTRY Uniform2dv(GLint location, GLsizei count, const GLdouble *value
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Uniform2dv, context, location, count, value);
-        if (context->skipValidation() || ValidateUniform2dv(context, location, count, value))
+        bool isCallValid =
+            (context->skipValidation() || ValidateUniform2dv(context, location, count, value));
+        if (isCallValid)
         {
             context->uniform2dv(location, count, value);
         }
+        ANGLE_CAPTURE(Uniform2dv, isCallValid, context, location, count, value);
     }
 }
 
@@ -609,11 +661,13 @@ void GL_APIENTRY Uniform3d(GLint location, GLdouble x, GLdouble y, GLdouble z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Uniform3d, context, location, x, y, z);
-        if (context->skipValidation() || ValidateUniform3d(context, location, x, y, z))
+        bool isCallValid =
+            (context->skipValidation() || ValidateUniform3d(context, location, x, y, z));
+        if (isCallValid)
         {
             context->uniform3d(location, x, y, z);
         }
+        ANGLE_CAPTURE(Uniform3d, isCallValid, context, location, x, y, z);
     }
 }
 
@@ -625,11 +679,13 @@ void GL_APIENTRY Uniform3dv(GLint location, GLsizei count, const GLdouble *value
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Uniform3dv, context, location, count, value);
-        if (context->skipValidation() || ValidateUniform3dv(context, location, count, value))
+        bool isCallValid =
+            (context->skipValidation() || ValidateUniform3dv(context, location, count, value));
+        if (isCallValid)
         {
             context->uniform3dv(location, count, value);
         }
+        ANGLE_CAPTURE(Uniform3dv, isCallValid, context, location, count, value);
     }
 }
 
@@ -642,11 +698,13 @@ void GL_APIENTRY Uniform4d(GLint location, GLdouble x, GLdouble y, GLdouble z, G
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Uniform4d, context, location, x, y, z, w);
-        if (context->skipValidation() || ValidateUniform4d(context, location, x, y, z, w))
+        bool isCallValid =
+            (context->skipValidation() || ValidateUniform4d(context, location, x, y, z, w));
+        if (isCallValid)
         {
             context->uniform4d(location, x, y, z, w);
         }
+        ANGLE_CAPTURE(Uniform4d, isCallValid, context, location, x, y, z, w);
     }
 }
 
@@ -658,11 +716,13 @@ void GL_APIENTRY Uniform4dv(GLint location, GLsizei count, const GLdouble *value
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Uniform4dv, context, location, count, value);
-        if (context->skipValidation() || ValidateUniform4dv(context, location, count, value))
+        bool isCallValid =
+            (context->skipValidation() || ValidateUniform4dv(context, location, count, value));
+        if (isCallValid)
         {
             context->uniform4dv(location, count, value);
         }
+        ANGLE_CAPTURE(Uniform4dv, isCallValid, context, location, count, value);
     }
 }
 
@@ -679,12 +739,13 @@ void GL_APIENTRY UniformMatrix2dv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix2dv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix2dv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix2dv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix2dv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix2dv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -701,12 +762,13 @@ void GL_APIENTRY UniformMatrix2x3dv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix2x3dv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix2x3dv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix2x3dv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix2x3dv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix2x3dv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -723,12 +785,13 @@ void GL_APIENTRY UniformMatrix2x4dv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix2x4dv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix2x4dv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix2x4dv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix2x4dv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix2x4dv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -745,12 +808,13 @@ void GL_APIENTRY UniformMatrix3dv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix3dv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix3dv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix3dv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix3dv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix3dv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -767,12 +831,13 @@ void GL_APIENTRY UniformMatrix3x2dv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix3x2dv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix3x2dv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix3x2dv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix3x2dv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix3x2dv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -789,12 +854,13 @@ void GL_APIENTRY UniformMatrix3x4dv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix3x4dv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix3x4dv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix3x4dv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix3x4dv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix3x4dv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -811,12 +877,13 @@ void GL_APIENTRY UniformMatrix4dv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix4dv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix4dv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix4dv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix4dv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix4dv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -833,12 +900,13 @@ void GL_APIENTRY UniformMatrix4x2dv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix4x2dv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix4x2dv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix4x2dv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix4x2dv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix4x2dv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -855,12 +923,13 @@ void GL_APIENTRY UniformMatrix4x3dv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix4x3dv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix4x3dv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix4x3dv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix4x3dv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix4x3dv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -873,12 +942,13 @@ void GL_APIENTRY UniformSubroutinesuiv(GLenum shadertype, GLsizei count, const G
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformSubroutinesuiv, context, shadertype, count, indices);
-        if (context->skipValidation() ||
-            ValidateUniformSubroutinesuiv(context, shadertype, count, indices))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformSubroutinesuiv(context, shadertype, count, indices));
+        if (isCallValid)
         {
             context->uniformSubroutinesuiv(shadertype, count, indices);
         }
+        ANGLE_CAPTURE(UniformSubroutinesuiv, isCallValid, context, shadertype, count, indices);
     }
 }
 }  // namespace gl

@@ -34,8 +34,9 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
     GLenum returnValue;
     if (context)
     {
-        ANGLE_CAPTURE(ClientWaitSync, context, sync, flags, timeout);
-        if (context->skipValidation() || ValidateClientWaitSync(context, sync, flags, timeout))
+        bool isCallValid =
+            (context->skipValidation() || ValidateClientWaitSync(context, sync, flags, timeout));
+        if (isCallValid)
         {
             returnValue = context->clientWaitSync(sync, flags, timeout);
         }
@@ -43,6 +44,7 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
         {
             returnValue = GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
         }
+        ANGLE_CAPTURE(ClientWaitSync, isCallValid, context, sync, flags, timeout);
     }
     else
     {
@@ -58,11 +60,12 @@ void GL_APIENTRY DeleteSync(GLsync sync)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DeleteSync, context, sync);
-        if (context->skipValidation() || ValidateDeleteSync(context, sync))
+        bool isCallValid = (context->skipValidation() || ValidateDeleteSync(context, sync));
+        if (isCallValid)
         {
             context->deleteSync(sync);
         }
+        ANGLE_CAPTURE(DeleteSync, isCallValid, context, sync);
     }
 }
 
@@ -80,12 +83,15 @@ void GL_APIENTRY DrawElementsBaseVertex(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawElementsBaseVertex, context, mode, count, type, indices, basevertex);
-        if (context->skipValidation() ||
-            ValidateDrawElementsBaseVertex(context, mode, count, type, indices, basevertex))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDrawElementsBaseVertex(context, mode, count, type, indices, basevertex));
+        if (isCallValid)
         {
             context->drawElementsBaseVertex(mode, count, type, indices, basevertex);
         }
+        ANGLE_CAPTURE(DrawElementsBaseVertex, isCallValid, context, mode, count, type, indices,
+                      basevertex);
     }
 }
 
@@ -104,15 +110,16 @@ void GL_APIENTRY DrawElementsInstancedBaseVertex(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawElementsInstancedBaseVertex, context, mode, count, type, indices,
-                      instancecount, basevertex);
-        if (context->skipValidation() ||
-            ValidateDrawElementsInstancedBaseVertex(context, mode, count, type, indices,
-                                                    instancecount, basevertex))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateDrawElementsInstancedBaseVertex(
+                                context, mode, count, type, indices, instancecount, basevertex));
+        if (isCallValid)
         {
             context->drawElementsInstancedBaseVertex(mode, count, type, indices, instancecount,
                                                      basevertex);
         }
+        ANGLE_CAPTURE(DrawElementsInstancedBaseVertex, isCallValid, context, mode, count, type,
+                      indices, instancecount, basevertex);
     }
 }
 
@@ -132,15 +139,16 @@ void GL_APIENTRY DrawRangeElementsBaseVertex(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawRangeElementsBaseVertex, context, mode, start, end, count, type, indices,
-                      basevertex);
-        if (context->skipValidation() ||
-            ValidateDrawRangeElementsBaseVertex(context, mode, start, end, count, type, indices,
-                                                basevertex))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateDrawRangeElementsBaseVertex(context, mode, start, end, count,
+                                                                type, indices, basevertex));
+        if (isCallValid)
         {
             context->drawRangeElementsBaseVertex(mode, start, end, count, type, indices,
                                                  basevertex);
         }
+        ANGLE_CAPTURE(DrawRangeElementsBaseVertex, isCallValid, context, mode, start, end, count,
+                      type, indices, basevertex);
     }
 }
 
@@ -152,8 +160,9 @@ GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
     GLsync returnValue;
     if (context)
     {
-        ANGLE_CAPTURE(FenceSync, context, condition, flags);
-        if (context->skipValidation() || ValidateFenceSync(context, condition, flags))
+        bool isCallValid =
+            (context->skipValidation() || ValidateFenceSync(context, condition, flags));
+        if (isCallValid)
         {
             returnValue = context->fenceSync(condition, flags);
         }
@@ -161,6 +170,7 @@ GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
         }
+        ANGLE_CAPTURE(FenceSync, isCallValid, context, condition, flags);
     }
     else
     {
@@ -177,12 +187,14 @@ void GL_APIENTRY FramebufferTexture(GLenum target, GLenum attachment, GLuint tex
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(FramebufferTexture, context, target, attachment, texture, level);
-        if (context->skipValidation() ||
-            ValidateFramebufferTexture(context, target, attachment, texture, level))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateFramebufferTexture(context, target, attachment, texture, level));
+        if (isCallValid)
         {
             context->framebufferTexture(target, attachment, texture, level);
         }
+        ANGLE_CAPTURE(FramebufferTexture, isCallValid, context, target, attachment, texture, level);
     }
 }
 
@@ -195,12 +207,13 @@ void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *pa
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        ANGLE_CAPTURE(GetBufferParameteri64v, context, targetPacked, pname, params);
-        if (context->skipValidation() ||
-            ValidateGetBufferParameteri64v(context, targetPacked, pname, params))
+        bool isCallValid           = (context->skipValidation() ||
+                            ValidateGetBufferParameteri64v(context, targetPacked, pname, params));
+        if (isCallValid)
         {
             context->getBufferParameteri64v(targetPacked, pname, params);
         }
+        ANGLE_CAPTURE(GetBufferParameteri64v, isCallValid, context, targetPacked, pname, params);
     }
 }
 
@@ -212,11 +225,13 @@ void GL_APIENTRY GetInteger64i_v(GLenum target, GLuint index, GLint64 *data)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetInteger64i_v, context, target, index, data);
-        if (context->skipValidation() || ValidateGetInteger64i_v(context, target, index, data))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetInteger64i_v(context, target, index, data));
+        if (isCallValid)
         {
             context->getInteger64i_v(target, index, data);
         }
+        ANGLE_CAPTURE(GetInteger64i_v, isCallValid, context, target, index, data);
     }
 }
 
@@ -227,11 +242,13 @@ void GL_APIENTRY GetInteger64v(GLenum pname, GLint64 *data)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetInteger64v, context, pname, data);
-        if (context->skipValidation() || ValidateGetInteger64v(context, pname, data))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetInteger64v(context, pname, data));
+        if (isCallValid)
         {
             context->getInteger64v(pname, data);
         }
+        ANGLE_CAPTURE(GetInteger64v, isCallValid, context, pname, data);
     }
 }
 
@@ -243,11 +260,13 @@ void GL_APIENTRY GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetMultisamplefv, context, pname, index, val);
-        if (context->skipValidation() || ValidateGetMultisamplefv(context, pname, index, val))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetMultisamplefv(context, pname, index, val));
+        if (isCallValid)
         {
             context->getMultisamplefv(pname, index, val);
         }
+        ANGLE_CAPTURE(GetMultisamplefv, isCallValid, context, pname, index, val);
     }
 }
 
@@ -262,12 +281,13 @@ GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *va
     Context *context = GetGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetSynciv, context, sync, pname, bufSize, length, values);
-        if (context->skipValidation() ||
-            ValidateGetSynciv(context, sync, pname, bufSize, length, values))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetSynciv(context, sync, pname, bufSize, length, values));
+        if (isCallValid)
         {
             context->getSynciv(sync, pname, bufSize, length, values);
         }
+        ANGLE_CAPTURE(GetSynciv, isCallValid, context, sync, pname, bufSize, length, values);
     }
 }
 
@@ -279,8 +299,8 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
     GLboolean returnValue;
     if (context)
     {
-        ANGLE_CAPTURE(IsSync, context, sync);
-        if (context->skipValidation() || ValidateIsSync(context, sync))
+        bool isCallValid = (context->skipValidation() || ValidateIsSync(context, sync));
+        if (isCallValid)
         {
             returnValue = context->isSync(sync);
         }
@@ -288,6 +308,7 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
         }
+        ANGLE_CAPTURE(IsSync, isCallValid, context, sync);
     }
     else
     {
@@ -311,14 +332,15 @@ void GL_APIENTRY MultiDrawElementsBaseVertex(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(MultiDrawElementsBaseVertex, context, mode, count, type, indices, drawcount,
-                      basevertex);
-        if (context->skipValidation() ||
-            ValidateMultiDrawElementsBaseVertex(context, mode, count, type, indices, drawcount,
-                                                basevertex))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateMultiDrawElementsBaseVertex(context, mode, count, type, indices,
+                                                                drawcount, basevertex));
+        if (isCallValid)
         {
             context->multiDrawElementsBaseVertex(mode, count, type, indices, drawcount, basevertex);
         }
+        ANGLE_CAPTURE(MultiDrawElementsBaseVertex, isCallValid, context, mode, count, type, indices,
+                      drawcount, basevertex);
     }
 }
 
@@ -330,11 +352,13 @@ void GL_APIENTRY ProvokingVertex(GLenum mode)
     if (context)
     {
         ProvokingVertexConvention modePacked = FromGLenum<ProvokingVertexConvention>(mode);
-        ANGLE_CAPTURE(ProvokingVertex, context, modePacked);
-        if (context->skipValidation() || ValidateProvokingVertex(context, modePacked))
+        bool isCallValid =
+            (context->skipValidation() || ValidateProvokingVertex(context, modePacked));
+        if (isCallValid)
         {
             context->provokingVertex(modePacked);
         }
+        ANGLE_CAPTURE(ProvokingVertex, isCallValid, context, modePacked);
     }
 }
 
@@ -345,11 +369,13 @@ void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SampleMaski, context, maskNumber, mask);
-        if (context->skipValidation() || ValidateSampleMaski(context, maskNumber, mask))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSampleMaski(context, maskNumber, mask));
+        if (isCallValid)
         {
             context->sampleMaski(maskNumber, mask);
         }
+        ANGLE_CAPTURE(SampleMaski, isCallValid, context, maskNumber, mask);
     }
 }
 
@@ -368,15 +394,16 @@ void GL_APIENTRY TexImage2DMultisample(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(TexImage2DMultisample, context, target, samples, internalformat, width,
-                      height, fixedsamplelocations);
-        if (context->skipValidation() ||
-            ValidateTexImage2DMultisample(context, target, samples, internalformat, width, height,
-                                          fixedsamplelocations))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateTexImage2DMultisample(context, target, samples, internalformat,
+                                                          width, height, fixedsamplelocations));
+        if (isCallValid)
         {
             context->texImage2DMultisample(target, samples, internalformat, width, height,
                                            fixedsamplelocations);
         }
+        ANGLE_CAPTURE(TexImage2DMultisample, isCallValid, context, target, samples, internalformat,
+                      width, height, fixedsamplelocations);
     }
 }
 
@@ -396,15 +423,17 @@ void GL_APIENTRY TexImage3DMultisample(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(TexImage3DMultisample, context, target, samples, internalformat, width,
-                      height, depth, fixedsamplelocations);
-        if (context->skipValidation() ||
-            ValidateTexImage3DMultisample(context, target, samples, internalformat, width, height,
-                                          depth, fixedsamplelocations))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTexImage3DMultisample(context, target, samples, internalformat, width, height,
+                                           depth, fixedsamplelocations));
+        if (isCallValid)
         {
             context->texImage3DMultisample(target, samples, internalformat, width, height, depth,
                                            fixedsamplelocations);
         }
+        ANGLE_CAPTURE(TexImage3DMultisample, isCallValid, context, target, samples, internalformat,
+                      width, height, depth, fixedsamplelocations);
     }
 }
 
@@ -416,11 +445,13 @@ void GL_APIENTRY WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WaitSync, context, sync, flags, timeout);
-        if (context->skipValidation() || ValidateWaitSync(context, sync, flags, timeout))
+        bool isCallValid =
+            (context->skipValidation() || ValidateWaitSync(context, sync, flags, timeout));
+        if (isCallValid)
         {
             context->waitSync(sync, flags, timeout);
         }
+        ANGLE_CAPTURE(WaitSync, isCallValid, context, sync, flags, timeout);
     }
 }
 }  // namespace gl

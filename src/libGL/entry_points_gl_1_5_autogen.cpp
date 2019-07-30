@@ -33,11 +33,13 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
     if (context)
     {
         QueryType targetPacked = FromGLenum<QueryType>(target);
-        ANGLE_CAPTURE(BeginQuery, context, targetPacked, id);
-        if (context->skipValidation() || ValidateBeginQuery(context, targetPacked, id))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBeginQuery(context, targetPacked, id));
+        if (isCallValid)
         {
             context->beginQuery(targetPacked, id);
         }
+        ANGLE_CAPTURE(BeginQuery, isCallValid, context, targetPacked, id);
     }
 }
 
@@ -49,11 +51,13 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        ANGLE_CAPTURE(BindBuffer, context, targetPacked, buffer);
-        if (context->skipValidation() || ValidateBindBuffer(context, targetPacked, buffer))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBindBuffer(context, targetPacked, buffer));
+        if (isCallValid)
         {
             context->bindBuffer(targetPacked, buffer);
         }
+        ANGLE_CAPTURE(BindBuffer, isCallValid, context, targetPacked, buffer);
     }
 }
 
@@ -68,12 +72,13 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
         BufferUsage usagePacked    = FromGLenum<BufferUsage>(usage);
-        ANGLE_CAPTURE(BufferData, context, targetPacked, size, data, usagePacked);
-        if (context->skipValidation() ||
-            ValidateBufferData(context, targetPacked, size, data, usagePacked))
+        bool isCallValid           = (context->skipValidation() ||
+                            ValidateBufferData(context, targetPacked, size, data, usagePacked));
+        if (isCallValid)
         {
             context->bufferData(targetPacked, size, data, usagePacked);
         }
+        ANGLE_CAPTURE(BufferData, isCallValid, context, targetPacked, size, data, usagePacked);
     }
 }
 
@@ -89,12 +94,13 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        ANGLE_CAPTURE(BufferSubData, context, targetPacked, offset, size, data);
-        if (context->skipValidation() ||
-            ValidateBufferSubData(context, targetPacked, offset, size, data))
+        bool isCallValid           = (context->skipValidation() ||
+                            ValidateBufferSubData(context, targetPacked, offset, size, data));
+        if (isCallValid)
         {
             context->bufferSubData(targetPacked, offset, size, data);
         }
+        ANGLE_CAPTURE(BufferSubData, isCallValid, context, targetPacked, offset, size, data);
     }
 }
 
@@ -105,11 +111,13 @@ void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DeleteBuffers, context, n, buffers);
-        if (context->skipValidation() || ValidateDeleteBuffers(context, n, buffers))
+        bool isCallValid =
+            (context->skipValidation() || ValidateDeleteBuffers(context, n, buffers));
+        if (isCallValid)
         {
             context->deleteBuffers(n, buffers);
         }
+        ANGLE_CAPTURE(DeleteBuffers, isCallValid, context, n, buffers);
     }
 }
 
@@ -120,11 +128,12 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DeleteQueries, context, n, ids);
-        if (context->skipValidation() || ValidateDeleteQueries(context, n, ids))
+        bool isCallValid = (context->skipValidation() || ValidateDeleteQueries(context, n, ids));
+        if (isCallValid)
         {
             context->deleteQueries(n, ids);
         }
+        ANGLE_CAPTURE(DeleteQueries, isCallValid, context, n, ids);
     }
 }
 
@@ -136,11 +145,12 @@ void GL_APIENTRY EndQuery(GLenum target)
     if (context)
     {
         QueryType targetPacked = FromGLenum<QueryType>(target);
-        ANGLE_CAPTURE(EndQuery, context, targetPacked);
-        if (context->skipValidation() || ValidateEndQuery(context, targetPacked))
+        bool isCallValid = (context->skipValidation() || ValidateEndQuery(context, targetPacked));
+        if (isCallValid)
         {
             context->endQuery(targetPacked);
         }
+        ANGLE_CAPTURE(EndQuery, isCallValid, context, targetPacked);
     }
 }
 
@@ -151,11 +161,12 @@ void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GenBuffers, context, n, buffers);
-        if (context->skipValidation() || ValidateGenBuffers(context, n, buffers))
+        bool isCallValid = (context->skipValidation() || ValidateGenBuffers(context, n, buffers));
+        if (isCallValid)
         {
             context->genBuffers(n, buffers);
         }
+        ANGLE_CAPTURE(GenBuffers, isCallValid, context, n, buffers);
     }
 }
 
@@ -166,11 +177,12 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GenQueries, context, n, ids);
-        if (context->skipValidation() || ValidateGenQueries(context, n, ids))
+        bool isCallValid = (context->skipValidation() || ValidateGenQueries(context, n, ids));
+        if (isCallValid)
         {
             context->genQueries(n, ids);
         }
+        ANGLE_CAPTURE(GenQueries, isCallValid, context, n, ids);
     }
 }
 
@@ -183,12 +195,13 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        ANGLE_CAPTURE(GetBufferParameteriv, context, targetPacked, pname, params);
-        if (context->skipValidation() ||
-            ValidateGetBufferParameteriv(context, targetPacked, pname, params))
+        bool isCallValid           = (context->skipValidation() ||
+                            ValidateGetBufferParameteriv(context, targetPacked, pname, params));
+        if (isCallValid)
         {
             context->getBufferParameteriv(targetPacked, pname, params);
         }
+        ANGLE_CAPTURE(GetBufferParameteriv, isCallValid, context, targetPacked, pname, params);
     }
 }
 
@@ -201,12 +214,13 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        ANGLE_CAPTURE(GetBufferPointerv, context, targetPacked, pname, params);
-        if (context->skipValidation() ||
-            ValidateGetBufferPointerv(context, targetPacked, pname, params))
+        bool isCallValid           = (context->skipValidation() ||
+                            ValidateGetBufferPointerv(context, targetPacked, pname, params));
+        if (isCallValid)
         {
             context->getBufferPointerv(targetPacked, pname, params);
         }
+        ANGLE_CAPTURE(GetBufferPointerv, isCallValid, context, targetPacked, pname, params);
     }
 }
 
@@ -221,12 +235,13 @@ void GL_APIENTRY GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr siz
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetBufferSubData, context, target, offset, size, data);
-        if (context->skipValidation() ||
-            ValidateGetBufferSubData(context, target, offset, size, data))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetBufferSubData(context, target, offset, size, data));
+        if (isCallValid)
         {
             context->getBufferSubData(target, offset, size, data);
         }
+        ANGLE_CAPTURE(GetBufferSubData, isCallValid, context, target, offset, size, data);
     }
 }
 
@@ -238,11 +253,13 @@ void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
     Context *context = GetGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetQueryObjectiv, context, id, pname, params);
-        if (context->skipValidation() || ValidateGetQueryObjectiv(context, id, pname, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetQueryObjectiv(context, id, pname, params));
+        if (isCallValid)
         {
             context->getQueryObjectiv(id, pname, params);
         }
+        ANGLE_CAPTURE(GetQueryObjectiv, isCallValid, context, id, pname, params);
     }
 }
 
@@ -254,11 +271,13 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetQueryObjectuiv, context, id, pname, params);
-        if (context->skipValidation() || ValidateGetQueryObjectuiv(context, id, pname, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetQueryObjectuiv(context, id, pname, params));
+        if (isCallValid)
         {
             context->getQueryObjectuiv(id, pname, params);
         }
+        ANGLE_CAPTURE(GetQueryObjectuiv, isCallValid, context, id, pname, params);
     }
 }
 
@@ -271,11 +290,13 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
     if (context)
     {
         QueryType targetPacked = FromGLenum<QueryType>(target);
-        ANGLE_CAPTURE(GetQueryiv, context, targetPacked, pname, params);
-        if (context->skipValidation() || ValidateGetQueryiv(context, targetPacked, pname, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetQueryiv(context, targetPacked, pname, params));
+        if (isCallValid)
         {
             context->getQueryiv(targetPacked, pname, params);
         }
+        ANGLE_CAPTURE(GetQueryiv, isCallValid, context, targetPacked, pname, params);
     }
 }
 
@@ -287,8 +308,8 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
     GLboolean returnValue;
     if (context)
     {
-        ANGLE_CAPTURE(IsBuffer, context, buffer);
-        if (context->skipValidation() || ValidateIsBuffer(context, buffer))
+        bool isCallValid = (context->skipValidation() || ValidateIsBuffer(context, buffer));
+        if (isCallValid)
         {
             returnValue = context->isBuffer(buffer);
         }
@@ -296,6 +317,7 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsBuffer, GLboolean>();
         }
+        ANGLE_CAPTURE(IsBuffer, isCallValid, context, buffer);
     }
     else
     {
@@ -312,8 +334,8 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
     GLboolean returnValue;
     if (context)
     {
-        ANGLE_CAPTURE(IsQuery, context, id);
-        if (context->skipValidation() || ValidateIsQuery(context, id))
+        bool isCallValid = (context->skipValidation() || ValidateIsQuery(context, id));
+        if (isCallValid)
         {
             returnValue = context->isQuery(id);
         }
@@ -321,6 +343,7 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
         }
+        ANGLE_CAPTURE(IsQuery, isCallValid, context, id);
     }
     else
     {
@@ -338,8 +361,9 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        ANGLE_CAPTURE(MapBuffer, context, targetPacked, access);
-        if (context->skipValidation() || ValidateMapBuffer(context, targetPacked, access))
+        bool isCallValid =
+            (context->skipValidation() || ValidateMapBuffer(context, targetPacked, access));
+        if (isCallValid)
         {
             returnValue = context->mapBuffer(targetPacked, access);
         }
@@ -347,6 +371,7 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::MapBuffer, void *>();
         }
+        ANGLE_CAPTURE(MapBuffer, isCallValid, context, targetPacked, access);
     }
     else
     {
@@ -364,8 +389,9 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        ANGLE_CAPTURE(UnmapBuffer, context, targetPacked);
-        if (context->skipValidation() || ValidateUnmapBuffer(context, targetPacked))
+        bool isCallValid =
+            (context->skipValidation() || ValidateUnmapBuffer(context, targetPacked));
+        if (isCallValid)
         {
             returnValue = context->unmapBuffer(targetPacked);
         }
@@ -373,6 +399,7 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
         }
+        ANGLE_CAPTURE(UnmapBuffer, isCallValid, context, targetPacked);
     }
     else
     {

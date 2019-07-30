@@ -42,15 +42,16 @@ void GL_APIENTRY CopyBufferSubData(GLenum readTarget,
     {
         BufferBinding readTargetPacked  = FromGLenum<BufferBinding>(readTarget);
         BufferBinding writeTargetPacked = FromGLenum<BufferBinding>(writeTarget);
-        ANGLE_CAPTURE(CopyBufferSubData, context, readTargetPacked, writeTargetPacked, readOffset,
-                      writeOffset, size);
-        if (context->skipValidation() ||
-            ValidateCopyBufferSubData(context, readTargetPacked, writeTargetPacked, readOffset,
-                                      writeOffset, size))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateCopyBufferSubData(context, readTargetPacked, writeTargetPacked,
+                                                      readOffset, writeOffset, size));
+        if (isCallValid)
         {
             context->copyBufferSubData(readTargetPacked, writeTargetPacked, readOffset, writeOffset,
                                        size);
         }
+        ANGLE_CAPTURE(CopyBufferSubData, isCallValid, context, readTargetPacked, writeTargetPacked,
+                      readOffset, writeOffset, size);
     }
 }
 
@@ -63,12 +64,15 @@ void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
     if (context)
     {
         PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
-        ANGLE_CAPTURE(DrawArraysInstanced, context, modePacked, first, count, instancecount);
-        if (context->skipValidation() ||
-            ValidateDrawArraysInstanced(context, modePacked, first, count, instancecount))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDrawArraysInstanced(context, modePacked, first, count, instancecount));
+        if (isCallValid)
         {
             context->drawArraysInstanced(modePacked, first, count, instancecount);
         }
+        ANGLE_CAPTURE(DrawArraysInstanced, isCallValid, context, modePacked, first, count,
+                      instancecount);
     }
 }
 
@@ -88,14 +92,15 @@ void GL_APIENTRY DrawElementsInstanced(GLenum mode,
     {
         PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
         DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
-        ANGLE_CAPTURE(DrawElementsInstanced, context, modePacked, count, typePacked, indices,
-                      instancecount);
-        if (context->skipValidation() ||
-            ValidateDrawElementsInstanced(context, modePacked, count, typePacked, indices,
-                                          instancecount))
+        bool isCallValid            = (context->skipValidation() ||
+                            ValidateDrawElementsInstanced(context, modePacked, count, typePacked,
+                                                          indices, instancecount));
+        if (isCallValid)
         {
             context->drawElementsInstanced(modePacked, count, typePacked, indices, instancecount);
         }
+        ANGLE_CAPTURE(DrawElementsInstanced, isCallValid, context, modePacked, count, typePacked,
+                      indices, instancecount);
     }
 }
 
@@ -113,15 +118,16 @@ void GL_APIENTRY GetActiveUniformBlockName(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetActiveUniformBlockName, context, program, uniformBlockIndex, bufSize,
-                      length, uniformBlockName);
-        if (context->skipValidation() ||
-            ValidateGetActiveUniformBlockName(context, program, uniformBlockIndex, bufSize, length,
-                                              uniformBlockName))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetActiveUniformBlockName(context, program, uniformBlockIndex,
+                                                              bufSize, length, uniformBlockName));
+        if (isCallValid)
         {
             context->getActiveUniformBlockName(program, uniformBlockIndex, bufSize, length,
                                                uniformBlockName);
         }
+        ANGLE_CAPTURE(GetActiveUniformBlockName, isCallValid, context, program, uniformBlockIndex,
+                      bufSize, length, uniformBlockName);
     }
 }
 
@@ -138,12 +144,15 @@ void GL_APIENTRY GetActiveUniformBlockiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetActiveUniformBlockiv, context, program, uniformBlockIndex, pname, params);
-        if (context->skipValidation() ||
-            ValidateGetActiveUniformBlockiv(context, program, uniformBlockIndex, pname, params))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetActiveUniformBlockiv(context, program, uniformBlockIndex, pname, params));
+        if (isCallValid)
         {
             context->getActiveUniformBlockiv(program, uniformBlockIndex, pname, params);
         }
+        ANGLE_CAPTURE(GetActiveUniformBlockiv, isCallValid, context, program, uniformBlockIndex,
+                      pname, params);
     }
 }
 
@@ -161,14 +170,15 @@ void GL_APIENTRY GetActiveUniformName(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetActiveUniformName, context, program, uniformIndex, bufSize, length,
-                      uniformName);
-        if (context->skipValidation() ||
-            ValidateGetActiveUniformName(context, program, uniformIndex, bufSize, length,
-                                         uniformName))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetActiveUniformName(context, program, uniformIndex, bufSize,
+                                                         length, uniformName));
+        if (isCallValid)
         {
             context->getActiveUniformName(program, uniformIndex, bufSize, length, uniformName);
         }
+        ANGLE_CAPTURE(GetActiveUniformName, isCallValid, context, program, uniformIndex, bufSize,
+                      length, uniformName);
     }
 }
 
@@ -186,13 +196,15 @@ void GL_APIENTRY GetActiveUniformsiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetActiveUniformsiv, context, program, uniformCount, uniformIndices, pname,
-                      params);
-        if (context->skipValidation() || ValidateGetActiveUniformsiv(context, program, uniformCount,
-                                                                     uniformIndices, pname, params))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetActiveUniformsiv(context, program, uniformCount,
+                                                        uniformIndices, pname, params));
+        if (isCallValid)
         {
             context->getActiveUniformsiv(program, uniformCount, uniformIndices, pname, params);
         }
+        ANGLE_CAPTURE(GetActiveUniformsiv, isCallValid, context, program, uniformCount,
+                      uniformIndices, pname, params);
     }
 }
 
@@ -205,9 +217,9 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
     GLuint returnValue;
     if (context)
     {
-        ANGLE_CAPTURE(GetUniformBlockIndex, context, program, uniformBlockName);
-        if (context->skipValidation() ||
-            ValidateGetUniformBlockIndex(context, program, uniformBlockName))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetUniformBlockIndex(context, program, uniformBlockName));
+        if (isCallValid)
         {
             returnValue = context->getUniformBlockIndex(program, uniformBlockName);
         }
@@ -215,6 +227,7 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
         }
+        ANGLE_CAPTURE(GetUniformBlockIndex, isCallValid, context, program, uniformBlockName);
     }
     else
     {
@@ -236,13 +249,15 @@ void GL_APIENTRY GetUniformIndices(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetUniformIndices, context, program, uniformCount, uniformNames,
-                      uniformIndices);
-        if (context->skipValidation() ||
-            ValidateGetUniformIndices(context, program, uniformCount, uniformNames, uniformIndices))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetUniformIndices(context, program, uniformCount,
+                                                                    uniformNames, uniformIndices));
+        if (isCallValid)
         {
             context->getUniformIndices(program, uniformCount, uniformNames, uniformIndices);
         }
+        ANGLE_CAPTURE(GetUniformIndices, isCallValid, context, program, uniformCount, uniformNames,
+                      uniformIndices);
     }
 }
 
@@ -253,11 +268,13 @@ void GL_APIENTRY PrimitiveRestartIndex(GLuint index)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PrimitiveRestartIndex, context, index);
-        if (context->skipValidation() || ValidatePrimitiveRestartIndex(context, index))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePrimitiveRestartIndex(context, index));
+        if (isCallValid)
         {
             context->primitiveRestartIndex(index);
         }
+        ANGLE_CAPTURE(PrimitiveRestartIndex, isCallValid, context, index);
     }
 }
 
@@ -269,11 +286,13 @@ void GL_APIENTRY TexBuffer(GLenum target, GLenum internalformat, GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(TexBuffer, context, target, internalformat, buffer);
-        if (context->skipValidation() || ValidateTexBuffer(context, target, internalformat, buffer))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateTexBuffer(context, target, internalformat, buffer));
+        if (isCallValid)
         {
             context->texBuffer(target, internalformat, buffer);
         }
+        ANGLE_CAPTURE(TexBuffer, isCallValid, context, target, internalformat, buffer);
     }
 }
 
@@ -287,13 +306,15 @@ void GL_APIENTRY UniformBlockBinding(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformBlockBinding, context, program, uniformBlockIndex,
-                      uniformBlockBinding);
-        if (context->skipValidation() ||
-            ValidateUniformBlockBinding(context, program, uniformBlockIndex, uniformBlockBinding))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformBlockBinding(context, program, uniformBlockIndex, uniformBlockBinding));
+        if (isCallValid)
         {
             context->uniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding);
         }
+        ANGLE_CAPTURE(UniformBlockBinding, isCallValid, context, program, uniformBlockIndex,
+                      uniformBlockBinding);
     }
 }
 }  // namespace gl

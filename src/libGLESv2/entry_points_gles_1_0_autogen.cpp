@@ -27,11 +27,13 @@ void GL_APIENTRY AlphaFunc(GLenum func, GLfloat ref)
     if (context)
     {
         AlphaTestFunc funcPacked = FromGLenum<AlphaTestFunc>(func);
-        ANGLE_CAPTURE(AlphaFunc, context, funcPacked, ref);
-        if (context->skipValidation() || ValidateAlphaFunc(context, funcPacked, ref))
+        bool isCallValid =
+            (context->skipValidation() || ValidateAlphaFunc(context, funcPacked, ref));
+        if (isCallValid)
         {
             context->alphaFunc(funcPacked, ref);
         }
+        ANGLE_CAPTURE(AlphaFunc, isCallValid, context, funcPacked, ref);
     }
 }
 
@@ -43,11 +45,13 @@ void GL_APIENTRY AlphaFuncx(GLenum func, GLfixed ref)
     if (context)
     {
         AlphaTestFunc funcPacked = FromGLenum<AlphaTestFunc>(func);
-        ANGLE_CAPTURE(AlphaFuncx, context, funcPacked, ref);
-        if (context->skipValidation() || ValidateAlphaFuncx(context, funcPacked, ref))
+        bool isCallValid =
+            (context->skipValidation() || ValidateAlphaFuncx(context, funcPacked, ref));
+        if (isCallValid)
         {
             context->alphaFuncx(funcPacked, ref);
         }
+        ANGLE_CAPTURE(AlphaFuncx, isCallValid, context, funcPacked, ref);
     }
 }
 
@@ -59,11 +63,13 @@ void GL_APIENTRY ClearColorx(GLfixed red, GLfixed green, GLfixed blue, GLfixed a
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(ClearColorx, context, red, green, blue, alpha);
-        if (context->skipValidation() || ValidateClearColorx(context, red, green, blue, alpha))
+        bool isCallValid =
+            (context->skipValidation() || ValidateClearColorx(context, red, green, blue, alpha));
+        if (isCallValid)
         {
             context->clearColorx(red, green, blue, alpha);
         }
+        ANGLE_CAPTURE(ClearColorx, isCallValid, context, red, green, blue, alpha);
     }
 }
 
@@ -74,11 +80,12 @@ void GL_APIENTRY ClearDepthx(GLfixed depth)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(ClearDepthx, context, depth);
-        if (context->skipValidation() || ValidateClearDepthx(context, depth))
+        bool isCallValid = (context->skipValidation() || ValidateClearDepthx(context, depth));
+        if (isCallValid)
         {
             context->clearDepthx(depth);
         }
+        ANGLE_CAPTURE(ClearDepthx, isCallValid, context, depth);
     }
 }
 
@@ -89,11 +96,13 @@ void GL_APIENTRY ClientActiveTexture(GLenum texture)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(ClientActiveTexture, context, texture);
-        if (context->skipValidation() || ValidateClientActiveTexture(context, texture))
+        bool isCallValid =
+            (context->skipValidation() || ValidateClientActiveTexture(context, texture));
+        if (isCallValid)
         {
             context->clientActiveTexture(texture);
         }
+        ANGLE_CAPTURE(ClientActiveTexture, isCallValid, context, texture);
     }
 }
 
@@ -104,11 +113,12 @@ void GL_APIENTRY ClipPlanef(GLenum p, const GLfloat *eqn)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(ClipPlanef, context, p, eqn);
-        if (context->skipValidation() || ValidateClipPlanef(context, p, eqn))
+        bool isCallValid = (context->skipValidation() || ValidateClipPlanef(context, p, eqn));
+        if (isCallValid)
         {
             context->clipPlanef(p, eqn);
         }
+        ANGLE_CAPTURE(ClipPlanef, isCallValid, context, p, eqn);
     }
 }
 
@@ -120,11 +130,13 @@ void GL_APIENTRY ClipPlanex(GLenum plane, const GLfixed *equation)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(ClipPlanex, context, plane, equation);
-        if (context->skipValidation() || ValidateClipPlanex(context, plane, equation))
+        bool isCallValid =
+            (context->skipValidation() || ValidateClipPlanex(context, plane, equation));
+        if (isCallValid)
         {
             context->clipPlanex(plane, equation);
         }
+        ANGLE_CAPTURE(ClipPlanex, isCallValid, context, plane, equation);
     }
 }
 
@@ -136,11 +148,13 @@ void GL_APIENTRY Color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Color4f, context, red, green, blue, alpha);
-        if (context->skipValidation() || ValidateColor4f(context, red, green, blue, alpha))
+        bool isCallValid =
+            (context->skipValidation() || ValidateColor4f(context, red, green, blue, alpha));
+        if (isCallValid)
         {
             context->color4f(red, green, blue, alpha);
         }
+        ANGLE_CAPTURE(Color4f, isCallValid, context, red, green, blue, alpha);
     }
 }
 
@@ -152,11 +166,13 @@ void GL_APIENTRY Color4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alph
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Color4ub, context, red, green, blue, alpha);
-        if (context->skipValidation() || ValidateColor4ub(context, red, green, blue, alpha))
+        bool isCallValid =
+            (context->skipValidation() || ValidateColor4ub(context, red, green, blue, alpha));
+        if (isCallValid)
         {
             context->color4ub(red, green, blue, alpha);
         }
+        ANGLE_CAPTURE(Color4ub, isCallValid, context, red, green, blue, alpha);
     }
 }
 
@@ -168,11 +184,13 @@ void GL_APIENTRY Color4x(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Color4x, context, red, green, blue, alpha);
-        if (context->skipValidation() || ValidateColor4x(context, red, green, blue, alpha))
+        bool isCallValid =
+            (context->skipValidation() || ValidateColor4x(context, red, green, blue, alpha));
+        if (isCallValid)
         {
             context->color4x(red, green, blue, alpha);
         }
+        ANGLE_CAPTURE(Color4x, isCallValid, context, red, green, blue, alpha);
     }
 }
 
@@ -187,12 +205,13 @@ void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const voi
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
-        ANGLE_CAPTURE(ColorPointer, context, size, typePacked, stride, pointer);
-        if (context->skipValidation() ||
-            ValidateColorPointer(context, size, typePacked, stride, pointer))
+        bool isCallValid            = (context->skipValidation() ||
+                            ValidateColorPointer(context, size, typePacked, stride, pointer));
+        if (isCallValid)
         {
             context->colorPointer(size, typePacked, stride, pointer);
         }
+        ANGLE_CAPTURE(ColorPointer, isCallValid, context, size, typePacked, stride, pointer);
     }
 }
 
@@ -203,11 +222,12 @@ void GL_APIENTRY DepthRangex(GLfixed n, GLfixed f)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DepthRangex, context, n, f);
-        if (context->skipValidation() || ValidateDepthRangex(context, n, f))
+        bool isCallValid = (context->skipValidation() || ValidateDepthRangex(context, n, f));
+        if (isCallValid)
         {
             context->depthRangex(n, f);
         }
+        ANGLE_CAPTURE(DepthRangex, isCallValid, context, n, f);
     }
 }
 
@@ -219,11 +239,13 @@ void GL_APIENTRY DisableClientState(GLenum array)
     if (context)
     {
         ClientVertexArrayType arrayPacked = FromGLenum<ClientVertexArrayType>(array);
-        ANGLE_CAPTURE(DisableClientState, context, arrayPacked);
-        if (context->skipValidation() || ValidateDisableClientState(context, arrayPacked))
+        bool isCallValid =
+            (context->skipValidation() || ValidateDisableClientState(context, arrayPacked));
+        if (isCallValid)
         {
             context->disableClientState(arrayPacked);
         }
+        ANGLE_CAPTURE(DisableClientState, isCallValid, context, arrayPacked);
     }
 }
 
@@ -235,11 +257,13 @@ void GL_APIENTRY EnableClientState(GLenum array)
     if (context)
     {
         ClientVertexArrayType arrayPacked = FromGLenum<ClientVertexArrayType>(array);
-        ANGLE_CAPTURE(EnableClientState, context, arrayPacked);
-        if (context->skipValidation() || ValidateEnableClientState(context, arrayPacked))
+        bool isCallValid =
+            (context->skipValidation() || ValidateEnableClientState(context, arrayPacked));
+        if (isCallValid)
         {
             context->enableClientState(arrayPacked);
         }
+        ANGLE_CAPTURE(EnableClientState, isCallValid, context, arrayPacked);
     }
 }
 
@@ -250,11 +274,12 @@ void GL_APIENTRY Fogf(GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Fogf, context, pname, param);
-        if (context->skipValidation() || ValidateFogf(context, pname, param))
+        bool isCallValid = (context->skipValidation() || ValidateFogf(context, pname, param));
+        if (isCallValid)
         {
             context->fogf(pname, param);
         }
+        ANGLE_CAPTURE(Fogf, isCallValid, context, pname, param);
     }
 }
 
@@ -266,11 +291,12 @@ void GL_APIENTRY Fogfv(GLenum pname, const GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Fogfv, context, pname, params);
-        if (context->skipValidation() || ValidateFogfv(context, pname, params))
+        bool isCallValid = (context->skipValidation() || ValidateFogfv(context, pname, params));
+        if (isCallValid)
         {
             context->fogfv(pname, params);
         }
+        ANGLE_CAPTURE(Fogfv, isCallValid, context, pname, params);
     }
 }
 
@@ -281,11 +307,12 @@ void GL_APIENTRY Fogx(GLenum pname, GLfixed param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Fogx, context, pname, param);
-        if (context->skipValidation() || ValidateFogx(context, pname, param))
+        bool isCallValid = (context->skipValidation() || ValidateFogx(context, pname, param));
+        if (isCallValid)
         {
             context->fogx(pname, param);
         }
+        ANGLE_CAPTURE(Fogx, isCallValid, context, pname, param);
     }
 }
 
@@ -297,11 +324,12 @@ void GL_APIENTRY Fogxv(GLenum pname, const GLfixed *param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Fogxv, context, pname, param);
-        if (context->skipValidation() || ValidateFogxv(context, pname, param))
+        bool isCallValid = (context->skipValidation() || ValidateFogxv(context, pname, param));
+        if (isCallValid)
         {
             context->fogxv(pname, param);
         }
+        ANGLE_CAPTURE(Fogxv, isCallValid, context, pname, param);
     }
 }
 
@@ -315,11 +343,13 @@ void GL_APIENTRY Frustumf(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat n,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Frustumf, context, l, r, b, t, n, f);
-        if (context->skipValidation() || ValidateFrustumf(context, l, r, b, t, n, f))
+        bool isCallValid =
+            (context->skipValidation() || ValidateFrustumf(context, l, r, b, t, n, f));
+        if (isCallValid)
         {
             context->frustumf(l, r, b, t, n, f);
         }
+        ANGLE_CAPTURE(Frustumf, isCallValid, context, l, r, b, t, n, f);
     }
 }
 
@@ -333,11 +363,13 @@ void GL_APIENTRY Frustumx(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Frustumx, context, l, r, b, t, n, f);
-        if (context->skipValidation() || ValidateFrustumx(context, l, r, b, t, n, f))
+        bool isCallValid =
+            (context->skipValidation() || ValidateFrustumx(context, l, r, b, t, n, f));
+        if (isCallValid)
         {
             context->frustumx(l, r, b, t, n, f);
         }
+        ANGLE_CAPTURE(Frustumx, isCallValid, context, l, r, b, t, n, f);
     }
 }
 
@@ -349,11 +381,13 @@ void GL_APIENTRY GetClipPlanef(GLenum plane, GLfloat *equation)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetClipPlanef, context, plane, equation);
-        if (context->skipValidation() || ValidateGetClipPlanef(context, plane, equation))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetClipPlanef(context, plane, equation));
+        if (isCallValid)
         {
             context->getClipPlanef(plane, equation);
         }
+        ANGLE_CAPTURE(GetClipPlanef, isCallValid, context, plane, equation);
     }
 }
 
@@ -365,11 +399,13 @@ void GL_APIENTRY GetClipPlanex(GLenum plane, GLfixed *equation)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetClipPlanex, context, plane, equation);
-        if (context->skipValidation() || ValidateGetClipPlanex(context, plane, equation))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetClipPlanex(context, plane, equation));
+        if (isCallValid)
         {
             context->getClipPlanex(plane, equation);
         }
+        ANGLE_CAPTURE(GetClipPlanex, isCallValid, context, plane, equation);
     }
 }
 
@@ -380,11 +416,12 @@ void GL_APIENTRY GetFixedv(GLenum pname, GLfixed *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetFixedv, context, pname, params);
-        if (context->skipValidation() || ValidateGetFixedv(context, pname, params))
+        bool isCallValid = (context->skipValidation() || ValidateGetFixedv(context, pname, params));
+        if (isCallValid)
         {
             context->getFixedv(pname, params);
         }
+        ANGLE_CAPTURE(GetFixedv, isCallValid, context, pname, params);
     }
 }
 
@@ -397,11 +434,13 @@ void GL_APIENTRY GetLightfv(GLenum light, GLenum pname, GLfloat *params)
     if (context)
     {
         LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        ANGLE_CAPTURE(GetLightfv, context, light, pnamePacked, params);
-        if (context->skipValidation() || ValidateGetLightfv(context, light, pnamePacked, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetLightfv(context, light, pnamePacked, params));
+        if (isCallValid)
         {
             context->getLightfv(light, pnamePacked, params);
         }
+        ANGLE_CAPTURE(GetLightfv, isCallValid, context, light, pnamePacked, params);
     }
 }
 
@@ -414,11 +453,13 @@ void GL_APIENTRY GetLightxv(GLenum light, GLenum pname, GLfixed *params)
     if (context)
     {
         LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        ANGLE_CAPTURE(GetLightxv, context, light, pnamePacked, params);
-        if (context->skipValidation() || ValidateGetLightxv(context, light, pnamePacked, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetLightxv(context, light, pnamePacked, params));
+        if (isCallValid)
         {
             context->getLightxv(light, pnamePacked, params);
         }
+        ANGLE_CAPTURE(GetLightxv, isCallValid, context, light, pnamePacked, params);
     }
 }
 
@@ -431,11 +472,13 @@ void GL_APIENTRY GetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
     if (context)
     {
         MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        ANGLE_CAPTURE(GetMaterialfv, context, face, pnamePacked, params);
-        if (context->skipValidation() || ValidateGetMaterialfv(context, face, pnamePacked, params))
+        bool isCallValid              = (context->skipValidation() ||
+                            ValidateGetMaterialfv(context, face, pnamePacked, params));
+        if (isCallValid)
         {
             context->getMaterialfv(face, pnamePacked, params);
         }
+        ANGLE_CAPTURE(GetMaterialfv, isCallValid, context, face, pnamePacked, params);
     }
 }
 
@@ -448,11 +491,13 @@ void GL_APIENTRY GetMaterialxv(GLenum face, GLenum pname, GLfixed *params)
     if (context)
     {
         MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        ANGLE_CAPTURE(GetMaterialxv, context, face, pnamePacked, params);
-        if (context->skipValidation() || ValidateGetMaterialxv(context, face, pnamePacked, params))
+        bool isCallValid              = (context->skipValidation() ||
+                            ValidateGetMaterialxv(context, face, pnamePacked, params));
+        if (isCallValid)
         {
             context->getMaterialxv(face, pnamePacked, params);
         }
+        ANGLE_CAPTURE(GetMaterialxv, isCallValid, context, face, pnamePacked, params);
     }
 }
 
@@ -463,11 +508,13 @@ void GL_APIENTRY GetPointerv(GLenum pname, void **params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetPointerv, context, pname, params);
-        if (context->skipValidation() || ValidateGetPointerv(context, pname, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetPointerv(context, pname, params));
+        if (isCallValid)
         {
             context->getPointerv(pname, params);
         }
+        ANGLE_CAPTURE(GetPointerv, isCallValid, context, pname, params);
     }
 }
 
@@ -481,12 +528,13 @@ void GL_APIENTRY GetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
     {
         TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
         TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
-        ANGLE_CAPTURE(GetTexEnvfv, context, targetPacked, pnamePacked, params);
-        if (context->skipValidation() ||
-            ValidateGetTexEnvfv(context, targetPacked, pnamePacked, params))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateGetTexEnvfv(context, targetPacked, pnamePacked, params));
+        if (isCallValid)
         {
             context->getTexEnvfv(targetPacked, pnamePacked, params);
         }
+        ANGLE_CAPTURE(GetTexEnvfv, isCallValid, context, targetPacked, pnamePacked, params);
     }
 }
 
@@ -500,12 +548,13 @@ void GL_APIENTRY GetTexEnviv(GLenum target, GLenum pname, GLint *params)
     {
         TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
         TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
-        ANGLE_CAPTURE(GetTexEnviv, context, targetPacked, pnamePacked, params);
-        if (context->skipValidation() ||
-            ValidateGetTexEnviv(context, targetPacked, pnamePacked, params))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateGetTexEnviv(context, targetPacked, pnamePacked, params));
+        if (isCallValid)
         {
             context->getTexEnviv(targetPacked, pnamePacked, params);
         }
+        ANGLE_CAPTURE(GetTexEnviv, isCallValid, context, targetPacked, pnamePacked, params);
     }
 }
 
@@ -519,12 +568,13 @@ void GL_APIENTRY GetTexEnvxv(GLenum target, GLenum pname, GLfixed *params)
     {
         TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
         TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
-        ANGLE_CAPTURE(GetTexEnvxv, context, targetPacked, pnamePacked, params);
-        if (context->skipValidation() ||
-            ValidateGetTexEnvxv(context, targetPacked, pnamePacked, params))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateGetTexEnvxv(context, targetPacked, pnamePacked, params));
+        if (isCallValid)
         {
             context->getTexEnvxv(targetPacked, pnamePacked, params);
         }
+        ANGLE_CAPTURE(GetTexEnvxv, isCallValid, context, targetPacked, pnamePacked, params);
     }
 }
 
@@ -537,12 +587,13 @@ void GL_APIENTRY GetTexParameterxv(GLenum target, GLenum pname, GLfixed *params)
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        ANGLE_CAPTURE(GetTexParameterxv, context, targetPacked, pname, params);
-        if (context->skipValidation() ||
-            ValidateGetTexParameterxv(context, targetPacked, pname, params))
+        bool isCallValid         = (context->skipValidation() ||
+                            ValidateGetTexParameterxv(context, targetPacked, pname, params));
+        if (isCallValid)
         {
             context->getTexParameterxv(targetPacked, pname, params);
         }
+        ANGLE_CAPTURE(GetTexParameterxv, isCallValid, context, targetPacked, pname, params);
     }
 }
 
@@ -553,11 +604,13 @@ void GL_APIENTRY LightModelf(GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(LightModelf, context, pname, param);
-        if (context->skipValidation() || ValidateLightModelf(context, pname, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidateLightModelf(context, pname, param));
+        if (isCallValid)
         {
             context->lightModelf(pname, param);
         }
+        ANGLE_CAPTURE(LightModelf, isCallValid, context, pname, param);
     }
 }
 
@@ -569,11 +622,13 @@ void GL_APIENTRY LightModelfv(GLenum pname, const GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(LightModelfv, context, pname, params);
-        if (context->skipValidation() || ValidateLightModelfv(context, pname, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateLightModelfv(context, pname, params));
+        if (isCallValid)
         {
             context->lightModelfv(pname, params);
         }
+        ANGLE_CAPTURE(LightModelfv, isCallValid, context, pname, params);
     }
 }
 
@@ -584,11 +639,13 @@ void GL_APIENTRY LightModelx(GLenum pname, GLfixed param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(LightModelx, context, pname, param);
-        if (context->skipValidation() || ValidateLightModelx(context, pname, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidateLightModelx(context, pname, param));
+        if (isCallValid)
         {
             context->lightModelx(pname, param);
         }
+        ANGLE_CAPTURE(LightModelx, isCallValid, context, pname, param);
     }
 }
 
@@ -600,11 +657,13 @@ void GL_APIENTRY LightModelxv(GLenum pname, const GLfixed *param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(LightModelxv, context, pname, param);
-        if (context->skipValidation() || ValidateLightModelxv(context, pname, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidateLightModelxv(context, pname, param));
+        if (isCallValid)
         {
             context->lightModelxv(pname, param);
         }
+        ANGLE_CAPTURE(LightModelxv, isCallValid, context, pname, param);
     }
 }
 
@@ -616,11 +675,13 @@ void GL_APIENTRY Lightf(GLenum light, GLenum pname, GLfloat param)
     if (context)
     {
         LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        ANGLE_CAPTURE(Lightf, context, light, pnamePacked, param);
-        if (context->skipValidation() || ValidateLightf(context, light, pnamePacked, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidateLightf(context, light, pnamePacked, param));
+        if (isCallValid)
         {
             context->lightf(light, pnamePacked, param);
         }
+        ANGLE_CAPTURE(Lightf, isCallValid, context, light, pnamePacked, param);
     }
 }
 
@@ -633,11 +694,13 @@ void GL_APIENTRY Lightfv(GLenum light, GLenum pname, const GLfloat *params)
     if (context)
     {
         LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        ANGLE_CAPTURE(Lightfv, context, light, pnamePacked, params);
-        if (context->skipValidation() || ValidateLightfv(context, light, pnamePacked, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateLightfv(context, light, pnamePacked, params));
+        if (isCallValid)
         {
             context->lightfv(light, pnamePacked, params);
         }
+        ANGLE_CAPTURE(Lightfv, isCallValid, context, light, pnamePacked, params);
     }
 }
 
@@ -649,11 +712,13 @@ void GL_APIENTRY Lightx(GLenum light, GLenum pname, GLfixed param)
     if (context)
     {
         LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        ANGLE_CAPTURE(Lightx, context, light, pnamePacked, param);
-        if (context->skipValidation() || ValidateLightx(context, light, pnamePacked, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidateLightx(context, light, pnamePacked, param));
+        if (isCallValid)
         {
             context->lightx(light, pnamePacked, param);
         }
+        ANGLE_CAPTURE(Lightx, isCallValid, context, light, pnamePacked, param);
     }
 }
 
@@ -666,11 +731,13 @@ void GL_APIENTRY Lightxv(GLenum light, GLenum pname, const GLfixed *params)
     if (context)
     {
         LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        ANGLE_CAPTURE(Lightxv, context, light, pnamePacked, params);
-        if (context->skipValidation() || ValidateLightxv(context, light, pnamePacked, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateLightxv(context, light, pnamePacked, params));
+        if (isCallValid)
         {
             context->lightxv(light, pnamePacked, params);
         }
+        ANGLE_CAPTURE(Lightxv, isCallValid, context, light, pnamePacked, params);
     }
 }
 
@@ -681,11 +748,12 @@ void GL_APIENTRY LineWidthx(GLfixed width)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(LineWidthx, context, width);
-        if (context->skipValidation() || ValidateLineWidthx(context, width))
+        bool isCallValid = (context->skipValidation() || ValidateLineWidthx(context, width));
+        if (isCallValid)
         {
             context->lineWidthx(width);
         }
+        ANGLE_CAPTURE(LineWidthx, isCallValid, context, width);
     }
 }
 
@@ -696,11 +764,12 @@ void GL_APIENTRY LoadIdentity()
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(LoadIdentity, context);
-        if (context->skipValidation() || ValidateLoadIdentity(context))
+        bool isCallValid = (context->skipValidation() || ValidateLoadIdentity(context));
+        if (isCallValid)
         {
             context->loadIdentity();
         }
+        ANGLE_CAPTURE(LoadIdentity, isCallValid, context);
     }
 }
 
@@ -711,11 +780,12 @@ void GL_APIENTRY LoadMatrixf(const GLfloat *m)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(LoadMatrixf, context, m);
-        if (context->skipValidation() || ValidateLoadMatrixf(context, m))
+        bool isCallValid = (context->skipValidation() || ValidateLoadMatrixf(context, m));
+        if (isCallValid)
         {
             context->loadMatrixf(m);
         }
+        ANGLE_CAPTURE(LoadMatrixf, isCallValid, context, m);
     }
 }
 
@@ -726,11 +796,12 @@ void GL_APIENTRY LoadMatrixx(const GLfixed *m)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(LoadMatrixx, context, m);
-        if (context->skipValidation() || ValidateLoadMatrixx(context, m))
+        bool isCallValid = (context->skipValidation() || ValidateLoadMatrixx(context, m));
+        if (isCallValid)
         {
             context->loadMatrixx(m);
         }
+        ANGLE_CAPTURE(LoadMatrixx, isCallValid, context, m);
     }
 }
 
@@ -742,11 +813,12 @@ void GL_APIENTRY LogicOp(GLenum opcode)
     if (context)
     {
         LogicalOperation opcodePacked = FromGLenum<LogicalOperation>(opcode);
-        ANGLE_CAPTURE(LogicOp, context, opcodePacked);
-        if (context->skipValidation() || ValidateLogicOp(context, opcodePacked))
+        bool isCallValid = (context->skipValidation() || ValidateLogicOp(context, opcodePacked));
+        if (isCallValid)
         {
             context->logicOp(opcodePacked);
         }
+        ANGLE_CAPTURE(LogicOp, isCallValid, context, opcodePacked);
     }
 }
 
@@ -758,11 +830,13 @@ void GL_APIENTRY Materialf(GLenum face, GLenum pname, GLfloat param)
     if (context)
     {
         MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        ANGLE_CAPTURE(Materialf, context, face, pnamePacked, param);
-        if (context->skipValidation() || ValidateMaterialf(context, face, pnamePacked, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidateMaterialf(context, face, pnamePacked, param));
+        if (isCallValid)
         {
             context->materialf(face, pnamePacked, param);
         }
+        ANGLE_CAPTURE(Materialf, isCallValid, context, face, pnamePacked, param);
     }
 }
 
@@ -775,11 +849,13 @@ void GL_APIENTRY Materialfv(GLenum face, GLenum pname, const GLfloat *params)
     if (context)
     {
         MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        ANGLE_CAPTURE(Materialfv, context, face, pnamePacked, params);
-        if (context->skipValidation() || ValidateMaterialfv(context, face, pnamePacked, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidateMaterialfv(context, face, pnamePacked, params));
+        if (isCallValid)
         {
             context->materialfv(face, pnamePacked, params);
         }
+        ANGLE_CAPTURE(Materialfv, isCallValid, context, face, pnamePacked, params);
     }
 }
 
@@ -791,11 +867,13 @@ void GL_APIENTRY Materialx(GLenum face, GLenum pname, GLfixed param)
     if (context)
     {
         MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        ANGLE_CAPTURE(Materialx, context, face, pnamePacked, param);
-        if (context->skipValidation() || ValidateMaterialx(context, face, pnamePacked, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidateMaterialx(context, face, pnamePacked, param));
+        if (isCallValid)
         {
             context->materialx(face, pnamePacked, param);
         }
+        ANGLE_CAPTURE(Materialx, isCallValid, context, face, pnamePacked, param);
     }
 }
 
@@ -808,11 +886,13 @@ void GL_APIENTRY Materialxv(GLenum face, GLenum pname, const GLfixed *param)
     if (context)
     {
         MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        ANGLE_CAPTURE(Materialxv, context, face, pnamePacked, param);
-        if (context->skipValidation() || ValidateMaterialxv(context, face, pnamePacked, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidateMaterialxv(context, face, pnamePacked, param));
+        if (isCallValid)
         {
             context->materialxv(face, pnamePacked, param);
         }
+        ANGLE_CAPTURE(Materialxv, isCallValid, context, face, pnamePacked, param);
     }
 }
 
@@ -824,11 +904,12 @@ void GL_APIENTRY MatrixMode(GLenum mode)
     if (context)
     {
         MatrixType modePacked = FromGLenum<MatrixType>(mode);
-        ANGLE_CAPTURE(MatrixMode, context, modePacked);
-        if (context->skipValidation() || ValidateMatrixMode(context, modePacked))
+        bool isCallValid = (context->skipValidation() || ValidateMatrixMode(context, modePacked));
+        if (isCallValid)
         {
             context->matrixMode(modePacked);
         }
+        ANGLE_CAPTURE(MatrixMode, isCallValid, context, modePacked);
     }
 }
 
@@ -839,11 +920,12 @@ void GL_APIENTRY MultMatrixf(const GLfloat *m)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(MultMatrixf, context, m);
-        if (context->skipValidation() || ValidateMultMatrixf(context, m))
+        bool isCallValid = (context->skipValidation() || ValidateMultMatrixf(context, m));
+        if (isCallValid)
         {
             context->multMatrixf(m);
         }
+        ANGLE_CAPTURE(MultMatrixf, isCallValid, context, m);
     }
 }
 
@@ -854,11 +936,12 @@ void GL_APIENTRY MultMatrixx(const GLfixed *m)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(MultMatrixx, context, m);
-        if (context->skipValidation() || ValidateMultMatrixx(context, m))
+        bool isCallValid = (context->skipValidation() || ValidateMultMatrixx(context, m));
+        if (isCallValid)
         {
             context->multMatrixx(m);
         }
+        ANGLE_CAPTURE(MultMatrixx, isCallValid, context, m);
     }
 }
 
@@ -870,11 +953,13 @@ void GL_APIENTRY MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(MultiTexCoord4f, context, target, s, t, r, q);
-        if (context->skipValidation() || ValidateMultiTexCoord4f(context, target, s, t, r, q))
+        bool isCallValid =
+            (context->skipValidation() || ValidateMultiTexCoord4f(context, target, s, t, r, q));
+        if (isCallValid)
         {
             context->multiTexCoord4f(target, s, t, r, q);
         }
+        ANGLE_CAPTURE(MultiTexCoord4f, isCallValid, context, target, s, t, r, q);
     }
 }
 
@@ -888,11 +973,13 @@ void GL_APIENTRY MultiTexCoord4x(GLenum texture, GLfixed s, GLfixed t, GLfixed r
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(MultiTexCoord4x, context, texture, s, t, r, q);
-        if (context->skipValidation() || ValidateMultiTexCoord4x(context, texture, s, t, r, q))
+        bool isCallValid =
+            (context->skipValidation() || ValidateMultiTexCoord4x(context, texture, s, t, r, q));
+        if (isCallValid)
         {
             context->multiTexCoord4x(texture, s, t, r, q);
         }
+        ANGLE_CAPTURE(MultiTexCoord4x, isCallValid, context, texture, s, t, r, q);
     }
 }
 
@@ -903,11 +990,12 @@ void GL_APIENTRY Normal3f(GLfloat nx, GLfloat ny, GLfloat nz)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Normal3f, context, nx, ny, nz);
-        if (context->skipValidation() || ValidateNormal3f(context, nx, ny, nz))
+        bool isCallValid = (context->skipValidation() || ValidateNormal3f(context, nx, ny, nz));
+        if (isCallValid)
         {
             context->normal3f(nx, ny, nz);
         }
+        ANGLE_CAPTURE(Normal3f, isCallValid, context, nx, ny, nz);
     }
 }
 
@@ -918,11 +1006,12 @@ void GL_APIENTRY Normal3x(GLfixed nx, GLfixed ny, GLfixed nz)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Normal3x, context, nx, ny, nz);
-        if (context->skipValidation() || ValidateNormal3x(context, nx, ny, nz))
+        bool isCallValid = (context->skipValidation() || ValidateNormal3x(context, nx, ny, nz));
+        if (isCallValid)
         {
             context->normal3x(nx, ny, nz);
         }
+        ANGLE_CAPTURE(Normal3x, isCallValid, context, nx, ny, nz);
     }
 }
 
@@ -935,12 +1024,13 @@ void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
-        ANGLE_CAPTURE(NormalPointer, context, typePacked, stride, pointer);
-        if (context->skipValidation() ||
-            ValidateNormalPointer(context, typePacked, stride, pointer))
+        bool isCallValid            = (context->skipValidation() ||
+                            ValidateNormalPointer(context, typePacked, stride, pointer));
+        if (isCallValid)
         {
             context->normalPointer(typePacked, stride, pointer);
         }
+        ANGLE_CAPTURE(NormalPointer, isCallValid, context, typePacked, stride, pointer);
     }
 }
 
@@ -954,11 +1044,12 @@ void GL_APIENTRY Orthof(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat n, G
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Orthof, context, l, r, b, t, n, f);
-        if (context->skipValidation() || ValidateOrthof(context, l, r, b, t, n, f))
+        bool isCallValid = (context->skipValidation() || ValidateOrthof(context, l, r, b, t, n, f));
+        if (isCallValid)
         {
             context->orthof(l, r, b, t, n, f);
         }
+        ANGLE_CAPTURE(Orthof, isCallValid, context, l, r, b, t, n, f);
     }
 }
 
@@ -972,11 +1063,12 @@ void GL_APIENTRY Orthox(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n, G
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Orthox, context, l, r, b, t, n, f);
-        if (context->skipValidation() || ValidateOrthox(context, l, r, b, t, n, f))
+        bool isCallValid = (context->skipValidation() || ValidateOrthox(context, l, r, b, t, n, f));
+        if (isCallValid)
         {
             context->orthox(l, r, b, t, n, f);
         }
+        ANGLE_CAPTURE(Orthox, isCallValid, context, l, r, b, t, n, f);
     }
 }
 
@@ -988,11 +1080,13 @@ void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
     if (context)
     {
         PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        ANGLE_CAPTURE(PointParameterf, context, pnamePacked, param);
-        if (context->skipValidation() || ValidatePointParameterf(context, pnamePacked, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePointParameterf(context, pnamePacked, param));
+        if (isCallValid)
         {
             context->pointParameterf(pnamePacked, param);
         }
+        ANGLE_CAPTURE(PointParameterf, isCallValid, context, pnamePacked, param);
     }
 }
 
@@ -1005,11 +1099,13 @@ void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
     if (context)
     {
         PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        ANGLE_CAPTURE(PointParameterfv, context, pnamePacked, params);
-        if (context->skipValidation() || ValidatePointParameterfv(context, pnamePacked, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePointParameterfv(context, pnamePacked, params));
+        if (isCallValid)
         {
             context->pointParameterfv(pnamePacked, params);
         }
+        ANGLE_CAPTURE(PointParameterfv, isCallValid, context, pnamePacked, params);
     }
 }
 
@@ -1021,11 +1117,13 @@ void GL_APIENTRY PointParameterx(GLenum pname, GLfixed param)
     if (context)
     {
         PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        ANGLE_CAPTURE(PointParameterx, context, pnamePacked, param);
-        if (context->skipValidation() || ValidatePointParameterx(context, pnamePacked, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePointParameterx(context, pnamePacked, param));
+        if (isCallValid)
         {
             context->pointParameterx(pnamePacked, param);
         }
+        ANGLE_CAPTURE(PointParameterx, isCallValid, context, pnamePacked, param);
     }
 }
 
@@ -1038,11 +1136,13 @@ void GL_APIENTRY PointParameterxv(GLenum pname, const GLfixed *params)
     if (context)
     {
         PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        ANGLE_CAPTURE(PointParameterxv, context, pnamePacked, params);
-        if (context->skipValidation() || ValidatePointParameterxv(context, pnamePacked, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePointParameterxv(context, pnamePacked, params));
+        if (isCallValid)
         {
             context->pointParameterxv(pnamePacked, params);
         }
+        ANGLE_CAPTURE(PointParameterxv, isCallValid, context, pnamePacked, params);
     }
 }
 
@@ -1053,11 +1153,12 @@ void GL_APIENTRY PointSize(GLfloat size)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PointSize, context, size);
-        if (context->skipValidation() || ValidatePointSize(context, size))
+        bool isCallValid = (context->skipValidation() || ValidatePointSize(context, size));
+        if (isCallValid)
         {
             context->pointSize(size);
         }
+        ANGLE_CAPTURE(PointSize, isCallValid, context, size);
     }
 }
 
@@ -1068,11 +1169,12 @@ void GL_APIENTRY PointSizex(GLfixed size)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PointSizex, context, size);
-        if (context->skipValidation() || ValidatePointSizex(context, size))
+        bool isCallValid = (context->skipValidation() || ValidatePointSizex(context, size));
+        if (isCallValid)
         {
             context->pointSizex(size);
         }
+        ANGLE_CAPTURE(PointSizex, isCallValid, context, size);
     }
 }
 
@@ -1083,11 +1185,13 @@ void GL_APIENTRY PolygonOffsetx(GLfixed factor, GLfixed units)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PolygonOffsetx, context, factor, units);
-        if (context->skipValidation() || ValidatePolygonOffsetx(context, factor, units))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePolygonOffsetx(context, factor, units));
+        if (isCallValid)
         {
             context->polygonOffsetx(factor, units);
         }
+        ANGLE_CAPTURE(PolygonOffsetx, isCallValid, context, factor, units);
     }
 }
 
@@ -1098,11 +1202,12 @@ void GL_APIENTRY PopMatrix()
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PopMatrix, context);
-        if (context->skipValidation() || ValidatePopMatrix(context))
+        bool isCallValid = (context->skipValidation() || ValidatePopMatrix(context));
+        if (isCallValid)
         {
             context->popMatrix();
         }
+        ANGLE_CAPTURE(PopMatrix, isCallValid, context);
     }
 }
 
@@ -1113,11 +1218,12 @@ void GL_APIENTRY PushMatrix()
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PushMatrix, context);
-        if (context->skipValidation() || ValidatePushMatrix(context))
+        bool isCallValid = (context->skipValidation() || ValidatePushMatrix(context));
+        if (isCallValid)
         {
             context->pushMatrix();
         }
+        ANGLE_CAPTURE(PushMatrix, isCallValid, context);
     }
 }
 
@@ -1128,11 +1234,12 @@ void GL_APIENTRY Rotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Rotatef, context, angle, x, y, z);
-        if (context->skipValidation() || ValidateRotatef(context, angle, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateRotatef(context, angle, x, y, z));
+        if (isCallValid)
         {
             context->rotatef(angle, x, y, z);
         }
+        ANGLE_CAPTURE(Rotatef, isCallValid, context, angle, x, y, z);
     }
 }
 
@@ -1144,11 +1251,12 @@ void GL_APIENTRY Rotatex(GLfixed angle, GLfixed x, GLfixed y, GLfixed z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Rotatex, context, angle, x, y, z);
-        if (context->skipValidation() || ValidateRotatex(context, angle, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateRotatex(context, angle, x, y, z));
+        if (isCallValid)
         {
             context->rotatex(angle, x, y, z);
         }
+        ANGLE_CAPTURE(Rotatex, isCallValid, context, angle, x, y, z);
     }
 }
 
@@ -1159,11 +1267,13 @@ void GL_APIENTRY SampleCoveragex(GLclampx value, GLboolean invert)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SampleCoveragex, context, value, invert);
-        if (context->skipValidation() || ValidateSampleCoveragex(context, value, invert))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSampleCoveragex(context, value, invert));
+        if (isCallValid)
         {
             context->sampleCoveragex(value, invert);
         }
+        ANGLE_CAPTURE(SampleCoveragex, isCallValid, context, value, invert);
     }
 }
 
@@ -1174,11 +1284,12 @@ void GL_APIENTRY Scalef(GLfloat x, GLfloat y, GLfloat z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Scalef, context, x, y, z);
-        if (context->skipValidation() || ValidateScalef(context, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateScalef(context, x, y, z));
+        if (isCallValid)
         {
             context->scalef(x, y, z);
         }
+        ANGLE_CAPTURE(Scalef, isCallValid, context, x, y, z);
     }
 }
 
@@ -1189,11 +1300,12 @@ void GL_APIENTRY Scalex(GLfixed x, GLfixed y, GLfixed z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Scalex, context, x, y, z);
-        if (context->skipValidation() || ValidateScalex(context, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateScalex(context, x, y, z));
+        if (isCallValid)
         {
             context->scalex(x, y, z);
         }
+        ANGLE_CAPTURE(Scalex, isCallValid, context, x, y, z);
     }
 }
 
@@ -1205,11 +1317,12 @@ void GL_APIENTRY ShadeModel(GLenum mode)
     if (context)
     {
         ShadingModel modePacked = FromGLenum<ShadingModel>(mode);
-        ANGLE_CAPTURE(ShadeModel, context, modePacked);
-        if (context->skipValidation() || ValidateShadeModel(context, modePacked))
+        bool isCallValid = (context->skipValidation() || ValidateShadeModel(context, modePacked));
+        if (isCallValid)
         {
             context->shadeModel(modePacked);
         }
+        ANGLE_CAPTURE(ShadeModel, isCallValid, context, modePacked);
     }
 }
 
@@ -1224,12 +1337,13 @@ void GL_APIENTRY TexCoordPointer(GLint size, GLenum type, GLsizei stride, const 
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
-        ANGLE_CAPTURE(TexCoordPointer, context, size, typePacked, stride, pointer);
-        if (context->skipValidation() ||
-            ValidateTexCoordPointer(context, size, typePacked, stride, pointer))
+        bool isCallValid            = (context->skipValidation() ||
+                            ValidateTexCoordPointer(context, size, typePacked, stride, pointer));
+        if (isCallValid)
         {
             context->texCoordPointer(size, typePacked, stride, pointer);
         }
+        ANGLE_CAPTURE(TexCoordPointer, isCallValid, context, size, typePacked, stride, pointer);
     }
 }
 
@@ -1242,11 +1356,13 @@ void GL_APIENTRY TexEnvf(GLenum target, GLenum pname, GLfloat param)
     {
         TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
         TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
-        ANGLE_CAPTURE(TexEnvf, context, targetPacked, pnamePacked, param);
-        if (context->skipValidation() || ValidateTexEnvf(context, targetPacked, pnamePacked, param))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateTexEnvf(context, targetPacked, pnamePacked, param));
+        if (isCallValid)
         {
             context->texEnvf(targetPacked, pnamePacked, param);
         }
+        ANGLE_CAPTURE(TexEnvf, isCallValid, context, targetPacked, pnamePacked, param);
     }
 }
 
@@ -1260,12 +1376,13 @@ void GL_APIENTRY TexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
     {
         TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
         TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
-        ANGLE_CAPTURE(TexEnvfv, context, targetPacked, pnamePacked, params);
-        if (context->skipValidation() ||
-            ValidateTexEnvfv(context, targetPacked, pnamePacked, params))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateTexEnvfv(context, targetPacked, pnamePacked, params));
+        if (isCallValid)
         {
             context->texEnvfv(targetPacked, pnamePacked, params);
         }
+        ANGLE_CAPTURE(TexEnvfv, isCallValid, context, targetPacked, pnamePacked, params);
     }
 }
 
@@ -1278,11 +1395,13 @@ void GL_APIENTRY TexEnvi(GLenum target, GLenum pname, GLint param)
     {
         TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
         TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
-        ANGLE_CAPTURE(TexEnvi, context, targetPacked, pnamePacked, param);
-        if (context->skipValidation() || ValidateTexEnvi(context, targetPacked, pnamePacked, param))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateTexEnvi(context, targetPacked, pnamePacked, param));
+        if (isCallValid)
         {
             context->texEnvi(targetPacked, pnamePacked, param);
         }
+        ANGLE_CAPTURE(TexEnvi, isCallValid, context, targetPacked, pnamePacked, param);
     }
 }
 
@@ -1296,12 +1415,13 @@ void GL_APIENTRY TexEnviv(GLenum target, GLenum pname, const GLint *params)
     {
         TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
         TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
-        ANGLE_CAPTURE(TexEnviv, context, targetPacked, pnamePacked, params);
-        if (context->skipValidation() ||
-            ValidateTexEnviv(context, targetPacked, pnamePacked, params))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateTexEnviv(context, targetPacked, pnamePacked, params));
+        if (isCallValid)
         {
             context->texEnviv(targetPacked, pnamePacked, params);
         }
+        ANGLE_CAPTURE(TexEnviv, isCallValid, context, targetPacked, pnamePacked, params);
     }
 }
 
@@ -1315,11 +1435,13 @@ void GL_APIENTRY TexEnvx(GLenum target, GLenum pname, GLfixed param)
     {
         TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
         TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
-        ANGLE_CAPTURE(TexEnvx, context, targetPacked, pnamePacked, param);
-        if (context->skipValidation() || ValidateTexEnvx(context, targetPacked, pnamePacked, param))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateTexEnvx(context, targetPacked, pnamePacked, param));
+        if (isCallValid)
         {
             context->texEnvx(targetPacked, pnamePacked, param);
         }
+        ANGLE_CAPTURE(TexEnvx, isCallValid, context, targetPacked, pnamePacked, param);
     }
 }
 
@@ -1333,12 +1455,13 @@ void GL_APIENTRY TexEnvxv(GLenum target, GLenum pname, const GLfixed *params)
     {
         TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
         TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
-        ANGLE_CAPTURE(TexEnvxv, context, targetPacked, pnamePacked, params);
-        if (context->skipValidation() ||
-            ValidateTexEnvxv(context, targetPacked, pnamePacked, params))
+        bool isCallValid                = (context->skipValidation() ||
+                            ValidateTexEnvxv(context, targetPacked, pnamePacked, params));
+        if (isCallValid)
         {
             context->texEnvxv(targetPacked, pnamePacked, params);
         }
+        ANGLE_CAPTURE(TexEnvxv, isCallValid, context, targetPacked, pnamePacked, params);
     }
 }
 
@@ -1351,11 +1474,13 @@ void GL_APIENTRY TexParameterx(GLenum target, GLenum pname, GLfixed param)
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        ANGLE_CAPTURE(TexParameterx, context, targetPacked, pname, param);
-        if (context->skipValidation() || ValidateTexParameterx(context, targetPacked, pname, param))
+        bool isCallValid         = (context->skipValidation() ||
+                            ValidateTexParameterx(context, targetPacked, pname, param));
+        if (isCallValid)
         {
             context->texParameterx(targetPacked, pname, param);
         }
+        ANGLE_CAPTURE(TexParameterx, isCallValid, context, targetPacked, pname, param);
     }
 }
 
@@ -1368,12 +1493,13 @@ void GL_APIENTRY TexParameterxv(GLenum target, GLenum pname, const GLfixed *para
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        ANGLE_CAPTURE(TexParameterxv, context, targetPacked, pname, params);
-        if (context->skipValidation() ||
-            ValidateTexParameterxv(context, targetPacked, pname, params))
+        bool isCallValid         = (context->skipValidation() ||
+                            ValidateTexParameterxv(context, targetPacked, pname, params));
+        if (isCallValid)
         {
             context->texParameterxv(targetPacked, pname, params);
         }
+        ANGLE_CAPTURE(TexParameterxv, isCallValid, context, targetPacked, pname, params);
     }
 }
 
@@ -1384,11 +1510,12 @@ void GL_APIENTRY Translatef(GLfloat x, GLfloat y, GLfloat z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Translatef, context, x, y, z);
-        if (context->skipValidation() || ValidateTranslatef(context, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateTranslatef(context, x, y, z));
+        if (isCallValid)
         {
             context->translatef(x, y, z);
         }
+        ANGLE_CAPTURE(Translatef, isCallValid, context, x, y, z);
     }
 }
 
@@ -1399,11 +1526,12 @@ void GL_APIENTRY Translatex(GLfixed x, GLfixed y, GLfixed z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(Translatex, context, x, y, z);
-        if (context->skipValidation() || ValidateTranslatex(context, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateTranslatex(context, x, y, z));
+        if (isCallValid)
         {
             context->translatex(x, y, z);
         }
+        ANGLE_CAPTURE(Translatex, isCallValid, context, x, y, z);
     }
 }
 
@@ -1418,12 +1546,13 @@ void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const vo
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
-        ANGLE_CAPTURE(VertexPointer, context, size, typePacked, stride, pointer);
-        if (context->skipValidation() ||
-            ValidateVertexPointer(context, size, typePacked, stride, pointer))
+        bool isCallValid            = (context->skipValidation() ||
+                            ValidateVertexPointer(context, size, typePacked, stride, pointer));
+        if (isCallValid)
         {
             context->vertexPointer(size, typePacked, stride, pointer);
         }
+        ANGLE_CAPTURE(VertexPointer, isCallValid, context, size, typePacked, stride, pointer);
     }
 }
 }  // namespace gl

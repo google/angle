@@ -41,13 +41,15 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BindImageTexture, context, unit, texture, level, layered, layer, access,
-                      format);
-        if (context->skipValidation() ||
-            ValidateBindImageTexture(context, unit, texture, level, layered, layer, access, format))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBindImageTexture(context, unit, texture, level,
+                                                                   layered, layer, access, format));
+        if (isCallValid)
         {
             context->bindImageTexture(unit, texture, level, layered, layer, access, format);
         }
+        ANGLE_CAPTURE(BindImageTexture, isCallValid, context, unit, texture, level, layered, layer,
+                      access, format);
     }
 }
 
@@ -65,15 +67,16 @@ void GL_APIENTRY DrawArraysInstancedBaseInstance(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawArraysInstancedBaseInstance, context, mode, first, count, instancecount,
-                      baseinstance);
-        if (context->skipValidation() ||
-            ValidateDrawArraysInstancedBaseInstance(context, mode, first, count, instancecount,
-                                                    baseinstance))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateDrawArraysInstancedBaseInstance(context, mode, first, count,
+                                                                    instancecount, baseinstance));
+        if (isCallValid)
         {
             context->drawArraysInstancedBaseInstance(mode, first, count, instancecount,
                                                      baseinstance);
         }
+        ANGLE_CAPTURE(DrawArraysInstancedBaseInstance, isCallValid, context, mode, first, count,
+                      instancecount, baseinstance);
     }
 }
 
@@ -92,15 +95,16 @@ void GL_APIENTRY DrawElementsInstancedBaseInstance(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawElementsInstancedBaseInstance, context, mode, count, type, indices,
-                      instancecount, baseinstance);
-        if (context->skipValidation() ||
-            ValidateDrawElementsInstancedBaseInstance(context, mode, count, type, indices,
-                                                      instancecount, baseinstance))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateDrawElementsInstancedBaseInstance(
+                                context, mode, count, type, indices, instancecount, baseinstance));
+        if (isCallValid)
         {
             context->drawElementsInstancedBaseInstance(mode, count, type, indices, instancecount,
                                                        baseinstance);
         }
+        ANGLE_CAPTURE(DrawElementsInstancedBaseInstance, isCallValid, context, mode, count, type,
+                      indices, instancecount, baseinstance);
     }
 }
 
@@ -121,15 +125,17 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstance(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawElementsInstancedBaseVertexBaseInstance, context, mode, count, type,
-                      indices, instancecount, basevertex, baseinstance);
-        if (context->skipValidation() ||
-            ValidateDrawElementsInstancedBaseVertexBaseInstance(
-                context, mode, count, type, indices, instancecount, basevertex, baseinstance))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDrawElementsInstancedBaseVertexBaseInstance(
+                 context, mode, count, type, indices, instancecount, basevertex, baseinstance));
+        if (isCallValid)
         {
             context->drawElementsInstancedBaseVertexBaseInstance(
                 mode, count, type, indices, instancecount, basevertex, baseinstance);
         }
+        ANGLE_CAPTURE(DrawElementsInstancedBaseVertexBaseInstance, isCallValid, context, mode,
+                      count, type, indices, instancecount, basevertex, baseinstance);
     }
 }
 
@@ -141,12 +147,14 @@ void GL_APIENTRY DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawTransformFeedbackInstanced, context, mode, id, instancecount);
-        if (context->skipValidation() ||
-            ValidateDrawTransformFeedbackInstanced(context, mode, id, instancecount))
+        bool isCallValid = (context->skipValidation() || ValidateDrawTransformFeedbackInstanced(
+                                                             context, mode, id, instancecount));
+        if (isCallValid)
         {
             context->drawTransformFeedbackInstanced(mode, id, instancecount);
         }
+        ANGLE_CAPTURE(DrawTransformFeedbackInstanced, isCallValid, context, mode, id,
+                      instancecount);
     }
 }
 
@@ -161,13 +169,15 @@ void GL_APIENTRY DrawTransformFeedbackStreamInstanced(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(DrawTransformFeedbackStreamInstanced, context, mode, id, stream,
-                      instancecount);
-        if (context->skipValidation() ||
-            ValidateDrawTransformFeedbackStreamInstanced(context, mode, id, stream, instancecount))
+        bool isCallValid =
+            (context->skipValidation() || ValidateDrawTransformFeedbackStreamInstanced(
+                                              context, mode, id, stream, instancecount));
+        if (isCallValid)
         {
             context->drawTransformFeedbackStreamInstanced(mode, id, stream, instancecount);
         }
+        ANGLE_CAPTURE(DrawTransformFeedbackStreamInstanced, isCallValid, context, mode, id, stream,
+                      instancecount);
     }
 }
 
@@ -184,12 +194,15 @@ void GL_APIENTRY GetActiveAtomicCounterBufferiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetActiveAtomicCounterBufferiv, context, program, bufferIndex, pname, params);
-        if (context->skipValidation() ||
-            ValidateGetActiveAtomicCounterBufferiv(context, program, bufferIndex, pname, params))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetActiveAtomicCounterBufferiv(context, program, bufferIndex, pname, params));
+        if (isCallValid)
         {
             context->getActiveAtomicCounterBufferiv(program, bufferIndex, pname, params);
         }
+        ANGLE_CAPTURE(GetActiveAtomicCounterBufferiv, isCallValid, context, program, bufferIndex,
+                      pname, params);
     }
 }
 
@@ -207,12 +220,15 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(GetInternalformativ, context, target, internalformat, pname, bufSize, params);
-        if (context->skipValidation() ||
-            ValidateGetInternalformativ(context, target, internalformat, pname, bufSize, params))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetInternalformativ(context, target, internalformat, pname, bufSize, params));
+        if (isCallValid)
         {
             context->getInternalformativ(target, internalformat, pname, bufSize, params);
         }
+        ANGLE_CAPTURE(GetInternalformativ, isCallValid, context, target, internalformat, pname,
+                      bufSize, params);
     }
 }
 
@@ -223,11 +239,12 @@ void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(MemoryBarrier, context, barriers);
-        if (context->skipValidation() || ValidateMemoryBarrier(context, barriers))
+        bool isCallValid = (context->skipValidation() || ValidateMemoryBarrier(context, barriers));
+        if (isCallValid)
         {
             context->memoryBarrier(barriers);
         }
+        ANGLE_CAPTURE(MemoryBarrier, isCallValid, context, barriers);
     }
 }
 
@@ -241,12 +258,13 @@ void GL_APIENTRY TexStorage1D(GLenum target, GLsizei levels, GLenum internalform
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(TexStorage1D, context, target, levels, internalformat, width);
-        if (context->skipValidation() ||
-            ValidateTexStorage1D(context, target, levels, internalformat, width))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateTexStorage1D(context, target, levels, internalformat, width));
+        if (isCallValid)
         {
             context->texStorage1D(target, levels, internalformat, width);
         }
+        ANGLE_CAPTURE(TexStorage1D, isCallValid, context, target, levels, internalformat, width);
     }
 }
 
@@ -262,12 +280,15 @@ TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        ANGLE_CAPTURE(TexStorage2D, context, targetPacked, levels, internalformat, width, height);
-        if (context->skipValidation() ||
-            ValidateTexStorage2D(context, targetPacked, levels, internalformat, width, height))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTexStorage2D(context, targetPacked, levels, internalformat, width, height));
+        if (isCallValid)
         {
             context->texStorage2D(targetPacked, levels, internalformat, width, height);
         }
+        ANGLE_CAPTURE(TexStorage2D, isCallValid, context, targetPacked, levels, internalformat,
+                      width, height);
     }
 }
 
@@ -287,13 +308,15 @@ void GL_APIENTRY TexStorage3D(GLenum target,
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        ANGLE_CAPTURE(TexStorage3D, context, targetPacked, levels, internalformat, width, height,
-                      depth);
-        if (context->skipValidation() || ValidateTexStorage3D(context, targetPacked, levels,
-                                                              internalformat, width, height, depth))
+        bool isCallValid         = (context->skipValidation() ||
+                            ValidateTexStorage3D(context, targetPacked, levels, internalformat,
+                                                 width, height, depth));
+        if (isCallValid)
         {
             context->texStorage3D(targetPacked, levels, internalformat, width, height, depth);
         }
+        ANGLE_CAPTURE(TexStorage3D, isCallValid, context, targetPacked, levels, internalformat,
+                      width, height, depth);
     }
 }
 }  // namespace gl

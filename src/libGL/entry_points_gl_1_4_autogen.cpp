@@ -33,11 +33,13 @@ void GL_APIENTRY BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat al
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BlendColor, context, red, green, blue, alpha);
-        if (context->skipValidation() || ValidateBlendColor(context, red, green, blue, alpha))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendColor(context, red, green, blue, alpha));
+        if (isCallValid)
         {
             context->blendColor(red, green, blue, alpha);
         }
+        ANGLE_CAPTURE(BlendColor, isCallValid, context, red, green, blue, alpha);
     }
 }
 
@@ -48,11 +50,12 @@ void GL_APIENTRY BlendEquation(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BlendEquation, context, mode);
-        if (context->skipValidation() || ValidateBlendEquation(context, mode))
+        bool isCallValid = (context->skipValidation() || ValidateBlendEquation(context, mode));
+        if (isCallValid)
         {
             context->blendEquation(mode);
         }
+        ANGLE_CAPTURE(BlendEquation, isCallValid, context, mode);
     }
 }
 
@@ -69,13 +72,15 @@ void GL_APIENTRY BlendFuncSeparate(GLenum sfactorRGB,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(BlendFuncSeparate, context, sfactorRGB, dfactorRGB, sfactorAlpha,
-                      dfactorAlpha);
-        if (context->skipValidation() ||
-            ValidateBlendFuncSeparate(context, sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha))
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendFuncSeparate(context, sfactorRGB, dfactorRGB,
+                                                                    sfactorAlpha, dfactorAlpha));
+        if (isCallValid)
         {
             context->blendFuncSeparate(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
         }
+        ANGLE_CAPTURE(BlendFuncSeparate, isCallValid, context, sfactorRGB, dfactorRGB, sfactorAlpha,
+                      dfactorAlpha);
     }
 }
 
@@ -87,11 +92,13 @@ void GL_APIENTRY FogCoordPointer(GLenum type, GLsizei stride, const void *pointe
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(FogCoordPointer, context, type, stride, pointer);
-        if (context->skipValidation() || ValidateFogCoordPointer(context, type, stride, pointer))
+        bool isCallValid =
+            (context->skipValidation() || ValidateFogCoordPointer(context, type, stride, pointer));
+        if (isCallValid)
         {
             context->fogCoordPointer(type, stride, pointer);
         }
+        ANGLE_CAPTURE(FogCoordPointer, isCallValid, context, type, stride, pointer);
     }
 }
 
@@ -102,11 +109,12 @@ void GL_APIENTRY FogCoordd(GLdouble coord)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(FogCoordd, context, coord);
-        if (context->skipValidation() || ValidateFogCoordd(context, coord))
+        bool isCallValid = (context->skipValidation() || ValidateFogCoordd(context, coord));
+        if (isCallValid)
         {
             context->fogCoordd(coord);
         }
+        ANGLE_CAPTURE(FogCoordd, isCallValid, context, coord);
     }
 }
 
@@ -117,11 +125,12 @@ void GL_APIENTRY FogCoorddv(const GLdouble *coord)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(FogCoorddv, context, coord);
-        if (context->skipValidation() || ValidateFogCoorddv(context, coord))
+        bool isCallValid = (context->skipValidation() || ValidateFogCoorddv(context, coord));
+        if (isCallValid)
         {
             context->fogCoorddv(coord);
         }
+        ANGLE_CAPTURE(FogCoorddv, isCallValid, context, coord);
     }
 }
 
@@ -132,11 +141,12 @@ void GL_APIENTRY FogCoordf(GLfloat coord)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(FogCoordf, context, coord);
-        if (context->skipValidation() || ValidateFogCoordf(context, coord))
+        bool isCallValid = (context->skipValidation() || ValidateFogCoordf(context, coord));
+        if (isCallValid)
         {
             context->fogCoordf(coord);
         }
+        ANGLE_CAPTURE(FogCoordf, isCallValid, context, coord);
     }
 }
 
@@ -147,11 +157,12 @@ void GL_APIENTRY FogCoordfv(const GLfloat *coord)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(FogCoordfv, context, coord);
-        if (context->skipValidation() || ValidateFogCoordfv(context, coord))
+        bool isCallValid = (context->skipValidation() || ValidateFogCoordfv(context, coord));
+        if (isCallValid)
         {
             context->fogCoordfv(coord);
         }
+        ANGLE_CAPTURE(FogCoordfv, isCallValid, context, coord);
     }
 }
 
@@ -168,12 +179,13 @@ void GL_APIENTRY MultiDrawArrays(GLenum mode,
     if (context)
     {
         PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
-        ANGLE_CAPTURE(MultiDrawArrays, context, modePacked, first, count, drawcount);
-        if (context->skipValidation() ||
-            ValidateMultiDrawArrays(context, modePacked, first, count, drawcount))
+        bool isCallValid         = (context->skipValidation() ||
+                            ValidateMultiDrawArrays(context, modePacked, first, count, drawcount));
+        if (isCallValid)
         {
             context->multiDrawArrays(modePacked, first, count, drawcount);
         }
+        ANGLE_CAPTURE(MultiDrawArrays, isCallValid, context, modePacked, first, count, drawcount);
     }
 }
 
@@ -193,13 +205,15 @@ void GL_APIENTRY MultiDrawElements(GLenum mode,
     {
         PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
         DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
-        ANGLE_CAPTURE(MultiDrawElements, context, modePacked, count, typePacked, indices,
-                      drawcount);
-        if (context->skipValidation() ||
-            ValidateMultiDrawElements(context, modePacked, count, typePacked, indices, drawcount))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateMultiDrawElements(context, modePacked, count, typePacked, indices, drawcount));
+        if (isCallValid)
         {
             context->multiDrawElements(modePacked, count, typePacked, indices, drawcount);
         }
+        ANGLE_CAPTURE(MultiDrawElements, isCallValid, context, modePacked, count, typePacked,
+                      indices, drawcount);
     }
 }
 
@@ -211,11 +225,13 @@ void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
     if (context)
     {
         PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        ANGLE_CAPTURE(PointParameterf, context, pnamePacked, param);
-        if (context->skipValidation() || ValidatePointParameterf(context, pnamePacked, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePointParameterf(context, pnamePacked, param));
+        if (isCallValid)
         {
             context->pointParameterf(pnamePacked, param);
         }
+        ANGLE_CAPTURE(PointParameterf, isCallValid, context, pnamePacked, param);
     }
 }
 
@@ -228,11 +244,13 @@ void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
     if (context)
     {
         PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        ANGLE_CAPTURE(PointParameterfv, context, pnamePacked, params);
-        if (context->skipValidation() || ValidatePointParameterfv(context, pnamePacked, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePointParameterfv(context, pnamePacked, params));
+        if (isCallValid)
         {
             context->pointParameterfv(pnamePacked, params);
         }
+        ANGLE_CAPTURE(PointParameterfv, isCallValid, context, pnamePacked, params);
     }
 }
 
@@ -243,11 +261,13 @@ void GL_APIENTRY PointParameteri(GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PointParameteri, context, pname, param);
-        if (context->skipValidation() || ValidatePointParameteri(context, pname, param))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePointParameteri(context, pname, param));
+        if (isCallValid)
         {
             context->pointParameteri(pname, param);
         }
+        ANGLE_CAPTURE(PointParameteri, isCallValid, context, pname, param);
     }
 }
 
@@ -259,11 +279,13 @@ void GL_APIENTRY PointParameteriv(GLenum pname, const GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PointParameteriv, context, pname, params);
-        if (context->skipValidation() || ValidatePointParameteriv(context, pname, params))
+        bool isCallValid =
+            (context->skipValidation() || ValidatePointParameteriv(context, pname, params));
+        if (isCallValid)
         {
             context->pointParameteriv(pname, params);
         }
+        ANGLE_CAPTURE(PointParameteriv, isCallValid, context, pname, params);
     }
 }
 
@@ -274,11 +296,13 @@ void GL_APIENTRY SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3b, context, red, green, blue);
-        if (context->skipValidation() || ValidateSecondaryColor3b(context, red, green, blue))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSecondaryColor3b(context, red, green, blue));
+        if (isCallValid)
         {
             context->secondaryColor3b(red, green, blue);
         }
+        ANGLE_CAPTURE(SecondaryColor3b, isCallValid, context, red, green, blue);
     }
 }
 
@@ -289,11 +313,12 @@ void GL_APIENTRY SecondaryColor3bv(const GLbyte *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3bv, context, v);
-        if (context->skipValidation() || ValidateSecondaryColor3bv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateSecondaryColor3bv(context, v));
+        if (isCallValid)
         {
             context->secondaryColor3bv(v);
         }
+        ANGLE_CAPTURE(SecondaryColor3bv, isCallValid, context, v);
     }
 }
 
@@ -304,11 +329,13 @@ void GL_APIENTRY SecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3d, context, red, green, blue);
-        if (context->skipValidation() || ValidateSecondaryColor3d(context, red, green, blue))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSecondaryColor3d(context, red, green, blue));
+        if (isCallValid)
         {
             context->secondaryColor3d(red, green, blue);
         }
+        ANGLE_CAPTURE(SecondaryColor3d, isCallValid, context, red, green, blue);
     }
 }
 
@@ -319,11 +346,12 @@ void GL_APIENTRY SecondaryColor3dv(const GLdouble *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3dv, context, v);
-        if (context->skipValidation() || ValidateSecondaryColor3dv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateSecondaryColor3dv(context, v));
+        if (isCallValid)
         {
             context->secondaryColor3dv(v);
         }
+        ANGLE_CAPTURE(SecondaryColor3dv, isCallValid, context, v);
     }
 }
 
@@ -334,11 +362,13 @@ void GL_APIENTRY SecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3f, context, red, green, blue);
-        if (context->skipValidation() || ValidateSecondaryColor3f(context, red, green, blue))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSecondaryColor3f(context, red, green, blue));
+        if (isCallValid)
         {
             context->secondaryColor3f(red, green, blue);
         }
+        ANGLE_CAPTURE(SecondaryColor3f, isCallValid, context, red, green, blue);
     }
 }
 
@@ -349,11 +379,12 @@ void GL_APIENTRY SecondaryColor3fv(const GLfloat *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3fv, context, v);
-        if (context->skipValidation() || ValidateSecondaryColor3fv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateSecondaryColor3fv(context, v));
+        if (isCallValid)
         {
             context->secondaryColor3fv(v);
         }
+        ANGLE_CAPTURE(SecondaryColor3fv, isCallValid, context, v);
     }
 }
 
@@ -364,11 +395,13 @@ void GL_APIENTRY SecondaryColor3i(GLint red, GLint green, GLint blue)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3i, context, red, green, blue);
-        if (context->skipValidation() || ValidateSecondaryColor3i(context, red, green, blue))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSecondaryColor3i(context, red, green, blue));
+        if (isCallValid)
         {
             context->secondaryColor3i(red, green, blue);
         }
+        ANGLE_CAPTURE(SecondaryColor3i, isCallValid, context, red, green, blue);
     }
 }
 
@@ -379,11 +412,12 @@ void GL_APIENTRY SecondaryColor3iv(const GLint *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3iv, context, v);
-        if (context->skipValidation() || ValidateSecondaryColor3iv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateSecondaryColor3iv(context, v));
+        if (isCallValid)
         {
             context->secondaryColor3iv(v);
         }
+        ANGLE_CAPTURE(SecondaryColor3iv, isCallValid, context, v);
     }
 }
 
@@ -394,11 +428,13 @@ void GL_APIENTRY SecondaryColor3s(GLshort red, GLshort green, GLshort blue)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3s, context, red, green, blue);
-        if (context->skipValidation() || ValidateSecondaryColor3s(context, red, green, blue))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSecondaryColor3s(context, red, green, blue));
+        if (isCallValid)
         {
             context->secondaryColor3s(red, green, blue);
         }
+        ANGLE_CAPTURE(SecondaryColor3s, isCallValid, context, red, green, blue);
     }
 }
 
@@ -409,11 +445,12 @@ void GL_APIENTRY SecondaryColor3sv(const GLshort *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3sv, context, v);
-        if (context->skipValidation() || ValidateSecondaryColor3sv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateSecondaryColor3sv(context, v));
+        if (isCallValid)
         {
             context->secondaryColor3sv(v);
         }
+        ANGLE_CAPTURE(SecondaryColor3sv, isCallValid, context, v);
     }
 }
 
@@ -424,11 +461,13 @@ void GL_APIENTRY SecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3ub, context, red, green, blue);
-        if (context->skipValidation() || ValidateSecondaryColor3ub(context, red, green, blue))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSecondaryColor3ub(context, red, green, blue));
+        if (isCallValid)
         {
             context->secondaryColor3ub(red, green, blue);
         }
+        ANGLE_CAPTURE(SecondaryColor3ub, isCallValid, context, red, green, blue);
     }
 }
 
@@ -439,11 +478,12 @@ void GL_APIENTRY SecondaryColor3ubv(const GLubyte *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3ubv, context, v);
-        if (context->skipValidation() || ValidateSecondaryColor3ubv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateSecondaryColor3ubv(context, v));
+        if (isCallValid)
         {
             context->secondaryColor3ubv(v);
         }
+        ANGLE_CAPTURE(SecondaryColor3ubv, isCallValid, context, v);
     }
 }
 
@@ -454,11 +494,13 @@ void GL_APIENTRY SecondaryColor3ui(GLuint red, GLuint green, GLuint blue)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3ui, context, red, green, blue);
-        if (context->skipValidation() || ValidateSecondaryColor3ui(context, red, green, blue))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSecondaryColor3ui(context, red, green, blue));
+        if (isCallValid)
         {
             context->secondaryColor3ui(red, green, blue);
         }
+        ANGLE_CAPTURE(SecondaryColor3ui, isCallValid, context, red, green, blue);
     }
 }
 
@@ -469,11 +511,12 @@ void GL_APIENTRY SecondaryColor3uiv(const GLuint *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3uiv, context, v);
-        if (context->skipValidation() || ValidateSecondaryColor3uiv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateSecondaryColor3uiv(context, v));
+        if (isCallValid)
         {
             context->secondaryColor3uiv(v);
         }
+        ANGLE_CAPTURE(SecondaryColor3uiv, isCallValid, context, v);
     }
 }
 
@@ -484,11 +527,13 @@ void GL_APIENTRY SecondaryColor3us(GLushort red, GLushort green, GLushort blue)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3us, context, red, green, blue);
-        if (context->skipValidation() || ValidateSecondaryColor3us(context, red, green, blue))
+        bool isCallValid =
+            (context->skipValidation() || ValidateSecondaryColor3us(context, red, green, blue));
+        if (isCallValid)
         {
             context->secondaryColor3us(red, green, blue);
         }
+        ANGLE_CAPTURE(SecondaryColor3us, isCallValid, context, red, green, blue);
     }
 }
 
@@ -499,11 +544,12 @@ void GL_APIENTRY SecondaryColor3usv(const GLushort *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColor3usv, context, v);
-        if (context->skipValidation() || ValidateSecondaryColor3usv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateSecondaryColor3usv(context, v));
+        if (isCallValid)
         {
             context->secondaryColor3usv(v);
         }
+        ANGLE_CAPTURE(SecondaryColor3usv, isCallValid, context, v);
     }
 }
 
@@ -517,12 +563,13 @@ void GL_APIENTRY SecondaryColorPointer(GLint size, GLenum type, GLsizei stride, 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SecondaryColorPointer, context, size, type, stride, pointer);
-        if (context->skipValidation() ||
-            ValidateSecondaryColorPointer(context, size, type, stride, pointer))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateSecondaryColorPointer(context, size, type, stride, pointer));
+        if (isCallValid)
         {
             context->secondaryColorPointer(size, type, stride, pointer);
         }
+        ANGLE_CAPTURE(SecondaryColorPointer, isCallValid, context, size, type, stride, pointer);
     }
 }
 
@@ -533,11 +580,12 @@ void GL_APIENTRY WindowPos2d(GLdouble x, GLdouble y)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos2d, context, x, y);
-        if (context->skipValidation() || ValidateWindowPos2d(context, x, y))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos2d(context, x, y));
+        if (isCallValid)
         {
             context->windowPos2d(x, y);
         }
+        ANGLE_CAPTURE(WindowPos2d, isCallValid, context, x, y);
     }
 }
 
@@ -548,11 +596,12 @@ void GL_APIENTRY WindowPos2dv(const GLdouble *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos2dv, context, v);
-        if (context->skipValidation() || ValidateWindowPos2dv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos2dv(context, v));
+        if (isCallValid)
         {
             context->windowPos2dv(v);
         }
+        ANGLE_CAPTURE(WindowPos2dv, isCallValid, context, v);
     }
 }
 
@@ -563,11 +612,12 @@ void GL_APIENTRY WindowPos2f(GLfloat x, GLfloat y)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos2f, context, x, y);
-        if (context->skipValidation() || ValidateWindowPos2f(context, x, y))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos2f(context, x, y));
+        if (isCallValid)
         {
             context->windowPos2f(x, y);
         }
+        ANGLE_CAPTURE(WindowPos2f, isCallValid, context, x, y);
     }
 }
 
@@ -578,11 +628,12 @@ void GL_APIENTRY WindowPos2fv(const GLfloat *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos2fv, context, v);
-        if (context->skipValidation() || ValidateWindowPos2fv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos2fv(context, v));
+        if (isCallValid)
         {
             context->windowPos2fv(v);
         }
+        ANGLE_CAPTURE(WindowPos2fv, isCallValid, context, v);
     }
 }
 
@@ -593,11 +644,12 @@ void GL_APIENTRY WindowPos2i(GLint x, GLint y)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos2i, context, x, y);
-        if (context->skipValidation() || ValidateWindowPos2i(context, x, y))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos2i(context, x, y));
+        if (isCallValid)
         {
             context->windowPos2i(x, y);
         }
+        ANGLE_CAPTURE(WindowPos2i, isCallValid, context, x, y);
     }
 }
 
@@ -608,11 +660,12 @@ void GL_APIENTRY WindowPos2iv(const GLint *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos2iv, context, v);
-        if (context->skipValidation() || ValidateWindowPos2iv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos2iv(context, v));
+        if (isCallValid)
         {
             context->windowPos2iv(v);
         }
+        ANGLE_CAPTURE(WindowPos2iv, isCallValid, context, v);
     }
 }
 
@@ -623,11 +676,12 @@ void GL_APIENTRY WindowPos2s(GLshort x, GLshort y)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos2s, context, x, y);
-        if (context->skipValidation() || ValidateWindowPos2s(context, x, y))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos2s(context, x, y));
+        if (isCallValid)
         {
             context->windowPos2s(x, y);
         }
+        ANGLE_CAPTURE(WindowPos2s, isCallValid, context, x, y);
     }
 }
 
@@ -638,11 +692,12 @@ void GL_APIENTRY WindowPos2sv(const GLshort *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos2sv, context, v);
-        if (context->skipValidation() || ValidateWindowPos2sv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos2sv(context, v));
+        if (isCallValid)
         {
             context->windowPos2sv(v);
         }
+        ANGLE_CAPTURE(WindowPos2sv, isCallValid, context, v);
     }
 }
 
@@ -653,11 +708,12 @@ void GL_APIENTRY WindowPos3d(GLdouble x, GLdouble y, GLdouble z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos3d, context, x, y, z);
-        if (context->skipValidation() || ValidateWindowPos3d(context, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos3d(context, x, y, z));
+        if (isCallValid)
         {
             context->windowPos3d(x, y, z);
         }
+        ANGLE_CAPTURE(WindowPos3d, isCallValid, context, x, y, z);
     }
 }
 
@@ -668,11 +724,12 @@ void GL_APIENTRY WindowPos3dv(const GLdouble *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos3dv, context, v);
-        if (context->skipValidation() || ValidateWindowPos3dv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos3dv(context, v));
+        if (isCallValid)
         {
             context->windowPos3dv(v);
         }
+        ANGLE_CAPTURE(WindowPos3dv, isCallValid, context, v);
     }
 }
 
@@ -683,11 +740,12 @@ void GL_APIENTRY WindowPos3f(GLfloat x, GLfloat y, GLfloat z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos3f, context, x, y, z);
-        if (context->skipValidation() || ValidateWindowPos3f(context, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos3f(context, x, y, z));
+        if (isCallValid)
         {
             context->windowPos3f(x, y, z);
         }
+        ANGLE_CAPTURE(WindowPos3f, isCallValid, context, x, y, z);
     }
 }
 
@@ -698,11 +756,12 @@ void GL_APIENTRY WindowPos3fv(const GLfloat *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos3fv, context, v);
-        if (context->skipValidation() || ValidateWindowPos3fv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos3fv(context, v));
+        if (isCallValid)
         {
             context->windowPos3fv(v);
         }
+        ANGLE_CAPTURE(WindowPos3fv, isCallValid, context, v);
     }
 }
 
@@ -713,11 +772,12 @@ void GL_APIENTRY WindowPos3i(GLint x, GLint y, GLint z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos3i, context, x, y, z);
-        if (context->skipValidation() || ValidateWindowPos3i(context, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos3i(context, x, y, z));
+        if (isCallValid)
         {
             context->windowPos3i(x, y, z);
         }
+        ANGLE_CAPTURE(WindowPos3i, isCallValid, context, x, y, z);
     }
 }
 
@@ -728,11 +788,12 @@ void GL_APIENTRY WindowPos3iv(const GLint *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos3iv, context, v);
-        if (context->skipValidation() || ValidateWindowPos3iv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos3iv(context, v));
+        if (isCallValid)
         {
             context->windowPos3iv(v);
         }
+        ANGLE_CAPTURE(WindowPos3iv, isCallValid, context, v);
     }
 }
 
@@ -743,11 +804,12 @@ void GL_APIENTRY WindowPos3s(GLshort x, GLshort y, GLshort z)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos3s, context, x, y, z);
-        if (context->skipValidation() || ValidateWindowPos3s(context, x, y, z))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos3s(context, x, y, z));
+        if (isCallValid)
         {
             context->windowPos3s(x, y, z);
         }
+        ANGLE_CAPTURE(WindowPos3s, isCallValid, context, x, y, z);
     }
 }
 
@@ -758,11 +820,12 @@ void GL_APIENTRY WindowPos3sv(const GLshort *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(WindowPos3sv, context, v);
-        if (context->skipValidation() || ValidateWindowPos3sv(context, v))
+        bool isCallValid = (context->skipValidation() || ValidateWindowPos3sv(context, v));
+        if (isCallValid)
         {
             context->windowPos3sv(v);
         }
+        ANGLE_CAPTURE(WindowPos3sv, isCallValid, context, v);
     }
 }
 }  // namespace gl

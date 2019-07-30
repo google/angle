@@ -39,14 +39,15 @@ void GL_APIENTRY MultiDrawArraysIndirectCount(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(MultiDrawArraysIndirectCount, context, mode, indirect, drawcount,
-                      maxdrawcount, stride);
-        if (context->skipValidation() ||
-            ValidateMultiDrawArraysIndirectCount(context, mode, indirect, drawcount, maxdrawcount,
-                                                 stride))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateMultiDrawArraysIndirectCount(context, mode, indirect, drawcount,
+                                                                 maxdrawcount, stride));
+        if (isCallValid)
         {
             context->multiDrawArraysIndirectCount(mode, indirect, drawcount, maxdrawcount, stride);
         }
+        ANGLE_CAPTURE(MultiDrawArraysIndirectCount, isCallValid, context, mode, indirect, drawcount,
+                      maxdrawcount, stride);
     }
 }
 
@@ -65,15 +66,16 @@ void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(MultiDrawElementsIndirectCount, context, mode, type, indirect, drawcount,
-                      maxdrawcount, stride);
-        if (context->skipValidation() ||
-            ValidateMultiDrawElementsIndirectCount(context, mode, type, indirect, drawcount,
-                                                   maxdrawcount, stride))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateMultiDrawElementsIndirectCount(
+                                context, mode, type, indirect, drawcount, maxdrawcount, stride));
+        if (isCallValid)
         {
             context->multiDrawElementsIndirectCount(mode, type, indirect, drawcount, maxdrawcount,
                                                     stride);
         }
+        ANGLE_CAPTURE(MultiDrawElementsIndirectCount, isCallValid, context, mode, type, indirect,
+                      drawcount, maxdrawcount, stride);
     }
 }
 
@@ -84,11 +86,13 @@ void GL_APIENTRY PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(PolygonOffsetClamp, context, factor, units, clamp);
-        if (context->skipValidation() || ValidatePolygonOffsetClamp(context, factor, units, clamp))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidatePolygonOffsetClamp(context, factor, units, clamp));
+        if (isCallValid)
         {
             context->polygonOffsetClamp(factor, units, clamp);
         }
+        ANGLE_CAPTURE(PolygonOffsetClamp, isCallValid, context, factor, units, clamp);
     }
 }
 
@@ -107,15 +111,17 @@ void GL_APIENTRY SpecializeShader(GLuint shader,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(SpecializeShader, context, shader, pEntryPoint, numSpecializationConstants,
-                      pConstantIndex, pConstantValue);
-        if (context->skipValidation() ||
-            ValidateSpecializeShader(context, shader, pEntryPoint, numSpecializationConstants,
-                                     pConstantIndex, pConstantValue))
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateSpecializeShader(context, shader, pEntryPoint, numSpecializationConstants,
+                                      pConstantIndex, pConstantValue));
+        if (isCallValid)
         {
             context->specializeShader(shader, pEntryPoint, numSpecializationConstants,
                                       pConstantIndex, pConstantValue);
         }
+        ANGLE_CAPTURE(SpecializeShader, isCallValid, context, shader, pEntryPoint,
+                      numSpecializationConstants, pConstantIndex, pConstantValue);
     }
 }
 }  // namespace gl

@@ -38,12 +38,13 @@ void GL_APIENTRY UniformMatrix2x3fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix2x3fv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix2x3fv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix2x3fv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix2x3fv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix2x3fv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -60,12 +61,13 @@ void GL_APIENTRY UniformMatrix2x4fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix2x4fv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix2x4fv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix2x4fv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix2x4fv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix2x4fv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -82,12 +84,13 @@ void GL_APIENTRY UniformMatrix3x2fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix3x2fv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix3x2fv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix3x2fv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix3x2fv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix3x2fv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -104,12 +107,13 @@ void GL_APIENTRY UniformMatrix3x4fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix3x4fv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix3x4fv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix3x4fv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix3x4fv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix3x4fv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -126,12 +130,13 @@ void GL_APIENTRY UniformMatrix4x2fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix4x2fv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix4x2fv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix4x2fv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix4x2fv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix4x2fv, isCallValid, context, location, count, transpose, value);
     }
 }
 
@@ -148,12 +153,13 @@ void GL_APIENTRY UniformMatrix4x3fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ANGLE_CAPTURE(UniformMatrix4x3fv, context, location, count, transpose, value);
-        if (context->skipValidation() ||
-            ValidateUniformMatrix4x3fv(context, location, count, transpose, value))
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateUniformMatrix4x3fv(context, location, count, transpose, value));
+        if (isCallValid)
         {
             context->uniformMatrix4x3fv(location, count, transpose, value);
         }
+        ANGLE_CAPTURE(UniformMatrix4x3fv, isCallValid, context, location, count, transpose, value);
     }
 }
 }  // namespace gl
