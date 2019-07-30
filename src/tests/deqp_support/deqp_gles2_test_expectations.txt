@@ -333,11 +333,6 @@
 3240 D3D11 : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_repeat = FAIL
 3240 D3D11 : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_mirror = FAIL
 
-// Vulkan multisampling bugs
-3204 VULKAN : dEQP-GLES2.functional.multisample.sample_coverage_invert = FAIL
-3204 VULKAN : dEQP-GLES2.functional.multisample.proportionality_sample_coverage = FAIL
-3204 VULKAN : dEQP-GLES2.functional.multisample.proportionality_sample_coverage_inverted = FAIL
-
 // Android Vulkan backend only failures
 2549 VULKAN ANDROID : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil* = SKIP
 
