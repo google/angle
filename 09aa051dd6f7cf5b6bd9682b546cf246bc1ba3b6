@@ -70,6 +70,30 @@
       "revId": "09aa051dd6f7cf5b6bd9682b546cf246bc1ba3b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6154e1b8_8074f925",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-07-30T20:44:10Z",
+      "side": 1,
+      "message": "The jump from ES2 to ES3 occurs here:\n\nbool ValidateCompressedTexImage3DOES(Context *context,\n                                     TextureTarget target,\n                                     GLint level,\n                                     GLenum internalformat,\n                                     GLsizei width,\n                                     GLsizei height,\n                                     GLsizei depth,\n                                     GLint border,\n                                     GLsizei imageSize,\n                                     const void *data)\n{\n    return ValidateCompressedTexImage3D(context, target, level, internalformat, width, height,\n                                        depth, border, imageSize, data);\n}\n\nValidateCompressedTexImage3DOES() is in validationES2.cpp, while ValidateCompressedTexImage3D() is in validationES3.cpp.\n\nHowever, while walking through that I came across this:\n\n[[[... third_party/angle/src/libANGLE/validationES3.cpp ...]]]\nbool ValidateES3TexImage3DParameters(...)\n{\n    if (!ValidTexture3DDestinationTarget(context, target))\n    {\n        context-\u003evalidationError(GL_INVALID_ENUM, kInvalidTextureTarget);\n        return false;\n    }\n\n    if (IsETC2EACFormat(format) \u0026\u0026 target !\u003d TextureTarget::_2DArray)  \u003c\u003c---- this guy\n    {\n        // ES 3.1, Section 8.7, page 169.\n        context-\u003evalidationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);\n        return false;\n    }\n\n    return ValidateES3TexImageParametersBase(context, target, level, internalformat, isCompressed,\n                                             isSubImage, xoffset, yoffset, zoffset, width, height,\n                                             depth, border, format, type, bufSize, pixels);\n}\n\nIt looks like IsETC2EACFormat(format) may be checking the wrong thing; it\u0027s using \u0027format\u0027 rather than \u0027internalFormat\u0027.   Updating that to \u0027internalFormat\u0027 (and removing my fix in ValidateES3TexImageParametersBase()) allows it to pass the test.   I\u0027ll see how that looks with the rest of CQ, but that may be a better answer here.",
+      "parentUuid": "27c88160_24997c36",
+      "range": {
+        "startLine": 538,
+        "startChar": 45,
+        "endLine": 538,
+        "endChar": 82
+      },
+      "revId": "09aa051dd6f7cf5b6bd9682b546cf246bc1ba3b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
