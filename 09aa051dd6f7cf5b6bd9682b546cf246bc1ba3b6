@@ -46,6 +46,30 @@
       "revId": "09aa051dd6f7cf5b6bd9682b546cf246bc1ba3b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27c88160_24997c36",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-30T20:29:59Z",
+      "side": 1,
+      "message": "It looks like the test Tim\u0027s referring to is specific to ES 2.0, so I wouldn\u0027t expect that ES 3 validation would want to do this.\nI\u0027m curious now how the test is getting to ES3 validation considering it should be a 2.0 test.",
+      "parentUuid": "155cb815_b9b41371",
+      "range": {
+        "startLine": 538,
+        "startChar": 45,
+        "endLine": 538,
+        "endChar": 82
+      },
+      "revId": "09aa051dd6f7cf5b6bd9682b546cf246bc1ba3b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
