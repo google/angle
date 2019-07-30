@@ -22,6 +22,30 @@
       "revId": "09aa051dd6f7cf5b6bd9682b546cf246bc1ba3b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "155cb815_b9b41371",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-07-30T19:39:50Z",
+      "side": 1,
+      "message": "This should only be rejecting ETC/EAC formats, so DXT should be fine.   I suppose we\u0027ll see if there are any issues some day though.\n\nThis is here because there are dEQP tests that check we are rejecting these formats:\n\n[[[... third_party/angle/third_party/deqp/src/external/openglcts/modules/gles2/es2cTexture3DTests.cpp ...]]]\nNegativeCompressedTexImage3DCase::IterateResult NegativeCompressedTexImage3DCase::iterate(void)\n{\n[[[...]]]\n\t\tconst char* message3 \u003d \"INVALID_OPERATION is generated if internalformat is an ETC2/EAC format.\";\n\t\tfor (int formatNdx \u003d 0; formatNdx \u003c tcu::COMPRESSEDTEXFORMAT_LAST; formatNdx++)\n\t\t{\n\t\t\ttcu::CompressedTexFormat format \u003d static_cast\u003ctcu::CompressedTexFormat\u003e(formatNdx);\n\t\t\tif (tcu::isEtcFormat(format) \u0026\u0026 (format !\u003d tcu::COMPRESSEDTEXFORMAT_ETC1_RGB8))\n\t\t\t{\n\t\t\t\tdeUint32 compressedFormat \u003d glu::getGLFormat(format);\n\t\t\t\tcallCompressedTexImage3D(GL_TEXTURE_3D, 0, compressedFormat, 0, 0, 0, 0, 0, 0);\n\t\t\t\tverifyError(GL_INVALID_OPERATION, message3);\n\t\t\t}\n\t\t}\n\nI couldn\u0027t find a spec statement anywhere that indicated these formats should be rejected, but dEQP seems pretty confident about it.   This may just be my own lack of knowledge about how this stuff works too, where EAC/ETC could never work in this case anyway, which is why we should be rejecting them.",
+      "parentUuid": "a35c19c9_13a33f0e",
+      "range": {
+        "startLine": 538,
+        "startChar": 45,
+        "endLine": 538,
+        "endChar": 82
+      },
+      "revId": "09aa051dd6f7cf5b6bd9682b546cf246bc1ba3b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
