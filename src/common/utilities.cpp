@@ -770,6 +770,13 @@ std::string ParseResourceName(const std::string &name, std::vector<unsigned int>
     return name.substr(0, baseNameLength);
 }
 
+std::string StripLastArrayIndex(const std::string &name)
+{
+    size_t strippedNameLength = name.find_last_of('[');
+    ASSERT(strippedNameLength != std::string::npos && name.back() == ']');
+    return name.substr(0, strippedNameLength);
+}
+
 const sh::ShaderVariable *FindShaderVarField(const sh::ShaderVariable &var,
                                              const std::string &fullName,
                                              GLuint *fieldIndexOut)

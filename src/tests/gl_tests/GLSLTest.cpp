@@ -2891,6 +2891,44 @@ TEST_P(GLSLTest_ES3, WriteIntoDynamicIndexingOfSwizzledVector)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that array indices for arrays of arrays work as expected.
+TEST_P(GLSLTest_ES31, ArraysOfArrays)
+{
+    constexpr char kFS[] =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform ivec2 test[2][2];\n"
+        "void main() {\n"
+        "    bool passed = true;\n"
+        "    for (int i = 0; i < 2; i++) {\n"
+        "        for (int j = 0; j < 2; j++) {\n"
+        "            if (test[i][j] != ivec2(i + 1, j + 1)) {\n"
+        "                passed = false;\n"
+        "            }\n"
+        "        }\n"
+        "    }\n"
+        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    glUseProgram(program.get());
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            std::stringstream uniformName;
+            uniformName << "test[" << i << "][" << j << "]";
+            GLint uniformLocation = glGetUniformLocation(program.get(), uniformName.str().c_str());
+            // All array indices should be used.
+            EXPECT_NE(uniformLocation, -1);
+            glUniform2i(uniformLocation, i + 1, j + 1);
+        }
+    }
+    drawQuad(program.get(), essl31_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // This test covers a bug (and associated workaround) with nested sampling operations in the HLSL
 // compiler DLL.
 TEST_P(GLSLTest_ES3, NestedSamplingOperation)
@@ -5651,4 +5689,4 @@ ANGLE_INSTANTIATE_TEST(GLSLTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), 
 
 ANGLE_INSTANTIATE_TEST(WebGLGLSLTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN());
 
-ANGLE_INSTANTIATE_TEST(GLSLTest_ES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
+ANGLE_INSTANTIATE_TEST(GLSLTest_ES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES(), ES31_VULKAN());
