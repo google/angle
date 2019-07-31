@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64204e7b_bf4fdac4",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-31T16:48:29Z",
+      "side": 0,
+      "message": "Just getting rid of this seems off. GLES 2.0 does not natively support 3D textures, need the GL_OES_texture_3D extension. If we know that extension is enabled / active at the time we reach here then dropping this test is okay. If not, seems this if should check if the texture is present or not and if not, return a validation error.\nIt\u0027s probably okay, it\u0027s just not immediately obvious to me. Tim, could you verify?",
+      "revId": "cbabea734cbd5537bdc73a46030462b01485a179",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
