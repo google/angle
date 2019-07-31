@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7ff47ee_dea292ca",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1255,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-31T16:38:58Z",
+      "side": 1,
+      "message": "If you added parentheses here, the compiler would know better to use the same result for the rhs of \u0026.\n\nThe compiler might be smart enough with unsigned types, but may shy away from changing the order with signed types. As is written, the compiler technically has to do: `(value + alignment) - 1`",
+      "range": {
+        "startLine": 1255,
+        "startChar": 20,
+        "endLine": 1255,
+        "endChar": 33
+      },
+      "revId": "3e493c48d2da71f045582fe80e44343316cec5f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
