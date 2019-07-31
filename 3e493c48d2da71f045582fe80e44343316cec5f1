@@ -22,6 +22,30 @@
       "revId": "3e493c48d2da71f045582fe80e44343316cec5f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9ab0e43_4b78f323",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1255,
+      "author": {
+        "id": 1351342
+      },
+      "writtenOn": "2019-07-31T18:50:45Z",
+      "side": 1,
+      "message": "Have checked the assemble code, looks like the compiler has optimized the rhs to a single `negate`, so the parenthese does not affect. See https://godbolt.org/z/RZl5C9\n\nBtw a fun fact that clang does not fully optimize it, look how gcc does it https://godbolt.org/z/uWvBLv",
+      "parentUuid": "e7ff47ee_dea292ca",
+      "range": {
+        "startLine": 1255,
+        "startChar": 20,
+        "endLine": 1255,
+        "endChar": 33
+      },
+      "revId": "3e493c48d2da71f045582fe80e44343316cec5f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
