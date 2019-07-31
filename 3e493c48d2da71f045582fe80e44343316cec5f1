@@ -46,6 +46,30 @@
       "revId": "3e493c48d2da71f045582fe80e44343316cec5f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e94e6195_72be77a3",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1255,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-31T21:06:14Z",
+      "side": 1,
+      "message": "Cool! Also, x86_64 is crazy with these features ^^\n\nBut hey, we have people working on clang, you can report this.",
+      "parentUuid": "c9ab0e43_4b78f323",
+      "range": {
+        "startLine": 1255,
+        "startChar": 20,
+        "endLine": 1255,
+        "endChar": 33
+      },
+      "revId": "3e493c48d2da71f045582fe80e44343316cec5f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
