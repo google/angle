@@ -74,6 +74,8 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.semaphore   = true;
     mNativeExtensions.semaphoreFd = getFeatures().supportsExternalSemaphoreFd.enabled;
 
+    mNativeExtensions.vertexHalfFloat = true;
+
     // TODO: Enable this always and emulate instanced draws if any divisor exceeds the maximum
     // supported.  http://anglebug.com/2672
     mNativeExtensions.instancedArraysANGLE = mMaxVertexAttribDivisor > 1;

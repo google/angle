@@ -795,6 +795,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_unpack_subimage"] = enableableExtension(&Extensions::unpackSubimage);
         map["GL_NV_pack_subimage"] = enableableExtension(&Extensions::packSubimage);
         map["GL_EXT_color_buffer_float"] = enableableExtension(&Extensions::colorBufferFloat);
+        map["GL_OES_vertex_half_float"] = enableableExtension(&Extensions::vertexHalfFloat);
         map["GL_OES_vertex_array_object"] = enableableExtension(&Extensions::vertexArrayObject);
         map["GL_KHR_debug"] = esOnlyExtension(&Extensions::debug);
         map["GL_OES_texture_border_clamp"] = enableableExtension(&Extensions::textureBorderClamp);

@@ -373,6 +373,9 @@ struct Extensions
     // NV_pack_subimage
     bool packSubimage = false;
 
+    // GL_OES_vertex_half_float
+    bool vertexHalfFloat = false;
+
     // GL_OES_vertex_array_object
     bool vertexArrayObject = false;
 
