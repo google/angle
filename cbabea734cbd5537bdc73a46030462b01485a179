@@ -16,6 +16,24 @@
       "revId": "cbabea734cbd5537bdc73a46030462b01485a179",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48e38358_efd9a73c",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-07-31T18:03:08Z",
+      "side": 0,
+      "message": "I\u0027ve add it back in along with a call to textureSupport(), which should be taking into account the version/extensions.",
+      "parentUuid": "64204e7b_bf4fdac4",
+      "revId": "cbabea734cbd5537bdc73a46030462b01485a179",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
