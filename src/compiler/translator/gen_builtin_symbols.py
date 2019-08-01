@@ -52,28 +52,52 @@ std::ostream &operator<<(std::ostream &os, const sh::ImmutableString &str)
 namespace
 {{
 
-constexpr int kT1[] = {{{S1}}};
-constexpr int kT2[] = {{{S2}}};
-constexpr int kG[] = {{{G}}};
+constexpr int mangledkT1[] = {{{mangled_S1}}};
+constexpr int mangledkT2[] = {{{mangled_S2}}};
+constexpr int mangledkG[] = {{{mangled_G}}};
 
-int HashG(const char *key, const int *T)
+int MangledHashG(const char *key, const int *T)
 {{
     int sum = 0;
 
     for (int i = 0; key[i] != '\\0'; i++)
     {{
         sum += T[i] * key[i];
-        sum %= {NG};
+        sum %= {mangled_NG};
     }}
-    return kG[sum];
+    return mangledkG[sum];
 }}
 
-int PerfectHash(const char *key)
+int MangledPerfectHash(const char *key)
 {{
-    if (strlen(key) > {NS})
+    if (strlen(key) > {mangled_NS})
         return 0;
 
-    return (HashG(key, kT1) + HashG(key, kT2)) % {NG};
+    return (MangledHashG(key, mangledkT1) + MangledHashG(key, mangledkT2)) % {mangled_NG};
+}}
+
+constexpr int unmangledkT1[] = {{{unmangled_S1}}};
+constexpr int unmangledkT2[] = {{{unmangled_S2}}};
+constexpr int unmangledkG[] = {{{unmangled_G}}};
+
+int UnmangledHashG(const char *key, const int *T)
+{{
+    int sum = 0;
+
+    for (int i = 0; key[i] != '\\0'; i++)
+    {{
+        sum += T[i] * key[i];
+        sum %= {unmangled_NG};
+    }}
+    return unmangledkG[sum];
+}}
+
+int UnmangledPerfectHash(const char *key)
+{{
+    if (strlen(key) > {unmangled_NS})
+        return 0;
+
+    return (UnmangledHashG(key, unmangledkT1) + UnmangledHashG(key, unmangledkT2)) % {unmangled_NG};
 }}
 
 }}
@@ -97,7 +121,12 @@ const size_t ImmutableString::FowlerNollVoHash<8>::kFnvOffsetBasis =
 
 uint32_t ImmutableString::mangledNameHash() const
 {{
-    return PerfectHash(data());
+    return MangledPerfectHash(data());
+}}
+
+uint32_t ImmutableString::unmangledNameHash() const
+{{
+    return UnmangledPerfectHash(data());
 }}
 
 }}  // namespace sh
@@ -122,6 +151,7 @@ namespace sh
 TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
 {{
 {script_generated_hash_tests}
+{unmangled_script_generated_hash_tests}
 }}
 
 }}  // namespace sh
@@ -189,7 +219,7 @@ namespace sh
 
 class TSymbolTableBase
 {{
-  protected:
+  public:
     TSymbolTableBase() = default;
 {declare_member_variables}
 }};
@@ -273,6 +303,15 @@ namespace BuiltInFunction
 
 }}  // namespace BuiltInFunction
 
+namespace BuiltInArray
+{{
+
+constexpr SymbolEntry mangled[] = {{ {mangled_array} }};
+
+constexpr UnmangledEntry unmangled[] = {{ {unmangled_array} }};
+
+}}
+
 void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
                                               ShShaderSpec spec,
                                               const ShBuiltInResources &resources)
@@ -281,25 +320,136 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
 {init_member_variables}
 }}
 
+namespace {{
+
+bool CheckESSLVersion(int expected, int actual)
+{{
+    // Not supported
+    if (expected == -1)
+        return false;
+
+    // Only ESSL100
+    if (expected == 100)
+        return actual == 100;
+
+    return actual >= expected;
+}}
+
+bool CheckGLSLVersion(int expected, int actual)
+{{
+    // Not supported
+    if (expected == -1)
+        return false;
+
+    return actual >= expected;
+}}
+
+bool CheckShaderType(Shader expected, GLenum actual)
+{{
+    switch(expected)
+    {{
+        case Shader::ALL:
+            return true;
+        case Shader::FRAGMENT:
+            return actual == GL_FRAGMENT_SHADER;
+        case Shader::VERTEX:
+            return actual == GL_VERTEX_SHADER;
+        case Shader::COMPUTE:
+            return actual == GL_COMPUTE_SHADER;
+        case Shader::GEOMETRY:
+            return actual == GL_GEOMETRY_SHADER;
+        case Shader::GEOMETRY_EXT:
+            return actual == GL_GEOMETRY_SHADER_EXT;
+        case Shader::NOT_COMPUTE:
+            return actual != GL_COMPUTE_SHADER;
+        default:
+            UNREACHABLE();
+            return false;
+    }}
+}}
+
+}}
+
+const TSymbol *TSymbolTable::getSymbol(SymbolEntry entry, const ImmutableString &name, int version) const
+{{
+    if (entry.name != name)
+    {{
+        return nullptr;
+    }}
+    if ((entry.symbol || entry.var) && CheckShaderType(entry.shaderType, mShaderType))
+    {{
+        // Non-extension symbol or variable
+        if (!IsDesktopGLSpec(mShaderSpec) && CheckESSLVersion(entry.esslVersion, version))
+        {{
+            return entry.symbol ? entry.symbol : this->*(entry.var);
+        }}
+        if (IsDesktopGLSpec(mShaderSpec) && CheckGLSLVersion(entry.glslVersion, version))
+        {{
+            return entry.symbol ? entry.symbol : this->*(entry.var);
+        }}
+    }}
+    if (entry.esslExtension && mResources.*(entry.esslExtension) && !IsDesktopGLSpec(mShaderSpec) &&
+        CheckESSLVersion(entry.esslExtVersion, version) &&
+        CheckShaderType(entry.esslExtShaderType, mShaderType))
+    {{
+        return entry.esslExtSymbol ? entry.esslExtSymbol : this->*(entry.esslExtVar);
+    }}
+    if (entry.glslExtension && mResources.*(entry.glslExtension) && IsDesktopGLSpec(mShaderSpec) &&
+        CheckGLSLVersion(entry.glslExtVersion, version) &&
+        CheckShaderType(entry.glslExtShaderType, mShaderType))
+    {{
+        return entry.glslExtSymbol ? entry.glslExtSymbol : this->*(entry.glslExtVar);
+    }}
+    if (entry.esslExtension2 && mResources.*(entry.esslExtension2) && !IsDesktopGLSpec(mShaderSpec) &&
+        CheckESSLVersion(entry.esslExtVersion2, version) &&
+        CheckShaderType(entry.esslExtShaderType2, mShaderType))
+    {{
+        return entry.esslExtSymbol2 ? entry.esslExtSymbol2 : this->*(entry.esslExtVar2);
+    }}
+    return nullptr;
+}}
+
 const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name,
                                          int shaderVersion) const
 {{
     if (name.length() > {max_mangled_name_length})
+        return nullptr;
+
+    uint32_t nameHash = name.mangledNameHash();
+    if (nameHash >= {num_mangled_names})
+        return nullptr;
+    return getSymbol(BuiltInArray::mangled[nameHash], name, shaderVersion);
+}}
+
+const UnmangledBuiltIn *TSymbolTable::getUnmangled(UnmangledEntry entry, const ImmutableString &name, int version) const
+{{
+    if (!CheckShaderType(entry.shaderType, mShaderType))
     {{
         return nullptr;
     }}
-    uint32_t nameHash = name.mangledNameHash();
-{get_builtin}
+    if (entry.name == name)
+    {{
+        if (!IsDesktopGLSpec(mShaderSpec) && CheckESSLVersion(entry.esslVersion, version))
+        {{
+            return entry.esslUnmangled;
+        }}
+        if (IsDesktopGLSpec(mShaderSpec) && CheckGLSLVersion(entry.glslVersion, version))
+        {{
+            return entry.glslUnmangled;
+        }}
+    }}
+    return nullptr;
 }}
 
 const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(const ImmutableString &name, int shaderVersion)
 {{
     if (name.length() > {max_unmangled_name_length})
-    {{
         return nullptr;
-    }}
-    uint32_t nameHash = name.mangledNameHash();
-{get_unmangled_builtin}
+
+    uint32_t nameHash = name.unmangledNameHash();
+    if (nameHash >= {num_unmangled_names})
+        return nullptr;
+    return getUnmangled(BuiltInArray::unmangled[nameHash], name, shaderVersion);
 }}
 
 }}  // namespace sh
@@ -334,8 +484,6 @@ namespace BuiltInGroup
 #endif  // COMPILER_TRANSLATOR_PARSECONTEXT_AUTOGEN_H_
 
 """
-
-parsed_variables = None
 
 basic_types_enumeration = [
     'Void',
@@ -457,180 +605,299 @@ glsl_levels = [
     'GLSL4_6_BUILTINS', 'GLSL4_5_BUILTINS', 'GLSL4_4_BUILTINS', 'GLSL4_3_BUILTINS',
     'GLSL4_2_BUILTINS', 'GLSL4_1_BUILTINS', 'GLSL4_BUILTINS', 'GLSL3_3_BUILTINS',
     'GLSL1_5_BUILTINS', 'GLSL1_4_BUILTINS', 'GLSL1_3_BUILTINS', 'GLSL1_2_BUILTINS',
-    'GLSL1_1_BUILTINS', 'COMMON_BUILTINS'
+    'COMMON_BUILTINS'
 ]
 
 
-def get_essl_shader_version_condition_for_level(level):
-    if level == 'ESSL3_1_BUILTINS':
-        return 'shaderVersion >= 310'
+def get_essl_shader_version_for_level(level):
+    if level == None:
+        return '-1'
+    elif level == 'ESSL3_1_BUILTINS':
+        return '310'
     elif level == 'ESSL3_BUILTINS':
-        return 'shaderVersion >= 300'
+        return '300'
     elif level == 'ESSL1_BUILTINS':
-        return 'shaderVersion == 100'
+        return '100'
     elif level == 'COMMON_BUILTINS':
-        return ''
+        return '0'
     else:
         raise Exception('Unsupported symbol table level')
 
 
-def get_glsl_shader_version_condition_for_level(level):
-    if level == 'GLSL1_1_BUILTINS':
-        return 'shaderVersion == 110'
+def get_glsl_shader_version_for_level(level):
+    if level == None:
+        return '-1'
     elif level == 'GLSL1_2_BUILTINS':
-        return 'shaderVersion >= 120'
+        return '120'
     elif level == 'GLSL1_3_BUILTINS':
-        return 'shaderVersion >= 130'
+        return '130'
     elif level == 'GLSL1_4_BUILTINS':
-        return 'shaderVersion >= 140'
+        return '140'
     elif level == 'GLSL1_5_BUILTINS':
-        return 'shaderVersion >= 150'
+        return '150'
     elif level == 'GLSL3_3_BUILTINS':
-        return 'shaderVersion >= 330'
+        return '330'
     elif level == 'GLSL4_BUILTINS':
-        return 'shaderVersion >= 400'
+        return '400'
     elif level == 'GLSL4_1_BUILTINS':
-        return 'shaderVersion >= 410'
+        return '410'
     elif level == 'GLSL4_2_BUILTINS':
-        return 'shaderVersion >= 420'
+        return '420'
     elif level == 'GLSL4_3_BUILTINS':
-        return 'shaderVersion >= 430'
+        return '430'
     elif level == 'GLSL4_4_BUILTINS':
-        return 'shaderVersion >= 440'
+        return '440'
     elif level == 'GLSL4_5_BUILTINS':
-        return 'shaderVersion >= 450'
+        return '450'
     elif level == 'GLSL4_6_BUILTINS':
-        return 'shaderVersion >= 460'
+        return '460'
     elif level == 'COMMON_BUILTINS':
-        return ''
+        return '0'
     else:
         raise Exception('Unsupported symbol table level')
-
-
-def get_specific_switch_code(level_dict, hashfn, script_generated_hash_tests):
-    code = []
-    for condition, objs in level_dict.iteritems():
-        if len(objs) > 0:
-            if condition != 'NO_CONDITION':
-                condition_header = '  if ({condition})\n {{'.format(condition=condition)
-                code.append(condition_header.replace('shaderType', 'mShaderType'))
-
-            switch = {}
-            for name, obj in objs.iteritems():
-                name_hash = mangledNameHash(name, hashfn, script_generated_hash_tests)
-                if name_hash not in switch:
-                    switch[name_hash] = []
-                switch[name_hash].append(obj['hash_matched_code'])
-
-            code.append('switch(nameHash) {')
-            for name_hash, obj in sorted(switch.iteritems()):
-                code.append('case 0x' + ('%08x' % name_hash) + 'u:\n{')
-                code += obj
-                code.append('break;\n}')
-            code.append('}')
-
-            if condition != 'NO_CONDITION':
-                code.append('}')
-    return code
 
 
 class GroupedList:
     """"Class for storing a list of objects grouped by symbol table level and condition."""
 
-    def __init__(self):
+    def __init__(self, hashfn, num_names):
         self.objs = OrderedDict()
         self.max_name_length = 0
-        # We need to add all the levels here instead of lazily since they must be in a specific order.
-        self.objs['essl'] = OrderedDict()
-        for l in essl_levels:
-            self.objs['essl'][l] = OrderedDict()
-        self.objs['glsl'] = OrderedDict()
-        for l in glsl_levels:
-            self.objs['glsl'][l] = OrderedDict()
+        self.hashfn = hashfn
+        self.num_names = num_names
 
-    def add_obj(self, essl_level, glsl_level, condition, name, obj):
-        if essl_level:
-            if essl_level not in essl_levels:
-                raise Exception('Unexpected essl level: ' + str(essl_level))
-            if condition not in self.objs['essl'][essl_level]:
-                self.objs['essl'][essl_level][condition] = OrderedDict()
-            self.objs['essl'][essl_level][condition][name] = obj
-            if len(name) > self.max_name_length:
-                self.max_name_length = len(name)
+    def add_obj(self,
+                essl_level,
+                glsl_level,
+                shader_type,
+                name,
+                obj,
+                essl_extension,
+                glsl_extension,
+                script_generated_hash_tests,
+                var_obj=False):
+        if essl_level and essl_level not in essl_levels:
+            raise Exception('Unexpected essl level: ' + str(essl_level))
+        if glsl_level and glsl_level not in glsl_levels:
+            raise Exception('Unexpected glsl level: ' + str(glsl_level))
+        if len(name) > self.max_name_length:
+            self.max_name_length = len(name)
 
-        if glsl_level:
-            if glsl_level not in glsl_levels:
-                raise Exception('Unexpected glsl level: ' + str(glsl_level))
-            if condition not in self.objs['glsl'][glsl_level]:
-                self.objs['glsl'][glsl_level][condition] = OrderedDict()
-            self.objs['glsl'][glsl_level][condition][name] = obj
-            if len(name) > self.max_name_length:
-                self.max_name_length = len(name)
+        name_hash = mangledNameHash(name, self.hashfn, script_generated_hash_tests, False)
+        if name_hash not in self.objs:
+            self.objs[name_hash] = OrderedDict()
 
-    def has_key(self, essl_level, glsl_level, condition, name):
-        if essl_level:
-            if essl_level not in essl_levels:
-                raise Exception('Unexpected essl level: ' + str(essl_level))
-            if condition not in self.objs['essl'][essl_level]:
-                return False
-            if name not in self.objs['essl'][essl_level][condition]:
-                return False
-        if glsl_level:
-            if glsl_level not in glsl_levels:
-                raise Exception('Unexpected glsl level: ' + str(glsl_level))
-            if condition not in self.objs['glsl'][glsl_level]:
-                return False
-            if name not in self.objs['glsl'][glsl_level][condition]:
-                return False
+        self.objs[name_hash]['name'] = name
+
+        if essl_extension == 'UNDEFINED' and glsl_extension == 'UNDEFINED':
+            if essl_level:
+                self.objs[name_hash]['essl_level'] = essl_level
+            if glsl_level:
+                self.objs[name_hash]['glsl_level'] = glsl_level
+            if var_obj:
+                self.objs[name_hash]['var'] = obj
+            else:
+                self.objs[name_hash]['obj'] = obj
+            self.objs[name_hash]['shader_type'] = shader_type
+
+        if essl_extension != 'UNDEFINED':
+            if (var_obj and 'essl_ext_var' in self.objs[name_hash] and
+                    self.objs[name_hash]['essl_ext_var'] != obj) or (
+                        not var_obj and 'essl_ext_obj' in self.objs[name_hash] and
+                        self.objs[name_hash]['essl_ext_obj'] != obj):
+                # Adding a variable that is part of two ESSL extensions
+                if essl_extension != 'UNDEFINED':
+                    self.objs[name_hash]['essl_extension2'] = essl_extension
+                    self.objs[name_hash]['essl_ext_level2'] = essl_level
+                    if var_obj:
+                        self.objs[name_hash]['essl_ext_var2'] = obj
+                    else:
+                        self.objs[name_hash]['essl_ext_obj2'] = obj
+                        self.objs[name_hash]['essl_ext_shader_type2'] = shader_type
+            else:
+                self.objs[name_hash]['essl_extension'] = essl_extension
+                self.objs[name_hash]['essl_ext_level'] = essl_level
+                if var_obj:
+                    self.objs[name_hash]['essl_ext_var'] = obj
+                else:
+                    self.objs[name_hash]['essl_ext_obj'] = obj
+                    self.objs[name_hash]['essl_ext_shader_type'] = shader_type
+
+        if glsl_extension != 'UNDEFINED':
+            self.objs[name_hash]['glsl_extension'] = glsl_extension
+            self.objs[name_hash]['glsl_ext_level'] = glsl_level
+            if var_obj:
+                self.objs[name_hash]['glsl_ext_var'] = obj
+            else:
+                self.objs[name_hash]['glsl_ext_obj'] = obj
+            self.objs[name_hash]['glsl_ext_shader_type'] = shader_type
+
+    def get_max_name_length(self):
+        return self.max_name_length
+
+    def get_array(self):
+        code = []
+        for hash_val in range(0, self.num_names):
+            if hash_val in self.objs:
+                obj_data = self.objs[hash_val]
+
+                data = []
+                data.append('ImmutableString("{name}")'.format(name=obj_data['name']))
+
+                symbol = obj_data['obj'] if 'obj' in obj_data else 'nullptr'
+                var = '&TSymbolTableBase::{}'.format(
+                    obj_data['var']) if 'var' in obj_data else 'nullptr'
+                essl_level = obj_data['essl_level'] if 'essl_level' in obj_data else None
+                glsl_level = obj_data['glsl_level'] if 'glsl_level' in obj_data else None
+                essl_version = get_essl_shader_version_for_level(essl_level)
+                glsl_version = get_glsl_shader_version_for_level(glsl_level)
+                shader_type = 'Shader::' + obj_data[
+                    'shader_type'] if 'shader_type' in obj_data and obj_data[
+                        'shader_type'] != 'NONE' else 'Shader::ALL'
+
+                data.append(symbol)
+                data.append(var)
+                data.append(essl_version)
+                data.append(glsl_version)
+                data.append(shader_type)
+
+                essl_ext_symbol = obj_data[
+                    'essl_ext_obj'] if 'essl_ext_obj' in obj_data else 'nullptr'
+                essl_ext_var = '&TSymbolTableBase::{}'.format(
+                    obj_data['essl_ext_var']) if 'essl_ext_var' in obj_data else 'nullptr'
+                essl_ext_version = get_essl_shader_version_for_level(
+                    obj_data['essl_ext_level']) if 'essl_extension' in obj_data else '-1'
+                essl_ext_shader_type = 'Shader::' + obj_data[
+                    'essl_ext_shader_type'] if 'essl_ext_shader_type' in obj_data and obj_data[
+                        'essl_ext_shader_type'] != 'NONE' else 'Shader::ALL'
+                essl_extension = '&ShBuiltInResources::{}'.format(
+                    obj_data['essl_extension']) if 'essl_extension' in obj_data else 'nullptr'
+
+                data.append(essl_ext_symbol)
+                data.append(essl_ext_var)
+                data.append(essl_ext_version)
+                data.append(essl_ext_shader_type)
+                data.append(essl_extension)
+
+                glsl_ext_symbol = obj_data[
+                    'glsl_ext_obj'] if 'glsl_ext_obj' in obj_data else 'nullptr'
+                glsl_ext_var = '&TSymbolTableBase::{}'.format(
+                    obj_data['glsl_ext_var']) if 'glsl_ext_var' in obj_data else 'nullptr'
+                glsl_ext_version = get_glsl_shader_version_for_level(
+                    obj_data['glsl_ext_level']) if 'glsl_extension' in obj_data else '-1'
+                glsl_ext_shader_type = 'Shader::' + obj_data[
+                    'glsl_ext_shader_type'] if 'glsl_ext_shader_type' in obj_data and obj_data[
+                        'glsl_ext_shader_type'] != 'NONE' else 'Shader::ALL'
+                glsl_extension = '&ShBuiltInResources::{}'.format(
+                    obj_data['glsl_extension']) if 'glsl_extension' in obj_data else 'nullptr'
+
+                data.append(glsl_ext_symbol)
+                data.append(glsl_ext_var)
+                data.append(glsl_ext_version)
+                data.append(glsl_ext_shader_type)
+                data.append(glsl_extension)
+
+                if 'essl_extension2' in obj_data:
+                    essl_ext_symbol2 = obj_data[
+                        'essl_ext_obj2'] if 'essl_ext_obj2' in obj_data else 'nullptr'
+                    essl_ext_var2 = '&TSymbolTableBase::{}'.format(
+                        obj_data['essl_ext_var2']) if 'essl_ext_var2' in obj_data else 'nullptr'
+                    essl_ext_version2 = get_essl_shader_version_for_level(
+                        obj_data['essl_ext_level2'])
+                    essl_ext_shader_type2 = 'Shader::' + obj_data[
+                        'essl_ext_shader_type2'] if 'essl_ext_shader_type2' in obj_data and obj_data[
+                            'essl_ext_shader_type2'] != 'NONE' else 'Shader::ALL'
+                    essl_extension2 = '&ShBuiltInResources::{}'.format(obj_data['essl_extension2'])
+                    data.append(essl_ext_symbol2)
+                    data.append(essl_ext_var2)
+                    data.append(essl_ext_version2)
+                    data.append(essl_ext_shader_type2)
+                    data.append(essl_extension2)
+
+                code.append('SymbolEntry(' + ', '.join(data) + ')')
+            else:
+                code.append("""SymbolEntry(ImmutableString(""),
+                       nullptr, nullptr, -1, -1, Shader::ALL,
+                       nullptr, nullptr, -1, Shader::ALL, nullptr,
+                       nullptr, nullptr, -1, Shader::ALL, nullptr)""")
+        return ', '.join(code)
+
+
+class UnmangledGroupedList:
+    """"Class for storing a list of unmangled objects grouped by symbol table level and condition."""
+
+    def __init__(self, hashfn, num_names):
+        self.objs = OrderedDict()
+        self.max_name_length = 0
+        self.hashfn = hashfn
+        self.num_names = num_names
+
+    def add_obj(self, essl_level, glsl_level, shader_type, name, essl_obj, glsl_obj,
+                essl_extension, glsl_extension, essl_unmangled_builtin_declaration,
+                glsl_unmangled_builtin_declaration, unmangled_script_generated_hash_tests):
+        if essl_level and essl_level not in essl_levels:
+            raise Exception('Unexpected essl level: ' + str(essl_level))
+        if glsl_level and glsl_level not in glsl_levels:
+            raise Exception('Unexpected glsl level: ' + str(glsl_level))
+        if len(name) > self.max_name_length:
+            self.max_name_length = len(name)
+
+        name_hash = mangledNameHash(name, self.hashfn, unmangled_script_generated_hash_tests, True)
+        self.objs[name_hash] = OrderedDict()
+        self.objs[name_hash]['name'] = name
+        self.objs[name_hash]['essl_level'] = essl_level
+        self.objs[name_hash]['glsl_level'] = glsl_level
+        self.objs[name_hash]['shader_type'] = shader_type
+        self.objs[name_hash]['essl_obj'] = essl_obj
+        self.objs[name_hash]['glsl_obj'] = glsl_obj
+        self.objs[name_hash]['essl_extension'] = essl_extension
+        self.objs[name_hash]['glsl_extension'] = glsl_extension
+        self.objs[name_hash]['essl_declaration'] = essl_unmangled_builtin_declaration
+        self.objs[name_hash]['glsl_declaration'] = glsl_unmangled_builtin_declaration
+
+    def has_key(self, essl_level, glsl_level, shader_type, name):
+        name_hash = mangledNameHash(name, self.hashfn, None, True, False)
+        if name_hash not in self.objs:
+            return False
+        entry = self.objs[name_hash]
+        if entry['essl_level'] != essl_level:
+            return False
+        if entry['glsl_level'] != glsl_level:
+            return False
+        if entry['shader_type'] != shader_type:
+            return False
         return True
 
-    def get(self, essl_level, glsl_level, condition, name):
-        if self.has_key(essl_level, glsl_level, condition, name):
-            if essl_level:
-                return self.objs['essl'][essl_level][condition][name]
-            if glsl_level:
-                return self.objs['glsl'][glsl_level][condition][name]
+    def get(self, essl_level, glsl_level, shader_type, name):
+        if self.has_key(essl_level, glsl_level, shader_type, name):
+            name_hash = mangledNameHash(name, self.hashfn, None, True, False)
+            return self.objs[name_hash]
         return None
 
     def get_max_name_length(self):
         return self.max_name_length
 
-    def get_switch_code(self, hashfn, script_generated_hash_tests):
+    def get_array(self, unmangled_builtin_declarations):
         code = []
-        code.append('if (!IsDesktopGLSpec(mShaderSpec))\n {')
-        for level in essl_levels:
-            if len(self.objs['essl'][level]) == 0:
-                continue
-            level_condition = get_essl_shader_version_condition_for_level(level)
-            if level_condition != '':
-                code.append('if ({condition})\n {{'.format(condition=level_condition))
+        for hash_val in range(0, self.num_names):
+            obj_data = self.objs[hash_val]
+            essl_level = obj_data['essl_level']
+            glsl_level = obj_data['glsl_level']
+            shader_type = 'Shader::' + obj_data['shader_type'] if obj_data[
+                'shader_type'] != 'NONE' else 'Shader::ALL'
+            data = []
+            data.append('ImmutableString("{name}")'.format(name=obj_data['name']))
+            data.append(obj_data['essl_obj'])
+            data.append(obj_data['glsl_obj'])
+            data.append(get_essl_shader_version_for_level(essl_level))
+            data.append(get_glsl_shader_version_for_level(glsl_level))
+            data.append(shader_type)
 
-            code.extend(
-                get_specific_switch_code(self.objs['essl'][level], hashfn,
-                                         script_generated_hash_tests))
+            code.append('UnmangledEntry(' + ', '.join(data) + ')')
 
-            if level_condition != '':
-                code.append('}')
-
-        code.append('}\nelse\n{')
-
-        for level in glsl_levels:
-            if len(self.objs['glsl'][level]) == 0:
-                continue
-            level_condition = get_glsl_shader_version_condition_for_level(level)
-            if level_condition != '':
-                code.append('if ({condition})\n {{'.format(condition=level_condition))
-
-            code.extend(
-                get_specific_switch_code(self.objs['glsl'][level], hashfn,
-                                         script_generated_hash_tests))
-
-            if level_condition != '':
-                code.append('}')
-
-        code.append('}')
-        code.append('return nullptr;')
-        return '\n'.join(code)
+            unmangled_builtin_declarations.add(obj_data['essl_declaration'])
+            unmangled_builtin_declarations.add(obj_data['glsl_declaration'])
+        return ', '.join(code)
 
 
 class TType:
@@ -717,6 +984,7 @@ class TType:
         return self
 
     def parse_type(self, glsl_header_type):
+        # TODO(http://anglebug.com/3833): handle readonly, writeonly qualifiers
         if glsl_header_type.startswith('readonly writeonly '):
             type_obj = self.parse_type(glsl_header_type[19:])
             type_obj['qualifier'] = 'Readonly Writeonly'
@@ -763,8 +1031,8 @@ class TType:
             'v': 'Void'
         }
 
-        # textureGatherOffsets in GLSL has an ivec2[4] parameter that this needs to parse
-        # treating it as a mat4x2
+        # TODO(http://anglebug.com/3833): textureGatherOffsets in GLSL has an ivec2[4] parameter
+        # Need to parse, currently treating it as mat4x2
         vec_re = re.compile(r'^([iudb]?)vec([234]?)((\[[234]\])?)$')
         vec_match = vec_re.match(glsl_header_type)
         if vec_match:
@@ -902,27 +1170,32 @@ def get_parsed_functions(functions_txt_filename):
     return parsed_functions
 
 
-def mangledNameHash(str, hashfn, script_generated_hash_tests, save_test=True):
+def mangledNameHash(str, hashfn, script_generated_hash_tests, unmangled, save_test=True):
     hash = hashfn.hash(str)
     if save_test:
-        sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").mangledNameHash());'.format(
-            hash=('%08x' % hash), str=str)
+        sanity_check = ''
+        if unmangled:
+            sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").unmangledNameHash());'.format(
+                hash=('%08x' % hash), str=str)
+        else:
+            sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").mangledNameHash());'.format(
+                hash=('%08x' % hash), str=str)
         script_generated_hash_tests.update({sanity_check: None})
     return hash
 
 
-def get_function_names(group, mangled_names):
+def get_function_names(group, mangled_names, unmangled_names):
     if 'functions' in group:
         for function_props in group['functions']:
             function_name = function_props['name']
-            mangled_names.append(function_name)
+            unmangled_names.append(function_name)
             function_variants = gen_function_variants(function_props)
             for function_props in function_variants:
                 parameters = get_parameters(function_props)
                 mangled_names.append(get_function_mangled_name(function_name, parameters))
     if 'subgroups' in group:
         for subgroup_name, subgroup in group['subgroups'].iteritems():
-            get_function_names(subgroup, mangled_names)
+            get_function_names(subgroup, mangled_names, unmangled_names)
 
 
 def get_variable_names(group, mangled_names):
@@ -940,9 +1213,15 @@ def get_suffix(props):
     return ''
 
 
-def get_extension(props):
-    if 'extension' in props:
-        return props['extension']
+def get_essl_extension(props):
+    if 'essl_extension' in props:
+        return props['essl_extension']
+    return 'UNDEFINED'
+
+
+def get_glsl_extension(props):
+    if 'glsl_extension' in props:
+        return props['glsl_extension']
     return 'UNDEFINED'
 
 
@@ -1106,11 +1385,12 @@ def gen_function_variants(function_props):
 
 
 def process_single_function_group(
-        condition, group_name, group, parameter_declarations, name_declarations,
+        shader_type, group_name, group, parameter_declarations, name_declarations,
         unmangled_function_if_statements, unmangled_builtin_declarations,
         defined_function_variants, builtin_id_declarations, builtin_id_definitions,
         defined_parameter_names, variable_declarations, function_declarations,
-        script_generated_hash_tests, get_builtin_if_statements):
+        script_generated_hash_tests, unmangled_script_generated_hash_tests,
+        get_builtin_if_statements):
     global id_counter
 
     if 'functions' not in group:
@@ -1120,13 +1400,19 @@ def process_single_function_group(
         function_name = function_props['name']
         essl_level = function_props['essl_level'] if 'essl_level' in function_props else None
         glsl_level = function_props['glsl_level'] if 'glsl_level' in function_props else None
-        extension = get_extension(function_props)
+        essl_extension = get_essl_extension(function_props)
+        glsl_extension = get_glsl_extension(function_props)
+        extension = essl_extension if essl_extension != 'UNDEFINED' else glsl_extension
         template_args = {
             'name': function_name,
             'name_with_suffix': function_name + get_suffix(function_props),
             'essl_level': essl_level,
             'glsl_level': glsl_level,
-            'extension': extension,
+            'essl_extension': essl_extension,
+            'glsl_extension': glsl_extension,
+            # This assumes that functions cannot be part of an ESSL and GLSL extension
+            # Will need to update after adding GLSL extension functions if this is not the case
+            'extension': essl_extension if essl_extension != 'UNDEFINED' else glsl_extension,
             'op': get_op(function_name, function_props),
             'known_to_not_have_side_effects': get_known_to_not_have_side_effects(function_props)
         }
@@ -1138,28 +1424,32 @@ def process_single_function_group(
         if not name_declaration in name_declarations:
             name_declarations.add(name_declaration)
 
-        template_unmangled_if = """if (name == BuiltInName::{name_with_suffix})
-{{
-    return &UnmangledBuiltIns::{extension};
-}}"""
-        unmangled_if = template_unmangled_if.format(**template_args)
-        unmangled_builtin_no_condition = unmangled_function_if_statements.get(
-            essl_level, glsl_level, 'NO_CONDITION', function_name)
-        if unmangled_builtin_no_condition != None and unmangled_builtin_no_condition[
-                'extension'] == 'UNDEFINED':
-            # We already have this unmangled name without a condition nor extension on the same level. No need to add a duplicate with a condition.
+        essl_obj = '&UnmangledBuiltIns::{essl_extension}'.format(**template_args)
+        glsl_obj = '&UnmangledBuiltIns::{glsl_extension}'.format(**template_args)
+        unmangled_builtin_no_shader_type = unmangled_function_if_statements.get(
+            essl_level, glsl_level, 'NONE', function_name)
+        if unmangled_builtin_no_shader_type != None and unmangled_builtin_no_shader_type[
+                'essl_extension'] == 'UNDEFINED' and unmangled_builtin_no_shader_type[
+                    'glsl_extension'] == 'UNDEFINED':
+            # We already have this unmangled name without a shader type nor extension on the same level.
+            # No need to add a duplicate with a type.
             pass
         elif (not unmangled_function_if_statements.has_key(
-                essl_level, glsl_level, condition, function_name)) or extension == 'UNDEFINED':
-            # We don't have this unmangled builtin recorded yet or we might replace an unmangled builtin from an extension with one from core.
-            unmangled_function_if_statements.add_obj(essl_level, glsl_level, condition,
-                                                     function_name, {
-                                                         'hash_matched_code': unmangled_if,
-                                                         'extension': extension
-                                                     })
-            unmangled_builtin_declarations.add(
-                'constexpr const UnmangledBuiltIn {extension}(TExtension::{extension});'.format(
-                    **template_args))
+                essl_level, glsl_level, shader_type, function_name)) or (
+                    unmangled_builtin_no_shader_type and
+                    ((essl_extension == 'UNDEFINED' and
+                      unmangled_builtin_no_shader_type['essl_extension'] != 'UNDEFINED') or
+                     (glsl_extension == 'UNDEFINED' and
+                      unmangled_builtin_no_shader_type['glsl_extension'] != 'UNDEFINED'))):
+            # We don't have this unmangled builtin recorded yet or we replace an unmangled builtin from an extension with one from core.
+            essl_unmangled_builtin_declaration = 'constexpr const UnmangledBuiltIn {essl_extension}(TExtension::{essl_extension});'.format(
+                **template_args)
+            glsl_unmangled_builtin_declaration = 'constexpr const UnmangledBuiltIn {glsl_extension}(TExtension::{glsl_extension});'.format(
+                **template_args)
+            unmangled_function_if_statements.add_obj(
+                essl_level, glsl_level, shader_type, function_name, essl_obj, glsl_obj,
+                essl_extension, glsl_extension, essl_unmangled_builtin_declaration,
+                glsl_unmangled_builtin_declaration, unmangled_script_generated_hash_tests)
 
         for function_props in function_variants:
             template_args['id'] = id_counter
@@ -1174,17 +1464,12 @@ def process_single_function_group(
             template_args['human_readable_name'] = get_function_human_readable_name(
                 template_args['name_with_suffix'], parameters)
             template_args['mangled_name_length'] = len(template_args['mangled_name'])
-            template_args['extension_condition'] = ' && mResources.{extension}'.format(
-                **template_args) if template_args['extension'] != 'UNDEFINED' else ''
 
-            template_mangled_if = """if (name == BuiltInName::{unique_name}{extension_condition})
-{{
-    return &BuiltInFunction::function_{unique_name};
-}}"""
-            mangled_if = template_mangled_if.format(**template_args)
-            get_builtin_if_statements.add_obj(essl_level, glsl_level, condition,
-                                              template_args['mangled_name'],
-                                              {'hash_matched_code': mangled_if})
+            obj = '&BuiltInFunction::function_{unique_name}'.format(**template_args)
+            get_builtin_if_statements.add_obj(
+                essl_level, glsl_level, shader_type, template_args['mangled_name'], obj,
+                template_args['essl_extension'], template_args['glsl_extension'],
+                script_generated_hash_tests)
 
             if template_args['unique_name'] in defined_function_variants:
                 continue
@@ -1232,9 +1517,6 @@ def process_single_function_group(
             template_function_declaration = 'constexpr const TFunction function_{unique_name}(BuiltInId::{human_readable_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
             function_declarations.append(template_function_declaration.format(**template_args))
 
-            template_mangled_name_declaration = 'constexpr const ImmutableString {unique_name}("{mangled_name}");'
-            name_declarations.add(template_mangled_name_declaration.format(**template_args))
-
             id_counter += 1
 
 
@@ -1243,20 +1525,22 @@ def process_function_group(group_name, group, parameter_declarations, name_decla
                            defined_function_variants, builtin_id_declarations,
                            builtin_id_definitions, defined_parameter_names, variable_declarations,
                            function_declarations, script_generated_hash_tests,
-                           get_builtin_if_statements, is_in_group_definitions):
+                           unmangled_script_generated_hash_tests, get_builtin_if_statements,
+                           is_in_group_definitions):
     global id_counter
     first_id = id_counter
 
-    condition = 'NO_CONDITION'
-    if 'condition' in group:
-        condition = group['condition']
+    shader_type = 'NONE'
+    if 'shader_type' in group:
+        shader_type = group['shader_type']
 
-    process_single_function_group(
-        condition, group_name, group, parameter_declarations, name_declarations,
-        unmangled_function_if_statements, unmangled_builtin_declarations,
-        defined_function_variants, builtin_id_declarations, builtin_id_definitions,
-        defined_parameter_names, variable_declarations, function_declarations,
-        script_generated_hash_tests, get_builtin_if_statements)
+    process_single_function_group(shader_type, group_name, group, parameter_declarations,
+                                  name_declarations, unmangled_function_if_statements,
+                                  unmangled_builtin_declarations, defined_function_variants,
+                                  builtin_id_declarations, builtin_id_definitions,
+                                  defined_parameter_names, variable_declarations,
+                                  function_declarations, script_generated_hash_tests,
+                                  unmangled_script_generated_hash_tests, get_builtin_if_statements)
 
     if 'subgroups' in group:
         for subgroup_name, subgroup in group['subgroups'].iteritems():
@@ -1265,7 +1549,8 @@ def process_function_group(group_name, group, parameter_declarations, name_decla
                 unmangled_function_if_statements, unmangled_builtin_declarations,
                 defined_function_variants, builtin_id_declarations, builtin_id_definitions,
                 defined_parameter_names, variable_declarations, function_declarations,
-                script_generated_hash_tests, get_builtin_if_statements, is_in_group_definitions)
+                script_generated_hash_tests, unmangled_script_generated_hash_tests,
+                get_builtin_if_statements, is_in_group_definitions)
 
     if 'queryFunction' in group:
         template_args = {'first_id': first_id, 'last_id': id_counter - 1, 'group_name': group_name}
@@ -1303,23 +1588,39 @@ def prune_parameters_arrays(parameter_declarations, function_declarations):
     ]
 
 
-def process_single_variable_group(condition, group_name, group, builtin_id_declarations,
+def process_single_variable_group(shader_type, group_name, group, builtin_id_declarations,
                                   builtin_id_definitions, name_declarations, init_member_variables,
                                   get_variable_declarations, get_builtin_if_statements,
                                   declare_member_variables, variable_declarations,
-                                  get_variable_definitions, variable_name_count):
+                                  get_variable_definitions, script_generated_hash_tests):
     global id_counter
     if 'variables' not in group:
         return
     for variable_name, props in group['variables'].iteritems():
-        level = props['level']
+        essl_level = props['essl_level'] if 'essl_level' in props else None
+        glsl_level = props['glsl_level'] if 'glsl_level' in props else None
         template_args = {
-            'id': id_counter,
-            'name': variable_name,
-            'name_with_suffix': variable_name + get_suffix(props),
-            'level': props['level'],
-            'extension': get_extension(props),
-            'class': 'TVariable'
+            'id':
+                id_counter,
+            'name':
+                variable_name,
+            'name_with_suffix':
+                variable_name + get_suffix(props),
+            'essl_level':
+                essl_level,
+            'glsl_level':
+                glsl_level,
+            'essl_extension':
+                get_essl_extension(props),
+            'glsl_extension':
+                get_glsl_extension(props),
+            # This assumes that variables cannot be part of an ESSL and GLSL extension
+            # Will need to update after adding GLSL extension variables if this is not the case
+            'extension':
+                get_essl_extension(props)
+                if get_essl_extension(props) != 'UNDEFINED' else get_glsl_extension(props),
+            'class':
+                'TVariable'
         }
 
         template_builtin_id_declaration = '    static constexpr const TSymbolUniqueId {name_with_suffix} = TSymbolUniqueId({id});'
@@ -1382,7 +1683,7 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
     {{
         TConstantUnion *unionArray = new TConstantUnion[{object_size}];
         unionArray[0].setIConst({value});
-        mVar_{name_with_suffix}->shareConstPointer(unionArray);
+        static_cast<TVariable *>(mVar_{name_with_suffix})->shareConstPointer(unionArray);
     }}"""
             if template_args['object_size'] > 1:
                 template_init_variable = """    mVar_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});
@@ -1392,7 +1693,7 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
         {{
             unionArray[index].setIConst({value}[index]);
         }}
-        mVar_{name_with_suffix}->shareConstPointer(unionArray);
+        static_cast<TVariable *>(mVar_{name_with_suffix})->shareConstPointer(unionArray);
     }}"""
 
         else:
@@ -1413,90 +1714,55 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
             get_variable_definitions.append(
                 template_get_variable_definition.format(**template_args))
 
-            if level != 'GLSL_BUILTINS':
-                template_name_if = """if (name == BuiltInName::{name})
-{{
-    return &BuiltInVariable::kVar_{name_with_suffix};
-}}"""
-                name_if = template_name_if.format(**template_args)
-                get_builtin_if_statements.add_obj(level, 'COMMON_BUILTINS', condition,
-                                                  template_args['name'],
-                                                  {'hash_matched_code': name_if})
+            if essl_level != 'GLSL_BUILTINS':
+                obj = '&BuiltInVariable::kVar_{name_with_suffix}'.format(**template_args)
+                # TODO(clemendeng@google.com): Add GLSL level once GLSL built-in vars are added
+                get_builtin_if_statements.add_obj(
+                    essl_level, 'COMMON_BUILTINS', shader_type, template_args['name'], obj,
+                    template_args['essl_extension'], template_args['glsl_extension'],
+                    script_generated_hash_tests)
 
         if is_member:
-            get_condition = condition
-            init_conditionally = (
-                condition != 'NO_CONDITION' and variable_name_count[variable_name] == 1)
-            if init_conditionally:
-                # Instead of having the condition if statement at lookup, it's cheaper to have it at initialization time.
-                init_member_variables.append(
-                    '    if ({condition})\n    {{'.format(condition=condition))
-                template_args[
-                    'condition_comment'] = '\n    // Only initialized if {condition}'.format(
-                        condition=condition)
-                get_condition = 'NO_CONDITION'
-            else:
-                template_args['condition_comment'] = ''
             init_member_variables.append(template_init_variable.format(**template_args))
-            if init_conditionally:
-                init_member_variables.append('    }')
 
-            template_declare_member_variable = '{class} *mVar_{name_with_suffix} = nullptr;'
+            template_declare_member_variable = 'TSymbol *mVar_{name_with_suffix} = nullptr;'
             declare_member_variables.append(
                 template_declare_member_variable.format(**template_args))
 
-            template_name_if = """if (name == BuiltInName::{name})
-{{{condition_comment}
-    return mVar_{name_with_suffix};
-}}"""
-            name_if = template_name_if.format(**template_args)
-            get_builtin_if_statements.add_obj(level, 'COMMON_BUILTINS', get_condition,
-                                              variable_name, {'hash_matched_code': name_if})
+            obj = 'mVar_{name_with_suffix}'.format(**template_args)
+
+            # TODO(clemendeng@google.com): Add GLSL level once GLSL built-in vars are added
+            get_builtin_if_statements.add_obj(
+                essl_level, 'COMMON_BUILTINS', shader_type, template_args['name'], obj,
+                template_args['essl_extension'], template_args['glsl_extension'],
+                script_generated_hash_tests, True)
 
         id_counter += 1
 
 
-def count_variable_names(group, variable_name_count):
-    if 'variables' in group:
-        for name in group['variables'].iterkeys():
-            if name not in variable_name_count:
-                variable_name_count[name] = 1
-            else:
-                variable_name_count[name] += 1
-    if 'subgroups' in group:
-        for subgroup_name, subgroup in group['subgroups'].iteritems():
-            count_variable_names(subgroup, variable_name_count)
-
-
-def process_variable_group(parent_condition, group_name, group, builtin_id_declarations,
+def process_variable_group(shader_type, group_name, group, builtin_id_declarations,
                            builtin_id_definitions, name_declarations, init_member_variables,
                            get_variable_declarations, get_builtin_if_statements,
                            declare_member_variables, variable_declarations,
-                           get_variable_definitions, variable_name_count):
+                           get_variable_definitions, script_generated_hash_tests):
     global id_counter
-    condition = 'NO_CONDITION'
-    if 'condition' in group:
-        condition = group['condition']
 
-    if parent_condition != 'NO_CONDITION':
-        if condition == 'NO_CONDITION':
-            condition = parent_condition
-        else:
-            condition = '({cond1}) && ({cond2})'.format(cond1=parent_condition, cond2=condition)
+    if 'shader_type' in group:
+        shader_type = group['shader_type']
 
-    process_single_variable_group(condition, group_name, group, builtin_id_declarations,
+    process_single_variable_group(shader_type, group_name, group, builtin_id_declarations,
                                   builtin_id_definitions, name_declarations, init_member_variables,
                                   get_variable_declarations, get_builtin_if_statements,
                                   declare_member_variables, variable_declarations,
-                                  get_variable_definitions, variable_name_count)
+                                  get_variable_definitions, script_generated_hash_tests)
 
     if 'subgroups' in group:
         for subgroup_name, subgroup in group['subgroups'].iteritems():
             process_variable_group(
-                condition, subgroup_name, subgroup, builtin_id_declarations,
+                shader_type, subgroup_name, subgroup, builtin_id_declarations,
                 builtin_id_definitions, name_declarations, init_member_variables,
                 get_variable_declarations, get_builtin_if_statements, declare_member_variables,
-                variable_declarations, get_variable_definitions, variable_name_count)
+                variable_declarations, get_variable_definitions, script_generated_hash_tests)
 
 
 def main():
@@ -1562,23 +1828,15 @@ def main():
     declare_member_variables = []
     init_member_variables = []
 
-    # Code for querying builtins.
-    get_builtin_if_statements = GroupedList()
-
     # Declarations of UnmangledBuiltIn objects
     unmangled_builtin_declarations = set()
 
-    # Code for querying builtin function unmangled names.
-    unmangled_function_if_statements = GroupedList()
-
     # Code for testing that script-generated hashes match with runtime computed hashes.
     script_generated_hash_tests = OrderedDict()
+    unmangled_script_generated_hash_tests = OrderedDict()
 
     # Functions for testing whether a builtin belongs in group.
     is_in_group_definitions = []
-
-    # Counts of variables with a certain name string:
-    variable_name_count = {}
 
     # Declarations of parameter arrays for builtin TFunctions. Map from C++ variable name to the full
     # declaration.
@@ -1601,43 +1859,59 @@ def main():
             json.dump(
                 parsed_functions, outfile, indent=4, separators=(',', ': '), default=serialize_obj)
 
+    parsed_variables = None
     with open(variables_json_filename) as f:
         parsed_variables = json.load(f, object_pairs_hook=OrderedDict)
 
     # This script uses a perfect hash function to avoid dealing with collisions
-    names = []
+    mangled_names = []
+    unmangled_names = []
     for group_name, group in parsed_functions.iteritems():
-        get_function_names(group, names)
+        get_function_names(group, mangled_names, unmangled_names)
     for group_name, group in parsed_variables.iteritems():
-        get_variable_names(group, names)
-    # Remove duplicates
-    names = list(dict.fromkeys(names))
-    names_dict = dict(zip(names, range(1, len(names) + 1)))
+        get_variable_names(group, mangled_names)
+
+    # Hashing mangled names
+    mangled_names = list(dict.fromkeys(mangled_names))
+    num_mangled_names = len(mangled_names)
+    mangled_names_dict = dict(zip(mangled_names, range(0, len(mangled_names))))
     # Generate the perfect hash function
-    f1, f2, G = generate_hash(names_dict, Hash2)
-    hashfn = HashFunction(f1, f2, G)
-    S1 = f1.salt
-    S2 = f2.salt
+    f1, f2, mangled_G = generate_hash(mangled_names_dict, Hash2)
+    mangled_hashfn = HashFunction(f1, f2, mangled_G)
+    mangled_S1 = f1.salt
+    mangled_S2 = f2.salt
+    # Array for querying mangled builtins
+    get_builtin_if_statements = GroupedList(mangled_hashfn, num_mangled_names)
+
+    # Hashing unmangled names
+    unmangled_names = list(dict.fromkeys(unmangled_names))
+    num_unmangled_names = len(unmangled_names)
+    unmangled_names_dict = dict(zip(unmangled_names, range(0, len(unmangled_names))))
+    # Generate the perfect hash function
+    f1, f2, unmangled_G = generate_hash(unmangled_names_dict, Hash2)
+    unmangled_hashfn = HashFunction(f1, f2, unmangled_G)
+    unmangled_S1 = f1.salt
+    unmangled_S2 = f2.salt
+    # Array for querying unmangled builtins
+    unmangled_function_if_statements = UnmangledGroupedList(unmangled_hashfn, num_unmangled_names)
 
     for group_name, group in parsed_functions.iteritems():
-        process_function_group(
-            group_name, group, parameter_declarations, name_declarations,
-            unmangled_function_if_statements, unmangled_builtin_declarations,
-            defined_function_variants, builtin_id_declarations, builtin_id_definitions,
-            defined_parameter_names, variable_declarations, function_declarations,
-            script_generated_hash_tests, get_builtin_if_statements, is_in_group_definitions)
+        process_function_group(group_name, group, parameter_declarations, name_declarations,
+                               unmangled_function_if_statements, unmangled_builtin_declarations,
+                               defined_function_variants, builtin_id_declarations,
+                               builtin_id_definitions, defined_parameter_names,
+                               variable_declarations, function_declarations,
+                               script_generated_hash_tests, unmangled_script_generated_hash_tests,
+                               get_builtin_if_statements, is_in_group_definitions)
 
     parameter_declarations = prune_parameters_arrays(parameter_declarations, function_declarations)
 
     for group_name, group in parsed_variables.iteritems():
-        count_variable_names(group, variable_name_count)
-
-    for group_name, group in parsed_variables.iteritems():
-        process_variable_group('NO_CONDITION', group_name, group, builtin_id_declarations,
+        process_variable_group('NONE', group_name, group, builtin_id_declarations,
                                builtin_id_definitions, name_declarations, init_member_variables,
                                get_variable_declarations, get_builtin_if_statements,
                                declare_member_variables, variable_declarations,
-                               get_variable_definitions, variable_name_count)
+                               get_variable_definitions, script_generated_hash_tests)
 
     output_strings = {
         'script_name':
@@ -1668,32 +1942,48 @@ def main():
             '\n'.join(sorted(get_variable_declarations)),
         'get_variable_definitions':
             '\n'.join(sorted(get_variable_definitions)),
-        'unmangled_builtin_declarations':
-            '\n'.join(sorted(unmangled_builtin_declarations)),
         'declare_member_variables':
             '\n'.join(declare_member_variables),
         'init_member_variables':
             '\n'.join(init_member_variables),
-        'get_unmangled_builtin':
-            unmangled_function_if_statements.get_switch_code(hashfn, script_generated_hash_tests),
-        'get_builtin':
-            get_builtin_if_statements.get_switch_code(hashfn, script_generated_hash_tests),
+        'mangled_array':
+            get_builtin_if_statements.get_array(),
+        'unmangled_array':
+            unmangled_function_if_statements.get_array(unmangled_builtin_declarations),
         'max_unmangled_name_length':
             unmangled_function_if_statements.get_max_name_length(),
         'max_mangled_name_length':
             get_builtin_if_statements.get_max_name_length(),
+        'num_unmangled_names':
+            num_unmangled_names,
+        'num_mangled_names':
+            num_mangled_names,
+        'unmangled_builtin_declarations':
+            '\n'.join(sorted(unmangled_builtin_declarations)),
         'script_generated_hash_tests':
             '\n'.join(script_generated_hash_tests.iterkeys()),
-        'S1':
-            str(S1).replace('[', ' ').replace(']', ' '),
-        'S2':
-            str(S2).replace('[', ' ').replace(']', ' '),
-        'G':
-            str(G).replace('[', ' ').replace(']', ' '),
-        'NG':
-            len(G),
-        'NS':
-            len(S1)
+        'unmangled_script_generated_hash_tests':
+            '\n'.join(unmangled_script_generated_hash_tests.iterkeys()),
+        'mangled_S1':
+            str(mangled_S1).replace('[', ' ').replace(']', ' '),
+        'mangled_S2':
+            str(mangled_S2).replace('[', ' ').replace(']', ' '),
+        'mangled_G':
+            str(mangled_G).replace('[', ' ').replace(']', ' '),
+        'mangled_NG':
+            len(mangled_G),
+        'mangled_NS':
+            len(mangled_S1),
+        'unmangled_S1':
+            str(unmangled_S1).replace('[', ' ').replace(']', ' '),
+        'unmangled_S2':
+            str(unmangled_S2).replace('[', ' ').replace(']', ' '),
+        'unmangled_G':
+            str(unmangled_G).replace('[', ' ').replace(']', ' '),
+        'unmangled_NG':
+            len(unmangled_G),
+        'unmangled_NS':
+            len(unmangled_S1)
     }
 
     with open('ImmutableString_autogen.cpp', 'wt') as outfile_cpp:
