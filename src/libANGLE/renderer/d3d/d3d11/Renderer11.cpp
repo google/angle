@@ -1238,30 +1238,28 @@ NativeWindowD3D *Renderer11::createNativeWindow(EGLNativeWindowType window,
 }
 
 egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
-                                         IUnknown *d3dTexture,
+                                         IUnknown *texture,
                                          EGLint *width,
                                          EGLint *height,
                                          EGLint *samples,
                                          const angle::Format **angleFormat) const
 {
-    ID3D11Texture2D *texture = d3d11::DynamicCastComObject<ID3D11Texture2D>(d3dTexture);
-    if (texture == nullptr)
+    angle::ComPtr<ID3D11Texture2D> d3dTexture =
+        d3d11::DynamicCastComObjectToComPtr<ID3D11Texture2D>(texture);
+    if (d3dTexture == nullptr)
     {
         return egl::EglBadParameter() << "client buffer is not a ID3D11Texture2D";
     }
 
-    ID3D11Device *textureDevice = nullptr;
-    texture->GetDevice(&textureDevice);
-    if (textureDevice != mDevice)
+    angle::ComPtr<ID3D11Device> textureDevice;
+    d3dTexture->GetDevice(&textureDevice);
+    if (textureDevice.Get() != mDevice)
     {
-        SafeRelease(texture);
         return egl::EglBadParameter() << "Texture's device does not match.";
     }
-    SafeRelease(textureDevice);
 
     D3D11_TEXTURE2D_DESC desc = {0};
-    texture->GetDesc(&desc);
-    SafeRelease(texture);
+    d3dTexture->GetDesc(&desc);
 
     if (width)
     {
