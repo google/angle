@@ -35,8 +35,9 @@
 // 3d texture framebuffer tests
 3188 VULKAN : KHR-GLES2.texture_3d.framebuffer_texture.rgba8 = SKIP
 
-// Unclear what is happening here, failing to validate a 2D texture format
-3190 VULKAN : KHR-GLES2.texture_3d.copy_sub_image.rgba8 = SKIP
+// GL_RGBA8 is not supported in GLES2
+// GL_OES_rgb8_rgba8 only enables GL_RGBA8 for render buffers (not textures)
+3797 VULKAN : KHR-GLES2.texture_3d.copy_sub_image.rgba8 = FAIL
 
 // Compressed texture tests on Android
 3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.rgba_astc_* = SKIP

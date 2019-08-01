@@ -791,7 +791,8 @@ class ImageHelper final : public CommandGraphResource
     void stageSubresourceUpdateFromImage(vk::ImageHelper *image,
                                          const gl::ImageIndex &index,
                                          const gl::Offset &destOffset,
-                                         const gl::Extents &glExtents);
+                                         const gl::Extents &glExtents,
+                                         const VkImageType imageType);
 
     // Stage a clear operation to a clear value based on WebGL requirements.
     void stageSubresourceRobustClear(const gl::ImageIndex &index, const angle::Format &format);
