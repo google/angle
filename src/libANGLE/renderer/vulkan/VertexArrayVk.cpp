@@ -285,8 +285,6 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
                                                     GLuint relativeOffset)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "VertexArrayVk::convertVertexBufferCpu");
-    // Needed before reading buffer or we could get stale data.
-    ANGLE_TRY(contextVk->finishImpl());
 
     unsigned srcFormatSize = vertexFormat.angleFormat().pixelBytes;
     unsigned dstFormatSize = vertexFormat.bufferFormat().pixelBytes;
