@@ -2429,6 +2429,9 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
         else if (IsBroadwell(adapterDesc.DeviceId) || IsHaswell(adapterDesc.DeviceId))
         {
             features->rewriteUnaryMinusOperator.enabled = capsVersion < IntelDriverVersion(4624);
+
+            // Haswell drivers occasionally corrupt (small?) (vertex?) texture data uploads.
+            features->setDataFasterThanImageUpload.enabled = false;
         }
     }
 
