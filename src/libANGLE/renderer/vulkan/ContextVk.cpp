@@ -2341,7 +2341,7 @@ angle::Result ContextVk::checkCompletedCommands()
         ASSERT(batch.serial > mLastCompletedQueueSerial);
         mLastCompletedQueueSerial = batch.serial;
 
-        batch.fence.reset(device);
+        mRenderer->resetSharedFence(&batch.fence);
         ANGLE_TRACE_EVENT0("gpu.angle", "commandPool.destroy");
         batch.commandPool.destroy(device);
         ++finishedCount;
@@ -2437,7 +2437,7 @@ angle::Result ContextVk::getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOu
     {
         ANGLE_TRY(getRenderer()->newSharedFence(this, &mSubmitFence));
     }
-    getRenderer()->resetSharedFence(sharedFenceOut);
+    ASSERT(!sharedFenceOut->isReferenced());
     sharedFenceOut->copy(getDevice(), mSubmitFence);
     return angle::Result::Continue;
 }
