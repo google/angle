@@ -2388,6 +2388,7 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
     bool isSkylake                 = false;
     bool isBroadwell               = false;
     bool isHaswell                 = false;
+    bool isIvyBridge               = false;
     bool isAMD                     = IsAMD(adapterDesc.VendorId);
     bool isFeatureLevel9_3         = (deviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
     IntelDriverVersion capsVersion = IntelDriverVersion(0);
@@ -2398,6 +2399,7 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
         isSkylake   = IsSkylake(adapterDesc.DeviceId);
         isBroadwell = IsBroadwell(adapterDesc.DeviceId);
         isHaswell   = IsHaswell(adapterDesc.DeviceId);
+        isIvyBridge = IsIvyBridge(adapterDesc.DeviceId);
     }
 
     if (isNvidia)
@@ -2447,8 +2449,9 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
     ANGLE_FEATURE_CONDITION(features, addDummyTextureNoRenderTarget,
                             isIntel && capsVersion < IntelDriverVersion(4815))
 
-    // Haswell drivers occasionally corrupt (small?) (vertex?) texture data uploads.
-    ANGLE_FEATURE_CONDITION(features, setDataFasterThanImageUpload, !(isBroadwell || isHaswell))
+    // Haswell/Ivybridge drivers occasionally corrupt (small?) (vertex?) texture data uploads.
+    ANGLE_FEATURE_CONDITION(features, setDataFasterThanImageUpload,
+                            !(isIvyBridge || isBroadwell || isHaswell))
 
     ANGLE_FEATURE_CONDITION(features, disableB5G6R5Support,
                             (isIntel && capsVersion < IntelDriverVersion(4539)) || isAMD)
