@@ -22,6 +22,30 @@
       "revId": "5ac3e3cb5789037339eda743edf74fda959e97d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c92240f_ac2d9d09",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-01T20:17:54Z",
+      "side": 1,
+      "message": "Ah, good catch.   Just remove this block then or is there a better way to be checking 3D texture support?",
+      "parentUuid": "e06fc9d9_d80b76c7",
+      "range": {
+        "startLine": 538,
+        "startChar": 12,
+        "endLine": 538,
+        "endChar": 99
+      },
+      "revId": "5ac3e3cb5789037339eda743edf74fda959e97d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
