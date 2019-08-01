@@ -32,8 +32,8 @@ class AtomicCounterBufferTest : public ANGLETest
 // Test GL_ATOMIC_COUNTER_BUFFER is not supported with version lower than ES31.
 TEST_P(AtomicCounterBufferTest, AtomicCounterBufferBindings)
 {
-    // Causes crashes in the subsequent OpenGL testing of this function.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
+    // Crashes in older drivers.  http://anglebug.com/3738
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
 
     ASSERT_EQ(3, getClientMajorVersion());
     GLBuffer atomicCounterBuffer;
@@ -54,8 +54,8 @@ class AtomicCounterBufferTest31 : public AtomicCounterBufferTest
 // Linking should fail if counters in vertex shader exceed gl_MaxVertexAtomicCounters.
 TEST_P(AtomicCounterBufferTest31, ExceedMaxVertexAtomicCounters)
 {
-    // Causes crashes in the subsequent OpenGL testing of this function.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
+    // Crashes in older drivers.  http://anglebug.com/3738
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
 
     constexpr char kVS[] =
         "#version 310 es\n"
@@ -78,8 +78,8 @@ TEST_P(AtomicCounterBufferTest31, ExceedMaxVertexAtomicCounters)
 // GLSL ES Spec 3.10.4, section 9.2.1.
 TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecified)
 {
-    // Causes crashes in the subsequent OpenGL testing of this function.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
+    // Crashes in older drivers.  http://anglebug.com/3738
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
 
     constexpr char kVS[] =
         "#version 310 es\n"
@@ -103,8 +103,8 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecified)
 // value.
 TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
 {
-    // Causes crashes in the subsequent OpenGL testing of this function.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
+    // Crashes in older drivers.  http://anglebug.com/3738
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
 
     constexpr char kVS[] =
         "#version 310 es\n"
@@ -127,8 +127,8 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
 // Tests atomic counter reads using compute shaders. Used as a sanity check for the translator.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterReadCompute)
 {
-    // Causes crashes in the subsequent OpenGL testing of this function.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
+    // Crashes in older drivers.  http://anglebug.com/3738
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
 
     // Skipping due to a bug on the Adreno OpenGLES Android driver.
     // http://anglebug.com/2925
@@ -158,8 +158,8 @@ void main()
 // Test atomic counter read.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 {
-    // Causes crashes in the subsequent OpenGL testing of this function.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
+    // Crashes in older drivers.  http://anglebug.com/3738
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
 
     // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
     // http://anglebug.com/1729
@@ -197,8 +197,8 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 // Test atomic counter increment and decrement.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
 {
-    // Causes crashes in the subsequent OpenGL testing of this function.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
+    // Crashes in older drivers.  http://anglebug.com/3738
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
 
     constexpr char kCS[] =
         "#version 310 es\n"
@@ -241,8 +241,8 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
 // Tests multiple atomic counter buffers.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterMultipleBuffers)
 {
-    // Causes crashes in the subsequent OpenGL testing of this function.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
+    // Crashes in older drivers.  http://anglebug.com/3738
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
 
     GLint maxAtomicCounterBuffers = 0;
     glGetIntegerv(GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS, &maxAtomicCounterBuffers);
