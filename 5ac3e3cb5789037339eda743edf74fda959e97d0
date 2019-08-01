@@ -46,6 +46,53 @@
       "revId": "5ac3e3cb5789037339eda743edf74fda959e97d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a5c58de_a389e58f",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-01T20:35:35Z",
+      "side": 1,
+      "message": "I think we can remove the block of code below (the \u0027ref\u0027) and put it up here slightly modified:\n\n    if (texType \u003d\u003d TextureType::_3D \u0026\u0026 IsETC2EACFormat(internalformat))\n    {\n        // ES 3.1, Section 8.7, page 169.\n        context-\u003evalidationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);\n        return false;\n    }\n\nBecause there are only two texture types that can be sent to glCompressedTexImage3D (2D array and 3D) and those targets are validated before this function is called, it\u0027s safe to do a !\u003d on 3D textures here.\n\nWe interpreted the part of the spec about \"compressed formats in xxx table must be used for 2D arrays only\" as \"all compressed formats must be 2D arrays only\" so we should be able to just update this validation to disallow only the ETC formats.",
+      "parentUuid": "6c92240f_ac2d9d09",
+      "range": {
+        "startLine": 538,
+        "startChar": 12,
+        "endLine": 538,
+        "endChar": 99
+      },
+      "revId": "5ac3e3cb5789037339eda743edf74fda959e97d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e05e38f_ae0c34c0",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-01T20:35:35Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 689,
+        "startChar": 0,
+        "endLine": 694,
+        "endChar": 5
+      },
+      "revId": "5ac3e3cb5789037339eda743edf74fda959e97d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
