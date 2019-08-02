@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3d0cfb3_42c7c7f5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-02T18:31:31Z",
+      "side": 1,
+      "message": "Duplicated",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 24
+      },
+      "revId": "e8dd23302a7ef9e0ba922aae81e67088b272945a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70371e70_69e816ed",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-02T18:31:31Z",
+      "side": 1,
+      "message": "Should this then be `!\u003d _2DArray`?\n\n---\n\nEdit, just saw Geoff\u0027s comment. I think given the error name, `!\u003d _2DArray` is clearer, but works either way.",
+      "range": {
+        "startLine": 537,
+        "startChar": 12,
+        "endLine": 537,
+        "endChar": 41
+      },
+      "revId": "e8dd23302a7ef9e0ba922aae81e67088b272945a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
