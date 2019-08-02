@@ -152,14 +152,6 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
     bool mInDefaultUniform;
 };
 
-TIntermConstantUnion *CreateFloatConstant(float value)
-{
-    const TType *constantType     = StaticType::GetBasic<EbtFloat, 1>();
-    TConstantUnion *constantValue = new TConstantUnion;
-    constantValue->setFConst(value);
-    return new TIntermConstantUnion(constantValue, *constantType);
-}
-
 constexpr ImmutableString kFlippedPointCoordName    = ImmutableString("flippedPointCoord");
 constexpr ImmutableString kFlippedFragCoordName     = ImmutableString("flippedFragCoord");
 constexpr ImmutableString kEmulatedDepthRangeParams = ImmutableString("ANGLEDepthRangeParams");
@@ -223,8 +215,7 @@ void FlipBuiltinVariable(TIntermBlock *root,
     TIntermSymbol *builtinRef = new TIntermSymbol(builtin);
 
     // Create a swizzle to "builtin.y"
-    TVector<int> swizzleOffsetY;
-    swizzleOffsetY.push_back(1);
+    TVector<int> swizzleOffsetY = {1};
     TIntermSwizzle *builtinY = new TIntermSwizzle(builtinRef, swizzleOffsetY);
 
     // Create a symbol reference to our new variable that will hold the modified builtin.
@@ -296,16 +287,14 @@ void AppendVertexShaderDepthCorrectionToMain(TIntermBlock *root, TSymbolTable *s
     TIntermSymbol *positionRef = new TIntermSymbol(position);
 
     // Create a swizzle to "gl_Position.z"
-    TVector<int> swizzleOffsetZ;
-    swizzleOffsetZ.push_back(2);
+    TVector<int> swizzleOffsetZ = {2};
     TIntermSwizzle *positionZ = new TIntermSwizzle(positionRef, swizzleOffsetZ);
 
     // Create a constant "0.5"
-    TIntermConstantUnion *oneHalf = CreateFloatConstant(0.5f);
+    TIntermConstantUnion *oneHalf = CreateFloatNode(0.5f);
 
     // Create a swizzle to "gl_Position.w"
-    TVector<int> swizzleOffsetW;
-    swizzleOffsetW.push_back(3);
+    TVector<int> swizzleOffsetW = {3};
     TIntermSwizzle *positionW = new TIntermSwizzle(positionRef->deepCopy(), swizzleOffsetW);
 
     // Create the expression "(gl_Position.z + gl_Position.w) * 0.5".
@@ -517,27 +506,22 @@ void AddLineSegmentRasterizationEmulation(TInfoSinkBase &sink,
 
     // Create a swizzle to "ANGLEUniforms.viewport.xy".
     TIntermBinary *viewportRef = CreateDriverUniformRef(driverUniforms, kViewport);
-    TVector<int> swizzleOffsetXY;
-    swizzleOffsetXY.push_back(0);
-    swizzleOffsetXY.push_back(1);
+    TVector<int> swizzleOffsetXY = {0, 1};
     TIntermSwizzle *viewportXY = new TIntermSwizzle(viewportRef->deepCopy(), swizzleOffsetXY);
 
     // Create a swizzle to "ANGLEUniforms.viewport.zw".
-    TVector<int> swizzleOffsetZW;
-    swizzleOffsetZW.push_back(2);
-    swizzleOffsetZW.push_back(3);
+    TVector<int> swizzleOffsetZW = {2, 3};
     TIntermSwizzle *viewportZW = new TIntermSwizzle(viewportRef, swizzleOffsetZW);
 
     // ANGLEPosition.xy / ANGLEPosition.w
     TIntermSymbol *position    = new TIntermSymbol(anglePosition);
     TIntermSwizzle *positionXY = new TIntermSwizzle(position, swizzleOffsetXY);
-    TVector<int> swizzleOffsetW;
-    swizzleOffsetW.push_back(3);
+    TVector<int> swizzleOffsetW = {3};
     TIntermSwizzle *positionW  = new TIntermSwizzle(position->deepCopy(), swizzleOffsetW);
     TIntermBinary *positionNDC = new TIntermBinary(EOpDiv, positionXY, positionW);
 
     // ANGLEPosition * 0.5
-    TIntermConstantUnion *oneHalf = CreateFloatConstant(0.5f);
+    TIntermConstantUnion *oneHalf = CreateFloatNode(0.5f);
     TIntermBinary *halfPosition   = new TIntermBinary(EOpVectorTimesScalar, positionNDC, oneHalf);
 
     // (ANGLEPosition * 0.5) + 0.5
@@ -575,7 +559,7 @@ void AddLineSegmentRasterizationEmulation(TInfoSinkBase &sink,
     TIntermBinary *baSq = new TIntermBinary(EOpMul, ba, ba->deepCopy());
 
     // 2.0 * ba * ba
-    TIntermTyped *two      = CreateFloatConstant(2.0f);
+    TIntermTyped *two      = CreateFloatNode(2.0f);
     TIntermBinary *twoBaSq = new TIntermBinary(EOpVectorTimesScalar, baSq, two);
 
     // Assign to a temporary "ba2".
@@ -583,9 +567,7 @@ void AddLineSegmentRasterizationEmulation(TInfoSinkBase &sink,
     TIntermDeclaration *ba2Decl = CreateTempInitDeclarationNode(ba2Temp, twoBaSq);
 
     // Create a swizzle to "ba2.yx".
-    TVector<int> swizzleOffsetYX;
-    swizzleOffsetYX.push_back(1);
-    swizzleOffsetYX.push_back(0);
+    TVector<int> swizzleOffsetYX = {1, 0};
     TIntermSymbol *ba2    = CreateTempSymbolNode(ba2Temp);
     TIntermSwizzle *ba2YX = new TIntermSwizzle(ba2, swizzleOffsetYX);
 
@@ -599,21 +581,19 @@ void AddLineSegmentRasterizationEmulation(TInfoSinkBase &sink,
     TIntermSymbol *bp          = CreateTempSymbolNode(bpTemp);
 
     // Create a swizzle to "bp.x".
-    TVector<int> swizzleOffsetX;
-    swizzleOffsetX.push_back(0);
+    TVector<int> swizzleOffsetX = {0};
     TIntermSwizzle *bpX = new TIntermSwizzle(bp, swizzleOffsetX);
 
     // Using a small epsilon value ensures that we don't suffer from numerical instability when
     // lines are exactly vertical or horizontal.
     static constexpr float kEpisilon = 0.00001f;
-    TIntermConstantUnion *epsilon    = CreateFloatConstant(kEpisilon);
+    TIntermConstantUnion *epsilon    = CreateFloatNode(kEpisilon);
 
     // bp.x > epsilon
     TIntermBinary *checkX = new TIntermBinary(EOpGreaterThan, bpX, epsilon);
 
     // Create a swizzle to "bp.y".
-    TVector<int> swizzleOffsetY;
-    swizzleOffsetY.push_back(1);
+    TVector<int> swizzleOffsetY = {1};
     TIntermSwizzle *bpY = new TIntermSwizzle(bp->deepCopy(), swizzleOffsetY);
 
     // bp.y > epsilon
@@ -798,7 +778,7 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         {
             TIntermBinary *viewportYScale =
                 CreateDriverUniformRef(driverUniforms, kNegViewportYScale);
-            TIntermConstantUnion *pivot = CreateFloatConstant(0.5f);
+            TIntermConstantUnion *pivot = CreateFloatNode(0.5f);
             FlipBuiltinVariable(root, GetMainSequence(root), viewportYScale, &getSymbolTable(),
                                 BuiltInVariable::gl_PointCoord(), kFlippedPointCoordName, pivot);
         }

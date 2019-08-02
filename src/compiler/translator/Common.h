@@ -71,6 +71,7 @@ class TVector : public std::vector<T, pool_allocator<T>>
     TVector() : std::vector<T, pool_allocator<T>>() {}
     TVector(const pool_allocator<T> &a) : std::vector<T, pool_allocator<T>>(a) {}
     TVector(size_type i) : std::vector<T, pool_allocator<T>>(i) {}
+    TVector(std::initializer_list<T> init) : std::vector<T, pool_allocator<T>>(init) {}
 };
 
 template <class K, class D, class H = std::hash<K>, class CMP = std::equal_to<K>>

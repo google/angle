@@ -113,14 +113,22 @@ TIntermTyped *CreateZeroNode(const TType &type)
     return TIntermAggregate::CreateConstructor(constType, arguments);
 }
 
+TIntermConstantUnion *CreateFloatNode(float value)
+{
+    TConstantUnion *u = new TConstantUnion[1];
+    u[0].setFConst(value);
+
+    TType type(EbtFloat, EbpUndefined, EvqConst, 1);
+    return new TIntermConstantUnion(u, type);
+}
+
 TIntermConstantUnion *CreateIndexNode(int index)
 {
     TConstantUnion *u = new TConstantUnion[1];
     u[0].setIConst(index);
 
     TType type(EbtInt, EbpUndefined, EvqConst, 1);
-    TIntermConstantUnion *node = new TIntermConstantUnion(u, type);
-    return node;
+    return new TIntermConstantUnion(u, type);
 }
 
 TIntermConstantUnion *CreateBoolNode(bool value)
@@ -129,8 +137,7 @@ TIntermConstantUnion *CreateBoolNode(bool value)
     u[0].setBConst(value);
 
     TType type(EbtBool, EbpUndefined, EvqConst, 1);
-    TIntermConstantUnion *node = new TIntermConstantUnion(u, type);
-    return node;
+    return new TIntermConstantUnion(u, type);
 }
 
 TVariable *CreateTempVariable(TSymbolTable *symbolTable, const TType *type)
