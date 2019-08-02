@@ -45,6 +45,30 @@
       "revId": "e8dd23302a7ef9e0ba922aae81e67088b272945a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64d18609_431df881",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-02T18:37:45Z",
+      "side": 1,
+      "message": "Problem is that we get into this validation on 2D and Cube cases too so we have to invert the check.",
+      "parentUuid": "70371e70_69e816ed",
+      "range": {
+        "startLine": 537,
+        "startChar": 12,
+        "endLine": 537,
+        "endChar": 41
+      },
+      "revId": "e8dd23302a7ef9e0ba922aae81e67088b272945a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
