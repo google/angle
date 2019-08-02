@@ -36,6 +36,11 @@ namespace
 constexpr unsigned int kEmulatedAlphaValue = 1;
 
 constexpr size_t kMinReadPixelsBufferSize = 128000;
+
+// Alignment value to accommodate the largest known, for now, uncompressed Vulkan format
+// VK_FORMAT_R64G64B64A64_SFLOAT
+constexpr size_t kReadPixelsBufferAlignment = 32;
+
 // Clear values are only used when loadOp=Clear is set in clearWithRenderPassOp.  When starting a
 // new render pass, the clear value is set to an unlikely value (bright pink) to stand out better
 // in case of a bug.
@@ -164,8 +169,8 @@ FramebufferVk::FramebufferVk(RendererVk *renderer,
                              WindowSurfaceVk *backbuffer)
     : FramebufferImpl(state), mBackbuffer(backbuffer), mActiveColorComponents(0)
 {
-    mReadPixelBuffer.init(renderer, VK_BUFFER_USAGE_TRANSFER_DST_BIT, 4, kMinReadPixelsBufferSize,
-                          true);
+    mReadPixelBuffer.init(renderer, VK_BUFFER_USAGE_TRANSFER_DST_BIT, kReadPixelsBufferAlignment,
+                          kMinReadPixelsBufferSize, true);
 }
 
 FramebufferVk::~FramebufferVk() = default;
