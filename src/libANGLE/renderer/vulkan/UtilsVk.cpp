@@ -1063,11 +1063,11 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     pipelineDesc.setScissor(gl_vk::GetRect(params.blitArea));
 
     // Change source layout outside render pass
-    if (src->isLayoutChangeNecessary(vk::ImageLayout::FragmentShaderReadOnly))
+    if (src->isLayoutChangeNecessary(vk::ImageLayout::AllGraphicsShadersReadOnly))
     {
         vk::CommandBuffer *srcLayoutChange;
         ANGLE_TRY(src->recordCommands(contextVk, &srcLayoutChange));
-        src->changeLayout(src->getAspectFlags(), vk::ImageLayout::FragmentShaderReadOnly,
+        src->changeLayout(src->getAspectFlags(), vk::ImageLayout::AllGraphicsShadersReadOnly,
                           srcLayoutChange);
     }
 
@@ -1394,11 +1394,11 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     pipelineDesc.setScissor(scissor);
 
     // Change source layout outside render pass
-    if (src->isLayoutChangeNecessary(vk::ImageLayout::FragmentShaderReadOnly))
+    if (src->isLayoutChangeNecessary(vk::ImageLayout::AllGraphicsShadersReadOnly))
     {
         vk::CommandBuffer *srcLayoutChange;
         ANGLE_TRY(src->recordCommands(contextVk, &srcLayoutChange));
-        src->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::FragmentShaderReadOnly,
+        src->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::AllGraphicsShadersReadOnly,
                           srcLayoutChange);
     }
 

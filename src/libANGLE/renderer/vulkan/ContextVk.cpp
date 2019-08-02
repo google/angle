@@ -2432,7 +2432,6 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
     const gl::ActiveTextureMask &activeTextures    = program->getActiveSamplersMask();
     const gl::ActiveTextureTypeArray &textureTypes = program->getActiveSamplerTypes();
 
-    const auto &uniforms = program->getState().getUniforms();
     for (size_t textureUnit : activeTextures)
     {
         gl::Texture *texture        = textures[textureUnit];
@@ -2454,15 +2453,10 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
         // staged updates in its staging buffer for unused texture mip levels or layers. Therefore
         // we can't verify it has no staged updates right here.
 
-        // Find out the image is used in which shader stage.
-        vk::ImageLayout textureLayout = vk::ImageLayout::FragmentShaderReadOnly;
+        vk::ImageLayout textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
         if (program->isCompute())
         {
             textureLayout = vk::ImageLayout::ComputeShaderReadOnly;
-        }
-        else if (uniforms[textureUnit].isActive(gl::ShaderType::Vertex))
-        {
-            textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
         }
 
         // Ensure the image is in read-only layout
