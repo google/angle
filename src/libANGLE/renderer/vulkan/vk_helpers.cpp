@@ -2159,7 +2159,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, &stagingPointer, &bufferHandle,
                                       &stagingOffset, nullptr));
 
-    const uint8_t *source = pixels + inputSkipBytes;
+    const uint8_t *source = pixels + static_cast<ptrdiff_t>(inputSkipBytes);
 
     LoadImageFunctionInfo loadFunction = vkFormat.textureLoadFunctions(type);
 

@@ -1515,8 +1515,24 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     // created with the host coherent bit.
     ANGLE_TRY(mReadPixelBuffer.invalidate(contextVk));
 
-    PackPixels(packPixelsParams, *readFormat, area.width * readFormat->pixelBytes, readPixelBuffer,
-               static_cast<uint8_t *>(pixels));
+    const gl::State &glState = contextVk->getState();
+    gl::Buffer *packBuffer   = glState.getTargetBuffer(gl::BufferBinding::PixelPack);
+    if (packBuffer != nullptr)
+    {
+        // Must map the PBO in order to read its contents (and then unmap it later)
+        BufferVk *packBufferVk = vk::GetImpl(packBuffer);
+        void *mapPtr           = nullptr;
+        ANGLE_TRY(packBufferVk->mapImpl(contextVk, &mapPtr));
+        uint8_t *dest = static_cast<uint8_t *>(mapPtr) + reinterpret_cast<ptrdiff_t>(pixels);
+        PackPixels(packPixelsParams, *readFormat, area.width * readFormat->pixelBytes,
+                   readPixelBuffer, static_cast<uint8_t *>(dest));
+        packBufferVk->unmapImpl(contextVk);
+    }
+    else
+    {
+        PackPixels(packPixelsParams, *readFormat, area.width * readFormat->pixelBytes,
+                   readPixelBuffer, static_cast<uint8_t *>(pixels));
+    }
 
     return angle::Result::Continue;
 }
