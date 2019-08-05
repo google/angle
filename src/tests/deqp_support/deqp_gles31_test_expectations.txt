@@ -695,8 +695,10 @@
 // Transform feedback:
 3205 VULKAN : dEQP-GLES31.functional.debug.*transform_feedback = SKIP
 
-// Stencil textures (some missing support for 3D and 2D array textures):
-3585 VULKAN : dEQP-GLES31.functional.stencil_texturing.* = SKIP
+// Stencil textures (some missing support for base level):
+3683 VULKAN PIXEL2 : dEQP-GLES31.functional.stencil_texturing.format.* = FAIL
+3683 VULKAN PIXEL2 : dEQP-GLES31.functional.stencil_texturing.misc.compare_mode_effect = FAIL
+3148 VULKAN : dEQP-GLES31.functional.stencil_texturing.misc.base_level = SKIP
 
 // Multisampled textures:
 3565 VULKAN : dEQP-GLES31.functional.texture.multisample.* = SKIP
