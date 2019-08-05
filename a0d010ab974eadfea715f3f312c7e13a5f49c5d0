@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e5e8499_5981614e",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-08-05T02:14:03Z",
+      "side": 1,
+      "message": "Still failing, maybe both Vulkan and GL?\nThough, I think this has actually something to do with the new capabilities, but I couldn\u0027t find anything wrong with the suspect CL.",
+      "range": {
+        "startLine": 36,
+        "startChar": 23,
+        "endLine": 36,
+        "endChar": 31
+      },
+      "revId": "a0d010ab974eadfea715f3f312c7e13a5f49c5d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
