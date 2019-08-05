@@ -23,6 +23,10 @@
 #include "libANGLE/validationGL31_autogen.h"
 #include "libGLESv2/global_state.h"
 
+#if defined(ANGLE_TRACE_ENABLED)
+#    include "libANGLE/gl_enum_utils_autogen.h"
+#endif
+
 namespace gl
 {
 void GL_APIENTRY CopyBufferSubData(GLenum readTarget,
@@ -32,10 +36,12 @@ void GL_APIENTRY CopyBufferSubData(GLenum readTarget,
                                    GLsizeiptr size)
 {
     EVENT(
-        "(GLenum readTarget = 0x%X, GLenum writeTarget = 0x%X, GLintptr readOffset = %llu, "
-        "GLintptr writeOffset = %llu, GLsizeiptr size = %llu)",
-        readTarget, writeTarget, static_cast<unsigned long long>(readOffset),
-        static_cast<unsigned long long>(writeOffset), static_cast<unsigned long long>(size));
+        "(GLenum readTarget = %s, GLenum writeTarget = %s, GLintptr readOffset = %llu, GLintptr "
+        "writeOffset = %llu, GLsizeiptr size = %llu)",
+        PackedGLenumToString<BufferBinding>(readTarget).c_str(),
+        PackedGLenumToString<BufferBinding>(writeTarget).c_str(),
+        static_cast<unsigned long long>(readOffset), static_cast<unsigned long long>(writeOffset),
+        static_cast<unsigned long long>(size));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -57,8 +63,8 @@ void GL_APIENTRY CopyBufferSubData(GLenum readTarget,
 
 void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instancecount)
 {
-    EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d, GLsizei instancecount = %d)",
-          mode, first, count, instancecount);
+    EVENT("(GLenum mode = %s, GLint first = %d, GLsizei count = %d, GLsizei instancecount = %d)",
+          PackedGLenumToString<PrimitiveMode>(mode).c_str(), first, count, instancecount);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -83,9 +89,10 @@ void GL_APIENTRY DrawElementsInstanced(GLenum mode,
                                        GLsizei instancecount)
 {
     EVENT(
-        "(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const void *indices = "
+        "(GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void *indices = "
         "0x%016" PRIxPTR ", GLsizei instancecount = %d)",
-        mode, count, type, (uintptr_t)indices, instancecount);
+        PackedGLenumToString<PrimitiveMode>(mode).c_str(), count,
+        PackedGLenumToString<DrawElementsType>(type).c_str(), (uintptr_t)indices, instancecount);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -137,9 +144,10 @@ void GL_APIENTRY GetActiveUniformBlockiv(GLuint program,
                                          GLint *params)
 {
     EVENT(
-        "(GLuint program = %u, GLuint uniformBlockIndex = %u, GLenum pname = 0x%X, GLint *params = "
+        "(GLuint program = %u, GLuint uniformBlockIndex = %u, GLenum pname = %s, GLint *params = "
         "0x%016" PRIxPTR ")",
-        program, uniformBlockIndex, pname, (uintptr_t)params);
+        program, uniformBlockIndex, GLenumToString(GLenumGroup::UniformBlockPName, pname),
+        (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -190,8 +198,9 @@ void GL_APIENTRY GetActiveUniformsiv(GLuint program,
 {
     EVENT(
         "(GLuint program = %u, GLsizei uniformCount = %d, const GLuint *uniformIndices = "
-        "0x%016" PRIxPTR ", GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")",
-        program, uniformCount, (uintptr_t)uniformIndices, pname, (uintptr_t)params);
+        "0x%016" PRIxPTR ", GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
+        program, uniformCount, (uintptr_t)uniformIndices,
+        GLenumToString(GLenumGroup::UniformPName, pname), (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -281,8 +290,9 @@ void GL_APIENTRY PrimitiveRestartIndex(GLuint index)
 
 void GL_APIENTRY TexBuffer(GLenum target, GLenum internalformat, GLuint buffer)
 {
-    EVENT("(GLenum target = 0x%X, GLenum internalformat = 0x%X, GLuint buffer = %u)", target,
-          internalformat, buffer);
+    EVENT("(GLenum target = %s, GLenum internalformat = %s, GLuint buffer = %u)",
+          GLenumToString(GLenumGroup::TextureTarget, target),
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer);
 
     Context *context = GetValidGlobalContext();
     if (context)

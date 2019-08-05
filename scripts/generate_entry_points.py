@@ -366,15 +366,15 @@ reinterpret_cast_to_dict = {
 }
 
 format_dict = {
-    "GLbitfield": "0x%X",
-    "GLboolean": "%u",
+    "GLbitfield": "%s",
+    "GLboolean": "%s",
     "GLbyte": "%d",
     "GLclampx": "0x%X",
     "GLDEBUGPROC": "0x%016\" PRIxPTR \"",
     "GLDEBUGPROCKHR": "0x%016\" PRIxPTR \"",
     "GLdouble": "%f",
     "GLeglImageOES": "0x%016\" PRIxPTR \"",
-    "GLenum": "0x%X",
+    "GLenum": "%s",
     "GLfixed": "0x%X",
     "GLfloat": "%f",
     "GLint": "%d",
@@ -411,6 +411,10 @@ template_sources_includes = """#include "libGLESv2/entry_points_{header_version}
 #include "libANGLE/validation{validation_header_version}.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
+
+#if defined(ANGLE_TRACE_ENABLED)
+#    include "libANGLE/gl_enum_utils_autogen.h"
+#endif
 """
 
 template_header_includes_gl32 = """#include <export.h>
@@ -432,6 +436,10 @@ template_sources_includes_gl32 = """#include "libGL/entry_points_{}_autogen.h"
 #include "libANGLE/validationGL{}{}_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
+
+#if defined(ANGLE_TRACE_ENABLED)
+#    include "libANGLE/gl_enum_utils_autogen.h"
+#endif
 """
 
 template_event_comment = """// Don't run an EVENT() macro on the EXT_debug_marker entry points.
@@ -617,7 +625,7 @@ def just_the_name_packed(param, reserved_set):
         return name
 
 
-def param_print_argument(param):
+def param_print_argument(command_node, packed_gl_enums, param):
     name_only = just_the_name(param)
     type_only = just_the_type(param)
 
@@ -629,6 +637,21 @@ def param_print_argument(param):
 
     if type_only in static_cast_to_dict:
         return "static_cast<" + static_cast_to_dict[type_only] + ">(" + name_only + ")"
+
+    if type_only == "GLbitfield":
+        group_name = find_gl_enum_group_in_command(command_node, name_only)
+        return "GLbitfieldToString(GLenumGroup::%s, %s).c_str()" % (group_name, name_only)
+
+    if type_only == "GLboolean":
+        return "GLenumToString(GLenumGroup::Boolean, %s)" % (name_only,)
+
+    if type_only == "GLenum":
+        if name_only in packed_gl_enums:
+            internal_type = packed_gl_enums[name_only]
+            return "PackedGLenumToString<%s>(%s).c_str()" % (internal_type, name_only)
+        else:
+            group_name = find_gl_enum_group_in_command(command_node, name_only)
+            return "GLenumToString(GLenumGroup::%s, %s)" % (group_name, name_only)
 
     return name_only
 
@@ -693,7 +716,8 @@ def get_packed_enums(cmd_packed_gl_enums, cmd_name):
     return cmd_packed_gl_enums.get(strip_suffix(cmd_name), {})
 
 
-def format_entry_point_def(cmd_name, proto, params, is_explicit_context, cmd_packed_gl_enums):
+def format_entry_point_def(command_node, cmd_name, proto, params, is_explicit_context,
+                           cmd_packed_gl_enums):
     packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name)
     internal_params = [just_the_name_packed(param, packed_gl_enums) for param in params]
     packed_gl_enum_conversions = []
@@ -707,7 +731,7 @@ def format_entry_point_def(cmd_name, proto, params, is_explicit_context, cmd_pac
                 ">(" + name + ");"
             ]
 
-    pass_params = [param_print_argument(param) for param in params]
+    pass_params = [param_print_argument(command_node, packed_gl_enums, param) for param in params]
     format_params = [param_format_string(param) for param in params]
     return_type = proto[:-len(cmd_name)]
     default_return = default_return_value(cmd_name, return_type.strip())
@@ -910,7 +934,7 @@ def get_entry_points(all_commands, commands, is_explicit_context, is_wgl, all_pa
         decls.append(
             format_entry_point_decl(cmd_name, proto_text, param_text, is_explicit_context))
         defs.append(
-            format_entry_point_def(cmd_name, proto_text, param_text, is_explicit_context,
+            format_entry_point_def(command, cmd_name, proto_text, param_text, is_explicit_context,
                                    cmd_packed_gl_enums))
 
         export_defs.append(

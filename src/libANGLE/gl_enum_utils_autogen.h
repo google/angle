@@ -11,7 +11,10 @@
 #ifndef LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
 #define LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
 
+#include <sstream>
 #include <string>
+
+#include "common/PackedGLEnums_autogen.h"
 
 namespace gl
 {
@@ -220,6 +223,15 @@ enum class GLenumGroup
 const char *GLenumToString(GLenumGroup enumGroup, unsigned int value);
 
 std::string GLbitfieldToString(GLenumGroup enumGroup, unsigned int value);
+
+template <typename T>
+std::string PackedGLenumToString(GLenum packedEnum)
+{
+    T internalTypeEnum = FromGLenum<T>(packedEnum);
+    std::stringstream st;
+    st << internalTypeEnum;
+    return st.str();
+}
 
 }  // namespace gl
 

@@ -304,6 +304,8 @@ libangle_sources = [
   "src/libANGLE/format_map_desktop.cpp",
   "src/libANGLE/formatutils.cpp",
   "src/libANGLE/formatutils.h",
+  "src/libANGLE/gl_enum_utils_autogen.cpp",
+  "src/libANGLE/gl_enum_utils_autogen.h",
   "src/libANGLE/histogram_macros.h",
   "src/libANGLE/queryconversions.cpp",
   "src/libANGLE/queryconversions.h",
@@ -923,7 +925,6 @@ libangle_sources += [
   "src/libANGLE/capture_gles_3_1_autogen.h",
   "src/libANGLE/capture_gles_ext_autogen.h",
   "src/libANGLE/frame_capture_utils_autogen.h",
-  "src/libANGLE/gl_enum_utils_autogen.h",
 ]
 
 libangle_capture_sources = [
@@ -938,7 +939,6 @@ libangle_capture_sources = [
   "src/libANGLE/capture_gles_3_1_params.cpp",
   "src/libANGLE/capture_gles_ext_autogen.cpp",
   "src/libANGLE/capture_gles_ext_params.cpp",
-  "src/libANGLE/gl_enum_utils_autogen.cpp",
   "src/libANGLE/frame_capture_utils_autogen.cpp",
 ]
 

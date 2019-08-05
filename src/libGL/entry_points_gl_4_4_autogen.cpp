@@ -23,14 +23,18 @@
 #include "libANGLE/validationGL44_autogen.h"
 #include "libGLESv2/global_state.h"
 
+#if defined(ANGLE_TRACE_ENABLED)
+#    include "libANGLE/gl_enum_utils_autogen.h"
+#endif
+
 namespace gl
 {
 void GL_APIENTRY BindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint *buffers)
 {
     EVENT(
-        "(GLenum target = 0x%X, GLuint first = %u, GLsizei count = %d, const GLuint *buffers = "
+        "(GLenum target = %s, GLuint first = %u, GLsizei count = %d, const GLuint *buffers = "
         "0x%016" PRIxPTR ")",
-        target, first, count, (uintptr_t)buffers);
+        GLenumToString(GLenumGroup::BufferTargetARB, target), first, count, (uintptr_t)buffers);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -53,10 +57,11 @@ void GL_APIENTRY BindBuffersRange(GLenum target,
                                   const GLsizeiptr *sizes)
 {
     EVENT(
-        "(GLenum target = 0x%X, GLuint first = %u, GLsizei count = %d, const GLuint *buffers = "
+        "(GLenum target = %s, GLuint first = %u, GLsizei count = %d, const GLuint *buffers = "
         "0x%016" PRIxPTR ", const GLintptr *offsets = 0x%016" PRIxPTR
         ", const GLsizeiptr *sizes = 0x%016" PRIxPTR ")",
-        target, first, count, (uintptr_t)buffers, (uintptr_t)offsets, (uintptr_t)sizes);
+        GLenumToString(GLenumGroup::BufferTargetARB, target), first, count, (uintptr_t)buffers,
+        (uintptr_t)offsets, (uintptr_t)sizes);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -155,9 +160,11 @@ void GL_APIENTRY BindVertexBuffers(GLuint first,
 
 void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags)
 {
-    EVENT("(GLenum target = 0x%X, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
-          ", GLbitfield flags = 0x%X)",
-          target, static_cast<unsigned long long>(size), (uintptr_t)data, flags);
+    EVENT("(GLenum target = %s, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
+          ", GLbitfield flags = %s)",
+          GLenumToString(GLenumGroup::BufferStorageTarget, target),
+          static_cast<unsigned long long>(size), (uintptr_t)data,
+          GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -176,9 +183,10 @@ void GL_APIENTRY
 ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const void *data)
 {
     EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLenum format = 0x%X, GLenum type = 0x%X, const "
-        "void *data = 0x%016" PRIxPTR ")",
-        texture, level, format, type, (uintptr_t)data);
+        "(GLuint texture = %u, GLint level = %d, GLenum format = %s, GLenum type = %s, const void "
+        "*data = 0x%016" PRIxPTR ")",
+        texture, level, GLenumToString(GLenumGroup::PixelFormat, format),
+        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -208,9 +216,10 @@ void GL_APIENTRY ClearTexSubImage(GLuint texture,
     EVENT(
         "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
         "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
-        "= 0x%X, GLenum type = 0x%X, const void *data = 0x%016" PRIxPTR ")",
-        texture, level, xoffset, yoffset, zoffset, width, height, depth, format, type,
-        (uintptr_t)data);
+        "= %s, GLenum type = %s, const void *data = 0x%016" PRIxPTR ")",
+        texture, level, xoffset, yoffset, zoffset, width, height, depth,
+        GLenumToString(GLenumGroup::PixelFormat, format),
+        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
     if (context)

@@ -23,6 +23,10 @@
 #include "libANGLE/validationGL12_autogen.h"
 #include "libGLESv2/global_state.h"
 
+#if defined(ANGLE_TRACE_ENABLED)
+#    include "libANGLE/gl_enum_utils_autogen.h"
+#endif
+
 namespace gl
 {
 void GL_APIENTRY CopyTexSubImage3D(GLenum target,
@@ -36,9 +40,10 @@ void GL_APIENTRY CopyTexSubImage3D(GLenum target,
                                    GLsizei height)
 {
     EVENT(
-        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
+        "(GLenum target = %s, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
         "zoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
-        target, level, xoffset, yoffset, zoffset, x, y, width, height);
+        PackedGLenumToString<TextureTarget>(target).c_str(), level, xoffset, yoffset, zoffset, x, y,
+        width, height);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -65,9 +70,10 @@ void GL_APIENTRY DrawRangeElements(GLenum mode,
                                    const void *indices)
 {
     EVENT(
-        "(GLenum mode = 0x%X, GLuint start = %u, GLuint end = %u, GLsizei count = %d, GLenum type "
-        "= 0x%X, const void *indices = 0x%016" PRIxPTR ")",
-        mode, start, end, count, type, (uintptr_t)indices);
+        "(GLenum mode = %s, GLuint start = %u, GLuint end = %u, GLsizei count = %d, GLenum type = "
+        "%s, const void *indices = 0x%016" PRIxPTR ")",
+        PackedGLenumToString<PrimitiveMode>(mode).c_str(), start, end, count,
+        PackedGLenumToString<DrawElementsType>(type).c_str(), (uintptr_t)indices);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -98,11 +104,12 @@ void GL_APIENTRY TexImage3D(GLenum target,
                             const void *pixels)
 {
     EVENT(
-        "(GLenum target = 0x%X, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, "
-        "GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLenum format = 0x%X, GLenum "
-        "type = 0x%X, const void *pixels = 0x%016" PRIxPTR ")",
-        target, level, internalformat, width, height, depth, border, format, type,
-        (uintptr_t)pixels);
+        "(GLenum target = %s, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, "
+        "GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLenum format = %s, GLenum "
+        "type = %s, const void *pixels = 0x%016" PRIxPTR ")",
+        PackedGLenumToString<TextureTarget>(target).c_str(), level, internalformat, width, height,
+        depth, border, GLenumToString(GLenumGroup::PixelFormat, format),
+        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -134,11 +141,12 @@ void GL_APIENTRY TexSubImage3D(GLenum target,
                                const void *pixels)
 {
     EVENT(
-        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
+        "(GLenum target = %s, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
         "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
-        "= 0x%X, GLenum type = 0x%X, const void *pixels = 0x%016" PRIxPTR ")",
-        target, level, xoffset, yoffset, zoffset, width, height, depth, format, type,
-        (uintptr_t)pixels);
+        "= %s, GLenum type = %s, const void *pixels = 0x%016" PRIxPTR ")",
+        PackedGLenumToString<TextureTarget>(target).c_str(), level, xoffset, yoffset, zoffset,
+        width, height, depth, GLenumToString(GLenumGroup::PixelFormat, format),
+        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
     Context *context = GetValidGlobalContext();
     if (context)
