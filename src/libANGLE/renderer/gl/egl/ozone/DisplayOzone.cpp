@@ -317,7 +317,7 @@ GLuint DisplayOzone::Buffer::createGLFB(const gl::Context *context)
 FramebufferGL *DisplayOzone::Buffer::framebufferGL(const gl::Context *context,
                                                    const gl::FramebufferState &state)
 {
-    return new FramebufferGL(state, createGLFB(context), true);
+    return new FramebufferGL(state, createGLFB(context), true, false);
 }
 
 void DisplayOzone::Buffer::present(const gl::Context *context)

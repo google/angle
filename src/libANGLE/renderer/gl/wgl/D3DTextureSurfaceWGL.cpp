@@ -498,7 +498,7 @@ FramebufferImpl *D3DTextureSurfaceWGL::createDefaultFramebuffer(const gl::Contex
                                            mDepthStencilRenderbufferID);
     }
 
-    return new FramebufferGL(data, framebufferID, true);
+    return new FramebufferGL(data, framebufferID, true, false);
 }
 
 HDC D3DTextureSurfaceWGL::getDC() const

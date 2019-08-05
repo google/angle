@@ -331,7 +331,7 @@ FramebufferImpl *WindowSurfaceCGL::createDefaultFramebuffer(const gl::Context *c
     functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
                                        mDSRenderbuffer);
 
-    return new FramebufferGL(state, framebuffer, true);
+    return new FramebufferGL(state, framebuffer, true, false);
 }
 
 }  // namespace rx

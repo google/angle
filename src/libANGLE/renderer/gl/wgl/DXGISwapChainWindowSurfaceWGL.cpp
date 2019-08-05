@@ -296,7 +296,7 @@ FramebufferImpl *DXGISwapChainWindowSurfaceWGL::createDefaultFramebuffer(
         }
     }
 
-    return new FramebufferGL(data, framebufferID, true);
+    return new FramebufferGL(data, framebufferID, true, false);
 }
 
 HDC DXGISwapChainWindowSurfaceWGL::getDC() const

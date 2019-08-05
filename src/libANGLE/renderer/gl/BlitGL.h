@@ -126,6 +126,10 @@ class BlitGL : angle::NonCopyable
 
     angle::Result clearFramebuffer(FramebufferGL *source);
 
+    angle::Result clearRenderableTextureAlphaToOne(GLuint texture,
+                                                   gl::TextureTarget target,
+                                                   size_t level);
+
     angle::Result initializeResources();
 
   private:

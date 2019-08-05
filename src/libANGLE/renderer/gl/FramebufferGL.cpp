@@ -218,12 +218,28 @@ bool RequiresMultiviewClear(const FramebufferState &state, bool scissorTestEnabl
     return false;
 }
 
+bool IsEmulatedAlphaChannelTextureAttachment(const FramebufferAttachment *attachment)
+{
+    if (!attachment || attachment->type() != GL_TEXTURE)
+    {
+        return false;
+    }
+
+    const Texture *texture     = attachment->getTexture();
+    const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
+    return textureGL->hasEmulatedAlphaChannel(attachment->getTextureImageIndex());
+}
+
 }  // namespace
 
-FramebufferGL::FramebufferGL(const gl::FramebufferState &data, GLuint id, bool isDefault)
+FramebufferGL::FramebufferGL(const gl::FramebufferState &data,
+                             GLuint id,
+                             bool isDefault,
+                             bool emulatedAlpha)
     : FramebufferImpl(data),
       mFramebufferID(id),
       mIsDefault(isDefault),
+      mHasEmulatedAlphaAttachment(emulatedAlpha),
       mAppliedEnabledDrawBuffers(1)
 {}
 
@@ -1104,6 +1120,16 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
                     {
                         attachment = newAttachment;
                     }
+
+                    // Hiding an alpha channel is only supported when it's the first attachment
+                    // currently. Assert that these emulated textures are not bound to a framebuffer
+                    // using MRT.
+                    if (index == 0)
+                    {
+                        mHasEmulatedAlphaAttachment =
+                            IsEmulatedAlphaChannelTextureAttachment(attachment);
+                    }
+                    ASSERT(index == 0 || !IsEmulatedAlphaChannelTextureAttachment(attachment));
                 }
                 break;
             }
@@ -1127,6 +1153,11 @@ GLuint FramebufferGL::getFramebufferID() const
 bool FramebufferGL::isDefault() const
 {
     return mIsDefault;
+}
+
+bool FramebufferGL::hasEmulatedAlphaChannelTextureAttachment() const
+{
+    return mHasEmulatedAlphaAttachment;
 }
 
 void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)

@@ -64,13 +64,19 @@ class IOSurfaceSurfaceCGL : public SurfaceGL
     FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
                                               const gl::FramebufferState &state) override;
 
+    bool hasEmulatedAlphaChannel() const override;
+
   private:
+    angle::Result initializeAlphaChannel(const gl::Context *context, GLuint texture);
+
     CGLContextObj mCGLContext;
     IOSurfaceRef mIOSurface;
     int mWidth;
     int mHeight;
     int mPlane;
     int mFormatIndex;
+
+    bool mAlphaInitialized;
 };
 
 }  // namespace rx

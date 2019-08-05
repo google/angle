@@ -926,6 +926,30 @@ angle::Result BlitGL::clearFramebuffer(FramebufferGL *source)
     return angle::Result::Continue;
 }
 
+angle::Result BlitGL::clearRenderableTextureAlphaToOne(GLuint texture,
+                                                       gl::TextureTarget target,
+                                                       size_t level)
+{
+    // Clearing the alpha of 3D textures is not supported/needed yet.
+    ASSERT(nativegl::UseTexImage2D(TextureTargetToType(target)));
+
+    ANGLE_TRY(initializeResources());
+
+    mStateManager->setClearColor(gl::ColorF(0.0f, 0.0f, 0.0f, 1.0f));
+    mStateManager->setColorMask(false, false, false, true);
+    mStateManager->setScissorTestEnabled(false);
+
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
+    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ToGLenum(target),
+                                     texture, static_cast<GLint>(level));
+    mFunctions->clear(GL_COLOR_BUFFER_BIT);
+
+    // Unbind the texture from the the scratch framebuffer
+    mFunctions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, 0);
+
+    return angle::Result::Continue;
+}
+
 angle::Result BlitGL::initializeResources()
 {
     for (size_t i = 0; i < ArraySize(mScratchTextures); i++)

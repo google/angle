@@ -47,11 +47,16 @@ struct LevelInfoGL
     // Information about luminance alpha texture workarounds in the core profile.
     LUMAWorkaroundGL lumaWorkaround;
 
+    // If this texture level hides the fact that it has an alpha channel by setting the sampler
+    // parameters to always sample 1.0.
+    bool emulatedAlphaChannel;
+
     LevelInfoGL();
     LevelInfoGL(GLenum sourceFormat,
                 GLenum nativeInternalFormat,
                 bool depthStencilWorkaround,
-                const LUMAWorkaroundGL &lumaWorkaround);
+                const LUMAWorkaroundGL &lumaWorkaround,
+                bool emulatedAlphaChannel);
 };
 
 class TextureGL : public TextureImpl
@@ -199,6 +204,7 @@ class TextureGL : public TextureImpl
     void setSwizzle(const gl::Context *context, GLint swizzle[4]);
 
     GLenum getNativeInternalFormat(const gl::ImageIndex &index) const;
+    bool hasEmulatedAlphaChannel(const gl::ImageIndex &index) const;
 
   private:
     void setImageHelper(const gl::Context *context,

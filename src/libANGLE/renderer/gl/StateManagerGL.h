@@ -136,6 +136,11 @@ class StateManagerGL final : angle::NonCopyable
     void setFramebufferSRGBEnabledForFramebuffer(const gl::Context *context,
                                                  bool enabled,
                                                  const FramebufferGL *framebuffer);
+    void setColorMaskForFramebuffer(bool red,
+                                    bool green,
+                                    bool blue,
+                                    bool alpha,
+                                    const FramebufferGL *framebuffer);
 
     void setDitherEnabled(bool enabled);
 

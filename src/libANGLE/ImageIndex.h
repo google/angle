@@ -40,6 +40,8 @@ class ImageIndex
     // map.
     TextureTarget getTarget() const;
 
+    TextureTarget getTargetOrFirstCubeFace() const;
+
     bool isLayered() const;
     bool isEntireLevelCubeMap() const;
 

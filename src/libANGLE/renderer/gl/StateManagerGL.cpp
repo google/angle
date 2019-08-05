@@ -1489,15 +1489,6 @@ void StateManagerGL::syncState(const gl::Context *context,
 {
     const gl::State &state = context->getState();
 
-    // Changing the draw framebuffer binding sometimes requires resetting srgb blending.
-    if (glDirtyBits[gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING])
-    {
-        if (mFunctions->standard == STANDARD_GL_DESKTOP)
-        {
-            mLocalDirtyBits.set(gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB);
-        }
-    }
-
     const gl::State::DirtyBits glAndLocalDirtyBits = (glDirtyBits | mLocalDirtyBits) & bitMask;
     if (!glAndLocalDirtyBits.any())
     {
@@ -1549,9 +1540,13 @@ void StateManagerGL::syncState(const gl::Context *context,
             }
             case gl::State::DIRTY_BIT_COLOR_MASK:
             {
+                gl::Framebuffer *framebuffer = state.getDrawFramebuffer();
+                FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
+
                 const auto &blendState = state.getBlendState();
-                setColorMask(blendState.colorMaskRed, blendState.colorMaskGreen,
-                             blendState.colorMaskBlue, blendState.colorMaskAlpha);
+                setColorMaskForFramebuffer(blendState.colorMaskRed, blendState.colorMaskGreen,
+                                           blendState.colorMaskBlue, blendState.colorMaskAlpha,
+                                           framebufferGL);
                 break;
             }
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
@@ -1697,6 +1692,16 @@ void StateManagerGL::syncState(const gl::Context *context,
                 {
                     updateMultiviewBaseViewLayerIndexUniform(program, framebufferGL->getState());
                 }
+
+                // Changing the draw framebuffer binding sometimes requires resetting srgb blending.
+                if (mFunctions->standard == STANDARD_GL_DESKTOP)
+                {
+                    iter.setLaterBit(gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB);
+                }
+
+                // If the framebuffer is emulating RGB on top of RGBA, the color mask has to be
+                // updated
+                iter.setLaterBit(gl::State::DIRTY_BIT_COLOR_MASK);
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -1886,6 +1891,20 @@ void StateManagerGL::setFramebufferSRGBEnabledForFramebuffer(const gl::Context *
     {
         setFramebufferSRGBEnabled(context, enabled);
     }
+}
+
+void StateManagerGL::setColorMaskForFramebuffer(bool red,
+                                                bool green,
+                                                bool blue,
+                                                bool alpha,
+                                                const FramebufferGL *framebuffer)
+{
+    bool modifiedAlphaMask = alpha;
+    if (framebuffer->hasEmulatedAlphaChannelTextureAttachment())
+    {
+        modifiedAlphaMask = false;
+    }
+    setColorMask(red, green, blue, modifiedAlphaMask);
 }
 
 void StateManagerGL::setDitherEnabled(bool enabled)

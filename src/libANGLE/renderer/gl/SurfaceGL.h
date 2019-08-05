@@ -26,6 +26,8 @@ class SurfaceGL : public SurfaceImpl
 
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
+
+    virtual bool hasEmulatedAlphaChannel() const;
 };
 
 }  // namespace rx

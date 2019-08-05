@@ -128,6 +128,18 @@ TextureTarget ImageIndex::getTarget() const
     return TextureTypeToTarget(mType, mLayerIndex);
 }
 
+gl::TextureTarget ImageIndex::getTargetOrFirstCubeFace() const
+{
+    if (isEntireLevelCubeMap())
+    {
+        return gl::kCubeMapTextureTargetMin;
+    }
+    else
+    {
+        return getTarget();
+    }
+}
+
 GLint ImageIndex::cubeMapFaceIndex() const
 {
     ASSERT(mType == TextureType::CubeMap);

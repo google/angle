@@ -25,7 +25,7 @@ SurfaceGL::~SurfaceGL() {}
 FramebufferImpl *SurfaceGL::createDefaultFramebuffer(const gl::Context *context,
                                                      const gl::FramebufferState &data)
 {
-    return new FramebufferGL(data, 0, true);
+    return new FramebufferGL(data, 0, true, false);
 }
 
 egl::Error SurfaceGL::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
@@ -44,6 +44,11 @@ angle::Result SurfaceGL::initializeContents(const gl::Context *context,
     ANGLE_TRY(blitter->clearFramebuffer(framebufferGL));
 
     return angle::Result::Continue;
+}
+
+bool SurfaceGL::hasEmulatedAlphaChannel() const
+{
+    return false;
 }
 
 }  // namespace rx

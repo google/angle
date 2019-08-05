@@ -14,6 +14,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/MemoryObject.h"
 #include "libANGLE/State.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
@@ -25,6 +26,7 @@
 #include "libANGLE/renderer/gl/ImageGL.h"
 #include "libANGLE/renderer/gl/MemoryObjectGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/SurfaceGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "platform/FeaturesGL.h"
@@ -72,7 +74,7 @@ LevelInfoGL GetLevelInfo(GLenum originalInternalFormat, GLenum destinationIntern
     GLenum destinationFormat = gl::GetUnsizedFormat(destinationInternalFormat);
     return LevelInfoGL(originalFormat, destinationInternalFormat,
                        GetDepthStencilWorkaround(originalFormat),
-                       GetLUMAWorkaroundInfo(originalFormat, destinationFormat));
+                       GetLUMAWorkaroundInfo(originalFormat, destinationFormat), false);
 }
 
 gl::Texture::DirtyBits GetLevelWorkaroundDirtyBits()
@@ -108,16 +110,18 @@ LUMAWorkaroundGL::LUMAWorkaroundGL(bool enabled_, GLenum workaroundFormat_)
     : enabled(enabled_), workaroundFormat(workaroundFormat_)
 {}
 
-LevelInfoGL::LevelInfoGL() : LevelInfoGL(GL_NONE, GL_NONE, false, LUMAWorkaroundGL()) {}
+LevelInfoGL::LevelInfoGL() : LevelInfoGL(GL_NONE, GL_NONE, false, LUMAWorkaroundGL(), false) {}
 
 LevelInfoGL::LevelInfoGL(GLenum sourceFormat_,
                          GLenum nativeInternalFormat_,
                          bool depthStencilWorkaround_,
-                         const LUMAWorkaroundGL &lumaWorkaround_)
+                         const LUMAWorkaroundGL &lumaWorkaround_,
+                         bool emulatedAlphaChannel_)
     : sourceFormat(sourceFormat_),
       nativeInternalFormat(nativeInternalFormat_),
       depthStencilWorkaround(depthStencilWorkaround_),
-      lumaWorkaround(lumaWorkaround_)
+      lumaWorkaround(lumaWorkaround_),
+      emulatedAlphaChannel(emulatedAlphaChannel_)
 {}
 
 TextureGL::TextureGL(const gl::TextureState &state, GLuint id)
@@ -1177,7 +1181,11 @@ angle::Result TextureGL::bindTexImage(const gl::Context *context, egl::Surface *
     // Make sure this texture is bound
     stateManager->bindTexture(getType(), mTextureID);
 
-    setLevelInfo(context, getType(), 0, 1, LevelInfoGL());
+    SurfaceGL *surfaceGL = GetImplAs<SurfaceGL>(surface);
+
+    setLevelInfo(context, getType(), 0, 1,
+                 LevelInfoGL(GL_NONE, GL_NONE, false, LUMAWorkaroundGL(),
+                             surfaceGL->hasEmulatedAlphaChannel()));
     return angle::Result::Continue;
 }
 
@@ -1484,6 +1492,12 @@ GLenum TextureGL::getNativeInternalFormat(const gl::ImageIndex &index) const
     return getLevelInfo(index.getTarget(), index.getLevelIndex()).nativeInternalFormat;
 }
 
+bool TextureGL::hasEmulatedAlphaChannel(const gl::ImageIndex &index) const
+{
+    return getLevelInfo(index.getTargetOrFirstCubeFace(), index.getLevelIndex())
+        .emulatedAlphaChannel;
+}
+
 void TextureGL::syncTextureStateSwizzle(const gl::Context *context,
                                         const FunctionsGL *functions,
                                         GLenum name,
@@ -1492,107 +1506,110 @@ void TextureGL::syncTextureStateSwizzle(const gl::Context *context,
 {
     const LevelInfoGL &levelInfo = getBaseLevelInfo();
     GLenum resultSwizzle         = value;
-    if (levelInfo.lumaWorkaround.enabled || levelInfo.depthStencilWorkaround)
+    if (levelInfo.lumaWorkaround.enabled)
     {
-        if (levelInfo.lumaWorkaround.enabled)
+        switch (value)
         {
-            switch (value)
-            {
-                case GL_RED:
-                case GL_GREEN:
-                case GL_BLUE:
-                    if (levelInfo.sourceFormat == GL_LUMINANCE ||
-                        levelInfo.sourceFormat == GL_LUMINANCE_ALPHA)
-                    {
-                        // Texture is backed by a RED or RG texture, point all color channels at the
-                        // red channel.
-                        ASSERT(levelInfo.lumaWorkaround.workaroundFormat == GL_RED ||
-                               levelInfo.lumaWorkaround.workaroundFormat == GL_RG);
-                        resultSwizzle = GL_RED;
-                    }
-                    else
-                    {
-                        ASSERT(levelInfo.sourceFormat == GL_ALPHA);
-                        // Color channels are not supposed to exist, make them always sample 0.
-                        resultSwizzle = GL_ZERO;
-                    }
-                    break;
+            case GL_RED:
+            case GL_GREEN:
+            case GL_BLUE:
+                if (levelInfo.sourceFormat == GL_LUMINANCE ||
+                    levelInfo.sourceFormat == GL_LUMINANCE_ALPHA)
+                {
+                    // Texture is backed by a RED or RG texture, point all color channels at the
+                    // red channel.
+                    ASSERT(levelInfo.lumaWorkaround.workaroundFormat == GL_RED ||
+                           levelInfo.lumaWorkaround.workaroundFormat == GL_RG);
+                    resultSwizzle = GL_RED;
+                }
+                else
+                {
+                    ASSERT(levelInfo.sourceFormat == GL_ALPHA);
+                    // Color channels are not supposed to exist, make them always sample 0.
+                    resultSwizzle = GL_ZERO;
+                }
+                break;
 
-                case GL_ALPHA:
-                    if (levelInfo.sourceFormat == GL_LUMINANCE)
-                    {
-                        // Alpha channel is not supposed to exist, make it always sample 1.
-                        resultSwizzle = GL_ONE;
-                    }
-                    else if (levelInfo.sourceFormat == GL_ALPHA)
-                    {
-                        // Texture is backed by a RED texture, point the alpha channel at the red
-                        // channel.
-                        ASSERT(levelInfo.lumaWorkaround.workaroundFormat == GL_RED);
-                        resultSwizzle = GL_RED;
-                    }
-                    else
-                    {
-                        ASSERT(levelInfo.sourceFormat == GL_LUMINANCE_ALPHA);
-                        // Texture is backed by an RG texture, point the alpha channel at the green
-                        // channel.
-                        ASSERT(levelInfo.lumaWorkaround.workaroundFormat == GL_RG);
-                        resultSwizzle = GL_GREEN;
-                    }
-                    break;
-
-                case GL_ZERO:
-                case GL_ONE:
-                    // Don't modify the swizzle state when requesting ZERO or ONE.
-                    resultSwizzle = value;
-                    break;
-
-                default:
-                    UNREACHABLE();
-                    break;
-            }
-        }
-        else
-        {
-            ASSERT(levelInfo.depthStencilWorkaround);
-            switch (value)
-            {
-                case GL_RED:
-                    // Don't modify the swizzle state when requesting the red channel.
-                    resultSwizzle = value;
-                    break;
-
-                case GL_GREEN:
-                case GL_BLUE:
-                    if (context->getClientMajorVersion() <= 2)
-                    {
-                        // In OES_depth_texture/ARB_depth_texture, depth
-                        // textures are treated as luminance.
-                        resultSwizzle = GL_RED;
-                    }
-                    else
-                    {
-                        // In GLES 3.0, depth textures are treated as RED
-                        // textures, so green and blue should be 0.
-                        resultSwizzle = GL_ZERO;
-                    }
-                    break;
-
-                case GL_ALPHA:
-                    // Depth textures should sample 1 from the alpha channel.
+            case GL_ALPHA:
+                if (levelInfo.sourceFormat == GL_LUMINANCE)
+                {
+                    // Alpha channel is not supposed to exist, make it always sample 1.
                     resultSwizzle = GL_ONE;
-                    break;
+                }
+                else if (levelInfo.sourceFormat == GL_ALPHA)
+                {
+                    // Texture is backed by a RED texture, point the alpha channel at the red
+                    // channel.
+                    ASSERT(levelInfo.lumaWorkaround.workaroundFormat == GL_RED);
+                    resultSwizzle = GL_RED;
+                }
+                else
+                {
+                    ASSERT(levelInfo.sourceFormat == GL_LUMINANCE_ALPHA);
+                    // Texture is backed by an RG texture, point the alpha channel at the green
+                    // channel.
+                    ASSERT(levelInfo.lumaWorkaround.workaroundFormat == GL_RG);
+                    resultSwizzle = GL_GREEN;
+                }
+                break;
 
-                case GL_ZERO:
-                case GL_ONE:
-                    // Don't modify the swizzle state when requesting ZERO or ONE.
-                    resultSwizzle = value;
-                    break;
+            case GL_ZERO:
+            case GL_ONE:
+                // Don't modify the swizzle state when requesting ZERO or ONE.
+                resultSwizzle = value;
+                break;
 
-                default:
-                    UNREACHABLE();
-                    break;
-            }
+            default:
+                UNREACHABLE();
+                break;
+        }
+    }
+    else if (levelInfo.depthStencilWorkaround)
+    {
+        switch (value)
+        {
+            case GL_RED:
+                // Don't modify the swizzle state when requesting the red channel.
+                resultSwizzle = value;
+                break;
+
+            case GL_GREEN:
+            case GL_BLUE:
+                if (context->getClientMajorVersion() <= 2)
+                {
+                    // In OES_depth_texture/ARB_depth_texture, depth
+                    // textures are treated as luminance.
+                    resultSwizzle = GL_RED;
+                }
+                else
+                {
+                    // In GLES 3.0, depth textures are treated as RED
+                    // textures, so green and blue should be 0.
+                    resultSwizzle = GL_ZERO;
+                }
+                break;
+
+            case GL_ALPHA:
+                // Depth textures should sample 1 from the alpha channel.
+                resultSwizzle = GL_ONE;
+                break;
+
+            case GL_ZERO:
+            case GL_ONE:
+                // Don't modify the swizzle state when requesting ZERO or ONE.
+                resultSwizzle = value;
+                break;
+
+            default:
+                UNREACHABLE();
+                break;
+        }
+    }
+    else if (levelInfo.emulatedAlphaChannel)
+    {
+        if (value == GL_ALPHA)
+        {
+            resultSwizzle = GL_ONE;
         }
     }
 

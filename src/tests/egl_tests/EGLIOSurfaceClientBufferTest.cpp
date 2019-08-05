@@ -331,6 +331,24 @@ TEST_P(IOSurfaceClientBufferTest, ReadFromBGRA8888IOSurface)
     doSampleTest(ioSurface, GL_BGRA_EXT, GL_UNSIGNED_BYTE, &color, sizeof(color), R | G | B | A);
 }
 
+// Test using BGRX8888 IOSurfaces for rendering
+TEST_P(IOSurfaceClientBufferTest, RenderToBGRX8888IOSurface)
+{
+    ScopedIOSurfaceRef ioSurface = CreateSinglePlaneIOSurface(1, 1, 'BGRA', 4);
+
+    GLColor color(3, 2, 1, 255);
+    doClearTest(ioSurface, GL_RGB, GL_UNSIGNED_BYTE, &color, sizeof(color));
+}
+
+// Test reading from BGRX8888 IOSurfaces
+TEST_P(IOSurfaceClientBufferTest, ReadFromBGRX8888IOSurface)
+{
+    ScopedIOSurfaceRef ioSurface = CreateSinglePlaneIOSurface(1, 1, 'BGRA', 4);
+
+    GLColor color(3, 2, 1, 4);
+    doSampleTest(ioSurface, GL_RGB, GL_UNSIGNED_BYTE, &color, sizeof(color), R | G | B);
+}
+
 // Test using RG88 IOSurfaces for rendering
 TEST_P(IOSurfaceClientBufferTest, RenderToRG88IOSurface)
 {
