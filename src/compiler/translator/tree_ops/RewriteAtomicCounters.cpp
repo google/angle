@@ -314,51 +314,29 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
             new TIntermSymbol(mRetyper.getVariableReplacement(symbolVariable));
         ASSERT(bindingOffset != nullptr);
 
-        TIntermNode *argument = symbol;
+        TIntermNode *argument = convertFunctionArgument(symbol, &bindingOffset);
 
-        TIntermNode *parent = getParentNode();
-        ASSERT(parent);
-
-        TIntermBinary *arrayExpression = parent->getAsBinaryNode();
-        if (arrayExpression)
+        if (mRetyper.isInAggregate())
         {
-            ASSERT(arrayExpression->getOp() == EOpIndexDirect ||
-                   arrayExpression->getOp() == EOpIndexIndirect);
-
-            argument = arrayExpression;
-
-            TIntermTyped *subscript                   = arrayExpression->getRight();
-            TIntermConstantUnion *subscriptAsConstant = subscript->getAsConstantUnion();
-            const bool subscriptIsZero = subscriptAsConstant && subscriptAsConstant->isZero(0);
-
-            if (!subscriptIsZero)
-            {
-                // Copy the atomic counter binding/offset constant and modify it by adding the array
-                // subscript to its offset field.
-                TVariable *modified = CreateTempVariable(mSymbolTable, mAtomicCounterType);
-                TIntermDeclaration *modifiedDecl =
-                    CreateTempInitDeclarationNode(modified, bindingOffset);
-
-                TIntermSymbol *modifiedSymbol    = new TIntermSymbol(modified);
-                TConstantUnion *offsetFieldIndex = new TConstantUnion;
-                offsetFieldIndex->setIConst(1);
-                TIntermConstantUnion *offsetFieldRef =
-                    new TIntermConstantUnion(offsetFieldIndex, *StaticType::GetBasic<EbtUInt>());
-                TIntermBinary *offsetField =
-                    new TIntermBinary(EOpIndexDirectStruct, modifiedSymbol, offsetFieldRef);
-
-                TIntermBinary *modifiedOffset = new TIntermBinary(
-                    EOpAddAssign, offsetField, arrayExpression->getRight()->deepCopy());
-
-                TIntermSequence *modifySequence =
-                    new TIntermSequence({modifiedDecl, modifiedOffset});
-                insertStatementsInParentBlock(*modifySequence);
-
-                bindingOffset = modifiedSymbol->deepCopy();
-            }
+            mRetyper.replaceFunctionCallArg(argument, bindingOffset);
         }
+        else
+        {
+            // If there's a stray ac[i] lying around, just delete it.  This can happen if the shader
+            // uses ac[i].length(), which in RemoveArrayLengthMethod() will result in an ineffective
+            // statement that's just ac[i]; (similarly for a stray ac;, it doesn't have to be
+            // subscripted).  Note that the subscript could have side effects, but the
+            // convertFunctionArgument above has already generated code that includes the subscript
+            // (and therefore its side-effect).
+            TIntermBlock *block = nullptr;
+            for (size_t ancestorIndex = 0; block == nullptr; ++ancestorIndex)
+            {
+                block = getAncestorNode(ancestorIndex)->getAsBlock();
+            }
 
-        mRetyper.replaceFunctionCallArg(argument, bindingOffset);
+            TIntermSequence emptySequence;
+            mMultiReplacements.emplace_back(block, argument, emptySequence);
+        }
     }
 
     TIntermDeclaration *getAtomicCounterTypeDeclaration() { return mAtomicCounterTypeDeclaration; }
@@ -445,6 +423,152 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
             new TVariable(mSymbolTable, param->name(), newType, SymbolType::UserDefined);
 
         return replacementVar;
+    }
+
+    TIntermTyped *convertFunctionArgumentHelper(
+        const TVector<unsigned int> &runningArraySizeProducts,
+        TIntermTyped *flattenedSubscript,
+        uint32_t depth,
+        uint32_t *subscriptCountOut)
+    {
+        std::string prefix(depth, ' ');
+        TIntermNode *parent = getAncestorNode(depth);
+        ASSERT(parent);
+
+        TIntermBinary *arrayExpression = parent->getAsBinaryNode();
+        if (!arrayExpression)
+        {
+            // If the parent is not an array subscript operation, we have reached the end of the
+            // subscript chain.  Note the depth that's traversed so the corresponding node can be
+            // taken as the function argument.
+            *subscriptCountOut = depth;
+            return flattenedSubscript;
+        }
+
+        ASSERT(arrayExpression->getOp() == EOpIndexDirect ||
+               arrayExpression->getOp() == EOpIndexIndirect);
+
+        // Assume i = n - depth.  Get Pi.  See comment in convertFunctionArgument.
+        ASSERT(depth < runningArraySizeProducts.size());
+        uint32_t thisDimensionSize =
+            runningArraySizeProducts[runningArraySizeProducts.size() - 1 - depth];
+
+        // Get Ii.
+        TIntermTyped *thisDimensionOffset = arrayExpression->getRight();
+
+        TIntermConstantUnion *subscriptAsConstant = thisDimensionOffset->getAsConstantUnion();
+        const bool subscriptIsZero = subscriptAsConstant && subscriptAsConstant->isZero(0);
+
+        // If Ii is zero, don't need to add Ii*Pi; that's zero.
+        if (!subscriptIsZero)
+        {
+            thisDimensionOffset = thisDimensionOffset->deepCopy();
+
+            // If Pi is 1, don't multiply.  Just accumulate Ii.
+            if (thisDimensionSize != 1)
+            {
+                thisDimensionOffset = new TIntermBinary(EOpMul, thisDimensionOffset,
+                                                        CreateUIntConstant(thisDimensionSize));
+            }
+
+            // Accumulate with the previous running offset, if any.
+            if (flattenedSubscript)
+            {
+                flattenedSubscript =
+                    new TIntermBinary(EOpAdd, flattenedSubscript, thisDimensionOffset);
+            }
+            else
+            {
+                flattenedSubscript = thisDimensionOffset;
+            }
+        }
+
+        // Note: GLSL only allows 2 nested levels of arrays, so this recursion is bounded.
+        return convertFunctionArgumentHelper(runningArraySizeProducts, flattenedSubscript,
+                                             depth + 1, subscriptCountOut);
+    }
+
+    TIntermNode *convertFunctionArgument(TIntermNode *symbol, TIntermTyped **bindingOffset)
+    {
+        // Assume a general case of array declaration with N dimensions:
+        //
+        //     atomic_uint ac[Dn]..[D2][D1];
+        //
+        // Let's define
+        //
+        //     Pn = D(n-1)*...*D2*D1
+        //
+        // In that case, we have:
+        //
+        //     ac[In]         = ac + In*Pn
+        //     ac[In][I(n-1)] = ac + In*Pn + I(n-1)*P(n-1)
+        //     ac[In]...[Ii]  = ac + In*Pn + ... + Ii*Pi
+        //
+        // We have just visited a symbol; ac.  Walking the parent chain, we will visit the
+        // expressions in the above order (ac, ac[In], ac[In][I(n-1)], ...).  We therefore can
+        // simply walk the parent chain and accumulate Ii*Pi to obtain the offset from the base of
+        // ac.
+
+        TIntermSymbol *argumentAsSymbol = symbol->getAsSymbolNode();
+        ASSERT(argumentAsSymbol);
+
+        const TVector<unsigned int> *arraySizes = argumentAsSymbol->getType().getArraySizes();
+
+        // Calculate Pi
+        TVector<unsigned int> runningArraySizeProducts;
+        if (arraySizes && arraySizes->size() > 0)
+        {
+            runningArraySizeProducts.resize(arraySizes->size());
+            uint32_t runningProduct = 1;
+            for (size_t dimension = 0; dimension < arraySizes->size(); ++dimension)
+            {
+                runningArraySizeProducts[dimension] = runningProduct;
+                runningProduct *= (*arraySizes)[dimension];
+            }
+        }
+
+        // Walk the parent chain and accumulate Ii*Pi
+        uint32_t subscriptCount = 0;
+        TIntermTyped *flattenedSubscript =
+            convertFunctionArgumentHelper(runningArraySizeProducts, nullptr, 0, &subscriptCount);
+
+        // Find the function argument, which is either in the form of ac (i.e. there are no
+        // subscripts, in which case that's the function argument), or ac[In]...[Ii] (in which case
+        // the function argument is the (n-i)th ancestor of ac.
+        //
+        // Note that this is the case because no other operation is allowed on ac other than
+        // subscript.
+        TIntermNode *argument = subscriptCount == 0 ? symbol : getAncestorNode(subscriptCount - 1);
+        ASSERT(argument != nullptr);
+
+        // If not subscripted, keep the argument as-is.
+        if (flattenedSubscript == nullptr)
+        {
+            return argument;
+        }
+
+        // Copy the atomic counter binding/offset constant and modify it by adding the array
+        // subscript to its offset field.
+        TVariable *modified              = CreateTempVariable(mSymbolTable, mAtomicCounterType);
+        TIntermDeclaration *modifiedDecl = CreateTempInitDeclarationNode(modified, *bindingOffset);
+
+        TIntermSymbol *modifiedSymbol    = new TIntermSymbol(modified);
+        TConstantUnion *offsetFieldIndex = new TConstantUnion;
+        offsetFieldIndex->setIConst(1);
+        TIntermConstantUnion *offsetFieldRef =
+            new TIntermConstantUnion(offsetFieldIndex, *StaticType::GetBasic<EbtUInt>());
+        TIntermBinary *offsetField =
+            new TIntermBinary(EOpIndexDirectStruct, modifiedSymbol, offsetFieldRef);
+
+        TIntermBinary *modifiedOffset =
+            new TIntermBinary(EOpAddAssign, offsetField, flattenedSubscript);
+
+        TIntermSequence *modifySequence = new TIntermSequence({modifiedDecl, modifiedOffset});
+        insertStatementsInParentBlock(*modifySequence);
+
+        *bindingOffset = modifiedSymbol->deepCopy();
+
+        return argument;
     }
 
     void convertBuiltinFunction(TIntermAggregate *node)

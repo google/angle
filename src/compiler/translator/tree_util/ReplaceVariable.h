@@ -101,6 +101,7 @@ class RetypeOpaqueVariablesHelper
 
     // Function call arguments handling:
     void preVisitAggregate() { mReplacedFunctionCallArgs.emplace(); }
+    bool isInAggregate() const { return !mReplacedFunctionCallArgs.empty(); }
     void postVisitAggregate() { mReplacedFunctionCallArgs.pop(); }
     void replaceFunctionCallArg(const TIntermNode *oldArg, TIntermTyped *newArg)
     {

@@ -703,9 +703,6 @@ void main()
 // Draw an array of points with the first vertex offset at 0 using gl_VertexID
 TEST_P(GLSLTest_ES3, GLVertexIDOffsetZeroDrawArray)
 {
-    // TODO(syoussefi): missing ES3 shader feature support.  http://anglebug.com/3221
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr int kStartIndex  = 0;
     constexpr int kArrayLength = 5;
     constexpr char kVS[]       = R"(#version 300 es
@@ -768,9 +765,6 @@ void GLVertexIDIntegerTextureDrawArrays_helper(int first, int count, GLenum err)
 // https://github.com/KhronosGroup/WebGL/blob/master/sdk/tests/conformance2/rendering/vertex-id.html
 TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawArrays)
 {
-    // TODO(syoussefi): missing ES3 shader feature support.  http://anglebug.com/3221
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Have to set a large point size because the window size is much larger than the texture
     constexpr char kVS[] = R"(#version 300 es
 flat out highp int vVertexID;
@@ -828,9 +822,6 @@ TEST_P(GLSLTest_ES3, GLVertexIDOffsetFiveDrawArray)
 {
     // Bug in Nexus drivers, offset does not work. (anglebug.com/3264)
     ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
-
-    // TODO(syoussefi): missing ES3 shader feature support.  http://anglebug.com/3221
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr int kStartIndex  = 5;
     constexpr int kArrayLength = 5;
@@ -2889,6 +2880,104 @@ TEST_P(GLSLTest_ES3, WriteIntoDynamicIndexingOfSwizzledVector)
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that the length() method is correctly translated in Vulkan atomic counter buffer emulation.
+TEST_P(GLSLTest_ES31, AtomicCounterArrayLength)
+{
+    // Crashes on an assertion.  The driver reports no atomic counter buffers when queried from the
+    // program, but ANGLE believes there to be one.
+    //
+    // This is likely due to the fact that ANGLE generates the following code, as a side effect of
+    // the code on which .length() is being called:
+    //
+    //     _uac1[(_uvalue = _utestSideEffectValue)];
+    //
+    // The driver is optimizing the subscription out, and calling the atomic counter inactive.  This
+    // was observed on nvidia, mesa and amd/windows.
+    //
+    // The fix would be for ANGLE to skip uniforms it believes should exist, but when queried, the
+    // driver says don't.
+    //
+    // http://anglebug.com/3782
+    ANGLE_SKIP_TEST_IF(IsOpenGL());
+
+    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
+    // http://anglebug.com/3726
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
+    constexpr char kCS[] = R"(#version 310 es
+precision mediump float;
+layout(local_size_x=1) in;
+
+layout(binding = 0) uniform atomic_uint ac1[2][3];
+uniform uint testSideEffectValue;
+
+layout(binding = 1, std140) buffer Result
+{
+    uint value;
+} result;
+
+void main() {
+    bool passed = true;
+    if (ac1.length() != 2)
+    {
+        passed = false;
+    }
+    uint value = 0u;
+    if (ac1[(value = testSideEffectValue)].length() != 3)
+    {
+        passed = false;
+    }
+    if (value != testSideEffectValue)
+    {
+        passed = false;
+    }
+    result.value = passed ? 255u : 127u;
+})";
+
+    constexpr unsigned int kUniformTestValue     = 17;
+    constexpr unsigned int kExpectedSuccessValue = 255;
+    constexpr unsigned int kAtomicCounterRows    = 2;
+    constexpr unsigned int kAtomicCounterCols    = 3;
+
+    GLint maxAtomicCounters = 0;
+    glGetIntegerv(GL_MAX_COMPUTE_ATOMIC_COUNTERS, &maxAtomicCounters);
+    EXPECT_GL_NO_ERROR();
+
+    // Required minimum is 8 by the spec
+    EXPECT_GE(maxAtomicCounters, 8);
+    ANGLE_SKIP_TEST_IF(static_cast<uint32_t>(maxAtomicCounters) <
+                       kAtomicCounterRows * kAtomicCounterCols);
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program.get());
+
+    constexpr unsigned int kBufferData[kAtomicCounterRows * kAtomicCounterCols] = {};
+    GLBuffer atomicCounterBuffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(kBufferData), kBufferData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer);
+
+    constexpr unsigned int kOutputInitValue = 0;
+    GLBuffer shaderStorageBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kOutputInitValue), &kOutputInitValue,
+                 GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer);
+
+    GLint uniformLocation = glGetUniformLocation(program.get(), "testSideEffectValue");
+    EXPECT_NE(uniformLocation, -1);
+    glUniform1i(uniformLocation, kUniformTestValue);
+
+    glDispatchCompute(1, 1, 1);
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLuint), GL_MAP_READ_BIT));
+    EXPECT_EQ(*ptr, kExpectedSuccessValue);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
 // Test that array indices for arrays of arrays work as expected.
