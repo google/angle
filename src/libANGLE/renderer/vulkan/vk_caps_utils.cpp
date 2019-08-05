@@ -402,6 +402,9 @@ void RendererVk::ensureCapsInitialized() const
     // Enable Program Binary extension.
     mNativeExtensions.getProgramBinary = true;
     mNativeCaps.programBinaryFormats.push_back(GL_PROGRAM_BINARY_ANGLE);
+
+    // Enable GL_NV_pixel_buffer_object extension.
+    mNativeExtensions.pixelBufferObject = true;
 }
 
 namespace egl_vk
