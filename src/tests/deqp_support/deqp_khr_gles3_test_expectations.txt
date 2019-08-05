@@ -32,16 +32,8 @@
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
 
 // GL_RGB32F framebuffers should not be "complete" (may crash on Android, but only fails elsewhere):
-3695 VULKAN : KHR-GLES3.packed_pixels.rectangle.rgb*32f = SKIP
-
-// Crashes trying to load non-existent texture load function.
-// The following test crashed on "android_angle_vk32_deqp_rel_ng":
-3455 VULKAN ANDROID : KHR-GLES3.packed_pixels.rectangle.rgb9_e5 = SKIP
-3455 VULKAN : KHR-GLES3.copy_tex_image_conversions.forbidden.* = SKIP
-
-// PBO's are not fully implemented:
-3455 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.r* = SKIP
-3455 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.srgb8_alpha8 = SKIP
+3695 VULKAN : KHR-GLES3.packed_pixels.rectangle.rgb*32f = FAIL
+3695 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.rgb*32f = FAIL
 
 // Depth/stencil related failures.
 3457 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth24_stencil8 = FAIL
@@ -114,6 +106,7 @@
 3674 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_cubemap_posx = SKIP
 3674 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_cubemap_posy = SKIP
 3674 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_cubemap_posz = SKIP
+3674 VULKAN : KHR-GLES3.copy_tex_image_conversions.forbidden.renderbuffer_cubemap* = SKIP
 
 // column/row_major specified on struct member:
 3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.all_per_block_buffers.16 = FAIL
