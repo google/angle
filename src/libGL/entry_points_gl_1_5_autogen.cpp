@@ -51,13 +51,14 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
     if (context)
     {
         BufferBinding targetPacked = FromGL<BufferBinding>(target);
+        BufferID bufferPacked      = FromGL<BufferID>(buffer);
         bool isCallValid =
-            (context->skipValidation() || ValidateBindBuffer(context, targetPacked, buffer));
+            (context->skipValidation() || ValidateBindBuffer(context, targetPacked, bufferPacked));
         if (isCallValid)
         {
-            context->bindBuffer(targetPacked, buffer);
+            context->bindBuffer(targetPacked, bufferPacked);
         }
-        ANGLE_CAPTURE(BindBuffer, isCallValid, context, targetPacked, buffer);
+        ANGLE_CAPTURE(BindBuffer, isCallValid, context, targetPacked, bufferPacked);
     }
 }
 
@@ -111,13 +112,14 @@ void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        const BufferID *buffersPacked = FromGL<const BufferID *>(buffers);
         bool isCallValid =
-            (context->skipValidation() || ValidateDeleteBuffers(context, n, buffers));
+            (context->skipValidation() || ValidateDeleteBuffers(context, n, buffersPacked));
         if (isCallValid)
         {
-            context->deleteBuffers(n, buffers);
+            context->deleteBuffers(n, buffersPacked);
         }
-        ANGLE_CAPTURE(DeleteBuffers, isCallValid, context, n, buffers);
+        ANGLE_CAPTURE(DeleteBuffers, isCallValid, context, n, buffersPacked);
     }
 }
 
@@ -161,12 +163,14 @@ void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() || ValidateGenBuffers(context, n, buffers));
+        BufferID *buffersPacked = FromGL<BufferID *>(buffers);
+        bool isCallValid =
+            (context->skipValidation() || ValidateGenBuffers(context, n, buffersPacked));
         if (isCallValid)
         {
-            context->genBuffers(n, buffers);
+            context->genBuffers(n, buffersPacked);
         }
-        ANGLE_CAPTURE(GenBuffers, isCallValid, context, n, buffers);
+        ANGLE_CAPTURE(GenBuffers, isCallValid, context, n, buffersPacked);
     }
 }
 
@@ -308,16 +312,17 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
     GLboolean returnValue;
     if (context)
     {
-        bool isCallValid = (context->skipValidation() || ValidateIsBuffer(context, buffer));
+        BufferID bufferPacked = FromGL<BufferID>(buffer);
+        bool isCallValid = (context->skipValidation() || ValidateIsBuffer(context, bufferPacked));
         if (isCallValid)
         {
-            returnValue = context->isBuffer(buffer);
+            returnValue = context->isBuffer(bufferPacked);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsBuffer, GLboolean>();
         }
-        ANGLE_CAPTURE(IsBuffer, isCallValid, context, buffer, returnValue);
+        ANGLE_CAPTURE(IsBuffer, isCallValid, context, bufferPacked, returnValue);
     }
     else
     {

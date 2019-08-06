@@ -13,9 +13,9 @@
 #define ANGLE_GLES_3_0_CONTEXT_API                                                                 \
     void beginQuery(QueryType targetPacked, GLuint id);                                            \
     void beginTransformFeedback(PrimitiveMode primitiveModePacked);                                \
-    void bindBufferBase(BufferBinding targetPacked, GLuint index, GLuint buffer);                  \
-    void bindBufferRange(BufferBinding targetPacked, GLuint index, GLuint buffer, GLintptr offset, \
-                         GLsizeiptr size);                                                         \
+    void bindBufferBase(BufferBinding targetPacked, GLuint index, BufferID bufferPacked);          \
+    void bindBufferRange(BufferBinding targetPacked, GLuint index, BufferID bufferPacked,          \
+                         GLintptr offset, GLsizeiptr size);                                        \
     void bindSampler(GLuint unit, GLuint sampler);                                                 \
     void bindTransformFeedback(GLenum target, GLuint id);                                          \
     void bindVertexArray(GLuint array);                                                            \

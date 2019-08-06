@@ -38,8 +38,8 @@ BufferState::BufferState()
 
 BufferState::~BufferState() {}
 
-Buffer::Buffer(rx::GLImplFactory *factory, GLuint id)
-    : RefCountObject(id),
+Buffer::Buffer(rx::GLImplFactory *factory, BufferID id)
+    : RefCountObject(id.value),
       mImpl(factory->createBuffer(mState)),
       mImplObserver(this, kImplementationSubjectIndex)
 {

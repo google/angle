@@ -9,6 +9,7 @@
         "Note that all entry points have their suffixes stripped in this file.",
         "See gen_packed_gl_enums.py for the generator that uses this data."
     ],
+
     "glAlphaFunc": {
         "func": "AlphaTestFunc"
     },
@@ -22,13 +23,22 @@
         "target": "QueryType"
     },
     "glBindBuffer": {
-        "target": "BufferBinding"
+        "target": "BufferBinding",
+        "buffer": "BufferID"
     },
     "glBindBufferBase": {
-        "target": "BufferBinding"
+        "target": "BufferBinding",
+        "buffer": "BufferID"
     },
     "glBindBufferRange": {
-        "target": "BufferBinding"
+        "target": "BufferBinding",
+        "buffer": "BufferID"
+    },
+    "glBindBuffersBase": {
+        "buffers": "const BufferID *"
+    },
+    "glBindBuffersRange": {
+        "buffers": "const BufferID *"
     },
     "glBindRenderbuffer": {
         "renderbuffer": "RenderbufferID"
@@ -36,12 +46,24 @@
     "glBindTexture": {
         "target": "TextureType"
     },
+    "glBindVertexBuffer": {
+        "buffer": "BufferID"
+    },
+    "glBindVertexBuffers": {
+        "buffers": "const BufferID *"
+    },
     "glBufferData": {
         "target": "BufferBinding",
         "usage": "BufferUsage"
     },
     "glBufferSubData": {
         "target": "BufferBinding"
+    },
+    "glClearNamedBufferData": {
+        "buffer": "BufferID"
+    },
+    "glClearNamedBufferSubData": {
+        "buffer": "BufferID"
     },
     "glColorPointer": {
         "type": "VertexAttribType"
@@ -95,6 +117,9 @@
         "readTarget": "BufferBinding",
         "writeTarget": "BufferBinding"
     },
+    "glCreateBuffers": {
+        "buffers": "BufferID *"
+    },
     "glCreateShader": {
         "type": "ShaderType"
     },
@@ -106,6 +131,9 @@
     },
     "glCullFace": {
         "mode": "CullFaceMode"
+    },
+    "glDeleteBuffers": {
+        "buffers": "const BufferID *"
     },
     "glDeleteRenderbuffers": {
         "renderbuffers": "const RenderbufferID *"
@@ -150,6 +178,9 @@
     "glFlushMappedBufferRange": {
         "target": "BufferBinding"
     },
+    "glFlushMappedNamedBufferRange": {
+        "buffer": "BufferID"
+    },
     "glFramebufferRenderbuffer": {
         "renderbuffer": "RenderbufferID"
     },
@@ -161,6 +192,9 @@
     },
     "glGenerateMipmap": {
         "target": "TextureType"
+    },
+    "glGenBuffers": {
+        "buffers": "BufferID *"
     },
     "glGenRenderbuffers": {
         "renderbuffers": "RenderbufferID *"
@@ -195,8 +229,32 @@
     "glGetMaterialxv": {
         "pname" : "MaterialParameter"
     },
+    "glGetNamedBufferParameteri64v": {
+        "buffer": "BufferID"
+    },
+    "glGetNamedBufferParameteriv": {
+        "buffer": "BufferID"
+    },
+    "glGetNamedBufferPointerv": {
+        "buffer": "BufferID"
+    },
+    "glGetNamedBufferSubData": {
+        "buffer": "BufferID"
+    },
     "glGetNamedRenderbufferParameteriv": {
         "renderbuffer": "RenderbufferID"
+    },
+    "glGetQueryBufferObjecti64v": {
+        "buffer": "BufferID"
+    },
+    "glGetQueryBufferObjectiv": {
+        "buffer": "BufferID"
+    },
+    "glGetQueryBufferObjectui64v": {
+        "buffer": "BufferID"
+    },
+    "glGetQueryBufferObjectuiv": {
+        "buffer": "BufferID"
     },
     "glGetQueryiv": {
         "target": "QueryType"
@@ -261,8 +319,17 @@
     "glImportSemaphoreFd": {
         "handleType": "HandleType"
     },
+    "glInvalidateBufferData": {
+        "buffer": "BufferID"
+    },
+    "glInvalidateBufferSubData": {
+        "buffer": "BufferID"
+    },
     "glInvalidateTexture": {
         "target": "TextureType"
+    },
+    "glIsBuffer": {
+        "buffer": "BufferID"
     },
     "glIsRenderbuffer": {
         "renderbuffer": "RenderbufferID"
@@ -292,6 +359,12 @@
     "glMapBufferRange": {
         "target": "BufferBinding"
     },
+    "glMapNamedBuffer": {
+        "buffer": "BufferID"
+    },
+    "glMapNamedBufferRange": {
+        "buffer": "BufferID"
+    },
     "glMaterialf": {
         "pname": "MaterialParameter"
     },
@@ -320,6 +393,15 @@
     "glMultiDrawElementsInstanced": {
         "mode": "PrimitiveMode",
         "type": "DrawElementsType"
+    },
+    "glNamedBufferData": {
+        "buffer": "BufferID"
+    },
+    "glNamedBufferStorage": {
+        "buffer": "BufferID"
+    },
+    "glNamedBufferSubData": {
+        "buffer": "BufferID"
     },
     "glNamedFramebufferRenderbuffer": {
         "renderbuffer": "RenderbufferID"
@@ -356,6 +438,15 @@
     },
     "glShadeModel": {
         "mode": "ShadingModel"
+    },
+    "glSignalSemaphore": {
+        "buffers": "const BufferID *"
+    },
+    "glTexBuffer": {
+        "buffer": "BufferID"
+    },
+    "glTexBufferRange": {
+        "buffer": "BufferID"
     },
     "glTexCoordPointer": {
         "type": "VertexAttribType"
@@ -474,8 +565,29 @@
     "glTexSubImage3DRobust": {
         "target": "TextureTarget"
     },
+    "glTextureBuffer": {
+        "buffer": "BufferID"
+    },
+    "glTextureBufferRange": {
+        "buffer": "BufferID"
+    },
+    "glTransformFeedbackBufferBase": {
+        "buffer": "BufferID"
+    },
+    "glTransformFeedbackBufferRange": {
+        "buffer": "BufferID"
+    },
     "glUnmapBuffer": {
         "target": "BufferBinding"
+    },
+    "glUnmapNamedBuffer": {
+        "buffer": "BufferID"
+    },
+    "glVertexArrayElementBuffer": {
+        "buffer": "BufferID"
+    },
+    "glVertexArrayVertexBuffer": {
+        "buffer": "BufferID"
     },
     "glVertexAttribFormat": {
         "type": "VertexAttribType"
@@ -489,7 +601,13 @@
     "glVertexAttribPointer": {
         "type": "VertexAttribType"
     },
+    "glVertexArrayVertexBuffers": {
+        "buffers": "const BufferID *"
+    },
     "glVertexPointer": {
         "type": "VertexAttribType"
+    },
+    "glWaitSemaphore": {
+        "buffers": "const BufferID *"
     }
 }

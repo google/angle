@@ -70,7 +70,7 @@ class Buffer final : public RefCountObject,
                      public angle::Subject
 {
   public:
-    Buffer(rx::GLImplFactory *factory, GLuint id);
+    Buffer(rx::GLImplFactory *factory, BufferID id);
     ~Buffer() override;
     void onDestroy(const Context *context) override;
 

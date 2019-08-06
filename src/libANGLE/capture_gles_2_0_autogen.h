@@ -33,7 +33,7 @@ angle::CallCapture CaptureBindAttribLocation(const Context *context,
 angle::CallCapture CaptureBindBuffer(const Context *context,
                                      bool isCallValid,
                                      BufferBinding targetPacked,
-                                     GLuint buffer);
+                                     BufferID bufferPacked);
 angle::CallCapture CaptureBindFramebuffer(const Context *context,
                                           bool isCallValid,
                                           GLenum target,
@@ -153,7 +153,7 @@ angle::CallCapture CaptureCullFace(const Context *context,
 angle::CallCapture CaptureDeleteBuffers(const Context *context,
                                         bool isCallValid,
                                         GLsizei n,
-                                        const GLuint *buffers);
+                                        const BufferID *buffersPacked);
 angle::CallCapture CaptureDeleteFramebuffers(const Context *context,
                                              bool isCallValid,
                                              GLsizei n,
@@ -216,7 +216,7 @@ angle::CallCapture CaptureFrontFace(const Context *context, bool isCallValid, GL
 angle::CallCapture CaptureGenBuffers(const Context *context,
                                      bool isCallValid,
                                      GLsizei n,
-                                     GLuint *buffers);
+                                     BufferID *buffersPacked);
 angle::CallCapture CaptureGenFramebuffers(const Context *context,
                                           bool isCallValid,
                                           GLsizei n,
@@ -374,7 +374,7 @@ angle::CallCapture CaptureHint(const Context *context,
                                GLenum mode);
 angle::CallCapture CaptureIsBuffer(const Context *context,
                                    bool isCallValid,
-                                   GLuint buffer,
+                                   BufferID bufferPacked,
                                    GLboolean returnValue);
 angle::CallCapture CaptureIsEnabled(const Context *context,
                                     bool isCallValid,
@@ -720,11 +720,11 @@ void CaptureCompressedTexSubImage2D_data(const Context *context,
                                          GLsizei imageSize,
                                          const void *data,
                                          angle::ParamCapture *paramCapture);
-void CaptureDeleteBuffers_buffers(const Context *context,
-                                  bool isCallValid,
-                                  GLsizei n,
-                                  const GLuint *buffers,
-                                  angle::ParamCapture *paramCapture);
+void CaptureDeleteBuffers_buffersPacked(const Context *context,
+                                        bool isCallValid,
+                                        GLsizei n,
+                                        const BufferID *buffersPacked,
+                                        angle::ParamCapture *paramCapture);
 void CaptureDeleteFramebuffers_framebuffers(const Context *context,
                                             bool isCallValid,
                                             GLsizei n,
@@ -747,11 +747,11 @@ void CaptureDrawElements_indices(const Context *context,
                                  DrawElementsType typePacked,
                                  const void *indices,
                                  angle::ParamCapture *paramCapture);
-void CaptureGenBuffers_buffers(const Context *context,
-                               bool isCallValid,
-                               GLsizei n,
-                               GLuint *buffers,
-                               angle::ParamCapture *paramCapture);
+void CaptureGenBuffers_buffersPacked(const Context *context,
+                                     bool isCallValid,
+                                     GLsizei n,
+                                     BufferID *buffersPacked,
+                                     angle::ParamCapture *paramCapture);
 void CaptureGenFramebuffers_framebuffers(const Context *context,
                                          bool isCallValid,
                                          GLsizei n,

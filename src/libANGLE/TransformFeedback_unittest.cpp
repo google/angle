@@ -112,7 +112,7 @@ TEST_F(TransformFeedbackTest, BufferBinding)
         .WillOnce(Return(bufferImpl))
         .RetiresOnSaturation();
 
-    gl::Buffer *buffer = new gl::Buffer(&mockGLFactory, 1);
+    gl::Buffer *buffer = new gl::Buffer(&mockGLFactory, {1});
 
     static const size_t bindIndex = 0;
 

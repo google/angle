@@ -346,14 +346,14 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     // These create  and destroy methods are merely pass-throughs to
     // ResourceManager, which owns these object types
-    GLuint createBuffer();
+    BufferID createBuffer();
     GLuint createTexture();
     RenderbufferID createRenderbuffer();
     GLuint createProgramPipeline();
     GLuint createMemoryObject();
     GLuint createSemaphore();
 
-    void deleteBuffer(GLuint buffer);
+    void deleteBuffer(BufferID buffer);
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(RenderbufferID renderbuffer);
     void deleteProgramPipeline(GLuint pipeline);
@@ -366,7 +366,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void bindReadFramebuffer(GLuint framebufferHandle);
     void bindDrawFramebuffer(GLuint framebufferHandle);
 
-    Buffer *getBuffer(GLuint handle) const;
+    Buffer *getBuffer(BufferID handle) const;
     FenceNV *getFenceNV(GLuint handle);
     Sync *getSync(GLsync handle) const;
     ANGLE_INLINE Texture *getTexture(GLuint handle) const
@@ -522,7 +522,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         return mState.mTextureManager->isHandleGenerated(texture);
     }
 
-    ANGLE_INLINE bool isBufferGenerated(GLuint buffer) const
+    ANGLE_INLINE bool isBufferGenerated(BufferID buffer) const
     {
         return mState.mBufferManager->isHandleGenerated(buffer);
     }

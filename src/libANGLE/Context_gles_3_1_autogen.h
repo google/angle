@@ -15,7 +15,8 @@
     void bindImageTexture(GLuint unit, GLuint texture, GLint level, GLboolean layered,             \
                           GLint layer, GLenum access, GLenum format);                              \
     void bindProgramPipeline(GLuint pipeline);                                                     \
-    void bindVertexBuffer(GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);    \
+    void bindVertexBuffer(GLuint bindingindex, BufferID bufferPacked, GLintptr offset,             \
+                          GLsizei stride);                                                         \
     GLuint createShaderProgramv(ShaderType typePacked, GLsizei count,                              \
                                 const GLchar *const *strings);                                     \
     void deleteProgramPipelines(GLsizei n, const GLuint *pipelines);                               \

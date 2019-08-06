@@ -164,7 +164,7 @@ IndexDataManagerPerfTest::IndexDataManagerPerfTest()
       mBufferSize(mIndexCount * sizeof(GLushort)),
       mMockBufferFactory(mBufferSize, gl::DrawElementsType::UnsignedShort),
       mMockGLFactory(&mMockBufferFactory),
-      mIndexBuffer(&mMockGLFactory, 1)
+      mIndexBuffer(&mMockGLFactory, {1})
 {
     std::vector<GLushort> indexData(mIndexCount);
     for (GLsizei index = 0; index < mIndexCount; ++index)

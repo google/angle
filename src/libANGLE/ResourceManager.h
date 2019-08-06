@@ -120,19 +120,19 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
     }
 };
 
-class BufferManager : public TypedResourceManager<Buffer, HandleAllocator, BufferManager>
+class BufferManager : public TypedResourceManager<Buffer, HandleAllocator, BufferManager, BufferID>
 {
   public:
-    GLuint createBuffer();
-    Buffer *getBuffer(GLuint handle) const;
+    BufferID createBuffer();
+    Buffer *getBuffer(BufferID handle) const;
 
-    ANGLE_INLINE Buffer *checkBufferAllocation(rx::GLImplFactory *factory, GLuint handle)
+    ANGLE_INLINE Buffer *checkBufferAllocation(rx::GLImplFactory *factory, BufferID handle)
     {
         return checkObjectAllocation(factory, handle);
     }
 
     // TODO(jmadill): Investigate design which doesn't expose these methods publicly.
-    static Buffer *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
+    static Buffer *AllocateNewObject(rx::GLImplFactory *factory, BufferID handle);
     static void DeleteObject(const Context *context, Buffer *buffer);
 
   protected:

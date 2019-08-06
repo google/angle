@@ -94,11 +94,11 @@ void CaptureCompressedTexSubImage2D_data(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteBuffers_buffers(const Context *context,
-                                  bool isCallValid,
-                                  GLsizei n,
-                                  const GLuint *buffers,
-                                  ParamCapture *paramCapture)
+void CaptureDeleteBuffers_buffersPacked(const Context *context,
+                                        bool isCallValid,
+                                        GLsizei n,
+                                        const BufferID *buffers,
+                                        ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -150,11 +150,11 @@ void CaptureDrawElements_indices(const Context *context,
     }
 }
 
-void CaptureGenBuffers_buffers(const Context *context,
-                               bool isCallValid,
-                               GLsizei n,
-                               GLuint *buffers,
-                               ParamCapture *paramCapture)
+void CaptureGenBuffers_buffersPacked(const Context *context,
+                                     bool isCallValid,
+                                     GLsizei n,
+                                     BufferID *buffers,
+                                     ParamCapture *paramCapture)
 {
     paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;
 }

@@ -21,8 +21,8 @@
                           GLsizei srcHeight, GLsizei srcDepth);                                 \
     void getInternalformati64v(GLenum target, GLenum internalformat, GLenum pname,              \
                                GLsizei bufSize, GLint64 *params);                               \
-    void invalidateBufferData(GLuint buffer);                                                   \
-    void invalidateBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr length);            \
+    void invalidateBufferData(BufferID bufferPacked);                                           \
+    void invalidateBufferSubData(BufferID bufferPacked, GLintptr offset, GLsizeiptr length);    \
     void invalidateTexImage(GLuint texture, GLint level);                                       \
     void invalidateTexSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset,       \
                                GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);    \
@@ -32,8 +32,8 @@
                                    GLsizei drawcount, GLsizei stride);                          \
     void shaderStorageBlockBinding(GLuint program, GLuint storageBlockIndex,                    \
                                    GLuint storageBlockBinding);                                 \
-    void texBufferRange(GLenum target, GLenum internalformat, GLuint buffer, GLintptr offset,   \
-                        GLsizeiptr size);                                                       \
+    void texBufferRange(GLenum target, GLenum internalformat, BufferID bufferPacked,            \
+                        GLintptr offset, GLsizeiptr size);                                      \
     void textureView(GLuint texture, GLenum target, GLuint origtexture, GLenum internalformat,  \
                      GLuint minlevel, GLuint numlevels, GLuint minlayer, GLuint numlayers);     \
     void vertexAttribLFormat(GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset);

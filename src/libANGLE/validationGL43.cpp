@@ -130,13 +130,13 @@ bool ValidateGetProgramResourceLocationIndex(Context *context,
     return true;
 }
 
-bool ValidateInvalidateBufferData(Context *context, GLuint buffer)
+bool ValidateInvalidateBufferData(Context *context, BufferID buffer)
 {
     return true;
 }
 
 bool ValidateInvalidateBufferSubData(Context *context,
-                                     GLuint buffer,
+                                     BufferID buffer,
                                      GLintptr offset,
                                      GLsizeiptr length)
 {
@@ -219,7 +219,7 @@ bool ValidateShaderStorageBlockBinding(Context *context,
 bool ValidateTexBufferRange(Context *context,
                             GLenum target,
                             GLenum internalformat,
-                            GLuint buffer,
+                            BufferID buffer,
                             GLintptr offset,
                             GLsizeiptr size)
 {

@@ -19,6 +19,9 @@ enum class ParamType
 {
     TAlphaTestFunc,
     TBufferBinding,
+    TBufferID,
+    TBufferIDConstPointer,
+    TBufferIDPointer,
     TBufferUsage,
     TClientVertexArrayType,
     TCullFaceMode,
@@ -106,6 +109,9 @@ union ParamValue
 {
     gl::AlphaTestFunc AlphaTestFuncVal;
     gl::BufferBinding BufferBindingVal;
+    gl::BufferID BufferIDVal;
+    const gl::BufferID *BufferIDConstPointerVal;
+    gl::BufferID *BufferIDPointerVal;
     gl::BufferUsage BufferUsageVal;
     gl::ClientVertexArrayType ClientVertexArrayTypeVal;
     gl::CullFaceMode CullFaceModeVal;
@@ -202,6 +208,25 @@ template <>
 inline void SetParamVal<ParamType::TBufferBinding>(gl::BufferBinding valueIn, ParamValue *valueOut)
 {
     valueOut->BufferBindingVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TBufferID>(gl::BufferID valueIn, ParamValue *valueOut)
+{
+    valueOut->BufferIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TBufferIDConstPointer>(const gl::BufferID *valueIn,
+                                                          ParamValue *valueOut)
+{
+    valueOut->BufferIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TBufferIDPointer>(gl::BufferID *valueIn, ParamValue *valueOut)
+{
+    valueOut->BufferIDPointerVal = valueIn;
 }
 
 template <>
@@ -735,6 +760,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TBufferBinding:
             SetParamVal<ParamType::TBufferBinding>(valueIn, valueOut);
+            break;
+        case ParamType::TBufferID:
+            SetParamVal<ParamType::TBufferID>(valueIn, valueOut);
+            break;
+        case ParamType::TBufferIDConstPointer:
+            SetParamVal<ParamType::TBufferIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TBufferIDPointer:
+            SetParamVal<ParamType::TBufferIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TBufferUsage:
             SetParamVal<ParamType::TBufferUsage>(valueIn, valueOut);

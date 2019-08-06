@@ -24,6 +24,16 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
         case ParamType::TBufferBinding:
             WriteParamValueToStream<ParamType::TBufferBinding>(os, paramValue.BufferBindingVal);
             break;
+        case ParamType::TBufferID:
+            WriteParamValueToStream<ParamType::TBufferID>(os, paramValue.BufferIDVal);
+            break;
+        case ParamType::TBufferIDConstPointer:
+            WriteParamValueToStream<ParamType::TBufferIDConstPointer>(
+                os, paramValue.BufferIDConstPointerVal);
+            break;
+        case ParamType::TBufferIDPointer:
+            WriteParamValueToStream<ParamType::TBufferIDPointer>(os, paramValue.BufferIDPointerVal);
+            break;
         case ParamType::TBufferUsage:
             WriteParamValueToStream<ParamType::TBufferUsage>(os, paramValue.BufferUsageVal);
             break;
@@ -315,6 +325,12 @@ const char *ParamTypeToString(ParamType paramType)
             return "gl::AlphaTestFunc";
         case ParamType::TBufferBinding:
             return "gl::BufferBinding";
+        case ParamType::TBufferID:
+            return "gl::BufferID";
+        case ParamType::TBufferIDConstPointer:
+            return "const gl::BufferID *";
+        case ParamType::TBufferIDPointer:
+            return "gl::BufferID *";
         case ParamType::TBufferUsage:
             return "gl::BufferUsage";
         case ParamType::TClientVertexArrayType:

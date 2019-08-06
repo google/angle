@@ -417,12 +417,12 @@ void Context::initialize()
 
         for (unsigned int i = 0; i < mState.mCaps.maxAtomicCounterBufferBindings; i++)
         {
-            bindBufferRange(BufferBinding::AtomicCounter, i, 0, 0, 0);
+            bindBufferRange(BufferBinding::AtomicCounter, i, {0}, 0, 0);
         }
 
         for (unsigned int i = 0; i < mState.mCaps.maxShaderStorageBufferBindings; i++)
         {
-            bindBufferRange(BufferBinding::ShaderStorage, i, 0, 0, 0);
+            bindBufferRange(BufferBinding::ShaderStorage, i, {0}, 0, 0);
         }
     }
 
@@ -454,14 +454,14 @@ void Context::initialize()
 
     for (auto type : angle::AllEnums<BufferBinding>())
     {
-        bindBuffer(type, 0);
+        bindBuffer(type, {0});
     }
 
     bindRenderbuffer(GL_RENDERBUFFER, {0});
 
     for (unsigned int i = 0; i < mState.mCaps.maxUniformBufferBindings; i++)
     {
-        bindBufferRange(BufferBinding::Uniform, i, 0, 0, -1);
+        bindBufferRange(BufferBinding::Uniform, i, {0}, 0, -1);
     }
 
     // Initialize GLES1 renderer if appropriate.
@@ -673,7 +673,7 @@ egl::Error Context::unMakeCurrent(const egl::Display *display)
     return angle::ResultToEGL(mImplementation->onUnMakeCurrent(this));
 }
 
-GLuint Context::createBuffer()
+BufferID Context::createBuffer()
 {
     return mState.mBufferManager->createBuffer();
 }
@@ -748,7 +748,7 @@ GLuint Context::createSemaphore()
     return mState.mSemaphoreManager->createSemaphore(mImplementation.get());
 }
 
-void Context::deleteBuffer(GLuint bufferName)
+void Context::deleteBuffer(BufferID bufferName)
 {
     Buffer *buffer = mState.mBufferManager->getBuffer(bufferName);
     if (buffer)
@@ -955,7 +955,7 @@ void Context::deleteFencesNV(GLsizei n, const GLuint *fences)
     }
 }
 
-Buffer *Context::getBuffer(GLuint handle) const
+Buffer *Context::getBuffer(BufferID handle) const
 {
     return mState.mBufferManager->getBuffer(handle);
 }
@@ -995,7 +995,7 @@ gl::LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) con
     switch (identifier)
     {
         case GL_BUFFER:
-            return getBuffer(name);
+            return getBuffer({name});
         case GL_SHADER:
             return getShader(name);
         case GL_PROGRAM:
@@ -1119,7 +1119,7 @@ void Context::bindVertexArray(GLuint vertexArrayHandle)
 }
 
 void Context::bindVertexBuffer(GLuint bindingIndex,
-                               GLuint bufferHandle,
+                               BufferID bufferHandle,
                                GLintptr offset,
                                GLsizei stride)
 {
@@ -5206,14 +5206,14 @@ void Context::bindAttribLocation(GLuint program, GLuint index, const GLchar *nam
     programObject->bindAttributeLocation(index, name);
 }
 
-void Context::bindBufferBase(BufferBinding target, GLuint index, GLuint buffer)
+void Context::bindBufferBase(BufferBinding target, GLuint index, BufferID buffer)
 {
     bindBufferRange(target, index, buffer, 0, 0);
 }
 
 void Context::bindBufferRange(BufferBinding target,
                               GLuint index,
-                              GLuint buffer,
+                              BufferID buffer,
                               GLintptr offset,
                               GLsizeiptr size)
 {
@@ -5626,7 +5626,7 @@ void Context::compileShader(GLuint shader)
     shaderObject->compile(this);
 }
 
-void Context::deleteBuffers(GLsizei n, const GLuint *buffers)
+void Context::deleteBuffers(GLsizei n, const BufferID *buffers)
 {
     for (int i = 0; i < n; i++)
     {
@@ -5675,7 +5675,7 @@ void Context::detachShader(GLuint program, GLuint shader)
     programObject->detachShader(this, shaderObject);
 }
 
-void Context::genBuffers(GLsizei n, GLuint *buffers)
+void Context::genBuffers(GLsizei n, BufferID *buffers)
 {
     for (int i = 0; i < n; i++)
     {
@@ -6008,9 +6008,9 @@ GLint Context::getUniformLocation(GLuint program, const GLchar *name)
     return programObject->getUniformLocation(name);
 }
 
-GLboolean Context::isBuffer(GLuint buffer)
+GLboolean Context::isBuffer(BufferID buffer)
 {
-    if (buffer == 0)
+    if (buffer.value == 0)
     {
         return GL_FALSE;
     }
@@ -7405,7 +7405,7 @@ void Context::getSemaphoreParameterui64v(GLuint semaphore, GLenum pname, GLuint6
 
 void Context::waitSemaphore(GLuint semaphoreHandle,
                             GLuint numBufferBarriers,
-                            const GLuint *buffers,
+                            const BufferID *buffers,
                             GLuint numTextureBarriers,
                             const GLuint *textures,
                             const GLenum *srcLayouts)
@@ -7431,7 +7431,7 @@ void Context::waitSemaphore(GLuint semaphoreHandle,
 
 void Context::signalSemaphore(GLuint semaphoreHandle,
                               GLuint numBufferBarriers,
-                              const GLuint *buffers,
+                              const BufferID *buffers,
                               GLuint numTextureBarriers,
                               const GLuint *textures,
                               const GLenum *dstLayouts)

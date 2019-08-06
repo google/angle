@@ -499,7 +499,7 @@ void Context::primitiveRestartIndex(GLuint index)
     UNIMPLEMENTED();
 }
 
-void Context::texBuffer(GLenum target, GLenum internalformat, GLuint buffer)
+void Context::texBuffer(GLenum target, GLenum internalformat, BufferID buffer)
 {
     UNIMPLEMENTED();
 }
@@ -2845,12 +2845,12 @@ void Context::getInternalformati64v(GLenum target,
     UNIMPLEMENTED();
 }
 
-void Context::invalidateBufferData(GLuint buffer)
+void Context::invalidateBufferData(BufferID buffer)
 {
     UNIMPLEMENTED();
 }
 
-void Context::invalidateBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr length)
+void Context::invalidateBufferSubData(BufferID buffer, GLintptr offset, GLsizeiptr length)
 {
     UNIMPLEMENTED();
 }
@@ -2898,7 +2898,7 @@ void Context::shaderStorageBlockBinding(GLuint program,
 
 void Context::texBufferRange(GLenum target,
                              GLenum internalformat,
-                             GLuint buffer,
+                             BufferID buffer,
                              GLintptr offset,
                              GLsizeiptr size)
 {
@@ -2925,7 +2925,7 @@ void Context::vertexAttribLFormat(GLuint attribindex,
     UNIMPLEMENTED();
 }
 
-void Context::bindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint *buffers)
+void Context::bindBuffersBase(GLenum target, GLuint first, GLsizei count, const BufferID *buffers)
 {
     UNIMPLEMENTED();
 }
@@ -2933,7 +2933,7 @@ void Context::bindBuffersBase(GLenum target, GLuint first, GLsizei count, const 
 void Context::bindBuffersRange(GLenum target,
                                GLuint first,
                                GLsizei count,
-                               const GLuint *buffers,
+                               const BufferID *buffers,
                                const GLintptr *offsets,
                                const GLsizeiptr *sizes)
 {
@@ -2957,7 +2957,7 @@ void Context::bindTextures(GLuint first, GLsizei count, const GLuint *textures)
 
 void Context::bindVertexBuffers(GLuint first,
                                 GLsizei count,
-                                const GLuint *buffers,
+                                const BufferID *buffers,
                                 const GLintptr *offsets,
                                 const GLsizei *strides)
 {
@@ -3020,7 +3020,7 @@ GLenum Context::checkNamedFramebufferStatus(GLuint framebuffer, GLenum target)
     return 0;
 }
 
-void Context::clearNamedBufferData(GLuint buffer,
+void Context::clearNamedBufferData(BufferID buffer,
                                    GLenum internalformat,
                                    GLenum format,
                                    GLenum type,
@@ -3029,7 +3029,7 @@ void Context::clearNamedBufferData(GLuint buffer,
     UNIMPLEMENTED();
 }
 
-void Context::clearNamedBufferSubData(GLuint buffer,
+void Context::clearNamedBufferSubData(BufferID buffer,
                                       GLenum internalformat,
                                       GLintptr offset,
                                       GLsizeiptr size,
@@ -3161,7 +3161,7 @@ void Context::copyTextureSubImage3D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::createBuffers(GLsizei n, GLuint *buffers)
+void Context::createBuffers(GLsizei n, BufferID *buffers)
 {
     UNIMPLEMENTED();
 }
@@ -3216,7 +3216,7 @@ void Context::enableVertexArrayAttrib(GLuint vaobj, GLuint index)
     UNIMPLEMENTED();
 }
 
-void Context::flushMappedNamedBufferRange(GLuint buffer, GLintptr offset, GLsizeiptr length)
+void Context::flushMappedNamedBufferRange(BufferID buffer, GLintptr offset, GLsizeiptr length)
 {
     UNIMPLEMENTED();
 }
@@ -3245,22 +3245,22 @@ void Context::getCompressedTextureSubImage(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::getNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLint64 *params)
+void Context::getNamedBufferParameteri64v(BufferID buffer, GLenum pname, GLint64 *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getNamedBufferParameteriv(GLuint buffer, GLenum pname, GLint *params)
+void Context::getNamedBufferParameteriv(BufferID buffer, GLenum pname, GLint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getNamedBufferPointerv(GLuint buffer, GLenum pname, void **params)
+void Context::getNamedBufferPointerv(BufferID buffer, GLenum pname, void **params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, void *data)
+void Context::getNamedBufferSubData(BufferID buffer, GLintptr offset, GLsizeiptr size, void *data)
 {
     UNIMPLEMENTED();
 }
@@ -3285,22 +3285,22 @@ void Context::getNamedRenderbufferParameteriv(RenderbufferID renderbuffer,
     UNIMPLEMENTED();
 }
 
-void Context::getQueryBufferObjecti64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
+void Context::getQueryBufferObjecti64v(GLuint id, BufferID buffer, GLenum pname, GLintptr offset)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getQueryBufferObjectiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
+void Context::getQueryBufferObjectiv(GLuint id, BufferID buffer, GLenum pname, GLintptr offset)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getQueryBufferObjectui64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
+void Context::getQueryBufferObjectui64v(GLuint id, BufferID buffer, GLenum pname, GLintptr offset)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getQueryBufferObjectuiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
+void Context::getQueryBufferObjectuiv(GLuint id, BufferID buffer, GLenum pname, GLintptr offset)
 {
     UNIMPLEMENTED();
 }
@@ -3519,13 +3519,13 @@ void Context::invalidateNamedFramebufferSubData(GLuint framebuffer,
     UNIMPLEMENTED();
 }
 
-void *Context::mapNamedBuffer(GLuint buffer, GLenum access)
+void *Context::mapNamedBuffer(BufferID buffer, GLenum access)
 {
     UNIMPLEMENTED();
     return nullptr;
 }
 
-void *Context::mapNamedBufferRange(GLuint buffer,
+void *Context::mapNamedBufferRange(BufferID buffer,
                                    GLintptr offset,
                                    GLsizeiptr length,
                                    GLbitfield access)
@@ -3534,17 +3534,23 @@ void *Context::mapNamedBufferRange(GLuint buffer,
     return nullptr;
 }
 
-void Context::namedBufferData(GLuint buffer, GLsizeiptr size, const void *data, GLenum usage)
+void Context::namedBufferData(BufferID buffer, GLsizeiptr size, const void *data, GLenum usage)
 {
     UNIMPLEMENTED();
 }
 
-void Context::namedBufferStorage(GLuint buffer, GLsizeiptr size, const void *data, GLbitfield flags)
+void Context::namedBufferStorage(BufferID buffer,
+                                 GLsizeiptr size,
+                                 const void *data,
+                                 GLbitfield flags)
 {
     UNIMPLEMENTED();
 }
 
-void Context::namedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void *data)
+void Context::namedBufferSubData(BufferID buffer,
+                                 GLintptr offset,
+                                 GLsizeiptr size,
+                                 const void *data)
 {
     UNIMPLEMENTED();
 }
@@ -3616,14 +3622,14 @@ void Context::textureBarrier()
     UNIMPLEMENTED();
 }
 
-void Context::textureBuffer(GLuint texture, GLenum internalformat, GLuint buffer)
+void Context::textureBuffer(GLuint texture, GLenum internalformat, BufferID buffer)
 {
     UNIMPLEMENTED();
 }
 
 void Context::textureBufferRange(GLuint texture,
                                  GLenum internalformat,
-                                 GLuint buffer,
+                                 BufferID buffer,
                                  GLintptr offset,
                                  GLsizeiptr size)
 {
@@ -3744,21 +3750,21 @@ void Context::textureSubImage3D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::transformFeedbackBufferBase(GLuint xfb, GLuint index, GLuint buffer)
+void Context::transformFeedbackBufferBase(GLuint xfb, GLuint index, BufferID buffer)
 {
     UNIMPLEMENTED();
 }
 
 void Context::transformFeedbackBufferRange(GLuint xfb,
                                            GLuint index,
-                                           GLuint buffer,
+                                           BufferID buffer,
                                            GLintptr offset,
                                            GLsizeiptr size)
 {
     UNIMPLEMENTED();
 }
 
-GLboolean Context::unmapNamedBuffer(GLuint buffer)
+GLboolean Context::unmapNamedBuffer(BufferID buffer)
 {
     UNIMPLEMENTED();
     return false;
@@ -3802,14 +3808,14 @@ void Context::vertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuin
     UNIMPLEMENTED();
 }
 
-void Context::vertexArrayElementBuffer(GLuint vaobj, GLuint buffer)
+void Context::vertexArrayElementBuffer(GLuint vaobj, BufferID buffer)
 {
     UNIMPLEMENTED();
 }
 
 void Context::vertexArrayVertexBuffer(GLuint vaobj,
                                       GLuint bindingindex,
-                                      GLuint buffer,
+                                      BufferID buffer,
                                       GLintptr offset,
                                       GLsizei stride)
 {
@@ -3819,7 +3825,7 @@ void Context::vertexArrayVertexBuffer(GLuint vaobj,
 void Context::vertexArrayVertexBuffers(GLuint vaobj,
                                        GLuint first,
                                        GLsizei count,
-                                       const GLuint *buffers,
+                                       const BufferID *buffers,
                                        const GLintptr *offsets,
                                        const GLsizei *strides)
 {

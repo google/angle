@@ -103,7 +103,7 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::del
 
 template class ResourceManagerBase<HandleAllocator>;
 template class ResourceManagerBase<HandleRangeAllocator>;
-template class TypedResourceManager<Buffer, HandleAllocator, BufferManager, GLuint>;
+template class TypedResourceManager<Buffer, HandleAllocator, BufferManager, BufferID>;
 template class TypedResourceManager<Texture, HandleAllocator, TextureManager, GLuint>;
 template class TypedResourceManager<Renderbuffer,
                                     HandleAllocator,
@@ -120,7 +120,7 @@ template class TypedResourceManager<ProgramPipeline,
 // BufferManager Implementation.
 
 // static
-Buffer *BufferManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint handle)
+Buffer *BufferManager::AllocateNewObject(rx::GLImplFactory *factory, BufferID handle)
 {
     Buffer *buffer = new Buffer(factory, handle);
     buffer->addRef();
@@ -133,12 +133,12 @@ void BufferManager::DeleteObject(const Context *context, Buffer *buffer)
     buffer->release(context);
 }
 
-GLuint BufferManager::createBuffer()
+BufferID BufferManager::createBuffer()
 {
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
-Buffer *BufferManager::getBuffer(GLuint handle) const
+Buffer *BufferManager::getBuffer(BufferID handle) const
 {
     return mObjectMap.query(handle);
 }

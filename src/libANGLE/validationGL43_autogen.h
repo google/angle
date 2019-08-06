@@ -92,9 +92,9 @@ bool ValidateGetProgramResourceLocationIndex(Context *context,
                                              GLuint program,
                                              GLenum programInterface,
                                              const GLchar *name);
-bool ValidateInvalidateBufferData(Context *context, GLuint buffer);
+bool ValidateInvalidateBufferData(Context *context, BufferID bufferPacked);
 bool ValidateInvalidateBufferSubData(Context *context,
-                                     GLuint buffer,
+                                     BufferID bufferPacked,
                                      GLintptr offset,
                                      GLsizeiptr length);
 bool ValidateInvalidateTexImage(Context *context, GLuint texture, GLint level);
@@ -137,7 +137,7 @@ bool ValidateShaderStorageBlockBinding(Context *context,
 bool ValidateTexBufferRange(Context *context,
                             GLenum target,
                             GLenum internalformat,
-                            GLuint buffer,
+                            BufferID bufferPacked,
                             GLintptr offset,
                             GLsizeiptr size);
 bool ValidateTexStorage3DMultisample(Context *context,

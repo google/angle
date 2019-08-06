@@ -39,7 +39,7 @@ angle::CallCapture CaptureBindProgramPipeline(const Context *context,
 angle::CallCapture CaptureBindVertexBuffer(const Context *context,
                                            bool isCallValid,
                                            GLuint bindingindex,
-                                           GLuint buffer,
+                                           BufferID bufferPacked,
                                            GLintptr offset,
                                            GLsizei stride);
 angle::CallCapture CaptureCreateShaderProgramv(const Context *context,

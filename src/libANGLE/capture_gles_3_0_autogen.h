@@ -31,12 +31,12 @@ angle::CallCapture CaptureBindBufferBase(const Context *context,
                                          bool isCallValid,
                                          BufferBinding targetPacked,
                                          GLuint index,
-                                         GLuint buffer);
+                                         BufferID bufferPacked);
 angle::CallCapture CaptureBindBufferRange(const Context *context,
                                           bool isCallValid,
                                           BufferBinding targetPacked,
                                           GLuint index,
-                                          GLuint buffer,
+                                          BufferID bufferPacked,
                                           GLintptr offset,
                                           GLsizeiptr size);
 angle::CallCapture CaptureBindSampler(const Context *context,

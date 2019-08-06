@@ -64,12 +64,12 @@ CallCapture CaptureBindAttribLocation(const Context *context,
 CallCapture CaptureBindBuffer(const Context *context,
                               bool isCallValid,
                               BufferBinding targetPacked,
-                              GLuint buffer)
+                              BufferID bufferPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
-    paramBuffer.addValueParam("buffer", ParamType::TGLuint, buffer);
+    paramBuffer.addValueParam("bufferPacked", ParamType::TBufferID, bufferPacked);
 
     return CallCapture(gl::EntryPoint::BindBuffer, std::move(paramBuffer));
 }
@@ -470,16 +470,16 @@ CallCapture CaptureCullFace(const Context *context, bool isCallValid, CullFaceMo
 CallCapture CaptureDeleteBuffers(const Context *context,
                                  bool isCallValid,
                                  GLsizei n,
-                                 const GLuint *buffers)
+                                 const BufferID *buffersPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture buffersParam("buffers", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, buffers, &buffersParam.value);
-    CaptureDeleteBuffers_buffers(context, isCallValid, n, buffers, &buffersParam);
-    paramBuffer.addParam(std::move(buffersParam));
+    ParamCapture buffersPackedParam("buffersPacked", ParamType::TBufferIDConstPointer);
+    InitParamValue(ParamType::TBufferIDConstPointer, buffersPacked, &buffersPackedParam.value);
+    CaptureDeleteBuffers_buffersPacked(context, isCallValid, n, buffersPacked, &buffersPackedParam);
+    paramBuffer.addParam(std::move(buffersPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteBuffers, std::move(paramBuffer));
 }
@@ -733,16 +733,19 @@ CallCapture CaptureFrontFace(const Context *context, bool isCallValid, GLenum mo
     return CallCapture(gl::EntryPoint::FrontFace, std::move(paramBuffer));
 }
 
-CallCapture CaptureGenBuffers(const Context *context, bool isCallValid, GLsizei n, GLuint *buffers)
+CallCapture CaptureGenBuffers(const Context *context,
+                              bool isCallValid,
+                              GLsizei n,
+                              BufferID *buffersPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture buffersParam("buffers", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, buffers, &buffersParam.value);
-    CaptureGenBuffers_buffers(context, isCallValid, n, buffers, &buffersParam);
-    paramBuffer.addParam(std::move(buffersParam));
+    ParamCapture buffersPackedParam("buffersPacked", ParamType::TBufferIDPointer);
+    InitParamValue(ParamType::TBufferIDPointer, buffersPacked, &buffersPackedParam.value);
+    CaptureGenBuffers_buffersPacked(context, isCallValid, n, buffersPacked, &buffersPackedParam);
+    paramBuffer.addParam(std::move(buffersPackedParam));
 
     return CallCapture(gl::EntryPoint::GenBuffers, std::move(paramBuffer));
 }
@@ -1400,12 +1403,12 @@ CallCapture CaptureHint(const Context *context, bool isCallValid, GLenum target,
 
 CallCapture CaptureIsBuffer(const Context *context,
                             bool isCallValid,
-                            GLuint buffer,
+                            BufferID bufferPacked,
                             GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("buffer", ParamType::TGLuint, buffer);
+    paramBuffer.addValueParam("bufferPacked", ParamType::TBufferID, bufferPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);

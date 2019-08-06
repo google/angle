@@ -56,9 +56,9 @@ TEST_F(ResourceManagerTest, ReallocateBoundBuffer)
 {
     EXPECT_CALL(mMockFactory, createBuffer(_)).Times(1).RetiresOnSaturation();
 
-    mBufferManager->checkBufferAllocation(&mMockFactory, 1);
-    GLuint newBuffer = mBufferManager->createBuffer();
-    EXPECT_NE(1u, newBuffer);
+    mBufferManager->checkBufferAllocation(&mMockFactory, {1});
+    BufferID newBuffer = mBufferManager->createBuffer();
+    EXPECT_NE(1u, newBuffer.value);
 }
 
 TEST_F(ResourceManagerTest, ReallocateBoundRenderbuffer)

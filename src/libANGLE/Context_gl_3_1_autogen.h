@@ -14,6 +14,6 @@
     void getActiveUniformName(GLuint program, GLuint uniformIndex, GLsizei bufSize, \
                               GLsizei *length, GLchar *uniformName);                \
     void primitiveRestartIndex(GLuint index);                                       \
-    void texBuffer(GLenum target, GLenum internalformat, GLuint buffer);
+    void texBuffer(GLenum target, GLenum internalformat, BufferID bufferPacked);
 
 #endif  // ANGLE_CONTEXT_API_3_1_AUTOGEN_H_

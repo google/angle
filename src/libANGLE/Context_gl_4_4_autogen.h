@@ -11,13 +11,15 @@
 #define ANGLE_CONTEXT_GL_4_4_AUTOGEN_H_
 
 #define ANGLE_GL_4_4_CONTEXT_API                                                                   \
-    void bindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint *buffers);       \
-    void bindBuffersRange(GLenum target, GLuint first, GLsizei count, const GLuint *buffers,       \
-                          const GLintptr *offsets, const GLsizeiptr *sizes);                       \
+    void bindBuffersBase(GLenum target, GLuint first, GLsizei count,                               \
+                         const BufferID *buffersPacked);                                           \
+    void bindBuffersRange(GLenum target, GLuint first, GLsizei count,                              \
+                          const BufferID *buffersPacked, const GLintptr *offsets,                  \
+                          const GLsizeiptr *sizes);                                                \
     void bindImageTextures(GLuint first, GLsizei count, const GLuint *textures);                   \
     void bindSamplers(GLuint first, GLsizei count, const GLuint *samplers);                        \
     void bindTextures(GLuint first, GLsizei count, const GLuint *textures);                        \
-    void bindVertexBuffers(GLuint first, GLsizei count, const GLuint *buffers,                     \
+    void bindVertexBuffers(GLuint first, GLsizei count, const BufferID *buffersPacked,             \
                            const GLintptr *offsets, const GLsizei *strides);                       \
     void bufferStorage(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);        \
     void clearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const void *data); \

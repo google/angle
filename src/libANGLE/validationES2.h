@@ -28,7 +28,7 @@ ANGLE_INLINE bool ValidateUniform2f(Context *context, GLint location, GLfloat x,
     return ValidateUniform(context, GL_FLOAT_VEC2, location, 1);
 }
 
-ANGLE_INLINE bool ValidateBindBuffer(Context *context, BufferBinding target, GLuint buffer)
+ANGLE_INLINE bool ValidateBindBuffer(Context *context, BufferBinding target, BufferID buffer)
 {
     if (!context->isValidBufferBinding(target))
     {

@@ -29,7 +29,7 @@ bool ValidateBindImageTexture(Context *context,
 bool ValidateBindProgramPipeline(Context *context, GLuint pipeline);
 bool ValidateBindVertexBuffer(Context *context,
                               GLuint bindingindex,
-                              GLuint buffer,
+                              BufferID bufferPacked,
                               GLintptr offset,
                               GLsizei stride);
 bool ValidateCreateShaderProgramv(Context *context,

@@ -1676,7 +1676,7 @@ bool ValidateIsVertexArray(Context *context, GLuint array)
 static bool ValidateBindBufferCommon(Context *context,
                                      BufferBinding target,
                                      GLuint index,
-                                     GLuint buffer,
+                                     BufferID buffer,
                                      GLintptr offset,
                                      GLsizeiptr size)
 {
@@ -1686,7 +1686,7 @@ static bool ValidateBindBufferCommon(Context *context,
         return false;
     }
 
-    if (buffer != 0 && offset < 0)
+    if (buffer.value != 0 && offset < 0)
     {
         context->validationError(GL_INVALID_VALUE, kNegativeOffset);
         return false;
@@ -1710,7 +1710,7 @@ static bool ValidateBindBufferCommon(Context *context,
                                          kIndexExceedsTransformFeedbackBufferBindings);
                 return false;
             }
-            if (buffer != 0 && ((offset % 4) != 0 || (size % 4) != 0))
+            if (buffer.value != 0 && ((offset % 4) != 0 || (size % 4) != 0))
             {
                 context->validationError(GL_INVALID_VALUE, kOffsetAndSizeAlignment);
                 return false;
@@ -1732,7 +1732,7 @@ static bool ValidateBindBufferCommon(Context *context,
             }
 
             ASSERT(caps.uniformBufferOffsetAlignment);
-            if (buffer != 0 && (offset % caps.uniformBufferOffsetAlignment) != 0)
+            if (buffer.value != 0 && (offset % caps.uniformBufferOffsetAlignment) != 0)
             {
                 context->validationError(GL_INVALID_VALUE, kUniformBufferOffsetAlignment);
                 return false;
@@ -1752,7 +1752,7 @@ static bool ValidateBindBufferCommon(Context *context,
                                          kIndexExceedsMaxAtomicCounterBufferBindings);
                 return false;
             }
-            if (buffer != 0 && (offset % 4) != 0)
+            if (buffer.value != 0 && (offset % 4) != 0)
             {
                 context->validationError(GL_INVALID_VALUE, kOffsetAlignment);
                 return false;
@@ -1772,7 +1772,7 @@ static bool ValidateBindBufferCommon(Context *context,
                 return false;
             }
             ASSERT(caps.shaderStorageBufferOffsetAlignment);
-            if (buffer != 0 && (offset % caps.shaderStorageBufferOffsetAlignment) != 0)
+            if (buffer.value != 0 && (offset % caps.shaderStorageBufferOffsetAlignment) != 0)
             {
                 context->validationError(GL_INVALID_VALUE, kShaderStorageBufferOffsetAlignment);
                 return false;
@@ -1787,7 +1787,7 @@ static bool ValidateBindBufferCommon(Context *context,
     return true;
 }
 
-bool ValidateBindBufferBase(Context *context, BufferBinding target, GLuint index, GLuint buffer)
+bool ValidateBindBufferBase(Context *context, BufferBinding target, GLuint index, BufferID buffer)
 {
     return ValidateBindBufferCommon(context, target, index, buffer, 0, 0);
 }
@@ -1795,11 +1795,11 @@ bool ValidateBindBufferBase(Context *context, BufferBinding target, GLuint index
 bool ValidateBindBufferRange(Context *context,
                              BufferBinding target,
                              GLuint index,
-                             GLuint buffer,
+                             BufferID buffer,
                              GLintptr offset,
                              GLsizeiptr size)
 {
-    if (buffer != 0 && size <= 0)
+    if (buffer.value != 0 && size <= 0)
     {
         context->validationError(GL_INVALID_VALUE, kInvalidBindBufferSize);
         return false;

@@ -14,7 +14,7 @@
     void activeTexture(GLenum texture);                                                            \
     void attachShader(GLuint program, GLuint shader);                                              \
     void bindAttribLocation(GLuint program, GLuint index, const GLchar *name);                     \
-    void bindBuffer(BufferBinding targetPacked, GLuint buffer);                                    \
+    void bindBuffer(BufferBinding targetPacked, BufferID bufferPacked);                            \
     void bindFramebuffer(GLenum target, GLuint framebuffer);                                       \
     void bindRenderbuffer(GLenum target, RenderbufferID renderbufferPacked);                       \
     void bindTexture(TextureType targetPacked, GLuint texture);                                    \
@@ -48,7 +48,7 @@
     GLuint createProgram();                                                                        \
     GLuint createShader(ShaderType typePacked);                                                    \
     void cullFace(CullFaceMode modePacked);                                                        \
-    void deleteBuffers(GLsizei n, const GLuint *buffers);                                          \
+    void deleteBuffers(GLsizei n, const BufferID *buffersPacked);                                  \
     void deleteFramebuffers(GLsizei n, const GLuint *framebuffers);                                \
     void deleteProgram(GLuint program);                                                            \
     void deleteRenderbuffers(GLsizei n, const RenderbufferID *renderbuffersPacked);                \
@@ -72,7 +72,7 @@
     void framebufferTexture2D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               GLuint texture, GLint level);                                        \
     void frontFace(GLenum mode);                                                                   \
-    void genBuffers(GLsizei n, GLuint *buffers);                                                   \
+    void genBuffers(GLsizei n, BufferID *buffersPacked);                                           \
     void genFramebuffers(GLsizei n, GLuint *framebuffers);                                         \
     void genRenderbuffers(GLsizei n, RenderbufferID *renderbuffersPacked);                         \
     void genTextures(GLsizei n, GLuint *textures);                                                 \
@@ -108,7 +108,7 @@
     void getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params);                           \
     void getVertexAttribiv(GLuint index, GLenum pname, GLint *params);                             \
     void hint(GLenum target, GLenum mode);                                                         \
-    GLboolean isBuffer(GLuint buffer);                                                             \
+    GLboolean isBuffer(BufferID bufferPacked);                                                     \
     GLboolean isEnabled(GLenum cap);                                                               \
     GLboolean isFramebuffer(GLuint framebuffer);                                                   \
     GLboolean isProgram(GLuint program);                                                           \

@@ -20,7 +20,7 @@ class Context;
 bool ValidateActiveTexture(Context *context, GLenum texture);
 bool ValidateAttachShader(Context *context, GLuint program, GLuint shader);
 bool ValidateBindAttribLocation(Context *context, GLuint program, GLuint index, const GLchar *name);
-bool ValidateBindBuffer(Context *context, BufferBinding targetPacked, GLuint buffer);
+bool ValidateBindBuffer(Context *context, BufferBinding targetPacked, BufferID bufferPacked);
 bool ValidateBindFramebuffer(Context *context, GLenum target, GLuint framebuffer);
 bool ValidateBindRenderbuffer(Context *context, GLenum target, RenderbufferID renderbufferPacked);
 bool ValidateBindTexture(Context *context, TextureType targetPacked, GLuint texture);
@@ -94,7 +94,7 @@ bool ValidateCopyTexSubImage2D(Context *context,
 bool ValidateCreateProgram(Context *context);
 bool ValidateCreateShader(Context *context, ShaderType typePacked);
 bool ValidateCullFace(Context *context, CullFaceMode modePacked);
-bool ValidateDeleteBuffers(Context *context, GLsizei n, const GLuint *buffers);
+bool ValidateDeleteBuffers(Context *context, GLsizei n, const BufferID *buffersPacked);
 bool ValidateDeleteFramebuffers(Context *context, GLsizei n, const GLuint *framebuffers);
 bool ValidateDeleteProgram(Context *context, GLuint program);
 bool ValidateDeleteRenderbuffers(Context *context,
@@ -130,7 +130,7 @@ bool ValidateFramebufferTexture2D(Context *context,
                                   GLuint texture,
                                   GLint level);
 bool ValidateFrontFace(Context *context, GLenum mode);
-bool ValidateGenBuffers(Context *context, GLsizei n, GLuint *buffers);
+bool ValidateGenBuffers(Context *context, GLsizei n, BufferID *buffersPacked);
 bool ValidateGenFramebuffers(Context *context, GLsizei n, GLuint *framebuffers);
 bool ValidateGenRenderbuffers(Context *context, GLsizei n, RenderbufferID *renderbuffersPacked);
 bool ValidateGenTextures(Context *context, GLsizei n, GLuint *textures);
@@ -212,7 +212,7 @@ bool ValidateGetVertexAttribPointerv(Context *context, GLuint index, GLenum pnam
 bool ValidateGetVertexAttribfv(Context *context, GLuint index, GLenum pname, GLfloat *params);
 bool ValidateGetVertexAttribiv(Context *context, GLuint index, GLenum pname, GLint *params);
 bool ValidateHint(Context *context, GLenum target, GLenum mode);
-bool ValidateIsBuffer(Context *context, GLuint buffer);
+bool ValidateIsBuffer(Context *context, BufferID bufferPacked);
 bool ValidateIsEnabled(Context *context, GLenum cap);
 bool ValidateIsFramebuffer(Context *context, GLuint framebuffer);
 bool ValidateIsProgram(Context *context, GLuint program);

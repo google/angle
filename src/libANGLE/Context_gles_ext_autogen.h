@@ -345,10 +345,10 @@
     void getSemaphoreParameterui64v(GLuint semaphore, GLenum pname, GLuint64 *params);             \
     GLboolean isSemaphore(GLuint semaphore);                                                       \
     void semaphoreParameterui64v(GLuint semaphore, GLenum pname, const GLuint64 *params);          \
-    void signalSemaphore(GLuint semaphore, GLuint numBufferBarriers, const GLuint *buffers,        \
-                         GLuint numTextureBarriers, const GLuint *textures,                        \
-                         const GLenum *dstLayouts);                                                \
-    void waitSemaphore(GLuint semaphore, GLuint numBufferBarriers, const GLuint *buffers,          \
+    void signalSemaphore(GLuint semaphore, GLuint numBufferBarriers,                               \
+                         const BufferID *buffersPacked, GLuint numTextureBarriers,                 \
+                         const GLuint *textures, const GLenum *dstLayouts);                        \
+    void waitSemaphore(GLuint semaphore, GLuint numBufferBarriers, const BufferID *buffersPacked,  \
                        GLuint numTextureBarriers, const GLuint *textures,                          \
                        const GLenum *srcLayouts);                                                  \
     /* GL_EXT_semaphore_fd */                                                                      \

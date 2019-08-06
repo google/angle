@@ -63,13 +63,14 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
     if (context)
     {
         BufferBinding targetPacked = FromGL<BufferBinding>(target);
+        BufferID bufferPacked      = FromGL<BufferID>(buffer);
         bool isCallValid           = (context->skipValidation() ||
-                            ValidateBindBufferBase(context, targetPacked, index, buffer));
+                            ValidateBindBufferBase(context, targetPacked, index, bufferPacked));
         if (isCallValid)
         {
-            context->bindBufferBase(targetPacked, index, buffer);
+            context->bindBufferBase(targetPacked, index, bufferPacked);
         }
-        ANGLE_CAPTURE(BindBufferBase, isCallValid, context, targetPacked, index, buffer);
+        ANGLE_CAPTURE(BindBufferBase, isCallValid, context, targetPacked, index, bufferPacked);
     }
 }
 
@@ -86,15 +87,16 @@ BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLs
     if (context)
     {
         BufferBinding targetPacked = FromGL<BufferBinding>(target);
+        BufferID bufferPacked      = FromGL<BufferID>(buffer);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateBindBufferRange(context, targetPacked, index, buffer, offset, size));
+             ValidateBindBufferRange(context, targetPacked, index, bufferPacked, offset, size));
         if (isCallValid)
         {
-            context->bindBufferRange(targetPacked, index, buffer, offset, size);
+            context->bindBufferRange(targetPacked, index, bufferPacked, offset, size);
         }
-        ANGLE_CAPTURE(BindBufferRange, isCallValid, context, targetPacked, index, buffer, offset,
-                      size);
+        ANGLE_CAPTURE(BindBufferRange, isCallValid, context, targetPacked, index, bufferPacked,
+                      offset, size);
     }
 }
 

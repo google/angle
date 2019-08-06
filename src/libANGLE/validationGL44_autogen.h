@@ -21,12 +21,12 @@ bool ValidateBindBuffersBase(Context *context,
                              GLenum target,
                              GLuint first,
                              GLsizei count,
-                             const GLuint *buffers);
+                             const BufferID *buffersPacked);
 bool ValidateBindBuffersRange(Context *context,
                               GLenum target,
                               GLuint first,
                               GLsizei count,
-                              const GLuint *buffers,
+                              const BufferID *buffersPacked,
                               const GLintptr *offsets,
                               const GLsizeiptr *sizes);
 bool ValidateBindImageTextures(Context *context,
@@ -38,7 +38,7 @@ bool ValidateBindTextures(Context *context, GLuint first, GLsizei count, const G
 bool ValidateBindVertexBuffers(Context *context,
                                GLuint first,
                                GLsizei count,
-                               const GLuint *buffers,
+                               const BufferID *buffersPacked,
                                const GLintptr *offsets,
                                const GLsizei *strides);
 bool ValidateBufferStorage(Context *context,

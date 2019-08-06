@@ -22,11 +22,11 @@ bool ValidateBeginTransformFeedback(Context *context, PrimitiveMode primitiveMod
 bool ValidateBindBufferBase(Context *context,
                             BufferBinding targetPacked,
                             GLuint index,
-                            GLuint buffer);
+                            BufferID bufferPacked);
 bool ValidateBindBufferRange(Context *context,
                              BufferBinding targetPacked,
                              GLuint index,
-                             GLuint buffer,
+                             BufferID bufferPacked,
                              GLintptr offset,
                              GLsizeiptr size);
 bool ValidateBindSampler(Context *context, GLuint unit, GLuint sampler);

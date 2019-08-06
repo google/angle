@@ -134,7 +134,7 @@ ANGLE_INLINE void StateCache::onBufferBindingChange(Context *context)
     updateBasicDrawElementsError();
 }
 
-ANGLE_INLINE void Context::bindBuffer(BufferBinding target, GLuint buffer)
+ANGLE_INLINE void Context::bindBuffer(BufferBinding target, BufferID buffer)
 {
     Buffer *bufferObject =
         mState.mBufferManager->checkBufferAllocation(mImplementation.get(), buffer);

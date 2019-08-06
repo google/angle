@@ -4039,7 +4039,7 @@ CallCapture CaptureSignalSemaphoreEXT(const Context *context,
                                       bool isCallValid,
                                       GLuint semaphore,
                                       GLuint numBufferBarriers,
-                                      const GLuint *buffers,
+                                      const BufferID *buffersPacked,
                                       GLuint numTextureBarriers,
                                       const GLuint *textures,
                                       const GLenum *dstLayouts)
@@ -4049,24 +4049,26 @@ CallCapture CaptureSignalSemaphoreEXT(const Context *context,
     paramBuffer.addValueParam("semaphore", ParamType::TGLuint, semaphore);
     paramBuffer.addValueParam("numBufferBarriers", ParamType::TGLuint, numBufferBarriers);
 
-    ParamCapture buffersParam("buffers", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, buffers, &buffersParam.value);
-    CaptureSignalSemaphoreEXT_buffers(context, isCallValid, semaphore, numBufferBarriers, buffers,
-                                      numTextureBarriers, textures, dstLayouts, &buffersParam);
-    paramBuffer.addParam(std::move(buffersParam));
+    ParamCapture buffersPackedParam("buffersPacked", ParamType::TBufferIDConstPointer);
+    InitParamValue(ParamType::TBufferIDConstPointer, buffersPacked, &buffersPackedParam.value);
+    CaptureSignalSemaphoreEXT_buffersPacked(context, isCallValid, semaphore, numBufferBarriers,
+                                            buffersPacked, numTextureBarriers, textures, dstLayouts,
+                                            &buffersPackedParam);
+    paramBuffer.addParam(std::move(buffersPackedParam));
 
     paramBuffer.addValueParam("numTextureBarriers", ParamType::TGLuint, numTextureBarriers);
 
     ParamCapture texturesParam("textures", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, textures, &texturesParam.value);
-    CaptureSignalSemaphoreEXT_textures(context, isCallValid, semaphore, numBufferBarriers, buffers,
-                                       numTextureBarriers, textures, dstLayouts, &texturesParam);
+    CaptureSignalSemaphoreEXT_textures(context, isCallValid, semaphore, numBufferBarriers,
+                                       buffersPacked, numTextureBarriers, textures, dstLayouts,
+                                       &texturesParam);
     paramBuffer.addParam(std::move(texturesParam));
 
     ParamCapture dstLayoutsParam("dstLayouts", ParamType::TGLenumConstPointer);
     InitParamValue(ParamType::TGLenumConstPointer, dstLayouts, &dstLayoutsParam.value);
     CaptureSignalSemaphoreEXT_dstLayouts(context, isCallValid, semaphore, numBufferBarriers,
-                                         buffers, numTextureBarriers, textures, dstLayouts,
+                                         buffersPacked, numTextureBarriers, textures, dstLayouts,
                                          &dstLayoutsParam);
     paramBuffer.addParam(std::move(dstLayoutsParam));
 
@@ -4077,7 +4079,7 @@ CallCapture CaptureWaitSemaphoreEXT(const Context *context,
                                     bool isCallValid,
                                     GLuint semaphore,
                                     GLuint numBufferBarriers,
-                                    const GLuint *buffers,
+                                    const BufferID *buffersPacked,
                                     GLuint numTextureBarriers,
                                     const GLuint *textures,
                                     const GLenum *srcLayouts)
@@ -4087,24 +4089,27 @@ CallCapture CaptureWaitSemaphoreEXT(const Context *context,
     paramBuffer.addValueParam("semaphore", ParamType::TGLuint, semaphore);
     paramBuffer.addValueParam("numBufferBarriers", ParamType::TGLuint, numBufferBarriers);
 
-    ParamCapture buffersParam("buffers", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, buffers, &buffersParam.value);
-    CaptureWaitSemaphoreEXT_buffers(context, isCallValid, semaphore, numBufferBarriers, buffers,
-                                    numTextureBarriers, textures, srcLayouts, &buffersParam);
-    paramBuffer.addParam(std::move(buffersParam));
+    ParamCapture buffersPackedParam("buffersPacked", ParamType::TBufferIDConstPointer);
+    InitParamValue(ParamType::TBufferIDConstPointer, buffersPacked, &buffersPackedParam.value);
+    CaptureWaitSemaphoreEXT_buffersPacked(context, isCallValid, semaphore, numBufferBarriers,
+                                          buffersPacked, numTextureBarriers, textures, srcLayouts,
+                                          &buffersPackedParam);
+    paramBuffer.addParam(std::move(buffersPackedParam));
 
     paramBuffer.addValueParam("numTextureBarriers", ParamType::TGLuint, numTextureBarriers);
 
     ParamCapture texturesParam("textures", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, textures, &texturesParam.value);
-    CaptureWaitSemaphoreEXT_textures(context, isCallValid, semaphore, numBufferBarriers, buffers,
-                                     numTextureBarriers, textures, srcLayouts, &texturesParam);
+    CaptureWaitSemaphoreEXT_textures(context, isCallValid, semaphore, numBufferBarriers,
+                                     buffersPacked, numTextureBarriers, textures, srcLayouts,
+                                     &texturesParam);
     paramBuffer.addParam(std::move(texturesParam));
 
     ParamCapture srcLayoutsParam("srcLayouts", ParamType::TGLenumConstPointer);
     InitParamValue(ParamType::TGLenumConstPointer, srcLayouts, &srcLayoutsParam.value);
-    CaptureWaitSemaphoreEXT_srcLayouts(context, isCallValid, semaphore, numBufferBarriers, buffers,
-                                       numTextureBarriers, textures, srcLayouts, &srcLayoutsParam);
+    CaptureWaitSemaphoreEXT_srcLayouts(context, isCallValid, semaphore, numBufferBarriers,
+                                       buffersPacked, numTextureBarriers, textures, srcLayouts,
+                                       &srcLayoutsParam);
     paramBuffer.addParam(std::move(srcLayoutsParam));
 
     return CallCapture(gl::EntryPoint::WaitSemaphoreEXT, std::move(paramBuffer));

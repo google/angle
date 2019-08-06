@@ -1145,7 +1145,7 @@ bool ValidateGetProgramResourceIndex(Context *context,
 
 bool ValidateBindVertexBuffer(Context *context,
                               GLuint bindingIndex,
-                              GLuint buffer,
+                              BufferID buffer,
                               GLintptr offset,
                               GLsizei stride)
 {

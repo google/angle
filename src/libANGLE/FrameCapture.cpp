@@ -604,6 +604,13 @@ template <>
 void WriteParamValueToStream<ParamType::TGLDEBUGPROC>(std::ostream &os, GLDEBUGPROC value)
 {}
 
+// TODO(jmadill): Use buffer ID map. http://anglebug.com/3611
+template <>
+void WriteParamValueToStream<ParamType::TBufferID>(std::ostream &os, gl::BufferID value)
+{
+    os << value.value;
+}
+
 // TODO(jmadill): Use renderbuffer ID map. http://anglebug.com/3611
 template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os, gl::RenderbufferID value)

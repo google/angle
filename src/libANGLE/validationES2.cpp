@@ -2372,7 +2372,7 @@ static bool ValidateObjectIdentifierAndName(Context *context, GLenum identifier,
     switch (identifier)
     {
         case GL_BUFFER:
-            if (context->getBuffer(name) == nullptr)
+            if (context->getBuffer({name}) == nullptr)
             {
                 context->validationError(GL_INVALID_VALUE, kInvalidBufferName);
                 return false;
@@ -3431,7 +3431,7 @@ bool ValidateSemaphoreParameterui64vEXT(Context *context,
 bool ValidateSignalSemaphoreEXT(Context *context,
                                 GLuint semaphore,
                                 GLuint numBufferBarriers,
-                                const GLuint *buffers,
+                                const BufferID *buffers,
                                 GLuint numTextureBarriers,
                                 const GLuint *textures,
                                 const GLenum *dstLayouts)
@@ -3457,7 +3457,7 @@ bool ValidateSignalSemaphoreEXT(Context *context,
 bool ValidateWaitSemaphoreEXT(Context *context,
                               GLuint semaphore,
                               GLuint numBufferBarriers,
-                              const GLuint *buffers,
+                              const BufferID *buffers,
                               GLuint numTextureBarriers,
                               const GLuint *textures,
                               const GLenum *srcLayouts)
@@ -5706,7 +5706,7 @@ bool ValidateHint(Context *context, GLenum target, GLenum mode)
     return true;
 }
 
-bool ValidateIsBuffer(Context *context, GLuint buffer)
+bool ValidateIsBuffer(Context *context, BufferID buffer)
 {
     return true;
 }
@@ -6220,7 +6220,7 @@ bool ValidateCopyTexSubImage3DOES(Context *context,
                                      height);
 }
 
-bool ValidateDeleteBuffers(Context *context, GLint n, const GLuint *)
+bool ValidateDeleteBuffers(Context *context, GLint n, const BufferID *buffers)
 {
     return ValidateGenOrDelete(context, n);
 }
@@ -6476,7 +6476,7 @@ bool ValidateFramebufferTexture3DOES(Context *context,
     return true;
 }
 
-bool ValidateGenBuffers(Context *context, GLint n, GLuint *)
+bool ValidateGenBuffers(Context *context, GLint n, BufferID *buffers)
 {
     return ValidateGenOrDelete(context, n);
 }

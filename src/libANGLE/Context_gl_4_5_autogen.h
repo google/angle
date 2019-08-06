@@ -16,9 +16,9 @@
                               GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0,     \
                               GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);           \
     GLenum checkNamedFramebufferStatus(GLuint framebuffer, GLenum target);                         \
-    void clearNamedBufferData(GLuint buffer, GLenum internalformat, GLenum format, GLenum type,    \
-                              const void *data);                                                   \
-    void clearNamedBufferSubData(GLuint buffer, GLenum internalformat, GLintptr offset,            \
+    void clearNamedBufferData(BufferID bufferPacked, GLenum internalformat, GLenum format,         \
+                              GLenum type, const void *data);                                      \
+    void clearNamedBufferSubData(BufferID bufferPacked, GLenum internalformat, GLintptr offset,    \
                                  GLsizeiptr size, GLenum format, GLenum type, const void *data);   \
     void clearNamedFramebufferfi(GLuint framebuffer, GLenum buffer, GLint drawbuffer,              \
                                  GLfloat depth, GLint stencil);                                    \
@@ -45,7 +45,7 @@
                                GLint y, GLsizei width, GLsizei height);                            \
     void copyTextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset,          \
                                GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);    \
-    void createBuffers(GLsizei n, GLuint *buffers);                                                \
+    void createBuffers(GLsizei n, BufferID *buffersPacked);                                        \
     void createFramebuffers(GLsizei n, GLuint *framebuffers);                                      \
     void createProgramPipelines(GLsizei n, GLuint *pipelines);                                     \
     void createQueries(GLenum target, GLsizei n, GLuint *ids);                                     \
@@ -56,25 +56,28 @@
     void createVertexArrays(GLsizei n, GLuint *arrays);                                            \
     void disableVertexArrayAttrib(GLuint vaobj, GLuint index);                                     \
     void enableVertexArrayAttrib(GLuint vaobj, GLuint index);                                      \
-    void flushMappedNamedBufferRange(GLuint buffer, GLintptr offset, GLsizeiptr length);           \
+    void flushMappedNamedBufferRange(BufferID bufferPacked, GLintptr offset, GLsizeiptr length);   \
     void generateTextureMipmap(GLuint texture);                                                    \
     void getCompressedTextureImage(GLuint texture, GLint level, GLsizei bufSize, void *pixels);    \
     void getCompressedTextureSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset,   \
                                       GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, \
                                       GLsizei bufSize, void *pixels);                              \
-    void getNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLint64 *params);                \
-    void getNamedBufferParameteriv(GLuint buffer, GLenum pname, GLint *params);                    \
-    void getNamedBufferPointerv(GLuint buffer, GLenum pname, void **params);                       \
-    void getNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, void *data);       \
+    void getNamedBufferParameteri64v(BufferID bufferPacked, GLenum pname, GLint64 *params);        \
+    void getNamedBufferParameteriv(BufferID bufferPacked, GLenum pname, GLint *params);            \
+    void getNamedBufferPointerv(BufferID bufferPacked, GLenum pname, void **params);               \
+    void getNamedBufferSubData(BufferID bufferPacked, GLintptr offset, GLsizeiptr size,            \
+                               void *data);                                                        \
     void getNamedFramebufferAttachmentParameteriv(GLuint framebuffer, GLenum attachment,           \
                                                   GLenum pname, GLint *params);                    \
     void getNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname, GLint *param);           \
     void getNamedRenderbufferParameteriv(RenderbufferID renderbufferPacked, GLenum pname,          \
                                          GLint *params);                                           \
-    void getQueryBufferObjecti64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);        \
-    void getQueryBufferObjectiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);          \
-    void getQueryBufferObjectui64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);       \
-    void getQueryBufferObjectuiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);         \
+    void getQueryBufferObjecti64v(GLuint id, BufferID bufferPacked, GLenum pname,                  \
+                                  GLintptr offset);                                                \
+    void getQueryBufferObjectiv(GLuint id, BufferID bufferPacked, GLenum pname, GLintptr offset);  \
+    void getQueryBufferObjectui64v(GLuint id, BufferID bufferPacked, GLenum pname,                 \
+                                   GLintptr offset);                                               \
+    void getQueryBufferObjectuiv(GLuint id, BufferID bufferPacked, GLenum pname, GLintptr offset); \
     void getTextureImage(GLuint texture, GLint level, GLenum format, GLenum type, GLsizei bufSize, \
                          void *pixels);                                                            \
     void getTextureLevelParameterfv(GLuint texture, GLint level, GLenum pname, GLfloat *params);   \
@@ -118,12 +121,14 @@
     void invalidateNamedFramebufferSubData(GLuint framebuffer, GLsizei numAttachments,             \
                                            const GLenum *attachments, GLint x, GLint y,            \
                                            GLsizei width, GLsizei height);                         \
-    void *mapNamedBuffer(GLuint buffer, GLenum access);                                            \
-    void *mapNamedBufferRange(GLuint buffer, GLintptr offset, GLsizeiptr length,                   \
+    void *mapNamedBuffer(BufferID bufferPacked, GLenum access);                                    \
+    void *mapNamedBufferRange(BufferID bufferPacked, GLintptr offset, GLsizeiptr length,           \
                               GLbitfield access);                                                  \
-    void namedBufferData(GLuint buffer, GLsizeiptr size, const void *data, GLenum usage);          \
-    void namedBufferStorage(GLuint buffer, GLsizeiptr size, const void *data, GLbitfield flags);   \
-    void namedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void *data);    \
+    void namedBufferData(BufferID bufferPacked, GLsizeiptr size, const void *data, GLenum usage);  \
+    void namedBufferStorage(BufferID bufferPacked, GLsizeiptr size, const void *data,              \
+                            GLbitfield flags);                                                     \
+    void namedBufferSubData(BufferID bufferPacked, GLintptr offset, GLsizeiptr size,               \
+                            const void *data);                                                     \
     void namedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf);                               \
     void namedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, const GLenum *bufs);           \
     void namedFramebufferParameteri(GLuint framebuffer, GLenum pname, GLint param);                \
@@ -141,9 +146,9 @@
                                              GLenum internalformat, GLsizei width,                 \
                                              GLsizei height);                                      \
     void textureBarrier();                                                                         \
-    void textureBuffer(GLuint texture, GLenum internalformat, GLuint buffer);                      \
-    void textureBufferRange(GLuint texture, GLenum internalformat, GLuint buffer, GLintptr offset, \
-                            GLsizeiptr size);                                                      \
+    void textureBuffer(GLuint texture, GLenum internalformat, BufferID bufferPacked);              \
+    void textureBufferRange(GLuint texture, GLenum internalformat, BufferID bufferPacked,          \
+                            GLintptr offset, GLsizeiptr size);                                     \
     void textureParameterIiv(GLuint texture, GLenum pname, const GLint *params);                   \
     void textureParameterIuiv(GLuint texture, GLenum pname, const GLuint *params);                 \
     void textureParameterf(GLuint texture, GLenum pname, GLfloat param);                           \
@@ -169,10 +174,10 @@
     void textureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset,              \
                            GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,            \
                            GLenum format, GLenum type, const void *pixels);                        \
-    void transformFeedbackBufferBase(GLuint xfb, GLuint index, GLuint buffer);                     \
-    void transformFeedbackBufferRange(GLuint xfb, GLuint index, GLuint buffer, GLintptr offset,    \
-                                      GLsizeiptr size);                                            \
-    GLboolean unmapNamedBuffer(GLuint buffer);                                                     \
+    void transformFeedbackBufferBase(GLuint xfb, GLuint index, BufferID bufferPacked);             \
+    void transformFeedbackBufferRange(GLuint xfb, GLuint index, BufferID bufferPacked,             \
+                                      GLintptr offset, GLsizeiptr size);                           \
+    GLboolean unmapNamedBuffer(BufferID bufferPacked);                                             \
     void vertexArrayAttribBinding(GLuint vaobj, GLuint attribindex, GLuint bindingindex);          \
     void vertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type,        \
                                  GLboolean normalized, GLuint relativeoffset);                     \
@@ -181,11 +186,11 @@
     void vertexArrayAttribLFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type,       \
                                   GLuint relativeoffset);                                          \
     void vertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor);             \
-    void vertexArrayElementBuffer(GLuint vaobj, GLuint buffer);                                    \
-    void vertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer,                 \
+    void vertexArrayElementBuffer(GLuint vaobj, BufferID bufferPacked);                            \
+    void vertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, BufferID bufferPacked,         \
                                  GLintptr offset, GLsizei stride);                                 \
     void vertexArrayVertexBuffers(GLuint vaobj, GLuint first, GLsizei count,                       \
-                                  const GLuint *buffers, const GLintptr *offsets,                  \
+                                  const BufferID *buffersPacked, const GLintptr *offsets,          \
                                   const GLsizei *strides);
 
 #endif  // ANGLE_CONTEXT_API_4_5_AUTOGEN_H_

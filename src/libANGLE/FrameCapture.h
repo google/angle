@@ -180,6 +180,9 @@ template <>
 void WriteParamValueToStream<ParamType::TGLDEBUGPROC>(std::ostream &os, GLDEBUGPROC value);
 
 template <>
+void WriteParamValueToStream<ParamType::TBufferID>(std::ostream &os, gl::BufferID value);
+
+template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os,
                                                          gl::RenderbufferID value);
 

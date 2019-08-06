@@ -38,14 +38,16 @@ void GL_APIENTRY BindVertexBuffer(GLuint bindingindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        BufferID bufferPacked = FromGL<BufferID>(buffer);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateBindVertexBuffer(context, bindingindex, buffer, offset, stride));
+             ValidateBindVertexBuffer(context, bindingindex, bufferPacked, offset, stride));
         if (isCallValid)
         {
-            context->bindVertexBuffer(bindingindex, buffer, offset, stride);
+            context->bindVertexBuffer(bindingindex, bufferPacked, offset, stride);
         }
-        ANGLE_CAPTURE(BindVertexBuffer, isCallValid, context, bindingindex, buffer, offset, stride);
+        ANGLE_CAPTURE(BindVertexBuffer, isCallValid, context, bindingindex, bufferPacked, offset,
+                      stride);
     }
 }
 
@@ -597,13 +599,14 @@ void GL_APIENTRY InvalidateBufferData(GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        BufferID bufferPacked = FromGL<BufferID>(buffer);
         bool isCallValid =
-            (context->skipValidation() || ValidateInvalidateBufferData(context, buffer));
+            (context->skipValidation() || ValidateInvalidateBufferData(context, bufferPacked));
         if (isCallValid)
         {
-            context->invalidateBufferData(buffer);
+            context->invalidateBufferData(bufferPacked);
         }
-        ANGLE_CAPTURE(InvalidateBufferData, isCallValid, context, buffer);
+        ANGLE_CAPTURE(InvalidateBufferData, isCallValid, context, bufferPacked);
     }
 }
 
@@ -615,13 +618,14 @@ void GL_APIENTRY InvalidateBufferSubData(GLuint buffer, GLintptr offset, GLsizei
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateInvalidateBufferSubData(context, buffer, offset, length));
+        BufferID bufferPacked = FromGL<BufferID>(buffer);
+        bool isCallValid      = (context->skipValidation() ||
+                            ValidateInvalidateBufferSubData(context, bufferPacked, offset, length));
         if (isCallValid)
         {
-            context->invalidateBufferSubData(buffer, offset, length);
+            context->invalidateBufferSubData(bufferPacked, offset, length);
         }
-        ANGLE_CAPTURE(InvalidateBufferSubData, isCallValid, context, buffer, offset, length);
+        ANGLE_CAPTURE(InvalidateBufferSubData, isCallValid, context, bufferPacked, offset, length);
     }
 }
 
@@ -886,15 +890,16 @@ void GL_APIENTRY TexBufferRange(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        BufferID bufferPacked = FromGL<BufferID>(buffer);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateTexBufferRange(context, target, internalformat, buffer, offset, size));
+             ValidateTexBufferRange(context, target, internalformat, bufferPacked, offset, size));
         if (isCallValid)
         {
-            context->texBufferRange(target, internalformat, buffer, offset, size);
+            context->texBufferRange(target, internalformat, bufferPacked, offset, size);
         }
-        ANGLE_CAPTURE(TexBufferRange, isCallValid, context, target, internalformat, buffer, offset,
-                      size);
+        ANGLE_CAPTURE(TexBufferRange, isCallValid, context, target, internalformat, bufferPacked,
+                      offset, size);
     }
 }
 

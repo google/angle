@@ -287,13 +287,14 @@ void GL_APIENTRY TexBuffer(GLenum target, GLenum internalformat, GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateTexBuffer(context, target, internalformat, buffer));
+        BufferID bufferPacked = FromGL<BufferID>(buffer);
+        bool isCallValid      = (context->skipValidation() ||
+                            ValidateTexBuffer(context, target, internalformat, bufferPacked));
         if (isCallValid)
         {
-            context->texBuffer(target, internalformat, buffer);
+            context->texBuffer(target, internalformat, bufferPacked);
         }
-        ANGLE_CAPTURE(TexBuffer, isCallValid, context, target, internalformat, buffer);
+        ANGLE_CAPTURE(TexBuffer, isCallValid, context, target, internalformat, bufferPacked);
     }
 }
 

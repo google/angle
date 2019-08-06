@@ -68,14 +68,14 @@ CallCapture CaptureBindProgramPipeline(const Context *context, bool isCallValid,
 CallCapture CaptureBindVertexBuffer(const Context *context,
                                     bool isCallValid,
                                     GLuint bindingindex,
-                                    GLuint buffer,
+                                    BufferID bufferPacked,
                                     GLintptr offset,
                                     GLsizei stride)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("bindingindex", ParamType::TGLuint, bindingindex);
-    paramBuffer.addValueParam("buffer", ParamType::TGLuint, buffer);
+    paramBuffer.addValueParam("bufferPacked", ParamType::TBufferID, bufferPacked);
     paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
     paramBuffer.addValueParam("stride", ParamType::TGLsizei, stride);
 

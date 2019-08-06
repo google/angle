@@ -94,14 +94,16 @@ void GL_APIENTRY BindVertexBuffer(GLuint bindingindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        BufferID bufferPacked = FromGL<BufferID>(buffer);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateBindVertexBuffer(context, bindingindex, buffer, offset, stride));
+             ValidateBindVertexBuffer(context, bindingindex, bufferPacked, offset, stride));
         if (isCallValid)
         {
-            context->bindVertexBuffer(bindingindex, buffer, offset, stride);
+            context->bindVertexBuffer(bindingindex, bufferPacked, offset, stride);
         }
-        ANGLE_CAPTURE(BindVertexBuffer, isCallValid, context, bindingindex, buffer, offset, stride);
+        ANGLE_CAPTURE(BindVertexBuffer, isCallValid, context, bindingindex, bufferPacked, offset,
+                      stride);
     }
 }
 
