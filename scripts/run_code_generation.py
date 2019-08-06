@@ -38,12 +38,18 @@ def rebase_script_path(script_path, relative_path):
     return os.path.relpath(os.path.join(os.path.dirname(script_path), relative_path), root_dir)
 
 
-def get_executable_name():
-    return 'vpython.bat' if platform.system() == 'Windows' else 'vpython'
+# Check if we need a module from vpython
+def get_executable_name(first_line):
+    if 'vpython' in first_line:
+        return 'vpython.bat' if platform.system() == 'Windows' else 'vpython'
+    return 'python'
 
 
 def grab_from_script(script, param):
-    res = subprocess.check_output([get_executable_name(), script, param]).strip()
+    res = ''
+    f = open(os.path.basename(script), "r")
+    res = subprocess.check_output([get_executable_name(f.readline()), script, param]).strip()
+    f.close()
     if res == '':
         return []
     return [clean_path_slashes(rebase_script_path(script, name)) for name in res.split(',')]
@@ -190,8 +196,12 @@ def main():
                 os.chdir(get_child_script_dirname(script))
 
                 print('Running ' + name + ' code generator')
-                if subprocess.call([get_executable_name(), os.path.basename(script)]) != 0:
+
+                f = open(os.path.basename(script), "r")
+                if subprocess.call([get_executable_name(f.readline()),
+                                    os.path.basename(script)]) != 0:
                     sys.exit(1)
+                f.close()
 
         # Update the hash dictionary.
         all_new_hashes[fname] = new_hashes
