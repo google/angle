@@ -48,7 +48,7 @@ void GL_APIENTRY AlphaFunc(GLenum func, GLfloat ref)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        AlphaTestFunc funcPacked = FromGLenum<AlphaTestFunc>(func);
+        AlphaTestFunc funcPacked = FromGL<AlphaTestFunc>(func);
         bool isCallValid =
             (context->skipValidation() || ValidateAlphaFunc(context, funcPacked, ref));
         if (isCallValid)
@@ -869,7 +869,7 @@ void GL_APIENTRY CullFace(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        CullFaceMode modePacked = FromGLenum<CullFaceMode>(mode);
+        CullFaceMode modePacked = FromGL<CullFaceMode>(mode);
         bool isCallValid = (context->skipValidation() || ValidateCullFace(context, modePacked));
         if (isCallValid)
         {
@@ -1565,7 +1565,7 @@ void GL_APIENTRY GetLightfv(GLenum light, GLenum pname, GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
+        LightParameter pnamePacked = FromGL<LightParameter>(pname);
         bool isCallValid =
             (context->skipValidation() || ValidateGetLightfv(context, light, pnamePacked, params));
         if (isCallValid)
@@ -1656,7 +1656,7 @@ void GL_APIENTRY GetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
+        MaterialParameter pnamePacked = FromGL<MaterialParameter>(pname);
         bool isCallValid              = (context->skipValidation() ||
                             ValidateGetMaterialfv(context, face, pnamePacked, params));
         if (isCallValid)
@@ -1786,8 +1786,8 @@ void GL_APIENTRY GetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = FromGL<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGL<TextureEnvParameter>(pname);
         bool isCallValid                = (context->skipValidation() ||
                             ValidateGetTexEnvfv(context, targetPacked, pnamePacked, params));
         if (isCallValid)
@@ -1806,8 +1806,8 @@ void GL_APIENTRY GetTexEnviv(GLenum target, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = FromGL<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGL<TextureEnvParameter>(pname);
         bool isCallValid                = (context->skipValidation() ||
                             ValidateGetTexEnviv(context, targetPacked, pnamePacked, params));
         if (isCallValid)
@@ -1902,7 +1902,7 @@ void GL_APIENTRY GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateGetTexLevelParameterfv(context, targetPacked, level, pname, params));
@@ -1925,7 +1925,7 @@ void GL_APIENTRY GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateGetTexLevelParameteriv(context, targetPacked, level, pname, params));
@@ -1946,7 +1946,7 @@ void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateGetTexParameterfv(context, targetPacked, pname, params));
         if (isCallValid)
@@ -1965,7 +1965,7 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateGetTexParameteriv(context, targetPacked, pname, params));
         if (isCallValid)
@@ -2281,7 +2281,7 @@ void GL_APIENTRY Lightf(GLenum light, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
+        LightParameter pnamePacked = FromGL<LightParameter>(pname);
         bool isCallValid =
             (context->skipValidation() || ValidateLightf(context, light, pnamePacked, param));
         if (isCallValid)
@@ -2300,7 +2300,7 @@ void GL_APIENTRY Lightfv(GLenum light, GLenum pname, const GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
+        LightParameter pnamePacked = FromGL<LightParameter>(pname);
         bool isCallValid =
             (context->skipValidation() || ValidateLightfv(context, light, pnamePacked, params));
         if (isCallValid)
@@ -2466,7 +2466,7 @@ void GL_APIENTRY LogicOp(GLenum opcode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LogicalOperation opcodePacked = FromGLenum<LogicalOperation>(opcode);
+        LogicalOperation opcodePacked = FromGL<LogicalOperation>(opcode);
         bool isCallValid = (context->skipValidation() || ValidateLogicOp(context, opcodePacked));
         if (isCallValid)
         {
@@ -2661,7 +2661,7 @@ void GL_APIENTRY Materialf(GLenum face, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
+        MaterialParameter pnamePacked = FromGL<MaterialParameter>(pname);
         bool isCallValid =
             (context->skipValidation() || ValidateMaterialf(context, face, pnamePacked, param));
         if (isCallValid)
@@ -2680,7 +2680,7 @@ void GL_APIENTRY Materialfv(GLenum face, GLenum pname, const GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
+        MaterialParameter pnamePacked = FromGL<MaterialParameter>(pname);
         bool isCallValid =
             (context->skipValidation() || ValidateMaterialfv(context, face, pnamePacked, params));
         if (isCallValid)
@@ -2733,7 +2733,7 @@ void GL_APIENTRY MatrixMode(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MatrixType modePacked = FromGLenum<MatrixType>(mode);
+        MatrixType modePacked = FromGL<MatrixType>(mode);
         bool isCallValid = (context->skipValidation() || ValidateMatrixMode(context, modePacked));
         if (isCallValid)
         {
@@ -3963,7 +3963,7 @@ void GL_APIENTRY ShadeModel(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ShadingModel modePacked = FromGLenum<ShadingModel>(mode);
+        ShadingModel modePacked = FromGL<ShadingModel>(mode);
         bool isCallValid = (context->skipValidation() || ValidateShadeModel(context, modePacked));
         if (isCallValid)
         {
@@ -4542,8 +4542,8 @@ void GL_APIENTRY TexEnvf(GLenum target, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = FromGL<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGL<TextureEnvParameter>(pname);
         bool isCallValid                = (context->skipValidation() ||
                             ValidateTexEnvf(context, targetPacked, pnamePacked, param));
         if (isCallValid)
@@ -4562,8 +4562,8 @@ void GL_APIENTRY TexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = FromGL<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGL<TextureEnvParameter>(pname);
         bool isCallValid                = (context->skipValidation() ||
                             ValidateTexEnvfv(context, targetPacked, pnamePacked, params));
         if (isCallValid)
@@ -4581,8 +4581,8 @@ void GL_APIENTRY TexEnvi(GLenum target, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = FromGL<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGL<TextureEnvParameter>(pname);
         bool isCallValid                = (context->skipValidation() ||
                             ValidateTexEnvi(context, targetPacked, pnamePacked, param));
         if (isCallValid)
@@ -4601,8 +4601,8 @@ void GL_APIENTRY TexEnviv(GLenum target, GLenum pname, const GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = FromGL<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGL<TextureEnvParameter>(pname);
         bool isCallValid                = (context->skipValidation() ||
                             ValidateTexEnviv(context, targetPacked, pnamePacked, params));
         if (isCallValid)
@@ -4767,7 +4767,7 @@ void GL_APIENTRY TexImage2D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateTexImage2D(context, targetPacked, level, internalformat, width,
                                                height, border, format, type, pixels));
@@ -4788,7 +4788,7 @@ void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateTexParameterf(context, targetPacked, pname, param));
         if (isCallValid)
@@ -4807,7 +4807,7 @@ void GL_APIENTRY TexParameterfv(GLenum target, GLenum pname, const GLfloat *para
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateTexParameterfv(context, targetPacked, pname, params));
         if (isCallValid)
@@ -4825,7 +4825,7 @@ void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateTexParameteri(context, targetPacked, pname, param));
         if (isCallValid)
@@ -4844,7 +4844,7 @@ void GL_APIENTRY TexParameteriv(GLenum target, GLenum pname, const GLint *params
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateTexParameteriv(context, targetPacked, pname, params));
         if (isCallValid)

@@ -78,7 +78,7 @@ void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateBindTexture(context, targetPacked, texture));
         if (isCallValid)
@@ -99,7 +99,7 @@ void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const voi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        VertexAttribType typePacked = FromGL<VertexAttribType>(type);
         bool isCallValid            = (context->skipValidation() ||
                             ValidateColorPointer(context, size, typePacked, stride, pointer));
         if (isCallValid)
@@ -155,7 +155,7 @@ void GL_APIENTRY CopyTexImage2D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateCopyTexImage2D(context, targetPacked, level, internalformat, x,
                                                    y, width, height, border));
@@ -208,7 +208,7 @@ void GL_APIENTRY CopyTexSubImage2D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateCopyTexSubImage2D(context, targetPacked, level, xoffset,
                                                       yoffset, x, y, width, height));
@@ -245,7 +245,7 @@ void GL_APIENTRY DisableClientState(GLenum array)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ClientVertexArrayType arrayPacked = FromGLenum<ClientVertexArrayType>(array);
+        ClientVertexArrayType arrayPacked = FromGL<ClientVertexArrayType>(array);
         bool isCallValid =
             (context->skipValidation() || ValidateDisableClientState(context, arrayPacked));
         if (isCallValid)
@@ -263,7 +263,7 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
+        PrimitiveMode modePacked = FromGL<PrimitiveMode>(mode);
         bool isCallValid =
             (context->skipValidation() || ValidateDrawArrays(context, modePacked, first, count));
         if (isCallValid)
@@ -284,8 +284,8 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const voi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
-        DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
+        PrimitiveMode modePacked    = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked = FromGL<DrawElementsType>(type);
         bool isCallValid            = (context->skipValidation() ||
                             ValidateDrawElements(context, modePacked, count, typePacked, indices));
         if (isCallValid)
@@ -321,7 +321,7 @@ void GL_APIENTRY EnableClientState(GLenum array)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ClientVertexArrayType arrayPacked = FromGLenum<ClientVertexArrayType>(array);
+        ClientVertexArrayType arrayPacked = FromGL<ClientVertexArrayType>(array);
         bool isCallValid =
             (context->skipValidation() || ValidateEnableClientState(context, arrayPacked));
         if (isCallValid)
@@ -467,7 +467,7 @@ void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        VertexAttribType typePacked = FromGL<VertexAttribType>(type);
         bool isCallValid            = (context->skipValidation() ||
                             ValidateNormalPointer(context, typePacked, stride, pointer));
         if (isCallValid)
@@ -556,7 +556,7 @@ void GL_APIENTRY TexCoordPointer(GLint size, GLenum type, GLsizei stride, const 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        VertexAttribType typePacked = FromGL<VertexAttribType>(type);
         bool isCallValid            = (context->skipValidation() ||
                             ValidateTexCoordPointer(context, size, typePacked, stride, pointer));
         if (isCallValid)
@@ -614,7 +614,7 @@ void GL_APIENTRY TexSubImage2D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateTexSubImage2D(context, targetPacked, level, xoffset, yoffset,
                                                   width, height, format, type, pixels));
@@ -638,7 +638,7 @@ void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const vo
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        VertexAttribType typePacked = FromGL<VertexAttribType>(type);
         bool isCallValid            = (context->skipValidation() ||
                             ValidateVertexPointer(context, size, typePacked, stride, pointer));
         if (isCallValid)

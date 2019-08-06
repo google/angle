@@ -43,7 +43,7 @@ void GL_APIENTRY CopyTexSubImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateCopyTexSubImage3D(context, targetPacked, level, xoffset,
                                                       yoffset, zoffset, x, y, width, height));
@@ -72,8 +72,8 @@ void GL_APIENTRY DrawRangeElements(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
-        DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
+        PrimitiveMode modePacked    = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked = FromGL<DrawElementsType>(type);
         bool isCallValid =
             (context->skipValidation() || ValidateDrawRangeElements(context, modePacked, start, end,
                                                                     count, typePacked, indices));
@@ -107,7 +107,7 @@ void GL_APIENTRY TexImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateTexImage3D(context, targetPacked, level, internalformat, width,
                                                height, depth, border, format, type, pixels));
@@ -143,7 +143,7 @@ void GL_APIENTRY TexSubImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset, width,

@@ -4750,12 +4750,12 @@ CallCapture CaptureBindFramebufferOES(const Context *context,
 CallCapture CaptureBindRenderbufferOES(const Context *context,
                                        bool isCallValid,
                                        GLenum target,
-                                       GLuint renderbuffer)
+                                       RenderbufferID renderbufferPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addEnumParam("target", GLenumGroup::RenderbufferTarget, ParamType::TGLenum, target);
-    paramBuffer.addValueParam("renderbuffer", ParamType::TGLuint, renderbuffer);
+    paramBuffer.addValueParam("renderbufferPacked", ParamType::TRenderbufferID, renderbufferPacked);
 
     return CallCapture(gl::EntryPoint::BindRenderbufferOES, std::move(paramBuffer));
 }
@@ -4797,17 +4797,19 @@ CallCapture CaptureDeleteFramebuffersOES(const Context *context,
 CallCapture CaptureDeleteRenderbuffersOES(const Context *context,
                                           bool isCallValid,
                                           GLsizei n,
-                                          const GLuint *renderbuffers)
+                                          const RenderbufferID *renderbuffersPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture renderbuffersParam("renderbuffers", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, renderbuffers, &renderbuffersParam.value);
-    CaptureDeleteRenderbuffersOES_renderbuffers(context, isCallValid, n, renderbuffers,
-                                                &renderbuffersParam);
-    paramBuffer.addParam(std::move(renderbuffersParam));
+    ParamCapture renderbuffersPackedParam("renderbuffersPacked",
+                                          ParamType::TRenderbufferIDConstPointer);
+    InitParamValue(ParamType::TRenderbufferIDConstPointer, renderbuffersPacked,
+                   &renderbuffersPackedParam.value);
+    CaptureDeleteRenderbuffersOES_renderbuffersPacked(context, isCallValid, n, renderbuffersPacked,
+                                                      &renderbuffersPackedParam);
+    paramBuffer.addParam(std::move(renderbuffersPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteRenderbuffersOES, std::move(paramBuffer));
 }
@@ -4817,7 +4819,7 @@ CallCapture CaptureFramebufferRenderbufferOES(const Context *context,
                                               GLenum target,
                                               GLenum attachment,
                                               GLenum renderbuffertarget,
-                                              GLuint renderbuffer)
+                                              RenderbufferID renderbufferPacked)
 {
     ParamBuffer paramBuffer;
 
@@ -4826,7 +4828,7 @@ CallCapture CaptureFramebufferRenderbufferOES(const Context *context,
                              attachment);
     paramBuffer.addEnumParam("renderbuffertarget", GLenumGroup::RenderbufferTarget,
                              ParamType::TGLenum, renderbuffertarget);
-    paramBuffer.addValueParam("renderbuffer", ParamType::TGLuint, renderbuffer);
+    paramBuffer.addValueParam("renderbufferPacked", ParamType::TRenderbufferID, renderbufferPacked);
 
     return CallCapture(gl::EntryPoint::FramebufferRenderbufferOES, std::move(paramBuffer));
 }
@@ -4872,17 +4874,18 @@ CallCapture CaptureGenFramebuffersOES(const Context *context,
 CallCapture CaptureGenRenderbuffersOES(const Context *context,
                                        bool isCallValid,
                                        GLsizei n,
-                                       GLuint *renderbuffers)
+                                       RenderbufferID *renderbuffersPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture renderbuffersParam("renderbuffers", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, renderbuffers, &renderbuffersParam.value);
-    CaptureGenRenderbuffersOES_renderbuffers(context, isCallValid, n, renderbuffers,
-                                             &renderbuffersParam);
-    paramBuffer.addParam(std::move(renderbuffersParam));
+    ParamCapture renderbuffersPackedParam("renderbuffersPacked", ParamType::TRenderbufferIDPointer);
+    InitParamValue(ParamType::TRenderbufferIDPointer, renderbuffersPacked,
+                   &renderbuffersPackedParam.value);
+    CaptureGenRenderbuffersOES_renderbuffersPacked(context, isCallValid, n, renderbuffersPacked,
+                                                   &renderbuffersPackedParam);
+    paramBuffer.addParam(std::move(renderbuffersPackedParam));
 
     return CallCapture(gl::EntryPoint::GenRenderbuffersOES, std::move(paramBuffer));
 }
@@ -4962,12 +4965,12 @@ CallCapture CaptureIsFramebufferOES(const Context *context,
 
 CallCapture CaptureIsRenderbufferOES(const Context *context,
                                      bool isCallValid,
-                                     GLuint renderbuffer,
+                                     RenderbufferID renderbufferPacked,
                                      GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("renderbuffer", ParamType::TGLuint, renderbuffer);
+    paramBuffer.addValueParam("renderbufferPacked", ParamType::TRenderbufferID, renderbufferPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);

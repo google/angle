@@ -86,6 +86,9 @@ enum class ParamType
     TPrimitiveMode,
     TProvokingVertexConvention,
     TQueryType,
+    TRenderbufferID,
+    TRenderbufferIDConstPointer,
+    TRenderbufferIDPointer,
     TShaderType,
     TShadingModel,
     TTextureEnvParameter,
@@ -170,6 +173,9 @@ union ParamValue
     gl::PrimitiveMode PrimitiveModeVal;
     gl::ProvokingVertexConvention ProvokingVertexConventionVal;
     gl::QueryType QueryTypeVal;
+    gl::RenderbufferID RenderbufferIDVal;
+    const gl::RenderbufferID *RenderbufferIDConstPointerVal;
+    gl::RenderbufferID *RenderbufferIDPointerVal;
     gl::ShaderType ShaderTypeVal;
     gl::ShadingModel ShadingModelVal;
     gl::TextureEnvParameter TextureEnvParameterVal;
@@ -623,6 +629,27 @@ inline void SetParamVal<ParamType::TQueryType>(gl::QueryType valueIn, ParamValue
 }
 
 template <>
+inline void SetParamVal<ParamType::TRenderbufferID>(gl::RenderbufferID valueIn,
+                                                    ParamValue *valueOut)
+{
+    valueOut->RenderbufferIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TRenderbufferIDConstPointer>(const gl::RenderbufferID *valueIn,
+                                                                ParamValue *valueOut)
+{
+    valueOut->RenderbufferIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TRenderbufferIDPointer>(gl::RenderbufferID *valueIn,
+                                                           ParamValue *valueOut)
+{
+    valueOut->RenderbufferIDPointerVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TShaderType>(gl::ShaderType valueIn, ParamValue *valueOut)
 {
     valueOut->ShaderTypeVal = valueIn;
@@ -909,6 +936,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TQueryType:
             SetParamVal<ParamType::TQueryType>(valueIn, valueOut);
+            break;
+        case ParamType::TRenderbufferID:
+            SetParamVal<ParamType::TRenderbufferID>(valueIn, valueOut);
+            break;
+        case ParamType::TRenderbufferIDConstPointer:
+            SetParamVal<ParamType::TRenderbufferIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TRenderbufferIDPointer:
+            SetParamVal<ParamType::TRenderbufferIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TShaderType:
             SetParamVal<ParamType::TShaderType>(valueIn, valueOut);

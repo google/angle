@@ -713,9 +713,9 @@ bool Framebuffer::detachTexture(const Context *context, GLuint textureId)
     return detachResourceById(context, GL_TEXTURE, textureId);
 }
 
-bool Framebuffer::detachRenderbuffer(const Context *context, GLuint renderbufferId)
+bool Framebuffer::detachRenderbuffer(const Context *context, RenderbufferID renderbufferId)
 {
-    return detachResourceById(context, GL_RENDERBUFFER, renderbufferId);
+    return detachResourceById(context, GL_RENDERBUFFER, renderbufferId.value);
 }
 
 bool Framebuffer::detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId)

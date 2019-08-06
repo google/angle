@@ -49,7 +49,7 @@
     void createFramebuffers(GLsizei n, GLuint *framebuffers);                                      \
     void createProgramPipelines(GLsizei n, GLuint *pipelines);                                     \
     void createQueries(GLenum target, GLsizei n, GLuint *ids);                                     \
-    void createRenderbuffers(GLsizei n, GLuint *renderbuffers);                                    \
+    void createRenderbuffers(GLsizei n, RenderbufferID *renderbuffersPacked);                      \
     void createSamplers(GLsizei n, GLuint *samplers);                                              \
     void createTextures(GLenum target, GLsizei n, GLuint *textures);                               \
     void createTransformFeedbacks(GLsizei n, GLuint *ids);                                         \
@@ -69,7 +69,8 @@
     void getNamedFramebufferAttachmentParameteriv(GLuint framebuffer, GLenum attachment,           \
                                                   GLenum pname, GLint *params);                    \
     void getNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname, GLint *param);           \
-    void getNamedRenderbufferParameteriv(GLuint renderbuffer, GLenum pname, GLint *params);        \
+    void getNamedRenderbufferParameteriv(RenderbufferID renderbufferPacked, GLenum pname,          \
+                                         GLint *params);                                           \
     void getQueryBufferObjecti64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);        \
     void getQueryBufferObjectiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);          \
     void getQueryBufferObjectui64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);       \
@@ -128,14 +129,15 @@
     void namedFramebufferParameteri(GLuint framebuffer, GLenum pname, GLint param);                \
     void namedFramebufferReadBuffer(GLuint framebuffer, GLenum src);                               \
     void namedFramebufferRenderbuffer(GLuint framebuffer, GLenum attachment,                       \
-                                      GLenum renderbuffertarget, GLuint renderbuffer);             \
+                                      GLenum renderbuffertarget,                                   \
+                                      RenderbufferID renderbufferPacked);                          \
     void namedFramebufferTexture(GLuint framebuffer, GLenum attachment, GLuint texture,            \
                                  GLint level);                                                     \
     void namedFramebufferTextureLayer(GLuint framebuffer, GLenum attachment, GLuint texture,       \
                                       GLint level, GLint layer);                                   \
-    void namedRenderbufferStorage(GLuint renderbuffer, GLenum internalformat, GLsizei width,       \
-                                  GLsizei height);                                                 \
-    void namedRenderbufferStorageMultisample(GLuint renderbuffer, GLsizei samples,                 \
+    void namedRenderbufferStorage(RenderbufferID renderbufferPacked, GLenum internalformat,        \
+                                  GLsizei width, GLsizei height);                                  \
+    void namedRenderbufferStorageMultisample(RenderbufferID renderbufferPacked, GLsizei samples,   \
                                              GLenum internalformat, GLsizei width,                 \
                                              GLsizei height);                                      \
     void textureBarrier();                                                                         \

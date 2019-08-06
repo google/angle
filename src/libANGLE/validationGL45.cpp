@@ -212,7 +212,7 @@ bool ValidateCreateQueries(Context *context, GLenum target, GLsizei n, GLuint *i
     return true;
 }
 
-bool ValidateCreateRenderbuffers(Context *context, GLsizei n, GLuint *renderbuffers)
+bool ValidateCreateRenderbuffers(Context *context, GLsizei n, RenderbufferID *renderbuffers)
 {
     return true;
 }
@@ -334,7 +334,7 @@ bool ValidateGetNamedFramebufferParameteriv(Context *context,
 }
 
 bool ValidateGetNamedRenderbufferParameteriv(Context *context,
-                                             GLuint renderbuffer,
+                                             RenderbufferID renderbuffer,
                                              GLenum pname,
                                              GLint *params)
 {
@@ -726,7 +726,7 @@ bool ValidateNamedFramebufferRenderbuffer(Context *context,
                                           GLuint framebuffer,
                                           GLenum attachment,
                                           GLenum renderbuffertarget,
-                                          GLuint renderbuffer)
+                                          RenderbufferID renderbuffer)
 {
     return true;
 }
@@ -751,7 +751,7 @@ bool ValidateNamedFramebufferTextureLayer(Context *context,
 }
 
 bool ValidateNamedRenderbufferStorage(Context *context,
-                                      GLuint renderbuffer,
+                                      RenderbufferID renderbuffer,
                                       GLenum internalformat,
                                       GLsizei width,
                                       GLsizei height)
@@ -760,7 +760,7 @@ bool ValidateNamedRenderbufferStorage(Context *context,
 }
 
 bool ValidateNamedRenderbufferStorageMultisample(Context *context,
-                                                 GLuint renderbuffer,
+                                                 RenderbufferID renderbuffer,
                                                  GLsizei samples,
                                                  GLenum internalformat,
                                                  GLsizei width,

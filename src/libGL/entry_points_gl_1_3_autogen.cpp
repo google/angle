@@ -105,7 +105,7 @@ void GL_APIENTRY CompressedTexImage2D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateCompressedTexImage2D(context, targetPacked, level, internalformat, width,
@@ -139,7 +139,7 @@ void GL_APIENTRY CompressedTexImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateCompressedTexImage3D(context, targetPacked, level, internalformat, width,
@@ -202,7 +202,7 @@ void GL_APIENTRY CompressedTexSubImage2D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateCompressedTexSubImage2D(context, targetPacked, level, xoffset, yoffset, width,
@@ -239,7 +239,7 @@ void GL_APIENTRY CompressedTexSubImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateCompressedTexSubImage3D(context, targetPacked, level, xoffset,
                                                             yoffset, zoffset, width, height, depth,

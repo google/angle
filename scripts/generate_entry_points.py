@@ -703,8 +703,8 @@ def format_entry_point_def(cmd_name, proto, params, is_explicit_context, cmd_pac
             internal_name = name + "Packed"
             internal_type = packed_gl_enums[name]
             packed_gl_enum_conversions += [
-                "\n        " + internal_type + " " + internal_name + " = FromGLenum<" +
-                internal_type + ">(" + name + ");"
+                "\n        " + internal_type + " " + internal_name + " = FromGL<" + internal_type +
+                ">(" + name + ");"
             ]
 
     pass_params = [param_print_argument(param) for param in params]
@@ -1150,7 +1150,7 @@ def write_capture_source(annotation_with_dash, annotation_no_dash, comment, capt
 def get_param_type_type(param_type):
 
     if param_type[0:2] != "GL" and "void" not in param_type:
-        return "gl::" + param_type
+        param_type = "gl::" + param_type
 
     if "ConstPointerPointer" in param_type:
         return "const " + param_type.replace("ConstPointerPointer", "") + " * const *"

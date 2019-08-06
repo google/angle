@@ -32,7 +32,7 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        QueryType targetPacked = FromGLenum<QueryType>(target);
+        QueryType targetPacked = FromGL<QueryType>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateBeginQuery(context, targetPacked, id));
         if (isCallValid)
@@ -50,7 +50,7 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateBindBuffer(context, targetPacked, buffer));
         if (isCallValid)
@@ -70,8 +70,8 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        BufferUsage usagePacked    = FromGLenum<BufferUsage>(usage);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
+        BufferUsage usagePacked    = FromGL<BufferUsage>(usage);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateBufferData(context, targetPacked, size, data, usagePacked));
         if (isCallValid)
@@ -93,7 +93,7 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateBufferSubData(context, targetPacked, offset, size, data));
         if (isCallValid)
@@ -144,7 +144,7 @@ void GL_APIENTRY EndQuery(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        QueryType targetPacked = FromGLenum<QueryType>(target);
+        QueryType targetPacked = FromGL<QueryType>(target);
         bool isCallValid = (context->skipValidation() || ValidateEndQuery(context, targetPacked));
         if (isCallValid)
         {
@@ -194,7 +194,7 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateGetBufferParameteriv(context, targetPacked, pname, params));
         if (isCallValid)
@@ -213,7 +213,7 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateGetBufferPointerv(context, targetPacked, pname, params));
         if (isCallValid)
@@ -289,7 +289,7 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        QueryType targetPacked = FromGLenum<QueryType>(target);
+        QueryType targetPacked = FromGL<QueryType>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateGetQueryiv(context, targetPacked, pname, params));
         if (isCallValid)
@@ -360,7 +360,7 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
     void *returnValue;
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateMapBuffer(context, targetPacked, access));
         if (isCallValid)
@@ -388,7 +388,7 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     GLboolean returnValue;
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateUnmapBuffer(context, targetPacked));
         if (isCallValid)

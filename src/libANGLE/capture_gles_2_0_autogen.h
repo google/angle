@@ -41,7 +41,7 @@ angle::CallCapture CaptureBindFramebuffer(const Context *context,
 angle::CallCapture CaptureBindRenderbuffer(const Context *context,
                                            bool isCallValid,
                                            GLenum target,
-                                           GLuint renderbuffer);
+                                           RenderbufferID renderbufferPacked);
 angle::CallCapture CaptureBindTexture(const Context *context,
                                       bool isCallValid,
                                       TextureType targetPacked,
@@ -162,7 +162,7 @@ angle::CallCapture CaptureDeleteProgram(const Context *context, bool isCallValid
 angle::CallCapture CaptureDeleteRenderbuffers(const Context *context,
                                               bool isCallValid,
                                               GLsizei n,
-                                              const GLuint *renderbuffers);
+                                              const RenderbufferID *renderbuffersPacked);
 angle::CallCapture CaptureDeleteShader(const Context *context, bool isCallValid, GLuint shader);
 angle::CallCapture CaptureDeleteTextures(const Context *context,
                                          bool isCallValid,
@@ -204,7 +204,7 @@ angle::CallCapture CaptureFramebufferRenderbuffer(const Context *context,
                                                   GLenum target,
                                                   GLenum attachment,
                                                   GLenum renderbuffertarget,
-                                                  GLuint renderbuffer);
+                                                  RenderbufferID renderbufferPacked);
 angle::CallCapture CaptureFramebufferTexture2D(const Context *context,
                                                bool isCallValid,
                                                GLenum target,
@@ -224,7 +224,7 @@ angle::CallCapture CaptureGenFramebuffers(const Context *context,
 angle::CallCapture CaptureGenRenderbuffers(const Context *context,
                                            bool isCallValid,
                                            GLsizei n,
-                                           GLuint *renderbuffers);
+                                           RenderbufferID *renderbuffersPacked);
 angle::CallCapture CaptureGenTextures(const Context *context,
                                       bool isCallValid,
                                       GLsizei n,
@@ -390,7 +390,7 @@ angle::CallCapture CaptureIsProgram(const Context *context,
                                     GLboolean returnValue);
 angle::CallCapture CaptureIsRenderbuffer(const Context *context,
                                          bool isCallValid,
-                                         GLuint renderbuffer,
+                                         RenderbufferID renderbufferPacked,
                                          GLboolean returnValue);
 angle::CallCapture CaptureIsShader(const Context *context,
                                    bool isCallValid,
@@ -730,11 +730,11 @@ void CaptureDeleteFramebuffers_framebuffers(const Context *context,
                                             GLsizei n,
                                             const GLuint *framebuffers,
                                             angle::ParamCapture *paramCapture);
-void CaptureDeleteRenderbuffers_renderbuffers(const Context *context,
-                                              bool isCallValid,
-                                              GLsizei n,
-                                              const GLuint *renderbuffers,
-                                              angle::ParamCapture *paramCapture);
+void CaptureDeleteRenderbuffers_renderbuffersPacked(const Context *context,
+                                                    bool isCallValid,
+                                                    GLsizei n,
+                                                    const RenderbufferID *renderbuffersPacked,
+                                                    angle::ParamCapture *paramCapture);
 void CaptureDeleteTextures_textures(const Context *context,
                                     bool isCallValid,
                                     GLsizei n,
@@ -757,11 +757,11 @@ void CaptureGenFramebuffers_framebuffers(const Context *context,
                                          GLsizei n,
                                          GLuint *framebuffers,
                                          angle::ParamCapture *paramCapture);
-void CaptureGenRenderbuffers_renderbuffers(const Context *context,
-                                           bool isCallValid,
-                                           GLsizei n,
-                                           GLuint *renderbuffers,
-                                           angle::ParamCapture *paramCapture);
+void CaptureGenRenderbuffers_renderbuffersPacked(const Context *context,
+                                                 bool isCallValid,
+                                                 GLsizei n,
+                                                 RenderbufferID *renderbuffersPacked,
+                                                 angle::ParamCapture *paramCapture);
 void CaptureGenTextures_textures(const Context *context,
                                  bool isCallValid,
                                  GLsizei n,

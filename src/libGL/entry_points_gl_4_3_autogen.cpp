@@ -913,7 +913,7 @@ void GL_APIENTRY TexStorage2DMultisample(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateTexStorage2DMultisample(context, targetPacked, samples, internalformat, width,
@@ -944,7 +944,7 @@ void GL_APIENTRY TexStorage3DMultisample(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateTexStorage3DMultisample(context, targetPacked, samples, internalformat, width,
@@ -1022,7 +1022,7 @@ void GL_APIENTRY VertexAttribFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        VertexAttribType typePacked = FromGL<VertexAttribType>(type);
         bool isCallValid            = (context->skipValidation() ||
                             ValidateVertexAttribFormat(context, attribindex, size, typePacked,
                                                        normalized, relativeoffset));
@@ -1048,7 +1048,7 @@ void GL_APIENTRY VertexAttribIFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        VertexAttribType typePacked = FromGL<VertexAttribType>(type);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateVertexAttribIFormat(context, attribindex, size, typePacked, relativeoffset));

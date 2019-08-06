@@ -1219,7 +1219,7 @@ bool ValidateFramebufferRenderbufferParameters(Context *context,
                                                GLenum target,
                                                GLenum attachment,
                                                GLenum renderbuffertarget,
-                                               GLuint renderbuffer)
+                                               RenderbufferID renderbuffer)
 {
     if (!ValidFramebufferTarget(context, target))
     {
@@ -1245,7 +1245,7 @@ bool ValidateFramebufferRenderbufferParameters(Context *context,
     // [OpenGL ES 3.0.2] Section 4.4.2 page 201
     // 'renderbuffer' must be either zero or the name of an existing renderbuffer object of
     // type 'renderbuffertarget', otherwise an INVALID_OPERATION error is generated.
-    if (renderbuffer != 0)
+    if (renderbuffer.value != 0)
     {
         if (!context->getRenderbuffer(renderbuffer))
         {

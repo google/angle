@@ -206,7 +206,7 @@ void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *pa
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateGetBufferParameteri64v(context, targetPacked, pname, params));
         if (isCallValid)
@@ -351,7 +351,7 @@ void GL_APIENTRY ProvokingVertex(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ProvokingVertexConvention modePacked = FromGLenum<ProvokingVertexConvention>(mode);
+        ProvokingVertexConvention modePacked = FromGL<ProvokingVertexConvention>(mode);
         bool isCallValid =
             (context->skipValidation() || ValidateProvokingVertex(context, modePacked));
         if (isCallValid)

@@ -1270,13 +1270,13 @@ void State::setRenderbufferBinding(const Context *context, Renderbuffer *renderb
     mDirtyBits.set(DIRTY_BIT_RENDERBUFFER_BINDING);
 }
 
-void State::detachRenderbuffer(const Context *context, GLuint renderbuffer)
+void State::detachRenderbuffer(const Context *context, RenderbufferID renderbuffer)
 {
     // [OpenGL ES 2.0.24] section 4.4 page 109:
     // If a renderbuffer that is currently bound to RENDERBUFFER is deleted, it is as though
     // BindRenderbuffer had been executed with the target RENDERBUFFER and name of zero.
 
-    if (mRenderbuffer.id() == renderbuffer)
+    if (mRenderbuffer.id() == renderbuffer.value)
     {
         setRenderbufferBinding(context, nullptr);
     }

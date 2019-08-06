@@ -1052,15 +1052,19 @@ bool ValidateDrawTexxvOES(Context *context, const GLfixed *coords);
 
 // GL_OES_framebuffer_object
 bool ValidateBindFramebufferOES(Context *context, GLenum target, GLuint framebuffer);
-bool ValidateBindRenderbufferOES(Context *context, GLenum target, GLuint renderbuffer);
+bool ValidateBindRenderbufferOES(Context *context,
+                                 GLenum target,
+                                 RenderbufferID renderbufferPacked);
 bool ValidateCheckFramebufferStatusOES(Context *context, GLenum target);
 bool ValidateDeleteFramebuffersOES(Context *context, GLsizei n, const GLuint *framebuffers);
-bool ValidateDeleteRenderbuffersOES(Context *context, GLsizei n, const GLuint *renderbuffers);
+bool ValidateDeleteRenderbuffersOES(Context *context,
+                                    GLsizei n,
+                                    const RenderbufferID *renderbuffersPacked);
 bool ValidateFramebufferRenderbufferOES(Context *context,
                                         GLenum target,
                                         GLenum attachment,
                                         GLenum renderbuffertarget,
-                                        GLuint renderbuffer);
+                                        RenderbufferID renderbufferPacked);
 bool ValidateFramebufferTexture2DOES(Context *context,
                                      GLenum target,
                                      GLenum attachment,
@@ -1068,7 +1072,7 @@ bool ValidateFramebufferTexture2DOES(Context *context,
                                      GLuint texture,
                                      GLint level);
 bool ValidateGenFramebuffersOES(Context *context, GLsizei n, GLuint *framebuffers);
-bool ValidateGenRenderbuffersOES(Context *context, GLsizei n, GLuint *renderbuffers);
+bool ValidateGenRenderbuffersOES(Context *context, GLsizei n, RenderbufferID *renderbuffersPacked);
 bool ValidateGenerateMipmapOES(Context *context, TextureType targetPacked);
 bool ValidateGetFramebufferAttachmentParameterivOES(Context *context,
                                                     GLenum target,
@@ -1080,7 +1084,7 @@ bool ValidateGetRenderbufferParameterivOES(Context *context,
                                            GLenum pname,
                                            GLint *params);
 bool ValidateIsFramebufferOES(Context *context, GLuint framebuffer);
-bool ValidateIsRenderbufferOES(Context *context, GLuint renderbuffer);
+bool ValidateIsRenderbufferOES(Context *context, RenderbufferID renderbufferPacked);
 bool ValidateRenderbufferStorageOES(Context *context,
                                     GLenum target,
                                     GLenum internalformat,

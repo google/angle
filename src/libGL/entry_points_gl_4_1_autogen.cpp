@@ -85,7 +85,7 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
     GLuint returnValue;
     if (context)
     {
-        ShaderType typePacked = FromGLenum<ShaderType>(type);
+        ShaderType typePacked = FromGL<ShaderType>(type);
         bool isCallValid      = (context->skipValidation() ||
                             ValidateCreateShaderProgramv(context, typePacked, count, strings));
         if (isCallValid)

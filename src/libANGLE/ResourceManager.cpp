@@ -29,10 +29,11 @@ namespace gl
 namespace
 {
 
-template <typename ResourceType>
-GLuint AllocateEmptyObject(HandleAllocator *handleAllocator, ResourceMap<ResourceType> *objectMap)
+template <typename ResourceType, typename IDType>
+IDType AllocateEmptyObject(HandleAllocator *handleAllocator,
+                           ResourceMap<ResourceType, IDType> *objectMap)
 {
-    GLuint handle = handleAllocator->allocate();
+    IDType handle = FromGL<IDType>(handleAllocator->allocate());
     objectMap->assign(handle, nullptr);
     return handle;
 }
@@ -59,14 +60,15 @@ void ResourceManagerBase<HandleAllocatorType>::release(const Context *context)
     }
 }
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
-TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::~TypedResourceManager()
+template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
+TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::~TypedResourceManager()
 {
     ASSERT(mObjectMap.empty());
 }
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
-void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::reset(const Context *context)
+template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
+void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::reset(
+    const Context *context)
 {
     this->mHandleAllocator.reset();
     for (const auto &resource : mObjectMap)
@@ -79,10 +81,10 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::reset(const
     mObjectMap.clear();
 }
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
-void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::deleteObject(
+template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
+void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::deleteObject(
     const Context *context,
-    GLuint handle)
+    IDType handle)
 {
     ResourceType *resource = nullptr;
     if (!mObjectMap.erase(handle, &resource))
@@ -91,7 +93,7 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::deleteObjec
     }
 
     // Requires an explicit this-> because of C++ template rules.
-    this->mHandleAllocator.release(handle);
+    this->mHandleAllocator.release(GetIDValue(handle));
 
     if (resource)
     {
@@ -101,13 +103,19 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::deleteObjec
 
 template class ResourceManagerBase<HandleAllocator>;
 template class ResourceManagerBase<HandleRangeAllocator>;
-template class TypedResourceManager<Buffer, HandleAllocator, BufferManager>;
-template class TypedResourceManager<Texture, HandleAllocator, TextureManager>;
-template class TypedResourceManager<Renderbuffer, HandleAllocator, RenderbufferManager>;
-template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager>;
-template class TypedResourceManager<Sync, HandleAllocator, SyncManager>;
-template class TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager>;
-template class TypedResourceManager<ProgramPipeline, HandleAllocator, ProgramPipelineManager>;
+template class TypedResourceManager<Buffer, HandleAllocator, BufferManager, GLuint>;
+template class TypedResourceManager<Texture, HandleAllocator, TextureManager, GLuint>;
+template class TypedResourceManager<Renderbuffer,
+                                    HandleAllocator,
+                                    RenderbufferManager,
+                                    RenderbufferID>;
+template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager, GLuint>;
+template class TypedResourceManager<Sync, HandleAllocator, SyncManager, GLuint>;
+template class TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager, GLuint>;
+template class TypedResourceManager<ProgramPipeline,
+                                    HandleAllocator,
+                                    ProgramPipelineManager,
+                                    GLuint>;
 
 // BufferManager Implementation.
 
@@ -258,7 +266,8 @@ void TextureManager::enableHandleAllocatorLogging()
 // RenderbufferManager Implementation.
 
 // static
-Renderbuffer *RenderbufferManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint handle)
+Renderbuffer *RenderbufferManager::AllocateNewObject(rx::GLImplFactory *factory,
+                                                     RenderbufferID handle)
 {
     Renderbuffer *renderbuffer = new Renderbuffer(factory, handle);
     renderbuffer->addRef();
@@ -271,12 +280,12 @@ void RenderbufferManager::DeleteObject(const Context *context, Renderbuffer *ren
     renderbuffer->release(context);
 }
 
-GLuint RenderbufferManager::createRenderbuffer()
+RenderbufferID RenderbufferManager::createRenderbuffer()
 {
-    return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
+    return {AllocateEmptyObject(&mHandleAllocator, &mObjectMap)};
 }
 
-Renderbuffer *RenderbufferManager::getRenderbuffer(GLuint handle) const
+Renderbuffer *RenderbufferManager::getRenderbuffer(RenderbufferID handle) const
 {
     return mObjectMap.query(handle);
 }

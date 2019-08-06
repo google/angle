@@ -30,6 +30,9 @@
     "glBindBufferRange": {
         "target": "BufferBinding"
     },
+    "glBindRenderbuffer": {
+        "renderbuffer": "RenderbufferID"
+    },
     "glBindTexture": {
         "target": "TextureType"
     },
@@ -98,8 +101,14 @@
     "glCreateShaderProgramv": {
         "type": "ShaderType"
     },
+    "glCreateRenderbuffers": {
+        "renderbuffers": "RenderbufferID *"
+    },
     "glCullFace": {
         "mode": "CullFaceMode"
+    },
+    "glDeleteRenderbuffers": {
+        "renderbuffers": "const RenderbufferID *"
     },
     "glDisableClientState": {
         "array": "ClientVertexArrayType"
@@ -141,6 +150,9 @@
     "glFlushMappedBufferRange": {
         "target": "BufferBinding"
     },
+    "glFramebufferRenderbuffer": {
+        "renderbuffer": "RenderbufferID"
+    },
     "glFramebufferTexture2D": {
         "textarget": "TextureTarget"
     },
@@ -149,6 +161,9 @@
     },
     "glGenerateMipmap": {
         "target": "TextureType"
+    },
+    "glGenRenderbuffers": {
+        "renderbuffers": "RenderbufferID *"
     },
     "glGetBufferParameteriv": {
         "target": "BufferBinding"
@@ -179,6 +194,9 @@
     },
     "glGetMaterialxv": {
         "pname" : "MaterialParameter"
+    },
+    "glGetNamedRenderbufferParameteriv": {
+        "renderbuffer": "RenderbufferID"
     },
     "glGetQueryiv": {
         "target": "QueryType"
@@ -246,6 +264,9 @@
     "glInvalidateTexture": {
         "target": "TextureType"
     },
+    "glIsRenderbuffer": {
+        "renderbuffer": "RenderbufferID"
+    },
     "glLightf" : {
         "pname" : "LightParameter"
     },
@@ -299,6 +320,15 @@
     "glMultiDrawElementsInstanced": {
         "mode": "PrimitiveMode",
         "type": "DrawElementsType"
+    },
+    "glNamedFramebufferRenderbuffer": {
+        "renderbuffer": "RenderbufferID"
+    },
+    "glNamedRenderbufferStorage": {
+        "renderbuffer": "RenderbufferID"
+    },
+    "glNamedRenderbufferStorageMultisample": {
+        "renderbuffer": "RenderbufferID"
     },
     "glNormalPointer": {
         "type": "VertexAttribType"

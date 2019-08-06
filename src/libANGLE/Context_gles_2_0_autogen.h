@@ -16,7 +16,7 @@
     void bindAttribLocation(GLuint program, GLuint index, const GLchar *name);                     \
     void bindBuffer(BufferBinding targetPacked, GLuint buffer);                                    \
     void bindFramebuffer(GLenum target, GLuint framebuffer);                                       \
-    void bindRenderbuffer(GLenum target, GLuint renderbuffer);                                     \
+    void bindRenderbuffer(GLenum target, RenderbufferID renderbufferPacked);                       \
     void bindTexture(TextureType targetPacked, GLuint texture);                                    \
     void blendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);                      \
     void blendEquation(GLenum mode);                                                               \
@@ -51,7 +51,7 @@
     void deleteBuffers(GLsizei n, const GLuint *buffers);                                          \
     void deleteFramebuffers(GLsizei n, const GLuint *framebuffers);                                \
     void deleteProgram(GLuint program);                                                            \
-    void deleteRenderbuffers(GLsizei n, const GLuint *renderbuffers);                              \
+    void deleteRenderbuffers(GLsizei n, const RenderbufferID *renderbuffersPacked);                \
     void deleteShader(GLuint shader);                                                              \
     void deleteTextures(GLsizei n, const GLuint *textures);                                        \
     void depthFunc(GLenum func);                                                                   \
@@ -68,13 +68,13 @@
     void finish();                                                                                 \
     void flush();                                                                                  \
     void framebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget,      \
-                                 GLuint renderbuffer);                                             \
+                                 RenderbufferID renderbufferPacked);                               \
     void framebufferTexture2D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               GLuint texture, GLint level);                                        \
     void frontFace(GLenum mode);                                                                   \
     void genBuffers(GLsizei n, GLuint *buffers);                                                   \
     void genFramebuffers(GLsizei n, GLuint *framebuffers);                                         \
-    void genRenderbuffers(GLsizei n, GLuint *renderbuffers);                                       \
+    void genRenderbuffers(GLsizei n, RenderbufferID *renderbuffersPacked);                         \
     void genTextures(GLsizei n, GLuint *textures);                                                 \
     void generateMipmap(TextureType targetPacked);                                                 \
     void getActiveAttrib(GLuint program, GLuint index, GLsizei bufSize, GLsizei *length,           \
@@ -112,7 +112,7 @@
     GLboolean isEnabled(GLenum cap);                                                               \
     GLboolean isFramebuffer(GLuint framebuffer);                                                   \
     GLboolean isProgram(GLuint program);                                                           \
-    GLboolean isRenderbuffer(GLuint renderbuffer);                                                 \
+    GLboolean isRenderbuffer(RenderbufferID renderbufferPacked);                                   \
     GLboolean isShader(GLuint shader);                                                             \
     GLboolean isTexture(GLuint texture);                                                           \
     void lineWidth(GLfloat width);                                                                 \

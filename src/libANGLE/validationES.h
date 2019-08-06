@@ -112,7 +112,7 @@ bool ValidateFramebufferRenderbufferParameters(Context *context,
                                                GLenum target,
                                                GLenum attachment,
                                                GLenum renderbuffertarget,
-                                               GLuint renderbuffer);
+                                               RenderbufferID renderbuffer);
 
 bool ValidateBlitFramebufferParameters(Context *context,
                                        GLint srcX0,

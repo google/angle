@@ -1474,13 +1474,15 @@ bool ValidateDeleteFramebuffersOES(Context *context, GLsizei n, const GLuint *fr
     return true;
 }
 
-bool ValidateGenRenderbuffersOES(Context *context, GLsizei n, GLuint *renderbuffers)
+bool ValidateGenRenderbuffersOES(Context *context, GLsizei n, RenderbufferID *renderbuffers)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateDeleteRenderbuffersOES(Context *context, GLsizei n, const GLuint *renderbuffers)
+bool ValidateDeleteRenderbuffersOES(Context *context,
+                                    GLsizei n,
+                                    const RenderbufferID *renderbuffers)
 {
     UNIMPLEMENTED();
     return true;
@@ -1492,7 +1494,7 @@ bool ValidateBindFramebufferOES(Context *context, GLenum target, GLuint framebuf
     return true;
 }
 
-bool ValidateBindRenderbufferOES(Context *context, GLenum target, GLuint renderbuffer)
+bool ValidateBindRenderbufferOES(Context *context, GLenum target, RenderbufferID renderbuffer)
 {
     UNIMPLEMENTED();
     return true;
@@ -1508,7 +1510,7 @@ bool ValidateFramebufferRenderbufferOES(Context *context,
                                         GLenum target,
                                         GLenum attachment,
                                         GLenum rbtarget,
-                                        GLuint renderbuffer)
+                                        RenderbufferID renderbuffer)
 {
     UNIMPLEMENTED();
     return true;
@@ -1556,7 +1558,7 @@ bool ValidateIsFramebufferOES(Context *context, GLuint framebuffer)
     return true;
 }
 
-bool ValidateIsRenderbufferOES(Context *context, GLuint renderbuffer)
+bool ValidateIsRenderbufferOES(Context *context, RenderbufferID renderbuffer)
 {
     UNIMPLEMENTED();
     return true;

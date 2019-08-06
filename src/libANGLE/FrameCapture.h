@@ -1,4 +1,4 @@
-//
+
 // Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -178,6 +178,10 @@ void WriteParamValueToStream<ParamType::TGLDEBUGPROCKHR>(std::ostream &os, GLDEB
 
 template <>
 void WriteParamValueToStream<ParamType::TGLDEBUGPROC>(std::ostream &os, GLDEBUGPROC value);
+
+template <>
+void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os,
+                                                         gl::RenderbufferID value);
 
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>

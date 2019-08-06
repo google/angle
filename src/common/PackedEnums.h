@@ -374,6 +374,58 @@ ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, Int2101010, GL_INT_2_10_10_10_REV);
 ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, UnsignedInt2101010, GL_UNSIGNED_INT_2_10_10_10_REV);
 
 std::ostream &operator<<(std::ostream &os, VertexAttribType value);
+
+// Typesafe object handles.
+struct RenderbufferID
+{
+    GLuint value;
+};
+
+// Used to unbox typed values.
+inline GLuint GetIDValue(RenderbufferID id)
+{
+    return id.value;
+}
+
+inline GLuint GetIDValue(GLuint id)
+{
+    return id;
+}
+
+template <typename EnumT, typename FromT>
+EnumT FromGL(FromT from);
+
+template <>
+ANGLE_INLINE RenderbufferID FromGL<RenderbufferID>(GLuint renderbuffer)
+{
+    return {renderbuffer};
+}
+
+template <>
+ANGLE_INLINE RenderbufferID *FromGL<RenderbufferID *>(GLuint *renderbuffers)
+{
+    return reinterpret_cast<RenderbufferID *>(renderbuffers);
+}
+
+template <>
+ANGLE_INLINE const RenderbufferID *FromGL<const RenderbufferID *>(const GLuint *renderbuffers)
+{
+    return reinterpret_cast<const RenderbufferID *>(renderbuffers);
+}
+
+// Pass-through for resource types that aren't yet represented by IDs.
+// TODO(jmadill): Remove when all resource types use IDs. http://anglebug.com/3611
+template <>
+ANGLE_INLINE GLuint FromGL(GLuint id)
+{
+    return id;
+}
+
+template <typename EnumT, typename FromT>
+EnumT FromGL(FromT from)
+{
+    return FromGLenum<EnumT>(from);
+}
 }  // namespace gl
 
 namespace egl

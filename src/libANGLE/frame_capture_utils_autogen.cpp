@@ -251,6 +251,17 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
         case ParamType::TQueryType:
             WriteParamValueToStream<ParamType::TQueryType>(os, paramValue.QueryTypeVal);
             break;
+        case ParamType::TRenderbufferID:
+            WriteParamValueToStream<ParamType::TRenderbufferID>(os, paramValue.RenderbufferIDVal);
+            break;
+        case ParamType::TRenderbufferIDConstPointer:
+            WriteParamValueToStream<ParamType::TRenderbufferIDConstPointer>(
+                os, paramValue.RenderbufferIDConstPointerVal);
+            break;
+        case ParamType::TRenderbufferIDPointer:
+            WriteParamValueToStream<ParamType::TRenderbufferIDPointer>(
+                os, paramValue.RenderbufferIDPointerVal);
+            break;
         case ParamType::TShaderType:
             WriteParamValueToStream<ParamType::TShaderType>(os, paramValue.ShaderTypeVal);
             break;
@@ -438,6 +449,12 @@ const char *ParamTypeToString(ParamType paramType)
             return "gl::ProvokingVertexConvention";
         case ParamType::TQueryType:
             return "gl::QueryType";
+        case ParamType::TRenderbufferID:
+            return "gl::RenderbufferID";
+        case ParamType::TRenderbufferIDConstPointer:
+            return "const gl::RenderbufferID *";
+        case ParamType::TRenderbufferIDPointer:
+            return "gl::RenderbufferID *";
         case ParamType::TShaderType:
             return "gl::ShaderType";
         case ParamType::TShadingModel:

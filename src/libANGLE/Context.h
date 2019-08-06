@@ -348,14 +348,14 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // ResourceManager, which owns these object types
     GLuint createBuffer();
     GLuint createTexture();
-    GLuint createRenderbuffer();
+    RenderbufferID createRenderbuffer();
     GLuint createProgramPipeline();
     GLuint createMemoryObject();
     GLuint createSemaphore();
 
     void deleteBuffer(GLuint buffer);
     void deleteTexture(GLuint texture);
-    void deleteRenderbuffer(GLuint renderbuffer);
+    void deleteRenderbuffer(RenderbufferID renderbuffer);
     void deleteProgramPipeline(GLuint pipeline);
     void deleteMemoryObject(GLuint memoryObject);
     void deleteSemaphore(GLuint semaphore);
@@ -375,7 +375,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     }
 
     Framebuffer *getFramebuffer(GLuint handle) const;
-    Renderbuffer *getRenderbuffer(GLuint handle) const;
+    Renderbuffer *getRenderbuffer(RenderbufferID handle) const;
     VertexArray *getVertexArray(GLuint handle) const;
     Sampler *getSampler(GLuint handle) const;
     Query *getQuery(GLuint handle, bool create, QueryType type);
@@ -527,7 +527,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         return mState.mBufferManager->isHandleGenerated(buffer);
     }
 
-    bool isRenderbufferGenerated(GLuint renderbuffer) const;
+    bool isRenderbufferGenerated(RenderbufferID renderbuffer) const;
     bool isFramebufferGenerated(GLuint framebuffer) const;
     bool isProgramPipelineGenerated(GLuint pipeline) const;
 
@@ -589,7 +589,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void detachBuffer(Buffer *buffer);
     void detachTexture(GLuint texture);
     void detachFramebuffer(GLuint framebuffer);
-    void detachRenderbuffer(GLuint renderbuffer);
+    void detachRenderbuffer(RenderbufferID renderbuffer);
     void detachVertexArray(GLuint vertexArray);
     void detachTransformFeedback(GLuint transformFeedback);
     void detachSampler(GLuint sampler);

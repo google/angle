@@ -115,7 +115,7 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
     GLuint returnValue;
     if (context)
     {
-        ShaderType typePacked = FromGLenum<ShaderType>(type);
+        ShaderType typePacked = FromGL<ShaderType>(type);
         bool isCallValid      = (context->skipValidation() ||
                             ValidateCreateShaderProgramv(context, typePacked, count, strings));
         if (isCallValid)
@@ -198,7 +198,7 @@ void GL_APIENTRY DrawArraysIndirect(GLenum mode, const void *indirect)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
+        PrimitiveMode modePacked = FromGL<PrimitiveMode>(mode);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateDrawArraysIndirect(context, modePacked, indirect));
         if (isCallValid)
@@ -217,8 +217,8 @@ void GL_APIENTRY DrawElementsIndirect(GLenum mode, GLenum type, const void *indi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
-        DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
+        PrimitiveMode modePacked    = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked = FromGL<DrawElementsType>(type);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateDrawElementsIndirect(context, modePacked, typePacked, indirect));
@@ -525,7 +525,7 @@ void GL_APIENTRY GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateGetTexLevelParameterfv(context, targetPacked, level, pname, params));
@@ -548,7 +548,7 @@ void GL_APIENTRY GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateGetTexLevelParameteriv(context, targetPacked, level, pname, params));
@@ -1390,7 +1390,7 @@ void GL_APIENTRY TexStorage2DMultisample(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateTexStorage2DMultisample(context, targetPacked, samples, internalformat, width,
@@ -1471,7 +1471,7 @@ void GL_APIENTRY VertexAttribFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        VertexAttribType typePacked = FromGL<VertexAttribType>(type);
         bool isCallValid            = (context->skipValidation() ||
                             ValidateVertexAttribFormat(context, attribindex, size, typePacked,
                                                        normalized, relativeoffset));
@@ -1497,7 +1497,7 @@ void GL_APIENTRY VertexAttribIFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        VertexAttribType typePacked = FromGL<VertexAttribType>(type);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateVertexAttribIFormat(context, attribindex, size, typePacked, relativeoffset));

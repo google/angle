@@ -255,7 +255,7 @@ class State : angle::NonCopyable
     void setRenderbufferBinding(const Context *context, Renderbuffer *renderbuffer);
     GLuint getRenderbufferId() const { return mRenderbuffer.id(); }
     Renderbuffer *getCurrentRenderbuffer() const { return mRenderbuffer.get(); }
-    void detachRenderbuffer(const Context *context, GLuint renderbuffer);
+    void detachRenderbuffer(const Context *context, RenderbufferID renderbuffer);
 
     // Framebuffer binding manipulation
     void setReadFramebufferBinding(Framebuffer *framebuffer);

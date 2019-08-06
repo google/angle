@@ -134,7 +134,7 @@ bool ValidateCreateBuffers(Context *context, GLsizei n, GLuint *buffers);
 bool ValidateCreateFramebuffers(Context *context, GLsizei n, GLuint *framebuffers);
 bool ValidateCreateProgramPipelines(Context *context, GLsizei n, GLuint *pipelines);
 bool ValidateCreateQueries(Context *context, GLenum target, GLsizei n, GLuint *ids);
-bool ValidateCreateRenderbuffers(Context *context, GLsizei n, GLuint *renderbuffers);
+bool ValidateCreateRenderbuffers(Context *context, GLsizei n, RenderbufferID *renderbuffersPacked);
 bool ValidateCreateSamplers(Context *context, GLsizei n, GLuint *samplers);
 bool ValidateCreateTextures(Context *context, GLenum target, GLsizei n, GLuint *textures);
 bool ValidateCreateTransformFeedbacks(Context *context, GLsizei n, GLuint *ids);
@@ -187,7 +187,7 @@ bool ValidateGetNamedFramebufferParameteriv(Context *context,
                                             GLenum pname,
                                             GLint *param);
 bool ValidateGetNamedRenderbufferParameteriv(Context *context,
-                                             GLuint renderbuffer,
+                                             RenderbufferID renderbufferPacked,
                                              GLenum pname,
                                              GLint *params);
 bool ValidateGetQueryBufferObjecti64v(Context *context,
@@ -390,7 +390,7 @@ bool ValidateNamedFramebufferRenderbuffer(Context *context,
                                           GLuint framebuffer,
                                           GLenum attachment,
                                           GLenum renderbuffertarget,
-                                          GLuint renderbuffer);
+                                          RenderbufferID renderbufferPacked);
 bool ValidateNamedFramebufferTexture(Context *context,
                                      GLuint framebuffer,
                                      GLenum attachment,
@@ -403,12 +403,12 @@ bool ValidateNamedFramebufferTextureLayer(Context *context,
                                           GLint level,
                                           GLint layer);
 bool ValidateNamedRenderbufferStorage(Context *context,
-                                      GLuint renderbuffer,
+                                      RenderbufferID renderbufferPacked,
                                       GLenum internalformat,
                                       GLsizei width,
                                       GLsizei height);
 bool ValidateNamedRenderbufferStorageMultisample(Context *context,
-                                                 GLuint renderbuffer,
+                                                 RenderbufferID renderbufferPacked,
                                                  GLsizei samples,
                                                  GLenum internalformat,
                                                  GLsizei width,

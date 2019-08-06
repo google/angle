@@ -57,7 +57,7 @@ TEST(ImageTest, RefCounting)
     // Create a renderbuffer and set it as a target of the EGL image
     rx::MockRenderbufferImpl *renderbufferImpl = new rx::MockRenderbufferImpl();
     EXPECT_CALL(mockGLFactory, createRenderbuffer(_)).WillOnce(Return(renderbufferImpl));
-    gl::Renderbuffer *renderbuffer = new gl::Renderbuffer(&mockGLFactory, 1);
+    gl::Renderbuffer *renderbuffer = new gl::Renderbuffer(&mockGLFactory, {1});
     renderbuffer->addRef();
 
     EXPECT_CALL(*renderbufferImpl, setStorageEGLImageTarget(_, _))

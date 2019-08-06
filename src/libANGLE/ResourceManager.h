@@ -59,17 +59,20 @@ class ResourceManagerBase : angle::NonCopyable
     size_t mRefCount;
 };
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
+template <typename ResourceType,
+          typename HandleAllocatorType,
+          typename ImplT,
+          typename IDType = GLuint>
 class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
 {
   public:
     TypedResourceManager() {}
 
-    void deleteObject(const Context *context, GLuint handle);
-    ANGLE_INLINE bool isHandleGenerated(GLuint handle) const
+    void deleteObject(const Context *context, IDType handle);
+    ANGLE_INLINE bool isHandleGenerated(IDType handle) const
     {
         // Zero is always assumed to have been generated implicitly.
-        return handle == 0 || mObjectMap.contains(handle);
+        return GetIDValue(handle) == 0 || mObjectMap.contains(handle);
     }
 
   protected:
@@ -78,7 +81,7 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
     // Inlined in the header for performance.
     template <typename... ArgTypes>
     ANGLE_INLINE ResourceType *checkObjectAllocation(rx::GLImplFactory *factory,
-                                                     GLuint handle,
+                                                     IDType handle,
                                                      ArgTypes... args)
     {
         ResourceType *value = mObjectMap.query(handle);
@@ -87,7 +90,7 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
             return value;
         }
 
-        if (handle == 0)
+        if (GetIDValue(handle) == 0)
         {
             return nullptr;
         }
@@ -97,19 +100,19 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
 
     void reset(const Context *context) override;
 
-    ResourceMap<ResourceType> mObjectMap;
+    ResourceMap<ResourceType, IDType> mObjectMap;
 
   private:
     template <typename... ArgTypes>
     ResourceType *checkObjectAllocationImpl(rx::GLImplFactory *factory,
-                                            GLuint handle,
+                                            IDType handle,
                                             ArgTypes... args)
     {
         ResourceType *object = ImplT::AllocateNewObject(factory, handle, args...);
 
         if (!mObjectMap.contains(handle))
         {
-            this->mHandleAllocator.reserve(handle);
+            this->mHandleAllocator.reserve(GetIDValue(handle));
         }
         mObjectMap.assign(handle, object);
 
@@ -193,19 +196,21 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
     ~TextureManager() override {}
 };
 
-class RenderbufferManager
-    : public TypedResourceManager<Renderbuffer, HandleAllocator, RenderbufferManager>
+class RenderbufferManager : public TypedResourceManager<Renderbuffer,
+                                                        HandleAllocator,
+                                                        RenderbufferManager,
+                                                        RenderbufferID>
 {
   public:
-    GLuint createRenderbuffer();
-    Renderbuffer *getRenderbuffer(GLuint handle) const;
+    RenderbufferID createRenderbuffer();
+    Renderbuffer *getRenderbuffer(RenderbufferID handle) const;
 
-    Renderbuffer *checkRenderbufferAllocation(rx::GLImplFactory *factory, GLuint handle)
+    Renderbuffer *checkRenderbufferAllocation(rx::GLImplFactory *factory, RenderbufferID handle)
     {
         return checkObjectAllocation(factory, handle);
     }
 
-    static Renderbuffer *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
+    static Renderbuffer *AllocateNewObject(rx::GLImplFactory *factory, RenderbufferID handle);
     static void DeleteObject(const Context *context, Renderbuffer *renderbuffer);
 
   protected:

@@ -279,7 +279,7 @@ TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateTexStorage2D(context, targetPacked, levels, internalformat, width, height));
@@ -307,7 +307,7 @@ void GL_APIENTRY TexStorage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateTexStorage3D(context, targetPacked, levels, internalformat,
                                                  width, height, depth));

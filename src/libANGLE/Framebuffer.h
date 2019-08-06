@@ -185,7 +185,7 @@ class Framebuffer final : public angle::ObserverInterface,
     void resetAttachment(const Context *context, GLenum binding);
 
     bool detachTexture(const Context *context, GLuint texture);
-    bool detachRenderbuffer(const Context *context, GLuint renderbuffer);
+    bool detachRenderbuffer(const Context *context, RenderbufferID renderbuffer);
 
     const FramebufferAttachment *getColorAttachment(size_t colorAttachment) const;
     const FramebufferAttachment *getDepthAttachment() const;

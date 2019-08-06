@@ -26,7 +26,7 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        QueryType targetPacked = FromGLenum<QueryType>(target);
+        QueryType targetPacked = FromGL<QueryType>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateBeginQuery(context, targetPacked, id));
         if (isCallValid)
@@ -44,7 +44,7 @@ void GL_APIENTRY BeginTransformFeedback(GLenum primitiveMode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode primitiveModePacked = FromGLenum<PrimitiveMode>(primitiveMode);
+        PrimitiveMode primitiveModePacked = FromGL<PrimitiveMode>(primitiveMode);
         bool isCallValid                  = (context->skipValidation() ||
                             ValidateBeginTransformFeedback(context, primitiveModePacked));
         if (isCallValid)
@@ -62,7 +62,7 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateBindBufferBase(context, targetPacked, index, buffer));
         if (isCallValid)
@@ -85,7 +85,7 @@ BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLs
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateBindBufferRange(context, targetPacked, index, buffer, offset, size));
@@ -300,7 +300,7 @@ void GL_APIENTRY CompressedTexImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateCompressedTexImage3D(context, targetPacked, level, internalformat, width,
@@ -337,7 +337,7 @@ void GL_APIENTRY CompressedTexSubImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateCompressedTexSubImage3D(context, targetPacked, level, xoffset,
                                                             yoffset, zoffset, width, height, depth,
@@ -367,8 +367,8 @@ void GL_APIENTRY CopyBufferSubData(GLenum readTarget,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding readTargetPacked  = FromGLenum<BufferBinding>(readTarget);
-        BufferBinding writeTargetPacked = FromGLenum<BufferBinding>(writeTarget);
+        BufferBinding readTargetPacked  = FromGL<BufferBinding>(readTarget);
+        BufferBinding writeTargetPacked = FromGL<BufferBinding>(writeTarget);
         bool isCallValid                = (context->skipValidation() ||
                             ValidateCopyBufferSubData(context, readTargetPacked, writeTargetPacked,
                                                       readOffset, writeOffset, size));
@@ -400,7 +400,7 @@ void GL_APIENTRY CopyTexSubImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateCopyTexSubImage3D(context, targetPacked, level, xoffset,
                                                       yoffset, zoffset, x, y, width, height));
@@ -506,7 +506,7 @@ void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
+        PrimitiveMode modePacked = FromGL<PrimitiveMode>(mode);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateDrawArraysInstanced(context, modePacked, first, count, instancecount));
@@ -549,8 +549,8 @@ void GL_APIENTRY DrawElementsInstanced(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
-        DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
+        PrimitiveMode modePacked    = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked = FromGL<DrawElementsType>(type);
         bool isCallValid            = (context->skipValidation() ||
                             ValidateDrawElementsInstanced(context, modePacked, count, typePacked,
                                                           indices, instancecount));
@@ -578,8 +578,8 @@ void GL_APIENTRY DrawRangeElements(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
-        DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
+        PrimitiveMode modePacked    = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked = FromGL<DrawElementsType>(type);
         bool isCallValid =
             (context->skipValidation() || ValidateDrawRangeElements(context, modePacked, start, end,
                                                                     count, typePacked, indices));
@@ -599,7 +599,7 @@ void GL_APIENTRY EndQuery(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        QueryType targetPacked = FromGLenum<QueryType>(target);
+        QueryType targetPacked = FromGL<QueryType>(target);
         bool isCallValid = (context->skipValidation() || ValidateEndQuery(context, targetPacked));
         if (isCallValid)
         {
@@ -660,7 +660,7 @@ void GL_APIENTRY FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeip
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateFlushMappedBufferRange(context, targetPacked, offset, length));
         if (isCallValid)
@@ -847,7 +847,7 @@ void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *pa
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateGetBufferParameteri64v(context, targetPacked, pname, params));
         if (isCallValid)
@@ -866,7 +866,7 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateGetBufferPointerv(context, targetPacked, pname, params));
         if (isCallValid)
@@ -1035,7 +1035,7 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        QueryType targetPacked = FromGLenum<QueryType>(target);
+        QueryType targetPacked = FromGL<QueryType>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateGetQueryiv(context, targetPacked, pname, params));
         if (isCallValid)
@@ -1465,7 +1465,7 @@ void *GL_APIENTRY MapBufferRange(GLenum target,
     void *returnValue;
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateMapBufferRange(context, targetPacked, offset, length, access));
         if (isCallValid)
@@ -1690,7 +1690,7 @@ void GL_APIENTRY TexImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid           = (context->skipValidation() ||
                             ValidateTexImage3D(context, targetPacked, level, internalformat, width,
                                                height, depth, border, format, type, pixels));
@@ -1715,7 +1715,7 @@ TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateTexStorage2D(context, targetPacked, levels, internalformat, width, height));
@@ -1743,7 +1743,7 @@ void GL_APIENTRY TexStorage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureType targetPacked = FromGL<TextureType>(target);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateTexStorage3D(context, targetPacked, levels, internalformat,
                                                  width, height, depth));
@@ -1778,7 +1778,7 @@ void GL_APIENTRY TexSubImage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        TextureTarget targetPacked = FromGL<TextureTarget>(target);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset, width,
@@ -2126,7 +2126,7 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     GLboolean returnValue;
     if (context)
     {
-        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        BufferBinding targetPacked = FromGL<BufferBinding>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateUnmapBuffer(context, targetPacked));
         if (isCallValid)
@@ -2244,7 +2244,7 @@ VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, cons
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        VertexAttribType typePacked = FromGL<VertexAttribType>(type);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateVertexAttribIPointer(context, index, size, typePacked, stride, pointer));

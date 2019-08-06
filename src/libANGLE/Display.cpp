@@ -835,7 +835,7 @@ Error Display::createImage(const gl::Context *context,
     }
     else if (IsRenderbufferTarget(target))
     {
-        sibling = context->getRenderbuffer(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
+        sibling = context->getRenderbuffer({egl_gl::EGLClientBufferToGLObjectHandle(buffer)});
     }
     else if (IsExternalImageTarget(target))
     {

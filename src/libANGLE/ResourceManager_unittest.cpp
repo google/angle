@@ -65,9 +65,9 @@ TEST_F(ResourceManagerTest, ReallocateBoundRenderbuffer)
 {
     EXPECT_CALL(mMockFactory, createRenderbuffer(_)).Times(1).RetiresOnSaturation();
 
-    mRenderbuffermanager->checkRenderbufferAllocation(&mMockFactory, 1);
-    GLuint newRenderbuffer = mRenderbuffermanager->createRenderbuffer();
-    EXPECT_NE(1u, newRenderbuffer);
+    mRenderbuffermanager->checkRenderbufferAllocation(&mMockFactory, {1});
+    RenderbufferID newRenderbuffer = mRenderbuffermanager->createRenderbuffer();
+    EXPECT_NE(1u, newRenderbuffer.value);
 }
 
 }  // anonymous namespace

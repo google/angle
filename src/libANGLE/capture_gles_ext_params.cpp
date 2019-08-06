@@ -2624,11 +2624,11 @@ void CaptureDeleteFramebuffersOES_framebuffers(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteRenderbuffersOES_renderbuffers(const Context *context,
-                                                 bool isCallValid,
-                                                 GLsizei n,
-                                                 const GLuint *renderbuffers,
-                                                 ParamCapture *paramCapture)
+void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const Context *context,
+                                                       bool isCallValid,
+                                                       GLsizei n,
+                                                       const RenderbufferID *renderbuffers,
+                                                       ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -2642,11 +2642,11 @@ void CaptureGenFramebuffersOES_framebuffers(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGenRenderbuffersOES_renderbuffers(const Context *context,
-                                              bool isCallValid,
-                                              GLsizei n,
-                                              GLuint *renderbuffers,
-                                              ParamCapture *paramCapture)
+void CaptureGenRenderbuffersOES_renderbuffersPacked(const Context *context,
+                                                    bool isCallValid,
+                                                    GLsizei n,
+                                                    RenderbufferID *renderbuffers,
+                                                    ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }

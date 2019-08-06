@@ -3181,7 +3181,7 @@ void Context::createQueries(GLenum target, GLsizei n, GLuint *ids)
     UNIMPLEMENTED();
 }
 
-void Context::createRenderbuffers(GLsizei n, GLuint *renderbuffers)
+void Context::createRenderbuffers(GLsizei n, RenderbufferID *renderbuffers)
 {
     UNIMPLEMENTED();
 }
@@ -3278,7 +3278,9 @@ void Context::getNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname, G
     UNIMPLEMENTED();
 }
 
-void Context::getNamedRenderbufferParameteriv(GLuint renderbuffer, GLenum pname, GLint *params)
+void Context::getNamedRenderbufferParameteriv(RenderbufferID renderbuffer,
+                                              GLenum pname,
+                                              GLint *params)
 {
     UNIMPLEMENTED();
 }
@@ -3570,7 +3572,7 @@ void Context::namedFramebufferReadBuffer(GLuint framebuffer, GLenum src)
 void Context::namedFramebufferRenderbuffer(GLuint framebuffer,
                                            GLenum attachment,
                                            GLenum renderbuffertarget,
-                                           GLuint renderbuffer)
+                                           RenderbufferID renderbuffer)
 {
     UNIMPLEMENTED();
 }
@@ -3592,7 +3594,7 @@ void Context::namedFramebufferTextureLayer(GLuint framebuffer,
     UNIMPLEMENTED();
 }
 
-void Context::namedRenderbufferStorage(GLuint renderbuffer,
+void Context::namedRenderbufferStorage(RenderbufferID renderbuffer,
                                        GLenum internalformat,
                                        GLsizei width,
                                        GLsizei height)
@@ -3600,7 +3602,7 @@ void Context::namedRenderbufferStorage(GLuint renderbuffer,
     UNIMPLEMENTED();
 }
 
-void Context::namedRenderbufferStorageMultisample(GLuint renderbuffer,
+void Context::namedRenderbufferStorageMultisample(RenderbufferID renderbuffer,
                                                   GLsizei samples,
                                                   GLenum internalformat,
                                                   GLsizei width,

@@ -178,7 +178,7 @@ void GL_APIENTRY MultiDrawArrays(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
+        PrimitiveMode modePacked = FromGL<PrimitiveMode>(mode);
         bool isCallValid         = (context->skipValidation() ||
                             ValidateMultiDrawArrays(context, modePacked, first, count, drawcount));
         if (isCallValid)
@@ -203,8 +203,8 @@ void GL_APIENTRY MultiDrawElements(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
-        DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
+        PrimitiveMode modePacked    = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked = FromGL<DrawElementsType>(type);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateMultiDrawElements(context, modePacked, count, typePacked, indices, drawcount));
@@ -224,7 +224,7 @@ void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
+        PointParameter pnamePacked = FromGL<PointParameter>(pname);
         bool isCallValid =
             (context->skipValidation() || ValidatePointParameterf(context, pnamePacked, param));
         if (isCallValid)
@@ -243,7 +243,7 @@ void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
+        PointParameter pnamePacked = FromGL<PointParameter>(pname);
         bool isCallValid =
             (context->skipValidation() || ValidatePointParameterfv(context, pnamePacked, params));
         if (isCallValid)

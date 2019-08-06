@@ -2436,7 +2436,7 @@ static bool ValidateObjectIdentifierAndName(Context *context, GLenum identifier,
             return true;
 
         case GL_RENDERBUFFER:
-            if (context->getRenderbuffer(name) == nullptr)
+            if (!context->isRenderbuffer({name}))
             {
                 context->validationError(GL_INVALID_VALUE, kInvalidRenderbufferName);
                 return false;
@@ -4952,7 +4952,7 @@ bool ValidateBindFramebuffer(Context *context, GLenum target, GLuint framebuffer
     return true;
 }
 
-bool ValidateBindRenderbuffer(Context *context, GLenum target, GLuint renderbuffer)
+bool ValidateBindRenderbuffer(Context *context, GLenum target, RenderbufferID renderbuffer)
 {
     if (target != GL_RENDERBUFFER)
     {
@@ -5721,7 +5721,7 @@ bool ValidateIsProgram(Context *context, GLuint program)
     return true;
 }
 
-bool ValidateIsRenderbuffer(Context *context, GLuint renderbuffer)
+bool ValidateIsRenderbuffer(Context *context, RenderbufferID renderbuffer)
 {
     return true;
 }
@@ -6230,7 +6230,7 @@ bool ValidateDeleteFramebuffers(Context *context, GLint n, const GLuint *)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateDeleteRenderbuffers(Context *context, GLint n, const GLuint *)
+bool ValidateDeleteRenderbuffers(Context *context, GLint n, const RenderbufferID *renderbuffers)
 {
     return ValidateGenOrDelete(context, n);
 }
@@ -6277,7 +6277,7 @@ bool ValidateFramebufferRenderbuffer(Context *context,
                                      GLenum target,
                                      GLenum attachment,
                                      GLenum renderbuffertarget,
-                                     GLuint renderbuffer)
+                                     RenderbufferID renderbuffer)
 {
     if (!ValidFramebufferTarget(context, target))
     {
@@ -6285,7 +6285,7 @@ bool ValidateFramebufferRenderbuffer(Context *context,
         return false;
     }
 
-    if (renderbuffertarget != GL_RENDERBUFFER && renderbuffer != 0)
+    if (renderbuffertarget != GL_RENDERBUFFER && renderbuffer.value != 0)
     {
         context->validationError(GL_INVALID_ENUM, kInvalidRenderbufferTarget);
         return false;
@@ -6429,7 +6429,7 @@ bool ValidateGenFramebuffers(Context *context, GLint n, GLuint *)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateGenRenderbuffers(Context *context, GLint n, GLuint *)
+bool ValidateGenRenderbuffers(Context *context, GLint n, RenderbufferID *renderbuffers)
 {
     return ValidateGenOrDelete(context, n);
 }

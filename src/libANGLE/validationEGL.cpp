@@ -2055,7 +2055,7 @@ Error ValidateCreateImage(const Display *display,
 
             ANGLE_TRY(ValidateContext(display, context));
             const gl::Renderbuffer *renderbuffer =
-                context->getRenderbuffer(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
+                context->getRenderbuffer({egl_gl::EGLClientBufferToGLObjectHandle(buffer)});
             if (renderbuffer == nullptr)
             {
                 return EglBadParameter() << "target is not a renderbuffer.";

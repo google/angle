@@ -64,7 +64,7 @@ class RenderbufferState final : angle::NonCopyable
 class Renderbuffer final : public RefCountObject, public egl::ImageSibling, public LabeledObject
 {
   public:
-    Renderbuffer(rx::GLImplFactory *implFactory, GLuint id);
+    Renderbuffer(rx::GLImplFactory *implFactory, RenderbufferID id);
     ~Renderbuffer() override;
 
     void onDestroy(const Context *context) override;

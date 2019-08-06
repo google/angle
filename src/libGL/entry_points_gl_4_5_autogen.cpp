@@ -567,13 +567,14 @@ void GL_APIENTRY CreateRenderbuffers(GLsizei n, GLuint *renderbuffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() || ValidateCreateRenderbuffers(context, n, renderbuffers));
+        RenderbufferID *renderbuffersPacked = FromGL<RenderbufferID *>(renderbuffers);
+        bool isCallValid                    = (context->skipValidation() ||
+                            ValidateCreateRenderbuffers(context, n, renderbuffersPacked));
         if (isCallValid)
         {
-            context->createRenderbuffers(n, renderbuffers);
+            context->createRenderbuffers(n, renderbuffersPacked);
         }
-        ANGLE_CAPTURE(CreateRenderbuffers, isCallValid, context, n, renderbuffers);
+        ANGLE_CAPTURE(CreateRenderbuffers, isCallValid, context, n, renderbuffersPacked);
     }
 }
 
@@ -929,14 +930,16 @@ void GL_APIENTRY GetNamedRenderbufferParameteriv(GLuint renderbuffer, GLenum pna
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() || ValidateGetNamedRenderbufferParameteriv(
-                                                             context, renderbuffer, pname, params));
+        RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetNamedRenderbufferParameteriv(context, renderbufferPacked, pname, params));
         if (isCallValid)
         {
-            context->getNamedRenderbufferParameteriv(renderbuffer, pname, params);
+            context->getNamedRenderbufferParameteriv(renderbufferPacked, pname, params);
         }
-        ANGLE_CAPTURE(GetNamedRenderbufferParameteriv, isCallValid, context, renderbuffer, pname,
-                      params);
+        ANGLE_CAPTURE(GetNamedRenderbufferParameteriv, isCallValid, context, renderbufferPacked,
+                      pname, params);
     }
 }
 
@@ -1978,16 +1981,18 @@ void GL_APIENTRY NamedFramebufferRenderbuffer(GLuint framebuffer,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateNamedFramebufferRenderbuffer(context, framebuffer, attachment,
-                                                                 renderbuffertarget, renderbuffer));
+        RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateNamedFramebufferRenderbuffer(context, framebuffer, attachment,
+                                                  renderbuffertarget, renderbufferPacked));
         if (isCallValid)
         {
             context->namedFramebufferRenderbuffer(framebuffer, attachment, renderbuffertarget,
-                                                  renderbuffer);
+                                                  renderbufferPacked);
         }
         ANGLE_CAPTURE(NamedFramebufferRenderbuffer, isCallValid, context, framebuffer, attachment,
-                      renderbuffertarget, renderbuffer);
+                      renderbuffertarget, renderbufferPacked);
     }
 }
 
@@ -2055,15 +2060,16 @@ void GL_APIENTRY NamedRenderbufferStorage(GLuint renderbuffer,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateNamedRenderbufferStorage(context, renderbuffer, internalformat,
-                                                             width, height));
+        RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
+        bool isCallValid                  = (context->skipValidation() ||
+                            ValidateNamedRenderbufferStorage(context, renderbufferPacked,
+                                                             internalformat, width, height));
         if (isCallValid)
         {
-            context->namedRenderbufferStorage(renderbuffer, internalformat, width, height);
+            context->namedRenderbufferStorage(renderbufferPacked, internalformat, width, height);
         }
-        ANGLE_CAPTURE(NamedRenderbufferStorage, isCallValid, context, renderbuffer, internalformat,
-                      width, height);
+        ANGLE_CAPTURE(NamedRenderbufferStorage, isCallValid, context, renderbufferPacked,
+                      internalformat, width, height);
     }
 }
 
@@ -2081,15 +2087,17 @@ void GL_APIENTRY NamedRenderbufferStorageMultisample(GLuint renderbuffer,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateNamedRenderbufferStorageMultisample(
-                                context, renderbuffer, samples, internalformat, width, height));
+        RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateNamedRenderbufferStorageMultisample(context, renderbufferPacked, samples,
+                                                         internalformat, width, height));
         if (isCallValid)
         {
-            context->namedRenderbufferStorageMultisample(renderbuffer, samples, internalformat,
-                                                         width, height);
+            context->namedRenderbufferStorageMultisample(renderbufferPacked, samples,
+                                                         internalformat, width, height);
         }
-        ANGLE_CAPTURE(NamedRenderbufferStorageMultisample, isCallValid, context, renderbuffer,
+        ANGLE_CAPTURE(NamedRenderbufferStorageMultisample, isCallValid, context, renderbufferPacked,
                       samples, internalformat, width, height);
     }
 }

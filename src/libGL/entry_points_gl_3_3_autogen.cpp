@@ -509,7 +509,7 @@ void GL_APIENTRY QueryCounter(GLuint id, GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        QueryType targetPacked = FromGLenum<QueryType>(target);
+        QueryType targetPacked = FromGL<QueryType>(target);
         bool isCallValid =
             (context->skipValidation() || ValidateQueryCounter(context, id, targetPacked));
         if (isCallValid)
