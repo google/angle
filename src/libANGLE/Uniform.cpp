@@ -80,7 +80,8 @@ LinkedUniform::LinkedUniform(const LinkedUniform &uniform)
       ActiveVariable(uniform),
       typeInfo(uniform.typeInfo),
       bufferIndex(uniform.bufferIndex),
-      blockInfo(uniform.blockInfo)
+      blockInfo(uniform.blockInfo),
+      outerArraySizes(uniform.outerArraySizes)
 {}
 
 LinkedUniform &LinkedUniform::operator=(const LinkedUniform &uniform)
@@ -90,6 +91,7 @@ LinkedUniform &LinkedUniform::operator=(const LinkedUniform &uniform)
     typeInfo                = uniform.typeInfo;
     bufferIndex             = uniform.bufferIndex;
     blockInfo               = uniform.blockInfo;
+    outerArraySizes         = uniform.outerArraySizes;
     return *this;
 }
 

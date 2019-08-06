@@ -53,6 +53,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         }
     }
 
+    if (contextVk->useOldRewriteStructSamplers())
+    {
+        compileOptions |= SH_USE_OLD_REWRITE_STRUCT_SAMPLERS;
+    }
+
     return compileImpl(context, compilerInstance, mData.getSource(), compileOptions | options);
 }
 

@@ -214,6 +214,8 @@ class TType
 
     // Note that the array element type might still be an array type in GLSL ES version >= 3.10.
     void toArrayElementType();
+    // Removes all array sizes.
+    void toArrayBaseType();
 
     const TInterfaceBlock *getInterfaceBlock() const { return mInterfaceBlock; }
     void setInterfaceBlock(const TInterfaceBlock *interfaceBlockIn);

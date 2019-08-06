@@ -406,7 +406,15 @@ void Shader::resolveCompile()
         // Remove null characters from the source line
         line.erase(std::remove(line.begin(), line.end(), '\0'), line.end());
 
-        shaderStream << "// " << line << std::endl;
+        shaderStream << "// " << line;
+
+        // glslang complains if a comment ends with backslash
+        if (!line.empty() && line.back() == '\\')
+        {
+            shaderStream << "\\";
+        }
+
+        shaderStream << std::endl;
     }
     shaderStream << "\n\n";
     shaderStream << mState.mTranslatedSource;

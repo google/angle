@@ -240,6 +240,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mIsAnyHostVisibleBufferWritten(false),
       mEmulateSeamfulCubeMapSampling(false),
       mEmulateSeamfulCubeMapSamplingWithSubgroupOps(false),
+      mUseOldRewriteStructSamplers(false),
       mLastCompletedQueueSerial(renderer->nextSerial()),
       mCurrentQueueSerial(renderer->nextSerial()),
       mPoolAllocator(kDefaultPoolAllocatorPageSize, 1),
@@ -445,6 +446,8 @@ angle::Result ContextVk::initialize()
 
     mEmulateSeamfulCubeMapSampling =
         shouldEmulateSeamfulCubeMapSampling(&mEmulateSeamfulCubeMapSamplingWithSubgroupOps);
+
+    mUseOldRewriteStructSamplers = shouldUseOldRewriteStructSamplers();
 
     return angle::Result::Continue;
 }
@@ -2946,5 +2949,10 @@ bool ContextVk::shouldEmulateSeamfulCubeMapSampling(bool *useSubgroupOpsOut) con
                          kSeamfulCubeMapSubgroupOperations;
 
     return true;
+}
+
+bool ContextVk::shouldUseOldRewriteStructSamplers() const
+{
+    return mRenderer->getFeatures().forceOldRewriteStructSamplers.enabled;
 }
 }  // namespace rx

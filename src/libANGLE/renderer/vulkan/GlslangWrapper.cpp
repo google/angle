@@ -366,7 +366,7 @@ std::string IntermediateShaderSource::getShaderSource()
     return shaderSource;
 }
 
-std::string GetMappedSamplerName(const std::string &originalName)
+std::string GetMappedSamplerNameOld(const std::string &originalName)
 {
     std::string samplerName = gl::ParseResourceName(originalName, nullptr);
 
@@ -777,7 +777,8 @@ void AssignBufferBindings(const gl::ProgramState &programState,
                                                      bindingStart, shaderSources);
 }
 
-void AssignTextureBindings(const gl::ProgramState &programState,
+void AssignTextureBindings(bool useOldRewriteStructSamplers,
+                           const gl::ProgramState &programState,
                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
     const std::string texturesDescriptorSet = "set = " + Str(kTextureDescriptorSetIndex);
@@ -789,18 +790,28 @@ void AssignTextureBindings(const gl::ProgramState &programState,
     for (unsigned int uniformIndex : programState.getSamplerUniformRange())
     {
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
+
+        if (!useOldRewriteStructSamplers &&
+            vk::SamplerNameContainsNonZeroArrayElement(samplerUniform.name))
+        {
+            continue;
+        }
+
         const std::string bindingString =
             texturesDescriptorSet + ", binding = " + Str(bindingIndex++);
 
         // Samplers in structs are extracted and renamed.
-        const std::string samplerName = GetMappedSamplerName(samplerUniform.name);
+        const std::string samplerName = useOldRewriteStructSamplers
+                                            ? GetMappedSamplerNameOld(samplerUniform.name)
+                                            : vk::GetMappedSamplerName(samplerUniform.name);
 
         AssignResourceBinding(samplerUniform.activeShaders(), samplerName, bindingString,
                               kUniformQualifier, kUnusedUniformSubstitution, shaderSources);
     }
 }
 
-void CleanupUnusedEntities(const gl::ProgramState &programState,
+void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
+                           const gl::ProgramState &programState,
                            const gl::ProgramLinkedResources &resources,
                            gl::Shader *glVertexShader,
                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
@@ -847,8 +858,11 @@ void CleanupUnusedEntities(const gl::ProgramState &programState,
     // uniforms to a single line.
     for (const gl::UnusedUniform &unusedUniform : resources.unusedUniforms)
     {
-        std::string uniformName =
-            unusedUniform.isSampler ? GetMappedSamplerName(unusedUniform.name) : unusedUniform.name;
+        std::string uniformName = unusedUniform.isSampler
+                                      ? useOldRewriteStructSamplers
+                                            ? GetMappedSamplerNameOld(unusedUniform.name)
+                                            : vk::GetMappedSamplerName(unusedUniform.name)
+                                      : unusedUniform.name;
 
         for (IntermediateShaderSource &shaderSource : *shaderSources)
         {
@@ -880,7 +894,8 @@ void GlslangWrapper::Release()
 }
 
 // static
-void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
+void GlslangWrapper::GetShaderSource(bool useOldRewriteStructSamplers,
+                                     const gl::ProgramState &programState,
                                      const gl::ProgramLinkedResources &resources,
                                      gl::ShaderMap<std::string> *shaderSourcesOut)
 {
@@ -906,9 +921,9 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
     }
     AssignUniformBindings(&intermediateSources);
     AssignBufferBindings(programState, &intermediateSources);
-    AssignTextureBindings(programState, &intermediateSources);
+    AssignTextureBindings(useOldRewriteStructSamplers, programState, &intermediateSources);
 
-    CleanupUnusedEntities(programState, resources,
+    CleanupUnusedEntities(useOldRewriteStructSamplers, programState, resources,
                           programState.getAttachedShader(gl::ShaderType::Vertex),
                           &intermediateSources);
 

@@ -503,7 +503,8 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     // assignment done in that function.
     linkResources(resources);
 
-    GlslangWrapper::GetShaderSource(mState, resources, &mShaderSources);
+    GlslangWrapper::GetShaderSource(contextVk->useOldRewriteStructSamplers(), mState, resources,
+                                    &mShaderSources);
 
     reset(contextVk);
 
@@ -565,6 +566,7 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
 
     // Textures:
     vk::DescriptorSetLayoutDesc texturesSetDesc;
+    uint32_t bindingIndex = 0;
 
     for (uint32_t textureIndex = 0; textureIndex < mState.getSamplerBindings().size();
          ++textureIndex)
@@ -575,11 +577,27 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
         const gl::LinkedUniform &samplerUniform = mState.getUniforms()[uniformIndex];
 
         // The front-end always binds array sampler units sequentially.
-        const uint32_t arraySize = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
+        uint32_t arraySize = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
         VkShaderStageFlags activeStages =
             gl_vk::GetShaderStageFlags(samplerUniform.activeShaders());
 
-        texturesSetDesc.update(textureIndex, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
+        if (!contextVk->useOldRewriteStructSamplers())
+        {
+            // 2D arrays are split into multiple 1D arrays when generating
+            // LinkedUniforms. Since they are flattened into one array, ignore the
+            // nonzero elements and expand the array to the total array size.
+            if (vk::SamplerNameContainsNonZeroArrayElement(samplerUniform.name))
+            {
+                continue;
+            }
+
+            for (unsigned int outerArraySize : samplerUniform.outerArraySizes)
+            {
+                arraySize *= outerArraySize;
+            }
+        }
+
+        texturesSetDesc.update(bindingIndex++, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
                                activeStages);
     }
 
@@ -1459,6 +1477,12 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
 
     bool useSubgroupOps                = false;
     bool emulateSeamfulCubeMapSampling = contextVk->emulateSeamfulCubeMapSampling(&useSubgroupOps);
+    bool useOldRewriteStructSamplers   = contextVk->useOldRewriteStructSamplers();
+
+    std::unordered_map<std::string, uint32_t> mappedSamplerNameToBindingIndex;
+    std::unordered_map<std::string, uint32_t> mappedSamplerNameToArrayOffset;
+
+    uint32_t currentBindingIndex = 0;
 
     for (uint32_t textureIndex = 0; textureIndex < mState.getSamplerBindings().size();
          ++textureIndex)
@@ -1467,8 +1491,30 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
 
         ASSERT(!samplerBinding.unreferenced);
 
-        for (uint32_t arrayElement = 0; arrayElement < samplerBinding.boundTextureUnits.size();
-             ++arrayElement)
+        uint32_t uniformIndex = mState.getUniformIndexFromSamplerIndex(textureIndex);
+        const gl::LinkedUniform &samplerUniform = mState.getUniforms()[uniformIndex];
+        std::string mappedSamplerName           = vk::GetMappedSamplerName(samplerUniform.name);
+
+        if (useOldRewriteStructSamplers ||
+            mappedSamplerNameToBindingIndex.emplace(mappedSamplerName, currentBindingIndex).second)
+        {
+            currentBindingIndex++;
+        }
+
+        uint32_t bindingIndex = textureIndex;
+        uint32_t arrayOffset  = 0;
+        uint32_t arraySize    = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
+
+        if (!useOldRewriteStructSamplers)
+        {
+            bindingIndex = mappedSamplerNameToBindingIndex[mappedSamplerName];
+            arrayOffset  = mappedSamplerNameToArrayOffset[mappedSamplerName];
+            // Front-end generates array elements in order, so we can just increment
+            // the offset each time we process a nested array.
+            mappedSamplerNameToArrayOffset[mappedSamplerName] += arraySize;
+        }
+
+        for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
         {
             GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
             TextureVk *textureVk = activeTextures[textureUnit].texture;
@@ -1496,8 +1542,8 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
             writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             writeInfo.pNext            = nullptr;
             writeInfo.dstSet           = descriptorSet;
-            writeInfo.dstBinding       = textureIndex;
-            writeInfo.dstArrayElement  = arrayElement;
+            writeInfo.dstBinding       = bindingIndex;
+            writeInfo.dstArrayElement  = arrayOffset + arrayElement;
             writeInfo.descriptorCount  = 1;
             writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             writeInfo.pImageInfo       = &imageInfo;

@@ -528,6 +528,9 @@ class Recycler final : angle::NonCopyable
     std::vector<T> mObjectFreeList;
 };
 
+bool SamplerNameContainsNonZeroArrayElement(const std::string &name);
+std::string GetMappedSamplerName(const std::string &originalName);
+
 }  // namespace vk
 
 // List of function pointers for used extensions.

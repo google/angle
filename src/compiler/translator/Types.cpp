@@ -716,6 +716,19 @@ void TType::toArrayElementType()
     }
 }
 
+void TType::toArrayBaseType()
+{
+    if (mArraySizes == nullptr)
+    {
+        return;
+    }
+    if (mArraySizes->size() > 0)
+    {
+        mArraySizes->clear();
+    }
+    invalidateMangledName();
+}
+
 void TType::setInterfaceBlock(const TInterfaceBlock *interfaceBlockIn)
 {
     if (mInterfaceBlock != interfaceBlockIn)

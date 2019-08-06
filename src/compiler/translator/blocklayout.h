@@ -230,12 +230,14 @@ class VariableNameVisitor : public ShaderVariableVisitor
   protected:
     virtual void visitNamedSampler(const sh::ShaderVariable &sampler,
                                    const std::string &name,
-                                   const std::string &mappedName)
+                                   const std::string &mappedName,
+                                   const std::vector<unsigned int> &arraySizes)
     {}
     virtual void visitNamedVariable(const ShaderVariable &variable,
                                     bool isRowMajor,
                                     const std::string &name,
-                                    const std::string &mappedName) = 0;
+                                    const std::string &mappedName,
+                                    const std::vector<unsigned int> &arraySizes) = 0;
 
     std::string collapseNameStack() const;
     std::string collapseMappedNameStack() const;
@@ -246,6 +248,7 @@ class VariableNameVisitor : public ShaderVariableVisitor
 
     std::vector<std::string> mNameStack;
     std::vector<std::string> mMappedNameStack;
+    std::vector<unsigned int> mArraySizeStack;
 };
 
 class BlockEncoderVisitor : public VariableNameVisitor
@@ -264,7 +267,8 @@ class BlockEncoderVisitor : public VariableNameVisitor
     void visitNamedVariable(const ShaderVariable &variable,
                             bool isRowMajor,
                             const std::string &name,
-                            const std::string &mappedName) override;
+                            const std::string &mappedName,
+                            const std::vector<unsigned int> &arraySizes) override;
 
     virtual void encodeVariable(const ShaderVariable &variable,
                                 const BlockMemberInfo &variableInfo,

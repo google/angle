@@ -406,6 +406,7 @@ void VariableNameVisitor::enterArray(const ShaderVariable &arrayVar)
         mNameStack.push_back(arrayVar.name);
         mMappedNameStack.push_back(arrayVar.mappedName);
     }
+    mArraySizeStack.push_back(arrayVar.getOutermostArraySize());
 }
 
 void VariableNameVisitor::exitArray(const ShaderVariable &arrayVar)
@@ -415,6 +416,7 @@ void VariableNameVisitor::exitArray(const ShaderVariable &arrayVar)
         mNameStack.pop_back();
         mMappedNameStack.pop_back();
     }
+    mArraySizeStack.pop_back();
 }
 
 void VariableNameVisitor::enterArrayElement(const ShaderVariable &arrayVar,
@@ -461,7 +463,7 @@ void VariableNameVisitor::visitSampler(const sh::ShaderVariable &sampler)
         mMappedNameStack.pop_back();
     }
 
-    visitNamedSampler(sampler, name, mappedName);
+    visitNamedSampler(sampler, name, mappedName, mArraySizeStack);
 }
 
 void VariableNameVisitor::visitVariable(const ShaderVariable &variable, bool isRowMajor)
@@ -481,7 +483,7 @@ void VariableNameVisitor::visitVariable(const ShaderVariable &variable, bool isR
         mMappedNameStack.pop_back();
     }
 
-    visitNamedVariable(variable, isRowMajor, name, mappedName);
+    visitNamedVariable(variable, isRowMajor, name, mappedName, mArraySizeStack);
 }
 
 // BlockEncoderVisitor implementation.
@@ -554,7 +556,8 @@ void BlockEncoderVisitor::exitArrayElement(const sh::ShaderVariable &arrayVar,
 void BlockEncoderVisitor::visitNamedVariable(const ShaderVariable &variable,
                                              bool isRowMajor,
                                              const std::string &name,
-                                             const std::string &mappedName)
+                                             const std::string &mappedName,
+                                             const std::vector<unsigned int> &arraySizes)
 {
     std::vector<unsigned int> innermostArraySize;
 

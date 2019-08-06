@@ -200,6 +200,14 @@ struct FeaturesVk : FeatureSetBase
         "disallow_seamful_cube_map_emulation", FeatureCategory::VulkanWorkarounds,
         "Seamful cube map emulation misbehaves on the AMD windows driver, so it's disallowed",
         &members, "http://anglebug.com/3243"};
+
+    // Qualcomm shader compiler doesn't support sampler arrays as parameters, so
+    // revert to old RewriteStructSamplers behavior, which produces fewer.
+    Feature forceOldRewriteStructSamplers = {
+        "force_old_rewrite_struct_samplers", FeatureCategory::VulkanWorkarounds,
+        "Qualcomm shader compiler doesn't support sampler arrays as parameters, so "
+        "revert to old RewriteStructSamplers behavior, which produces fewer.",
+        &members, "http://anglebug.com/2703"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

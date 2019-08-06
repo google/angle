@@ -217,7 +217,8 @@ class UniformEncodingVisitorD3D : public sh::BlockEncoderVisitor
 
     void visitNamedSampler(const sh::ShaderVariable &sampler,
                            const std::string &name,
-                           const std::string &mappedName) override
+                           const std::string &mappedName,
+                           const std::vector<unsigned int> &arraySizes) override
     {
         auto uniformMapEntry = mUniformMapOut->find(name);
         if (uniformMapEntry == mUniformMapOut->end())

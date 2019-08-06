@@ -75,6 +75,7 @@ struct LinkedUniform : public sh::Uniform, public ActiveVariable
     // Identifies the containing buffer backed resource -- interface block or atomic counter buffer.
     int bufferIndex;
     sh::BlockMemberInfo blockInfo;
+    std::vector<unsigned int> outerArraySizes;
 };
 
 struct BufferVariable : public sh::ShaderVariable, public ActiveVariable

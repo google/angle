@@ -333,6 +333,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
         return mEmulateSeamfulCubeMapSampling;
     }
 
+    bool useOldRewriteStructSamplers() const { return mUseOldRewriteStructSamplers; }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -492,6 +494,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     bool shouldEmulateSeamfulCubeMapSampling(bool *useSubgroupOpsOut) const;
 
+    bool shouldUseOldRewriteStructSamplers() const;
+
     vk::PipelineHelper *mCurrentGraphicsPipeline;
     vk::PipelineAndSerial *mCurrentComputePipeline;
     gl::PrimitiveMode mCurrentDrawMode;
@@ -557,6 +561,10 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // operations should be used.
     bool mEmulateSeamfulCubeMapSampling;
     bool mEmulateSeamfulCubeMapSamplingWithSubgroupOps;
+
+    // Whether this context should use the old version of the
+    // RewriteStructSamplers pass.
+    bool mUseOldRewriteStructSamplers;
 
     struct DriverUniformsDescriptorSet
     {

@@ -526,6 +526,57 @@ bool GarbageObject::destroyIfComplete(VkDevice device, Serial completedSerial)
     return false;
 }
 
+bool SamplerNameContainsNonZeroArrayElement(const std::string &name)
+{
+    constexpr char kZERO_ELEMENT[] = "[0]";
+
+    size_t start = 0;
+    while (true)
+    {
+        start = name.find(kZERO_ELEMENT[0], start);
+        if (start == std::string::npos)
+        {
+            break;
+        }
+        if (name.compare(start, strlen(kZERO_ELEMENT), kZERO_ELEMENT) != 0)
+        {
+            return true;
+        }
+        start++;
+    }
+    return false;
+}
+
+std::string GetMappedSamplerName(const std::string &originalName)
+{
+    std::string samplerName = originalName;
+
+    // Samplers in structs are extracted.
+    std::replace(samplerName.begin(), samplerName.end(), '.', '_');
+
+    // Remove array elements
+    auto out = samplerName.begin();
+    for (auto in = samplerName.begin(); in != samplerName.end(); in++)
+    {
+        if (*in == '[')
+        {
+            while (*in != ']')
+            {
+                in++;
+                ASSERT(in != samplerName.end());
+            }
+        }
+        else
+        {
+            *out++ = *in;
+        }
+    }
+
+    samplerName.erase(out, samplerName.end());
+
+    return samplerName;
+}
+
 }  // namespace vk
 
 // VK_EXT_debug_utils
