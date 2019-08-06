@@ -2081,12 +2081,10 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
         contextVk, formatInfo.computeDepthPitch(glExtents.height, unpack.imageHeight, inputRowPitch,
                                                 &inputDepthPitch));
 
-    bool applySkipImages = false;
-
     GLuint inputSkipBytes = 0;
     ANGLE_VK_CHECK_MATH(contextVk,
                         formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
-                                                    applySkipImages, &inputSkipBytes));
+                                                    index.usesTex3D(), &inputSkipBytes));
 
     const angle::Format &storageFormat = vkFormat.imageFormat();
 

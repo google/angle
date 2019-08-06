@@ -548,16 +548,6 @@
 3190 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgb16* = FAIL
 3190 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rg32* = FAIL
 
-//  Pixel pack/unpack settings:
-3209 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_unpack_params.rgb8_skip_images = FAIL
-3209 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_unpack_params.rgb8_skip_images = FAIL
-3209 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_unpack_params.r8_* = FAIL
-3209 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_unpack_params.r8_* = FAIL
-
-//  Pixel Buffer Objects (PBOs):
-3209 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_pbo.rgb8_skip_images* = FAIL
-3209 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_pbo.rgb8_skip_images* = FAIL
-
 // Formats:
 3677 ANDROID VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgba32f = FAIL
 3677 ANDROID VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgba32f = FAIL
