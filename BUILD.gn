@@ -129,6 +129,8 @@ config("extra_warnings") {
       "-Wfloat-conversion",
       "-Wnon-virtual-dtor",
       "-Wunneeded-internal-declaration",
+      "-Wglobal-constructors",
+      "-Wexit-time-destructors",
     ]
   }
 }
@@ -932,6 +934,7 @@ angle_shared_library("libEGL") {
   }
 
   deps = [
+    ":angle_common",
     ":angle_system_utils",
     ":angle_version",
     ":libEGL_egl_loader",
@@ -1074,6 +1077,7 @@ foreach(is_shared_library,
     }
 
     configs += [ ":debug_annotations_config" ]
+    configs -= [ "${angle_root}:extra_warnings" ]
 
     public_configs += [ ":angle_util_config" ]
 

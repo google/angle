@@ -42,6 +42,7 @@ libangle_common_sources = [
   "src/common/third_party/base/anglebase/containers/mru_cache.h",
   "src/common/third_party/base/anglebase/logging.h",
   "src/common/third_party/base/anglebase/macros.h",
+  "src/common/third_party/base/anglebase/no_destructor.h",
   "src/common/third_party/base/anglebase/numerics/safe_conversions.h",
   "src/common/third_party/base/anglebase/numerics/safe_conversions_impl.h",
   "src/common/third_party/base/anglebase/numerics/safe_math.h",

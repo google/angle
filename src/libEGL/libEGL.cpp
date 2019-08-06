@@ -6,6 +6,7 @@
 
 // libEGL.cpp: Implements the exported EGL functions.
 
+#include "anglebase/no_destructor.h"
 #include "common/system_utils.h"
 
 #include <memory>
@@ -21,11 +22,16 @@ namespace
 {
 #if defined(ANGLE_USE_EGL_LOADER)
 bool gLoaded = false;
-std::unique_ptr<angle::Library> gEntryPointsLib;
+
+std::unique_ptr<angle::Library> &EntryPointsLib()
+{
+    static angle::base::NoDestructor<std::unique_ptr<angle::Library>> entryPointsLib;
+    return *entryPointsLib;
+}
 
 angle::GenericProc KHRONOS_APIENTRY GlobalLoad(const char *symbol)
 {
-    return reinterpret_cast<angle::GenericProc>(gEntryPointsLib->getSymbol(symbol));
+    return reinterpret_cast<angle::GenericProc>(EntryPointsLib()->getSymbol(symbol));
 }
 
 void EnsureEGLLoaded()
@@ -33,7 +39,7 @@ void EnsureEGLLoaded()
     if (gLoaded)
         return;
 
-    gEntryPointsLib.reset(
+    EntryPointsLib().reset(
         angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ApplicationDir));
     angle::LoadEGL_EGL(GlobalLoad);
     if (!EGL_GetPlatformDisplay)

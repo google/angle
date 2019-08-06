@@ -14,6 +14,7 @@
 #include <EGL/eglext.h>
 #include <platform/Platform.h>
 
+#include "anglebase/no_destructor.h"
 #include "common/debug.h"
 #include "common/platform.h"
 #include "libANGLE/renderer/DeviceImpl.h"
@@ -39,8 +40,8 @@ static std::string GenerateExtensionsString(const T &extensions)
 typedef std::set<egl::Device *> DeviceSet;
 static DeviceSet *GetDeviceSet()
 {
-    static DeviceSet devices;
-    return &devices;
+    static angle::base::NoDestructor<DeviceSet> devices;
+    return devices.get();
 }
 
 // Static factory methods

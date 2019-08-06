@@ -19,6 +19,7 @@
 #include <EGL/eglext.h>
 #include <platform/Platform.h>
 
+#include "anglebase/no_destructor.h"
 #include "common/android_util.h"
 #include "common/debug.h"
 #include "common/mathutil.h"
@@ -89,22 +90,22 @@ typedef std::map<EGLNativeWindowType, Surface *> WindowSurfaceMap;
 // associated with it.
 static WindowSurfaceMap *GetWindowSurfaces()
 {
-    static WindowSurfaceMap windowSurfaces;
-    return &windowSurfaces;
+    static angle::base::NoDestructor<WindowSurfaceMap> windowSurfaces;
+    return windowSurfaces.get();
 }
 
 typedef std::map<EGLNativeDisplayType, Display *> ANGLEPlatformDisplayMap;
 static ANGLEPlatformDisplayMap *GetANGLEPlatformDisplayMap()
 {
-    static ANGLEPlatformDisplayMap displays;
-    return &displays;
+    static angle::base::NoDestructor<ANGLEPlatformDisplayMap> displays;
+    return displays.get();
 }
 
 typedef std::map<Device *, Display *> DevicePlatformDisplayMap;
 static DevicePlatformDisplayMap *GetDevicePlatformDisplayMap()
 {
-    static DevicePlatformDisplayMap displays;
-    return &displays;
+    static angle::base::NoDestructor<DevicePlatformDisplayMap> displays;
+    return displays.get();
 }
 
 rx::DisplayImpl *CreateDisplayFromDevice(Device *eglDevice, const DisplayState &state)
@@ -1266,9 +1267,9 @@ const ClientExtensions &Display::GetClientExtensions()
 // static
 const std::string &Display::GetClientExtensionString()
 {
-    static const std::string clientExtensionsString =
-        GenerateExtensionsString(GetClientExtensions());
-    return clientExtensionsString;
+    static const angle::base::NoDestructor<std::string> clientExtensionsString(
+        GenerateExtensionsString(GetClientExtensions()));
+    return *clientExtensionsString;
 }
 
 void Display::initDisplayExtensions()

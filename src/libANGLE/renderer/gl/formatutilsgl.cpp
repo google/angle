@@ -11,6 +11,7 @@
 
 #include <limits>
 
+#include "anglebase/no_destructor.h"
 #include "common/string_utils.h"
 #include "libANGLE/formatutils.h"
 #include "platform/FeaturesGL.h"
@@ -367,8 +368,9 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
 
 static const InternalFormatInfoMap &GetInternalFormatMap()
 {
-    static const InternalFormatInfoMap formatMap = BuildInternalFormatInfoMap();
-    return formatMap;
+    static const angle::base::NoDestructor<InternalFormatInfoMap> formatMap(
+        BuildInternalFormatInfoMap());
+    return *formatMap;
 }
 
 const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, StandardGL standard)
@@ -390,8 +392,8 @@ const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, StandardGL st
         }
     }
 
-    static const InternalFormat defaultInternalFormat;
-    return defaultInternalFormat;
+    static const angle::base::NoDestructor<InternalFormat> defaultInternalFormat;
+    return *defaultInternalFormat;
 }
 
 static GLenum GetNativeInternalFormat(const FunctionsGL *functions,

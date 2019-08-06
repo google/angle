@@ -6,6 +6,7 @@
 
 #include "libANGLE/Caps.h"
 
+#include "anglebase/no_destructor.h"
 #include "common/angleutils.h"
 #include "common/debug.h"
 
@@ -849,8 +850,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         return map;
     };
 
-    static const ExtensionInfoMap extensionInfo = buildExtensionInfoMap();
-    return extensionInfo;
+    static const angle::base::NoDestructor<ExtensionInfoMap> extensionInfo(buildExtensionInfoMap());
+    return *extensionInfo;
 }
 
 TypePrecision::TypePrecision() = default;

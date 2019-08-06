@@ -8,6 +8,7 @@
 
 #include "libANGLE/formatutils.h"
 
+#include "anglebase/no_destructor.h"
 #include "common/mathutil.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
@@ -1038,8 +1039,9 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
 
 static const InternalFormatInfoMap &GetInternalFormatMap()
 {
-    static const InternalFormatInfoMap formatMap = BuildInternalFormatInfoMap();
-    return formatMap;
+    static const angle::base::NoDestructor<InternalFormatInfoMap> formatMap(
+        BuildInternalFormatInfoMap());
+    return *formatMap;
 }
 
 static FormatSet BuildAllSizedInternalFormatSet()
@@ -1328,8 +1330,8 @@ GLenum GetUnsizedFormat(GLenum internalFormat)
 
 const FormatSet &GetAllSizedInternalFormats()
 {
-    static FormatSet formatSet = BuildAllSizedInternalFormatSet();
-    return formatSet;
+    static angle::base::NoDestructor<FormatSet> formatSet(BuildAllSizedInternalFormatSet());
+    return *formatSet;
 }
 
 AttributeType GetAttributeType(GLenum enumValue)
