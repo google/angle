@@ -22,6 +22,30 @@
       "revId": "22ec7dc9007f205522802d6822c6efc62a5698ed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f57bf0b_21f02e34",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1042,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2019-08-07T22:31:40Z",
+      "side": 1,
+      "message": "Yes, filed http://crbug.com/angleproject/3787",
+      "parentUuid": "960f23ee_15a7e520",
+      "range": {
+        "startLine": 1042,
+        "startChar": 66,
+        "endLine": 1042,
+        "endChar": 75
+      },
+      "revId": "22ec7dc9007f205522802d6822c6efc62a5698ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
