@@ -40,12 +40,8 @@ TIntermSymbol *GetValueFromNeighbor(TSymbolTable *symbolTable,
 }
 
 // If this is a helper invocation, retrieve the layer index (cube map face) from another invocation
-// in the quad that is not a helper.  Get the corresponding ma value from the same invocation as
-// well.  See comment in declareCoordTranslationFunction.
-void GetLayerFromNonHelperInvocation(TSymbolTable *symbolTable,
-                                     TIntermBlock *body,
-                                     TIntermTyped *l,
-                                     TIntermTyped *ma)
+// in the quad that is not a helper.  See comment in declareCoordTranslationFunction.
+void GetLayerFromNonHelperInvocation(TSymbolTable *symbolTable, TIntermBlock *body, TIntermTyped *l)
 {
     TVariable *gl_HelperInvocationVar =
         new TVariable(symbolTable, ImmutableString("gl_HelperInvocation"),
@@ -85,14 +81,6 @@ void GetLayerFromNonHelperInvocation(TSymbolTable *symbolTable,
     TIntermSymbol *lD =
         GetValueFromNeighbor(symbolTable, body, quadSwapDiagonalFloat, l->deepCopy(), floatType);
 
-    // Get the value of ma from the neighbors.  Similarly, these should be done outside `if`s.
-    TIntermSymbol *maH =
-        GetValueFromNeighbor(symbolTable, body, quadSwapHorizontalFloat, ma, floatType);
-    TIntermSymbol *maV =
-        GetValueFromNeighbor(symbolTable, body, quadSwapVerticalFloat, ma->deepCopy(), floatType);
-    TIntermSymbol *maD =
-        GetValueFromNeighbor(symbolTable, body, quadSwapDiagonalFloat, ma->deepCopy(), floatType);
-
     // Get the value of gl_HelperInvocation from the neighbors too.
     TIntermSymbol *horizontalIsHelper = GetValueFromNeighbor(
         symbolTable, body, quadSwapHorizontalBool, gl_HelperInvocation->deepCopy(), boolType);
@@ -108,12 +96,8 @@ void GetLayerFromNonHelperInvocation(TSymbolTable *symbolTable,
     TIntermTyped *lVD  = new TIntermTernary(verticalIsNonHelper, lV, lD);
     TIntermTyped *lHVD = new TIntermTernary(horizontalIsNonHelper, lH, lVD);
 
-    TIntermTyped *maVD  = new TIntermTernary(verticalIsNonHelper->deepCopy(), maV, maD);
-    TIntermTyped *maHVD = new TIntermTernary(horizontalIsNonHelper->deepCopy(), maH, maVD);
-
     TIntermBlock *helperBody = new TIntermBlock;
     helperBody->appendStatement(new TIntermBinary(EOpAssign, l->deepCopy(), lHVD));
-    helperBody->appendStatement(new TIntermBinary(EOpAssign, ma->deepCopy(), maHVD));
 
     TIntermIfElse *ifHelper = new TIntermIfElse(gl_HelperInvocation, helperBody, nullptr);
     body->appendStatement(ifHelper);
@@ -566,13 +550,14 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         // helper invocations generate UVs out of range).
         if (mIsFragmentShader)
         {
-            GetLayerFromNonHelperInvocation(mSymbolTable, body, l->deepCopy(), ma->deepCopy());
+            GetLayerFromNonHelperInvocation(mSymbolTable, body, l->deepCopy());
         }
 
         // layer < 1.5 (covering faces 0 and 1, corresponding to major axis being X) and layer < 3.5
         // (covering faces 2 and 3, corresponding to major axis being Y).  Used to determine which
         // of the three transformations to apply.  Previously, ma == |X| and ma == |Y| was used,
-        // which is no longer correct for helper invocations.
+        // which is no longer correct for helper invocations.  The value of ma is updated in each
+        // case for these invocations.
         isXMajor = new TIntermBinary(EOpLessThan, l->deepCopy(), CreateFloatNode(1.5f));
         isYMajor = new TIntermBinary(EOpLessThan, l->deepCopy(), CreateFloatNode(3.5f));
 
@@ -585,16 +570,22 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         TIntermSwizzle *dPdyZ = new TIntermSwizzle(dPdy->deepCopy(), {2});
 
         TIntermBlock *calculateXUcVc = new TIntermBlock;
+        calculateXUcVc->appendStatement(
+            new TIntermBinary(EOpAssign, ma->deepCopy(), absX->deepCopy()));
         TransformXMajor(calculateXUcVc, x, y, z, uc, vc);
         TransformXMajor(calculateXUcVc, dPdxX, dPdxY, dPdxZ, dUdx, dVdx);
         TransformXMajor(calculateXUcVc, dPdyX, dPdyY, dPdyZ, dUdy, dVdy);
 
         TIntermBlock *calculateYUcVc = new TIntermBlock;
+        calculateYUcVc->appendStatement(
+            new TIntermBinary(EOpAssign, ma->deepCopy(), absY->deepCopy()));
         TransformYMajor(calculateYUcVc, x, y, z, uc, vc);
         TransformYMajor(calculateYUcVc, dPdxX, dPdxY, dPdxZ, dUdx, dVdx);
         TransformYMajor(calculateYUcVc, dPdyX, dPdyY, dPdyZ, dUdy, dVdy);
 
         TIntermBlock *calculateZUcVc = new TIntermBlock;
+        calculateZUcVc->appendStatement(
+            new TIntermBinary(EOpAssign, ma->deepCopy(), absZ->deepCopy()));
         TransformZMajor(calculateZUcVc, x, y, z, uc, vc);
         TransformZMajor(calculateZUcVc, dPdxX, dPdxY, dPdxZ, dUdx, dVdx);
         TransformZMajor(calculateZUcVc, dPdyX, dPdyY, dPdyZ, dUdy, dVdy);
