@@ -359,8 +359,8 @@ def set_working_dir():
 def get_basic_mangled_name(basic):
     index = basic_types_enumeration.index(basic)
     if index < 26:
-        return chr(ord('A') + index)
-    return chr(ord('a') + index - 26)
+        return '0' + chr(ord('A') + index)
+    return '0' + chr(ord('a') + index - 26)
 
 
 levels = ['ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS']
