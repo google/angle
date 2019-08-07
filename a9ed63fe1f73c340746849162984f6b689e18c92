@@ -128,6 +128,24 @@
       "revId": "a9ed63fe1f73c340746849162984f6b689e18c92",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7eff308b_05f162c3",
+        "filename": "util/osx/OSXWindow.mm",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-07T21:44:41Z",
+      "side": 1,
+      "message": "I\u0027d prefer if we could keep that. Could you restore the changes to this file?",
+      "parentUuid": "ecb469b9_d12fdbc9",
+      "revId": "a9ed63fe1f73c340746849162984f6b689e18c92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
