@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "960f23ee_15a7e520",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1042,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-08-07T22:05:06Z",
+      "side": 1,
+      "message": "I thought the original plan to get rid of destructors was to make this a constexpr instead of static?\nShould we file a follow-up bug about the things we wanted to optimize while getting rid of static initializers?",
+      "range": {
+        "startLine": 1042,
+        "startChar": 66,
+        "endLine": 1042,
+        "endChar": 75
+      },
+      "revId": "22ec7dc9007f205522802d6822c6efc62a5698ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
