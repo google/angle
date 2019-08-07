@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d92ee08_2be171d9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-08-07T16:57:15Z",
+      "side": 1,
+      "message": "kinda want to remove this",
+      "revId": "96abbb1a331ecbba5e1532099f6e3f1681080a3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
