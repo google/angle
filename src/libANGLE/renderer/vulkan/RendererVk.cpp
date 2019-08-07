@@ -1279,6 +1279,7 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 
     if (IsWindows() && IsAMD(mPhysicalDeviceProperties.vendorID))
     {
+        // Disabled on AMD/windows due to buggy behavior.
         mFeatures.disallowSeamfulCubeMapEmulation.enabled = true;
     }
 

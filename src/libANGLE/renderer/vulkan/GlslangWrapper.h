@@ -29,14 +29,14 @@ class GlslangWrapper
     static angle::Result GetShaderCode(vk::Context *context,
                                        const gl::Caps &glCaps,
                                        bool enableLineRasterEmulation,
-                                       bool enableSeamfulCubeMapEmulation,
+                                       bool enableSubgroupOps,
                                        const gl::ShaderMap<std::string> &shaderSources,
                                        gl::ShaderMap<std::vector<uint32_t>> *shaderCodesOut);
 
   private:
     static angle::Result GetShaderCodeImpl(vk::Context *context,
                                            const gl::Caps &glCaps,
-                                           bool enableSeamfulCubeMapEmulation,
+                                           bool enableSubgroupOps,
                                            const gl::ShaderMap<std::string> &shaderSources,
                                            gl::ShaderMap<std::vector<uint32_t>> *shaderCodesOut);
 };

@@ -39,9 +39,56 @@ TIntermSymbol *GetValueFromNeighbor(TSymbolTable *symbolTable,
     return neighbor;
 }
 
+// Calculate the difference of a value with another invocation in the quad.  Used to emulate
+// GetValueFromNeighbor where subgroup operations are not present.
+//
+// See comment in declareCoordTranslationFunction.
+TIntermSymbol *GetDiffWithNeighbor(TSymbolTable *symbolTable,
+                                   TIntermBlock *body,
+                                   TFunction *dFdxyFine,
+                                   TIntermTyped *variable,
+                                   const TType *variableType)
+{
+    TIntermTyped *neighborValue =
+        TIntermAggregate::CreateRawFunctionCall(*dFdxyFine, new TIntermSequence({variable}));
+    TIntermTyped *absNeighborValue = new TIntermUnary(EOpAbs, neighborValue, nullptr);
+
+    TIntermSymbol *neighbor = new TIntermSymbol(CreateTempVariable(symbolTable, variableType));
+    body->appendStatement(CreateTempInitDeclarationNode(&neighbor->variable(), absNeighborValue));
+
+    return neighbor;
+}
+
+// Used to emulate GetValueFromNeighbor with bool values.
+TIntermSymbol *IsNeighborNonHelper(TSymbolTable *symbolTable,
+                                   TIntermBlock *body,
+                                   TFunction *dFdxyFine,
+                                   TIntermTyped *gl_HelperInvocation)
+{
+    const TType *boolType  = StaticType::GetBasic<EbtBool>();
+    const TType *floatType = StaticType::GetBasic<EbtFloat>();
+
+    TIntermTyped *gl_HelperInvocationAsFloat =
+        TIntermAggregate::CreateConstructor(*floatType, new TIntermSequence({gl_HelperInvocation}));
+    TIntermSymbol *diffWithNeighbor =
+        GetDiffWithNeighbor(symbolTable, body, dFdxyFine, gl_HelperInvocationAsFloat, floatType);
+
+    TIntermTyped *isNeighborNonHelperValue =
+        new TIntermBinary(EOpGreaterThan, diffWithNeighbor, CreateFloatNode(0.5f));
+    TIntermSymbol *isNeighborNonHelper =
+        new TIntermSymbol(CreateTempVariable(symbolTable, boolType));
+    body->appendStatement(
+        CreateTempInitDeclarationNode(&isNeighborNonHelper->variable(), isNeighborNonHelperValue));
+
+    return isNeighborNonHelper;
+}
+
 // If this is a helper invocation, retrieve the layer index (cube map face) from another invocation
 // in the quad that is not a helper.  See comment in declareCoordTranslationFunction.
-void GetLayerFromNonHelperInvocation(TSymbolTable *symbolTable, TIntermBlock *body, TIntermTyped *l)
+void GetLayerFromNonHelperInvocation(TSymbolTable *symbolTable,
+                                     TIntermBlock *body,
+                                     TIntermTyped *l,
+                                     bool useSubgroupOps)
 {
     TVariable *gl_HelperInvocationVar =
         new TVariable(symbolTable, ImmutableString("gl_HelperInvocation"),
@@ -50,48 +97,97 @@ void GetLayerFromNonHelperInvocation(TSymbolTable *symbolTable, TIntermBlock *bo
 
     const TType *boolType  = StaticType::GetBasic<EbtBool>();
     const TType *floatType = StaticType::GetBasic<EbtFloat>();
-    TFunction *quadSwapHorizontalBool =
-        new TFunction(symbolTable, ImmutableString("subgroupQuadSwapHorizontal"),
-                      SymbolType::AngleInternal, boolType, true);
-    TFunction *quadSwapHorizontalFloat =
-        new TFunction(symbolTable, ImmutableString("subgroupQuadSwapHorizontal"),
-                      SymbolType::AngleInternal, floatType, true);
-    TFunction *quadSwapVerticalBool =
-        new TFunction(symbolTable, ImmutableString("subgroupQuadSwapVertical"),
-                      SymbolType::AngleInternal, boolType, true);
-    TFunction *quadSwapVerticalFloat =
-        new TFunction(symbolTable, ImmutableString("subgroupQuadSwapVertical"),
-                      SymbolType::AngleInternal, floatType, true);
-    TFunction *quadSwapDiagonalFloat =
-        new TFunction(symbolTable, ImmutableString("subgroupQuadSwapDiagonal"),
-                      SymbolType::AngleInternal, floatType, true);
 
-    quadSwapHorizontalBool->addParameter(CreateTempVariable(symbolTable, boolType));
-    quadSwapVerticalBool->addParameter(CreateTempVariable(symbolTable, boolType));
-    quadSwapHorizontalFloat->addParameter(CreateTempVariable(symbolTable, floatType));
-    quadSwapVerticalFloat->addParameter(CreateTempVariable(symbolTable, floatType));
-    quadSwapDiagonalFloat->addParameter(CreateTempVariable(symbolTable, floatType));
+    TIntermSymbol *lH;
+    TIntermSymbol *lV;
+    TIntermSymbol *lD;
 
-    // Get the layer from the horizontal, vertical and diagonal neighbor.  These should be done
-    // outside `if`s so the non-helper thread is not turned inactive.
-    TIntermSymbol *lH =
-        GetValueFromNeighbor(symbolTable, body, quadSwapHorizontalFloat, l, floatType);
-    TIntermSymbol *lV =
-        GetValueFromNeighbor(symbolTable, body, quadSwapVerticalFloat, l->deepCopy(), floatType);
-    TIntermSymbol *lD =
-        GetValueFromNeighbor(symbolTable, body, quadSwapDiagonalFloat, l->deepCopy(), floatType);
+    TIntermTyped *horizontalIsNonHelper;
+    TIntermTyped *verticalIsNonHelper;
 
-    // Get the value of gl_HelperInvocation from the neighbors too.
-    TIntermSymbol *horizontalIsHelper = GetValueFromNeighbor(
-        symbolTable, body, quadSwapHorizontalBool, gl_HelperInvocation->deepCopy(), boolType);
-    TIntermSymbol *verticalIsHelper = GetValueFromNeighbor(
-        symbolTable, body, quadSwapVerticalBool, gl_HelperInvocation->deepCopy(), boolType);
+    if (useSubgroupOps)
+    {
+        TFunction *quadSwapHorizontalBool =
+            new TFunction(symbolTable, ImmutableString("subgroupQuadSwapHorizontal"),
+                          SymbolType::AngleInternal, boolType, true);
+        TFunction *quadSwapHorizontalFloat =
+            new TFunction(symbolTable, ImmutableString("subgroupQuadSwapHorizontal"),
+                          SymbolType::AngleInternal, floatType, true);
+        TFunction *quadSwapVerticalBool =
+            new TFunction(symbolTable, ImmutableString("subgroupQuadSwapVertical"),
+                          SymbolType::AngleInternal, boolType, true);
+        TFunction *quadSwapVerticalFloat =
+            new TFunction(symbolTable, ImmutableString("subgroupQuadSwapVertical"),
+                          SymbolType::AngleInternal, floatType, true);
+        TFunction *quadSwapDiagonalFloat =
+            new TFunction(symbolTable, ImmutableString("subgroupQuadSwapDiagonal"),
+                          SymbolType::AngleInternal, floatType, true);
 
-    // Note(syoussefi): if the sampling is done inside an if with a non-uniform condition, it's not
-    // enough to test if the neighbor is not a helper, we should also check if it's active.
-    TIntermTyped *horizontalIsNonHelper =
-        new TIntermUnary(EOpLogicalNot, horizontalIsHelper, nullptr);
-    TIntermTyped *verticalIsNonHelper = new TIntermUnary(EOpLogicalNot, verticalIsHelper, nullptr);
+        quadSwapHorizontalBool->addParameter(CreateTempVariable(symbolTable, boolType));
+        quadSwapVerticalBool->addParameter(CreateTempVariable(symbolTable, boolType));
+        quadSwapHorizontalFloat->addParameter(CreateTempVariable(symbolTable, floatType));
+        quadSwapVerticalFloat->addParameter(CreateTempVariable(symbolTable, floatType));
+        quadSwapDiagonalFloat->addParameter(CreateTempVariable(symbolTable, floatType));
+
+        // Get the layer from the horizontal, vertical and diagonal neighbor.  These should be done
+        // outside `if`s so the non-helper thread is not turned inactive.
+        lH = GetValueFromNeighbor(symbolTable, body, quadSwapHorizontalFloat, l, floatType);
+        lV = GetValueFromNeighbor(symbolTable, body, quadSwapVerticalFloat, l->deepCopy(),
+                                  floatType);
+        lD = GetValueFromNeighbor(symbolTable, body, quadSwapDiagonalFloat, l->deepCopy(),
+                                  floatType);
+
+        // Get the value of gl_HelperInvocation from the neighbors too.
+        TIntermSymbol *horizontalIsHelper = GetValueFromNeighbor(
+            symbolTable, body, quadSwapHorizontalBool, gl_HelperInvocation->deepCopy(), boolType);
+        TIntermSymbol *verticalIsHelper = GetValueFromNeighbor(
+            symbolTable, body, quadSwapVerticalBool, gl_HelperInvocation->deepCopy(), boolType);
+
+        // Note(syoussefi): if the sampling is done inside an if with a non-uniform condition, it's
+        // not enough to test if the neighbor is not a helper, we should also check if it's active.
+        horizontalIsNonHelper = new TIntermUnary(EOpLogicalNot, horizontalIsHelper, nullptr);
+        verticalIsNonHelper   = new TIntermUnary(EOpLogicalNot, verticalIsHelper, nullptr);
+    }
+    else
+    {
+        TFunction *dFdxFineBool  = new TFunction(symbolTable, ImmutableString("dFdxFine"),
+                                                SymbolType::AngleInternal, boolType, true);
+        TFunction *dFdxFineFloat = new TFunction(symbolTable, ImmutableString("dFdxFine"),
+                                                 SymbolType::AngleInternal, floatType, true);
+        TFunction *dFdyFineBool  = new TFunction(symbolTable, ImmutableString("dFdyFine"),
+                                                SymbolType::AngleInternal, boolType, true);
+        TFunction *dFdyFineFloat = new TFunction(symbolTable, ImmutableString("dFdyFine"),
+                                                 SymbolType::AngleInternal, floatType, true);
+
+        dFdxFineBool->addParameter(CreateTempVariable(symbolTable, boolType));
+        dFdyFineBool->addParameter(CreateTempVariable(symbolTable, boolType));
+        dFdxFineFloat->addParameter(CreateTempVariable(symbolTable, floatType));
+        dFdyFineFloat->addParameter(CreateTempVariable(symbolTable, floatType));
+
+        // layerQuadSwapHelper = gl_HelperInvocation ? 0.0 : layer;
+        TIntermTyped *layerQuadSwapHelperValue =
+            new TIntermTernary(gl_HelperInvocation->deepCopy(), CreateZeroNode(*floatType), l);
+        TIntermSymbol *layerQuadSwapHelper =
+            new TIntermSymbol(CreateTempVariable(symbolTable, floatType));
+        body->appendStatement(CreateTempInitDeclarationNode(&layerQuadSwapHelper->variable(),
+                                                            layerQuadSwapHelperValue));
+
+        // Get the layer from the horizontal, vertical and diagonal neighbor.  These should be done
+        // outside `if`s so the non-helper thread is not turned inactive.
+        lH = GetDiffWithNeighbor(symbolTable, body, dFdxFineFloat, layerQuadSwapHelper, floatType);
+        lV = GetDiffWithNeighbor(symbolTable, body, dFdyFineFloat, layerQuadSwapHelper->deepCopy(),
+                                 floatType);
+        lD = GetDiffWithNeighbor(symbolTable, body, dFdxFineFloat, lV->deepCopy(), floatType);
+
+        // Get the value of gl_HelperInvocation from the neighbors too.
+        //
+        // Note(syoussefi): if the sampling is done inside an if with a non-uniform condition, it's
+        // not enough to test if the neighbor is not a helper, we should also check if it's active.
+        horizontalIsNonHelper =
+            IsNeighborNonHelper(symbolTable, body, dFdxFineBool, gl_HelperInvocation->deepCopy());
+        verticalIsNonHelper =
+            IsNeighborNonHelper(symbolTable, body, dFdyFineBool, gl_HelperInvocation->deepCopy());
+    }
 
     TIntermTyped *lVD  = new TIntermTernary(verticalIsNonHelper, lV, lD);
     TIntermTyped *lHVD = new TIntermTernary(horizontalIsNonHelper, lH, lVD);
@@ -163,10 +259,13 @@ void TransformZMajor(TIntermBlock *block,
 class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
 {
   public:
-    RewriteCubeMapSamplersAs2DArrayTraverser(TSymbolTable *symbolTable, bool isFragmentShader)
+    RewriteCubeMapSamplersAs2DArrayTraverser(TSymbolTable *symbolTable,
+                                             bool isFragmentShader,
+                                             bool useSubgroupOps)
         : TIntermTraverser(true, true, true, symbolTable),
           mCubeXYZToArrayUVL(nullptr),
           mIsFragmentShader(isFragmentShader),
+          mUseSubgroupOps(useSubgroupOps),
           mCoordTranslationFunctionDecl(nullptr)
     {}
 
@@ -543,14 +642,15 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         // incorrect and the wrong mip would be selected.
         //
         // We therefore use gl_HelperInvocation to identify these invocations and subgroupQuadSwap*
-        // operations to retrieve the layer from a non-helper invocation.  As a result, the UVs
-        // calculated for the helper invocations correspond to the same face and end up outside the
-        // [0, 1] range, but result in correct derivatives.  Indeed, sampling from any other kind of
-        // texture using varyings that range from [0, 1] would follow the same behavior (where
-        // helper invocations generate UVs out of range).
+        // (where available) or dFdx/dFdy (emulating subgroupQuadSwap*) to retrieve the layer from a
+        // non-helper invocation.  As a result, the UVs calculated for the helper invocations
+        // correspond to the same face and end up outside the [0, 1] range, but result in correct
+        // derivatives.  Indeed, sampling from any other kind of texture using varyings that range
+        // from [0, 1] would follow the same behavior (where helper invocations generate UVs out of
+        // range).
         if (mIsFragmentShader)
         {
-            GetLayerFromNonHelperInvocation(mSymbolTable, body, l->deepCopy());
+            GetLayerFromNonHelperInvocation(mSymbolTable, body, l->deepCopy(), mUseSubgroupOps);
         }
 
         // layer < 1.5 (covering faces 0 and 1, corresponding to major axis being X) and layer < 3.5
@@ -819,6 +919,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
     TFunction *mCubeXYZToArrayUVL;
 
     bool mIsFragmentShader;
+    bool mUseSubgroupOps;
 
     // Stored to be put before the first function after the pass.
     TIntermFunctionDefinition *mCoordTranslationFunctionDecl;
@@ -828,9 +929,11 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
 
 void RewriteCubeMapSamplersAs2DArray(TIntermBlock *root,
                                      TSymbolTable *symbolTable,
-                                     bool isFragmentShader)
+                                     bool isFragmentShader,
+                                     bool useSubgroupOps)
 {
-    RewriteCubeMapSamplersAs2DArrayTraverser traverser(symbolTable, isFragmentShader);
+    RewriteCubeMapSamplersAs2DArrayTraverser traverser(symbolTable, isFragmentShader,
+                                                       useSubgroupOps);
     root->traverse(&traverser);
     traverser.updateTree();
 

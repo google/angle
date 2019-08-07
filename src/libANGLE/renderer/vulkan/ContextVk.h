@@ -313,7 +313,11 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     void updateScissor(const gl::State &glState);
 
-    bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
+    bool emulateSeamfulCubeMapSampling(bool *useSubgroupOpsOut) const
+    {
+        *useSubgroupOpsOut = mEmulateSeamfulCubeMapSamplingWithSubgroupOps;
+        return mEmulateSeamfulCubeMapSampling;
+    }
 
   private:
     // Dirty bits.
@@ -472,7 +476,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     void waitForSwapchainImageIfNecessary();
 
-    bool shouldEmulateSeamfulCubeMapSampling() const;
+    bool shouldEmulateSeamfulCubeMapSampling(bool *useSubgroupOpsOut) const;
 
     vk::PipelineHelper *mCurrentGraphicsPipeline;
     vk::PipelineAndSerial *mCurrentComputePipeline;
@@ -535,8 +539,10 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // at the end of the command buffer to make that write available to the host.
     bool mIsAnyHostVisibleBufferWritten;
 
-    // Whether this context should do seamful cube map sampling emulation.
+    // Whether this context should do seamful cube map sampling emulation, and whether subgroup
+    // operations should be used.
     bool mEmulateSeamfulCubeMapSampling;
+    bool mEmulateSeamfulCubeMapSamplingWithSubgroupOps;
 
     struct DriverUniformsDescriptorSet
     {

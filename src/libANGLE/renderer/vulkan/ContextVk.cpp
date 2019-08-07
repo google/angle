@@ -238,6 +238,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mClearColorMask(kAllColorChannelsMask),
       mFlipYForCurrentSurface(false),
       mIsAnyHostVisibleBufferWritten(false),
+      mEmulateSeamfulCubeMapSampling(false),
+      mEmulateSeamfulCubeMapSamplingWithSubgroupOps(false),
       mLastCompletedQueueSerial(renderer->nextSerial()),
       mCurrentQueueSerial(renderer->nextSerial()),
       mPoolAllocator(kDefaultPoolAllocatorPageSize, 1),
@@ -441,7 +443,8 @@ angle::Result ContextVk::initialize()
         ANGLE_TRY(synchronizeCpuGpuTime());
     }
 
-    mEmulateSeamfulCubeMapSampling = shouldEmulateSeamfulCubeMapSampling();
+    mEmulateSeamfulCubeMapSampling =
+        shouldEmulateSeamfulCubeMapSampling(&mEmulateSeamfulCubeMapSamplingWithSubgroupOps);
 
     return angle::Result::Continue;
 }
@@ -2896,9 +2899,10 @@ vk::DescriptorSetLayoutDesc ContextVk::getDriverUniformsDescriptorSetDesc(
     return desc;
 }
 
-bool ContextVk::shouldEmulateSeamfulCubeMapSampling() const
+bool ContextVk::shouldEmulateSeamfulCubeMapSampling(bool *useSubgroupOpsOut) const
 {
-    if (mState.getClientMajorVersion() != 2)
+    // Only allow seamful cube map sampling in non-webgl ES2.
+    if (mState.getClientMajorVersion() != 2 || mState.isWebGL())
     {
         return false;
     }
@@ -2908,17 +2912,15 @@ bool ContextVk::shouldEmulateSeamfulCubeMapSampling() const
         return false;
     }
 
+    // Use subgroup ops where available.
     constexpr VkSubgroupFeatureFlags kSeamfulCubeMapSubgroupOperations =
         VK_SUBGROUP_FEATURE_BASIC_BIT | VK_SUBGROUP_FEATURE_BALLOT_BIT |
         VK_SUBGROUP_FEATURE_QUAD_BIT;
     const VkSubgroupFeatureFlags deviceSupportedOperations =
         mRenderer->getPhysicalDeviceSubgroupProperties().supportedOperations;
-    bool hasSeamfulCubeMapSubgroupOperations =
-        (deviceSupportedOperations & kSeamfulCubeMapSubgroupOperations) ==
-        kSeamfulCubeMapSubgroupOperations;
+    *useSubgroupOpsOut = (deviceSupportedOperations & kSeamfulCubeMapSubgroupOperations) ==
+                         kSeamfulCubeMapSubgroupOperations;
 
-    // Only enable seamful cube map emulation if the necessary subgroup operations are supported.
-    // Without them, we cannot remove derivative-related artifacts caused by helper invocations.
-    return hasSeamfulCubeMapSubgroupOperations;
+    return true;
 }
 }  // namespace rx

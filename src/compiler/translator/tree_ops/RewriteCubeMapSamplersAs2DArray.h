@@ -19,7 +19,8 @@ class TSymbolTable;
 
 void RewriteCubeMapSamplersAs2DArray(TIntermBlock *root,
                                      TSymbolTable *symbolTable,
-                                     bool isFragmentShader);
+                                     bool isFragmentShader,
+                                     bool useSubgroupOps);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_REWRITECUBEMAPSAMPLERSAS2DARRAY_H_

@@ -329,25 +329,6 @@
 3306 VULKAN ANDROID : dEQP-GLES2.functional.polygon_offset.fixed16_factor_1_slope = FAIL
 3307 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.projected.nearest_linear = FAIL
 
-// Seamful cubemap sampling failures on Android (due to missing support subgroupQuad* operations).
-3243 VULKAN ANDROID : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_clamp = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_mirror = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_clamp = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_mirror = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_clamp = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_repeat = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_mirror = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_clamp = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_repeat = FAIL
-3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_mirror = FAIL
-
 // These tests also fail on AMD windows driver as it is not allowed to use emulation due to errors.
 3243 VULKAN WIN AMD : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
 3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
