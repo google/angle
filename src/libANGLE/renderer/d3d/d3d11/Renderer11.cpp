@@ -2773,14 +2773,12 @@ angle::Result Renderer11::compileToExecutable(d3d::Context *context,
 
     UINT flags = D3DCOMPILE_OPTIMIZATION_LEVEL2;
 
-    if (gl::DebugAnnotationsActive())
-    {
-#ifndef NDEBUG
-        flags = D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-        flags |= D3DCOMPILE_DEBUG;
-    }
+#if defined(ANGLE_ENABLE_DEBUG_TRACE)
+#    ifndef NDEBUG
+    flags = D3DCOMPILE_SKIP_OPTIMIZATION;
+#    endif  // NDEBUG
+    flags |= D3DCOMPILE_DEBUG;
+#endif  // defined(ANGLE_ENABLE_DEBUG_TRACE)
 
     if (workarounds.enableIEEEStrictness)
         flags |= D3DCOMPILE_IEEE_STRICTNESS;
