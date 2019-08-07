@@ -1077,7 +1077,6 @@ foreach(is_shared_library,
     }
 
     configs += [ ":debug_annotations_config" ]
-    configs -= [ "${angle_root}:extra_warnings" ]
 
     public_configs += [ ":angle_util_config" ]
 

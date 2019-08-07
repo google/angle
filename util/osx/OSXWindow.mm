@@ -12,6 +12,7 @@
 // Include Carbon to use the keycode names in Carbon's Event.h
 #include <Carbon/Carbon.h>
 
+#include "anglebase/no_destructor.h"
 #include "common/debug.h"
 
 // On OSX 10.12 a number of AppKit interfaces have been renamed for consistency, and the previous
@@ -23,7 +24,11 @@
 // Some events such as "ShouldTerminate" are sent to the whole application so we keep a list of
 // all the windows in order to forward the event to each of them. However this and calling pushEvent
 // in ApplicationDelegate is inherently unsafe in a multithreaded environment.
-static std::set<OSXWindow *> gAllWindows;
+static std::set<OSXWindow *> &AllWindows()
+{
+    static angle::base::NoDestructor<std::set<OSXWindow *>> allWindows;
+    return *allWindows;
+}
 
 @interface Application : NSApplication
 @end
@@ -33,7 +38,7 @@ static std::set<OSXWindow *> gAllWindows;
 {
     if ([nsEvent type] == NSApplicationDefined)
     {
-        for (auto window : gAllWindows)
+        for (auto window : AllWindows())
         {
             if ([window->getNSWindow() windowNumber] == [nsEvent windowNumber])
             {
@@ -56,7 +61,7 @@ static std::set<OSXWindow *> gAllWindows;
 {
     Event event;
     event.Type = Event::EVENT_CLOSED;
-    for (auto window : gAllWindows)
+    for (auto window : AllWindows())
     {
         window->pushEvent(event);
     }
@@ -662,13 +667,13 @@ bool OSXWindow::initialize(const std::string &name, size_t width, size_t height)
     mWidth  = width;
     mHeight = height;
 
-    gAllWindows.insert(this);
+    AllWindows().insert(this);
     return true;
 }
 
 void OSXWindow::destroy()
 {
-    gAllWindows.erase(this);
+    AllWindows().erase(this);
 
     [mView release];
     mView = nil;
