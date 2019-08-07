@@ -42,6 +42,52 @@
     },
     {
       "key": {
+        "uuid": "ccc703ed_6623ea38",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-07T17:39:06Z",
+      "side": 1,
+      "message": "nit: remove \"more\"",
+      "range": {
+        "startLine": 214,
+        "startChar": 91,
+        "endLine": 214,
+        "endChar": 95
+      },
+      "revId": "96abbb1a331ecbba5e1532099f6e3f1681080a3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5793f236_f516fc6e",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-07T17:39:06Z",
+      "side": 1,
+      "message": "A2B10G10R10\u0027s components are not ...",
+      "range": {
+        "startLine": 214,
+        "startChar": 7,
+        "endLine": 214,
+        "endChar": 47
+      },
+      "revId": "96abbb1a331ecbba5e1532099f6e3f1681080a3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e8150f7a_b084b49e",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
         "patchSetId": 4
