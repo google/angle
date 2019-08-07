@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df821cd1_e97b0117",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1444,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-07T18:03:47Z",
+      "side": 1,
+      "message": "I recommend you also instantiate a VkImageSubresourceLayers struct here and use it below in the two places. override as necessary.\n\nBTW - does this work for both 2D array and 3D?",
+      "range": {
+        "startLine": 1443,
+        "startChar": 0,
+        "endLine": 1444,
+        "endChar": 63
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4972af7_48fe11e8",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-07T18:03:47Z",
+      "side": 1,
+      "message": "looks wrong here",
+      "range": {
+        "startLine": 1470,
+        "startChar": 37,
+        "endLine": 1470,
+        "endChar": 51
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66257752_cb49f362",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1489,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-07T18:03:47Z",
+      "side": 1,
+      "message": "here you can also update the VkImageSubresourceLayers",
+      "range": {
+        "startLine": 1485,
+        "startChar": 2,
+        "endLine": 1489,
+        "endChar": 30
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "833fce09_cb5559e6",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1178,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-07T18:03:47Z",
+      "side": 1,
+      "message": "feels like this maybe should be a helper too",
+      "range": {
+        "startLine": 1177,
+        "startChar": 0,
+        "endLine": 1178,
+        "endChar": 94
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ff3bce0_f635f0a8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1498,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-07T18:03:47Z",
+      "side": 1,
+      "message": "maybe this should be some kind of helper, like hasLayers?",
+      "range": {
+        "startLine": 1494,
+        "startChar": 0,
+        "endLine": 1498,
+        "endChar": 5
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb427f8d_b810854c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-07T18:03:47Z",
+      "side": 1,
+      "message": "same as below",
+      "range": {
+        "startLine": 283,
+        "startChar": 18,
+        "endLine": 283,
+        "endChar": 37
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "055d24c0_304d37e1",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-07T18:03:47Z",
+      "side": 1,
+      "message": "nit: 3DRenderTargets spelling to be consistent",
+      "range": {
+        "startLine": 317,
+        "startChar": 32,
+        "endLine": 317,
+        "endChar": 48
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b88f7572_d8604201",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-07T18:03:47Z",
+      "side": 1,
+      "message": "can you investigate this? looks like a real angle bug.",
+      "range": {
+        "startLine": 567,
+        "startChar": 0,
+        "endLine": 568,
+        "endChar": 61
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
