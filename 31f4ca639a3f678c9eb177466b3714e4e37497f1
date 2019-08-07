@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "b93c6be6_b8538a6d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1444,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-07T18:14:35Z",
+      "side": 1,
+      "message": "How do each of these depth checks work with \"\u003e 1\" when the 3D texture has a depth of 1?   Will the layer count have to contain the value we need anyway in that case?",
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a4972af7_48fe11e8",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
