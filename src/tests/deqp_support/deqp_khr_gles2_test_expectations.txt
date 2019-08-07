@@ -39,7 +39,7 @@
 3457 VULKAN : KHR-GLES2.core.internalformat.texture2d.depth_stencil_unsigned_int_24_8_depth_stencil = FAIL
 
 // 3d texture framebuffer tests
-3188 VULKAN : KHR-GLES2.texture_3d.framebuffer_* = SKIP
+3188 VULKAN : KHR-GLES2.texture_3d.framebuffer_texture.rgba8 = SKIP
 
 // Unclear what is happening here, failing to validate a 2D texture format
 3190 VULKAN : KHR-GLES2.texture_3d.copy_sub_image.rgba8 = SKIP

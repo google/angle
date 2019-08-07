@@ -6415,8 +6415,65 @@ bool ValidateFramebufferTexture3DOES(Context *context,
                                      GLint level,
                                      GLint zoffset)
 {
-    UNIMPLEMENTED();
-    return false;
+    // We don't call into a base ValidateFramebufferTexture3D here because
+    // it doesn't exist for OpenGL ES. This function is replaced by
+    // FramebufferTextureLayer in ES 3.x, which has broader support.
+    if (!context->getExtensions().texture3DOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    // Attachments are required to be bound to level 0 without ES3 or the
+    // GL_OES_fbo_render_mipmap extension
+    if (context->getClientMajorVersion() < 3 && !context->getExtensions().fboRenderMipmap &&
+        level != 0)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidFramebufferTextureLevel);
+        return false;
+    }
+
+    if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
+    {
+        return false;
+    }
+
+    if (texture != 0)
+    {
+        gl::Texture *tex = context->getTexture(texture);
+        ASSERT(tex);
+
+        const gl::Caps &caps = context->getCaps();
+
+        switch (textargetPacked)
+        {
+            case TextureTarget::_3D:
+            {
+                if (level > gl::log2(caps.max3DTextureSize))
+                {
+                    context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
+                    return false;
+                }
+                if (static_cast<size_t>(zoffset) >= caps.max3DTextureSize)
+                {
+                    context->validationError(GL_INVALID_VALUE, kInvalidZOffset);
+                    return false;
+                }
+                if (tex->getType() != TextureType::_3D)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidTextureType);
+                    return false;
+                }
+            }
+            break;
+
+            default:
+                context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
+                return false;
+        }
+    }
+
+    return true;
 }
 
 bool ValidateGenBuffers(Context *context, GLint n, GLuint *)
