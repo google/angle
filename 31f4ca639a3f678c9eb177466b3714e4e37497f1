@@ -84,6 +84,48 @@
     },
     {
       "key": {
+        "uuid": "e6ac828a_209389d1",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1444,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T21:00:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d2ea395_42d88fa9",
+      "range": {
+        "startLine": 1443,
+        "startChar": 0,
+        "endLine": 1444,
+        "endChar": 63
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5381b011_7ca4770c",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1444,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T21:00:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e5ca994_0fb5dada",
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4972af7_48fe11e8",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
@@ -131,6 +173,30 @@
     },
     {
       "key": {
+        "uuid": "06f382f8_b7bb2f28",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T21:00:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3132f164_933315eb",
+      "range": {
+        "startLine": 1470,
+        "startChar": 37,
+        "endLine": 1470,
+        "endChar": 51
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66257752_cb49f362",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
@@ -151,6 +217,30 @@
       "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "162a1e02_0e12ac22",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1489,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T21:00:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66257752_cb49f362",
+      "range": {
+        "startLine": 1485,
+        "startChar": 2,
+        "endLine": 1489,
+        "endChar": 30
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -177,6 +267,30 @@
     },
     {
       "key": {
+        "uuid": "2cd8ae0d_c28c333b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1178,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T21:00:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "833fce09_cb5559e6",
+      "range": {
+        "startLine": 1177,
+        "startChar": 0,
+        "endLine": 1178,
+        "endChar": 94
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ff3bce0_f635f0a8",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 4
@@ -188,6 +302,30 @@
       "writtenOn": "2019-08-07T18:03:47Z",
       "side": 1,
       "message": "maybe this should be some kind of helper, like hasLayers?",
+      "range": {
+        "startLine": 1494,
+        "startChar": 0,
+        "endLine": 1498,
+        "endChar": 5
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c00c5be2_1b4eb272",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1498,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T21:00:10Z",
+      "side": 1,
+      "message": "This seems suspiciously like the validation error that I can\u0027t reproduce, since this block of code speculatively creates 2D views of all the layers.  I\u0027m going to drop 3D from this section, as I don\u0027t believe it is necessary.",
+      "parentUuid": "0ff3bce0_f635f0a8",
       "range": {
         "startLine": 1494,
         "startChar": 0,
@@ -223,6 +361,30 @@
     },
     {
       "key": {
+        "uuid": "f6d02d73_c93b0d4c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T21:00:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb427f8d_b810854c",
+      "range": {
+        "startLine": 283,
+        "startChar": 18,
+        "endLine": 283,
+        "endChar": 37
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "055d24c0_304d37e1",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 4
@@ -243,6 +405,30 @@
       "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e518f66d_b4c334bf",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T21:00:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "055d24c0_304d37e1",
+      "range": {
+        "startLine": 317,
+        "startChar": 32,
+        "endLine": 317,
+        "endChar": 48
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
