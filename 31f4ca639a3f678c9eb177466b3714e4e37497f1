@@ -42,6 +42,48 @@
     },
     {
       "key": {
+        "uuid": "2e5ca994_0fb5dada",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1444,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T18:45:07Z",
+      "side": 1,
+      "message": "Yes, I believe a 3D texture with depth of 1 will only have one layer (0) and the logic still works.\n\nThat being said, if you see a better way of detecting that a texture is 3D, we can switch to it. That\u0027s the only indicator I\u0027ve been able to find at this level.  Maybe can be moved to a helper, like suggested .",
+      "parentUuid": "b93c6be6_b8538a6d",
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d2ea395_42d88fa9",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1444,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T18:45:07Z",
+      "side": 1,
+      "message": "Okay, I\u0027ll refactor a bit.  Yes, works for both.",
+      "parentUuid": "df821cd1_e97b0117",
+      "range": {
+        "startLine": 1443,
+        "startChar": 0,
+        "endLine": 1444,
+        "endChar": 63
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a4972af7_48fe11e8",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
@@ -53,6 +95,30 @@
       "writtenOn": "2019-08-07T18:03:47Z",
       "side": 1,
       "message": "looks wrong here",
+      "range": {
+        "startLine": 1470,
+        "startChar": 37,
+        "endLine": 1470,
+        "endChar": 51
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3132f164_933315eb",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T18:45:07Z",
+      "side": 1,
+      "message": "Ah, I\u0027ll update the multisampled section too.",
+      "parentUuid": "a4972af7_48fe11e8",
       "range": {
         "startLine": 1470,
         "startChar": 37,
@@ -191,6 +257,30 @@
       "writtenOn": "2019-08-07T18:03:47Z",
       "side": 1,
       "message": "can you investigate this? looks like a real angle bug.",
+      "range": {
+        "startLine": 567,
+        "startChar": 0,
+        "endLine": 568,
+        "endChar": 61
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfa629b2_87bc4b3e",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-07T18:45:07Z",
+      "side": 1,
+      "message": "Yes, intending to investigate, but didn\u0027t want to hold up general conformance progress, since I don\u0027t have a system available.",
+      "parentUuid": "b88f7572_d8604201",
       "range": {
         "startLine": 567,
         "startChar": 0,
