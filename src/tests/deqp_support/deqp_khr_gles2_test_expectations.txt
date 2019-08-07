@@ -29,12 +29,6 @@
 // fails on Nexus5X with GLES backend (hangs)
 //  91531 NEXUS5X GLES : conformance_more_* = SKIP
 
-// Failures with floating point extensions
-3451 D3D9 D3D11 OPENGL GLES : KHR-GLES2.core.internalformat.texture2d.rgb_half_float_rgb16f = FAIL
-3451 D3D9 D3D11 OPENGL GLES : KHR-GLES2.core.internalformat.texture2d.rgba_half_float_rgba16f = FAIL
-3451 D3D9 D3D11 OPENGL GLES : KHR-GLES2.core.internalformat.texture2d.rgb_half_float_rgb16f_linear = FAIL
-3451 D3D9 D3D11 OPENGL GLES : KHR-GLES2.core.internalformat.texture2d.rgba_half_float_rgba16f_linear = FAIL
-
 // Depth/stencil related failures.
 3457 VULKAN : KHR-GLES2.core.internalformat.texture2d.depth_stencil_unsigned_int_24_8_depth_stencil = FAIL
 
@@ -48,3 +42,9 @@
 3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.rgba_astc_* = SKIP
 3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.sgb8_alpha8_astc_* = SKIP
 3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.srgb8_alpha8_astc_* = SKIP
+
+// Bug in dEQP uses an incorrect enum (GL_HALF_FLOAT instead of GL_HALF_FLOAT_OES)
+3451 : KHR-GLES2.core.internalformat.texture2d.rgb_half_float_rgb16f = FAIL
+3451 : KHR-GLES2.core.internalformat.texture2d.rgba_half_float_rgba16f = FAIL
+3451 : KHR-GLES2.core.internalformat.texture2d.rgb_half_float_rgb16f_linear = FAIL
+3451 : KHR-GLES2.core.internalformat.texture2d.rgba_half_float_rgba16f_linear = FAIL
