@@ -1824,9 +1824,6 @@ void main()
 // Test that compond assignment operator for buffer variable is correctly handled.
 TEST_P(ShaderStorageBufferTest31, CompoundAssignmentOperator)
 {
-    // http://anglebug.com/2990
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kComputeShaderSource[] =
         R"(#version 310 es
 layout (local_size_x=1) in;
@@ -1945,9 +1942,6 @@ TEST_P(ShaderStorageBufferTest31, ReadonlyBinaryOperator)
 // Test that ssbo as an argument of a function can be translated.
 TEST_P(ShaderStorageBufferTest31, SSBOAsFunctionArgument)
 {
-    // http://anglebug.com/2990
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kComputeShaderSource[] =
         R"(#version 310 es
 layout(local_size_x = 1) in;
@@ -2006,9 +2000,6 @@ void main(void)
 // Test that ssbo as unary operand works well.
 TEST_P(ShaderStorageBufferTest31, SSBOAsUnaryOperand)
 {
-    // http://anglebug.com/2990
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kComputeShaderSource[] =
         R"(#version 310 es
 layout (local_size_x=1) in;
