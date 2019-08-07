@@ -55,7 +55,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl
                           size_t offsetsSize) const;
 
   private:
-    void onBeginEnd(const gl::Context *context);
+    void onBeginOrEnd(const gl::Context *context);
 
     // Cached buffer properties for faster descriptor set update and offset calculation.
     struct BoundBufferRange

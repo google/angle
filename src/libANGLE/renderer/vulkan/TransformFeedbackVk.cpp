@@ -37,7 +37,7 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
     contextVk->invalidateCurrentTransformFeedbackBuffers();
 
     vk::GetImpl(context)->onTransformFeedbackPauseResume();
-    onBeginEnd(context);
+    onBeginOrEnd(context);
 
     return angle::Result::Continue;
 }
@@ -54,7 +54,7 @@ angle::Result TransformFeedbackVk::end(const gl::Context *context)
     }
 
     vk::GetImpl(context)->onTransformFeedbackPauseResume();
-    onBeginEnd(context);
+    onBeginOrEnd(context);
 
     return angle::Result::Continue;
 }
@@ -217,7 +217,7 @@ void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
     }
 }
 
-void TransformFeedbackVk::onBeginEnd(const gl::Context *context)
+void TransformFeedbackVk::onBeginOrEnd(const gl::Context *context)
 {
     // Currently, we don't handle resources switching from read-only to writable and back correctly.
     // In the case of transform feedback, the attached buffers can switch between being written by
@@ -231,6 +231,7 @@ void TransformFeedbackVk::onBeginEnd(const gl::Context *context)
     FramebufferVk *framebufferVk       = vk::GetImpl(context->getState().getDrawFramebuffer());
     vk::FramebufferHelper *framebuffer = framebufferVk->getFramebuffer();
 
+    framebuffer->updateQueueSerial(contextVk->getCurrentQueueSerial());
     if (framebuffer->hasStartedRenderPass())
     {
         framebuffer->finishCurrentCommands(contextVk);
