@@ -146,6 +146,24 @@
       "revId": "a9ed63fe1f73c340746849162984f6b689e18c92",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f42a7664_86b52bdd",
+        "filename": "util/osx/OSXWindow.mm",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2019-08-07T21:51:18Z",
+      "side": 1,
+      "message": "Sure, sorry, I\u0027ll send a follow up.",
+      "parentUuid": "7eff308b_05f162c3",
+      "revId": "a9ed63fe1f73c340746849162984f6b689e18c92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
