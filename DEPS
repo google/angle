@@ -49,7 +49,7 @@ deps = {
   },
 
   '{angle_root}/build': {
-    'url': '{chromium_git}/chromium/src/build.git@54ea0e7fd122348de2f73ac21d1b6eafb9b78969',
+    'url': '{chromium_git}/chromium/src/build.git@680f9ea3db817c5e8d1e1ebca72a1e6f0dbec1da',
     'condition': 'not build_with_chromium',
   },
 
