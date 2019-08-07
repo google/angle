@@ -85,16 +85,21 @@ enum flags
 };
 enum Conversion
 {
-    kSintToSint   = 0x00000000,
-    kUintToUint   = 0x00000002,
-    kSintToFloat  = 0x00000004,
-    kUintToFloat  = 0x00000006,
-    kSnormToFloat = 0x00000008,
-    kUnormToFloat = 0x0000000A,
-    kFixedToFloat = 0x0000000C,
-    kFloatToFloat = 0x0000000E,
+    kSintToSint          = 0x00000000,
+    kUintToUint          = 0x00000002,
+    kSintToFloat         = 0x00000004,
+    kUintToFloat         = 0x00000006,
+    kSnormToFloat        = 0x00000008,
+    kUnormToFloat        = 0x0000000A,
+    kFixedToFloat        = 0x0000000C,
+    kFloatToFloat        = 0x0000000E,
+    kA2BGR10SintToSint   = 0x00000010,
+    kA2BGR10UintToUint   = 0x00000012,
+    kA2BGR10SintToFloat  = 0x00000014,
+    kA2BGR10UintToFloat  = 0x00000016,
+    kA2BGR10SnormToFloat = 0x00000018,
 };
-constexpr size_t kArrayLen = 0x00000010;
+constexpr size_t kArrayLen = 0x0000001A;
 }  // namespace ConvertVertex_comp
 
 namespace FullScreenQuad_vert

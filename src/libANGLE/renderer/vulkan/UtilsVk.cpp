@@ -70,6 +70,9 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
     bool srcIsUnorm = params.srcFormat->isUnorm();
     bool srcIsFixed = params.srcFormat->isFixed;
     bool srcIsFloat = params.srcFormat->isFloat();
+    bool srcIsA2BGR10 =
+        ((params.srcFormat->vertexAttribType == gl::VertexAttribType::UnsignedInt2101010) ||
+         (params.srcFormat->vertexAttribType == gl::VertexAttribType::Int2101010));
 
     bool destIsSint  = params.destFormat->isSint();
     bool destIsUint  = params.destFormat->isUint();
@@ -95,7 +98,34 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 
     uint32_t flags = 0;
 
-    if (srcIsSint && destIsSint)
+    if (srcIsA2BGR10)
+    {
+        if (srcIsSint && destIsSint)
+        {
+            flags |= ConvertVertex_comp::kA2BGR10SintToSint;
+        }
+        else if (srcIsUint && destIsUint)
+        {
+            flags |= ConvertVertex_comp::kA2BGR10UintToUint;
+        }
+        else if (srcIsSint)
+        {
+            flags |= ConvertVertex_comp::kA2BGR10SintToFloat;
+        }
+        else if (srcIsUint)
+        {
+            flags |= ConvertVertex_comp::kA2BGR10UintToFloat;
+        }
+        else if (srcIsSnorm)
+        {
+            flags |= ConvertVertex_comp::kA2BGR10SnormToFloat;
+        }
+        else
+        {
+            UNREACHABLE();
+        }
+    }
+    else if (srcIsSint && destIsSint)
     {
         flags |= ConvertVertex_comp::kSintToSint;
     }

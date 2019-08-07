@@ -597,10 +597,6 @@
 3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.18 = FAIL
 3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.24 = FAIL
 
-// vertex_type_2_10_10_10_rev:
-3193 VULKAN PIXEL2 : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.int2_10_10_10.* = SKIP
-3193 VULKAN PIXEL2 : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.usigned_int2_10_10_10.* = SKIP
-
 3221 VULKAN : dEQP-GLES3.functional.instanced.draw_elements_instanced.attribute_divisor.2*_instances = FAIL
 3221 VULKAN : dEQP-GLES3.functional.instanced.draw_elements_instanced.attribute_divisor.4_instances = FAIL
 3221 VULKAN : dEQP-GLES3.functional.instanced.draw_elements_instanced.mixed.2*_instances = FAIL

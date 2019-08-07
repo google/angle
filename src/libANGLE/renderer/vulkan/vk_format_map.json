@@ -440,6 +440,21 @@
         },
         "EAC_R11G11_SNORM_BLOCK": {
             "image": ["R16G16_SNORM", "R16G16_FLOAT"]
+        },
+        "R10G10B10A2_SNORM": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R10G10B10A2_USCALED": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R10G10B10A2_SSCALED": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R10G10B10A2_UINT": {
+            "buffer": "R16G16B16A16_UINT"
+        },
+        "R10G10B10A2_SINT": {
+            "buffer": "R16G16B16A16_SINT"
         }
     }
 }

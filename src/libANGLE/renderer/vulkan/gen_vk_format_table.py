@@ -128,6 +128,13 @@ def get_vertex_copy_function(src_format, dst_format, vk_format):
         else:
             return 'nullptr'
         return 'CopyNativeVertexData<GLu%s, 1, 1, 0>' % base_type
+    if 'R10G10B10A2' in src_format:
+        # When the R10G10B10A2 type can't be used by the vertex buffer,
+        # it needs to be converted to the type which can be used by it.
+        is_signed = 'false' if 'UINT' in src_format or 'UNORM' in src_format or 'USCALED' in src_format else 'true'
+        normalized = 'true' if 'NORM' in src_format else 'false'
+        to_float = 'false' if 'INT' in src_format else 'true'
+        return 'CopyXYZ10W2ToXYZW32FVertexData<%s, %s, %s>' % (is_signed, normalized, to_float)
     return angle_format.get_vertex_copy_function(src_format, dst_format)
 
 

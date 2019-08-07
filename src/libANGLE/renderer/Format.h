@@ -94,8 +94,8 @@ struct Format final : private angle::NonCopyable
 
     GLuint pixelBytes;
 
-    // For 1-byte components, is MAX_UINT. For 2-byte, is 0x1. For 4-byte, is 0x3. For all others,
-    // 0x0.
+    // For 1-byte components, is 0x0. For 2-byte, is 0x1. For 4-byte, is 0x3. For all others,
+    // MAX_UINT.
     GLuint componentAlignmentMask;
 
     GLuint channelCount;

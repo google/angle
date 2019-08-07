@@ -251,10 +251,11 @@ uint getShiftBits(uint offset, uint B)
 
     uint offset = getSourceComponentOffset(vertex, component);
     uint block = srcData[offset / 4];
-    uint shiftBits = getShiftBits(offset, 4);
 
+    uint shiftBits = getShiftBits(offset, 4);
     uint valueBits = 4 * 8;
     uint valueMask = valueBits == 32 ? - 1 :(1 << valueBits)- 1;
+
     uint valueAsUint =(block >> shiftBits)& valueMask;
 
     float divisor = 1.0f / 65536.0f;
