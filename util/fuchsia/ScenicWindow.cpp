@@ -73,7 +73,7 @@ ScenicWindow::~ScenicWindow()
     destroy();
 }
 
-bool ScenicWindow::initialize(const std::string &name, size_t width, size_t height)
+bool ScenicWindow::initialize(const std::string &name, int width, int height)
 {
     // Set up scenic resources.
     mShape.SetShape(scenic::Rectangle(&mScenicSession, width, height));

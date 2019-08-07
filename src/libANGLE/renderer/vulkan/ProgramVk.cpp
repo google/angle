@@ -636,7 +636,7 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
     if (bufferSetSize.size() > 0)
     {
         ANGLE_TRY(mDynamicDescriptorPools[kShaderResourceDescriptorSetIndex].init(
-            contextVk, bufferSetSize.data(), bufferSetSize.size()));
+            contextVk, bufferSetSize.data(), static_cast<uint32_t>(bufferSetSize.size())));
     }
     if (textureCount > 0)
     {
@@ -666,9 +666,9 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
 
 void ProgramVk::updateBindingOffsets()
 {
-    mStorageBlockBindingsOffset = mState.getUniqueUniformBlockCount();
+    mStorageBlockBindingsOffset = static_cast<uint32_t>(mState.getUniqueUniformBlockCount());
     mAtomicCounterBufferBindingsOffset =
-        mStorageBlockBindingsOffset + mState.getUniqueStorageBlockCount();
+        static_cast<uint32_t>(mStorageBlockBindingsOffset + mState.getUniqueStorageBlockCount());
 }
 
 void ProgramVk::linkResources(const gl::ProgramLinkedResources &resources)
@@ -1146,7 +1146,7 @@ angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
 
 void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
 {
-    size_t shaderStageCount = mState.getLinkedShaderStageCount();
+    uint32_t shaderStageCount = static_cast<uint32_t>(mState.getLinkedShaderStageCount());
 
     gl::ShaderVector<VkDescriptorBufferInfo> descriptorBufferInfo(shaderStageCount);
     gl::ShaderVector<VkWriteDescriptorSet> writeDescriptorInfo(shaderStageCount);
@@ -1346,7 +1346,7 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
         writeInfo.pNext            = nullptr;
         writeInfo.dstSet           = descriptorSet;
         writeInfo.dstBinding       = bindingStart;
-        writeInfo.dstArrayElement  = binding;
+        writeInfo.dstArrayElement  = static_cast<uint32_t>(binding);
         writeInfo.descriptorCount  = 1;
         writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
         writeInfo.pImageInfo       = nullptr;
@@ -1530,7 +1530,7 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
     const VkPipelineBindPoint pipelineBindPoint =
         mState.isCompute() ? VK_PIPELINE_BIND_POINT_COMPUTE : VK_PIPELINE_BIND_POINT_GRAPHICS;
 
-    for (size_t descriptorSetIndex = 0; descriptorSetIndex < descriptorSetRange;
+    for (uint32_t descriptorSetIndex = 0; descriptorSetIndex < descriptorSetRange;
          ++descriptorSetIndex)
     {
         VkDescriptorSet descSet = mDescriptorSets[descriptorSetIndex];
@@ -1560,8 +1560,9 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
         // through dynamic uniform buffers (requiring dynamic offsets).  No other descriptor
         // requires a dynamic offset.
         const uint32_t uniformBlockOffsetCount =
-            descriptorSetIndex == kUniformsAndXfbDescriptorSetIndex ? mDynamicBufferOffsets.size()
-                                                                    : 0;
+            descriptorSetIndex == kUniformsAndXfbDescriptorSetIndex
+                ? static_cast<uint32_t>(mDynamicBufferOffsets.size())
+                : 0;
 
         commandBuffer->bindDescriptorSets(mPipelineLayout.get(), pipelineBindPoint,
                                           descriptorSetIndex, 1, &descSet, uniformBlockOffsetCount,

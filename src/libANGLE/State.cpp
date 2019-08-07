@@ -1259,7 +1259,7 @@ void State::detachSampler(const Context *context, GLuint sampler)
     {
         if (mSamplers[i].id() == sampler)
         {
-            setSamplerBinding(context, i, nullptr);
+            setSamplerBinding(context, static_cast<GLuint>(i), nullptr);
         }
     }
 }

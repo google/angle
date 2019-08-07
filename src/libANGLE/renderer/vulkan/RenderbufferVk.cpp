@@ -72,8 +72,8 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
             (isDepthOrStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0);
 
         VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
-        ANGLE_TRY(
-            mImage->init(contextVk, gl::TextureType::_2D, extents, vkFormat, samples, usage, 1, 1));
+        ANGLE_TRY(mImage->init(contextVk, gl::TextureType::_2D, extents, vkFormat,
+                               static_cast<uint32_t>(samples), usage, 1, 1));
 
         VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
@@ -136,7 +136,7 @@ angle::Result RenderbufferVk::setStorageMultisample(const gl::Context *context,
         formatSampleCounts = stencilSampleCounts;
     }
 
-    samples = vk_gl::GetSampleCount(formatSampleCounts, samples);
+    samples = vk_gl::GetSampleCount(formatSampleCounts, static_cast<uint32_t>(samples));
 
     return setStorageImpl(context, samples, internalformat, width, height);
 }

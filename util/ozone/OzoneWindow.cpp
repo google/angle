@@ -14,7 +14,7 @@ OzoneWindow::OzoneWindow() {}
 
 OzoneWindow::~OzoneWindow() {}
 
-bool OzoneWindow::initialize(const std::string &name, size_t width, size_t height)
+bool OzoneWindow::initialize(const std::string &name, int width, int height)
 {
     mNative.x = mX = 0;
     mNative.y = mY = 0;

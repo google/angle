@@ -21,7 +21,7 @@ class Win32Window : public OSWindow
     Win32Window();
     ~Win32Window() override;
 
-    bool initialize(const std::string &name, size_t width, size_t height) override;
+    bool initialize(const std::string &name, int width, int height) override;
     void destroy() override;
 
     bool takeScreenshot(uint8_t *pixelData) override;

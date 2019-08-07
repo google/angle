@@ -58,8 +58,8 @@ class ReplaceShadowingVariablesTraverser : public TIntermTraverser
             ASSERT(mParameterNames.size() == 0);
             const TFunction *func = node->getFunctionPrototype()->getFunction();
             // Grab all of the parameter names from the function prototype
-            uint32_t paramCount = func->getParamCount();
-            for (uint32_t i = 0; i < paramCount; ++i)
+            size_t paramCount = func->getParamCount();
+            for (size_t i = 0; i < paramCount; ++i)
             {
                 mParameterNames.emplace(std::string(func->getParam(i)->name().data()));
             }

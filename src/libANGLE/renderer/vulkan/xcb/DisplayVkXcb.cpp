@@ -65,7 +65,8 @@ bool DisplayVkXcb::isValidNativeWindow(EGLNativeWindowType window) const
 {
     // There doesn't appear to be an xcb function explicitly for checking the validity of a
     // window ID, but xcb_query_tree_reply will return nullptr if the window doesn't exist.
-    xcb_query_tree_cookie_t cookie = xcb_query_tree(mXcbConnection, window);
+    xcb_query_tree_cookie_t cookie =
+        xcb_query_tree(mXcbConnection, static_cast<xcb_window_t>(window));
     xcb_query_tree_reply_t *reply  = xcb_query_tree_reply(mXcbConnection, cookie, nullptr);
     if (reply)
     {

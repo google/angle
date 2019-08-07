@@ -554,8 +554,8 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
 
     VkImageSubresourceLayers srcSubresource = {};
     srcSubresource.aspectMask               = VK_IMAGE_ASPECT_COLOR_BIT;
-    srcSubresource.mipLevel                 = sourceLevel;
-    srcSubresource.baseArrayLayer           = sourceLayer;
+    srcSubresource.mipLevel                 = static_cast<uint32_t>(sourceLevel);
+    srcSubresource.baseArrayLayer           = static_cast<uint32_t>(sourceLayer);
     srcSubresource.layerCount               = layerCount;
 
     // If destination is valid, copy the source directly into it.
@@ -641,7 +641,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
     params.srcExtents[1]       = sourceArea.height;
     params.destOffset[0]       = destOffset.x;
     params.destOffset[1]       = destOffset.y;
-    params.srcMip              = sourceLevel;
+    params.srcMip              = static_cast<uint32_t>(sourceLevel);
     params.srcHeight           = srcImage->getExtents().height;
     params.srcPremultiplyAlpha = unpackPremultiplyAlpha && !unpackUnmultiplyAlpha;
     params.srcUnmultiplyAlpha  = unpackUnmultiplyAlpha && !unpackPremultiplyAlpha;
@@ -764,7 +764,8 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
     ANGLE_TRY(
         memoryObjectVk->createImage(context, type, levels, internalFormat, size, offset, mImage));
 
-    ANGLE_TRY(initImageViews(contextVk, format, levels, mImage->getLayerCount()));
+    ANGLE_TRY(
+        initImageViews(contextVk, format, static_cast<uint32_t>(levels), mImage->getLayerCount()));
 
     // TODO(spang): This needs to be reworked when semaphores are added.
     // http://anglebug.com/3289
@@ -1184,7 +1185,7 @@ angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
     mLayerFetchImageView.resize(layerCount);
     m3DRenderTargets.resize(layerCount);
 
-    for (size_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
+    for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
         vk::ImageView *drawView;
         ANGLE_TRY(getLayerLevelDrawImageView(contextVk, layerIndex, 0, &drawView));
@@ -1213,7 +1214,7 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
 
     mLayerFetchImageView.resize(gl::kCubeFaceCount);
     mCubeMapRenderTargets.resize(gl::kCubeFaceCount);
-    for (size_t cubeMapFaceIndex = 0; cubeMapFaceIndex < gl::kCubeFaceCount; ++cubeMapFaceIndex)
+    for (uint32_t cubeMapFaceIndex = 0; cubeMapFaceIndex < gl::kCubeFaceCount; ++cubeMapFaceIndex)
     {
         vk::ImageView *drawView;
         ANGLE_TRY(getLayerLevelDrawImageView(contextVk, cubeMapFaceIndex, 0, &drawView));
@@ -1403,8 +1404,9 @@ angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
     // don't have swizzle.
     gl::TextureType viewType = vk::Get2DTextureType(layerCount, mImage->getSamples());
     return mImage->initLayerImageView(context, viewType, mImage->getAspectFlags(),
-                                      gl::SwizzleState(), *imageViewOut, getNativeImageLevel(level),
-                                      1, getNativeImageLayer(layer), 1);
+                                      gl::SwizzleState(), *imageViewOut,
+                                      getNativeImageLevel(static_cast<uint32_t>(level)), 1,
+                                      getNativeImageLayer(static_cast<uint32_t>(layer)), 1);
 }
 
 const vk::Sampler &TextureVk::getSampler() const

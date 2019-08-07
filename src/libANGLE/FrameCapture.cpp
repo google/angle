@@ -185,7 +185,7 @@ void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
 
         if (call.params.hasClientArrayData())
         {
-            mClientVertexArrayMap[index] = mCalls.size();
+            mClientVertexArrayMap[index] = static_cast<uint32_t>(mCalls.size());
         }
         else
         {
@@ -259,7 +259,8 @@ void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
 
             if (binding.getDivisor() > 0)
             {
-                count = rx::UnsignedCeilDivide(instanceCount, binding.getDivisor());
+                count = rx::UnsignedCeilDivide(static_cast<uint32_t>(instanceCount),
+                                               binding.getDivisor());
             }
 
             // The last capture element doesn't take up the full stride.
@@ -270,7 +271,8 @@ void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
             ASSERT(param.type == ParamType::TvoidConstPointer);
 
             ParamBuffer updateParamBuffer;
-            updateParamBuffer.addValueParam<GLint>("arrayIndex", ParamType::TGLint, attribIndex);
+            updateParamBuffer.addValueParam<GLint>("arrayIndex", ParamType::TGLint,
+                                                   static_cast<uint32_t>(attribIndex));
 
             ParamCapture updateMemory("pointer", ParamType::TvoidConstPointer);
             CaptureMemory(param.value.voidConstPointerVal, bytesToCapture, &updateMemory);

@@ -127,7 +127,7 @@ void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
                                         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
     }
 
-    submitInfo->waitSemaphoreCount = waitSemaphores.size();
+    submitInfo->waitSemaphoreCount = static_cast<uint32_t>(waitSemaphores.size());
     submitInfo->pWaitSemaphores    = waitSemaphores.data();
     submitInfo->pWaitDstStageMask  = waitSemaphoreStageMasks->data();
 
@@ -585,7 +585,7 @@ angle::Result ContextVk::setupLineLoopDraw(const gl::Context *context,
                                            gl::DrawElementsType indexTypeOrInvalid,
                                            const void *indices,
                                            vk::CommandBuffer **commandBufferOut,
-                                           size_t *numIndicesOut)
+                                           uint32_t *numIndicesOut)
 {
     ANGLE_TRY(mVertexArray->handleLineLoop(this, firstVertex, vertexOrIndexCount,
                                            indexTypeOrInvalid, indices, numIndicesOut));
@@ -1316,7 +1316,7 @@ angle::Result ContextVk::drawArrays(const gl::Context *context,
 
     if (mode == gl::PrimitiveMode::LineLoop)
     {
-        size_t numIndices;
+        uint32_t numIndices;
         ANGLE_TRY(setupLineLoopDraw(context, mode, first, count, gl::DrawElementsType::InvalidEnum,
                                     nullptr, &commandBuffer, &numIndices));
         vk::LineLoopHelper::Draw(numIndices, commandBuffer);
@@ -1360,7 +1360,7 @@ angle::Result ContextVk::drawElements(const gl::Context *context,
     vk::CommandBuffer *commandBuffer = nullptr;
     if (mode == gl::PrimitiveMode::LineLoop)
     {
-        size_t indexCount;
+        uint32_t indexCount;
         ANGLE_TRY(
             setupLineLoopDraw(context, mode, 0, count, type, indices, &commandBuffer, &indexCount));
         vk::LineLoopHelper::Draw(indexCount, commandBuffer);
@@ -2435,7 +2435,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
     for (size_t textureUnit : activeTextures)
     {
         gl::Texture *texture        = textures[textureUnit];
-        gl::Sampler *sampler        = mState.getSampler(textureUnit);
+        gl::Sampler *sampler        = mState.getSampler(static_cast<uint32_t>(textureUnit));
         gl::TextureType textureType = textureTypes[textureUnit];
 
         // Null textures represent incomplete textures.

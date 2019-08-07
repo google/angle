@@ -26,7 +26,7 @@ static Key X11CodeToKey(Display *display, unsigned int scancode)
     KeySym *keySymbols;
     keySymbols = XGetKeyboardMapping(display, scancode, 1, &temp);
 
-    unsigned int keySymbol = keySymbols[0];
+    KeySym keySymbol = keySymbols[0];
     XFree(keySymbols);
 
     switch (keySymbol)
@@ -277,7 +277,7 @@ X11Window::~X11Window()
     destroy();
 }
 
-bool X11Window::initialize(const std::string &name, size_t width, size_t height)
+bool X11Window::initialize(const std::string &name, int width, int height)
 {
     destroy();
 

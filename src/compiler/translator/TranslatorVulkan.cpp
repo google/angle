@@ -197,7 +197,7 @@ TIntermBinary *CreateDriverUniformRef(const TVariable *driverUniforms, const cha
 
     TIntermSymbol *angleUniformsRef = new TIntermSymbol(driverUniforms);
     TConstantUnion *uniformIndex    = new TConstantUnion;
-    uniformIndex->setIConst(fieldIndex);
+    uniformIndex->setIConst(static_cast<int>(fieldIndex));
     TIntermConstantUnion *indexRef =
         new TIntermConstantUnion(uniformIndex, *StaticType::GetBasic<EbtInt>());
     return new TIntermBinary(EOpIndexDirectInterfaceBlock, angleUniformsRef, indexRef);

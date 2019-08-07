@@ -371,7 +371,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                                     gl::DrawElementsType indexTypeOrInvalid,
                                     const void *indices,
                                     vk::CommandBuffer **commandBufferOut,
-                                    size_t *numIndicesOut);
+                                    uint32_t *numIndicesOut);
     angle::Result setupDispatch(const gl::Context *context, vk::CommandBuffer **commandBufferOut);
 
     void updateViewport(FramebufferVk *framebufferVk,

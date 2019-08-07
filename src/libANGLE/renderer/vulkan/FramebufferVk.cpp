@@ -1322,7 +1322,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
         ASSERT(colorRenderTarget);
 
         params.colorFormat            = &colorRenderTarget->getImage().getFormat().imageFormat();
-        params.colorAttachmentIndexGL = colorIndexGL;
+        params.colorAttachmentIndexGL = static_cast<uint32_t>(colorIndexGL);
         params.colorMaskFlags         = colorMaskFlags;
         if (mEmulatedAlphaAttachmentMask[colorIndexGL])
         {
@@ -1436,8 +1436,8 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
         readFormat = &GetDepthStencilImageToBufferFormat(*readFormat, copyAspectFlags);
     }
 
-    size_t level         = renderTarget->getLevelIndex();
-    size_t layer         = renderTarget->getLayerIndex();
+    uint32_t level       = renderTarget->getLevelIndex();
+    uint32_t layer       = renderTarget->getLayerIndex();
     VkOffset3D srcOffset = {area.x, area.y, 0};
 
     VkImageSubresourceLayers srcSubresource = {};

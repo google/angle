@@ -384,7 +384,7 @@ static Key NSCodeToKey(int keyCode)
     return Key(0);
 }
 
-static void AddNSKeyStateToEvent(Event *event, int state)
+static void AddNSKeyStateToEvent(Event *event, NSEventModifierFlags state)
 {
     event->Key.Shift   = state & NSShiftKeyMask;
     event->Key.Control = state & NSControlKeyMask;
@@ -392,7 +392,7 @@ static void AddNSKeyStateToEvent(Event *event, int state)
     event->Key.System  = state & NSCommandKeyMask;
 }
 
-static MouseButton TranslateMouseButton(int button)
+static MouseButton TranslateMouseButton(NSInteger button)
 {
     switch (button)
     {
@@ -622,7 +622,7 @@ OSXWindow::~OSXWindow()
     destroy();
 }
 
-bool OSXWindow::initialize(const std::string &name, size_t width, size_t height)
+bool OSXWindow::initialize(const std::string &name, int width, int height)
 {
     if (!InitializeAppKit())
     {

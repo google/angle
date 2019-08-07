@@ -2026,7 +2026,7 @@ angle::Result TextureD3D_Cube::initMipmapImages(const gl::Context *context)
     const GLuint maxLevel  = mState.getMipmapMaxLevel();
     // Purge array levels baseLevel + 1 through q and reset them to represent the generated mipmap
     // levels.
-    for (size_t faceIndex = 0; faceIndex < gl::kCubeFaceCount; faceIndex++)
+    for (int faceIndex = 0; faceIndex < static_cast<int>(gl::kCubeFaceCount); faceIndex++)
     {
         for (GLuint level = baseLevel + 1; level <= maxLevel; level++)
         {
@@ -2099,7 +2099,8 @@ angle::Result TextureD3D_Cube::createCompleteStorage(bool renderTarget,
         // If any of the CPU images (levels >= 1) are dirty, then the textureStorage should use the
         // mipped texture to begin with. Otherwise, it should use the level-zero-only texture.
         hintLevelZeroOnly = true;
-        for (size_t faceIndex = 0; faceIndex < gl::kCubeFaceCount && hintLevelZeroOnly; faceIndex++)
+        for (int faceIndex = 0;
+             faceIndex < static_cast<int>(gl::kCubeFaceCount) && hintLevelZeroOnly; faceIndex++)
         {
             for (int level = 1; level < levels && hintLevelZeroOnly; level++)
             {
@@ -2121,7 +2122,7 @@ angle::Result TextureD3D_Cube::setCompleteTexStorage(const gl::Context *context,
 {
     if (newCompleteTexStorage && newCompleteTexStorage->isManaged())
     {
-        for (size_t faceIndex = 0; faceIndex < gl::kCubeFaceCount; faceIndex++)
+        for (int faceIndex = 0; faceIndex < static_cast<int>(gl::kCubeFaceCount); faceIndex++)
         {
             for (int level = 0; level < newCompleteTexStorage->getLevelCount(); level++)
             {
@@ -2147,7 +2148,7 @@ angle::Result TextureD3D_Cube::updateStorage(const gl::Context *context)
 
     ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
-    for (size_t face = 0; face < gl::kCubeFaceCount; face++)
+    for (int face = 0; face < static_cast<int>(gl::kCubeFaceCount); face++)
     {
         for (int level = 0; level < storageLevels; level++)
         {

@@ -1813,7 +1813,8 @@ void StateManager11::unsetConflictingUAVs(gl::PipelineType pipeline,
         if (record.view && record.resource == resource &&
             (!index || ImageIndexConflictsWithUAV(*index, record.desc)))
         {
-            deviceContext->CSSetUnorderedAccessViews(resourceIndex, 1, &mNullUAVs[0], nullptr);
+            deviceContext->CSSetUnorderedAccessViews(static_cast<UINT>(resourceIndex), 1,
+                                                     &mNullUAVs[0], nullptr);
             mCurComputeUAVs.update(resourceIndex, nullptr);
             foundOne = true;
         }

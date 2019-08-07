@@ -28,7 +28,7 @@ AttributeVector TrimAttributeMap(const egl::AttributeMap &attributes,
         if (attributes.contains(forwardAttrib))
         {
             result.push_back(forwardAttrib);
-            result.push_back(attributes.get(forwardAttrib));
+            result.push_back(static_cast<int>(attributes.get(forwardAttrib)));
         }
     }
     return result;

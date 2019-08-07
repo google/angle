@@ -25,7 +25,7 @@ AndroidWindow::AndroidWindow() {}
 
 AndroidWindow::~AndroidWindow() {}
 
-bool AndroidWindow::initialize(const std::string &name, size_t width, size_t height)
+bool AndroidWindow::initialize(const std::string &name, int width, int height)
 {
     return resize(width, height);
 }

@@ -317,11 +317,11 @@ void OverrideFeaturesWithDisplayState(angle::FeatureSetBase *features,
                                       const egl::DisplayState &state);
 
 template <typename In>
-size_t LineLoopRestartIndexCountHelper(GLsizei indexCount, const uint8_t *srcPtr)
+uint32_t LineLoopRestartIndexCountHelper(GLsizei indexCount, const uint8_t *srcPtr)
 {
     constexpr In restartIndex = gl::GetPrimitiveRestartIndexFromType<In>();
     const In *inIndices       = reinterpret_cast<const In *>(srcPtr);
-    size_t numIndices         = 0;
+    uint32_t numIndices       = 0;
     // See CopyLineLoopIndicesWithRestart() below for more info on how
     // numIndices is calculated.
     GLsizei loopStartIndex = 0;
@@ -348,9 +348,9 @@ size_t LineLoopRestartIndexCountHelper(GLsizei indexCount, const uint8_t *srcPtr
     return numIndices;
 }
 
-inline size_t GetLineLoopWithRestartIndexCount(gl::DrawElementsType glIndexType,
-                                               GLsizei indexCount,
-                                               const uint8_t *srcPtr)
+inline uint32_t GetLineLoopWithRestartIndexCount(gl::DrawElementsType glIndexType,
+                                                 GLsizei indexCount,
+                                                 const uint8_t *srcPtr)
 {
     switch (glIndexType)
     {

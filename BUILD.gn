@@ -138,6 +138,7 @@ config("extra_warnings") {
       "-Wrange-loop-analysis",
       "-Wstrict-prototypes",
       "-Wunreachable-code",
+      "-Wshorten-64-to-32",
     ]
   }
 }

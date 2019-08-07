@@ -417,7 +417,7 @@ class LineLoopHelper final : angle::NonCopyable
                                                       intptr_t elementArrayOffset,
                                                       vk::BufferHelper **bufferOut,
                                                       VkDeviceSize *bufferOffsetOut,
-                                                      size_t *indexCountOut);
+                                                      uint32_t *indexCountOut);
 
     angle::Result streamIndices(ContextVk *contextVk,
                                 gl::DrawElementsType glIndexType,
@@ -425,7 +425,7 @@ class LineLoopHelper final : angle::NonCopyable
                                 const uint8_t *srcPtr,
                                 vk::BufferHelper **bufferOut,
                                 VkDeviceSize *bufferOffsetOut,
-                                size_t *indexCountOut);
+                                uint32_t *indexCountOut);
 
     void release(ContextVk *contextVk);
     void destroy(VkDevice device);

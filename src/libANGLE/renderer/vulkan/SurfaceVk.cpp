@@ -978,7 +978,7 @@ angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context, EGLint *rect
 
     bool presentOutOfDate = false;
     // Save this now, since present() will increment the value.
-    size_t currentSwapHistoryIndex = mCurrentSwapHistoryIndex;
+    uint32_t currentSwapHistoryIndex = static_cast<uint32_t>(mCurrentSwapHistoryIndex);
 
     ANGLE_TRY(present(contextVk, rects, n_rects, &presentOutOfDate));
 

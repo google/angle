@@ -456,7 +456,7 @@ void GenerateTransformFeedbackOutputs(const gl::ProgramState &programState,
 
     std::string xfbDecl;
 
-    for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
+    for (uint32_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
     {
         const std::string xfbBinding = Str(kXfbBindingIndexStart + bufferIndex);
         xfbIndices[bufferIndex]      = Str(bufferIndex);
@@ -657,7 +657,7 @@ void AssignUniformBindings(gl::ShaderMap<IntermediateShaderSource> *shaderSource
     const std::string uniformsDescriptorSet = "set = " + Str(kUniformsAndXfbDescriptorSetIndex);
 
     constexpr char kDefaultUniformsBlockName[] = "defaultUniforms";
-    size_t bindingIndex                        = 0;
+    uint32_t bindingIndex                      = 0;
     for (IntermediateShaderSource &shaderSource : *shaderSources)
     {
         if (!shaderSource.empty())

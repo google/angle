@@ -904,7 +904,7 @@ SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
     EGLAttrib height = attribs.get(EGL_HEIGHT, 0);
     Buffer *buffer   = new Buffer(this, GBM_BO_USE_RENDERING, GBM_FORMAT_ARGB8888,
                                 DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888, true, true);
-    if (!buffer || !buffer->initialize(width, height))
+    if (!buffer || !buffer->initialize(static_cast<int>(width), static_cast<int>(height)))
     {
         return nullptr;
     }

@@ -25,7 +25,8 @@ bool X11Pixmap::initialize(EGLNativeDisplayType display, size_t width, size_t he
     int screen  = DefaultScreen(mDisplay);
     Window root = RootWindow(mDisplay, screen);
 
-    mPixmap = XCreatePixmap(mDisplay, root, width, height, depth);
+    mPixmap = XCreatePixmap(mDisplay, root, static_cast<unsigned int>(width),
+                            static_cast<unsigned int>(height), depth);
 
     return mPixmap != 0;
 }

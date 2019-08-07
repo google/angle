@@ -1320,7 +1320,8 @@ void ProgramLinkedResourcesLinker::getAtomicCounterBufferSizeMap(
         // uniform and adding size of the uniform. For arrays, the size is the number of elements
         // times the element size (should always by 4 for atomic_units).
         unsigned dataOffset =
-            glUniform.offset + (glUniform.getBasicTypeElementCount() * glUniform.getElementSize());
+            glUniform.offset + static_cast<unsigned int>(glUniform.getBasicTypeElementCount() *
+                                                         glUniform.getElementSize());
         if (dataOffset > bufferDataSize)
         {
             bufferDataSize = dataOffset;

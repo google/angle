@@ -99,7 +99,7 @@ void TransformFeedbackVk::updateDescriptorSetLayout(
 {
     size_t xfbBufferCount = programState.getTransformFeedbackBufferCount();
 
-    for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
+    for (uint32_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
         descSetLayoutOut->update(kXfbBindingIndexStart + bufferIndex,
                                  VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_VERTEX_BIT);
@@ -172,7 +172,7 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
     writeDescriptorInfo.dstSet               = descSet;
     writeDescriptorInfo.dstBinding           = kXfbBindingIndexStart;
     writeDescriptorInfo.dstArrayElement      = 0;
-    writeDescriptorInfo.descriptorCount      = xfbBufferCount;
+    writeDescriptorInfo.descriptorCount      = static_cast<uint32_t>(xfbBufferCount);
     writeDescriptorInfo.descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
     writeDescriptorInfo.pImageInfo           = nullptr;
     writeDescriptorInfo.pBufferInfo          = descriptorBufferInfo.data();

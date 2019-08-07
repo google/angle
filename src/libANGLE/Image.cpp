@@ -173,7 +173,7 @@ gl::Format ExternalImageSibling::getAttachmentFormat(GLenum binding,
 
 GLsizei ExternalImageSibling::getAttachmentSamples(const gl::ImageIndex &imageIndex) const
 {
-    return mImplementation->getSamples();
+    return static_cast<GLsizei>(mImplementation->getSamples());
 }
 
 bool ExternalImageSibling::isRenderable(const gl::Context *context,

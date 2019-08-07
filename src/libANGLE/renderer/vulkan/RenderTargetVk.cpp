@@ -38,8 +38,8 @@ RenderTargetVk::RenderTargetVk(RenderTargetVk &&other)
 void RenderTargetVk::init(vk::ImageHelper *image,
                           vk::ImageView *imageView,
                           vk::ImageView *cubeImageFetchView,
-                          size_t levelIndex,
-                          size_t layerIndex)
+                          uint32_t levelIndex,
+                          uint32_t layerIndex)
 {
     mImage              = image;
     mImageView          = imageView;
@@ -131,7 +131,7 @@ const vk::Format &RenderTargetVk::getImageFormat() const
 gl::Extents RenderTargetVk::getExtents() const
 {
     ASSERT(mImage && mImage->valid());
-    return mImage->getLevelExtents2D(mLevelIndex);
+    return mImage->getLevelExtents2D(static_cast<uint32_t>(mLevelIndex));
 }
 
 void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageView *imageView)

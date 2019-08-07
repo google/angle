@@ -1128,16 +1128,16 @@ angle::Result TextureGL::setStorageExternalMemory(const gl::Context *context,
     stateManager->bindTexture(getType(), mTextureID);
     if (nativegl::UseTexImage2D(getType()))
     {
-        functions->texStorageMem2DEXT(ToGLenum(type), levels, texStorageFormat.internalFormat,
-                                      size.width, size.height, memoryObjectGL->getMemoryObjectID(),
-                                      offset);
+        functions->texStorageMem2DEXT(ToGLenum(type), static_cast<GLsizei>(levels),
+                                      texStorageFormat.internalFormat, size.width, size.height,
+                                      memoryObjectGL->getMemoryObjectID(), offset);
     }
     else
     {
         ASSERT(nativegl::UseTexImage3D(getType()));
-        functions->texStorageMem3DEXT(ToGLenum(type), levels, texStorageFormat.internalFormat,
-                                      size.width, size.height, size.depth,
-                                      memoryObjectGL->getMemoryObjectID(), offset);
+        functions->texStorageMem3DEXT(ToGLenum(type), static_cast<GLsizei>(levels),
+                                      texStorageFormat.internalFormat, size.width, size.height,
+                                      size.depth, memoryObjectGL->getMemoryObjectID(), offset);
     }
 
     setLevelInfo(context, type, 0, levels,

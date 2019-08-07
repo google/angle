@@ -499,7 +499,7 @@ Win32Window::~Win32Window()
     delete mSetVisibleTimer;
 }
 
-bool Win32Window::initialize(const std::string &name, size_t width, size_t height)
+bool Win32Window::initialize(const std::string &name, int width, int height)
 {
     destroy();
 

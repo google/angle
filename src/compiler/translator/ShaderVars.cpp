@@ -112,7 +112,7 @@ unsigned int ShaderVariable::getInnerArraySizeProduct() const
     unsigned int arraySizeProduct = 1u;
     for (size_t index = 1; index < arraySizes.size(); ++index)
     {
-        arraySizeProduct *= getNestedArraySize(index);
+        arraySizeProduct *= getNestedArraySize(static_cast<unsigned int>(index));
     }
     return arraySizeProduct;
 }

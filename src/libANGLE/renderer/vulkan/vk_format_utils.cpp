@@ -123,7 +123,8 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
         // Compressed textures also need to perform this check.
         testFunction = HasNonRenderableTextureFormatSupport;
     }
-    int i = FindSupportedFormat(renderer, info + skip, numInfo - skip, testFunction);
+    int i = FindSupportedFormat(renderer, info + skip, static_cast<uint32_t>(numInfo - skip),
+                                testFunction);
     i += skip;
 
     imageFormatID            = info[i].format;
@@ -134,7 +135,8 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
 void Format::initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo *info, int numInfo)
 {
     size_t skip = renderer->getFeatures().forceFallbackFormat.enabled ? 1 : 0;
-    int i = FindSupportedFormat(renderer, info + skip, numInfo - skip, HasFullBufferFormatSupport);
+    int i       = FindSupportedFormat(renderer, info + skip, static_cast<uint32_t>(numInfo - skip),
+                                HasFullBufferFormatSupport);
     i += skip;
 
     bufferFormatID               = info[i].format;

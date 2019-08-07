@@ -167,7 +167,8 @@ bool VertexArray::detachBuffer(const Context *context, GLuint bufferName)
             }
             else
             {
-                ASSERT(binding.getBoundAttributesMask() == AttributesMask(1ull << bindingIndex));
+                ASSERT(binding.getBoundAttributesMask() ==
+                       AttributesMask(static_cast<size_t>(1) << bindingIndex));
                 setDirtyAttribBit(bindingIndex, DIRTY_ATTRIB_POINTER);
             }
 

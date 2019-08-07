@@ -379,7 +379,8 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
     vk::PipelineLayoutDesc pipelineLayoutDesc;
 
     pipelineLayoutDesc.updateDescriptorSetLayout(kSetIndex, descriptorSetDesc);
-    pipelineLayoutDesc.updatePushConstantRange(pushConstantsShaderStage, 0, pushConstantsSize);
+    pipelineLayoutDesc.updatePushConstantRange(pushConstantsShaderStage, 0,
+                                               static_cast<uint32_t>(pushConstantsSize));
 
     ANGLE_TRY(renderer->getPipelineLayout(contextVk, pipelineLayoutDesc,
                                           mDescriptorSetLayouts[function],
@@ -387,7 +388,8 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
 
     if (setSizesCount > 0)
     {
-        ANGLE_TRY(mDescriptorPools[function].init(contextVk, setSizes, setSizesCount));
+        ANGLE_TRY(mDescriptorPools[function].init(contextVk, setSizes,
+                                                  static_cast<uint32_t>(setSizesCount)));
     }
 
     return angle::Result::Continue;
@@ -601,7 +603,7 @@ angle::Result UtilsVk::setupProgram(ContextVk *contextVk,
     }
 
     commandBuffer->pushConstants(pipelineLayout.get(), pushConstantsShaderStage, 0,
-                                 pushConstantsSize, pushConstants);
+                                 static_cast<uint32_t>(pushConstantsSize), pushConstants);
 
     return angle::Result::Continue;
 }
@@ -623,8 +625,8 @@ angle::Result UtilsVk::clearBuffer(ContextVk *contextVk,
     uint32_t flags = BufferUtils_comp::kIsClear | GetBufferUtilsFlags(params.size, destFormat);
 
     BufferUtilsShaderParams shaderParams;
-    shaderParams.destOffset = params.offset;
-    shaderParams.size       = params.size;
+    shaderParams.destOffset = static_cast<uint32_t>(params.offset);
+    shaderParams.size       = static_cast<uint32_t>(params.size);
     shaderParams.clearValue = params.clearValue;
 
     VkDescriptorSet descriptorSet;
@@ -650,7 +652,7 @@ angle::Result UtilsVk::clearBuffer(ContextVk *contextVk,
                            &mBufferUtilsPrograms[flags], nullptr, descriptorSet, &shaderParams,
                            sizeof(shaderParams), commandBuffer));
 
-    commandBuffer->dispatch(UnsignedCeilDivide(params.size, 64), 1, 1);
+    commandBuffer->dispatch(UnsignedCeilDivide(static_cast<uint32_t>(params.size), 64), 1, 1);
 
     descriptorPoolBinding.reset();
 
@@ -734,7 +736,7 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
     ConvertVertexShaderParams shaderParams;
     shaderParams.Ns = params.srcFormat->channelCount;
     shaderParams.Bs = params.srcFormat->pixelBytes / params.srcFormat->channelCount;
-    shaderParams.Ss = params.srcStride;
+    shaderParams.Ss = static_cast<uint32_t>(params.srcStride);
     shaderParams.Nd = params.destFormat->channelCount;
     shaderParams.Bd = params.destFormat->pixelBytes / params.destFormat->channelCount;
     shaderParams.Sd = shaderParams.Nd * shaderParams.Bd;
@@ -745,12 +747,12 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
     shaderParams.Ed = 4 / shaderParams.Bd;
     // Total number of output components is simply the number of vertices by number of components in
     // each.
-    shaderParams.componentCount = params.vertexCount * shaderParams.Nd;
+    shaderParams.componentCount = static_cast<uint32_t>(params.vertexCount * shaderParams.Nd);
     // Total number of 4-byte outputs is the number of components divided by how many components can
     // fit in a 4-byte value.  Note that this value is also the invocation size of the shader.
     shaderParams.outputCount = shaderParams.componentCount / shaderParams.Ed;
-    shaderParams.srcOffset   = params.srcOffset;
-    shaderParams.destOffset  = params.destOffset;
+    shaderParams.srcOffset   = static_cast<uint32_t>(params.srcOffset);
+    shaderParams.destOffset  = static_cast<uint32_t>(params.destOffset);
 
     uint32_t flags = GetConvertVertexFlags(params);
 

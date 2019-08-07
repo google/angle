@@ -32,8 +32,8 @@ class SampleApplication
                       char **argv,
                       EGLint glesMajorVersion = 2,
                       EGLint glesMinorVersion = 0,
-                      size_t width            = 1280,
-                      size_t height           = 720);
+                      uint32_t width          = 1280,
+                      uint32_t height         = 720);
     virtual ~SampleApplication();
 
     virtual bool initialize();
@@ -57,8 +57,8 @@ class SampleApplication
 
   private:
     std::string mName;
-    size_t mWidth;
-    size_t mHeight;
+    uint32_t mWidth;
+    uint32_t mHeight;
     bool mRunning;
 
     std::unique_ptr<Timer> mTimer;

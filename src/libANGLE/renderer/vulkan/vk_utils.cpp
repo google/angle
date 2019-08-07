@@ -924,27 +924,27 @@ void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *se
 {
     // The possible bits are VK_SAMPLE_COUNT_n_BIT = n, with n = 1 << b.  At the time of this
     // writing, b is in [0, 6], however, we test all 32 bits in case the enum is extended.
-    for (unsigned long bit : angle::BitSet32<32>(sampleCounts))
+    for (size_t bit : angle::BitSet32<32>(sampleCounts))
     {
-        setOut->insert(1 << bit);
+        setOut->insert(static_cast<GLuint>(1 << bit));
     }
 }
 
 GLuint GetMaxSampleCount(VkSampleCountFlags sampleCounts)
 {
     GLuint maxCount = 0;
-    for (unsigned long bit : angle::BitSet32<32>(sampleCounts))
+    for (size_t bit : angle::BitSet32<32>(sampleCounts))
     {
-        maxCount = 1 << bit;
+        maxCount = static_cast<GLuint>(1 << bit);
     }
     return maxCount;
 }
 
 GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount)
 {
-    for (unsigned long bit : angle::BitSet32<32>(supportedCounts))
+    for (size_t bit : angle::BitSet32<32>(supportedCounts))
     {
-        GLuint sampleCount = 1 << bit;
+        GLuint sampleCount = static_cast<GLuint>(1 << bit);
         if (sampleCount >= requestedCount)
         {
             return sampleCount;

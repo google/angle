@@ -327,7 +327,7 @@ void RendererVk::ensureCapsInitialized() const
     // There is no particular limit to how many atomic counters there can be, other than the size of
     // a storage buffer.  We nevertheless limit this to something sane (4096 arbitrarily).
     const uint32_t maxAtomicCounters =
-        std::min<size_t>(4096, limitsVk.maxStorageBufferRange / sizeof(uint32_t));
+        std::min<uint32_t>(4096, limitsVk.maxStorageBufferRange / sizeof(uint32_t));
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         mNativeCaps.maxShaderAtomicCounters[shaderType] = maxAtomicCounters;

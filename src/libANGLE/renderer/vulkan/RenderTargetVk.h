@@ -46,8 +46,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     void init(vk::ImageHelper *image,
               vk::ImageView *imageView,
               vk::ImageView *cubeImageFetchView,
-              size_t levelIndex,
-              size_t layerIndex);
+              uint32_t levelIndex,
+              uint32_t layerIndex);
     void reset();
 
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
@@ -76,8 +76,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     const vk::Format &getImageFormat() const;
     gl::Extents getExtents() const;
-    size_t getLevelIndex() const { return mLevelIndex; }
-    size_t getLayerIndex() const { return mLayerIndex; }
+    uint32_t getLevelIndex() const { return mLevelIndex; }
+    uint32_t getLayerIndex() const { return mLayerIndex; }
 
     // Special mutator for Surface RenderTargets. Allows the Framebuffer to keep a single
     // RenderTargetVk pointer.
@@ -92,8 +92,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageView *mImageView;
     // For cubemaps, a 2D-array view is also created to be used with shaders that use texelFetch().
     vk::ImageView *mCubeImageFetchView;
-    size_t mLevelIndex;
-    size_t mLayerIndex;
+    uint32_t mLevelIndex;
+    uint32_t mLayerIndex;
 };
 
 }  // namespace rx

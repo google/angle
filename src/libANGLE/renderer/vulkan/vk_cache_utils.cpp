@@ -234,7 +234,7 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
 
     if (desc.hasDepthStencilAttachment())
     {
-        uint32_t depthStencilIndex   = desc.depthStencilAttachmentIndex();
+        uint32_t depthStencilIndex   = static_cast<uint32_t>(desc.depthStencilAttachmentIndex());
         uint32_t depthStencilIndexVk = colorAttachmentCount;
 
         angle::FormatID formatID = desc[depthStencilIndex];
@@ -805,7 +805,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     blendState.flags           = 0;
     blendState.logicOpEnable   = static_cast<VkBool32>(inputAndBlend.logic.opEnable);
     blendState.logicOp         = static_cast<VkLogicOp>(inputAndBlend.logic.op);
-    blendState.attachmentCount = mRenderPassDesc.colorAttachmentRange();
+    blendState.attachmentCount = static_cast<uint32_t>(mRenderPassDesc.colorAttachmentRange());
     blendState.pAttachments    = blendAttachmentState.data();
 
     for (int i = 0; i < 4; i++)
@@ -829,7 +829,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     createInfo.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     createInfo.flags               = 0;
-    createInfo.stageCount          = shaderStages.size();
+    createInfo.stageCount          = static_cast<uint32_t>(shaderStages.size());
     createInfo.pStages             = shaderStages.data();
     createInfo.pVertexInputState   = &vertexInputState;
     createInfo.pInputAssemblyState = &inputAssemblyState;
@@ -1047,7 +1047,7 @@ void GraphicsPipelineDesc::setColorWriteMask(VkColorComponentFlags colorComponen
     PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend = mInputAssemblyAndColorBlendStateInfo;
     uint8_t colorMask = static_cast<uint8_t>(colorComponentFlags);
 
-    for (size_t colorIndexGL = 0; colorIndexGL < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+    for (uint32_t colorIndexGL = 0; colorIndexGL < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
          colorIndexGL++)
     {
         uint8_t mask =
@@ -1528,7 +1528,7 @@ void TextureDescriptorDesc::update(size_t index, Serial textureSerial, Serial sa
 {
     if (index >= mMaxIndex)
     {
-        mMaxIndex = index + 1;
+        mMaxIndex = static_cast<uint32_t>(index + 1);
     }
 
     // If the serial number overflows we should defragment and regenerate all serials.
@@ -1856,7 +1856,7 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     createInfo.flags                      = 0;
     createInfo.setLayoutCount             = static_cast<uint32_t>(setLayoutHandles.size());
     createInfo.pSetLayouts                = setLayoutHandles.data();
-    createInfo.pushConstantRangeCount     = pushConstantRanges.size();
+    createInfo.pushConstantRangeCount     = static_cast<uint32_t>(pushConstantRanges.size());
     createInfo.pPushConstantRanges        = pushConstantRanges.data();
 
     vk::PipelineLayout newLayout;

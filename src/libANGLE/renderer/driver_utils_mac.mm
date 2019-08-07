@@ -18,9 +18,9 @@ OSVersion GetMacOSVersion()
     OSVersion result;
 
     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    result.majorVersion              = version.majorVersion;
-    result.minorVersion              = version.minorVersion;
-    result.patchVersion              = version.patchVersion;
+    result.majorVersion              = static_cast<int>(version.majorVersion);
+    result.minorVersion              = static_cast<int>(version.minorVersion);
+    result.patchVersion              = static_cast<int>(version.patchVersion);
 
     return result;
 }

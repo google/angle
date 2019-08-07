@@ -1122,7 +1122,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
                                                                   intptr_t elementArrayOffset,
                                                                   vk::BufferHelper **bufferOut,
                                                                   VkDeviceSize *bufferOffsetOut,
-                                                                  size_t *indexCountOut)
+                                                                  uint32_t *indexCountOut)
 {
     if (glIndexType == gl::DrawElementsType::UnsignedByte ||
         contextVk->getState().isPrimitiveRestartEnabled())
@@ -1162,8 +1162,8 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
     if (contextVk->getRenderer()->getFeatures().extraCopyBufferRegion.enabled)
         copies.push_back({sourceOffset, *bufferOffsetOut + (unitCount + 1) * unitSize, 1});
 
-    ANGLE_TRY(
-        elementArrayBufferVk->copyToBuffer(contextVk, *bufferOut, copies.size(), copies.data()));
+    ANGLE_TRY(elementArrayBufferVk->copyToBuffer(
+        contextVk, *bufferOut, static_cast<uint32_t>(copies.size()), copies.data()));
     ANGLE_TRY(mDynamicIndexBuffer.flush(contextVk));
     return angle::Result::Continue;
 }
@@ -1174,14 +1174,14 @@ angle::Result LineLoopHelper::streamIndices(ContextVk *contextVk,
                                             const uint8_t *srcPtr,
                                             vk::BufferHelper **bufferOut,
                                             VkDeviceSize *bufferOffsetOut,
-                                            size_t *indexCountOut)
+                                            uint32_t *indexCountOut)
 {
     VkIndexType indexType = gl_vk::kIndexTypeMap[glIndexType];
 
     uint8_t *indices = nullptr;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
-    size_t numOutIndices = static_cast<size_t>(indexCount) + 1;
+    uint32_t numOutIndices = indexCount + 1;
     if (contextVk->getState().isPrimitiveRestartEnabled())
     {
         numOutIndices = GetLineLoopWithRestartIndexCount(glIndexType, indexCount, srcPtr);

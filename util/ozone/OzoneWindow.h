@@ -19,7 +19,7 @@ class OzoneWindow : public OSWindow
     OzoneWindow();
     ~OzoneWindow();
 
-    bool initialize(const std::string &name, size_t width, size_t height) override;
+    bool initialize(const std::string &name, int width, int height) override;
     void destroy() override;
 
     void resetNativeWindow() override;

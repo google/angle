@@ -196,7 +196,7 @@ void CopyStringToBuffer(GLchar *buffer,
 
     if (lengthOut)
     {
-        *lengthOut = length;
+        *lengthOut = static_cast<GLsizei>(length);
     }
 }
 
@@ -3942,8 +3942,9 @@ bool FindUsedOutputLocation(std::vector<VariableLocation> &outputLocations,
 {
     if (baseLocation + elementCount > outputLocations.size())
     {
-        elementCount =
-            baseLocation < outputLocations.size() ? outputLocations.size() - baseLocation : 0;
+        elementCount = baseLocation < outputLocations.size()
+                           ? static_cast<unsigned int>(outputLocations.size() - baseLocation)
+                           : 0;
     }
     for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
     {

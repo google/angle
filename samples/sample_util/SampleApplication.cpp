@@ -47,8 +47,8 @@ SampleApplication::SampleApplication(std::string name,
                                      char **argv,
                                      EGLint glesMajorVersion,
                                      EGLint glesMinorVersion,
-                                     size_t width,
-                                     size_t height)
+                                     uint32_t width,
+                                     uint32_t height)
     : mName(std::move(name)),
       mWidth(width),
       mHeight(height),

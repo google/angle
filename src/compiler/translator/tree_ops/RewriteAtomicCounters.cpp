@@ -329,7 +329,7 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
             // convertFunctionArgument above has already generated code that includes the subscript
             // (and therefore its side-effect).
             TIntermBlock *block = nullptr;
-            for (size_t ancestorIndex = 0; block == nullptr; ++ancestorIndex)
+            for (uint32_t ancestorIndex = 0; block == nullptr; ++ancestorIndex)
             {
                 block = getAncestorNode(ancestorIndex)->getAsBlock();
             }

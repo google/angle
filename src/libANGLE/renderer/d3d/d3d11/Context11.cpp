@@ -291,9 +291,10 @@ ANGLE_INLINE angle::Result Context11::drawElementsImpl(const gl::Context *contex
         ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(
             context, indexType, indexCount, indices, &indexRange));
         ANGLE_TRY(mRenderer->getStateManager()->updateState(
-            context, mode, indexRange.start, indexCount, indexType, indices, instanceCount, 0));
-        return mRenderer->drawElements(context, mode, indexRange.start, indexCount, indexType,
-                                       indices, instanceCount);
+            context, mode, static_cast<GLint>(indexRange.start), indexCount, indexType, indices,
+            instanceCount, 0));
+        return mRenderer->drawElements(context, mode, static_cast<GLint>(indexRange.start),
+                                       indexCount, indexType, indices, instanceCount);
     }
     else
     {
@@ -385,8 +386,8 @@ angle::Result Context11::drawElementsIndirect(const gl::Context *context,
         ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode, startVertex, cmd->count,
                                                             type, indices, cmd->primCount,
                                                             cmd->baseVertex));
-        return mRenderer->drawElements(context, mode, indexRange.start, cmd->count, type, indices,
-                                       cmd->primCount);
+        return mRenderer->drawElements(context, mode, static_cast<GLint>(indexRange.start),
+                                       cmd->count, type, indices, cmd->primCount);
     }
     else
     {
@@ -436,7 +437,7 @@ void Context11::popGroupMarker()
 void Context11::pushDebugGroup(GLenum source, GLuint id, const std::string &message)
 {
     // Fall through to the EXT_debug_marker functions
-    pushGroupMarker(message.size(), message.c_str());
+    pushGroupMarker(static_cast<GLsizei>(message.size()), message.c_str());
 }
 
 void Context11::popDebugGroup()

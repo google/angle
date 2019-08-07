@@ -622,7 +622,7 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
                                             GLsizei vertexOrIndexCount,
                                             gl::DrawElementsType indexTypeOrInvalid,
                                             const void *indices,
-                                            size_t *indexCountOut)
+                                            uint32_t *indexCountOut)
 {
     if (indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
     {

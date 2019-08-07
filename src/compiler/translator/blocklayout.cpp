@@ -261,18 +261,19 @@ void Std140BlockEncoder::getBlockLayoutInfo(GLenum type,
     if (gl::IsMatrixType(type))
     {
         baseAlignment = getTypeBaseAlignment(type, isRowMajorMatrix);
-        matrixStride  = getTypeBaseAlignment(type, isRowMajorMatrix);
+        matrixStride  = static_cast<int>(getTypeBaseAlignment(type, isRowMajorMatrix));
 
         if (!arraySizes.empty())
         {
             const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
-            arrayStride            = getTypeBaseAlignment(type, isRowMajorMatrix) * numRegisters;
+            arrayStride =
+                static_cast<int>(getTypeBaseAlignment(type, isRowMajorMatrix) * numRegisters);
         }
     }
     else if (!arraySizes.empty())
     {
-        baseAlignment = getTypeBaseAlignment(type, false);
-        arrayStride   = getTypeBaseAlignment(type, false);
+        baseAlignment = static_cast<int>(getTypeBaseAlignment(type, false));
+        arrayStride   = static_cast<int>(getTypeBaseAlignment(type, false));
     }
     else
     {

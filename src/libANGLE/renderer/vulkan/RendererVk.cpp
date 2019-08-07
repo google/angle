@@ -614,7 +614,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // Enumerate instance extensions that are provided by explicit layers.
     for (const char *layerName : enabledInstanceLayerNames)
     {
-        uint32_t previousExtensionCount      = instanceExtensionProps.size();
+        uint32_t previousExtensionCount      = static_cast<uint32_t>(instanceExtensionProps.size());
         uint32_t instanceLayerExtensionCount = 0;
         ANGLE_VK_TRY(displayVk, vkEnumerateInstanceExtensionProperties(
                                     layerName, &instanceLayerExtensionCount, nullptr));
@@ -704,7 +704,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     instanceInfo.enabledExtensionCount = static_cast<uint32_t>(enabledInstanceExtensions.size());
     instanceInfo.ppEnabledExtensionNames =
         enabledInstanceExtensions.empty() ? nullptr : enabledInstanceExtensions.data();
-    instanceInfo.enabledLayerCount   = enabledInstanceLayerNames.size();
+    instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
     instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
 
     ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
@@ -863,7 +863,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     // Enumerate device extensions that are provided by explicit layers.
     for (const char *layerName : enabledDeviceLayerNames)
     {
-        uint32_t previousExtensionCount    = deviceExtensionProps.size();
+        uint32_t previousExtensionCount    = static_cast<uint32_t>(deviceExtensionProps.size());
         uint32_t deviceLayerExtensionCount = 0;
         ANGLE_VK_TRY(displayVk,
                      vkEnumerateDeviceExtensionProperties(mPhysicalDevice, layerName,
@@ -979,7 +979,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     createInfo.flags                = 0;
     createInfo.queueCreateInfoCount = 1;
     createInfo.pQueueCreateInfos    = &queueCreateInfo;
-    createInfo.enabledLayerCount    = enabledDeviceLayerNames.size();
+    createInfo.enabledLayerCount    = static_cast<uint32_t>(enabledDeviceLayerNames.size());
     createInfo.ppEnabledLayerNames  = enabledDeviceLayerNames.data();
 
     if (vkGetPhysicalDeviceProperties2KHR &&

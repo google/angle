@@ -81,7 +81,8 @@ angle::Result SemaphoreGL::wait(gl::Context *context,
     GatherNativeTextureIDs(textureBarriers, &textureIDs, &textureLayouts);
     ASSERT(textureIDs.size() == textureLayouts.size());
 
-    functions->waitSemaphoreEXT(mSemaphoreID, bufferIDs.size(), bufferIDs.data(), textureIDs.size(),
+    functions->waitSemaphoreEXT(mSemaphoreID, static_cast<GLuint>(bufferIDs.size()),
+                                bufferIDs.data(), static_cast<GLuint>(textureIDs.size()),
                                 textureIDs.data(), textureLayouts.data());
 
     return angle::Result::Continue;
@@ -101,8 +102,9 @@ angle::Result SemaphoreGL::signal(gl::Context *context,
     GatherNativeTextureIDs(textureBarriers, &textureIDs, &textureLayouts);
     ASSERT(textureIDs.size() == textureLayouts.size());
 
-    functions->signalSemaphoreEXT(mSemaphoreID, bufferIDs.size(), bufferIDs.data(),
-                                  textureIDs.size(), textureIDs.data(), textureLayouts.data());
+    functions->signalSemaphoreEXT(mSemaphoreID, static_cast<GLuint>(bufferIDs.size()),
+                                  bufferIDs.data(), static_cast<GLuint>(textureIDs.size()),
+                                  textureIDs.data(), textureLayouts.data());
 
     return angle::Result::Continue;
 }
