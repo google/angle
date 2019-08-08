@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "329d607f_967c91bc",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-08T17:00:16Z",
+      "side": 1,
+      "message": "nit: static funcs should be Capitalized for ANGLE style.",
+      "range": {
+        "startLine": 69,
+        "startChar": 9,
+        "endLine": 69,
+        "endChar": 34
+      },
+      "revId": "b36cab11a6625d7c8168e8324d5d2303c963cef7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
