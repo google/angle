@@ -338,6 +338,30 @@
     },
     {
       "key": {
+        "uuid": "15520e22_f6151a4c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1498,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-08T15:56:19Z",
+      "side": 1,
+      "message": "No flakes or failures after removing 3D from this section.",
+      "parentUuid": "c00c5be2_1b4eb272",
+      "range": {
+        "startLine": 1494,
+        "startChar": 0,
+        "endLine": 1498,
+        "endChar": 5
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fb427f8d_b810854c",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 4
@@ -467,6 +491,30 @@
       "side": 1,
       "message": "Yes, intending to investigate, but didn\u0027t want to hold up general conformance progress, since I don\u0027t have a system available.",
       "parentUuid": "b88f7572_d8604201",
+      "range": {
+        "startLine": 567,
+        "startChar": 0,
+        "endLine": 568,
+        "endChar": 61
+      },
+      "revId": "31f4ca639a3f678c9eb177466b3714e4e37497f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ab322ae_d7d7b228",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-08T15:56:19Z",
+      "side": 1,
+      "message": "I\u0027ll test this again after submission, it may start working after other fixes.  Would like to avoid another round on CI for this CL if that\u0027s okay.",
+      "parentUuid": "bfa629b2_87bc4b3e",
       "range": {
         "startLine": 567,
         "startChar": 0,
