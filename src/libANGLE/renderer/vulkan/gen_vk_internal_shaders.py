@@ -569,6 +569,10 @@ def get_destroy_call(shader_and_variation):
     return destroy
 
 
+def shader_path(shader):
+    return '"src/libANGLE/renderer/vulkan/%s"' % slash(shader)
+
+
 def main():
     # STEP 0: Handle inputs/outputs for run_code_generation.py's auto_script
     shaders_dir = os.path.join('shaders', 'src')
@@ -690,7 +694,7 @@ def main():
             copyright_year=date.today().year,
             out_file_name=out_file_gni,
             input_file_name='shaders/src/*',
-            shaders_list=',\n'.join(['  "' + slash(shader) + '"' for shader in output_shaders]))
+            shaders_list=',\n'.join([shader_path(shader) for shader in output_shaders]))
         outfile.write(outcode)
         outfile.close()
 
