@@ -21,6 +21,7 @@
 #    include <android/log.h>
 #endif
 
+#include "anglebase/no_destructor.h"
 #include "common/Optional.h"
 #include "common/angleutils.h"
 #include "common/system_utils.h"
@@ -251,11 +252,11 @@ void Trace(LogSeverity severity, const char *message)
         return;
     }
 #    endif  // defined(NDEBUG)
-    static std::ofstream file(TRACE_OUTPUT_FILE, std::ofstream::app);
-    if (file)
+    static angle::base::NoDestructor<std::ofstream> file(TRACE_OUTPUT_FILE, std::ofstream::app);
+    if (file->good())
     {
-        file << LogSeverityName(severity) << ": " << str << std::endl;
-        file.flush();
+        *file << LogSeverityName(severity) << ": " << str << std::endl;
+        file->flush();
     }
 #endif  // defined(ANGLE_ENABLE_DEBUG_TRACE)
 }
