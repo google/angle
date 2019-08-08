@@ -3783,7 +3783,7 @@ bool Program::linkValidateGlobalNames(InfoLog &infoLog) const
                 // to see if there's a conflict or not.
                 std::vector<BlockAndFieldPair> prevBlockFieldPairs =
                     uniformBlockFieldMap[field.name];
-                for (const auto prevBlockFieldPair : prevBlockFieldPairs)
+                for (const auto &prevBlockFieldPair : prevBlockFieldPairs)
                 {
                     const sh::InterfaceBlock *prevUniformBlock = prevBlockFieldPair.first;
                     const sh::InterfaceBlockField *prevUniformBlockField =

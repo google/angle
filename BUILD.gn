@@ -131,6 +131,13 @@ config("extra_warnings") {
       "-Wunneeded-internal-declaration",
       "-Wglobal-constructors",
       "-Wexit-time-destructors",
+
+      # The below warnings are used by WebKit. We enable them to make rolling
+      # ANGLE in WebKit easier.
+      "-Wparentheses",
+      "-Wrange-loop-analysis",
+      "-Wstrict-prototypes",
+      "-Wunreachable-code",
     ]
   }
 }

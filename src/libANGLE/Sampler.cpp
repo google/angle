@@ -187,8 +187,9 @@ rx::SamplerImpl *Sampler::getImplementation() const
 angle::Result Sampler::syncState(const Context *context)
 {
     ASSERT(isDirty());
-    return mSampler->syncState(context, mDirty);
-    mDirty = false;
+    angle::Result result = mSampler->syncState(context, mDirty);
+    mDirty               = result != angle::Result::Continue;
+    return result;
 }
 
 void Sampler::signalDirtyState()

@@ -702,6 +702,7 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 #    pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 // Flex isn't semi-colon clean.
 #    pragma clang diagnostic ignored "-Wextra-semi-stmt"
+#    pragma clang diagnostic ignored "-Wunreachable-code"
 #endif
 
 // Workaround for flex using the register keyword, deprecated in C++11.

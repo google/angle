@@ -37,6 +37,9 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 #pragma warning(disable: 4701)
 #pragma warning(disable: 4702)
 #endif
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wunreachable-code"
+#endif
 
 #include "angle_gl.h"
 #include "compiler/translator/Declarator.h"

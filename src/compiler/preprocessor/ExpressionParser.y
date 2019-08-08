@@ -30,6 +30,9 @@ WHICH GENERATES THE GLSL ES preprocessor expression parser.
 #elif defined(_MSC_VER)
 #pragma warning(disable: 4065 4244 4701 4702)
 #endif
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wunreachable-code"
+#endif
 
 #include "ExpressionParser.h"
 
