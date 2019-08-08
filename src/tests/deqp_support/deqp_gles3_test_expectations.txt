@@ -653,6 +653,8 @@
 
 // Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).  Passes on 418.12 on Linux.
 2976 VULKAN NVIDIA : dEQP-GLES3.functional.shaders.invariance.* = FAIL
+// Fails on 431.02 NVIDIA driver
+3748 VULKAN WIN NVIDIA : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.* = FAIL
 
 // Android Vulkan failures
 3306 ANDROID VULKAN : dEQP-GLES3.functional.polygon_offset.* = FAIL
