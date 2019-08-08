@@ -987,8 +987,7 @@ Error Display::makeCurrent(const Thread *thread,
 
     if (context != nullptr)
     {
-        ASSERT(readSurface == drawSurface);
-        ANGLE_TRY(context->makeCurrent(this, drawSurface));
+        ANGLE_TRY(context->makeCurrent(this, drawSurface, readSurface));
     }
 
     return NoError();

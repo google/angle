@@ -1780,12 +1780,15 @@ Error ValidateMakeCurrent(Display *display, Surface *draw, Surface *read, gl::Co
 
     if (draw != read)
     {
-        UNIMPLEMENTED();  // FIXME
-
         if (draw)
         {
             ANGLE_TRY(ValidateCompatibleConfigs(display, draw->getConfig(), draw,
                                                 context->getConfig(), draw->getType()));
+        }
+        if (read)
+        {
+            ANGLE_TRY(ValidateCompatibleConfigs(display, read->getConfig(), read,
+                                                context->getConfig(), read->getType()));
         }
     }
     return NoError();

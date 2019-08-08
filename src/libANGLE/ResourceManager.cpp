@@ -424,6 +424,8 @@ Framebuffer *FramebufferManager::AllocateNewObject(rx::GLImplFactory *factory,
                                                    GLuint handle,
                                                    const Caps &caps)
 {
+    // Make sure the caller isn't using a reserved handle.
+    ASSERT(handle != Framebuffer::kDefaultDrawFramebufferHandle);
     return new Framebuffer(caps, factory, handle);
 }
 
@@ -446,11 +448,11 @@ Framebuffer *FramebufferManager::getFramebuffer(GLuint handle) const
 
 void FramebufferManager::setDefaultFramebuffer(Framebuffer *framebuffer)
 {
-    ASSERT(framebuffer == nullptr || framebuffer->id() == 0);
-    mObjectMap.assign(0, framebuffer);
+    ASSERT(framebuffer == nullptr || framebuffer->isDefault());
+    mObjectMap.assign(Framebuffer::kDefaultDrawFramebufferHandle, framebuffer);
 }
 
-void FramebufferManager::invalidateFramebufferComplenessCache() const
+void FramebufferManager::invalidateFramebufferCompletenessCache() const
 {
     for (const auto &framebuffer : mObjectMap)
     {

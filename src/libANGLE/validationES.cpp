@@ -1230,7 +1230,7 @@ bool ValidateFramebufferRenderbufferParameters(Context *context,
     Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
 
     ASSERT(framebuffer);
-    if (framebuffer->id() == 0)
+    if (framebuffer->isDefault())
     {
         context->validationError(GL_INVALID_OPERATION, kDefaultFramebufferTarget);
         return false;
@@ -1314,7 +1314,12 @@ bool ValidateBlitFramebufferParameters(Context *context,
         return false;
     }
 
-    if (readFramebuffer->id() == drawFramebuffer->id())
+    // The draw and read framebuffers can only match if:
+    // - They are the default framebuffer AND
+    // - The read/draw surfaces are different
+    if ((readFramebuffer->id() == drawFramebuffer->id()) &&
+        ((drawFramebuffer->id() != Framebuffer::kDefaultDrawFramebufferHandle) ||
+         (context->getCurrentDrawSurface() == context->getCurrentReadSurface())))
     {
         context->validationError(GL_INVALID_OPERATION, kBlitFeedbackLoop);
         return false;
@@ -2471,7 +2476,8 @@ bool ValidateCopyTexImageParametersBase(Context *context,
         return false;
     }
 
-    if (readFramebuffer->id() != 0 && !ValidateFramebufferNotMultisampled(context, readFramebuffer))
+    if (!readFramebuffer->isDefault() &&
+        !ValidateFramebufferNotMultisampled(context, readFramebuffer))
     {
         return false;
     }
@@ -3059,7 +3065,7 @@ bool ValidateFramebufferTextureBase(Context *context,
     const Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (framebuffer->id() == 0)
+    if (framebuffer->isDefault())
     {
         context->validationError(GL_INVALID_OPERATION, kDefaultFramebufferTarget);
         return false;
@@ -3965,7 +3971,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(Context *context,
     const Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (framebuffer->id() == 0)
+    if (framebuffer->isDefault())
     {
         if (clientVersion < 3)
         {
@@ -5428,27 +5434,26 @@ bool ValidateReadPixelsBase(Context *context,
     }
 
     Framebuffer *readFramebuffer = context->getState().getReadFramebuffer();
+    ASSERT(readFramebuffer);
 
     if (!ValidateFramebufferComplete(context, readFramebuffer))
     {
         return false;
     }
 
-    if (readFramebuffer->id() != 0 && !ValidateFramebufferNotMultisampled(context, readFramebuffer))
+    if (!readFramebuffer->isDefault() &&
+        !ValidateFramebufferNotMultisampled(context, readFramebuffer))
     {
         return false;
     }
 
-    Framebuffer *framebuffer = context->getState().getReadFramebuffer();
-    ASSERT(framebuffer);
-
-    if (framebuffer->getReadBufferState() == GL_NONE)
+    if (readFramebuffer->getReadBufferState() == GL_NONE)
     {
         context->validationError(GL_INVALID_OPERATION, kReadBufferNone);
         return false;
     }
 
-    const FramebufferAttachment *readBuffer = framebuffer->getReadColorAttachment();
+    const FramebufferAttachment *readBuffer = readFramebuffer->getReadColorAttachment();
     // WebGL 1.0 [Section 6.26] Reading From a Missing Attachment
     // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
     // attachment and WebGL defines it to be an error. We do the check unconditionnaly as the
@@ -5462,7 +5467,7 @@ bool ValidateReadPixelsBase(Context *context,
     // OVR_multiview2, Revision 1:
     // ReadPixels generates an INVALID_FRAMEBUFFER_OPERATION error if
     // the number of views in the current read framebuffer is more than one.
-    if (framebuffer->readDisallowedByMultiview())
+    if (readFramebuffer->readDisallowedByMultiview())
     {
         context->validationError(GL_INVALID_FRAMEBUFFER_OPERATION, kMultiviewReadFramebuffer);
         return false;
@@ -5491,10 +5496,11 @@ bool ValidateReadPixelsBase(Context *context,
     }
 
     GLenum currentFormat = GL_NONE;
-    ANGLE_VALIDATION_TRY(framebuffer->getImplementationColorReadFormat(context, &currentFormat));
+    ANGLE_VALIDATION_TRY(
+        readFramebuffer->getImplementationColorReadFormat(context, &currentFormat));
 
     GLenum currentType = GL_NONE;
-    ANGLE_VALIDATION_TRY(framebuffer->getImplementationColorReadType(context, &currentType));
+    ANGLE_VALIDATION_TRY(readFramebuffer->getImplementationColorReadType(context, &currentType));
 
     GLenum currentComponentType = readBuffer->getFormat().info->componentType;
 

@@ -2071,7 +2071,7 @@ bool ValidateDiscardFramebufferEXT(Context *context,
     {
         case GL_FRAMEBUFFER:
             defaultFramebuffer =
-                (context->getState().getTargetFramebuffer(GL_FRAMEBUFFER)->id() == 0);
+                (context->getState().getTargetFramebuffer(GL_FRAMEBUFFER)->isDefault());
             break;
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidFramebufferTarget);

@@ -1408,10 +1408,10 @@ bool ValidateInvalidateFramebuffer(Context *context,
     {
         case GL_DRAW_FRAMEBUFFER:
         case GL_FRAMEBUFFER:
-            defaultFramebuffer = context->getState().getDrawFramebuffer()->id() == 0;
+            defaultFramebuffer = context->getState().getDrawFramebuffer()->isDefault();
             break;
         case GL_READ_FRAMEBUFFER:
-            defaultFramebuffer = context->getState().getReadFramebuffer()->id() == 0;
+            defaultFramebuffer = context->getState().getReadFramebuffer()->isDefault();
             break;
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidFramebufferTarget);
@@ -1542,7 +1542,7 @@ bool ValidateReadBuffer(Context *context, GLenum src)
         return false;
     }
 
-    if (readFBO->id() == 0)
+    if (readFBO->isDefault())
     {
         if (src != GL_BACK)
         {

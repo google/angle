@@ -1058,7 +1058,7 @@ bool ValidateFramebufferParameteri(Context *context, GLenum target, GLenum pname
 
     const Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
     ASSERT(framebuffer);
-    if (framebuffer->id() == 0)
+    if (framebuffer->isDefault())
     {
         context->validationError(GL_INVALID_OPERATION, kDefaultFramebuffer);
         return false;
@@ -1102,7 +1102,7 @@ bool ValidateGetFramebufferParameteriv(Context *context, GLenum target, GLenum p
     const Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (framebuffer->id() == 0)
+    if (framebuffer->isDefault())
     {
         context->validationError(GL_INVALID_OPERATION, kDefaultFramebuffer);
         return false;

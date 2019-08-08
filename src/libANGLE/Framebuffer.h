@@ -112,6 +112,8 @@ class FramebufferState final : angle::NonCopyable
 
     GLuint id() const { return mId; }
 
+    bool isDefault() const;
+
   private:
     const FramebufferAttachment *getWebGLDepthStencilAttachment() const;
     const FramebufferAttachment *getWebGLDepthAttachment() const;
@@ -146,6 +148,9 @@ class FramebufferState final : angle::NonCopyable
 
     // Tracks if we need to initialize the resources for each attachment.
     angle::BitSet<IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS + 2> mResourceNeedsInit;
+
+    bool mDefaultFramebufferReadAttachmentInitialized;
+    FramebufferAttachment mDefaultFramebufferReadAttachment;
 };
 
 class Framebuffer final : public angle::ObserverInterface,
@@ -156,13 +161,14 @@ class Framebuffer final : public angle::ObserverInterface,
     // Constructor to build application-defined framebuffers
     Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id);
     // Constructor to build default framebuffers for a surface and context pair
-    Framebuffer(const Context *context, egl::Surface *surface);
+    Framebuffer(const Context *context, egl::Surface *surface, egl::Surface *readSurface);
     // Constructor to build a fake default framebuffer when surfaceless
-    Framebuffer(rx::GLImplFactory *factory);
+    Framebuffer(const Context *context, rx::GLImplFactory *factory, egl::Surface *readSurface);
 
     ~Framebuffer() override;
     void onDestroy(const Context *context);
 
+    void setReadSurface(const Context *context, egl::Surface *readSurface);
     void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
 
@@ -246,8 +252,8 @@ class Framebuffer final : public angle::ObserverInterface,
     {
         // The default framebuffer is always complete except when it is surfaceless in which
         // case it is always unsupported.
-        ASSERT(mState.mId != 0 || mCachedStatus.valid());
-        if (mState.mId == 0 || (!hasAnyDirtyBit() && mCachedStatus.valid()))
+        ASSERT(!isDefault() || mCachedStatus.valid());
+        if (isDefault() || (!hasAnyDirtyBit() && mCachedStatus.valid()))
         {
             return mCachedStatus.value();
         }
@@ -307,7 +313,7 @@ class Framebuffer final : public angle::ObserverInterface,
                        const Rectangle &destArea,
                        GLbitfield mask,
                        GLenum filter);
-    bool isDefault() const;
+    bool isDefault() const { return mState.isDefault(); }
 
     enum DirtyBitType : size_t
     {
@@ -361,6 +367,8 @@ class Framebuffer final : public angle::ObserverInterface,
     // Conservatively initializes both read color and depth. Blit can access the depth buffer.
     angle::Result ensureReadAttachmentsInitialized(const Context *context);
     Box getDimensions() const;
+
+    static const GLuint kDefaultDrawFramebufferHandle = 0;
 
   private:
     bool detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);

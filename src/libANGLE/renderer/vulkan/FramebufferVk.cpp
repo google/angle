@@ -525,6 +525,13 @@ RenderTargetVk *FramebufferVk::getDepthStencilRenderTarget() const
     return mRenderTargetCache.getDepthStencil();
 }
 
+RenderTargetVk *FramebufferVk::getColorDrawRenderTarget(size_t colorIndex) const
+{
+    RenderTargetVk *renderTarget = mRenderTargetCache.getColorDraw(mState, colorIndex);
+    ASSERT(renderTarget && renderTarget->getImage().valid());
+    return renderTarget;
+}
+
 RenderTargetVk *FramebufferVk::getColorReadRenderTarget() const
 {
     RenderTargetVk *renderTarget = mRenderTargetCache.getColorRead(mState);
@@ -1078,8 +1085,10 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
             case gl::Framebuffer::DIRTY_BIT_STENCIL_BUFFER_CONTENTS:
                 ANGLE_TRY(mRenderTargetCache.getDepthStencil()->flushStagedUpdates(contextVk));
                 break;
-            case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
             case gl::Framebuffer::DIRTY_BIT_READ_BUFFER:
+                ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
+                break;
+            case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_WIDTH:
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_HEIGHT:
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_SAMPLES:
@@ -1263,7 +1272,7 @@ angle::Result FramebufferVk::clearWithRenderPassOp(
     {
         if (clearColorBuffers.test(colorIndexGL))
         {
-            RenderTargetVk *renderTarget = getColorReadRenderTarget();
+            RenderTargetVk *renderTarget = getColorDrawRenderTarget(colorIndexGL);
 
             // If the render target doesn't have alpha, but its emulated format has it, clear the
             // alpha to 1.

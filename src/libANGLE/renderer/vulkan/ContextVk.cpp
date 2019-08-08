@@ -1840,7 +1840,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // command graph node can only support one RenderPass configuration at a time.
                 onRenderPassFinished();
 
-                mDrawFramebuffer = vk::GetImpl(glState.getDrawFramebuffer());
+                gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
+                mDrawFramebuffer                 = vk::GetImpl(drawFramebuffer);
                 updateFlipViewportDrawFramebuffer(glState);
                 updateViewport(mDrawFramebuffer, glState.getViewport(), glState.getNearPlane(),
                                glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
@@ -1852,21 +1853,17 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                                        glState.getRasterizerState(),
                                                        isViewportFlipEnabledForDrawFBO());
                 updateScissor(glState);
+                const gl::DepthStencilState depthStencilState = glState.getDepthStencilState();
                 mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
-                                                              glState.getDepthStencilState(),
-                                                              glState.getDrawFramebuffer());
+                                                              depthStencilState, drawFramebuffer);
                 mGraphicsPipelineDesc->updateDepthWriteEnabled(&mGraphicsPipelineTransition,
-                                                               glState.getDepthStencilState(),
-                                                               glState.getDrawFramebuffer());
+                                                               depthStencilState, drawFramebuffer);
                 mGraphicsPipelineDesc->updateStencilTestEnabled(&mGraphicsPipelineTransition,
-                                                                glState.getDepthStencilState(),
-                                                                glState.getDrawFramebuffer());
-                mGraphicsPipelineDesc->updateStencilFrontWriteMask(&mGraphicsPipelineTransition,
-                                                                   glState.getDepthStencilState(),
-                                                                   glState.getDrawFramebuffer());
-                mGraphicsPipelineDesc->updateStencilBackWriteMask(&mGraphicsPipelineTransition,
-                                                                  glState.getDepthStencilState(),
-                                                                  glState.getDrawFramebuffer());
+                                                                depthStencilState, drawFramebuffer);
+                mGraphicsPipelineDesc->updateStencilFrontWriteMask(
+                    &mGraphicsPipelineTransition, depthStencilState, drawFramebuffer);
+                mGraphicsPipelineDesc->updateStencilBackWriteMask(
+                    &mGraphicsPipelineTransition, depthStencilState, drawFramebuffer);
                 mGraphicsPipelineDesc->updateRenderPassDesc(&mGraphicsPipelineTransition,
                                                             mDrawFramebuffer->getRenderPassDesc());
                 invalidateCurrentTransformFeedbackBuffers();
