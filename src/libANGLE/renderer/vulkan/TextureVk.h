@@ -313,7 +313,6 @@ class TextureVk : public TextureImpl
                                  const bool sized,
                                  uint32_t levelCount,
                                  uint32_t layerCount);
-    angle::Result init3DRenderTargets(ContextVk *contextVk);
     angle::Result initImageViewImpl(ContextVk *contextVk,
                                     const vk::Format &format,
                                     uint32_t levelCount,
@@ -321,11 +320,11 @@ class TextureVk : public TextureImpl
                                     TextureVkViews *views,
                                     VkImageAspectFlags aspectFlags,
                                     gl::SwizzleState mappedSwizzle);
+    angle::Result initLayerRenderTargets(ContextVk *contextVk, GLuint layerCount);
     vk::ImageView *getLevelImageViewImpl(vk::ImageViewVector *imageViews, size_t level);
     vk::ImageView *getLayerLevelImageViewImpl(vk::LayerLevelImageViewVector *imageViews,
                                               size_t layer,
                                               size_t level);
-    angle::Result initCubeMapRenderTargets(ContextVk *contextVk);
 
     angle::Result ensureImageInitializedImpl(ContextVk *contextVk,
                                              const gl::Extents &baseLevelExtents,
@@ -365,8 +364,7 @@ class TextureVk : public TextureImpl
 
     vk::Sampler mSampler;
     RenderTargetVk mRenderTarget;
-    std::vector<RenderTargetVk> m3DRenderTargets;
-    std::vector<RenderTargetVk> mCubeMapRenderTargets;
+    std::vector<RenderTargetVk> mLayerRenderTargets;
 
     // The serial is used for cache indexing.
     Serial mSerial;

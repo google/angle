@@ -72,6 +72,33 @@ uint32_t GetImageLayerCountForView(const vk::ImageHelper &image)
     return image.getExtents().depth > 1 ? image.getExtents().depth : image.getLayerCount();
 }
 
+void GetRenderTargetLayerCountAndIndex(vk::ImageHelper *image,
+                                       const gl::ImageIndex &index,
+                                       GLuint *layerCount,
+                                       GLuint *layerIndex)
+{
+    switch (index.getType())
+    {
+        case gl::TextureType::CubeMap:
+            *layerIndex = index.cubeMapFaceIndex();
+            *layerCount = gl::kCubeFaceCount;
+            return;
+
+        case gl::TextureType::_3D:
+            *layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
+            *layerCount = image->getExtents().depth;
+            return;
+
+        case gl::TextureType::_2DArray:
+            *layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
+            *layerCount = image->getLayerCount();
+            return;
+
+        default:
+            UNREACHABLE();
+    }
+}
+
 bool HasBothDepthAndStencilAspects(VkImageAspectFlags aspectFlags)
 {
     constexpr VkImageAspectFlags kDepthStencilAspects =
@@ -933,8 +960,7 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
                        getNativeImageLayer(0));
 
     // Force re-creation of layered render targets next time they are needed
-    mCubeMapRenderTargets.clear();
-    m3DRenderTargets.clear();
+    mLayerRenderTargets.clear();
 
     mSerial = contextVk->generateTextureSerial();
 }
@@ -1277,19 +1303,21 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(ensureImageInitialized(contextVk));
 
+    GLuint layerIndex = 0, layerCount = 0;
+
     switch (imageIndex.getType())
     {
         case gl::TextureType::_2D:
             *rtOut = &mRenderTarget;
             break;
+        case gl::TextureType::CubeMap:
         case gl::TextureType::_2DArray:
         case gl::TextureType::_3D:
-            ANGLE_TRY(init3DRenderTargets(contextVk));
-            *rtOut = &m3DRenderTargets[imageIndex.getLayerIndex()];
-            break;
-        case gl::TextureType::CubeMap:
-            ANGLE_TRY(initCubeMapRenderTargets(contextVk));
-            *rtOut = &mCubeMapRenderTargets[imageIndex.cubeMapFaceIndex()];
+            // Special handling required for different types, grab the count and index
+            GetRenderTargetLayerCountAndIndex(mImage, imageIndex, &layerCount, &layerIndex);
+
+            ANGLE_TRY(initLayerRenderTargets(contextVk, layerCount));
+            *rtOut = &mLayerRenderTargets[layerIndex];
             break;
         default:
             UNREACHABLE();
@@ -1335,17 +1363,16 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
                                       commandBuffer);
 }
 
-angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
+angle::Result TextureVk::initLayerRenderTargets(ContextVk *contextVk, GLuint layerCount)
 {
     // Lazy init. Check if already initialized.
-    if (!m3DRenderTargets.empty())
+    if (!mLayerRenderTargets.empty())
         return angle::Result::Continue;
 
-    uint32_t layerCount                = GetImageLayerCountForView(*mImage);
     const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
 
     mLayerFetchImageView.resize(layerCount);
-    m3DRenderTargets.resize(layerCount);
+    mLayerRenderTargets.resize(layerCount);
 
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
@@ -1363,41 +1390,9 @@ angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
                                              getNativeImageLevel(0), 1,
                                              getNativeImageLayer(layerIndex), 1));
 
-        m3DRenderTargets[layerIndex].init(mImage, drawView, &mLayerFetchImageView[layerIndex],
-                                          getNativeImageLevel(0), getNativeImageLayer(layerIndex));
-    }
-    return angle::Result::Continue;
-}
-
-angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
-{
-    // Lazy init. Check if already initialized.
-    if (!mCubeMapRenderTargets.empty())
-        return angle::Result::Continue;
-
-    const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
-
-    mLayerFetchImageView.resize(gl::kCubeFaceCount);
-    mCubeMapRenderTargets.resize(gl::kCubeFaceCount);
-    for (uint32_t cubeMapFaceIndex = 0; cubeMapFaceIndex < gl::kCubeFaceCount; ++cubeMapFaceIndex)
-    {
-        const vk::ImageView *drawView;
-        ANGLE_TRY(getLayerLevelDrawImageView(contextVk, cubeMapFaceIndex, 0, &drawView));
-
-        // Users of the render target expect the views to directly view the desired layer, so we
-        // need create a fetch view for each layer as well.
-        gl::SwizzleState mappedSwizzle;
-        MapSwizzleState(contextVk, mImage->getFormat(), baseLevelDesc.format.info->sized,
-                        mState.getSwizzleState(), &mappedSwizzle);
-        gl::TextureType arrayType = vk::Get2DTextureType(gl::kCubeFaceCount, mImage->getSamples());
-        ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, mImage->getAspectFlags(),
-                                             mappedSwizzle, &mLayerFetchImageView[cubeMapFaceIndex],
-                                             getNativeImageLevel(0), 1,
-                                             getNativeImageLayer(cubeMapFaceIndex), 1));
-
-        mCubeMapRenderTargets[cubeMapFaceIndex].init(
-            mImage, drawView, &mLayerFetchImageView[cubeMapFaceIndex], getNativeImageLevel(0),
-            getNativeImageLayer(cubeMapFaceIndex));
+        mLayerRenderTargets[layerIndex].init(mImage, drawView, &mLayerFetchImageView[layerIndex],
+                                             getNativeImageLevel(0),
+                                             getNativeImageLayer(layerIndex));
     }
     return angle::Result::Continue;
 }
@@ -1820,8 +1815,7 @@ void TextureVk::releaseImage(ContextVk *contextVk)
 
     releaseImageViews(contextVk);
 
-    mCubeMapRenderTargets.clear();
-    m3DRenderTargets.clear();
+    mLayerRenderTargets.clear();
 
     onStagingBufferChange();
 }
