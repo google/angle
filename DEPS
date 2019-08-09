@@ -49,17 +49,17 @@ deps = {
   },
 
   '{angle_root}/build': {
-    'url': '{chromium_git}/chromium/src/build.git@680f9ea3db817c5e8d1e1ebca72a1e6f0dbec1da',
+    'url': '{chromium_git}/chromium/src/build.git@5262b9094642f42ac7ecd3fcfe2762e23cbefd97',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@d5c58b84d50d256968271db459cd29b22bff1ba2',
+    'url': '{chromium_git}/chromium/src/buildtools.git@74cfb57006f83cfe050817526db359d5c8a11628',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/testing': {
-    'url': '{chromium_git}/chromium/src/testing@32e614b7ec7b2b741351c1b8470aaf30c2f532fa',
+    'url': '{chromium_git}/chromium/src/testing@58990c945ffa4f0b333cf0fff30a39260a5d6c69',
     'condition': 'not build_with_chromium',
   },
 
@@ -74,7 +74,7 @@ deps = {
   },
 
   '{angle_root}/third_party/fuchsia-sdk': {
-    'url': '{chromium_git}/chromium/src/third_party/fuchsia-sdk.git@8e8db13b538ecb251e5ce9d5c781fc142f9752fd',
+    'url': '{chromium_git}/chromium/src/third_party/fuchsia-sdk.git@5fd29151cf35c0813c33cc368a7c78389e3f5caa',
     'condition': 'checkout_fuchsia and not build_with_chromium',
   },
 
@@ -89,7 +89,7 @@ deps = {
   },
 
   '{angle_root}/third_party/googletest': {
-    'url': '{chromium_git}/chromium/src/third_party/googletest@d5024103c8a8977156ee800eb1c84d92dffe9fdf',
+    'url': '{chromium_git}/chromium/src/third_party/googletest@c721b68ddecc18bbc6b763b2fe8ab802c22f228a',
     'condition': 'not build_with_chromium',
   },
 
@@ -110,17 +110,17 @@ deps = {
   },
 
   '{angle_root}/third_party/jsoncpp': {
-    'url': '{chromium_git}/chromium/src/third_party/jsoncpp@fd0ac8ce63a47e99b71a58f1489136fbb19c9137',
+    'url': '{chromium_git}/chromium/src/third_party/jsoncpp@48246a099549ab325c01f69f24a34fc72e5c42e4',
     'condition': 'not build_with_chromium',
    },
 
   '{angle_root}/third_party/jsoncpp/source': {
-    'url' : '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@f572e8e42e22cfcf5ab0aea26574f408943edfa4',
+    'url' : '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@645250b6690785be60ab6780ce4b58698d884d11',
     'condition': 'not build_with_chromium',
    },
 
   '{angle_root}/third_party/Python-Markdown': {
-    'url': '{chromium_git}/chromium/src/third_party/Python-Markdown@b08af21eb795e522e1b972cb85bff59edb1ae209',
+    'url': '{chromium_git}/chromium/src/third_party/Python-Markdown@36657c103ce5964733bbbb29377085e9cc1a9472',
     'condition': 'not build_with_chromium',
   },
 
@@ -177,7 +177,7 @@ deps = {
   },
 
   '{angle_root}/third_party/yasm': {
-    'url': '{chromium_git}/chromium/src/third_party/yasm@86b6058141a42aed51bbd8bb9f9d54d199d9dbd0',
+    'url': '{chromium_git}/chromium/src/third_party/yasm@15439370afd9df5359a0ff12244c2ccb2111c787',
     'condition': 'not build_with_chromium',
   },
 
@@ -187,7 +187,7 @@ deps = {
   },
 
   '{angle_root}/third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@f95aeb0fa7f136ef4a457a6d9ba6f3c2701a444b',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@0f820c1d7165ba79e0429eab8b55c76f2be7d440',
     'condition': 'not build_with_chromium',
   },
 
@@ -197,7 +197,7 @@ deps = {
   },
 
   '{angle_root}/tools/md_browser': {
-    'url': '{chromium_git}/chromium/src/tools/md_browser@e9462696241f3ca832890473173e03e7bcfe6adc',
+    'url': '{chromium_git}/chromium/src/tools/md_browser@0bfd826f8566a99923e64a782908faca72bc457c',
     'condition': 'not build_with_chromium',
   },
 }
