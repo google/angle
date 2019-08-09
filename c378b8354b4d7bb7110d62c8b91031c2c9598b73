@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "03cf3c6f_ed5839ca",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-08-09T22:20:00Z",
+      "side": 1,
+      "message": "Moved to newest patch. Mark as resolved here",
+      "parentUuid": "1fb026ac_6437c396",
+      "revId": "c378b8354b4d7bb7110d62c8b91031c2c9598b73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "00ba788d_f2f5982d",
         "filename": "src/compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.cpp",
         "patchSetId": 26
@@ -33,6 +51,24 @@
       "revId": "c378b8354b4d7bb7110d62c8b91031c2c9598b73",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad339b4e_178309d9",
+        "filename": "src/compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-08-09T22:20:00Z",
+      "side": 1,
+      "message": "Moved to newest patch. Mark as resolved here",
+      "parentUuid": "00ba788d_f2f5982d",
+      "revId": "c378b8354b4d7bb7110d62c8b91031c2c9598b73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
