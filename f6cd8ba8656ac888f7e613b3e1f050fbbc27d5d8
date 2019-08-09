@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "22a47f4b_d92c3007",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6464,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-09T13:48:21Z",
+      "side": 1,
+      "message": "Okay, works for me.  Done.",
+      "parentUuid": "f65f8ee8_3957ee03",
+      "range": {
+        "startLine": 6464,
+        "startChar": 67,
+        "endLine": 6464,
+        "endChar": 88
+      },
+      "revId": "f6cd8ba8656ac888f7e613b3e1f050fbbc27d5d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ead3458a_3c51e474",
         "filename": "src/tests/deqp_support/deqp_khr_gles2_test_expectations.txt",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "f6cd8ba8656ac888f7e613b3e1f050fbbc27d5d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92551aed_8c1b0951",
+        "filename": "src/tests/deqp_support/deqp_khr_gles2_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-09T13:48:21Z",
+      "side": 1,
+      "message": "It is a combination of missing support for framebufferTexture3D (which I\u0027ll upload this morning) and a test bug due to use of sized internal formats.  Hacking the test to use unsized allows it to pass.",
+      "parentUuid": "ead3458a_3c51e474",
+      "range": {
+        "startLine": 42,
+        "startChar": 35,
+        "endLine": 42,
+        "endChar": 54
+      },
+      "revId": "f6cd8ba8656ac888f7e613b3e1f050fbbc27d5d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
