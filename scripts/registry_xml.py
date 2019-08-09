@@ -139,9 +139,6 @@ unsupported_enum_group_names = {
     'FenceConditionNV',
     'BufferPointerNameARB',
     'MatrixIndexPointerTypeARB',
-    'PointParameterNameARB',
-    'ClampColorTargetARB',
-    'ClampColorModeARB',
 }
 
 

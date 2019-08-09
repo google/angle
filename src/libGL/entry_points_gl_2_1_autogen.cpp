@@ -23,10 +23,6 @@
 #include "libANGLE/validationGL21_autogen.h"
 #include "libGLESv2/global_state.h"
 
-#if defined(ANGLE_TRACE_ENABLED)
-#    include "libANGLE/gl_enum_utils_autogen.h"
-#endif
-
 namespace gl
 {
 void GL_APIENTRY UniformMatrix2x3fv(GLint location,
@@ -35,9 +31,9 @@ void GL_APIENTRY UniformMatrix2x3fv(GLint location,
                                     const GLfloat *value)
 {
     EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
+        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
         "= 0x%016" PRIxPTR ")",
-        location, count, GLenumToString(GLenumGroup::Boolean, transpose), (uintptr_t)value);
+        location, count, transpose, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -58,9 +54,9 @@ void GL_APIENTRY UniformMatrix2x4fv(GLint location,
                                     const GLfloat *value)
 {
     EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
+        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
         "= 0x%016" PRIxPTR ")",
-        location, count, GLenumToString(GLenumGroup::Boolean, transpose), (uintptr_t)value);
+        location, count, transpose, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -81,9 +77,9 @@ void GL_APIENTRY UniformMatrix3x2fv(GLint location,
                                     const GLfloat *value)
 {
     EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
+        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
         "= 0x%016" PRIxPTR ")",
-        location, count, GLenumToString(GLenumGroup::Boolean, transpose), (uintptr_t)value);
+        location, count, transpose, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -104,9 +100,9 @@ void GL_APIENTRY UniformMatrix3x4fv(GLint location,
                                     const GLfloat *value)
 {
     EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
+        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
         "= 0x%016" PRIxPTR ")",
-        location, count, GLenumToString(GLenumGroup::Boolean, transpose), (uintptr_t)value);
+        location, count, transpose, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -127,9 +123,9 @@ void GL_APIENTRY UniformMatrix4x2fv(GLint location,
                                     const GLfloat *value)
 {
     EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
+        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
         "= 0x%016" PRIxPTR ")",
-        location, count, GLenumToString(GLenumGroup::Boolean, transpose), (uintptr_t)value);
+        location, count, transpose, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -150,9 +146,9 @@ void GL_APIENTRY UniformMatrix4x3fv(GLint location,
                                     const GLfloat *value)
 {
     EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
+        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
         "= 0x%016" PRIxPTR ")",
-        location, count, GLenumToString(GLenumGroup::Boolean, transpose), (uintptr_t)value);
+        location, count, transpose, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)

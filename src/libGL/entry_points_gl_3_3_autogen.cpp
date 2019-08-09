@@ -23,10 +23,6 @@
 #include "libANGLE/validationGL33_autogen.h"
 #include "libGLESv2/global_state.h"
 
-#if defined(ANGLE_TRACE_ENABLED)
-#    include "libANGLE/gl_enum_utils_autogen.h"
-#endif
-
 namespace gl
 {
 void GL_APIENTRY BindFragDataLocationIndexed(GLuint program,
@@ -73,8 +69,7 @@ void GL_APIENTRY BindSampler(GLuint unit, GLuint sampler)
 
 void GL_APIENTRY ColorP3ui(GLenum type, GLuint color)
 {
-    EVENT("(GLenum type = %s, GLuint color = %u)",
-          GLenumToString(GLenumGroup::ColorPointerType, type), color);
+    EVENT("(GLenum type = 0x%X, GLuint color = %u)", type, color);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -90,8 +85,7 @@ void GL_APIENTRY ColorP3ui(GLenum type, GLuint color)
 
 void GL_APIENTRY ColorP3uiv(GLenum type, const GLuint *color)
 {
-    EVENT("(GLenum type = %s, const GLuint *color = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::ColorPointerType, type), (uintptr_t)color);
+    EVENT("(GLenum type = 0x%X, const GLuint *color = 0x%016" PRIxPTR ")", type, (uintptr_t)color);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -107,8 +101,7 @@ void GL_APIENTRY ColorP3uiv(GLenum type, const GLuint *color)
 
 void GL_APIENTRY ColorP4ui(GLenum type, GLuint color)
 {
-    EVENT("(GLenum type = %s, GLuint color = %u)",
-          GLenumToString(GLenumGroup::ColorPointerType, type), color);
+    EVENT("(GLenum type = 0x%X, GLuint color = %u)", type, color);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -124,8 +117,7 @@ void GL_APIENTRY ColorP4ui(GLenum type, GLuint color)
 
 void GL_APIENTRY ColorP4uiv(GLenum type, const GLuint *color)
 {
-    EVENT("(GLenum type = %s, const GLuint *color = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::ColorPointerType, type), (uintptr_t)color);
+    EVENT("(GLenum type = 0x%X, const GLuint *color = 0x%016" PRIxPTR ")", type, (uintptr_t)color);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -204,8 +196,8 @@ GLint GL_APIENTRY GetFragDataIndex(GLuint program, const GLchar *name)
 
 void GL_APIENTRY GetQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params)
 {
-    EVENT("(GLuint id = %u, GLenum pname = %s, GLint64 *params = 0x%016" PRIxPTR ")", id,
-          GLenumToString(GLenumGroup::QueryObjectParameterName, pname), (uintptr_t)params);
+    EVENT("(GLuint id = %u, GLenum pname = 0x%X, GLint64 *params = 0x%016" PRIxPTR ")", id, pname,
+          (uintptr_t)params);
 
     Context *context = GetGlobalContext();
     if (context)
@@ -222,8 +214,8 @@ void GL_APIENTRY GetQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params)
 
 void GL_APIENTRY GetQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params)
 {
-    EVENT("(GLuint id = %u, GLenum pname = %s, GLuint64 *params = 0x%016" PRIxPTR ")", id,
-          GLenumToString(GLenumGroup::QueryObjectParameterName, pname), (uintptr_t)params);
+    EVENT("(GLuint id = %u, GLenum pname = 0x%X, GLuint64 *params = 0x%016" PRIxPTR ")", id, pname,
+          (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -240,8 +232,8 @@ void GL_APIENTRY GetQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params)
 
 void GL_APIENTRY GetSamplerParameterIiv(GLuint sampler, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", sampler,
-          GLenumToString(GLenumGroup::SamplerParameterName, pname), (uintptr_t)params);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", sampler,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -258,8 +250,8 @@ void GL_APIENTRY GetSamplerParameterIiv(GLuint sampler, GLenum pname, GLint *par
 
 void GL_APIENTRY GetSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint *params)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, GLuint *params = 0x%016" PRIxPTR ")", sampler,
-          GLenumToString(GLenumGroup::SamplerParameterName, pname), (uintptr_t)params);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLuint *params = 0x%016" PRIxPTR ")", sampler,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -276,8 +268,8 @@ void GL_APIENTRY GetSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint *p
 
 void GL_APIENTRY GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat *params)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, GLfloat *params = 0x%016" PRIxPTR ")", sampler,
-          GLenumToString(GLenumGroup::SamplerParameterName, pname), (uintptr_t)params);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLfloat *params = 0x%016" PRIxPTR ")",
+          sampler, pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -294,8 +286,8 @@ void GL_APIENTRY GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat *pa
 
 void GL_APIENTRY GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", sampler,
-          GLenumToString(GLenumGroup::SamplerParameterName, pname), (uintptr_t)params);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", sampler,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -338,9 +330,7 @@ GLboolean GL_APIENTRY IsSampler(GLuint sampler)
 
 void GL_APIENTRY MultiTexCoordP1ui(GLenum texture, GLenum type, GLuint coords)
 {
-    EVENT("(GLenum texture = %s, GLenum type = %s, GLuint coords = %u)",
-          GLenumToString(GLenumGroup::TextureUnit, texture),
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), coords);
+    EVENT("(GLenum texture = 0x%X, GLenum type = 0x%X, GLuint coords = %u)", texture, type, coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -357,9 +347,8 @@ void GL_APIENTRY MultiTexCoordP1ui(GLenum texture, GLenum type, GLuint coords)
 
 void GL_APIENTRY MultiTexCoordP1uiv(GLenum texture, GLenum type, const GLuint *coords)
 {
-    EVENT("(GLenum texture = %s, GLenum type = %s, const GLuint *coords = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TextureUnit, texture),
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), (uintptr_t)coords);
+    EVENT("(GLenum texture = 0x%X, GLenum type = 0x%X, const GLuint *coords = 0x%016" PRIxPTR ")",
+          texture, type, (uintptr_t)coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -376,9 +365,7 @@ void GL_APIENTRY MultiTexCoordP1uiv(GLenum texture, GLenum type, const GLuint *c
 
 void GL_APIENTRY MultiTexCoordP2ui(GLenum texture, GLenum type, GLuint coords)
 {
-    EVENT("(GLenum texture = %s, GLenum type = %s, GLuint coords = %u)",
-          GLenumToString(GLenumGroup::TextureUnit, texture),
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), coords);
+    EVENT("(GLenum texture = 0x%X, GLenum type = 0x%X, GLuint coords = %u)", texture, type, coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -395,9 +382,8 @@ void GL_APIENTRY MultiTexCoordP2ui(GLenum texture, GLenum type, GLuint coords)
 
 void GL_APIENTRY MultiTexCoordP2uiv(GLenum texture, GLenum type, const GLuint *coords)
 {
-    EVENT("(GLenum texture = %s, GLenum type = %s, const GLuint *coords = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TextureUnit, texture),
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), (uintptr_t)coords);
+    EVENT("(GLenum texture = 0x%X, GLenum type = 0x%X, const GLuint *coords = 0x%016" PRIxPTR ")",
+          texture, type, (uintptr_t)coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -414,9 +400,7 @@ void GL_APIENTRY MultiTexCoordP2uiv(GLenum texture, GLenum type, const GLuint *c
 
 void GL_APIENTRY MultiTexCoordP3ui(GLenum texture, GLenum type, GLuint coords)
 {
-    EVENT("(GLenum texture = %s, GLenum type = %s, GLuint coords = %u)",
-          GLenumToString(GLenumGroup::TextureUnit, texture),
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), coords);
+    EVENT("(GLenum texture = 0x%X, GLenum type = 0x%X, GLuint coords = %u)", texture, type, coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -433,9 +417,8 @@ void GL_APIENTRY MultiTexCoordP3ui(GLenum texture, GLenum type, GLuint coords)
 
 void GL_APIENTRY MultiTexCoordP3uiv(GLenum texture, GLenum type, const GLuint *coords)
 {
-    EVENT("(GLenum texture = %s, GLenum type = %s, const GLuint *coords = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TextureUnit, texture),
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), (uintptr_t)coords);
+    EVENT("(GLenum texture = 0x%X, GLenum type = 0x%X, const GLuint *coords = 0x%016" PRIxPTR ")",
+          texture, type, (uintptr_t)coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -452,9 +435,7 @@ void GL_APIENTRY MultiTexCoordP3uiv(GLenum texture, GLenum type, const GLuint *c
 
 void GL_APIENTRY MultiTexCoordP4ui(GLenum texture, GLenum type, GLuint coords)
 {
-    EVENT("(GLenum texture = %s, GLenum type = %s, GLuint coords = %u)",
-          GLenumToString(GLenumGroup::TextureUnit, texture),
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), coords);
+    EVENT("(GLenum texture = 0x%X, GLenum type = 0x%X, GLuint coords = %u)", texture, type, coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -471,9 +452,8 @@ void GL_APIENTRY MultiTexCoordP4ui(GLenum texture, GLenum type, GLuint coords)
 
 void GL_APIENTRY MultiTexCoordP4uiv(GLenum texture, GLenum type, const GLuint *coords)
 {
-    EVENT("(GLenum texture = %s, GLenum type = %s, const GLuint *coords = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TextureUnit, texture),
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), (uintptr_t)coords);
+    EVENT("(GLenum texture = 0x%X, GLenum type = 0x%X, const GLuint *coords = 0x%016" PRIxPTR ")",
+          texture, type, (uintptr_t)coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -490,8 +470,7 @@ void GL_APIENTRY MultiTexCoordP4uiv(GLenum texture, GLenum type, const GLuint *c
 
 void GL_APIENTRY NormalP3ui(GLenum type, GLuint coords)
 {
-    EVENT("(GLenum type = %s, GLuint coords = %u)",
-          GLenumToString(GLenumGroup::NormalPointerType, type), coords);
+    EVENT("(GLenum type = 0x%X, GLuint coords = %u)", type, coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -507,8 +486,8 @@ void GL_APIENTRY NormalP3ui(GLenum type, GLuint coords)
 
 void GL_APIENTRY NormalP3uiv(GLenum type, const GLuint *coords)
 {
-    EVENT("(GLenum type = %s, const GLuint *coords = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::NormalPointerType, type), (uintptr_t)coords);
+    EVENT("(GLenum type = 0x%X, const GLuint *coords = 0x%016" PRIxPTR ")", type,
+          (uintptr_t)coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -525,8 +504,7 @@ void GL_APIENTRY NormalP3uiv(GLenum type, const GLuint *coords)
 
 void GL_APIENTRY QueryCounter(GLuint id, GLenum target)
 {
-    EVENT("(GLuint id = %u, GLenum target = %s)", id,
-          PackedGLenumToString<QueryType>(target).c_str());
+    EVENT("(GLuint id = %u, GLenum target = 0x%X)", id, target);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -544,8 +522,8 @@ void GL_APIENTRY QueryCounter(GLuint id, GLenum target)
 
 void GL_APIENTRY SamplerParameterIiv(GLuint sampler, GLenum pname, const GLint *param)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, const GLint *param = 0x%016" PRIxPTR ")",
-          sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname), (uintptr_t)param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint *param = 0x%016" PRIxPTR ")",
+          sampler, pname, (uintptr_t)param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -562,8 +540,8 @@ void GL_APIENTRY SamplerParameterIiv(GLuint sampler, GLenum pname, const GLint *
 
 void GL_APIENTRY SamplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint *param)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, const GLuint *param = 0x%016" PRIxPTR ")",
-          sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname), (uintptr_t)param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLuint *param = 0x%016" PRIxPTR ")",
+          sampler, pname, (uintptr_t)param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -580,8 +558,7 @@ void GL_APIENTRY SamplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint
 
 void GL_APIENTRY SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, GLfloat param = %f)", sampler,
-          GLenumToString(GLenumGroup::SamplerParameterName, pname), param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLfloat param = %f)", sampler, pname, param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -598,8 +575,8 @@ void GL_APIENTRY SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 
 void GL_APIENTRY SamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat *param)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, const GLfloat *param = 0x%016" PRIxPTR ")",
-          sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname), (uintptr_t)param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLfloat *param = 0x%016" PRIxPTR ")",
+          sampler, pname, (uintptr_t)param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -616,8 +593,7 @@ void GL_APIENTRY SamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat 
 
 void GL_APIENTRY SamplerParameteri(GLuint sampler, GLenum pname, GLint param)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, GLint param = %d)", sampler,
-          GLenumToString(GLenumGroup::SamplerParameterName, pname), param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint param = %d)", sampler, pname, param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -634,8 +610,8 @@ void GL_APIENTRY SamplerParameteri(GLuint sampler, GLenum pname, GLint param)
 
 void GL_APIENTRY SamplerParameteriv(GLuint sampler, GLenum pname, const GLint *param)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = %s, const GLint *param = 0x%016" PRIxPTR ")",
-          sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname), (uintptr_t)param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint *param = 0x%016" PRIxPTR ")",
+          sampler, pname, (uintptr_t)param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -652,8 +628,7 @@ void GL_APIENTRY SamplerParameteriv(GLuint sampler, GLenum pname, const GLint *p
 
 void GL_APIENTRY SecondaryColorP3ui(GLenum type, GLuint color)
 {
-    EVENT("(GLenum type = %s, GLuint color = %u)",
-          GLenumToString(GLenumGroup::ColorPointerType, type), color);
+    EVENT("(GLenum type = 0x%X, GLuint color = %u)", type, color);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -670,8 +645,7 @@ void GL_APIENTRY SecondaryColorP3ui(GLenum type, GLuint color)
 
 void GL_APIENTRY SecondaryColorP3uiv(GLenum type, const GLuint *color)
 {
-    EVENT("(GLenum type = %s, const GLuint *color = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::ColorPointerType, type), (uintptr_t)color);
+    EVENT("(GLenum type = 0x%X, const GLuint *color = 0x%016" PRIxPTR ")", type, (uintptr_t)color);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -688,8 +662,7 @@ void GL_APIENTRY SecondaryColorP3uiv(GLenum type, const GLuint *color)
 
 void GL_APIENTRY TexCoordP1ui(GLenum type, GLuint coords)
 {
-    EVENT("(GLenum type = %s, GLuint coords = %u)",
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), coords);
+    EVENT("(GLenum type = 0x%X, GLuint coords = %u)", type, coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -706,8 +679,8 @@ void GL_APIENTRY TexCoordP1ui(GLenum type, GLuint coords)
 
 void GL_APIENTRY TexCoordP1uiv(GLenum type, const GLuint *coords)
 {
-    EVENT("(GLenum type = %s, const GLuint *coords = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), (uintptr_t)coords);
+    EVENT("(GLenum type = 0x%X, const GLuint *coords = 0x%016" PRIxPTR ")", type,
+          (uintptr_t)coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -724,8 +697,7 @@ void GL_APIENTRY TexCoordP1uiv(GLenum type, const GLuint *coords)
 
 void GL_APIENTRY TexCoordP2ui(GLenum type, GLuint coords)
 {
-    EVENT("(GLenum type = %s, GLuint coords = %u)",
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), coords);
+    EVENT("(GLenum type = 0x%X, GLuint coords = %u)", type, coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -742,8 +714,8 @@ void GL_APIENTRY TexCoordP2ui(GLenum type, GLuint coords)
 
 void GL_APIENTRY TexCoordP2uiv(GLenum type, const GLuint *coords)
 {
-    EVENT("(GLenum type = %s, const GLuint *coords = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), (uintptr_t)coords);
+    EVENT("(GLenum type = 0x%X, const GLuint *coords = 0x%016" PRIxPTR ")", type,
+          (uintptr_t)coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -760,8 +732,7 @@ void GL_APIENTRY TexCoordP2uiv(GLenum type, const GLuint *coords)
 
 void GL_APIENTRY TexCoordP3ui(GLenum type, GLuint coords)
 {
-    EVENT("(GLenum type = %s, GLuint coords = %u)",
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), coords);
+    EVENT("(GLenum type = 0x%X, GLuint coords = %u)", type, coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -778,8 +749,8 @@ void GL_APIENTRY TexCoordP3ui(GLenum type, GLuint coords)
 
 void GL_APIENTRY TexCoordP3uiv(GLenum type, const GLuint *coords)
 {
-    EVENT("(GLenum type = %s, const GLuint *coords = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), (uintptr_t)coords);
+    EVENT("(GLenum type = 0x%X, const GLuint *coords = 0x%016" PRIxPTR ")", type,
+          (uintptr_t)coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -796,8 +767,7 @@ void GL_APIENTRY TexCoordP3uiv(GLenum type, const GLuint *coords)
 
 void GL_APIENTRY TexCoordP4ui(GLenum type, GLuint coords)
 {
-    EVENT("(GLenum type = %s, GLuint coords = %u)",
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), coords);
+    EVENT("(GLenum type = 0x%X, GLuint coords = %u)", type, coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -814,8 +784,8 @@ void GL_APIENTRY TexCoordP4ui(GLenum type, GLuint coords)
 
 void GL_APIENTRY TexCoordP4uiv(GLenum type, const GLuint *coords)
 {
-    EVENT("(GLenum type = %s, const GLuint *coords = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TexCoordPointerType, type), (uintptr_t)coords);
+    EVENT("(GLenum type = 0x%X, const GLuint *coords = 0x%016" PRIxPTR ")", type,
+          (uintptr_t)coords);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -849,9 +819,8 @@ void GL_APIENTRY VertexAttribDivisor(GLuint index, GLuint divisor)
 
 void GL_APIENTRY VertexAttribP1ui(GLuint index, GLenum type, GLboolean normalized, GLuint value)
 {
-    EVENT("(GLuint index = %u, GLenum type = %s, GLboolean normalized = %s, GLuint value = %u)",
-          index, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
-          GLenumToString(GLenumGroup::Boolean, normalized), value);
+    EVENT("(GLuint index = %u, GLenum type = 0x%X, GLboolean normalized = %u, GLuint value = %u)",
+          index, type, normalized, value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -872,10 +841,9 @@ void GL_APIENTRY VertexAttribP1uiv(GLuint index,
                                    const GLuint *value)
 {
     EVENT(
-        "(GLuint index = %u, GLenum type = %s, GLboolean normalized = %s, const GLuint *value = "
+        "(GLuint index = %u, GLenum type = 0x%X, GLboolean normalized = %u, const GLuint *value = "
         "0x%016" PRIxPTR ")",
-        index, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
-        GLenumToString(GLenumGroup::Boolean, normalized), (uintptr_t)value);
+        index, type, normalized, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -892,9 +860,8 @@ void GL_APIENTRY VertexAttribP1uiv(GLuint index,
 
 void GL_APIENTRY VertexAttribP2ui(GLuint index, GLenum type, GLboolean normalized, GLuint value)
 {
-    EVENT("(GLuint index = %u, GLenum type = %s, GLboolean normalized = %s, GLuint value = %u)",
-          index, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
-          GLenumToString(GLenumGroup::Boolean, normalized), value);
+    EVENT("(GLuint index = %u, GLenum type = 0x%X, GLboolean normalized = %u, GLuint value = %u)",
+          index, type, normalized, value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -915,10 +882,9 @@ void GL_APIENTRY VertexAttribP2uiv(GLuint index,
                                    const GLuint *value)
 {
     EVENT(
-        "(GLuint index = %u, GLenum type = %s, GLboolean normalized = %s, const GLuint *value = "
+        "(GLuint index = %u, GLenum type = 0x%X, GLboolean normalized = %u, const GLuint *value = "
         "0x%016" PRIxPTR ")",
-        index, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
-        GLenumToString(GLenumGroup::Boolean, normalized), (uintptr_t)value);
+        index, type, normalized, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -935,9 +901,8 @@ void GL_APIENTRY VertexAttribP2uiv(GLuint index,
 
 void GL_APIENTRY VertexAttribP3ui(GLuint index, GLenum type, GLboolean normalized, GLuint value)
 {
-    EVENT("(GLuint index = %u, GLenum type = %s, GLboolean normalized = %s, GLuint value = %u)",
-          index, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
-          GLenumToString(GLenumGroup::Boolean, normalized), value);
+    EVENT("(GLuint index = %u, GLenum type = 0x%X, GLboolean normalized = %u, GLuint value = %u)",
+          index, type, normalized, value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -958,10 +923,9 @@ void GL_APIENTRY VertexAttribP3uiv(GLuint index,
                                    const GLuint *value)
 {
     EVENT(
-        "(GLuint index = %u, GLenum type = %s, GLboolean normalized = %s, const GLuint *value = "
+        "(GLuint index = %u, GLenum type = 0x%X, GLboolean normalized = %u, const GLuint *value = "
         "0x%016" PRIxPTR ")",
-        index, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
-        GLenumToString(GLenumGroup::Boolean, normalized), (uintptr_t)value);
+        index, type, normalized, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -978,9 +942,8 @@ void GL_APIENTRY VertexAttribP3uiv(GLuint index,
 
 void GL_APIENTRY VertexAttribP4ui(GLuint index, GLenum type, GLboolean normalized, GLuint value)
 {
-    EVENT("(GLuint index = %u, GLenum type = %s, GLboolean normalized = %s, GLuint value = %u)",
-          index, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
-          GLenumToString(GLenumGroup::Boolean, normalized), value);
+    EVENT("(GLuint index = %u, GLenum type = 0x%X, GLboolean normalized = %u, GLuint value = %u)",
+          index, type, normalized, value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1001,10 +964,9 @@ void GL_APIENTRY VertexAttribP4uiv(GLuint index,
                                    const GLuint *value)
 {
     EVENT(
-        "(GLuint index = %u, GLenum type = %s, GLboolean normalized = %s, const GLuint *value = "
+        "(GLuint index = %u, GLenum type = 0x%X, GLboolean normalized = %u, const GLuint *value = "
         "0x%016" PRIxPTR ")",
-        index, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
-        GLenumToString(GLenumGroup::Boolean, normalized), (uintptr_t)value);
+        index, type, normalized, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1021,8 +983,7 @@ void GL_APIENTRY VertexAttribP4uiv(GLuint index,
 
 void GL_APIENTRY VertexP2ui(GLenum type, GLuint value)
 {
-    EVENT("(GLenum type = %s, GLuint value = %u)",
-          GLenumToString(GLenumGroup::VertexPointerType, type), value);
+    EVENT("(GLenum type = 0x%X, GLuint value = %u)", type, value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1038,8 +999,7 @@ void GL_APIENTRY VertexP2ui(GLenum type, GLuint value)
 
 void GL_APIENTRY VertexP2uiv(GLenum type, const GLuint *value)
 {
-    EVENT("(GLenum type = %s, const GLuint *value = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::VertexPointerType, type), (uintptr_t)value);
+    EVENT("(GLenum type = 0x%X, const GLuint *value = 0x%016" PRIxPTR ")", type, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1055,8 +1015,7 @@ void GL_APIENTRY VertexP2uiv(GLenum type, const GLuint *value)
 
 void GL_APIENTRY VertexP3ui(GLenum type, GLuint value)
 {
-    EVENT("(GLenum type = %s, GLuint value = %u)",
-          GLenumToString(GLenumGroup::VertexPointerType, type), value);
+    EVENT("(GLenum type = 0x%X, GLuint value = %u)", type, value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1072,8 +1031,7 @@ void GL_APIENTRY VertexP3ui(GLenum type, GLuint value)
 
 void GL_APIENTRY VertexP3uiv(GLenum type, const GLuint *value)
 {
-    EVENT("(GLenum type = %s, const GLuint *value = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::VertexPointerType, type), (uintptr_t)value);
+    EVENT("(GLenum type = 0x%X, const GLuint *value = 0x%016" PRIxPTR ")", type, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1089,8 +1047,7 @@ void GL_APIENTRY VertexP3uiv(GLenum type, const GLuint *value)
 
 void GL_APIENTRY VertexP4ui(GLenum type, GLuint value)
 {
-    EVENT("(GLenum type = %s, GLuint value = %u)",
-          GLenumToString(GLenumGroup::VertexPointerType, type), value);
+    EVENT("(GLenum type = 0x%X, GLuint value = %u)", type, value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1106,8 +1063,7 @@ void GL_APIENTRY VertexP4ui(GLenum type, GLuint value)
 
 void GL_APIENTRY VertexP4uiv(GLenum type, const GLuint *value)
 {
-    EVENT("(GLenum type = %s, const GLuint *value = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::VertexPointerType, type), (uintptr_t)value);
+    EVENT("(GLenum type = 0x%X, const GLuint *value = 0x%016" PRIxPTR ")", type, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)

@@ -17,15 +17,11 @@
 #include "libANGLE/validationES2.h"
 #include "libGLESv2/global_state.h"
 
-#if defined(ANGLE_TRACE_ENABLED)
-#    include "libANGLE/gl_enum_utils_autogen.h"
-#endif
-
 namespace gl
 {
 void GL_APIENTRY ActiveTexture(GLenum texture)
 {
-    EVENT("(GLenum texture = %s)", GLenumToString(GLenumGroup::TextureUnit, texture));
+    EVENT("(GLenum texture = 0x%X)", texture);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -76,8 +72,7 @@ void GL_APIENTRY BindAttribLocation(GLuint program, GLuint index, const GLchar *
 
 void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
 {
-    EVENT("(GLenum target = %s, GLuint buffer = %u)",
-          PackedGLenumToString<BufferBinding>(target).c_str(), buffer);
+    EVENT("(GLenum target = 0x%X, GLuint buffer = %u)", target, buffer);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -95,8 +90,7 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
 
 void GL_APIENTRY BindFramebuffer(GLenum target, GLuint framebuffer)
 {
-    EVENT("(GLenum target = %s, GLuint framebuffer = %u)",
-          GLenumToString(GLenumGroup::FramebufferTarget, target), framebuffer);
+    EVENT("(GLenum target = 0x%X, GLuint framebuffer = %u)", target, framebuffer);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -113,8 +107,7 @@ void GL_APIENTRY BindFramebuffer(GLenum target, GLuint framebuffer)
 
 void GL_APIENTRY BindRenderbuffer(GLenum target, GLuint renderbuffer)
 {
-    EVENT("(GLenum target = %s, GLuint renderbuffer = %u)",
-          GLenumToString(GLenumGroup::RenderbufferTarget, target), renderbuffer);
+    EVENT("(GLenum target = 0x%X, GLuint renderbuffer = %u)", target, renderbuffer);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -132,8 +125,7 @@ void GL_APIENTRY BindRenderbuffer(GLenum target, GLuint renderbuffer)
 
 void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
 {
-    EVENT("(GLenum target = %s, GLuint texture = %u)",
-          PackedGLenumToString<TextureType>(target).c_str(), texture);
+    EVENT("(GLenum target = 0x%X, GLuint texture = %u)", target, texture);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -169,7 +161,7 @@ void GL_APIENTRY BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat al
 
 void GL_APIENTRY BlendEquation(GLenum mode)
 {
-    EVENT("(GLenum mode = %s)", GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
+    EVENT("(GLenum mode = 0x%X)", mode);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -185,9 +177,7 @@ void GL_APIENTRY BlendEquation(GLenum mode)
 
 void GL_APIENTRY BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
 {
-    EVENT("(GLenum modeRGB = %s, GLenum modeAlpha = %s)",
-          GLenumToString(GLenumGroup::BlendEquationModeEXT, modeRGB),
-          GLenumToString(GLenumGroup::BlendEquationModeEXT, modeAlpha));
+    EVENT("(GLenum modeRGB = 0x%X, GLenum modeAlpha = 0x%X)", modeRGB, modeAlpha);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -204,9 +194,7 @@ void GL_APIENTRY BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
 
 void GL_APIENTRY BlendFunc(GLenum sfactor, GLenum dfactor)
 {
-    EVENT("(GLenum sfactor = %s, GLenum dfactor = %s)",
-          GLenumToString(GLenumGroup::BlendingFactor, sfactor),
-          GLenumToString(GLenumGroup::BlendingFactor, dfactor));
+    EVENT("(GLenum sfactor = 0x%X, GLenum dfactor = 0x%X)", sfactor, dfactor);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -227,12 +215,9 @@ void GL_APIENTRY BlendFuncSeparate(GLenum sfactorRGB,
                                    GLenum dfactorAlpha)
 {
     EVENT(
-        "(GLenum sfactorRGB = %s, GLenum dfactorRGB = %s, GLenum sfactorAlpha = %s, GLenum "
-        "dfactorAlpha = %s)",
-        GLenumToString(GLenumGroup::BlendingFactor, sfactorRGB),
-        GLenumToString(GLenumGroup::BlendingFactor, dfactorRGB),
-        GLenumToString(GLenumGroup::BlendingFactor, sfactorAlpha),
-        GLenumToString(GLenumGroup::BlendingFactor, dfactorAlpha));
+        "(GLenum sfactorRGB = 0x%X, GLenum dfactorRGB = 0x%X, GLenum sfactorAlpha = 0x%X, GLenum "
+        "dfactorAlpha = 0x%X)",
+        sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -251,11 +236,9 @@ void GL_APIENTRY BlendFuncSeparate(GLenum sfactorRGB,
 
 void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage)
 {
-    EVENT("(GLenum target = %s, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
-          ", GLenum usage = %s)",
-          PackedGLenumToString<BufferBinding>(target).c_str(),
-          static_cast<unsigned long long>(size), (uintptr_t)data,
-          PackedGLenumToString<BufferUsage>(usage).c_str());
+    EVENT("(GLenum target = 0x%X, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
+          ", GLenum usage = 0x%X)",
+          target, static_cast<unsigned long long>(size), (uintptr_t)data, usage);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -275,10 +258,9 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
 void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data)
 {
     EVENT(
-        "(GLenum target = %s, GLintptr offset = %llu, GLsizeiptr size = %llu, const void *data = "
+        "(GLenum target = 0x%X, GLintptr offset = %llu, GLsizeiptr size = %llu, const void *data = "
         "0x%016" PRIxPTR ")",
-        PackedGLenumToString<BufferBinding>(target).c_str(),
-        static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
+        target, static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
         (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
@@ -297,7 +279,7 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
 
 GLenum GL_APIENTRY CheckFramebufferStatus(GLenum target)
 {
-    EVENT("(GLenum target = %s)", GLenumToString(GLenumGroup::FramebufferTarget, target));
+    EVENT("(GLenum target = 0x%X)", target);
 
     Context *context = GetValidGlobalContext();
     GLenum returnValue;
@@ -324,7 +306,7 @@ GLenum GL_APIENTRY CheckFramebufferStatus(GLenum target)
 
 void GL_APIENTRY Clear(GLbitfield mask)
 {
-    EVENT("(GLbitfield mask = %s)", GLbitfieldToString(GLenumGroup::ClearBufferMask, mask).c_str());
+    EVENT("(GLbitfield mask = 0x%X)", mask);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -390,9 +372,8 @@ void GL_APIENTRY ClearStencil(GLint s)
 
 void GL_APIENTRY ColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
 {
-    EVENT("(GLboolean red = %s, GLboolean green = %s, GLboolean blue = %s, GLboolean alpha = %s)",
-          GLenumToString(GLenumGroup::Boolean, red), GLenumToString(GLenumGroup::Boolean, green),
-          GLenumToString(GLenumGroup::Boolean, blue), GLenumToString(GLenumGroup::Boolean, alpha));
+    EVENT("(GLboolean red = %u, GLboolean green = %u, GLboolean blue = %u, GLboolean alpha = %u)",
+          red, green, blue, alpha);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -433,12 +414,10 @@ void GL_APIENTRY CompressedTexImage2D(GLenum target,
                                       const void *data)
 {
     EVENT(
-        "(GLenum target = %s, GLint level = %d, GLenum internalformat = %s, GLsizei width = %d, "
-        "GLsizei height = %d, GLint border = %d, GLsizei imageSize = %d, const void *data = "
+        "(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d, GLint border = %d, GLsizei imageSize = %d, const void *data = "
         "0x%016" PRIxPTR ")",
-        PackedGLenumToString<TextureTarget>(target).c_str(), level,
-        GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, border,
-        imageSize, (uintptr_t)data);
+        target, level, internalformat, width, height, border, imageSize, (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -469,11 +448,10 @@ void GL_APIENTRY CompressedTexSubImage2D(GLenum target,
                                          const void *data)
 {
     EVENT(
-        "(GLenum target = %s, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLsizei "
-        "width = %d, GLsizei height = %d, GLenum format = %s, GLsizei imageSize = %d, const void "
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLsizei "
+        "width = %d, GLsizei height = %d, GLenum format = 0x%X, GLsizei imageSize = %d, const void "
         "*data = 0x%016" PRIxPTR ")",
-        PackedGLenumToString<TextureTarget>(target).c_str(), level, xoffset, yoffset, width, height,
-        GLenumToString(GLenumGroup::PixelFormat, format), imageSize, (uintptr_t)data);
+        target, level, xoffset, yoffset, width, height, format, imageSize, (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -503,10 +481,9 @@ void GL_APIENTRY CopyTexImage2D(GLenum target,
                                 GLint border)
 {
     EVENT(
-        "(GLenum target = %s, GLint level = %d, GLenum internalformat = %s, GLint x = %d, GLint y "
-        "= %d, GLsizei width = %d, GLsizei height = %d, GLint border = %d)",
-        PackedGLenumToString<TextureTarget>(target).c_str(), level,
-        GLenumToString(GLenumGroup::InternalFormat, internalformat), x, y, width, height, border);
+        "(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLint x = %d, "
+        "GLint y = %d, GLsizei width = %d, GLsizei height = %d, GLint border = %d)",
+        target, level, internalformat, x, y, width, height, border);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -535,10 +512,9 @@ void GL_APIENTRY CopyTexSubImage2D(GLenum target,
                                    GLsizei height)
 {
     EVENT(
-        "(GLenum target = %s, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint x = "
-        "%d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
-        PackedGLenumToString<TextureTarget>(target).c_str(), level, xoffset, yoffset, x, y, width,
-        height);
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint x "
+        "= %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
+        target, level, xoffset, yoffset, x, y, width, height);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -584,7 +560,7 @@ GLuint GL_APIENTRY CreateProgram()
 
 GLuint GL_APIENTRY CreateShader(GLenum type)
 {
-    EVENT("(GLenum type = %s)", PackedGLenumToString<ShaderType>(type).c_str());
+    EVENT("(GLenum type = 0x%X)", type);
 
     Context *context = GetValidGlobalContext();
     GLuint returnValue;
@@ -611,7 +587,7 @@ GLuint GL_APIENTRY CreateShader(GLenum type)
 
 void GL_APIENTRY CullFace(GLenum mode)
 {
-    EVENT("(GLenum mode = %s)", PackedGLenumToString<CullFaceMode>(mode).c_str());
+    EVENT("(GLenum mode = 0x%X)", mode);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -731,7 +707,7 @@ void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint *textures)
 
 void GL_APIENTRY DepthFunc(GLenum func)
 {
-    EVENT("(GLenum func = %s)", GLenumToString(GLenumGroup::DepthFunction, func));
+    EVENT("(GLenum func = 0x%X)", func);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -747,7 +723,7 @@ void GL_APIENTRY DepthFunc(GLenum func)
 
 void GL_APIENTRY DepthMask(GLboolean flag)
 {
-    EVENT("(GLboolean flag = %s)", GLenumToString(GLenumGroup::Boolean, flag));
+    EVENT("(GLboolean flag = %u)", flag);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -796,7 +772,7 @@ void GL_APIENTRY DetachShader(GLuint program, GLuint shader)
 
 void GL_APIENTRY Disable(GLenum cap)
 {
-    EVENT("(GLenum cap = %s)", GLenumToString(GLenumGroup::EnableCap, cap));
+    EVENT("(GLenum cap = 0x%X)", cap);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -829,8 +805,7 @@ void GL_APIENTRY DisableVertexAttribArray(GLuint index)
 
 void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
 {
-    EVENT("(GLenum mode = %s, GLint first = %d, GLsizei count = %d)",
-          PackedGLenumToString<PrimitiveMode>(mode).c_str(), first, count);
+    EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d)", mode, first, count);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -849,10 +824,9 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
 void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)
 {
     EVENT(
-        "(GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void *indices = "
+        "(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const void *indices = "
         "0x%016" PRIxPTR ")",
-        PackedGLenumToString<PrimitiveMode>(mode).c_str(), count,
-        PackedGLenumToString<DrawElementsType>(type).c_str(), (uintptr_t)indices);
+        mode, count, type, (uintptr_t)indices);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -871,7 +845,7 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const voi
 
 void GL_APIENTRY Enable(GLenum cap)
 {
-    EVENT("(GLenum cap = %s)", GLenumToString(GLenumGroup::EnableCap, cap));
+    EVENT("(GLenum cap = 0x%X)", cap);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -940,11 +914,9 @@ void GL_APIENTRY FramebufferRenderbuffer(GLenum target,
                                          GLuint renderbuffer)
 {
     EVENT(
-        "(GLenum target = %s, GLenum attachment = %s, GLenum renderbuffertarget = %s, GLuint "
+        "(GLenum target = 0x%X, GLenum attachment = 0x%X, GLenum renderbuffertarget = 0x%X, GLuint "
         "renderbuffer = %u)",
-        GLenumToString(GLenumGroup::FramebufferTarget, target),
-        GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
-        GLenumToString(GLenumGroup::RenderbufferTarget, renderbuffertarget), renderbuffer);
+        target, attachment, renderbuffertarget, renderbuffer);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -971,11 +943,9 @@ void GL_APIENTRY FramebufferTexture2D(GLenum target,
                                       GLint level)
 {
     EVENT(
-        "(GLenum target = %s, GLenum attachment = %s, GLenum textarget = %s, GLuint texture = %u, "
-        "GLint level = %d)",
-        GLenumToString(GLenumGroup::FramebufferTarget, target),
-        GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
-        PackedGLenumToString<TextureTarget>(textarget).c_str(), texture, level);
+        "(GLenum target = 0x%X, GLenum attachment = 0x%X, GLenum textarget = 0x%X, GLuint texture "
+        "= %u, GLint level = %d)",
+        target, attachment, textarget, texture, level);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -995,7 +965,7 @@ void GL_APIENTRY FramebufferTexture2D(GLenum target,
 
 void GL_APIENTRY FrontFace(GLenum mode)
 {
-    EVENT("(GLenum mode = %s)", GLenumToString(GLenumGroup::FrontFaceDirection, mode));
+    EVENT("(GLenum mode = 0x%X)", mode);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1079,7 +1049,7 @@ void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
 
 void GL_APIENTRY GenerateMipmap(GLenum target)
 {
-    EVENT("(GLenum target = %s)", PackedGLenumToString<TextureType>(target).c_str());
+    EVENT("(GLenum target = 0x%X)", target);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1207,8 +1177,7 @@ GLint GL_APIENTRY GetAttribLocation(GLuint program, const GLchar *name)
 
 void GL_APIENTRY GetBooleanv(GLenum pname, GLboolean *data)
 {
-    EVENT("(GLenum pname = %s, GLboolean *data = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
+    EVENT("(GLenum pname = 0x%X, GLboolean *data = 0x%016" PRIxPTR ")", pname, (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1224,9 +1193,8 @@ void GL_APIENTRY GetBooleanv(GLenum pname, GLboolean *data)
 
 void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
-          PackedGLenumToString<BufferBinding>(target).c_str(),
-          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1270,8 +1238,7 @@ GLenum GL_APIENTRY GetError()
 
 void GL_APIENTRY GetFloatv(GLenum pname, GLfloat *data)
 {
-    EVENT("(GLenum pname = %s, GLfloat *data = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
+    EVENT("(GLenum pname = 0x%X, GLfloat *data = 0x%016" PRIxPTR ")", pname, (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1291,11 +1258,9 @@ void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target,
                                                      GLint *params)
 {
     EVENT(
-        "(GLenum target = %s, GLenum attachment = %s, GLenum pname = %s, GLint *params = "
+        "(GLenum target = 0x%X, GLenum attachment = 0x%X, GLenum pname = 0x%X, GLint *params = "
         "0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::FramebufferTarget, target),
-        GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
-        GLenumToString(GLenumGroup::FramebufferAttachmentParameterName, pname), (uintptr_t)params);
+        target, attachment, pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1314,8 +1279,7 @@ void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target,
 
 void GL_APIENTRY GetIntegerv(GLenum pname, GLint *data)
 {
-    EVENT("(GLenum pname = %s, GLint *data = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
+    EVENT("(GLenum pname = 0x%X, GLint *data = 0x%016" PRIxPTR ")", pname, (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1353,8 +1317,8 @@ void GL_APIENTRY GetProgramInfoLog(GLuint program,
 
 void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint program = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", program,
-          GLenumToString(GLenumGroup::ProgramPropertyARB, pname), (uintptr_t)params);
+    EVENT("(GLuint program = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", program,
+          pname, (uintptr_t)params);
 
     Context *context = GetGlobalContext();
     if (context)
@@ -1371,9 +1335,8 @@ void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params)
 
 void GL_APIENTRY GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::RenderbufferTarget, target),
-          GLenumToString(GLenumGroup::RenderbufferParameterName, pname), (uintptr_t)params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1412,11 +1375,9 @@ void GL_APIENTRY GetShaderPrecisionFormat(GLenum shadertype,
                                           GLint *range,
                                           GLint *precision)
 {
-    EVENT("(GLenum shadertype = %s, GLenum precisiontype = %s, GLint *range = 0x%016" PRIxPTR
+    EVENT("(GLenum shadertype = 0x%X, GLenum precisiontype = 0x%X, GLint *range = 0x%016" PRIxPTR
           ", GLint *precision = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::ShaderType, shadertype),
-          GLenumToString(GLenumGroup::PrecisionType, precisiontype), (uintptr_t)range,
-          (uintptr_t)precision);
+          shadertype, precisiontype, (uintptr_t)range, (uintptr_t)precision);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1454,8 +1415,8 @@ void GL_APIENTRY GetShaderSource(GLuint shader, GLsizei bufSize, GLsizei *length
 
 void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint shader = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", shader,
-          GLenumToString(GLenumGroup::ShaderParameterName, pname), (uintptr_t)params);
+    EVENT("(GLuint shader = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", shader,
+          pname, (uintptr_t)params);
 
     Context *context = GetGlobalContext();
     if (context)
@@ -1472,7 +1433,7 @@ void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint *params)
 
 const GLubyte *GL_APIENTRY GetString(GLenum name)
 {
-    EVENT("(GLenum name = %s)", GLenumToString(GLenumGroup::StringName, name));
+    EVENT("(GLenum name = 0x%X)", name);
 
     Context *context = GetValidGlobalContext();
     const GLubyte *returnValue;
@@ -1498,9 +1459,8 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
 
 void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLfloat *params = 0x%016" PRIxPTR ")",
-          PackedGLenumToString<TextureType>(target).c_str(),
-          GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLfloat *params = 0x%016" PRIxPTR ")",
+          target, pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1518,9 +1478,8 @@ void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
 
 void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
-          PackedGLenumToString<TextureType>(target).c_str(),
-          GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1602,8 +1561,8 @@ void GL_APIENTRY GetUniformiv(GLuint program, GLint location, GLint *params)
 
 void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, void **pointer)
 {
-    EVENT("(GLuint index = %u, GLenum pname = %s, void **pointer = 0x%016" PRIxPTR ")", index,
-          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)pointer);
+    EVENT("(GLuint index = %u, GLenum pname = 0x%X, void **pointer = 0x%016" PRIxPTR ")", index,
+          pname, (uintptr_t)pointer);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1620,8 +1579,8 @@ void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, void **poin
 
 void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
 {
-    EVENT("(GLuint index = %u, GLenum pname = %s, GLfloat *params = 0x%016" PRIxPTR ")", index,
-          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
+    EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLfloat *params = 0x%016" PRIxPTR ")", index,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1638,8 +1597,8 @@ void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
 
 void GL_APIENTRY GetVertexAttribiv(GLuint index, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint index = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", index,
-          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
+    EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", index,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1656,8 +1615,7 @@ void GL_APIENTRY GetVertexAttribiv(GLuint index, GLenum pname, GLint *params)
 
 void GL_APIENTRY Hint(GLenum target, GLenum mode)
 {
-    EVENT("(GLenum target = %s, GLenum mode = %s)", GLenumToString(GLenumGroup::HintTarget, target),
-          GLenumToString(GLenumGroup::HintMode, mode));
+    EVENT("(GLenum target = 0x%X, GLenum mode = 0x%X)", target, mode);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1699,7 +1657,7 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
 
 GLboolean GL_APIENTRY IsEnabled(GLenum cap)
 {
-    EVENT("(GLenum cap = %s)", GLenumToString(GLenumGroup::EnableCap, cap));
+    EVENT("(GLenum cap = 0x%X)", cap);
 
     Context *context = GetValidGlobalContext();
     GLboolean returnValue;
@@ -1890,8 +1848,7 @@ void GL_APIENTRY LinkProgram(GLuint program)
 
 void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
 {
-    EVENT("(GLenum pname = %s, GLint param = %d)",
-          GLenumToString(GLenumGroup::PixelStoreParameter, pname), param);
+    EVENT("(GLenum pname = 0x%X, GLint param = %d)", pname, param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1932,10 +1889,9 @@ void GL_APIENTRY ReadPixels(GLint x,
                             void *pixels)
 {
     EVENT(
-        "(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, GLenum format = %s, "
-        "GLenum type = %s, void *pixels = 0x%016" PRIxPTR ")",
-        x, y, width, height, GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
+        "(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, GLenum format = "
+        "0x%X, GLenum type = 0x%X, void *pixels = 0x%016" PRIxPTR ")",
+        x, y, width, height, format, type, (uintptr_t)pixels);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1972,9 +1928,9 @@ void GL_APIENTRY RenderbufferStorage(GLenum target,
                                      GLsizei height)
 {
     EVENT(
-        "(GLenum target = %s, GLenum internalformat = %s, GLsizei width = %d, GLsizei height = %d)",
-        GLenumToString(GLenumGroup::RenderbufferTarget, target),
-        GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
+        "(GLenum target = 0x%X, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = "
+        "%d)",
+        target, internalformat, width, height);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1993,8 +1949,7 @@ void GL_APIENTRY RenderbufferStorage(GLenum target,
 
 void GL_APIENTRY SampleCoverage(GLfloat value, GLboolean invert)
 {
-    EVENT("(GLfloat value = %f, GLboolean invert = %s)", value,
-          GLenumToString(GLenumGroup::Boolean, invert));
+    EVENT("(GLfloat value = %f, GLboolean invert = %u)", value, invert);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2034,10 +1989,9 @@ void GL_APIENTRY ShaderBinary(GLsizei count,
                               GLsizei length)
 {
     EVENT("(GLsizei count = %d, const GLuint *shaders = 0x%016" PRIxPTR
-          ", GLenum binaryformat = %s, const void *binary = 0x%016" PRIxPTR
+          ", GLenum binaryformat = 0x%X, const void *binary = 0x%016" PRIxPTR
           ", GLsizei length = %d)",
-          count, (uintptr_t)shaders, GLenumToString(GLenumGroup::DefaultGroup, binaryformat),
-          (uintptr_t)binary, length);
+          count, (uintptr_t)shaders, binaryformat, (uintptr_t)binary, length);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2078,8 +2032,7 @@ void GL_APIENTRY ShaderSource(GLuint shader,
 
 void GL_APIENTRY StencilFunc(GLenum func, GLint ref, GLuint mask)
 {
-    EVENT("(GLenum func = %s, GLint ref = %d, GLuint mask = %u)",
-          GLenumToString(GLenumGroup::StencilFunction, func), ref, mask);
+    EVENT("(GLenum func = 0x%X, GLint ref = %d, GLuint mask = %u)", func, ref, mask);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2096,9 +2049,8 @@ void GL_APIENTRY StencilFunc(GLenum func, GLint ref, GLuint mask)
 
 void GL_APIENTRY StencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask)
 {
-    EVENT("(GLenum face = %s, GLenum func = %s, GLint ref = %d, GLuint mask = %u)",
-          GLenumToString(GLenumGroup::StencilFaceDirection, face),
-          GLenumToString(GLenumGroup::StencilFunction, func), ref, mask);
+    EVENT("(GLenum face = 0x%X, GLenum func = 0x%X, GLint ref = %d, GLuint mask = %u)", face, func,
+          ref, mask);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2131,8 +2083,7 @@ void GL_APIENTRY StencilMask(GLuint mask)
 
 void GL_APIENTRY StencilMaskSeparate(GLenum face, GLuint mask)
 {
-    EVENT("(GLenum face = %s, GLuint mask = %u)",
-          GLenumToString(GLenumGroup::StencilFaceDirection, face), mask);
+    EVENT("(GLenum face = 0x%X, GLuint mask = %u)", face, mask);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2149,10 +2100,7 @@ void GL_APIENTRY StencilMaskSeparate(GLenum face, GLuint mask)
 
 void GL_APIENTRY StencilOp(GLenum fail, GLenum zfail, GLenum zpass)
 {
-    EVENT("(GLenum fail = %s, GLenum zfail = %s, GLenum zpass = %s)",
-          GLenumToString(GLenumGroup::StencilOp, fail),
-          GLenumToString(GLenumGroup::StencilOp, zfail),
-          GLenumToString(GLenumGroup::StencilOp, zpass));
+    EVENT("(GLenum fail = 0x%X, GLenum zfail = 0x%X, GLenum zpass = 0x%X)", fail, zfail, zpass);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2169,11 +2117,8 @@ void GL_APIENTRY StencilOp(GLenum fail, GLenum zfail, GLenum zpass)
 
 void GL_APIENTRY StencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass)
 {
-    EVENT("(GLenum face = %s, GLenum sfail = %s, GLenum dpfail = %s, GLenum dppass = %s)",
-          GLenumToString(GLenumGroup::StencilFaceDirection, face),
-          GLenumToString(GLenumGroup::StencilOp, sfail),
-          GLenumToString(GLenumGroup::StencilOp, dpfail),
-          GLenumToString(GLenumGroup::StencilOp, dppass));
+    EVENT("(GLenum face = 0x%X, GLenum sfail = 0x%X, GLenum dpfail = 0x%X, GLenum dppass = 0x%X)",
+          face, sfail, dpfail, dppass);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2199,12 +2144,10 @@ void GL_APIENTRY TexImage2D(GLenum target,
                             const void *pixels)
 {
     EVENT(
-        "(GLenum target = %s, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, "
-        "GLsizei height = %d, GLint border = %d, GLenum format = %s, GLenum type = %s, const void "
-        "*pixels = 0x%016" PRIxPTR ")",
-        PackedGLenumToString<TextureTarget>(target).c_str(), level, internalformat, width, height,
-        border, GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
+        "(GLenum target = 0x%X, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, "
+        "GLsizei height = %d, GLint border = %d, GLenum format = 0x%X, GLenum type = 0x%X, const "
+        "void *pixels = 0x%016" PRIxPTR ")",
+        target, level, internalformat, width, height, border, format, type, (uintptr_t)pixels);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2225,9 +2168,7 @@ void GL_APIENTRY TexImage2D(GLenum target,
 
 void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLfloat param = %f)",
-          PackedGLenumToString<TextureType>(target).c_str(),
-          GLenumToString(GLenumGroup::TextureParameterName, pname), param);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLfloat param = %f)", target, pname, param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2245,9 +2186,8 @@ void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
 
 void GL_APIENTRY TexParameterfv(GLenum target, GLenum pname, const GLfloat *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, const GLfloat *params = 0x%016" PRIxPTR ")",
-          PackedGLenumToString<TextureType>(target).c_str(),
-          GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLfloat *params = 0x%016" PRIxPTR ")",
+          target, pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2265,9 +2205,7 @@ void GL_APIENTRY TexParameterfv(GLenum target, GLenum pname, const GLfloat *para
 
 void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLint param = %d)",
-          PackedGLenumToString<TextureType>(target).c_str(),
-          GLenumToString(GLenumGroup::TextureParameterName, pname), param);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint param = %d)", target, pname, param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2285,9 +2223,8 @@ void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
 
 void GL_APIENTRY TexParameteriv(GLenum target, GLenum pname, const GLint *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, const GLint *params = 0x%016" PRIxPTR ")",
-          PackedGLenumToString<TextureType>(target).c_str(),
-          GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint *params = 0x%016" PRIxPTR ")",
+          target, pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2314,12 +2251,10 @@ void GL_APIENTRY TexSubImage2D(GLenum target,
                                const void *pixels)
 {
     EVENT(
-        "(GLenum target = %s, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLsizei "
-        "width = %d, GLsizei height = %d, GLenum format = %s, GLenum type = %s, const void *pixels "
-        "= 0x%016" PRIxPTR ")",
-        PackedGLenumToString<TextureTarget>(target).c_str(), level, xoffset, yoffset, width, height,
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLsizei "
+        "width = %d, GLsizei height = %d, GLenum format = 0x%X, GLenum type = 0x%X, const void "
+        "*pixels = 0x%016" PRIxPTR ")",
+        target, level, xoffset, yoffset, width, height, format, type, (uintptr_t)pixels);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2627,9 +2562,9 @@ void GL_APIENTRY UniformMatrix2fv(GLint location,
                                   const GLfloat *value)
 {
     EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
+        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
         "= 0x%016" PRIxPTR ")",
-        location, count, GLenumToString(GLenumGroup::Boolean, transpose), (uintptr_t)value);
+        location, count, transpose, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2650,9 +2585,9 @@ void GL_APIENTRY UniformMatrix3fv(GLint location,
                                   const GLfloat *value)
 {
     EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
+        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
         "= 0x%016" PRIxPTR ")",
-        location, count, GLenumToString(GLenumGroup::Boolean, transpose), (uintptr_t)value);
+        location, count, transpose, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2673,9 +2608,9 @@ void GL_APIENTRY UniformMatrix4fv(GLint location,
                                   const GLfloat *value)
 {
     EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
+        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
         "= 0x%016" PRIxPTR ")",
-        location, count, GLenumToString(GLenumGroup::Boolean, transpose), (uintptr_t)value);
+        location, count, transpose, (uintptr_t)value);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2866,10 +2801,9 @@ void GL_APIENTRY VertexAttribPointer(GLuint index,
                                      const void *pointer)
 {
     EVENT(
-        "(GLuint index = %u, GLint size = %d, GLenum type = %s, GLboolean normalized = %s, GLsizei "
-        "stride = %d, const void *pointer = 0x%016" PRIxPTR ")",
-        index, size, PackedGLenumToString<VertexAttribType>(type).c_str(),
-        GLenumToString(GLenumGroup::Boolean, normalized), stride, (uintptr_t)pointer);
+        "(GLuint index = %u, GLint size = %d, GLenum type = 0x%X, GLboolean normalized = %u, "
+        "GLsizei stride = %d, const void *pointer = 0x%016" PRIxPTR ")",
+        index, size, type, normalized, stride, (uintptr_t)pointer);
 
     Context *context = GetValidGlobalContext();
     if (context)

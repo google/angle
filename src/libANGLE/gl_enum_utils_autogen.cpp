@@ -10,6 +10,8 @@
 
 #include "libANGLE/gl_enum_utils_autogen.h"
 
+#include <sstream>
+
 #include "common/bitset_utils.h"
 #include "common/debug.h"
 
@@ -199,19 +201,6 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_NEAREST";
                 case 0x2601:
                     return "GL_LINEAR";
-                default:
-                    return "EnumUnknown";
-            }
-        }
-
-        case GLenumGroup::Boolean:
-        {
-            switch (value)
-            {
-                case 0x0:
-                    return "GL_FALSE";
-                case 0x1:
-                    return "GL_TRUE";
                 default:
                     return "EnumUnknown";
             }
