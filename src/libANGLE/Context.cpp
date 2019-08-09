@@ -3913,7 +3913,21 @@ void Context::framebufferTexture3D(GLenum target,
                                    GLint level,
                                    GLint zoffset)
 {
-    UNIMPLEMENTED();
+    Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    if (texture.value != 0)
+    {
+        Texture *textureObj = getTexture(texture);
+        ImageIndex index    = ImageIndex::Make3D(level, zoffset);
+        framebuffer->setAttachment(this, GL_TEXTURE, attachment, index, textureObj);
+    }
+    else
+    {
+        framebuffer->resetAttachment(this, attachment);
+    }
+
+    mState.setObjectDirty(target);
 }
 
 void Context::framebufferRenderbuffer(GLenum target,

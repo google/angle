@@ -32,8 +32,8 @@
 // Depth/stencil related failures.
 3457 VULKAN : KHR-GLES2.core.internalformat.texture2d.depth_stencil_unsigned_int_24_8_depth_stencil = FAIL
 
-// 3d texture framebuffer tests
-3188 VULKAN : KHR-GLES2.texture_3d.framebuffer_texture.rgba8 = SKIP
+// Test bug, use of sized internal format. Passes with patch from bug.
+3797 VULKAN : KHR-GLES2.texture_3d.framebuffer_texture.rgba8 = SKIP
 
 // GL_RGBA8 is not supported in GLES2
 // GL_OES_rgb8_rgba8 only enables GL_RGBA8 for render buffers (not textures)
