@@ -16,6 +16,24 @@
       "revId": "eb0479e245f0b6ba5bbe00ef7299ecaa82f8c6e1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00d7e324_8b522a48",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1177,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-09T04:23:34Z",
+      "side": 1,
+      "message": "Yes, I meant to do that.  That\u0027s what I get for copy/pasting initial prototype.  Thanks for catching it Shabi.  Posted a fix over here: http://crrev/c/1745722",
+      "parentUuid": "0689b785_153aad8f",
+      "revId": "eb0479e245f0b6ba5bbe00ef7299ecaa82f8c6e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
