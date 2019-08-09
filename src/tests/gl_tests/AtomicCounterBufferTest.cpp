@@ -32,9 +32,6 @@ class AtomicCounterBufferTest : public ANGLETest
 // Test GL_ATOMIC_COUNTER_BUFFER is not supported with version lower than ES31.
 TEST_P(AtomicCounterBufferTest, AtomicCounterBufferBindings)
 {
-    // Crashes in older drivers.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
-
     ASSERT_EQ(3, getClientMajorVersion());
     GLBuffer atomicCounterBuffer;
     glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer.get());
@@ -54,9 +51,6 @@ class AtomicCounterBufferTest31 : public AtomicCounterBufferTest
 // Linking should fail if counters in vertex shader exceed gl_MaxVertexAtomicCounters.
 TEST_P(AtomicCounterBufferTest31, ExceedMaxVertexAtomicCounters)
 {
-    // Crashes in older drivers.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
-
     constexpr char kVS[] =
         "#version 310 es\n"
         "layout(binding = 0) uniform atomic_uint foo[gl_MaxVertexAtomicCounters + 1];\n"
@@ -78,9 +72,6 @@ TEST_P(AtomicCounterBufferTest31, ExceedMaxVertexAtomicCounters)
 // GLSL ES Spec 3.10.4, section 9.2.1.
 TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecified)
 {
-    // Crashes in older drivers.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
-
     constexpr char kVS[] =
         "#version 310 es\n"
         "layout(binding = 0, offset = 4) uniform atomic_uint foo;\n"
@@ -103,9 +94,6 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecified)
 // value.
 TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
 {
-    // Crashes in older drivers.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
-
     constexpr char kVS[] =
         "#version 310 es\n"
         "layout(binding = 0, offset = 4) uniform atomic_uint foo;\n"
@@ -127,9 +115,6 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
 // Tests atomic counter reads using compute shaders. Used as a sanity check for the translator.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterReadCompute)
 {
-    // Crashes in older drivers.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
-
     // Skipping due to a bug on the Qualcomm Vulkan Android driver.
     // http://anglebug.com/3726
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
@@ -163,9 +148,6 @@ void main()
 // Test atomic counter read.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 {
-    // Crashes in older drivers.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
-
     // Skipping due to a bug on the Qualcomm Vulkan Android driver.
     // http://anglebug.com/3726
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
@@ -206,9 +188,6 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 // Test atomic counter increment and decrement.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
 {
-    // Crashes in older drivers.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
-
     // Skipping due to a bug on the Qualcomm Vulkan Android driver.
     // http://anglebug.com/3726
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
@@ -254,9 +233,6 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
 // Tests multiple atomic counter buffers.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterMultipleBuffers)
 {
-    // Crashes in older drivers.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
-
     // Skipping due to a bug on the Qualcomm Vulkan Android driver.
     // http://anglebug.com/3726
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
@@ -313,9 +289,6 @@ void main()
 // Test atomic counter array of array.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterArrayOfArray)
 {
-    // Crashes in older drivers.  http://anglebug.com/3738
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
-
     // Fails on D3D.  Some counters are double-incremented while some are untouched, hinting at a
     // bug in index translation.  http://anglebug.com/3783
     ANGLE_SKIP_TEST_IF(IsD3D11());
@@ -460,17 +433,17 @@ void main()
     }
 }
 
+// TODO(syoussefi): re-enable tests on Vulkan once http://anglebug.com/3738 is resolved.  The issue
+// is with WGL where if a Vulkan test is run first in the shard, it causes crashes when an OpenGL
+// test is run afterwards.  AtomicCounter* tests are alphabetically first, and having them not run
+// on Vulkan makes every shard our bots currently make do have at least some OpenGL test run before
+// any Vulkan test.
 ANGLE_INSTANTIATE_TEST(AtomicCounterBufferTest,
                        ES3_OPENGL(),
                        ES3_OPENGLES(),
                        ES31_OPENGL(),
                        ES31_OPENGLES(),
-                       ES31_D3D11(),
-                       ES31_VULKAN());
-ANGLE_INSTANTIATE_TEST(AtomicCounterBufferTest31,
-                       ES31_OPENGL(),
-                       ES31_OPENGLES(),
-                       ES31_D3D11(),
-                       ES31_VULKAN());
+                       ES31_D3D11());
+ANGLE_INSTANTIATE_TEST(AtomicCounterBufferTest31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 
 }  // namespace
