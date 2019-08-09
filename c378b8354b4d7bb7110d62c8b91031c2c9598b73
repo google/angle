@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fb026ac_6437c396",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-08-09T22:16:03Z",
+      "side": 1,
+      "message": "Oops. Will delete this in a new patch.",
+      "revId": "c378b8354b4d7bb7110d62c8b91031c2c9598b73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00ba788d_f2f5982d",
+        "filename": "src/compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-08-09T22:16:03Z",
+      "side": 1,
+      "message": "I merge the two emulation functions into one as there was a issue where order of emulated angle_BaseVertex and angle_BaseInstance in the uniform block of Vulkan GLSL is different from that in the uniforms vector, if two separate functions EmulateGLBaseVertex and EmulateGLBaseInstance are called separately.\nBy merging them into one function I deliberately call ReplaceVariable and uniforms-\u003epush_back in different order to make sure the uniform location matches their appearance in the Vulkan GLSL. Ken mentions this may be unstable. So I highlight this part for your opinions.",
+      "revId": "c378b8354b4d7bb7110d62c8b91031c2c9598b73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
