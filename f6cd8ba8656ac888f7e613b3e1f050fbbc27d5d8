@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f65f8ee8_3957ee03",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6464,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-09T13:08:47Z",
+      "side": 1,
+      "message": "think this is kInvalidTextureType",
+      "range": {
+        "startLine": 6464,
+        "startChar": 67,
+        "endLine": 6464,
+        "endChar": 88
+      },
+      "revId": "f6cd8ba8656ac888f7e613b3e1f050fbbc27d5d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ead3458a_3c51e474",
+        "filename": "src/tests/deqp_support/deqp_khr_gles2_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-09T13:08:47Z",
+      "side": 1,
+      "message": "what\u0027s up with this remaining failure?",
+      "range": {
+        "startLine": 42,
+        "startChar": 35,
+        "endLine": 42,
+        "endChar": 54
+      },
+      "revId": "f6cd8ba8656ac888f7e613b3e1f050fbbc27d5d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
