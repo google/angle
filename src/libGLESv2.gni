@@ -938,6 +938,7 @@ libangle_capture_sources = [
   "src/libANGLE/capture_gles_3_1_params.cpp",
   "src/libANGLE/capture_gles_ext_autogen.cpp",
   "src/libANGLE/capture_gles_ext_params.cpp",
+  "src/libANGLE/frame_capture_replay_autogen.cpp",
   "src/libANGLE/frame_capture_utils_autogen.cpp",
   "src/libANGLE/gl_enum_utils_autogen.cpp",
 ]
