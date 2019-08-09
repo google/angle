@@ -69,7 +69,9 @@ declare_args() {
         (!angle_64bit_current_cpu && android32_ndk_api_level >= 26) ||
         (angle_64bit_current_cpu && android64_ndk_api_level >= 26)
   }
-  angle_shared_libvulkan = false
+
+  # TODO(tobine): Remove this after roll. http://anglebug.com/4162
+  angle_shared_libvulkan = true
 
   # There's no "is_winuwp" helper in BUILDCONFIG.gn, so we define one ourselves
   angle_is_winuwp = is_win && current_os == "winuwp"

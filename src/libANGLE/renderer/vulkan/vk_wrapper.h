@@ -11,7 +11,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_WRAPPER_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_WRAPPER_H_
 
-#include <vulkan/vulkan.h>
+#include "volk.h"
 
 #include "libANGLE/renderer/renderer_utils.h"
 

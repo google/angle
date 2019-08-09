@@ -11,7 +11,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_SECONDARYCOMMANDBUFFERVK_H_
 #define LIBANGLE_RENDERER_VULKAN_SECONDARYCOMMANDBUFFERVK_H_
 
-#include <vulkan/vulkan.h>
+#include "volk.h"
 
 #include "common/PoolAlloc.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"

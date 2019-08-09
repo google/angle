@@ -10,10 +10,10 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_RENDERERVK_H_
 #define LIBANGLE_RENDERER_VULKAN_RENDERERVK_H_
 
-#include <vulkan/vulkan.h>
 #include <memory>
 #include <mutex>
 #include "vk_ext_provoking_vertex.h"
+#include "volk.h"
 
 #include "common/PoolAlloc.h"
 #include "common/angleutils.h"
@@ -68,6 +68,8 @@ class RendererVk : angle::NonCopyable
                              egl::Display *display,
                              const char *wsiExtension,
                              const char *wsiLayer);
+    // Reload volk vk* function ptrs if needed for an already initialized RendererVk
+    void reloadVolkIfNeeded() const;
     void onDestroy(vk::Context *context);
 
     void notifyDeviceLost();

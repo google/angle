@@ -606,59 +606,6 @@ class Recycler final : angle::NonCopyable
 
 }  // namespace vk
 
-// List of function pointers for used extensions.
-// VK_EXT_debug_utils
-extern PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
-extern PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
-extern PFN_vkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXT;
-extern PFN_vkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXT;
-extern PFN_vkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXT;
-
-// VK_EXT_debug_report
-extern PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT;
-extern PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
-
-// VK_KHR_get_physical_device_properties2
-extern PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
-extern PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
-
-// VK_KHR_external_semaphore_fd
-extern PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR;
-
-extern PFN_vkCmdBindTransformFeedbackBuffersEXT vkCmdBindTransformFeedbackBuffersEXT;
-extern PFN_vkCmdBeginTransformFeedbackEXT vkCmdBeginTransformFeedbackEXT;
-extern PFN_vkCmdEndTransformFeedbackEXT vkCmdEndTransformFeedbackEXT;
-extern PFN_vkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXT;
-extern PFN_vkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXT;
-extern PFN_vkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXT;
-
-// Lazily load entry points for each extension as necessary.
-void InitDebugUtilsEXTFunctions(VkInstance instance);
-void InitDebugReportEXTFunctions(VkInstance instance);
-void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance);
-void InitTransformFeedbackEXTFunctions(VkDevice device);
-
-#if defined(ANGLE_PLATFORM_FUCHSIA)
-// VK_FUCHSIA_imagepipe_surface
-extern PFN_vkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIA;
-void InitImagePipeSurfaceFUCHSIAFunctions(VkInstance instance);
-#endif
-
-#if defined(ANGLE_PLATFORM_ANDROID)
-// VK_ANDROID_external_memory_android_hardware_buffer
-extern PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROID;
-extern PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID;
-void InitExternalMemoryHardwareBufferANDROIDFunctions(VkInstance instance);
-#endif
-
-#if defined(ANGLE_PLATFORM_GGP)
-// VK_GGP_stream_descriptor_surface
-extern PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP;
-void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance);
-#endif  // defined(ANGLE_PLATFORM_GGP)
-
-void InitExternalSemaphoreFdFunctions(VkInstance instance);
-
 namespace gl_vk
 {
 VkRect2D GetRect(const gl::Rectangle &source);

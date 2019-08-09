@@ -160,6 +160,7 @@ config("angle_vulkan_lib_android") {
 group("angle_vulkan_entry_points") {
   public_configs = [ ":angle_vulkan_lib_android" ]
   public_deps = [
+    "$angle_root/src/third_party/volk:volk",
     "$angle_root/third_party/vulkan-headers/src:vulkan_headers",
   ]
   if (is_fuchsia) {

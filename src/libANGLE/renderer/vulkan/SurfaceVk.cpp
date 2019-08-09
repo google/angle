@@ -191,6 +191,8 @@ angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
     RendererVk *renderer      = displayVk->getRenderer();
     const egl::Config *config = mState.config;
 
+    renderer->reloadVolkIfNeeded();
+
     GLint samples = GetSampleCount(mState.config);
     ANGLE_VK_CHECK(displayVk, samples > 0, VK_ERROR_INITIALIZATION_FAILED);
 
@@ -461,6 +463,8 @@ egl::Error WindowSurfaceVk::initialize(const egl::Display *display)
 angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 {
     RendererVk *renderer = displayVk->getRenderer();
+
+    renderer->reloadVolkIfNeeded();
 
     gl::Extents windowSize;
     ANGLE_TRY(createSurfaceVk(displayVk, &windowSize));

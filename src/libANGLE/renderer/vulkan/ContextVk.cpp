@@ -2526,6 +2526,7 @@ GLint64 ContextVk::getTimestamp()
 
 angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
 {
+    mRenderer->reloadVolkIfNeeded();
     ASSERT(mCommandGraph.empty());
 
     // Flip viewports if FeaturesVk::flipViewportY is enabled and the user did not request that

@@ -41,6 +41,8 @@ egl::Error DisplayVk::initialize(egl::Display *display)
 
 void DisplayVk::terminate()
 {
+    mRenderer->reloadVolkIfNeeded();
+
     ASSERT(mRenderer);
     mRenderer->onDestroy(this);
 }

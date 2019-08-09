@@ -167,7 +167,7 @@ const char *GetStoreOpShorthand(uint32_t storeOp)
             return "D";
     }
 }
-
+#if !defined(ANGLE_PLATFORM_ANDROID)
 void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label)
 {
     static constexpr angle::ColorF kLabelColors[6] = {
@@ -187,7 +187,7 @@ void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT
     label->pLabelName = marker;
     kLabelColors[colorIndex].writeData(label->color);
 }
-
+#endif
 constexpr VkSubpassContents kRenderPassContents =
     CommandBuffer::ExecutesInline() ? VK_SUBPASS_CONTENTS_INLINE
                                     : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
@@ -737,7 +737,7 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
 
         case CommandGraphNodeFunction::InsertDebugMarker:
             ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
-
+#if !defined(ANGLE_PLATFORM_ANDROID)
             if (vkCmdInsertDebugUtilsLabelEXT)
             {
                 VkDebugUtilsLabelEXT label;
@@ -745,11 +745,12 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
 
                 vkCmdInsertDebugUtilsLabelEXT(primaryCommandBuffer->getHandle(), &label);
             }
+#endif
             break;
 
         case CommandGraphNodeFunction::PushDebugMarker:
             ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
-
+#if !defined(ANGLE_PLATFORM_ANDROID)
             if (vkCmdBeginDebugUtilsLabelEXT)
             {
                 VkDebugUtilsLabelEXT label;
@@ -757,15 +758,17 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
 
                 vkCmdBeginDebugUtilsLabelEXT(primaryCommandBuffer->getHandle(), &label);
             }
+#endif
             break;
 
         case CommandGraphNodeFunction::PopDebugMarker:
             ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
-
+#if !defined(ANGLE_PLATFORM_ANDROID)
             if (vkCmdEndDebugUtilsLabelEXT)
             {
                 vkCmdEndDebugUtilsLabelEXT(primaryCommandBuffer->getHandle());
             }
+#endif
             break;
 
         case CommandGraphNodeFunction::HostAvailabilityOperation:

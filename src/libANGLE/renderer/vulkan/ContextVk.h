@@ -10,7 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_
 
-#include <vulkan/vulkan.h>
+#include "volk.h"
 
 #include "common/PackedEnums.h"
 #include "libANGLE/renderer/ContextImpl.h"
