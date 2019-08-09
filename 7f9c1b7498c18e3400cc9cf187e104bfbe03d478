@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "ac80d312_fd708d75",
+        "filename": "extensions/ANGLE_base_vertex_base_instance.txt",
+        "patchSetId": 27
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-08-09T22:24:52Z",
+      "side": 1,
+      "message": "kbr@: Hi Ken. Could you help just only review the ANGLE_base_vertex_base_instance.txt the spec? It should impact the later WebGL spec. Thanks",
+      "revId": "7f9c1b7498c18e3400cc9cf187e104bfbe03d478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6288ce50_84dfb945",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 27
