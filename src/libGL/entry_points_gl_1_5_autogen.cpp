@@ -13,6 +13,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/entry_points_utils.h"
+#include "libANGLE/gl_enum_utils_autogen.h"
 #include "libANGLE/validationEGL.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES1.h"
@@ -27,7 +28,8 @@ namespace gl
 {
 void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
 {
-    EVENT("(GLenum target = 0x%X, GLuint id = %u)", target, id);
+    EVENT("(GLenum target = %s, GLuint id = %u)", GLenumToString(GLenumGroup::QueryTarget, target),
+          id);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -45,7 +47,8 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
 
 void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
 {
-    EVENT("(GLenum target = 0x%X, GLuint buffer = %u)", target, buffer);
+    EVENT("(GLenum target = %s, GLuint buffer = %u)",
+          GLenumToString(GLenumGroup::BufferTargetARB, target), buffer);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -64,9 +67,11 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
 
 void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage)
 {
-    EVENT("(GLenum target = 0x%X, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
-          ", GLenum usage = 0x%X)",
-          target, static_cast<unsigned long long>(size), (uintptr_t)data, usage);
+    EVENT("(GLenum target = %s, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
+          ", GLenum usage = %s)",
+          GLenumToString(GLenumGroup::BufferTargetARB, target),
+          static_cast<unsigned long long>(size), (uintptr_t)data,
+          GLenumToString(GLenumGroup::BufferUsageARB, usage));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -86,9 +91,10 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
 void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data)
 {
     EVENT(
-        "(GLenum target = 0x%X, GLintptr offset = %llu, GLsizeiptr size = %llu, const void *data = "
+        "(GLenum target = %s, GLintptr offset = %llu, GLsizeiptr size = %llu, const void *data = "
         "0x%016" PRIxPTR ")",
-        target, static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
+        GLenumToString(GLenumGroup::BufferTargetARB, target),
+        static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
         (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
@@ -141,7 +147,7 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
 
 void GL_APIENTRY EndQuery(GLenum target)
 {
-    EVENT("(GLenum target = 0x%X)", target);
+    EVENT("(GLenum target = %s)", GLenumToString(GLenumGroup::QueryTarget, target));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -192,8 +198,9 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
 
 void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
-          pname, (uintptr_t)params);
+    EVENT("(GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
+          GLenumToString(GLenumGroup::BufferTargetARB, target),
+          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -211,8 +218,9 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params
 
 void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
 {
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, void **params = 0x%016" PRIxPTR ")", target,
-          pname, (uintptr_t)params);
+    EVENT("(GLenum target = %s, GLenum pname = %s, void **params = 0x%016" PRIxPTR ")",
+          GLenumToString(GLenumGroup::BufferTargetARB, target),
+          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -231,9 +239,10 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
 void GL_APIENTRY GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void *data)
 {
     EVENT(
-        "(GLenum target = 0x%X, GLintptr offset = %llu, GLsizeiptr size = %llu, void *data = "
+        "(GLenum target = %s, GLintptr offset = %llu, GLsizeiptr size = %llu, void *data = "
         "0x%016" PRIxPTR ")",
-        target, static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
+        GLenumToString(GLenumGroup::BufferTargetARB, target),
+        static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
         (uintptr_t)data);
 
     Context *context = GetValidGlobalContext();
@@ -251,8 +260,8 @@ void GL_APIENTRY GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr siz
 
 void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint id = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", id, pname,
-          (uintptr_t)params);
+    EVENT("(GLuint id = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", id,
+          GLenumToString(GLenumGroup::QueryObjectParameterName, pname), (uintptr_t)params);
 
     Context *context = GetGlobalContext();
     if (context)
@@ -269,8 +278,8 @@ void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
 
 void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 {
-    EVENT("(GLuint id = %u, GLenum pname = 0x%X, GLuint *params = 0x%016" PRIxPTR ")", id, pname,
-          (uintptr_t)params);
+    EVENT("(GLuint id = %u, GLenum pname = %s, GLuint *params = 0x%016" PRIxPTR ")", id,
+          GLenumToString(GLenumGroup::QueryObjectParameterName, pname), (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -287,8 +296,9 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 
 void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
 {
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
-          pname, (uintptr_t)params);
+    EVENT("(GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
+          GLenumToString(GLenumGroup::QueryTarget, target),
+          GLenumToString(GLenumGroup::QueryParameterName, pname), (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -359,7 +369,9 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
 
 void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
 {
-    EVENT("(GLenum target = 0x%X, GLenum access = 0x%X)", target, access);
+    EVENT("(GLenum target = %s, GLenum access = %s)",
+          GLenumToString(GLenumGroup::BufferTargetARB, target),
+          GLenumToString(GLenumGroup::BufferAccessARB, access));
 
     Context *context = GetValidGlobalContext();
     void *returnValue;
@@ -387,7 +399,7 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
 
 GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
 {
-    EVENT("(GLenum target = 0x%X)", target);
+    EVENT("(GLenum target = %s)", GLenumToString(GLenumGroup::BufferTargetARB, target));
 
     Context *context = GetValidGlobalContext();
     GLboolean returnValue;

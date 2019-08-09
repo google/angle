@@ -13,6 +13,8 @@
 
 #include <string>
 
+#include "common/PackedGLEnums_autogen.h"
+
 namespace gl
 {
 
@@ -216,6 +218,8 @@ enum class GLenumGroup
     VertexPointerType,
     VertexProvokingMode
 };
+
+const char *GLbooleanToString(unsigned int value);
 
 const char *GLenumToString(GLenumGroup enumGroup, unsigned int value);
 

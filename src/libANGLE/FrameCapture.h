@@ -15,9 +15,13 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/frame_capture_utils_autogen.h"
-#include "libANGLE/gl_enum_utils_autogen.h"
 
 #include <tuple>
+
+namespace gl
+{
+enum class GLenumGroup;
+}
 
 namespace angle
 {

@@ -10,9 +10,7 @@
 
 import sys
 import os
-import re
 from datetime import date
-from collections import namedtuple
 
 import registry_xml
 
@@ -31,6 +29,8 @@ template_gl_enums_header = """// GENERATED FILE - DO NOT EDIT.
 
 #include <string>
 
+#include "common/PackedGLEnums_autogen.h"
+
 namespace gl
 {{
 
@@ -38,6 +38,7 @@ enum class GLenumGroup {{
     {gl_enum_groups}
 }};
 
+const char *GLbooleanToString(unsigned int value);
 
 const char *GLenumToString(GLenumGroup enumGroup, unsigned int value);
 
@@ -62,17 +63,26 @@ template_gl_enums_source = """// GENERATED FILE - DO NOT EDIT.
 
 #include <sstream>
 
-#include "common/debug.h"
 #include "common/bitset_utils.h"
 
 namespace gl
 {{
 
+const char *GLbooleanToString(unsigned int value) {{
+    switch (value) {{
+        case 0x0:
+            return "GL_FALSE";
+        case 0x1:
+            return "GL_TRUE";
+        default:
+            return "EnumUnknown";
+    }}
+}}
+
 const char *GLenumToString(GLenumGroup enumGroup, unsigned int value) {{
     switch (enumGroup) {{
         {gl_enums_value_to_string_table}
         default:
-            UNREACHABLE();
             return "EnumUnknown";
     }}
 }}
@@ -113,10 +123,11 @@ template_enum_group_case = """case GLenumGroup::{group_name}: {{
 
 template_enum_value_to_string_case = """case {value}: return {name};"""
 
-export_apis = ['gles2']
-export_extensions = registry_xml.supported_extensions
-
-trivial_gl_enums = {'GL_FALSE', 'GL_TRUE', 'GL_NO_ERROR', 'GL_TIMEOUT_IGNORED', 'GL_INVALID_INDEX'}
+exclude_gl_enums = {
+    'GL_NO_ERROR', 'GL_TIMEOUT_IGNORED', 'GL_INVALID_INDEX', 'GL_VERSION_ES_CL_1_0',
+    'GL_VERSION_ES_CM_1_1', 'GL_VERSION_ES_CL_1_1'
+}
+exclude_gl_enum_groups = {'SpecialNumbers'}
 
 
 def dump_value_to_string_mapping(gl_enum_in_groups, exporting_enums):
@@ -174,6 +185,9 @@ def main(header_output_path, source_output_path):
     enums_has_group = set()
     for enums_group_node in xml.root.findall('groups/group'):
         group_name = enums_group_node.attrib['name']
+        if group_name in exclude_gl_enum_groups:
+            continue
+
         if group_name not in gl_enum_in_groups:
             gl_enum_in_groups[group_name] = dict()
 
@@ -184,21 +198,19 @@ def main(header_output_path, source_output_path):
 
     # Find relevant GLenums according to enabled APIs and extensions.
     exporting_enums = set()
-    for api in export_apis:
-        xpath = ".//feature[@api='%s']//require//enum" % api
-        for enum_tag in xml.root.findall(xpath):
-            enum_name = enum_tag.attrib['name']
+    # export all the apis
+    xpath = "./feature/require/enum"
+    for enum_tag in xml.root.findall(xpath):
+        enum_name = enum_tag.attrib['name']
+        if enum_name not in exclude_gl_enums:
             exporting_enums.add(enum_name)
 
-    for extension in export_extensions:
-        xpath = ".//extensions//extension[@name='%s']//require//enum" % extension
+    for extension in registry_xml.supported_extensions:
+        xpath = "./extensions/extension[@name='%s']/require/enum" % extension
         for enum_tag in xml.root.findall(xpath):
             enum_name = enum_tag.attrib['name']
-            exporting_enums.add(enum_name)
-
-    for enum in trivial_gl_enums:
-        if enum in exporting_enums:
-            exporting_enums.remove(enum)
+            if enum_name not in exclude_gl_enums:
+                exporting_enums.add(enum_name)
 
     # For enums that do not have a group, add them to a default group
     default_group_name = registry_xml.default_enum_group_name
@@ -215,6 +227,7 @@ def main(header_output_path, source_output_path):
         year=date.today().year,
         gl_enum_groups=',\n'.join(sorted(gl_enum_in_groups.iterkeys())))
 
+    header_output_path = registry_xml.script_relative(header_output_path)
     with open(header_output_path, 'w') as f:
         f.write(header_content)
 

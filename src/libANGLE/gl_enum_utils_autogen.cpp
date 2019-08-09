@@ -13,15 +13,46 @@
 #include <sstream>
 
 #include "common/bitset_utils.h"
-#include "common/debug.h"
 
 namespace gl
 {
+
+const char *GLbooleanToString(unsigned int value)
+{
+    switch (value)
+    {
+        case 0x0:
+            return "GL_FALSE";
+        case 0x1:
+            return "GL_TRUE";
+        default:
+            return "EnumUnknown";
+    }
+}
 
 const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
 {
     switch (enumGroup)
     {
+        case GLenumGroup::AccumOp:
+        {
+            switch (value)
+            {
+                case 0x100:
+                    return "GL_ACCUM";
+                case 0x101:
+                    return "GL_LOAD";
+                case 0x102:
+                    return "GL_RETURN";
+                case 0x103:
+                    return "GL_MULT";
+                case 0x104:
+                    return "GL_ADD";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::AlphaFunction:
         {
             switch (value)
@@ -51,8 +82,26 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x90ed:
+                    return "GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_COMPUTE_SHADER";
                 case 0x92c1:
                     return "GL_ATOMIC_COUNTER_BUFFER_BINDING";
+                case 0x92c4:
+                    return "GL_ATOMIC_COUNTER_BUFFER_DATA_SIZE";
+                case 0x92c5:
+                    return "GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTERS";
+                case 0x92c6:
+                    return "GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTER_INDICES";
+                case 0x92c7:
+                    return "GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_VERTEX_SHADER";
+                case 0x92c8:
+                    return "GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_CONTROL_SHADER";
+                case 0x92c9:
+                    return "GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_EVALUATION_SHADER";
+                case 0x92ca:
+                    return "GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_GEOMETRY_SHADER";
+                case 0x92cb:
+                    return "GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_FRAGMENT_SHADER";
                 default:
                     return "EnumUnknown";
             }
@@ -62,12 +111,50 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x1:
+                    return "GL_CURRENT_BIT";
+                case 0x2:
+                    return "GL_POINT_BIT";
+                case 0x4:
+                    return "GL_LINE_BIT";
+                case 0x8:
+                    return "GL_POLYGON_BIT";
+                case 0x10:
+                    return "GL_POLYGON_STIPPLE_BIT";
+                case 0x20:
+                    return "GL_PIXEL_MODE_BIT";
+                case 0x40:
+                    return "GL_LIGHTING_BIT";
+                case 0x80:
+                    return "GL_FOG_BIT";
                 case 0x100:
                     return "GL_DEPTH_BUFFER_BIT";
+                case 0x200:
+                    return "GL_ACCUM_BUFFER_BIT";
                 case 0x400:
                     return "GL_STENCIL_BUFFER_BIT";
+                case 0x800:
+                    return "GL_VIEWPORT_BIT";
+                case 0x1000:
+                    return "GL_TRANSFORM_BIT";
+                case 0x2000:
+                    return "GL_ENABLE_BIT";
                 case 0x4000:
                     return "GL_COLOR_BUFFER_BIT";
+                case 0x8000:
+                    return "GL_HINT_BIT";
+                case 0x10000:
+                    return "GL_EVAL_BIT";
+                case 0x20000:
+                    return "GL_LIST_BIT";
+                case 0x40000:
+                    return "GL_TEXTURE_BIT";
+                case 0x80000:
+                    return "GL_SCISSOR_BIT";
+                case 0x20000000:
+                    return "GL_MULTISAMPLE_BIT";
+                case 0xffffffff:
+                    return "GL_ALL_ATTRIB_BITS";
                 default:
                     return "EnumUnknown";
             }
@@ -103,14 +190,22 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_FLOAT_MAT3";
                 case 0x8b5c:
                     return "GL_FLOAT_MAT4";
+                case 0x8b5d:
+                    return "GL_SAMPLER_1D";
                 case 0x8b5e:
                     return "GL_SAMPLER_2D";
                 case 0x8b5f:
                     return "GL_SAMPLER_3D";
                 case 0x8b60:
                     return "GL_SAMPLER_CUBE";
+                case 0x8b61:
+                    return "GL_SAMPLER_1D_SHADOW";
                 case 0x8b62:
                     return "GL_SAMPLER_2D_SHADOW";
+                case 0x8b63:
+                    return "GL_SAMPLER_2D_RECT";
+                case 0x8b64:
+                    return "GL_SAMPLER_2D_RECT_SHADOW";
                 case 0x8b65:
                     return "GL_FLOAT_MAT2x3";
                 case 0x8b66:
@@ -143,6 +238,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0xbf1:
+                    return "GL_LOGIC_OP";
                 case 0x8006:
                     return "GL_FUNC_ADD";
                 case 0x800a:
@@ -188,6 +285,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_CONSTANT_ALPHA";
                 case 0x8004:
                     return "GL_ONE_MINUS_CONSTANT_ALPHA";
+                case 0x8589:
+                    return "GL_SRC1_ALPHA";
+                case 0x88f9:
+                    return "GL_SRC1_COLOR";
+                case 0x88fa:
+                    return "GL_ONE_MINUS_SRC1_COLOR";
+                case 0x88fb:
+                    return "GL_ONE_MINUS_SRC1_ALPHA";
                 default:
                     return "EnumUnknown";
             }
@@ -201,6 +306,19 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_NEAREST";
                 case 0x2601:
                     return "GL_LINEAR";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::Boolean:
+        {
+            switch (value)
+            {
+                case 0x0:
+                    return "GL_FALSE";
+                case 0x1:
+                    return "GL_TRUE";
                 default:
                     return "EnumUnknown";
             }
@@ -252,6 +370,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAP_FLUSH_EXPLICIT_BIT";
                 case 0x20:
                     return "GL_MAP_UNSYNCHRONIZED_BIT";
+                case 0x40:
+                    return "GL_MAP_PERSISTENT_BIT";
+                case 0x80:
+                    return "GL_MAP_COHERENT_BIT";
                 default:
                     return "EnumUnknown";
             }
@@ -285,6 +407,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_SHADER_STORAGE_BUFFER";
                 case 0x90ee:
                     return "GL_DISPATCH_INDIRECT_BUFFER";
+                case 0x9192:
+                    return "GL_QUERY_BUFFER";
                 case 0x92c0:
                     return "GL_ATOMIC_COUNTER_BUFFER";
                 default:
@@ -320,6 +444,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_SHADER_STORAGE_BUFFER";
                 case 0x90ee:
                     return "GL_DISPATCH_INDIRECT_BUFFER";
+                case 0x9192:
+                    return "GL_QUERY_BUFFER";
                 case 0x92c0:
                     return "GL_ATOMIC_COUNTER_BUFFER";
                 default:
@@ -375,10 +501,78 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             {
                 case 0x100:
                     return "GL_DEPTH_BUFFER_BIT";
+                case 0x200:
+                    return "GL_ACCUM_BUFFER_BIT";
                 case 0x400:
                     return "GL_STENCIL_BUFFER_BIT";
                 case 0x4000:
                     return "GL_COLOR_BUFFER_BIT";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::ClientAttribMask:
+        {
+            switch (value)
+            {
+                case 0x1:
+                    return "GL_CLIENT_PIXEL_STORE_BIT";
+                case 0x2:
+                    return "GL_CLIENT_VERTEX_ARRAY_BIT";
+                case 0xffffffff:
+                    return "GL_CLIENT_ALL_ATTRIB_BITS";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::ClipControlDepth:
+        {
+            switch (value)
+            {
+                case 0x935e:
+                    return "GL_NEGATIVE_ONE_TO_ONE";
+                case 0x935f:
+                    return "GL_ZERO_TO_ONE";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::ClipControlOrigin:
+        {
+            switch (value)
+            {
+                case 0x8ca1:
+                    return "GL_LOWER_LEFT";
+                case 0x8ca2:
+                    return "GL_UPPER_LEFT";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::ClipPlaneName:
+        {
+            switch (value)
+            {
+                case 0x3000:
+                    return "GL_CLIP_DISTANCE0";
+                case 0x3001:
+                    return "GL_CLIP_DISTANCE1";
+                case 0x3002:
+                    return "GL_CLIP_DISTANCE2";
+                case 0x3003:
+                    return "GL_CLIP_DISTANCE3";
+                case 0x3004:
+                    return "GL_CLIP_DISTANCE4";
+                case 0x3005:
+                    return "GL_CLIP_DISTANCE5";
+                case 0x3006:
+                    return "GL_CLIP_DISTANCE6";
+                case 0x3007:
+                    return "GL_CLIP_DISTANCE7";
                 default:
                     return "EnumUnknown";
             }
@@ -390,10 +584,22 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             {
                 case 0x0:
                     return "GL_NONE";
+                case 0x400:
+                    return "GL_FRONT_LEFT";
+                case 0x401:
+                    return "GL_FRONT_RIGHT";
+                case 0x402:
+                    return "GL_BACK_LEFT";
+                case 0x403:
+                    return "GL_BACK_RIGHT";
                 case 0x404:
                     return "GL_FRONT";
                 case 0x405:
                     return "GL_BACK";
+                case 0x406:
+                    return "GL_LEFT";
+                case 0x407:
+                    return "GL_RIGHT";
                 case 0x408:
                     return "GL_FRONT_AND_BACK";
                 case 0x8ce0:
@@ -480,6 +686,25 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::ColorMaterialParameter:
+        {
+            switch (value)
+            {
+                case 0x1200:
+                    return "GL_AMBIENT";
+                case 0x1201:
+                    return "GL_DIFFUSE";
+                case 0x1202:
+                    return "GL_SPECULAR";
+                case 0x1600:
+                    return "GL_EMISSION";
+                case 0x1602:
+                    return "GL_AMBIENT_AND_DIFFUSE";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::ColorPointerType:
         {
             switch (value)
@@ -498,6 +723,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNSIGNED_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
                 default:
                     return "EnumUnknown";
             }
@@ -507,10 +734,27 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x1:
+                    return "GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT";
                 case 0x2:
                     return "GL_CONTEXT_FLAG_DEBUG_BIT";
                 case 0x4:
                     return "GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT";
+                case 0x8:
+                    return "GL_CONTEXT_FLAG_NO_ERROR_BIT";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::ContextProfileMask:
+        {
+            switch (value)
+            {
+                case 0x1:
+                    return "GL_CONTEXT_CORE_PROFILE_BIT";
+                case 0x2:
+                    return "GL_CONTEXT_COMPATIBILITY_PROFILE_BIT";
                 default:
                     return "EnumUnknown";
             }
@@ -544,6 +788,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_SHADER_STORAGE_BUFFER";
                 case 0x90ee:
                     return "GL_DISPATCH_INDIRECT_BUFFER";
+                case 0x9192:
+                    return "GL_QUERY_BUFFER";
                 case 0x92c0:
                     return "GL_ATOMIC_COUNTER_BUFFER";
                 default:
@@ -651,6 +897,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_CONTEXT_LOST";
                 case 0x1004:
                     return "GL_TEXTURE_BORDER_COLOR_OES";
+                case 0x1006:
+                    return "GL_TEXTURE_TARGET";
                 case 0x2500:
                     return "GL_TEXTURE_GEN_MODE_OES";
                 case 0x8005:
@@ -661,12 +909,16 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX";
                 case 0x8009:
                     return "GL_BLEND_EQUATION";
+                case 0x803a:
+                    return "GL_RESCALE_NORMAL";
                 case 0x803c:
                     return "GL_ALPHA8_EXT";
                 case 0x8040:
                     return "GL_LUMINANCE8_EXT";
                 case 0x8045:
                     return "GL_LUMINANCE8_ALPHA8_EXT";
+                case 0x8055:
+                    return "GL_RGBA2";
                 case 0x806a:
                     return "GL_TEXTURE_BINDING_3D_OES";
                 case 0x8071:
@@ -675,8 +927,12 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_3D_TEXTURE_SIZE";
                 case 0x8074:
                     return "GL_VERTEX_ARRAY_KHR";
+                case 0x809d:
+                    return "GL_MULTISAMPLE";
                 case 0x809e:
                     return "GL_SAMPLE_ALPHA_TO_COVERAGE";
+                case 0x809f:
+                    return "GL_SAMPLE_ALPHA_TO_ONE";
                 case 0x80a0:
                     return "GL_SAMPLE_COVERAGE";
                 case 0x80aa:
@@ -691,14 +947,24 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_BLEND_DST_ALPHA";
                 case 0x80cb:
                     return "GL_BLEND_SRC_ALPHA";
+                case 0x80e0:
+                    return "GL_BGR";
+                case 0x80e1:
+                    return "GL_BGRA";
                 case 0x80e8:
                     return "GL_MAX_ELEMENTS_VERTICES";
                 case 0x80e9:
                     return "GL_MAX_ELEMENTS_INDICES";
+                case 0x80ee:
+                    return "GL_PARAMETER_BUFFER";
+                case 0x80ef:
+                    return "GL_PARAMETER_BUFFER_BINDING";
                 case 0x812d:
                     return "GL_CLAMP_TO_BORDER_OES";
                 case 0x81a6:
                     return "GL_DEPTH_COMPONENT24";
+                case 0x81a7:
+                    return "GL_DEPTH_COMPONENT32";
                 case 0x8218:
                     return "GL_FRAMEBUFFER_DEFAULT";
                 case 0x821a:
@@ -713,6 +979,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_CONTEXT_FLAGS";
                 case 0x8221:
                     return "GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED";
+                case 0x8222:
+                    return "GL_INDEX";
                 case 0x8228:
                     return "GL_RG_INTEGER";
                 case 0x8242:
@@ -759,8 +1027,16 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RESET_NOTIFICATION_STRATEGY";
                 case 0x825a:
                     return "GL_PROGRAM_PIPELINE_BINDING";
+                case 0x825b:
+                    return "GL_MAX_VIEWPORTS";
+                case 0x825c:
+                    return "GL_VIEWPORT_SUBPIXEL_BITS";
+                case 0x825d:
+                    return "GL_VIEWPORT_BOUNDS_RANGE";
                 case 0x825e:
                     return "GL_LAYER_PROVOKING_VERTEX";
+                case 0x825f:
+                    return "GL_VIEWPORT_INDEX_PROVOKING_VERTEX";
                 case 0x8260:
                     return "GL_UNDEFINED_VERTEX";
                 case 0x8261:
@@ -789,6 +1065,72 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_DEBUG_GROUP_STACK_DEPTH";
                 case 0x826e:
                     return "GL_MAX_UNIFORM_LOCATIONS";
+                case 0x8282:
+                    return "GL_MAX_COMBINED_DIMENSIONS";
+                case 0x8284:
+                    return "GL_DEPTH_COMPONENTS";
+                case 0x8285:
+                    return "GL_STENCIL_COMPONENTS";
+                case 0x8294:
+                    return "GL_MANUAL_GENERATE_MIPMAP";
+                case 0x82b7:
+                    return "GL_FULL_SUPPORT";
+                case 0x82b8:
+                    return "GL_CAVEAT_SUPPORT";
+                case 0x82b9:
+                    return "GL_IMAGE_CLASS_4_X_32";
+                case 0x82ba:
+                    return "GL_IMAGE_CLASS_2_X_32";
+                case 0x82bb:
+                    return "GL_IMAGE_CLASS_1_X_32";
+                case 0x82bc:
+                    return "GL_IMAGE_CLASS_4_X_16";
+                case 0x82bd:
+                    return "GL_IMAGE_CLASS_2_X_16";
+                case 0x82be:
+                    return "GL_IMAGE_CLASS_1_X_16";
+                case 0x82bf:
+                    return "GL_IMAGE_CLASS_4_X_8";
+                case 0x82c0:
+                    return "GL_IMAGE_CLASS_2_X_8";
+                case 0x82c1:
+                    return "GL_IMAGE_CLASS_1_X_8";
+                case 0x82c2:
+                    return "GL_IMAGE_CLASS_11_11_10";
+                case 0x82c3:
+                    return "GL_IMAGE_CLASS_10_10_10_2";
+                case 0x82c4:
+                    return "GL_VIEW_CLASS_128_BITS";
+                case 0x82c5:
+                    return "GL_VIEW_CLASS_96_BITS";
+                case 0x82c6:
+                    return "GL_VIEW_CLASS_64_BITS";
+                case 0x82c7:
+                    return "GL_VIEW_CLASS_48_BITS";
+                case 0x82c8:
+                    return "GL_VIEW_CLASS_32_BITS";
+                case 0x82c9:
+                    return "GL_VIEW_CLASS_24_BITS";
+                case 0x82ca:
+                    return "GL_VIEW_CLASS_16_BITS";
+                case 0x82cb:
+                    return "GL_VIEW_CLASS_8_BITS";
+                case 0x82cc:
+                    return "GL_VIEW_CLASS_S3TC_DXT1_RGB";
+                case 0x82cd:
+                    return "GL_VIEW_CLASS_S3TC_DXT1_RGBA";
+                case 0x82ce:
+                    return "GL_VIEW_CLASS_S3TC_DXT3_RGBA";
+                case 0x82cf:
+                    return "GL_VIEW_CLASS_S3TC_DXT5_RGBA";
+                case 0x82d0:
+                    return "GL_VIEW_CLASS_RGTC1_RED";
+                case 0x82d1:
+                    return "GL_VIEW_CLASS_RGTC2_RG";
+                case 0x82d2:
+                    return "GL_VIEW_CLASS_BPTC_UNORM";
+                case 0x82d3:
+                    return "GL_VIEW_CLASS_BPTC_FLOAT";
                 case 0x82d4:
                     return "GL_VERTEX_ATTRIB_BINDING";
                 case 0x82d6:
@@ -801,6 +1143,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET";
                 case 0x82da:
                     return "GL_MAX_VERTEX_ATTRIB_BINDINGS";
+                case 0x82db:
+                    return "GL_TEXTURE_VIEW_MIN_LEVEL";
+                case 0x82dc:
+                    return "GL_TEXTURE_VIEW_NUM_LEVELS";
+                case 0x82dd:
+                    return "GL_TEXTURE_VIEW_MIN_LAYER";
+                case 0x82de:
+                    return "GL_TEXTURE_VIEW_NUM_LAYERS";
                 case 0x82df:
                     return "GL_TEXTURE_IMMUTABLE_LEVELS";
                 case 0x82e0:
@@ -821,32 +1171,140 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_DISPLAY_LIST";
                 case 0x82e8:
                     return "GL_MAX_LABEL_LENGTH";
+                case 0x82e9:
+                    return "GL_NUM_SHADING_LANGUAGE_VERSIONS";
+                case 0x82ec:
+                    return "GL_TRANSFORM_FEEDBACK_OVERFLOW";
+                case 0x82ed:
+                    return "GL_TRANSFORM_FEEDBACK_STREAM_OVERFLOW";
+                case 0x82ee:
+                    return "GL_VERTICES_SUBMITTED";
+                case 0x82ef:
+                    return "GL_PRIMITIVES_SUBMITTED";
+                case 0x82f0:
+                    return "GL_VERTEX_SHADER_INVOCATIONS";
+                case 0x82f1:
+                    return "GL_TESS_CONTROL_SHADER_PATCHES";
+                case 0x82f2:
+                    return "GL_TESS_EVALUATION_SHADER_INVOCATIONS";
+                case 0x82f3:
+                    return "GL_GEOMETRY_SHADER_PRIMITIVES_EMITTED";
+                case 0x82f4:
+                    return "GL_FRAGMENT_SHADER_INVOCATIONS";
+                case 0x82f5:
+                    return "GL_COMPUTE_SHADER_INVOCATIONS";
+                case 0x82f6:
+                    return "GL_CLIPPING_INPUT_PRIMITIVES";
+                case 0x82f7:
+                    return "GL_CLIPPING_OUTPUT_PRIMITIVES";
+                case 0x82f9:
+                    return "GL_MAX_CULL_DISTANCES";
+                case 0x82fa:
+                    return "GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES";
+                case 0x82fb:
+                    return "GL_CONTEXT_RELEASE_BEHAVIOR";
+                case 0x82fc:
+                    return "GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH";
+                case 0x8362:
+                    return "GL_UNSIGNED_BYTE_2_3_3_REV";
                 case 0x8363:
                     return "GL_UNSIGNED_SHORT_5_6_5";
+                case 0x8364:
+                    return "GL_UNSIGNED_SHORT_5_6_5_REV";
+                case 0x8365:
+                    return "GL_UNSIGNED_SHORT_4_4_4_4_REV";
+                case 0x8366:
+                    return "GL_UNSIGNED_SHORT_1_5_5_5_REV";
+                case 0x8367:
+                    return "GL_UNSIGNED_INT_8_8_8_8_REV";
                 case 0x8370:
                     return "GL_MIRRORED_REPEAT";
+                case 0x8450:
+                    return "GL_FOG_COORDINATE_SOURCE";
+                case 0x8451:
+                    return "GL_FOG_COORD";
+                case 0x8452:
+                    return "GL_FRAGMENT_DEPTH";
+                case 0x8453:
+                    return "GL_CURRENT_FOG_COORD";
+                case 0x8454:
+                    return "GL_FOG_COORDINATE_ARRAY_TYPE";
+                case 0x8455:
+                    return "GL_FOG_COORDINATE_ARRAY_STRIDE";
+                case 0x8456:
+                    return "GL_FOG_COORDINATE_ARRAY_POINTER";
+                case 0x8457:
+                    return "GL_FOG_COORDINATE_ARRAY";
+                case 0x8458:
+                    return "GL_COLOR_SUM";
+                case 0x8459:
+                    return "GL_CURRENT_SECONDARY_COLOR";
+                case 0x845a:
+                    return "GL_SECONDARY_COLOR_ARRAY_SIZE";
+                case 0x845b:
+                    return "GL_SECONDARY_COLOR_ARRAY_TYPE";
+                case 0x845c:
+                    return "GL_SECONDARY_COLOR_ARRAY_STRIDE";
+                case 0x845d:
+                    return "GL_SECONDARY_COLOR_ARRAY_POINTER";
+                case 0x845e:
+                    return "GL_SECONDARY_COLOR_ARRAY";
+                case 0x845f:
+                    return "GL_CURRENT_RASTER_SECONDARY_COLOR";
                 case 0x84e0:
                     return "GL_ACTIVE_TEXTURE";
+                case 0x84e1:
+                    return "GL_CLIENT_ACTIVE_TEXTURE";
+                case 0x84e2:
+                    return "GL_MAX_TEXTURE_UNITS";
+                case 0x84e3:
+                    return "GL_TRANSPOSE_MODELVIEW_MATRIX";
+                case 0x84e4:
+                    return "GL_TRANSPOSE_PROJECTION_MATRIX";
+                case 0x84e5:
+                    return "GL_TRANSPOSE_TEXTURE_MATRIX";
+                case 0x84e6:
+                    return "GL_TRANSPOSE_COLOR_MATRIX";
+                case 0x84e7:
+                    return "GL_SUBTRACT";
                 case 0x84e8:
                     return "GL_MAX_RENDERBUFFER_SIZE";
+                case 0x84e9:
+                    return "GL_COMPRESSED_ALPHA";
+                case 0x84ea:
+                    return "GL_COMPRESSED_LUMINANCE";
+                case 0x84eb:
+                    return "GL_COMPRESSED_LUMINANCE_ALPHA";
+                case 0x84ec:
+                    return "GL_COMPRESSED_INTENSITY";
                 case 0x84f2:
                     return "GL_ALL_COMPLETED_NV";
                 case 0x84f3:
                     return "GL_FENCE_STATUS_NV";
                 case 0x84f4:
                     return "GL_FENCE_CONDITION_NV";
+                case 0x84f6:
+                    return "GL_TEXTURE_BINDING_RECTANGLE";
+                case 0x84f8:
+                    return "GL_MAX_RECTANGLE_TEXTURE_SIZE";
                 case 0x84fa:
                     return "GL_UNSIGNED_INT_24_8";
                 case 0x84fd:
                     return "GL_MAX_TEXTURE_LOD_BIAS";
+                case 0x84fe:
+                    return "GL_TEXTURE_MAX_ANISOTROPY";
+                case 0x84ff:
+                    return "GL_MAX_TEXTURE_MAX_ANISOTROPY";
+                case 0x8500:
+                    return "GL_TEXTURE_FILTER_CONTROL";
                 case 0x8507:
                     return "GL_INCR_WRAP";
                 case 0x8508:
                     return "GL_DECR_WRAP";
                 case 0x8511:
-                    return "GL_NORMAL_MAP_OES";
+                    return "GL_NORMAL_MAP";
                 case 0x8512:
-                    return "GL_REFLECTION_MAP_OES";
+                    return "GL_REFLECTION_MAP";
                 case 0x8513:
                     return "GL_TEXTURE_CUBE_MAP_OES";
                 case 0x8514:
@@ -865,12 +1323,56 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_OES";
                 case 0x851c:
                     return "GL_MAX_CUBE_MAP_TEXTURE_SIZE";
+                case 0x8570:
+                    return "GL_COMBINE";
+                case 0x8571:
+                    return "GL_COMBINE_RGB";
+                case 0x8572:
+                    return "GL_COMBINE_ALPHA";
+                case 0x8573:
+                    return "GL_RGB_SCALE";
+                case 0x8574:
+                    return "GL_ADD_SIGNED";
+                case 0x8575:
+                    return "GL_INTERPOLATE";
+                case 0x8578:
+                    return "GL_PREVIOUS";
+                case 0x8580:
+                    return "GL_SOURCE0_RGB";
+                case 0x8581:
+                    return "GL_SOURCE1_RGB";
+                case 0x8582:
+                    return "GL_SOURCE2_RGB";
+                case 0x8588:
+                    return "GL_SOURCE0_ALPHA";
                 case 0x8589:
-                    return "GL_SRC1_ALPHA_EXT";
+                    return "GL_SOURCE1_ALPHA";
+                case 0x858a:
+                    return "GL_SOURCE2_ALPHA";
+                case 0x8590:
+                    return "GL_OPERAND0_RGB";
+                case 0x8591:
+                    return "GL_OPERAND1_RGB";
+                case 0x8592:
+                    return "GL_OPERAND2_RGB";
+                case 0x8598:
+                    return "GL_OPERAND0_ALPHA";
+                case 0x8599:
+                    return "GL_OPERAND1_ALPHA";
+                case 0x859a:
+                    return "GL_OPERAND2_ALPHA";
                 case 0x85b5:
                     return "GL_VERTEX_ARRAY_BINDING";
+                case 0x8642:
+                    return "GL_PROGRAM_POINT_SIZE";
+                case 0x8643:
+                    return "GL_VERTEX_PROGRAM_TWO_SIDE";
                 case 0x8645:
                     return "GL_VERTEX_ATTRIB_ARRAY_POINTER";
+                case 0x864f:
+                    return "GL_DEPTH_CLAMP";
+                case 0x86a0:
+                    return "GL_TEXTURE_COMPRESSED_IMAGE_SIZE";
                 case 0x86a2:
                     return "GL_NUM_COMPRESSED_TEXTURE_FORMATS";
                 case 0x86a3:
@@ -887,8 +1389,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_WEIGHT_ARRAY_POINTER_OES";
                 case 0x86ad:
                     return "GL_WEIGHT_ARRAY_OES";
+                case 0x86ae:
+                    return "GL_DOT3_RGB";
+                case 0x86af:
+                    return "GL_DOT3_RGBA";
                 case 0x8741:
                     return "GL_PROGRAM_BINARY_LENGTH_OES";
+                case 0x8743:
+                    return "GL_MIRROR_CLAMP_TO_EDGE";
                 case 0x87fe:
                     return "GL_NUM_PROGRAM_BINARY_FORMATS";
                 case 0x87ff:
@@ -969,8 +1477,16 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MATRIX_INDEX_ARRAY_POINTER_OES";
                 case 0x884a:
                     return "GL_TEXTURE_DEPTH_SIZE";
+                case 0x884b:
+                    return "GL_DEPTH_TEXTURE_MODE";
                 case 0x884e:
                     return "GL_COMPARE_REF_TO_TEXTURE";
+                case 0x884f:
+                    return "GL_TEXTURE_CUBE_MAP_SEAMLESS";
+                case 0x8861:
+                    return "GL_POINT_SPRITE";
+                case 0x8862:
+                    return "GL_COORD_REPLACE";
                 case 0x8864:
                     return "GL_QUERY_COUNTER_BITS_EXT";
                 case 0x8865:
@@ -985,6 +1501,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_TESS_CONTROL_INPUT_COMPONENTS";
                 case 0x886d:
                     return "GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS";
+                case 0x8871:
+                    return "GL_MAX_TEXTURE_COORDS";
                 case 0x8872:
                     return "GL_MAX_TEXTURE_IMAGE_UNITS";
                 case 0x887f:
@@ -993,8 +1511,24 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_ARRAY_BUFFER_BINDING";
                 case 0x8895:
                     return "GL_ELEMENT_ARRAY_BUFFER_BINDING";
+                case 0x8896:
+                    return "GL_VERTEX_ARRAY_BUFFER_BINDING";
+                case 0x8897:
+                    return "GL_NORMAL_ARRAY_BUFFER_BINDING";
+                case 0x8898:
+                    return "GL_COLOR_ARRAY_BUFFER_BINDING";
+                case 0x8899:
+                    return "GL_INDEX_ARRAY_BUFFER_BINDING";
+                case 0x889a:
+                    return "GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING";
+                case 0x889b:
+                    return "GL_EDGE_FLAG_ARRAY_BUFFER_BINDING";
+                case 0x889c:
+                    return "GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING";
+                case 0x889d:
+                    return "GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING";
                 case 0x889e:
-                    return "GL_WEIGHT_ARRAY_BUFFER_BINDING_OES";
+                    return "GL_WEIGHT_ARRAY_BUFFER_BINDING";
                 case 0x88b9:
                     return "GL_WRITE_ONLY_OES";
                 case 0x88bb:
@@ -1018,7 +1552,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x88fb:
                     return "GL_ONE_MINUS_SRC1_ALPHA_EXT";
                 case 0x88fc:
-                    return "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT";
+                    return "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS";
                 case 0x88fe:
                     return "GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE";
                 case 0x88ff:
@@ -1035,6 +1569,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_GEOMETRY_LINKED_OUTPUT_TYPE_EXT";
                 case 0x8919:
                     return "GL_SAMPLER_BINDING";
+                case 0x891a:
+                    return "GL_CLAMP_VERTEX_COLOR";
+                case 0x891b:
+                    return "GL_CLAMP_FRAGMENT_COLOR";
+                case 0x891c:
+                    return "GL_CLAMP_READ_COLOR";
+                case 0x891d:
+                    return "GL_FIXED_ONLY";
                 case 0x898a:
                     return "GL_POINT_SIZE_ARRAY_TYPE_OES";
                 case 0x898b:
@@ -1095,10 +1637,16 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TEXTURE_BLUE_TYPE";
                 case 0x8c13:
                     return "GL_TEXTURE_ALPHA_TYPE";
+                case 0x8c14:
+                    return "GL_TEXTURE_LUMINANCE_TYPE";
+                case 0x8c15:
+                    return "GL_TEXTURE_INTENSITY_TYPE";
                 case 0x8c16:
                     return "GL_TEXTURE_DEPTH_TYPE";
                 case 0x8c17:
                     return "GL_UNSIGNED_NORMALIZED";
+                case 0x8c1c:
+                    return "GL_TEXTURE_BINDING_1D_ARRAY";
                 case 0x8c1d:
                     return "GL_TEXTURE_BINDING_2D_ARRAY";
                 case 0x8c29:
@@ -1121,6 +1669,18 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNSIGNED_INT_5_9_9_9_REV";
                 case 0x8c3f:
                     return "GL_TEXTURE_SHARED_SIZE";
+                case 0x8c44:
+                    return "GL_SLUMINANCE_ALPHA";
+                case 0x8c45:
+                    return "GL_SLUMINANCE8_ALPHA8";
+                case 0x8c46:
+                    return "GL_SLUMINANCE";
+                case 0x8c47:
+                    return "GL_SLUMINANCE8";
+                case 0x8c4a:
+                    return "GL_COMPRESSED_SLUMINANCE";
+                case 0x8c4b:
+                    return "GL_COMPRESSED_SLUMINANCE_ALPHA";
                 case 0x8c80:
                     return "GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS";
                 case 0x8c87:
@@ -1135,6 +1695,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_INTERLEAVED_ATTRIBS";
                 case 0x8c8d:
                     return "GL_SEPARATE_ATTRIBS";
+                case 0x8ca0:
+                    return "GL_POINT_SPRITE_COORD_ORIGIN";
                 case 0x8ca3:
                     return "GL_STENCIL_BACK_REF";
                 case 0x8ca4:
@@ -1187,8 +1749,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RENDERBUFFER_HEIGHT_OES";
                 case 0x8d44:
                     return "GL_RENDERBUFFER_INTERNAL_FORMAT_OES";
+                case 0x8d46:
+                    return "GL_STENCIL_INDEX1";
+                case 0x8d47:
+                    return "GL_STENCIL_INDEX4";
                 case 0x8d48:
                     return "GL_STENCIL_INDEX8";
+                case 0x8d49:
+                    return "GL_STENCIL_INDEX16";
                 case 0x8d50:
                     return "GL_RENDERBUFFER_RED_SIZE_OES";
                 case 0x8d51:
@@ -1217,20 +1785,36 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_ELEMENT_INDEX";
                 case 0x8d94:
                     return "GL_RED_INTEGER";
+                case 0x8d95:
+                    return "GL_GREEN_INTEGER";
+                case 0x8d96:
+                    return "GL_BLUE_INTEGER";
+                case 0x8d97:
+                    return "GL_ALPHA_INTEGER";
                 case 0x8d98:
                     return "GL_RGB_INTEGER";
                 case 0x8d99:
                     return "GL_RGBA_INTEGER";
+                case 0x8d9a:
+                    return "GL_BGR_INTEGER";
+                case 0x8d9b:
+                    return "GL_BGRA_INTEGER";
                 case 0x8da7:
                     return "GL_FRAMEBUFFER_ATTACHMENT_LAYERED_EXT";
                 case 0x8da8:
                     return "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT";
                 case 0x8dad:
                     return "GL_FLOAT_32_UNSIGNED_INT_24_8_REV";
+                case 0x8db9:
+                    return "GL_FRAMEBUFFER_SRGB";
+                case 0x8dc0:
+                    return "GL_SAMPLER_1D_ARRAY";
                 case 0x8dc1:
                     return "GL_SAMPLER_2D_ARRAY";
                 case 0x8dc2:
                     return "GL_SAMPLER_BUFFER";
+                case 0x8dc3:
+                    return "GL_SAMPLER_1D_ARRAY_SHADOW";
                 case 0x8dc4:
                     return "GL_SAMPLER_2D_ARRAY_SHADOW";
                 case 0x8dc5:
@@ -1241,22 +1825,34 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNSIGNED_INT_VEC3";
                 case 0x8dc8:
                     return "GL_UNSIGNED_INT_VEC4";
+                case 0x8dc9:
+                    return "GL_INT_SAMPLER_1D";
                 case 0x8dca:
                     return "GL_INT_SAMPLER_2D";
                 case 0x8dcb:
                     return "GL_INT_SAMPLER_3D";
                 case 0x8dcc:
                     return "GL_INT_SAMPLER_CUBE";
+                case 0x8dcd:
+                    return "GL_INT_SAMPLER_2D_RECT";
+                case 0x8dce:
+                    return "GL_INT_SAMPLER_1D_ARRAY";
                 case 0x8dcf:
                     return "GL_INT_SAMPLER_2D_ARRAY";
                 case 0x8dd0:
                     return "GL_INT_SAMPLER_BUFFER";
+                case 0x8dd1:
+                    return "GL_UNSIGNED_INT_SAMPLER_1D";
                 case 0x8dd2:
                     return "GL_UNSIGNED_INT_SAMPLER_2D";
                 case 0x8dd3:
                     return "GL_UNSIGNED_INT_SAMPLER_3D";
                 case 0x8dd4:
                     return "GL_UNSIGNED_INT_SAMPLER_CUBE";
+                case 0x8dd5:
+                    return "GL_UNSIGNED_INT_SAMPLER_2D_RECT";
+                case 0x8dd6:
+                    return "GL_UNSIGNED_INT_SAMPLER_1D_ARRAY";
                 case 0x8dd7:
                     return "GL_UNSIGNED_INT_SAMPLER_2D_ARRAY";
                 case 0x8dd8:
@@ -1269,6 +1865,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_GEOMETRY_OUTPUT_VERTICES";
                 case 0x8de1:
                     return "GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS";
+                case 0x8de7:
+                    return "GL_MAX_SUBROUTINES";
+                case 0x8de8:
+                    return "GL_MAX_SUBROUTINE_UNIFORM_LOCATIONS";
                 case 0x8df8:
                     return "GL_SHADER_BINARY_FORMATS";
                 case 0x8df9:
@@ -1281,14 +1881,30 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_VARYING_VECTORS";
                 case 0x8dfd:
                     return "GL_MAX_FRAGMENT_UNIFORM_VECTORS";
+                case 0x8e17:
+                    return "GL_QUERY_WAIT_INVERTED";
+                case 0x8e18:
+                    return "GL_QUERY_NO_WAIT_INVERTED";
+                case 0x8e19:
+                    return "GL_QUERY_BY_REGION_WAIT_INVERTED";
+                case 0x8e1a:
+                    return "GL_QUERY_BY_REGION_NO_WAIT_INVERTED";
+                case 0x8e1b:
+                    return "GL_POLYGON_OFFSET_CLAMP";
                 case 0x8e1e:
                     return "GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS";
                 case 0x8e1f:
                     return "GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS";
+                case 0x8e23:
+                    return "GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED";
+                case 0x8e24:
+                    return "GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE";
                 case 0x8e25:
                     return "GL_TRANSFORM_FEEDBACK_BINDING";
                 case 0x8e28:
-                    return "GL_TIMESTAMP_EXT";
+                    return "GL_TIMESTAMP";
+                case 0x8e4c:
+                    return "GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION";
                 case 0x8e4d:
                     return "GL_FIRST_VERTEX_CONVENTION_EXT";
                 case 0x8e4e:
@@ -1315,6 +1931,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET";
                 case 0x8e5f:
                     return "GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET";
+                case 0x8e70:
+                    return "GL_MAX_TRANSFORM_FEEDBACK_BUFFERS";
+                case 0x8e71:
+                    return "GL_MAX_VERTEX_STREAMS";
                 case 0x8e75:
                     return "GL_TESS_CONTROL_OUTPUT_VERTICES";
                 case 0x8e76:
@@ -1362,7 +1982,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8f38:
                     return "GL_MAX_IMAGE_UNITS";
                 case 0x8f39:
-                    return "GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES";
+                    return "GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS";
                 case 0x8f3a:
                     return "GL_IMAGE_BINDING_NAME";
                 case 0x8f3b:
@@ -1375,12 +1995,42 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_IMAGE_BINDING_ACCESS";
                 case 0x8f43:
                     return "GL_DRAW_INDIRECT_BUFFER_BINDING";
+                case 0x8f46:
+                    return "GL_DOUBLE_MAT2";
+                case 0x8f47:
+                    return "GL_DOUBLE_MAT3";
+                case 0x8f48:
+                    return "GL_DOUBLE_MAT4";
+                case 0x8f49:
+                    return "GL_DOUBLE_MAT2x3";
+                case 0x8f4a:
+                    return "GL_DOUBLE_MAT2x4";
+                case 0x8f4b:
+                    return "GL_DOUBLE_MAT3x2";
+                case 0x8f4c:
+                    return "GL_DOUBLE_MAT3x4";
+                case 0x8f4d:
+                    return "GL_DOUBLE_MAT4x2";
+                case 0x8f4e:
+                    return "GL_DOUBLE_MAT4x3";
                 case 0x8f4f:
                     return "GL_VERTEX_BINDING_BUFFER";
+                case 0x8f9b:
+                    return "GL_RGBA16_SNORM";
                 case 0x8f9c:
                     return "GL_SIGNED_NORMALIZED";
+                case 0x8f9d:
+                    return "GL_PRIMITIVE_RESTART";
+                case 0x8f9e:
+                    return "GL_PRIMITIVE_RESTART_INDEX";
                 case 0x8fbb:
                     return "GL_GPU_DISJOINT_EXT";
+                case 0x8ffc:
+                    return "GL_DOUBLE_VEC2";
+                case 0x8ffd:
+                    return "GL_DOUBLE_VEC3";
+                case 0x8ffe:
+                    return "GL_DOUBLE_VEC4";
                 case 0x900a:
                     return "GL_TEXTURE_BINDING_CUBE_MAP_ARRAY";
                 case 0x900c:
@@ -1391,44 +2041,78 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_INT_SAMPLER_CUBE_MAP_ARRAY";
                 case 0x900f:
                     return "GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY";
+                case 0x904c:
+                    return "GL_IMAGE_1D";
                 case 0x904d:
                     return "GL_IMAGE_2D";
                 case 0x904e:
                     return "GL_IMAGE_3D";
+                case 0x904f:
+                    return "GL_IMAGE_2D_RECT";
                 case 0x9050:
                     return "GL_IMAGE_CUBE";
                 case 0x9051:
                     return "GL_IMAGE_BUFFER";
+                case 0x9052:
+                    return "GL_IMAGE_1D_ARRAY";
                 case 0x9053:
                     return "GL_IMAGE_2D_ARRAY";
                 case 0x9054:
                     return "GL_IMAGE_CUBE_MAP_ARRAY";
+                case 0x9055:
+                    return "GL_IMAGE_2D_MULTISAMPLE";
+                case 0x9056:
+                    return "GL_IMAGE_2D_MULTISAMPLE_ARRAY";
+                case 0x9057:
+                    return "GL_INT_IMAGE_1D";
                 case 0x9058:
                     return "GL_INT_IMAGE_2D";
                 case 0x9059:
                     return "GL_INT_IMAGE_3D";
+                case 0x905a:
+                    return "GL_INT_IMAGE_2D_RECT";
                 case 0x905b:
                     return "GL_INT_IMAGE_CUBE";
                 case 0x905c:
                     return "GL_INT_IMAGE_BUFFER";
+                case 0x905d:
+                    return "GL_INT_IMAGE_1D_ARRAY";
                 case 0x905e:
                     return "GL_INT_IMAGE_2D_ARRAY";
                 case 0x905f:
                     return "GL_INT_IMAGE_CUBE_MAP_ARRAY";
+                case 0x9060:
+                    return "GL_INT_IMAGE_2D_MULTISAMPLE";
+                case 0x9061:
+                    return "GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY";
+                case 0x9062:
+                    return "GL_UNSIGNED_INT_IMAGE_1D";
                 case 0x9063:
                     return "GL_UNSIGNED_INT_IMAGE_2D";
                 case 0x9064:
                     return "GL_UNSIGNED_INT_IMAGE_3D";
+                case 0x9065:
+                    return "GL_UNSIGNED_INT_IMAGE_2D_RECT";
                 case 0x9066:
                     return "GL_UNSIGNED_INT_IMAGE_CUBE";
                 case 0x9067:
                     return "GL_UNSIGNED_INT_IMAGE_BUFFER";
+                case 0x9068:
+                    return "GL_UNSIGNED_INT_IMAGE_1D_ARRAY";
                 case 0x9069:
                     return "GL_UNSIGNED_INT_IMAGE_2D_ARRAY";
                 case 0x906a:
                     return "GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY";
+                case 0x906b:
+                    return "GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE";
+                case 0x906c:
+                    return "GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY";
+                case 0x906d:
+                    return "GL_MAX_IMAGE_SAMPLES";
                 case 0x906e:
                     return "GL_IMAGE_BINDING_FORMAT";
+                case 0x90bc:
+                    return "GL_MIN_MAP_BUFFER_ALIGNMENT";
                 case 0x90c8:
                     return "GL_IMAGE_FORMAT_COMPATIBILITY_BY_SIZE";
                 case 0x90c9:
@@ -1476,7 +2160,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x90ef:
                     return "GL_DISPATCH_INDIRECT_BUFFER_BINDING";
                 case 0x90f3:
-                    return "GL_CONTEXT_ROBUST_ACCESS_EXT";
+                    return "GL_CONTEXT_ROBUST_ACCESS";
                 case 0x9102:
                     return "GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES";
                 case 0x9104:
@@ -1521,6 +2205,24 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_GEOMETRY_OUTPUT_COMPONENTS";
                 case 0x9125:
                     return "GL_MAX_FRAGMENT_INPUT_COMPONENTS";
+                case 0x9126:
+                    return "GL_CONTEXT_PROFILE_MASK";
+                case 0x9127:
+                    return "GL_UNPACK_COMPRESSED_BLOCK_WIDTH";
+                case 0x9128:
+                    return "GL_UNPACK_COMPRESSED_BLOCK_HEIGHT";
+                case 0x9129:
+                    return "GL_UNPACK_COMPRESSED_BLOCK_DEPTH";
+                case 0x912a:
+                    return "GL_UNPACK_COMPRESSED_BLOCK_SIZE";
+                case 0x912b:
+                    return "GL_PACK_COMPRESSED_BLOCK_WIDTH";
+                case 0x912c:
+                    return "GL_PACK_COMPRESSED_BLOCK_HEIGHT";
+                case 0x912d:
+                    return "GL_PACK_COMPRESSED_BLOCK_DEPTH";
+                case 0x912e:
+                    return "GL_PACK_COMPRESSED_BLOCK_SIZE";
                 case 0x912f:
                     return "GL_TEXTURE_IMMUTABLE_FORMAT";
                 case 0x9143:
@@ -1535,6 +2237,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_DEBUG_SEVERITY_MEDIUM_KHR";
                 case 0x9148:
                     return "GL_DEBUG_SEVERITY_LOW_KHR";
+                case 0x9193:
+                    return "GL_QUERY_BUFFER_BINDING";
                 case 0x919d:
                     return "GL_TEXTURE_BUFFER_OFFSET";
                 case 0x919e:
@@ -1670,7 +2374,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x930e:
                     return "GL_LOCATION";
                 case 0x930f:
-                    return "GL_LOCATION_INDEX_EXT";
+                    return "GL_LOCATION_INDEX";
                 case 0x9312:
                     return "GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT";
                 case 0x9315:
@@ -1681,6 +2385,16 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_FRAMEBUFFER_LAYERS";
                 case 0x9318:
                     return "GL_MAX_FRAMEBUFFER_SAMPLES";
+                case 0x934a:
+                    return "GL_LOCATION_COMPONENT";
+                case 0x934b:
+                    return "GL_TRANSFORM_FEEDBACK_BUFFER_INDEX";
+                case 0x934c:
+                    return "GL_TRANSFORM_FEEDBACK_BUFFER_STRIDE";
+                case 0x935c:
+                    return "GL_CLIP_ORIGIN";
+                case 0x935d:
+                    return "GL_CLIP_DEPTH_MODE";
                 case 0x9381:
                     return "GL_MULTISAMPLE_LINE_WIDTH_RANGE";
                 case 0x9382:
@@ -1745,6 +2459,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10";
                 case 0x93dd:
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12";
+                case 0x9551:
+                    return "GL_SHADER_BINARY_FORMAT_SPIR_V";
+                case 0x9552:
+                    return "GL_SPIR_V_BINARY";
+                case 0x9553:
+                    return "GL_SPIR_V_EXTENSIONS";
+                case 0x9554:
+                    return "GL_NUM_SPIR_V_EXTENSIONS";
                 case 0x9582:
                     return "GL_NUM_TILING_TYPES_EXT";
                 case 0x9583:
@@ -1797,12 +2519,32 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             {
                 case 0x0:
                     return "GL_NONE";
+                case 0x400:
+                    return "GL_FRONT_LEFT";
+                case 0x401:
+                    return "GL_FRONT_RIGHT";
+                case 0x402:
+                    return "GL_BACK_LEFT";
+                case 0x403:
+                    return "GL_BACK_RIGHT";
                 case 0x404:
                     return "GL_FRONT";
                 case 0x405:
                     return "GL_BACK";
+                case 0x406:
+                    return "GL_LEFT";
+                case 0x407:
+                    return "GL_RIGHT";
                 case 0x408:
                     return "GL_FRONT_AND_BACK";
+                case 0x409:
+                    return "GL_AUX0";
+                case 0x40a:
+                    return "GL_AUX1";
+                case 0x40b:
+                    return "GL_AUX2";
+                case 0x40c:
+                    return "GL_AUX3";
                 default:
                     return "EnumUnknown";
             }
@@ -1827,24 +2569,138 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0xb10:
+                    return "GL_POINT_SMOOTH";
+                case 0xb20:
+                    return "GL_LINE_SMOOTH";
+                case 0xb24:
+                    return "GL_LINE_STIPPLE";
+                case 0xb41:
+                    return "GL_POLYGON_SMOOTH";
+                case 0xb42:
+                    return "GL_POLYGON_STIPPLE";
                 case 0xb44:
                     return "GL_CULL_FACE";
+                case 0xb50:
+                    return "GL_LIGHTING";
+                case 0xb57:
+                    return "GL_COLOR_MATERIAL";
+                case 0xb60:
+                    return "GL_FOG";
                 case 0xb71:
                     return "GL_DEPTH_TEST";
                 case 0xb90:
                     return "GL_STENCIL_TEST";
+                case 0xba1:
+                    return "GL_NORMALIZE";
+                case 0xbc0:
+                    return "GL_ALPHA_TEST";
                 case 0xbd0:
                     return "GL_DITHER";
                 case 0xbe2:
                     return "GL_BLEND";
+                case 0xbf1:
+                    return "GL_INDEX_LOGIC_OP";
+                case 0xbf2:
+                    return "GL_COLOR_LOGIC_OP";
                 case 0xc11:
                     return "GL_SCISSOR_TEST";
+                case 0xc60:
+                    return "GL_TEXTURE_GEN_S";
+                case 0xc61:
+                    return "GL_TEXTURE_GEN_T";
+                case 0xc62:
+                    return "GL_TEXTURE_GEN_R";
+                case 0xc63:
+                    return "GL_TEXTURE_GEN_Q";
+                case 0xd80:
+                    return "GL_AUTO_NORMAL";
+                case 0xd90:
+                    return "GL_MAP1_COLOR_4";
+                case 0xd91:
+                    return "GL_MAP1_INDEX";
+                case 0xd92:
+                    return "GL_MAP1_NORMAL";
+                case 0xd93:
+                    return "GL_MAP1_TEXTURE_COORD_1";
+                case 0xd94:
+                    return "GL_MAP1_TEXTURE_COORD_2";
+                case 0xd95:
+                    return "GL_MAP1_TEXTURE_COORD_3";
+                case 0xd96:
+                    return "GL_MAP1_TEXTURE_COORD_4";
+                case 0xd97:
+                    return "GL_MAP1_VERTEX_3";
+                case 0xd98:
+                    return "GL_MAP1_VERTEX_4";
+                case 0xdb0:
+                    return "GL_MAP2_COLOR_4";
+                case 0xdb1:
+                    return "GL_MAP2_INDEX";
+                case 0xdb2:
+                    return "GL_MAP2_NORMAL";
+                case 0xdb3:
+                    return "GL_MAP2_TEXTURE_COORD_1";
+                case 0xdb4:
+                    return "GL_MAP2_TEXTURE_COORD_2";
+                case 0xdb5:
+                    return "GL_MAP2_TEXTURE_COORD_3";
+                case 0xdb6:
+                    return "GL_MAP2_TEXTURE_COORD_4";
+                case 0xdb7:
+                    return "GL_MAP2_VERTEX_3";
+                case 0xdb8:
+                    return "GL_MAP2_VERTEX_4";
+                case 0xde0:
+                    return "GL_TEXTURE_1D";
                 case 0xde1:
                     return "GL_TEXTURE_2D";
+                case 0x2a01:
+                    return "GL_POLYGON_OFFSET_POINT";
+                case 0x2a02:
+                    return "GL_POLYGON_OFFSET_LINE";
+                case 0x3000:
+                    return "GL_CLIP_PLANE0";
+                case 0x3001:
+                    return "GL_CLIP_PLANE1";
+                case 0x3002:
+                    return "GL_CLIP_PLANE2";
+                case 0x3003:
+                    return "GL_CLIP_PLANE3";
+                case 0x3004:
+                    return "GL_CLIP_PLANE4";
+                case 0x3005:
+                    return "GL_CLIP_PLANE5";
+                case 0x4000:
+                    return "GL_LIGHT0";
+                case 0x4001:
+                    return "GL_LIGHT1";
+                case 0x4002:
+                    return "GL_LIGHT2";
+                case 0x4003:
+                    return "GL_LIGHT3";
+                case 0x4004:
+                    return "GL_LIGHT4";
+                case 0x4005:
+                    return "GL_LIGHT5";
+                case 0x4006:
+                    return "GL_LIGHT6";
+                case 0x4007:
+                    return "GL_LIGHT7";
                 case 0x8037:
                     return "GL_POLYGON_OFFSET_FILL";
                 case 0x8074:
                     return "GL_VERTEX_ARRAY";
+                case 0x8075:
+                    return "GL_NORMAL_ARRAY";
+                case 0x8076:
+                    return "GL_COLOR_ARRAY";
+                case 0x8077:
+                    return "GL_INDEX_ARRAY";
+                case 0x8078:
+                    return "GL_TEXTURE_COORD_ARRAY";
+                case 0x8079:
+                    return "GL_EDGE_FLAG_ARRAY";
                 default:
                     return "EnumUnknown";
             }
@@ -1884,12 +2740,58 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::FeedBackToken:
+        {
+            switch (value)
+            {
+                case 0x700:
+                    return "GL_PASS_THROUGH_TOKEN";
+                case 0x701:
+                    return "GL_POINT_TOKEN";
+                case 0x702:
+                    return "GL_LINE_TOKEN";
+                case 0x703:
+                    return "GL_POLYGON_TOKEN";
+                case 0x704:
+                    return "GL_BITMAP_TOKEN";
+                case 0x705:
+                    return "GL_DRAW_PIXEL_TOKEN";
+                case 0x706:
+                    return "GL_COPY_PIXEL_TOKEN";
+                case 0x707:
+                    return "GL_LINE_RESET_TOKEN";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::FeedbackType:
+        {
+            switch (value)
+            {
+                case 0x600:
+                    return "GL_2D";
+                case 0x601:
+                    return "GL_3D";
+                case 0x602:
+                    return "GL_3D_COLOR";
+                case 0x603:
+                    return "GL_3D_COLOR_TEXTURE";
+                case 0x604:
+                    return "GL_4D_COLOR_TEXTURE";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::FogCoordinatePointerType:
         {
             switch (value)
             {
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
                 default:
                     return "EnumUnknown";
             }
@@ -1899,8 +2801,54 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x800:
+                    return "GL_EXP";
+                case 0x801:
+                    return "GL_EXP2";
                 case 0x2601:
                     return "GL_LINEAR";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::FogPName:
+        {
+            switch (value)
+            {
+                case 0xb61:
+                    return "GL_FOG_INDEX";
+                case 0xb62:
+                    return "GL_FOG_DENSITY";
+                case 0xb63:
+                    return "GL_FOG_START";
+                case 0xb64:
+                    return "GL_FOG_END";
+                case 0xb65:
+                    return "GL_FOG_MODE";
+                case 0x8450:
+                    return "GL_FOG_COORD_SRC";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::FogParameter:
+        {
+            switch (value)
+            {
+                case 0xb61:
+                    return "GL_FOG_INDEX";
+                case 0xb62:
+                    return "GL_FOG_DENSITY";
+                case 0xb63:
+                    return "GL_FOG_START";
+                case 0xb64:
+                    return "GL_FOG_END";
+                case 0xb65:
+                    return "GL_FOG_MODE";
+                case 0xb66:
+                    return "GL_FOG_COLOR";
                 default:
                     return "EnumUnknown";
             }
@@ -1912,6 +2860,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             {
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
                 default:
                     return "EnumUnknown";
             }
@@ -1923,6 +2873,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             {
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
                 default:
                     return "EnumUnknown";
             }
@@ -2071,6 +3023,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
                 case 0x8cd7:
                     return "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+                case 0x8cdb:
+                    return "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+                case 0x8cdc:
+                    return "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
                 case 0x8cdd:
                     return "GL_FRAMEBUFFER_UNSUPPORTED";
                 case 0x8d56:
@@ -2114,6 +3070,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0xc32:
+                    return "GL_DOUBLEBUFFER";
+                case 0xc33:
+                    return "GL_STEREO";
                 case 0x80a8:
                     return "GL_SAMPLE_BUFFERS";
                 case 0x80a9:
@@ -2137,18 +3097,119 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::GetMapQuery:
+        {
+            switch (value)
+            {
+                case 0xa00:
+                    return "GL_COEFF";
+                case 0xa01:
+                    return "GL_ORDER";
+                case 0xa02:
+                    return "GL_DOMAIN";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::GetPName:
         {
             switch (value)
             {
+                case 0xb00:
+                    return "GL_CURRENT_COLOR";
+                case 0xb01:
+                    return "GL_CURRENT_INDEX";
+                case 0xb02:
+                    return "GL_CURRENT_NORMAL";
+                case 0xb03:
+                    return "GL_CURRENT_TEXTURE_COORDS";
+                case 0xb04:
+                    return "GL_CURRENT_RASTER_COLOR";
+                case 0xb05:
+                    return "GL_CURRENT_RASTER_INDEX";
+                case 0xb06:
+                    return "GL_CURRENT_RASTER_TEXTURE_COORDS";
+                case 0xb07:
+                    return "GL_CURRENT_RASTER_POSITION";
+                case 0xb08:
+                    return "GL_CURRENT_RASTER_POSITION_VALID";
+                case 0xb09:
+                    return "GL_CURRENT_RASTER_DISTANCE";
+                case 0xb10:
+                    return "GL_POINT_SMOOTH";
+                case 0xb11:
+                    return "GL_POINT_SIZE";
+                case 0xb12:
+                    return "GL_POINT_SIZE_RANGE";
+                case 0xb13:
+                    return "GL_POINT_SIZE_GRANULARITY";
+                case 0xb20:
+                    return "GL_LINE_SMOOTH";
                 case 0xb21:
                     return "GL_LINE_WIDTH";
+                case 0xb22:
+                    return "GL_LINE_WIDTH_RANGE";
+                case 0xb23:
+                    return "GL_LINE_WIDTH_GRANULARITY";
+                case 0xb24:
+                    return "GL_LINE_STIPPLE";
+                case 0xb25:
+                    return "GL_LINE_STIPPLE_PATTERN";
+                case 0xb26:
+                    return "GL_LINE_STIPPLE_REPEAT";
+                case 0xb30:
+                    return "GL_LIST_MODE";
+                case 0xb31:
+                    return "GL_MAX_LIST_NESTING";
+                case 0xb32:
+                    return "GL_LIST_BASE";
+                case 0xb33:
+                    return "GL_LIST_INDEX";
+                case 0xb40:
+                    return "GL_POLYGON_MODE";
+                case 0xb41:
+                    return "GL_POLYGON_SMOOTH";
+                case 0xb42:
+                    return "GL_POLYGON_STIPPLE";
+                case 0xb43:
+                    return "GL_EDGE_FLAG";
                 case 0xb44:
                     return "GL_CULL_FACE";
                 case 0xb45:
                     return "GL_CULL_FACE_MODE";
                 case 0xb46:
                     return "GL_FRONT_FACE";
+                case 0xb50:
+                    return "GL_LIGHTING";
+                case 0xb51:
+                    return "GL_LIGHT_MODEL_LOCAL_VIEWER";
+                case 0xb52:
+                    return "GL_LIGHT_MODEL_TWO_SIDE";
+                case 0xb53:
+                    return "GL_LIGHT_MODEL_AMBIENT";
+                case 0xb54:
+                    return "GL_SHADE_MODEL";
+                case 0xb55:
+                    return "GL_COLOR_MATERIAL_FACE";
+                case 0xb56:
+                    return "GL_COLOR_MATERIAL_PARAMETER";
+                case 0xb57:
+                    return "GL_COLOR_MATERIAL";
+                case 0xb60:
+                    return "GL_FOG";
+                case 0xb61:
+                    return "GL_FOG_INDEX";
+                case 0xb62:
+                    return "GL_FOG_DENSITY";
+                case 0xb63:
+                    return "GL_FOG_START";
+                case 0xb64:
+                    return "GL_FOG_END";
+                case 0xb65:
+                    return "GL_FOG_MODE";
+                case 0xb66:
+                    return "GL_FOG_COLOR";
                 case 0xb70:
                     return "GL_DEPTH_RANGE";
                 case 0xb71:
@@ -2159,6 +3220,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_DEPTH_CLEAR_VALUE";
                 case 0xb74:
                     return "GL_DEPTH_FUNC";
+                case 0xb80:
+                    return "GL_ACCUM_CLEAR_VALUE";
                 case 0xb90:
                     return "GL_STENCIL_TEST";
                 case 0xb91:
@@ -2177,22 +3240,118 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_STENCIL_REF";
                 case 0xb98:
                     return "GL_STENCIL_WRITEMASK";
+                case 0xba0:
+                    return "GL_MATRIX_MODE";
+                case 0xba1:
+                    return "GL_NORMALIZE";
                 case 0xba2:
                     return "GL_VIEWPORT";
+                case 0xba3:
+                    return "GL_MODELVIEW_STACK_DEPTH";
+                case 0xba4:
+                    return "GL_PROJECTION_STACK_DEPTH";
+                case 0xba5:
+                    return "GL_TEXTURE_STACK_DEPTH";
+                case 0xba6:
+                    return "GL_MODELVIEW_MATRIX";
+                case 0xba7:
+                    return "GL_PROJECTION_MATRIX";
+                case 0xba8:
+                    return "GL_TEXTURE_MATRIX";
+                case 0xbb0:
+                    return "GL_ATTRIB_STACK_DEPTH";
+                case 0xbb1:
+                    return "GL_CLIENT_ATTRIB_STACK_DEPTH";
+                case 0xbc0:
+                    return "GL_ALPHA_TEST";
+                case 0xbc1:
+                    return "GL_ALPHA_TEST_FUNC";
+                case 0xbc2:
+                    return "GL_ALPHA_TEST_REF";
                 case 0xbd0:
                     return "GL_DITHER";
+                case 0xbe0:
+                    return "GL_BLEND_DST";
+                case 0xbe1:
+                    return "GL_BLEND_SRC";
                 case 0xbe2:
                     return "GL_BLEND";
+                case 0xbf0:
+                    return "GL_LOGIC_OP_MODE";
+                case 0xbf1:
+                    return "GL_INDEX_LOGIC_OP";
+                case 0xbf2:
+                    return "GL_COLOR_LOGIC_OP";
+                case 0xc00:
+                    return "GL_AUX_BUFFERS";
+                case 0xc01:
+                    return "GL_DRAW_BUFFER";
                 case 0xc02:
                     return "GL_READ_BUFFER";
                 case 0xc10:
                     return "GL_SCISSOR_BOX";
                 case 0xc11:
                     return "GL_SCISSOR_TEST";
+                case 0xc20:
+                    return "GL_INDEX_CLEAR_VALUE";
+                case 0xc21:
+                    return "GL_INDEX_WRITEMASK";
                 case 0xc22:
                     return "GL_COLOR_CLEAR_VALUE";
                 case 0xc23:
                     return "GL_COLOR_WRITEMASK";
+                case 0xc30:
+                    return "GL_INDEX_MODE";
+                case 0xc31:
+                    return "GL_RGBA_MODE";
+                case 0xc32:
+                    return "GL_DOUBLEBUFFER";
+                case 0xc33:
+                    return "GL_STEREO";
+                case 0xc40:
+                    return "GL_RENDER_MODE";
+                case 0xc50:
+                    return "GL_PERSPECTIVE_CORRECTION_HINT";
+                case 0xc51:
+                    return "GL_POINT_SMOOTH_HINT";
+                case 0xc52:
+                    return "GL_LINE_SMOOTH_HINT";
+                case 0xc53:
+                    return "GL_POLYGON_SMOOTH_HINT";
+                case 0xc54:
+                    return "GL_FOG_HINT";
+                case 0xc60:
+                    return "GL_TEXTURE_GEN_S";
+                case 0xc61:
+                    return "GL_TEXTURE_GEN_T";
+                case 0xc62:
+                    return "GL_TEXTURE_GEN_R";
+                case 0xc63:
+                    return "GL_TEXTURE_GEN_Q";
+                case 0xcb0:
+                    return "GL_PIXEL_MAP_I_TO_I_SIZE";
+                case 0xcb1:
+                    return "GL_PIXEL_MAP_S_TO_S_SIZE";
+                case 0xcb2:
+                    return "GL_PIXEL_MAP_I_TO_R_SIZE";
+                case 0xcb3:
+                    return "GL_PIXEL_MAP_I_TO_G_SIZE";
+                case 0xcb4:
+                    return "GL_PIXEL_MAP_I_TO_B_SIZE";
+                case 0xcb5:
+                    return "GL_PIXEL_MAP_I_TO_A_SIZE";
+                case 0xcb6:
+                    return "GL_PIXEL_MAP_R_TO_R_SIZE";
+                case 0xcb7:
+                    return "GL_PIXEL_MAP_G_TO_G_SIZE";
+                case 0xcb8:
+                    return "GL_PIXEL_MAP_B_TO_B_SIZE";
+                case 0xcb9:
+                    return "GL_PIXEL_MAP_A_TO_A_SIZE";
+                case 0xcf0:
+                    return "GL_UNPACK_SWAP_BYTES";
+                case 0xcf1:
+                    return "GL_UNPACK_LSB_FIRST";
                 case 0xcf2:
                     return "GL_UNPACK_ROW_LENGTH";
                 case 0xcf3:
@@ -2201,6 +3360,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNPACK_SKIP_PIXELS";
                 case 0xcf5:
                     return "GL_UNPACK_ALIGNMENT";
+                case 0xd00:
+                    return "GL_PACK_SWAP_BYTES";
+                case 0xd01:
+                    return "GL_PACK_LSB_FIRST";
                 case 0xd02:
                     return "GL_PACK_ROW_LENGTH";
                 case 0xd03:
@@ -2209,12 +3372,66 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_PACK_SKIP_PIXELS";
                 case 0xd05:
                     return "GL_PACK_ALIGNMENT";
+                case 0xd10:
+                    return "GL_MAP_COLOR";
+                case 0xd11:
+                    return "GL_MAP_STENCIL";
+                case 0xd12:
+                    return "GL_INDEX_SHIFT";
+                case 0xd13:
+                    return "GL_INDEX_OFFSET";
+                case 0xd14:
+                    return "GL_RED_SCALE";
+                case 0xd15:
+                    return "GL_RED_BIAS";
+                case 0xd16:
+                    return "GL_ZOOM_X";
+                case 0xd17:
+                    return "GL_ZOOM_Y";
+                case 0xd18:
+                    return "GL_GREEN_SCALE";
+                case 0xd19:
+                    return "GL_GREEN_BIAS";
+                case 0xd1a:
+                    return "GL_BLUE_SCALE";
+                case 0xd1b:
+                    return "GL_BLUE_BIAS";
+                case 0xd1c:
+                    return "GL_ALPHA_SCALE";
+                case 0xd1d:
+                    return "GL_ALPHA_BIAS";
+                case 0xd1e:
+                    return "GL_DEPTH_SCALE";
+                case 0xd1f:
+                    return "GL_DEPTH_BIAS";
+                case 0xd30:
+                    return "GL_MAX_EVAL_ORDER";
+                case 0xd31:
+                    return "GL_MAX_LIGHTS";
+                case 0xd32:
+                    return "GL_MAX_CLIP_DISTANCES";
                 case 0xd33:
                     return "GL_MAX_TEXTURE_SIZE";
+                case 0xd34:
+                    return "GL_MAX_PIXEL_MAP_TABLE";
+                case 0xd35:
+                    return "GL_MAX_ATTRIB_STACK_DEPTH";
+                case 0xd36:
+                    return "GL_MAX_MODELVIEW_STACK_DEPTH";
+                case 0xd37:
+                    return "GL_MAX_NAME_STACK_DEPTH";
+                case 0xd38:
+                    return "GL_MAX_PROJECTION_STACK_DEPTH";
+                case 0xd39:
+                    return "GL_MAX_TEXTURE_STACK_DEPTH";
                 case 0xd3a:
                     return "GL_MAX_VIEWPORT_DIMS";
+                case 0xd3b:
+                    return "GL_MAX_CLIENT_ATTRIB_STACK_DEPTH";
                 case 0xd50:
                     return "GL_SUBPIXEL_BITS";
+                case 0xd51:
+                    return "GL_INDEX_BITS";
                 case 0xd52:
                     return "GL_RED_BITS";
                 case 0xd53:
@@ -2227,20 +3444,158 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_DEPTH_BITS";
                 case 0xd57:
                     return "GL_STENCIL_BITS";
+                case 0xd58:
+                    return "GL_ACCUM_RED_BITS";
+                case 0xd59:
+                    return "GL_ACCUM_GREEN_BITS";
+                case 0xd5a:
+                    return "GL_ACCUM_BLUE_BITS";
+                case 0xd5b:
+                    return "GL_ACCUM_ALPHA_BITS";
+                case 0xd70:
+                    return "GL_NAME_STACK_DEPTH";
+                case 0xd80:
+                    return "GL_AUTO_NORMAL";
+                case 0xd90:
+                    return "GL_MAP1_COLOR_4";
+                case 0xd91:
+                    return "GL_MAP1_INDEX";
+                case 0xd92:
+                    return "GL_MAP1_NORMAL";
+                case 0xd93:
+                    return "GL_MAP1_TEXTURE_COORD_1";
+                case 0xd94:
+                    return "GL_MAP1_TEXTURE_COORD_2";
+                case 0xd95:
+                    return "GL_MAP1_TEXTURE_COORD_3";
+                case 0xd96:
+                    return "GL_MAP1_TEXTURE_COORD_4";
+                case 0xd97:
+                    return "GL_MAP1_VERTEX_3";
+                case 0xd98:
+                    return "GL_MAP1_VERTEX_4";
+                case 0xdb0:
+                    return "GL_MAP2_COLOR_4";
+                case 0xdb1:
+                    return "GL_MAP2_INDEX";
+                case 0xdb2:
+                    return "GL_MAP2_NORMAL";
+                case 0xdb3:
+                    return "GL_MAP2_TEXTURE_COORD_1";
+                case 0xdb4:
+                    return "GL_MAP2_TEXTURE_COORD_2";
+                case 0xdb5:
+                    return "GL_MAP2_TEXTURE_COORD_3";
+                case 0xdb6:
+                    return "GL_MAP2_TEXTURE_COORD_4";
+                case 0xdb7:
+                    return "GL_MAP2_VERTEX_3";
+                case 0xdb8:
+                    return "GL_MAP2_VERTEX_4";
+                case 0xdd0:
+                    return "GL_MAP1_GRID_DOMAIN";
+                case 0xdd1:
+                    return "GL_MAP1_GRID_SEGMENTS";
+                case 0xdd2:
+                    return "GL_MAP2_GRID_DOMAIN";
+                case 0xdd3:
+                    return "GL_MAP2_GRID_SEGMENTS";
+                case 0xde0:
+                    return "GL_TEXTURE_1D";
                 case 0xde1:
                     return "GL_TEXTURE_2D";
+                case 0xdf1:
+                    return "GL_FEEDBACK_BUFFER_SIZE";
+                case 0xdf2:
+                    return "GL_FEEDBACK_BUFFER_TYPE";
+                case 0xdf4:
+                    return "GL_SELECTION_BUFFER_SIZE";
                 case 0x2a00:
                     return "GL_POLYGON_OFFSET_UNITS";
+                case 0x2a01:
+                    return "GL_POLYGON_OFFSET_POINT";
+                case 0x2a02:
+                    return "GL_POLYGON_OFFSET_LINE";
+                case 0x3000:
+                    return "GL_CLIP_PLANE0";
+                case 0x3001:
+                    return "GL_CLIP_PLANE1";
+                case 0x3002:
+                    return "GL_CLIP_PLANE2";
+                case 0x3003:
+                    return "GL_CLIP_PLANE3";
+                case 0x3004:
+                    return "GL_CLIP_PLANE4";
+                case 0x3005:
+                    return "GL_CLIP_PLANE5";
+                case 0x4000:
+                    return "GL_LIGHT0";
+                case 0x4001:
+                    return "GL_LIGHT1";
+                case 0x4002:
+                    return "GL_LIGHT2";
+                case 0x4003:
+                    return "GL_LIGHT3";
+                case 0x4004:
+                    return "GL_LIGHT4";
+                case 0x4005:
+                    return "GL_LIGHT5";
+                case 0x4006:
+                    return "GL_LIGHT6";
+                case 0x4007:
+                    return "GL_LIGHT7";
                 case 0x8037:
                     return "GL_POLYGON_OFFSET_FILL";
                 case 0x8038:
                     return "GL_POLYGON_OFFSET_FACTOR";
+                case 0x8068:
+                    return "GL_TEXTURE_BINDING_1D";
                 case 0x8069:
                     return "GL_TEXTURE_BINDING_2D";
                 case 0x806a:
                     return "GL_TEXTURE_BINDING_3D";
                 case 0x8074:
                     return "GL_VERTEX_ARRAY";
+                case 0x8075:
+                    return "GL_NORMAL_ARRAY";
+                case 0x8076:
+                    return "GL_COLOR_ARRAY";
+                case 0x8077:
+                    return "GL_INDEX_ARRAY";
+                case 0x8078:
+                    return "GL_TEXTURE_COORD_ARRAY";
+                case 0x8079:
+                    return "GL_EDGE_FLAG_ARRAY";
+                case 0x807a:
+                    return "GL_VERTEX_ARRAY_SIZE";
+                case 0x807b:
+                    return "GL_VERTEX_ARRAY_TYPE";
+                case 0x807c:
+                    return "GL_VERTEX_ARRAY_STRIDE";
+                case 0x807e:
+                    return "GL_NORMAL_ARRAY_TYPE";
+                case 0x807f:
+                    return "GL_NORMAL_ARRAY_STRIDE";
+                case 0x8081:
+                    return "GL_COLOR_ARRAY_SIZE";
+                case 0x8082:
+                    return "GL_COLOR_ARRAY_TYPE";
+                case 0x8083:
+                    return "GL_COLOR_ARRAY_STRIDE";
+                case 0x8085:
+                    return "GL_INDEX_ARRAY_TYPE";
+                case 0x8086:
+                    return "GL_INDEX_ARRAY_STRIDE";
+                case 0x8088:
+                    return "GL_TEXTURE_COORD_ARRAY_SIZE";
+                case 0x8089:
+                    return "GL_TEXTURE_COORD_ARRAY_TYPE";
+                case 0x808a:
+                    return "GL_TEXTURE_COORD_ARRAY_STRIDE";
+                case 0x808c:
+                    return "GL_EDGE_FLAG_ARRAY_STRIDE";
+                case 0x81f8:
+                    return "GL_LIGHT_MODEL_COLOR_CONTROL";
                 case 0x846d:
                     return "GL_ALIASED_POINT_SIZE_RANGE";
                 case 0x846e:
@@ -2256,10 +3611,55 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::GetPixelMap:
+        {
+            switch (value)
+            {
+                case 0xc70:
+                    return "GL_PIXEL_MAP_I_TO_I";
+                case 0xc71:
+                    return "GL_PIXEL_MAP_S_TO_S";
+                case 0xc72:
+                    return "GL_PIXEL_MAP_I_TO_R";
+                case 0xc73:
+                    return "GL_PIXEL_MAP_I_TO_G";
+                case 0xc74:
+                    return "GL_PIXEL_MAP_I_TO_B";
+                case 0xc75:
+                    return "GL_PIXEL_MAP_I_TO_A";
+                case 0xc76:
+                    return "GL_PIXEL_MAP_R_TO_R";
+                case 0xc77:
+                    return "GL_PIXEL_MAP_G_TO_G";
+                case 0xc78:
+                    return "GL_PIXEL_MAP_B_TO_B";
+                case 0xc79:
+                    return "GL_PIXEL_MAP_A_TO_A";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::GetPointervPName:
         {
             switch (value)
             {
+                case 0xdf0:
+                    return "GL_FEEDBACK_BUFFER_POINTER";
+                case 0xdf3:
+                    return "GL_SELECTION_BUFFER_POINTER";
+                case 0x808e:
+                    return "GL_VERTEX_ARRAY_POINTER";
+                case 0x808f:
+                    return "GL_NORMAL_ARRAY_POINTER";
+                case 0x8090:
+                    return "GL_COLOR_ARRAY_POINTER";
+                case 0x8091:
+                    return "GL_INDEX_ARRAY_POINTER";
+                case 0x8092:
+                    return "GL_TEXTURE_COORD_ARRAY_POINTER";
+                case 0x8093:
+                    return "GL_EDGE_FLAG_ARRAY_POINTER";
                 case 0x8244:
                     return "GL_DEBUG_CALLBACK_FUNCTION";
                 case 0x8245:
@@ -2278,9 +3678,11 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1001:
                     return "GL_TEXTURE_HEIGHT";
                 case 0x1003:
-                    return "GL_TEXTURE_INTERNAL_FORMAT";
+                    return "GL_TEXTURE_COMPONENTS";
                 case 0x1004:
                     return "GL_TEXTURE_BORDER_COLOR";
+                case 0x1005:
+                    return "GL_TEXTURE_BORDER";
                 case 0x2800:
                     return "GL_TEXTURE_MAG_FILTER";
                 case 0x2801:
@@ -2297,6 +3699,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TEXTURE_BLUE_SIZE";
                 case 0x805f:
                     return "GL_TEXTURE_ALPHA_SIZE";
+                case 0x8060:
+                    return "GL_TEXTURE_LUMINANCE_SIZE";
+                case 0x8061:
+                    return "GL_TEXTURE_INTENSITY_SIZE";
+                case 0x8066:
+                    return "GL_TEXTURE_PRIORITY";
+                case 0x8067:
+                    return "GL_TEXTURE_RESIDENT";
                 default:
                     return "EnumUnknown";
             }
@@ -2336,10 +3746,22 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0xc50:
+                    return "GL_PERSPECTIVE_CORRECTION_HINT";
+                case 0xc51:
+                    return "GL_POINT_SMOOTH_HINT";
+                case 0xc52:
+                    return "GL_LINE_SMOOTH_HINT";
+                case 0xc53:
+                    return "GL_POLYGON_SMOOTH_HINT";
+                case 0xc54:
+                    return "GL_FOG_HINT";
                 case 0x8192:
                     return "GL_GENERATE_MIPMAP_HINT";
                 case 0x8257:
                     return "GL_PROGRAM_BINARY_RETRIEVABLE_HINT";
+                case 0x84ef:
+                    return "GL_TEXTURE_COMPRESSION_HINT";
                 case 0x8b8b:
                     return "GL_FRAGMENT_SHADER_DERIVATIVE_HINT";
                 default:
@@ -2357,6 +3779,45 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::InterleavedArrayFormat:
+        {
+            switch (value)
+            {
+                case 0x2a20:
+                    return "GL_V2F";
+                case 0x2a21:
+                    return "GL_V3F";
+                case 0x2a22:
+                    return "GL_C4UB_V2F";
+                case 0x2a23:
+                    return "GL_C4UB_V3F";
+                case 0x2a24:
+                    return "GL_C3F_V3F";
+                case 0x2a25:
+                    return "GL_N3F_V3F";
+                case 0x2a26:
+                    return "GL_C4F_N3F_V3F";
+                case 0x2a27:
+                    return "GL_T2F_V3F";
+                case 0x2a28:
+                    return "GL_T4F_V4F";
+                case 0x2a29:
+                    return "GL_T2F_C4UB_V3F";
+                case 0x2a2a:
+                    return "GL_T2F_C3F_V3F";
+                case 0x2a2b:
+                    return "GL_T2F_N3F_V3F";
+                case 0x2a2c:
+                    return "GL_T2F_C4F_N3F_V3F";
+                case 0x2a2d:
+                    return "GL_T4F_C4F_N3F_V4F";
                 default:
                     return "EnumUnknown";
             }
@@ -2374,10 +3835,58 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RGB";
                 case 0x1908:
                     return "GL_RGBA";
+                case 0x2a10:
+                    return "GL_R3_G3_B2";
+                case 0x803b:
+                    return "GL_ALPHA4";
+                case 0x803c:
+                    return "GL_ALPHA8";
+                case 0x803d:
+                    return "GL_ALPHA12";
+                case 0x803e:
+                    return "GL_ALPHA16";
+                case 0x803f:
+                    return "GL_LUMINANCE4";
+                case 0x8040:
+                    return "GL_LUMINANCE8";
+                case 0x8041:
+                    return "GL_LUMINANCE12";
+                case 0x8042:
+                    return "GL_LUMINANCE16";
+                case 0x8043:
+                    return "GL_LUMINANCE4_ALPHA4";
+                case 0x8044:
+                    return "GL_LUMINANCE6_ALPHA2";
+                case 0x8045:
+                    return "GL_LUMINANCE8_ALPHA8";
+                case 0x8046:
+                    return "GL_LUMINANCE12_ALPHA4";
+                case 0x8047:
+                    return "GL_LUMINANCE12_ALPHA12";
+                case 0x8048:
+                    return "GL_LUMINANCE16_ALPHA16";
+                case 0x8049:
+                    return "GL_INTENSITY";
+                case 0x804a:
+                    return "GL_INTENSITY4";
+                case 0x804b:
+                    return "GL_INTENSITY8";
+                case 0x804c:
+                    return "GL_INTENSITY12";
+                case 0x804d:
+                    return "GL_INTENSITY16";
+                case 0x804f:
+                    return "GL_RGB4";
+                case 0x8050:
+                    return "GL_RGB5";
                 case 0x8051:
                     return "GL_RGB8";
                 case 0x8052:
-                    return "GL_RGB10_EXT";
+                    return "GL_RGB10";
+                case 0x8053:
+                    return "GL_RGB12";
+                case 0x8054:
+                    return "GL_RGB16";
                 case 0x8056:
                     return "GL_RGBA4";
                 case 0x8057:
@@ -2386,14 +3895,26 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RGBA8";
                 case 0x8059:
                     return "GL_RGB10_A2";
+                case 0x805a:
+                    return "GL_RGBA12";
+                case 0x805b:
+                    return "GL_RGBA16";
                 case 0x81a5:
                     return "GL_DEPTH_COMPONENT16";
+                case 0x8225:
+                    return "GL_COMPRESSED_RED";
+                case 0x8226:
+                    return "GL_COMPRESSED_RG";
                 case 0x8227:
                     return "GL_RG";
                 case 0x8229:
                     return "GL_R8";
+                case 0x822a:
+                    return "GL_R16";
                 case 0x822b:
                     return "GL_RG8";
+                case 0x822c:
+                    return "GL_RG16";
                 case 0x822d:
                     return "GL_R16F";
                 case 0x822e:
@@ -2426,6 +3947,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RG32I";
                 case 0x823c:
                     return "GL_RG32UI";
+                case 0x84ed:
+                    return "GL_COMPRESSED_RGB";
+                case 0x84ee:
+                    return "GL_COMPRESSED_RGBA";
                 case 0x84f9:
                     return "GL_DEPTH_STENCIL";
                 case 0x8814:
@@ -2444,8 +3969,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_SRGB";
                 case 0x8c41:
                     return "GL_SRGB8";
+                case 0x8c42:
+                    return "GL_SRGB_ALPHA";
                 case 0x8c43:
                     return "GL_SRGB8_ALPHA8";
+                case 0x8c48:
+                    return "GL_COMPRESSED_SRGB";
+                case 0x8c49:
+                    return "GL_COMPRESSED_SRGB_ALPHA";
                 case 0x8cac:
                     return "GL_DEPTH_COMPONENT32F";
                 case 0x8cad:
@@ -2474,6 +4005,22 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RGBA8I";
                 case 0x8d8f:
                     return "GL_RGB8I";
+                case 0x8dbb:
+                    return "GL_COMPRESSED_RED_RGTC1";
+                case 0x8dbc:
+                    return "GL_COMPRESSED_SIGNED_RED_RGTC1";
+                case 0x8dbd:
+                    return "GL_COMPRESSED_RG_RGTC2";
+                case 0x8dbe:
+                    return "GL_COMPRESSED_SIGNED_RG_RGTC2";
+                case 0x8e8c:
+                    return "GL_COMPRESSED_RGBA_BPTC_UNORM";
+                case 0x8e8d:
+                    return "GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM";
+                case 0x8e8e:
+                    return "GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT";
+                case 0x8e8f:
+                    return "GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT";
                 case 0x8f94:
                     return "GL_R8_SNORM";
                 case 0x8f95:
@@ -2482,6 +4029,12 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RGB8_SNORM";
                 case 0x8f97:
                     return "GL_RGBA8_SNORM";
+                case 0x8f98:
+                    return "GL_R16_SNORM";
+                case 0x8f99:
+                    return "GL_RG16_SNORM";
+                case 0x8f9a:
+                    return "GL_RGB16_SNORM";
                 case 0x906f:
                     return "GL_RGB10_A2UI";
                 case 0x9270:
@@ -2515,10 +4068,144 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             {
                 case 0x80a9:
                     return "GL_SAMPLES";
+                case 0x8191:
+                    return "GL_GENERATE_MIPMAP";
+                case 0x826f:
+                    return "GL_INTERNALFORMAT_SUPPORTED";
+                case 0x8270:
+                    return "GL_INTERNALFORMAT_PREFERRED";
+                case 0x8271:
+                    return "GL_INTERNALFORMAT_RED_SIZE";
+                case 0x8272:
+                    return "GL_INTERNALFORMAT_GREEN_SIZE";
+                case 0x8273:
+                    return "GL_INTERNALFORMAT_BLUE_SIZE";
+                case 0x8274:
+                    return "GL_INTERNALFORMAT_ALPHA_SIZE";
+                case 0x8275:
+                    return "GL_INTERNALFORMAT_DEPTH_SIZE";
+                case 0x8276:
+                    return "GL_INTERNALFORMAT_STENCIL_SIZE";
+                case 0x8277:
+                    return "GL_INTERNALFORMAT_SHARED_SIZE";
+                case 0x8278:
+                    return "GL_INTERNALFORMAT_RED_TYPE";
+                case 0x8279:
+                    return "GL_INTERNALFORMAT_GREEN_TYPE";
+                case 0x827a:
+                    return "GL_INTERNALFORMAT_BLUE_TYPE";
+                case 0x827b:
+                    return "GL_INTERNALFORMAT_ALPHA_TYPE";
+                case 0x827c:
+                    return "GL_INTERNALFORMAT_DEPTH_TYPE";
+                case 0x827d:
+                    return "GL_INTERNALFORMAT_STENCIL_TYPE";
+                case 0x827e:
+                    return "GL_MAX_WIDTH";
+                case 0x827f:
+                    return "GL_MAX_HEIGHT";
+                case 0x8280:
+                    return "GL_MAX_DEPTH";
+                case 0x8281:
+                    return "GL_MAX_LAYERS";
+                case 0x8283:
+                    return "GL_COLOR_COMPONENTS";
+                case 0x8286:
+                    return "GL_COLOR_RENDERABLE";
+                case 0x8287:
+                    return "GL_DEPTH_RENDERABLE";
+                case 0x8288:
+                    return "GL_STENCIL_RENDERABLE";
+                case 0x8289:
+                    return "GL_FRAMEBUFFER_RENDERABLE";
+                case 0x828a:
+                    return "GL_FRAMEBUFFER_RENDERABLE_LAYERED";
+                case 0x828b:
+                    return "GL_FRAMEBUFFER_BLEND";
+                case 0x828c:
+                    return "GL_READ_PIXELS";
+                case 0x828d:
+                    return "GL_READ_PIXELS_FORMAT";
+                case 0x828e:
+                    return "GL_READ_PIXELS_TYPE";
+                case 0x828f:
+                    return "GL_TEXTURE_IMAGE_FORMAT";
+                case 0x8290:
+                    return "GL_TEXTURE_IMAGE_TYPE";
+                case 0x8291:
+                    return "GL_GET_TEXTURE_IMAGE_FORMAT";
+                case 0x8292:
+                    return "GL_GET_TEXTURE_IMAGE_TYPE";
+                case 0x8293:
+                    return "GL_MIPMAP";
+                case 0x8295:
+                    return "GL_AUTO_GENERATE_MIPMAP";
+                case 0x8296:
+                    return "GL_COLOR_ENCODING";
+                case 0x8297:
+                    return "GL_SRGB_READ";
+                case 0x8298:
+                    return "GL_SRGB_WRITE";
+                case 0x829a:
+                    return "GL_FILTER";
+                case 0x829b:
+                    return "GL_VERTEX_TEXTURE";
+                case 0x829c:
+                    return "GL_TESS_CONTROL_TEXTURE";
+                case 0x829d:
+                    return "GL_TESS_EVALUATION_TEXTURE";
+                case 0x829e:
+                    return "GL_GEOMETRY_TEXTURE";
+                case 0x829f:
+                    return "GL_FRAGMENT_TEXTURE";
+                case 0x82a0:
+                    return "GL_COMPUTE_TEXTURE";
+                case 0x82a1:
+                    return "GL_TEXTURE_SHADOW";
+                case 0x82a2:
+                    return "GL_TEXTURE_GATHER";
+                case 0x82a3:
+                    return "GL_TEXTURE_GATHER_SHADOW";
+                case 0x82a4:
+                    return "GL_SHADER_IMAGE_LOAD";
+                case 0x82a5:
+                    return "GL_SHADER_IMAGE_STORE";
+                case 0x82a6:
+                    return "GL_SHADER_IMAGE_ATOMIC";
+                case 0x82a7:
+                    return "GL_IMAGE_TEXEL_SIZE";
+                case 0x82a8:
+                    return "GL_IMAGE_COMPATIBILITY_CLASS";
+                case 0x82a9:
+                    return "GL_IMAGE_PIXEL_FORMAT";
+                case 0x82aa:
+                    return "GL_IMAGE_PIXEL_TYPE";
+                case 0x82ac:
+                    return "GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_TEST";
+                case 0x82ad:
+                    return "GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_TEST";
+                case 0x82ae:
+                    return "GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_WRITE";
+                case 0x82af:
+                    return "GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_WRITE";
+                case 0x82b1:
+                    return "GL_TEXTURE_COMPRESSED_BLOCK_WIDTH";
+                case 0x82b2:
+                    return "GL_TEXTURE_COMPRESSED_BLOCK_HEIGHT";
+                case 0x82b3:
+                    return "GL_TEXTURE_COMPRESSED_BLOCK_SIZE";
+                case 0x82b4:
+                    return "GL_CLEAR_BUFFER";
+                case 0x82b5:
+                    return "GL_TEXTURE_VIEW";
+                case 0x82b6:
+                    return "GL_VIEW_COMPATIBILITY_CLASS";
                 case 0x86a1:
                     return "GL_TEXTURE_COMPRESSED";
                 case 0x90c7:
                     return "GL_IMAGE_FORMAT_COMPATIBILITY_TYPE";
+                case 0x9365:
+                    return "GL_CLEAR_TEXTURE";
                 case 0x9380:
                     return "GL_NUM_SAMPLE_COUNTS";
                 default:
@@ -2530,8 +4217,109 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x104:
+                    return "GL_ADD";
                 case 0x1e01:
                     return "GL_REPLACE";
+                case 0x2100:
+                    return "GL_MODULATE";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::LightModelColorControl:
+        {
+            switch (value)
+            {
+                case 0x81f9:
+                    return "GL_SINGLE_COLOR";
+                case 0x81fa:
+                    return "GL_SEPARATE_SPECULAR_COLOR";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::LightModelParameter:
+        {
+            switch (value)
+            {
+                case 0xb51:
+                    return "GL_LIGHT_MODEL_LOCAL_VIEWER";
+                case 0xb52:
+                    return "GL_LIGHT_MODEL_TWO_SIDE";
+                case 0xb53:
+                    return "GL_LIGHT_MODEL_AMBIENT";
+                case 0x81f8:
+                    return "GL_LIGHT_MODEL_COLOR_CONTROL";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::LightName:
+        {
+            switch (value)
+            {
+                case 0x4000:
+                    return "GL_LIGHT0";
+                case 0x4001:
+                    return "GL_LIGHT1";
+                case 0x4002:
+                    return "GL_LIGHT2";
+                case 0x4003:
+                    return "GL_LIGHT3";
+                case 0x4004:
+                    return "GL_LIGHT4";
+                case 0x4005:
+                    return "GL_LIGHT5";
+                case 0x4006:
+                    return "GL_LIGHT6";
+                case 0x4007:
+                    return "GL_LIGHT7";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::LightParameter:
+        {
+            switch (value)
+            {
+                case 0x1200:
+                    return "GL_AMBIENT";
+                case 0x1201:
+                    return "GL_DIFFUSE";
+                case 0x1202:
+                    return "GL_SPECULAR";
+                case 0x1203:
+                    return "GL_POSITION";
+                case 0x1204:
+                    return "GL_SPOT_DIRECTION";
+                case 0x1205:
+                    return "GL_SPOT_EXPONENT";
+                case 0x1206:
+                    return "GL_SPOT_CUTOFF";
+                case 0x1207:
+                    return "GL_CONSTANT_ATTENUATION";
+                case 0x1208:
+                    return "GL_LINEAR_ATTENUATION";
+                case 0x1209:
+                    return "GL_QUADRATIC_ATTENUATION";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::ListMode:
+        {
+            switch (value)
+            {
+                case 0x1300:
+                    return "GL_COMPILE";
+                case 0x1301:
+                    return "GL_COMPILE_AND_EXECUTE";
                 default:
                     return "EnumUnknown";
             }
@@ -2555,6 +4343,12 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNSIGNED_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x1407:
+                    return "GL_2_BYTES";
+                case 0x1408:
+                    return "GL_3_BYTES";
+                case 0x1409:
+                    return "GL_4_BYTES";
                 default:
                     return "EnumUnknown";
             }
@@ -2564,8 +4358,38 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x1500:
+                    return "GL_CLEAR";
+                case 0x1501:
+                    return "GL_AND";
+                case 0x1502:
+                    return "GL_AND_REVERSE";
+                case 0x1503:
+                    return "GL_COPY";
+                case 0x1504:
+                    return "GL_AND_INVERTED";
+                case 0x1505:
+                    return "GL_NOOP";
+                case 0x1506:
+                    return "GL_XOR";
+                case 0x1507:
+                    return "GL_OR";
+                case 0x1508:
+                    return "GL_NOR";
+                case 0x1509:
+                    return "GL_EQUIV";
                 case 0x150a:
                     return "GL_INVERT";
+                case 0x150b:
+                    return "GL_OR_REVERSE";
+                case 0x150c:
+                    return "GL_COPY_INVERTED";
+                case 0x150d:
+                    return "GL_OR_INVERTED";
+                case 0x150e:
+                    return "GL_NAND";
+                case 0x150f:
+                    return "GL_SET";
                 default:
                     return "EnumUnknown";
             }
@@ -2587,6 +4411,74 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAP_FLUSH_EXPLICIT_BIT";
                 case 0x20:
                     return "GL_MAP_UNSYNCHRONIZED_BIT";
+                case 0x40:
+                    return "GL_MAP_PERSISTENT_BIT";
+                case 0x80:
+                    return "GL_MAP_COHERENT_BIT";
+                case 0x100:
+                    return "GL_DYNAMIC_STORAGE_BIT";
+                case 0x200:
+                    return "GL_CLIENT_STORAGE_BIT";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::MapQuery:
+        {
+            switch (value)
+            {
+                case 0xa00:
+                    return "GL_COEFF";
+                case 0xa01:
+                    return "GL_ORDER";
+                case 0xa02:
+                    return "GL_DOMAIN";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::MapTarget:
+        {
+            switch (value)
+            {
+                case 0xd90:
+                    return "GL_MAP1_COLOR_4";
+                case 0xd91:
+                    return "GL_MAP1_INDEX";
+                case 0xd92:
+                    return "GL_MAP1_NORMAL";
+                case 0xd93:
+                    return "GL_MAP1_TEXTURE_COORD_1";
+                case 0xd94:
+                    return "GL_MAP1_TEXTURE_COORD_2";
+                case 0xd95:
+                    return "GL_MAP1_TEXTURE_COORD_3";
+                case 0xd96:
+                    return "GL_MAP1_TEXTURE_COORD_4";
+                case 0xd97:
+                    return "GL_MAP1_VERTEX_3";
+                case 0xd98:
+                    return "GL_MAP1_VERTEX_4";
+                case 0xdb0:
+                    return "GL_MAP2_COLOR_4";
+                case 0xdb1:
+                    return "GL_MAP2_INDEX";
+                case 0xdb2:
+                    return "GL_MAP2_NORMAL";
+                case 0xdb3:
+                    return "GL_MAP2_TEXTURE_COORD_1";
+                case 0xdb4:
+                    return "GL_MAP2_TEXTURE_COORD_2";
+                case 0xdb5:
+                    return "GL_MAP2_TEXTURE_COORD_3";
+                case 0xdb6:
+                    return "GL_MAP2_TEXTURE_COORD_4";
+                case 0xdb7:
+                    return "GL_MAP2_VERTEX_3";
+                case 0xdb8:
+                    return "GL_MAP2_VERTEX_4";
                 default:
                     return "EnumUnknown";
             }
@@ -2607,10 +4499,37 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::MaterialParameter:
+        {
+            switch (value)
+            {
+                case 0x1200:
+                    return "GL_AMBIENT";
+                case 0x1201:
+                    return "GL_DIFFUSE";
+                case 0x1202:
+                    return "GL_SPECULAR";
+                case 0x1600:
+                    return "GL_EMISSION";
+                case 0x1601:
+                    return "GL_SHININESS";
+                case 0x1602:
+                    return "GL_AMBIENT_AND_DIFFUSE";
+                case 0x1603:
+                    return "GL_COLOR_INDEXES";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::MatrixMode:
         {
             switch (value)
             {
+                case 0x1700:
+                    return "GL_MODELVIEW";
+                case 0x1701:
+                    return "GL_PROJECTION";
                 case 0x1702:
                     return "GL_TEXTURE";
                 default:
@@ -2648,6 +4567,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_ATOMIC_COUNTER_BARRIER_BIT";
                 case 0x2000:
                     return "GL_SHADER_STORAGE_BARRIER_BIT";
+                case 0x4000:
+                    return "GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT";
+                case 0x8000:
+                    return "GL_QUERY_BUFFER_BARRIER_BIT";
                 case 0xffffffff:
                     return "GL_ALL_BARRIER_BITS";
                 default:
@@ -2668,6 +4591,34 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::MeshMode1:
+        {
+            switch (value)
+            {
+                case 0x1b00:
+                    return "GL_POINT";
+                case 0x1b01:
+                    return "GL_LINE";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::MeshMode2:
+        {
+            switch (value)
+            {
+                case 0x1b00:
+                    return "GL_POINT";
+                case 0x1b01:
+                    return "GL_LINE";
+                case 0x1b02:
+                    return "GL_FILL";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::NormalPointerType:
         {
             switch (value)
@@ -2680,6 +4631,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
                 default:
                     return "EnumUnknown";
             }
@@ -2722,6 +4675,21 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             {
                 case 0x8e72:
                     return "GL_PATCH_VERTICES";
+                case 0x8e73:
+                    return "GL_PATCH_DEFAULT_INNER_LEVEL";
+                case 0x8e74:
+                    return "GL_PATCH_DEFAULT_OUTER_LEVEL";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::PathColor:
+        {
+            switch (value)
+            {
+                case 0x8577:
+                    return "GL_PRIMARY_COLOR";
                 default:
                     return "EnumUnknown";
             }
@@ -2755,6 +4723,12 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             {
                 case 0x0:
                     return "GL_NONE";
+                case 0x2400:
+                    return "GL_EYE_LINEAR";
+                case 0x2401:
+                    return "GL_OBJECT_LINEAR";
+                case 0x8576:
+                    return "GL_CONSTANT";
                 default:
                     return "EnumUnknown";
             }
@@ -2817,6 +4791,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNSIGNED_SHORT";
                 case 0x1405:
                     return "GL_UNSIGNED_INT";
+                case 0x1900:
+                    return "GL_COLOR_INDEX";
                 case 0x1901:
                     return "GL_STENCIL_INDEX";
                 case 0x1902:
@@ -2842,10 +4818,43 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::PixelMap:
+        {
+            switch (value)
+            {
+                case 0xc70:
+                    return "GL_PIXEL_MAP_I_TO_I";
+                case 0xc71:
+                    return "GL_PIXEL_MAP_S_TO_S";
+                case 0xc72:
+                    return "GL_PIXEL_MAP_I_TO_R";
+                case 0xc73:
+                    return "GL_PIXEL_MAP_I_TO_G";
+                case 0xc74:
+                    return "GL_PIXEL_MAP_I_TO_B";
+                case 0xc75:
+                    return "GL_PIXEL_MAP_I_TO_A";
+                case 0xc76:
+                    return "GL_PIXEL_MAP_R_TO_R";
+                case 0xc77:
+                    return "GL_PIXEL_MAP_G_TO_G";
+                case 0xc78:
+                    return "GL_PIXEL_MAP_B_TO_B";
+                case 0xc79:
+                    return "GL_PIXEL_MAP_A_TO_A";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::PixelStoreParameter:
         {
             switch (value)
             {
+                case 0xcf0:
+                    return "GL_UNPACK_SWAP_BYTES";
+                case 0xcf1:
+                    return "GL_UNPACK_LSB_FIRST";
                 case 0xcf2:
                     return "GL_UNPACK_ROW_LENGTH";
                 case 0xcf3:
@@ -2854,6 +4863,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNPACK_SKIP_PIXELS";
                 case 0xcf5:
                     return "GL_UNPACK_ALIGNMENT";
+                case 0xd00:
+                    return "GL_PACK_SWAP_BYTES";
+                case 0xd01:
+                    return "GL_PACK_LSB_FIRST";
                 case 0xd02:
                     return "GL_PACK_ROW_LENGTH";
                 case 0xd03:
@@ -2862,6 +4875,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_PACK_SKIP_PIXELS";
                 case 0xd05:
                     return "GL_PACK_ALIGNMENT";
+                case 0x806b:
+                    return "GL_PACK_SKIP_IMAGES";
+                case 0x806c:
+                    return "GL_PACK_IMAGE_HEIGHT";
                 case 0x806d:
                     return "GL_UNPACK_SKIP_IMAGES";
                 case 0x806e:
@@ -2890,6 +4907,43 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::PixelTransferParameter:
+        {
+            switch (value)
+            {
+                case 0xd10:
+                    return "GL_MAP_COLOR";
+                case 0xd11:
+                    return "GL_MAP_STENCIL";
+                case 0xd12:
+                    return "GL_INDEX_SHIFT";
+                case 0xd13:
+                    return "GL_INDEX_OFFSET";
+                case 0xd14:
+                    return "GL_RED_SCALE";
+                case 0xd15:
+                    return "GL_RED_BIAS";
+                case 0xd18:
+                    return "GL_GREEN_SCALE";
+                case 0xd19:
+                    return "GL_GREEN_BIAS";
+                case 0xd1a:
+                    return "GL_BLUE_SCALE";
+                case 0xd1b:
+                    return "GL_BLUE_BIAS";
+                case 0xd1c:
+                    return "GL_ALPHA_SCALE";
+                case 0xd1d:
+                    return "GL_ALPHA_BIAS";
+                case 0xd1e:
+                    return "GL_DEPTH_SCALE";
+                case 0xd1f:
+                    return "GL_DEPTH_BIAS";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::PixelType:
         {
             switch (value)
@@ -2908,10 +4962,50 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNSIGNED_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x1a00:
+                    return "GL_BITMAP";
+                case 0x8032:
+                    return "GL_UNSIGNED_BYTE_3_3_2";
                 case 0x8033:
                     return "GL_UNSIGNED_SHORT_4_4_4_4";
                 case 0x8034:
                     return "GL_UNSIGNED_SHORT_5_5_5_1";
+                case 0x8035:
+                    return "GL_UNSIGNED_INT_8_8_8_8";
+                case 0x8036:
+                    return "GL_UNSIGNED_INT_10_10_10_2";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::PointParameterNameSGIS:
+        {
+            switch (value)
+            {
+                case 0x8126:
+                    return "GL_POINT_SIZE_MIN";
+                case 0x8127:
+                    return "GL_POINT_SIZE_MAX";
+                case 0x8128:
+                    return "GL_POINT_FADE_THRESHOLD_SIZE";
+                case 0x8129:
+                    return "GL_POINT_DISTANCE_ATTENUATION";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::PolygonMode:
+        {
+            switch (value)
+            {
+                case 0x1b00:
+                    return "GL_POINT";
+                case 0x1b01:
+                    return "GL_LINE";
+                case 0x1b02:
+                    return "GL_FILL";
                 default:
                     return "EnumUnknown";
             }
@@ -2958,6 +5052,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TRIANGLE_FAN";
                 case 0x7:
                     return "GL_QUADS";
+                case 0x8:
+                    return "GL_QUAD_STRIP";
+                case 0x9:
+                    return "GL_POLYGON";
                 case 0xa:
                     return "GL_LINES_ADJACENCY";
                 case 0xb:
@@ -2991,6 +5089,30 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_BUFFER_VARIABLE";
                 case 0x92e6:
                     return "GL_SHADER_STORAGE_BLOCK";
+                case 0x92e8:
+                    return "GL_VERTEX_SUBROUTINE";
+                case 0x92e9:
+                    return "GL_TESS_CONTROL_SUBROUTINE";
+                case 0x92ea:
+                    return "GL_TESS_EVALUATION_SUBROUTINE";
+                case 0x92eb:
+                    return "GL_GEOMETRY_SUBROUTINE";
+                case 0x92ec:
+                    return "GL_FRAGMENT_SUBROUTINE";
+                case 0x92ed:
+                    return "GL_COMPUTE_SUBROUTINE";
+                case 0x92ee:
+                    return "GL_VERTEX_SUBROUTINE_UNIFORM";
+                case 0x92ef:
+                    return "GL_TESS_CONTROL_SUBROUTINE_UNIFORM";
+                case 0x92f0:
+                    return "GL_TESS_EVALUATION_SUBROUTINE_UNIFORM";
+                case 0x92f1:
+                    return "GL_GEOMETRY_SUBROUTINE_UNIFORM";
+                case 0x92f2:
+                    return "GL_FRAGMENT_SUBROUTINE_UNIFORM";
+                case 0x92f3:
+                    return "GL_COMPUTE_SUBROUTINE_UNIFORM";
                 case 0x92f4:
                     return "GL_TRANSFORM_FEEDBACK_VARYING";
                 default:
@@ -3008,6 +5130,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_NAME_LENGTH";
                 case 0x92f7:
                     return "GL_MAX_NUM_ACTIVE_VARIABLES";
+                case 0x92f8:
+                    return "GL_MAX_NUM_COMPATIBLE_SUBROUTINES";
                 default:
                     return "EnumUnknown";
             }
@@ -3075,14 +5199,37 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::ProgramStagePName:
+        {
+            switch (value)
+            {
+                case 0x8de5:
+                    return "GL_ACTIVE_SUBROUTINES";
+                case 0x8de6:
+                    return "GL_ACTIVE_SUBROUTINE_UNIFORMS";
+                case 0x8e47:
+                    return "GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS";
+                case 0x8e48:
+                    return "GL_ACTIVE_SUBROUTINE_MAX_LENGTH";
+                case 0x8e49:
+                    return "GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::QueryObjectParameterName:
         {
             switch (value)
             {
+                case 0x82ea:
+                    return "GL_QUERY_TARGET";
                 case 0x8866:
                     return "GL_QUERY_RESULT";
                 case 0x8867:
                     return "GL_QUERY_RESULT_AVAILABLE";
+                case 0x9194:
+                    return "GL_QUERY_RESULT_NO_WAIT";
                 default:
                     return "EnumUnknown";
             }
@@ -3092,6 +5239,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x8864:
+                    return "GL_QUERY_COUNTER_BITS";
                 case 0x8865:
                     return "GL_CURRENT_QUERY";
                 default:
@@ -3103,6 +5252,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x88bf:
+                    return "GL_TIME_ELAPSED";
+                case 0x8914:
+                    return "GL_SAMPLES_PASSED";
                 case 0x8c2f:
                     return "GL_ANY_SAMPLES_PASSED";
                 case 0x8c87:
@@ -3120,10 +5273,30 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x400:
+                    return "GL_FRONT_LEFT";
+                case 0x401:
+                    return "GL_FRONT_RIGHT";
+                case 0x402:
+                    return "GL_BACK_LEFT";
+                case 0x403:
+                    return "GL_BACK_RIGHT";
                 case 0x404:
                     return "GL_FRONT";
                 case 0x405:
                     return "GL_BACK";
+                case 0x406:
+                    return "GL_LEFT";
+                case 0x407:
+                    return "GL_RIGHT";
+                case 0x409:
+                    return "GL_AUX0";
+                case 0x40a:
+                    return "GL_AUX1";
+                case 0x40b:
+                    return "GL_AUX2";
+                case 0x40c:
+                    return "GL_AUX3";
                 default:
                     return "EnumUnknown";
             }
@@ -3164,6 +5337,21 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             {
                 case 0x8d41:
                     return "GL_RENDERBUFFER";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::RenderingMode:
+        {
+            switch (value)
+            {
+                case 0x1c00:
+                    return "GL_RENDER";
+                case 0x1c01:
+                    return "GL_FEEDBACK";
+                case 0x1c02:
+                    return "GL_SELECT";
                 default:
                     return "EnumUnknown";
             }
@@ -3233,6 +5421,19 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TESS_CONTROL_SHADER";
                 case 0x91b9:
                     return "GL_COMPUTE_SHADER";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::ShadingModel:
+        {
+            switch (value)
+            {
+                case 0x1d00:
+                    return "GL_FLAT";
+                case 0x1d01:
+                    return "GL_SMOOTH";
                 default:
                     return "EnumUnknown";
             }
@@ -3326,6 +5527,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNIFORM_SIZE";
                 case 0x8a39:
                     return "GL_UNIFORM_NAME_LENGTH";
+                case 0x8e4a:
+                    return "GL_NUM_COMPATIBLE_SUBROUTINES";
+                case 0x8e4b:
+                    return "GL_COMPATIBLE_SUBROUTINES";
                 default:
                     return "EnumUnknown";
             }
@@ -3397,6 +5602,25 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::TextureCoordName:
+        {
+            switch (value)
+            {
+                case 0x2000:
+                    return "GL_S";
+                case 0x2001:
+                    return "GL_T";
+                case 0x2002:
+                    return "GL_R";
+                case 0x2003:
+                    return "GL_Q";
                 default:
                     return "EnumUnknown";
             }
@@ -3406,8 +5630,68 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x104:
+                    return "GL_ADD";
                 case 0xbe2:
                     return "GL_BLEND";
+                case 0x2100:
+                    return "GL_MODULATE";
+                case 0x2101:
+                    return "GL_DECAL";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::TextureEnvParameter:
+        {
+            switch (value)
+            {
+                case 0x2200:
+                    return "GL_TEXTURE_ENV_MODE";
+                case 0x2201:
+                    return "GL_TEXTURE_ENV_COLOR";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::TextureEnvTarget:
+        {
+            switch (value)
+            {
+                case 0x2300:
+                    return "GL_TEXTURE_ENV";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::TextureGenMode:
+        {
+            switch (value)
+            {
+                case 0x2400:
+                    return "GL_EYE_LINEAR";
+                case 0x2401:
+                    return "GL_OBJECT_LINEAR";
+                case 0x2402:
+                    return "GL_SPHERE_MAP";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
+        case GLenumGroup::TextureGenParameter:
+        {
+            switch (value)
+            {
+                case 0x2500:
+                    return "GL_TEXTURE_GEN_MODE";
+                case 0x2501:
+                    return "GL_OBJECT_PLANE";
+                case 0x2502:
+                    return "GL_EYE_PLANE";
                 default:
                     return "EnumUnknown";
             }
@@ -3483,9 +5767,11 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1001:
                     return "GL_TEXTURE_HEIGHT";
                 case 0x1003:
-                    return "GL_TEXTURE_INTERNAL_FORMAT";
+                    return "GL_TEXTURE_COMPONENTS";
                 case 0x1004:
                     return "GL_TEXTURE_BORDER_COLOR";
+                case 0x1005:
+                    return "GL_TEXTURE_BORDER";
                 case 0x2800:
                     return "GL_TEXTURE_MAG_FILTER";
                 case 0x2801:
@@ -3502,6 +5788,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TEXTURE_BLUE_SIZE";
                 case 0x805f:
                     return "GL_TEXTURE_ALPHA_SIZE";
+                case 0x8060:
+                    return "GL_TEXTURE_LUMINANCE_SIZE";
+                case 0x8061:
+                    return "GL_TEXTURE_INTENSITY_SIZE";
+                case 0x8066:
+                    return "GL_TEXTURE_PRIORITY";
+                case 0x8067:
+                    return "GL_TEXTURE_RESIDENT";
                 case 0x8072:
                     return "GL_TEXTURE_WRAP_R";
                 case 0x813a:
@@ -3512,6 +5806,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TEXTURE_BASE_LEVEL";
                 case 0x813d:
                     return "GL_TEXTURE_MAX_LEVEL";
+                case 0x8191:
+                    return "GL_GENERATE_MIPMAP";
+                case 0x8501:
+                    return "GL_TEXTURE_LOD_BIAS";
                 case 0x884c:
                     return "GL_TEXTURE_COMPARE_MODE";
                 case 0x884d:
@@ -3524,6 +5822,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TEXTURE_SWIZZLE_B";
                 case 0x8e45:
                     return "GL_TEXTURE_SWIZZLE_A";
+                case 0x8e46:
+                    return "GL_TEXTURE_SWIZZLE_RGBA";
                 case 0x90ea:
                     return "GL_DEPTH_STENCIL_TEXTURE_MODE";
                 case 0x9580:
@@ -3537,10 +5837,22 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0xde0:
+                    return "GL_TEXTURE_1D";
                 case 0xde1:
                     return "GL_TEXTURE_2D";
+                case 0x8063:
+                    return "GL_PROXY_TEXTURE_1D";
+                case 0x8064:
+                    return "GL_PROXY_TEXTURE_2D";
                 case 0x806f:
                     return "GL_TEXTURE_3D";
+                case 0x8070:
+                    return "GL_PROXY_TEXTURE_3D";
+                case 0x84f5:
+                    return "GL_TEXTURE_RECTANGLE";
+                case 0x84f7:
+                    return "GL_PROXY_TEXTURE_RECTANGLE";
                 case 0x8513:
                     return "GL_TEXTURE_CUBE_MAP";
                 case 0x8515:
@@ -3555,14 +5867,28 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TEXTURE_CUBE_MAP_POSITIVE_Z";
                 case 0x851a:
                     return "GL_TEXTURE_CUBE_MAP_NEGATIVE_Z";
+                case 0x851b:
+                    return "GL_PROXY_TEXTURE_CUBE_MAP";
+                case 0x8c18:
+                    return "GL_TEXTURE_1D_ARRAY";
+                case 0x8c19:
+                    return "GL_PROXY_TEXTURE_1D_ARRAY";
                 case 0x8c1a:
                     return "GL_TEXTURE_2D_ARRAY";
+                case 0x8c1b:
+                    return "GL_PROXY_TEXTURE_2D_ARRAY";
                 case 0x9009:
                     return "GL_TEXTURE_CUBE_MAP_ARRAY";
+                case 0x900b:
+                    return "GL_PROXY_TEXTURE_CUBE_MAP_ARRAY";
                 case 0x9100:
                     return "GL_TEXTURE_2D_MULTISAMPLE";
+                case 0x9101:
+                    return "GL_PROXY_TEXTURE_2D_MULTISAMPLE";
                 case 0x9102:
                     return "GL_TEXTURE_2D_MULTISAMPLE_ARRAY";
+                case 0x9103:
+                    return "GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY";
                 default:
                     return "EnumUnknown";
             }
@@ -3645,6 +5971,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x2900:
+                    return "GL_CLAMP";
                 case 0x2901:
                     return "GL_REPEAT";
                 case 0x812d:
@@ -3675,10 +6003,31 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::TypeEnum:
+        {
+            switch (value)
+            {
+                case 0x8e13:
+                    return "GL_QUERY_WAIT";
+                case 0x8e14:
+                    return "GL_QUERY_NO_WAIT";
+                case 0x8e15:
+                    return "GL_QUERY_BY_REGION_WAIT";
+                case 0x8e16:
+                    return "GL_QUERY_BY_REGION_NO_WAIT";
+                default:
+                    return "EnumUnknown";
+            }
+        }
+
         case GLenumGroup::UniformBlockPName:
         {
             switch (value)
             {
+                case 0x84f0:
+                    return "GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER";
+                case 0x84f1:
+                    return "GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER";
                 case 0x8a3f:
                     return "GL_UNIFORM_BLOCK_BINDING";
                 case 0x8a40:
@@ -3691,8 +6040,12 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES";
                 case 0x8a44:
                     return "GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER";
+                case 0x8a45:
+                    return "GL_UNIFORM_BLOCK_REFERENCED_BY_GEOMETRY_SHADER";
                 case 0x8a46:
                     return "GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER";
+                case 0x90ec:
+                    return "GL_UNIFORM_BLOCK_REFERENCED_BY_COMPUTE_SHADER";
                 default:
                     return "EnumUnknown";
             }
@@ -3718,6 +6071,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNIFORM_MATRIX_STRIDE";
                 case 0x8a3e:
                     return "GL_UNIFORM_IS_ROW_MAJOR";
+                case 0x92da:
+                    return "GL_UNIFORM_ATOMIC_COUNTER_BUFFER_INDEX";
                 default:
                     return "EnumUnknown";
             }
@@ -3760,6 +6115,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_VERTEX_ATTRIB_ARRAY_STRIDE";
                 case 0x8625:
                     return "GL_VERTEX_ATTRIB_ARRAY_TYPE";
+                case 0x874e:
+                    return "GL_VERTEX_ATTRIB_ARRAY_LONG";
                 case 0x886a:
                     return "GL_VERTEX_ATTRIB_ARRAY_NORMALIZED";
                 case 0x88fd:
@@ -3816,6 +6173,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNSIGNED_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
                 case 0x140b:
                     return "GL_HALF_FLOAT";
                 case 0x140c:
@@ -3849,6 +6208,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNSIGNED_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
                 case 0x140b:
                     return "GL_HALF_FLOAT";
                 case 0x140c:
@@ -3868,10 +6229,16 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x821f:
+                    return "GL_BUFFER_IMMUTABLE_STORAGE";
+                case 0x8220:
+                    return "GL_BUFFER_STORAGE_FLAGS";
                 case 0x8764:
                     return "GL_BUFFER_SIZE";
                 case 0x8765:
                     return "GL_BUFFER_USAGE";
+                case 0x88bb:
+                    return "GL_BUFFER_ACCESS";
                 case 0x88bc:
                     return "GL_BUFFER_MAPPED";
                 case 0x911f:
@@ -3922,6 +6289,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140a:
+                    return "GL_DOUBLE";
                 default:
                     return "EnumUnknown";
             }
@@ -3941,7 +6310,6 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         }
 
         default:
-            UNREACHABLE();
             return "EnumUnknown";
     }
 }
