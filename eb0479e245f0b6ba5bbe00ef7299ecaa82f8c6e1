@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0689b785_153aad8f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1177,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-09T02:10:54Z",
+      "side": 1,
+      "message": "This function is very similar to initCubeMapRenderTargets. They could have probably been merged (if m3DRenderTargets and mCubeMapRenderTargets was passed to the shared function)",
+      "revId": "eb0479e245f0b6ba5bbe00ef7299ecaa82f8c6e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
