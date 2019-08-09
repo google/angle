@@ -93,6 +93,30 @@
       "revId": "f6cd8ba8656ac888f7e613b3e1f050fbbc27d5d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86d2d4da_409c27c3",
+        "filename": "src/tests/deqp_support/deqp_khr_gles2_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-08-09T16:35:13Z",
+      "side": 1,
+      "message": "ANGLE changes for the test: http://crrev/c/1745838\nTracking the test bug: http://anglebug.com/3797",
+      "parentUuid": "92551aed_8c1b0951",
+      "range": {
+        "startLine": 42,
+        "startChar": 35,
+        "endLine": 42,
+        "endChar": 54
+      },
+      "revId": "f6cd8ba8656ac888f7e613b3e1f050fbbc27d5d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
