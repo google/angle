@@ -45,7 +45,7 @@ angle::CallCapture CaptureBindRenderbuffer(const Context *context,
 angle::CallCapture CaptureBindTexture(const Context *context,
                                       bool isCallValid,
                                       TextureType targetPacked,
-                                      GLuint texture);
+                                      TextureID texturePacked);
 angle::CallCapture CaptureBlendColor(const Context *context,
                                      bool isCallValid,
                                      GLfloat red,
@@ -167,7 +167,7 @@ angle::CallCapture CaptureDeleteShader(const Context *context, bool isCallValid,
 angle::CallCapture CaptureDeleteTextures(const Context *context,
                                          bool isCallValid,
                                          GLsizei n,
-                                         const GLuint *textures);
+                                         const TextureID *texturesPacked);
 angle::CallCapture CaptureDepthFunc(const Context *context, bool isCallValid, GLenum func);
 angle::CallCapture CaptureDepthMask(const Context *context, bool isCallValid, GLboolean flag);
 angle::CallCapture CaptureDepthRangef(const Context *context,
@@ -210,7 +210,7 @@ angle::CallCapture CaptureFramebufferTexture2D(const Context *context,
                                                GLenum target,
                                                GLenum attachment,
                                                TextureTarget textargetPacked,
-                                               GLuint texture,
+                                               TextureID texturePacked,
                                                GLint level);
 angle::CallCapture CaptureFrontFace(const Context *context, bool isCallValid, GLenum mode);
 angle::CallCapture CaptureGenBuffers(const Context *context,
@@ -228,7 +228,7 @@ angle::CallCapture CaptureGenRenderbuffers(const Context *context,
 angle::CallCapture CaptureGenTextures(const Context *context,
                                       bool isCallValid,
                                       GLsizei n,
-                                      GLuint *textures);
+                                      TextureID *texturesPacked);
 angle::CallCapture CaptureGenerateMipmap(const Context *context,
                                          bool isCallValid,
                                          TextureType targetPacked);
@@ -398,7 +398,7 @@ angle::CallCapture CaptureIsShader(const Context *context,
                                    GLboolean returnValue);
 angle::CallCapture CaptureIsTexture(const Context *context,
                                     bool isCallValid,
-                                    GLuint texture,
+                                    TextureID texturePacked,
                                     GLboolean returnValue);
 angle::CallCapture CaptureLineWidth(const Context *context, bool isCallValid, GLfloat width);
 angle::CallCapture CaptureLinkProgram(const Context *context, bool isCallValid, GLuint program);
@@ -735,11 +735,11 @@ void CaptureDeleteRenderbuffers_renderbuffersPacked(const Context *context,
                                                     GLsizei n,
                                                     const RenderbufferID *renderbuffersPacked,
                                                     angle::ParamCapture *paramCapture);
-void CaptureDeleteTextures_textures(const Context *context,
-                                    bool isCallValid,
-                                    GLsizei n,
-                                    const GLuint *textures,
-                                    angle::ParamCapture *paramCapture);
+void CaptureDeleteTextures_texturesPacked(const Context *context,
+                                          bool isCallValid,
+                                          GLsizei n,
+                                          const TextureID *texturesPacked,
+                                          angle::ParamCapture *paramCapture);
 void CaptureDrawElements_indices(const Context *context,
                                  bool isCallValid,
                                  PrimitiveMode modePacked,
@@ -762,11 +762,11 @@ void CaptureGenRenderbuffers_renderbuffersPacked(const Context *context,
                                                  GLsizei n,
                                                  RenderbufferID *renderbuffersPacked,
                                                  angle::ParamCapture *paramCapture);
-void CaptureGenTextures_textures(const Context *context,
-                                 bool isCallValid,
-                                 GLsizei n,
-                                 GLuint *textures,
-                                 angle::ParamCapture *paramCapture);
+void CaptureGenTextures_texturesPacked(const Context *context,
+                                       bool isCallValid,
+                                       GLsizei n,
+                                       TextureID *texturesPacked,
+                                       angle::ParamCapture *paramCapture);
 void CaptureGetActiveAttrib_length(const Context *context,
                                    bool isCallValid,
                                    GLuint program,

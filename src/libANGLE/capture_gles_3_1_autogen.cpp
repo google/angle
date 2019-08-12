@@ -36,7 +36,7 @@ CallCapture CaptureActiveShaderProgram(const Context *context,
 CallCapture CaptureBindImageTexture(const Context *context,
                                     bool isCallValid,
                                     GLuint unit,
-                                    GLuint texture,
+                                    TextureID texturePacked,
                                     GLint level,
                                     GLboolean layered,
                                     GLint layer,
@@ -46,7 +46,7 @@ CallCapture CaptureBindImageTexture(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("unit", ParamType::TGLuint, unit);
-    paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
+    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("layered", ParamType::TGLboolean, layered);
     paramBuffer.addValueParam("layer", ParamType::TGLint, layer);

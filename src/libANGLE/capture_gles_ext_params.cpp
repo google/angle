@@ -2250,22 +2250,22 @@ void CaptureSignalSemaphoreEXT_buffersPacked(const Context *context,
                                              GLuint numBufferBarriers,
                                              const BufferID *buffers,
                                              GLuint numTextureBarriers,
-                                             const GLuint *textures,
+                                             const TextureID *textures,
                                              const GLenum *dstLayouts,
                                              ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureSignalSemaphoreEXT_textures(const Context *context,
-                                        bool isCallValid,
-                                        GLuint semaphore,
-                                        GLuint numBufferBarriers,
-                                        const BufferID *buffers,
-                                        GLuint numTextureBarriers,
-                                        const GLuint *textures,
-                                        const GLenum *dstLayouts,
-                                        ParamCapture *paramCapture)
+void CaptureSignalSemaphoreEXT_texturesPacked(const Context *context,
+                                              bool isCallValid,
+                                              GLuint semaphore,
+                                              GLuint numBufferBarriers,
+                                              const BufferID *buffers,
+                                              GLuint numTextureBarriers,
+                                              const TextureID *textures,
+                                              const GLenum *dstLayouts,
+                                              ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -2276,7 +2276,7 @@ void CaptureSignalSemaphoreEXT_dstLayouts(const Context *context,
                                           GLuint numBufferBarriers,
                                           const BufferID *buffers,
                                           GLuint numTextureBarriers,
-                                          const GLuint *textures,
+                                          const TextureID *textures,
                                           const GLenum *dstLayouts,
                                           ParamCapture *paramCapture)
 {
@@ -2289,22 +2289,22 @@ void CaptureWaitSemaphoreEXT_buffersPacked(const Context *context,
                                            GLuint numBufferBarriers,
                                            const BufferID *buffers,
                                            GLuint numTextureBarriers,
-                                           const GLuint *textures,
+                                           const TextureID *textures,
                                            const GLenum *srcLayouts,
                                            ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureWaitSemaphoreEXT_textures(const Context *context,
-                                      bool isCallValid,
-                                      GLuint semaphore,
-                                      GLuint numBufferBarriers,
-                                      const BufferID *buffers,
-                                      GLuint numTextureBarriers,
-                                      const GLuint *textures,
-                                      const GLenum *srcLayouts,
-                                      ParamCapture *paramCapture)
+void CaptureWaitSemaphoreEXT_texturesPacked(const Context *context,
+                                            bool isCallValid,
+                                            GLuint semaphore,
+                                            GLuint numBufferBarriers,
+                                            const BufferID *buffers,
+                                            GLuint numTextureBarriers,
+                                            const TextureID *textures,
+                                            const GLenum *srcLayouts,
+                                            ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -2315,7 +2315,7 @@ void CaptureWaitSemaphoreEXT_srcLayouts(const Context *context,
                                         GLuint numBufferBarriers,
                                         const BufferID *buffers,
                                         GLuint numTextureBarriers,
-                                        const GLuint *textures,
+                                        const TextureID *textures,
                                         const GLenum *srcLayouts,
                                         ParamCapture *paramCapture)
 {

@@ -37,7 +37,7 @@ TEST(ImageTest, RefCounting)
     // Create a texture and an EGL image that uses the texture as its source
     rx::MockTextureImpl *textureImpl = new rx::MockTextureImpl();
     EXPECT_CALL(mockGLFactory, createTexture(_)).WillOnce(Return(textureImpl));
-    gl::Texture *texture = new gl::Texture(&mockGLFactory, 1, gl::TextureType::_2D);
+    gl::Texture *texture = new gl::Texture(&mockGLFactory, {1}, gl::TextureType::_2D);
     texture->addRef();
 
     EXPECT_CALL(mockEGLFactory, createImage(_, _, _, _))
@@ -106,7 +106,7 @@ TEST(ImageTest, RespecificationReleasesReferences)
     // Create a texture and an EGL image that uses the texture as its source
     rx::MockTextureImpl *textureImpl = new rx::MockTextureImpl();
     EXPECT_CALL(mockGLFactory, createTexture(_)).WillOnce(Return(textureImpl));
-    gl::Texture *texture = new gl::Texture(&mockGLFactory, 1, gl::TextureType::_2D);
+    gl::Texture *texture = new gl::Texture(&mockGLFactory, {1}, gl::TextureType::_2D);
     texture->addRef();
 
     gl::PixelUnpackState defaultUnpackState;

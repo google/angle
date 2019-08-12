@@ -712,13 +712,14 @@ void GL_APIENTRY InvalidateTexImage(GLuint texture, GLint level)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() || ValidateInvalidateTexImage(context, texture, level));
+        TextureID texturePacked = FromGL<TextureID>(texture);
+        bool isCallValid        = (context->skipValidation() ||
+                            ValidateInvalidateTexImage(context, texturePacked, level));
         if (isCallValid)
         {
-            context->invalidateTexImage(texture, level);
+            context->invalidateTexImage(texturePacked, level);
         }
-        ANGLE_CAPTURE(InvalidateTexImage, isCallValid, context, texture, level);
+        ANGLE_CAPTURE(InvalidateTexImage, isCallValid, context, texturePacked, level);
     }
 }
 
@@ -739,16 +740,17 @@ void GL_APIENTRY InvalidateTexSubImage(GLuint texture,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateInvalidateTexSubImage(context, texture, level, xoffset, yoffset,
-                                                          zoffset, width, height, depth));
+        TextureID texturePacked = FromGL<TextureID>(texture);
+        bool isCallValid        = (context->skipValidation() ||
+                            ValidateInvalidateTexSubImage(context, texturePacked, level, xoffset,
+                                                          yoffset, zoffset, width, height, depth));
         if (isCallValid)
         {
-            context->invalidateTexSubImage(texture, level, xoffset, yoffset, zoffset, width, height,
-                                           depth);
+            context->invalidateTexSubImage(texturePacked, level, xoffset, yoffset, zoffset, width,
+                                           height, depth);
         }
-        ANGLE_CAPTURE(InvalidateTexSubImage, isCallValid, context, texture, level, xoffset, yoffset,
-                      zoffset, width, height, depth);
+        ANGLE_CAPTURE(InvalidateTexSubImage, isCallValid, context, texturePacked, level, xoffset,
+                      yoffset, zoffset, width, height, depth);
     }
 }
 
@@ -1014,16 +1016,17 @@ void GL_APIENTRY TextureView(GLuint texture,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        TextureID texturePacked = FromGL<TextureID>(texture);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateTextureView(context, texture, target, origtexture, internalformat, minlevel,
-                                 numlevels, minlayer, numlayers));
+             ValidateTextureView(context, texturePacked, target, origtexture, internalformat,
+                                 minlevel, numlevels, minlayer, numlayers));
         if (isCallValid)
         {
-            context->textureView(texture, target, origtexture, internalformat, minlevel, numlevels,
-                                 minlayer, numlayers);
+            context->textureView(texturePacked, target, origtexture, internalformat, minlevel,
+                                 numlevels, minlayer, numlayers);
         }
-        ANGLE_CAPTURE(TextureView, isCallValid, context, texture, target, origtexture,
+        ANGLE_CAPTURE(TextureView, isCallValid, context, texturePacked, target, origtexture,
                       internalformat, minlevel, numlevels, minlayer, numlayers);
     }
 }

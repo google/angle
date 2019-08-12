@@ -386,6 +386,11 @@ struct RenderbufferID
     GLuint value;
 };
 
+struct TextureID
+{
+    GLuint value;
+};
+
 // Used to unbox typed values.
 template <typename ResourceIDType>
 GLuint GetIDValue(ResourceIDType id);

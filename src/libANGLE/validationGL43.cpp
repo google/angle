@@ -143,13 +143,13 @@ bool ValidateInvalidateBufferSubData(Context *context,
     return true;
 }
 
-bool ValidateInvalidateTexImage(Context *context, GLuint texture, GLint level)
+bool ValidateInvalidateTexImage(Context *context, TextureID texture, GLint level)
 {
     return true;
 }
 
 bool ValidateInvalidateTexSubImage(Context *context,
-                                   GLuint texture,
+                                   TextureID texture,
                                    GLint level,
                                    GLint xoffset,
                                    GLint yoffset,
@@ -239,7 +239,7 @@ bool ValidateTexStorage3DMultisample(Context *context,
 }
 
 bool ValidateTextureView(Context *context,
-                         GLuint texture,
+                         TextureID texture,
                          GLenum target,
                          GLuint origtexture,
                          GLenum internalformat,

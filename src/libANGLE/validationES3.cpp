@@ -32,7 +32,7 @@ namespace
 bool ValidateFramebufferTextureMultiviewBaseANGLE(Context *context,
                                                   GLenum target,
                                                   GLenum attachment,
-                                                  GLuint texture,
+                                                  TextureID texture,
                                                   GLint level,
                                                   GLsizei numViews)
 {
@@ -47,7 +47,7 @@ bool ValidateFramebufferTextureMultiviewBaseANGLE(Context *context,
         return false;
     }
 
-    if (texture != 0 && numViews < 1)
+    if (texture.value != 0 && numViews < 1)
     {
         context->validationError(GL_INVALID_VALUE, kMultiviewViewsTooSmall);
         return false;
@@ -1297,7 +1297,7 @@ bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint
 bool ValidateFramebufferTextureLayer(Context *context,
                                      GLenum target,
                                      GLenum attachment,
-                                     GLuint texture,
+                                     TextureID texture,
                                      GLint level,
                                      GLint layer)
 {
@@ -1313,7 +1313,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
     }
 
     const gl::Caps &caps = context->getCaps();
-    if (texture != 0)
+    if (texture.value != 0)
     {
         if (layer < 0)
         {
@@ -2069,10 +2069,10 @@ bool ValidateCopyTexSubImage3D(Context *context,
 }
 
 bool ValidateCopyTexture3DANGLE(Context *context,
-                                GLuint sourceId,
+                                TextureID sourceId,
                                 GLint sourceLevel,
                                 TextureTarget destTarget,
-                                GLuint destId,
+                                TextureID destId,
                                 GLint destLevel,
                                 GLint internalFormat,
                                 GLenum destType,
@@ -2130,10 +2130,10 @@ bool ValidateCopyTexture3DANGLE(Context *context,
 }
 
 bool ValidateCopySubTexture3DANGLE(Context *context,
-                                   GLuint sourceId,
+                                   TextureID sourceId,
                                    GLint sourceLevel,
                                    TextureTarget destTarget,
-                                   GLuint destId,
+                                   TextureID destId,
                                    GLint destLevel,
                                    GLint xoffset,
                                    GLint yoffset,
@@ -3229,7 +3229,7 @@ bool ValidateMultiDrawElementsInstancedANGLE(Context *context,
 bool ValidateFramebufferTextureMultiviewOVR(Context *context,
                                             GLenum target,
                                             GLenum attachment,
-                                            GLuint texture,
+                                            TextureID texture,
                                             GLint level,
                                             GLint baseViewIndex,
                                             GLsizei numViews)
@@ -3240,7 +3240,7 @@ bool ValidateFramebufferTextureMultiviewOVR(Context *context,
         return false;
     }
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         if (baseViewIndex < 0)
         {

@@ -1409,7 +1409,7 @@ bool ValidateDispatchComputeIndirect(Context *context, GLintptr indirect)
 
 bool ValidateBindImageTexture(Context *context,
                               GLuint unit,
-                              GLuint texture,
+                              TextureID texture,
                               GLint level,
                               GLboolean layered,
                               GLint layer,
@@ -1462,7 +1462,7 @@ bool ValidateBindImageTexture(Context *context,
             return false;
     }
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         Texture *tex = context->getTexture(texture);
 
@@ -1802,7 +1802,7 @@ bool ValidateSampleMaski(Context *context, GLuint maskNumber, GLbitfield mask)
 bool ValidateFramebufferTextureEXT(Context *context,
                                    GLenum target,
                                    GLenum attachment,
-                                   GLuint texture,
+                                   TextureID texture,
                                    GLint level)
 {
     if (!context->getExtensions().geometryShader)
@@ -1811,7 +1811,7 @@ bool ValidateFramebufferTextureEXT(Context *context,
         return false;
     }
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         gl::Texture *tex = context->getTexture(texture);
 

@@ -832,7 +832,7 @@ Error Display::createImage(const gl::Context *context,
     egl::ImageSibling *sibling = nullptr;
     if (IsTextureTarget(target))
     {
-        sibling = context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
+        sibling = context->getTexture({egl_gl::EGLClientBufferToGLObjectHandle(buffer)});
     }
     else if (IsRenderbufferTarget(target))
     {

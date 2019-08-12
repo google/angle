@@ -54,8 +54,8 @@
     void endTransformFeedback();                                                                   \
     GLsync fenceSync(GLenum condition, GLbitfield flags);                                          \
     void flushMappedBufferRange(BufferBinding targetPacked, GLintptr offset, GLsizeiptr length);   \
-    void framebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint level,    \
-                                 GLint layer);                                                     \
+    void framebufferTextureLayer(GLenum target, GLenum attachment, TextureID texturePacked,        \
+                                 GLint level, GLint layer);                                        \
     void genQueries(GLsizei n, GLuint *ids);                                                       \
     void genSamplers(GLsizei count, GLuint *samplers);                                             \
     void genTransformFeedbacks(GLsizei n, GLuint *ids);                                            \

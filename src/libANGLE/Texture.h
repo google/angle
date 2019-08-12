@@ -214,7 +214,7 @@ bool operator!=(const TextureState &a, const TextureState &b);
 class Texture final : public RefCountObject, public egl::ImageSibling, public LabeledObject
 {
   public:
-    Texture(rx::GLImplFactory *factory, GLuint id, TextureType type);
+    Texture(rx::GLImplFactory *factory, TextureID id, TextureType type);
     ~Texture() override;
 
     void onDestroy(const Context *context) override;

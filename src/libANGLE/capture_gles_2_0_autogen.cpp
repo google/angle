@@ -103,12 +103,12 @@ CallCapture CaptureBindRenderbuffer(const Context *context,
 CallCapture CaptureBindTexture(const Context *context,
                                bool isCallValid,
                                TextureType targetPacked,
-                               GLuint texture)
+                               TextureID texturePacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
-    paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
+    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
 
     return CallCapture(gl::EntryPoint::BindTexture, std::move(paramBuffer));
 }
@@ -543,16 +543,17 @@ CallCapture CaptureDeleteShader(const Context *context, bool isCallValid, GLuint
 CallCapture CaptureDeleteTextures(const Context *context,
                                   bool isCallValid,
                                   GLsizei n,
-                                  const GLuint *textures)
+                                  const TextureID *texturesPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture texturesParam("textures", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, textures, &texturesParam.value);
-    CaptureDeleteTextures_textures(context, isCallValid, n, textures, &texturesParam);
-    paramBuffer.addParam(std::move(texturesParam));
+    ParamCapture texturesPackedParam("texturesPacked", ParamType::TTextureIDConstPointer);
+    InitParamValue(ParamType::TTextureIDConstPointer, texturesPacked, &texturesPackedParam.value);
+    CaptureDeleteTextures_texturesPacked(context, isCallValid, n, texturesPacked,
+                                         &texturesPackedParam);
+    paramBuffer.addParam(std::move(texturesPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteTextures, std::move(paramBuffer));
 }
@@ -709,7 +710,7 @@ CallCapture CaptureFramebufferTexture2D(const Context *context,
                                         GLenum target,
                                         GLenum attachment,
                                         TextureTarget textargetPacked,
-                                        GLuint texture,
+                                        TextureID texturePacked,
                                         GLint level)
 {
     ParamBuffer paramBuffer;
@@ -718,7 +719,7 @@ CallCapture CaptureFramebufferTexture2D(const Context *context,
     paramBuffer.addEnumParam("attachment", GLenumGroup::FramebufferAttachment, ParamType::TGLenum,
                              attachment);
     paramBuffer.addValueParam("textargetPacked", ParamType::TTextureTarget, textargetPacked);
-    paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
+    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
 
     return CallCapture(gl::EntryPoint::FramebufferTexture2D, std::move(paramBuffer));
@@ -789,16 +790,17 @@ CallCapture CaptureGenRenderbuffers(const Context *context,
 CallCapture CaptureGenTextures(const Context *context,
                                bool isCallValid,
                                GLsizei n,
-                               GLuint *textures)
+                               TextureID *texturesPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture texturesParam("textures", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, textures, &texturesParam.value);
-    CaptureGenTextures_textures(context, isCallValid, n, textures, &texturesParam);
-    paramBuffer.addParam(std::move(texturesParam));
+    ParamCapture texturesPackedParam("texturesPacked", ParamType::TTextureIDPointer);
+    InitParamValue(ParamType::TTextureIDPointer, texturesPacked, &texturesPackedParam.value);
+    CaptureGenTextures_texturesPacked(context, isCallValid, n, texturesPacked,
+                                      &texturesPackedParam);
+    paramBuffer.addParam(std::move(texturesPackedParam));
 
     return CallCapture(gl::EntryPoint::GenTextures, std::move(paramBuffer));
 }
@@ -1499,12 +1501,12 @@ CallCapture CaptureIsShader(const Context *context,
 
 CallCapture CaptureIsTexture(const Context *context,
                              bool isCallValid,
-                             GLuint texture,
+                             TextureID texturePacked,
                              GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
+    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);

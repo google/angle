@@ -1912,7 +1912,7 @@ Error ValidateCreateImage(const Display *display,
 
             ANGLE_TRY(ValidateContext(display, context));
             const gl::Texture *texture =
-                context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
+                context->getTexture({egl_gl::EGLClientBufferToGLObjectHandle(buffer)});
             if (texture == nullptr || texture->getType() != gl::TextureType::_2D)
             {
                 return EglBadParameter() << "target is not a 2D texture.";
@@ -1955,7 +1955,7 @@ Error ValidateCreateImage(const Display *display,
 
             ANGLE_TRY(ValidateContext(display, context));
             const gl::Texture *texture =
-                context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
+                context->getTexture({egl_gl::EGLClientBufferToGLObjectHandle(buffer)});
             if (texture == nullptr || texture->getType() != gl::TextureType::CubeMap)
             {
                 return EglBadParameter() << "target is not a cubemap texture.";
@@ -2001,7 +2001,7 @@ Error ValidateCreateImage(const Display *display,
 
             ANGLE_TRY(ValidateContext(display, context));
             const gl::Texture *texture =
-                context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
+                context->getTexture({egl_gl::EGLClientBufferToGLObjectHandle(buffer)});
             if (texture == nullptr || texture->getType() != gl::TextureType::_3D)
             {
                 return EglBadParameter() << "target is not a 3D texture.";

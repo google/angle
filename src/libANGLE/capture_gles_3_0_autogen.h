@@ -189,7 +189,7 @@ angle::CallCapture CaptureFramebufferTextureLayer(const Context *context,
                                                   bool isCallValid,
                                                   GLenum target,
                                                   GLenum attachment,
-                                                  GLuint texture,
+                                                  TextureID texturePacked,
                                                   GLint level,
                                                   GLint layer);
 angle::CallCapture CaptureGenQueries(const Context *context,

@@ -703,15 +703,16 @@ FramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferTextureLayer(context, target, attachment, texture, level, layer));
+        TextureID texturePacked = FromGL<TextureID>(texture);
+        bool isCallValid        = (context->skipValidation() ||
+                            ValidateFramebufferTextureLayer(context, target, attachment,
+                                                            texturePacked, level, layer));
         if (isCallValid)
         {
-            context->framebufferTextureLayer(target, attachment, texture, level, layer);
+            context->framebufferTextureLayer(target, attachment, texturePacked, level, layer);
         }
-        ANGLE_CAPTURE(FramebufferTextureLayer, isCallValid, context, target, attachment, texture,
-                      level, layer);
+        ANGLE_CAPTURE(FramebufferTextureLayer, isCallValid, context, target, attachment,
+                      texturePacked, level, layer);
     }
 }
 

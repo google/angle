@@ -571,7 +571,7 @@ CallCapture CaptureFramebufferTextureLayer(const Context *context,
                                            bool isCallValid,
                                            GLenum target,
                                            GLenum attachment,
-                                           GLuint texture,
+                                           TextureID texturePacked,
                                            GLint level,
                                            GLint layer)
 {
@@ -580,7 +580,7 @@ CallCapture CaptureFramebufferTextureLayer(const Context *context,
     paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
     paramBuffer.addEnumParam("attachment", GLenumGroup::FramebufferAttachment, ParamType::TGLenum,
                              attachment);
-    paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
+    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("layer", ParamType::TGLint, layer);
 

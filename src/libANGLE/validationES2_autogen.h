@@ -23,7 +23,7 @@ bool ValidateBindAttribLocation(Context *context, GLuint program, GLuint index, 
 bool ValidateBindBuffer(Context *context, BufferBinding targetPacked, BufferID bufferPacked);
 bool ValidateBindFramebuffer(Context *context, GLenum target, GLuint framebuffer);
 bool ValidateBindRenderbuffer(Context *context, GLenum target, RenderbufferID renderbufferPacked);
-bool ValidateBindTexture(Context *context, TextureType targetPacked, GLuint texture);
+bool ValidateBindTexture(Context *context, TextureType targetPacked, TextureID texturePacked);
 bool ValidateBlendColor(Context *context, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 bool ValidateBlendEquation(Context *context, GLenum mode);
 bool ValidateBlendEquationSeparate(Context *context, GLenum modeRGB, GLenum modeAlpha);
@@ -101,7 +101,7 @@ bool ValidateDeleteRenderbuffers(Context *context,
                                  GLsizei n,
                                  const RenderbufferID *renderbuffersPacked);
 bool ValidateDeleteShader(Context *context, GLuint shader);
-bool ValidateDeleteTextures(Context *context, GLsizei n, const GLuint *textures);
+bool ValidateDeleteTextures(Context *context, GLsizei n, const TextureID *texturesPacked);
 bool ValidateDepthFunc(Context *context, GLenum func);
 bool ValidateDepthMask(Context *context, GLboolean flag);
 bool ValidateDepthRangef(Context *context, GLfloat n, GLfloat f);
@@ -127,13 +127,13 @@ bool ValidateFramebufferTexture2D(Context *context,
                                   GLenum target,
                                   GLenum attachment,
                                   TextureTarget textargetPacked,
-                                  GLuint texture,
+                                  TextureID texturePacked,
                                   GLint level);
 bool ValidateFrontFace(Context *context, GLenum mode);
 bool ValidateGenBuffers(Context *context, GLsizei n, BufferID *buffersPacked);
 bool ValidateGenFramebuffers(Context *context, GLsizei n, GLuint *framebuffers);
 bool ValidateGenRenderbuffers(Context *context, GLsizei n, RenderbufferID *renderbuffersPacked);
-bool ValidateGenTextures(Context *context, GLsizei n, GLuint *textures);
+bool ValidateGenTextures(Context *context, GLsizei n, TextureID *texturesPacked);
 bool ValidateGenerateMipmap(Context *context, TextureType targetPacked);
 bool ValidateGetActiveAttrib(Context *context,
                              GLuint program,
@@ -218,7 +218,7 @@ bool ValidateIsFramebuffer(Context *context, GLuint framebuffer);
 bool ValidateIsProgram(Context *context, GLuint program);
 bool ValidateIsRenderbuffer(Context *context, RenderbufferID renderbufferPacked);
 bool ValidateIsShader(Context *context, GLuint shader);
-bool ValidateIsTexture(Context *context, GLuint texture);
+bool ValidateIsTexture(Context *context, TextureID texturePacked);
 bool ValidateLineWidth(Context *context, GLfloat width);
 bool ValidateLinkProgram(Context *context, GLuint program);
 bool ValidatePixelStorei(Context *context, GLenum pname, GLint param);

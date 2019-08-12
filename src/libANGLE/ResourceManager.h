@@ -168,26 +168,29 @@ class ShaderProgramManager : public ResourceManagerBase<HandleAllocator>
     ResourceMap<Program> mPrograms;
 };
 
-class TextureManager : public TypedResourceManager<Texture, HandleAllocator, TextureManager>
+class TextureManager
+    : public TypedResourceManager<Texture, HandleAllocator, TextureManager, TextureID>
 {
   public:
-    GLuint createTexture();
-    ANGLE_INLINE Texture *getTexture(GLuint handle) const
+    TextureID createTexture();
+    ANGLE_INLINE Texture *getTexture(TextureID handle) const
     {
-        ASSERT(mObjectMap.query(0) == nullptr);
+        ASSERT(mObjectMap.query({0}) == nullptr);
         return mObjectMap.query(handle);
     }
 
     void signalAllTexturesDirty() const;
 
     ANGLE_INLINE Texture *checkTextureAllocation(rx::GLImplFactory *factory,
-                                                 GLuint handle,
+                                                 TextureID handle,
                                                  TextureType type)
     {
         return checkObjectAllocation(factory, handle, type);
     }
 
-    static Texture *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle, TextureType type);
+    static Texture *AllocateNewObject(rx::GLImplFactory *factory,
+                                      TextureID handle,
+                                      TextureType type);
     static void DeleteObject(const Context *context, Texture *texture);
 
     void enableHandleAllocatorLogging();

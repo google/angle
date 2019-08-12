@@ -121,11 +121,11 @@ void CaptureDeleteRenderbuffers_renderbuffersPacked(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteTextures_textures(const Context *context,
-                                    bool isCallValid,
-                                    GLsizei n,
-                                    const GLuint *textures,
-                                    ParamCapture *paramCapture)
+void CaptureDeleteTextures_texturesPacked(const Context *context,
+                                          bool isCallValid,
+                                          GLsizei n,
+                                          const TextureID *textures,
+                                          ParamCapture *paramCapture)
 {
     CaptureMemory(textures, sizeof(GLuint) * n, paramCapture);
 }
@@ -177,11 +177,11 @@ void CaptureGenRenderbuffers_renderbuffersPacked(const Context *context,
     paramCapture->readBufferSizeBytes = sizeof(RenderbufferID) * n;
 }
 
-void CaptureGenTextures_textures(const Context *context,
-                                 bool isCallValid,
-                                 GLsizei n,
-                                 GLuint *textures,
-                                 ParamCapture *paramCapture)
+void CaptureGenTextures_texturesPacked(const Context *context,
+                                       bool isCallValid,
+                                       GLsizei n,
+                                       TextureID *textures,
+                                       ParamCapture *paramCapture)
 {
     paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;
 }

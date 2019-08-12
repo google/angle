@@ -124,7 +124,7 @@ bool ValidateFlushMappedBufferRange(Context *context,
 bool ValidateFramebufferTextureLayer(Context *context,
                                      GLenum target,
                                      GLenum attachment,
-                                     GLuint texture,
+                                     TextureID texturePacked,
                                      GLint level,
                                      GLint layer);
 bool ValidateGenQueries(Context *context, GLsizei n, GLuint *ids);

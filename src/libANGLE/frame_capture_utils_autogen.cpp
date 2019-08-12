@@ -286,6 +286,17 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
             WriteParamValueToStream<ParamType::TTextureEnvTarget>(os,
                                                                   paramValue.TextureEnvTargetVal);
             break;
+        case ParamType::TTextureID:
+            WriteParamValueToStream<ParamType::TTextureID>(os, paramValue.TextureIDVal);
+            break;
+        case ParamType::TTextureIDConstPointer:
+            WriteParamValueToStream<ParamType::TTextureIDConstPointer>(
+                os, paramValue.TextureIDConstPointerVal);
+            break;
+        case ParamType::TTextureIDPointer:
+            WriteParamValueToStream<ParamType::TTextureIDPointer>(os,
+                                                                  paramValue.TextureIDPointerVal);
+            break;
         case ParamType::TTextureTarget:
             WriteParamValueToStream<ParamType::TTextureTarget>(os, paramValue.TextureTargetVal);
             break;
@@ -479,6 +490,12 @@ const char *ParamTypeToString(ParamType paramType)
             return "gl::TextureEnvParameter";
         case ParamType::TTextureEnvTarget:
             return "gl::TextureEnvTarget";
+        case ParamType::TTextureID:
+            return "gl::TextureID";
+        case ParamType::TTextureIDConstPointer:
+            return "const gl::TextureID *";
+        case ParamType::TTextureIDPointer:
+            return "gl::TextureID *";
         case ParamType::TTextureTarget:
             return "gl::TextureTarget";
         case ParamType::TTextureType:

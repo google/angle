@@ -20,7 +20,7 @@ class Context;
 bool ValidateActiveShaderProgram(Context *context, GLuint pipeline, GLuint program);
 bool ValidateBindImageTexture(Context *context,
                               GLuint unit,
-                              GLuint texture,
+                              TextureID texturePacked,
                               GLint level,
                               GLboolean layered,
                               GLint layer,

@@ -708,9 +708,9 @@ const std::string &Framebuffer::getLabel() const
     return mState.mLabel;
 }
 
-bool Framebuffer::detachTexture(const Context *context, GLuint textureId)
+bool Framebuffer::detachTexture(const Context *context, TextureID textureId)
 {
-    return detachResourceById(context, GL_TEXTURE, textureId);
+    return detachResourceById(context, GL_TEXTURE, textureId.value);
 }
 
 bool Framebuffer::detachRenderbuffer(const Context *context, RenderbufferID renderbufferId)

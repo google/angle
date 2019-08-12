@@ -2428,7 +2428,7 @@ static bool ValidateObjectIdentifierAndName(Context *context, GLenum identifier,
             return true;
 
         case GL_TEXTURE:
-            if (context->getTexture(name) == nullptr)
+            if (context->getTexture({name}) == nullptr)
             {
                 context->validationError(GL_INVALID_VALUE, kInvalidTextureName);
                 return false;
@@ -3433,7 +3433,7 @@ bool ValidateSignalSemaphoreEXT(Context *context,
                                 GLuint numBufferBarriers,
                                 const BufferID *buffers,
                                 GLuint numTextureBarriers,
-                                const GLuint *textures,
+                                const TextureID *textures,
                                 const GLenum *dstLayouts)
 {
     if (!context->getExtensions().semaphore)
@@ -3459,7 +3459,7 @@ bool ValidateWaitSemaphoreEXT(Context *context,
                               GLuint numBufferBarriers,
                               const BufferID *buffers,
                               GLuint numTextureBarriers,
-                              const GLuint *textures,
+                              const TextureID *textures,
                               const GLenum *srcLayouts)
 {
     if (!context->getExtensions().semaphore)
@@ -4396,10 +4396,10 @@ bool ValidateProgramPathFragmentInputGenCHROMIUM(Context *context,
 }
 
 bool ValidateCopyTextureCHROMIUM(Context *context,
-                                 GLuint sourceId,
+                                 TextureID sourceId,
                                  GLint sourceLevel,
                                  TextureTarget destTarget,
-                                 GLuint destId,
+                                 TextureID destId,
                                  GLint destLevel,
                                  GLint internalFormat,
                                  GLenum destType,
@@ -4498,10 +4498,10 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
 }
 
 bool ValidateCopySubTextureCHROMIUM(Context *context,
-                                    GLuint sourceId,
+                                    TextureID sourceId,
                                     GLint sourceLevel,
                                     TextureTarget destTarget,
-                                    GLuint destId,
+                                    TextureID destId,
                                     GLint destLevel,
                                     GLint xoffset,
                                     GLint yoffset,
@@ -4630,7 +4630,7 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
     return true;
 }
 
-bool ValidateCompressedCopyTextureCHROMIUM(Context *context, GLuint sourceId, GLuint destId)
+bool ValidateCompressedCopyTextureCHROMIUM(Context *context, TextureID sourceId, TextureID destId)
 {
     if (!context->getExtensions().copyCompressedTexture)
     {
@@ -5731,7 +5731,7 @@ bool ValidateIsShader(Context *context, GLuint shader)
     return true;
 }
 
-bool ValidateIsTexture(Context *context, GLuint texture)
+bool ValidateIsTexture(Context *context, TextureID texture)
 {
     return true;
 }
@@ -6235,7 +6235,7 @@ bool ValidateDeleteRenderbuffers(Context *context, GLint n, const RenderbufferID
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateDeleteTextures(Context *context, GLint n, const GLuint *)
+bool ValidateDeleteTextures(Context *context, GLint n, const TextureID *textures)
 {
     return ValidateGenOrDelete(context, n);
 }
@@ -6299,7 +6299,7 @@ bool ValidateFramebufferTexture2D(Context *context,
                                   GLenum target,
                                   GLenum attachment,
                                   TextureTarget textarget,
-                                  GLuint texture,
+                                  TextureID texture,
                                   GLint level)
 {
     // Attachments are required to be bound to level 0 without ES3 or the GL_OES_fbo_render_mipmap
@@ -6316,7 +6316,7 @@ bool ValidateFramebufferTexture2D(Context *context,
         return false;
     }
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         gl::Texture *tex = context->getTexture(texture);
         ASSERT(tex);
@@ -6411,7 +6411,7 @@ bool ValidateFramebufferTexture3DOES(Context *context,
                                      GLenum target,
                                      GLenum attachment,
                                      TextureTarget textargetPacked,
-                                     GLuint texture,
+                                     TextureID texture,
                                      GLint level,
                                      GLint zoffset)
 {
@@ -6438,7 +6438,7 @@ bool ValidateFramebufferTexture3DOES(Context *context,
         return false;
     }
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         gl::Texture *tex = context->getTexture(texture);
         ASSERT(tex);
@@ -6491,7 +6491,7 @@ bool ValidateGenRenderbuffers(Context *context, GLint n, RenderbufferID *renderb
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateGenTextures(Context *context, GLint n, GLuint *)
+bool ValidateGenTextures(Context *context, GLint n, TextureID *textures)
 {
     return ValidateGenOrDelete(context, n);
 }

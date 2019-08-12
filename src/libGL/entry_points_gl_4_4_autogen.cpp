@@ -191,13 +191,16 @@ ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const voi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateClearTexImage(context, texture, level, format, type, data));
+        TextureID texturePacked = FromGL<TextureID>(texture);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateClearTexImage(context, texturePacked, level, format, type, data));
         if (isCallValid)
         {
-            context->clearTexImage(texture, level, format, type, data);
+            context->clearTexImage(texturePacked, level, format, type, data);
         }
-        ANGLE_CAPTURE(ClearTexImage, isCallValid, context, texture, level, format, type, data);
+        ANGLE_CAPTURE(ClearTexImage, isCallValid, context, texturePacked, level, format, type,
+                      data);
     }
 }
 
@@ -224,17 +227,18 @@ void GL_APIENTRY ClearTexSubImage(GLuint texture,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        TextureID texturePacked = FromGL<TextureID>(texture);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateClearTexSubImage(context, texture, level, xoffset, yoffset, zoffset, width,
-                                      height, depth, format, type, data));
+             ValidateClearTexSubImage(context, texturePacked, level, xoffset, yoffset, zoffset,
+                                      width, height, depth, format, type, data));
         if (isCallValid)
         {
-            context->clearTexSubImage(texture, level, xoffset, yoffset, zoffset, width, height,
-                                      depth, format, type, data);
+            context->clearTexSubImage(texturePacked, level, xoffset, yoffset, zoffset, width,
+                                      height, depth, format, type, data);
         }
-        ANGLE_CAPTURE(ClearTexSubImage, isCallValid, context, texture, level, xoffset, yoffset,
-                      zoffset, width, height, depth, format, type, data);
+        ANGLE_CAPTURE(ClearTexSubImage, isCallValid, context, texturePacked, level, xoffset,
+                      yoffset, zoffset, width, height, depth, format, type, data);
     }
 }
 }  // namespace gl

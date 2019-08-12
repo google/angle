@@ -44,15 +44,16 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() || ValidateBindImageTexture(context, unit, texture, level,
-                                                                   layered, layer, access, format));
+        TextureID texturePacked = FromGL<TextureID>(texture);
+        bool isCallValid        = (context->skipValidation() ||
+                            ValidateBindImageTexture(context, unit, texturePacked, level, layered,
+                                                     layer, access, format));
         if (isCallValid)
         {
-            context->bindImageTexture(unit, texture, level, layered, layer, access, format);
+            context->bindImageTexture(unit, texturePacked, level, layered, layer, access, format);
         }
-        ANGLE_CAPTURE(BindImageTexture, isCallValid, context, unit, texture, level, layered, layer,
-                      access, format);
+        ANGLE_CAPTURE(BindImageTexture, isCallValid, context, unit, texturePacked, level, layered,
+                      layer, access, format);
     }
 }
 

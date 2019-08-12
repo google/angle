@@ -184,7 +184,6 @@ void SetFloatUniformMatrixFast(unsigned int arrayElementOffset,
     const uint8_t *valueData = reinterpret_cast<const uint8_t *>(value);
     targetData               = targetData + arrayElementOffset * matrixSize;
 
-
     memcpy(targetData, valueData, matrixSize * count);
 }
 
@@ -459,7 +458,8 @@ angle::Result IncompleteTextureSet::getIncompleteTexture(
     // If a texture is external use a 2D texture for the incomplete texture
     gl::TextureType createType = (type == gl::TextureType::External) ? gl::TextureType::_2D : type;
 
-    gl::Texture *tex = new gl::Texture(implFactory, std::numeric_limits<GLuint>::max(), createType);
+    gl::Texture *tex =
+        new gl::Texture(implFactory, {std::numeric_limits<GLuint>::max()}, createType);
     angle::UniqueObjectPointer<gl::Texture, gl::Context> t(tex, context);
 
     // This is a bit of a kludge but is necessary to consume the error.

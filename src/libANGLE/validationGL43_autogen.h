@@ -97,9 +97,9 @@ bool ValidateInvalidateBufferSubData(Context *context,
                                      BufferID bufferPacked,
                                      GLintptr offset,
                                      GLsizeiptr length);
-bool ValidateInvalidateTexImage(Context *context, GLuint texture, GLint level);
+bool ValidateInvalidateTexImage(Context *context, TextureID texturePacked, GLint level);
 bool ValidateInvalidateTexSubImage(Context *context,
-                                   GLuint texture,
+                                   TextureID texturePacked,
                                    GLint level,
                                    GLint xoffset,
                                    GLint yoffset,
@@ -149,7 +149,7 @@ bool ValidateTexStorage3DMultisample(Context *context,
                                      GLsizei depth,
                                      GLboolean fixedsamplelocations);
 bool ValidateTextureView(Context *context,
-                         GLuint texture,
+                         TextureID texturePacked,
                          GLenum target,
                          GLuint origtexture,
                          GLenum internalformat,

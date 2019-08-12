@@ -387,32 +387,33 @@ void Context::initialize()
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    Texture *zeroTexture2D = new Texture(mImplementation.get(), 0, TextureType::_2D);
+    Texture *zeroTexture2D = new Texture(mImplementation.get(), {0}, TextureType::_2D);
     mZeroTextures[TextureType::_2D].set(this, zeroTexture2D);
 
-    Texture *zeroTextureCube = new Texture(mImplementation.get(), 0, TextureType::CubeMap);
+    Texture *zeroTextureCube = new Texture(mImplementation.get(), {0}, TextureType::CubeMap);
     mZeroTextures[TextureType::CubeMap].set(this, zeroTextureCube);
 
     if (getClientVersion() >= Version(3, 0) || mSupportedExtensions.texture3DOES)
     {
-        Texture *zeroTexture3D = new Texture(mImplementation.get(), 0, TextureType::_3D);
+        Texture *zeroTexture3D = new Texture(mImplementation.get(), {0}, TextureType::_3D);
         mZeroTextures[TextureType::_3D].set(this, zeroTexture3D);
     }
     if (getClientVersion() >= Version(3, 0))
     {
-        Texture *zeroTexture2DArray = new Texture(mImplementation.get(), 0, TextureType::_2DArray);
+        Texture *zeroTexture2DArray =
+            new Texture(mImplementation.get(), {0}, TextureType::_2DArray);
         mZeroTextures[TextureType::_2DArray].set(this, zeroTexture2DArray);
     }
     if (getClientVersion() >= Version(3, 1) || mSupportedExtensions.textureMultisample)
     {
         Texture *zeroTexture2DMultisample =
-            new Texture(mImplementation.get(), 0, TextureType::_2DMultisample);
+            new Texture(mImplementation.get(), {0}, TextureType::_2DMultisample);
         mZeroTextures[TextureType::_2DMultisample].set(this, zeroTexture2DMultisample);
     }
     if (getClientVersion() >= Version(3, 1))
     {
         Texture *zeroTexture2DMultisampleArray =
-            new Texture(mImplementation.get(), 0, TextureType::_2DMultisampleArray);
+            new Texture(mImplementation.get(), {0}, TextureType::_2DMultisampleArray);
         mZeroTextures[TextureType::_2DMultisampleArray].set(this, zeroTexture2DMultisampleArray);
 
         for (unsigned int i = 0; i < mState.mCaps.maxAtomicCounterBufferBindings; i++)
@@ -429,13 +430,14 @@ void Context::initialize()
     if (mSupportedExtensions.textureRectangle)
     {
         Texture *zeroTextureRectangle =
-            new Texture(mImplementation.get(), 0, TextureType::Rectangle);
+            new Texture(mImplementation.get(), {0}, TextureType::Rectangle);
         mZeroTextures[TextureType::Rectangle].set(this, zeroTextureRectangle);
     }
 
     if (mSupportedExtensions.eglImageExternal || mSupportedExtensions.eglStreamConsumerExternal)
     {
-        Texture *zeroTextureExternal = new Texture(mImplementation.get(), 0, TextureType::External);
+        Texture *zeroTextureExternal =
+            new Texture(mImplementation.get(), {0}, TextureType::External);
         mZeroTextures[TextureType::External].set(this, zeroTextureExternal);
     }
 
@@ -689,7 +691,7 @@ GLuint Context::createShader(ShaderType type)
                                                       type);
 }
 
-GLuint Context::createTexture()
+TextureID Context::createTexture()
 {
     return mState.mTextureManager->createTexture();
 }
@@ -769,7 +771,7 @@ void Context::deleteProgram(GLuint program)
     mState.mShaderProgramManager->deleteProgram(this, program);
 }
 
-void Context::deleteTexture(GLuint texture)
+void Context::deleteTexture(TextureID texture)
 {
     if (mState.mTextureManager->getTexture(texture))
     {
@@ -1009,7 +1011,7 @@ gl::LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) con
         case GL_SAMPLER:
             return getSampler(name);
         case GL_TEXTURE:
-            return getTexture(name);
+            return getTexture({name});
         case GL_RENDERBUFFER:
             return getRenderbuffer({name});
         case GL_FRAMEBUFFER:
@@ -1074,11 +1076,11 @@ GLboolean Context::isSampler(GLuint samplerName)
     return mState.mSamplerManager->isSampler(samplerName);
 }
 
-void Context::bindTexture(TextureType target, GLuint handle)
+void Context::bindTexture(TextureType target, TextureID handle)
 {
     Texture *texture = nullptr;
 
-    if (handle == 0)
+    if (handle.value == 0)
     {
         texture = mZeroTextures[target].get();
     }
@@ -1140,7 +1142,7 @@ void Context::bindSampler(GLuint textureUnit, GLuint samplerHandle)
 }
 
 void Context::bindImageTexture(GLuint unit,
-                               GLuint texture,
+                               TextureID texture,
                                GLint level,
                                GLboolean layered,
                                GLint layer,
@@ -2771,7 +2773,7 @@ bool Context::isTransformFeedbackGenerated(GLuint transformFeedback)
     return mTransformFeedbackMap.contains(transformFeedback);
 }
 
-void Context::detachTexture(GLuint texture)
+void Context::detachTexture(TextureID texture)
 {
     // Simple pass-through to State's detachTexture method, as textures do not require
     // allocation map management either here or in the resource manager at detach time.
@@ -3884,13 +3886,13 @@ void Context::copyTexSubImage3D(TextureTarget target,
 void Context::framebufferTexture2D(GLenum target,
                                    GLenum attachment,
                                    TextureTarget textarget,
-                                   GLuint texture,
+                                   TextureID texture,
                                    GLint level)
 {
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         Texture *textureObj = getTexture(texture);
         ImageIndex index    = ImageIndex::MakeFromTarget(textarget, level, 1);
@@ -3907,7 +3909,7 @@ void Context::framebufferTexture2D(GLenum target,
 void Context::framebufferTexture3D(GLenum target,
                                    GLenum attachment,
                                    TextureTarget textargetPacked,
-                                   GLuint texture,
+                                   TextureID texture,
                                    GLint level,
                                    GLint zoffset)
 {
@@ -3939,14 +3941,14 @@ void Context::framebufferRenderbuffer(GLenum target,
 
 void Context::framebufferTextureLayer(GLenum target,
                                       GLenum attachment,
-                                      GLuint texture,
+                                      TextureID texture,
                                       GLint level,
                                       GLint layer)
 {
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         Texture *textureObject = getTexture(texture);
         ImageIndex index       = ImageIndex::MakeFromType(textureObject->getType(), level, layer);
@@ -3962,7 +3964,7 @@ void Context::framebufferTextureLayer(GLenum target,
 
 void Context::framebufferTextureMultiview(GLenum target,
                                           GLenum attachment,
-                                          GLuint texture,
+                                          TextureID texture,
                                           GLint level,
                                           GLint baseViewIndex,
                                           GLsizei numViews)
@@ -3970,7 +3972,7 @@ void Context::framebufferTextureMultiview(GLenum target,
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         Texture *textureObj = getTexture(texture);
 
@@ -3996,12 +3998,12 @@ void Context::framebufferTextureMultiview(GLenum target,
     mState.setObjectDirty(target);
 }
 
-void Context::framebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level)
+void Context::framebufferTexture(GLenum target, GLenum attachment, TextureID texture, GLint level)
 {
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         Texture *textureObj = getTexture(texture);
 
@@ -4393,10 +4395,10 @@ void Context::generateMipmap(TextureType target)
     ANGLE_CONTEXT_TRY(texture->generateMipmap(this));
 }
 
-void Context::copyTexture(GLuint sourceId,
+void Context::copyTexture(TextureID sourceId,
                           GLint sourceLevel,
                           TextureTarget destTarget,
-                          GLuint destId,
+                          TextureID destId,
                           GLint destLevel,
                           GLint internalFormat,
                           GLenum destType,
@@ -4414,10 +4416,10 @@ void Context::copyTexture(GLuint sourceId,
                                  ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
 }
 
-void Context::copySubTexture(GLuint sourceId,
+void Context::copySubTexture(TextureID sourceId,
                              GLint sourceLevel,
                              TextureTarget destTarget,
-                             GLuint destId,
+                             TextureID destId,
                              GLint destLevel,
                              GLint xoffset,
                              GLint yoffset,
@@ -4447,10 +4449,10 @@ void Context::copySubTexture(GLuint sourceId,
         sourceTexture));
 }
 
-void Context::copyTexture3D(GLuint sourceId,
+void Context::copyTexture3D(TextureID sourceId,
                             GLint sourceLevel,
                             TextureTarget destTarget,
-                            GLuint destId,
+                            TextureID destId,
                             GLint destLevel,
                             GLint internalFormat,
                             GLenum destType,
@@ -4468,10 +4470,10 @@ void Context::copyTexture3D(GLuint sourceId,
                                  ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
 }
 
-void Context::copySubTexture3D(GLuint sourceId,
+void Context::copySubTexture3D(TextureID sourceId,
                                GLint sourceLevel,
                                TextureTarget destTarget,
-                               GLuint destId,
+                               TextureID destId,
                                GLint destLevel,
                                GLint xoffset,
                                GLint yoffset,
@@ -4504,7 +4506,7 @@ void Context::copySubTexture3D(GLuint sourceId,
         sourceTexture));
 }
 
-void Context::compressedCopyTexture(GLuint sourceId, GLuint destId)
+void Context::compressedCopyTexture(TextureID sourceId, TextureID destId)
 {
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
@@ -5653,11 +5655,11 @@ void Context::deleteRenderbuffers(GLsizei n, const RenderbufferID *renderbuffers
     }
 }
 
-void Context::deleteTextures(GLsizei n, const GLuint *textures)
+void Context::deleteTextures(GLsizei n, const TextureID *textures)
 {
     for (int i = 0; i < n; i++)
     {
-        if (textures[i] != 0)
+        if (textures[i].value != 0)
         {
             deleteTexture(textures[i]);
         }
@@ -5699,7 +5701,7 @@ void Context::genRenderbuffers(GLsizei n, RenderbufferID *renderbuffers)
     }
 }
 
-void Context::genTextures(GLsizei n, GLuint *textures)
+void Context::genTextures(GLsizei n, TextureID *textures)
 {
     for (int i = 0; i < n; i++)
     {
@@ -6063,9 +6065,9 @@ GLboolean Context::isShader(GLuint shader)
     return ConvertToGLBoolean(getShader(shader));
 }
 
-GLboolean Context::isTexture(GLuint texture)
+GLboolean Context::isTexture(TextureID texture)
 {
-    if (texture == 0)
+    if (texture.value == 0)
     {
         return GL_FALSE;
     }
@@ -7407,7 +7409,7 @@ void Context::waitSemaphore(GLuint semaphoreHandle,
                             GLuint numBufferBarriers,
                             const BufferID *buffers,
                             GLuint numTextureBarriers,
-                            const GLuint *textures,
+                            const TextureID *textures,
                             const GLenum *srcLayouts)
 {
     Semaphore *semaphore = getSemaphore(semaphoreHandle);
@@ -7433,7 +7435,7 @@ void Context::signalSemaphore(GLuint semaphoreHandle,
                               GLuint numBufferBarriers,
                               const BufferID *buffers,
                               GLuint numTextureBarriers,
-                              const GLuint *textures,
+                              const TextureID *textures,
                               const GLenum *dstLayouts)
 {
     Semaphore *semaphore = getSemaphore(semaphoreHandle);

@@ -10,21 +10,22 @@
 #ifndef ANGLE_CONTEXT_GL_4_4_AUTOGEN_H_
 #define ANGLE_CONTEXT_GL_4_4_AUTOGEN_H_
 
-#define ANGLE_GL_4_4_CONTEXT_API                                                                   \
-    void bindBuffersBase(GLenum target, GLuint first, GLsizei count,                               \
-                         const BufferID *buffersPacked);                                           \
-    void bindBuffersRange(GLenum target, GLuint first, GLsizei count,                              \
-                          const BufferID *buffersPacked, const GLintptr *offsets,                  \
-                          const GLsizeiptr *sizes);                                                \
-    void bindImageTextures(GLuint first, GLsizei count, const GLuint *textures);                   \
-    void bindSamplers(GLuint first, GLsizei count, const GLuint *samplers);                        \
-    void bindTextures(GLuint first, GLsizei count, const GLuint *textures);                        \
-    void bindVertexBuffers(GLuint first, GLsizei count, const BufferID *buffersPacked,             \
-                           const GLintptr *offsets, const GLsizei *strides);                       \
-    void bufferStorage(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);        \
-    void clearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const void *data); \
-    void clearTexSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset,               \
-                          GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,             \
+#define ANGLE_GL_4_4_CONTEXT_API                                                              \
+    void bindBuffersBase(GLenum target, GLuint first, GLsizei count,                          \
+                         const BufferID *buffersPacked);                                      \
+    void bindBuffersRange(GLenum target, GLuint first, GLsizei count,                         \
+                          const BufferID *buffersPacked, const GLintptr *offsets,             \
+                          const GLsizeiptr *sizes);                                           \
+    void bindImageTextures(GLuint first, GLsizei count, const GLuint *textures);              \
+    void bindSamplers(GLuint first, GLsizei count, const GLuint *samplers);                   \
+    void bindTextures(GLuint first, GLsizei count, const GLuint *textures);                   \
+    void bindVertexBuffers(GLuint first, GLsizei count, const BufferID *buffersPacked,        \
+                           const GLintptr *offsets, const GLsizei *strides);                  \
+    void bufferStorage(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);   \
+    void clearTexImage(TextureID texturePacked, GLint level, GLenum format, GLenum type,      \
+                       const void *data);                                                     \
+    void clearTexSubImage(TextureID texturePacked, GLint level, GLint xoffset, GLint yoffset, \
+                          GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,        \
                           GLenum format, GLenum type, const void *data);
 
 #endif  // ANGLE_CONTEXT_API_4_4_AUTOGEN_H_

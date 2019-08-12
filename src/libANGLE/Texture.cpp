@@ -615,8 +615,8 @@ void TextureState::clearImageDescs()
     }
 }
 
-Texture::Texture(rx::GLImplFactory *factory, GLuint id, TextureType type)
-    : RefCountObject(id),
+Texture::Texture(rx::GLImplFactory *factory, TextureID id, TextureType type)
+    : RefCountObject(id.value),
       mState(type),
       mTexture(factory->createTexture(mState)),
       mImplObserver(this, rx::kTextureImageImplObserverMessageIndex),

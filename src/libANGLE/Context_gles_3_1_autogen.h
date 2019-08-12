@@ -12,7 +12,7 @@
 
 #define ANGLE_GLES_3_1_CONTEXT_API                                                                 \
     void activeShaderProgram(GLuint pipeline, GLuint program);                                     \
-    void bindImageTexture(GLuint unit, GLuint texture, GLint level, GLboolean layered,             \
+    void bindImageTexture(GLuint unit, TextureID texturePacked, GLint level, GLboolean layered,    \
                           GLint layer, GLenum access, GLenum format);                              \
     void bindProgramPipeline(GLuint pipeline);                                                     \
     void bindVertexBuffer(GLuint bindingindex, BufferID bufferPacked, GLintptr offset,             \

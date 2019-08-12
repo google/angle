@@ -392,8 +392,8 @@ void Context::endConditionalRender()
 
 void Context::framebufferTexture1D(GLenum target,
                                    GLenum attachment,
-                                   GLenum textarget,
-                                   GLuint texture,
+                                   TextureTarget textarget,
+                                   TextureID texture,
                                    GLint level)
 {
     UNIMPLEMENTED();
@@ -2855,12 +2855,12 @@ void Context::invalidateBufferSubData(BufferID buffer, GLintptr offset, GLsizeip
     UNIMPLEMENTED();
 }
 
-void Context::invalidateTexImage(GLuint texture, GLint level)
+void Context::invalidateTexImage(TextureID texture, GLint level)
 {
     UNIMPLEMENTED();
 }
 
-void Context::invalidateTexSubImage(GLuint texture,
+void Context::invalidateTexSubImage(TextureID texture,
                                     GLint level,
                                     GLint xoffset,
                                     GLint yoffset,
@@ -2905,7 +2905,7 @@ void Context::texBufferRange(GLenum target,
     UNIMPLEMENTED();
 }
 
-void Context::textureView(GLuint texture,
+void Context::textureView(TextureID texture,
                           GLenum target,
                           GLuint origtexture,
                           GLenum internalformat,
@@ -2969,7 +2969,7 @@ void Context::bufferStorage(GLenum target, GLsizeiptr size, const void *data, GL
     UNIMPLEMENTED();
 }
 
-void Context::clearTexImage(GLuint texture,
+void Context::clearTexImage(TextureID texture,
                             GLint level,
                             GLenum format,
                             GLenum type,
@@ -2978,7 +2978,7 @@ void Context::clearTexImage(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::clearTexSubImage(GLuint texture,
+void Context::clearTexSubImage(TextureID texture,
                                GLint level,
                                GLint xoffset,
                                GLint yoffset,
@@ -2993,7 +2993,7 @@ void Context::clearTexSubImage(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::bindTextureUnit(GLuint unit, GLuint texture)
+void Context::bindTextureUnit(GLuint unit, TextureID texture)
 {
     UNIMPLEMENTED();
 }
@@ -3078,7 +3078,7 @@ void Context::clipControl(GLenum origin, GLenum depth)
     UNIMPLEMENTED();
 }
 
-void Context::compressedTextureSubImage1D(GLuint texture,
+void Context::compressedTextureSubImage1D(TextureID texture,
                                           GLint level,
                                           GLint xoffset,
                                           GLsizei width,
@@ -3089,7 +3089,7 @@ void Context::compressedTextureSubImage1D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::compressedTextureSubImage2D(GLuint texture,
+void Context::compressedTextureSubImage2D(TextureID texture,
                                           GLint level,
                                           GLint xoffset,
                                           GLint yoffset,
@@ -3102,7 +3102,7 @@ void Context::compressedTextureSubImage2D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::compressedTextureSubImage3D(GLuint texture,
+void Context::compressedTextureSubImage3D(TextureID texture,
                                           GLint level,
                                           GLint xoffset,
                                           GLint yoffset,
@@ -3126,7 +3126,7 @@ void Context::copyNamedBufferSubData(GLuint readBuffer,
     UNIMPLEMENTED();
 }
 
-void Context::copyTextureSubImage1D(GLuint texture,
+void Context::copyTextureSubImage1D(TextureID texture,
                                     GLint level,
                                     GLint xoffset,
                                     GLint x,
@@ -3136,7 +3136,7 @@ void Context::copyTextureSubImage1D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::copyTextureSubImage2D(GLuint texture,
+void Context::copyTextureSubImage2D(TextureID texture,
                                     GLint level,
                                     GLint xoffset,
                                     GLint yoffset,
@@ -3148,7 +3148,7 @@ void Context::copyTextureSubImage2D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::copyTextureSubImage3D(GLuint texture,
+void Context::copyTextureSubImage3D(TextureID texture,
                                     GLint level,
                                     GLint xoffset,
                                     GLint yoffset,
@@ -3221,17 +3221,20 @@ void Context::flushMappedNamedBufferRange(BufferID buffer, GLintptr offset, GLsi
     UNIMPLEMENTED();
 }
 
-void Context::generateTextureMipmap(GLuint texture)
+void Context::generateTextureMipmap(TextureID texture)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getCompressedTextureImage(GLuint texture, GLint level, GLsizei bufSize, void *pixels)
+void Context::getCompressedTextureImage(TextureID texture,
+                                        GLint level,
+                                        GLsizei bufSize,
+                                        void *pixels)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getCompressedTextureSubImage(GLuint texture,
+void Context::getCompressedTextureSubImage(TextureID texture,
                                            GLint level,
                                            GLint xoffset,
                                            GLint yoffset,
@@ -3305,7 +3308,7 @@ void Context::getQueryBufferObjectuiv(GLuint id, BufferID buffer, GLenum pname, 
     UNIMPLEMENTED();
 }
 
-void Context::getTextureImage(GLuint texture,
+void Context::getTextureImage(TextureID texture,
                               GLint level,
                               GLenum format,
                               GLenum type,
@@ -3315,37 +3318,43 @@ void Context::getTextureImage(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::getTextureLevelParameterfv(GLuint texture, GLint level, GLenum pname, GLfloat *params)
+void Context::getTextureLevelParameterfv(TextureID texture,
+                                         GLint level,
+                                         GLenum pname,
+                                         GLfloat *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getTextureLevelParameteriv(GLuint texture, GLint level, GLenum pname, GLint *params)
+void Context::getTextureLevelParameteriv(TextureID texture,
+                                         GLint level,
+                                         GLenum pname,
+                                         GLint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getTextureParameterIiv(GLuint texture, GLenum pname, GLint *params)
+void Context::getTextureParameterIiv(TextureID texture, GLenum pname, GLint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getTextureParameterIuiv(GLuint texture, GLenum pname, GLuint *params)
+void Context::getTextureParameterIuiv(TextureID texture, GLenum pname, GLuint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getTextureParameterfv(GLuint texture, GLenum pname, GLfloat *params)
+void Context::getTextureParameterfv(TextureID texture, GLenum pname, GLfloat *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getTextureParameteriv(GLuint texture, GLenum pname, GLint *params)
+void Context::getTextureParameteriv(TextureID texture, GLenum pname, GLint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getTextureSubImage(GLuint texture,
+void Context::getTextureSubImage(TextureID texture,
                                  GLint level,
                                  GLint xoffset,
                                  GLint yoffset,
@@ -3585,7 +3594,7 @@ void Context::namedFramebufferRenderbuffer(GLuint framebuffer,
 
 void Context::namedFramebufferTexture(GLuint framebuffer,
                                       GLenum attachment,
-                                      GLuint texture,
+                                      TextureID texture,
                                       GLint level)
 {
     UNIMPLEMENTED();
@@ -3593,7 +3602,7 @@ void Context::namedFramebufferTexture(GLuint framebuffer,
 
 void Context::namedFramebufferTextureLayer(GLuint framebuffer,
                                            GLenum attachment,
-                                           GLuint texture,
+                                           TextureID texture,
                                            GLint level,
                                            GLint layer)
 {
@@ -3622,12 +3631,12 @@ void Context::textureBarrier()
     UNIMPLEMENTED();
 }
 
-void Context::textureBuffer(GLuint texture, GLenum internalformat, BufferID buffer)
+void Context::textureBuffer(TextureID texture, GLenum internalformat, BufferID buffer)
 {
     UNIMPLEMENTED();
 }
 
-void Context::textureBufferRange(GLuint texture,
+void Context::textureBufferRange(TextureID texture,
                                  GLenum internalformat,
                                  BufferID buffer,
                                  GLintptr offset,
@@ -3636,42 +3645,45 @@ void Context::textureBufferRange(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::textureParameterIiv(GLuint texture, GLenum pname, const GLint *params)
+void Context::textureParameterIiv(TextureID texture, GLenum pname, const GLint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::textureParameterIuiv(GLuint texture, GLenum pname, const GLuint *params)
+void Context::textureParameterIuiv(TextureID texture, GLenum pname, const GLuint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::textureParameterf(GLuint texture, GLenum pname, GLfloat param)
+void Context::textureParameterf(TextureID texture, GLenum pname, GLfloat param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::textureParameterfv(GLuint texture, GLenum pname, const GLfloat *param)
+void Context::textureParameterfv(TextureID texture, GLenum pname, const GLfloat *param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::textureParameteri(GLuint texture, GLenum pname, GLint param)
+void Context::textureParameteri(TextureID texture, GLenum pname, GLint param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::textureParameteriv(GLuint texture, GLenum pname, const GLint *param)
+void Context::textureParameteriv(TextureID texture, GLenum pname, const GLint *param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::textureStorage1D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width)
+void Context::textureStorage1D(TextureID texture,
+                               GLsizei levels,
+                               GLenum internalformat,
+                               GLsizei width)
 {
     UNIMPLEMENTED();
 }
 
-void Context::textureStorage2D(GLuint texture,
+void Context::textureStorage2D(TextureID texture,
                                GLsizei levels,
                                GLenum internalformat,
                                GLsizei width,
@@ -3680,7 +3692,7 @@ void Context::textureStorage2D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::textureStorage2DMultisample(GLuint texture,
+void Context::textureStorage2DMultisample(TextureID texture,
                                           GLsizei samples,
                                           GLenum internalformat,
                                           GLsizei width,
@@ -3690,7 +3702,7 @@ void Context::textureStorage2DMultisample(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::textureStorage3D(GLuint texture,
+void Context::textureStorage3D(TextureID texture,
                                GLsizei levels,
                                GLenum internalformat,
                                GLsizei width,
@@ -3700,7 +3712,7 @@ void Context::textureStorage3D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::textureStorage3DMultisample(GLuint texture,
+void Context::textureStorage3DMultisample(TextureID texture,
                                           GLsizei samples,
                                           GLenum internalformat,
                                           GLsizei width,
@@ -3711,7 +3723,7 @@ void Context::textureStorage3DMultisample(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::textureSubImage1D(GLuint texture,
+void Context::textureSubImage1D(TextureID texture,
                                 GLint level,
                                 GLint xoffset,
                                 GLsizei width,
@@ -3722,7 +3734,7 @@ void Context::textureSubImage1D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::textureSubImage2D(GLuint texture,
+void Context::textureSubImage2D(TextureID texture,
                                 GLint level,
                                 GLint xoffset,
                                 GLint yoffset,
@@ -3735,7 +3747,7 @@ void Context::textureSubImage2D(GLuint texture,
     UNIMPLEMENTED();
 }
 
-void Context::textureSubImage3D(GLuint texture,
+void Context::textureSubImage3D(TextureID texture,
                                 GLint level,
                                 GLint xoffset,
                                 GLint yoffset,

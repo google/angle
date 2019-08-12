@@ -196,14 +196,16 @@ void GL_APIENTRY FramebufferTexture(GLenum target, GLenum attachment, GLuint tex
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        TextureID texturePacked = FromGL<TextureID>(texture);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateFramebufferTexture(context, target, attachment, texture, level));
+             ValidateFramebufferTexture(context, target, attachment, texturePacked, level));
         if (isCallValid)
         {
-            context->framebufferTexture(target, attachment, texture, level);
+            context->framebufferTexture(target, attachment, texturePacked, level);
         }
-        ANGLE_CAPTURE(FramebufferTexture, isCallValid, context, target, attachment, texture, level);
+        ANGLE_CAPTURE(FramebufferTexture, isCallValid, context, target, attachment, texturePacked,
+                      level);
     }
 }
 

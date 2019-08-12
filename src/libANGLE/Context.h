@@ -347,14 +347,14 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // These create  and destroy methods are merely pass-throughs to
     // ResourceManager, which owns these object types
     BufferID createBuffer();
-    GLuint createTexture();
+    TextureID createTexture();
     RenderbufferID createRenderbuffer();
     GLuint createProgramPipeline();
     GLuint createMemoryObject();
     GLuint createSemaphore();
 
     void deleteBuffer(BufferID buffer);
-    void deleteTexture(GLuint texture);
+    void deleteTexture(TextureID texture);
     void deleteRenderbuffer(RenderbufferID renderbuffer);
     void deleteProgramPipeline(GLuint pipeline);
     void deleteMemoryObject(GLuint memoryObject);
@@ -369,7 +369,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Buffer *getBuffer(BufferID handle) const;
     FenceNV *getFenceNV(GLuint handle);
     Sync *getSync(GLsync handle) const;
-    ANGLE_INLINE Texture *getTexture(GLuint handle) const
+    ANGLE_INLINE Texture *getTexture(TextureID handle) const
     {
         return mState.mTextureManager->getTexture(handle);
     }
@@ -517,7 +517,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Program *getProgramNoResolveLink(GLuint handle) const;
     Shader *getShader(GLuint handle) const;
 
-    ANGLE_INLINE bool isTextureGenerated(GLuint texture) const
+    ANGLE_INLINE bool isTextureGenerated(TextureID texture) const
     {
         return mState.mTextureManager->isHandleGenerated(texture);
     }
@@ -587,7 +587,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::Result onProgramLink(Program *programObject);
 
     void detachBuffer(Buffer *buffer);
-    void detachTexture(GLuint texture);
+    void detachTexture(TextureID texture);
     void detachFramebuffer(GLuint framebuffer);
     void detachRenderbuffer(RenderbufferID renderbuffer);
     void detachVertexArray(GLuint vertexArray);

@@ -50,7 +50,7 @@ class VulkanUniformUpdatesTest : public ANGLETest
     {
         // Hack the angle!
         const gl::Context *context = static_cast<gl::Context *>(getEGLWindow()->getContext());
-        const gl::Texture *texture = context->getTexture(handle);
+        const gl::Texture *texture = context->getTexture({handle});
         return rx::vk::GetImpl(texture);
     }
 

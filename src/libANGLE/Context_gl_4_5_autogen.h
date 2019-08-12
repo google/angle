@@ -11,7 +11,7 @@
 #define ANGLE_CONTEXT_GL_4_5_AUTOGEN_H_
 
 #define ANGLE_GL_4_5_CONTEXT_API                                                                   \
-    void bindTextureUnit(GLuint unit, GLuint texture);                                             \
+    void bindTextureUnit(GLuint unit, TextureID texturePacked);                                    \
     void blitNamedFramebuffer(GLuint readFramebuffer, GLuint drawFramebuffer, GLint srcX0,         \
                               GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0,     \
                               GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);           \
@@ -29,21 +29,23 @@
     void clearNamedFramebufferuiv(GLuint framebuffer, GLenum buffer, GLint drawbuffer,             \
                                   const GLuint *value);                                            \
     void clipControl(GLenum origin, GLenum depth);                                                 \
-    void compressedTextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLsizei width,    \
-                                     GLenum format, GLsizei imageSize, const void *data);          \
-    void compressedTextureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset,    \
-                                     GLsizei width, GLsizei height, GLenum format,                 \
+    void compressedTextureSubImage1D(TextureID texturePacked, GLint level, GLint xoffset,          \
+                                     GLsizei width, GLenum format, GLsizei imageSize,              \
+                                     const void *data);                                            \
+    void compressedTextureSubImage2D(TextureID texturePacked, GLint level, GLint xoffset,          \
+                                     GLint yoffset, GLsizei width, GLsizei height, GLenum format,  \
                                      GLsizei imageSize, const void *data);                         \
-    void compressedTextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset,    \
-                                     GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,  \
-                                     GLenum format, GLsizei imageSize, const void *data);          \
+    void compressedTextureSubImage3D(TextureID texturePacked, GLint level, GLint xoffset,          \
+                                     GLint yoffset, GLint zoffset, GLsizei width, GLsizei height,  \
+                                     GLsizei depth, GLenum format, GLsizei imageSize,              \
+                                     const void *data);                                            \
     void copyNamedBufferSubData(GLuint readBuffer, GLuint writeBuffer, GLintptr readOffset,        \
                                 GLintptr writeOffset, GLsizeiptr size);                            \
-    void copyTextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLint x, GLint y,       \
-                               GLsizei width);                                                     \
-    void copyTextureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint x, \
-                               GLint y, GLsizei width, GLsizei height);                            \
-    void copyTextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset,          \
+    void copyTextureSubImage1D(TextureID texturePacked, GLint level, GLint xoffset, GLint x,       \
+                               GLint y, GLsizei width);                                            \
+    void copyTextureSubImage2D(TextureID texturePacked, GLint level, GLint xoffset, GLint yoffset, \
+                               GLint x, GLint y, GLsizei width, GLsizei height);                   \
+    void copyTextureSubImage3D(TextureID texturePacked, GLint level, GLint xoffset, GLint yoffset, \
                                GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);    \
     void createBuffers(GLsizei n, BufferID *buffersPacked);                                        \
     void createFramebuffers(GLsizei n, GLuint *framebuffers);                                      \
@@ -57,11 +59,12 @@
     void disableVertexArrayAttrib(GLuint vaobj, GLuint index);                                     \
     void enableVertexArrayAttrib(GLuint vaobj, GLuint index);                                      \
     void flushMappedNamedBufferRange(BufferID bufferPacked, GLintptr offset, GLsizeiptr length);   \
-    void generateTextureMipmap(GLuint texture);                                                    \
-    void getCompressedTextureImage(GLuint texture, GLint level, GLsizei bufSize, void *pixels);    \
-    void getCompressedTextureSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset,   \
-                                      GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, \
-                                      GLsizei bufSize, void *pixels);                              \
+    void generateTextureMipmap(TextureID texturePacked);                                           \
+    void getCompressedTextureImage(TextureID texturePacked, GLint level, GLsizei bufSize,          \
+                                   void *pixels);                                                  \
+    void getCompressedTextureSubImage(TextureID texturePacked, GLint level, GLint xoffset,         \
+                                      GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, \
+                                      GLsizei depth, GLsizei bufSize, void *pixels);               \
     void getNamedBufferParameteri64v(BufferID bufferPacked, GLenum pname, GLint64 *params);        \
     void getNamedBufferParameteriv(BufferID bufferPacked, GLenum pname, GLint *params);            \
     void getNamedBufferPointerv(BufferID bufferPacked, GLenum pname, void **params);               \
@@ -78,15 +81,17 @@
     void getQueryBufferObjectui64v(GLuint id, BufferID bufferPacked, GLenum pname,                 \
                                    GLintptr offset);                                               \
     void getQueryBufferObjectuiv(GLuint id, BufferID bufferPacked, GLenum pname, GLintptr offset); \
-    void getTextureImage(GLuint texture, GLint level, GLenum format, GLenum type, GLsizei bufSize, \
-                         void *pixels);                                                            \
-    void getTextureLevelParameterfv(GLuint texture, GLint level, GLenum pname, GLfloat *params);   \
-    void getTextureLevelParameteriv(GLuint texture, GLint level, GLenum pname, GLint *params);     \
-    void getTextureParameterIiv(GLuint texture, GLenum pname, GLint *params);                      \
-    void getTextureParameterIuiv(GLuint texture, GLenum pname, GLuint *params);                    \
-    void getTextureParameterfv(GLuint texture, GLenum pname, GLfloat *params);                     \
-    void getTextureParameteriv(GLuint texture, GLenum pname, GLint *params);                       \
-    void getTextureSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset,             \
+    void getTextureImage(TextureID texturePacked, GLint level, GLenum format, GLenum type,         \
+                         GLsizei bufSize, void *pixels);                                           \
+    void getTextureLevelParameterfv(TextureID texturePacked, GLint level, GLenum pname,            \
+                                    GLfloat *params);                                              \
+    void getTextureLevelParameteriv(TextureID texturePacked, GLint level, GLenum pname,            \
+                                    GLint *params);                                                \
+    void getTextureParameterIiv(TextureID texturePacked, GLenum pname, GLint *params);             \
+    void getTextureParameterIuiv(TextureID texturePacked, GLenum pname, GLuint *params);           \
+    void getTextureParameterfv(TextureID texturePacked, GLenum pname, GLfloat *params);            \
+    void getTextureParameteriv(TextureID texturePacked, GLenum pname, GLint *params);              \
+    void getTextureSubImage(TextureID texturePacked, GLint level, GLint xoffset, GLint yoffset,    \
                             GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,           \
                             GLenum format, GLenum type, GLsizei bufSize, void *pixels);            \
     void getTransformFeedbacki64_v(GLuint xfb, GLenum pname, GLuint index, GLint64 *param);        \
@@ -136,42 +141,43 @@
     void namedFramebufferRenderbuffer(GLuint framebuffer, GLenum attachment,                       \
                                       GLenum renderbuffertarget,                                   \
                                       RenderbufferID renderbufferPacked);                          \
-    void namedFramebufferTexture(GLuint framebuffer, GLenum attachment, GLuint texture,            \
+    void namedFramebufferTexture(GLuint framebuffer, GLenum attachment, TextureID texturePacked,   \
                                  GLint level);                                                     \
-    void namedFramebufferTextureLayer(GLuint framebuffer, GLenum attachment, GLuint texture,       \
-                                      GLint level, GLint layer);                                   \
+    void namedFramebufferTextureLayer(GLuint framebuffer, GLenum attachment,                       \
+                                      TextureID texturePacked, GLint level, GLint layer);          \
     void namedRenderbufferStorage(RenderbufferID renderbufferPacked, GLenum internalformat,        \
                                   GLsizei width, GLsizei height);                                  \
     void namedRenderbufferStorageMultisample(RenderbufferID renderbufferPacked, GLsizei samples,   \
                                              GLenum internalformat, GLsizei width,                 \
                                              GLsizei height);                                      \
     void textureBarrier();                                                                         \
-    void textureBuffer(GLuint texture, GLenum internalformat, BufferID bufferPacked);              \
-    void textureBufferRange(GLuint texture, GLenum internalformat, BufferID bufferPacked,          \
+    void textureBuffer(TextureID texturePacked, GLenum internalformat, BufferID bufferPacked);     \
+    void textureBufferRange(TextureID texturePacked, GLenum internalformat, BufferID bufferPacked, \
                             GLintptr offset, GLsizeiptr size);                                     \
-    void textureParameterIiv(GLuint texture, GLenum pname, const GLint *params);                   \
-    void textureParameterIuiv(GLuint texture, GLenum pname, const GLuint *params);                 \
-    void textureParameterf(GLuint texture, GLenum pname, GLfloat param);                           \
-    void textureParameterfv(GLuint texture, GLenum pname, const GLfloat *param);                   \
-    void textureParameteri(GLuint texture, GLenum pname, GLint param);                             \
-    void textureParameteriv(GLuint texture, GLenum pname, const GLint *param);                     \
-    void textureStorage1D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width);   \
-    void textureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width,    \
-                          GLsizei height);                                                         \
-    void textureStorage2DMultisample(GLuint texture, GLsizei samples, GLenum internalformat,       \
-                                     GLsizei width, GLsizei height,                                \
+    void textureParameterIiv(TextureID texturePacked, GLenum pname, const GLint *params);          \
+    void textureParameterIuiv(TextureID texturePacked, GLenum pname, const GLuint *params);        \
+    void textureParameterf(TextureID texturePacked, GLenum pname, GLfloat param);                  \
+    void textureParameterfv(TextureID texturePacked, GLenum pname, const GLfloat *param);          \
+    void textureParameteri(TextureID texturePacked, GLenum pname, GLint param);                    \
+    void textureParameteriv(TextureID texturePacked, GLenum pname, const GLint *param);            \
+    void textureStorage1D(TextureID texturePacked, GLsizei levels, GLenum internalformat,          \
+                          GLsizei width);                                                          \
+    void textureStorage2D(TextureID texturePacked, GLsizei levels, GLenum internalformat,          \
+                          GLsizei width, GLsizei height);                                          \
+    void textureStorage2DMultisample(TextureID texturePacked, GLsizei samples,                     \
+                                     GLenum internalformat, GLsizei width, GLsizei height,         \
                                      GLboolean fixedsamplelocations);                              \
-    void textureStorage3D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width,    \
-                          GLsizei height, GLsizei depth);                                          \
-    void textureStorage3DMultisample(GLuint texture, GLsizei samples, GLenum internalformat,       \
-                                     GLsizei width, GLsizei height, GLsizei depth,                 \
-                                     GLboolean fixedsamplelocations);                              \
-    void textureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLsizei width,              \
+    void textureStorage3D(TextureID texturePacked, GLsizei levels, GLenum internalformat,          \
+                          GLsizei width, GLsizei height, GLsizei depth);                           \
+    void textureStorage3DMultisample(TextureID texturePacked, GLsizei samples,                     \
+                                     GLenum internalformat, GLsizei width, GLsizei height,         \
+                                     GLsizei depth, GLboolean fixedsamplelocations);               \
+    void textureSubImage1D(TextureID texturePacked, GLint level, GLint xoffset, GLsizei width,     \
                            GLenum format, GLenum type, const void *pixels);                        \
-    void textureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset,              \
+    void textureSubImage2D(TextureID texturePacked, GLint level, GLint xoffset, GLint yoffset,     \
                            GLsizei width, GLsizei height, GLenum format, GLenum type,              \
                            const void *pixels);                                                    \
-    void textureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset,              \
+    void textureSubImage3D(TextureID texturePacked, GLint level, GLint xoffset, GLint yoffset,     \
                            GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,            \
                            GLenum format, GLenum type, const void *pixels);                        \
     void transformFeedbackBufferBase(GLuint xfb, GLuint index, BufferID bufferPacked);             \

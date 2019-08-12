@@ -1520,7 +1520,7 @@ bool ValidateFramebufferTexture2DOES(Context *context,
                                      GLenum target,
                                      GLenum attachment,
                                      TextureTarget textarget,
-                                     GLuint texture,
+                                     TextureID texture,
                                      GLint level)
 {
     UNIMPLEMENTED();

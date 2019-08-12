@@ -124,7 +124,7 @@ ANGLE_INLINE bool ValidateVertexAttribPointer(Context *context,
 
 void RecordBindTextureTypeError(Context *context, TextureType target);
 
-ANGLE_INLINE bool ValidateBindTexture(Context *context, TextureType target, GLuint texture)
+ANGLE_INLINE bool ValidateBindTexture(Context *context, TextureType target, TextureID texture)
 {
     if (!context->getStateCache().isValidBindTextureType(target))
     {
@@ -132,7 +132,7 @@ ANGLE_INLINE bool ValidateBindTexture(Context *context, TextureType target, GLui
         return false;
     }
 
-    if (texture == 0)
+    if (texture.value == 0)
     {
         return true;
     }

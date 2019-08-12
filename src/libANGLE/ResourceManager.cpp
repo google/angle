@@ -104,7 +104,7 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::del
 template class ResourceManagerBase<HandleAllocator>;
 template class ResourceManagerBase<HandleRangeAllocator>;
 template class TypedResourceManager<Buffer, HandleAllocator, BufferManager, BufferID>;
-template class TypedResourceManager<Texture, HandleAllocator, TextureManager, GLuint>;
+template class TypedResourceManager<Texture, HandleAllocator, TextureManager, TextureID>;
 template class TypedResourceManager<Renderbuffer,
                                     HandleAllocator,
                                     RenderbufferManager,
@@ -226,7 +226,7 @@ void ShaderProgramManager::deleteObject(const Context *context,
 
 // static
 Texture *TextureManager::AllocateNewObject(rx::GLImplFactory *factory,
-                                           GLuint handle,
+                                           TextureID handle,
                                            TextureType type)
 {
     Texture *texture = new Texture(factory, handle, type);
@@ -240,7 +240,7 @@ void TextureManager::DeleteObject(const Context *context, Texture *texture)
     texture->release(context);
 }
 
-GLuint TextureManager::createTexture()
+TextureID TextureManager::createTexture()
 {
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }

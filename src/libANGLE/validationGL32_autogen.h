@@ -41,7 +41,7 @@ bool ValidateDrawRangeElementsBaseVertex(Context *context,
 bool ValidateFramebufferTexture(Context *context,
                                 GLenum target,
                                 GLenum attachment,
-                                GLuint texture,
+                                TextureID texturePacked,
                                 GLint level);
 bool ValidateMultiDrawElementsBaseVertex(Context *context,
                                          GLenum mode,

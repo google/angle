@@ -19,10 +19,10 @@ class Context;
 
 // GL_ANGLE_copy_texture_3d
 bool ValidateCopyTexture3DANGLE(Context *context,
-                                GLuint sourceId,
+                                TextureID sourceIdPacked,
                                 GLint sourceLevel,
                                 TextureTarget destTargetPacked,
-                                GLuint destId,
+                                TextureID destIdPacked,
                                 GLint destLevel,
                                 GLint internalFormat,
                                 GLenum destType,
@@ -30,10 +30,10 @@ bool ValidateCopyTexture3DANGLE(Context *context,
                                 GLboolean unpackPremultiplyAlpha,
                                 GLboolean unpackUnmultiplyAlpha);
 bool ValidateCopySubTexture3DANGLE(Context *context,
-                                   GLuint sourceId,
+                                   TextureID sourceIdPacked,
                                    GLint sourceLevel,
                                    TextureTarget destTargetPacked,
-                                   GLuint destId,
+                                   TextureID destIdPacked,
                                    GLint destLevel,
                                    GLint xoffset,
                                    GLint yoffset,
@@ -597,14 +597,16 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
                                          const GLchar *name);
 
 // GL_CHROMIUM_copy_compressed_texture
-bool ValidateCompressedCopyTextureCHROMIUM(Context *context, GLuint sourceId, GLuint destId);
+bool ValidateCompressedCopyTextureCHROMIUM(Context *context,
+                                           TextureID sourceIdPacked,
+                                           TextureID destIdPacked);
 
 // GL_CHROMIUM_copy_texture
 bool ValidateCopyTextureCHROMIUM(Context *context,
-                                 GLuint sourceId,
+                                 TextureID sourceIdPacked,
                                  GLint sourceLevel,
                                  TextureTarget destTargetPacked,
-                                 GLuint destId,
+                                 TextureID destIdPacked,
                                  GLint destLevel,
                                  GLint internalFormat,
                                  GLenum destType,
@@ -612,10 +614,10 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
                                  GLboolean unpackPremultiplyAlpha,
                                  GLboolean unpackUnmultiplyAlpha);
 bool ValidateCopySubTextureCHROMIUM(Context *context,
-                                    GLuint sourceId,
+                                    TextureID sourceIdPacked,
                                     GLint sourceLevel,
                                     TextureTarget destTargetPacked,
-                                    GLuint destId,
+                                    TextureID destIdPacked,
                                     GLint destLevel,
                                     GLint xoffset,
                                     GLint yoffset,
@@ -782,7 +784,7 @@ bool ValidateDrawBuffersEXT(Context *context, GLsizei n, const GLenum *bufs);
 bool ValidateFramebufferTextureEXT(Context *context,
                                    GLenum target,
                                    GLenum attachment,
-                                   GLuint texture,
+                                   TextureID texturePacked,
                                    GLint level);
 
 // GL_EXT_instanced_arrays
@@ -914,14 +916,14 @@ bool ValidateSignalSemaphoreEXT(Context *context,
                                 GLuint numBufferBarriers,
                                 const BufferID *buffersPacked,
                                 GLuint numTextureBarriers,
-                                const GLuint *textures,
+                                const TextureID *texturesPacked,
                                 const GLenum *dstLayouts);
 bool ValidateWaitSemaphoreEXT(Context *context,
                               GLuint semaphore,
                               GLuint numBufferBarriers,
                               const BufferID *buffersPacked,
                               GLuint numTextureBarriers,
-                              const GLuint *textures,
+                              const TextureID *texturesPacked,
                               const GLenum *srcLayouts);
 
 // GL_EXT_semaphore_fd
@@ -1069,7 +1071,7 @@ bool ValidateFramebufferTexture2DOES(Context *context,
                                      GLenum target,
                                      GLenum attachment,
                                      TextureTarget textargetPacked,
-                                     GLuint texture,
+                                     TextureID texturePacked,
                                      GLint level);
 bool ValidateGenFramebuffersOES(Context *context, GLsizei n, GLuint *framebuffers);
 bool ValidateGenRenderbuffersOES(Context *context, GLsizei n, RenderbufferID *renderbuffersPacked);
@@ -1172,7 +1174,7 @@ bool ValidateFramebufferTexture3DOES(Context *context,
                                      GLenum target,
                                      GLenum attachment,
                                      TextureTarget textargetPacked,
-                                     GLuint texture,
+                                     TextureID texturePacked,
                                      GLint level,
                                      GLint zoffset);
 bool ValidateTexImage3DOES(Context *context,
@@ -1264,7 +1266,7 @@ bool ValidateIsVertexArrayOES(Context *context, GLuint array);
 bool ValidateFramebufferTextureMultiviewOVR(Context *context,
                                             GLenum target,
                                             GLenum attachment,
-                                            GLuint texture,
+                                            TextureID texturePacked,
                                             GLint level,
                                             GLint baseViewIndex,
                                             GLsizei numViews);

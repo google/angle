@@ -56,8 +56,8 @@ bool ValidateEndConditionalRender(Context *context)
 bool ValidateFramebufferTexture1D(Context *context,
                                   GLenum target,
                                   GLenum attachment,
-                                  GLenum textarget,
-                                  GLuint texture,
+                                  TextureTarget textargetPacked,
+                                  TextureID texture,
                                   GLint level)
 {
     return true;
@@ -67,7 +67,7 @@ bool ValidateFramebufferTexture3D(Context *context,
                                   GLenum target,
                                   GLenum attachment,
                                   TextureTarget textargetPacked,
-                                  GLuint texture,
+                                  TextureID texture,
                                   GLint level,
                                   GLint zoffset)
 {

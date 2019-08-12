@@ -47,15 +47,15 @@
     /* ANGLE Extensions */                                                                         \
                                                                                                    \
     /* GL_ANGLE_copy_texture_3d */                                                                 \
-    void copyTexture3D(GLuint sourceId, GLint sourceLevel, TextureTarget destTargetPacked,         \
-                       GLuint destId, GLint destLevel, GLint internalFormat, GLenum destType,      \
-                       GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha,                    \
-                       GLboolean unpackUnmultiplyAlpha);                                           \
-    void copySubTexture3D(GLuint sourceId, GLint sourceLevel, TextureTarget destTargetPacked,      \
-                          GLuint destId, GLint destLevel, GLint xoffset, GLint yoffset,            \
-                          GLint zoffset, GLint x, GLint y, GLint z, GLint width, GLint height,     \
-                          GLint depth, GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha,    \
-                          GLboolean unpackUnmultiplyAlpha);                                        \
+    void copyTexture3D(TextureID sourceIdPacked, GLint sourceLevel,                                \
+                       TextureTarget destTargetPacked, TextureID destIdPacked, GLint destLevel,    \
+                       GLint internalFormat, GLenum destType, GLboolean unpackFlipY,               \
+                       GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);         \
+    void copySubTexture3D(TextureID sourceIdPacked, GLint sourceLevel,                             \
+                          TextureTarget destTargetPacked, TextureID destIdPacked, GLint destLevel, \
+                          GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLint z,  \
+                          GLint width, GLint height, GLint depth, GLboolean unpackFlipY,           \
+                          GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);      \
     /* GL_ANGLE_request_extension */                                                               \
     void requestExtension(const GLchar *name);                                                     \
     /* GL_ANGLE_robust_client_memory */                                                            \
@@ -205,16 +205,17 @@
     /* GL_CHROMIUM_bind_uniform_location */                                                        \
     void bindUniformLocation(GLuint program, GLint location, const GLchar *name);                  \
     /* GL_CHROMIUM_copy_compressed_texture */                                                      \
-    void compressedCopyTexture(GLuint sourceId, GLuint destId);                                    \
+    void compressedCopyTexture(TextureID sourceIdPacked, TextureID destIdPacked);                  \
     /* GL_CHROMIUM_copy_texture */                                                                 \
-    void copyTexture(GLuint sourceId, GLint sourceLevel, TextureTarget destTargetPacked,           \
-                     GLuint destId, GLint destLevel, GLint internalFormat, GLenum destType,        \
-                     GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha,                      \
+    void copyTexture(TextureID sourceIdPacked, GLint sourceLevel, TextureTarget destTargetPacked,  \
+                     TextureID destIdPacked, GLint destLevel, GLint internalFormat,                \
+                     GLenum destType, GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha,     \
                      GLboolean unpackUnmultiplyAlpha);                                             \
-    void copySubTexture(GLuint sourceId, GLint sourceLevel, TextureTarget destTargetPacked,        \
-                        GLuint destId, GLint destLevel, GLint xoffset, GLint yoffset, GLint x,     \
-                        GLint y, GLint width, GLint height, GLboolean unpackFlipY,                 \
-                        GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);        \
+    void copySubTexture(TextureID sourceIdPacked, GLint sourceLevel,                               \
+                        TextureTarget destTargetPacked, TextureID destIdPacked, GLint destLevel,   \
+                        GLint xoffset, GLint yoffset, GLint x, GLint y, GLint width, GLint height, \
+                        GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha,                   \
+                        GLboolean unpackUnmultiplyAlpha);                                          \
     /* GL_CHROMIUM_framebuffer_mixed_samples */                                                    \
     void coverageModulation(GLenum components);                                                    \
     void matrixLoadf(GLenum matrixMode, const GLfloat *matrix);                                    \
@@ -305,7 +306,8 @@
     void queryCounter(GLuint id, QueryType targetPacked);                                          \
     /* GL_EXT_draw_buffers */                                                                      \
     /* GL_EXT_geometry_shader */                                                                   \
-    void framebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level);        \
+    void framebufferTexture(GLenum target, GLenum attachment, TextureID texturePacked,             \
+                            GLint level);                                                          \
     /* GL_EXT_instanced_arrays */                                                                  \
     /* GL_EXT_map_buffer_range */                                                                  \
     /* GL_EXT_memory_object */                                                                     \
@@ -347,9 +349,9 @@
     void semaphoreParameterui64v(GLuint semaphore, GLenum pname, const GLuint64 *params);          \
     void signalSemaphore(GLuint semaphore, GLuint numBufferBarriers,                               \
                          const BufferID *buffersPacked, GLuint numTextureBarriers,                 \
-                         const GLuint *textures, const GLenum *dstLayouts);                        \
+                         const TextureID *texturesPacked, const GLenum *dstLayouts);               \
     void waitSemaphore(GLuint semaphore, GLuint numBufferBarriers, const BufferID *buffersPacked,  \
-                       GLuint numTextureBarriers, const GLuint *textures,                          \
+                       GLuint numTextureBarriers, const TextureID *texturesPacked,                 \
                        const GLenum *srcLayouts);                                                  \
     /* GL_EXT_semaphore_fd */                                                                      \
     void importSemaphoreFd(GLuint semaphore, HandleType handleTypePacked, GLint fd);               \
@@ -389,7 +391,7 @@
     void *mapBuffer(BufferBinding targetPacked, GLenum access);                                    \
     /* GL_OES_texture_3D */                                                                        \
     void framebufferTexture3D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
-                              GLuint texture, GLint level, GLint zoffset);                         \
+                              TextureID texturePacked, GLint level, GLint zoffset);                \
     /* GL_OES_texture_border_clamp */                                                              \
     void getSamplerParameterIiv(GLuint sampler, GLenum pname, GLint *params);                      \
     void getSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint *params);                    \
@@ -405,7 +407,7 @@
                                  GLboolean fixedsamplelocations);                                  \
     /* GL_OES_vertex_array_object */                                                               \
     /* GL_OVR_multiview */                                                                         \
-    void framebufferTextureMultiview(GLenum target, GLenum attachment, GLuint texture,             \
+    void framebufferTextureMultiview(GLenum target, GLenum attachment, TextureID texturePacked,    \
                                      GLint level, GLint baseViewIndex, GLsizei numViews);          \
     /* GL_OVR_multiview2 */
 

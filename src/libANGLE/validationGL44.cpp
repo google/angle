@@ -69,7 +69,7 @@ bool ValidateBufferStorage(Context *context,
 }
 
 bool ValidateClearTexImage(Context *context,
-                           GLuint texture,
+                           TextureID texture,
                            GLint level,
                            GLenum format,
                            GLenum type,
@@ -79,7 +79,7 @@ bool ValidateClearTexImage(Context *context,
 }
 
 bool ValidateClearTexSubImage(Context *context,
-                              GLuint texture,
+                              TextureID texture,
                               GLint level,
                               GLint xoffset,
                               GLint yoffset,

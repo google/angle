@@ -96,6 +96,9 @@ enum class ParamType
     TShadingModel,
     TTextureEnvParameter,
     TTextureEnvTarget,
+    TTextureID,
+    TTextureIDConstPointer,
+    TTextureIDPointer,
     TTextureTarget,
     TTextureType,
     TVertexAttribType,
@@ -186,6 +189,9 @@ union ParamValue
     gl::ShadingModel ShadingModelVal;
     gl::TextureEnvParameter TextureEnvParameterVal;
     gl::TextureEnvTarget TextureEnvTargetVal;
+    gl::TextureID TextureIDVal;
+    const gl::TextureID *TextureIDConstPointerVal;
+    gl::TextureID *TextureIDPointerVal;
     gl::TextureTarget TextureTargetVal;
     gl::TextureType TextureTypeVal;
     gl::VertexAttribType VertexAttribTypeVal;
@@ -701,6 +707,25 @@ inline void SetParamVal<ParamType::TTextureEnvTarget>(gl::TextureEnvTarget value
 }
 
 template <>
+inline void SetParamVal<ParamType::TTextureID>(gl::TextureID valueIn, ParamValue *valueOut)
+{
+    valueOut->TextureIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TTextureIDConstPointer>(const gl::TextureID *valueIn,
+                                                           ParamValue *valueOut)
+{
+    valueOut->TextureIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TTextureIDPointer>(gl::TextureID *valueIn, ParamValue *valueOut)
+{
+    valueOut->TextureIDPointerVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TTextureTarget>(gl::TextureTarget valueIn, ParamValue *valueOut)
 {
     valueOut->TextureTargetVal = valueIn;
@@ -991,6 +1016,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TTextureEnvTarget:
             SetParamVal<ParamType::TTextureEnvTarget>(valueIn, valueOut);
+            break;
+        case ParamType::TTextureID:
+            SetParamVal<ParamType::TTextureID>(valueIn, valueOut);
+            break;
+        case ParamType::TTextureIDConstPointer:
+            SetParamVal<ParamType::TTextureIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TTextureIDPointer:
+            SetParamVal<ParamType::TTextureIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TTextureTarget:
             SetParamVal<ParamType::TTextureTarget>(valueIn, valueOut);

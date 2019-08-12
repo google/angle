@@ -3025,7 +3025,7 @@ bool ValidateDrawElementsInstancedEXT(Context *context,
 bool ValidateFramebufferTextureBase(Context *context,
                                     GLenum target,
                                     GLenum attachment,
-                                    GLuint texture,
+                                    TextureID texture,
                                     GLint level)
 {
     if (!ValidFramebufferTarget(context, target))
@@ -3039,7 +3039,7 @@ bool ValidateFramebufferTextureBase(Context *context,
         return false;
     }
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
         Texture *tex = context->getTexture(texture);
 

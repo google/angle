@@ -1161,7 +1161,7 @@ GLuint State::getSamplerTextureId(unsigned int sampler, TextureType type) const
     return mSamplerTextures[type][sampler].id();
 }
 
-void State::detachTexture(const Context *context, const TextureMap &zeroTextures, GLuint texture)
+void State::detachTexture(const Context *context, const TextureMap &zeroTextures, TextureID texture)
 {
     // Textures have a detach method on State rather than a simple
     // removeBinding, because the zero/null texture objects are managed
@@ -1179,7 +1179,7 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
         for (size_t bindingIndex = 0; bindingIndex < textureVector.size(); ++bindingIndex)
         {
             BindingPointer<Texture> &binding = textureVector[bindingIndex];
-            if (binding.id() == texture)
+            if (binding.id() == texture.value)
             {
                 // Zero textures are the "default" textures instead of NULL
                 Texture *zeroTexture = zeroTextures[type].get();
@@ -1195,7 +1195,7 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
 
     for (auto &bindingImageUnit : mImageUnits)
     {
-        if (bindingImageUnit.texture.id() == texture)
+        if (bindingImageUnit.texture.id() == texture.value)
         {
             bindingImageUnit.texture.set(context, nullptr);
             bindingImageUnit.level   = 0;

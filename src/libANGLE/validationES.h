@@ -361,7 +361,7 @@ bool ValidateDrawInstancedEXT(Context *context);
 bool ValidateFramebufferTextureBase(Context *context,
                                     GLenum target,
                                     GLenum attachment,
-                                    GLuint texture,
+                                    TextureID texture,
                                     GLint level);
 
 bool ValidateGetUniformBase(Context *context, GLuint program, GLint location);
