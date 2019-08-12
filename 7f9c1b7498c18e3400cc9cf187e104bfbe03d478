@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "7478791b_33c24d29",
+        "filename": "extensions/ANGLE_base_vertex_base_instance.txt",
+        "patchSetId": 27
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-08-12T16:40:54Z",
+      "side": 1,
+      "message": "TODO: This section should be removed.\n(This was added when support for ES 2.0 is planned)",
+      "revId": "7f9c1b7498c18e3400cc9cf187e104bfbe03d478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6288ce50_84dfb945",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 27
