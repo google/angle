@@ -9,11 +9,47 @@
 
 #include "libANGLE/FrameCapture.h"
 
+#include <cerrno>
+#include <cstring>
 #include <string>
 
 #include "libANGLE/Context.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/gl_enum_utils_autogen.h"
+
+#ifdef ANGLE_PLATFORM_ANDROID
+#    define ANGLE_CAPTURE_PATH ("/sdcard/Android/data/" + CurrentAPKName() + "/")
+
+std::string CurrentAPKName()
+{
+    static char sApplicationId[512] = {0};
+    if (!sApplicationId[0])
+    {
+        // Linux interface to get application id of the running process
+        FILE *cmdline = fopen("/proc/self/cmdline", "r");
+        if (cmdline)
+        {
+            fread(sApplicationId, 1, sizeof(sApplicationId), cmdline);
+            fclose(cmdline);
+
+            // Some package may have application id as <app_name>:<cmd_name>
+            char *colonSep = strchr(sApplicationId, ':');
+            if (colonSep)
+            {
+                *colonSep = '\0';
+            }
+        }
+        else
+        {
+            WARN() << "not able to lookup application id";
+        }
+    }
+    return std::string(sApplicationId);
+}
+
+#else
+#    define ANGLE_CAPTURE_PATH "./"
+#endif  // ANGLE_PLATFORM_ANDROID
 
 namespace angle
 {
@@ -33,7 +69,7 @@ std::string GetCaptureFileName(size_t frameIndex, const char *suffix)
     std::stringstream fnameStream;
     fnameStream << "angle_capture_frame" << std::setfill('0') << std::setw(3) << frameIndex
                 << suffix;
-    return fnameStream.str();
+    return ANGLE_CAPTURE_PATH + fnameStream.str();
 }
 
 void WriteParamStaticVarName(const CallCapture &call,
@@ -446,6 +482,10 @@ void FrameCapture::saveCapturedFrameAsCpp()
         std::string fname = GetCaptureFileName(mFrameIndex, ".angledata");
 
         FILE *fp = fopen(fname.c_str(), "wb");
+        if (!fp)
+        {
+            FATAL() << "file " << fname << " can not be created!: " << strerror(errno);
+        }
         fwrite(binaryData.data(), 1, binaryData.size(), fp);
         fclose(fp);
 
@@ -474,6 +514,10 @@ void FrameCapture::saveCapturedFrameAsCpp()
 
     std::string fname = GetCaptureFileName(mFrameIndex, ".cpp");
     FILE *fp          = fopen(fname.c_str(), "w");
+    if (!fp)
+    {
+        FATAL() << "file " << fname << " can not be created!: " << strerror(errno);
+    }
     fprintf(fp, "%s\n\n%s", headerString.c_str(), outString.c_str());
     fclose(fp);
 

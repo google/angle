@@ -818,22 +818,29 @@ template("angle_libGLESv2") {
 }
 
 angle_libGLESv2("libGLESv2") {
-  deps = [
-    ":libANGLE",
-  ]
-
   if (angle_with_capture_by_default) {
-    output_name = "libGLESv2_no_capture"
+    deps = [
+      ":libANGLE_with_capture",
+    ]
+  } else {
+    deps = [
+      ":libANGLE",
+    ]
   }
 }
 
-angle_libGLESv2("libGLESv2_with_capture") {
-  deps = [
-    ":libANGLE_with_capture",
-  ]
-
-  if (!angle_with_capture_by_default) {
-    output_name = "libGLESv2_with_capture"
+# Output capture lib when `angle_with_capture_by_default` disabled, vice versa.
+angle_libGLESv2("libGLESv2_capture_complement") {
+  if (angle_with_capture_by_default) {
+    deps = [
+      ":libANGLE",
+    ]
+    output_name += "_no_capture"
+  } else {
+    deps = [
+      ":libANGLE_with_capture",
+    ]
+    output_name += "_with_capture"
   }
 }
 
