@@ -636,12 +636,6 @@
 // - Primitive restart with line loops:
 2672 VULKAN : dEQP-GLES3.functional.primitive_restart.*.line_loop.*instanced = SKIP
 
-// - ES3 State queries:
-3680 VULKAN : dEQP-GLES3.functional.state_query.integers.max_elements_indices_getfloat = FAIL
-3680 VULKAN : dEQP-GLES3.functional.state_query.integers.max_elements_vertices_getfloat = FAIL
-3680 VULKAN : dEQP-GLES3.functional.state_query.integers.max_program_texel_offset_get* = FAIL
-3680 VULKAN : dEQP-GLES3.functional.state_query.integers.min_program_texel_offset_get* = FAIL
-
 // Misc failures:
 3681 VULKAN : dEQP-GLES3.functional.lifetime.attach.deleted_input.buffer_vertex_array = SKIP
 
