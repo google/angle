@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cca464c_c7494823",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2019-08-12T23:50:49Z",
+      "side": 1,
+      "message": "This is supposed to be\n\n```\n    return (copyDepth ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |\n           (copyStencil ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);\n```\n\nright? Currently this is parsed as \n\n```\n    return copyDepth ? VK_IMAGE_ASPECT_DEPTH_BIT : ((0 |\n           copyStencil) ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);\n```\n\nand `0 | copyStencil` is always just `copyStencil`.\n\n(Caught by a new warning: https://bugs.chromium.org/p/chromium/issues/detail?id\u003d992863#c1)",
+      "revId": "1617e69e3883e77f8ae05680576d08d905fcc70f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
