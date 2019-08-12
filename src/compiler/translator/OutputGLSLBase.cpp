@@ -293,6 +293,35 @@ void TOutputGLSLBase::writeLayoutQualifier(TIntermTyped *variable)
     out << ") ";
 }
 
+void TOutputGLSLBase::writeFieldLayoutQualifier(const TField *field)
+{
+    if (!field->type()->isMatrix() && !field->type()->isStructureContainingMatrices())
+    {
+        return;
+    }
+
+    TInfoSinkBase &out = objSink();
+
+    out << "layout(";
+    switch (field->type()->getLayoutQualifier().matrixPacking)
+    {
+        case EmpUnspecified:
+        case EmpColumnMajor:
+            // Default matrix packing is column major.
+            out << "column_major";
+            break;
+
+        case EmpRowMajor:
+            out << "row_major";
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+    out << ") ";
+}
+
 void TOutputGLSLBase::writeQualifier(TQualifier qualifier, const TType &type, const TSymbol *symbol)
 {
     const char *result = mapQualifierToString(qualifier);
@@ -1312,27 +1341,7 @@ void TOutputGLSLBase::declareInterfaceBlock(const TInterfaceBlock *interfaceBloc
     const TFieldList &fields = interfaceBlock->fields();
     for (const TField *field : fields)
     {
-        if (field->type()->isMatrix() || field->type()->isStructureContainingMatrices())
-        {
-            out << "layout(";
-            switch (field->type()->getLayoutQualifier().matrixPacking)
-            {
-                case EmpUnspecified:
-                case EmpColumnMajor:
-                    // Default matrix packing is column major.
-                    out << "column_major";
-                    break;
-
-                case EmpRowMajor:
-                    out << "row_major";
-                    break;
-
-                default:
-                    UNREACHABLE();
-                    break;
-            }
-            out << ") ";
-        }
+        writeFieldLayoutQualifier(field);
 
         if (writeVariablePrecision(field->type()->getPrecision()))
             out << " ";

@@ -560,29 +560,6 @@
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
 
-// column/row_major specified on struct member:
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.10 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_per_block_buffers.8 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_per_block_buffers.17 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_per_block_buffers.25 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_per_block_buffers.49 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_shared_buffer.11 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_shared_buffer.48 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.18 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.20 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.23 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.8 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_instance_arrays.13 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs.12 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs.17 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs.5 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_arrays.2 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_arrays.3 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_arrays.4 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.12 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.18 = FAIL
-3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.24 = FAIL
-
 3221 VULKAN : dEQP-GLES3.functional.instanced.draw_elements_instanced.attribute_divisor.2*_instances = FAIL
 3221 VULKAN : dEQP-GLES3.functional.instanced.draw_elements_instanced.attribute_divisor.4_instances = FAIL
 3221 VULKAN : dEQP-GLES3.functional.instanced.draw_elements_instanced.mixed.2*_instances = FAIL

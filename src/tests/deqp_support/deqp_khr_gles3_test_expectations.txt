@@ -115,17 +115,5 @@
 3818 VULKAN : KHR-GLES3.copy_tex_image_conversions.forbidden.renderbuffer_cubemap_posy = FAIL
 3818 VULKAN : KHR-GLES3.copy_tex_image_conversions.forbidden.renderbuffer_cubemap_posz = FAIL
 
-// column/row_major specified on struct member:
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.all_per_block_buffers.16 = FAIL
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.all_per_block_buffers.3 = FAIL
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.all_per_block_buffers.5 = FAIL
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.all_per_block_buffers.7 = FAIL
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.all_shared_buffer.0 = FAIL
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.basic_instance_arrays.0 = FAIL
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.basic_instance_arrays.4 = FAIL
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.basic_instance_arrays.5 = FAIL
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.nested_structs_arrays.7 = FAIL
-3443 VULKAN : KHR-GLES3.shaders.uniform_block.random.nested_structs_arrays_instance_arrays.3 = FAIL
-
 // Require 3D textures.
 3188 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.* = SKIP

@@ -54,7 +54,6 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     }
 
     TInfoSinkBase &out                      = objSink();
-    const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
 
     // This isn't super clean, but it gets the job done.
     // See corresponding code in GlslangWrapper.cpp.
@@ -88,12 +87,12 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
         {
             blockStorage = getBlockStorageString(storage);
         }
-    }
 
-    // Specify matrix packing if necessary.
-    if (layoutQualifier.matrixPacking != EmpUnspecified)
-    {
-        matrixPacking = getMatrixPackingString(layoutQualifier.matrixPacking);
+        // We expect all interface blocks to have been transformed to column major, so we don't
+        // specify the packing.  Any remaining interface block qualified with row_major shouldn't
+        // have any matrices inside.
+        ASSERT(type.getLayoutQualifier().matrixPacking != EmpRowMajor ||
+               !interfaceBlock->containsMatrices());
     }
 
     if (needsCustomLayout)
@@ -130,6 +129,14 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     {
         out << "@@";
     }
+}
+
+void TOutputVulkanGLSL::writeFieldLayoutQualifier(const TField *field)
+{
+    // We expect all interface blocks to have been transformed to column major, as Vulkan GLSL
+    // doesn't allow layout qualifiers on interface block fields.  Any remaining interface block
+    // qualified with row_major shouldn't have any matrices inside, so the qualifier can be
+    // dropped.
 }
 
 void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier,

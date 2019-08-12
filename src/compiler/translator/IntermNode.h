@@ -915,7 +915,7 @@ enum class PreprocessorDirective
 class TIntermPreprocessorDirective : public TIntermNode
 {
   public:
-    // This could also take an ImmutbleString as an argument.
+    // This could also take an ImmutableString as an argument.
     TIntermPreprocessorDirective(PreprocessorDirective directive, ImmutableString command);
     ~TIntermPreprocessorDirective() final;
 

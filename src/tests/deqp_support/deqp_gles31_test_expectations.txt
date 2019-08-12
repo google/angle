@@ -715,21 +715,6 @@
 3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture_2d.compressed_integer = SKIP
 3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture_2d.compressed_float = SKIP
 
-// column/row_major specified on struct member:
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.2 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.9 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.12 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.16 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.23 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.25 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.29 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.33 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_shared_buffer.3 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_shared_buffer.11 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_shared_buffer.25 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_shared_buffer.39 = FAIL
-3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_shared_buffer.45 = FAIL
-
 // Inactive SSBOs with flexible array member (about 20% of these tests are affected):
 3714 VULKAN : dEQP-GLES31.functional.ssbo.layout.random.* = FAIL
 

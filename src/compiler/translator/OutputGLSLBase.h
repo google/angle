@@ -43,6 +43,7 @@ class TOutputGLSLBase : public TIntermTraverser
     std::string getCommonLayoutQualifiers(TIntermTyped *variable);
     std::string getMemoryQualifiers(const TType &type);
     virtual void writeLayoutQualifier(TIntermTyped *variable);
+    virtual void writeFieldLayoutQualifier(const TField *field);
     void writeInvariantQualifier(const TType &type);
     virtual void writeVariableType(const TType &type, const TSymbol *symbol);
     virtual bool writeVariablePrecision(TPrecision precision) = 0;
