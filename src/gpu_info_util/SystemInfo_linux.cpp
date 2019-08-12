@@ -81,7 +81,7 @@ bool GetSystemInfo(SystemInfo *info)
         return false;
     }
 
-    FindActiveGPU(info);
+    GetDualGPUInfo(info);
 
     for (size_t i = 0; i < info->gpus.size(); ++i)
     {
