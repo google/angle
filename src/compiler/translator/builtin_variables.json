@@ -577,7 +577,7 @@
                 }
             },
             "ARMShaderFramebufferFetch":{
-                "condition":"!mResources.EXT_shader_framebuffer_fetch && !mResources.NV_shader_framebuffer_fetch && mResources.ARM_shader_framebuffer_fetch",
+                "condition":"mResources.ARM_shader_framebuffer_fetch",
                 "variables":{
                     "gl_LastFragColorARM":{
                         "level":"ESSL1_BUILTINS",
@@ -882,7 +882,7 @@
         }
     },
     "Multiview":{
-        "condition":"(mResources.OVR_multiview||mResources.OVR_multiview2) && shaderType != GL_COMPUTE_SHADER",
+        "condition":"mResources.OVR_multiview && shaderType != GL_COMPUTE_SHADER",
         "subgroups":{
             "ESSL3":{
                 "variables":{

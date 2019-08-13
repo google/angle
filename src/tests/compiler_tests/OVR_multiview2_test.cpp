@@ -97,6 +97,7 @@ class OVRMultiview2VertexShaderTest : public ShaderCompileTreeTest
     ShShaderSpec getShaderSpec() const override { return SH_WEBGL3_SPEC; }
     void initResources(ShBuiltInResources *resources) override
     {
+        resources->OVR_multiview  = 1;
         resources->OVR_multiview2 = 1;
         resources->MaxViewsOVR    = 4;
     }
@@ -112,6 +113,7 @@ class OVRMultiview2FragmentShaderTest : public ShaderCompileTreeTest
     ShShaderSpec getShaderSpec() const override { return SH_WEBGL3_SPEC; }
     void initResources(ShBuiltInResources *resources) override
     {
+        resources->OVR_multiview  = 1;
         resources->OVR_multiview2 = 1;
         resources->MaxViewsOVR    = 4;
     }
@@ -125,6 +127,7 @@ class OVRMultiview2OutputCodeTest : public MatchOutputCodeTest
     {
         addOutputType(SH_GLSL_COMPATIBILITY_OUTPUT);
 
+        getResources()->OVR_multiview  = 1;
         getResources()->OVR_multiview2 = 1;
         getResources()->MaxViewsOVR    = 4;
     }
@@ -185,25 +188,6 @@ void VariableOccursNTimes(TIntermBlock *root,
     SymbolOccurrenceCounterByName viewIDByName(varName);
     root->traverse(&viewIDByName);
     EXPECT_EQ(n, viewIDByName.getNumberOfOccurrences());
-}
-
-// Unsupported GL_OVR_multiview extension directive (GL_OVR_multiview2 spec only exposes
-// GL_OVR_multiview2).
-TEST_F(OVRMultiview2VertexShaderTest, InvalidMultiview2)
-{
-    const std::string &shaderString =
-        "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
-        "layout(num_views = 2) in;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position.x = (gl_ViewID_OVR == 0u) ? 1.0 : 0.0;\n"
-        "    gl_Position.yzw = vec3(0, 0, 1);\n"
-        "}\n";
-    if (compile(shaderString))
-    {
-        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
-    }
 }
 
 // Invalid combination of non-matching num_views declarations.

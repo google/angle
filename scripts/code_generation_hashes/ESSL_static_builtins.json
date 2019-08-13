@@ -4,13 +4,13 @@
   "src/compiler/translator/ParseContext_autogen.h":
     "58786d2f352ee1a58d529fb7572c86a4",
   "src/compiler/translator/SymbolTable_autogen.cpp":
-    "cd0abc040d6902e1688d048d19ca70a9",
+    "e53566eaeeb2ca47d54b22ff0ff21b6d",
   "src/compiler/translator/SymbolTable_autogen.h":
     "bdb3c8eab0d48267a2f264e3af635e1a",
   "src/compiler/translator/builtin_function_declarations.txt":
     "d0c15cb9f2ef6c0ba5cd6612470db000",
   "src/compiler/translator/builtin_variables.json":
-    "04f763459cfbd47831bec22299287e82",
+    "bbcda061188c066dd887f9ecf5f6f4b4",
   "src/compiler/translator/gen_builtin_symbols.py":
     "5527c49f0e939aa593fa14f0f0cf84c5",
   "src/compiler/translator/tree_util/BuiltIn_autogen.h":

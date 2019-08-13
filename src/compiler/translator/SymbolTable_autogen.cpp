@@ -17236,8 +17236,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
             }
         }
-        if ((mResources.OVR_multiview || mResources.OVR_multiview2) &&
-            mShaderType != GL_COMPUTE_SHADER)
+        if (mResources.OVR_multiview && mShaderType != GL_COMPUTE_SHADER)
         {
             switch (nameHash)
             {
@@ -17716,9 +17715,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
             }
         }
-        if ((mShaderType == GL_FRAGMENT_SHADER) &&
-            (!mResources.EXT_shader_framebuffer_fetch && !mResources.NV_shader_framebuffer_fetch &&
-             mResources.ARM_shader_framebuffer_fetch))
+        if ((mShaderType == GL_FRAGMENT_SHADER) && (mResources.ARM_shader_framebuffer_fetch))
         {
             switch (nameHash)
             {
@@ -17746,8 +17743,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
             }
         }
-        if ((mResources.OVR_multiview || mResources.OVR_multiview2) &&
-            mShaderType != GL_COMPUTE_SHADER)
+        if (mResources.OVR_multiview && mShaderType != GL_COMPUTE_SHADER)
         {
             switch (nameHash)
             {
