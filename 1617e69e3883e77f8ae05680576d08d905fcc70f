@@ -34,6 +34,24 @@
       "revId": "1617e69e3883e77f8ae05680576d08d905fcc70f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff9bc7d8_44ca0e8e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2019-08-13T14:12:38Z",
+      "side": 1,
+      "message": "Thanks!\n\nIt\u0027s a warning that\u0027s under development in clang, we\u0027re currently evaluating it. It will be on by default once it\u0027s been merged into clang and a clang with it merged has been rolled into chromium. Right now, it only shows up when using a custom clang with a local patch applied.",
+      "parentUuid": "7c7151b4_795fb9b0",
+      "revId": "1617e69e3883e77f8ae05680576d08d905fcc70f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
