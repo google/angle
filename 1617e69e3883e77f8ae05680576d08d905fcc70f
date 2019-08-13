@@ -16,6 +16,24 @@
       "revId": "1617e69e3883e77f8ae05680576d08d905fcc70f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c7151b4_795fb9b0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-13T13:23:18Z",
+      "side": 1,
+      "message": "Thanks. Looks like this function is unused now. I\u0027ll upload a CL. Could we enable the warnings in ANGLE\u0027s BUILD.gn as well? What should we add?",
+      "parentUuid": "9cca464c_c7494823",
+      "revId": "1617e69e3883e77f8ae05680576d08d905fcc70f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
