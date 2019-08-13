@@ -44,8 +44,9 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureID texturePacked = FromGL<TextureID>(texture);
-        bool isCallValid        = (context->skipValidation() ||
+        TextureID texturePacked                       = FromGL<TextureID>(texture);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                              = (context->skipValidation() ||
                             ValidateBindImageTexture(context, unit, texturePacked, level, layered,
                                                      layer, access, format));
         if (isCallValid)
@@ -72,7 +73,8 @@ void GL_APIENTRY DrawArraysInstancedBaseInstance(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                              = (context->skipValidation() ||
                             ValidateDrawArraysInstancedBaseInstance(context, mode, first, count,
                                                                     instancecount, baseinstance));
         if (isCallValid)
@@ -102,7 +104,8 @@ void GL_APIENTRY DrawElementsInstancedBaseInstance(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                              = (context->skipValidation() ||
                             ValidateDrawElementsInstancedBaseInstance(
                                 context, mode, count, type, indices, instancecount, baseinstance));
         if (isCallValid)
@@ -134,6 +137,7 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstance(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateDrawElementsInstancedBaseVertexBaseInstance(
@@ -156,6 +160,7 @@ void GL_APIENTRY DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei 
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid = (context->skipValidation() || ValidateDrawTransformFeedbackInstanced(
                                                              context, mode, id, instancecount));
         if (isCallValid)
@@ -178,6 +183,7 @@ void GL_APIENTRY DrawTransformFeedbackStreamInstanced(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateDrawTransformFeedbackStreamInstanced(
                                               context, mode, id, stream, instancecount));
@@ -204,6 +210,7 @@ void GL_APIENTRY GetActiveAtomicCounterBufferiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateGetActiveAtomicCounterBufferiv(context, program, bufferIndex, pname, params));
@@ -232,6 +239,7 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateGetInternalformativ(context, target, internalformat, pname, bufSize, params));
@@ -252,6 +260,7 @@ void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid = (context->skipValidation() || ValidateMemoryBarrier(context, barriers));
         if (isCallValid)
         {
@@ -271,7 +280,8 @@ void GL_APIENTRY TexStorage1D(GLenum target, GLsizei levels, GLenum internalform
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                              = (context->skipValidation() ||
                             ValidateTexStorage1D(context, target, levels, internalformat, width));
         if (isCallValid)
         {
@@ -293,7 +303,8 @@ TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGL<TextureType>(target);
+        TextureType targetPacked                      = FromGL<TextureType>(target);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateTexStorage2D(context, targetPacked, levels, internalformat, width, height));
@@ -322,8 +333,9 @@ void GL_APIENTRY TexStorage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGL<TextureType>(target);
-        bool isCallValid         = (context->skipValidation() ||
+        TextureType targetPacked                      = FromGL<TextureType>(target);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                              = (context->skipValidation() ||
                             ValidateTexStorage3D(context, targetPacked, levels, internalformat,
                                                  width, height, depth));
         if (isCallValid)

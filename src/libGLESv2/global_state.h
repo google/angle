@@ -56,6 +56,11 @@ ANGLE_INLINE Context *GetValidGlobalContext()
     return thread->getValidContext();
 }
 
+ANGLE_INLINE std::unique_lock<std::mutex> GetShareGroupLock(const Context *context)
+{
+    return context->isShared() ? std::unique_lock<std::mutex>(egl::GetGlobalMutex())
+                               : std::unique_lock<std::mutex>();
+}
 }  // namespace gl
 
 #endif  // LIBGLESV2_GLOBALSTATE_H_

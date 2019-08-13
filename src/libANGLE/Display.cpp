@@ -880,7 +880,7 @@ Error Display::createStream(const AttributeMap &attribs, Stream **outStream)
 }
 
 Error Display::createContext(const Config *configuration,
-                             const gl::Context *shareContext,
+                             gl::Context *shareContext,
                              EGLenum clientType,
                              const AttributeMap &attribs,
                              gl::Context **outContext)
@@ -930,6 +930,10 @@ Error Display::createContext(const Config *configuration,
     gl::Context *context =
         new gl::Context(this, configuration, shareContext, shareTextures, cachePointer, clientType,
                         attribs, mDisplayExtensions, GetClientExtensions());
+    if (shareContext != nullptr)
+    {
+        shareContext->setShared();
+    }
 
     ASSERT(context != nullptr);
     mContextSet.insert(context);
@@ -1055,8 +1059,8 @@ Error Display::destroyContext(const Thread *thread, gl::Context *context)
     Surface *currentReadSurface   = thread->getCurrentReadSurface();
     bool changeContextForDeletion = context != currentContext;
 
-    // Make the context being deleted current during it's deletion.  This allows it to delete any
-    // resources it's holding.
+    // Make the context being deleted current during it's deletion.  This allows it to delete
+    // any resources it's holding.
     if (changeContextForDeletion)
     {
         ANGLE_TRY(makeCurrent(thread, nullptr, nullptr, context));
@@ -1067,8 +1071,9 @@ Error Display::destroyContext(const Thread *thread, gl::Context *context)
         ASSERT(mGlobalTextureShareGroupUsers >= 1 && mTextureManager != nullptr);
         if (mGlobalTextureShareGroupUsers == 1)
         {
-            // If this is the last context using the global share group, destroy the global texture
-            // manager so that the textures can be destroyed while a context still exists
+            // If this is the last context using the global share group, destroy the global
+            // texture manager so that the textures can be destroyed while a context still
+            // exists
             mTextureManager->release(context);
             mTextureManager = nullptr;
         }
@@ -1296,8 +1301,8 @@ void Display::initDisplayExtensions()
     // Blob cache extension is provided by the ANGLE frontend
     mDisplayExtensions.blobCache = true;
 
-    // The EGL_ANDROID_recordable extension is provided by the ANGLE frontend, and will always say
-    // that ANativeWindow is not recordable.
+    // The EGL_ANDROID_recordable extension is provided by the ANGLE frontend, and will always
+    // say that ANativeWindow is not recordable.
     mDisplayExtensions.recordable = true;
 
     // All backends support specific context versions
