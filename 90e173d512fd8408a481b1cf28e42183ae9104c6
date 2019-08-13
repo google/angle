@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "10b2c1e0_bdcd0532",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-08-13T18:09:35Z",
+      "side": 1,
+      "message": "Will do. Copy/paste from other EGL test.",
+      "parentUuid": "6a6d594a_b479662e",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d01aa91e_6cf9dfaa",
         "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
         "patchSetId": 3
@@ -36,6 +60,24 @@
       "writtenOn": "2019-08-13T13:09:30Z",
       "side": 1,
       "message": "file-level comment",
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13331eca_d83276ea",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-08-13T18:09:35Z",
+      "side": 1,
+      "message": "How about this:\n//\n// This suite of test cases is to test valid/invalid attributes passed to eglCreateContext\n// Section 3.7.1 of EGL 1.5 specification provides error cases\n//",
+      "parentUuid": "d01aa91e_6cf9dfaa",
       "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "e91e8421_1926c33b",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-08-13T18:09:35Z",
+      "side": 1,
+      "message": "I\u0027ll remove comment here and move to above. typo fixed.",
+      "parentUuid": "b31f4ff3_5c419528",
+      "range": {
+        "startLine": 14,
+        "startChar": 45,
+        "endLine": 14,
+        "endChar": 53
+      },
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e69d880b_0ed6f749",
         "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
         "patchSetId": 3
@@ -76,6 +142,24 @@
       "writtenOn": "2019-08-13T17:21:08Z",
       "side": 1,
       "message": "Can you add a test that requests a 4.x context so we fall into the \u0027default\u0027 case for the clientMajorVersion value?",
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a6bd9a1_cac1148a",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-08-13T18:09:35Z",
+      "side": 1,
+      "message": "YES.",
+      "parentUuid": "e69d880b_0ed6f749",
       "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "951847ce_5e64850b",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-08-13T18:09:35Z",
+      "side": 1,
+      "message": "I\u0027ll remove here or there. I want to be sure there are no contexts current between cases.",
+      "parentUuid": "ea3064ed_55ca7350",
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f9a725f4_4b01841a",
         "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
         "patchSetId": 3
@@ -110,6 +212,30 @@
       "writtenOn": "2019-08-13T13:09:30Z",
       "side": 1,
       "message": "use std::vector",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 14
+      },
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "927cb8b3_ea58a7d2",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-08-13T18:09:35Z",
+      "side": 1,
+      "message": "99+    std::vector\u003cEGLConfig\u003e configsVec(configList, configList + (ncfg * sizeof(EGLConfig)));",
+      "parentUuid": "f9a725f4_4b01841a",
       "range": {
         "startLine": 93,
         "startChar": 4,
