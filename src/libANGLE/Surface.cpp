@@ -258,7 +258,9 @@ Error Surface::postSubBuffer(const gl::Context *context,
         return egl::NoError();
     }
 
-    return mImplementation->postSubBuffer(context, x, y, width, height);
+    ANGLE_TRY(mImplementation->postSubBuffer(context, x, y, width, height));
+    postSwap(context);
+    return NoError();
 }
 
 Error Surface::setPresentationTime(EGLnsecsANDROID time)
