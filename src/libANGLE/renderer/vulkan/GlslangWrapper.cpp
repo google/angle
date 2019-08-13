@@ -491,21 +491,21 @@ void GenerateTransformFeedbackOutputs(const gl::ProgramState &programState,
 }
 
 void AssignAttributeLocations(const gl::ProgramState &programState,
-                              IntermediateShaderSource *vertexSource)
+                              IntermediateShaderSource *shaderSource)
 {
-    ASSERT(!vertexSource->empty());
+    ASSERT(!shaderSource->empty());
 
     // Parse attribute locations and replace them in the vertex shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
     for (const sh::Attribute &attribute : programState.getAttributes())
     {
-        // Warning: If we endup supporting ES 3.0 shaders and up, Program::linkAttributes is going
-        // to bring us all attributes in this list instead of only the active ones.
+        // Warning: If we end up supporting ES 3.0 shaders and up, Program::linkAttributes is
+        // going to bring us all attributes in this list instead of only the active ones.
         ASSERT(attribute.active);
 
         std::string locationString = "location = " + Str(attribute.location);
-        vertexSource->insertLayoutSpecifier(attribute.name, locationString);
-        vertexSource->insertQualifierSpecifier(attribute.name, "in");
+        shaderSource->insertLayoutSpecifier(attribute.name, locationString);
+        shaderSource->insertQualifierSpecifier(attribute.name, "in");
     }
 }
 
@@ -519,8 +519,6 @@ std::string RemoveArrayZeroSubscript(const std::string &expression)
 void AssignOutputLocations(const gl::ProgramState &programState,
                            IntermediateShaderSource *fragmentSource)
 {
-    ASSERT(!fragmentSource->empty());
-
     // Parse output locations and replace them in the fragment shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
     // TODO(syoussefi): Add support for EXT_blend_func_extended.  http://anglebug.com/3385
@@ -573,9 +571,6 @@ void AssignVaryingLocations(const gl::ProgramLinkedResources &resources,
                             IntermediateShaderSource *outStageSource,
                             IntermediateShaderSource *inStageSource)
 {
-    ASSERT(!outStageSource->empty());
-    ASSERT(!inStageSource->empty());
-
     // Assign varying locations.
     for (const gl::PackedVaryingRegister &varyingReg : resources.varyingPacking.getRegisterList())
     {
@@ -813,25 +808,26 @@ void AssignTextureBindings(bool useOldRewriteStructSamplers,
 void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
                            const gl::ProgramState &programState,
                            const gl::ProgramLinkedResources &resources,
-                           gl::Shader *glVertexShader,
+                           gl::ShaderType shaderType,
                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
-    IntermediateShaderSource &vertexSource = (*shaderSources)[gl::ShaderType::Vertex];
-    if (!vertexSource.empty())
+    gl::Shader *shader               = programState.getAttachedShader(shaderType);
+    IntermediateShaderSource &source = (*shaderSources)[shaderType];
+    if (!source.empty())
     {
-        ASSERT(glVertexShader != nullptr);
+        ASSERT(shader != nullptr);
 
         // The attributes in the programState could have been filled with active attributes only
         // depending on the shader version. If there is inactive attributes left, we have to remove
         // their @@ QUALIFIER and @@ LAYOUT markers.
-        for (const sh::Attribute &attribute : glVertexShader->getAllAttributes())
+        for (const sh::Attribute &attribute : shader->getAllAttributes())
         {
             if (attribute.active)
             {
                 continue;
             }
 
-            vertexSource.eraseLayoutAndQualifierSpecifiers(attribute.name, "");
+            source.eraseLayoutAndQualifierSpecifiers(attribute.name, "");
         }
     }
 
@@ -919,13 +915,21 @@ void GlslangWrapper::GetShaderSource(bool useOldRewriteStructSamplers,
         AssignOutputLocations(programState, fragmentSource);
         AssignVaryingLocations(resources, vertexSource, fragmentSource);
     }
+    else if (!fragmentSource->empty())
+    {
+        AssignAttributeLocations(programState, fragmentSource);
+        AssignOutputLocations(programState, fragmentSource);
+        AssignVaryingLocations(resources, vertexSource, fragmentSource);
+    }
     AssignUniformBindings(&intermediateSources);
     AssignBufferBindings(programState, &intermediateSources);
     AssignTextureBindings(useOldRewriteStructSamplers, programState, &intermediateSources);
 
-    CleanupUnusedEntities(useOldRewriteStructSamplers, programState, resources,
-                          programState.getAttachedShader(gl::ShaderType::Vertex),
-                          &intermediateSources);
+    for (const auto shaderType : gl::kAllGraphicsShaderTypes)
+    {
+        CleanupUnusedEntities(useOldRewriteStructSamplers, programState, resources, shaderType,
+                              &intermediateSources);
+    }
 
     // Write transform feedback output code.
     if (!vertexSource->empty())

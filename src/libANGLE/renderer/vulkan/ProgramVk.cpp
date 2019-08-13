@@ -484,7 +484,7 @@ void ProgramVk::setBinaryRetrievableHint(bool retrievable)
 
 void ProgramVk::setSeparable(bool separable)
 {
-    UNIMPLEMENTED();
+    // Nohting to do here yet.
 }
 
 std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,

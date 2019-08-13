@@ -989,6 +989,7 @@ ProgramState::ProgramState()
       mImageUniformRange(0, 0),
       mAtomicCounterUniformRange(0, 0),
       mBinaryRetrieveableHint(false),
+      mSeparable(false),
       mNumViews(-1),
       // [GL_EXT_geometry_shader] Table 20.22
       mGeometryShaderInputPrimitiveType(PrimitiveMode::Triangles),
@@ -1464,8 +1465,11 @@ angle::Result Program::link(const Context *context)
 
         const auto &mergedVaryings = getMergedVaryings();
 
-        ASSERT(mState.mAttachedShaders[ShaderType::Vertex]);
-        mState.mNumViews = mState.mAttachedShaders[ShaderType::Vertex]->getNumViews();
+        gl::Shader *vertexShader = mState.mAttachedShaders[ShaderType::Vertex];
+        if (vertexShader)
+        {
+            mState.mNumViews = vertexShader->getNumViews();
+        }
 
         InitUniformBlockLinker(mState, &resources->uniformBlockLinker);
         InitShaderStorageBlockLinker(mState, &resources->shaderStorageBlockLinker);
@@ -2818,25 +2822,51 @@ bool Program::linkValidateShaders(InfoLog &infoLog)
     }
     else
     {
-        if (!fragmentShader || !fragmentShader->isCompiled())
+        if (isSeparable())
         {
-            infoLog << "No compiled fragment shader when at least one graphics shader is attached.";
-            return false;
-        }
-        ASSERT(fragmentShader->getType() == ShaderType::Fragment);
+            ASSERT(!fragmentShader || fragmentShader->getType() == ShaderType::Fragment);
+            if (fragmentShader && !fragmentShader->isCompiled())
+            {
+                infoLog << "Fragment shader is not compiled.";
+                return false;
+            }
 
-        if (!vertexShader || !vertexShader->isCompiled())
-        {
-            infoLog << "No compiled vertex shader when at least one graphics shader is attached.";
-            return false;
+            ASSERT(!vertexShader || vertexShader->getType() == ShaderType::Vertex);
+            if (vertexShader && !vertexShader->isCompiled())
+            {
+                infoLog << "Vertex shader is not compiled.";
+                return false;
+            }
         }
-        ASSERT(vertexShader->getType() == ShaderType::Vertex);
-
-        int vertexShaderVersion = vertexShader->getShaderVersion();
-        if (fragmentShader->getShaderVersion() != vertexShaderVersion)
+        else
         {
-            infoLog << "Fragment shader version does not match vertex shader version.";
-            return false;
+            if (!fragmentShader || !fragmentShader->isCompiled())
+            {
+                infoLog
+                    << "No compiled fragment shader when at least one graphics shader is attached.";
+                return false;
+            }
+            ASSERT(fragmentShader->getType() == ShaderType::Fragment);
+
+            if (!vertexShader || !vertexShader->isCompiled())
+            {
+                infoLog
+                    << "No compiled vertex shader when at least one graphics shader is attached.";
+                return false;
+            }
+            ASSERT(vertexShader->getType() == ShaderType::Vertex);
+        }
+
+        if (vertexShader && fragmentShader)
+        {
+            int vertexShaderVersion   = vertexShader->getShaderVersion();
+            int fragmentShaderVersion = fragmentShader->getShaderVersion();
+
+            if (fragmentShaderVersion != vertexShaderVersion)
+            {
+                infoLog << "Fragment shader version does not match vertex shader version.";
+                return false;
+            }
         }
 
         if (geometryShader)
@@ -2857,7 +2887,8 @@ bool Program::linkValidateShaders(InfoLog &infoLog)
                 return false;
             }
 
-            if (geometryShader->getShaderVersion() != vertexShaderVersion)
+            if (vertexShader &&
+                (geometryShader->getShaderVersion() != vertexShader->getShaderVersion()))
             {
                 mInfoLog << "Geometry shader version does not match vertex shader version.";
                 return false;
@@ -3075,13 +3106,16 @@ bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
 
 bool Program::linkValidateFragmentInputBindings(gl::InfoLog &infoLog) const
 {
-    ASSERT(mState.mAttachedShaders[ShaderType::Fragment]);
-
     std::map<GLuint, std::string> staticFragmentInputLocations;
 
-    const std::vector<sh::Varying> &fragmentInputVaryings =
-        mState.mAttachedShaders[ShaderType::Fragment]->getInputVaryings();
-    for (const sh::Varying &input : fragmentInputVaryings)
+    Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
+
+    if (!fragmentShader)
+    {
+        return true;
+    }
+
+    for (const sh::Varying &input : fragmentShader->getInputVaryings())
     {
         if (input.isBuiltIn() || !input.staticUse)
         {
@@ -3247,16 +3281,23 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
     const Caps &caps               = context->getCaps();
     const Limitations &limitations = context->getLimitations();
     bool webglCompatibility        = context->getExtensions().webglCompatibility;
+    int shaderVersion              = -1;
+    unsigned int usedLocations     = 0;
 
-    Shader *vertexShader = mState.getAttachedShader(ShaderType::Vertex);
+    Shader *vertexShader = mState.getAttachedShader(gl::ShaderType::Vertex);
 
-    int shaderVersion = vertexShader->getShaderVersion();
+    if (!vertexShader)
+    {
+        // No vertex shader, so no attributes, so nothing to do
+        return true;
+    }
 
-    unsigned int usedLocations = 0;
+    shaderVersion = vertexShader->getShaderVersion();
     if (shaderVersion >= 300)
     {
-        // In GLSL ES 3.00.6, aliasing checks should be done with all declared attributes - see GLSL
-        // ES 3.00.6 section 12.46. Inactive attributes will be pruned after aliasing checks.
+        // In GLSL ES 3.00.6, aliasing checks should be done with all declared attributes -
+        // see GLSL ES 3.00.6 section 12.46. Inactive attributes will be pruned after
+        // aliasing checks.
         mState.mAttributes = vertexShader->getAllAttributes();
     }
     else
@@ -3264,8 +3305,8 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
         // In GLSL ES 1.00.17 we only do aliasing checks for active attributes.
         mState.mAttributes = vertexShader->getActiveAttributes();
     }
-    GLuint maxAttribs = caps.maxVertexAttributes;
 
+    GLuint maxAttribs = caps.maxVertexAttributes;
     std::vector<sh::Attribute *> usedAttribMap(maxAttribs, nullptr);
 
     // Assign locations to attributes that have a binding location and check for attribute aliasing.
@@ -3587,8 +3628,15 @@ LinkMismatchError Program::LinkValidateVaryings(const sh::Varying &outputVarying
 
 bool Program::linkValidateBuiltInVaryings(InfoLog &infoLog) const
 {
-    Shader *vertexShader         = mState.mAttachedShaders[ShaderType::Vertex];
-    Shader *fragmentShader       = mState.mAttachedShaders[ShaderType::Fragment];
+    Shader *vertexShader   = mState.mAttachedShaders[ShaderType::Vertex];
+    Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
+
+    if (!vertexShader || !fragmentShader)
+    {
+        // We can't validate an interface if we don't have both a producer and a consumer
+        return true;
+    }
+
     const auto &vertexVaryings   = vertexShader->getOutputVaryings();
     const auto &fragmentVaryings = fragmentShader->getInputVaryings();
     int shaderVersion            = vertexShader->getShaderVersion();
@@ -3772,8 +3820,6 @@ bool Program::linkValidateTransformFeedback(const Version &version,
 
 bool Program::linkValidateGlobalNames(InfoLog &infoLog) const
 {
-    const std::vector<sh::Attribute> &attributes =
-        mState.mAttachedShaders[ShaderType::Vertex]->getActiveAttributes();
     std::unordered_map<std::string, const sh::Uniform *> uniformMap;
     using BlockAndFieldPair =
         std::pair<const sh::InterfaceBlock *, const sh::InterfaceBlockField *>;
@@ -3857,12 +3903,16 @@ bool Program::linkValidateGlobalNames(InfoLog &infoLog) const
     }
 
     // Validate no uniform names conflict with attribute names
-    for (const auto &attrib : attributes)
+    gl::Shader *vertexShader = mState.mAttachedShaders[ShaderType::Vertex];
+    if (vertexShader)
     {
-        if (uniformMap.count(attrib.name))
+        for (const auto &attrib : vertexShader->getActiveAttributes())
         {
-            infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
-            return false;
+            if (uniformMap.count(attrib.name))
+            {
+                infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
+                return false;
+            }
         }
     }
 
@@ -3920,16 +3970,22 @@ ProgramMergedVaryings Program::getMergedVaryings() const
 {
     ProgramMergedVaryings merged;
 
-    for (const sh::Varying &varying :
-         mState.mAttachedShaders[ShaderType::Vertex]->getOutputVaryings())
+    Shader *vertexShader = mState.mAttachedShaders[ShaderType::Vertex];
+    if (vertexShader)
     {
-        merged[varying.name].vertex = &varying;
+        for (const sh::Varying &varying : vertexShader->getOutputVaryings())
+        {
+            merged[varying.name].vertex = &varying;
+        }
     }
 
-    for (const sh::Varying &varying :
-         mState.mAttachedShaders[ShaderType::Fragment]->getInputVaryings())
+    Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
+    if (fragmentShader)
     {
-        merged[varying.name].fragment = &varying;
+        for (const sh::Varying &varying : fragmentShader->getInputVaryings())
+        {
+            merged[varying.name].fragment = &varying;
+        }
     }
 
     return merged;
@@ -4035,13 +4091,19 @@ bool Program::linkOutputVariables(const Caps &caps,
                                   GLuint combinedShaderStorageBlocksCount)
 {
     Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
-    ASSERT(fragmentShader != nullptr);
 
     ASSERT(mState.mOutputVariableTypes.empty());
     ASSERT(mState.mActiveOutputVariables.none());
     ASSERT(mState.mDrawBufferTypeMask.none());
 
+    if (!fragmentShader)
+    {
+        // No fragment shader, so nothing to link
+        return true;
+    }
+
     const auto &outputVariables = fragmentShader->getActiveOutputVariables();
+
     // Gather output variable types
     for (const auto &outputVariable : outputVariables)
     {
@@ -4095,7 +4157,7 @@ bool Program::linkOutputVariables(const Caps &caps,
     }
 
     // Skip this step for GLES2 shaders.
-    if (fragmentShader->getShaderVersion() == 100)
+    if (fragmentShader && fragmentShader->getShaderVersion() == 100)
         return true;
 
     mState.mOutputVariables = outputVariables;

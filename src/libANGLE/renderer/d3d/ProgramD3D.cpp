@@ -42,6 +42,11 @@ void GetDefaultInputLayoutFromShader(gl::Shader *vertexShader, gl::InputLayout *
 {
     inputLayoutOut->clear();
 
+    if (!vertexShader)
+    {
+        return;
+    }
+
     for (const sh::Attribute &shaderAttr : vertexShader->getActiveAttributes())
     {
         if (shaderAttr.type != GL_NONE)
@@ -404,34 +409,39 @@ int ProgramD3DMetadata::getRendererMajorShaderModel() const
 
 bool ProgramD3DMetadata::usesBroadcast(const gl::State &data) const
 {
-    return (mAttachedShaders[gl::ShaderType::Fragment]->usesFragColor() &&
-            mAttachedShaders[gl::ShaderType::Fragment]->usesMultipleRenderTargets() &&
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Fragment];
+    return (shader && shader->usesFragColor() && shader->usesMultipleRenderTargets() &&
             data.getClientMajorVersion() < 3);
 }
 
 bool ProgramD3DMetadata::usesSecondaryColor() const
 {
-    return mAttachedShaders[gl::ShaderType::Fragment]->usesSecondaryColor();
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Fragment];
+    return (shader && shader->usesSecondaryColor());
 }
 
 bool ProgramD3DMetadata::usesFragDepth() const
 {
-    return mAttachedShaders[gl::ShaderType::Fragment]->usesFragDepth();
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Fragment];
+    return (shader && shader->usesFragDepth());
 }
 
 bool ProgramD3DMetadata::usesPointCoord() const
 {
-    return mAttachedShaders[gl::ShaderType::Fragment]->usesPointCoord();
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Fragment];
+    return (shader && shader->usesPointCoord());
 }
 
 bool ProgramD3DMetadata::usesFragCoord() const
 {
-    return mAttachedShaders[gl::ShaderType::Fragment]->usesFragCoord();
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Fragment];
+    return (shader && shader->usesFragCoord());
 }
 
 bool ProgramD3DMetadata::usesPointSize() const
 {
-    return mAttachedShaders[gl::ShaderType::Vertex]->usesPointSize();
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Vertex];
+    return (shader && shader->usesPointSize());
 }
 
 bool ProgramD3DMetadata::usesInsertedPointCoordValue() const
@@ -447,17 +457,20 @@ bool ProgramD3DMetadata::usesViewScale() const
 
 bool ProgramD3DMetadata::hasANGLEMultiviewEnabled() const
 {
-    return mAttachedShaders[gl::ShaderType::Vertex]->hasANGLEMultiviewEnabled();
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Vertex];
+    return (shader && shader->hasANGLEMultiviewEnabled());
 }
 
 bool ProgramD3DMetadata::usesVertexID() const
 {
-    return mAttachedShaders[gl::ShaderType::Vertex]->usesVertexID();
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Vertex];
+    return (shader && shader->usesVertexID());
 }
 
 bool ProgramD3DMetadata::usesViewID() const
 {
-    return mAttachedShaders[gl::ShaderType::Fragment]->usesViewID();
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Fragment];
+    return (shader && shader->usesViewID());
 }
 
 bool ProgramD3DMetadata::canSelectViewInVertexShader() const
@@ -492,12 +505,15 @@ bool ProgramD3DMetadata::usesSystemValuePointSize() const
 
 bool ProgramD3DMetadata::usesMultipleFragmentOuts() const
 {
-    return mAttachedShaders[gl::ShaderType::Fragment]->usesMultipleRenderTargets();
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Fragment];
+    return (shader && shader->usesMultipleRenderTargets());
 }
 
 bool ProgramD3DMetadata::usesCustomOutVars() const
 {
-    int version = mAttachedShaders[gl::ShaderType::Vertex]->getData().getShaderVersion();
+
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Vertex];
+    int version                 = shader ? shader->getData().getShaderVersion() : -1;
 
     switch (mClientType)
     {
@@ -1635,6 +1651,11 @@ class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
     GetVertexExecutableTask(ProgramD3D *program) : GetExecutableTask(program) {}
     angle::Result run() override
     {
+        if (!mProgram->mState.getAttachedShader(gl::ShaderType::Vertex))
+        {
+            return angle::Result::Continue;
+        }
+
         mProgram->updateCachedInputLayoutFromShader();
 
         ANGLE_TRY(mProgram->getVertexExecutableForCachedInputLayout(this, &mExecutable, &mInfoLog));
@@ -1657,6 +1678,11 @@ class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
     GetPixelExecutableTask(ProgramD3D *program) : GetExecutableTask(program) {}
     angle::Result run() override
     {
+        if (!mProgram->mState.getAttachedShader(gl::ShaderType::Fragment))
+        {
+            return angle::Result::Continue;
+        }
+
         mProgram->updateCachedOutputLayoutFromShader();
 
         ANGLE_TRY(mProgram->getPixelExecutableForCachedOutputLayout(this, &mExecutable, &mInfoLog));
@@ -1876,10 +1902,11 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(const gl::Conte
     auto pixelTask    = std::make_shared<GetPixelExecutableTask>(this);
     auto geometryTask = std::make_shared<GetGeometryExecutableTask>(this, context->getState());
     bool useGS        = usesGeometryShader(context->getState(), gl::PrimitiveMode::Points);
-    const ShaderD3D *vertexShaderD3D =
-        GetImplAs<ShaderD3D>(mState.getAttachedShader(gl::ShaderType::Vertex));
+    gl::Shader *vertexShader = mState.getAttachedShader(gl::ShaderType::Vertex);
+    gl::Shader *fragmentShader       = mState.getAttachedShader(gl::ShaderType::Fragment);
+    const ShaderD3D *vertexShaderD3D = vertexShader ? GetImplAs<ShaderD3D>(vertexShader) : nullptr;
     const ShaderD3D *fragmentShaderD3D =
-        GetImplAs<ShaderD3D>(mState.getAttachedShader(gl::ShaderType::Fragment));
+        fragmentShader ? GetImplAs<ShaderD3D>(fragmentShader) : nullptr;
 
     return std::make_unique<GraphicsProgramLinkEvent>(infoLog, context->getWorkerThreadPool(),
                                                       vertexTask, pixelTask, geometryTask, useGS,
@@ -2010,7 +2037,8 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
 
         if (mRenderer->getNativeLimitations().noFrontFacingSupport)
         {
-            if (shadersD3D[gl::ShaderType::Fragment]->usesFrontFacing())
+            const ShaderD3D *fragmentShader = shadersD3D[gl::ShaderType::Fragment];
+            if (fragmentShader && fragmentShader->usesFrontFacing())
             {
                 infoLog << "The current renderer doesn't support gl_FrontFacing";
                 return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
@@ -2023,7 +2051,8 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
         mDynamicHLSL->generateShaderLinkHLSL(context->getCaps(), mState, metadata,
                                              resources.varyingPacking, builtins, &mShaderHLSL);
 
-        mUsesPointSize = shadersD3D[gl::ShaderType::Vertex]->usesPointSize();
+        const ShaderD3D *vertexShader = shadersD3D[gl::ShaderType::Vertex];
+        mUsesPointSize                = vertexShader && vertexShader->usesPointSize();
         mDynamicHLSL->getPixelShaderOutputKey(data, mState, metadata, &mPixelShaderKey);
         mUsesFragDepth            = metadata.usesFragDepth();
         mUsesVertexID             = metadata.usesVertexID();
@@ -2920,7 +2949,10 @@ unsigned int ProgramD3D::issueSerial()
 void ProgramD3D::initAttribLocationsToD3DSemantic()
 {
     gl::Shader *vertexShader = mState.getAttachedShader(gl::ShaderType::Vertex);
-    ASSERT(vertexShader != nullptr);
+    if (!vertexShader)
+    {
+        return;
+    }
 
     // Init semantic index
     int semanticIndex = 0;

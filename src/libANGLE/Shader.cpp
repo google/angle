@@ -462,16 +462,16 @@ void Shader::resolveCompile()
         }
         case ShaderType::Vertex:
         {
-            {
-                mState.mOutputVaryings = GetShaderVariables(sh::GetOutputVaryings(compilerHandle));
-                mState.mAllAttributes    = GetShaderVariables(sh::GetAttributes(compilerHandle));
-                mState.mActiveAttributes = GetActiveShaderVariables(&mState.mAllAttributes);
-                mState.mNumViews         = sh::GetVertexShaderNumViews(compilerHandle);
-            }
+            mState.mOutputVaryings   = GetShaderVariables(sh::GetOutputVaryings(compilerHandle));
+            mState.mAllAttributes    = GetShaderVariables(sh::GetAttributes(compilerHandle));
+            mState.mActiveAttributes = GetActiveShaderVariables(&mState.mAllAttributes);
+            mState.mNumViews         = sh::GetVertexShaderNumViews(compilerHandle);
             break;
         }
         case ShaderType::Fragment:
         {
+            mState.mAllAttributes    = GetShaderVariables(sh::GetAttributes(compilerHandle));
+            mState.mActiveAttributes = GetActiveShaderVariables(&mState.mAllAttributes);
             mState.mInputVaryings = GetShaderVariables(sh::GetInputVaryings(compilerHandle));
             // TODO(jmadill): Figure out why we only sort in the FS, and if we need to.
             std::sort(mState.mInputVaryings.begin(), mState.mInputVaryings.end(), CompareShaderVar);
