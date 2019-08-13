@@ -42,6 +42,63 @@
     },
     {
       "key": {
+        "uuid": "b31f4ff3_5c419528",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-13T17:21:08Z",
+      "side": 1,
+      "message": "typo: invalid",
+      "range": {
+        "startLine": 14,
+        "startChar": 45,
+        "endLine": 14,
+        "endChar": 53
+      },
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e69d880b_0ed6f749",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-13T17:21:08Z",
+      "side": 1,
+      "message": "Can you add a test that requests a 4.x context so we fall into the \u0027default\u0027 case for the clientMajorVersion value?",
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea3064ed_55ca7350",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-13T17:21:08Z",
+      "side": 1,
+      "message": "Can this be removed since it\u0027s already in testTearDown()?",
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f9a725f4_4b01841a",
         "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
         "patchSetId": 3
@@ -59,6 +116,23 @@
         "endLine": 93,
         "endChar": 14
       },
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "686366db_c4ec9315",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-13T17:21:08Z",
+      "side": 1,
+      "message": "Same. Remove?",
       "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
