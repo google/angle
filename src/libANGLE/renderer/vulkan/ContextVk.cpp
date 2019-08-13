@@ -3003,7 +3003,7 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         // already notified of content change).
         // Test: SimpleStateChangeTestES31.DispatchWithImageTextureTexSubImageThenDispatchAgain
         // http://anglebug.com/3539
-        ANGLE_TRY(textureVk->ensureImageInitialized(this));
+        ANGLE_TRY(textureVk->ensureImageInitialized(this, ImageMipLevels::EnabledLevels));
 
         vk::ImageLayout imageLayout = vk::ImageLayout::AllGraphicsShadersWrite;
         if (program->isCompute())

@@ -882,6 +882,15 @@ class ImageHelper final : public CommandGraphResource
     uint32_t getBaseLevel();
     void setBaseAndMaxLevels(uint32_t baseLevel, uint32_t maxLevel);
 
+    angle::Result copyImageDataToBuffer(ContextVk *contextVk,
+                                        size_t sourceLevel,
+                                        uint32_t layerCount,
+                                        uint32_t baseLayer,
+                                        const gl::Box &sourceArea,
+                                        vk::BufferHelper **bufferOut,
+                                        VkDeviceSize *bufferOffsetOut,
+                                        uint8_t **outDataPtr);
+
   private:
     void forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
                                    ImageLayout newLayout,

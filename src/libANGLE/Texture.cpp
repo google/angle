@@ -496,6 +496,28 @@ TextureTarget TextureState::getBaseImageTarget() const
                                          : NonCubeTextureTypeToTarget(mType);
 }
 
+GLuint TextureState::getEnabledLevelCount() const
+{
+    GLuint levelCount      = 0;
+    const GLuint baseLevel = getEffectiveBaseLevel();
+    const GLuint maxLevel  = std::min(getEffectiveMaxLevel(), getMipmapMaxLevel());
+
+    // The mip chain will have either one or more sequential levels, or max levels,
+    // but not a sparse one.
+    for (size_t descIndex = baseLevel; descIndex < mImageDescs.size();)
+    {
+        if (!mImageDescs[descIndex].size.empty())
+        {
+            levelCount++;
+        }
+        descIndex = (mType == TextureType::CubeMap) ? descIndex + 6 : descIndex + 1;
+    }
+    // The original image already takes account into the levelCount.
+    levelCount = std::min(maxLevel - baseLevel + 1, levelCount);
+
+    return levelCount;
+}
+
 ImageDesc::ImageDesc()
     : ImageDesc(Extents(0, 0, 0), Format::Invalid(), 0, GL_TRUE, InitState::Initialized)
 {}
