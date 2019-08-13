@@ -84,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "08d68a77_ec54d228",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-13T19:08:03Z",
+      "side": 1,
+      "message": "SGTM",
+      "parentUuid": "13331eca_d83276ea",
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b31f4ff3_5c419528",
         "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
         "patchSetId": 3
@@ -236,6 +254,30 @@
       "side": 1,
       "message": "99+    std::vector\u003cEGLConfig\u003e configsVec(configList, configList + (ncfg * sizeof(EGLConfig)));",
       "parentUuid": "f9a725f4_4b01841a",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 14
+      },
+      "revId": "90e173d512fd8408a481b1cf28e42183ae9104c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f15cae22_29c2d794",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-13T19:08:03Z",
+      "side": 1,
+      "message": "What I tend to do for these double-query things is go\n\n// do first query to get size\nstd::vector\u003cEGLConfig\u003e configs(size);\n// do second query that writes to configs.data()\n\nBut as you prefer. The advantage of std::vector is the RAII pattern.",
+      "parentUuid": "927cb8b3_ea58a7d2",
       "range": {
         "startLine": 93,
         "startChar": 4,
