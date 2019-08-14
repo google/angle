@@ -133,6 +133,25 @@ void TransformFeedbackVk::addFramebufferDependency(ContextVk *contextVk,
     }
 }
 
+void TransformFeedbackVk::initDescriptorSet(ContextVk *contextVk,
+                                            size_t xfbBufferCount,
+                                            vk::BufferHelper *emptyBuffer,
+                                            VkDescriptorSet descSet) const
+{
+    std::array<VkDescriptorBufferInfo, gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS>
+        descriptorBufferInfo;
+
+    for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
+    {
+        VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[bufferIndex];
+        bufferInfo.buffer                  = emptyBuffer->getBuffer().getHandle();
+        bufferInfo.offset                  = 0;
+        bufferInfo.range                   = VK_WHOLE_SIZE;
+    }
+
+    writeDescriptorSet(contextVk, xfbBufferCount, descriptorBufferInfo.data(), descSet);
+}
+
 void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
                                               const gl::ProgramState &programState,
                                               VkDescriptorSet descSet) const
@@ -165,20 +184,7 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
         bufferInfo.range  = bufferRange.size + (bufferRange.offset - bufferRange.alignedOffset);
     }
 
-    VkDevice device = contextVk->getDevice();
-
-    VkWriteDescriptorSet writeDescriptorInfo = {};
-    writeDescriptorInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeDescriptorInfo.dstSet               = descSet;
-    writeDescriptorInfo.dstBinding           = kXfbBindingIndexStart;
-    writeDescriptorInfo.dstArrayElement      = 0;
-    writeDescriptorInfo.descriptorCount      = static_cast<uint32_t>(xfbBufferCount);
-    writeDescriptorInfo.descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-    writeDescriptorInfo.pImageInfo           = nullptr;
-    writeDescriptorInfo.pBufferInfo          = descriptorBufferInfo.data();
-    writeDescriptorInfo.pTexelBufferView     = nullptr;
-
-    vkUpdateDescriptorSets(device, 1, &writeDescriptorInfo, 0, nullptr);
+    writeDescriptorSet(contextVk, xfbBufferCount, descriptorBufferInfo.data(), descSet);
 }
 
 void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
@@ -236,6 +242,27 @@ void TransformFeedbackVk::onBeginOrEnd(const gl::Context *context)
     {
         framebuffer->finishCurrentCommands(contextVk);
     }
+}
+
+void TransformFeedbackVk::writeDescriptorSet(ContextVk *contextVk,
+                                             size_t xfbBufferCount,
+                                             VkDescriptorBufferInfo *pBufferInfo,
+                                             VkDescriptorSet descSet) const
+{
+    VkDevice device = contextVk->getDevice();
+
+    VkWriteDescriptorSet writeDescriptorInfo = {};
+    writeDescriptorInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeDescriptorInfo.dstSet               = descSet;
+    writeDescriptorInfo.dstBinding           = kXfbBindingIndexStart;
+    writeDescriptorInfo.dstArrayElement      = 0;
+    writeDescriptorInfo.descriptorCount      = static_cast<uint32_t>(xfbBufferCount);
+    writeDescriptorInfo.descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    writeDescriptorInfo.pImageInfo           = nullptr;
+    writeDescriptorInfo.pBufferInfo          = pBufferInfo;
+    writeDescriptorInfo.pTexelBufferView     = nullptr;
+
+    vkUpdateDescriptorSets(device, 1, &writeDescriptorInfo, 0, nullptr);
 }
 
 }  // namespace rx

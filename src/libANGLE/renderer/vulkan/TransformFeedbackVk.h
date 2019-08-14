@@ -45,6 +45,10 @@ class TransformFeedbackVk : public TransformFeedbackImpl
     void addFramebufferDependency(ContextVk *contextVk,
                                   const gl::ProgramState &programState,
                                   vk::FramebufferHelper *framebuffer) const;
+    void initDescriptorSet(ContextVk *contextVk,
+                           size_t xfbBufferCount,
+                           vk::BufferHelper *emptyBuffer,
+                           VkDescriptorSet descSet) const;
     void updateDescriptorSet(ContextVk *contextVk,
                              const gl::ProgramState &programState,
                              VkDescriptorSet descSet) const;
@@ -56,6 +60,10 @@ class TransformFeedbackVk : public TransformFeedbackImpl
 
   private:
     void onBeginOrEnd(const gl::Context *context);
+    void writeDescriptorSet(ContextVk *contextVk,
+                            size_t xfbBufferCount,
+                            VkDescriptorBufferInfo *pBufferInfo,
+                            VkDescriptorSet descSet) const;
 
     // Cached buffer properties for faster descriptor set update and offset calculation.
     struct BoundBufferRange
