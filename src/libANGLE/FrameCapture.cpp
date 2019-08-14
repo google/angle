@@ -59,6 +59,13 @@ void WriteInlineData(const std::vector<uint8_t> &vec, std::ostream &out)
 }
 
 constexpr size_t kInlineDataThreshold = 128;
+
+void WriteStringParamReplay(std::ostream &out, const ParamCapture &param)
+{
+    const std::vector<uint8_t> &data = param.data[0];
+    std::string str(data.begin(), data.end());
+    out << "\"" << str << "\"";
+}
 }  // anonymous namespace
 
 ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
@@ -108,6 +115,13 @@ ParamCapture &ParamBuffer::getParam(const char *paramName, ParamType paramType, 
     ASSERT(capture.name == paramName);
     ASSERT(capture.type == paramType);
     return capture;
+}
+
+const ParamCapture &ParamBuffer::getParam(const char *paramName,
+                                          ParamType paramType,
+                                          int index) const
+{
+    return const_cast<ParamBuffer *>(this)->getParam(paramName, paramType, index);
 }
 
 void ParamBuffer::addParam(ParamCapture &&param)
@@ -176,67 +190,121 @@ FrameCapture::FrameCapture() : mFrameIndex(0), mReadBufferSize(0)
 
 FrameCapture::~FrameCapture() = default;
 
-void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
+void FrameCapture::maybeCaptureClientData(const gl::Context *context, const CallCapture &call)
 {
-    if (call.entryPoint == gl::EntryPoint::VertexAttribPointer)
+    switch (call.entryPoint)
     {
-        // Get array location
-        GLuint index = call.params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal;
-
-        if (call.params.hasClientArrayData())
+        case gl::EntryPoint::VertexAttribPointer:
         {
-            mClientVertexArrayMap[index] = static_cast<uint32_t>(mCalls.size());
-        }
-        else
-        {
-            mClientVertexArrayMap[index] = -1;
-        }
-    }
-    else if (call.entryPoint == gl::EntryPoint::DrawArrays)
-    {
-        if (context->getStateCache().hasAnyActiveClientAttrib())
-        {
-            // Get counts from paramBuffer.
-            GLint firstVertex = call.params.getParam("first", ParamType::TGLint, 1).value.GLintVal;
-            GLsizei drawCount =
-                call.params.getParam("count", ParamType::TGLsizei, 2).value.GLsizeiVal;
-            captureClientArraySnapshot(context, firstVertex + drawCount, 1);
-        }
-    }
-    else if (call.entryPoint == gl::EntryPoint::DrawElements)
-    {
-        if (context->getStateCache().hasAnyActiveClientAttrib())
-        {
-            GLsizei count = call.params.getParam("count", ParamType::TGLsizei, 1).value.GLsizeiVal;
-            gl::DrawElementsType drawElementsType =
-                call.params.getParam("typePacked", ParamType::TDrawElementsType, 2)
-                    .value.DrawElementsTypeVal;
-            const void *indices = call.params.getParam("indices", ParamType::TvoidConstPointer, 3)
-                                      .value.voidConstPointerVal;
+            // Get array location
+            GLuint index = call.params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal;
 
-            gl::IndexRange indexRange;
-
-            bool restart = context->getState().isPrimitiveRestartEnabled();
-
-            gl::Buffer *elementArrayBuffer =
-                context->getState().getVertexArray()->getElementArrayBuffer();
-            if (elementArrayBuffer)
+            if (call.params.hasClientArrayData())
             {
-                size_t offset = reinterpret_cast<size_t>(indices);
-                (void)elementArrayBuffer->getIndexRange(context, drawElementsType, offset, count,
-                                                        restart, &indexRange);
+                mClientVertexArrayMap[index] = static_cast<int>(mCalls.size());
             }
             else
             {
-                indexRange = gl::ComputeIndexRange(drawElementsType, indices, count, restart);
+                mClientVertexArrayMap[index] = -1;
             }
-
-            captureClientArraySnapshot(context, indexRange.end, 1);
+            break;
         }
+
+        case gl::EntryPoint::DrawArrays:
+        {
+            if (context->getStateCache().hasAnyActiveClientAttrib())
+            {
+                // Get counts from paramBuffer.
+                GLint firstVertex =
+                    call.params.getParam("first", ParamType::TGLint, 1).value.GLintVal;
+                GLsizei drawCount =
+                    call.params.getParam("count", ParamType::TGLsizei, 2).value.GLsizeiVal;
+                captureClientArraySnapshot(context, firstVertex + drawCount, 1);
+            }
+            break;
+        }
+
+        case gl::EntryPoint::DrawElements:
+        {
+            if (context->getStateCache().hasAnyActiveClientAttrib())
+            {
+                GLsizei count =
+                    call.params.getParam("count", ParamType::TGLsizei, 1).value.GLsizeiVal;
+                gl::DrawElementsType drawElementsType =
+                    call.params.getParam("typePacked", ParamType::TDrawElementsType, 2)
+                        .value.DrawElementsTypeVal;
+                const void *indices =
+                    call.params.getParam("indices", ParamType::TvoidConstPointer, 3)
+                        .value.voidConstPointerVal;
+
+                gl::IndexRange indexRange;
+
+                bool restart = context->getState().isPrimitiveRestartEnabled();
+
+                gl::Buffer *elementArrayBuffer =
+                    context->getState().getVertexArray()->getElementArrayBuffer();
+                if (elementArrayBuffer)
+                {
+                    size_t offset = reinterpret_cast<size_t>(indices);
+                    (void)elementArrayBuffer->getIndexRange(context, drawElementsType, offset,
+                                                            count, restart, &indexRange);
+                }
+                else
+                {
+                    indexRange = gl::ComputeIndexRange(drawElementsType, indices, count, restart);
+                }
+
+                captureClientArraySnapshot(context, indexRange.end, 1);
+            }
+            break;
+        }
+
+        default:
+            break;
     }
+}
+
+void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
+{
+    // Process client data snapshots.
+    maybeCaptureClientData(context, call);
 
     mReadBufferSize = std::max(mReadBufferSize, call.params.getReadBufferSize());
     mCalls.emplace_back(std::move(call));
+
+    // Process resource ID updates.
+    maybeUpdateResourceIDs(context, mCalls.back());
+}
+
+void FrameCapture::maybeUpdateResourceIDs(const gl::Context *context, const CallCapture &call)
+{
+    switch (call.entryPoint)
+    {
+        case gl::EntryPoint::GenRenderbuffers:
+        case gl::EntryPoint::GenRenderbuffersOES:
+        {
+            GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+            const ParamCapture &renderbuffers =
+                call.params.getParam("renderbuffersPacked", ParamType::TRenderbufferIDPointer, 1);
+            ASSERT(renderbuffers.data.size() == 1);
+            const gl::RenderbufferID *returnedIDs =
+                reinterpret_cast<const gl::RenderbufferID *>(renderbuffers.data[0].data());
+
+            for (GLsizei idIndex = 0; idIndex < n; ++idIndex)
+            {
+                gl::RenderbufferID id    = returnedIDs[idIndex];
+                GLsizei readBufferOffset = idIndex * sizeof(gl::RenderbufferID);
+                ParamBuffer params;
+                params.addValueParam("id", ParamType::TGLuint, id.value);
+                params.addValueParam("readBufferOffset", ParamType::TGLsizei, readBufferOffset);
+                mCalls.emplace_back("UpdateRenderbufferID", std::move(params));
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
 }
 
 void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
@@ -322,6 +390,7 @@ void FrameCapture::saveCapturedFrameAsCpp()
     header << "#include <cstdio>\n";
     header << "#include <cstring>\n";
     header << "#include <vector>\n";
+    header << "#include <unordered_map>\n";
     header << "\n";
     header << "namespace\n";
     header << "{\n";
@@ -338,6 +407,14 @@ void FrameCapture::saveCapturedFrameAsCpp()
         header << "    memcpy(gClientArrays[arrayIndex].data(), data, size);\n";
         header << "}\n";
     }
+
+    header << "std::unordered_map<GLuint, GLuint> gRenderbufferMap;\n";
+    header << "void UpdateRenderbufferID(GLuint id, GLsizei readBufferOffset)\n";
+    header << "{\n";
+    header << "    GLuint returnedID;\n";
+    header << "    memcpy(&returnedID, &gReadBuffer[readBufferOffset], sizeof(GLuint));\n";
+    header << "    gRenderbufferMap[id] = returnedID;\n";
+    header << "}\n";
 
     out << "void ReplayFrame" << mFrameIndex << "()\n";
     out << "{\n";
@@ -409,141 +486,198 @@ int FrameCapture::getAndIncrementCounter(gl::EntryPoint entryPoint, const std::s
     return mDataCounters[counterKey]++;
 }
 
+void FrameCapture::writeStringPointerParamReplay(std::ostream &out,
+                                                 std::ostream &header,
+                                                 const CallCapture &call,
+                                                 const ParamCapture &param)
+{
+    int counter = getAndIncrementCounter(call.entryPoint, param.name);
+
+    header << "const char *";
+    WriteParamStaticVarName(call, param, counter, header);
+    header << "[] = { \n";
+
+    for (const std::vector<uint8_t> &data : param.data)
+    {
+        std::string str(data.begin(), data.end());
+        header << "    R\"(" << str << ")\",\n";
+    }
+
+    header << " };\n";
+    WriteParamStaticVarName(call, param, counter, out);
+}
+
+void FrameCapture::writeRenderbufferIDPointerParamReplay(std::ostream &out,
+                                                         std::ostream &header,
+                                                         const CallCapture &call,
+                                                         const ParamCapture &param)
+{
+    int counter = getAndIncrementCounter(call.entryPoint, param.name);
+
+    header << "const GLuint ";
+    WriteParamStaticVarName(call, param, counter, header);
+    header << "[] = { ";
+
+    GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+    const ParamCapture &renderbuffers =
+        call.params.getParam("renderbuffersPacked", ParamType::TRenderbufferIDConstPointer, 1);
+    ASSERT(renderbuffers.data.size() == 1);
+    const gl::RenderbufferID *returnedIDs =
+        reinterpret_cast<const gl::RenderbufferID *>(renderbuffers.data[0].data());
+    for (GLsizei resIndex = 0; resIndex < n; ++resIndex)
+    {
+        gl::RenderbufferID id = returnedIDs[resIndex];
+        if (resIndex > 0)
+        {
+            header << ", ";
+        }
+        header << "gRenderbufferMap[" << id.value << "]";
+    }
+
+    header << " };\n    ";
+
+    WriteParamStaticVarName(call, param, counter, out);
+}
+
+void FrameCapture::writeBinaryParamReplay(std::ostream &out,
+                                          std::ostream &header,
+                                          const CallCapture &call,
+                                          const ParamCapture &param,
+                                          std::vector<uint8_t> *binaryData)
+{
+    int counter = getAndIncrementCounter(call.entryPoint, param.name);
+
+    ASSERT(param.data.size() == 1);
+    const std::vector<uint8_t> &data = param.data[0];
+
+    if (data.size() > kInlineDataThreshold)
+    {
+        size_t offset = binaryData->size();
+        binaryData->resize(offset + data.size());
+        memcpy(binaryData->data() + offset, data.data(), data.size());
+        if (param.type == ParamType::TvoidConstPointer || param.type == ParamType::TvoidPointer)
+        {
+            out << "&gBinaryData[" << offset << "]";
+        }
+        else
+        {
+            out << "reinterpret_cast<" << ParamTypeToString(param.type) << ">(&gBinaryData["
+                << offset << "])";
+        }
+    }
+    else
+    {
+        ParamType overrideType = param.type;
+        if (param.type == ParamType::TGLvoidConstPointer ||
+            param.type == ParamType::TvoidConstPointer)
+        {
+            overrideType = ParamType::TGLubyteConstPointer;
+        }
+
+        std::string paramTypeString = ParamTypeToString(overrideType);
+        header << paramTypeString.substr(0, paramTypeString.length() - 1);
+        WriteParamStaticVarName(call, param, counter, header);
+
+        header << "[] = { ";
+
+        switch (overrideType)
+        {
+            case ParamType::TGLintConstPointer:
+                WriteInlineData<GLint>(data, header);
+                break;
+            case ParamType::TGLshortConstPointer:
+                WriteInlineData<GLshort>(data, header);
+                break;
+            case ParamType::TGLfloatConstPointer:
+                WriteInlineData<GLfloat>(data, header);
+                break;
+            case ParamType::TGLubyteConstPointer:
+                WriteInlineData<GLubyte, int>(data, header);
+                break;
+            case ParamType::TGLuintConstPointer:
+            case ParamType::TGLenumConstPointer:
+                WriteInlineData<GLuint>(data, header);
+                break;
+            default:
+                UNIMPLEMENTED();
+                break;
+        }
+
+        header << " };\n";
+
+        WriteParamStaticVarName(call, param, counter, out);
+    }
+}
+
 void FrameCapture::writeCallReplay(const CallCapture &call,
                                    std::ostream &out,
                                    std::ostream &header,
                                    std::vector<uint8_t> *binaryData)
 {
-    out << call.name() << "(";
+    std::ostringstream callOut;
+
+    callOut << call.name() << "(";
 
     bool first = true;
     for (const ParamCapture &param : call.params.getParamCaptures())
     {
         if (!first)
         {
-            out << ", ";
+            callOut << ", ";
         }
 
         if (param.arrayClientPointerIndex != -1)
         {
-            out << "gClientArrays[" << param.arrayClientPointerIndex << "].data()";
+            callOut << "gClientArrays[" << param.arrayClientPointerIndex << "].data()";
         }
         else if (param.readBufferSizeBytes > 0)
         {
-            out << "reinterpret_cast<" << ParamTypeToString(param.type) << ">(gReadBuffer.data())";
+            callOut << "reinterpret_cast<" << ParamTypeToString(param.type)
+                    << ">(gReadBuffer.data())";
         }
         else if (param.data.empty())
         {
             if (param.type == ParamType::TGLenum)
             {
-                out << GLenumToString(param.enumGroup, param.value.GLenumVal);
+                callOut << GLenumToString(param.enumGroup, param.value.GLenumVal);
             }
             else if (param.type == ParamType::TGLbitfield)
             {
-                out << GLbitfieldToString(param.enumGroup, param.value.GLbitfieldVal);
+                callOut << GLbitfieldToString(param.enumGroup, param.value.GLbitfieldVal);
             }
             else
             {
-                out << param;
+                callOut << param;
             }
         }
         else
         {
-            if (param.type == ParamType::TGLcharConstPointer)
+            switch (param.type)
             {
-                const std::vector<uint8_t> &data = param.data[0];
-                std::string str(data.begin(), data.end());
-                out << "\"" << str << "\"";
-            }
-            else if (param.type == ParamType::TGLcharConstPointerPointer)
-            {
-                int counter = getAndIncrementCounter(call.entryPoint, param.name);
-
-                header << "const char *";
-                WriteParamStaticVarName(call, param, counter, header);
-                header << "[] = { \n";
-
-                for (const std::vector<uint8_t> &data : param.data)
-                {
-                    std::string str(data.begin(), data.end());
-                    header << "    R\"(" << str << ")\",\n";
-                }
-
-                header << " };\n";
-                WriteParamStaticVarName(call, param, counter, out);
-            }
-            else
-            {
-                int counter = getAndIncrementCounter(call.entryPoint, param.name);
-
-                ASSERT(param.data.size() == 1);
-                const std::vector<uint8_t> &data = param.data[0];
-
-                if (data.size() > kInlineDataThreshold)
-                {
-                    size_t offset = binaryData->size();
-                    binaryData->resize(offset + data.size());
-                    memcpy(binaryData->data() + offset, data.data(), data.size());
-                    if (param.type == ParamType::TvoidConstPointer ||
-                        param.type == ParamType::TvoidPointer)
-                    {
-                        out << "&gBinaryData[" << offset << "]";
-                    }
-                    else
-                    {
-                        out << "reinterpret_cast<" << ParamTypeToString(param.type)
-                            << ">(&gBinaryData[" << offset << "])";
-                    }
-                }
-                else
-                {
-                    ParamType overrideType = param.type;
-                    if (param.type == ParamType::TGLvoidConstPointer ||
-                        param.type == ParamType::TvoidConstPointer)
-                    {
-                        overrideType = ParamType::TGLubyteConstPointer;
-                    }
-
-                    std::string paramTypeString = ParamTypeToString(overrideType);
-                    header << paramTypeString.substr(0, paramTypeString.length() - 1);
-                    WriteParamStaticVarName(call, param, counter, header);
-
-                    header << "[] = { ";
-
-                    switch (overrideType)
-                    {
-                        case ParamType::TGLintConstPointer:
-                            WriteInlineData<GLint>(data, header);
-                            break;
-                        case ParamType::TGLshortConstPointer:
-                            WriteInlineData<GLshort>(data, header);
-                            break;
-                        case ParamType::TGLfloatConstPointer:
-                            WriteInlineData<GLfloat>(data, header);
-                            break;
-                        case ParamType::TGLubyteConstPointer:
-                            WriteInlineData<GLubyte, int>(data, header);
-                            break;
-                        case ParamType::TGLuintConstPointer:
-                        case ParamType::TGLenumConstPointer:
-                            WriteInlineData<GLuint>(data, header);
-                            break;
-                        default:
-                            UNIMPLEMENTED();
-                            break;
-                    }
-
-                    header << " };\n";
-
-                    WriteParamStaticVarName(call, param, counter, out);
-                }
+                case ParamType::TGLcharConstPointer:
+                    WriteStringParamReplay(callOut, param);
+                    break;
+                case ParamType::TGLcharConstPointerPointer:
+                    writeStringPointerParamReplay(callOut, header, call, param);
+                    break;
+                case ParamType::TRenderbufferIDConstPointer:
+                    writeRenderbufferIDPointerParamReplay(callOut, out, call, param);
+                    break;
+                case ParamType::TRenderbufferIDPointer:
+                    UNIMPLEMENTED();
+                    break;
+                default:
+                    writeBinaryParamReplay(callOut, header, call, param, binaryData);
+                    break;
             }
         }
 
         first = false;
     }
 
-    out << ")";
+    callOut << ")";
+
+    out << callOut.str();
 }
 
 bool FrameCapture::enabled() const
@@ -623,11 +757,10 @@ void WriteParamValueToStream<ParamType::TBufferID>(std::ostream &os, gl::BufferI
     os << value.value;
 }
 
-// TODO(jmadill): Use renderbuffer ID map. http://anglebug.com/3611
 template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os, gl::RenderbufferID value)
 {
-    os << value.value;
+    os << "gRenderbufferMap[" << value.value << "]";
 }
 
 // TODO(jmadill): Use texture ID map. http://anglebug.com/3611

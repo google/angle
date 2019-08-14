@@ -61,6 +61,8 @@ class ParamBuffer final : angle::NonCopyable
                       T paramValue);
 
     ParamCapture &getParam(const char *paramName, ParamType paramType, int index);
+    const ParamCapture &getParam(const char *paramName, ParamType paramType, int index) const;
+    const ParamCapture &getReturnValue() const { return mReturnValueCapture; }
 
     void addParam(ParamCapture &&param);
     void addReturnValue(ParamCapture &&returnValue);
@@ -119,6 +121,21 @@ class FrameCapture final : angle::NonCopyable
     int getAndIncrementCounter(gl::EntryPoint entryPoint, const std::string &paramName);
     bool anyClientArray() const;
     void saveCapturedFrameAsCpp();
+    void writeStringPointerParamReplay(std::ostream &out,
+                                       std::ostream &header,
+                                       const CallCapture &call,
+                                       const ParamCapture &param);
+    void writeRenderbufferIDPointerParamReplay(std::ostream &out,
+                                               std::ostream &header,
+                                               const CallCapture &call,
+                                               const ParamCapture &param);
+    void writeBinaryParamReplay(std::ostream &out,
+                                std::ostream &header,
+                                const CallCapture &call,
+                                const ParamCapture &param,
+                                std::vector<uint8_t> *binaryData);
+    void maybeCaptureClientData(const gl::Context *context, const CallCapture &call);
+    void maybeUpdateResourceIDs(const gl::Context *context, const CallCapture &call);
 
     std::vector<CallCapture> mCalls;
     gl::AttribArray<int> mClientVertexArrayMap;

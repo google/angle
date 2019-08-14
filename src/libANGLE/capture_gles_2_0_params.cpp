@@ -109,7 +109,7 @@ void CaptureDeleteFramebuffers_framebuffers(const Context *context,
                                             const GLuint *framebuffers,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(framebuffers, sizeof(GLuint) * n, paramCapture);
 }
 
 void CaptureDeleteRenderbuffers_renderbuffersPacked(const Context *context,
@@ -118,7 +118,7 @@ void CaptureDeleteRenderbuffers_renderbuffersPacked(const Context *context,
                                                     const RenderbufferID *renderbuffers,
                                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(renderbuffers, sizeof(RenderbufferID) * n, paramCapture);
 }
 
 void CaptureDeleteTextures_texturesPacked(const Context *context,
@@ -175,6 +175,7 @@ void CaptureGenRenderbuffers_renderbuffersPacked(const Context *context,
                                                  ParamCapture *paramCapture)
 {
     paramCapture->readBufferSizeBytes = sizeof(RenderbufferID) * n;
+    CaptureMemory(renderbuffers, paramCapture->readBufferSizeBytes, paramCapture);
 }
 
 void CaptureGenTextures_texturesPacked(const Context *context,
