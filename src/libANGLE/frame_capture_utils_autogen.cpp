@@ -333,23 +333,23 @@ const char *ParamTypeToString(ParamType paramType)
     switch (paramType)
     {
         case ParamType::TAlphaTestFunc:
-            return "gl::AlphaTestFunc";
+            return "GLenum";
         case ParamType::TBufferBinding:
-            return "gl::BufferBinding";
+            return "GLenum";
         case ParamType::TBufferID:
-            return "gl::BufferID";
+            return "GLuint";
         case ParamType::TBufferIDConstPointer:
-            return "const gl::BufferID *";
+            return "const GLuint *";
         case ParamType::TBufferIDPointer:
-            return "gl::BufferID *";
+            return "GLuint *";
         case ParamType::TBufferUsage:
-            return "gl::BufferUsage";
+            return "GLenum";
         case ParamType::TClientVertexArrayType:
-            return "gl::ClientVertexArrayType";
+            return "GLenum";
         case ParamType::TCullFaceMode:
-            return "gl::CullFaceMode";
+            return "GLenum";
         case ParamType::TDrawElementsType:
-            return "gl::DrawElementsType";
+            return "GLenum";
         case ParamType::TGLDEBUGPROC:
             return "GLDEBUGPROC";
         case ParamType::TGLDEBUGPROCKHR:
@@ -457,51 +457,51 @@ const char *ParamTypeToString(ParamType paramType)
         case ParamType::TGLvoidConstPointerPointer:
             return "const GLvoid * const *";
         case ParamType::TGraphicsResetStatus:
-            return "gl::GraphicsResetStatus";
+            return "GLenum";
         case ParamType::THandleType:
-            return "gl::HandleType";
+            return "GLenum";
         case ParamType::TLightParameter:
-            return "gl::LightParameter";
+            return "GLenum";
         case ParamType::TLogicalOperation:
-            return "gl::LogicalOperation";
+            return "GLenum";
         case ParamType::TMaterialParameter:
-            return "gl::MaterialParameter";
+            return "GLenum";
         case ParamType::TMatrixType:
-            return "gl::MatrixType";
+            return "GLenum";
         case ParamType::TPointParameter:
-            return "gl::PointParameter";
+            return "GLenum";
         case ParamType::TPrimitiveMode:
-            return "gl::PrimitiveMode";
+            return "GLenum";
         case ParamType::TProvokingVertexConvention:
-            return "gl::ProvokingVertexConvention";
+            return "GLenum";
         case ParamType::TQueryType:
-            return "gl::QueryType";
+            return "GLenum";
         case ParamType::TRenderbufferID:
-            return "gl::RenderbufferID";
+            return "GLuint";
         case ParamType::TRenderbufferIDConstPointer:
-            return "const gl::RenderbufferID *";
+            return "const GLuint *";
         case ParamType::TRenderbufferIDPointer:
-            return "gl::RenderbufferID *";
+            return "GLuint *";
         case ParamType::TShaderType:
-            return "gl::ShaderType";
+            return "GLenum";
         case ParamType::TShadingModel:
-            return "gl::ShadingModel";
+            return "GLenum";
         case ParamType::TTextureEnvParameter:
-            return "gl::TextureEnvParameter";
+            return "GLenum";
         case ParamType::TTextureEnvTarget:
-            return "gl::TextureEnvTarget";
+            return "GLenum";
         case ParamType::TTextureID:
-            return "gl::TextureID";
+            return "GLuint";
         case ParamType::TTextureIDConstPointer:
-            return "const gl::TextureID *";
+            return "const GLuint *";
         case ParamType::TTextureIDPointer:
-            return "gl::TextureID *";
+            return "GLuint *";
         case ParamType::TTextureTarget:
-            return "gl::TextureTarget";
+            return "GLenum";
         case ParamType::TTextureType:
-            return "gl::TextureType";
+            return "GLenum";
         case ParamType::TVertexAttribType:
-            return "gl::VertexAttribType";
+            return "GLenum";
         case ParamType::TvoidConstPointer:
             return "const void *";
         case ParamType::TvoidConstPointerPointer:
