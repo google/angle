@@ -23,8 +23,7 @@ class TSymbolTable;
 ANGLE_NO_DISCARD bool RewriteCubeMapSamplersAs2DArray(TCompiler *compiler,
                                                       TIntermBlock *root,
                                                       TSymbolTable *symbolTable,
-                                                      bool isFragmentShader,
-                                                      bool useSubgroupOps);
+                                                      bool isFragmentShader);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_REWRITECUBEMAPSAMPLERSAS2DARRAY_H_

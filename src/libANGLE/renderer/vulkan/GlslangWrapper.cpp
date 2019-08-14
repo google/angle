@@ -951,7 +951,6 @@ void GlslangWrapper::GetShaderSource(bool useOldRewriteStructSamplers,
 angle::Result GlslangWrapper::GetShaderCode(vk::Context *context,
                                             const gl::Caps &glCaps,
                                             bool enableLineRasterEmulation,
-                                            bool enableSubgroupOps,
                                             const gl::ShaderMap<std::string> &shaderSources,
                                             gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
@@ -971,18 +970,17 @@ angle::Result GlslangWrapper::GetShaderCode(vk::Context *context,
                                                kVersionDefine, kLineRasterDefine),
                        VK_ERROR_INVALID_SHADER_NV);
 
-        return GetShaderCodeImpl(context, glCaps, enableSubgroupOps, patchedSources, shaderCodeOut);
+        return GetShaderCodeImpl(context, glCaps, patchedSources, shaderCodeOut);
     }
     else
     {
-        return GetShaderCodeImpl(context, glCaps, enableSubgroupOps, shaderSources, shaderCodeOut);
+        return GetShaderCodeImpl(context, glCaps, shaderSources, shaderCodeOut);
     }
 }
 
 // static
 angle::Result GlslangWrapper::GetShaderCodeImpl(vk::Context *context,
                                                 const gl::Caps &glCaps,
-                                                bool enableSubgroupOps,
                                                 const gl::ShaderMap<std::string> &shaderSources,
                                                 gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
@@ -1018,11 +1016,6 @@ angle::Result GlslangWrapper::GetShaderCodeImpl(vk::Context *context,
         glslang::TShader *shader = shaders[shaderType];
         shader->setStringsWithLengths(&shaderString, &shaderLength, 1);
         shader->setEntryPoint("main");
-        if (enableSubgroupOps)
-        {
-            // Enable SPIR-V 1.3 if to be able to use subgroup operations.
-            shader->setEnvTarget(glslang::EShTargetSpv, glslang::EShTargetSpv_1_3);
-        }
 
         bool result = shader->parse(&builtInResources, 450, ECoreProfile, false, false, messages);
         if (!result)

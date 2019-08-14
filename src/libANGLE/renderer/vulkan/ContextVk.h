@@ -327,11 +327,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     void updateScissor(const gl::State &glState);
 
-    bool emulateSeamfulCubeMapSampling(bool *useSubgroupOpsOut) const
-    {
-        *useSubgroupOpsOut = mEmulateSeamfulCubeMapSamplingWithSubgroupOps;
-        return mEmulateSeamfulCubeMapSampling;
-    }
+    bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
 
     bool useOldRewriteStructSamplers() const { return mUseOldRewriteStructSamplers; }
 
@@ -492,7 +488,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     void waitForSwapchainImageIfNecessary();
 
-    bool shouldEmulateSeamfulCubeMapSampling(bool *useSubgroupOpsOut) const;
+    bool shouldEmulateSeamfulCubeMapSampling() const;
 
     bool shouldUseOldRewriteStructSamplers() const;
 
@@ -557,10 +553,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // at the end of the command buffer to make that write available to the host.
     bool mIsAnyHostVisibleBufferWritten;
 
-    // Whether this context should do seamful cube map sampling emulation, and whether subgroup
-    // operations should be used.
+    // Whether this context should do seamful cube map sampling emulation.
     bool mEmulateSeamfulCubeMapSampling;
-    bool mEmulateSeamfulCubeMapSamplingWithSubgroupOps;
 
     // Whether this context should use the old version of the
     // RewriteStructSamplers pass.

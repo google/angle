@@ -46,6 +46,8 @@ class CubeMapTextureTest : public ANGLETest
 
     void testTearDown() override { glDeleteProgram(mProgram); }
 
+    void runSampleCoordinateTransformTest(const char *shader);
+
     GLuint mProgram;
     GLint mColorLocation;
 };
@@ -113,9 +115,7 @@ TEST_P(CubeMapTextureTest, RenderToFacesConsecutively)
     EXPECT_GL_NO_ERROR();
 }
 
-// Verify that cube map sampling follows the rules that map cubemap coordinates to coordinates
-// within each face.  See section 3.7.5 of GLES2.0 (Cube Map Texture Selection).
-TEST_P(CubeMapTextureTest, SampleCoordinateTransform)
+void CubeMapTextureTest::runSampleCoordinateTransformTest(const char *shader)
 {
     // Fails to compile the shader.  anglebug.com/3776
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
@@ -182,42 +182,7 @@ TEST_P(CubeMapTextureTest, SampleCoordinateTransform)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboTex, 0);
     EXPECT_GL_NO_ERROR();
 
-    // Create a program that samples from 6x4 directions of the cubemap, draw and verify that the
-    // colors match the right color from |faceColors|.
-    constexpr char kFS[] = R"(precision mediump float;
-
-uniform samplerCube texCube;
-
-const mat4 coordInSection = mat4(
-    vec4(-0.5, -0.5, 0, 0),
-    vec4( 0.5, -0.5, 0, 0),
-    vec4(-0.5,  0.5, 0, 0),
-    vec4( 0.5,  0.5, 0, 0)
-);
-
-void main()
-{
-    vec3 coord;
-    if (gl_FragCoord.x < 2.0)
-    {
-        coord.x = gl_FragCoord.x < 1.0 ? 1.0 : -1.0;
-        coord.zy = coordInSection[int(gl_FragCoord.y)].xy;
-    }
-    else if (gl_FragCoord.x < 4.0)
-    {
-        coord.y = gl_FragCoord.x < 3.0 ? 1.0 : -1.0;
-        coord.xz = coordInSection[int(gl_FragCoord.y)].xy;
-    }
-    else
-    {
-        coord.z = gl_FragCoord.x < 5.0 ? 1.0 : -1.0;
-        coord.xy = coordInSection[int(gl_FragCoord.y)].xy;
-    }
-
-    gl_FragColor = textureCube(texCube, coord);
-})";
-
-    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), shader);
     glUseProgram(program);
 
     GLint texCubeLocation = glGetUniformLocation(program, "texCube");
@@ -259,6 +224,93 @@ void main()
         }
     }
     EXPECT_GL_NO_ERROR();
+}
+
+// Verify that cube map sampling follows the rules that map cubemap coordinates to coordinates
+// within each face.  See section 3.7.5 of GLES2.0 (Cube Map Texture Selection).
+TEST_P(CubeMapTextureTest, SampleCoordinateTransform)
+{
+    // Create a program that samples from 6x4 directions of the cubemap, draw and verify that the
+    // colors match the right color from |faceColors|.
+    constexpr char kFS[] = R"(precision mediump float;
+
+uniform samplerCube texCube;
+
+const mat4 coordInSection = mat4(
+    vec4(-0.5, -0.5, 0, 0),
+    vec4( 0.5, -0.5, 0, 0),
+    vec4(-0.5,  0.5, 0, 0),
+    vec4( 0.5,  0.5, 0, 0)
+);
+
+void main()
+{
+    vec3 coord;
+    if (gl_FragCoord.x < 2.0)
+    {
+        coord.x = gl_FragCoord.x < 1.0 ? 1.0 : -1.0;
+        coord.zy = coordInSection[int(gl_FragCoord.y)].xy;
+    }
+    else if (gl_FragCoord.x < 4.0)
+    {
+        coord.y = gl_FragCoord.x < 3.0 ? 1.0 : -1.0;
+        coord.xz = coordInSection[int(gl_FragCoord.y)].xy;
+    }
+    else
+    {
+        coord.z = gl_FragCoord.x < 5.0 ? 1.0 : -1.0;
+        coord.xy = coordInSection[int(gl_FragCoord.y)].xy;
+    }
+
+    gl_FragColor = textureCube(texCube, coord);
+})";
+
+    runSampleCoordinateTransformTest(kFS);
+}
+
+// On Android Vulkan, unequal x and y derivatives cause this test to fail.
+TEST_P(CubeMapTextureTest, SampleCoordinateTransformGrad)
+{
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());  // anglebug.com/3814
+    ANGLE_SKIP_TEST_IF(IsD3D11());                  // anglebug.com/3856
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_texture_lod"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_shader_texture_lod : require
+precision mediump float;
+
+uniform samplerCube texCube;
+
+const mat4 coordInSection = mat4(
+    vec4(-0.5, -0.5, 0, 0),
+    vec4( 0.5, -0.5, 0, 0),
+    vec4(-0.5,  0.5, 0, 0),
+    vec4( 0.5,  0.5, 0, 0)
+);
+
+void main()
+{
+    vec3 coord;
+    if (gl_FragCoord.x < 2.0)
+    {
+        coord.x = gl_FragCoord.x < 1.0 ? 1.0 : -1.0;
+        coord.zy = coordInSection[int(gl_FragCoord.y)].xy;
+    }
+    else if (gl_FragCoord.x < 4.0)
+    {
+        coord.y = gl_FragCoord.x < 3.0 ? 1.0 : -1.0;
+        coord.xz = coordInSection[int(gl_FragCoord.y)].xy;
+    }
+    else
+    {
+        coord.z = gl_FragCoord.x < 5.0 ? 1.0 : -1.0;
+        coord.xy = coordInSection[int(gl_FragCoord.y)].xy;
+    }
+
+    gl_FragColor = textureCubeGradEXT(texCube, coord,
+                                      vec3(10.0, 10.0, 0.0), vec3(0.0, 10.0, 10.0));
+})";
+
+    runSampleCoordinateTransformTest(kFS);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
