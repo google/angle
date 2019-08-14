@@ -1,6 +1,6 @@
 #line 16 "./Tokenizer.l"
 //
-// Copyright (c) 2011-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright 2011 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -670,7 +670,7 @@ static const flex_int16_t yy_chk[224] = {
 #define YY_RESTORE_YY_MORE_OFFSET
 /*
 //
-// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright 2002 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
