@@ -737,7 +737,6 @@ size_t CountUniqueBlocks(const std::vector<InterfaceBlock> &blocks)
 // Saves the linking context for later use in resolveLink().
 struct Program::LinkingState
 {
-    const Context *context;
     std::unique_ptr<ProgramLinkedResources> resources;
     egl::BlobCache::Key programHash;
     std::unique_ptr<rx::LinkEvent> linkEvent;
@@ -1488,7 +1487,6 @@ angle::Result Program::link(const Context *context)
     updateLinkedShaderStages();
 
     mLinkingState.reset(new LinkingState());
-    mLinkingState->context           = context;
     mLinkingState->linkingFromBinary = false;
     mLinkingState->programHash       = programHash;
     mLinkingState->linkEvent         = mProgram->link(context, *resources, mInfoLog);
@@ -1541,12 +1539,12 @@ void Program::resolveLinkImpl(const Context *context)
     setUniformValuesFromBindingQualifiers();
 
     // Save to the program cache.
-    auto *cache = linkingState->context->getMemoryProgramCache();
-    if (cache && (mState.mLinkedTransformFeedbackVaryings.empty() ||
-                  !linkingState->context->getFrontendFeatures()
-                       .disableProgramCachingForTransformFeedback.enabled))
+    MemoryProgramCache *cache = context->getMemoryProgramCache();
+    if (cache &&
+        (mState.mLinkedTransformFeedbackVaryings.empty() ||
+         !context->getFrontendFeatures().disableProgramCachingForTransformFeedback.enabled))
     {
-        cache->putProgram(linkingState->programHash, linkingState->context, this);
+        cache->putProgram(linkingState->programHash, context, this);
     }
 }
 
@@ -1703,7 +1701,6 @@ angle::Result Program::loadBinary(const Context *context,
     }
 
     mLinkingState.reset(new LinkingState());
-    mLinkingState->context           = context;
     mLinkingState->linkingFromBinary = true;
     mLinkingState->linkEvent         = mProgram->load(context, &stream, mInfoLog);
     mLinkResolved                    = false;
