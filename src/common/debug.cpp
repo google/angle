@@ -255,7 +255,11 @@ void Trace(LogSeverity severity, const char *message)
     static angle::base::NoDestructor<std::ofstream> file(TRACE_OUTPUT_FILE, std::ofstream::app);
     if (file->good())
     {
-        *file << LogSeverityName(severity) << ": " << str << std::endl;
+        if (severity > LOG_EVENT)
+        {
+            *file << LogSeverityName(severity) << ": ";
+        }
+        *file << str;
         file->flush();
     }
 #endif  // defined(ANGLE_ENABLE_DEBUG_TRACE)

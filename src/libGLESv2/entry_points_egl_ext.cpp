@@ -979,7 +979,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetSyncAttribKHR(EGLDisplay dpy,
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_WaitSyncKHR(EGLDisplay dpy, EGLSync sync, EGLint flags)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(EGLDisplay dpy =0x%016" PRIxPTR "p, EGLSync sync = 0x%016" PRIxPTR
+    EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR "p, EGLSync sync = 0x%016" PRIxPTR
           ", EGLint flags = 0x%X)",
           (uintptr_t)dpy, (uintptr_t)sync, flags);
 
