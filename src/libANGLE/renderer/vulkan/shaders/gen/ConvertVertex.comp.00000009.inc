@@ -202,125 +202,125 @@ const uint32_t kConvertVertex_comp_00000009[] = {
 	0x000000cf,0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-layout(local_size_x = 64, local_size_y = 1, local_size_z = 1)in;
-
-layout(set = 0, binding = 0)buffer dest
-{
-    uint destData[];
-};
-
-layout(set = 0, binding = 1)buffer src
-{
-    uint srcData[];
-};
-
-layout(push_constant)uniform PushConstants
-{
-
-    uint outputCount;
-
-    uint componentCount;
-
-    uint srcOffset;
-    uint destOffset;
-
-    uint Ns;
-    uint Bs;
-    uint Ss;
-    uint Es;
-
-    uint Nd;
-    uint Bd;
-    uint Sd;
-    uint Ed;
-} params;
-
-uint getSourceComponentOffset(uint vertex, uint component)
-{
-    return vertex * params . Ss + component * params . Bs + params . srcOffset;
-}
-
-uint getDestinationComponentOffset(uint vertex, uint component)
-{
-    return vertex * params . Sd + component * 4 + params . destOffset;
-}
-
-uint getShiftBits(uint offset, uint B)
-{
-
-    uint shift =(offset % 4)* 8;
-
-    return shift;
-}
-
-      float loadSourceComponent(uint cd)
-{
-
-    uint vertex = cd / params . Nd;
-    uint component = cd % params . Nd;
-
-    if(component >= params . Ns)
-    {
-        return 0;
-    }
-
-    uint offset = getSourceComponentOffset(vertex, component);
-    uint block = srcData[offset / 4];
-
-    uint shiftBits = getShiftBits(offset, params . Bs);
-    uint valueBits = params . Bs * 8;
-    uint valueMask = valueBits == 32 ? - 1 :(1 << valueBits)- 1;
-
-    uint valueAsUint =(block >> shiftBits)& valueMask;
-
-    if(valueBits < 32)
-    {
-        bool isNegative =(valueAsUint &(1 <<(valueBits - 1)))!= 0;
-        uint signExtension = isNegative ? 0xFFFFFFFF << valueBits : 0;
-        valueAsUint |= signExtension;
-    }
-    int valueAsInt = int(valueAsUint);
-          float value =(2 * float(valueAsInt)+ 1)/ valueMask;
-
-    return value;
-}
-
-       float convertComponent(float srcValue)
-{
-
-    return srcValue;
-}
-
-uint makeDestinationComponent(uint cd, float value)
-{
-
-    uint valueAsUint = floatBitsToInt(value);
-
-    return valueAsUint;
-}
-
-void storeDestinationComponents(uint valueAsUint)
-{
-
-    destData[gl_GlobalInvocationID . x + params . destOffset / 4]= valueAsUint;
-}
-
-void main()
-{
-
-    uint valueOut = 0;
-    for(uint i = 0;i < 1;++ i)
-    {
-        uint cd = gl_GlobalInvocationID . x * 1 + i;
-
-              float srcValue = loadSourceComponent(cd);
-               float destValue = convertComponent(srcValue);
-        valueOut |= makeDestinationComponent(cd, destValue);
-    }
-
-    storeDestinationComponents(valueOut);
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// layout(local_size_x = 64, local_size_y = 1, local_size_z = 1)in;
+//
+// layout(set = 0, binding = 0)buffer dest
+// {
+//     uint destData[];
+// };
+//
+// layout(set = 0, binding = 1)buffer src
+// {
+//     uint srcData[];
+// };
+//
+// layout(push_constant)uniform PushConstants
+// {
+//
+//     uint outputCount;
+//
+//     uint componentCount;
+//
+//     uint srcOffset;
+//     uint destOffset;
+//
+//     uint Ns;
+//     uint Bs;
+//     uint Ss;
+//     uint Es;
+//
+//     uint Nd;
+//     uint Bd;
+//     uint Sd;
+//     uint Ed;
+// } params;
+//
+// uint getSourceComponentOffset(uint vertex, uint component)
+// {
+//     return vertex * params . Ss + component * params . Bs + params . srcOffset;
+// }
+//
+// uint getDestinationComponentOffset(uint vertex, uint component)
+// {
+//     return vertex * params . Sd + component * 4 + params . destOffset;
+// }
+//
+// uint getShiftBits(uint offset, uint B)
+// {
+//
+//     uint shift =(offset % 4)* 8;
+//
+//     return shift;
+// }
+//
+//       float loadSourceComponent(uint cd)
+// {
+//
+//     uint vertex = cd / params . Nd;
+//     uint component = cd % params . Nd;
+//
+//     if(component >= params . Ns)
+//     {
+//         return 0;
+//     }
+//
+//     uint offset = getSourceComponentOffset(vertex, component);
+//     uint block = srcData[offset / 4];
+//
+//     uint shiftBits = getShiftBits(offset, params . Bs);
+//     uint valueBits = params . Bs * 8;
+//     uint valueMask = valueBits == 32 ? - 1 :(1 << valueBits)- 1;
+//
+//     uint valueAsUint =(block >> shiftBits)& valueMask;
+//
+//     if(valueBits < 32)
+//     {
+//         bool isNegative =(valueAsUint &(1 <<(valueBits - 1)))!= 0;
+//         uint signExtension = isNegative ? 0xFFFFFFFF << valueBits : 0;
+//         valueAsUint |= signExtension;
+//     }
+//     int valueAsInt = int(valueAsUint);
+//           float value =(2 * float(valueAsInt)+ 1)/ valueMask;
+//
+//     return value;
+// }
+//
+//        float convertComponent(float srcValue)
+// {
+//
+//     return srcValue;
+// }
+//
+// uint makeDestinationComponent(uint cd, float value)
+// {
+//
+//     uint valueAsUint = floatBitsToInt(value);
+//
+//     return valueAsUint;
+// }
+//
+// void storeDestinationComponents(uint valueAsUint)
+// {
+//
+//     destData[gl_GlobalInvocationID . x + params . destOffset / 4]= valueAsUint;
+// }
+//
+// void main()
+// {
+//
+//     uint valueOut = 0;
+//     for(uint i = 0;i < 1;++ i)
+//     {
+//         uint cd = gl_GlobalInvocationID . x * 1 + i;
+//
+//               float srcValue = loadSourceComponent(cd);
+//                float destValue = convertComponent(srcValue);
+//         valueOut |= makeDestinationComponent(cd, destValue);
+//     }
+//
+//     storeDestinationComponents(valueOut);
+// }

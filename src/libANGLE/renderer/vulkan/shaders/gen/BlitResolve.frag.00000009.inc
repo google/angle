@@ -133,85 +133,85 @@ const uint32_t kBlitResolve_frag_00000009[] = {
 	0x0000009b,0x000200f8,0x0000009b,0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-layout(push_constant)uniform PushConstants {
-
-            vec2 offset;
-    vec2 stretch;
-    vec2 invSrcExtent;
-    int srcLayer;
-    int samples;
-    float invSamples;
-
-    int outputMask;
-
-    bool flipX;
-    bool flipY;
-} params;
-
-layout(set = 0, binding = 0)uniform utexture2DArray color;
-
-layout(location = 0)out uvec4 colorOut0;
-layout(location = 1)out uvec4 colorOut1;
-layout(location = 2)out uvec4 colorOut2;
-layout(location = 3)out uvec4 colorOut3;
-layout(location = 4)out uvec4 colorOut4;
-layout(location = 5)out uvec4 colorOut5;
-layout(location = 6)out uvec4 colorOut6;
-layout(location = 7)out uvec4 colorOut7;
-
-layout(set = 0, binding = 2)uniform sampler blitSampler;
-
-void main()
-{
-
-            vec2 srcImageCoords = vec2(gl_FragCoord . xy);
-
-    srcImageCoords *= params . stretch;
-
-    srcImageCoords -= params . offset;
-
-    if(params . flipX)
-        srcImageCoords . x = - srcImageCoords . x;
-    if(params . flipY)
-        srcImageCoords . y = - srcImageCoords . y;
-
-            uvec4 colorValue = texture(usampler2DArray(color, blitSampler), vec3(srcImageCoords * params . invSrcExtent, params . srcLayer));
-
-    if((params . outputMask &(1 << 0))!= 0)
-    {
-        colorOut0 = colorValue;
-    }
-    if((params . outputMask &(1 << 1))!= 0)
-    {
-        colorOut1 = colorValue;
-    }
-    if((params . outputMask &(1 << 2))!= 0)
-    {
-        colorOut2 = colorValue;
-    }
-    if((params . outputMask &(1 << 3))!= 0)
-    {
-        colorOut3 = colorValue;
-    }
-    if((params . outputMask &(1 << 4))!= 0)
-    {
-        colorOut4 = colorValue;
-    }
-    if((params . outputMask &(1 << 5))!= 0)
-    {
-        colorOut5 = colorValue;
-    }
-    if((params . outputMask &(1 << 6))!= 0)
-    {
-        colorOut6 = colorValue;
-    }
-    if((params . outputMask &(1 << 7))!= 0)
-    {
-        colorOut7 = colorValue;
-    }
-
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// layout(push_constant)uniform PushConstants {
+//
+//             vec2 offset;
+//     vec2 stretch;
+//     vec2 invSrcExtent;
+//     int srcLayer;
+//     int samples;
+//     float invSamples;
+//
+//     int outputMask;
+//
+//     bool flipX;
+//     bool flipY;
+// } params;
+//
+// layout(set = 0, binding = 0)uniform utexture2DArray color;
+//
+// layout(location = 0)out uvec4 colorOut0;
+// layout(location = 1)out uvec4 colorOut1;
+// layout(location = 2)out uvec4 colorOut2;
+// layout(location = 3)out uvec4 colorOut3;
+// layout(location = 4)out uvec4 colorOut4;
+// layout(location = 5)out uvec4 colorOut5;
+// layout(location = 6)out uvec4 colorOut6;
+// layout(location = 7)out uvec4 colorOut7;
+//
+// layout(set = 0, binding = 2)uniform sampler blitSampler;
+//
+// void main()
+// {
+//
+//             vec2 srcImageCoords = vec2(gl_FragCoord . xy);
+//
+//     srcImageCoords *= params . stretch;
+//
+//     srcImageCoords -= params . offset;
+//
+//     if(params . flipX)
+//         srcImageCoords . x = - srcImageCoords . x;
+//     if(params . flipY)
+//         srcImageCoords . y = - srcImageCoords . y;
+//
+//             uvec4 colorValue = texture(usampler2DArray(color, blitSampler), vec3(srcImageCoords * params . invSrcExtent, params . srcLayer));
+//
+//     if((params . outputMask &(1 << 0))!= 0)
+//     {
+//         colorOut0 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 1))!= 0)
+//     {
+//         colorOut1 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 2))!= 0)
+//     {
+//         colorOut2 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 3))!= 0)
+//     {
+//         colorOut3 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 4))!= 0)
+//     {
+//         colorOut4 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 5))!= 0)
+//     {
+//         colorOut5 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 6))!= 0)
+//     {
+//         colorOut6 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 7))!= 0)
+//     {
+//         colorOut7 = colorValue;
+//     }
+//
+// }

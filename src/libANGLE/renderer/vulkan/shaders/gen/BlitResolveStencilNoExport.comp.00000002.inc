@@ -129,73 +129,73 @@ const uint32_t kBlitResolveStencilNoExport_comp_00000002[] = {
 	0x0003003e,0x0000009b,0x00000099,0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-#extension GL_EXT_samplerless_texture_functions : require
-
-layout(local_size_x = 8, local_size_y = 8, local_size_z = 1)in;
-
-layout(push_constant)uniform PushConstants {
-
-            ivec2 offset;
-    vec2 stretch;
-    vec2 invSrcExtent;
-    int srcLayer;
-    int srcWidth;
-
-    ivec4 blitArea;
-    int destPitch;
-
-    bool flipX;
-    bool flipY;
-} params;
-
-layout(set = 0, binding = 0)buffer dest
-{
-
-    uint destData[];
-};
-
-layout(set = 0, binding = 1)uniform utexture2DMS stencil;
-
-void main()
-{
-    ivec2 destSubImageCoords = ivec2(gl_GlobalInvocationID . x * 4, gl_GlobalInvocationID . y);
-    if(any(lessThanEqual(params . blitArea . zw, destSubImageCoords)))
-    {
-        return;
-    }
-
-    destSubImageCoords += params . blitArea . xy;
-            ivec2 srcImageCoords = ivec2(destSubImageCoords);
-
-    srcImageCoords -= params . offset;
-
-    if(params . flipX)
-        srcImageCoords . x = - srcImageCoords . x;
-    if(params . flipY)
-        srcImageCoords . y = - srcImageCoords . y;
-
-    int xDir = params . flipX ? - 1 : 1;
-
-    uint outStencils = 0;
-
-    for(int i = 0;i < 4;++ i)
-    {
-
-        if(srcImageCoords . x >= 0 && srcImageCoords . x < params . srcWidth)
-        {
-
-            uint stencilValue = texelFetch(stencil, srcImageCoords, 0). x;
-
-            outStencils |=(stencilValue & 0xFF)<<(i * 8);
-
-        }
-
-        srcImageCoords . x += xDir;
-    }
-
-    destData[gl_GlobalInvocationID . y * params . destPitch + gl_GlobalInvocationID . x]= outStencils;
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// #extension GL_EXT_samplerless_texture_functions : require
+//
+// layout(local_size_x = 8, local_size_y = 8, local_size_z = 1)in;
+//
+// layout(push_constant)uniform PushConstants {
+//
+//             ivec2 offset;
+//     vec2 stretch;
+//     vec2 invSrcExtent;
+//     int srcLayer;
+//     int srcWidth;
+//
+//     ivec4 blitArea;
+//     int destPitch;
+//
+//     bool flipX;
+//     bool flipY;
+// } params;
+//
+// layout(set = 0, binding = 0)buffer dest
+// {
+//
+//     uint destData[];
+// };
+//
+// layout(set = 0, binding = 1)uniform utexture2DMS stencil;
+//
+// void main()
+// {
+//     ivec2 destSubImageCoords = ivec2(gl_GlobalInvocationID . x * 4, gl_GlobalInvocationID . y);
+//     if(any(lessThanEqual(params . blitArea . zw, destSubImageCoords)))
+//     {
+//         return;
+//     }
+//
+//     destSubImageCoords += params . blitArea . xy;
+//             ivec2 srcImageCoords = ivec2(destSubImageCoords);
+//
+//     srcImageCoords -= params . offset;
+//
+//     if(params . flipX)
+//         srcImageCoords . x = - srcImageCoords . x;
+//     if(params . flipY)
+//         srcImageCoords . y = - srcImageCoords . y;
+//
+//     int xDir = params . flipX ? - 1 : 1;
+//
+//     uint outStencils = 0;
+//
+//     for(int i = 0;i < 4;++ i)
+//     {
+//
+//         if(srcImageCoords . x >= 0 && srcImageCoords . x < params . srcWidth)
+//         {
+//
+//             uint stencilValue = texelFetch(stencil, srcImageCoords, 0). x;
+//
+//             outStencils |=(stencilValue & 0xFF)<<(i * 8);
+//
+//         }
+//
+//         srcImageCoords . x += xDir;
+//     }
+//
+//     destData[gl_GlobalInvocationID . y * params . destPitch + gl_GlobalInvocationID . x]= outStencils;
+// }

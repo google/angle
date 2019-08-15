@@ -19,17 +19,17 @@ const uint32_t kImageClear_frag_00000009[] = {
 	0x0000000f,0x0003003e,0x00000009,0x00000010,0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-layout(push_constant)uniform PushConstants {
-       ivec4 clearColor;
-} params;
-
-layout(location = 1)out ivec4 colorOut;
-
-void main()
-{
-    colorOut = params . clearColor;
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// layout(push_constant)uniform PushConstants {
+//        ivec4 clearColor;
+// } params;
+//
+// layout(location = 1)out ivec4 colorOut;
+//
+// void main()
+// {
+//     colorOut = params . clearColor;
+// }

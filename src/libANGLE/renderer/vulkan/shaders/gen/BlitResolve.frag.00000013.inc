@@ -72,43 +72,43 @@ const uint32_t kBlitResolve_frag_00000013[] = {
 	0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-#extension GL_EXT_samplerless_texture_functions : require
-
-#extension GL_ARB_shader_stencil_export : require
-
-layout(push_constant)uniform PushConstants {
-
-            ivec2 offset;
-    vec2 stretch;
-    vec2 invSrcExtent;
-    int srcLayer;
-    int samples;
-    float invSamples;
-
-    int outputMask;
-
-    bool flipX;
-    bool flipY;
-} params;
-
-layout(set = 0, binding = 1)uniform utexture2DMSArray stencil;
-
-void main()
-{
-
-            ivec2 srcImageCoords = ivec2(gl_FragCoord . xy);
-
-    srcImageCoords -= params . offset;
-
-    if(params . flipX)
-        srcImageCoords . x = - srcImageCoords . x;
-    if(params . flipY)
-        srcImageCoords . y = - srcImageCoords . y;
-
-    gl_FragStencilRefARB = int(texelFetch(stencil, ivec3(srcImageCoords, params . srcLayer), 0). x);
-
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// #extension GL_EXT_samplerless_texture_functions : require
+//
+// #extension GL_ARB_shader_stencil_export : require
+//
+// layout(push_constant)uniform PushConstants {
+//
+//             ivec2 offset;
+//     vec2 stretch;
+//     vec2 invSrcExtent;
+//     int srcLayer;
+//     int samples;
+//     float invSamples;
+//
+//     int outputMask;
+//
+//     bool flipX;
+//     bool flipY;
+// } params;
+//
+// layout(set = 0, binding = 1)uniform utexture2DMSArray stencil;
+//
+// void main()
+// {
+//
+//             ivec2 srcImageCoords = ivec2(gl_FragCoord . xy);
+//
+//     srcImageCoords -= params . offset;
+//
+//     if(params . flipX)
+//         srcImageCoords . x = - srcImageCoords . x;
+//     if(params . flipY)
+//         srcImageCoords . y = - srcImageCoords . y;
+//
+//     gl_FragStencilRefARB = int(texelFetch(stencil, ivec3(srcImageCoords, params . srcLayer), 0). x);
+//
+// }

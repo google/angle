@@ -286,11 +286,16 @@ class CompileQueue:
         def wait(self, queue):
             (out, err) = self.process.communicate()
             if self.process.returncode == 0:
+                # Use unix line endings.
+                out = out.replace('\r\n', '\n')
+                # Clean up excessive empty lines.
+                out = cleanup_preprocessed_shader(out)
+                # Comment it out!
+                out = '\n'.join([('// ' + line).strip() for line in out.splitlines()])
                 # Append preprocessor output to the output file.
                 with open(self.output_path, 'ab') as incfile:
-                    incfile.write('\n\n#if 0  // Generated from:\n')
-                    incfile.write(cleanup_preprocessed_shader(out.replace('\r\n', '\n')))
-                    incfile.write('\n#endif  // Preprocessed code\n')
+                    incfile.write('\n\n// Generated from:\n//\n')
+                    incfile.write(out + '\n')
                 out = None
             return (out, err, self.process.returncode, None,
                     "Error running preprocessor on " + self.shader_file)

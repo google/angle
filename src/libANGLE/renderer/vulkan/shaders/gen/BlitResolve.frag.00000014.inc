@@ -88,49 +88,49 @@ const uint32_t kBlitResolve_frag_00000014[] = {
 	0x0000005e,0x0000005d,0x0003003e,0x0000004f,0x0000005e,0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-#extension GL_ARB_shader_stencil_export : require
-
-layout(push_constant)uniform PushConstants {
-
-            vec2 offset;
-    vec2 stretch;
-    vec2 invSrcExtent;
-    int srcLayer;
-    int samples;
-    float invSamples;
-
-    int outputMask;
-
-    bool flipX;
-    bool flipY;
-} params;
-
-layout(set = 0, binding = 0)uniform texture2D depth;
-
-layout(set = 0, binding = 1)uniform utexture2D stencil;
-
-layout(set = 0, binding = 2)uniform sampler blitSampler;
-
-void main()
-{
-
-            vec2 srcImageCoords = vec2(gl_FragCoord . xy);
-
-    srcImageCoords *= params . stretch;
-
-    srcImageCoords -= params . offset;
-
-    if(params . flipX)
-        srcImageCoords . x = - srcImageCoords . x;
-    if(params . flipY)
-        srcImageCoords . y = - srcImageCoords . y;
-
-    gl_FragDepth = texture(sampler2D(depth, blitSampler), srcImageCoords * params . invSrcExtent). x;
-
-    gl_FragStencilRefARB = int(texture(usampler2D(stencil, blitSampler), srcImageCoords * params . invSrcExtent). x);
-
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// #extension GL_ARB_shader_stencil_export : require
+//
+// layout(push_constant)uniform PushConstants {
+//
+//             vec2 offset;
+//     vec2 stretch;
+//     vec2 invSrcExtent;
+//     int srcLayer;
+//     int samples;
+//     float invSamples;
+//
+//     int outputMask;
+//
+//     bool flipX;
+//     bool flipY;
+// } params;
+//
+// layout(set = 0, binding = 0)uniform texture2D depth;
+//
+// layout(set = 0, binding = 1)uniform utexture2D stencil;
+//
+// layout(set = 0, binding = 2)uniform sampler blitSampler;
+//
+// void main()
+// {
+//
+//             vec2 srcImageCoords = vec2(gl_FragCoord . xy);
+//
+//     srcImageCoords *= params . stretch;
+//
+//     srcImageCoords -= params . offset;
+//
+//     if(params . flipX)
+//         srcImageCoords . x = - srcImageCoords . x;
+//     if(params . flipY)
+//         srcImageCoords . y = - srcImageCoords . y;
+//
+//     gl_FragDepth = texture(sampler2D(depth, blitSampler), srcImageCoords * params . invSrcExtent). x;
+//
+//     gl_FragStencilRefARB = int(texture(usampler2D(stencil, blitSampler), srcImageCoords * params . invSrcExtent). x);
+//
+// }

@@ -20,17 +20,17 @@ const uint32_t kImageClear_frag_00000006[] = {
 	0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-layout(push_constant)uniform PushConstants {
-       vec4 clearColor;
-} params;
-
-layout(location = 6)out vec4 colorOut;
-
-void main()
-{
-    colorOut = params . clearColor;
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// layout(push_constant)uniform PushConstants {
+//        vec4 clearColor;
+// } params;
+//
+// layout(location = 6)out vec4 colorOut;
+//
+// void main()
+// {
+//     colorOut = params . clearColor;
+// }

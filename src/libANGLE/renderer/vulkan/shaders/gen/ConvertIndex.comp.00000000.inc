@@ -111,71 +111,71 @@ const uint32_t kConvertIndex_comp_00000000[] = {
 	0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-layout(local_size_x = 64, local_size_y = 1, local_size_z = 1)in;
-
-layout(set = 0, binding = 0)buffer dst
-{
-
-    uint dstData[];
-};
-
-layout(set = 0, binding = 1)readonly buffer src
-{
-
-    uint srcData[];
-};
-
-layout(push_constant)uniform PushConstants
-{
-
-    uint srcOffset;
-
-    uint dstOffsetDiv4;
-
-    uint maxIndex;
-
-    uint _padding;
-};
-
-uint PullIndex(uint index)
-{
-    uint srcIndex = index + srcOffset;
-    uint srcBlock = srcData[srcIndex >> 2];
-    uint srcComponent =(srcIndex & 3);
-
-    uint value =(srcBlock >>(srcComponent << 3))& 0xFF;
-
-    return value;
-}
-
-void PackIndexValue(uint srcValue, uint indexIndex, inout uint dstValue)
-{
-
-    dstValue |= srcValue <<(indexIndex << 4);
-}
-
-void main()
-{
-
-    uint index =(gl_GlobalInvocationID . x << 1);
-
-    if(index >= maxIndex)
-        return;
-
-    uint dstValue = 0;
-
-    uint srcValue = PullIndex(index);
-    PackIndexValue(srcValue, 0, dstValue);
-
-    if(index + 1 < maxIndex)
-    {
-        uint srcValue = PullIndex(index + 1);
-        PackIndexValue(srcValue, 1, dstValue);
-    }
-
-    dstData[dstOffsetDiv4 + gl_GlobalInvocationID . x]= dstValue;
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// layout(local_size_x = 64, local_size_y = 1, local_size_z = 1)in;
+//
+// layout(set = 0, binding = 0)buffer dst
+// {
+//
+//     uint dstData[];
+// };
+//
+// layout(set = 0, binding = 1)readonly buffer src
+// {
+//
+//     uint srcData[];
+// };
+//
+// layout(push_constant)uniform PushConstants
+// {
+//
+//     uint srcOffset;
+//
+//     uint dstOffsetDiv4;
+//
+//     uint maxIndex;
+//
+//     uint _padding;
+// };
+//
+// uint PullIndex(uint index)
+// {
+//     uint srcIndex = index + srcOffset;
+//     uint srcBlock = srcData[srcIndex >> 2];
+//     uint srcComponent =(srcIndex & 3);
+//
+//     uint value =(srcBlock >>(srcComponent << 3))& 0xFF;
+//
+//     return value;
+// }
+//
+// void PackIndexValue(uint srcValue, uint indexIndex, inout uint dstValue)
+// {
+//
+//     dstValue |= srcValue <<(indexIndex << 4);
+// }
+//
+// void main()
+// {
+//
+//     uint index =(gl_GlobalInvocationID . x << 1);
+//
+//     if(index >= maxIndex)
+//         return;
+//
+//     uint dstValue = 0;
+//
+//     uint srcValue = PullIndex(index);
+//     PackIndexValue(srcValue, 0, dstValue);
+//
+//     if(index + 1 < maxIndex)
+//     {
+//         uint srcValue = PullIndex(index + 1);
+//         PackIndexValue(srcValue, 1, dstValue);
+//     }
+//
+//     dstData[dstOffsetDiv4 + gl_GlobalInvocationID . x]= dstValue;
+// }

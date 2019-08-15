@@ -78,43 +78,43 @@ const uint32_t kBlitResolve_frag_0000000D[] = {
 	0x00000056,0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-layout(push_constant)uniform PushConstants {
-
-            vec2 offset;
-    vec2 stretch;
-    vec2 invSrcExtent;
-    int srcLayer;
-    int samples;
-    float invSamples;
-
-    int outputMask;
-
-    bool flipX;
-    bool flipY;
-} params;
-
-layout(set = 0, binding = 0)uniform texture2DArray depth;
-
-layout(set = 0, binding = 2)uniform sampler blitSampler;
-
-void main()
-{
-
-            vec2 srcImageCoords = vec2(gl_FragCoord . xy);
-
-    srcImageCoords *= params . stretch;
-
-    srcImageCoords -= params . offset;
-
-    if(params . flipX)
-        srcImageCoords . x = - srcImageCoords . x;
-    if(params . flipY)
-        srcImageCoords . y = - srcImageCoords . y;
-
-    gl_FragDepth = texture(sampler2DArray(depth, blitSampler), vec3(srcImageCoords * params . invSrcExtent, params . srcLayer)). x;
-
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// layout(push_constant)uniform PushConstants {
+//
+//             vec2 offset;
+//     vec2 stretch;
+//     vec2 invSrcExtent;
+//     int srcLayer;
+//     int samples;
+//     float invSamples;
+//
+//     int outputMask;
+//
+//     bool flipX;
+//     bool flipY;
+// } params;
+//
+// layout(set = 0, binding = 0)uniform texture2DArray depth;
+//
+// layout(set = 0, binding = 2)uniform sampler blitSampler;
+//
+// void main()
+// {
+//
+//             vec2 srcImageCoords = vec2(gl_FragCoord . xy);
+//
+//     srcImageCoords *= params . stretch;
+//
+//     srcImageCoords -= params . offset;
+//
+//     if(params . flipX)
+//         srcImageCoords . x = - srcImageCoords . x;
+//     if(params . flipY)
+//         srcImageCoords . y = - srcImageCoords . y;
+//
+//     gl_FragDepth = texture(sampler2DArray(depth, blitSampler), vec3(srcImageCoords * params . invSrcExtent, params . srcLayer)). x;
+//
+// }

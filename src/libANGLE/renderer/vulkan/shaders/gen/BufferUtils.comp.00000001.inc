@@ -50,34 +50,34 @@ const uint32_t kBufferUtils_comp_00000001[] = {
 	0x0000002e,0x0000002f,0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-layout(local_size_x = 64, local_size_y = 1, local_size_z = 1)in;
-
-layout(set = 0, binding = 0, rgba32f)uniform writeonly imageBuffer dest;
-
-layout(push_constant)uniform PushConstants
-{
-
-    uint destOffset;
-
-    uint size;
-
-    uint srcOffset;
-    uint padding;
-
-        vec4 clearValue;
-} params;
-
-void main()
-{
-
-    int destIndex = int(params . destOffset . x + gl_GlobalInvocationID . x);
-    int srcIndex = int(params . srcOffset . x + gl_GlobalInvocationID . x);
-
-        vec4 srcValue = params . clearValue;
-
-    imageStore(dest, destIndex, srcValue);
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// layout(local_size_x = 64, local_size_y = 1, local_size_z = 1)in;
+//
+// layout(set = 0, binding = 0, rgba32f)uniform writeonly imageBuffer dest;
+//
+// layout(push_constant)uniform PushConstants
+// {
+//
+//     uint destOffset;
+//
+//     uint size;
+//
+//     uint srcOffset;
+//     uint padding;
+//
+//         vec4 clearValue;
+// } params;
+//
+// void main()
+// {
+//
+//     int destIndex = int(params . destOffset . x + gl_GlobalInvocationID . x);
+//     int srcIndex = int(params . srcOffset . x + gl_GlobalInvocationID . x);
+//
+//         vec4 srcValue = params . clearValue;
+//
+//     imageStore(dest, destIndex, srcValue);
+// }

@@ -137,89 +137,89 @@ const uint32_t kBlitResolve_frag_00000006[] = {
 	0x000200f8,0x0000009e,0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-#extension GL_EXT_samplerless_texture_functions : require
-
-layout(push_constant)uniform PushConstants {
-
-            ivec2 offset;
-    vec2 stretch;
-    vec2 invSrcExtent;
-    int srcLayer;
-    int samples;
-    float invSamples;
-
-    int outputMask;
-
-    bool flipX;
-    bool flipY;
-} params;
-
-layout(set = 0, binding = 0)uniform itexture2DMS color;
-
-layout(location = 0)out ivec4 colorOut0;
-layout(location = 1)out ivec4 colorOut1;
-layout(location = 2)out ivec4 colorOut2;
-layout(location = 3)out ivec4 colorOut3;
-layout(location = 4)out ivec4 colorOut4;
-layout(location = 5)out ivec4 colorOut5;
-layout(location = 6)out ivec4 colorOut6;
-layout(location = 7)out ivec4 colorOut7;
-
-void main()
-{
-
-            ivec2 srcImageCoords = ivec2(gl_FragCoord . xy);
-
-    srcImageCoords -= params . offset;
-
-    if(params . flipX)
-        srcImageCoords . x = - srcImageCoords . x;
-    if(params . flipY)
-        srcImageCoords . y = - srcImageCoords . y;
-
-            ivec4 colorValue = ivec4(0, 0, 0, 1);
-    for(int i = 0;i < params . samples;++ i)
-    {
-        colorValue += texelFetch(color, srcImageCoords, i);
-    }
-
-    colorValue = ivec4(round(colorValue * params . invSamples));
-
-    if((params . outputMask &(1 << 0))!= 0)
-    {
-        colorOut0 = colorValue;
-    }
-    if((params . outputMask &(1 << 1))!= 0)
-    {
-        colorOut1 = colorValue;
-    }
-    if((params . outputMask &(1 << 2))!= 0)
-    {
-        colorOut2 = colorValue;
-    }
-    if((params . outputMask &(1 << 3))!= 0)
-    {
-        colorOut3 = colorValue;
-    }
-    if((params . outputMask &(1 << 4))!= 0)
-    {
-        colorOut4 = colorValue;
-    }
-    if((params . outputMask &(1 << 5))!= 0)
-    {
-        colorOut5 = colorValue;
-    }
-    if((params . outputMask &(1 << 6))!= 0)
-    {
-        colorOut6 = colorValue;
-    }
-    if((params . outputMask &(1 << 7))!= 0)
-    {
-        colorOut7 = colorValue;
-    }
-
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// #extension GL_EXT_samplerless_texture_functions : require
+//
+// layout(push_constant)uniform PushConstants {
+//
+//             ivec2 offset;
+//     vec2 stretch;
+//     vec2 invSrcExtent;
+//     int srcLayer;
+//     int samples;
+//     float invSamples;
+//
+//     int outputMask;
+//
+//     bool flipX;
+//     bool flipY;
+// } params;
+//
+// layout(set = 0, binding = 0)uniform itexture2DMS color;
+//
+// layout(location = 0)out ivec4 colorOut0;
+// layout(location = 1)out ivec4 colorOut1;
+// layout(location = 2)out ivec4 colorOut2;
+// layout(location = 3)out ivec4 colorOut3;
+// layout(location = 4)out ivec4 colorOut4;
+// layout(location = 5)out ivec4 colorOut5;
+// layout(location = 6)out ivec4 colorOut6;
+// layout(location = 7)out ivec4 colorOut7;
+//
+// void main()
+// {
+//
+//             ivec2 srcImageCoords = ivec2(gl_FragCoord . xy);
+//
+//     srcImageCoords -= params . offset;
+//
+//     if(params . flipX)
+//         srcImageCoords . x = - srcImageCoords . x;
+//     if(params . flipY)
+//         srcImageCoords . y = - srcImageCoords . y;
+//
+//             ivec4 colorValue = ivec4(0, 0, 0, 1);
+//     for(int i = 0;i < params . samples;++ i)
+//     {
+//         colorValue += texelFetch(color, srcImageCoords, i);
+//     }
+//
+//     colorValue = ivec4(round(colorValue * params . invSamples));
+//
+//     if((params . outputMask &(1 << 0))!= 0)
+//     {
+//         colorOut0 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 1))!= 0)
+//     {
+//         colorOut1 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 2))!= 0)
+//     {
+//         colorOut2 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 3))!= 0)
+//     {
+//         colorOut3 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 4))!= 0)
+//     {
+//         colorOut4 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 5))!= 0)
+//     {
+//         colorOut5 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 6))!= 0)
+//     {
+//         colorOut6 = colorValue;
+//     }
+//     if((params . outputMask &(1 << 7))!= 0)
+//     {
+//         colorOut7 = colorValue;
+//     }
+//
+// }

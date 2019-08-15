@@ -38,20 +38,20 @@ const uint32_t kFullScreenQuad_vert_00000000[] = {
 	0x0003003e,0x00000027,0x00000025,0x000100fd,0x00010038
 };
 
-#if 0  // Generated from:
-#version 450 core
-
-const vec2 kQuadVertices[]= {
-    vec2(- 1, 1),
-    vec2(- 1, - 1),
-    vec2(1, - 1),
-    vec2(- 1, 1),
-    vec2(1, - 1),
-    vec2(1, 1),
-};
-
-void main()
-{
-    gl_Position = vec4(kQuadVertices[gl_VertexIndex], 0, 1);
-}
-#endif  // Preprocessed code
+// Generated from:
+//
+// #version 450 core
+//
+// const vec2 kQuadVertices[]= {
+//     vec2(- 1, 1),
+//     vec2(- 1, - 1),
+//     vec2(1, - 1),
+//     vec2(- 1, 1),
+//     vec2(1, - 1),
+//     vec2(1, 1),
+// };
+//
+// void main()
+// {
+//     gl_Position = vec4(kQuadVertices[gl_VertexIndex], 0, 1);
+// }
