@@ -536,11 +536,9 @@
 3676 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 
 //  New or broken formats in ES 3.0:
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth32* = FAIL
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.format.depth32* = FAIL
-3190 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgba16* = FAIL
-3190 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgb16* = FAIL
-3190 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rg32* = FAIL
+3816 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgba16* = FAIL
+3816 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgb16* = FAIL
+3816 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rg32* = FAIL
 
 // Formats:
 3677 ANDROID VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgba32f = FAIL
@@ -557,12 +555,6 @@
 2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
 2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth32f_stencil8 = FAIL
 2905 VULKAN : dEQP-GLES3.functional.texture.format.sized.*.depth32f_stencil8* = FAIL
-2905 VULKAN : dEQP-GLES3.functional.texture.specification.teximage2d_depth.depth32f_stencil8 = FAIL
-2905 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage2d_depth.depth32f_stencil8 = FAIL
-2905 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_depth.depth32f_stencil8_2d_array = FAIL
-2905 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_depth.depth32f_stencil8_2d_array = FAIL
-2905 VULKAN : dEQP-GLES3.functional.texture.specification.teximage2d_depth_pbo.depth32f_stencil8 = FAIL
-2905 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_depth_pbo.depth32f_stencil8_2d_array = FAIL
 
 // Shader support:
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
