@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "287f06cf_73e70dda",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-15T19:39:49Z",
+      "side": 1,
+      "message": "nit: EXPECT_EGL_TRUE",
+      "range": {
+        "startLine": 29,
+        "startChar": 8,
+        "endLine": 29,
+        "endChar": 19
+      },
+      "revId": "e260fc3498fcc9bf92c0a876e852fe8fd3a4d25a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8b3cc73_7a3039ff",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-15T19:39:49Z",
+      "side": 1,
+      "message": "nit: you can omit",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 35
+      },
+      "revId": "e260fc3498fcc9bf92c0a876e852fe8fd3a4d25a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4cf5d65a_4a46cccb",
+        "filename": "src/tests/egl_tests/EGLCreateContextAttribsTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-15T19:39:49Z",
+      "side": 1,
+      "message": "ditto for these",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 15
+      },
+      "revId": "e260fc3498fcc9bf92c0a876e852fe8fd3a4d25a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
