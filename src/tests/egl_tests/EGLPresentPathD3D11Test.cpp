@@ -88,23 +88,13 @@ class EGLPresentPathD3D11 : public ANGLETest
         EGLAttrib device      = 0;
         EGLAttrib angleDevice = 0;
 
-        PFNEGLQUERYDISPLAYATTRIBEXTPROC queryDisplayAttribEXT;
-        PFNEGLQUERYDEVICEATTRIBEXTPROC queryDeviceAttribEXT;
-
         const char *extensionString =
             static_cast<const char *>(eglQueryString(mDisplay, EGL_EXTENSIONS));
         EXPECT_TRUE(strstr(extensionString, "EGL_EXT_device_query"));
 
-        queryDisplayAttribEXT =
-            (PFNEGLQUERYDISPLAYATTRIBEXTPROC)eglGetProcAddress("eglQueryDisplayAttribEXT");
-        queryDeviceAttribEXT =
-            (PFNEGLQUERYDEVICEATTRIBEXTPROC)eglGetProcAddress("eglQueryDeviceAttribEXT");
-        ASSERT_NE(nullptr, queryDisplayAttribEXT);
-        ASSERT_NE(nullptr, queryDeviceAttribEXT);
-
-        ASSERT_EGL_TRUE(queryDisplayAttribEXT(mDisplay, EGL_DEVICE_EXT, &angleDevice));
-        ASSERT_EGL_TRUE(queryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                             EGL_D3D11_DEVICE_ANGLE, &device));
+        ASSERT_EGL_TRUE(eglQueryDisplayAttribEXT(mDisplay, EGL_DEVICE_EXT, &angleDevice));
+        ASSERT_EGL_TRUE(eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                                EGL_D3D11_DEVICE_ANGLE, &device));
         ID3D11Device *d3d11Device = reinterpret_cast<ID3D11Device *>(device);
 
         D3D11_TEXTURE2D_DESC textureDesc = {0};

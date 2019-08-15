@@ -97,17 +97,9 @@ class MultiviewTestBase : public ANGLETestBase
     }
     virtual ~MultiviewTestBase() {}
 
-    void MultiviewTestBaseSetUp()
-    {
-        ANGLETestBase::ANGLETestSetUp();
-
-        glRequestExtensionANGLE = reinterpret_cast<PFNGLREQUESTEXTENSIONANGLEPROC>(
-            eglGetProcAddress("glRequestExtensionANGLE"));
-    }
+    void MultiviewTestBaseSetUp() { ANGLETestBase::ANGLETestSetUp(); }
 
     void MultiviewTestBaseTearDown() { ANGLETestBase::ANGLETestTearDown(); }
-
-    PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
 };
 
 // Base class for multiview tests that don't need specific helper functions.

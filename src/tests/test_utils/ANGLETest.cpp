@@ -1000,20 +1000,10 @@ void ANGLETestBase::checkD3D11SDKLayersMessages()
     EGLAttrib device      = 0;
     EGLAttrib angleDevice = 0;
 
-    PFNEGLQUERYDISPLAYATTRIBEXTPROC queryDisplayAttribEXT;
-    PFNEGLQUERYDEVICEATTRIBEXTPROC queryDeviceAttribEXT;
-
-    queryDisplayAttribEXT = reinterpret_cast<PFNEGLQUERYDISPLAYATTRIBEXTPROC>(
-        eglGetProcAddress("eglQueryDisplayAttribEXT"));
-    queryDeviceAttribEXT = reinterpret_cast<PFNEGLQUERYDEVICEATTRIBEXTPROC>(
-        eglGetProcAddress("eglQueryDeviceAttribEXT"));
-    ASSERT_NE(nullptr, queryDisplayAttribEXT);
-    ASSERT_NE(nullptr, queryDeviceAttribEXT);
-
     ASSERT_EGL_TRUE(
-        queryDisplayAttribEXT(mFixture->eglWindow->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
-    ASSERT_EGL_TRUE(queryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                         EGL_D3D11_DEVICE_ANGLE, &device));
+        eglQueryDisplayAttribEXT(mFixture->eglWindow->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+    ASSERT_EGL_TRUE(eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                            EGL_D3D11_DEVICE_ANGLE, &device));
     ID3D11Device *d3d11Device = reinterpret_cast<ID3D11Device *>(device);
 
     ID3D11InfoQueue *infoQueue = nullptr;

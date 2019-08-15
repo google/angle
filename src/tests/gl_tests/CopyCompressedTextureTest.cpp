@@ -48,13 +48,6 @@ class CopyCompressedTextureTest : public ANGLETest
 
         mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
-
-        if (IsGLExtensionEnabled("GL_CHROMIUM_copy_compressed_texture"))
-        {
-            glCompressedCopyTextureCHROMIUM =
-                reinterpret_cast<PFNGLCOMPRESSEDCOPYTEXTURECHROMIUMPROC>(
-                    eglGetProcAddress("glCompressedCopyTextureCHROMIUM"));
-        }
     }
 
     void testTearDown() override
@@ -84,8 +77,6 @@ class CopyCompressedTextureTest : public ANGLETest
 
     GLuint mProgram     = 0;
     GLuint mTextures[2] = {0, 0};
-
-    PFNGLCOMPRESSEDCOPYTEXTURECHROMIUMPROC glCompressedCopyTextureCHROMIUM = nullptr;
 };
 
 namespace

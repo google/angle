@@ -789,8 +789,6 @@ TEST_P(RobustResourceInitTestES3, ReadingOutOfBoundsCopiedTextureWithUnpackBuffe
     // GL_ALPHA texture can't be read with glReadPixels, for convenience this test uses
     // glCopyTextureCHROMIUM to copy GL_ALPHA into GL_RGBA
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
-    PFNGLCOPYTEXTURECHROMIUMPROC glCopyTextureCHROMIUM =
-        reinterpret_cast<PFNGLCOPYTEXTURECHROMIUMPROC>(eglGetProcAddress("glCopyTextureCHROMIUM"));
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);

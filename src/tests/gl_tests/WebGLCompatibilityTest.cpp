@@ -67,12 +67,6 @@ class WebGLCompatibilityTest : public ANGLETest
         setWebGLCompatibilityEnabled(true);
     }
 
-    void testSetUp() override
-    {
-        glRequestExtensionANGLE = reinterpret_cast<PFNGLREQUESTEXTENSIONANGLEPROC>(
-            eglGetProcAddress("glRequestExtensionANGLE"));
-    }
-
     template <typename T>
     void TestFloatTextureFormat(GLenum internalFormat,
                                 GLenum format,
@@ -284,8 +278,6 @@ void main()
                                                    GLsizei blockSize,
                                                    const std::string &extName,
                                                    bool subImageAllowed);
-
-    PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
 };
 
 class WebGL2CompatibilityTest : public WebGLCompatibilityTest

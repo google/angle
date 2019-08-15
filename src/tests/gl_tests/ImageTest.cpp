@@ -123,11 +123,6 @@ class ImageTest : public ANGLETest
                 glGetUniformLocation(mTextureExternalESSL3Program, "tex");
         }
 
-        eglCreateImageKHR =
-            reinterpret_cast<PFNEGLCREATEIMAGEKHRPROC>(eglGetProcAddress("eglCreateImageKHR"));
-        eglDestroyImageKHR =
-            reinterpret_cast<PFNEGLDESTROYIMAGEKHRPROC>(eglGetProcAddress("eglDestroyImageKHR"));
-
         ASSERT_GL_NO_ERROR();
     }
 
@@ -467,9 +462,6 @@ class ImageTest : public ANGLETest
 
     GLuint mTextureExternalESSL3Program        = 0;
     GLint mTextureExternalESSL3UniformLocation = -1;
-
-    PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR;
-    PFNEGLDESTROYIMAGEKHRPROC eglDestroyImageKHR;
 };
 
 class ImageTestES3 : public ImageTest

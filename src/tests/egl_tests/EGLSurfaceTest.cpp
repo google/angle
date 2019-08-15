@@ -91,11 +91,6 @@ class EGLSurfaceTest : public ANGLETest
 
     void initializeDisplay()
     {
-        PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
-            reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
-                eglGetProcAddress("eglGetPlatformDisplayEXT"));
-        ASSERT_TRUE(eglGetPlatformDisplayEXT != nullptr);
-
         GLenum platformType = GetParam().getRenderer();
 
         std::vector<EGLint> displayAttributes;
