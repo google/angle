@@ -117,6 +117,30 @@
     },
     {
       "key": {
+        "uuid": "5ee8a279_18fb9a3d",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1424,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-16T14:32:00Z",
+      "side": 1,
+      "message": "Sorry, that should read \"!glState.isXFBActive\"",
+      "parentUuid": "ae9d668a_96c7cd3a",
+      "range": {
+        "startLine": 1424,
+        "startChar": 8,
+        "endLine": 1424,
+        "endChar": 14
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "15be65fc_3e9063f8",
         "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
         "patchSetId": 5
