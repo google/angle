@@ -56,11 +56,11 @@ struct InstancingPerfParams final : public RenderTestParams
         instancingEnabled = true;
     }
 
-    std::string suffix() const override
+    std::string story() const override
     {
         std::stringstream strstr;
 
-        strstr << RenderTestParams::suffix();
+        strstr << RenderTestParams::story();
 
         if (!instancingEnabled)
         {
@@ -77,7 +77,7 @@ struct InstancingPerfParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const InstancingPerfParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 

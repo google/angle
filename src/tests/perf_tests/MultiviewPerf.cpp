@@ -90,9 +90,9 @@ struct MultiviewPerfParams final : public RenderTestParams
         multiviewExtension = multiviewExtensionIn;
     }
 
-    std::string suffix() const override
+    std::string story() const override
     {
-        std::string name = RenderTestParams::suffix();
+        std::string name = RenderTestParams::story();
         switch (multiviewOption)
         {
             case MultiviewOption::NoAcceleration:
@@ -133,7 +133,7 @@ struct MultiviewPerfParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const MultiviewPerfParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 

@@ -23,7 +23,7 @@ struct DispatchComputePerfParams final : public RenderTestParams
         minorVersion      = 1;
     }
 
-    std::string suffix() const override;
+    std::string story() const override;
 
     unsigned int localSizeX    = 16;
     unsigned int localSizeY    = 16;
@@ -31,21 +31,21 @@ struct DispatchComputePerfParams final : public RenderTestParams
     unsigned int textureHeight = 32;
 };
 
-std::string DispatchComputePerfParams::suffix() const
+std::string DispatchComputePerfParams::story() const
 {
-    std::stringstream suffixStr;
-    suffixStr << RenderTestParams::suffix();
+    std::stringstream storyStr;
+    storyStr << RenderTestParams::story();
 
     if (eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
     {
-        suffixStr << "_null";
+        storyStr << "_null";
     }
-    return suffixStr.str();
+    return storyStr.str();
 }
 
 std::ostream &operator<<(std::ostream &os, const DispatchComputePerfParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 

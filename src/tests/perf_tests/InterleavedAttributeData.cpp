@@ -37,7 +37,7 @@ struct InterleavedAttributeDataParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const InterleavedAttributeDataParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
 
     if (params.eglParameters.majorVersion != EGL_DONT_CARE)
     {

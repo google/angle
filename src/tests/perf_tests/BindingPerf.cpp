@@ -41,22 +41,22 @@ struct BindingsParams final : public RenderTestParams
         iterationsPerStep = kIterationsPerStep;
     }
 
-    std::string suffix() const override;
+    std::string story() const override;
     size_t numObjects;
     AllocationStyle allocationStyle;
 };
 
 std::ostream &operator<<(std::ostream &os, const BindingsParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 
-std::string BindingsParams::suffix() const
+std::string BindingsParams::story() const
 {
     std::stringstream strstr;
 
-    strstr << RenderTestParams::suffix();
+    strstr << RenderTestParams::story();
     strstr << "_" << numObjects << "_objects";
 
     switch (allocationStyle)

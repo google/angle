@@ -67,7 +67,7 @@ struct UniformsParams final : public RenderTestParams
         windowHeight = 720;
     }
 
-    std::string suffix() const override;
+    std::string story() const override;
     size_t numVertexUniforms   = 200;
     size_t numFragmentUniforms = 200;
 
@@ -79,15 +79,15 @@ struct UniformsParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const UniformsParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 
-std::string UniformsParams::suffix() const
+std::string UniformsParams::story() const
 {
     std::stringstream strstr;
 
-    strstr << RenderTestParams::suffix();
+    strstr << RenderTestParams::story();
 
     if (eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
     {

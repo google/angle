@@ -40,7 +40,7 @@ class EGLMakeCurrentPerfTest : public ANGLEPerfTest,
 };
 
 EGLMakeCurrentPerfTest::EGLMakeCurrentPerfTest()
-    : ANGLEPerfTest("EGLMakeCurrent", "_run", ITERATIONS),
+    : ANGLEPerfTest("EGLMakeCurrent", "", "_run", ITERATIONS),
       mOSWindow(nullptr),
       mDisplay(EGL_NO_DISPLAY),
       mSurface(EGL_NO_SURFACE),

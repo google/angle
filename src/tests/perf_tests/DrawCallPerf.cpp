@@ -27,16 +27,16 @@ struct DrawArraysPerfParams : public DrawCallPerfParams
 {
     DrawArraysPerfParams(const DrawCallPerfParams &base) : DrawCallPerfParams(base) {}
 
-    std::string suffix() const override;
+    std::string story() const override;
 
     StateChange stateChange = StateChange::NoChange;
 };
 
-std::string DrawArraysPerfParams::suffix() const
+std::string DrawArraysPerfParams::story() const
 {
     std::stringstream strstr;
 
-    strstr << DrawCallPerfParams::suffix();
+    strstr << DrawCallPerfParams::story();
 
     switch (stateChange)
     {
@@ -61,7 +61,7 @@ std::string DrawArraysPerfParams::suffix() const
 
 std::ostream &operator<<(std::ostream &os, const DrawArraysPerfParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 

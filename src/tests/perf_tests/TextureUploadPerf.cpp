@@ -35,7 +35,7 @@ struct TextureUploadParams final : public RenderTestParams
         webgl = false;
     }
 
-    std::string suffix() const override;
+    std::string story() const override;
 
     GLsizei baseSize;
     GLsizei subImageSize;
@@ -45,15 +45,15 @@ struct TextureUploadParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const TextureUploadParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 
-std::string TextureUploadParams::suffix() const
+std::string TextureUploadParams::story() const
 {
     std::stringstream strstr;
 
-    strstr << RenderTestParams::suffix();
+    strstr << RenderTestParams::story();
 
     if (webgl)
     {

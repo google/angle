@@ -31,11 +31,11 @@ DrawCallPerfParams::DrawCallPerfParams()
 
 DrawCallPerfParams::~DrawCallPerfParams() = default;
 
-std::string DrawCallPerfParams::suffix() const
+std::string DrawCallPerfParams::story() const
 {
     std::stringstream strstr;
 
-    strstr << RenderTestParams::suffix();
+    strstr << RenderTestParams::story();
 
     if (numTris == 0)
     {

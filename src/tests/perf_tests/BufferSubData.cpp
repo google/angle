@@ -33,7 +33,7 @@ struct BufferSubDataParams final : public RenderTestParams
         updateRate        = 1;
     }
 
-    std::string suffix() const override;
+    std::string story() const override;
 
     GLboolean vertexNormalized;
     GLenum vertexType;
@@ -47,7 +47,7 @@ struct BufferSubDataParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const BufferSubDataParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 
@@ -203,11 +203,11 @@ GLsizeiptr GetVertexData(GLenum type,
     return triDataSize;
 }
 
-std::string BufferSubDataParams::suffix() const
+std::string BufferSubDataParams::story() const
 {
     std::stringstream strstr;
 
-    strstr << RenderTestParams::suffix();
+    strstr << RenderTestParams::story();
 
     if (vertexNormalized)
     {

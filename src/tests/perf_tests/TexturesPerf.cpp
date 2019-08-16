@@ -39,7 +39,7 @@ struct TexturesParams final : public RenderTestParams
         webgl = false;
     }
 
-    std::string suffix() const override;
+    std::string story() const override;
     size_t numTextures;
     size_t textureRebindFrequency;
     size_t textureStateUpdateFrequency;
@@ -50,15 +50,15 @@ struct TexturesParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const TexturesParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 
-std::string TexturesParams::suffix() const
+std::string TexturesParams::story() const
 {
     std::stringstream strstr;
 
-    strstr << RenderTestParams::suffix();
+    strstr << RenderTestParams::story();
     strstr << "_" << numTextures << "_textures";
     strstr << "_" << textureRebindFrequency << "_rebind";
     strstr << "_" << textureStateUpdateFrequency << "_state";

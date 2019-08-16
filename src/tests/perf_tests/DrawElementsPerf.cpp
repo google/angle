@@ -35,11 +35,11 @@ struct DrawElementsPerfParams final : public DrawCallPerfParams
         numTris        = 2;
     }
 
-    std::string suffix() const override
+    std::string story() const override
     {
         std::stringstream strstr;
 
-        strstr << DrawCallPerfParams::suffix();
+        strstr << DrawCallPerfParams::story();
 
         if (indexBufferChanged)
         {
@@ -60,7 +60,7 @@ struct DrawElementsPerfParams final : public DrawCallPerfParams
 
 std::ostream &operator<<(std::ostream &os, const DrawElementsPerfParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 

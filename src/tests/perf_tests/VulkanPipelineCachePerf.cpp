@@ -38,7 +38,7 @@ class VulkanPipelineCachePerfTest : public ANGLEPerfTest
 };
 
 VulkanPipelineCachePerfTest::VulkanPipelineCachePerfTest()
-    : ANGLEPerfTest("VulkanPipelineCachePerf", "", kIterationsPerStep)
+    : ANGLEPerfTest("VulkanPipelineCachePerf", "", "", kIterationsPerStep)
 {}
 
 VulkanPipelineCachePerfTest::~VulkanPipelineCachePerfTest()

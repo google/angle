@@ -49,10 +49,10 @@ struct LinkProgramParams final : public RenderTestParams
         threadOption = threadOptionIn;
     }
 
-    std::string suffix() const override
+    std::string story() const override
     {
         std::stringstream strstr;
-        strstr << RenderTestParams::suffix();
+        strstr << RenderTestParams::story();
 
         if (taskOption == TaskOption::CompileOnly)
         {
@@ -86,7 +86,7 @@ struct LinkProgramParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const LinkProgramParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 

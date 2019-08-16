@@ -13,11 +13,13 @@
 #include <gtest/gtest.h>
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "platform/Platform.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
+#include "third_party/perf/perf_result_reporter.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 #include "util/Timer.h"
@@ -55,7 +57,8 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 {
   public:
     ANGLEPerfTest(const std::string &name,
-                  const std::string &suffix,
+                  const std::string &backend,
+                  const std::string &story,
                   unsigned int iterationsPerStep);
     virtual ~ANGLEPerfTest();
 
@@ -70,14 +73,6 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 
   protected:
     void run();
-    void printResult(const std::string &trace,
-                     double value,
-                     const std::string &units,
-                     bool important) const;
-    void printResult(const std::string &trace,
-                     size_t value,
-                     const std::string &units,
-                     bool important) const;
     void SetUp() override;
     void TearDown() override;
 
@@ -91,10 +86,12 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     void doRunLoop(double maxRunTime);
 
     std::string mName;
-    std::string mSuffix;
+    std::string mBackend;
+    std::string mStory;
     Timer *mTimer;
     uint64_t mGPUTimeNs;
     bool mSkipTest;
+    std::unique_ptr<perf_test::PerfResultReporter> mReporter;
 
   private:
     double printResults();
@@ -109,7 +106,9 @@ struct RenderTestParams : public angle::PlatformParameters
 {
     virtual ~RenderTestParams() {}
 
-    virtual std::string suffix() const;
+    virtual std::string backend() const;
+    virtual std::string story() const;
+    std::string backendAndStory() const;
 
     EGLint windowWidth             = 64;
     EGLint windowHeight            = 64;

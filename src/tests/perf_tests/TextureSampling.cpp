@@ -41,7 +41,7 @@ struct TextureSamplingParams final : public RenderTestParams
         kernelSize  = 3;
     }
 
-    std::string suffix() const override;
+    std::string story() const override;
     unsigned int numSamplers;
     unsigned int textureSize;
     unsigned int kernelSize;
@@ -49,15 +49,15 @@ struct TextureSamplingParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const TextureSamplingParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 
-std::string TextureSamplingParams::suffix() const
+std::string TextureSamplingParams::story() const
 {
     std::stringstream strstr;
 
-    strstr << RenderTestParams::suffix() << "_" << numSamplers << "samplers";
+    strstr << RenderTestParams::story() << "_" << numSamplers << "samplers";
 
     return strstr.str();
 }

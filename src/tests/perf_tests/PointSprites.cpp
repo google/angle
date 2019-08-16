@@ -37,7 +37,7 @@ struct PointSpritesParams final : public RenderTestParams
         numVaryings  = 3;
     }
 
-    std::string suffix() const override;
+    std::string story() const override;
 
     unsigned int count;
     float size;
@@ -46,7 +46,7 @@ struct PointSpritesParams final : public RenderTestParams
 
 std::ostream &operator<<(std::ostream &os, const PointSpritesParams &params)
 {
-    os << params.suffix().substr(1);
+    os << params.backendAndStory().substr(1);
     return os;
 }
 
@@ -66,11 +66,11 @@ class PointSpritesBenchmark : public ANGLERenderTest,
     RNG mRNG;
 };
 
-std::string PointSpritesParams::suffix() const
+std::string PointSpritesParams::story() const
 {
     std::stringstream strstr;
 
-    strstr << RenderTestParams::suffix() << "_" << count << "_" << size << "px"
+    strstr << RenderTestParams::story() << "_" << count << "_" << size << "px"
            << "_" << numVaryings << "vars";
 
     return strstr.str();

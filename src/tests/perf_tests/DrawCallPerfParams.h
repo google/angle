@@ -20,7 +20,7 @@ struct DrawCallPerfParams : public RenderTestParams
     DrawCallPerfParams();
     virtual ~DrawCallPerfParams();
 
-    std::string suffix() const override;
+    std::string story() const override;
 
     double runTimeSeconds;
     int numTris;

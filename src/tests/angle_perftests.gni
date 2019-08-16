@@ -8,6 +8,8 @@ _angle_perf_test_common_sources = [
   "perf_tests/ANGLEPerfTest.h",
   "perf_tests/ANGLEPerfTestArgs.cpp",
   "perf_tests/ANGLEPerfTestArgs.h",
+  "perf_tests/third_party/perf/perf_result_reporter.cc",
+  "perf_tests/third_party/perf/perf_result_reporter.h",
   "perf_tests/third_party/perf/perf_test.cc",
   "perf_tests/third_party/perf/perf_test.h",
   "test_utils/angle_test_configs.cpp",
