@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ce4916d_a2063475",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-16T17:39:20Z",
+      "side": 1,
+      "message": "I think we could get a cleaner (more hidden) design by supporting a single framebuffer with two surfaces instead of two framebuffers with a special ID.\n\nIf we add another FramebufferAttachment to FramebufferState, (maybe mDefaultFramebufferReadAttachment?) and have FramebufferState::getReadAttachment return it in the case of a default framebuffer I think most of the complexity will be hidden in gl::Framebuffer itself.\n\nThe one hiccup I see is that FramebufferVk::readPixels looks up the read attachment using the RenderTargetCache which circumvents FramebufferState::getReadAttachment.  I think this can also be solved by adding a new mReadRenderTarget to RenderTargetCache and updating it in RenderTargetCache::update when the DIRTY_BIT_READ_BUFFER dirty bit is processed using FramebufferState::getReadAttachment.",
+      "revId": "e2e29df84222b512a68daf8b4b9f06e8b2c18173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
