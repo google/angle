@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "4cc8287d_fa0ad480",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1422,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-16T14:31:16Z",
+      "side": 1,
+      "message": "nit: guaranteed",
+      "range": {
+        "startLine": 1422,
+        "startChar": 38,
+        "endLine": 1422,
+        "endChar": 48
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "737c449a_2c265099",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1422,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-16T14:31:16Z",
+      "side": 1,
+      "message": "nit: add space",
+      "range": {
+        "startLine": 1422,
+        "startChar": 15,
+        "endLine": 1422,
+        "endChar": 17
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6a4ae079_a302f1f9",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 5
@@ -48,6 +94,52 @@
     },
     {
       "key": {
+        "uuid": "ae9d668a_96c7cd3a",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1424,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-16T14:31:16Z",
+      "side": 1,
+      "message": "if I understand the code correctly, you could change this to\n\nif (!hasXFB())\n{\n   return;\n}\nelse if (glState.isTransformFeedbackActive())\n{\n   // do your init here.\n}\n\nAnd move the special case XFB code out of allocateDescriptorSetAndGetInfo. If possible I think it would be cleaner.",
+      "range": {
+        "startLine": 1424,
+        "startChar": 8,
+        "endLine": 1424,
+        "endChar": 14
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15be65fc_3e9063f8",
+        "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-16T14:31:16Z",
+      "side": 1,
+      "message": "instead of passing the ProgramState here and below, can you just pass the buffer count?",
+      "range": {
+        "startLine": 137,
+        "startChar": 44,
+        "endLine": 137,
+        "endChar": 79
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea6912e7_9abbf5c0",
         "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
         "patchSetId": 5
@@ -59,6 +151,29 @@
       "writtenOn": "2019-08-16T14:14:20Z",
       "side": 1,
       "message": "You don\u0027t need to update this serial, the program\u0027s mEmptyBuffer\u0027s serial is not expected to be used anywhere.",
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a53eef9a_bd18904c",
+        "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-16T14:31:16Z",
+      "side": 1,
+      "message": "can you make this into a shared helper?",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 72
+      },
       "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
