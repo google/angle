@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92f8f55b_64f0a0d8",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1422,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-16T14:14:20Z",
+      "side": 1,
+      "message": "space after .",
+      "range": {
+        "startLine": 1422,
+        "startChar": 14,
+        "endLine": 1422,
+        "endChar": 15
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a4ae079_a302f1f9",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1423,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-16T14:14:20Z",
+      "side": 1,
+      "message": "bindings",
+      "range": {
+        "startLine": 1423,
+        "startChar": 70,
+        "endLine": 1423,
+        "endChar": 77
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea6912e7_9abbf5c0",
+        "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-16T14:14:20Z",
+      "side": 1,
+      "message": "You don\u0027t need to update this serial, the program\u0027s mEmptyBuffer\u0027s serial is not expected to be used anywhere.",
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
