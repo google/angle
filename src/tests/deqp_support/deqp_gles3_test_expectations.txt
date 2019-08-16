@@ -597,9 +597,6 @@
 3678 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
 3678 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_factor_1_slope = FAIL
 
-// FBO
-3679 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_texture_layer = FAIL
-
 // Flat shading:
 3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
 3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.basic_types.u* = FAIL
