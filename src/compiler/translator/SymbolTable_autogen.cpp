@@ -2233,9 +2233,8 @@ constexpr const TSymbolUniqueId BuiltInId::gl_in;
 constexpr const TSymbolUniqueId BuiltInId::gl_PerVertexOutBlock;
 constexpr const TSymbolUniqueId BuiltInId::gl_PositionGS;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
-constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVRESSL1;
 
-const int TSymbolTable::kLastBuiltInId = 2296;
+const int TSymbolTable::kLastBuiltInId = 2295;
 
 namespace BuiltInName
 {
@@ -4962,12 +4961,6 @@ constexpr const TVariable var_gl_ViewID_OVR(
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUInt, EbpHigh, EvqViewIDOVR, 1, 1>());
-constexpr const TVariable var_gl_ViewID_OVRESSL1(
-    BuiltInId::gl_ViewID_OVRESSL1,
-    BuiltInName::gl_ViewID_OVR,
-    SymbolType::BuiltIn,
-    TExtension::UNDEFINED,
-    StaticType::Get<EbtInt, EbpHigh, EvqViewIDOVR, 1, 1>());
 constexpr const TVariable var_gl_ViewportIndex(
     BuiltInId::gl_ViewportIndex,
     BuiltInName::gl_ViewportIndex,
@@ -5866,11 +5859,6 @@ const TVariable *gl_VertexID()
 const TVariable *gl_ViewID_OVR()
 {
     return &var_gl_ViewID_OVR;
-}
-
-const TVariable *gl_ViewID_OVRESSL1()
-{
-    return &var_gl_ViewID_OVRESSL1;
 }
 
 const TVariable *gl_ViewportIndex()
@@ -32292,20 +32280,6 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                 }
             }
-            if (mResources.OVR_multiview && mShaderType != GL_COMPUTE_SHADER)
-            {
-                switch (nameHash)
-                {
-                    case 0x0000024eu:
-                    {
-                        if (name == BuiltInName::gl_ViewID_OVR)
-                        {
-                            return &BuiltInVariable::var_gl_ViewID_OVRESSL1;
-                        }
-                        break;
-                    }
-                }
-            }
         }
         switch (nameHash)
         {
@@ -51070,7 +51044,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_ViewID_OVR)
                     {
-                        return &BuiltInVariable::var_gl_ViewID_OVRESSL1;
+                        return &BuiltInVariable::var_gl_ViewID_OVR;
                     }
                     break;
                 }

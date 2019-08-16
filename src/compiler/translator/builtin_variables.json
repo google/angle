@@ -895,19 +895,6 @@
                         }
                     }
                 }
-            },
-            "ESSL1":{
-                "variables":{
-                    "gl_ViewID_OVR":{
-                        "suffix":"ESSL1",
-                        "level":"ESSL1_BUILTINS",
-                        "type":{
-                            "basic":"Int",
-                            "precision":"High",
-                            "qualifier":"ViewIDOVR"
-                        }
-                    }
-                }
             }
         }
     }

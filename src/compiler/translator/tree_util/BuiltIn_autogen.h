@@ -3482,7 +3482,6 @@ class BuiltInId
     static constexpr const TSymbolUniqueId gl_PerVertexOutBlock     = TSymbolUniqueId(2293);
     static constexpr const TSymbolUniqueId gl_PositionGS            = TSymbolUniqueId(2294);
     static constexpr const TSymbolUniqueId gl_ViewID_OVR            = TSymbolUniqueId(2295);
-    static constexpr const TSymbolUniqueId gl_ViewID_OVRESSL1       = TSymbolUniqueId(2296);
 
 };  // class BuiltInId
 
@@ -3517,7 +3516,6 @@ const TVariable *gl_PrimitiveIDIn();
 const TVariable *gl_SecondaryFragColorEXT();
 const TVariable *gl_VertexID();
 const TVariable *gl_ViewID_OVR();
-const TVariable *gl_ViewID_OVRESSL1();
 const TVariable *gl_ViewportIndex();
 const TVariable *gl_WorkGroupID();
 const TVariable *gl_WorkGroupSize();
