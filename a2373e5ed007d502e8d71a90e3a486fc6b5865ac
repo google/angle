@@ -141,6 +141,30 @@
     },
     {
       "key": {
+        "uuid": "da186185_fec2516a",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1424,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-16T15:33:13Z",
+      "side": 1,
+      "message": "If you do the \"init\" here, you would be potentially initing the desc set multiple times for no reason. Though if it makes the code cleaner, I don\u0027t mind. Just the `if` should say `!Active` and be followed by a return.",
+      "parentUuid": "5ee8a279_18fb9a3d",
+      "range": {
+        "startLine": 1424,
+        "startChar": 8,
+        "endLine": 1424,
+        "endChar": 14
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "15be65fc_3e9063f8",
         "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
         "patchSetId": 5
