@@ -979,7 +979,7 @@ inline uint32_t BitfieldReverse(uint32_t value)
 }
 
 // Count the 1 bits.
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64))
 #    define ANGLE_HAS_BITCOUNT_32
 inline int BitCount(uint32_t bits)
 {
