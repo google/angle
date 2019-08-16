@@ -125,6 +125,7 @@ class RendererVk : angle::NonCopyable
         ASSERT(mFeaturesInitialized);
         return mFeatures;
     }
+    uint32_t getMaxVertexAttribDivisor() const { return mMaxVertexAttribDivisor; }
 
     bool isMockICDEnabled() const { return mEnabledICD == vk::ICD::Mock; }
 

@@ -38,7 +38,7 @@ using RefCountedPipelineLayout      = RefCounted<PipelineLayout>;
 // fewer bits. For example, boolean values could be represented by a single bit instead
 // of a uint8_t. However at the current time there are concerns about the portability
 // of bitfield operators, and complexity issues with using bit mask operations. This is
-// something likely we will want to investigate as the Vulkan implementation progresses.
+// something we will likely want to investigate as the Vulkan implementation progresses.
 //
 // Second implementation note: the struct packing is also a bit fragile, and some of the
 // packing requirements depend on using alignas and field ordering to get the result of
@@ -164,8 +164,6 @@ static_assert(sizeof(AttachmentOpsArray) == 20, "Size check failed");
 struct PackedAttribDesc final
 {
     uint8_t format;
-
-    // TODO(http://anglebug.com/2672): Emulate divisors greater than UBYTE_MAX.
     uint8_t divisor;
 
     // Can only take 11 bits on NV.
@@ -315,9 +313,9 @@ constexpr size_t kPackedInputAssemblyAndColorBlendStateSize =
 static_assert(kPackedInputAssemblyAndColorBlendStateSize == 56, "Size check failed");
 
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
-    kVertexInputAttributesSize + kPackedInputAssemblyAndColorBlendStateSize +
-    kPackedRasterizationAndMultisampleStateSize + kPackedDepthStencilStateSize +
-    kRenderPassDescSize + sizeof(VkViewport) + sizeof(VkRect2D);
+    kVertexInputAttributesSize + kRenderPassDescSize + kPackedRasterizationAndMultisampleStateSize +
+    kPackedDepthStencilStateSize + kPackedInputAssemblyAndColorBlendStateSize + sizeof(VkViewport) +
+    sizeof(VkRect2D);
 
 // Number of dirty bits in the dirty bit set.
 constexpr size_t kGraphicsPipelineDirtyBitBytes = 4;

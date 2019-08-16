@@ -1056,7 +1056,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         deviceProperties.pNext = &divisorProperties;
 
         vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
-        mMaxVertexAttribDivisor = divisorProperties.maxVertexAttribDivisor;
+        // We only store 8 bit divisor in GraphicsPipelineDesc so capping value & we emulate if
+        // exceeded
+        mMaxVertexAttribDivisor =
+            std::min(divisorProperties.maxVertexAttribDivisor,
+                     static_cast<uint32_t>(std::numeric_limits<uint8_t>::max()));
 
         createInfo.pNext = &enabledFeatures;
     }

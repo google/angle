@@ -16,6 +16,7 @@
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
@@ -673,7 +674,6 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     VkPipelineVertexInputDivisorStateCreateInfoEXT divisorState = {};
     divisorState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT;
     divisorState.pVertexBindingDivisors = divisorDesc.data();
-
     for (size_t attribIndexSizeT : activeAttribLocationsMask)
     {
         const uint32_t attribIndex = static_cast<uint32_t>(attribIndexSizeT);
@@ -884,10 +884,6 @@ void GraphicsPipelineDesc::updateVertexInput(GraphicsPipelineTransitionBits *tra
                                              GLuint relativeOffset)
 {
     vk::PackedAttribDesc &packedAttrib = mVertexInputAttribs.attribs[attribIndex];
-
-    // TODO: Handle the case where the divisor overflows the field that holds it.
-    // http://anglebug.com/2672
-    ASSERT(divisor <= std::numeric_limits<decltype(packedAttrib.divisor)>::max());
 
     SetBitField(packedAttrib.stride, stride);
     SetBitField(packedAttrib.divisor, divisor);

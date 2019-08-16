@@ -213,9 +213,10 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                                               GLuint relativeOffset)
     {
         invalidateVertexAndIndexBuffers();
-        mGraphicsPipelineDesc->updateVertexInput(&mGraphicsPipelineTransition,
-                                                 static_cast<uint32_t>(attribIndex), stride,
-                                                 divisor, format, relativeOffset);
+        // Set divisor to 1 for attribs with emulated divisor
+        mGraphicsPipelineDesc->updateVertexInput(
+            &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex), stride,
+            divisor > mRenderer->getMaxVertexAttribDivisor() ? 1 : divisor, format, relativeOffset);
     }
 
     void invalidateDefaultAttribute(size_t attribIndex);

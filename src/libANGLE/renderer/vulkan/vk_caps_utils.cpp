@@ -82,10 +82,9 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.vertexHalfFloat = true;
 
-    // TODO: Enable this always and emulate instanced draws if any divisor exceeds the maximum
-    // supported.  http://anglebug.com/2672
-    mNativeExtensions.instancedArraysANGLE = mMaxVertexAttribDivisor > 1;
-    mNativeExtensions.instancedArraysEXT   = mMaxVertexAttribDivisor > 1;
+    // Enabled in HW if VK_EXT_vertex_attribute_divisor available, otherwise emulated
+    mNativeExtensions.instancedArraysANGLE = true;
+    mNativeExtensions.instancedArraysEXT   = true;
 
     // Only expose robust buffer access if the physical device supports it.
     mNativeExtensions.robustBufferAccessBehavior =
