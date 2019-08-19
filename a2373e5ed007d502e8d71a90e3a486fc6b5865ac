@@ -71,6 +71,78 @@
     },
     {
       "key": {
+        "uuid": "bb93da88_cff14ede",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1422,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-08-19T23:25:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "737c449a_2c265099",
+      "range": {
+        "startLine": 1422,
+        "startChar": 15,
+        "endLine": 1422,
+        "endChar": 17
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28e5aabf_8a9008d4",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1422,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-08-19T23:25:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92f8f55b_64f0a0d8",
+      "range": {
+        "startLine": 1422,
+        "startChar": 14,
+        "endLine": 1422,
+        "endChar": 15
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c5f0656_22edfa11",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1422,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-08-19T23:25:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4cc8287d_fa0ad480",
+      "range": {
+        "startLine": 1422,
+        "startChar": 38,
+        "endLine": 1422,
+        "endChar": 48
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a4ae079_a302f1f9",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 5
@@ -91,6 +163,30 @@
       "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8a4bb66_63220632",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1423,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-08-19T23:25:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a4ae079_a302f1f9",
+      "range": {
+        "startLine": 1423,
+        "startChar": 70,
+        "endLine": 1423,
+        "endChar": 77
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -189,6 +285,30 @@
     },
     {
       "key": {
+        "uuid": "696de7f0_d0cab70f",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1424,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-08-19T23:25:15Z",
+      "side": 1,
+      "message": "@jamie, I understand what you are saying. It\u0027ll make code cleaner. But let\u0027s think about function name, updateTransformFeedbackDescriptorSet. It can be called anywhere to update xfb descriptroSet. Later, someone may try to update again after updating it. So I would suggest keeping the code as it is. I think it is better from the point of view of code reliability.",
+      "parentUuid": "6806cc7c_6f1a2b27",
+      "range": {
+        "startLine": 1424,
+        "startChar": 8,
+        "endLine": 1424,
+        "endChar": 14
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15be65fc_3e9063f8",
         "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
         "patchSetId": 5
@@ -212,6 +332,30 @@
     },
     {
       "key": {
+        "uuid": "062e8379_4715e17f",
+        "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-08-19T23:25:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15be65fc_3e9063f8",
+      "range": {
+        "startLine": 137,
+        "startChar": 44,
+        "endLine": 137,
+        "endChar": 79
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea6912e7_9abbf5c0",
         "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
         "patchSetId": 5
@@ -226,6 +370,24 @@
       "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a80841fb_9a7fb08c",
+        "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-08-19T23:25:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea6912e7_9abbf5c0",
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -249,6 +411,30 @@
       "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecabed05_1091d58f",
+        "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-08-19T23:25:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a53eef9a_bd18904c",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 72
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
