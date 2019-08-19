@@ -4801,1097 +4801,1091 @@ constexpr const ImmutableString yuv_2_rgb_20B00H("yuv_2_rgb(20B00H");
 namespace BuiltInVariable
 {
 
-constexpr const TVariable kVar_gl_BaseInstance(
+constexpr const TVariable var_gl_BaseInstance(
     BuiltInId::gl_BaseInstance,
     BuiltInName::gl_BaseInstance,
     SymbolType::BuiltIn,
     TExtension::ANGLE_base_vertex_base_instance,
     StaticType::Get<EbtInt, EbpHigh, EvqBaseInstance, 1, 1>());
-constexpr const TVariable kVar_gl_BaseVertex(
+constexpr const TVariable var_gl_BaseVertex(
     BuiltInId::gl_BaseVertex,
     BuiltInName::gl_BaseVertex,
     SymbolType::BuiltIn,
     TExtension::ANGLE_base_vertex_base_instance,
     StaticType::Get<EbtInt, EbpHigh, EvqBaseVertex, 1, 1>());
-constexpr const TVariable kVar_gl_DrawID(BuiltInId::gl_DrawID,
-                                         BuiltInName::gl_DrawID,
-                                         SymbolType::BuiltIn,
-                                         TExtension::ANGLE_multi_draw,
-                                         StaticType::Get<EbtInt, EbpHigh, EvqDrawID, 1, 1>());
-constexpr const TVariable kVar_gl_DrawIDESSL1(BuiltInId::gl_DrawIDESSL1,
-                                              BuiltInName::gl_DrawID,
-                                              SymbolType::BuiltIn,
-                                              TExtension::ANGLE_multi_draw,
-                                              StaticType::Get<EbtInt, EbpHigh, EvqDrawID, 1, 1>());
-constexpr const TVariable kVar_gl_FragColor(
+constexpr const TVariable var_gl_DrawID(BuiltInId::gl_DrawID,
+                                        BuiltInName::gl_DrawID,
+                                        SymbolType::BuiltIn,
+                                        TExtension::ANGLE_multi_draw,
+                                        StaticType::Get<EbtInt, EbpHigh, EvqDrawID, 1, 1>());
+constexpr const TVariable var_gl_DrawIDESSL1(BuiltInId::gl_DrawIDESSL1,
+                                             BuiltInName::gl_DrawID,
+                                             SymbolType::BuiltIn,
+                                             TExtension::ANGLE_multi_draw,
+                                             StaticType::Get<EbtInt, EbpHigh, EvqDrawID, 1, 1>());
+constexpr const TVariable var_gl_FragColor(
     BuiltInId::gl_FragColor,
     BuiltInName::gl_FragColor,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtFloat, EbpMedium, EvqFragColor, 4, 1>());
-constexpr const TVariable kVar_gl_FragCoord(
+constexpr const TVariable var_gl_FragCoord(
     BuiltInId::gl_FragCoord,
     BuiltInName::gl_FragCoord,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtFloat, EbpMedium, EvqFragCoord, 4, 1>());
-constexpr const TVariable kVar_gl_FragDepth(
+constexpr const TVariable var_gl_FragDepth(
     BuiltInId::gl_FragDepth,
     BuiltInName::gl_FragDepth,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtFloat, EbpHigh, EvqFragDepth, 1, 1>());
-constexpr const TVariable kVar_gl_FrontFacing(
+constexpr const TVariable var_gl_FrontFacing(
     BuiltInId::gl_FrontFacing,
     BuiltInName::gl_FrontFacing,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtBool, EbpUndefined, EvqFrontFacing, 1, 1>());
-constexpr const TVariable kVar_gl_GlobalInvocationID(
+constexpr const TVariable var_gl_GlobalInvocationID(
     BuiltInId::gl_GlobalInvocationID,
     BuiltInName::gl_GlobalInvocationID,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobalInvocationID, 3, 1>());
-constexpr const TVariable kVar_gl_InstanceID(
+constexpr const TVariable var_gl_InstanceID(
     BuiltInId::gl_InstanceID,
     BuiltInName::gl_InstanceID,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtInt, EbpHigh, EvqInstanceID, 1, 1>());
-constexpr const TVariable kVar_gl_InvocationID(
+constexpr const TVariable var_gl_InvocationID(
     BuiltInId::gl_InvocationID,
     BuiltInName::gl_InvocationID,
     SymbolType::BuiltIn,
     TExtension::EXT_geometry_shader,
     StaticType::Get<EbtInt, EbpHigh, EvqInvocationID, 1, 1>());
-constexpr const TVariable kVar_gl_LastFragColor(
+constexpr const TVariable var_gl_LastFragColor(
     BuiltInId::gl_LastFragColor,
     BuiltInName::gl_LastFragColor,
     SymbolType::BuiltIn,
     TExtension::NV_shader_framebuffer_fetch,
     StaticType::Get<EbtFloat, EbpMedium, EvqLastFragColor, 4, 1>());
-constexpr const TVariable kVar_gl_LastFragColorARM(
+constexpr const TVariable var_gl_LastFragColorARM(
     BuiltInId::gl_LastFragColorARM,
     BuiltInName::gl_LastFragColorARM,
     SymbolType::BuiltIn,
     TExtension::ARM_shader_framebuffer_fetch,
     StaticType::Get<EbtFloat, EbpMedium, EvqLastFragColor, 4, 1>());
-constexpr const TVariable kVar_gl_Layer(BuiltInId::gl_Layer,
-                                        BuiltInName::gl_Layer,
-                                        SymbolType::BuiltIn,
-                                        TExtension::EXT_geometry_shader,
-                                        StaticType::Get<EbtInt, EbpHigh, EvqLayer, 1, 1>());
-constexpr const TVariable kVar_gl_LayerGS(BuiltInId::gl_LayerGS,
-                                          BuiltInName::gl_Layer,
-                                          SymbolType::BuiltIn,
-                                          TExtension::EXT_geometry_shader,
-                                          StaticType::Get<EbtInt, EbpHigh, EvqLayer, 1, 1>());
-constexpr const TVariable kVar_gl_LayerVS(BuiltInId::gl_LayerVS,
-                                          BuiltInName::gl_Layer,
-                                          SymbolType::BuiltIn,
-                                          TExtension::UNDEFINED,
-                                          StaticType::Get<EbtInt, EbpHigh, EvqLayer, 1, 1>());
-constexpr const TVariable kVar_gl_LocalInvocationID(
+constexpr const TVariable var_gl_Layer(BuiltInId::gl_Layer,
+                                       BuiltInName::gl_Layer,
+                                       SymbolType::BuiltIn,
+                                       TExtension::EXT_geometry_shader,
+                                       StaticType::Get<EbtInt, EbpHigh, EvqLayer, 1, 1>());
+constexpr const TVariable var_gl_LayerGS(BuiltInId::gl_LayerGS,
+                                         BuiltInName::gl_Layer,
+                                         SymbolType::BuiltIn,
+                                         TExtension::EXT_geometry_shader,
+                                         StaticType::Get<EbtInt, EbpHigh, EvqLayer, 1, 1>());
+constexpr const TVariable var_gl_LayerVS(BuiltInId::gl_LayerVS,
+                                         BuiltInName::gl_Layer,
+                                         SymbolType::BuiltIn,
+                                         TExtension::UNDEFINED,
+                                         StaticType::Get<EbtInt, EbpHigh, EvqLayer, 1, 1>());
+constexpr const TVariable var_gl_LocalInvocationID(
     BuiltInId::gl_LocalInvocationID,
     BuiltInName::gl_LocalInvocationID,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUInt, EbpUndefined, EvqLocalInvocationID, 3, 1>());
-constexpr const TVariable kVar_gl_LocalInvocationIndex(
+constexpr const TVariable var_gl_LocalInvocationIndex(
     BuiltInId::gl_LocalInvocationIndex,
     BuiltInName::gl_LocalInvocationIndex,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUInt, EbpUndefined, EvqLocalInvocationIndex, 1, 1>());
-constexpr const TVariable kVar_gl_NumWorkGroups(
+constexpr const TVariable var_gl_NumWorkGroups(
     BuiltInId::gl_NumWorkGroups,
     BuiltInName::gl_NumWorkGroups,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUInt, EbpUndefined, EvqNumWorkGroups, 3, 1>());
-constexpr const TVariable kVar_gl_PointCoord(
+constexpr const TVariable var_gl_PointCoord(
     BuiltInId::gl_PointCoord,
     BuiltInName::gl_PointCoord,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtFloat, EbpMedium, EvqPointCoord, 2, 1>());
-constexpr const TVariable kVar_gl_PointSize(
+constexpr const TVariable var_gl_PointSize(
     BuiltInId::gl_PointSize,
     BuiltInName::gl_PointSize,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtFloat, EbpMedium, EvqPointSize, 1, 1>());
-constexpr const TVariable kVar_gl_Position(BuiltInId::gl_Position,
-                                           BuiltInName::gl_Position,
-                                           SymbolType::BuiltIn,
-                                           TExtension::UNDEFINED,
-                                           StaticType::Get<EbtFloat, EbpHigh, EvqPosition, 4, 1>());
-constexpr const TVariable kVar_gl_PrimitiveID(
+constexpr const TVariable var_gl_Position(BuiltInId::gl_Position,
+                                          BuiltInName::gl_Position,
+                                          SymbolType::BuiltIn,
+                                          TExtension::UNDEFINED,
+                                          StaticType::Get<EbtFloat, EbpHigh, EvqPosition, 4, 1>());
+constexpr const TVariable var_gl_PrimitiveID(
     BuiltInId::gl_PrimitiveID,
     BuiltInName::gl_PrimitiveID,
     SymbolType::BuiltIn,
     TExtension::EXT_geometry_shader,
     StaticType::Get<EbtInt, EbpHigh, EvqPrimitiveID, 1, 1>());
-constexpr const TVariable kVar_gl_PrimitiveIDGS(
+constexpr const TVariable var_gl_PrimitiveIDGS(
     BuiltInId::gl_PrimitiveIDGS,
     BuiltInName::gl_PrimitiveID,
     SymbolType::BuiltIn,
     TExtension::EXT_geometry_shader,
     StaticType::Get<EbtInt, EbpHigh, EvqPrimitiveID, 1, 1>());
-constexpr const TVariable kVar_gl_PrimitiveIDIn(
+constexpr const TVariable var_gl_PrimitiveIDIn(
     BuiltInId::gl_PrimitiveIDIn,
     BuiltInName::gl_PrimitiveIDIn,
     SymbolType::BuiltIn,
     TExtension::EXT_geometry_shader,
     StaticType::Get<EbtInt, EbpHigh, EvqPrimitiveIDIn, 1, 1>());
-constexpr const TVariable kVar_gl_SecondaryFragColorEXT(
+constexpr const TVariable var_gl_SecondaryFragColorEXT(
     BuiltInId::gl_SecondaryFragColorEXT,
     BuiltInName::gl_SecondaryFragColorEXT,
     SymbolType::BuiltIn,
     TExtension::EXT_blend_func_extended,
     StaticType::Get<EbtFloat, EbpMedium, EvqSecondaryFragColorEXT, 4, 1>());
-constexpr const TVariable kVar_gl_VertexID(BuiltInId::gl_VertexID,
-                                           BuiltInName::gl_VertexID,
-                                           SymbolType::BuiltIn,
-                                           TExtension::UNDEFINED,
-                                           StaticType::Get<EbtInt, EbpHigh, EvqVertexID, 1, 1>());
-constexpr const TVariable kVar_gl_ViewID_OVR(
+constexpr const TVariable var_gl_VertexID(BuiltInId::gl_VertexID,
+                                          BuiltInName::gl_VertexID,
+                                          SymbolType::BuiltIn,
+                                          TExtension::UNDEFINED,
+                                          StaticType::Get<EbtInt, EbpHigh, EvqVertexID, 1, 1>());
+constexpr const TVariable var_gl_ViewID_OVR(
     BuiltInId::gl_ViewID_OVR,
     BuiltInName::gl_ViewID_OVR,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUInt, EbpHigh, EvqViewIDOVR, 1, 1>());
-constexpr const TVariable kVar_gl_ViewID_OVRESSL1(
+constexpr const TVariable var_gl_ViewID_OVRESSL1(
     BuiltInId::gl_ViewID_OVRESSL1,
     BuiltInName::gl_ViewID_OVR,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtInt, EbpHigh, EvqViewIDOVR, 1, 1>());
-constexpr const TVariable kVar_gl_ViewportIndex(
+constexpr const TVariable var_gl_ViewportIndex(
     BuiltInId::gl_ViewportIndex,
     BuiltInName::gl_ViewportIndex,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtInt, EbpHigh, EvqViewportIndex, 1, 1>());
-constexpr const TVariable kVar_gl_WorkGroupID(
+constexpr const TVariable var_gl_WorkGroupID(
     BuiltInId::gl_WorkGroupID,
     BuiltInName::gl_WorkGroupID,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUInt, EbpUndefined, EvqWorkGroupID, 3, 1>());
-constexpr const TVariable kVar_gl_WorkGroupSize(
+constexpr const TVariable var_gl_WorkGroupSize(
     BuiltInId::gl_WorkGroupSize,
     BuiltInName::gl_WorkGroupSize,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUInt, EbpUndefined, EvqWorkGroupSize, 3, 1>());
-constexpr const TVariable kVar_pt00B(BuiltInId::pt00B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00C(BuiltInId::pt00C,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00D(BuiltInId::pt00D,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00E(BuiltInId::pt00E,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00F(BuiltInId::pt00F,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00G(
+constexpr const TVariable var_pt00B(BuiltInId::pt00B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt00C(BuiltInId::pt00C,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt00D(BuiltInId::pt00D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt00E(BuiltInId::pt00E,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt00F(BuiltInId::pt00F,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt00G(
     BuiltInId::pt00G,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtAtomicCounter, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00H(
+constexpr const TVariable var_pt00H(
     BuiltInId::pt00H,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtYuvCscStandardEXT, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00I(
-    BuiltInId::pt00I,
-    BuiltInName::_empty,
-    SymbolType::BuiltIn,
-    TExtension::UNDEFINED,
-    StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00J(
-    BuiltInId::pt00J,
-    BuiltInName::_empty,
-    SymbolType::BuiltIn,
-    TExtension::UNDEFINED,
-    StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00K(
+constexpr const TVariable var_pt00I(BuiltInId::pt00I,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt00J(BuiltInId::pt00J,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt00K(
     BuiltInId::pt00K,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSamplerCube, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00L(
+constexpr const TVariable var_pt00L(
     BuiltInId::pt00L,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00M(
+constexpr const TVariable var_pt00M(
     BuiltInId::pt00M,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00N(
+constexpr const TVariable var_pt00N(
     BuiltInId::pt00N,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00O(
+constexpr const TVariable var_pt00O(
     BuiltInId::pt00O,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler2DRect, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00P(
+constexpr const TVariable var_pt00P(
     BuiltInId::pt00P,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler2DMS, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00Q(
+constexpr const TVariable var_pt00Q(
     BuiltInId::pt00Q,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler2DMSArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00R(
+constexpr const TVariable var_pt00R(
     BuiltInId::pt00R,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00S(
+constexpr const TVariable var_pt00S(
     BuiltInId::pt00S,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00T(
+constexpr const TVariable var_pt00T(
     BuiltInId::pt00T,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISamplerCube, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00U(
+constexpr const TVariable var_pt00U(
     BuiltInId::pt00U,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00V(
+constexpr const TVariable var_pt00V(
     BuiltInId::pt00V,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISampler2DMS, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00W(
+constexpr const TVariable var_pt00W(
     BuiltInId::pt00W,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISampler2DMSArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00X(
+constexpr const TVariable var_pt00X(
     BuiltInId::pt00X,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00Y(
+constexpr const TVariable var_pt00Y(
     BuiltInId::pt00Y,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00Z(
+constexpr const TVariable var_pt00Z(
     BuiltInId::pt00Z,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSamplerCube, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00a(
+constexpr const TVariable var_pt00a(
     BuiltInId::pt00a,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00b(
+constexpr const TVariable var_pt00b(
     BuiltInId::pt00b,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSampler2DMS, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00c(
+constexpr const TVariable var_pt00c(
     BuiltInId::pt00c,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSampler2DMSArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00d(
+constexpr const TVariable var_pt00d(
     BuiltInId::pt00d,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00e(
+constexpr const TVariable var_pt00e(
     BuiltInId::pt00e,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00f(
+constexpr const TVariable var_pt00f(
     BuiltInId::pt00f,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00g(
-    BuiltInId::pt00g,
-    BuiltInName::_empty,
-    SymbolType::BuiltIn,
-    TExtension::UNDEFINED,
-    StaticType::Get<EbtSampler1D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00h(
+constexpr const TVariable var_pt00g(BuiltInId::pt00g,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtSampler1D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt00h(
     BuiltInId::pt00h,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler1DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00i(
+constexpr const TVariable var_pt00i(
     BuiltInId::pt00i,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler1DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00j(
+constexpr const TVariable var_pt00j(
     BuiltInId::pt00j,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSamplerBuffer, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00k(
+constexpr const TVariable var_pt00k(
     BuiltInId::pt00k,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSamplerCubeArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00l(
+constexpr const TVariable var_pt00l(
     BuiltInId::pt00l,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSamplerCubeArrayShadow, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00m(
+constexpr const TVariable var_pt00m(
     BuiltInId::pt00m,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler1DShadow, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00n(
+constexpr const TVariable var_pt00n(
     BuiltInId::pt00n,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSampler2DRectShadow, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00o(
+constexpr const TVariable var_pt00o(
     BuiltInId::pt00o,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISampler1D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00p(
+constexpr const TVariable var_pt00p(
     BuiltInId::pt00p,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISampler1DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00q(
+constexpr const TVariable var_pt00q(
     BuiltInId::pt00q,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISampler2DRect, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00r(
+constexpr const TVariable var_pt00r(
     BuiltInId::pt00r,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISamplerBuffer, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00s(
+constexpr const TVariable var_pt00s(
     BuiltInId::pt00s,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISamplerCubeArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00t(
+constexpr const TVariable var_pt00t(
     BuiltInId::pt00t,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSampler1D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00u(
+constexpr const TVariable var_pt00u(
     BuiltInId::pt00u,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSampler1DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00v(
+constexpr const TVariable var_pt00v(
     BuiltInId::pt00v,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSampler2DRect, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00w(
+constexpr const TVariable var_pt00w(
     BuiltInId::pt00w,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSamplerBuffer, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00x(
+constexpr const TVariable var_pt00x(
     BuiltInId::pt00x,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSamplerCubeArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00y(BuiltInId::pt00y,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtImage2D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt00z(BuiltInId::pt00z,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtIImage2D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01A(BuiltInId::pt01A,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtUImage2D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01B(BuiltInId::pt01B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtImage3D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01C(BuiltInId::pt01C,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtIImage3D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01D(BuiltInId::pt01D,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtUImage3D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01E(
+constexpr const TVariable var_pt00y(BuiltInId::pt00y,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtImage2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt00z(BuiltInId::pt00z,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtIImage2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01A(BuiltInId::pt01A,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUImage2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01B(BuiltInId::pt01B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtImage3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01C(BuiltInId::pt01C,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtIImage3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01D(BuiltInId::pt01D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUImage3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01E(
     BuiltInId::pt01E,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtImage2DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01F(
+constexpr const TVariable var_pt01F(
     BuiltInId::pt01F,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtIImage2DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01G(
+constexpr const TVariable var_pt01G(
     BuiltInId::pt01G,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUImage2DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01H(
-    BuiltInId::pt01H,
-    BuiltInName::_empty,
-    SymbolType::BuiltIn,
-    TExtension::UNDEFINED,
-    StaticType::Get<EbtImageCube, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01I(
+constexpr const TVariable var_pt01H(BuiltInId::pt01H,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtImageCube, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01I(
     BuiltInId::pt01I,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtIImageCube, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01J(
+constexpr const TVariable var_pt01J(
     BuiltInId::pt01J,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUImageCube, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01K(BuiltInId::pt01K,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtImage1D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01L(BuiltInId::pt01L,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtIImage1D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01M(BuiltInId::pt01M,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtUImage1D, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01N(
+constexpr const TVariable var_pt01K(BuiltInId::pt01K,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtImage1D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01L(BuiltInId::pt01L,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtIImage1D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01M(BuiltInId::pt01M,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUImage1D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01N(
     BuiltInId::pt01N,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtImage1DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01O(
+constexpr const TVariable var_pt01O(
     BuiltInId::pt01O,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtIImage1DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01P(
+constexpr const TVariable var_pt01P(
     BuiltInId::pt01P,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUImage1DArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01Q(
-    BuiltInId::pt01Q,
-    BuiltInName::_empty,
-    SymbolType::BuiltIn,
-    TExtension::UNDEFINED,
-    StaticType::Get<EbtImage2DMS, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01R(
+constexpr const TVariable var_pt01Q(BuiltInId::pt01Q,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtImage2DMS, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01R(
     BuiltInId::pt01R,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtIImage2DMS, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01S(
+constexpr const TVariable var_pt01S(
     BuiltInId::pt01S,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUImage2DMS, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01T(
+constexpr const TVariable var_pt01T(
     BuiltInId::pt01T,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtImage2DMSArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01U(
+constexpr const TVariable var_pt01U(
     BuiltInId::pt01U,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtIImage2DMSArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01V(
+constexpr const TVariable var_pt01V(
     BuiltInId::pt01V,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUImage2DMSArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01W(
+constexpr const TVariable var_pt01W(
     BuiltInId::pt01W,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtImage2DRect, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01X(
+constexpr const TVariable var_pt01X(
     BuiltInId::pt01X,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtIImage2DRect, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01Y(
+constexpr const TVariable var_pt01Y(
     BuiltInId::pt01Y,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUImage2DRect, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01Z(
+constexpr const TVariable var_pt01Z(
     BuiltInId::pt01Z,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtImageCubeArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01a(
+constexpr const TVariable var_pt01a(
     BuiltInId::pt01a,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtIImageCubeArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01b(
+constexpr const TVariable var_pt01b(
     BuiltInId::pt01b,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUImageCubeArray, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01c(
-    BuiltInId::pt01c,
-    BuiltInName::_empty,
-    SymbolType::BuiltIn,
-    TExtension::UNDEFINED,
-    StaticType::Get<EbtImageRect, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01d(
+constexpr const TVariable var_pt01c(BuiltInId::pt01c,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtImageRect, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable var_pt01d(
     BuiltInId::pt01d,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtIImageRect, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01e(
+constexpr const TVariable var_pt01e(
     BuiltInId::pt01e,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUImageRect, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01f(
+constexpr const TVariable var_pt01f(
     BuiltInId::pt01f,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtImageBuffer, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01g(
+constexpr const TVariable var_pt01g(
     BuiltInId::pt01g,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtIImageBuffer, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01h(
+constexpr const TVariable var_pt01h(
     BuiltInId::pt01h,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUImageBuffer, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01i(
+constexpr const TVariable var_pt01i(
     BuiltInId::pt01i,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSubpassInput, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01j(
+constexpr const TVariable var_pt01j(
     BuiltInId::pt01j,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISubpassInput, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01k(
+constexpr const TVariable var_pt01k(
     BuiltInId::pt01k,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSubpassInput, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01l(
+constexpr const TVariable var_pt01l(
     BuiltInId::pt01l,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtSubpassInputMS, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01m(
+constexpr const TVariable var_pt01m(
     BuiltInId::pt01m,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtISubpassInputMS, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt01n(
+constexpr const TVariable var_pt01n(
     BuiltInId::pt01n,
     BuiltInName::_empty,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUSubpassInputMS, EbpUndefined, EvqGlobal, 1, 1>());
-constexpr const TVariable kVar_pt10B(BuiltInId::pt10B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>());
-constexpr const TVariable kVar_pt10C(BuiltInId::pt10C,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>());
-constexpr const TVariable kVar_pt10D(BuiltInId::pt10D,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>());
-constexpr const TVariable kVar_pt10E(BuiltInId::pt10E,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>());
-constexpr const TVariable kVar_pt10F(BuiltInId::pt10F,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>());
-constexpr const TVariable kVar_pt20B(BuiltInId::pt20B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>());
-constexpr const TVariable kVar_pt20C(BuiltInId::pt20C,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>());
-constexpr const TVariable kVar_pt20D(BuiltInId::pt20D,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>());
-constexpr const TVariable kVar_pt20E(BuiltInId::pt20E,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>());
-constexpr const TVariable kVar_pt20F(BuiltInId::pt20F,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>());
-constexpr const TVariable kVar_pt30B(BuiltInId::pt30B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>());
-constexpr const TVariable kVar_pt30C(BuiltInId::pt30C,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>());
-constexpr const TVariable kVar_pt30D(BuiltInId::pt30D,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>());
-constexpr const TVariable kVar_pt30E(BuiltInId::pt30E,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>());
-constexpr const TVariable kVar_pt30F(BuiltInId::pt30F,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>());
-constexpr const TVariable kVar_pt50B(BuiltInId::pt50B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>());
-constexpr const TVariable kVar_pt60B(BuiltInId::pt60B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 2>());
-constexpr const TVariable kVar_pt70B(BuiltInId::pt70B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>());
-constexpr const TVariable kVar_pt70D(BuiltInId::pt70D,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 2>());
-constexpr const TVariable kVar_pt90B(BuiltInId::pt90B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 3>());
-constexpr const TVariable kVar_ptA0B(BuiltInId::ptA0B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>());
-constexpr const TVariable kVar_ptB0B(BuiltInId::ptB0B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 3>());
-constexpr const TVariable kVar_ptD0B(BuiltInId::ptD0B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 4>());
-constexpr const TVariable kVar_ptE0B(BuiltInId::ptE0B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 4>());
-constexpr const TVariable kVar_ptF0B(BuiltInId::ptF0B,
-                                     BuiltInName::_empty,
-                                     SymbolType::BuiltIn,
-                                     TExtension::UNDEFINED,
-                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>());
-constexpr const TVariable kVar_pt_io_00D(BuiltInId::pt_io_00D,
-                                         BuiltInName::_empty,
-                                         SymbolType::BuiltIn,
-                                         TExtension::UNDEFINED,
-                                         StaticType::Get<EbtInt, EbpUndefined, EvqInOut, 1, 1>());
-constexpr const TVariable kVar_pt_io_00E(BuiltInId::pt_io_00E,
-                                         BuiltInName::_empty,
-                                         SymbolType::BuiltIn,
-                                         TExtension::UNDEFINED,
-                                         StaticType::Get<EbtUInt, EbpUndefined, EvqInOut, 1, 1>());
-constexpr const TVariable kVar_pt_o_00B(BuiltInId::pt_o_00B,
+constexpr const TVariable var_pt10B(BuiltInId::pt10B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable var_pt10C(BuiltInId::pt10C,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable var_pt10D(BuiltInId::pt10D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable var_pt10E(BuiltInId::pt10E,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable var_pt10F(BuiltInId::pt10F,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable var_pt20B(BuiltInId::pt20B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>());
+constexpr const TVariable var_pt20C(BuiltInId::pt20C,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>());
+constexpr const TVariable var_pt20D(BuiltInId::pt20D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>());
+constexpr const TVariable var_pt20E(BuiltInId::pt20E,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>());
+constexpr const TVariable var_pt20F(BuiltInId::pt20F,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>());
+constexpr const TVariable var_pt30B(BuiltInId::pt30B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>());
+constexpr const TVariable var_pt30C(BuiltInId::pt30C,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>());
+constexpr const TVariable var_pt30D(BuiltInId::pt30D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>());
+constexpr const TVariable var_pt30E(BuiltInId::pt30E,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>());
+constexpr const TVariable var_pt30F(BuiltInId::pt30F,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>());
+constexpr const TVariable var_pt50B(BuiltInId::pt50B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>());
+constexpr const TVariable var_pt60B(BuiltInId::pt60B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 2>());
+constexpr const TVariable var_pt70B(BuiltInId::pt70B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>());
+constexpr const TVariable var_pt70D(BuiltInId::pt70D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 2>());
+constexpr const TVariable var_pt90B(BuiltInId::pt90B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 3>());
+constexpr const TVariable var_ptA0B(BuiltInId::ptA0B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>());
+constexpr const TVariable var_ptB0B(BuiltInId::ptB0B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 3>());
+constexpr const TVariable var_ptD0B(BuiltInId::ptD0B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 4>());
+constexpr const TVariable var_ptE0B(BuiltInId::ptE0B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 4>());
+constexpr const TVariable var_ptF0B(BuiltInId::ptF0B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>());
+constexpr const TVariable var_pt_io_00D(BuiltInId::pt_io_00D,
                                         BuiltInName::_empty,
                                         SymbolType::BuiltIn,
                                         TExtension::UNDEFINED,
-                                        StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 1, 1>());
-constexpr const TVariable kVar_pt_o_00C(BuiltInId::pt_o_00C,
+                                        StaticType::Get<EbtInt, EbpUndefined, EvqInOut, 1, 1>());
+constexpr const TVariable var_pt_io_00E(BuiltInId::pt_io_00E,
                                         BuiltInName::_empty,
                                         SymbolType::BuiltIn,
                                         TExtension::UNDEFINED,
-                                        StaticType::Get<EbtDouble, EbpUndefined, EvqOut, 1, 1>());
-constexpr const TVariable kVar_pt_o_00D(BuiltInId::pt_o_00D,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtInt, EbpUndefined, EvqOut, 1, 1>());
-constexpr const TVariable kVar_pt_o_00E(BuiltInId::pt_o_00E,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 1, 1>());
-constexpr const TVariable kVar_pt_o_10B(BuiltInId::pt_o_10B,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 2, 1>());
-constexpr const TVariable kVar_pt_o_10C(BuiltInId::pt_o_10C,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtDouble, EbpUndefined, EvqOut, 2, 1>());
-constexpr const TVariable kVar_pt_o_10D(BuiltInId::pt_o_10D,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtInt, EbpUndefined, EvqOut, 2, 1>());
-constexpr const TVariable kVar_pt_o_10E(BuiltInId::pt_o_10E,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 2, 1>());
-constexpr const TVariable kVar_pt_o_20B(BuiltInId::pt_o_20B,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 3, 1>());
-constexpr const TVariable kVar_pt_o_20C(BuiltInId::pt_o_20C,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtDouble, EbpUndefined, EvqOut, 3, 1>());
-constexpr const TVariable kVar_pt_o_20D(BuiltInId::pt_o_20D,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtInt, EbpUndefined, EvqOut, 3, 1>());
-constexpr const TVariable kVar_pt_o_20E(BuiltInId::pt_o_20E,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 3, 1>());
-constexpr const TVariable kVar_pt_o_30B(BuiltInId::pt_o_30B,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 4, 1>());
-constexpr const TVariable kVar_pt_o_30C(BuiltInId::pt_o_30C,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtDouble, EbpUndefined, EvqOut, 4, 1>());
-constexpr const TVariable kVar_pt_o_30D(BuiltInId::pt_o_30D,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtInt, EbpUndefined, EvqOut, 4, 1>());
-constexpr const TVariable kVar_pt_o_30E(BuiltInId::pt_o_30E,
-                                        BuiltInName::_empty,
-                                        SymbolType::BuiltIn,
-                                        TExtension::UNDEFINED,
-                                        StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 4, 1>());
+                                        StaticType::Get<EbtUInt, EbpUndefined, EvqInOut, 1, 1>());
+constexpr const TVariable var_pt_o_00B(BuiltInId::pt_o_00B,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 1, 1>());
+constexpr const TVariable var_pt_o_00C(BuiltInId::pt_o_00C,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtDouble, EbpUndefined, EvqOut, 1, 1>());
+constexpr const TVariable var_pt_o_00D(BuiltInId::pt_o_00D,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtInt, EbpUndefined, EvqOut, 1, 1>());
+constexpr const TVariable var_pt_o_00E(BuiltInId::pt_o_00E,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 1, 1>());
+constexpr const TVariable var_pt_o_10B(BuiltInId::pt_o_10B,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 2, 1>());
+constexpr const TVariable var_pt_o_10C(BuiltInId::pt_o_10C,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtDouble, EbpUndefined, EvqOut, 2, 1>());
+constexpr const TVariable var_pt_o_10D(BuiltInId::pt_o_10D,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtInt, EbpUndefined, EvqOut, 2, 1>());
+constexpr const TVariable var_pt_o_10E(BuiltInId::pt_o_10E,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 2, 1>());
+constexpr const TVariable var_pt_o_20B(BuiltInId::pt_o_20B,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 3, 1>());
+constexpr const TVariable var_pt_o_20C(BuiltInId::pt_o_20C,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtDouble, EbpUndefined, EvqOut, 3, 1>());
+constexpr const TVariable var_pt_o_20D(BuiltInId::pt_o_20D,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtInt, EbpUndefined, EvqOut, 3, 1>());
+constexpr const TVariable var_pt_o_20E(BuiltInId::pt_o_20E,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 3, 1>());
+constexpr const TVariable var_pt_o_30B(BuiltInId::pt_o_30B,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 4, 1>());
+constexpr const TVariable var_pt_o_30C(BuiltInId::pt_o_30C,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtDouble, EbpUndefined, EvqOut, 4, 1>());
+constexpr const TVariable var_pt_o_30D(BuiltInId::pt_o_30D,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtInt, EbpUndefined, EvqOut, 4, 1>());
+constexpr const TVariable var_pt_o_30E(BuiltInId::pt_o_30E,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 4, 1>());
 
 const TVariable *gl_BaseInstance()
 {
-    return &kVar_gl_BaseInstance;
+    return &var_gl_BaseInstance;
 }
 
 const TVariable *gl_BaseVertex()
 {
-    return &kVar_gl_BaseVertex;
+    return &var_gl_BaseVertex;
 }
 
 const TVariable *gl_DrawID()
 {
-    return &kVar_gl_DrawID;
+    return &var_gl_DrawID;
 }
 
 const TVariable *gl_DrawIDESSL1()
 {
-    return &kVar_gl_DrawIDESSL1;
+    return &var_gl_DrawIDESSL1;
 }
 
 const TVariable *gl_FragColor()
 {
-    return &kVar_gl_FragColor;
+    return &var_gl_FragColor;
 }
 
 const TVariable *gl_FragCoord()
 {
-    return &kVar_gl_FragCoord;
+    return &var_gl_FragCoord;
 }
 
 const TVariable *gl_FragDepth()
 {
-    return &kVar_gl_FragDepth;
+    return &var_gl_FragDepth;
 }
 
 const TVariable *gl_FrontFacing()
 {
-    return &kVar_gl_FrontFacing;
+    return &var_gl_FrontFacing;
 }
 
 const TVariable *gl_GlobalInvocationID()
 {
-    return &kVar_gl_GlobalInvocationID;
+    return &var_gl_GlobalInvocationID;
 }
 
 const TVariable *gl_InstanceID()
 {
-    return &kVar_gl_InstanceID;
+    return &var_gl_InstanceID;
 }
 
 const TVariable *gl_InvocationID()
 {
-    return &kVar_gl_InvocationID;
+    return &var_gl_InvocationID;
 }
 
 const TVariable *gl_LastFragColor()
 {
-    return &kVar_gl_LastFragColor;
+    return &var_gl_LastFragColor;
 }
 
 const TVariable *gl_LastFragColorARM()
 {
-    return &kVar_gl_LastFragColorARM;
+    return &var_gl_LastFragColorARM;
 }
 
 const TVariable *gl_Layer()
 {
-    return &kVar_gl_Layer;
+    return &var_gl_Layer;
 }
 
 const TVariable *gl_LayerGS()
 {
-    return &kVar_gl_LayerGS;
+    return &var_gl_LayerGS;
 }
 
 const TVariable *gl_LayerVS()
 {
-    return &kVar_gl_LayerVS;
+    return &var_gl_LayerVS;
 }
 
 const TVariable *gl_LocalInvocationID()
 {
-    return &kVar_gl_LocalInvocationID;
+    return &var_gl_LocalInvocationID;
 }
 
 const TVariable *gl_LocalInvocationIndex()
 {
-    return &kVar_gl_LocalInvocationIndex;
+    return &var_gl_LocalInvocationIndex;
 }
 
 const TVariable *gl_NumWorkGroups()
 {
-    return &kVar_gl_NumWorkGroups;
+    return &var_gl_NumWorkGroups;
 }
 
 const TVariable *gl_PointCoord()
 {
-    return &kVar_gl_PointCoord;
+    return &var_gl_PointCoord;
 }
 
 const TVariable *gl_PointSize()
 {
-    return &kVar_gl_PointSize;
+    return &var_gl_PointSize;
 }
 
 const TVariable *gl_Position()
 {
-    return &kVar_gl_Position;
+    return &var_gl_Position;
 }
 
 const TVariable *gl_PrimitiveID()
 {
-    return &kVar_gl_PrimitiveID;
+    return &var_gl_PrimitiveID;
 }
 
 const TVariable *gl_PrimitiveIDGS()
 {
-    return &kVar_gl_PrimitiveIDGS;
+    return &var_gl_PrimitiveIDGS;
 }
 
 const TVariable *gl_PrimitiveIDIn()
 {
-    return &kVar_gl_PrimitiveIDIn;
+    return &var_gl_PrimitiveIDIn;
 }
 
 const TVariable *gl_SecondaryFragColorEXT()
 {
-    return &kVar_gl_SecondaryFragColorEXT;
+    return &var_gl_SecondaryFragColorEXT;
 }
 
 const TVariable *gl_VertexID()
 {
-    return &kVar_gl_VertexID;
+    return &var_gl_VertexID;
 }
 
 const TVariable *gl_ViewID_OVR()
 {
-    return &kVar_gl_ViewID_OVR;
+    return &var_gl_ViewID_OVR;
 }
 
 const TVariable *gl_ViewID_OVRESSL1()
 {
-    return &kVar_gl_ViewID_OVRESSL1;
+    return &var_gl_ViewID_OVRESSL1;
 }
 
 const TVariable *gl_ViewportIndex()
 {
-    return &kVar_gl_ViewportIndex;
+    return &var_gl_ViewportIndex;
 }
 
 const TVariable *gl_WorkGroupID()
 {
-    return &kVar_gl_WorkGroupID;
+    return &var_gl_WorkGroupID;
 }
 
 const TVariable *gl_WorkGroupSize()
 {
-    return &kVar_gl_WorkGroupSize;
+    return &var_gl_WorkGroupSize;
 }
 
 }  // namespace BuiltInVariable
@@ -5901,1335 +5895,1257 @@ namespace BuiltInParameters
 
 constexpr const TVariable **empty        = nullptr;
 constexpr const TVariable *p00B00B00B[3] = {
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00B00B00F[3] = {
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00F};
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00F};
 constexpr const TVariable *p00B00B10B[3] = {
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt10B};
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt10B};
 constexpr const TVariable *p00B00B20B[3] = {
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt20B};
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt20B};
 constexpr const TVariable *p00B00B30B[3] = {
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt30B};
-constexpr const TVariable *p00B00D[2]    = {&BuiltInVariable::kVar_pt00B,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00B10B[2]    = {&BuiltInVariable::kVar_pt00B,
-                                         &BuiltInVariable::kVar_pt10B};
-constexpr const TVariable *p00B20B[2]    = {&BuiltInVariable::kVar_pt00B,
-                                         &BuiltInVariable::kVar_pt20B};
-constexpr const TVariable *p00B30B[2]    = {&BuiltInVariable::kVar_pt00B,
-                                         &BuiltInVariable::kVar_pt30B};
-constexpr const TVariable *p00B_o_00B[2] = {&BuiltInVariable::kVar_pt00B,
-                                            &BuiltInVariable::kVar_pt_o_00B};
-constexpr const TVariable *p00B_o_00D[2] = {&BuiltInVariable::kVar_pt00B,
-                                            &BuiltInVariable::kVar_pt_o_00D};
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt30B};
+constexpr const TVariable *p00B00D[2] = {&BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00B10B[2] = {&BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt10B};
+constexpr const TVariable *p00B20B[2] = {&BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt20B};
+constexpr const TVariable *p00B30B[2] = {&BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt30B};
+constexpr const TVariable *p00B_o_00B[2] = {&BuiltInVariable::var_pt00B,
+                                            &BuiltInVariable::var_pt_o_00B};
+constexpr const TVariable *p00B_o_00D[2] = {&BuiltInVariable::var_pt00B,
+                                            &BuiltInVariable::var_pt_o_00D};
 constexpr const TVariable *p00C00C00B[3] = {
-    &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00C00C00C[3] = {
-    &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C};
+    &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C};
 constexpr const TVariable *p00C00C00F[3] = {
-    &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00F};
+    &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00F};
 constexpr const TVariable *p00C00C10C[3] = {
-    &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt10C};
+    &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt10C};
 constexpr const TVariable *p00C00C20C[3] = {
-    &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt20C};
+    &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt20C};
 constexpr const TVariable *p00C00C30C[3] = {
-    &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt30C};
-constexpr const TVariable *p00C00D[2]       = {&BuiltInVariable::kVar_pt00C,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00C10C[2]       = {&BuiltInVariable::kVar_pt00C,
-                                         &BuiltInVariable::kVar_pt10C};
-constexpr const TVariable *p00C20C[2]       = {&BuiltInVariable::kVar_pt00C,
-                                         &BuiltInVariable::kVar_pt20C};
-constexpr const TVariable *p00C30C[2]       = {&BuiltInVariable::kVar_pt00C,
-                                         &BuiltInVariable::kVar_pt30C};
-constexpr const TVariable *p00C_o_00C[2]    = {&BuiltInVariable::kVar_pt00C,
-                                            &BuiltInVariable::kVar_pt_o_00C};
-constexpr const TVariable *p00C_o_00D[2]    = {&BuiltInVariable::kVar_pt00C,
-                                            &BuiltInVariable::kVar_pt_o_00D};
+    &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt30C};
+constexpr const TVariable *p00C00D[2] = {&BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00C10C[2] = {&BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt10C};
+constexpr const TVariable *p00C20C[2] = {&BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt20C};
+constexpr const TVariable *p00C30C[2] = {&BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt30C};
+constexpr const TVariable *p00C_o_00C[2]    = {&BuiltInVariable::var_pt00C,
+                                            &BuiltInVariable::var_pt_o_00C};
+constexpr const TVariable *p00C_o_00D[2]    = {&BuiltInVariable::var_pt00C,
+                                            &BuiltInVariable::var_pt_o_00D};
 constexpr const TVariable *p00D00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00D00D00F[3] = {
-    &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00F};
+    &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00F};
 constexpr const TVariable *p00D00D_o_00D_o_00D[4] = {
-    &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt_o_00D,
-    &BuiltInVariable::kVar_pt_o_00D};
+    &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt_o_00D,
+    &BuiltInVariable::var_pt_o_00D};
 constexpr const TVariable *p00E00D00D[3] = {
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00E00E00D00D[4] = {
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00E00E00E[3] = {
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p00E00E00F[3] = {
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00F};
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00F};
 constexpr const TVariable *p00E00E_o_00E_o_00E[4] = {
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt_o_00E,
-    &BuiltInVariable::kVar_pt_o_00E};
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt_o_00E,
+    &BuiltInVariable::var_pt_o_00E};
 constexpr const TVariable *p00F00F00F[3] = {
-    &BuiltInVariable::kVar_pt00F, &BuiltInVariable::kVar_pt00F, &BuiltInVariable::kVar_pt00F};
+    &BuiltInVariable::var_pt00F, &BuiltInVariable::var_pt00F, &BuiltInVariable::var_pt00F};
 constexpr const TVariable *p00G00E00E[3] = {
-    &BuiltInVariable::kVar_pt00G, &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt00G, &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p00I00B00B00B[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00I00D[2]       = {&BuiltInVariable::kVar_pt00I,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00I00D[2] = {&BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00I10B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00I10B00D[3] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00I10B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00I10B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00I10B10D00D[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00I10B70D00D[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt70D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt70D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00I10D00D10D[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00I20B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00I20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00I20B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00I30B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00I30B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00I30B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00I, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00J00D[2]       = {&BuiltInVariable::kVar_pt00J,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00I, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00J00D[2] = {&BuiltInVariable::var_pt00J, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00J20B00B20D[4] = {
-    &BuiltInVariable::kVar_pt00J, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00J, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00J20B20B20B20D[5] = {
-    &BuiltInVariable::kVar_pt00J, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00J, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00J20B20D00B[4] = {
-    &BuiltInVariable::kVar_pt00J, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00J, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00J20D00D20D[4] = {
-    &BuiltInVariable::kVar_pt00J, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00J, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00J30B00B20D[4] = {
-    &BuiltInVariable::kVar_pt00J, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00J, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00J30B20B20B20D[5] = {
-    &BuiltInVariable::kVar_pt00J, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00J, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00J30B20D00B[4] = {
-    &BuiltInVariable::kVar_pt00J, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00K00D[2]    = {&BuiltInVariable::kVar_pt00K,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00J, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00K00D[2] = {&BuiltInVariable::var_pt00K, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00K20B00B[3] = {
-    &BuiltInVariable::kVar_pt00K, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00K, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00K20B00D[3] = {
-    &BuiltInVariable::kVar_pt00K, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00K, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00K20B20B20B[4] = {
-    &BuiltInVariable::kVar_pt00K, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B};
-constexpr const TVariable *p00L00D[2]       = {&BuiltInVariable::kVar_pt00L,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00L10B[2]       = {&BuiltInVariable::kVar_pt00L,
-                                         &BuiltInVariable::kVar_pt10B};
+    &BuiltInVariable::var_pt00K, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B};
+constexpr const TVariable *p00L00D[2] = {&BuiltInVariable::var_pt00L, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00L10B[2] = {&BuiltInVariable::var_pt00L, &BuiltInVariable::var_pt10B};
 constexpr const TVariable *p00L20B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00L, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00L, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00L20B00D[3] = {
-    &BuiltInVariable::kVar_pt00L, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00L, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00L20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00L, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00L, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00L20B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00L, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00L, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00L20B10D00D[4] = {
-    &BuiltInVariable::kVar_pt00L, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00L, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00L20B70D00D[4] = {
-    &BuiltInVariable::kVar_pt00L, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt70D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00L, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt70D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00L20D00D10D[4] = {
-    &BuiltInVariable::kVar_pt00L, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt10D};
-constexpr const TVariable *p00M00D[2]    = {&BuiltInVariable::kVar_pt00M,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00L, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt10D};
+constexpr const TVariable *p00M00D[2] = {&BuiltInVariable::var_pt00M, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00M10B00B[3] = {
-    &BuiltInVariable::kVar_pt00M, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00M, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00M10D00D[3] = {
-    &BuiltInVariable::kVar_pt00M, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00M, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00M20B00B[3] = {
-    &BuiltInVariable::kVar_pt00M, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00M, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00M30B00B[3] = {
-    &BuiltInVariable::kVar_pt00M, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00N00D[2]    = {&BuiltInVariable::kVar_pt00N,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00M, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00N00D[2] = {&BuiltInVariable::var_pt00N, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00N10B00B[3] = {
-    &BuiltInVariable::kVar_pt00N, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00N, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00N10D00D[3] = {
-    &BuiltInVariable::kVar_pt00N, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00N, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00N20B00B[3] = {
-    &BuiltInVariable::kVar_pt00N, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00N, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00N30B00B[3] = {
-    &BuiltInVariable::kVar_pt00N, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00N, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00O10B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00O, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00O, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00O10B10D00D[4] = {
-    &BuiltInVariable::kVar_pt00O, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00O, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00O10B70D00D[4] = {
-    &BuiltInVariable::kVar_pt00O, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt70D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00O, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt70D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00O10D10D[3] = {
-    &BuiltInVariable::kVar_pt00O, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00O, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00O20B00D[3] = {
-    &BuiltInVariable::kVar_pt00O, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00O, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00O20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00O, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00O, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00O20B10D[3] = {
-    &BuiltInVariable::kVar_pt00O, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00O, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00O30B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00O, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00O, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00O30B10D[3] = {
-    &BuiltInVariable::kVar_pt00O, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00O, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00P10D00D[3] = {
-    &BuiltInVariable::kVar_pt00P, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00P, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00Q20D00D[3] = {
-    &BuiltInVariable::kVar_pt00Q, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00Q, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00R00B00B00B[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00R00D[2]       = {&BuiltInVariable::kVar_pt00R,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00R00D[2] = {&BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00R10B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00R10B00D[3] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00R10B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00R10B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00R10B10D00D[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00R10B70D00D[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt70D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt70D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00R10D00D10D[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00R20B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00R20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00R20B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00R30B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00R30B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00R30B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00R, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00S00D[2]       = {&BuiltInVariable::kVar_pt00S,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00R, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00S00D[2] = {&BuiltInVariable::var_pt00S, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00S20B00B20D[4] = {
-    &BuiltInVariable::kVar_pt00S, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00S, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00S20B20B20B20D[5] = {
-    &BuiltInVariable::kVar_pt00S, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00S, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00S20B20D00B[4] = {
-    &BuiltInVariable::kVar_pt00S, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00S, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00S20D00D20D[4] = {
-    &BuiltInVariable::kVar_pt00S, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00S, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00S30B00B20D[4] = {
-    &BuiltInVariable::kVar_pt00S, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00S, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00S30B20B20B20D[5] = {
-    &BuiltInVariable::kVar_pt00S, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00S, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00S30B20D00B[4] = {
-    &BuiltInVariable::kVar_pt00S, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00T00D[2]    = {&BuiltInVariable::kVar_pt00T,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00S, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00T00D[2] = {&BuiltInVariable::var_pt00T, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00T20B00B[3] = {
-    &BuiltInVariable::kVar_pt00T, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00T, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00T20B00D[3] = {
-    &BuiltInVariable::kVar_pt00T, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00T, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00T20B20B20B[4] = {
-    &BuiltInVariable::kVar_pt00T, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B};
-constexpr const TVariable *p00U00D[2]       = {&BuiltInVariable::kVar_pt00U,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00U10B[2]       = {&BuiltInVariable::kVar_pt00U,
-                                         &BuiltInVariable::kVar_pt10B};
+    &BuiltInVariable::var_pt00T, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B};
+constexpr const TVariable *p00U00D[2] = {&BuiltInVariable::var_pt00U, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00U10B[2] = {&BuiltInVariable::var_pt00U, &BuiltInVariable::var_pt10B};
 constexpr const TVariable *p00U20B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00U, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00U, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00U20B00D[3] = {
-    &BuiltInVariable::kVar_pt00U, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00U, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00U20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00U, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00U, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00U20B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00U, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00U, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00U20B10D00D[4] = {
-    &BuiltInVariable::kVar_pt00U, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00U, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00U20B70D00D[4] = {
-    &BuiltInVariable::kVar_pt00U, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt70D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00U, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt70D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00U20D00D10D[4] = {
-    &BuiltInVariable::kVar_pt00U, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00U, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00V10D00D[3] = {
-    &BuiltInVariable::kVar_pt00V, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00V, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00W20D00D[3] = {
-    &BuiltInVariable::kVar_pt00W, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00W, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00X00B00B00B[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00X00D[2]       = {&BuiltInVariable::kVar_pt00X,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00X00D[2] = {&BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00X10B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00X10B00D[3] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00X10B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00X10B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00X10B10D00D[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00X10B70D00D[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt70D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt70D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00X10D00D10D[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00X20B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00X20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00X20B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00X30B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00X30B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00X30B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00X, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00Y00D[2]       = {&BuiltInVariable::kVar_pt00Y,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00X, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00Y00D[2] = {&BuiltInVariable::var_pt00Y, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00Y20B00B20D[4] = {
-    &BuiltInVariable::kVar_pt00Y, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00Y, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00Y20B20B20B20D[5] = {
-    &BuiltInVariable::kVar_pt00Y, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00Y, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00Y20B20D00B[4] = {
-    &BuiltInVariable::kVar_pt00Y, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00Y, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00Y20D00D20D[4] = {
-    &BuiltInVariable::kVar_pt00Y, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00Y, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00Y30B00B20D[4] = {
-    &BuiltInVariable::kVar_pt00Y, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00Y, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00Y30B20B20B20D[5] = {
-    &BuiltInVariable::kVar_pt00Y, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt00Y, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p00Y30B20D00B[4] = {
-    &BuiltInVariable::kVar_pt00Y, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00Z00D[2]    = {&BuiltInVariable::kVar_pt00Z,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00Y, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00Z00D[2] = {&BuiltInVariable::var_pt00Z, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00Z20B00B[3] = {
-    &BuiltInVariable::kVar_pt00Z, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00Z, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00Z20B00D[3] = {
-    &BuiltInVariable::kVar_pt00Z, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00Z, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00Z20B20B20B[4] = {
-    &BuiltInVariable::kVar_pt00Z, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B};
-constexpr const TVariable *p00a00D[2]       = {&BuiltInVariable::kVar_pt00a,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00a10B[2]       = {&BuiltInVariable::kVar_pt00a,
-                                         &BuiltInVariable::kVar_pt10B};
+    &BuiltInVariable::var_pt00Z, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B};
+constexpr const TVariable *p00a00D[2] = {&BuiltInVariable::var_pt00a, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00a10B[2] = {&BuiltInVariable::var_pt00a, &BuiltInVariable::var_pt10B};
 constexpr const TVariable *p00a20B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00a, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00a, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00a20B00D[3] = {
-    &BuiltInVariable::kVar_pt00a, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00a, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00a20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00a, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00a, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00a20B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00a, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00a, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00a20B10D00D[4] = {
-    &BuiltInVariable::kVar_pt00a, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00a, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00a20B70D00D[4] = {
-    &BuiltInVariable::kVar_pt00a, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt70D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00a, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt70D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00a20D00D10D[4] = {
-    &BuiltInVariable::kVar_pt00a, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00a, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00b10D00D[3] = {
-    &BuiltInVariable::kVar_pt00b, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00b, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00c20D00D[3] = {
-    &BuiltInVariable::kVar_pt00c, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00d00D[2]       = {&BuiltInVariable::kVar_pt00d,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00c, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00d00D[2] = {&BuiltInVariable::var_pt00d, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00d10B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00d, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00d, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00d10B00B70D[4] = {
-    &BuiltInVariable::kVar_pt00d, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt70D};
+    &BuiltInVariable::var_pt00d, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt70D};
 constexpr const TVariable *p00d20B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00d, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00d, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00d20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00d, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00d, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00d20B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00d, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00d, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00d30B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00d, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00d, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00d30B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00d, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00d, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00d30B10D00B[4] = {
-    &BuiltInVariable::kVar_pt00d, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00e00D[2]    = {&BuiltInVariable::kVar_pt00e,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00d, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00e00D[2] = {&BuiltInVariable::var_pt00e, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00e20B00B[3] = {
-    &BuiltInVariable::kVar_pt00e, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00e, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00e30B00B[3] = {
-    &BuiltInVariable::kVar_pt00e, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00e, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00e30B20B20B[4] = {
-    &BuiltInVariable::kVar_pt00e, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B};
-constexpr const TVariable *p00f00D[2]       = {&BuiltInVariable::kVar_pt00f,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00f10B[2]       = {&BuiltInVariable::kVar_pt00f,
-                                         &BuiltInVariable::kVar_pt10B};
+    &BuiltInVariable::var_pt00e, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B};
+constexpr const TVariable *p00f00D[2] = {&BuiltInVariable::var_pt00f, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00f10B[2] = {&BuiltInVariable::var_pt00f, &BuiltInVariable::var_pt10B};
 constexpr const TVariable *p00f20B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00f, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00f, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00f20B00B70D[4] = {
-    &BuiltInVariable::kVar_pt00f, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt70D};
+    &BuiltInVariable::var_pt00f, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt70D};
 constexpr const TVariable *p00f30B00B[3] = {
-    &BuiltInVariable::kVar_pt00f, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00f, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00f30B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00f, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00f, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00f30B10D[3] = {
-    &BuiltInVariable::kVar_pt00f, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00f, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00g00B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00g00B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00g00B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00g00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00g10B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00g10B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00g10B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00g30B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00g30B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00g30B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00g, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00h00B[2]          = {&BuiltInVariable::kVar_pt00h,
-                                         &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00h00D[2]          = {&BuiltInVariable::kVar_pt00h,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00g, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00h00B[2] = {&BuiltInVariable::var_pt00h, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00h00D[2] = {&BuiltInVariable::var_pt00h, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00h10B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00h, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00h, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00h10B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00h, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00h, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00h10B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00h, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00h, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00h10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt00h, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00h, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00h20B00B[3] = {
-    &BuiltInVariable::kVar_pt00h, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00i00B[2]          = {&BuiltInVariable::kVar_pt00i,
-                                         &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00i00D[2]          = {&BuiltInVariable::kVar_pt00i,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00h, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00i00B[2] = {&BuiltInVariable::var_pt00i, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00i00D[2] = {&BuiltInVariable::var_pt00i, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00i20B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00i, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00i, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00i20B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00i, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00i, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00i20B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00i, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00j00D[2]    = {&BuiltInVariable::kVar_pt00j,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00k00D[2]    = {&BuiltInVariable::kVar_pt00k,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00k20B[2]    = {&BuiltInVariable::kVar_pt00k,
-                                         &BuiltInVariable::kVar_pt20B};
+    &BuiltInVariable::var_pt00i, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00j00D[2] = {&BuiltInVariable::var_pt00j, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00k00D[2] = {&BuiltInVariable::var_pt00k, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00k20B[2] = {&BuiltInVariable::var_pt00k, &BuiltInVariable::var_pt20B};
 constexpr const TVariable *p00k30B00B[3] = {
-    &BuiltInVariable::kVar_pt00k, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00k, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00k30B00D[3] = {
-    &BuiltInVariable::kVar_pt00k, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00k, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00k30B20B20B[4] = {
-    &BuiltInVariable::kVar_pt00k, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B};
-constexpr const TVariable *p00l00D[2]    = {&BuiltInVariable::kVar_pt00l,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00l20B[2]    = {&BuiltInVariable::kVar_pt00l,
-                                         &BuiltInVariable::kVar_pt20B};
+    &BuiltInVariable::var_pt00k, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B};
+constexpr const TVariable *p00l00D[2] = {&BuiltInVariable::var_pt00l, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00l20B[2] = {&BuiltInVariable::var_pt00l, &BuiltInVariable::var_pt20B};
 constexpr const TVariable *p00l30B00B[3] = {
-    &BuiltInVariable::kVar_pt00l, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00m00B[2]          = {&BuiltInVariable::kVar_pt00m,
-                                         &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00m00D[2]          = {&BuiltInVariable::kVar_pt00m,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00l, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00m00B[2] = {&BuiltInVariable::var_pt00m, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00m00D[2] = {&BuiltInVariable::var_pt00m, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00m20B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00m, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00m, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00m20B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00m, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00m, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00m20B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00m, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00m, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00m30B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00m, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00m, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00m30B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00m, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00m, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00m30B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00m, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00m, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00n10B00B10D[4] = {
-    &BuiltInVariable::kVar_pt00n, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00n, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00n10B00B70D[4] = {
-    &BuiltInVariable::kVar_pt00n, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt70D};
+    &BuiltInVariable::var_pt00n, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt70D};
 constexpr const TVariable *p00n20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00n, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00n, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00n20B10D[3] = {
-    &BuiltInVariable::kVar_pt00n, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00n, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00n30B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00n, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00n, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00n30B10D[3] = {
-    &BuiltInVariable::kVar_pt00n, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00n, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00o00B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00o00B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00o00B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00o00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00o10B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00o10B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00o10B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00o30B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00o30B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00o30B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00o, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00p00B[2]          = {&BuiltInVariable::kVar_pt00p,
-                                         &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00p00D[2]          = {&BuiltInVariable::kVar_pt00p,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00o, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00p00B[2] = {&BuiltInVariable::var_pt00p, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00p00D[2] = {&BuiltInVariable::var_pt00p, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00p10B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00p, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00p, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00p10B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00p, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00p, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00p10B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00p, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00p, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00p10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt00p, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00p, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00p20B00B[3] = {
-    &BuiltInVariable::kVar_pt00p, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00p, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00q10B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00q, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00q, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00q10B10D00D[4] = {
-    &BuiltInVariable::kVar_pt00q, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00q, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00q10B70D00D[4] = {
-    &BuiltInVariable::kVar_pt00q, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt70D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00q, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt70D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00q10D10D[3] = {
-    &BuiltInVariable::kVar_pt00q, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00q, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00q20B00D[3] = {
-    &BuiltInVariable::kVar_pt00q, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00q, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00q20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00q, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00q, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00q20B10D[3] = {
-    &BuiltInVariable::kVar_pt00q, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00q, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00q30B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00q, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00q, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00q30B10D[3] = {
-    &BuiltInVariable::kVar_pt00q, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10D};
-constexpr const TVariable *p00r00D[2]    = {&BuiltInVariable::kVar_pt00r,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00s00D[2]    = {&BuiltInVariable::kVar_pt00s,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00s20B[2]    = {&BuiltInVariable::kVar_pt00s,
-                                         &BuiltInVariable::kVar_pt20B};
+    &BuiltInVariable::var_pt00q, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10D};
+constexpr const TVariable *p00r00D[2] = {&BuiltInVariable::var_pt00r, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00s00D[2] = {&BuiltInVariable::var_pt00s, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00s20B[2] = {&BuiltInVariable::var_pt00s, &BuiltInVariable::var_pt20B};
 constexpr const TVariable *p00s30B00B[3] = {
-    &BuiltInVariable::kVar_pt00s, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00s, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00s30B00D[3] = {
-    &BuiltInVariable::kVar_pt00s, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00s, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00s30B20B20B[4] = {
-    &BuiltInVariable::kVar_pt00s, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B};
+    &BuiltInVariable::var_pt00s, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B};
 constexpr const TVariable *p00t00B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00t00B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00t00B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00t00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00t10B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00t10B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00t10B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00t30B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00t30B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00t30B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00t, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00u00B[2]          = {&BuiltInVariable::kVar_pt00u,
-                                         &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p00u00D[2]          = {&BuiltInVariable::kVar_pt00u,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00t, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00u00B[2] = {&BuiltInVariable::var_pt00u, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p00u00D[2] = {&BuiltInVariable::var_pt00u, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00u10B00B00B00D[5] = {
-    &BuiltInVariable::kVar_pt00u, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00u, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00u10B00B00D[4] = {
-    &BuiltInVariable::kVar_pt00u, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00u, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00u10B00D00B[4] = {
-    &BuiltInVariable::kVar_pt00u, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00u, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00u10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt00u, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00u, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00u20B00B[3] = {
-    &BuiltInVariable::kVar_pt00u, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00u, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00v10B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00v, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00v, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00v10B10D00D[4] = {
-    &BuiltInVariable::kVar_pt00v, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00v, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00v10B70D00D[4] = {
-    &BuiltInVariable::kVar_pt00v, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt70D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00v, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt70D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00v10D10D[3] = {
-    &BuiltInVariable::kVar_pt00v, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00v, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00v20B00D[3] = {
-    &BuiltInVariable::kVar_pt00v, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00v, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00v20B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00v, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00v, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00v20B10D[3] = {
-    &BuiltInVariable::kVar_pt00v, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00v, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00v30B10B10B10D[5] = {
-    &BuiltInVariable::kVar_pt00v, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10B,
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt00v, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B,
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p00v30B10D[3] = {
-    &BuiltInVariable::kVar_pt00v, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt10D};
-constexpr const TVariable *p00w00D[2]    = {&BuiltInVariable::kVar_pt00w,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00x00D[2]    = {&BuiltInVariable::kVar_pt00x,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p00x20B[2]    = {&BuiltInVariable::kVar_pt00x,
-                                         &BuiltInVariable::kVar_pt20B};
+    &BuiltInVariable::var_pt00v, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10D};
+constexpr const TVariable *p00w00D[2] = {&BuiltInVariable::var_pt00w, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00x00D[2] = {&BuiltInVariable::var_pt00x, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p00x20B[2] = {&BuiltInVariable::var_pt00x, &BuiltInVariable::var_pt20B};
 constexpr const TVariable *p00x30B00B[3] = {
-    &BuiltInVariable::kVar_pt00x, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00x, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00x30B00D[3] = {
-    &BuiltInVariable::kVar_pt00x, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00x, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00x30B20B20B[4] = {
-    &BuiltInVariable::kVar_pt00x, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt20B,
-    &BuiltInVariable::kVar_pt20B};
+    &BuiltInVariable::var_pt00x, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20B,
+    &BuiltInVariable::var_pt20B};
 constexpr const TVariable *p00y10D00B[3] = {
-    &BuiltInVariable::kVar_pt00y, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00y, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00y10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt00y, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00y, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00y10D00E00E[4] = {
-    &BuiltInVariable::kVar_pt00y, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt00y, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p00y10D30B[3] = {
-    &BuiltInVariable::kVar_pt00y, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt00y, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p00z10D00B[3] = {
-    &BuiltInVariable::kVar_pt00z, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt00z, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p00z10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt00z, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt00z, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p00z10D00E00E[4] = {
-    &BuiltInVariable::kVar_pt00z, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt00z, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p00z10D30D[3] = {
-    &BuiltInVariable::kVar_pt00z, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt00z, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01A10D00B[3] = {
-    &BuiltInVariable::kVar_pt01A, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01A, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01A10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01A, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01A, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01A10D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01A, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01A, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01A10D30E[3] = {
-    &BuiltInVariable::kVar_pt01A, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt01A, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p01B20D00B[3] = {
-    &BuiltInVariable::kVar_pt01B, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01B, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01B20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01B, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01B, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01B20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01B, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01B, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01B20D30B[3] = {
-    &BuiltInVariable::kVar_pt01B, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01B, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01C20D00B[3] = {
-    &BuiltInVariable::kVar_pt01C, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01C, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01C20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01C, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01C, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01C20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01C, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01C, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01C20D30D[3] = {
-    &BuiltInVariable::kVar_pt01C, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01C, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01D20D00B[3] = {
-    &BuiltInVariable::kVar_pt01D, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01D, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01D20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01D, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01D, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01D20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01D, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01D, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01D20D30E[3] = {
-    &BuiltInVariable::kVar_pt01D, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt01D, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p01E20D00B[3] = {
-    &BuiltInVariable::kVar_pt01E, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01E, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01E20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01E, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01E, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01E20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01E, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01E, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01E20D30B[3] = {
-    &BuiltInVariable::kVar_pt01E, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01E, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01F20D00B[3] = {
-    &BuiltInVariable::kVar_pt01F, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01F, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01F20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01F, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01F, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01F20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01F, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01F, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01F20D30D[3] = {
-    &BuiltInVariable::kVar_pt01F, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01F, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01G20D00B[3] = {
-    &BuiltInVariable::kVar_pt01G, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01G, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01G20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01G, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01G, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01G20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01G, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01G, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01G20D30E[3] = {
-    &BuiltInVariable::kVar_pt01G, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt01G, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p01H20D00B[3] = {
-    &BuiltInVariable::kVar_pt01H, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01H, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01H20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01H, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01H, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01H20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01H, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01H, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01H20D30B[3] = {
-    &BuiltInVariable::kVar_pt01H, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01H, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01I20D00B[3] = {
-    &BuiltInVariable::kVar_pt01I, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01I, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01I20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01I, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01I, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01I20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01I, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01I, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01I20D30D[3] = {
-    &BuiltInVariable::kVar_pt01I, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01I, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01J20D00B[3] = {
-    &BuiltInVariable::kVar_pt01J, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01J, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01J20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01J, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01J, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01J20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01J, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01J, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01J20D30E[3] = {
-    &BuiltInVariable::kVar_pt01J, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt01J, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p01K00D00B[3] = {
-    &BuiltInVariable::kVar_pt01K, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01K, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01K00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01K, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01K, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01K00D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01K, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01K, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01K00D30B[3] = {
-    &BuiltInVariable::kVar_pt01K, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01K, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01L00D00B[3] = {
-    &BuiltInVariable::kVar_pt01L, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01L, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01L00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01L, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01L, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01L00D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01L, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01L, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01L00D30D[3] = {
-    &BuiltInVariable::kVar_pt01L, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01L, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01M00D00B[3] = {
-    &BuiltInVariable::kVar_pt01M, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01M, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01M00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01M, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01M, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01M00D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01M, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01M, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01M00D30E[3] = {
-    &BuiltInVariable::kVar_pt01M, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt01M, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p01N10D00B[3] = {
-    &BuiltInVariable::kVar_pt01N, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01N, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01N10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01N, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01N, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01N10D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01N, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01N, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01N10D30B[3] = {
-    &BuiltInVariable::kVar_pt01N, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01N, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01O10D00B[3] = {
-    &BuiltInVariable::kVar_pt01O, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01O, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01O10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01O, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01O, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01O10D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01O, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01O, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01O10D30D[3] = {
-    &BuiltInVariable::kVar_pt01O, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01O, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01P10D00B[3] = {
-    &BuiltInVariable::kVar_pt01P, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01P, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01P10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01P, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01P, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01P10D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01P, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01P, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01P10D30E[3] = {
-    &BuiltInVariable::kVar_pt01P, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt01P, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p01Q10D00D00B[4] = {
-    &BuiltInVariable::kVar_pt01Q, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01Q, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01Q10D00D00D00D[5] = {
-    &BuiltInVariable::kVar_pt01Q, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01Q, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01Q10D00D00E00E[5] = {
-    &BuiltInVariable::kVar_pt01Q, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01Q, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01Q10D00D30B[4] = {
-    &BuiltInVariable::kVar_pt01Q, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01Q, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01R10D00D00B[4] = {
-    &BuiltInVariable::kVar_pt01R, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01R, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01R10D00D00D00D[5] = {
-    &BuiltInVariable::kVar_pt01R, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01R, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01R10D00D00E00E[5] = {
-    &BuiltInVariable::kVar_pt01R, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01R, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01R10D00D30D[4] = {
-    &BuiltInVariable::kVar_pt01R, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01R, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01S10D00D00B[4] = {
-    &BuiltInVariable::kVar_pt01S, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01S, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01S10D00D00D00D[5] = {
-    &BuiltInVariable::kVar_pt01S, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01S, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01S10D00D00E00E[5] = {
-    &BuiltInVariable::kVar_pt01S, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01S, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01S10D00D30E[4] = {
-    &BuiltInVariable::kVar_pt01S, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt01S, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p01T20D00D00B[4] = {
-    &BuiltInVariable::kVar_pt01T, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01T, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01T20D00D00D00D[5] = {
-    &BuiltInVariable::kVar_pt01T, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01T, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01T20D00D00E00E[5] = {
-    &BuiltInVariable::kVar_pt01T, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01T, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01T20D00D30B[4] = {
-    &BuiltInVariable::kVar_pt01T, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01T, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01U20D00D00B[4] = {
-    &BuiltInVariable::kVar_pt01U, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01U, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01U20D00D00D00D[5] = {
-    &BuiltInVariable::kVar_pt01U, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01U, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01U20D00D00E00E[5] = {
-    &BuiltInVariable::kVar_pt01U, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01U, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01U20D00D30D[4] = {
-    &BuiltInVariable::kVar_pt01U, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01U, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01V20D00D00B[4] = {
-    &BuiltInVariable::kVar_pt01V, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01V, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01V20D00D00D00D[5] = {
-    &BuiltInVariable::kVar_pt01V, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01V, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01V20D00D00E00E[5] = {
-    &BuiltInVariable::kVar_pt01V, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01V, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01V20D00D30E[4] = {
-    &BuiltInVariable::kVar_pt01V, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt01V, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p01W10D00B[3] = {
-    &BuiltInVariable::kVar_pt01W, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01W, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01W10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01W, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01W, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01W10D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01W, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01W, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01W10D30B[3] = {
-    &BuiltInVariable::kVar_pt01W, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01W, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01X10D00B[3] = {
-    &BuiltInVariable::kVar_pt01X, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01X, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01X10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01X, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01X, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01X10D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01X, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01X, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01X10D30D[3] = {
-    &BuiltInVariable::kVar_pt01X, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01X, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01Y10D00B[3] = {
-    &BuiltInVariable::kVar_pt01Y, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01Y, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01Y10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01Y, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01Y, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01Y10D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01Y, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01Y, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01Y10D30E[3] = {
-    &BuiltInVariable::kVar_pt01Y, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt01Y, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p01Z20D00B[3] = {
-    &BuiltInVariable::kVar_pt01Z, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01Z, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01Z20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01Z, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01Z, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01Z20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01Z, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01Z, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01Z20D30B[3] = {
-    &BuiltInVariable::kVar_pt01Z, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01Z, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01a20D00B[3] = {
-    &BuiltInVariable::kVar_pt01a, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01a, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01a20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01a, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01a, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01a20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01a, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01a, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01a20D30D[3] = {
-    &BuiltInVariable::kVar_pt01a, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01a, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01b20D00B[3] = {
-    &BuiltInVariable::kVar_pt01b, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01b, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01b20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01b, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01b, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01b20D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01b, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01b, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01b20D30E[3] = {
-    &BuiltInVariable::kVar_pt01b, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt30E};
-constexpr const TVariable *p01c[1]       = {&BuiltInVariable::kVar_pt01c};
-constexpr const TVariable *p01d[1]       = {&BuiltInVariable::kVar_pt01d};
-constexpr const TVariable *p01e[1]       = {&BuiltInVariable::kVar_pt01e};
+    &BuiltInVariable::var_pt01b, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt30E};
+constexpr const TVariable *p01c[1]       = {&BuiltInVariable::var_pt01c};
+constexpr const TVariable *p01d[1]       = {&BuiltInVariable::var_pt01d};
+constexpr const TVariable *p01e[1]       = {&BuiltInVariable::var_pt01e};
 constexpr const TVariable *p01f00D00B[3] = {
-    &BuiltInVariable::kVar_pt01f, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01f, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01f00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01f, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01f, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01f00D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01f, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01f, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01f00D30B[3] = {
-    &BuiltInVariable::kVar_pt01f, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt01f, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p01g00D00B[3] = {
-    &BuiltInVariable::kVar_pt01g, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01g, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01g00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01g, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01g, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01g00D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01g, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01g, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01g00D30D[3] = {
-    &BuiltInVariable::kVar_pt01g, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt01g, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p01h00D00B[3] = {
-    &BuiltInVariable::kVar_pt01h, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt01h, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p01h00D00D00D[4] = {
-    &BuiltInVariable::kVar_pt01h, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01h, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p01h00D00E00E[4] = {
-    &BuiltInVariable::kVar_pt01h, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00E,
-    &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt01h, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00E,
+    &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p01h00D30E[3] = {
-    &BuiltInVariable::kVar_pt01h, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt30E};
-constexpr const TVariable *p01i[1]       = {&BuiltInVariable::kVar_pt01i};
-constexpr const TVariable *p01j[1]       = {&BuiltInVariable::kVar_pt01j};
-constexpr const TVariable *p01k[1]       = {&BuiltInVariable::kVar_pt01k};
-constexpr const TVariable *p01l00D[2]    = {&BuiltInVariable::kVar_pt01l,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p01m00D[2]    = {&BuiltInVariable::kVar_pt01m,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p01n00D[2]    = {&BuiltInVariable::kVar_pt01n,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt01h, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt30E};
+constexpr const TVariable *p01i[1]    = {&BuiltInVariable::var_pt01i};
+constexpr const TVariable *p01j[1]    = {&BuiltInVariable::var_pt01j};
+constexpr const TVariable *p01k[1]    = {&BuiltInVariable::var_pt01k};
+constexpr const TVariable *p01l00D[2] = {&BuiltInVariable::var_pt01l, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p01m00D[2] = {&BuiltInVariable::var_pt01m, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p01n00D[2] = {&BuiltInVariable::var_pt01n, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p10B00B00B[3] = {
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p10B00D[2]    = {&BuiltInVariable::kVar_pt10B,
-                                         &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p10B00D[2] = {&BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p10B10B00B[3] = {
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p10B10B10B[3] = {
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B};
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B};
 constexpr const TVariable *p10B10B10F[3] = {
-    &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10B, &BuiltInVariable::kVar_pt10F};
-constexpr const TVariable *p10B10D[2]    = {&BuiltInVariable::kVar_pt10B,
-                                         &BuiltInVariable::kVar_pt10D};
-constexpr const TVariable *p10B20B[2]    = {&BuiltInVariable::kVar_pt10B,
-                                         &BuiltInVariable::kVar_pt20B};
-constexpr const TVariable *p10B30B[2]    = {&BuiltInVariable::kVar_pt10B,
-                                         &BuiltInVariable::kVar_pt30B};
-constexpr const TVariable *p10B_o_10B[2] = {&BuiltInVariable::kVar_pt10B,
-                                            &BuiltInVariable::kVar_pt_o_10B};
-constexpr const TVariable *p10B_o_10D[2] = {&BuiltInVariable::kVar_pt10B,
-                                            &BuiltInVariable::kVar_pt_o_10D};
+    &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10F};
+constexpr const TVariable *p10B10D[2] = {&BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt10D};
+constexpr const TVariable *p10B20B[2] = {&BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt20B};
+constexpr const TVariable *p10B30B[2] = {&BuiltInVariable::var_pt10B, &BuiltInVariable::var_pt30B};
+constexpr const TVariable *p10B_o_10B[2] = {&BuiltInVariable::var_pt10B,
+                                            &BuiltInVariable::var_pt_o_10B};
+constexpr const TVariable *p10B_o_10D[2] = {&BuiltInVariable::var_pt10B,
+                                            &BuiltInVariable::var_pt_o_10D};
 constexpr const TVariable *p10C00C00C[3] = {
-    &BuiltInVariable::kVar_pt10C, &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C};
+    &BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C};
 constexpr const TVariable *p10C10C00B[3] = {
-    &BuiltInVariable::kVar_pt10C, &BuiltInVariable::kVar_pt10C, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p10C10C00C[3] = {
-    &BuiltInVariable::kVar_pt10C, &BuiltInVariable::kVar_pt10C, &BuiltInVariable::kVar_pt00C};
+    &BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt00C};
 constexpr const TVariable *p10C10C10C[3] = {
-    &BuiltInVariable::kVar_pt10C, &BuiltInVariable::kVar_pt10C, &BuiltInVariable::kVar_pt10C};
+    &BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt10C};
 constexpr const TVariable *p10C10C10F[3] = {
-    &BuiltInVariable::kVar_pt10C, &BuiltInVariable::kVar_pt10C, &BuiltInVariable::kVar_pt10F};
-constexpr const TVariable *p10C10D[2]    = {&BuiltInVariable::kVar_pt10C,
-                                         &BuiltInVariable::kVar_pt10D};
-constexpr const TVariable *p10C_o_10C[2] = {&BuiltInVariable::kVar_pt10C,
-                                            &BuiltInVariable::kVar_pt_o_10C};
-constexpr const TVariable *p10C_o_10D[2] = {&BuiltInVariable::kVar_pt10C,
-                                            &BuiltInVariable::kVar_pt_o_10D};
+    &BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt10F};
+constexpr const TVariable *p10C10D[2] = {&BuiltInVariable::var_pt10C, &BuiltInVariable::var_pt10D};
+constexpr const TVariable *p10C_o_10C[2] = {&BuiltInVariable::var_pt10C,
+                                            &BuiltInVariable::var_pt_o_10C};
+constexpr const TVariable *p10C_o_10D[2] = {&BuiltInVariable::var_pt10C,
+                                            &BuiltInVariable::var_pt_o_10D};
 constexpr const TVariable *p10D00D00D[3] = {
-    &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p10D10D00D00D[4] = {
-    &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p10D10D10D[3] = {
-    &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt10D};
+    &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt10D};
 constexpr const TVariable *p10D10D10F[3] = {
-    &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt10F};
+    &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt10F};
 constexpr const TVariable *p10D10D_o_10D_o_10D[4] = {
-    &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt10D, &BuiltInVariable::kVar_pt_o_10D,
-    &BuiltInVariable::kVar_pt_o_10D};
+    &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt10D, &BuiltInVariable::var_pt_o_10D,
+    &BuiltInVariable::var_pt_o_10D};
 constexpr const TVariable *p10E00D00D[3] = {
-    &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p10E00E00E[3] = {
-    &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p10E10E00D00D[4] = {
-    &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p10E10E10E[3] = {
-    &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt10E};
+    &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt10E};
 constexpr const TVariable *p10E10E10F[3] = {
-    &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt10F};
+    &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt10F};
 constexpr const TVariable *p10E10E_o_10E_o_10E[4] = {
-    &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt10E, &BuiltInVariable::kVar_pt_o_10E,
-    &BuiltInVariable::kVar_pt_o_10E};
+    &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt10E, &BuiltInVariable::var_pt_o_10E,
+    &BuiltInVariable::var_pt_o_10E};
 constexpr const TVariable *p10F10F10F[3] = {
-    &BuiltInVariable::kVar_pt10F, &BuiltInVariable::kVar_pt10F, &BuiltInVariable::kVar_pt10F};
+    &BuiltInVariable::var_pt10F, &BuiltInVariable::var_pt10F, &BuiltInVariable::var_pt10F};
 constexpr const TVariable *p20B00B00B[3] = {
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p20B00D[2]    = {&BuiltInVariable::kVar_pt20B,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p20B00H[2]    = {&BuiltInVariable::kVar_pt20B,
-                                         &BuiltInVariable::kVar_pt00H};
-constexpr const TVariable *p20B10B[2]    = {&BuiltInVariable::kVar_pt20B,
-                                         &BuiltInVariable::kVar_pt10B};
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p20B00D[2] = {&BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p20B00H[2] = {&BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00H};
+constexpr const TVariable *p20B10B[2] = {&BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt10B};
 constexpr const TVariable *p20B20B00B[3] = {
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p20B20B20B[3] = {
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B};
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B};
 constexpr const TVariable *p20B20B20F[3] = {
-    &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20B, &BuiltInVariable::kVar_pt20F};
-constexpr const TVariable *p20B20D[2]    = {&BuiltInVariable::kVar_pt20B,
-                                         &BuiltInVariable::kVar_pt20D};
-constexpr const TVariable *p20B30B[2]    = {&BuiltInVariable::kVar_pt20B,
-                                         &BuiltInVariable::kVar_pt30B};
-constexpr const TVariable *p20B_o_20B[2] = {&BuiltInVariable::kVar_pt20B,
-                                            &BuiltInVariable::kVar_pt_o_20B};
-constexpr const TVariable *p20B_o_20D[2] = {&BuiltInVariable::kVar_pt20B,
-                                            &BuiltInVariable::kVar_pt_o_20D};
+    &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20F};
+constexpr const TVariable *p20B20D[2] = {&BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt20D};
+constexpr const TVariable *p20B30B[2] = {&BuiltInVariable::var_pt20B, &BuiltInVariable::var_pt30B};
+constexpr const TVariable *p20B_o_20B[2] = {&BuiltInVariable::var_pt20B,
+                                            &BuiltInVariable::var_pt_o_20B};
+constexpr const TVariable *p20B_o_20D[2] = {&BuiltInVariable::var_pt20B,
+                                            &BuiltInVariable::var_pt_o_20D};
 constexpr const TVariable *p20C00C00C[3] = {
-    &BuiltInVariable::kVar_pt20C, &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C};
+    &BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C};
 constexpr const TVariable *p20C20C00B[3] = {
-    &BuiltInVariable::kVar_pt20C, &BuiltInVariable::kVar_pt20C, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p20C20C00C[3] = {
-    &BuiltInVariable::kVar_pt20C, &BuiltInVariable::kVar_pt20C, &BuiltInVariable::kVar_pt00C};
+    &BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt00C};
 constexpr const TVariable *p20C20C20C[3] = {
-    &BuiltInVariable::kVar_pt20C, &BuiltInVariable::kVar_pt20C, &BuiltInVariable::kVar_pt20C};
+    &BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt20C};
 constexpr const TVariable *p20C20C20F[3] = {
-    &BuiltInVariable::kVar_pt20C, &BuiltInVariable::kVar_pt20C, &BuiltInVariable::kVar_pt20F};
-constexpr const TVariable *p20C20D[2]    = {&BuiltInVariable::kVar_pt20C,
-                                         &BuiltInVariable::kVar_pt20D};
-constexpr const TVariable *p20C_o_20C[2] = {&BuiltInVariable::kVar_pt20C,
-                                            &BuiltInVariable::kVar_pt_o_20C};
-constexpr const TVariable *p20C_o_20D[2] = {&BuiltInVariable::kVar_pt20C,
-                                            &BuiltInVariable::kVar_pt_o_20D};
+    &BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt20F};
+constexpr const TVariable *p20C20D[2] = {&BuiltInVariable::var_pt20C, &BuiltInVariable::var_pt20D};
+constexpr const TVariable *p20C_o_20C[2] = {&BuiltInVariable::var_pt20C,
+                                            &BuiltInVariable::var_pt_o_20C};
+constexpr const TVariable *p20C_o_20D[2] = {&BuiltInVariable::var_pt20C,
+                                            &BuiltInVariable::var_pt_o_20D};
 constexpr const TVariable *p20D00D00D[3] = {
-    &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p20D20D00D00D[4] = {
-    &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p20D20D20D[3] = {
-    &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt20D};
+    &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt20D};
 constexpr const TVariable *p20D20D20F[3] = {
-    &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt20F};
+    &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt20F};
 constexpr const TVariable *p20D20D_o_20D_o_20D[4] = {
-    &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt20D, &BuiltInVariable::kVar_pt_o_20D,
-    &BuiltInVariable::kVar_pt_o_20D};
+    &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt20D, &BuiltInVariable::var_pt_o_20D,
+    &BuiltInVariable::var_pt_o_20D};
 constexpr const TVariable *p20E00D00D[3] = {
-    &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p20E00E00E[3] = {
-    &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p20E20E00D00D[4] = {
-    &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p20E20E20E[3] = {
-    &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt20E};
+    &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt20E};
 constexpr const TVariable *p20E20E20F[3] = {
-    &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt20F};
+    &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt20F};
 constexpr const TVariable *p20E20E_o_20E_o_20E[4] = {
-    &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt20E, &BuiltInVariable::kVar_pt_o_20E,
-    &BuiltInVariable::kVar_pt_o_20E};
+    &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt20E, &BuiltInVariable::var_pt_o_20E,
+    &BuiltInVariable::var_pt_o_20E};
 constexpr const TVariable *p20F20F20F[3] = {
-    &BuiltInVariable::kVar_pt20F, &BuiltInVariable::kVar_pt20F, &BuiltInVariable::kVar_pt20F};
+    &BuiltInVariable::var_pt20F, &BuiltInVariable::var_pt20F, &BuiltInVariable::var_pt20F};
 constexpr const TVariable *p30B00B00B[3] = {
-    &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B, &BuiltInVariable::kVar_pt00B};
-constexpr const TVariable *p30B00D[2]    = {&BuiltInVariable::kVar_pt30B,
-                                         &BuiltInVariable::kVar_pt00D};
-constexpr const TVariable *p30B10B[2]    = {&BuiltInVariable::kVar_pt30B,
-                                         &BuiltInVariable::kVar_pt10B};
-constexpr const TVariable *p30B20B[2]    = {&BuiltInVariable::kVar_pt30B,
-                                         &BuiltInVariable::kVar_pt20B};
+    &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B, &BuiltInVariable::var_pt00B};
+constexpr const TVariable *p30B00D[2] = {&BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00D};
+constexpr const TVariable *p30B10B[2] = {&BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt10B};
+constexpr const TVariable *p30B20B[2] = {&BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt20B};
 constexpr const TVariable *p30B30B00B[3] = {
-    &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p30B30B30B[3] = {
-    &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt30B};
+    &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt30B};
 constexpr const TVariable *p30B30B30F[3] = {
-    &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt30B, &BuiltInVariable::kVar_pt30F};
-constexpr const TVariable *p30B30D[2]    = {&BuiltInVariable::kVar_pt30B,
-                                         &BuiltInVariable::kVar_pt30D};
-constexpr const TVariable *p30B_o_30B[2] = {&BuiltInVariable::kVar_pt30B,
-                                            &BuiltInVariable::kVar_pt_o_30B};
-constexpr const TVariable *p30B_o_30D[2] = {&BuiltInVariable::kVar_pt30B,
-                                            &BuiltInVariable::kVar_pt_o_30D};
+    &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt30F};
+constexpr const TVariable *p30B30D[2] = {&BuiltInVariable::var_pt30B, &BuiltInVariable::var_pt30D};
+constexpr const TVariable *p30B_o_30B[2] = {&BuiltInVariable::var_pt30B,
+                                            &BuiltInVariable::var_pt_o_30B};
+constexpr const TVariable *p30B_o_30D[2] = {&BuiltInVariable::var_pt30B,
+                                            &BuiltInVariable::var_pt_o_30D};
 constexpr const TVariable *p30C00C00C[3] = {
-    &BuiltInVariable::kVar_pt30C, &BuiltInVariable::kVar_pt00C, &BuiltInVariable::kVar_pt00C};
+    &BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt00C, &BuiltInVariable::var_pt00C};
 constexpr const TVariable *p30C30C00B[3] = {
-    &BuiltInVariable::kVar_pt30C, &BuiltInVariable::kVar_pt30C, &BuiltInVariable::kVar_pt00B};
+    &BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt00B};
 constexpr const TVariable *p30C30C00C[3] = {
-    &BuiltInVariable::kVar_pt30C, &BuiltInVariable::kVar_pt30C, &BuiltInVariable::kVar_pt00C};
+    &BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt00C};
 constexpr const TVariable *p30C30C30C[3] = {
-    &BuiltInVariable::kVar_pt30C, &BuiltInVariable::kVar_pt30C, &BuiltInVariable::kVar_pt30C};
+    &BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt30C};
 constexpr const TVariable *p30C30C30F[3] = {
-    &BuiltInVariable::kVar_pt30C, &BuiltInVariable::kVar_pt30C, &BuiltInVariable::kVar_pt30F};
-constexpr const TVariable *p30C30D[2]    = {&BuiltInVariable::kVar_pt30C,
-                                         &BuiltInVariable::kVar_pt30D};
-constexpr const TVariable *p30C_o_30C[2] = {&BuiltInVariable::kVar_pt30C,
-                                            &BuiltInVariable::kVar_pt_o_30C};
-constexpr const TVariable *p30C_o_30D[2] = {&BuiltInVariable::kVar_pt30C,
-                                            &BuiltInVariable::kVar_pt_o_30D};
+    &BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt30F};
+constexpr const TVariable *p30C30D[2] = {&BuiltInVariable::var_pt30C, &BuiltInVariable::var_pt30D};
+constexpr const TVariable *p30C_o_30C[2] = {&BuiltInVariable::var_pt30C,
+                                            &BuiltInVariable::var_pt_o_30C};
+constexpr const TVariable *p30C_o_30D[2] = {&BuiltInVariable::var_pt30C,
+                                            &BuiltInVariable::var_pt_o_30D};
 constexpr const TVariable *p30D00D00D[3] = {
-    &BuiltInVariable::kVar_pt30D, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt30D, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p30D30D00D00D[4] = {
-    &BuiltInVariable::kVar_pt30D, &BuiltInVariable::kVar_pt30D, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt30D, &BuiltInVariable::var_pt30D, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p30D30D30D[3] = {
-    &BuiltInVariable::kVar_pt30D, &BuiltInVariable::kVar_pt30D, &BuiltInVariable::kVar_pt30D};
+    &BuiltInVariable::var_pt30D, &BuiltInVariable::var_pt30D, &BuiltInVariable::var_pt30D};
 constexpr const TVariable *p30D30D30F[3] = {
-    &BuiltInVariable::kVar_pt30D, &BuiltInVariable::kVar_pt30D, &BuiltInVariable::kVar_pt30F};
+    &BuiltInVariable::var_pt30D, &BuiltInVariable::var_pt30D, &BuiltInVariable::var_pt30F};
 constexpr const TVariable *p30D30D_o_30D_o_30D[4] = {
-    &BuiltInVariable::kVar_pt30D, &BuiltInVariable::kVar_pt30D, &BuiltInVariable::kVar_pt_o_30D,
-    &BuiltInVariable::kVar_pt_o_30D};
+    &BuiltInVariable::var_pt30D, &BuiltInVariable::var_pt30D, &BuiltInVariable::var_pt_o_30D,
+    &BuiltInVariable::var_pt_o_30D};
 constexpr const TVariable *p30E00D00D[3] = {
-    &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p30E00E00E[3] = {
-    &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 constexpr const TVariable *p30E30E00D00D[4] = {
-    &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt00D,
-    &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt00D,
+    &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p30E30E30E[3] = {
-    &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt30E};
+    &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt30E};
 constexpr const TVariable *p30E30E30F[3] = {
-    &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt30F};
+    &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt30F};
 constexpr const TVariable *p30E30E_o_30E_o_30E[4] = {
-    &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt30E, &BuiltInVariable::kVar_pt_o_30E,
-    &BuiltInVariable::kVar_pt_o_30E};
+    &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt30E, &BuiltInVariable::var_pt_o_30E,
+    &BuiltInVariable::var_pt_o_30E};
 constexpr const TVariable *p30F30F30F[3] = {
-    &BuiltInVariable::kVar_pt30F, &BuiltInVariable::kVar_pt30F, &BuiltInVariable::kVar_pt30F};
-constexpr const TVariable *p50B50B[2]        = {&BuiltInVariable::kVar_pt50B,
-                                         &BuiltInVariable::kVar_pt50B};
-constexpr const TVariable *p60B60B[2]        = {&BuiltInVariable::kVar_pt60B,
-                                         &BuiltInVariable::kVar_pt60B};
-constexpr const TVariable *p70B70B[2]        = {&BuiltInVariable::kVar_pt70B,
-                                         &BuiltInVariable::kVar_pt70B};
-constexpr const TVariable *p90B90B[2]        = {&BuiltInVariable::kVar_pt90B,
-                                         &BuiltInVariable::kVar_pt90B};
-constexpr const TVariable *pA0BA0B[2]        = {&BuiltInVariable::kVar_ptA0B,
-                                         &BuiltInVariable::kVar_ptA0B};
-constexpr const TVariable *pB0BB0B[2]        = {&BuiltInVariable::kVar_ptB0B,
-                                         &BuiltInVariable::kVar_ptB0B};
-constexpr const TVariable *pD0BD0B[2]        = {&BuiltInVariable::kVar_ptD0B,
-                                         &BuiltInVariable::kVar_ptD0B};
-constexpr const TVariable *pE0BE0B[2]        = {&BuiltInVariable::kVar_ptE0B,
-                                         &BuiltInVariable::kVar_ptE0B};
-constexpr const TVariable *pF0BF0B[2]        = {&BuiltInVariable::kVar_ptF0B,
-                                         &BuiltInVariable::kVar_ptF0B};
+    &BuiltInVariable::var_pt30F, &BuiltInVariable::var_pt30F, &BuiltInVariable::var_pt30F};
+constexpr const TVariable *p50B50B[2] = {&BuiltInVariable::var_pt50B, &BuiltInVariable::var_pt50B};
+constexpr const TVariable *p60B60B[2] = {&BuiltInVariable::var_pt60B, &BuiltInVariable::var_pt60B};
+constexpr const TVariable *p70B70B[2] = {&BuiltInVariable::var_pt70B, &BuiltInVariable::var_pt70B};
+constexpr const TVariable *p90B90B[2] = {&BuiltInVariable::var_pt90B, &BuiltInVariable::var_pt90B};
+constexpr const TVariable *pA0BA0B[2] = {&BuiltInVariable::var_ptA0B, &BuiltInVariable::var_ptA0B};
+constexpr const TVariable *pB0BB0B[2] = {&BuiltInVariable::var_ptB0B, &BuiltInVariable::var_ptB0B};
+constexpr const TVariable *pD0BD0B[2] = {&BuiltInVariable::var_ptD0B, &BuiltInVariable::var_ptD0B};
+constexpr const TVariable *pE0BE0B[2] = {&BuiltInVariable::var_ptE0B, &BuiltInVariable::var_ptE0B};
+constexpr const TVariable *pF0BF0B[2] = {&BuiltInVariable::var_ptF0B, &BuiltInVariable::var_ptF0B};
 constexpr const TVariable *p_io_00D00D00D[3] = {
-    &BuiltInVariable::kVar_pt_io_00D, &BuiltInVariable::kVar_pt00D, &BuiltInVariable::kVar_pt00D};
+    &BuiltInVariable::var_pt_io_00D, &BuiltInVariable::var_pt00D, &BuiltInVariable::var_pt00D};
 constexpr const TVariable *p_io_00E00E00E[3] = {
-    &BuiltInVariable::kVar_pt_io_00E, &BuiltInVariable::kVar_pt00E, &BuiltInVariable::kVar_pt00E};
+    &BuiltInVariable::var_pt_io_00E, &BuiltInVariable::var_pt00E, &BuiltInVariable::var_pt00E};
 
 }  // namespace BuiltInParameters
 
@@ -28197,7 +28113,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_WorkGroupSize)
                         {
-                            return &BuiltInVariable::kVar_gl_WorkGroupSize;
+                            return &BuiltInVariable::var_gl_WorkGroupSize;
                         }
                         break;
                     }
@@ -28205,7 +28121,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_GlobalInvocationID)
                         {
-                            return &BuiltInVariable::kVar_gl_GlobalInvocationID;
+                            return &BuiltInVariable::var_gl_GlobalInvocationID;
                         }
                         break;
                     }
@@ -28213,7 +28129,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_NumWorkGroups)
                         {
-                            return &BuiltInVariable::kVar_gl_NumWorkGroups;
+                            return &BuiltInVariable::var_gl_NumWorkGroups;
                         }
                         break;
                     }
@@ -28229,7 +28145,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_LocalInvocationID)
                         {
-                            return &BuiltInVariable::kVar_gl_LocalInvocationID;
+                            return &BuiltInVariable::var_gl_LocalInvocationID;
                         }
                         break;
                     }
@@ -28237,7 +28153,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_WorkGroupID)
                         {
-                            return &BuiltInVariable::kVar_gl_WorkGroupID;
+                            return &BuiltInVariable::var_gl_WorkGroupID;
                         }
                         break;
                     }
@@ -28245,7 +28161,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_LocalInvocationIndex)
                         {
-                            return &BuiltInVariable::kVar_gl_LocalInvocationIndex;
+                            return &BuiltInVariable::var_gl_LocalInvocationIndex;
                         }
                         break;
                     }
@@ -28267,7 +28183,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_InvocationID)
                         {
-                            return &BuiltInVariable::kVar_gl_InvocationID;
+                            return &BuiltInVariable::var_gl_InvocationID;
                         }
                         break;
                     }
@@ -28307,7 +28223,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_PrimitiveID)
                         {
-                            return &BuiltInVariable::kVar_gl_PrimitiveIDGS;
+                            return &BuiltInVariable::var_gl_PrimitiveIDGS;
                         }
                         break;
                     }
@@ -28315,7 +28231,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_Layer)
                         {
-                            return &BuiltInVariable::kVar_gl_LayerGS;
+                            return &BuiltInVariable::var_gl_LayerGS;
                         }
                         break;
                     }
@@ -28323,7 +28239,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_PrimitiveIDIn)
                         {
-                            return &BuiltInVariable::kVar_gl_PrimitiveIDIn;
+                            return &BuiltInVariable::var_gl_PrimitiveIDIn;
                         }
                         break;
                     }
@@ -28337,7 +28253,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_PrimitiveID)
                         {
-                            return &BuiltInVariable::kVar_gl_PrimitiveID;
+                            return &BuiltInVariable::var_gl_PrimitiveID;
                         }
                         break;
                     }
@@ -28345,7 +28261,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_Layer)
                         {
-                            return &BuiltInVariable::kVar_gl_Layer;
+                            return &BuiltInVariable::var_gl_Layer;
                         }
                         break;
                     }
@@ -31472,7 +31388,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_FragDepth)
                         {
-                            return &BuiltInVariable::kVar_gl_FragDepth;
+                            return &BuiltInVariable::var_gl_FragDepth;
                         }
                         break;
                     }
@@ -31801,7 +31717,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_InstanceID)
                         {
-                            return &BuiltInVariable::kVar_gl_InstanceID;
+                            return &BuiltInVariable::var_gl_InstanceID;
                         }
                         break;
                     }
@@ -31809,7 +31725,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_VertexID)
                         {
-                            return &BuiltInVariable::kVar_gl_VertexID;
+                            return &BuiltInVariable::var_gl_VertexID;
                         }
                         break;
                     }
@@ -31823,7 +31739,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_DrawID)
                         {
-                            return &BuiltInVariable::kVar_gl_DrawID;
+                            return &BuiltInVariable::var_gl_DrawID;
                         }
                         break;
                     }
@@ -31837,7 +31753,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_BaseInstance)
                         {
-                            return &BuiltInVariable::kVar_gl_BaseInstance;
+                            return &BuiltInVariable::var_gl_BaseInstance;
                         }
                         break;
                     }
@@ -31845,7 +31761,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_BaseVertex)
                         {
-                            return &BuiltInVariable::kVar_gl_BaseVertex;
+                            return &BuiltInVariable::var_gl_BaseVertex;
                         }
                         break;
                     }
@@ -31859,7 +31775,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_ViewID_OVR)
                         {
-                            return &BuiltInVariable::kVar_gl_ViewID_OVR;
+                            return &BuiltInVariable::var_gl_ViewID_OVR;
                         }
                         break;
                     }
@@ -32103,7 +32019,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_FragColor)
                         {
-                            return &BuiltInVariable::kVar_gl_FragColor;
+                            return &BuiltInVariable::var_gl_FragColor;
                         }
                         break;
                     }
@@ -32306,7 +32222,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_SecondaryFragColorEXT)
                         {
-                            return &BuiltInVariable::kVar_gl_SecondaryFragColorEXT;
+                            return &BuiltInVariable::var_gl_SecondaryFragColorEXT;
                         }
                         break;
                     }
@@ -32334,7 +32250,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_LastFragColor)
                         {
-                            return &BuiltInVariable::kVar_gl_LastFragColor;
+                            return &BuiltInVariable::var_gl_LastFragColor;
                         }
                         break;
                     }
@@ -32356,7 +32272,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_LastFragColorARM)
                         {
-                            return &BuiltInVariable::kVar_gl_LastFragColorARM;
+                            return &BuiltInVariable::var_gl_LastFragColorARM;
                         }
                         break;
                     }
@@ -32370,7 +32286,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_DrawID)
                         {
-                            return &BuiltInVariable::kVar_gl_DrawIDESSL1;
+                            return &BuiltInVariable::var_gl_DrawIDESSL1;
                         }
                         break;
                     }
@@ -32384,7 +32300,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         if (name == BuiltInName::gl_ViewID_OVR)
                         {
-                            return &BuiltInVariable::kVar_gl_ViewID_OVRESSL1;
+                            return &BuiltInVariable::var_gl_ViewID_OVRESSL1;
                         }
                         break;
                     }
@@ -34210,7 +34126,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_FrontFacing)
                     {
-                        return &BuiltInVariable::kVar_gl_FrontFacing;
+                        return &BuiltInVariable::var_gl_FrontFacing;
                     }
                     break;
                 }
@@ -34218,7 +34134,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_FragCoord)
                     {
-                        return &BuiltInVariable::kVar_gl_FragCoord;
+                        return &BuiltInVariable::var_gl_FragCoord;
                     }
                     break;
                 }
@@ -34226,7 +34142,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_PointCoord)
                     {
-                        return &BuiltInVariable::kVar_gl_PointCoord;
+                        return &BuiltInVariable::var_gl_PointCoord;
                     }
                     break;
                 }
@@ -34240,7 +34156,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_PointSize)
                     {
-                        return &BuiltInVariable::kVar_gl_PointSize;
+                        return &BuiltInVariable::var_gl_PointSize;
                     }
                     break;
                 }
@@ -34248,7 +34164,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_Position)
                     {
-                        return &BuiltInVariable::kVar_gl_Position;
+                        return &BuiltInVariable::var_gl_Position;
                     }
                     break;
                 }
@@ -50536,7 +50452,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_PointSize)
                     {
-                        return &BuiltInVariable::kVar_gl_PointSize;
+                        return &BuiltInVariable::var_gl_PointSize;
                     }
                     break;
                 }
@@ -50544,7 +50460,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_InstanceID)
                     {
-                        return &BuiltInVariable::kVar_gl_InstanceID;
+                        return &BuiltInVariable::var_gl_InstanceID;
                     }
                     break;
                 }
@@ -50576,7 +50492,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_Position)
                     {
-                        return &BuiltInVariable::kVar_gl_Position;
+                        return &BuiltInVariable::var_gl_Position;
                     }
                     break;
                 }
@@ -50616,7 +50532,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_VertexID)
                     {
-                        return &BuiltInVariable::kVar_gl_VertexID;
+                        return &BuiltInVariable::var_gl_VertexID;
                     }
                     break;
                 }
@@ -50694,7 +50610,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_FrontFacing)
                     {
-                        return &BuiltInVariable::kVar_gl_FrontFacing;
+                        return &BuiltInVariable::var_gl_FrontFacing;
                     }
                     break;
                 }
@@ -50734,7 +50650,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_FragDepth)
                     {
-                        return &BuiltInVariable::kVar_gl_FragDepth;
+                        return &BuiltInVariable::var_gl_FragDepth;
                     }
                     break;
                 }
@@ -50750,7 +50666,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_FragColor)
                     {
-                        return &BuiltInVariable::kVar_gl_FragColor;
+                        return &BuiltInVariable::var_gl_FragColor;
                     }
                     break;
                 }
@@ -50758,7 +50674,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_FragCoord)
                     {
-                        return &BuiltInVariable::kVar_gl_FragCoord;
+                        return &BuiltInVariable::var_gl_FragCoord;
                     }
                     break;
                 }
@@ -50790,7 +50706,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_PointCoord)
                     {
-                        return &BuiltInVariable::kVar_gl_PointCoord;
+                        return &BuiltInVariable::var_gl_PointCoord;
                     }
                     break;
                 }
@@ -50924,7 +50840,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_SecondaryFragColorEXT)
                     {
-                        return &BuiltInVariable::kVar_gl_SecondaryFragColorEXT;
+                        return &BuiltInVariable::var_gl_SecondaryFragColorEXT;
                     }
                     break;
                 }
@@ -50952,7 +50868,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_LastFragColor)
                     {
-                        return &BuiltInVariable::kVar_gl_LastFragColor;
+                        return &BuiltInVariable::var_gl_LastFragColor;
                     }
                     break;
                 }
@@ -50974,7 +50890,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_LastFragColorARM)
                     {
-                        return &BuiltInVariable::kVar_gl_LastFragColorARM;
+                        return &BuiltInVariable::var_gl_LastFragColorARM;
                     }
                     break;
                 }
@@ -50988,7 +50904,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_PrimitiveID)
                     {
-                        return &BuiltInVariable::kVar_gl_PrimitiveID;
+                        return &BuiltInVariable::var_gl_PrimitiveID;
                     }
                     break;
                 }
@@ -50996,7 +50912,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_Layer)
                     {
-                        return &BuiltInVariable::kVar_gl_Layer;
+                        return &BuiltInVariable::var_gl_Layer;
                     }
                     break;
                 }
@@ -51010,7 +50926,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_DrawID)
                     {
-                        return &BuiltInVariable::kVar_gl_DrawIDESSL1;
+                        return &BuiltInVariable::var_gl_DrawIDESSL1;
                     }
                     break;
                 }
@@ -51024,7 +50940,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_BaseInstance)
                     {
-                        return &BuiltInVariable::kVar_gl_BaseInstance;
+                        return &BuiltInVariable::var_gl_BaseInstance;
                     }
                     break;
                 }
@@ -51032,7 +50948,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_BaseVertex)
                     {
-                        return &BuiltInVariable::kVar_gl_BaseVertex;
+                        return &BuiltInVariable::var_gl_BaseVertex;
                     }
                     break;
                 }
@@ -51046,7 +50962,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_WorkGroupSize)
                     {
-                        return &BuiltInVariable::kVar_gl_WorkGroupSize;
+                        return &BuiltInVariable::var_gl_WorkGroupSize;
                     }
                     break;
                 }
@@ -51054,7 +50970,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_GlobalInvocationID)
                     {
-                        return &BuiltInVariable::kVar_gl_GlobalInvocationID;
+                        return &BuiltInVariable::var_gl_GlobalInvocationID;
                     }
                     break;
                 }
@@ -51062,7 +50978,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_NumWorkGroups)
                     {
-                        return &BuiltInVariable::kVar_gl_NumWorkGroups;
+                        return &BuiltInVariable::var_gl_NumWorkGroups;
                     }
                     break;
                 }
@@ -51070,7 +50986,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_LocalInvocationID)
                     {
-                        return &BuiltInVariable::kVar_gl_LocalInvocationID;
+                        return &BuiltInVariable::var_gl_LocalInvocationID;
                     }
                     break;
                 }
@@ -51078,7 +50994,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_WorkGroupID)
                     {
-                        return &BuiltInVariable::kVar_gl_WorkGroupID;
+                        return &BuiltInVariable::var_gl_WorkGroupID;
                     }
                     break;
                 }
@@ -51086,7 +51002,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_LocalInvocationIndex)
                     {
-                        return &BuiltInVariable::kVar_gl_LocalInvocationIndex;
+                        return &BuiltInVariable::var_gl_LocalInvocationIndex;
                     }
                     break;
                 }
@@ -51100,7 +51016,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_InvocationID)
                     {
-                        return &BuiltInVariable::kVar_gl_InvocationID;
+                        return &BuiltInVariable::var_gl_InvocationID;
                     }
                     break;
                 }
@@ -51124,7 +51040,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_PrimitiveID)
                     {
-                        return &BuiltInVariable::kVar_gl_PrimitiveIDGS;
+                        return &BuiltInVariable::var_gl_PrimitiveIDGS;
                     }
                     break;
                 }
@@ -51132,7 +51048,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_Layer)
                     {
-                        return &BuiltInVariable::kVar_gl_LayerGS;
+                        return &BuiltInVariable::var_gl_LayerGS;
                     }
                     break;
                 }
@@ -51140,7 +51056,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_PrimitiveIDIn)
                     {
-                        return &BuiltInVariable::kVar_gl_PrimitiveIDIn;
+                        return &BuiltInVariable::var_gl_PrimitiveIDIn;
                     }
                     break;
                 }
@@ -51154,7 +51070,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 {
                     if (name == BuiltInName::gl_ViewID_OVR)
                     {
-                        return &BuiltInVariable::kVar_gl_ViewID_OVRESSL1;
+                        return &BuiltInVariable::var_gl_ViewID_OVRESSL1;
                     }
                     break;
                 }
