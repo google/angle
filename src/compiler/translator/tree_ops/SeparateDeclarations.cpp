@@ -26,18 +26,18 @@ namespace
 class SeparateDeclarationsTraverser : private TIntermTraverser
 {
   public:
-    static void apply(TIntermNode *root);
+    ANGLE_NO_DISCARD static bool apply(TCompiler *compiler, TIntermNode *root);
 
   private:
     SeparateDeclarationsTraverser();
     bool visitDeclaration(Visit, TIntermDeclaration *node) override;
 };
 
-void SeparateDeclarationsTraverser::apply(TIntermNode *root)
+bool SeparateDeclarationsTraverser::apply(TCompiler *compiler, TIntermNode *root)
 {
     SeparateDeclarationsTraverser separateDecl;
     root->traverse(&separateDecl);
-    separateDecl.updateTree();
+    return separateDecl.updateTree(compiler, root);
 }
 
 SeparateDeclarationsTraverser::SeparateDeclarationsTraverser()
@@ -70,9 +70,9 @@ bool SeparateDeclarationsTraverser::visitDeclaration(Visit, TIntermDeclaration *
 
 }  // namespace
 
-void SeparateDeclarations(TIntermNode *root)
+bool SeparateDeclarations(TCompiler *compiler, TIntermNode *root)
 {
-    SeparateDeclarationsTraverser::apply(root);
+    return SeparateDeclarationsTraverser::apply(compiler, root);
 }
 
 }  // namespace sh

@@ -11,13 +11,18 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_FOLDEXPRESSIONS_H_
 #define COMPILER_TRANSLATOR_TREEOPS_FOLDEXPRESSIONS_H_
 
+#include "common/angleutils.h"
+
 namespace sh
 {
 
+class TCompiler;
 class TIntermBlock;
 class TDiagnostics;
 
-void FoldExpressions(TIntermBlock *root, TDiagnostics *diagnostics);
+ANGLE_NO_DISCARD bool FoldExpressions(TCompiler *compiler,
+                                      TIntermBlock *root,
+                                      TDiagnostics *diagnostics);
 
 }  // namespace sh
 

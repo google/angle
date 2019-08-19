@@ -9,13 +9,18 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_ARRAYRETURNVALUETOOUTPARAMETER_H_
 #define COMPILER_TRANSLATOR_TREEOPS_ARRAYRETURNVALUETOOUTPARAMETER_H_
 
+#include "common/angleutils.h"
+
 namespace sh
 {
 
+class TCompiler;
 class TIntermNode;
 class TSymbolTable;
 
-void ArrayReturnValueToOutParameter(TIntermNode *root, TSymbolTable *symbolTable);
+ANGLE_NO_DISCARD bool ArrayReturnValueToOutParameter(TCompiler *compiler,
+                                                     TIntermNode *root,
+                                                     TSymbolTable *symbolTable);
 
 }  // namespace sh
 

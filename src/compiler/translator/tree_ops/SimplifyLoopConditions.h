@@ -11,14 +11,18 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_SIMPLIFYLOOPCONDITIONS_H_
 #define COMPILER_TRANSLATOR_TREEOPS_SIMPLIFYLOOPCONDITIONS_H_
 
+#include "common/angleutils.h"
+
 namespace sh
 {
+class TCompiler;
 class TIntermNode;
 class TSymbolTable;
 
-void SimplifyLoopConditions(TIntermNode *root,
-                            unsigned int conditionsToSimplify,
-                            TSymbolTable *symbolTable);
+ANGLE_NO_DISCARD bool SimplifyLoopConditions(TCompiler *compiler,
+                                             TIntermNode *root,
+                                             unsigned int conditionsToSimplify,
+                                             TSymbolTable *symbolTable);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_SIMPLIFYLOOPCONDITIONS_H_

@@ -12,15 +12,19 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_REWRITECUBEMAPSAMPLERSAS2DARRAY_H_
 #define COMPILER_TRANSLATOR_TREEOPS_REWRITECUBEMAPSAMPLERSAS2DARRAY_H_
 
+#include "common/angleutils.h"
+
 namespace sh
 {
+class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
 
-void RewriteCubeMapSamplersAs2DArray(TIntermBlock *root,
-                                     TSymbolTable *symbolTable,
-                                     bool isFragmentShader,
-                                     bool useSubgroupOps);
+ANGLE_NO_DISCARD bool RewriteCubeMapSamplersAs2DArray(TCompiler *compiler,
+                                                      TIntermBlock *root,
+                                                      TSymbolTable *symbolTable,
+                                                      bool isFragmentShader,
+                                                      bool useSubgroupOps);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_REWRITECUBEMAPSAMPLERSAS2DARRAY_H_

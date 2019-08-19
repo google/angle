@@ -7,11 +7,14 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_REMOVEINVARIANTDECLARATION_H_
 #define COMPILER_TRANSLATOR_TREEOPS_REMOVEINVARIANTDECLARATION_H_
 
-class TIntermNode;
+#include "common/angleutils.h"
+
 namespace sh
 {
+class TCompiler;
+class TIntermNode;
 
-void RemoveInvariantDeclaration(TIntermNode *root);
+ANGLE_NO_DISCARD bool RemoveInvariantDeclaration(TCompiler *compiler, TIntermNode *root);
 
 }  // namespace sh
 

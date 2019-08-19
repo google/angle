@@ -22,12 +22,15 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_REMOVEARRAYLENGTHMETHOD_H_
 #define COMPILER_TRANSLATOR_TREEOPS_REMOVEARRAYLENGTHMETHOD_H_
 
+#include "common/angleutils.h"
+
 namespace sh
 {
 
+class TCompiler;
 class TIntermBlock;
 
-void RemoveArrayLengthMethod(TIntermBlock *root);
+ANGLE_NO_DISCARD bool RemoveArrayLengthMethod(TCompiler *compiler, TIntermBlock *root);
 
 }  // namespace sh
 

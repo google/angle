@@ -98,7 +98,8 @@ class FindGLBaseInstanceTraverser : public TIntermTraverser
 
 }  // namespace
 
-void EmulateGLDrawID(TIntermBlock *root,
+bool EmulateGLDrawID(TCompiler *compiler,
+                     TIntermBlock *root,
                      TSymbolTable *symbolTable,
                      std::vector<sh::Uniform> *uniforms,
                      bool shouldCollect)
@@ -131,11 +132,17 @@ void EmulateGLDrawID(TIntermBlock *root,
         }
 
         DeclareGlobalVariable(root, drawID);
-        ReplaceVariable(root, builtInVariable, drawID);
+        if (!ReplaceVariable(compiler, root, builtInVariable, drawID))
+        {
+            return false;
+        }
     }
+
+    return true;
 }
 
-void EmulateGLBaseVertex(TIntermBlock *root,
+bool EmulateGLBaseVertex(TCompiler *compiler,
+                         TIntermBlock *root,
                          TSymbolTable *symbolTable,
                          std::vector<sh::Uniform> *uniforms,
                          bool shouldCollect)
@@ -168,11 +175,17 @@ void EmulateGLBaseVertex(TIntermBlock *root,
         }
 
         DeclareGlobalVariable(root, baseVertex);
-        ReplaceVariable(root, builtInVariable, baseVertex);
+        if (!ReplaceVariable(compiler, root, builtInVariable, baseVertex))
+        {
+            return false;
+        }
     }
+
+    return true;
 }
 
-void EmulateGLBaseInstance(TIntermBlock *root,
+bool EmulateGLBaseInstance(TCompiler *compiler,
+                           TIntermBlock *root,
                            TSymbolTable *symbolTable,
                            std::vector<sh::Uniform> *uniforms,
                            bool shouldCollect)
@@ -205,8 +218,13 @@ void EmulateGLBaseInstance(TIntermBlock *root,
         }
 
         DeclareGlobalVariable(root, baseInstance);
-        ReplaceVariable(root, builtInVariable, baseInstance);
+        if (!ReplaceVariable(compiler, root, builtInVariable, baseInstance))
+        {
+            return false;
+        }
     }
+
+    return true;
 }
 
 }  // namespace sh

@@ -33,11 +33,11 @@ class RemoveInvariantDeclarationTraverser : public TIntermTraverser
 
 }  // anonymous namespace
 
-void RemoveInvariantDeclaration(TIntermNode *root)
+bool RemoveInvariantDeclaration(TCompiler *compiler, TIntermNode *root)
 {
     RemoveInvariantDeclarationTraverser traverser;
     root->traverse(&traverser);
-    traverser.updateTree();
+    return traverser.updateTree(compiler, root);
 }
 
 }  // namespace sh

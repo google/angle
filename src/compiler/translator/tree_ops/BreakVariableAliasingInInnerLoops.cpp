@@ -10,6 +10,7 @@
 
 #include "BreakVariableAliasingInInnerLoops.h"
 
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 
@@ -98,10 +99,12 @@ class AliasingBreaker : public TIntermTraverser
 
 }  // anonymous namespace
 
-void BreakVariableAliasingInInnerLoops(TIntermNode *root)
+bool BreakVariableAliasingInInnerLoops(TCompiler *compiler, TIntermNode *root)
 {
     AliasingBreaker breaker;
     root->traverse(&breaker);
+
+    return compiler->validateAST(root);
 }
 
 }  // namespace sh

@@ -68,7 +68,7 @@ bool RemoveArrayLengthTraverser::visitUnary(Visit visit, TIntermUnary *node)
 
 }  // anonymous namespace
 
-void RemoveArrayLengthMethod(TIntermBlock *root)
+bool RemoveArrayLengthMethod(TCompiler *compiler, TIntermBlock *root)
 {
     RemoveArrayLengthTraverser traverser;
     do
@@ -76,8 +76,15 @@ void RemoveArrayLengthMethod(TIntermBlock *root)
         traverser.nextIteration();
         root->traverse(&traverser);
         if (traverser.foundArrayLength())
-            traverser.updateTree();
+        {
+            if (!traverser.updateTree(compiler, root))
+            {
+                return false;
+            }
+        }
     } while (traverser.foundArrayLength());
+
+    return true;
 }
 
 }  // namespace sh

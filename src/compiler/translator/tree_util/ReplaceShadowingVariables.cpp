@@ -18,6 +18,7 @@
 #include "compiler/translator/tree_util/ReplaceShadowingVariables.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
 
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/SymbolTable.h"
@@ -105,14 +106,18 @@ class ReplaceShadowingVariablesTraverser : public TIntermTraverser
         return true;
     }
     // Perform replacement of vars for any deferred replacements that were identified
-    void executeReplacements()
+    ANGLE_NO_DISCARD bool executeReplacements(TCompiler *compiler)
     {
         for (DeferredReplacementBlock &replace : mReplacements)
         {
-            ReplaceVariable(replace.functionBody, replace.originalVariable,
-                            replace.replacementVariable);
+            if (!ReplaceVariable(compiler, replace.functionBody, replace.originalVariable,
+                                 replace.replacementVariable))
+            {
+                return false;
+            }
         }
         mReplacements.clear();
+        return true;
     }
 
   private:
@@ -125,12 +130,17 @@ class ReplaceShadowingVariablesTraverser : public TIntermTraverser
 }  // anonymous namespace
 
 // Replaces every occurrence of a variable with another variable.
-void ReplaceShadowingVariables(TIntermBlock *root, TSymbolTable *symbolTable)
+ANGLE_NO_DISCARD bool ReplaceShadowingVariables(TCompiler *compiler,
+                                                TIntermBlock *root,
+                                                TSymbolTable *symbolTable)
 {
     ReplaceShadowingVariablesTraverser traverser(symbolTable);
     root->traverse(&traverser);
-    traverser.executeReplacements();
-    traverser.updateTree();
+    if (!traverser.executeReplacements(compiler))
+    {
+        return false;
+    }
+    return traverser.updateTree(compiler, root);
 }
 
 }  // namespace sh

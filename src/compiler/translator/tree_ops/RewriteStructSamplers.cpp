@@ -688,12 +688,15 @@ class Traverser final : public TIntermTraverser
 };
 }  // anonymous namespace
 
-int RewriteStructSamplers(TIntermBlock *root, TSymbolTable *symbolTable)
+bool RewriteStructSamplers(TCompiler *compiler,
+                           TIntermBlock *root,
+                           TSymbolTable *symbolTable,
+                           int *removedUniformsCountOut)
 {
     Traverser rewriteStructSamplers(symbolTable);
     root->traverse(&rewriteStructSamplers);
-    rewriteStructSamplers.updateTree();
+    *removedUniformsCountOut = rewriteStructSamplers.removedUniformsCount();
 
-    return rewriteStructSamplers.removedUniformsCount();
+    return rewriteStructSamplers.updateTree(compiler, root);
 }
 }  // namespace sh

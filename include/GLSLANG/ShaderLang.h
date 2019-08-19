@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 212
+#define ANGLE_SH_VERSION 213
 
 enum ShShaderSpec
 {
@@ -296,6 +296,9 @@ const ShCompileOptions SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE = UINT64_C(1) << 
 // available, but is buggy on Nvidia.
 const ShCompileOptions SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING = UINT64_C(1) << 44;
 const ShCompileOptions SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING_WITH_SUBGROUP_OP = UINT64_C(1) << 45;
+
+// If requested, validates the AST after every transformation.  Useful for debugging.
+const ShCompileOptions SH_VALIDATE_AST = UINT64_C(1) << 46;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy

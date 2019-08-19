@@ -273,15 +273,22 @@ bool VectorizeVectorScalarArithmeticTraverser::visitAggregate(Visit /*visit*/,
 
 }  // anonymous namespace
 
-void VectorizeVectorScalarArithmetic(TIntermBlock *root, TSymbolTable *symbolTable)
+bool VectorizeVectorScalarArithmetic(TCompiler *compiler,
+                                     TIntermBlock *root,
+                                     TSymbolTable *symbolTable)
 {
     VectorizeVectorScalarArithmeticTraverser traverser(symbolTable);
     do
     {
         traverser.nextIteration();
         root->traverse(&traverser);
-        traverser.updateTree();
+        if (!traverser.updateTree(compiler, root))
+        {
+            return false;
+        }
     } while (traverser.didReplaceScalarsWithVectors());
+
+    return true;
 }
 
 }  // namespace sh

@@ -8,6 +8,7 @@
 
 #include "compiler/translator/tree_ops/RewriteAtomicCounters.h"
 
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
@@ -651,7 +652,8 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
 
 }  // anonymous namespace
 
-void RewriteAtomicCounters(TIntermBlock *root,
+bool RewriteAtomicCounters(TCompiler *compiler,
+                           TIntermBlock *root,
                            TSymbolTable *symbolTable,
                            const TIntermTyped *acbBufferOffsets)
 {
@@ -659,12 +661,17 @@ void RewriteAtomicCounters(TIntermBlock *root,
 
     RewriteAtomicCountersTraverser traverser(symbolTable, atomicCounters, acbBufferOffsets);
     root->traverse(&traverser);
-    traverser.updateTree();
+    if (!traverser.updateTree(compiler, root))
+    {
+        return false;
+    }
 
     TIntermDeclaration *atomicCounterTypeDeclaration = traverser.getAtomicCounterTypeDeclaration();
     if (atomicCounterTypeDeclaration)
     {
         root->getSequence()->insert(root->getSequence()->begin(), atomicCounterTypeDeclaration);
     }
+
+    return compiler->validateAST(root);
 }
 }  // namespace sh

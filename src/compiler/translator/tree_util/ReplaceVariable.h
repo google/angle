@@ -17,6 +17,7 @@
 namespace sh
 {
 
+class TCompiler;
 class TFunction;
 class TIntermAggregate;
 class TIntermBlock;
@@ -26,12 +27,14 @@ class TIntermTyped;
 class TSymbolTable;
 class TVariable;
 
-void ReplaceVariable(TIntermBlock *root,
-                     const TVariable *toBeReplaced,
-                     const TVariable *replacement);
-void ReplaceVariableWithTyped(TIntermBlock *root,
-                              const TVariable *toBeReplaced,
-                              const TIntermTyped *replacement);
+ANGLE_NO_DISCARD bool ReplaceVariable(TCompiler *compiler,
+                                      TIntermBlock *root,
+                                      const TVariable *toBeReplaced,
+                                      const TVariable *replacement);
+ANGLE_NO_DISCARD bool ReplaceVariableWithTyped(TCompiler *compiler,
+                                               TIntermBlock *root,
+                                               const TVariable *toBeReplaced,
+                                               const TIntermTyped *replacement);
 
 // A helper class to keep track of opaque variable re-typing during a pass.  Unlike the above
 // functions, this can be used to replace all opaque variables of a certain type with another in a

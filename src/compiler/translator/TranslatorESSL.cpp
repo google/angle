@@ -28,7 +28,7 @@ void TranslatorESSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
     }
 }
 
-void TranslatorESSL::translate(TIntermBlock *root,
+bool TranslatorESSL::translate(TIntermBlock *root,
                                ShCompileOptions compileOptions,
                                PerformanceDiagnostics * /*perfDiagnostics*/)
 {
@@ -54,11 +54,17 @@ void TranslatorESSL::translate(TIntermBlock *root,
     {
         EmulatePrecision emulatePrecision(&getSymbolTable());
         root->traverse(&emulatePrecision);
-        emulatePrecision.updateTree();
+        if (!emulatePrecision.updateTree(this, root))
+        {
+            return false;
+        }
         emulatePrecision.writeEmulationHelpers(sink, shaderVer, SH_ESSL_OUTPUT);
     }
 
-    RecordConstantPrecision(root, &getSymbolTable());
+    if (!RecordConstantPrecision(this, root, &getSymbolTable()))
+    {
+        return false;
+    }
 
     // Write emulated built-in functions if needed.
     if (!getBuiltInFunctionEmulator().isOutputEmpty())
@@ -102,6 +108,8 @@ void TranslatorESSL::translate(TIntermBlock *root,
                            compileOptions);
 
     root->traverse(&outputESSL);
+
+    return true;
 }
 
 bool TranslatorESSL::shouldFlattenPragmaStdglInvariantAll()

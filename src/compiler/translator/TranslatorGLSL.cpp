@@ -44,7 +44,7 @@ void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
     InitBuiltInFunctionEmulatorForGLSLMissingFunctions(emu, getShaderType(), targetGLSLVersion);
 }
 
-void TranslatorGLSL::translate(TIntermBlock *root,
+bool TranslatorGLSL::translate(TIntermBlock *root,
                                ShCompileOptions compileOptions,
                                PerformanceDiagnostics * /*perfDiagnostics*/)
 {
@@ -95,12 +95,18 @@ void TranslatorGLSL::translate(TIntermBlock *root,
 
     if ((compileOptions & SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH) != 0)
     {
-        sh::RewriteTexelFetchOffset(root, getSymbolTable(), getShaderVersion());
+        if (!sh::RewriteTexelFetchOffset(this, root, getSymbolTable(), getShaderVersion()))
+        {
+            return false;
+        }
     }
 
     if ((compileOptions & SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR) != 0)
     {
-        sh::RewriteUnaryMinusOperatorFloat(root);
+        if (!sh::RewriteUnaryMinusOperatorFloat(this, root))
+        {
+            return false;
+        }
     }
 
     bool precisionEmulation =
@@ -110,7 +116,10 @@ void TranslatorGLSL::translate(TIntermBlock *root,
     {
         EmulatePrecision emulatePrecision(&getSymbolTable());
         root->traverse(&emulatePrecision);
-        emulatePrecision.updateTree();
+        if (!emulatePrecision.updateTree(this, root))
+        {
+            return false;
+        }
         emulatePrecision.writeEmulationHelpers(sink, getShaderVersion(), getOutputType());
     }
 
@@ -212,6 +221,8 @@ void TranslatorGLSL::translate(TIntermBlock *root,
                            compileOptions);
 
     root->traverse(&outputGLSL);
+
+    return true;
 }
 
 bool TranslatorGLSL::shouldFlattenPragmaStdglInvariantAll()

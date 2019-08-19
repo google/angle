@@ -17,12 +17,15 @@
 namespace sh
 {
 
-void ClampPointSize(TIntermBlock *root, float maxPointSize, TSymbolTable *symbolTable)
+bool ClampPointSize(TCompiler *compiler,
+                    TIntermBlock *root,
+                    float maxPointSize,
+                    TSymbolTable *symbolTable)
 {
     // Only clamp gl_PointSize if it's used in the shader.
     if (!FindSymbolNode(root, ImmutableString("gl_PointSize")))
     {
-        return;
+        return true;
     }
 
     TIntermSymbol *pointSizeNode = new TIntermSymbol(BuiltInVariable::gl_PointSize());
@@ -42,7 +45,7 @@ void ClampPointSize(TIntermBlock *root, float maxPointSize, TSymbolTable *symbol
     // gl_PointSize = min(gl_PointSize, maxPointSize)
     TIntermBinary *assignPointSize = new TIntermBinary(EOpAssign, pointSizeNode, clampedPointSize);
 
-    RunAtTheEndOfShader(root, assignPointSize, symbolTable);
+    return RunAtTheEndOfShader(compiler, root, assignPointSize, symbolTable);
 }
 
 }  // namespace sh

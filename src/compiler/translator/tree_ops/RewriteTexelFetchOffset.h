@@ -15,13 +15,19 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_REWRITE_TEXELFETCHOFFSET_H_
 #define COMPILER_TRANSLATOR_TREEOPS_REWRITE_TEXELFETCHOFFSET_H_
 
-class TIntermNode;
-class TSymbolTable;
+#include "common/angleutils.h"
 
 namespace sh
 {
 
-void RewriteTexelFetchOffset(TIntermNode *root, const TSymbolTable &symbolTable, int shaderVersion);
+class TCompiler;
+class TIntermNode;
+class TSymbolTable;
+
+ANGLE_NO_DISCARD bool RewriteTexelFetchOffset(TCompiler *compiler,
+                                              TIntermNode *root,
+                                              const TSymbolTable &symbolTable,
+                                              int shaderVersion);
 
 }  // namespace sh
 

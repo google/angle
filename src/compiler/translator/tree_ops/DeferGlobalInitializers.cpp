@@ -17,6 +17,7 @@
 
 #include <vector>
 
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
@@ -125,7 +126,8 @@ void InsertInitCallToMain(TIntermBlock *root,
 
 }  // namespace
 
-void DeferGlobalInitializers(TIntermBlock *root,
+bool DeferGlobalInitializers(TCompiler *compiler,
+                             TIntermBlock *root,
                              bool initializeUninitializedGlobals,
                              bool canUseLoopsToInitialize,
                              bool highPrecisionSupported,
@@ -160,8 +162,13 @@ void DeferGlobalInitializers(TIntermBlock *root,
         replacementType->setQualifier(EvqGlobal);
         TVariable *replacement =
             new TVariable(symbolTable, var->name(), replacementType, var->symbolType());
-        ReplaceVariable(root, var, replacement);
+        if (!ReplaceVariable(compiler, root, var, replacement))
+        {
+            return false;
+        }
     }
+
+    return true;
 }
 
 }  // namespace sh

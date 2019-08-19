@@ -23,9 +23,9 @@ class TranslatorVulkan : public TCompiler
     TranslatorVulkan(sh::GLenum type, ShShaderSpec spec);
 
   protected:
-    void translate(TIntermBlock *root,
-                   ShCompileOptions compileOptions,
-                   PerformanceDiagnostics *perfDiagnostics) override;
+    ANGLE_NO_DISCARD bool translate(TIntermBlock *root,
+                                    ShCompileOptions compileOptions,
+                                    PerformanceDiagnostics *perfDiagnostics) override;
     bool shouldFlattenPragmaStdglInvariantAll() override;
 };
 

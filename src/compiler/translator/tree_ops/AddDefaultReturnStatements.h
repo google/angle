@@ -10,12 +10,14 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_ADDDEFAULTRETURNSTATEMENTS_H_
 #define COMPILER_TRANSLATOR_TREEOPS_ADDDEFAULTRETURNSTATEMENTS_H_
 
-class TIntermBlock;
+#include "common/angleutils.h"
 
 namespace sh
 {
+class TCompiler;
+class TIntermBlock;
 
-void AddDefaultReturnStatements(TIntermBlock *root);
+ANGLE_NO_DISCARD bool AddDefaultReturnStatements(TCompiler *compiler, TIntermBlock *root);
 
 }  // namespace sh
 

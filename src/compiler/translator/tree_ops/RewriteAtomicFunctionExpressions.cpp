@@ -171,12 +171,13 @@ bool RewriteAtomicFunctionExpressionsTraverser::visitBlock(Visit visit, TIntermB
 
 }  // anonymous namespace
 
-void RewriteAtomicFunctionExpressions(TIntermNode *root,
+bool RewriteAtomicFunctionExpressions(TCompiler *compiler,
+                                      TIntermNode *root,
                                       TSymbolTable *symbolTable,
                                       int shaderVersion)
 {
     RewriteAtomicFunctionExpressionsTraverser traverser(symbolTable, shaderVersion);
     traverser.traverse(root);
-    traverser.updateTree();
+    return traverser.updateTree(compiler, root);
 }
 }  // namespace sh

@@ -15,6 +15,7 @@
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
@@ -214,13 +215,16 @@ TVariable *ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
 
 }  // namespace
 
-void ScalarizeVecAndMatConstructorArgs(TIntermBlock *root,
+bool ScalarizeVecAndMatConstructorArgs(TCompiler *compiler,
+                                       TIntermBlock *root,
                                        sh::GLenum shaderType,
                                        bool fragmentPrecisionHigh,
                                        TSymbolTable *symbolTable)
 {
     ScalarizeArgsTraverser scalarizer(shaderType, fragmentPrecisionHigh, symbolTable);
     root->traverse(&scalarizer);
+
+    return compiler->validateAST(root);
 }
 
 }  // namespace sh

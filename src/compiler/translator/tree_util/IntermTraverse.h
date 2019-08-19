@@ -15,6 +15,7 @@
 namespace sh
 {
 
+class TCompiler;
 class TSymbolTable;
 class TSymbolUniqueId;
 
@@ -89,7 +90,10 @@ class TIntermTraverser : angle::NonCopyable
     // If traversers need to replace nodes, they can add the replacements in
     // mReplacements/mMultiReplacements during traversal and the user of the traverser should call
     // this function after traversal to perform them.
-    void updateTree();
+    //
+    // Compiler is used to validate the tree.  Node is the same given to traverse().  Returns false
+    // if the tree is invalid after update.
+    ANGLE_NO_DISCARD bool updateTree(TCompiler *compiler, TIntermNode *node);
 
   protected:
     void setMaxAllowedDepth(int depth);

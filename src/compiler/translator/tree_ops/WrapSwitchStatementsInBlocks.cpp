@@ -116,11 +116,11 @@ bool WrapSwitchStatementsInBlocksTraverser::visitSwitch(Visit, TIntermSwitch *no
 }  // anonymous namespace
 
 // Wrap switch statements in the AST into blocks when needed.
-void WrapSwitchStatementsInBlocks(TIntermBlock *root)
+bool WrapSwitchStatementsInBlocks(TCompiler *compiler, TIntermBlock *root)
 {
     WrapSwitchStatementsInBlocksTraverser traverser;
     root->traverse(&traverser);
-    traverser.updateTree();
+    return traverser.updateTree(compiler, root);
 }
 
 }  // namespace sh

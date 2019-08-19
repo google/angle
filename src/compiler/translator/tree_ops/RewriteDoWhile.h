@@ -10,13 +10,18 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_REWRITEDOWHILE_H_
 #define COMPILER_TRANSLATOR_TREEOPS_REWRITEDOWHILE_H_
 
+#include "common/angleutils.h"
+
 namespace sh
 {
 
+class TCompiler;
 class TIntermNode;
 class TSymbolTable;
 
-void RewriteDoWhile(TIntermNode *root, TSymbolTable *symbolTable);
+ANGLE_NO_DISCARD bool RewriteDoWhile(TCompiler *compiler,
+                                     TIntermNode *root,
+                                     TSymbolTable *symbolTable);
 
 }  // namespace sh
 

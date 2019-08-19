@@ -9,6 +9,7 @@
 
 #include "compiler/translator/tree_ops/RewriteDoWhile.h"
 
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
@@ -134,11 +135,13 @@ class DoWhileRewriter : public TIntermTraverser
 
 }  // anonymous namespace
 
-void RewriteDoWhile(TIntermNode *root, TSymbolTable *symbolTable)
+bool RewriteDoWhile(TCompiler *compiler, TIntermNode *root, TSymbolTable *symbolTable)
 {
     DoWhileRewriter rewriter(symbolTable);
 
     root->traverse(&rewriter);
+
+    return compiler->validateAST(root);
 }
 
 }  // namespace sh

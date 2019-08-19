@@ -8,11 +8,14 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_REWRITEUNARYMINUSOPERATORFLOAT_H_
 #define COMPILER_TRANSLATOR_TREEOPS_REWRITEUNARYMINUSOPERATORFLOAT_H_
 
-class TIntermNode;
+#include "common/angleutils.h"
+
 namespace sh
 {
+class TCompiler;
+class TIntermNode;
 
-void RewriteUnaryMinusOperatorFloat(TIntermNode *root);
+ANGLE_NO_DISCARD bool RewriteUnaryMinusOperatorFloat(TCompiler *compiler, TIntermNode *root);
 
 }  // namespace sh
 

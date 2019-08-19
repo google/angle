@@ -358,14 +358,14 @@ void RemoveUnreferencedVariablesTraverser::traverseLoop(TIntermLoop *node)
 
 }  // namespace
 
-void RemoveUnreferencedVariables(TIntermBlock *root, TSymbolTable *symbolTable)
+bool RemoveUnreferencedVariables(TCompiler *compiler, TIntermBlock *root, TSymbolTable *symbolTable)
 {
     CollectVariableRefCountsTraverser collector;
     root->traverse(&collector);
     RemoveUnreferencedVariablesTraverser traverser(&collector.getSymbolIdRefCounts(),
                                                    &collector.getStructIdRefCounts(), symbolTable);
     root->traverse(&traverser);
-    traverser.updateTree();
+    return traverser.updateTree(compiler, root);
 }
 
 }  // namespace sh

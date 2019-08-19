@@ -113,7 +113,9 @@ void SeparateExpressionsTraverser::nextIteration()
 
 }  // namespace
 
-void SeparateExpressionsReturningArrays(TIntermNode *root, TSymbolTable *symbolTable)
+bool SeparateExpressionsReturningArrays(TCompiler *compiler,
+                                        TIntermNode *root,
+                                        TSymbolTable *symbolTable)
 {
     SeparateExpressionsTraverser traverser(symbolTable);
     // Separate one expression at a time, and reset the traverser between iterations.
@@ -122,8 +124,15 @@ void SeparateExpressionsReturningArrays(TIntermNode *root, TSymbolTable *symbolT
         traverser.nextIteration();
         root->traverse(&traverser);
         if (traverser.foundArrayExpression())
-            traverser.updateTree();
+        {
+            if (!traverser.updateTree(compiler, root))
+            {
+                return false;
+            }
+        }
     } while (traverser.foundArrayExpression());
+
+    return true;
 }
 
 }  // namespace sh

@@ -11,12 +11,14 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_BREAKVARIABLEALIASINGININNERLOOPS_H_
 #define COMPILER_TRANSLATOR_TREEOPS_BREAKVARIABLEALIASINGININNERLOOPS_H_
 
-class TIntermNode;
+#include "common/angleutils.h"
 
 namespace sh
 {
+class TCompiler;
+class TIntermNode;
 
-void BreakVariableAliasingInInnerLoops(TIntermNode *root);
+ANGLE_NO_DISCARD bool BreakVariableAliasingInInnerLoops(TCompiler *compiler, TIntermNode *root);
 
 }  // namespace sh
 

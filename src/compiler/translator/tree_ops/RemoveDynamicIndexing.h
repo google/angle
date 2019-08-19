@@ -12,16 +12,20 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_REMOVEDYNAMICINDEXING_H_
 #define COMPILER_TRANSLATOR_TREEOPS_REMOVEDYNAMICINDEXING_H_
 
+#include "common/angleutils.h"
+
 namespace sh
 {
 
+class TCompiler;
 class TIntermNode;
 class TSymbolTable;
 class PerformanceDiagnostics;
 
-void RemoveDynamicIndexing(TIntermNode *root,
-                           TSymbolTable *symbolTable,
-                           PerformanceDiagnostics *perfDiagnostics);
+ANGLE_NO_DISCARD bool RemoveDynamicIndexing(TCompiler *compiler,
+                                            TIntermNode *root,
+                                            TSymbolTable *symbolTable,
+                                            PerformanceDiagnostics *perfDiagnostics);
 
 }  // namespace sh
 

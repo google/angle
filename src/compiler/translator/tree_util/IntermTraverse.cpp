@@ -6,6 +6,7 @@
 
 #include "compiler/translator/tree_util/IntermTraverse.h"
 
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
@@ -494,7 +495,7 @@ bool TIntermTraverser::CompareInsertion(const NodeInsertMultipleEntry &a,
     return a.position < b.position;
 }
 
-void TIntermTraverser::updateTree()
+bool TIntermTraverser::updateTree(TCompiler *compiler, TIntermNode *node)
 {
     // Sort the insertions so that insertion position is increasing and same position insertions are
     // not reordered. The insertions are processed in reverse order so that multiple insertions to
@@ -551,6 +552,8 @@ void TIntermTraverser::updateTree()
     }
 
     clearReplacementQueue();
+
+    return compiler->validateAST(node);
 }
 
 void TIntermTraverser::clearReplacementQueue()

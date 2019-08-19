@@ -43,23 +43,25 @@ class ReplaceVariableTraverser : public TIntermTraverser
 }  // anonymous namespace
 
 // Replaces every occurrence of a variable with another variable.
-void ReplaceVariable(TIntermBlock *root,
-                     const TVariable *toBeReplaced,
-                     const TVariable *replacement)
+ANGLE_NO_DISCARD bool ReplaceVariable(TCompiler *compiler,
+                                      TIntermBlock *root,
+                                      const TVariable *toBeReplaced,
+                                      const TVariable *replacement)
 {
     ReplaceVariableTraverser traverser(toBeReplaced, new TIntermSymbol(replacement));
     root->traverse(&traverser);
-    traverser.updateTree();
+    return traverser.updateTree(compiler, root);
 }
 
 // Replaces every occurrence of a variable with a TIntermNode.
-void ReplaceVariableWithTyped(TIntermBlock *root,
-                              const TVariable *toBeReplaced,
-                              const TIntermTyped *replacement)
+ANGLE_NO_DISCARD bool ReplaceVariableWithTyped(TCompiler *compiler,
+                                               TIntermBlock *root,
+                                               const TVariable *toBeReplaced,
+                                               const TIntermTyped *replacement)
 {
     ReplaceVariableTraverser traverser(toBeReplaced, replacement);
     root->traverse(&traverser);
-    traverser.updateTree();
+    return traverser.updateTree(compiler, root);
 }
 
 TIntermFunctionPrototype *RetypeOpaqueVariablesHelper::convertFunctionPrototype(

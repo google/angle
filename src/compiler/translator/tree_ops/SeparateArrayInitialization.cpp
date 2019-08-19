@@ -30,18 +30,18 @@ namespace
 class SeparateArrayInitTraverser : private TIntermTraverser
 {
   public:
-    static void apply(TIntermNode *root);
+    ANGLE_NO_DISCARD static bool apply(TCompiler *compiler, TIntermNode *root);
 
   private:
     SeparateArrayInitTraverser();
     bool visitDeclaration(Visit, TIntermDeclaration *node) override;
 };
 
-void SeparateArrayInitTraverser::apply(TIntermNode *root)
+bool SeparateArrayInitTraverser::apply(TCompiler *compiler, TIntermNode *root)
 {
     SeparateArrayInitTraverser separateInit;
     root->traverse(&separateInit);
-    separateInit.updateTree();
+    return separateInit.updateTree(compiler, root);
 }
 
 SeparateArrayInitTraverser::SeparateArrayInitTraverser() : TIntermTraverser(true, false, false) {}
@@ -82,9 +82,9 @@ bool SeparateArrayInitTraverser::visitDeclaration(Visit, TIntermDeclaration *nod
 
 }  // namespace
 
-void SeparateArrayInitialization(TIntermNode *root)
+bool SeparateArrayInitialization(TCompiler *compiler, TIntermNode *root)
 {
-    SeparateArrayInitTraverser::apply(root);
+    return SeparateArrayInitTraverser::apply(compiler, root);
 }
 
 }  // namespace sh

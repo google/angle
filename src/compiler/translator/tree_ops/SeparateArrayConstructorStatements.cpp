@@ -74,11 +74,11 @@ bool SeparateArrayConstructorStatementsTraverser::visitAggregate(Visit visit,
 
 }  // namespace
 
-void SeparateArrayConstructorStatements(TIntermBlock *root)
+bool SeparateArrayConstructorStatements(TCompiler *compiler, TIntermBlock *root)
 {
     SeparateArrayConstructorStatementsTraverser traverser;
     root->traverse(&traverser);
-    traverser.updateTree();
+    return traverser.updateTree(compiler, root);
 }
 
 }  // namespace sh

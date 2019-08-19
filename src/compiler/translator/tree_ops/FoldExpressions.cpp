@@ -101,15 +101,20 @@ class FoldExpressionsTraverser : public TIntermTraverser
 
 }  // anonymous namespace
 
-void FoldExpressions(TIntermBlock *root, TDiagnostics *diagnostics)
+bool FoldExpressions(TCompiler *compiler, TIntermBlock *root, TDiagnostics *diagnostics)
 {
     FoldExpressionsTraverser traverser(diagnostics);
     do
     {
         traverser.nextIteration();
         root->traverse(&traverser);
-        traverser.updateTree();
+        if (!traverser.updateTree(compiler, root))
+        {
+            return false;
+        }
     } while (traverser.didReplace());
+
+    return true;
 }
 
 }  // namespace sh

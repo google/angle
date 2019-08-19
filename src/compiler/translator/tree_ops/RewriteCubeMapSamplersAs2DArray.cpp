@@ -9,6 +9,7 @@
 
 #include "compiler/translator/tree_ops/RewriteCubeMapSamplersAs2DArray.h"
 
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
@@ -927,7 +928,8 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
 
 }  // anonymous namespace
 
-void RewriteCubeMapSamplersAs2DArray(TIntermBlock *root,
+bool RewriteCubeMapSamplersAs2DArray(TCompiler *compiler,
+                                     TIntermBlock *root,
                                      TSymbolTable *symbolTable,
                                      bool isFragmentShader,
                                      bool useSubgroupOps)
@@ -935,7 +937,10 @@ void RewriteCubeMapSamplersAs2DArray(TIntermBlock *root,
     RewriteCubeMapSamplersAs2DArrayTraverser traverser(symbolTable, isFragmentShader,
                                                        useSubgroupOps);
     root->traverse(&traverser);
-    traverser.updateTree();
+    if (!traverser.updateTree(compiler, root))
+    {
+        return false;
+    }
 
     TIntermFunctionDefinition *coordTranslationFunctionDecl =
         traverser.getCoordTranslationFunctionDecl();
@@ -944,6 +949,8 @@ void RewriteCubeMapSamplersAs2DArray(TIntermBlock *root,
         size_t firstFunctionIndex = FindFirstFunctionDefinitionIndex(root);
         root->insertChildNodes(firstFunctionIndex, TIntermSequence({coordTranslationFunctionDecl}));
     }
+
+    return compiler->validateAST(root);
 }
 
 }  // namespace sh

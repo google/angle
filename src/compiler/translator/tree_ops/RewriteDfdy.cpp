@@ -22,9 +22,10 @@ namespace
 class Traverser : public TIntermTraverser
 {
   public:
-    static void Apply(TIntermNode *root,
-                      const TSymbolTable &symbolTable,
-                      TIntermBinary *viewportYScale);
+    ANGLE_NO_DISCARD static bool Apply(TCompiler *compiler,
+                                       TIntermNode *root,
+                                       const TSymbolTable &symbolTable,
+                                       TIntermBinary *viewportYScale);
 
   private:
     Traverser(TIntermBinary *viewportYScale, TSymbolTable *symbolTable);
@@ -38,14 +39,15 @@ Traverser::Traverser(TIntermBinary *viewportYScale, TSymbolTable *symbolTable)
 {}
 
 // static
-void Traverser::Apply(TIntermNode *root,
+bool Traverser::Apply(TCompiler *compiler,
+                      TIntermNode *root,
                       const TSymbolTable &symbolTable,
                       TIntermBinary *viewportYScale)
 {
     TSymbolTable *pSymbolTable = const_cast<TSymbolTable *>(&symbolTable);
     Traverser traverser(viewportYScale, pSymbolTable);
     root->traverse(&traverser);
-    traverser.updateTree();
+    return traverser.updateTree(compiler, root);
 }
 
 bool Traverser::visitUnary(Visit visit, TIntermUnary *node)
@@ -75,16 +77,17 @@ bool Traverser::visitUnary(Visit visit, TIntermUnary *node)
 
 }  // anonymous namespace
 
-void RewriteDfdy(TIntermNode *root,
+bool RewriteDfdy(TCompiler *compiler,
+                 TIntermNode *root,
                  const TSymbolTable &symbolTable,
                  int shaderVersion,
                  TIntermBinary *viewportYScale)
 {
     // dFdy is only valid in GLSL 3.0 and later.
     if (shaderVersion < 300)
-        return;
+        return true;
 
-    Traverser::Apply(root, symbolTable, viewportYScale);
+    return Traverser::Apply(compiler, root, symbolTable, viewportYScale);
 }
 
 }  // namespace sh

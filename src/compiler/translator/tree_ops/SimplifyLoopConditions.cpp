@@ -287,13 +287,14 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
 
 }  // namespace
 
-void SimplifyLoopConditions(TIntermNode *root,
+bool SimplifyLoopConditions(TCompiler *compiler,
+                            TIntermNode *root,
                             unsigned int conditionsToSimplifyMask,
                             TSymbolTable *symbolTable)
 {
     SimplifyLoopConditionsTraverser traverser(conditionsToSimplifyMask, symbolTable);
     root->traverse(&traverser);
-    traverser.updateTree();
+    return traverser.updateTree(compiler, root);
 }
 
 }  // namespace sh

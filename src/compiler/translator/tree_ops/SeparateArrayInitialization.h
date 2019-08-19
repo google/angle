@@ -19,11 +19,14 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_SEPARATEARRAYINITIALIZATION_H_
 #define COMPILER_TRANSLATOR_TREEOPS_SEPARATEARRAYINITIALIZATION_H_
 
+#include "common/angleutils.h"
+
 namespace sh
 {
+class TCompiler;
 class TIntermNode;
 
-void SeparateArrayInitialization(TIntermNode *root);
+ANGLE_NO_DISCARD bool SeparateArrayInitialization(TCompiler *compiler, TIntermNode *root);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_SEPARATEARRAYINITIALIZATION_H_
