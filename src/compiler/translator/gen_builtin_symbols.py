@@ -1020,7 +1020,7 @@ def get_variable_name_to_store_parameters(parameters):
 
 
 def define_constexpr_variable(template_args, variable_declarations):
-    template_variable_declaration = 'constexpr const TVariable var_{name_with_suffix}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});'
+    template_variable_declaration = 'constexpr const TVariable kVar_{name_with_suffix}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});'
     variable_declarations.append(template_variable_declaration.format(**template_args))
 
 
@@ -1179,7 +1179,7 @@ def process_single_function_group(
 
             template_mangled_if = """if (name == BuiltInName::{unique_name}{extension_condition})
 {{
-    return &BuiltInFunction::kFunction_{unique_name};
+    return &BuiltInFunction::function_{unique_name};
 }}"""
             mangled_if = template_mangled_if.format(**template_args)
             get_builtin_if_statements.add_obj(essl_level, glsl_level, condition,
@@ -1213,7 +1213,7 @@ def process_single_function_group(
                     define_constexpr_variable(param_template_args, variable_declarations)
                     defined_parameter_names.add(unique_param_name)
                 parameters_list.append(
-                    '&BuiltInVariable::var_{name_with_suffix}'.format(**param_template_args))
+                    '&BuiltInVariable::kVar_{name_with_suffix}'.format(**param_template_args))
 
             template_args['parameters_var_name'] = get_variable_name_to_store_parameters(
                 parameters)
@@ -1229,7 +1229,7 @@ def process_single_function_group(
                     'parameters_var_name']] = template_parameter_list_declaration.format(
                         **template_args)
 
-            template_function_declaration = 'constexpr const TFunction kFunction_{unique_name}(BuiltInId::{human_readable_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
+            template_function_declaration = 'constexpr const TFunction function_{unique_name}(BuiltInId::{human_readable_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
             function_declarations.append(template_function_declaration.format(**template_args))
 
             template_mangled_name_declaration = 'constexpr const ImmutableString {unique_name}("{mangled_name}");'
@@ -1407,7 +1407,7 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
 
             template_get_variable_definition = """const TVariable *{name_with_suffix}()
 {{
-    return &var_{name_with_suffix};
+    return &kVar_{name_with_suffix};
 }}
 """
             get_variable_definitions.append(
@@ -1416,7 +1416,7 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
             if level != 'GLSL_BUILTINS':
                 template_name_if = """if (name == BuiltInName::{name})
 {{
-    return &BuiltInVariable::var_{name_with_suffix};
+    return &BuiltInVariable::kVar_{name_with_suffix};
 }}"""
                 name_if = template_name_if.format(**template_args)
                 get_builtin_if_statements.add_obj(level, 'COMMON_BUILTINS', condition,
