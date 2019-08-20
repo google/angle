@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b573572e_51883a87",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-20T13:48:59Z",
+      "side": 1,
+      "message": "Maybe both the read and write framebuffers could think they are framebuffer 0 and just store them with the special ID in the resource map?  Then we wouldn\u0027t need setIsDefault and these parameters.",
+      "range": {
+        "startLine": 160,
+        "startChar": 61,
+        "endLine": 160,
+        "endChar": 88
+      },
+      "revId": "5199ce4b34afd3629145a39f49bf794c503b35e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "825bd1fa_9cc7cc08",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-20T13:48:59Z",
+      "side": 1,
+      "message": "This shouldn\u0027t be needed, if it\u0027s already returning true to isDefault then there is no need to set it as default.",
+      "range": {
+        "startLine": 451,
+        "startChar": 0,
+        "endLine": 454,
+        "endChar": 5
+      },
+      "revId": "5199ce4b34afd3629145a39f49bf794c503b35e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
