@@ -619,7 +619,7 @@
             </command>
             <command>
             <proto>void <name>glGetFramebufferParameterivRobustANGLE</name></proto>
-                <param><ptype>GLuint</ptype> <name>sampler</name></param>
+                <param><ptype>GLenum</ptype> <name>target</name></param>
                 <param><ptype>GLenum</ptype> <name>pname</name></param>
                 <param><ptype>GLsizei</ptype> <name>bufSize</name></param>
                 <param><ptype>GLsizei *</ptype> <name>length</name></param>

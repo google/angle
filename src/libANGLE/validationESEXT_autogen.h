@@ -446,7 +446,7 @@ bool ValidateGetSamplerParameterfvRobustANGLE(Context *context,
                                               GLsizei *length,
                                               GLfloat *params);
 bool ValidateGetFramebufferParameterivRobustANGLE(Context *context,
-                                                  GLuint sampler,
+                                                  GLenum target,
                                                   GLenum pname,
                                                   GLsizei bufSize,
                                                   GLsizei *length,

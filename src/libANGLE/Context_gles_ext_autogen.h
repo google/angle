@@ -152,7 +152,7 @@
                                      GLsizei *length, GLint *params);                              \
     void getSamplerParameterfvRobust(GLuint sampler, GLenum pname, GLsizei bufSize,                \
                                      GLsizei *length, GLfloat *params);                            \
-    void getFramebufferParameterivRobust(GLuint sampler, GLenum pname, GLsizei bufSize,            \
+    void getFramebufferParameterivRobust(GLenum target, GLenum pname, GLsizei bufSize,             \
                                          GLsizei *length, GLint *params);                          \
     void getProgramInterfaceivRobust(GLuint program, GLenum programInterface, GLenum pname,        \
                                      GLsizei bufSize, GLsizei *length, GLint *params);             \

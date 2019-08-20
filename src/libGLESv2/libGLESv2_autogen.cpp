@@ -3041,13 +3041,13 @@ void GL_APIENTRY glGetSamplerParameterfvRobustANGLE(GLuint sampler,
     return gl::GetSamplerParameterfvRobustANGLE(sampler, pname, bufSize, length, params);
 }
 
-void GL_APIENTRY glGetFramebufferParameterivRobustANGLE(GLuint sampler,
+void GL_APIENTRY glGetFramebufferParameterivRobustANGLE(GLenum target,
                                                         GLenum pname,
                                                         GLsizei bufSize,
                                                         GLsizei *length,
                                                         GLint *params)
 {
-    return gl::GetFramebufferParameterivRobustANGLE(sampler, pname, bufSize, length, params);
+    return gl::GetFramebufferParameterivRobustANGLE(target, pname, bufSize, length, params);
 }
 
 void GL_APIENTRY glGetProgramInterfaceivRobustANGLE(GLuint program,
@@ -9428,14 +9428,14 @@ void GL_APIENTRY glGetSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx
 }
 
 void GL_APIENTRY glGetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                    GLuint sampler,
+                                                                    GLenum target,
                                                                     GLenum pname,
                                                                     GLsizei bufSize,
                                                                     GLsizei *length,
                                                                     GLint *params)
 {
-    return gl::GetFramebufferParameterivRobustANGLEContextANGLE(ctx, sampler, pname, bufSize,
-                                                                length, params);
+    return gl::GetFramebufferParameterivRobustANGLEContextANGLE(ctx, target, pname, bufSize, length,
+                                                                params);
 }
 
 void GL_APIENTRY glGetProgramInterfaceivRobustANGLEContextANGLE(GLeglContext ctx,

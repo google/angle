@@ -329,7 +329,7 @@ typedef void (GL_APIENTRYP PFNGLSAMPLERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC)(G
 typedef void (GL_APIENTRYP PFNGLSAMPLERPARAMETERFVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint sampler, GLenum pname, GLsizei bufSize, const GLfloat * param);
 typedef void (GL_APIENTRYP PFNGLGETSAMPLERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint sampler, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
 typedef void (GL_APIENTRYP PFNGLGETSAMPLERPARAMETERFVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint sampler, GLenum pname, GLsizei bufSize, GLsizei * length, GLfloat * params);
-typedef void (GL_APIENTRYP PFNGLGETFRAMEBUFFERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint sampler, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
+typedef void (GL_APIENTRYP PFNGLGETFRAMEBUFFERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
 typedef void (GL_APIENTRYP PFNGLGETPROGRAMINTERFACEIVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint program, GLenum programInterface, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
 typedef void (GL_APIENTRYP PFNGLGETBOOLEANI_VROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLuint index, GLsizei bufSize, GLsizei * length, GLboolean * data);
 typedef void (GL_APIENTRYP PFNGLGETMULTISAMPLEFVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum pname, GLuint index, GLsizei bufSize, GLsizei * length, GLfloat * val);
@@ -692,7 +692,7 @@ GL_APICALL void GL_APIENTRY glSamplerParameterivRobustANGLEContextANGLE(GLeglCon
 GL_APICALL void GL_APIENTRY glSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx, GLuint sampler, GLenum pname, GLsizei bufSize, const GLfloat * param);
 GL_APICALL void GL_APIENTRY glGetSamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx, GLuint sampler, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
 GL_APICALL void GL_APIENTRY glGetSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx, GLuint sampler, GLenum pname, GLsizei bufSize, GLsizei * length, GLfloat * params);
-GL_APICALL void GL_APIENTRY glGetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext ctx, GLuint sampler, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
+GL_APICALL void GL_APIENTRY glGetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
 GL_APICALL void GL_APIENTRY glGetProgramInterfaceivRobustANGLEContextANGLE(GLeglContext ctx, GLuint program, GLenum programInterface, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
 GL_APICALL void GL_APIENTRY glGetBooleani_vRobustANGLEContextANGLE(GLeglContext ctx, GLenum target, GLuint index, GLsizei bufSize, GLsizei * length, GLboolean * data);
 GL_APICALL void GL_APIENTRY glGetMultisamplefvRobustANGLEContextANGLE(GLeglContext ctx, GLenum pname, GLuint index, GLsizei bufSize, GLsizei * length, GLfloat * val);

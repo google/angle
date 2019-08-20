@@ -392,7 +392,7 @@ ANGLE_EXPORT void GL_APIENTRY GetSamplerParameterfvRobustANGLE(GLuint sampler,
                                                                GLsizei bufSize,
                                                                GLsizei *length,
                                                                GLfloat *params);
-ANGLE_EXPORT void GL_APIENTRY GetFramebufferParameterivRobustANGLE(GLuint sampler,
+ANGLE_EXPORT void GL_APIENTRY GetFramebufferParameterivRobustANGLE(GLenum target,
                                                                    GLenum pname,
                                                                    GLsizei bufSize,
                                                                    GLsizei *length,
@@ -3671,7 +3671,7 @@ ANGLE_EXPORT void GL_APIENTRY GetSamplerParameterfvRobustANGLEContextANGLE(GLegl
                                                                            GLsizei *length,
                                                                            GLfloat *params);
 ANGLE_EXPORT void GL_APIENTRY GetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                               GLuint sampler,
+                                                                               GLenum target,
                                                                                GLenum pname,
                                                                                GLsizei bufSize,
                                                                                GLsizei *length,

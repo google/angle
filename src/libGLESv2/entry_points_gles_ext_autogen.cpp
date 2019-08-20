@@ -1841,16 +1841,17 @@ void GL_APIENTRY GetSamplerParameterfvRobustANGLE(GLuint sampler,
     }
 }
 
-void GL_APIENTRY GetFramebufferParameterivRobustANGLE(GLuint sampler,
+void GL_APIENTRY GetFramebufferParameterivRobustANGLE(GLenum target,
                                                       GLenum pname,
                                                       GLsizei bufSize,
                                                       GLsizei *length,
                                                       GLint *params)
 {
     EVENT(
-        "(GLuint sampler = %u, GLenum pname = %s, GLsizei bufSize = %d, GLsizei * length = "
+        "(GLenum target = %s, GLenum pname = %s, GLsizei bufSize = %d, GLsizei * length = "
         "0x%016" PRIxPTR ", GLint * params = 0x%016" PRIxPTR ")",
-        sampler, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
+        GLenumToString(GLenumGroup::DefaultGroup, target),
+        GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
         (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
@@ -1859,12 +1860,12 @@ void GL_APIENTRY GetFramebufferParameterivRobustANGLE(GLuint sampler,
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateGetFramebufferParameterivRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+                                              context, target, pname, bufSize, length, params));
         if (isCallValid)
         {
-            context->getFramebufferParameterivRobust(sampler, pname, bufSize, length, params);
+            context->getFramebufferParameterivRobust(target, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetFramebufferParameterivRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(GetFramebufferParameterivRobustANGLE, isCallValid, context, target, pname,
                       bufSize, length, params);
     }
 }
@@ -22401,16 +22402,17 @@ void GL_APIENTRY GetSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY GetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                  GLuint sampler,
+                                                                  GLenum target,
                                                                   GLenum pname,
                                                                   GLsizei bufSize,
                                                                   GLsizei *length,
                                                                   GLint *params)
 {
     EVENT(
-        "(GLuint sampler = %u, GLenum pname = %s, GLsizei bufSize = %d, GLsizei * length = "
+        "(GLenum target = %s, GLenum pname = %s, GLsizei bufSize = %d, GLsizei * length = "
         "0x%016" PRIxPTR ", GLint * params = 0x%016" PRIxPTR ")",
-        sampler, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
+        GLenumToString(GLenumGroup::DefaultGroup, target),
+        GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
         (uintptr_t)params);
 
     Context *context = static_cast<gl::Context *>(ctx);
@@ -22420,12 +22422,12 @@ void GL_APIENTRY GetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext c
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateGetFramebufferParameterivRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+                                              context, target, pname, bufSize, length, params));
         if (isCallValid)
         {
-            context->getFramebufferParameterivRobust(sampler, pname, bufSize, length, params);
+            context->getFramebufferParameterivRobust(target, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetFramebufferParameterivRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(GetFramebufferParameterivRobustANGLE, isCallValid, context, target, pname,
                       bufSize, length, params);
     }
 }

@@ -1792,7 +1792,7 @@ CallCapture CaptureGetSamplerParameterfvRobustANGLE(const Context *context,
 
 CallCapture CaptureGetFramebufferParameterivRobustANGLE(const Context *context,
                                                         bool isCallValid,
-                                                        GLuint sampler,
+                                                        GLenum target,
                                                         GLenum pname,
                                                         GLsizei bufSize,
                                                         GLsizei *length,
@@ -1800,20 +1800,20 @@ CallCapture CaptureGetFramebufferParameterivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
+    paramBuffer.addEnumParam("target", GLenumGroup::DefaultGroup, ParamType::TGLenum, target);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetFramebufferParameterivRobustANGLE_length(context, isCallValid, sampler, pname,
-                                                       bufSize, length, params, &lengthParam);
+    CaptureGetFramebufferParameterivRobustANGLE_length(context, isCallValid, target, pname, bufSize,
+                                                       length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetFramebufferParameterivRobustANGLE_params(context, isCallValid, sampler, pname,
-                                                       bufSize, length, params, &paramsParam);
+    CaptureGetFramebufferParameterivRobustANGLE_params(context, isCallValid, target, pname, bufSize,
+                                                       length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetFramebufferParameterivRobustANGLE,
