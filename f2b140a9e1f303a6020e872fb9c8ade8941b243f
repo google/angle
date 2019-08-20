@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "157deb55_01080852",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1410,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-20T23:19:15Z",
+      "side": 1,
+      "message": "nit: can omit the else. the above if always returns.",
+      "range": {
+        "startLine": 1410,
+        "startChar": 4,
+        "endLine": 1410,
+        "endChar": 9
+      },
+      "revId": "f2b140a9e1f303a6020e872fb9c8ade8941b243f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
