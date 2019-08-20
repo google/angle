@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af69851d_859ef42c",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2019-08-20T23:02:31Z",
+      "side": 1,
+      "message": "Listing directories with generated files in data leads to incremental builds and generally doesn\u0027t work, see https://bugs.chromium.org/p/chromium/issues/detail?id\u003d912946 . Is it possible to explicitly list the needed files here?",
+      "revId": "cafd7736490e2cfeca38397301853e76dfce91c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
