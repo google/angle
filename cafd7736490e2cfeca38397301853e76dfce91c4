@@ -16,6 +16,24 @@
       "revId": "cafd7736490e2cfeca38397301853e76dfce91c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24b7064b_d06ca95a",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-20T23:39:56Z",
+      "side": 1,
+      "message": "We could maybe patch it upstream. The test is doing something weird and expecting a hard coded path which doesn\u0027t exist in the tree. In any case it\u0027ll be a bit of a slow process to fix.",
+      "parentUuid": "af69851d_859ef42c",
+      "revId": "cafd7736490e2cfeca38397301853e76dfce91c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
