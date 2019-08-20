@@ -333,6 +333,30 @@
     },
     {
       "key": {
+        "uuid": "c2a7c2db_02382346",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1424,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-20T02:04:08Z",
+      "side": 1,
+      "message": "I\u0027m inclined to agree with Jamie, the `Impl` suffix implies that this function is internal to this class, so it\u0027s usage is very controlled.\n\nChanging the name of the function to reflect its limitations would be better for readability in my opinion than trying to make the body support usages the function was never intended for. Such a name change could be part of a much bigger cleanup in the backend though, as this pattern is used quite often.",
+      "parentUuid": "196c1759_8a44c40c",
+      "range": {
+        "startLine": 1424,
+        "startChar": 8,
+        "endLine": 1424,
+        "endChar": 14
+      },
+      "revId": "a2373e5ed007d502e8d71a90e3a486fc6b5865ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "15be65fc_3e9063f8",
         "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
         "patchSetId": 5
