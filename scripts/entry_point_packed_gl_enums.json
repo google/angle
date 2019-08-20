@@ -16,11 +16,11 @@
     "glAlphaFuncx": {
         "func": "AlphaTestFunc"
     },
-    "glBeginTransformFeedback": {
-        "primitiveMode": "PrimitiveMode"
-    },
     "glBeginQuery": {
         "target": "QueryType"
+    },
+    "glBeginTransformFeedback": {
+        "primitiveMode": "PrimitiveMode"
     },
     "glBindBuffer": {
         "target": "BufferBinding",
@@ -46,6 +46,9 @@
     "glBindRenderbuffer": {
         "renderbuffer": "RenderbufferID"
     },
+    "glBindSampler": {
+        "sampler": "SamplerID"
+    },
     "glBindTexture": {
         "target": "TextureType",
         "texture": "TextureID"
@@ -62,6 +65,9 @@
     "glBufferData": {
         "target": "BufferBinding",
         "usage": "BufferUsage"
+    },
+    "glBufferStorageMem": {
+        "target": "TextureType"
     },
     "glBufferSubData": {
         "target": "BufferBinding"
@@ -84,21 +90,6 @@
     "glCompressedCopyTexture": {
         "sourceId": "TextureID",
         "destId": "TextureID"
-    },
-    "glCompressedTextureImage": {
-        "texture": "TextureID"
-    },
-    "glCompressedTextureSubImage": {
-        "texture": "TextureID"
-    },
-    "glCompressedTextureSubImage1D": {
-        "texture": "TextureID"
-    },
-    "glCompressedTextureSubImage2D": {
-        "texture": "TextureID"
-    },
-    "glCompressedTextureSubImage3D": {
-        "texture": "TextureID"
     },
     "glCompressedTexImage2D": {
         "target": "TextureTarget"
@@ -124,6 +115,54 @@
     "glCompressedTexSubImage3DRobust": {
         "target": "TextureTarget"
     },
+    "glCompressedTextureImage": {
+        "texture": "TextureID"
+    },
+    "glCompressedTextureSubImage": {
+        "texture": "TextureID"
+    },
+    "glCompressedTextureSubImage1D": {
+        "texture": "TextureID"
+    },
+    "glCompressedTextureSubImage2D": {
+        "texture": "TextureID"
+    },
+    "glCompressedTextureSubImage3D": {
+        "texture": "TextureID"
+    },
+    "glCopyBufferSubData": {
+        "readTarget": "BufferBinding",
+        "writeTarget": "BufferBinding"
+    },
+    "glCopySubTexture": {
+        "destTarget": "TextureTarget",
+        "sourceId": "TextureID",
+        "destId": "TextureID"
+    },
+    "glCopySubTexture3D": {
+        "destTarget": "TextureTarget",
+        "sourceId": "TextureID",
+        "destId": "TextureID"
+    },
+    "glCopyTexImage2D": {
+        "target": "TextureTarget"
+    },
+    "glCopyTexSubImage2D": {
+        "target": "TextureTarget"
+    },
+    "glCopyTexSubImage3D": {
+        "target": "TextureTarget"
+    },
+    "glCopyTexture": {
+        "destTarget": "TextureTarget",
+        "sourceId": "TextureID",
+        "destId": "TextureID"
+    },
+    "glCopyTexture3D": {
+        "destTarget": "TextureTarget",
+        "sourceId": "TextureID",
+        "destId": "TextureID"
+    },
     "glCopyTextureSubImage1D": {
         "texture": "TextureID"
     },
@@ -133,50 +172,17 @@
     "glCopyTextureSubImage3D": {
         "texture": "TextureID"
     },
-    "glCopyTexImage2D": {
-        "target": "TextureTarget"
-    },
-    "glCopyTexture3D": {
-        "destTarget": "TextureTarget",
-        "sourceId": "TextureID",
-        "destId": "TextureID"
-    },
-    "glCopyTexture": {
-        "destTarget": "TextureTarget",
-        "sourceId": "TextureID",
-        "destId": "TextureID"
-    },
-    "glCopyTexSubImage2D": {
-        "target": "TextureTarget"
-    },
-    "glCopyTexSubImage3D": {
-        "target": "TextureTarget"
-    },
-    "glCopySubTexture3D": {
-        "destTarget": "TextureTarget",
-        "sourceId": "TextureID",
-        "destId": "TextureID"
-    },
-    "glCopySubTexture": {
-        "destTarget": "TextureTarget",
-        "sourceId": "TextureID",
-        "destId": "TextureID"
-    },
-    "glCopyBufferSubData": {
-        "readTarget": "BufferBinding",
-        "writeTarget": "BufferBinding"
-    },
     "glCreateBuffers": {
         "buffers": "BufferID *"
+    },
+    "glCreateRenderbuffers": {
+        "renderbuffers": "RenderbufferID *"
     },
     "glCreateShader": {
         "type": "ShaderType"
     },
     "glCreateShaderProgramv": {
         "type": "ShaderType"
-    },
-    "glCreateRenderbuffers": {
-        "renderbuffers": "RenderbufferID *"
     },
     "glCullFace": {
         "mode": "CullFaceMode"
@@ -186,6 +192,9 @@
     },
     "glDeleteRenderbuffers": {
         "renderbuffers": "const RenderbufferID *"
+    },
+    "glDeleteSamplers": {
+        "samplers": "const SamplerID *"
     },
     "glDeleteTextures": {
         "textures": "const TextureID *"
@@ -265,31 +274,34 @@
     "glFramebufferTextureMultiview": {
         "texture": "TextureID"
     },
+    "glGenBuffers": {
+        "buffers": "BufferID *"
+    },
     "glGenerateMipmap": {
         "target": "TextureType"
     },
     "glGenerateTextureMipmap": {
         "texture": "TextureID"
     },
-    "glGenBuffers": {
-        "buffers": "BufferID *"
-    },
     "glGenRenderbuffers": {
         "renderbuffers": "RenderbufferID *"
     },
+    "glGenSamplers": {
+        "samplers": "SamplerID *"
+    },
     "glGenTextures": {
         "textures": "TextureID *"
-    },
-    "glGetBufferParameteriv": {
-        "target": "BufferBinding"
-    },
-    "glGetBufferParameterivRobust": {
-        "target": "BufferBinding"
     },
     "glGetBufferParameteri64v": {
         "target": "BufferBinding"
     },
     "glGetBufferParameteri64vRobust": {
+        "target": "BufferBinding"
+    },
+    "glGetBufferParameteriv": {
+        "target": "BufferBinding"
+    },
+    "glGetBufferParameterivRobust": {
         "target": "BufferBinding"
     },
     "glGetBufferPointerv": {
@@ -305,16 +317,16 @@
         "texture": "TextureID"
     },
     "glGetLightfv": {
-        "pname" : "LightParameter"
+        "pname": "LightParameter"
     },
     "glGetLightxv": {
-        "pname" : "LightParameter"
+        "pname": "LightParameter"
     },
     "glGetMaterialfv": {
-        "pname" : "MaterialParameter"
+        "pname": "MaterialParameter"
     },
     "glGetMaterialxv": {
-        "pname" : "MaterialParameter"
+        "pname": "MaterialParameter"
     },
     "glGetNamedBufferParameteri64v": {
         "buffer": "BufferID"
@@ -349,29 +361,29 @@
     "glGetQueryivRobust": {
         "target": "QueryType"
     },
-    "glGetTextureImage": {
-        "texture": "TextureID"
+    "glGetSamplerParameterfv": {
+        "sampler": "SamplerID"
     },
-    "glGetTextureLevelParameterfv": {
-        "texture": "TextureID"
+    "glGetSamplerParameterfvRobust": {
+        "sampler": "SamplerID"
     },
-    "glGetTextureLevelParameteriv": {
-        "texture": "TextureID"
+    "glGetSamplerParameterIiv": {
+        "sampler": "SamplerID"
     },
-    "glGetTextureParameterIiv": {
-        "texture": "TextureID"
+    "glGetSamplerParameterIivRobust": {
+        "sampler": "SamplerID"
     },
-    "glGetTextureParameterIuiv": {
-        "texture": "TextureID"
+    "glGetSamplerParameterIuiv": {
+        "sampler": "SamplerID"
     },
-    "glGetTextureParameterfv": {
-        "texture": "TextureID"
+    "glGetSamplerParameterIuivRobust": {
+        "sampler": "SamplerID"
     },
-    "glGetTextureParameteriv": {
-        "texture": "TextureID"
+    "glGetSamplerParameteriv": {
+        "sampler": "SamplerID"
     },
-    "glGetTextureSubImage": {
-        "texture": "TextureID"
+    "glGetSamplerParameterivRobust": {
+        "sampler": "SamplerID"
     },
     "glGetTexEnvfv": {
         "target": "TextureEnvTarget",
@@ -403,26 +415,50 @@
     "glGetTexParameterfvRobust": {
         "target": "TextureType"
     },
+    "glGetTexParameterIiv": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterIivRobust": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterIuiv": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterIuivRobust": {
+        "target": "TextureType"
+    },
     "glGetTexParameteriv": {
         "target": "TextureType"
     },
     "glGetTexParameterivRobust": {
         "target": "TextureType"
     },
-    "glGetTexParameterIivRobust": {
-        "target": "TextureType"
-    },
-    "glGetTexParameterIuivRobust": {
-        "target": "TextureType"
-    },
-    "glGetTexParameterIiv": {
-        "target": "TextureType"
-    },
-    "glGetTexParameterIuiv": {
-        "target": "TextureType"
-    },
     "glGetTexParameterxv": {
         "target": "TextureType"
+    },
+    "glGetTextureImage": {
+        "texture": "TextureID"
+    },
+    "glGetTextureLevelParameterfv": {
+        "texture": "TextureID"
+    },
+    "glGetTextureLevelParameteriv": {
+        "texture": "TextureID"
+    },
+    "glGetTextureParameterfv": {
+        "texture": "TextureID"
+    },
+    "glGetTextureParameterIiv": {
+        "texture": "TextureID"
+    },
+    "glGetTextureParameterIuiv": {
+        "texture": "TextureID"
+    },
+    "glGetTextureParameteriv": {
+        "texture": "TextureID"
+    },
+    "glGetTextureSubImage": {
+        "texture": "TextureID"
     },
     "glImportMemoryFd": {
         "handleType": "HandleType"
@@ -436,14 +472,14 @@
     "glInvalidateBufferSubData": {
         "buffer": "BufferID"
     },
-    "glInvalidateTexture": {
-        "target": "TextureType"
-    },
     "glInvalidateTexImage": {
         "texture": "TextureID"
     },
     "glInvalidateTexSubImage": {
         "texture": "TextureID"
+    },
+    "glInvalidateTexture": {
+        "target": "TextureType"
     },
     "glIsBuffer": {
         "buffer": "BufferID"
@@ -451,27 +487,30 @@
     "glIsRenderbuffer": {
         "renderbuffer": "RenderbufferID"
     },
+    "glIsSampler": {
+        "sampler": "SamplerID"
+    },
     "glIsTexture": {
         "texture": "TextureID"
     },
-    "glLightf" : {
-        "pname" : "LightParameter"
+    "glLightf": {
+        "pname": "LightParameter"
     },
-    "glLightfv" : {
-        "pname" : "LightParameter"
+    "glLightfv": {
+        "pname": "LightParameter"
     },
-    "glLightx" : {
-        "pname" : "LightParameter"
+    "glLightx": {
+        "pname": "LightParameter"
     },
-    "glLightxv" : {
-        "pname" : "LightParameter"
+    "glLightxv": {
+        "pname": "LightParameter"
     },
-    "glLogicOp" : {
-        "opcode" : "LogicalOperation"
+    "glLogicOp": {
+        "opcode": "LogicalOperation"
     },
-    "glLoseContext" : {
-        "current" : "GraphicsResetStatus",
-        "other" : "GraphicsResetStatus"
+    "glLoseContext": {
+        "current": "GraphicsResetStatus",
+        "other": "GraphicsResetStatus"
     },
     "glMapBuffer": {
         "target": "BufferBinding"
@@ -517,6 +556,10 @@
         "mode": "PrimitiveMode",
         "type": "DrawElementsType"
     },
+    "glMultiDrawElementsInstancedBaseVertexBaseInstance": {
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
+    },
     "glNamedBufferData": {
         "buffer": "BufferID"
     },
@@ -541,27 +584,23 @@
     "glNamedRenderbufferStorageMultisample": {
         "renderbuffer": "RenderbufferID"
     },
-    "glMultiDrawElementsInstancedBaseVertexBaseInstance": {
-        "mode": "PrimitiveMode",
-        "type": "DrawElementsType"
-    },
     "glNormalPointer": {
         "type": "VertexAttribType"
     },
     "glPointParameterf": {
-        "pname" : "PointParameter"
+        "pname": "PointParameter"
     },
     "glPointParameterfv": {
-        "pname" : "PointParameter"
+        "pname": "PointParameter"
     },
     "glPointParameterx": {
-        "pname" : "PointParameter"
+        "pname": "PointParameter"
     },
     "glPointParameterxv": {
-        "pname" : "PointParameter"
+        "pname": "PointParameter"
     },
     "glPointSizePointer": {
-        "type" : "VertexAttribType"
+        "type": "VertexAttribType"
     },
     "glProvokingVertex": {
         "mode": "ProvokingVertexConvention"
@@ -569,30 +608,42 @@
     "glQueryCounter": {
         "target": "QueryType"
     },
+    "glSamplerParameterf": {
+        "sampler": "SamplerID"
+    },
+    "glSamplerParameterfv": {
+        "sampler": "SamplerID"
+    },
+    "glSamplerParameterfvRobust": {
+        "sampler": "SamplerID"
+    },
+    "glSamplerParameteri": {
+        "sampler": "SamplerID"
+    },
+    "glSamplerParameterIiv": {
+        "sampler": "SamplerID"
+    },
+    "glSamplerParameterIivRobust": {
+        "sampler": "SamplerID"
+    },
+    "glSamplerParameterIuiv": {
+        "sampler": "SamplerID"
+    },
+    "glSamplerParameterIuivRobust": {
+        "sampler": "SamplerID"
+    },
+    "glSamplerParameteriv": {
+        "sampler": "SamplerID"
+    },
+    "glSamplerParameterivRobust": {
+        "sampler": "SamplerID"
+    },
     "glShadeModel": {
         "mode": "ShadingModel"
     },
     "glSignalSemaphore": {
         "buffers": "const BufferID *",
         "textures": "const TextureID *"
-    },
-    "glTextureParameterIiv": {
-        "texture": "TextureID"
-    },
-    "glTextureParameterIuiv": {
-        "texture": "TextureID"
-    },
-    "glTextureParameterf": {
-        "texture": "TextureID"
-    },
-    "glTextureParameterfv": {
-        "texture": "TextureID"
-    },
-    "glTextureParameteri": {
-        "texture": "TextureID"
-    },
-    "glTextureParameteriv": {
-        "texture": "TextureID"
     },
     "glTexBuffer": {
         "buffer": "BufferID"
@@ -654,22 +705,22 @@
     "glTexParameteri": {
         "target": "TextureType"
     },
-    "glTexParameteriv": {
-        "target": "TextureType"
-    },
-    "glTexParameterivRobust": {
+    "glTexParameterIiv": {
         "target": "TextureType"
     },
     "glTexParameterIivRobust": {
         "target": "TextureType"
     },
+    "glTexParameterIuiv": {
+        "target": "TextureType"
+    },
     "glTexParameterIuivRobust": {
         "target": "TextureType"
     },
-    "glTexParameterIiv": {
+    "glTexParameteriv": {
         "target": "TextureType"
     },
-    "glTexParameterIuiv": {
+    "glTexParameterivRobust": {
         "target": "TextureType"
     },
     "glTexParameterx": {
@@ -677,6 +728,68 @@
     },
     "glTexParameterxv": {
         "target": "TextureType"
+    },
+    "glTexStorage2D": {
+        "target": "TextureType"
+    },
+    "glTexStorage2DMultisample": {
+        "target": "TextureType"
+    },
+    "glTexStorage3D": {
+        "target": "TextureType"
+    },
+    "glTexStorage3DMultisample": {
+        "target": "TextureType"
+    },
+    "glTexStorageMem2D": {
+        "target": "TextureType"
+    },
+    "glTexStorageMem2DMultisample": {
+        "target": "TextureType"
+    },
+    "glTexStorageMem3D": {
+        "target": "TextureType"
+    },
+    "glTexStorageMem3DMultisample": {
+        "target": "TextureType"
+    },
+    "glTexSubImage2D": {
+        "target": "TextureTarget"
+    },
+    "glTexSubImage2DRobust": {
+        "target": "TextureTarget"
+    },
+    "glTexSubImage3D": {
+        "target": "TextureTarget"
+    },
+    "glTexSubImage3DRobust": {
+        "target": "TextureTarget"
+    },
+    "glTextureBuffer": {
+        "buffer": "BufferID",
+        "texture": "TextureID"
+    },
+    "glTextureBufferRange": {
+        "buffer": "BufferID",
+        "texture": "TextureID"
+    },
+    "glTextureParameterf": {
+        "texture": "TextureID"
+    },
+    "glTextureParameterfv": {
+        "texture": "TextureID"
+    },
+    "glTextureParameteri": {
+        "texture": "TextureID"
+    },
+    "glTextureParameterIiv": {
+        "texture": "TextureID"
+    },
+    "glTextureParameterIuiv": {
+        "texture": "TextureID"
+    },
+    "glTextureParameteriv": {
+        "texture": "TextureID"
     },
     "glTextureStorage1D": {
         "texture": "TextureID"
@@ -702,51 +815,7 @@
     "glTextureSubImage3D": {
         "texture": "TextureID"
     },
-    "glTexStorage2D": {
-        "target": "TextureType"
-    },
-    "glTexStorage2DMultisample": {
-        "target": "TextureType"
-    },
-    "glTexStorage3DMultisample": {
-        "target": "TextureType"
-    },
-    "glTexStorageMem2D": {
-        "target": "TextureType"
-    },
-    "glTexStorageMem2DMultisample": {
-        "target": "TextureType"
-    },
-    "glTexStorageMem3D": {
-        "target": "TextureType"
-    },
-    "glTexStorageMem3DMultisample": {
-        "target": "TextureType"
-    },
-    "glBufferStorageMem": {
-        "target": "TextureType"
-    },
-    "glTexStorage3D": {
-        "target": "TextureType"
-    },
-    "glTexSubImage2D": {
-        "target": "TextureTarget"
-    },
-    "glTexSubImage2DRobust": {
-        "target": "TextureTarget"
-    },
-    "glTexSubImage3D": {
-        "target": "TextureTarget"
-    },
-    "glTexSubImage3DRobust": {
-        "target": "TextureTarget"
-    },
-    "glTextureBuffer": {
-        "buffer": "BufferID",
-        "texture": "TextureID"
-    },
-    "glTextureBufferRange": {
-        "buffer": "BufferID",
+    "glTextureView": {
         "texture": "TextureID"
     },
     "glTransformFeedbackBufferBase": {
@@ -754,9 +823,6 @@
     },
     "glTransformFeedbackBufferRange": {
         "buffer": "BufferID"
-    },
-    "glTextureView": {
-        "texture": "TextureID"
     },
     "glUnmapBuffer": {
         "target": "BufferBinding"
@@ -770,6 +836,9 @@
     "glVertexArrayVertexBuffer": {
         "buffer": "BufferID"
     },
+    "glVertexArrayVertexBuffers": {
+        "buffers": "const BufferID *"
+    },
     "glVertexAttribFormat": {
         "type": "VertexAttribType"
     },
@@ -781,9 +850,6 @@
     },
     "glVertexAttribPointer": {
         "type": "VertexAttribType"
-    },
-    "glVertexArrayVertexBuffers": {
-        "buffers": "const BufferID *"
     },
     "glVertexPointer": {
         "type": "VertexAttribType"

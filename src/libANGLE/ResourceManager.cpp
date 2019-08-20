@@ -109,7 +109,7 @@ template class TypedResourceManager<Renderbuffer,
                                     HandleAllocator,
                                     RenderbufferManager,
                                     RenderbufferID>;
-template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager, GLuint>;
+template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager, SamplerID>;
 template class TypedResourceManager<Sync, HandleAllocator, SyncManager, GLuint>;
 template class TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager, GLuint>;
 template class TypedResourceManager<ProgramPipeline,
@@ -293,7 +293,7 @@ Renderbuffer *RenderbufferManager::getRenderbuffer(RenderbufferID handle) const
 // SamplerManager Implementation.
 
 // static
-Sampler *SamplerManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint handle)
+Sampler *SamplerManager::AllocateNewObject(rx::GLImplFactory *factory, SamplerID handle)
 {
     Sampler *sampler = new Sampler(factory, handle);
     sampler->addRef();
@@ -306,17 +306,17 @@ void SamplerManager::DeleteObject(const Context *context, Sampler *sampler)
     sampler->release(context);
 }
 
-GLuint SamplerManager::createSampler()
+SamplerID SamplerManager::createSampler()
 {
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
-Sampler *SamplerManager::getSampler(GLuint handle) const
+Sampler *SamplerManager::getSampler(SamplerID handle) const
 {
     return mObjectMap.query(handle);
 }
 
-bool SamplerManager::isSampler(GLuint sampler) const
+bool SamplerManager::isSampler(SamplerID sampler) const
 {
     return mObjectMap.contains(sampler);
 }

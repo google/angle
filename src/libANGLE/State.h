@@ -249,7 +249,7 @@ class State : angle::NonCopyable
     using SamplerBindingVector = std::vector<BindingPointer<Sampler>>;
     const SamplerBindingVector &getSamplers() const { return mSamplers; }
 
-    void detachSampler(const Context *context, GLuint sampler);
+    void detachSampler(const Context *context, SamplerID sampler);
 
     // Renderbuffer binding manipulation
     void setRenderbufferBinding(const Context *context, Renderbuffer *renderbuffer);

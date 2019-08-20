@@ -82,12 +82,12 @@ CallCapture CaptureBindBufferRange(const Context *context,
 CallCapture CaptureBindSampler(const Context *context,
                                bool isCallValid,
                                GLuint unit,
-                               GLuint sampler)
+                               SamplerID samplerPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("unit", ParamType::TGLuint, unit);
-    paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
+    paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
 
     return CallCapture(gl::EntryPoint::BindSampler, std::move(paramBuffer));
 }
@@ -375,16 +375,17 @@ CallCapture CaptureDeleteQueries(const Context *context,
 CallCapture CaptureDeleteSamplers(const Context *context,
                                   bool isCallValid,
                                   GLsizei count,
-                                  const GLuint *samplers)
+                                  const SamplerID *samplersPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
-    ParamCapture samplersParam("samplers", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, samplers, &samplersParam.value);
-    CaptureDeleteSamplers_samplers(context, isCallValid, count, samplers, &samplersParam);
-    paramBuffer.addParam(std::move(samplersParam));
+    ParamCapture samplersPackedParam("samplersPacked", ParamType::TSamplerIDConstPointer);
+    InitParamValue(ParamType::TSamplerIDConstPointer, samplersPacked, &samplersPackedParam.value);
+    CaptureDeleteSamplers_samplersPacked(context, isCallValid, count, samplersPacked,
+                                         &samplersPackedParam);
+    paramBuffer.addParam(std::move(samplersPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteSamplers, std::move(paramBuffer));
 }
@@ -604,16 +605,17 @@ CallCapture CaptureGenQueries(const Context *context, bool isCallValid, GLsizei 
 CallCapture CaptureGenSamplers(const Context *context,
                                bool isCallValid,
                                GLsizei count,
-                               GLuint *samplers)
+                               SamplerID *samplersPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
-    ParamCapture samplersParam("samplers", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, samplers, &samplersParam.value);
-    CaptureGenSamplers_samplers(context, isCallValid, count, samplers, &samplersParam);
-    paramBuffer.addParam(std::move(samplersParam));
+    ParamCapture samplersPackedParam("samplersPacked", ParamType::TSamplerIDPointer);
+    InitParamValue(ParamType::TSamplerIDPointer, samplersPacked, &samplersPackedParam.value);
+    CaptureGenSamplers_samplersPacked(context, isCallValid, count, samplersPacked,
+                                      &samplersPackedParam);
+    paramBuffer.addParam(std::move(samplersPackedParam));
 
     return CallCapture(gl::EntryPoint::GenSamplers, std::move(paramBuffer));
 }
@@ -951,18 +953,19 @@ CallCapture CaptureGetQueryiv(const Context *context,
 
 CallCapture CaptureGetSamplerParameterfv(const Context *context,
                                          bool isCallValid,
-                                         GLuint sampler,
+                                         SamplerID samplerPacked,
                                          GLenum pname,
                                          GLfloat *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
+    paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::SamplerParameterName, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-    CaptureGetSamplerParameterfv_params(context, isCallValid, sampler, pname, params, &paramsParam);
+    CaptureGetSamplerParameterfv_params(context, isCallValid, samplerPacked, pname, params,
+                                        &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetSamplerParameterfv, std::move(paramBuffer));
@@ -970,18 +973,19 @@ CallCapture CaptureGetSamplerParameterfv(const Context *context,
 
 CallCapture CaptureGetSamplerParameteriv(const Context *context,
                                          bool isCallValid,
-                                         GLuint sampler,
+                                         SamplerID samplerPacked,
                                          GLenum pname,
                                          GLint *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
+    paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::SamplerParameterName, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetSamplerParameteriv_params(context, isCallValid, sampler, pname, params, &paramsParam);
+    CaptureGetSamplerParameteriv_params(context, isCallValid, samplerPacked, pname, params,
+                                        &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetSamplerParameteriv, std::move(paramBuffer));
@@ -1252,12 +1256,12 @@ CallCapture CaptureIsQuery(const Context *context,
 
 CallCapture CaptureIsSampler(const Context *context,
                              bool isCallValid,
-                             GLuint sampler,
+                             SamplerID samplerPacked,
                              GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
+    paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
@@ -1422,13 +1426,13 @@ CallCapture CaptureResumeTransformFeedback(const Context *context, bool isCallVa
 
 CallCapture CaptureSamplerParameterf(const Context *context,
                                      bool isCallValid,
-                                     GLuint sampler,
+                                     SamplerID samplerPacked,
                                      GLenum pname,
                                      GLfloat param)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
+    paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::SamplerParameterName, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLfloat, param);
 
@@ -1437,18 +1441,18 @@ CallCapture CaptureSamplerParameterf(const Context *context,
 
 CallCapture CaptureSamplerParameterfv(const Context *context,
                                       bool isCallValid,
-                                      GLuint sampler,
+                                      SamplerID samplerPacked,
                                       GLenum pname,
                                       const GLfloat *param)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
+    paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::SamplerParameterName, ParamType::TGLenum, pname);
 
     ParamCapture paramParam("param", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, param, &paramParam.value);
-    CaptureSamplerParameterfv_param(context, isCallValid, sampler, pname, param, &paramParam);
+    CaptureSamplerParameterfv_param(context, isCallValid, samplerPacked, pname, param, &paramParam);
     paramBuffer.addParam(std::move(paramParam));
 
     return CallCapture(gl::EntryPoint::SamplerParameterfv, std::move(paramBuffer));
@@ -1456,13 +1460,13 @@ CallCapture CaptureSamplerParameterfv(const Context *context,
 
 CallCapture CaptureSamplerParameteri(const Context *context,
                                      bool isCallValid,
-                                     GLuint sampler,
+                                     SamplerID samplerPacked,
                                      GLenum pname,
                                      GLint param)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
+    paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::SamplerParameterName, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLint, param);
 
@@ -1471,18 +1475,18 @@ CallCapture CaptureSamplerParameteri(const Context *context,
 
 CallCapture CaptureSamplerParameteriv(const Context *context,
                                       bool isCallValid,
-                                      GLuint sampler,
+                                      SamplerID samplerPacked,
                                       GLenum pname,
                                       const GLint *param)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
+    paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::SamplerParameterName, ParamType::TGLenum, pname);
 
     ParamCapture paramParam("param", ParamType::TGLintConstPointer);
     InitParamValue(ParamType::TGLintConstPointer, param, &paramParam.value);
-    CaptureSamplerParameteriv_param(context, isCallValid, sampler, pname, param, &paramParam);
+    CaptureSamplerParameteriv_param(context, isCallValid, samplerPacked, pname, param, &paramParam);
     paramBuffer.addParam(std::move(paramParam));
 
     return CallCapture(gl::EntryPoint::SamplerParameteriv, std::move(paramBuffer));

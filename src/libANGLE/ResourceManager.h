@@ -220,19 +220,20 @@ class RenderbufferManager : public TypedResourceManager<Renderbuffer,
     ~RenderbufferManager() override {}
 };
 
-class SamplerManager : public TypedResourceManager<Sampler, HandleAllocator, SamplerManager>
+class SamplerManager
+    : public TypedResourceManager<Sampler, HandleAllocator, SamplerManager, SamplerID>
 {
   public:
-    GLuint createSampler();
-    Sampler *getSampler(GLuint handle) const;
-    bool isSampler(GLuint sampler) const;
+    SamplerID createSampler();
+    Sampler *getSampler(SamplerID handle) const;
+    bool isSampler(SamplerID sampler) const;
 
-    Sampler *checkSamplerAllocation(rx::GLImplFactory *factory, GLuint handle)
+    Sampler *checkSamplerAllocation(rx::GLImplFactory *factory, SamplerID handle)
     {
         return checkObjectAllocation(factory, handle);
     }
 
-    static Sampler *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
+    static Sampler *AllocateNewObject(rx::GLImplFactory *factory, SamplerID handle);
     static void DeleteObject(const Context *context, Sampler *sampler);
 
   protected:

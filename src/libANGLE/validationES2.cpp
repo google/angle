@@ -2420,7 +2420,7 @@ static bool ValidateObjectIdentifierAndName(Context *context, GLenum identifier,
             return true;
 
         case GL_SAMPLER:
-            if (context->getSampler(name) == nullptr)
+            if (context->getSampler({name}) == nullptr)
             {
                 context->validationError(GL_INVALID_VALUE, kInvalidSamplerName);
                 return false;

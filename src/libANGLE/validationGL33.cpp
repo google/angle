@@ -55,12 +55,18 @@ bool ValidateGetQueryObjectui64v(Context *context, GLuint id, GLenum pname, GLui
     return true;
 }
 
-bool ValidateGetSamplerParameterIiv(Context *context, GLuint sampler, GLenum pname, GLint *params)
+bool ValidateGetSamplerParameterIiv(Context *context,
+                                    SamplerID sampler,
+                                    GLenum pname,
+                                    GLint *params)
 {
     return true;
 }
 
-bool ValidateGetSamplerParameterIuiv(Context *context, GLuint sampler, GLenum pname, GLuint *params)
+bool ValidateGetSamplerParameterIuiv(Context *context,
+                                     SamplerID sampler,
+                                     GLenum pname,
+                                     GLuint *params)
 {
     return true;
 }
@@ -120,13 +126,16 @@ bool ValidateQueryCounter(Context *context, GLuint id, QueryType targetPacked)
     return true;
 }
 
-bool ValidateSamplerParameterIiv(Context *context, GLuint sampler, GLenum pname, const GLint *param)
+bool ValidateSamplerParameterIiv(Context *context,
+                                 SamplerID sampler,
+                                 GLenum pname,
+                                 const GLint *param)
 {
     return true;
 }
 
 bool ValidateSamplerParameterIuiv(Context *context,
-                                  GLuint sampler,
+                                  SamplerID sampler,
                                   GLenum pname,
                                   const GLuint *param)
 {

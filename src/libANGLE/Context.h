@@ -377,7 +377,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Framebuffer *getFramebuffer(GLuint handle) const;
     Renderbuffer *getRenderbuffer(RenderbufferID handle) const;
     VertexArray *getVertexArray(GLuint handle) const;
-    Sampler *getSampler(GLuint handle) const;
+    Sampler *getSampler(SamplerID handle) const;
     Query *getQuery(GLuint handle, bool create, QueryType type);
     Query *getQuery(GLuint handle) const;
     TransformFeedback *getTransformFeedback(GLuint handle) const;
@@ -596,7 +596,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void detachRenderbuffer(RenderbufferID renderbuffer);
     void detachVertexArray(GLuint vertexArray);
     void detachTransformFeedback(GLuint transformFeedback);
-    void detachSampler(GLuint sampler);
+    void detachSampler(SamplerID sampler);
     void detachProgramPipeline(GLuint pipeline);
 
     // A small helper method to facilitate using the ANGLE_CONTEXT_TRY macro.

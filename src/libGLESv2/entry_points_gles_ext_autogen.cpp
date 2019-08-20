@@ -1746,16 +1746,17 @@ void GL_APIENTRY SamplerParameterivRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateSamplerParameterivRobustANGLE(context, sampler, pname, bufSize, param));
+             ValidateSamplerParameterivRobustANGLE(context, samplerPacked, pname, bufSize, param));
         if (isCallValid)
         {
-            context->samplerParameterivRobust(sampler, pname, bufSize, param);
+            context->samplerParameterivRobust(samplerPacked, pname, bufSize, param);
         }
-        ANGLE_CAPTURE(SamplerParameterivRobustANGLE, isCallValid, context, sampler, pname, bufSize,
-                      param);
+        ANGLE_CAPTURE(SamplerParameterivRobustANGLE, isCallValid, context, samplerPacked, pname,
+                      bufSize, param);
     }
 }
 
@@ -1772,16 +1773,17 @@ void GL_APIENTRY SamplerParameterfvRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateSamplerParameterfvRobustANGLE(context, sampler, pname, bufSize, param));
+             ValidateSamplerParameterfvRobustANGLE(context, samplerPacked, pname, bufSize, param));
         if (isCallValid)
         {
-            context->samplerParameterfvRobust(sampler, pname, bufSize, param);
+            context->samplerParameterfvRobust(samplerPacked, pname, bufSize, param);
         }
-        ANGLE_CAPTURE(SamplerParameterfvRobustANGLE, isCallValid, context, sampler, pname, bufSize,
-                      param);
+        ANGLE_CAPTURE(SamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked, pname,
+                      bufSize, param);
     }
 }
 
@@ -1800,15 +1802,16 @@ void GL_APIENTRY GetSamplerParameterivRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetSamplerParameterivRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetSamplerParameterivRobustANGLE(context, samplerPacked, pname,
+                                                                     bufSize, length, params));
         if (isCallValid)
         {
-            context->getSamplerParameterivRobust(sampler, pname, bufSize, length, params);
+            context->getSamplerParameterivRobust(samplerPacked, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterivRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(GetSamplerParameterivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
     }
 }
@@ -1828,15 +1831,16 @@ void GL_APIENTRY GetSamplerParameterfvRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetSamplerParameterfvRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetSamplerParameterfvRobustANGLE(context, samplerPacked, pname,
+                                                                     bufSize, length, params));
         if (isCallValid)
         {
-            context->getSamplerParameterfvRobust(sampler, pname, bufSize, length, params);
+            context->getSamplerParameterfvRobust(samplerPacked, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterfvRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(GetSamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
     }
 }
@@ -2296,16 +2300,17 @@ void GL_APIENTRY SamplerParameterIivRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateSamplerParameterIivRobustANGLE(context, sampler, pname, bufSize, param));
+             ValidateSamplerParameterIivRobustANGLE(context, samplerPacked, pname, bufSize, param));
         if (isCallValid)
         {
-            context->samplerParameterIivRobust(sampler, pname, bufSize, param);
+            context->samplerParameterIivRobust(samplerPacked, pname, bufSize, param);
         }
-        ANGLE_CAPTURE(SamplerParameterIivRobustANGLE, isCallValid, context, sampler, pname, bufSize,
-                      param);
+        ANGLE_CAPTURE(SamplerParameterIivRobustANGLE, isCallValid, context, samplerPacked, pname,
+                      bufSize, param);
     }
 }
 
@@ -2322,15 +2327,16 @@ void GL_APIENTRY SamplerParameterIuivRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() ||
-             ValidateSamplerParameterIuivRobustANGLE(context, sampler, pname, bufSize, param));
+            (context->skipValidation() || ValidateSamplerParameterIuivRobustANGLE(
+                                              context, samplerPacked, pname, bufSize, param));
         if (isCallValid)
         {
-            context->samplerParameterIuivRobust(sampler, pname, bufSize, param);
+            context->samplerParameterIuivRobust(samplerPacked, pname, bufSize, param);
         }
-        ANGLE_CAPTURE(SamplerParameterIuivRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(SamplerParameterIuivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
     }
 }
@@ -2350,15 +2356,16 @@ void GL_APIENTRY GetSamplerParameterIivRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetSamplerParameterIivRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetSamplerParameterIivRobustANGLE(context, samplerPacked, pname,
+                                                                      bufSize, length, params));
         if (isCallValid)
         {
-            context->getSamplerParameterIivRobust(sampler, pname, bufSize, length, params);
+            context->getSamplerParameterIivRobust(samplerPacked, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterIivRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(GetSamplerParameterIivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
     }
 }
@@ -2378,16 +2385,17 @@ void GL_APIENTRY GetSamplerParameterIuivRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetSamplerParameterIuivRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetSamplerParameterIuivRobustANGLE(
+                                context, samplerPacked, pname, bufSize, length, params));
         if (isCallValid)
         {
-            context->getSamplerParameterIuivRobust(sampler, pname, bufSize, length, params);
+            context->getSamplerParameterIuivRobust(samplerPacked, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterIuivRobustANGLE, isCallValid, context, sampler, pname,
-                      bufSize, length, params);
+        ANGLE_CAPTURE(GetSamplerParameterIuivRobustANGLE, isCallValid, context, samplerPacked,
+                      pname, bufSize, length, params);
     }
 }
 
@@ -6292,14 +6300,17 @@ void GL_APIENTRY GetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetSamplerParameterIivOES(context, sampler, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetSamplerParameterIivOES(context, samplerPacked, pname, params));
         if (isCallValid)
         {
-            context->getSamplerParameterIiv(sampler, pname, params);
+            context->getSamplerParameterIiv(samplerPacked, pname, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterIivOES, isCallValid, context, sampler, pname, params);
+        ANGLE_CAPTURE(GetSamplerParameterIivOES, isCallValid, context, samplerPacked, pname,
+                      params);
     }
 }
 
@@ -6311,14 +6322,17 @@ void GL_APIENTRY GetSamplerParameterIuivOES(GLuint sampler, GLenum pname, GLuint
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetSamplerParameterIuivOES(context, sampler, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetSamplerParameterIuivOES(context, samplerPacked, pname, params));
         if (isCallValid)
         {
-            context->getSamplerParameterIuiv(sampler, pname, params);
+            context->getSamplerParameterIuiv(samplerPacked, pname, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterIuivOES, isCallValid, context, sampler, pname, params);
+        ANGLE_CAPTURE(GetSamplerParameterIuivOES, isCallValid, context, samplerPacked, pname,
+                      params);
     }
 }
 
@@ -6372,14 +6386,15 @@ void GL_APIENTRY SamplerParameterIivOES(GLuint sampler, GLenum pname, const GLin
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateSamplerParameterIivOES(context, sampler, pname, param));
+                            ValidateSamplerParameterIivOES(context, samplerPacked, pname, param));
         if (isCallValid)
         {
-            context->samplerParameterIiv(sampler, pname, param);
+            context->samplerParameterIiv(samplerPacked, pname, param);
         }
-        ANGLE_CAPTURE(SamplerParameterIivOES, isCallValid, context, sampler, pname, param);
+        ANGLE_CAPTURE(SamplerParameterIivOES, isCallValid, context, samplerPacked, pname, param);
     }
 }
 
@@ -6391,14 +6406,15 @@ void GL_APIENTRY SamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLu
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateSamplerParameterIuivOES(context, sampler, pname, param));
+                            ValidateSamplerParameterIuivOES(context, samplerPacked, pname, param));
         if (isCallValid)
         {
-            context->samplerParameterIuiv(sampler, pname, param);
+            context->samplerParameterIuiv(samplerPacked, pname, param);
         }
-        ANGLE_CAPTURE(SamplerParameterIuivOES, isCallValid, context, sampler, pname, param);
+        ANGLE_CAPTURE(SamplerParameterIuivOES, isCallValid, context, samplerPacked, pname, param);
     }
 }
 
@@ -7237,14 +7253,15 @@ void GL_APIENTRY BindSamplerContextANGLE(GLeglContext ctx, GLuint unit, GLuint s
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBindSampler(context, unit, sampler));
+            (context->skipValidation() || ValidateBindSampler(context, unit, samplerPacked));
         if (isCallValid)
         {
-            context->bindSampler(unit, sampler);
+            context->bindSampler(unit, samplerPacked);
         }
-        ANGLE_CAPTURE(BindSampler, isCallValid, context, unit, sampler);
+        ANGLE_CAPTURE(BindSampler, isCallValid, context, unit, samplerPacked);
     }
 }
 
@@ -9010,14 +9027,15 @@ void GL_APIENTRY DeleteSamplersContextANGLE(GLeglContext ctx, GLsizei count, con
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        const SamplerID *samplersPacked               = FromGL<const SamplerID *>(samplers);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateDeleteSamplers(context, count, samplers));
+            (context->skipValidation() || ValidateDeleteSamplers(context, count, samplersPacked));
         if (isCallValid)
         {
-            context->deleteSamplers(count, samplers);
+            context->deleteSamplers(count, samplersPacked);
         }
-        ANGLE_CAPTURE(DeleteSamplers, isCallValid, context, count, samplers);
+        ANGLE_CAPTURE(DeleteSamplers, isCallValid, context, count, samplersPacked);
     }
 }
 
@@ -10810,14 +10828,15 @@ void GL_APIENTRY GenSamplersContextANGLE(GLeglContext ctx, GLsizei count, GLuint
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID *samplersPacked                     = FromGL<SamplerID *>(samplers);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGenSamplers(context, count, samplers));
+            (context->skipValidation() || ValidateGenSamplers(context, count, samplersPacked));
         if (isCallValid)
         {
-            context->genSamplers(count, samplers);
+            context->genSamplers(count, samplersPacked);
         }
-        ANGLE_CAPTURE(GenSamplers, isCallValid, context, count, samplers);
+        ANGLE_CAPTURE(GenSamplers, isCallValid, context, count, samplersPacked);
     }
 }
 
@@ -12613,14 +12632,17 @@ void GL_APIENTRY GetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetSamplerParameterIivOES(context, sampler, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetSamplerParameterIivOES(context, samplerPacked, pname, params));
         if (isCallValid)
         {
-            context->getSamplerParameterIiv(sampler, pname, params);
+            context->getSamplerParameterIiv(samplerPacked, pname, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterIivOES, isCallValid, context, sampler, pname, params);
+        ANGLE_CAPTURE(GetSamplerParameterIivOES, isCallValid, context, samplerPacked, pname,
+                      params);
     }
 }
 
@@ -12636,14 +12658,17 @@ void GL_APIENTRY GetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetSamplerParameterIuivOES(context, sampler, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetSamplerParameterIuivOES(context, samplerPacked, pname, params));
         if (isCallValid)
         {
-            context->getSamplerParameterIuiv(sampler, pname, params);
+            context->getSamplerParameterIuiv(samplerPacked, pname, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterIuivOES, isCallValid, context, sampler, pname, params);
+        ANGLE_CAPTURE(GetSamplerParameterIuivOES, isCallValid, context, samplerPacked, pname,
+                      params);
     }
 }
 
@@ -12659,14 +12684,15 @@ void GL_APIENTRY GetSamplerParameterfvContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetSamplerParameterfv(context, sampler, pname, params));
+                            ValidateGetSamplerParameterfv(context, samplerPacked, pname, params));
         if (isCallValid)
         {
-            context->getSamplerParameterfv(sampler, pname, params);
+            context->getSamplerParameterfv(samplerPacked, pname, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterfv, isCallValid, context, sampler, pname, params);
+        ANGLE_CAPTURE(GetSamplerParameterfv, isCallValid, context, samplerPacked, pname, params);
     }
 }
 
@@ -12682,14 +12708,15 @@ void GL_APIENTRY GetSamplerParameterivContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetSamplerParameteriv(context, sampler, pname, params));
+                            ValidateGetSamplerParameteriv(context, samplerPacked, pname, params));
         if (isCallValid)
         {
-            context->getSamplerParameteriv(sampler, pname, params);
+            context->getSamplerParameteriv(samplerPacked, pname, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameteriv, isCallValid, context, sampler, pname, params);
+        ANGLE_CAPTURE(GetSamplerParameteriv, isCallValid, context, samplerPacked, pname, params);
     }
 }
 
@@ -14207,17 +14234,18 @@ GLboolean GL_APIENTRY IsSamplerContextANGLE(GLeglContext ctx, GLuint sampler)
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateIsSampler(context, sampler));
+        bool isCallValid = (context->skipValidation() || ValidateIsSampler(context, samplerPacked));
         if (isCallValid)
         {
-            returnValue = context->isSampler(sampler);
+            returnValue = context->isSampler(samplerPacked);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
         }
-        ANGLE_CAPTURE(IsSampler, isCallValid, context, sampler, returnValue);
+        ANGLE_CAPTURE(IsSampler, isCallValid, context, samplerPacked, returnValue);
     }
     else
     {
@@ -16989,14 +17017,15 @@ void GL_APIENTRY SamplerParameterIivOESContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateSamplerParameterIivOES(context, sampler, pname, param));
+                            ValidateSamplerParameterIivOES(context, samplerPacked, pname, param));
         if (isCallValid)
         {
-            context->samplerParameterIiv(sampler, pname, param);
+            context->samplerParameterIiv(samplerPacked, pname, param);
         }
-        ANGLE_CAPTURE(SamplerParameterIivOES, isCallValid, context, sampler, pname, param);
+        ANGLE_CAPTURE(SamplerParameterIivOES, isCallValid, context, samplerPacked, pname, param);
     }
 }
 
@@ -17012,14 +17041,15 @@ void GL_APIENTRY SamplerParameterIuivOESContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateSamplerParameterIuivOES(context, sampler, pname, param));
+                            ValidateSamplerParameterIuivOES(context, samplerPacked, pname, param));
         if (isCallValid)
         {
-            context->samplerParameterIuiv(sampler, pname, param);
+            context->samplerParameterIuiv(samplerPacked, pname, param);
         }
-        ANGLE_CAPTURE(SamplerParameterIuivOES, isCallValid, context, sampler, pname, param);
+        ANGLE_CAPTURE(SamplerParameterIuivOES, isCallValid, context, samplerPacked, pname, param);
     }
 }
 
@@ -17035,14 +17065,15 @@ void GL_APIENTRY SamplerParameterfContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateSamplerParameterf(context, sampler, pname, param));
+                            ValidateSamplerParameterf(context, samplerPacked, pname, param));
         if (isCallValid)
         {
-            context->samplerParameterf(sampler, pname, param);
+            context->samplerParameterf(samplerPacked, pname, param);
         }
-        ANGLE_CAPTURE(SamplerParameterf, isCallValid, context, sampler, pname, param);
+        ANGLE_CAPTURE(SamplerParameterf, isCallValid, context, samplerPacked, pname, param);
     }
 }
 
@@ -17058,14 +17089,15 @@ void GL_APIENTRY SamplerParameterfvContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateSamplerParameterfv(context, sampler, pname, param));
+                            ValidateSamplerParameterfv(context, samplerPacked, pname, param));
         if (isCallValid)
         {
-            context->samplerParameterfv(sampler, pname, param);
+            context->samplerParameterfv(samplerPacked, pname, param);
         }
-        ANGLE_CAPTURE(SamplerParameterfv, isCallValid, context, sampler, pname, param);
+        ANGLE_CAPTURE(SamplerParameterfv, isCallValid, context, samplerPacked, pname, param);
     }
 }
 
@@ -17081,14 +17113,15 @@ void GL_APIENTRY SamplerParameteriContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateSamplerParameteri(context, sampler, pname, param));
+                            ValidateSamplerParameteri(context, samplerPacked, pname, param));
         if (isCallValid)
         {
-            context->samplerParameteri(sampler, pname, param);
+            context->samplerParameteri(samplerPacked, pname, param);
         }
-        ANGLE_CAPTURE(SamplerParameteri, isCallValid, context, sampler, pname, param);
+        ANGLE_CAPTURE(SamplerParameteri, isCallValid, context, samplerPacked, pname, param);
     }
 }
 
@@ -17104,14 +17137,15 @@ void GL_APIENTRY SamplerParameterivContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateSamplerParameteriv(context, sampler, pname, param));
+                            ValidateSamplerParameteriv(context, samplerPacked, pname, param));
         if (isCallValid)
         {
-            context->samplerParameteriv(sampler, pname, param);
+            context->samplerParameteriv(samplerPacked, pname, param);
         }
-        ANGLE_CAPTURE(SamplerParameteriv, isCallValid, context, sampler, pname, param);
+        ANGLE_CAPTURE(SamplerParameteriv, isCallValid, context, samplerPacked, pname, param);
     }
 }
 
@@ -22300,16 +22334,17 @@ void GL_APIENTRY SamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateSamplerParameterivRobustANGLE(context, sampler, pname, bufSize, param));
+             ValidateSamplerParameterivRobustANGLE(context, samplerPacked, pname, bufSize, param));
         if (isCallValid)
         {
-            context->samplerParameterivRobust(sampler, pname, bufSize, param);
+            context->samplerParameterivRobust(samplerPacked, pname, bufSize, param);
         }
-        ANGLE_CAPTURE(SamplerParameterivRobustANGLE, isCallValid, context, sampler, pname, bufSize,
-                      param);
+        ANGLE_CAPTURE(SamplerParameterivRobustANGLE, isCallValid, context, samplerPacked, pname,
+                      bufSize, param);
     }
 }
 
@@ -22328,16 +22363,17 @@ void GL_APIENTRY SamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateSamplerParameterfvRobustANGLE(context, sampler, pname, bufSize, param));
+             ValidateSamplerParameterfvRobustANGLE(context, samplerPacked, pname, bufSize, param));
         if (isCallValid)
         {
-            context->samplerParameterfvRobust(sampler, pname, bufSize, param);
+            context->samplerParameterfvRobust(samplerPacked, pname, bufSize, param);
         }
-        ANGLE_CAPTURE(SamplerParameterfvRobustANGLE, isCallValid, context, sampler, pname, bufSize,
-                      param);
+        ANGLE_CAPTURE(SamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked, pname,
+                      bufSize, param);
     }
 }
 
@@ -22358,15 +22394,16 @@ void GL_APIENTRY GetSamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetSamplerParameterivRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetSamplerParameterivRobustANGLE(context, samplerPacked, pname,
+                                                                     bufSize, length, params));
         if (isCallValid)
         {
-            context->getSamplerParameterivRobust(sampler, pname, bufSize, length, params);
+            context->getSamplerParameterivRobust(samplerPacked, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterivRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(GetSamplerParameterivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
     }
 }
@@ -22388,15 +22425,16 @@ void GL_APIENTRY GetSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetSamplerParameterfvRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetSamplerParameterfvRobustANGLE(context, samplerPacked, pname,
+                                                                     bufSize, length, params));
         if (isCallValid)
         {
-            context->getSamplerParameterfvRobust(sampler, pname, bufSize, length, params);
+            context->getSamplerParameterfvRobust(samplerPacked, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterfvRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(GetSamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
     }
 }
@@ -22888,16 +22926,17 @@ void GL_APIENTRY SamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateSamplerParameterIivRobustANGLE(context, sampler, pname, bufSize, param));
+             ValidateSamplerParameterIivRobustANGLE(context, samplerPacked, pname, bufSize, param));
         if (isCallValid)
         {
-            context->samplerParameterIivRobust(sampler, pname, bufSize, param);
+            context->samplerParameterIivRobust(samplerPacked, pname, bufSize, param);
         }
-        ANGLE_CAPTURE(SamplerParameterIivRobustANGLE, isCallValid, context, sampler, pname, bufSize,
-                      param);
+        ANGLE_CAPTURE(SamplerParameterIivRobustANGLE, isCallValid, context, samplerPacked, pname,
+                      bufSize, param);
     }
 }
 
@@ -22916,15 +22955,16 @@ void GL_APIENTRY SamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() ||
-             ValidateSamplerParameterIuivRobustANGLE(context, sampler, pname, bufSize, param));
+            (context->skipValidation() || ValidateSamplerParameterIuivRobustANGLE(
+                                              context, samplerPacked, pname, bufSize, param));
         if (isCallValid)
         {
-            context->samplerParameterIuivRobust(sampler, pname, bufSize, param);
+            context->samplerParameterIuivRobust(samplerPacked, pname, bufSize, param);
         }
-        ANGLE_CAPTURE(SamplerParameterIuivRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(SamplerParameterIuivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
     }
 }
@@ -22946,15 +22986,16 @@ void GL_APIENTRY GetSamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetSamplerParameterIivRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetSamplerParameterIivRobustANGLE(context, samplerPacked, pname,
+                                                                      bufSize, length, params));
         if (isCallValid)
         {
-            context->getSamplerParameterIivRobust(sampler, pname, bufSize, length, params);
+            context->getSamplerParameterIivRobust(samplerPacked, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterIivRobustANGLE, isCallValid, context, sampler, pname,
+        ANGLE_CAPTURE(GetSamplerParameterIivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
     }
 }
@@ -22976,16 +23017,17 @@ void GL_APIENTRY GetSamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        SamplerID samplerPacked                       = FromGL<SamplerID>(sampler);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetSamplerParameterIuivRobustANGLE(
-                                              context, sampler, pname, bufSize, length, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetSamplerParameterIuivRobustANGLE(
+                                context, samplerPacked, pname, bufSize, length, params));
         if (isCallValid)
         {
-            context->getSamplerParameterIuivRobust(sampler, pname, bufSize, length, params);
+            context->getSamplerParameterIuivRobust(samplerPacked, pname, bufSize, length, params);
         }
-        ANGLE_CAPTURE(GetSamplerParameterIuivRobustANGLE, isCallValid, context, sampler, pname,
-                      bufSize, length, params);
+        ANGLE_CAPTURE(GetSamplerParameterIuivRobustANGLE, isCallValid, context, samplerPacked,
+                      pname, bufSize, length, params);
     }
 }
 

@@ -4558,7 +4558,7 @@ bool ValidateTexParameterIuivRobustANGLE(Context *context,
 }
 
 bool ValidateGetSamplerParameterfvRobustANGLE(Context *context,
-                                              GLuint sampler,
+                                              SamplerID sampler,
                                               GLenum pname,
                                               GLsizei bufSize,
                                               GLsizei *length,
@@ -4586,7 +4586,7 @@ bool ValidateGetSamplerParameterfvRobustANGLE(Context *context,
 }
 
 bool ValidateGetSamplerParameterivRobustANGLE(Context *context,
-                                              GLuint sampler,
+                                              SamplerID sampler,
                                               GLenum pname,
                                               GLsizei bufSize,
                                               GLsizei *length,
@@ -4614,7 +4614,7 @@ bool ValidateGetSamplerParameterivRobustANGLE(Context *context,
 }
 
 bool ValidateGetSamplerParameterIivRobustANGLE(Context *context,
-                                               GLuint sampler,
+                                               SamplerID sampler,
                                                GLenum pname,
                                                GLsizei bufSize,
                                                GLsizei *length,
@@ -4625,7 +4625,7 @@ bool ValidateGetSamplerParameterIivRobustANGLE(Context *context,
 }
 
 bool ValidateGetSamplerParameterIuivRobustANGLE(Context *context,
-                                                GLuint sampler,
+                                                SamplerID sampler,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
@@ -4636,7 +4636,7 @@ bool ValidateGetSamplerParameterIuivRobustANGLE(Context *context,
 }
 
 bool ValidateSamplerParameterfvRobustANGLE(Context *context,
-                                           GLuint sampler,
+                                           SamplerID sampler,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            const GLfloat *params)
@@ -4650,7 +4650,7 @@ bool ValidateSamplerParameterfvRobustANGLE(Context *context,
 }
 
 bool ValidateSamplerParameterivRobustANGLE(Context *context,
-                                           GLuint sampler,
+                                           SamplerID sampler,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            const GLint *params)
@@ -4664,7 +4664,7 @@ bool ValidateSamplerParameterivRobustANGLE(Context *context,
 }
 
 bool ValidateSamplerParameterIivRobustANGLE(Context *context,
-                                            GLuint sampler,
+                                            SamplerID sampler,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             const GLint *param)
@@ -4674,7 +4674,7 @@ bool ValidateSamplerParameterIivRobustANGLE(Context *context,
 }
 
 bool ValidateSamplerParameterIuivRobustANGLE(Context *context,
-                                             GLuint sampler,
+                                             SamplerID sampler,
                                              GLenum pname,
                                              GLsizei bufSize,
                                              const GLuint *param)
@@ -6007,7 +6007,7 @@ bool ValidateGetActiveUniformBlockivBase(Context *context,
 
 template <typename ParamType>
 bool ValidateSamplerParameterBase(Context *context,
-                                  GLuint sampler,
+                                  SamplerID sampler,
                                   GLenum pname,
                                   GLsizei bufSize,
                                   bool vectorParams,
@@ -6115,21 +6115,26 @@ bool ValidateSamplerParameterBase(Context *context,
 }
 
 template bool ValidateSamplerParameterBase(Context *,
-                                           GLuint,
+                                           SamplerID,
                                            GLenum,
                                            GLsizei,
                                            bool,
                                            const GLfloat *);
-template bool ValidateSamplerParameterBase(Context *, GLuint, GLenum, GLsizei, bool, const GLint *);
 template bool ValidateSamplerParameterBase(Context *,
-                                           GLuint,
+                                           SamplerID,
+                                           GLenum,
+                                           GLsizei,
+                                           bool,
+                                           const GLint *);
+template bool ValidateSamplerParameterBase(Context *,
+                                           SamplerID,
                                            GLenum,
                                            GLsizei,
                                            bool,
                                            const GLuint *);
 
 bool ValidateGetSamplerParameterBase(Context *context,
-                                     GLuint sampler,
+                                     SamplerID sampler,
                                      GLenum pname,
                                      GLsizei *length)
 {

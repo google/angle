@@ -978,7 +978,7 @@ VertexArray *Context::getVertexArray(GLuint handle) const
     return mVertexArrayMap.query(handle);
 }
 
-Sampler *Context::getSampler(GLuint handle) const
+Sampler *Context::getSampler(SamplerID handle) const
 {
     return mState.mSamplerManager->getSampler(handle);
 }
@@ -1010,7 +1010,7 @@ gl::LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) con
         case GL_TRANSFORM_FEEDBACK:
             return getTransformFeedback(name);
         case GL_SAMPLER:
-            return getSampler(name);
+            return getSampler({name});
         case GL_TEXTURE:
             return getTexture({name});
         case GL_RENDERBUFFER:
@@ -1072,7 +1072,7 @@ void Context::getObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *lengt
     GetObjectLabelBase(objectLabel, bufSize, length, label);
 }
 
-GLboolean Context::isSampler(GLuint samplerName)
+GLboolean Context::isSampler(SamplerID samplerName)
 {
     return mState.mSamplerManager->isSampler(samplerName);
 }
@@ -1132,7 +1132,7 @@ void Context::bindVertexBuffer(GLuint bindingIndex,
     mStateCache.onVertexArrayStateChange(this);
 }
 
-void Context::bindSampler(GLuint textureUnit, GLuint samplerHandle)
+void Context::bindSampler(GLuint textureUnit, SamplerID samplerHandle)
 {
     ASSERT(textureUnit < mState.mCaps.maxCombinedTextureImageUnits);
     Sampler *sampler =
@@ -2853,7 +2853,7 @@ void Context::detachTransformFeedback(GLuint transformFeedback)
     }
 }
 
-void Context::detachSampler(GLuint sampler)
+void Context::detachSampler(SamplerID sampler)
 {
     mState.detachSampler(this, sampler);
 }
@@ -2869,35 +2869,35 @@ void Context::vertexAttribDivisor(GLuint index, GLuint divisor)
     mStateCache.onVertexArrayStateChange(this);
 }
 
-void Context::samplerParameteri(GLuint sampler, GLenum pname, GLint param)
+void Context::samplerParameteri(SamplerID sampler, GLenum pname, GLint param)
 {
     Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameteri(this, samplerObject, pname, param);
 }
 
-void Context::samplerParameteriv(GLuint sampler, GLenum pname, const GLint *param)
+void Context::samplerParameteriv(SamplerID sampler, GLenum pname, const GLint *param)
 {
     Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameteriv(this, samplerObject, pname, param);
 }
 
-void Context::samplerParameterIiv(GLuint sampler, GLenum pname, const GLint *param)
+void Context::samplerParameterIiv(SamplerID sampler, GLenum pname, const GLint *param)
 {
     Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameterIiv(this, samplerObject, pname, param);
 }
 
-void Context::samplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint *param)
+void Context::samplerParameterIuiv(SamplerID sampler, GLenum pname, const GLuint *param)
 {
     Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameterIuiv(this, samplerObject, pname, param);
 }
 
-void Context::samplerParameterivRobust(GLuint sampler,
+void Context::samplerParameterivRobust(SamplerID sampler,
                                        GLenum pname,
                                        GLsizei bufSize,
                                        const GLint *param)
@@ -2905,7 +2905,7 @@ void Context::samplerParameterivRobust(GLuint sampler,
     samplerParameteriv(sampler, pname, param);
 }
 
-void Context::samplerParameterIivRobust(GLuint sampler,
+void Context::samplerParameterIivRobust(SamplerID sampler,
                                         GLenum pname,
                                         GLsizei bufSize,
                                         const GLint *param)
@@ -2913,7 +2913,7 @@ void Context::samplerParameterIivRobust(GLuint sampler,
     UNIMPLEMENTED();
 }
 
-void Context::samplerParameterIuivRobust(GLuint sampler,
+void Context::samplerParameterIuivRobust(SamplerID sampler,
                                          GLenum pname,
                                          GLsizei bufSize,
                                          const GLuint *param)
@@ -2921,21 +2921,21 @@ void Context::samplerParameterIuivRobust(GLuint sampler,
     UNIMPLEMENTED();
 }
 
-void Context::samplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
+void Context::samplerParameterf(SamplerID sampler, GLenum pname, GLfloat param)
 {
     Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameterf(this, samplerObject, pname, param);
 }
 
-void Context::samplerParameterfv(GLuint sampler, GLenum pname, const GLfloat *param)
+void Context::samplerParameterfv(SamplerID sampler, GLenum pname, const GLfloat *param)
 {
     Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameterfv(this, samplerObject, pname, param);
 }
 
-void Context::samplerParameterfvRobust(GLuint sampler,
+void Context::samplerParameterfvRobust(SamplerID sampler,
                                        GLenum pname,
                                        GLsizei bufSize,
                                        const GLfloat *param)
@@ -2943,28 +2943,28 @@ void Context::samplerParameterfvRobust(GLuint sampler,
     samplerParameterfv(sampler, pname, param);
 }
 
-void Context::getSamplerParameteriv(GLuint sampler, GLenum pname, GLint *params)
+void Context::getSamplerParameteriv(SamplerID sampler, GLenum pname, GLint *params)
 {
     const Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     QuerySamplerParameteriv(samplerObject, pname, params);
 }
 
-void Context::getSamplerParameterIiv(GLuint sampler, GLenum pname, GLint *params)
+void Context::getSamplerParameterIiv(SamplerID sampler, GLenum pname, GLint *params)
 {
     const Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     QuerySamplerParameterIiv(samplerObject, pname, params);
 }
 
-void Context::getSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint *params)
+void Context::getSamplerParameterIuiv(SamplerID sampler, GLenum pname, GLuint *params)
 {
     const Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     QuerySamplerParameterIuiv(samplerObject, pname, params);
 }
 
-void Context::getSamplerParameterivRobust(GLuint sampler,
+void Context::getSamplerParameterivRobust(SamplerID sampler,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -2973,7 +2973,7 @@ void Context::getSamplerParameterivRobust(GLuint sampler,
     getSamplerParameteriv(sampler, pname, params);
 }
 
-void Context::getSamplerParameterIivRobust(GLuint sampler,
+void Context::getSamplerParameterIivRobust(SamplerID sampler,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            GLsizei *length,
@@ -2982,7 +2982,7 @@ void Context::getSamplerParameterIivRobust(GLuint sampler,
     UNIMPLEMENTED();
 }
 
-void Context::getSamplerParameterIuivRobust(GLuint sampler,
+void Context::getSamplerParameterIuivRobust(SamplerID sampler,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             GLsizei *length,
@@ -2991,14 +2991,14 @@ void Context::getSamplerParameterIuivRobust(GLuint sampler,
     UNIMPLEMENTED();
 }
 
-void Context::getSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat *params)
+void Context::getSamplerParameterfv(SamplerID sampler, GLenum pname, GLfloat *params)
 {
     const Sampler *const samplerObject =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
     QuerySamplerParameterfv(samplerObject, pname, params);
 }
 
-void Context::getSamplerParameterfvRobust(GLuint sampler,
+void Context::getSamplerParameterfvRobust(SamplerID sampler,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -7000,7 +7000,7 @@ void Context::getBufferParameteri64vRobust(BufferBinding target,
     getBufferParameteri64v(target, pname, params);
 }
 
-void Context::genSamplers(GLsizei count, GLuint *samplers)
+void Context::genSamplers(GLsizei count, SamplerID *samplers)
 {
     for (int i = 0; i < count; i++)
     {
@@ -7008,11 +7008,11 @@ void Context::genSamplers(GLsizei count, GLuint *samplers)
     }
 }
 
-void Context::deleteSamplers(GLsizei count, const GLuint *samplers)
+void Context::deleteSamplers(GLsizei count, const SamplerID *samplers)
 {
     for (int i = 0; i < count; i++)
     {
-        GLuint sampler = samplers[i];
+        SamplerID sampler = samplers[i];
 
         if (mState.mSamplerManager->getSampler(sampler))
         {

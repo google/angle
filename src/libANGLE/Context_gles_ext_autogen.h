@@ -144,13 +144,13 @@
                                GLint64 *data);                                                     \
     void getBufferParameteri64vRobust(BufferBinding targetPacked, GLenum pname, GLsizei bufSize,   \
                                       GLsizei *length, GLint64 *params);                           \
-    void samplerParameterivRobust(GLuint sampler, GLuint pname, GLsizei bufSize,                   \
+    void samplerParameterivRobust(SamplerID samplerPacked, GLuint pname, GLsizei bufSize,          \
                                   const GLint *param);                                             \
-    void samplerParameterfvRobust(GLuint sampler, GLenum pname, GLsizei bufSize,                   \
+    void samplerParameterfvRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,          \
                                   const GLfloat *param);                                           \
-    void getSamplerParameterivRobust(GLuint sampler, GLenum pname, GLsizei bufSize,                \
+    void getSamplerParameterivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,       \
                                      GLsizei *length, GLint *params);                              \
-    void getSamplerParameterfvRobust(GLuint sampler, GLenum pname, GLsizei bufSize,                \
+    void getSamplerParameterfvRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,       \
                                      GLsizei *length, GLfloat *params);                            \
     void getFramebufferParameterivRobust(GLenum target, GLenum pname, GLsizei bufSize,             \
                                          GLsizei *length, GLint *params);                          \
@@ -183,13 +183,13 @@
                                   GLsizei *length, GLint *params);                                 \
     void getTexParameterIuivRobust(TextureType targetPacked, GLenum pname, GLsizei bufSize,        \
                                    GLsizei *length, GLuint *params);                               \
-    void samplerParameterIivRobust(GLuint sampler, GLenum pname, GLsizei bufSize,                  \
+    void samplerParameterIivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,         \
                                    const GLint *param);                                            \
-    void samplerParameterIuivRobust(GLuint sampler, GLenum pname, GLsizei bufSize,                 \
+    void samplerParameterIuivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,        \
                                     const GLuint *param);                                          \
-    void getSamplerParameterIivRobust(GLuint sampler, GLenum pname, GLsizei bufSize,               \
+    void getSamplerParameterIivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,      \
                                       GLsizei *length, GLint *params);                             \
-    void getSamplerParameterIuivRobust(GLuint sampler, GLenum pname, GLsizei bufSize,              \
+    void getSamplerParameterIuivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,     \
                                        GLsizei *length, GLuint *params);                           \
     void getQueryObjectivRobust(GLuint id, GLenum pname, GLsizei bufSize, GLsizei *length,         \
                                 GLint *params);                                                    \
@@ -406,12 +406,12 @@
     void framebufferTexture3D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               TextureID texturePacked, GLint level, GLint zoffset);                \
     /* GL_OES_texture_border_clamp */                                                              \
-    void getSamplerParameterIiv(GLuint sampler, GLenum pname, GLint *params);                      \
-    void getSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint *params);                    \
+    void getSamplerParameterIiv(SamplerID samplerPacked, GLenum pname, GLint *params);             \
+    void getSamplerParameterIuiv(SamplerID samplerPacked, GLenum pname, GLuint *params);           \
     void getTexParameterIiv(TextureType targetPacked, GLenum pname, GLint *params);                \
     void getTexParameterIuiv(TextureType targetPacked, GLenum pname, GLuint *params);              \
-    void samplerParameterIiv(GLuint sampler, GLenum pname, const GLint *param);                    \
-    void samplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint *param);                  \
+    void samplerParameterIiv(SamplerID samplerPacked, GLenum pname, const GLint *param);           \
+    void samplerParameterIuiv(SamplerID samplerPacked, GLenum pname, const GLuint *param);         \
     void texParameterIiv(TextureType targetPacked, GLenum pname, const GLint *params);             \
     void texParameterIuiv(TextureType targetPacked, GLenum pname, const GLuint *params);           \
     /* GL_OES_texture_storage_multisample_2d_array */                                              \

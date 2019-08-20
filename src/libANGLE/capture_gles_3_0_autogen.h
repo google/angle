@@ -42,7 +42,7 @@ angle::CallCapture CaptureBindBufferRange(const Context *context,
 angle::CallCapture CaptureBindSampler(const Context *context,
                                       bool isCallValid,
                                       GLuint unit,
-                                      GLuint sampler);
+                                      SamplerID samplerPacked);
 angle::CallCapture CaptureBindTransformFeedback(const Context *context,
                                                 bool isCallValid,
                                                 GLenum target,
@@ -136,7 +136,7 @@ angle::CallCapture CaptureDeleteQueries(const Context *context,
 angle::CallCapture CaptureDeleteSamplers(const Context *context,
                                          bool isCallValid,
                                          GLsizei count,
-                                         const GLuint *samplers);
+                                         const SamplerID *samplersPacked);
 angle::CallCapture CaptureDeleteSync(const Context *context, bool isCallValid, GLsync sync);
 angle::CallCapture CaptureDeleteTransformFeedbacks(const Context *context,
                                                    bool isCallValid,
@@ -199,7 +199,7 @@ angle::CallCapture CaptureGenQueries(const Context *context,
 angle::CallCapture CaptureGenSamplers(const Context *context,
                                       bool isCallValid,
                                       GLsizei count,
-                                      GLuint *samplers);
+                                      SamplerID *samplersPacked);
 angle::CallCapture CaptureGenTransformFeedbacks(const Context *context,
                                                 bool isCallValid,
                                                 GLsizei n,
@@ -283,12 +283,12 @@ angle::CallCapture CaptureGetQueryiv(const Context *context,
                                      GLint *params);
 angle::CallCapture CaptureGetSamplerParameterfv(const Context *context,
                                                 bool isCallValid,
-                                                GLuint sampler,
+                                                SamplerID samplerPacked,
                                                 GLenum pname,
                                                 GLfloat *params);
 angle::CallCapture CaptureGetSamplerParameteriv(const Context *context,
                                                 bool isCallValid,
-                                                GLuint sampler,
+                                                SamplerID samplerPacked,
                                                 GLenum pname,
                                                 GLint *params);
 angle::CallCapture CaptureGetStringi(const Context *context,
@@ -358,7 +358,7 @@ angle::CallCapture CaptureIsQuery(const Context *context,
                                   GLboolean returnValue);
 angle::CallCapture CaptureIsSampler(const Context *context,
                                     bool isCallValid,
-                                    GLuint sampler,
+                                    SamplerID samplerPacked,
                                     GLboolean returnValue);
 angle::CallCapture CaptureIsSync(const Context *context,
                                  bool isCallValid,
@@ -402,22 +402,22 @@ angle::CallCapture CaptureRenderbufferStorageMultisample(const Context *context,
 angle::CallCapture CaptureResumeTransformFeedback(const Context *context, bool isCallValid);
 angle::CallCapture CaptureSamplerParameterf(const Context *context,
                                             bool isCallValid,
-                                            GLuint sampler,
+                                            SamplerID samplerPacked,
                                             GLenum pname,
                                             GLfloat param);
 angle::CallCapture CaptureSamplerParameterfv(const Context *context,
                                              bool isCallValid,
-                                             GLuint sampler,
+                                             SamplerID samplerPacked,
                                              GLenum pname,
                                              const GLfloat *param);
 angle::CallCapture CaptureSamplerParameteri(const Context *context,
                                             bool isCallValid,
-                                            GLuint sampler,
+                                            SamplerID samplerPacked,
                                             GLenum pname,
                                             GLint param);
 angle::CallCapture CaptureSamplerParameteriv(const Context *context,
                                              bool isCallValid,
-                                             GLuint sampler,
+                                             SamplerID samplerPacked,
                                              GLenum pname,
                                              const GLint *param);
 angle::CallCapture CaptureTexImage3D(const Context *context,
@@ -643,11 +643,11 @@ void CaptureDeleteQueries_ids(const Context *context,
                               GLsizei n,
                               const GLuint *ids,
                               angle::ParamCapture *paramCapture);
-void CaptureDeleteSamplers_samplers(const Context *context,
-                                    bool isCallValid,
-                                    GLsizei count,
-                                    const GLuint *samplers,
-                                    angle::ParamCapture *paramCapture);
+void CaptureDeleteSamplers_samplersPacked(const Context *context,
+                                          bool isCallValid,
+                                          GLsizei count,
+                                          const SamplerID *samplersPacked,
+                                          angle::ParamCapture *paramCapture);
 void CaptureDeleteTransformFeedbacks_ids(const Context *context,
                                          bool isCallValid,
                                          GLsizei n,
@@ -685,11 +685,11 @@ void CaptureGenQueries_ids(const Context *context,
                            GLsizei n,
                            GLuint *ids,
                            angle::ParamCapture *paramCapture);
-void CaptureGenSamplers_samplers(const Context *context,
-                                 bool isCallValid,
-                                 GLsizei count,
-                                 GLuint *samplers,
-                                 angle::ParamCapture *paramCapture);
+void CaptureGenSamplers_samplersPacked(const Context *context,
+                                       bool isCallValid,
+                                       GLsizei count,
+                                       SamplerID *samplersPacked,
+                                       angle::ParamCapture *paramCapture);
 void CaptureGenTransformFeedbacks_ids(const Context *context,
                                       bool isCallValid,
                                       GLsizei n,
@@ -819,13 +819,13 @@ void CaptureGetQueryiv_params(const Context *context,
                               angle::ParamCapture *paramCapture);
 void CaptureGetSamplerParameterfv_params(const Context *context,
                                          bool isCallValid,
-                                         GLuint sampler,
+                                         SamplerID samplerPacked,
                                          GLenum pname,
                                          GLfloat *params,
                                          angle::ParamCapture *paramCapture);
 void CaptureGetSamplerParameteriv_params(const Context *context,
                                          bool isCallValid,
-                                         GLuint sampler,
+                                         SamplerID samplerPacked,
                                          GLenum pname,
                                          GLint *params,
                                          angle::ParamCapture *paramCapture);
@@ -947,13 +947,13 @@ void CaptureProgramBinary_binary(const Context *context,
                                  angle::ParamCapture *paramCapture);
 void CaptureSamplerParameterfv_param(const Context *context,
                                      bool isCallValid,
-                                     GLuint sampler,
+                                     SamplerID samplerPacked,
                                      GLenum pname,
                                      const GLfloat *param,
                                      angle::ParamCapture *paramCapture);
 void CaptureSamplerParameteriv_param(const Context *context,
                                      bool isCallValid,
-                                     GLuint sampler,
+                                     SamplerID samplerPacked,
                                      GLenum pname,
                                      const GLint *param,
                                      angle::ParamCapture *paramCapture);

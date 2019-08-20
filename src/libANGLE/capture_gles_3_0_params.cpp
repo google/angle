@@ -85,11 +85,11 @@ void CaptureDeleteQueries_ids(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteSamplers_samplers(const Context *context,
-                                    bool isCallValid,
-                                    GLsizei count,
-                                    const GLuint *samplers,
-                                    ParamCapture *paramCapture)
+void CaptureDeleteSamplers_samplersPacked(const Context *context,
+                                          bool isCallValid,
+                                          GLsizei count,
+                                          const SamplerID *samplers,
+                                          ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -155,11 +155,11 @@ void CaptureGenQueries_ids(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGenSamplers_samplers(const Context *context,
-                                 bool isCallValid,
-                                 GLsizei count,
-                                 GLuint *samplers,
-                                 ParamCapture *paramCapture)
+void CaptureGenSamplers_samplersPacked(const Context *context,
+                                       bool isCallValid,
+                                       GLsizei count,
+                                       SamplerID *samplers,
+                                       ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -369,7 +369,7 @@ void CaptureGetQueryiv_params(const Context *context,
 
 void CaptureGetSamplerParameterfv_params(const Context *context,
                                          bool isCallValid,
-                                         GLuint sampler,
+                                         SamplerID sampler,
                                          GLenum pname,
                                          GLfloat *params,
                                          ParamCapture *paramCapture)
@@ -379,7 +379,7 @@ void CaptureGetSamplerParameterfv_params(const Context *context,
 
 void CaptureGetSamplerParameteriv_params(const Context *context,
                                          bool isCallValid,
-                                         GLuint sampler,
+                                         SamplerID sampler,
                                          GLenum pname,
                                          GLint *params,
                                          ParamCapture *paramCapture)
@@ -565,7 +565,7 @@ void CaptureProgramBinary_binary(const Context *context,
 
 void CaptureSamplerParameterfv_param(const Context *context,
                                      bool isCallValid,
-                                     GLuint sampler,
+                                     SamplerID sampler,
                                      GLenum pname,
                                      const GLfloat *param,
                                      ParamCapture *paramCapture)
@@ -575,7 +575,7 @@ void CaptureSamplerParameterfv_param(const Context *context,
 
 void CaptureSamplerParameteriv_param(const Context *context,
                                      bool isCallValid,
-                                     GLuint sampler,
+                                     SamplerID sampler,
                                      GLenum pname,
                                      const GLint *param,
                                      ParamCapture *paramCapture)

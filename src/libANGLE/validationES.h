@@ -578,13 +578,13 @@ bool ValidateGetActiveUniformBlockivBase(Context *context,
                                          GLsizei *length);
 
 bool ValidateGetSamplerParameterBase(Context *context,
-                                     GLuint sampler,
+                                     SamplerID sampler,
                                      GLenum pname,
                                      GLsizei *length);
 
 template <typename ParamType>
 bool ValidateSamplerParameterBase(Context *context,
-                                  GLuint sampler,
+                                  SamplerID sampler,
                                   GLenum pname,
                                   GLsizei bufSize,
                                   bool vectorParams,

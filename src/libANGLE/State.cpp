@@ -1249,7 +1249,7 @@ void State::setSamplerBinding(const Context *context, GLuint textureUnit, Sample
     onActiveTextureStateChange(context, textureUnit);
 }
 
-void State::detachSampler(const Context *context, GLuint sampler)
+void State::detachSampler(const Context *context, SamplerID sampler)
 {
     // [OpenGL ES 3.0.2] section 3.8.2 pages 123-124:
     // If a sampler object that is currently bound to one or more texture units is
@@ -1257,7 +1257,7 @@ void State::detachSampler(const Context *context, GLuint sampler)
     // which the sampler is bound, with unit set to the texture unit and sampler set to zero.
     for (size_t i = 0; i < mSamplers.size(); i++)
     {
-        if (mSamplers[i].id() == sampler)
+        if (mSamplers[i].id() == sampler.value)
         {
             setSamplerBinding(context, static_cast<GLuint>(i), nullptr);
         }

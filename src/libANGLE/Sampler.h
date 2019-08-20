@@ -27,7 +27,7 @@ namespace gl
 class Sampler final : public RefCountObject, public LabeledObject, public angle::Subject
 {
   public:
-    Sampler(rx::GLImplFactory *factory, GLuint id);
+    Sampler(rx::GLImplFactory *factory, SamplerID id);
     ~Sampler() override;
 
     void onDestroy(const Context *context) override;
