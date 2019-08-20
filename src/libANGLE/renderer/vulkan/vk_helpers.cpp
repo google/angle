@@ -330,7 +330,7 @@ angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
                                       VkDeviceSize *offsetOut,
                                       bool *newBufferAllocatedOut)
 {
-    size_t sizeToAllocate = roundUpPow2(sizeInBytes, mAlignment);
+    size_t sizeToAllocate = roundUp(sizeInBytes, mAlignment);
 
     angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextAllocationOffset;
     checkedNextWriteOffset += sizeToAllocate;
@@ -546,17 +546,30 @@ void DynamicBuffer::updateAlignment(RendererVk *renderer, size_t alignment)
     size_t atomSize =
         static_cast<size_t>(renderer->getPhysicalDeviceProperties().limits.nonCoherentAtomSize);
 
-    // We need lcm(alignment, atomSize), we are assuming one divides the other so std::max() could
-    // be used instead.
-    ASSERT(alignment % atomSize == 0 || atomSize % alignment == 0);
-    alignment = std::max(alignment, atomSize);
-    ASSERT(gl::isPow2(alignment));
+    // We need lcm(alignment, atomSize).  Usually, one divides the other so std::max() could be used
+    // instead.  Only known case where this assumption breaks is for 3-component types with 16- or
+    // 32-bit channels, so that's special-cased to avoid a full-fledged lcm implementation.
+
+    if (gl::isPow2(alignment))
+    {
+        ASSERT(alignment % atomSize == 0 || atomSize % alignment == 0);
+        ASSERT(gl::isPow2(atomSize));
+
+        alignment = std::max(alignment, atomSize);
+    }
+    else
+    {
+        ASSERT(gl::isPow2(atomSize));
+        ASSERT(alignment % 3 == 0);
+        ASSERT(gl::isPow2(alignment / 3));
+
+        alignment = std::max(alignment / 3, atomSize) * 3;
+    }
 
     // If alignment has changed, make sure the next allocation is done at an aligned offset.
     if (alignment != mAlignment)
     {
-        mNextAllocationOffset =
-            roundUpPow2(mNextAllocationOffset, static_cast<uint32_t>(alignment));
+        mNextAllocationOffset = roundUp(mNextAllocationOffset, static_cast<uint32_t>(alignment));
     }
 
     mAlignment = alignment;

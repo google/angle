@@ -38,8 +38,9 @@ constexpr unsigned int kEmulatedAlphaValue = 1;
 constexpr size_t kMinReadPixelsBufferSize = 128000;
 
 // Alignment value to accommodate the largest known, for now, uncompressed Vulkan format
-// VK_FORMAT_R64G64B64A64_SFLOAT
-constexpr size_t kReadPixelsBufferAlignment = 32;
+// VK_FORMAT_R64G64B64A64_SFLOAT, while supporting 3-component types such as
+// VK_FORMAT_R16G16B16_SFLOAT.
+constexpr size_t kReadPixelsBufferAlignment = 32 * 3;
 
 // Clear values are only used when loadOp=Clear is set in clearWithRenderPassOp.  When starting a
 // new render pass, the clear value is set to an unlikely value (bright pink) to stand out better
