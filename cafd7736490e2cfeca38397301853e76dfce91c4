@@ -52,6 +52,24 @@
       "revId": "cafd7736490e2cfeca38397301853e76dfce91c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9eb727ea_608566b8",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2019-08-20T23:45:36Z",
+      "side": 1,
+      "message": "Sure, will do. crbug? Angle\u0027s issue tracker? Some upstream cts issue tracker? (If the latter, where is it?)",
+      "parentUuid": "3b793139_fbcd9f25",
+      "revId": "cafd7736490e2cfeca38397301853e76dfce91c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
