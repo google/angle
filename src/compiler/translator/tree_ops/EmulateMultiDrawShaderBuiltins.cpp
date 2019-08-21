@@ -42,8 +42,7 @@ class FindGLDrawIDTraverser : public TIntermTraverser
   protected:
     void visitSymbol(TIntermSymbol *node) override
     {
-        if (&node->variable() == BuiltInVariable::gl_DrawID() ||
-            &node->variable() == BuiltInVariable::gl_DrawIDESSL1())
+        if (&node->variable() == BuiltInVariable::gl_DrawID())
         {
             mVariable = &node->variable();
         }

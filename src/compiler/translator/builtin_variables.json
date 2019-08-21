@@ -679,21 +679,7 @@
                   "ESSL3":{
                         "variables":{
                             "gl_DrawID":{
-                                "level":"ESSL3_BUILTINS",
-                                "extension":"ANGLE_multi_draw",
-                                "type":{
-                                    "basic":"Int",
-                                    "precision":"High",
-                                    "qualifier":"DrawID"
-                                }
-                            }
-                        }
-                    },
-                    "ESSL1":{
-                        "variables":{
-                            "gl_DrawID":{
-                                "suffix":"ESSL1",
-                                "level":"ESSL1_BUILTINS",
+                                "level":"COMMON_BUILTINS",
                                 "extension":"ANGLE_multi_draw",
                                 "type":{
                                     "basic":"Int",
