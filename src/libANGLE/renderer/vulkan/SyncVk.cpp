@@ -28,7 +28,10 @@ void FenceSyncVk::onDestroy(ContextVk *contextVk)
         contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mEvent);
     }
 
-    mFence.reset(contextVk->getDevice());
+    for (vk::Shared<vk::Fence> &fence : mFences)
+    {
+        fence.reset(contextVk->getDevice());
+    }
 }
 
 void FenceSyncVk::onDestroy(DisplayVk *display)
@@ -36,7 +39,7 @@ void FenceSyncVk::onDestroy(DisplayVk *display)
     std::vector<vk::GarbageObjectBase> garbage;
     mEvent.dumpResources(&garbage);
 
-    display->getRenderer()->addGarbage(std::move(mFence), std::move(garbage));
+    display->getRenderer()->addGarbage(std::move(mFences), std::move(garbage));
 }
 
 angle::Result FenceSyncVk::initialize(ContextVk *contextVk)
@@ -53,9 +56,11 @@ angle::Result FenceSyncVk::initialize(ContextVk *contextVk)
     vk::Scoped<vk::Event> event(device);
     ANGLE_VK_TRY(contextVk, event.get().init(device, eventCreateInfo));
 
-    ANGLE_TRY(contextVk->getNextSubmitFence(&mFence));
+    vk::Shared<vk::Fence> fence;
+    ANGLE_TRY(contextVk->getNextSubmitFence(&fence));
 
     mEvent = event.release();
+    mFences.emplace_back(std::move(fence));
 
     contextVk->getCommandGraph()->setFenceSync(mEvent);
     return angle::Result::Continue;
@@ -91,8 +96,9 @@ angle::Result FenceSyncVk::clientWait(vk::Context *context,
     }
 
     // Wait on the fence that's expected to be signaled on the first vkQueueSubmit after
-    // `initialize` was called.
-    VkResult status = mFence.get().wait(renderer->getDevice(), timeout);
+    // `initialize` was called. The first fence is the fence created to signal this sync.
+    ASSERT(!mFences.empty());
+    VkResult status = mFences[0].get().wait(renderer->getDevice(), timeout);
 
     // Check for errors, but don't consider timeout as such.
     if (status != VK_TIMEOUT)
@@ -109,6 +115,11 @@ angle::Result FenceSyncVk::serverWait(vk::Context *context, ContextVk *contextVk
     if (contextVk)
     {
         contextVk->getCommandGraph()->waitFenceSync(mEvent);
+
+        // Track fences from Contexts that use this sync for garbage collection.
+        vk::Shared<vk::Fence> nextSubmitFence;
+        ANGLE_TRY(contextVk->getNextSubmitFence(&nextSubmitFence));
+        mFences.emplace_back(std::move(nextSubmitFence));
     }
     return angle::Result::Continue;
 }
