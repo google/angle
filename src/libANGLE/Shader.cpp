@@ -131,7 +131,7 @@ Shader::Shader(ShaderProgramManager *manager,
                rx::GLImplFactory *implFactory,
                const gl::Limitations &rendererLimitations,
                ShaderType type,
-               GLuint handle)
+               ShaderProgramID handle)
     : mState(type),
       mImplementation(implFactory->createShader(mState)),
       mRendererLimitations(rendererLimitations),
@@ -169,7 +169,7 @@ const std::string &Shader::getLabel() const
     return mState.mLabel;
 }
 
-GLuint Shader::getHandle() const
+ShaderProgramID Shader::getHandle() const
 {
     return mHandle;
 }

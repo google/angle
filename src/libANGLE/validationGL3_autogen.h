@@ -19,7 +19,7 @@ class Context;
 
 bool ValidateBeginConditionalRender(Context *context, GLuint id, GLenum mode);
 bool ValidateBindFragDataLocation(Context *context,
-                                  GLuint program,
+                                  ShaderProgramID programPacked,
                                   GLuint color,
                                   const GLchar *name);
 bool ValidateClampColor(Context *context, GLenum target, GLenum clamp);

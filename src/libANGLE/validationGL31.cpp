@@ -12,7 +12,7 @@ namespace gl
 {
 
 bool ValidateGetActiveUniformName(Context *context,
-                                  GLuint program,
+                                  ShaderProgramID program,
                                   GLuint uniformIndex,
                                   GLsizei bufSize,
                                   GLsizei *length,

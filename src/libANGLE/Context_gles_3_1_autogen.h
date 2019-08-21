@@ -11,7 +11,7 @@
 #define ANGLE_CONTEXT_GLES_3_1_AUTOGEN_H_
 
 #define ANGLE_GLES_3_1_CONTEXT_API                                                                 \
-    void activeShaderProgram(ProgramPipelineID pipelinePacked, GLuint program);                    \
+    void activeShaderProgram(ProgramPipelineID pipelinePacked, ShaderProgramID programPacked);     \
     void bindImageTexture(GLuint unit, TextureID texturePacked, GLint level, GLboolean layered,    \
                           GLint layer, GLenum access, GLenum format);                              \
     void bindProgramPipeline(ProgramPipelineID pipelinePacked);                                    \
@@ -30,18 +30,20 @@
     void getBooleani_v(GLenum target, GLuint index, GLboolean *data);                              \
     void getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params);                    \
     void getMultisamplefv(GLenum pname, GLuint index, GLfloat *val);                               \
-    void getProgramInterfaceiv(GLuint program, GLenum programInterface, GLenum pname,              \
-                               GLint *params);                                                     \
+    void getProgramInterfaceiv(ShaderProgramID programPacked, GLenum programInterface,             \
+                               GLenum pname, GLint *params);                                       \
     void getProgramPipelineInfoLog(ProgramPipelineID pipelinePacked, GLsizei bufSize,              \
                                    GLsizei *length, GLchar *infoLog);                              \
     void getProgramPipelineiv(ProgramPipelineID pipelinePacked, GLenum pname, GLint *params);      \
-    GLuint getProgramResourceIndex(GLuint program, GLenum programInterface, const GLchar *name);   \
-    GLint getProgramResourceLocation(GLuint program, GLenum programInterface, const GLchar *name); \
-    void getProgramResourceName(GLuint program, GLenum programInterface, GLuint index,             \
-                                GLsizei bufSize, GLsizei *length, GLchar *name);                   \
-    void getProgramResourceiv(GLuint program, GLenum programInterface, GLuint index,               \
-                              GLsizei propCount, const GLenum *props, GLsizei bufSize,             \
-                              GLsizei *length, GLint *params);                                     \
+    GLuint getProgramResourceIndex(ShaderProgramID programPacked, GLenum programInterface,         \
+                                   const GLchar *name);                                            \
+    GLint getProgramResourceLocation(ShaderProgramID programPacked, GLenum programInterface,       \
+                                     const GLchar *name);                                          \
+    void getProgramResourceName(ShaderProgramID programPacked, GLenum programInterface,            \
+                                GLuint index, GLsizei bufSize, GLsizei *length, GLchar *name);     \
+    void getProgramResourceiv(ShaderProgramID programPacked, GLenum programInterface,              \
+                              GLuint index, GLsizei propCount, const GLenum *props,                \
+                              GLsizei bufSize, GLsizei *length, GLint *params);                    \
     void getTexLevelParameterfv(TextureTarget targetPacked, GLint level, GLenum pname,             \
                                 GLfloat *params);                                                  \
     void getTexLevelParameteriv(TextureTarget targetPacked, GLint level, GLenum pname,             \
@@ -49,54 +51,71 @@
     GLboolean isProgramPipeline(ProgramPipelineID pipelinePacked);                                 \
     void memoryBarrier(GLbitfield barriers);                                                       \
     void memoryBarrierByRegion(GLbitfield barriers);                                               \
-    void programUniform1f(GLuint program, GLint location, GLfloat v0);                             \
-    void programUniform1fv(GLuint program, GLint location, GLsizei count, const GLfloat *value);   \
-    void programUniform1i(GLuint program, GLint location, GLint v0);                               \
-    void programUniform1iv(GLuint program, GLint location, GLsizei count, const GLint *value);     \
-    void programUniform1ui(GLuint program, GLint location, GLuint v0);                             \
-    void programUniform1uiv(GLuint program, GLint location, GLsizei count, const GLuint *value);   \
-    void programUniform2f(GLuint program, GLint location, GLfloat v0, GLfloat v1);                 \
-    void programUniform2fv(GLuint program, GLint location, GLsizei count, const GLfloat *value);   \
-    void programUniform2i(GLuint program, GLint location, GLint v0, GLint v1);                     \
-    void programUniform2iv(GLuint program, GLint location, GLsizei count, const GLint *value);     \
-    void programUniform2ui(GLuint program, GLint location, GLuint v0, GLuint v1);                  \
-    void programUniform2uiv(GLuint program, GLint location, GLsizei count, const GLuint *value);   \
-    void programUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2);     \
-    void programUniform3fv(GLuint program, GLint location, GLsizei count, const GLfloat *value);   \
-    void programUniform3i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2);           \
-    void programUniform3iv(GLuint program, GLint location, GLsizei count, const GLint *value);     \
-    void programUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2);       \
-    void programUniform3uiv(GLuint program, GLint location, GLsizei count, const GLuint *value);   \
-    void programUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2,      \
-                          GLfloat v3);                                                             \
-    void programUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat *value);   \
-    void programUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3); \
-    void programUniform4iv(GLuint program, GLint location, GLsizei count, const GLint *value);     \
-    void programUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2,        \
-                           GLuint v3);                                                             \
-    void programUniform4uiv(GLuint program, GLint location, GLsizei count, const GLuint *value);   \
-    void programUniformMatrix2fv(GLuint program, GLint location, GLsizei count,                    \
+    void programUniform1f(ShaderProgramID programPacked, GLint location, GLfloat v0);              \
+    void programUniform1fv(ShaderProgramID programPacked, GLint location, GLsizei count,           \
+                           const GLfloat *value);                                                  \
+    void programUniform1i(ShaderProgramID programPacked, GLint location, GLint v0);                \
+    void programUniform1iv(ShaderProgramID programPacked, GLint location, GLsizei count,           \
+                           const GLint *value);                                                    \
+    void programUniform1ui(ShaderProgramID programPacked, GLint location, GLuint v0);              \
+    void programUniform1uiv(ShaderProgramID programPacked, GLint location, GLsizei count,          \
+                            const GLuint *value);                                                  \
+    void programUniform2f(ShaderProgramID programPacked, GLint location, GLfloat v0, GLfloat v1);  \
+    void programUniform2fv(ShaderProgramID programPacked, GLint location, GLsizei count,           \
+                           const GLfloat *value);                                                  \
+    void programUniform2i(ShaderProgramID programPacked, GLint location, GLint v0, GLint v1);      \
+    void programUniform2iv(ShaderProgramID programPacked, GLint location, GLsizei count,           \
+                           const GLint *value);                                                    \
+    void programUniform2ui(ShaderProgramID programPacked, GLint location, GLuint v0, GLuint v1);   \
+    void programUniform2uiv(ShaderProgramID programPacked, GLint location, GLsizei count,          \
+                            const GLuint *value);                                                  \
+    void programUniform3f(ShaderProgramID programPacked, GLint location, GLfloat v0, GLfloat v1,   \
+                          GLfloat v2);                                                             \
+    void programUniform3fv(ShaderProgramID programPacked, GLint location, GLsizei count,           \
+                           const GLfloat *value);                                                  \
+    void programUniform3i(ShaderProgramID programPacked, GLint location, GLint v0, GLint v1,       \
+                          GLint v2);                                                               \
+    void programUniform3iv(ShaderProgramID programPacked, GLint location, GLsizei count,           \
+                           const GLint *value);                                                    \
+    void programUniform3ui(ShaderProgramID programPacked, GLint location, GLuint v0, GLuint v1,    \
+                           GLuint v2);                                                             \
+    void programUniform3uiv(ShaderProgramID programPacked, GLint location, GLsizei count,          \
+                            const GLuint *value);                                                  \
+    void programUniform4f(ShaderProgramID programPacked, GLint location, GLfloat v0, GLfloat v1,   \
+                          GLfloat v2, GLfloat v3);                                                 \
+    void programUniform4fv(ShaderProgramID programPacked, GLint location, GLsizei count,           \
+                           const GLfloat *value);                                                  \
+    void programUniform4i(ShaderProgramID programPacked, GLint location, GLint v0, GLint v1,       \
+                          GLint v2, GLint v3);                                                     \
+    void programUniform4iv(ShaderProgramID programPacked, GLint location, GLsizei count,           \
+                           const GLint *value);                                                    \
+    void programUniform4ui(ShaderProgramID programPacked, GLint location, GLuint v0, GLuint v1,    \
+                           GLuint v2, GLuint v3);                                                  \
+    void programUniform4uiv(ShaderProgramID programPacked, GLint location, GLsizei count,          \
+                            const GLuint *value);                                                  \
+    void programUniformMatrix2fv(ShaderProgramID programPacked, GLint location, GLsizei count,     \
                                  GLboolean transpose, const GLfloat *value);                       \
-    void programUniformMatrix2x3fv(GLuint program, GLint location, GLsizei count,                  \
+    void programUniformMatrix2x3fv(ShaderProgramID programPacked, GLint location, GLsizei count,   \
                                    GLboolean transpose, const GLfloat *value);                     \
-    void programUniformMatrix2x4fv(GLuint program, GLint location, GLsizei count,                  \
+    void programUniformMatrix2x4fv(ShaderProgramID programPacked, GLint location, GLsizei count,   \
                                    GLboolean transpose, const GLfloat *value);                     \
-    void programUniformMatrix3fv(GLuint program, GLint location, GLsizei count,                    \
+    void programUniformMatrix3fv(ShaderProgramID programPacked, GLint location, GLsizei count,     \
                                  GLboolean transpose, const GLfloat *value);                       \
-    void programUniformMatrix3x2fv(GLuint program, GLint location, GLsizei count,                  \
+    void programUniformMatrix3x2fv(ShaderProgramID programPacked, GLint location, GLsizei count,   \
                                    GLboolean transpose, const GLfloat *value);                     \
-    void programUniformMatrix3x4fv(GLuint program, GLint location, GLsizei count,                  \
+    void programUniformMatrix3x4fv(ShaderProgramID programPacked, GLint location, GLsizei count,   \
                                    GLboolean transpose, const GLfloat *value);                     \
-    void programUniformMatrix4fv(GLuint program, GLint location, GLsizei count,                    \
+    void programUniformMatrix4fv(ShaderProgramID programPacked, GLint location, GLsizei count,     \
                                  GLboolean transpose, const GLfloat *value);                       \
-    void programUniformMatrix4x2fv(GLuint program, GLint location, GLsizei count,                  \
+    void programUniformMatrix4x2fv(ShaderProgramID programPacked, GLint location, GLsizei count,   \
                                    GLboolean transpose, const GLfloat *value);                     \
-    void programUniformMatrix4x3fv(GLuint program, GLint location, GLsizei count,                  \
+    void programUniformMatrix4x3fv(ShaderProgramID programPacked, GLint location, GLsizei count,   \
                                    GLboolean transpose, const GLfloat *value);                     \
     void sampleMaski(GLuint maskNumber, GLbitfield mask);                                          \
     void texStorage2DMultisample(TextureType targetPacked, GLsizei samples, GLenum internalformat, \
                                  GLsizei width, GLsizei height, GLboolean fixedsamplelocations);   \
-    void useProgramStages(ProgramPipelineID pipelinePacked, GLbitfield stages, GLuint program);    \
+    void useProgramStages(ProgramPipelineID pipelinePacked, GLbitfield stages,                     \
+                          ShaderProgramID programPacked);                                          \
     void validateProgramPipeline(ProgramPipelineID pipelinePacked);                                \
     void vertexAttribBinding(GLuint attribindex, GLuint bindingindex);                             \
     void vertexAttribFormat(GLuint attribindex, GLint size, VertexAttribType typePacked,           \

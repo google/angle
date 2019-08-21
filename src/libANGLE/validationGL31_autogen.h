@@ -18,7 +18,7 @@ namespace gl
 class Context;
 
 bool ValidateGetActiveUniformName(Context *context,
-                                  GLuint program,
+                                  ShaderProgramID programPacked,
                                   GLuint uniformIndex,
                                   GLsizei bufSize,
                                   GLsizei *length,

@@ -612,7 +612,7 @@ bool ValidateGetnTexImage(Context *context,
 }
 
 bool ValidateGetnUniformdv(Context *context,
-                           GLuint program,
+                           ShaderProgramID program,
                            GLint location,
                            GLsizei bufSize,
                            GLdouble *params)
@@ -621,7 +621,7 @@ bool ValidateGetnUniformdv(Context *context,
 }
 
 bool ValidateGetnUniformfv(Context *context,
-                           GLuint program,
+                           ShaderProgramID program,
                            GLint location,
                            GLsizei bufSize,
                            GLfloat *params)
@@ -630,7 +630,7 @@ bool ValidateGetnUniformfv(Context *context,
 }
 
 bool ValidateGetnUniformiv(Context *context,
-                           GLuint program,
+                           ShaderProgramID program,
                            GLint location,
                            GLsizei bufSize,
                            GLint *params)
@@ -639,7 +639,7 @@ bool ValidateGetnUniformiv(Context *context,
 }
 
 bool ValidateGetnUniformuiv(Context *context,
-                            GLuint program,
+                            ShaderProgramID program,
                             GLint location,
                             GLsizei bufSize,
                             GLuint *params)

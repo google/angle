@@ -217,16 +217,17 @@ void GL_APIENTRY GetActiveAtomicCounterBufferiv(GLuint program,
 
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetActiveAtomicCounterBufferiv(context, program, bufferIndex, pname, params));
+            (context->skipValidation() || ValidateGetActiveAtomicCounterBufferiv(
+                                              context, programPacked, bufferIndex, pname, params));
         if (isCallValid)
         {
-            context->getActiveAtomicCounterBufferiv(program, bufferIndex, pname, params);
+            context->getActiveAtomicCounterBufferiv(programPacked, bufferIndex, pname, params);
         }
-        ANGLE_CAPTURE(GetActiveAtomicCounterBufferiv, isCallValid, context, program, bufferIndex,
-                      pname, params);
+        ANGLE_CAPTURE(GetActiveAtomicCounterBufferiv, isCallValid, context, programPacked,
+                      bufferIndex, pname, params);
     }
 }
 

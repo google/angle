@@ -16,7 +16,7 @@ bool ValidateBeginConditionalRender(Context *context, GLuint id, GLenum mode)
 }
 
 bool ValidateBindFragDataLocation(Context *context,
-                                  GLuint program,
+                                  ShaderProgramID program,
                                   GLuint color,
                                   const GLchar *name)
 {

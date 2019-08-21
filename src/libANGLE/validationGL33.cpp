@@ -12,7 +12,7 @@ namespace gl
 {
 
 bool ValidateBindFragDataLocationIndexed(Context *context,
-                                         GLuint program,
+                                         ShaderProgramID program,
                                          GLuint colorNumber,
                                          GLuint index,
                                          const GLchar *name)
@@ -40,7 +40,7 @@ bool ValidateColorP4uiv(Context *context, GLenum type, const GLuint *color)
     return true;
 }
 
-bool ValidateGetFragDataIndex(Context *context, GLuint program, const GLchar *name)
+bool ValidateGetFragDataIndex(Context *context, ShaderProgramID program, const GLchar *name)
 {
     return true;
 }

@@ -62,7 +62,7 @@ bool ValidateDrawTransformFeedbackStreamInstanced(Context *context,
 }
 
 bool ValidateGetActiveAtomicCounterBufferiv(Context *context,
-                                            GLuint program,
+                                            ShaderProgramID program,
                                             GLuint bufferIndex,
                                             GLenum pname,
                                             GLint *params)

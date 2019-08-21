@@ -132,18 +132,18 @@ bool ValidateGenSamplers(Context *context, GLsizei count, SamplerID *samplersPac
 bool ValidateGenTransformFeedbacks(Context *context, GLsizei n, GLuint *ids);
 bool ValidateGenVertexArrays(Context *context, GLsizei n, GLuint *arrays);
 bool ValidateGetActiveUniformBlockName(Context *context,
-                                       GLuint program,
+                                       ShaderProgramID programPacked,
                                        GLuint uniformBlockIndex,
                                        GLsizei bufSize,
                                        GLsizei *length,
                                        GLchar *uniformBlockName);
 bool ValidateGetActiveUniformBlockiv(Context *context,
-                                     GLuint program,
+                                     ShaderProgramID programPacked,
                                      GLuint uniformBlockIndex,
                                      GLenum pname,
                                      GLint *params);
 bool ValidateGetActiveUniformsiv(Context *context,
-                                 GLuint program,
+                                 ShaderProgramID programPacked,
                                  GLsizei uniformCount,
                                  const GLuint *uniformIndices,
                                  GLenum pname,
@@ -156,7 +156,9 @@ bool ValidateGetBufferPointerv(Context *context,
                                BufferBinding targetPacked,
                                GLenum pname,
                                void **params);
-bool ValidateGetFragDataLocation(Context *context, GLuint program, const GLchar *name);
+bool ValidateGetFragDataLocation(Context *context,
+                                 ShaderProgramID programPacked,
+                                 const GLchar *name);
 bool ValidateGetInteger64i_v(Context *context, GLenum target, GLuint index, GLint64 *data);
 bool ValidateGetInteger64v(Context *context, GLenum pname, GLint64 *data);
 bool ValidateGetIntegeri_v(Context *context, GLenum target, GLuint index, GLint *data);
@@ -167,7 +169,7 @@ bool ValidateGetInternalformativ(Context *context,
                                  GLsizei bufSize,
                                  GLint *params);
 bool ValidateGetProgramBinary(Context *context,
-                              GLuint program,
+                              ShaderProgramID programPacked,
                               GLsizei bufSize,
                               GLsizei *length,
                               GLenum *binaryFormat,
@@ -190,20 +192,25 @@ bool ValidateGetSynciv(Context *context,
                        GLsizei *length,
                        GLint *values);
 bool ValidateGetTransformFeedbackVarying(Context *context,
-                                         GLuint program,
+                                         ShaderProgramID programPacked,
                                          GLuint index,
                                          GLsizei bufSize,
                                          GLsizei *length,
                                          GLsizei *size,
                                          GLenum *type,
                                          GLchar *name);
-bool ValidateGetUniformBlockIndex(Context *context, GLuint program, const GLchar *uniformBlockName);
+bool ValidateGetUniformBlockIndex(Context *context,
+                                  ShaderProgramID programPacked,
+                                  const GLchar *uniformBlockName);
 bool ValidateGetUniformIndices(Context *context,
-                               GLuint program,
+                               ShaderProgramID programPacked,
                                GLsizei uniformCount,
                                const GLchar *const *uniformNames,
                                GLuint *uniformIndices);
-bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint *params);
+bool ValidateGetUniformuiv(Context *context,
+                           ShaderProgramID programPacked,
+                           GLint location,
+                           GLuint *params);
 bool ValidateGetVertexAttribIiv(Context *context, GLuint index, GLenum pname, GLint *params);
 bool ValidateGetVertexAttribIuiv(Context *context, GLuint index, GLenum pname, GLuint *params);
 bool ValidateInvalidateFramebuffer(Context *context,
@@ -230,11 +237,14 @@ bool ValidateMapBufferRange(Context *context,
                             GLbitfield access);
 bool ValidatePauseTransformFeedback(Context *context);
 bool ValidateProgramBinary(Context *context,
-                           GLuint program,
+                           ShaderProgramID programPacked,
                            GLenum binaryFormat,
                            const void *binary,
                            GLsizei length);
-bool ValidateProgramParameteri(Context *context, GLuint program, GLenum pname, GLint value);
+bool ValidateProgramParameteri(Context *context,
+                               ShaderProgramID programPacked,
+                               GLenum pname,
+                               GLint value);
 bool ValidateReadBuffer(Context *context, GLenum src);
 bool ValidateRenderbufferStorageMultisample(Context *context,
                                             GLenum target,
@@ -296,7 +306,7 @@ bool ValidateTexSubImage3D(Context *context,
                            GLenum type,
                            const void *pixels);
 bool ValidateTransformFeedbackVaryings(Context *context,
-                                       GLuint program,
+                                       ShaderProgramID programPacked,
                                        GLsizei count,
                                        const GLchar *const *varyings,
                                        GLenum bufferMode);
@@ -314,7 +324,7 @@ bool ValidateUniform4ui(Context *context,
                         GLuint v3);
 bool ValidateUniform4uiv(Context *context, GLint location, GLsizei count, const GLuint *value);
 bool ValidateUniformBlockBinding(Context *context,
-                                 GLuint program,
+                                 ShaderProgramID programPacked,
                                  GLuint uniformBlockIndex,
                                  GLuint uniformBlockBinding);
 bool ValidateUniformMatrix2x3fv(Context *context,

@@ -313,16 +313,18 @@ void GL_APIENTRY GetActiveSubroutineName(GLuint program,
 
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetActiveSubroutineName(context, program, shadertype, index,
-                                                            bufsize, length, name));
+                            ValidateGetActiveSubroutineName(context, programPacked, shadertype,
+                                                            index, bufsize, length, name));
         if (isCallValid)
         {
-            context->getActiveSubroutineName(program, shadertype, index, bufsize, length, name);
+            context->getActiveSubroutineName(programPacked, shadertype, index, bufsize, length,
+                                             name);
         }
-        ANGLE_CAPTURE(GetActiveSubroutineName, isCallValid, context, program, shadertype, index,
-                      bufsize, length, name);
+        ANGLE_CAPTURE(GetActiveSubroutineName, isCallValid, context, programPacked, shadertype,
+                      index, bufsize, length, name);
     }
 }
 
@@ -342,17 +344,18 @@ void GL_APIENTRY GetActiveSubroutineUniformName(GLuint program,
 
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetActiveSubroutineUniformName(context, program, shadertype,
-                                                                   index, bufsize, length, name));
+                            ValidateGetActiveSubroutineUniformName(
+                                context, programPacked, shadertype, index, bufsize, length, name));
         if (isCallValid)
         {
-            context->getActiveSubroutineUniformName(program, shadertype, index, bufsize, length,
-                                                    name);
+            context->getActiveSubroutineUniformName(programPacked, shadertype, index, bufsize,
+                                                    length, name);
         }
-        ANGLE_CAPTURE(GetActiveSubroutineUniformName, isCallValid, context, program, shadertype,
-                      index, bufsize, length, name);
+        ANGLE_CAPTURE(GetActiveSubroutineUniformName, isCallValid, context, programPacked,
+                      shadertype, index, bufsize, length, name);
     }
 }
 
@@ -371,15 +374,16 @@ void GL_APIENTRY GetActiveSubroutineUniformiv(GLuint program,
 
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetActiveSubroutineUniformiv(
-                                              context, program, shadertype, index, pname, values));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetActiveSubroutineUniformiv(context, programPacked, shadertype,
+                                                                 index, pname, values));
         if (isCallValid)
         {
-            context->getActiveSubroutineUniformiv(program, shadertype, index, pname, values);
+            context->getActiveSubroutineUniformiv(programPacked, shadertype, index, pname, values);
         }
-        ANGLE_CAPTURE(GetActiveSubroutineUniformiv, isCallValid, context, program, shadertype,
+        ANGLE_CAPTURE(GetActiveSubroutineUniformiv, isCallValid, context, programPacked, shadertype,
                       index, pname, values);
     }
 }
@@ -395,14 +399,17 @@ void GL_APIENTRY GetProgramStageiv(GLuint program, GLenum shadertype, GLenum pna
 
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetProgramStageiv(context, program, shadertype, pname, values));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetProgramStageiv(context, programPacked, shadertype, pname, values));
         if (isCallValid)
         {
-            context->getProgramStageiv(program, shadertype, pname, values);
+            context->getProgramStageiv(programPacked, shadertype, pname, values);
         }
-        ANGLE_CAPTURE(GetProgramStageiv, isCallValid, context, program, shadertype, pname, values);
+        ANGLE_CAPTURE(GetProgramStageiv, isCallValid, context, programPacked, shadertype, pname,
+                      values);
     }
 }
 
@@ -440,18 +447,19 @@ GLuint GL_APIENTRY GetSubroutineIndex(GLuint program, GLenum shadertype, const G
     GLuint returnValue;
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetSubroutineIndex(context, program, shadertype, name));
+                            ValidateGetSubroutineIndex(context, programPacked, shadertype, name));
         if (isCallValid)
         {
-            returnValue = context->getSubroutineIndex(program, shadertype, name);
+            returnValue = context->getSubroutineIndex(programPacked, shadertype, name);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineIndex, GLuint>();
         }
-        ANGLE_CAPTURE(GetSubroutineIndex, isCallValid, context, program, shadertype, name,
+        ANGLE_CAPTURE(GetSubroutineIndex, isCallValid, context, programPacked, shadertype, name,
                       returnValue);
     }
     else
@@ -475,19 +483,21 @@ GLint GL_APIENTRY GetSubroutineUniformLocation(GLuint program,
     GLint returnValue;
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateGetSubroutineUniformLocation(
-                                                             context, program, shadertype, name));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetSubroutineUniformLocation(context, programPacked, shadertype, name));
         if (isCallValid)
         {
-            returnValue = context->getSubroutineUniformLocation(program, shadertype, name);
+            returnValue = context->getSubroutineUniformLocation(programPacked, shadertype, name);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineUniformLocation, GLint>();
         }
-        ANGLE_CAPTURE(GetSubroutineUniformLocation, isCallValid, context, program, shadertype, name,
-                      returnValue);
+        ANGLE_CAPTURE(GetSubroutineUniformLocation, isCallValid, context, programPacked, shadertype,
+                      name, returnValue);
     }
     else
     {
@@ -530,14 +540,15 @@ void GL_APIENTRY GetUniformdv(GLuint program, GLint location, GLdouble *params)
 
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetUniformdv(context, program, location, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetUniformdv(context, programPacked, location, params));
         if (isCallValid)
         {
-            context->getUniformdv(program, location, params);
+            context->getUniformdv(programPacked, location, params);
         }
-        ANGLE_CAPTURE(GetUniformdv, isCallValid, context, program, location, params);
+        ANGLE_CAPTURE(GetUniformdv, isCallValid, context, programPacked, location, params);
     }
 }
 

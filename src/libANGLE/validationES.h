@@ -94,12 +94,12 @@ bool ValidateWebGLVertexAttribPointer(Context *context,
 // Returns valid program if id is a valid program name
 // Errors INVALID_OPERATION if valid shader is given and returns NULL
 // Errors INVALID_VALUE otherwise and returns NULL
-Program *GetValidProgram(Context *context, GLuint id);
+Program *GetValidProgram(Context *context, ShaderProgramID id);
 
 // Returns valid shader if id is a valid shader name
 // Errors INVALID_OPERATION if valid program is given and returns NULL
 // Errors INVALID_VALUE otherwise and returns NULL
-Shader *GetValidShader(Context *context, GLuint id);
+Shader *GetValidShader(Context *context, ShaderProgramID id);
 
 bool ValidateAttachmentTarget(Context *context, GLenum attachment);
 bool ValidateRenderbufferStorageParametersBase(Context *context,
@@ -367,49 +367,49 @@ bool ValidateFramebufferTextureBase(Context *context,
                                     TextureID texture,
                                     GLint level);
 
-bool ValidateGetUniformBase(Context *context, GLuint program, GLint location);
+bool ValidateGetUniformBase(Context *context, ShaderProgramID program, GLint location);
 bool ValidateGetnUniformfvEXT(Context *context,
-                              GLuint program,
+                              ShaderProgramID program,
                               GLint location,
                               GLsizei bufSize,
                               GLfloat *params);
 bool ValidateGetnUniformfvRobustANGLE(Context *context,
-                                      GLuint program,
+                                      ShaderProgramID program,
                                       GLint location,
                                       GLsizei bufSize,
                                       GLsizei *length,
                                       GLfloat *params);
 bool ValidateGetnUniformivEXT(Context *context,
-                              GLuint program,
+                              ShaderProgramID program,
                               GLint location,
                               GLsizei bufSize,
                               GLint *params);
 bool ValidateGetnUniformivRobustANGLE(Context *context,
-                                      GLuint program,
+                                      ShaderProgramID program,
                                       GLint location,
                                       GLsizei bufSize,
                                       GLsizei *length,
                                       GLint *params);
 bool ValidateGetnUniformuivRobustANGLE(Context *context,
-                                       GLuint program,
+                                       ShaderProgramID program,
                                        GLint location,
                                        GLsizei bufSize,
                                        GLsizei *length,
                                        GLuint *params);
 bool ValidateGetUniformfvRobustANGLE(Context *context,
-                                     GLuint program,
+                                     ShaderProgramID program,
                                      GLint location,
                                      GLsizei bufSize,
                                      GLsizei *length,
                                      GLfloat *params);
 bool ValidateGetUniformivRobustANGLE(Context *context,
-                                     GLuint program,
+                                     ShaderProgramID program,
                                      GLint location,
                                      GLsizei bufSize,
                                      GLsizei *length,
                                      GLint *params);
 bool ValidateGetUniformuivRobustANGLE(Context *context,
-                                      GLuint program,
+                                      ShaderProgramID program,
                                       GLint location,
                                       GLsizei bufSize,
                                       GLsizei *length,
@@ -434,12 +434,12 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
 bool ValidateBindVertexArrayBase(Context *context, GLuint array);
 
 bool ValidateProgramBinaryBase(Context *context,
-                               GLuint program,
+                               ShaderProgramID program,
                                GLenum binaryFormat,
                                const void *binary,
                                GLint length);
 bool ValidateGetProgramBinaryBase(Context *context,
-                                  GLuint program,
+                                  ShaderProgramID program,
                                   GLsizei bufSize,
                                   GLsizei *length,
                                   GLenum *binaryFormat,
@@ -480,14 +480,20 @@ bool ValidateGetBufferParameterBase(Context *context,
                                     bool pointerVersion,
                                     GLsizei *numParams);
 
-bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GLsizei *numParams);
+bool ValidateGetProgramivBase(Context *context,
+                              ShaderProgramID program,
+                              GLenum pname,
+                              GLsizei *numParams);
 
 bool ValidateGetRenderbufferParameterivBase(Context *context,
                                             GLenum target,
                                             GLenum pname,
                                             GLsizei *length);
 
-bool ValidateGetShaderivBase(Context *context, GLuint shader, GLenum pname, GLsizei *length);
+bool ValidateGetShaderivBase(Context *context,
+                             ShaderProgramID shader,
+                             GLenum pname,
+                             GLsizei *length);
 
 bool ValidateGetTexParameterBase(Context *context,
                                  TextureType target,
@@ -575,7 +581,7 @@ bool ValidateRobustCompressedTexImageBase(Context *context, GLsizei imageSize, G
 bool ValidateVertexAttribIndex(Context *context, GLuint index);
 
 bool ValidateGetActiveUniformBlockivBase(Context *context,
-                                         GLuint program,
+                                         ShaderProgramID program,
                                          GLuint uniformBlockIndex,
                                          GLenum pname,
                                          GLsizei *length);

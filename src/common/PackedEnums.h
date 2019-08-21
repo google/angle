@@ -396,6 +396,11 @@ struct PathID
     GLuint value;
 };
 
+struct ShaderProgramID
+{
+    GLuint value;
+};
+
 struct TextureID
 {
     GLuint value;

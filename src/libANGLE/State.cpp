@@ -2089,7 +2089,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             *params = mVertexArray->id();
             break;
         case GL_CURRENT_PROGRAM:
-            *params = mProgram ? mProgram->id() : 0;
+            *params = mProgram ? mProgram->id().value : 0;
             break;
         case GL_PACK_ALIGNMENT:
             *params = mPack.alignment;

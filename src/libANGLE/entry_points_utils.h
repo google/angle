@@ -43,6 +43,12 @@ struct DefaultReturnValue<EP, GLboolean>
     static constexpr GLboolean kValue = GL_FALSE;
 };
 
+template <EntryPoint EP>
+struct DefaultReturnValue<EP, ShaderProgramID>
+{
+    static constexpr ShaderProgramID kValue = {0};
+};
+
 // Catch-all rules for pointer types.
 template <EntryPoint EP, typename PointerType>
 struct DefaultReturnValue<EP, const PointerType *>

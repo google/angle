@@ -89,7 +89,7 @@ bool ValidateGetObjectPtrLabel(Context *context,
                                GLsizei *length,
                                GLchar *label);
 bool ValidateGetProgramResourceLocationIndex(Context *context,
-                                             GLuint program,
+                                             ShaderProgramID programPacked,
                                              GLenum programInterface,
                                              const GLchar *name);
 bool ValidateInvalidateBufferData(Context *context, BufferID bufferPacked);
@@ -131,7 +131,7 @@ bool ValidatePushDebugGroup(Context *context,
                             GLsizei length,
                             const GLchar *message);
 bool ValidateShaderStorageBlockBinding(Context *context,
-                                       GLuint program,
+                                       ShaderProgramID programPacked,
                                        GLuint storageBlockIndex,
                                        GLuint storageBlockBinding);
 bool ValidateTexBufferRange(Context *context,

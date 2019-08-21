@@ -267,6 +267,10 @@ void WriteParamValueToStream<ParamType::TProgramPipelineID>(std::ostream &os,
                                                             gl::ProgramPipelineID value);
 
 template <>
+void WriteParamValueToStream<ParamType::TShaderProgramID>(std::ostream &os,
+                                                          gl::ShaderProgramID value);
+
+template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os,
                                                          gl::RenderbufferID value);
 

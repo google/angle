@@ -10,10 +10,10 @@
 #ifndef ANGLE_CONTEXT_GL_3_1_AUTOGEN_H_
 #define ANGLE_CONTEXT_GL_3_1_AUTOGEN_H_
 
-#define ANGLE_GL_3_1_CONTEXT_API                                                    \
-    void getActiveUniformName(GLuint program, GLuint uniformIndex, GLsizei bufSize, \
-                              GLsizei *length, GLchar *uniformName);                \
-    void primitiveRestartIndex(GLuint index);                                       \
+#define ANGLE_GL_3_1_CONTEXT_API                                                                   \
+    void getActiveUniformName(ShaderProgramID programPacked, GLuint uniformIndex, GLsizei bufSize, \
+                              GLsizei *length, GLchar *uniformName);                               \
+    void primitiveRestartIndex(GLuint index);                                                      \
     void texBuffer(GLenum target, GLenum internalformat, BufferID bufferPacked);
 
 #endif  // ANGLE_CONTEXT_API_3_1_AUTOGEN_H_

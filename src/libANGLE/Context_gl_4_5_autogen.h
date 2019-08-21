@@ -119,8 +119,10 @@
                              void *row, GLsizei columnBufSize, void *column, void *span);          \
     void getnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize,     \
                       void *pixels);                                                               \
-    void getnUniformdv(GLuint program, GLint location, GLsizei bufSize, GLdouble *params);         \
-    void getnUniformuiv(GLuint program, GLint location, GLsizei bufSize, GLuint *params);          \
+    void getnUniformdv(ShaderProgramID programPacked, GLint location, GLsizei bufSize,             \
+                       GLdouble *params);                                                          \
+    void getnUniformuiv(ShaderProgramID programPacked, GLint location, GLsizei bufSize,            \
+                        GLuint *params);                                                           \
     void invalidateNamedFramebufferData(GLuint framebuffer, GLsizei numAttachments,                \
                                         const GLenum *attachments);                                \
     void invalidateNamedFramebufferSubData(GLuint framebuffer, GLsizei numAttachments,             \

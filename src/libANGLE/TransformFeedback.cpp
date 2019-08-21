@@ -235,9 +235,9 @@ void TransformFeedback::bindProgram(const Context *context, Program *program)
     }
 }
 
-bool TransformFeedback::hasBoundProgram(GLuint program) const
+bool TransformFeedback::hasBoundProgram(ShaderProgramID program) const
 {
-    return mState.mProgram != nullptr && mState.mProgram->id() == program;
+    return mState.mProgram != nullptr && mState.mProgram->id().value == program.value;
 }
 
 angle::Result TransformFeedback::detachBuffer(const Context *context, GLuint bufferName)

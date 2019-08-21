@@ -39,15 +39,16 @@ void GL_APIENTRY BindFragDataLocationIndexed(GLuint program,
 
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateBindFragDataLocationIndexed(context, program, colorNumber, index, name));
+             ValidateBindFragDataLocationIndexed(context, programPacked, colorNumber, index, name));
         if (isCallValid)
         {
-            context->bindFragDataLocationIndexed(program, colorNumber, index, name);
+            context->bindFragDataLocationIndexed(programPacked, colorNumber, index, name);
         }
-        ANGLE_CAPTURE(BindFragDataLocationIndexed, isCallValid, context, program, colorNumber,
+        ANGLE_CAPTURE(BindFragDataLocationIndexed, isCallValid, context, programPacked, colorNumber,
                       index, name);
     }
 }
@@ -195,18 +196,19 @@ GLint GL_APIENTRY GetFragDataIndex(GLuint program, const GLchar *name)
     GLint returnValue;
     if (context)
     {
+        ShaderProgramID programPacked                 = FromGL<ShaderProgramID>(program);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGetFragDataIndex(context, program, name));
+            (context->skipValidation() || ValidateGetFragDataIndex(context, programPacked, name));
         if (isCallValid)
         {
-            returnValue = context->getFragDataIndex(program, name);
+            returnValue = context->getFragDataIndex(programPacked, name);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataIndex, GLint>();
         }
-        ANGLE_CAPTURE(GetFragDataIndex, isCallValid, context, program, name, returnValue);
+        ANGLE_CAPTURE(GetFragDataIndex, isCallValid, context, programPacked, name, returnValue);
     }
     else
     {

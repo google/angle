@@ -1057,7 +1057,7 @@ bool ValidateWebGLVertexAttribPointer(Context *context,
     return true;
 }
 
-Program *GetValidProgramNoResolve(Context *context, GLuint id)
+Program *GetValidProgramNoResolve(Context *context, ShaderProgramID id)
 {
     // ES3 spec (section 2.11.1) -- "Commands that accept shader or program object names will
     // generate the error INVALID_VALUE if the provided name is not the name of either a shader
@@ -1081,7 +1081,7 @@ Program *GetValidProgramNoResolve(Context *context, GLuint id)
     return validProgram;
 }
 
-Program *GetValidProgram(Context *context, GLuint id)
+Program *GetValidProgram(Context *context, ShaderProgramID id)
 {
     Program *program = GetValidProgramNoResolve(context, id);
     if (program)
@@ -1091,7 +1091,7 @@ Program *GetValidProgram(Context *context, GLuint id)
     return program;
 }
 
-Shader *GetValidShader(Context *context, GLuint id)
+Shader *GetValidShader(Context *context, ShaderProgramID id)
 {
     // See ValidProgram for spec details.
 
@@ -3068,9 +3068,9 @@ bool ValidateFramebufferTextureBase(Context *context,
     return true;
 }
 
-bool ValidateGetUniformBase(Context *context, GLuint program, GLint location)
+bool ValidateGetUniformBase(Context *context, ShaderProgramID program, GLint location)
 {
-    if (program == 0)
+    if (program.value == 0)
     {
         context->validationError(GL_INVALID_VALUE, kProgramDoesNotExist);
         return false;
@@ -3098,7 +3098,7 @@ bool ValidateGetUniformBase(Context *context, GLuint program, GLint location)
 }
 
 static bool ValidateSizedGetUniform(Context *context,
-                                    GLuint program,
+                                    ShaderProgramID program,
                                     GLint location,
                                     GLsizei bufSize,
                                     GLsizei *length)
@@ -3140,7 +3140,7 @@ static bool ValidateSizedGetUniform(Context *context,
 }
 
 bool ValidateGetnUniformfvEXT(Context *context,
-                              GLuint program,
+                              ShaderProgramID program,
                               GLint location,
                               GLsizei bufSize,
                               GLfloat *params)
@@ -3149,7 +3149,7 @@ bool ValidateGetnUniformfvEXT(Context *context,
 }
 
 bool ValidateGetnUniformfvRobustANGLE(Context *context,
-                                      GLuint program,
+                                      ShaderProgramID program,
                                       GLint location,
                                       GLsizei bufSize,
                                       GLsizei *length,
@@ -3160,7 +3160,7 @@ bool ValidateGetnUniformfvRobustANGLE(Context *context,
 }
 
 bool ValidateGetnUniformivEXT(Context *context,
-                              GLuint program,
+                              ShaderProgramID program,
                               GLint location,
                               GLsizei bufSize,
                               GLint *params)
@@ -3169,7 +3169,7 @@ bool ValidateGetnUniformivEXT(Context *context,
 }
 
 bool ValidateGetnUniformivRobustANGLE(Context *context,
-                                      GLuint program,
+                                      ShaderProgramID program,
                                       GLint location,
                                       GLsizei bufSize,
                                       GLsizei *length,
@@ -3180,7 +3180,7 @@ bool ValidateGetnUniformivRobustANGLE(Context *context,
 }
 
 bool ValidateGetnUniformuivRobustANGLE(Context *context,
-                                       GLuint program,
+                                       ShaderProgramID program,
                                        GLint location,
                                        GLsizei bufSize,
                                        GLsizei *length,
@@ -3191,7 +3191,7 @@ bool ValidateGetnUniformuivRobustANGLE(Context *context,
 }
 
 bool ValidateGetUniformfvRobustANGLE(Context *context,
-                                     GLuint program,
+                                     ShaderProgramID program,
                                      GLint location,
                                      GLsizei bufSize,
                                      GLsizei *length,
@@ -3216,7 +3216,7 @@ bool ValidateGetUniformfvRobustANGLE(Context *context,
 }
 
 bool ValidateGetUniformivRobustANGLE(Context *context,
-                                     GLuint program,
+                                     ShaderProgramID program,
                                      GLint location,
                                      GLsizei bufSize,
                                      GLsizei *length,
@@ -3241,7 +3241,7 @@ bool ValidateGetUniformivRobustANGLE(Context *context,
 }
 
 bool ValidateGetUniformuivRobustANGLE(Context *context,
-                                      GLuint program,
+                                      ShaderProgramID program,
                                       GLint location,
                                       GLsizei bufSize,
                                       GLsizei *length,
@@ -3486,7 +3486,7 @@ bool ValidateBindVertexArrayBase(Context *context, GLuint array)
 }
 
 bool ValidateProgramBinaryBase(Context *context,
-                               GLuint program,
+                               ShaderProgramID program,
                                GLenum binaryFormat,
                                const void *binary,
                                GLint length)
@@ -3516,7 +3516,7 @@ bool ValidateProgramBinaryBase(Context *context,
 }
 
 bool ValidateGetProgramBinaryBase(Context *context,
-                                  GLuint program,
+                                  ShaderProgramID program,
                                   GLsizei bufSize,
                                   GLsizei *length,
                                   GLenum *binaryFormat,
@@ -4202,7 +4202,10 @@ bool ValidateGetBufferParameteri64vRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GLsizei *numParams)
+bool ValidateGetProgramivBase(Context *context,
+                              ShaderProgramID program,
+                              GLenum pname,
+                              GLsizei *numParams)
 {
     // Currently, all GetProgramiv queries return 1 parameter
     if (numParams)
@@ -4345,7 +4348,7 @@ bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GL
 }
 
 bool ValidateGetProgramivRobustANGLE(Context *context,
-                                     GLuint program,
+                                     ShaderProgramID program,
                                      GLenum pname,
                                      GLsizei bufSize,
                                      GLsizei *length,
@@ -4403,7 +4406,7 @@ bool ValidateGetRenderbufferParameterivRobustANGLE(Context *context,
 }
 
 bool ValidateGetShaderivRobustANGLE(Context *context,
-                                    GLuint shader,
+                                    ShaderProgramID shader,
                                     GLenum pname,
                                     GLsizei bufSize,
                                     GLsizei *length,
@@ -4828,7 +4831,7 @@ bool ValidateGetVertexAttribIuivRobustANGLE(Context *context,
 }
 
 bool ValidateGetActiveUniformBlockivRobustANGLE(Context *context,
-                                                GLuint program,
+                                                ShaderProgramID program,
                                                 GLuint uniformBlockIndex,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -5087,7 +5090,10 @@ bool ValidateGetRenderbufferParameterivBase(Context *context,
     return true;
 }
 
-bool ValidateGetShaderivBase(Context *context, GLuint shader, GLenum pname, GLsizei *length)
+bool ValidateGetShaderivBase(Context *context,
+                             ShaderProgramID shader,
+                             GLenum pname,
+                             GLsizei *length)
 {
     if (length)
     {
@@ -5944,7 +5950,7 @@ bool ValidateVertexAttribIndex(Context *context, GLuint index)
 }
 
 bool ValidateGetActiveUniformBlockivBase(Context *context,
-                                         GLuint program,
+                                         ShaderProgramID program,
                                          GLuint uniformBlockIndex,
                                          GLenum pname,
                                          GLsizei *length)

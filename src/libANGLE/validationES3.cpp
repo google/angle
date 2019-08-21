@@ -1501,7 +1501,10 @@ bool ValidateDrawRangeElements(Context *context,
     return true;
 }
 
-bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint *params)
+bool ValidateGetUniformuiv(Context *context,
+                           ShaderProgramID program,
+                           GLint location,
+                           GLuint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1808,7 +1811,7 @@ bool ValidateBindBufferRange(Context *context,
 }
 
 bool ValidateProgramBinary(Context *context,
-                           GLuint program,
+                           ShaderProgramID program,
                            GLenum binaryFormat,
                            const void *binary,
                            GLint length)
@@ -1823,7 +1826,7 @@ bool ValidateProgramBinary(Context *context,
 }
 
 bool ValidateGetProgramBinary(Context *context,
-                              GLuint program,
+                              ShaderProgramID program,
                               GLsizei bufSize,
                               GLsizei *length,
                               GLenum *binaryFormat,
@@ -1838,7 +1841,7 @@ bool ValidateGetProgramBinary(Context *context,
     return ValidateGetProgramBinaryBase(context, program, bufSize, length, binaryFormat, binary);
 }
 
-bool ValidateProgramParameteri(Context *context, GLuint program, GLenum pname, GLint value)
+bool ValidateProgramParameteri(Context *context, ShaderProgramID program, GLenum pname, GLint value)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3517,7 +3520,7 @@ bool ValidateEndTransformFeedback(Context *context)
 }
 
 bool ValidateTransformFeedbackVaryings(Context *context,
-                                       GLuint program,
+                                       ShaderProgramID program,
                                        GLsizei count,
                                        const GLchar *const *varyings,
                                        GLenum bufferMode)
@@ -3563,7 +3566,7 @@ bool ValidateTransformFeedbackVaryings(Context *context,
 }
 
 bool ValidateGetTransformFeedbackVarying(Context *context,
-                                         GLuint program,
+                                         ShaderProgramID program,
                                          GLuint index,
                                          GLsizei bufSize,
                                          GLsizei *length,
@@ -3750,7 +3753,7 @@ bool ValidateVertexAttribI4uiv(Context *context, GLuint index, const GLuint *v)
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateGetFragDataLocation(Context *context, GLuint program, const GLchar *name)
+bool ValidateGetFragDataLocation(Context *context, ShaderProgramID program, const GLchar *name)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3774,7 +3777,7 @@ bool ValidateGetFragDataLocation(Context *context, GLuint program, const GLchar 
 }
 
 bool ValidateGetUniformIndices(Context *context,
-                               GLuint program,
+                               ShaderProgramID program,
                                GLsizei uniformCount,
                                const GLchar *const *uniformNames,
                                GLuint *uniformIndices)
@@ -3801,7 +3804,7 @@ bool ValidateGetUniformIndices(Context *context,
 }
 
 bool ValidateGetActiveUniformsiv(Context *context,
-                                 GLuint program,
+                                 ShaderProgramID program,
                                  GLsizei uniformCount,
                                  const GLuint *uniformIndices,
                                  GLenum pname,
@@ -3869,7 +3872,9 @@ bool ValidateGetActiveUniformsiv(Context *context,
     return true;
 }
 
-bool ValidateGetUniformBlockIndex(Context *context, GLuint program, const GLchar *uniformBlockName)
+bool ValidateGetUniformBlockIndex(Context *context,
+                                  ShaderProgramID program,
+                                  const GLchar *uniformBlockName)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3887,7 +3892,7 @@ bool ValidateGetUniformBlockIndex(Context *context, GLuint program, const GLchar
 }
 
 bool ValidateGetActiveUniformBlockiv(Context *context,
-                                     GLuint program,
+                                     ShaderProgramID program,
                                      GLuint uniformBlockIndex,
                                      GLenum pname,
                                      GLint *params)
@@ -3896,7 +3901,7 @@ bool ValidateGetActiveUniformBlockiv(Context *context,
 }
 
 bool ValidateGetActiveUniformBlockName(Context *context,
-                                       GLuint program,
+                                       ShaderProgramID program,
                                        GLuint uniformBlockIndex,
                                        GLsizei bufSize,
                                        GLsizei *length,
@@ -3924,7 +3929,7 @@ bool ValidateGetActiveUniformBlockName(Context *context,
 }
 
 bool ValidateUniformBlockBinding(Context *context,
-                                 GLuint program,
+                                 ShaderProgramID program,
                                  GLuint uniformBlockIndex,
                                  GLuint uniformBlockBinding)
 {
@@ -4305,7 +4310,7 @@ bool ValidateGetInternalformativ(Context *context,
 }
 
 bool ValidateBindFragDataLocationIndexedEXT(Context *context,
-                                            GLuint program,
+                                            ShaderProgramID program,
                                             GLuint colorNumber,
                                             GLuint index,
                                             const char *name)
@@ -4354,14 +4359,14 @@ bool ValidateBindFragDataLocationIndexedEXT(Context *context,
 }
 
 bool ValidateBindFragDataLocationEXT(Context *context,
-                                     GLuint program,
+                                     ShaderProgramID program,
                                      GLuint colorNumber,
                                      const char *name)
 {
     return ValidateBindFragDataLocationIndexedEXT(context, program, colorNumber, 0u, name);
 }
 
-bool ValidateGetFragDataIndexEXT(Context *context, GLuint program, const char *name)
+bool ValidateGetFragDataIndexEXT(Context *context, ShaderProgramID program, const char *name)
 {
     if (!context->getExtensions().blendFuncExtended)
     {

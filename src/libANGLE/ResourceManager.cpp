@@ -157,52 +157,52 @@ void ShaderProgramManager::reset(const Context *context)
 {
     while (!mPrograms.empty())
     {
-        deleteProgram(context, mPrograms.begin()->first);
+        deleteProgram(context, {mPrograms.begin()->first});
     }
     mPrograms.clear();
     while (!mShaders.empty())
     {
-        deleteShader(context, mShaders.begin()->first);
+        deleteShader(context, {mShaders.begin()->first});
     }
     mShaders.clear();
 }
 
-GLuint ShaderProgramManager::createShader(rx::GLImplFactory *factory,
-                                          const gl::Limitations &rendererLimitations,
-                                          ShaderType type)
+ShaderProgramID ShaderProgramManager::createShader(rx::GLImplFactory *factory,
+                                                   const gl::Limitations &rendererLimitations,
+                                                   ShaderType type)
 {
     ASSERT(type != ShaderType::InvalidEnum);
-    GLuint handle = mHandleAllocator.allocate();
+    ShaderProgramID handle = ShaderProgramID{mHandleAllocator.allocate()};
     mShaders.assign(handle, new Shader(this, factory, rendererLimitations, type, handle));
     return handle;
 }
 
-void ShaderProgramManager::deleteShader(const Context *context, GLuint shader)
+void ShaderProgramManager::deleteShader(const Context *context, ShaderProgramID shader)
 {
     deleteObject(context, &mShaders, shader);
 }
 
-Shader *ShaderProgramManager::getShader(GLuint handle) const
+Shader *ShaderProgramManager::getShader(ShaderProgramID handle) const
 {
     return mShaders.query(handle);
 }
 
-GLuint ShaderProgramManager::createProgram(rx::GLImplFactory *factory)
+ShaderProgramID ShaderProgramManager::createProgram(rx::GLImplFactory *factory)
 {
-    GLuint handle = mHandleAllocator.allocate();
+    ShaderProgramID handle = ShaderProgramID{mHandleAllocator.allocate()};
     mPrograms.assign(handle, new Program(factory, this, handle));
     return handle;
 }
 
-void ShaderProgramManager::deleteProgram(const gl::Context *context, GLuint program)
+void ShaderProgramManager::deleteProgram(const gl::Context *context, ShaderProgramID program)
 {
     deleteObject(context, &mPrograms, program);
 }
 
-template <typename ObjectType>
+template <typename ObjectType, typename IDType>
 void ShaderProgramManager::deleteObject(const Context *context,
-                                        ResourceMap<ObjectType> *objectMap,
-                                        GLuint id)
+                                        ResourceMap<ObjectType, IDType> *objectMap,
+                                        IDType id)
 {
     ObjectType *object = objectMap->query(id);
     if (!object)
@@ -212,7 +212,7 @@ void ShaderProgramManager::deleteObject(const Context *context,
 
     if (object->getRefCount() == 0)
     {
-        mHandleAllocator.release(id);
+        mHandleAllocator.release(id.value);
         object->onDestroy(context);
         objectMap->erase(id, &object);
     }

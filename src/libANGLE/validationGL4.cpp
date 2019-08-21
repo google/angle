@@ -57,7 +57,7 @@ bool ValidateEndQueryIndexed(Context *context, GLenum target, GLuint index)
 }
 
 bool ValidateGetActiveSubroutineName(Context *context,
-                                     GLuint program,
+                                     ShaderProgramID program,
                                      GLenum shadertype,
                                      GLuint index,
                                      GLsizei bufsize,
@@ -68,7 +68,7 @@ bool ValidateGetActiveSubroutineName(Context *context,
 }
 
 bool ValidateGetActiveSubroutineUniformName(Context *context,
-                                            GLuint program,
+                                            ShaderProgramID program,
                                             GLenum shadertype,
                                             GLuint index,
                                             GLsizei bufsize,
@@ -79,7 +79,7 @@ bool ValidateGetActiveSubroutineUniformName(Context *context,
 }
 
 bool ValidateGetActiveSubroutineUniformiv(Context *context,
-                                          GLuint program,
+                                          ShaderProgramID program,
                                           GLenum shadertype,
                                           GLuint index,
                                           GLenum pname,
@@ -89,7 +89,7 @@ bool ValidateGetActiveSubroutineUniformiv(Context *context,
 }
 
 bool ValidateGetProgramStageiv(Context *context,
-                               GLuint program,
+                               ShaderProgramID program,
                                GLenum shadertype,
                                GLenum pname,
                                GLint *values)
@@ -107,7 +107,7 @@ bool ValidateGetQueryIndexediv(Context *context,
 }
 
 bool ValidateGetSubroutineIndex(Context *context,
-                                GLuint program,
+                                ShaderProgramID program,
                                 GLenum shadertype,
                                 const GLchar *name)
 {
@@ -115,7 +115,7 @@ bool ValidateGetSubroutineIndex(Context *context,
 }
 
 bool ValidateGetSubroutineUniformLocation(Context *context,
-                                          GLuint program,
+                                          ShaderProgramID program,
                                           GLenum shadertype,
                                           const GLchar *name)
 {
@@ -130,7 +130,10 @@ bool ValidateGetUniformSubroutineuiv(Context *context,
     return true;
 }
 
-bool ValidateGetUniformdv(Context *context, GLuint program, GLint location, GLdouble *params)
+bool ValidateGetUniformdv(Context *context,
+                          ShaderProgramID program,
+                          GLint location,
+                          GLdouble *params)
 {
     return true;
 }

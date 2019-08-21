@@ -123,7 +123,7 @@ bool ValidateGetObjectPtrLabel(Context *context,
 }
 
 bool ValidateGetProgramResourceLocationIndex(Context *context,
-                                             GLuint program,
+                                             ShaderProgramID program,
                                              GLenum programInterface,
                                              const GLchar *name)
 {
@@ -209,7 +209,7 @@ bool ValidatePushDebugGroup(Context *context,
 }
 
 bool ValidateShaderStorageBlockBinding(Context *context,
-                                       GLuint program,
+                                       ShaderProgramID program,
                                        GLuint storageBlockIndex,
                                        GLuint storageBlockBinding)
 {

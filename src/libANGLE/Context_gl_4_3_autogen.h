@@ -30,7 +30,7 @@
                                  GLsizei stride);                                                  \
     void multiDrawElementsIndirect(GLenum mode, GLenum type, const void *indirect,                 \
                                    GLsizei drawcount, GLsizei stride);                             \
-    void shaderStorageBlockBinding(GLuint program, GLuint storageBlockIndex,                       \
+    void shaderStorageBlockBinding(ShaderProgramID programPacked, GLuint storageBlockIndex,        \
                                    GLuint storageBlockBinding);                                    \
     void texBufferRange(GLenum target, GLenum internalformat, BufferID bufferPacked,               \
                         GLintptr offset, GLsizeiptr size);                                         \

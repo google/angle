@@ -407,7 +407,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     GLuint createFramebuffer();
     void deleteFramebuffer(GLuint framebuffer);
 
-    bool hasActiveTransformFeedback(GLuint program) const;
+    bool hasActiveTransformFeedback(ShaderProgramID program) const;
 
     // GL emulation: Interface to entry points
     ANGLE_GL_1_0_CONTEXT_API
@@ -511,7 +511,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams) const;
     bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams) const;
 
-    ANGLE_INLINE Program *getProgramResolveLink(GLuint handle) const
+    ANGLE_INLINE Program *getProgramResolveLink(ShaderProgramID handle) const
     {
         Program *program = mState.mShaderProgramManager->getProgram(handle);
         if (program)
@@ -521,8 +521,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         return program;
     }
 
-    Program *getProgramNoResolveLink(GLuint handle) const;
-    Shader *getShader(GLuint handle) const;
+    Program *getProgramNoResolveLink(ShaderProgramID handle) const;
+    Shader *getShader(ShaderProgramID handle) const;
 
     ANGLE_INLINE bool isTextureGenerated(TextureID texture) const
     {

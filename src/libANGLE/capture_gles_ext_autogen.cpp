@@ -661,7 +661,7 @@ CallCapture CaptureGetIntegervRobustANGLE(const Context *context,
 
 CallCapture CaptureGetProgramivRobustANGLE(const Context *context,
                                            bool isCallValid,
-                                           GLuint program,
+                                           ShaderProgramID programPacked,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            GLsizei *length,
@@ -669,20 +669,20 @@ CallCapture CaptureGetProgramivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetProgramivRobustANGLE_length(context, isCallValid, program, pname, bufSize, length,
-                                          params, &lengthParam);
+    CaptureGetProgramivRobustANGLE_length(context, isCallValid, programPacked, pname, bufSize,
+                                          length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetProgramivRobustANGLE_params(context, isCallValid, program, pname, bufSize, length,
-                                          params, &paramsParam);
+    CaptureGetProgramivRobustANGLE_params(context, isCallValid, programPacked, pname, bufSize,
+                                          length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetProgramivRobustANGLE, std::move(paramBuffer));
@@ -720,7 +720,7 @@ CallCapture CaptureGetRenderbufferParameterivRobustANGLE(const Context *context,
 
 CallCapture CaptureGetShaderivRobustANGLE(const Context *context,
                                           bool isCallValid,
-                                          GLuint shader,
+                                          ShaderProgramID shaderPacked,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -728,19 +728,19 @@ CallCapture CaptureGetShaderivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("shader", ParamType::TGLuint, shader);
+    paramBuffer.addValueParam("shaderPacked", ParamType::TShaderProgramID, shaderPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetShaderivRobustANGLE_length(context, isCallValid, shader, pname, bufSize, length,
+    CaptureGetShaderivRobustANGLE_length(context, isCallValid, shaderPacked, pname, bufSize, length,
                                          params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetShaderivRobustANGLE_params(context, isCallValid, shader, pname, bufSize, length,
+    CaptureGetShaderivRobustANGLE_params(context, isCallValid, shaderPacked, pname, bufSize, length,
                                          params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
@@ -807,7 +807,7 @@ CallCapture CaptureGetTexParameterivRobustANGLE(const Context *context,
 
 CallCapture CaptureGetUniformfvRobustANGLE(const Context *context,
                                            bool isCallValid,
-                                           GLuint program,
+                                           ShaderProgramID programPacked,
                                            GLint location,
                                            GLsizei bufSize,
                                            GLsizei *length,
@@ -815,20 +815,20 @@ CallCapture CaptureGetUniformfvRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetUniformfvRobustANGLE_length(context, isCallValid, program, location, bufSize, length,
-                                          params, &lengthParam);
+    CaptureGetUniformfvRobustANGLE_length(context, isCallValid, programPacked, location, bufSize,
+                                          length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-    CaptureGetUniformfvRobustANGLE_params(context, isCallValid, program, location, bufSize, length,
-                                          params, &paramsParam);
+    CaptureGetUniformfvRobustANGLE_params(context, isCallValid, programPacked, location, bufSize,
+                                          length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetUniformfvRobustANGLE, std::move(paramBuffer));
@@ -836,7 +836,7 @@ CallCapture CaptureGetUniformfvRobustANGLE(const Context *context,
 
 CallCapture CaptureGetUniformivRobustANGLE(const Context *context,
                                            bool isCallValid,
-                                           GLuint program,
+                                           ShaderProgramID programPacked,
                                            GLint location,
                                            GLsizei bufSize,
                                            GLsizei *length,
@@ -844,20 +844,20 @@ CallCapture CaptureGetUniformivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetUniformivRobustANGLE_length(context, isCallValid, program, location, bufSize, length,
-                                          params, &lengthParam);
+    CaptureGetUniformivRobustANGLE_length(context, isCallValid, programPacked, location, bufSize,
+                                          length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetUniformivRobustANGLE_params(context, isCallValid, program, location, bufSize, length,
-                                          params, &paramsParam);
+    CaptureGetUniformivRobustANGLE_params(context, isCallValid, programPacked, location, bufSize,
+                                          length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetUniformivRobustANGLE, std::move(paramBuffer));
@@ -1543,7 +1543,7 @@ CallCapture CaptureGetVertexAttribIuivRobustANGLE(const Context *context,
 
 CallCapture CaptureGetUniformuivRobustANGLE(const Context *context,
                                             bool isCallValid,
-                                            GLuint program,
+                                            ShaderProgramID programPacked,
                                             GLint location,
                                             GLsizei bufSize,
                                             GLsizei *length,
@@ -1551,20 +1551,20 @@ CallCapture CaptureGetUniformuivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetUniformuivRobustANGLE_length(context, isCallValid, program, location, bufSize, length,
-                                           params, &lengthParam);
+    CaptureGetUniformuivRobustANGLE_length(context, isCallValid, programPacked, location, bufSize,
+                                           length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetUniformuivRobustANGLE_params(context, isCallValid, program, location, bufSize, length,
-                                           params, &paramsParam);
+    CaptureGetUniformuivRobustANGLE_params(context, isCallValid, programPacked, location, bufSize,
+                                           length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetUniformuivRobustANGLE, std::move(paramBuffer));
@@ -1572,7 +1572,7 @@ CallCapture CaptureGetUniformuivRobustANGLE(const Context *context,
 
 CallCapture CaptureGetActiveUniformBlockivRobustANGLE(const Context *context,
                                                       bool isCallValid,
-                                                      GLuint program,
+                                                      ShaderProgramID programPacked,
                                                       GLuint uniformBlockIndex,
                                                       GLenum pname,
                                                       GLsizei bufSize,
@@ -1581,21 +1581,21 @@ CallCapture CaptureGetActiveUniformBlockivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("uniformBlockIndex", ParamType::TGLuint, uniformBlockIndex);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetActiveUniformBlockivRobustANGLE_length(context, isCallValid, program,
+    CaptureGetActiveUniformBlockivRobustANGLE_length(context, isCallValid, programPacked,
                                                      uniformBlockIndex, pname, bufSize, length,
                                                      params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetActiveUniformBlockivRobustANGLE_params(context, isCallValid, program,
+    CaptureGetActiveUniformBlockivRobustANGLE_params(context, isCallValid, programPacked,
                                                      uniformBlockIndex, pname, bufSize, length,
                                                      params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
@@ -1822,7 +1822,7 @@ CallCapture CaptureGetFramebufferParameterivRobustANGLE(const Context *context,
 
 CallCapture CaptureGetProgramInterfaceivRobustANGLE(const Context *context,
                                                     bool isCallValid,
-                                                    GLuint program,
+                                                    ShaderProgramID programPacked,
                                                     GLenum programInterface,
                                                     GLenum pname,
                                                     GLsizei bufSize,
@@ -1831,7 +1831,7 @@ CallCapture CaptureGetProgramInterfaceivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addEnumParam("programInterface", GLenumGroup::DefaultGroup, ParamType::TGLenum,
                              programInterface);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
@@ -1839,14 +1839,16 @@ CallCapture CaptureGetProgramInterfaceivRobustANGLE(const Context *context,
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetProgramInterfaceivRobustANGLE_length(context, isCallValid, program, programInterface,
-                                                   pname, bufSize, length, params, &lengthParam);
+    CaptureGetProgramInterfaceivRobustANGLE_length(context, isCallValid, programPacked,
+                                                   programInterface, pname, bufSize, length, params,
+                                                   &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetProgramInterfaceivRobustANGLE_params(context, isCallValid, program, programInterface,
-                                                   pname, bufSize, length, params, &paramsParam);
+    CaptureGetProgramInterfaceivRobustANGLE_params(context, isCallValid, programPacked,
+                                                   programInterface, pname, bufSize, length, params,
+                                                   &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetProgramInterfaceivRobustANGLE, std::move(paramBuffer));
@@ -2052,7 +2054,7 @@ CallCapture CaptureReadnPixelsRobustANGLE(const Context *context,
 
 CallCapture CaptureGetnUniformfvRobustANGLE(const Context *context,
                                             bool isCallValid,
-                                            GLuint program,
+                                            ShaderProgramID programPacked,
                                             GLint location,
                                             GLsizei bufSize,
                                             GLsizei *length,
@@ -2060,20 +2062,20 @@ CallCapture CaptureGetnUniformfvRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetnUniformfvRobustANGLE_length(context, isCallValid, program, location, bufSize, length,
-                                           params, &lengthParam);
+    CaptureGetnUniformfvRobustANGLE_length(context, isCallValid, programPacked, location, bufSize,
+                                           length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-    CaptureGetnUniformfvRobustANGLE_params(context, isCallValid, program, location, bufSize, length,
-                                           params, &paramsParam);
+    CaptureGetnUniformfvRobustANGLE_params(context, isCallValid, programPacked, location, bufSize,
+                                           length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetnUniformfvRobustANGLE, std::move(paramBuffer));
@@ -2081,7 +2083,7 @@ CallCapture CaptureGetnUniformfvRobustANGLE(const Context *context,
 
 CallCapture CaptureGetnUniformivRobustANGLE(const Context *context,
                                             bool isCallValid,
-                                            GLuint program,
+                                            ShaderProgramID programPacked,
                                             GLint location,
                                             GLsizei bufSize,
                                             GLsizei *length,
@@ -2089,20 +2091,20 @@ CallCapture CaptureGetnUniformivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetnUniformivRobustANGLE_length(context, isCallValid, program, location, bufSize, length,
-                                           params, &lengthParam);
+    CaptureGetnUniformivRobustANGLE_length(context, isCallValid, programPacked, location, bufSize,
+                                           length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetnUniformivRobustANGLE_params(context, isCallValid, program, location, bufSize, length,
-                                           params, &paramsParam);
+    CaptureGetnUniformivRobustANGLE_params(context, isCallValid, programPacked, location, bufSize,
+                                           length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetnUniformivRobustANGLE, std::move(paramBuffer));
@@ -2110,7 +2112,7 @@ CallCapture CaptureGetnUniformivRobustANGLE(const Context *context,
 
 CallCapture CaptureGetnUniformuivRobustANGLE(const Context *context,
                                              bool isCallValid,
-                                             GLuint program,
+                                             ShaderProgramID programPacked,
                                              GLint location,
                                              GLsizei bufSize,
                                              GLsizei *length,
@@ -2118,19 +2120,19 @@ CallCapture CaptureGetnUniformuivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetnUniformuivRobustANGLE_length(context, isCallValid, program, location, bufSize,
+    CaptureGetnUniformuivRobustANGLE_length(context, isCallValid, programPacked, location, bufSize,
                                             length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetnUniformuivRobustANGLE_params(context, isCallValid, program, location, bufSize,
+    CaptureGetnUniformuivRobustANGLE_params(context, isCallValid, programPacked, location, bufSize,
                                             length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
@@ -2564,26 +2566,26 @@ CallCapture CaptureSampleMaskiANGLE(const Context *context,
 
 CallCapture CaptureGetTranslatedShaderSourceANGLE(const Context *context,
                                                   bool isCallValid,
-                                                  GLuint shader,
+                                                  ShaderProgramID shaderPacked,
                                                   GLsizei bufsize,
                                                   GLsizei *length,
                                                   GLchar *source)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("shader", ParamType::TGLuint, shader);
+    paramBuffer.addValueParam("shaderPacked", ParamType::TShaderProgramID, shaderPacked);
     paramBuffer.addValueParam("bufsize", ParamType::TGLsizei, bufsize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetTranslatedShaderSourceANGLE_length(context, isCallValid, shader, bufsize, length,
-                                                 source, &lengthParam);
+    CaptureGetTranslatedShaderSourceANGLE_length(context, isCallValid, shaderPacked, bufsize,
+                                                 length, source, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture sourceParam("source", ParamType::TGLcharPointer);
     InitParamValue(ParamType::TGLcharPointer, source, &sourceParam.value);
-    CaptureGetTranslatedShaderSourceANGLE_source(context, isCallValid, shader, bufsize, length,
-                                                 source, &sourceParam);
+    CaptureGetTranslatedShaderSourceANGLE_source(context, isCallValid, shaderPacked, bufsize,
+                                                 length, source, &sourceParam);
     paramBuffer.addParam(std::move(sourceParam));
 
     return CallCapture(gl::EntryPoint::GetTranslatedShaderSourceANGLE, std::move(paramBuffer));
@@ -2591,18 +2593,18 @@ CallCapture CaptureGetTranslatedShaderSourceANGLE(const Context *context,
 
 CallCapture CaptureBindUniformLocationCHROMIUM(const Context *context,
                                                bool isCallValid,
-                                               GLuint program,
+                                               ShaderProgramID programPacked,
                                                GLint location,
                                                const GLchar *name)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
 
     ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
     InitParamValue(ParamType::TGLcharConstPointer, name, &nameParam.value);
-    CaptureBindUniformLocationCHROMIUM_name(context, isCallValid, program, location, name,
+    CaptureBindUniformLocationCHROMIUM_name(context, isCallValid, programPacked, location, name,
                                             &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
@@ -3243,19 +3245,19 @@ CallCapture CaptureStencilThenCoverStrokePathInstancedCHROMIUM(const Context *co
 
 CallCapture CaptureBindFragmentInputLocationCHROMIUM(const Context *context,
                                                      bool isCallValid,
-                                                     GLuint programs,
+                                                     ShaderProgramID programsPacked,
                                                      GLint location,
                                                      const GLchar *name)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("programs", ParamType::TGLuint, programs);
+    paramBuffer.addValueParam("programsPacked", ParamType::TShaderProgramID, programsPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
 
     ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
     InitParamValue(ParamType::TGLcharConstPointer, name, &nameParam.value);
-    CaptureBindFragmentInputLocationCHROMIUM_name(context, isCallValid, programs, location, name,
-                                                  &nameParam);
+    CaptureBindFragmentInputLocationCHROMIUM_name(context, isCallValid, programsPacked, location,
+                                                  name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
     return CallCapture(gl::EntryPoint::BindFragmentInputLocationCHROMIUM, std::move(paramBuffer));
@@ -3263,7 +3265,7 @@ CallCapture CaptureBindFragmentInputLocationCHROMIUM(const Context *context,
 
 CallCapture CaptureProgramPathFragmentInputGenCHROMIUM(const Context *context,
                                                        bool isCallValid,
-                                                       GLuint program,
+                                                       ShaderProgramID programPacked,
                                                        GLint location,
                                                        GLenum genMode,
                                                        GLint components,
@@ -3271,14 +3273,14 @@ CallCapture CaptureProgramPathFragmentInputGenCHROMIUM(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addEnumParam("genMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, genMode);
     paramBuffer.addValueParam("components", ParamType::TGLint, components);
 
     ParamCapture coeffsParam("coeffs", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, coeffs, &coeffsParam.value);
-    CaptureProgramPathFragmentInputGenCHROMIUM_coeffs(context, isCallValid, program, location,
+    CaptureProgramPathFragmentInputGenCHROMIUM_coeffs(context, isCallValid, programPacked, location,
                                                       genMode, components, coeffs, &coeffsParam);
     paramBuffer.addParam(std::move(coeffsParam));
 
@@ -3287,18 +3289,19 @@ CallCapture CaptureProgramPathFragmentInputGenCHROMIUM(const Context *context,
 
 CallCapture CaptureBindFragDataLocationEXT(const Context *context,
                                            bool isCallValid,
-                                           GLuint program,
+                                           ShaderProgramID programPacked,
                                            GLuint color,
                                            const GLchar *name)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("color", ParamType::TGLuint, color);
 
     ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
     InitParamValue(ParamType::TGLcharConstPointer, name, &nameParam.value);
-    CaptureBindFragDataLocationEXT_name(context, isCallValid, program, color, name, &nameParam);
+    CaptureBindFragDataLocationEXT_name(context, isCallValid, programPacked, color, name,
+                                        &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
     return CallCapture(gl::EntryPoint::BindFragDataLocationEXT, std::move(paramBuffer));
@@ -3306,21 +3309,21 @@ CallCapture CaptureBindFragDataLocationEXT(const Context *context,
 
 CallCapture CaptureBindFragDataLocationIndexedEXT(const Context *context,
                                                   bool isCallValid,
-                                                  GLuint program,
+                                                  ShaderProgramID programPacked,
                                                   GLuint colorNumber,
                                                   GLuint index,
                                                   const GLchar *name)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("colorNumber", ParamType::TGLuint, colorNumber);
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
 
     ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
     InitParamValue(ParamType::TGLcharConstPointer, name, &nameParam.value);
-    CaptureBindFragDataLocationIndexedEXT_name(context, isCallValid, program, colorNumber, index,
-                                               name, &nameParam);
+    CaptureBindFragDataLocationIndexedEXT_name(context, isCallValid, programPacked, colorNumber,
+                                               index, name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
     return CallCapture(gl::EntryPoint::BindFragDataLocationIndexedEXT, std::move(paramBuffer));
@@ -3328,17 +3331,17 @@ CallCapture CaptureBindFragDataLocationIndexedEXT(const Context *context,
 
 CallCapture CaptureGetFragDataIndexEXT(const Context *context,
                                        bool isCallValid,
-                                       GLuint program,
+                                       ShaderProgramID programPacked,
                                        const GLchar *name,
                                        GLint returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
 
     ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
     InitParamValue(ParamType::TGLcharConstPointer, name, &nameParam.value);
-    CaptureGetFragDataIndexEXT_name(context, isCallValid, program, name, &nameParam);
+    CaptureGetFragDataIndexEXT_name(context, isCallValid, programPacked, name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLint);
@@ -3350,21 +3353,21 @@ CallCapture CaptureGetFragDataIndexEXT(const Context *context,
 
 CallCapture CaptureGetProgramResourceLocationIndexEXT(const Context *context,
                                                       bool isCallValid,
-                                                      GLuint program,
+                                                      ShaderProgramID programPacked,
                                                       GLenum programInterface,
                                                       const GLchar *name,
                                                       GLint returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addEnumParam("programInterface", GLenumGroup::ProgramInterface, ParamType::TGLenum,
                              programInterface);
 
     ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
     InitParamValue(ParamType::TGLcharConstPointer, name, &nameParam.value);
-    CaptureGetProgramResourceLocationIndexEXT_name(context, isCallValid, program, programInterface,
-                                                   name, &nameParam);
+    CaptureGetProgramResourceLocationIndexEXT_name(context, isCallValid, programPacked,
+                                                   programInterface, name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLint);
@@ -4032,20 +4035,20 @@ CallCapture CaptureGetGraphicsResetStatusEXT(const Context *context,
 
 CallCapture CaptureGetnUniformfvEXT(const Context *context,
                                     bool isCallValid,
-                                    GLuint program,
+                                    ShaderProgramID programPacked,
                                     GLint location,
                                     GLsizei bufSize,
                                     GLfloat *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-    CaptureGetnUniformfvEXT_params(context, isCallValid, program, location, bufSize, params,
+    CaptureGetnUniformfvEXT_params(context, isCallValid, programPacked, location, bufSize, params,
                                    &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
@@ -4054,20 +4057,20 @@ CallCapture CaptureGetnUniformfvEXT(const Context *context,
 
 CallCapture CaptureGetnUniformivEXT(const Context *context,
                                     bool isCallValid,
-                                    GLuint program,
+                                    ShaderProgramID programPacked,
                                     GLint location,
                                     GLsizei bufSize,
                                     GLint *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetnUniformivEXT_params(context, isCallValid, program, location, bufSize, params,
+    CaptureGetnUniformivEXT_params(context, isCallValid, programPacked, location, bufSize, params,
                                    &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
@@ -5168,7 +5171,7 @@ CallCapture CaptureRenderbufferStorageOES(const Context *context,
 
 CallCapture CaptureGetProgramBinaryOES(const Context *context,
                                        bool isCallValid,
-                                       GLuint program,
+                                       ShaderProgramID programPacked,
                                        GLsizei bufSize,
                                        GLsizei *length,
                                        GLenum *binaryFormat,
@@ -5176,25 +5179,25 @@ CallCapture CaptureGetProgramBinaryOES(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetProgramBinaryOES_length(context, isCallValid, program, bufSize, length, binaryFormat,
-                                      binary, &lengthParam);
+    CaptureGetProgramBinaryOES_length(context, isCallValid, programPacked, bufSize, length,
+                                      binaryFormat, binary, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture binaryFormatParam("binaryFormat", ParamType::TGLenumPointer);
     InitParamValue(ParamType::TGLenumPointer, binaryFormat, &binaryFormatParam.value);
-    CaptureGetProgramBinaryOES_binaryFormat(context, isCallValid, program, bufSize, length,
+    CaptureGetProgramBinaryOES_binaryFormat(context, isCallValid, programPacked, bufSize, length,
                                             binaryFormat, binary, &binaryFormatParam);
     paramBuffer.addParam(std::move(binaryFormatParam));
 
     ParamCapture binaryParam("binary", ParamType::TvoidPointer);
     InitParamValue(ParamType::TvoidPointer, binary, &binaryParam.value);
-    CaptureGetProgramBinaryOES_binary(context, isCallValid, program, bufSize, length, binaryFormat,
-                                      binary, &binaryParam);
+    CaptureGetProgramBinaryOES_binary(context, isCallValid, programPacked, bufSize, length,
+                                      binaryFormat, binary, &binaryParam);
     paramBuffer.addParam(std::move(binaryParam));
 
     return CallCapture(gl::EntryPoint::GetProgramBinaryOES, std::move(paramBuffer));
@@ -5202,21 +5205,21 @@ CallCapture CaptureGetProgramBinaryOES(const Context *context,
 
 CallCapture CaptureProgramBinaryOES(const Context *context,
                                     bool isCallValid,
-                                    GLuint program,
+                                    ShaderProgramID programPacked,
                                     GLenum binaryFormat,
                                     const void *binary,
                                     GLint length)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("program", ParamType::TGLuint, program);
+    paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addEnumParam("binaryFormat", GLenumGroup::DefaultGroup, ParamType::TGLenum,
                              binaryFormat);
 
     ParamCapture binaryParam("binary", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, binary, &binaryParam.value);
-    CaptureProgramBinaryOES_binary(context, isCallValid, program, binaryFormat, binary, length,
-                                   &binaryParam);
+    CaptureProgramBinaryOES_binary(context, isCallValid, programPacked, binaryFormat, binary,
+                                   length, &binaryParam);
     paramBuffer.addParam(std::move(binaryParam));
 
     paramBuffer.addValueParam("length", ParamType::TGLint, length);

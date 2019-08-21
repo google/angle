@@ -552,10 +552,10 @@ using ProgramMergedVaryings = std::map<std::string, ProgramVaryingRef>;
 class Program final : angle::NonCopyable, public LabeledObject
 {
   public:
-    Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, GLuint handle);
+    Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, ShaderProgramID handle);
     void onDestroy(const Context *context);
 
-    GLuint id() const;
+    ShaderProgramID id() const;
 
     void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
@@ -623,7 +623,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     int getInfoLogLength() const;
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const;
-    void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders) const;
+    void getAttachedShaders(GLsizei maxCount, GLsizei *count, ShaderProgramID *shaders) const;
 
     GLuint getAttributeLocation(const std::string &name) const;
     bool isAttribLocationActive(size_t attribLocation) const;
@@ -1069,7 +1069,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     unsigned int mRefCount;
 
     ShaderProgramManager *mResourceManager;
-    const GLuint mHandle;
+    const ShaderProgramID mHandle;
 
     InfoLog mInfoLog;
 

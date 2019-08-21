@@ -485,7 +485,7 @@ void Context::vertexAttribI4usv(GLuint index, const GLushort *v)
     UNIMPLEMENTED();
 }
 
-void Context::getActiveUniformName(GLuint program,
+void Context::getActiveUniformName(ShaderProgramID program,
                                    GLuint uniformIndex,
                                    GLsizei bufSize,
                                    GLsizei *length,
@@ -2307,7 +2307,7 @@ void Context::endQueryIndexed(GLenum target, GLuint index)
     UNIMPLEMENTED();
 }
 
-void Context::getActiveSubroutineName(GLuint program,
+void Context::getActiveSubroutineName(ShaderProgramID program,
                                       GLenum shadertype,
                                       GLuint index,
                                       GLsizei bufsize,
@@ -2317,7 +2317,7 @@ void Context::getActiveSubroutineName(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::getActiveSubroutineUniformName(GLuint program,
+void Context::getActiveSubroutineUniformName(ShaderProgramID program,
                                              GLenum shadertype,
                                              GLuint index,
                                              GLsizei bufsize,
@@ -2327,7 +2327,7 @@ void Context::getActiveSubroutineUniformName(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::getActiveSubroutineUniformiv(GLuint program,
+void Context::getActiveSubroutineUniformiv(ShaderProgramID program,
                                            GLenum shadertype,
                                            GLuint index,
                                            GLenum pname,
@@ -2336,7 +2336,10 @@ void Context::getActiveSubroutineUniformiv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::getProgramStageiv(GLuint program, GLenum shadertype, GLenum pname, GLint *values)
+void Context::getProgramStageiv(ShaderProgramID program,
+                                GLenum shadertype,
+                                GLenum pname,
+                                GLint *values)
 {
     UNIMPLEMENTED();
 }
@@ -2346,13 +2349,15 @@ void Context::getQueryIndexediv(GLenum target, GLuint index, GLenum pname, GLint
     UNIMPLEMENTED();
 }
 
-GLuint Context::getSubroutineIndex(GLuint program, GLenum shadertype, const GLchar *name)
+GLuint Context::getSubroutineIndex(ShaderProgramID program, GLenum shadertype, const GLchar *name)
 {
     UNIMPLEMENTED();
     return 0;
 }
 
-GLint Context::getSubroutineUniformLocation(GLuint program, GLenum shadertype, const GLchar *name)
+GLint Context::getSubroutineUniformLocation(ShaderProgramID program,
+                                            GLenum shadertype,
+                                            const GLchar *name)
 {
     UNIMPLEMENTED();
     return 0;
@@ -2363,7 +2368,7 @@ void Context::getUniformSubroutineuiv(GLenum shadertype, GLint location, GLuint 
     UNIMPLEMENTED();
 }
 
-void Context::getUniformdv(GLuint program, GLint location, GLdouble *params)
+void Context::getUniformdv(ShaderProgramID program, GLint location, GLdouble *params)
 {
     UNIMPLEMENTED();
 }
@@ -2525,12 +2530,12 @@ void Context::getVertexAttribLdv(GLuint index, GLenum pname, GLdouble *params)
     UNIMPLEMENTED();
 }
 
-void Context::programUniform1d(GLuint program, GLint location, GLdouble v0)
+void Context::programUniform1d(ShaderProgramID program, GLint location, GLdouble v0)
 {
     UNIMPLEMENTED();
 }
 
-void Context::programUniform1dv(GLuint program,
+void Context::programUniform1dv(ShaderProgramID program,
                                 GLint location,
                                 GLsizei count,
                                 const GLdouble *value)
@@ -2538,12 +2543,12 @@ void Context::programUniform1dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniform2d(GLuint program, GLint location, GLdouble v0, GLdouble v1)
+void Context::programUniform2d(ShaderProgramID program, GLint location, GLdouble v0, GLdouble v1)
 {
     UNIMPLEMENTED();
 }
 
-void Context::programUniform2dv(GLuint program,
+void Context::programUniform2dv(ShaderProgramID program,
                                 GLint location,
                                 GLsizei count,
                                 const GLdouble *value)
@@ -2551,7 +2556,7 @@ void Context::programUniform2dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniform3d(GLuint program,
+void Context::programUniform3d(ShaderProgramID program,
                                GLint location,
                                GLdouble v0,
                                GLdouble v1,
@@ -2560,7 +2565,7 @@ void Context::programUniform3d(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniform3dv(GLuint program,
+void Context::programUniform3dv(ShaderProgramID program,
                                 GLint location,
                                 GLsizei count,
                                 const GLdouble *value)
@@ -2568,7 +2573,7 @@ void Context::programUniform3dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniform4d(GLuint program,
+void Context::programUniform4d(ShaderProgramID program,
                                GLint location,
                                GLdouble v0,
                                GLdouble v1,
@@ -2578,7 +2583,7 @@ void Context::programUniform4d(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniform4dv(GLuint program,
+void Context::programUniform4dv(ShaderProgramID program,
                                 GLint location,
                                 GLsizei count,
                                 const GLdouble *value)
@@ -2586,7 +2591,7 @@ void Context::programUniform4dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniformMatrix2dv(GLuint program,
+void Context::programUniformMatrix2dv(ShaderProgramID program,
                                       GLint location,
                                       GLsizei count,
                                       GLboolean transpose,
@@ -2595,7 +2600,7 @@ void Context::programUniformMatrix2dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniformMatrix2x3dv(GLuint program,
+void Context::programUniformMatrix2x3dv(ShaderProgramID program,
                                         GLint location,
                                         GLsizei count,
                                         GLboolean transpose,
@@ -2604,7 +2609,7 @@ void Context::programUniformMatrix2x3dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniformMatrix2x4dv(GLuint program,
+void Context::programUniformMatrix2x4dv(ShaderProgramID program,
                                         GLint location,
                                         GLsizei count,
                                         GLboolean transpose,
@@ -2613,7 +2618,7 @@ void Context::programUniformMatrix2x4dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniformMatrix3dv(GLuint program,
+void Context::programUniformMatrix3dv(ShaderProgramID program,
                                       GLint location,
                                       GLsizei count,
                                       GLboolean transpose,
@@ -2622,7 +2627,7 @@ void Context::programUniformMatrix3dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniformMatrix3x2dv(GLuint program,
+void Context::programUniformMatrix3x2dv(ShaderProgramID program,
                                         GLint location,
                                         GLsizei count,
                                         GLboolean transpose,
@@ -2631,7 +2636,7 @@ void Context::programUniformMatrix3x2dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniformMatrix3x4dv(GLuint program,
+void Context::programUniformMatrix3x4dv(ShaderProgramID program,
                                         GLint location,
                                         GLsizei count,
                                         GLboolean transpose,
@@ -2640,7 +2645,7 @@ void Context::programUniformMatrix3x4dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniformMatrix4dv(GLuint program,
+void Context::programUniformMatrix4dv(ShaderProgramID program,
                                       GLint location,
                                       GLsizei count,
                                       GLboolean transpose,
@@ -2649,7 +2654,7 @@ void Context::programUniformMatrix4dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniformMatrix4x2dv(GLuint program,
+void Context::programUniformMatrix4x2dv(ShaderProgramID program,
                                         GLint location,
                                         GLsizei count,
                                         GLboolean transpose,
@@ -2658,7 +2663,7 @@ void Context::programUniformMatrix4x2dv(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::programUniformMatrix4x3dv(GLuint program,
+void Context::programUniformMatrix4x3dv(ShaderProgramID program,
                                         GLint location,
                                         GLsizei count,
                                         GLboolean transpose,
@@ -2769,7 +2774,7 @@ void Context::drawTransformFeedbackStreamInstanced(GLenum mode,
     UNIMPLEMENTED();
 }
 
-void Context::getActiveAtomicCounterBufferiv(GLuint program,
+void Context::getActiveAtomicCounterBufferiv(ShaderProgramID program,
                                              GLuint bufferIndex,
                                              GLenum pname,
                                              GLint *params)
@@ -2869,7 +2874,7 @@ void Context::multiDrawElementsIndirect(GLenum mode,
     UNIMPLEMENTED();
 }
 
-void Context::shaderStorageBlockBinding(GLuint program,
+void Context::shaderStorageBlockBinding(ShaderProgramID program,
                                         GLuint storageBlockIndex,
                                         GLuint storageBlockBinding)
 {
@@ -3480,12 +3485,18 @@ void Context::getnTexImage(GLenum target,
     UNIMPLEMENTED();
 }
 
-void Context::getnUniformdv(GLuint program, GLint location, GLsizei bufSize, GLdouble *params)
+void Context::getnUniformdv(ShaderProgramID program,
+                            GLint location,
+                            GLsizei bufSize,
+                            GLdouble *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getnUniformuiv(GLuint program, GLint location, GLsizei bufSize, GLuint *params)
+void Context::getnUniformuiv(ShaderProgramID program,
+                             GLint location,
+                             GLsizei bufSize,
+                             GLuint *params)
 {
     UNIMPLEMENTED();
 }
