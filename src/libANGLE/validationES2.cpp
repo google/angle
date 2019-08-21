@@ -6832,7 +6832,7 @@ bool ValidateUseProgram(Context *context, GLuint program)
     return true;
 }
 
-bool ValidateDeleteFencesNV(Context *context, GLsizei n, const GLuint *fences)
+bool ValidateDeleteFencesNV(Context *context, GLsizei n, const FenceNVID *fences)
 {
     if (!context->getExtensions().fence)
     {
@@ -6849,7 +6849,7 @@ bool ValidateDeleteFencesNV(Context *context, GLsizei n, const GLuint *fences)
     return true;
 }
 
-bool ValidateFinishFenceNV(Context *context, GLuint fence)
+bool ValidateFinishFenceNV(Context *context, FenceNVID fence)
 {
     if (!context->getExtensions().fence)
     {
@@ -6874,7 +6874,7 @@ bool ValidateFinishFenceNV(Context *context, GLuint fence)
     return true;
 }
 
-bool ValidateGenFencesNV(Context *context, GLsizei n, GLuint *fences)
+bool ValidateGenFencesNV(Context *context, GLsizei n, FenceNVID *fences)
 {
     if (!context->getExtensions().fence)
     {
@@ -6891,7 +6891,7 @@ bool ValidateGenFencesNV(Context *context, GLsizei n, GLuint *fences)
     return true;
 }
 
-bool ValidateGetFenceivNV(Context *context, GLuint fence, GLenum pname, GLint *params)
+bool ValidateGetFenceivNV(Context *context, FenceNVID fence, GLenum pname, GLint *params)
 {
     if (!context->getExtensions().fence)
     {
@@ -6967,7 +6967,7 @@ bool ValidateGetTranslatedShaderSourceANGLE(Context *context,
     return true;
 }
 
-bool ValidateIsFenceNV(Context *context, GLuint fence)
+bool ValidateIsFenceNV(Context *context, FenceNVID fence)
 {
     if (!context->getExtensions().fence)
     {
@@ -6978,7 +6978,7 @@ bool ValidateIsFenceNV(Context *context, GLuint fence)
     return true;
 }
 
-bool ValidateSetFenceNV(Context *context, GLuint fence, GLenum condition)
+bool ValidateSetFenceNV(Context *context, FenceNVID fence, GLenum condition)
 {
     if (!context->getExtensions().fence)
     {
@@ -7003,7 +7003,7 @@ bool ValidateSetFenceNV(Context *context, GLuint fence, GLenum condition)
     return true;
 }
 
-bool ValidateTestFenceNV(Context *context, GLuint fence)
+bool ValidateTestFenceNV(Context *context, FenceNVID fence)
 {
     if (!context->getExtensions().fence)
     {

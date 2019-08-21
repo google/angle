@@ -26,6 +26,9 @@ enum class ParamType
     TClientVertexArrayType,
     TCullFaceMode,
     TDrawElementsType,
+    TFenceNVID,
+    TFenceNVIDConstPointer,
+    TFenceNVIDPointer,
     TGLDEBUGPROC,
     TGLDEBUGPROCKHR,
     TGLbitfield,
@@ -122,6 +125,9 @@ union ParamValue
     gl::ClientVertexArrayType ClientVertexArrayTypeVal;
     gl::CullFaceMode CullFaceModeVal;
     gl::DrawElementsType DrawElementsTypeVal;
+    gl::FenceNVID FenceNVIDVal;
+    const gl::FenceNVID *FenceNVIDConstPointerVal;
+    gl::FenceNVID *FenceNVIDPointerVal;
     GLDEBUGPROC GLDEBUGPROCVal;
     GLDEBUGPROCKHR GLDEBUGPROCKHRVal;
     GLbitfield GLbitfieldVal;
@@ -265,6 +271,25 @@ inline void SetParamVal<ParamType::TDrawElementsType>(gl::DrawElementsType value
                                                       ParamValue *valueOut)
 {
     valueOut->DrawElementsTypeVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TFenceNVID>(gl::FenceNVID valueIn, ParamValue *valueOut)
+{
+    valueOut->FenceNVIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TFenceNVIDConstPointer>(const gl::FenceNVID *valueIn,
+                                                           ParamValue *valueOut)
+{
+    valueOut->FenceNVIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TFenceNVIDPointer>(gl::FenceNVID *valueIn, ParamValue *valueOut)
+{
+    valueOut->FenceNVIDPointerVal = valueIn;
 }
 
 template <>
@@ -831,6 +856,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TDrawElementsType:
             SetParamVal<ParamType::TDrawElementsType>(valueIn, valueOut);
+            break;
+        case ParamType::TFenceNVID:
+            SetParamVal<ParamType::TFenceNVID>(valueIn, valueOut);
+            break;
+        case ParamType::TFenceNVIDConstPointer:
+            SetParamVal<ParamType::TFenceNVIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TFenceNVIDPointer:
+            SetParamVal<ParamType::TFenceNVIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TGLDEBUGPROC:
             SetParamVal<ParamType::TGLDEBUGPROC>(valueIn, valueOut);

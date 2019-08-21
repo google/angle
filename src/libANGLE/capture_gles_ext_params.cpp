@@ -2703,27 +2703,27 @@ void CapturePushDebugGroupKHR_message(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteFencesNV_fences(const Context *context,
-                                  bool isCallValid,
-                                  GLsizei n,
-                                  const GLuint *fences,
-                                  ParamCapture *paramCapture)
+void CaptureDeleteFencesNV_fencesPacked(const Context *context,
+                                        bool isCallValid,
+                                        GLsizei n,
+                                        const FenceNVID *fences,
+                                        ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureGenFencesNV_fences(const Context *context,
-                               bool isCallValid,
-                               GLsizei n,
-                               GLuint *fences,
-                               ParamCapture *paramCapture)
+void CaptureGenFencesNV_fencesPacked(const Context *context,
+                                     bool isCallValid,
+                                     GLsizei n,
+                                     FenceNVID *fences,
+                                     ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
 void CaptureGetFenceivNV_params(const Context *context,
                                 bool isCallValid,
-                                GLuint fence,
+                                FenceNVID fence,
                                 GLenum pname,
                                 GLint *params,
                                 ParamCapture *paramCapture)

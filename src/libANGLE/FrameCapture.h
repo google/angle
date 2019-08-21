@@ -213,6 +213,9 @@ void WriteParamValueToStream<ParamType::TTextureID>(std::ostream &os, gl::Textur
 template <>
 void WriteParamValueToStream<ParamType::TSamplerID>(std::ostream &os, gl::SamplerID value);
 
+template <>
+void WriteParamValueToStream<ParamType::TFenceNVID>(std::ostream &os, gl::FenceNVID value);
+
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>
 void WriteParamValueToStream(std::ostream &os, T value)

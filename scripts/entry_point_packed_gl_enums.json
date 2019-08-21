@@ -857,5 +857,26 @@
     "glWaitSemaphore": {
         "buffers": "const BufferID *",
         "textures": "const TextureID *"
+    },
+    "glIsFenceNV": {
+        "fence": "FenceNVID"
+    },
+    "glTestFenceNV": {
+        "fence": "FenceNVID"
+    },
+    "glGetFenceivNV": {
+        "fence": "FenceNVID"
+    },
+    "glFinishFenceNV": {
+        "fence": "FenceNVID"
+    },
+    "glSetFenceNV": {
+        "fence": "FenceNVID"
+    },
+    "glDeleteFencesNV": {
+        "fences": "const FenceNVID *"
+    },
+    "glGenFencesNV": {
+        "fences": "FenceNVID *"
     }
 }

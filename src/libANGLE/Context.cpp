@@ -720,13 +720,13 @@ GLuint Context::createFramebuffer()
     return mState.mFramebufferManager->createFramebuffer();
 }
 
-void Context::genFencesNV(GLsizei n, GLuint *fences)
+void Context::genFencesNV(GLsizei n, FenceNVID *fences)
 {
     for (int i = 0; i < n; i++)
     {
         GLuint handle = mFenceNVHandleAllocator.allocate();
-        mFenceNVMap.assign(handle, new FenceNV(mImplementation->createFenceNV()));
-        fences[i] = handle;
+        mFenceNVMap.assign({handle}, new FenceNV(mImplementation->createFenceNV()));
+        fences[i] = {handle};
     }
 }
 
@@ -943,16 +943,16 @@ void Context::deleteFramebuffer(GLuint framebuffer)
     mState.mFramebufferManager->deleteObject(this, framebuffer);
 }
 
-void Context::deleteFencesNV(GLsizei n, const GLuint *fences)
+void Context::deleteFencesNV(GLsizei n, const FenceNVID *fences)
 {
     for (int i = 0; i < n; i++)
     {
-        GLuint fence = fences[i];
+        FenceNVID fence = fences[i];
 
         FenceNV *fenceObject = nullptr;
         if (mFenceNVMap.erase(fence, &fenceObject))
         {
-            mFenceNVHandleAllocator.release(fence);
+            mFenceNVHandleAllocator.release(fence.value);
             delete fenceObject;
         }
     }
@@ -1324,7 +1324,7 @@ Framebuffer *Context::getFramebuffer(GLuint handle) const
     return mState.mFramebufferManager->getFramebuffer(handle);
 }
 
-FenceNV *Context::getFenceNV(GLuint handle)
+FenceNV *Context::getFenceNV(FenceNVID handle)
 {
     return mFenceNVMap.query(handle);
 }
@@ -7344,7 +7344,7 @@ GLboolean Context::isProgramPipeline(GLuint pipeline)
     return ConvertToGLBoolean(getProgramPipeline(pipeline));
 }
 
-void Context::finishFenceNV(GLuint fence)
+void Context::finishFenceNV(FenceNVID fence)
 {
     FenceNV *fenceObject = getFenceNV(fence);
 
@@ -7352,7 +7352,7 @@ void Context::finishFenceNV(GLuint fence)
     ANGLE_CONTEXT_TRY(fenceObject->finish(this));
 }
 
-void Context::getFenceivNV(GLuint fence, GLenum pname, GLint *params)
+void Context::getFenceivNV(FenceNVID fence, GLenum pname, GLint *params)
 {
     FenceNV *fenceObject = getFenceNV(fence);
 
@@ -7439,7 +7439,7 @@ void Context::getnUniformuivRobust(GLuint program,
     UNIMPLEMENTED();
 }
 
-GLboolean Context::isFenceNV(GLuint fence)
+GLboolean Context::isFenceNV(FenceNVID fence)
 {
     FenceNV *fenceObject = getFenceNV(fence);
 
@@ -7466,7 +7466,7 @@ void Context::readnPixels(GLint x,
     return readPixels(x, y, width, height, format, type, data);
 }
 
-void Context::setFenceNV(GLuint fence, GLenum condition)
+void Context::setFenceNV(FenceNVID fence, GLenum condition)
 {
     ASSERT(condition == GL_ALL_COMPLETED_NV);
 
@@ -7475,7 +7475,7 @@ void Context::setFenceNV(GLuint fence, GLenum condition)
     ANGLE_CONTEXT_TRY(fenceObject->set(this, condition));
 }
 
-GLboolean Context::testFenceNV(GLuint fence)
+GLboolean Context::testFenceNV(FenceNVID fence)
 {
     FenceNV *fenceObject = getFenceNV(fence);
 

@@ -4641,57 +4641,60 @@ CallCapture CaptureMaxShaderCompilerThreadsKHR(const Context *context,
 CallCapture CaptureDeleteFencesNV(const Context *context,
                                   bool isCallValid,
                                   GLsizei n,
-                                  const GLuint *fences)
+                                  const FenceNVID *fencesPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture fencesParam("fences", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, fences, &fencesParam.value);
-    CaptureDeleteFencesNV_fences(context, isCallValid, n, fences, &fencesParam);
-    paramBuffer.addParam(std::move(fencesParam));
+    ParamCapture fencesPackedParam("fencesPacked", ParamType::TFenceNVIDConstPointer);
+    InitParamValue(ParamType::TFenceNVIDConstPointer, fencesPacked, &fencesPackedParam.value);
+    CaptureDeleteFencesNV_fencesPacked(context, isCallValid, n, fencesPacked, &fencesPackedParam);
+    paramBuffer.addParam(std::move(fencesPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteFencesNV, std::move(paramBuffer));
 }
 
-CallCapture CaptureFinishFenceNV(const Context *context, bool isCallValid, GLuint fence)
+CallCapture CaptureFinishFenceNV(const Context *context, bool isCallValid, FenceNVID fencePacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("fence", ParamType::TGLuint, fence);
+    paramBuffer.addValueParam("fencePacked", ParamType::TFenceNVID, fencePacked);
 
     return CallCapture(gl::EntryPoint::FinishFenceNV, std::move(paramBuffer));
 }
 
-CallCapture CaptureGenFencesNV(const Context *context, bool isCallValid, GLsizei n, GLuint *fences)
+CallCapture CaptureGenFencesNV(const Context *context,
+                               bool isCallValid,
+                               GLsizei n,
+                               FenceNVID *fencesPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture fencesParam("fences", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, fences, &fencesParam.value);
-    CaptureGenFencesNV_fences(context, isCallValid, n, fences, &fencesParam);
-    paramBuffer.addParam(std::move(fencesParam));
+    ParamCapture fencesPackedParam("fencesPacked", ParamType::TFenceNVIDPointer);
+    InitParamValue(ParamType::TFenceNVIDPointer, fencesPacked, &fencesPackedParam.value);
+    CaptureGenFencesNV_fencesPacked(context, isCallValid, n, fencesPacked, &fencesPackedParam);
+    paramBuffer.addParam(std::move(fencesPackedParam));
 
     return CallCapture(gl::EntryPoint::GenFencesNV, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetFenceivNV(const Context *context,
                                 bool isCallValid,
-                                GLuint fence,
+                                FenceNVID fencePacked,
                                 GLenum pname,
                                 GLint *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("fence", ParamType::TGLuint, fence);
+    paramBuffer.addValueParam("fencePacked", ParamType::TFenceNVID, fencePacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetFenceivNV_params(context, isCallValid, fence, pname, params, &paramsParam);
+    CaptureGetFenceivNV_params(context, isCallValid, fencePacked, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetFenceivNV, std::move(paramBuffer));
@@ -4699,12 +4702,12 @@ CallCapture CaptureGetFenceivNV(const Context *context,
 
 CallCapture CaptureIsFenceNV(const Context *context,
                              bool isCallValid,
-                             GLuint fence,
+                             FenceNVID fencePacked,
                              GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("fence", ParamType::TGLuint, fence);
+    paramBuffer.addValueParam("fencePacked", ParamType::TFenceNVID, fencePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
@@ -4715,12 +4718,12 @@ CallCapture CaptureIsFenceNV(const Context *context,
 
 CallCapture CaptureSetFenceNV(const Context *context,
                               bool isCallValid,
-                              GLuint fence,
+                              FenceNVID fencePacked,
                               GLenum condition)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("fence", ParamType::TGLuint, fence);
+    paramBuffer.addValueParam("fencePacked", ParamType::TFenceNVID, fencePacked);
     paramBuffer.addEnumParam("condition", GLenumGroup::DefaultGroup, ParamType::TGLenum, condition);
 
     return CallCapture(gl::EntryPoint::SetFenceNV, std::move(paramBuffer));
@@ -4728,12 +4731,12 @@ CallCapture CaptureSetFenceNV(const Context *context,
 
 CallCapture CaptureTestFenceNV(const Context *context,
                                bool isCallValid,
-                               GLuint fence,
+                               FenceNVID fencePacked,
                                GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("fence", ParamType::TGLuint, fence);
+    paramBuffer.addValueParam("fencePacked", ParamType::TFenceNVID, fencePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);

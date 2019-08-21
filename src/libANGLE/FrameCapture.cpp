@@ -820,5 +820,13 @@ void WriteParamValueToStream<ParamType::TSamplerID>(std::ostream &os, gl::Sample
 {
     os << value.value;
 }
+
+// TODO(jmadill): Use FenceNV ID map. http://anglebug.com/3611
+template <>
+void WriteParamValueToStream<ParamType::TFenceNVID>(std::ostream &os, gl::FenceNVID value)
+{
+    os << value.value;
+}
+
 #endif  // ANGLE_CAPTURE_ENABLED
 }  // namespace angle

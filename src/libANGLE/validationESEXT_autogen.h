@@ -1043,13 +1043,13 @@ bool ValidatePushDebugGroupKHR(Context *context,
 bool ValidateMaxShaderCompilerThreadsKHR(Context *context, GLuint count);
 
 // GL_NV_fence
-bool ValidateDeleteFencesNV(Context *context, GLsizei n, const GLuint *fences);
-bool ValidateFinishFenceNV(Context *context, GLuint fence);
-bool ValidateGenFencesNV(Context *context, GLsizei n, GLuint *fences);
-bool ValidateGetFenceivNV(Context *context, GLuint fence, GLenum pname, GLint *params);
-bool ValidateIsFenceNV(Context *context, GLuint fence);
-bool ValidateSetFenceNV(Context *context, GLuint fence, GLenum condition);
-bool ValidateTestFenceNV(Context *context, GLuint fence);
+bool ValidateDeleteFencesNV(Context *context, GLsizei n, const FenceNVID *fencesPacked);
+bool ValidateFinishFenceNV(Context *context, FenceNVID fencePacked);
+bool ValidateGenFencesNV(Context *context, GLsizei n, FenceNVID *fencesPacked);
+bool ValidateGetFenceivNV(Context *context, FenceNVID fencePacked, GLenum pname, GLint *params);
+bool ValidateIsFenceNV(Context *context, FenceNVID fencePacked);
+bool ValidateSetFenceNV(Context *context, FenceNVID fencePacked, GLenum condition);
+bool ValidateTestFenceNV(Context *context, FenceNVID fencePacked);
 
 // GL_OES_EGL_image
 bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,

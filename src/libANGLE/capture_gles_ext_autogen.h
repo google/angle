@@ -1339,28 +1339,30 @@ angle::CallCapture CaptureMaxShaderCompilerThreadsKHR(const Context *context,
 angle::CallCapture CaptureDeleteFencesNV(const Context *context,
                                          bool isCallValid,
                                          GLsizei n,
-                                         const GLuint *fences);
-angle::CallCapture CaptureFinishFenceNV(const Context *context, bool isCallValid, GLuint fence);
+                                         const FenceNVID *fencesPacked);
+angle::CallCapture CaptureFinishFenceNV(const Context *context,
+                                        bool isCallValid,
+                                        FenceNVID fencePacked);
 angle::CallCapture CaptureGenFencesNV(const Context *context,
                                       bool isCallValid,
                                       GLsizei n,
-                                      GLuint *fences);
+                                      FenceNVID *fencesPacked);
 angle::CallCapture CaptureGetFenceivNV(const Context *context,
                                        bool isCallValid,
-                                       GLuint fence,
+                                       FenceNVID fencePacked,
                                        GLenum pname,
                                        GLint *params);
 angle::CallCapture CaptureIsFenceNV(const Context *context,
                                     bool isCallValid,
-                                    GLuint fence,
+                                    FenceNVID fencePacked,
                                     GLboolean returnValue);
 angle::CallCapture CaptureSetFenceNV(const Context *context,
                                      bool isCallValid,
-                                     GLuint fence,
+                                     FenceNVID fencePacked,
                                      GLenum condition);
 angle::CallCapture CaptureTestFenceNV(const Context *context,
                                       bool isCallValid,
-                                      GLuint fence,
+                                      FenceNVID fencePacked,
                                       GLboolean returnValue);
 
 // GL_OES_EGL_image
@@ -3576,19 +3578,19 @@ void CapturePushDebugGroupKHR_message(const Context *context,
                                       GLsizei length,
                                       const GLchar *message,
                                       angle::ParamCapture *paramCapture);
-void CaptureDeleteFencesNV_fences(const Context *context,
-                                  bool isCallValid,
-                                  GLsizei n,
-                                  const GLuint *fences,
-                                  angle::ParamCapture *paramCapture);
-void CaptureGenFencesNV_fences(const Context *context,
-                               bool isCallValid,
-                               GLsizei n,
-                               GLuint *fences,
-                               angle::ParamCapture *paramCapture);
+void CaptureDeleteFencesNV_fencesPacked(const Context *context,
+                                        bool isCallValid,
+                                        GLsizei n,
+                                        const FenceNVID *fencesPacked,
+                                        angle::ParamCapture *paramCapture);
+void CaptureGenFencesNV_fencesPacked(const Context *context,
+                                     bool isCallValid,
+                                     GLsizei n,
+                                     FenceNVID *fencesPacked,
+                                     angle::ParamCapture *paramCapture);
 void CaptureGetFenceivNV_params(const Context *context,
                                 bool isCallValid,
-                                GLuint fence,
+                                FenceNVID fencePacked,
                                 GLenum pname,
                                 GLint *params,
                                 angle::ParamCapture *paramCapture);
