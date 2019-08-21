@@ -2298,10 +2298,6 @@ TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensio
 
     ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsOpenGL());
 
-    // NVIDIA was observed drawing color 0,0,0,0 instead of the texture color after the base
-    // level was changed.
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() && (IsOpenGL() || IsOpenGLES()));
-
     // Switch the level that is being used to the cyan level 2.
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 2);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 2);
@@ -2487,9 +2483,6 @@ TEST_P(Texture2DTestES3, ImmutableTextureBaseLevelOutOfRange)
 // Test that changing base level works when it affects the format of the texture.
 TEST_P(Texture2DTestES3, TextureFormatChangesWithBaseLevel)
 {
-    // Observed rendering corruption on NVIDIA OpenGL.
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGL());
-
     ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsDesktopOpenGL());
 
     // Observed incorrect rendering on AMD OpenGL.
@@ -2833,7 +2826,6 @@ TEST_P(Texture2DTest, TextureLuminance16ImplicitAlpha1)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_float"));
     ANGLE_SKIP_TEST_IF(IsD3D9());
     ANGLE_SKIP_TEST_IF(IsVulkan());
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGLES());
     // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1420 is fixed
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 

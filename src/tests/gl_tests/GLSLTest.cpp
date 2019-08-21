@@ -1280,12 +1280,6 @@ TEST_P(GLSLTest_ES3, MissingReturnArrayOfStructs)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest_ES3, MissingReturnStructOfArrays)
 {
-    // TODO(cwallez) remove the suppression once NVIDIA drivers are updated across trybots, drivers
-    // since late 2016 should have the fix. Last check on 2017-05-30 revealed that the Windows
-    // Server 2008 bots still had the old, failing drivers.
-    // It disallows returning structure of arrays on NVIDIA OpenGL ES.
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGLES());
-
     constexpr char kVS[] =
         "#version 300 es\n"
         "in float v_varying;\n"
