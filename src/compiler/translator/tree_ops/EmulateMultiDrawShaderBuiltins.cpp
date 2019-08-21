@@ -19,7 +19,7 @@
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/SymbolTable.h"
-#include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
 #include "compiler/translator/util.h"

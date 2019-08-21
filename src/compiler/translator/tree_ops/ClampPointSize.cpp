@@ -9,7 +9,7 @@
 #include "compiler/translator/tree_ops/ClampPointSize.h"
 
 #include "compiler/translator/SymbolTable.h"
-#include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/FindSymbolNode.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"

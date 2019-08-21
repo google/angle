@@ -16,7 +16,7 @@
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/SymbolTable.h"
-#include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/BuiltIn.h"
 
 namespace sh
 {

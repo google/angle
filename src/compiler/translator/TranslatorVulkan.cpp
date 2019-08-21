@@ -23,7 +23,7 @@
 #include "compiler/translator/tree_ops/RewriteDfdy.h"
 #include "compiler/translator/tree_ops/RewriteRowMajorMatrices.h"
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
-#include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/FindFunction.h"
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
@@ -220,7 +220,7 @@ ANGLE_NO_DISCARD bool FlipBuiltinVariable(TCompiler *compiler,
 
     // Create a swizzle to "builtin.y"
     TVector<int> swizzleOffsetY = {1};
-    TIntermSwizzle *builtinY = new TIntermSwizzle(builtinRef, swizzleOffsetY);
+    TIntermSwizzle *builtinY    = new TIntermSwizzle(builtinRef, swizzleOffsetY);
 
     // Create a symbol reference to our new variable that will hold the modified builtin.
     const TType *type = StaticType::GetForVec<EbtFloat>(
@@ -300,14 +300,14 @@ ANGLE_NO_DISCARD bool AppendVertexShaderDepthCorrectionToMain(TCompiler *compile
 
     // Create a swizzle to "gl_Position.z"
     TVector<int> swizzleOffsetZ = {2};
-    TIntermSwizzle *positionZ = new TIntermSwizzle(positionRef, swizzleOffsetZ);
+    TIntermSwizzle *positionZ   = new TIntermSwizzle(positionRef, swizzleOffsetZ);
 
     // Create a constant "0.5"
     TIntermConstantUnion *oneHalf = CreateFloatNode(0.5f);
 
     // Create a swizzle to "gl_Position.w"
     TVector<int> swizzleOffsetW = {3};
-    TIntermSwizzle *positionW = new TIntermSwizzle(positionRef->deepCopy(), swizzleOffsetW);
+    TIntermSwizzle *positionW   = new TIntermSwizzle(positionRef->deepCopy(), swizzleOffsetW);
 
     // Create the expression "(gl_Position.z + gl_Position.w) * 0.5".
     TIntermBinary *zPlusW = new TIntermBinary(EOpAdd, positionZ->deepCopy(), positionW->deepCopy());
@@ -521,20 +521,20 @@ ANGLE_NO_DISCARD bool AddLineSegmentRasterizationEmulation(TCompiler *compiler,
     const TType *vec2Type = StaticType::GetBasic<EbtFloat, 2>();
 
     // Create a swizzle to "ANGLEUniforms.viewport.xy".
-    TIntermBinary *viewportRef = CreateDriverUniformRef(driverUniforms, kViewport);
+    TIntermBinary *viewportRef   = CreateDriverUniformRef(driverUniforms, kViewport);
     TVector<int> swizzleOffsetXY = {0, 1};
-    TIntermSwizzle *viewportXY = new TIntermSwizzle(viewportRef->deepCopy(), swizzleOffsetXY);
+    TIntermSwizzle *viewportXY   = new TIntermSwizzle(viewportRef->deepCopy(), swizzleOffsetXY);
 
     // Create a swizzle to "ANGLEUniforms.viewport.zw".
     TVector<int> swizzleOffsetZW = {2, 3};
-    TIntermSwizzle *viewportZW = new TIntermSwizzle(viewportRef, swizzleOffsetZW);
+    TIntermSwizzle *viewportZW   = new TIntermSwizzle(viewportRef, swizzleOffsetZW);
 
     // ANGLEPosition.xy / ANGLEPosition.w
-    TIntermSymbol *position    = new TIntermSymbol(anglePosition);
-    TIntermSwizzle *positionXY = new TIntermSwizzle(position, swizzleOffsetXY);
+    TIntermSymbol *position     = new TIntermSymbol(anglePosition);
+    TIntermSwizzle *positionXY  = new TIntermSwizzle(position, swizzleOffsetXY);
     TVector<int> swizzleOffsetW = {3};
-    TIntermSwizzle *positionW  = new TIntermSwizzle(position->deepCopy(), swizzleOffsetW);
-    TIntermBinary *positionNDC = new TIntermBinary(EOpDiv, positionXY, positionW);
+    TIntermSwizzle *positionW   = new TIntermSwizzle(position->deepCopy(), swizzleOffsetW);
+    TIntermBinary *positionNDC  = new TIntermBinary(EOpDiv, positionXY, positionW);
 
     // ANGLEPosition * 0.5
     TIntermConstantUnion *oneHalf = CreateFloatNode(0.5f);
@@ -584,8 +584,8 @@ ANGLE_NO_DISCARD bool AddLineSegmentRasterizationEmulation(TCompiler *compiler,
 
     // Create a swizzle to "ba2.yx".
     TVector<int> swizzleOffsetYX = {1, 0};
-    TIntermSymbol *ba2    = CreateTempSymbolNode(ba2Temp);
-    TIntermSwizzle *ba2YX = new TIntermSwizzle(ba2, swizzleOffsetYX);
+    TIntermSymbol *ba2           = CreateTempSymbolNode(ba2Temp);
+    TIntermSwizzle *ba2YX        = new TIntermSwizzle(ba2, swizzleOffsetYX);
 
     // ba2 + ba2.yx - ba
     TIntermBinary *ba2PlusBaYX2 = new TIntermBinary(EOpAdd, ba2->deepCopy(), ba2YX);
@@ -598,7 +598,7 @@ ANGLE_NO_DISCARD bool AddLineSegmentRasterizationEmulation(TCompiler *compiler,
 
     // Create a swizzle to "bp.x".
     TVector<int> swizzleOffsetX = {0};
-    TIntermSwizzle *bpX = new TIntermSwizzle(bp, swizzleOffsetX);
+    TIntermSwizzle *bpX         = new TIntermSwizzle(bp, swizzleOffsetX);
 
     // Using a small epsilon value ensures that we don't suffer from numerical instability when
     // lines are exactly vertical or horizontal.
@@ -610,7 +610,7 @@ ANGLE_NO_DISCARD bool AddLineSegmentRasterizationEmulation(TCompiler *compiler,
 
     // Create a swizzle to "bp.y".
     TVector<int> swizzleOffsetY = {1};
-    TIntermSwizzle *bpY = new TIntermSwizzle(bp->deepCopy(), swizzleOffsetY);
+    TIntermSwizzle *bpY         = new TIntermSwizzle(bp->deepCopy(), swizzleOffsetY);
 
     // bp.y > epsilon
     TIntermBinary *checkY = new TIntermBinary(EOpGreaterThan, bpY, epsilon->deepCopy());

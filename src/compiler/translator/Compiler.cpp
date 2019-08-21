@@ -47,7 +47,7 @@
 #include "compiler/translator/tree_ops/UnfoldShortCircuitAST.h"
 #include "compiler/translator/tree_ops/UseInterfaceBlockFields.h"
 #include "compiler/translator/tree_ops/VectorizeVectorScalarArithmetic.h"
-#include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
 #include "compiler/translator/tree_util/ReplaceShadowingVariables.h"
 #include "compiler/translator/util.h"

@@ -44,7 +44,6 @@ angle_translator_sources = [
   "src/compiler/translator/FunctionLookup.h",
   "src/compiler/translator/HashNames.cpp",
   "src/compiler/translator/HashNames.h",
-  "src/compiler/translator/ImmutableString_autogen.cpp",
   "src/compiler/translator/ImmutableString.h",
   "src/compiler/translator/ImmutableStringBuilder.cpp",
   "src/compiler/translator/ImmutableStringBuilder.h",
@@ -65,7 +64,9 @@ angle_translator_sources = [
   "src/compiler/translator/OutputTree.h",
   "src/compiler/translator/ParseContext.cpp",
   "src/compiler/translator/ParseContext.h",
-  "src/compiler/translator/ParseContext_autogen.h",
+  "src/compiler/translator/ParseContext_interm.h",
+  "src/compiler/translator/ParseContext_complete_autogen.h",
+  "src/compiler/translator/ParseContext_ESSL_autogen.h",
   "src/compiler/translator/PoolAlloc.cpp",
   "src/compiler/translator/PoolAlloc.h",
   "src/compiler/translator/Pragma.h",
@@ -79,7 +80,6 @@ angle_translator_sources = [
   "src/compiler/translator/Symbol.h",
   "src/compiler/translator/SymbolTable.cpp",
   "src/compiler/translator/SymbolTable.h",
-  "src/compiler/translator/SymbolTable_autogen.cpp",
   "src/compiler/translator/SymbolTable_autogen.h",
   "src/compiler/translator/SymbolUniqueId.cpp",
   "src/compiler/translator/SymbolUniqueId.h",
@@ -193,7 +193,9 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/UseInterfaceBlockFields.h",
   "src/compiler/translator/tree_ops/VectorizeVectorScalarArithmetic.cpp",
   "src/compiler/translator/tree_ops/VectorizeVectorScalarArithmetic.h",
-  "src/compiler/translator/tree_util/BuiltIn_autogen.h",
+  "src/compiler/translator/tree_util/BuiltIn.h",
+  "src/compiler/translator/tree_util/BuiltIn_complete_autogen.h",
+  "src/compiler/translator/tree_util/BuiltIn_ESSL_autogen.h",
   "src/compiler/translator/tree_util/FindFunction.cpp",
   "src/compiler/translator/tree_util/FindFunction.h",
   "src/compiler/translator/tree_util/FindMain.cpp",
@@ -292,6 +294,17 @@ angle_translator_lib_vulkan_sources = [
   "src/compiler/translator/TranslatorVulkan.cpp",
   "src/compiler/translator/TranslatorVulkan.h",
 ]
+if (is_android) {
+  angle_translator_sources += [
+    "src/compiler/translator/ImmutableString_ESSL_autogen.cpp",
+    "src/compiler/translator/SymbolTable_ESSL_autogen.cpp",
+  ]
+} else {
+  angle_translator_sources += [
+    "src/compiler/translator/ImmutableString_autogen.cpp",
+    "src/compiler/translator/SymbolTable_autogen.cpp",
+  ]
+}
 angle_preprocessor_sources = [
   "src/compiler/preprocessor/DiagnosticsBase.cpp",
   "src/compiler/preprocessor/DiagnosticsBase.h",

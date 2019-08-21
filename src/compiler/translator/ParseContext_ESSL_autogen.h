@@ -6,7 +6,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// ParseContext_autogen.h:
+// ParseContext_ESSL_autogen.h:
 //   Helpers for built-in related checks.
 
 #ifndef COMPILER_TRANSLATOR_PARSECONTEXT_AUTOGEN_H_
@@ -21,42 +21,42 @@ namespace BuiltInGroup
 bool isTextureOffsetNoBias(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 1113 && id <= 1259;
+    return id >= 3012 && id <= 3081;
 }
 bool isTextureOffsetBias(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 1260 && id <= 1294;
+    return id >= 3082 && id <= 3101;
 }
 bool isTextureGatherOffset(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 1346 && id <= 1388;
+    return id >= 3139 && id <= 3152;
 }
 bool isTextureGather(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 1308 && id <= 1388;
+    return id >= 3115 && id <= 3152;
 }
 bool isAtomicMemory(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 1450 && id <= 1467;
+    return id >= 3169 && id <= 3186;
 }
 bool isImageLoad(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 2104 && id <= 2136;
+    return id >= 3211 && id <= 3222;
 }
 bool isImageStore(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 2137 && id <= 2169;
+    return id >= 3223 && id <= 3234;
 }
 bool isImage(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 1468 && id <= 2169;
+    return id >= 3187 && id <= 3234;
 }
 
 }  // namespace BuiltInGroup
