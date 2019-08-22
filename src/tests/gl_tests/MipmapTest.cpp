@@ -1093,6 +1093,7 @@ TEST_P(MipmapTestES3, GenerateMipmapCubeBaseLevel)
 
     // Observed incorrect rendering on NVIDIA, level zero seems to be incorrectly affected by
     // GenerateMipmap.
+    // http://anglebug.com/3851
     ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGL());
 
     // Draw using level 0. It should still be blue.
