@@ -878,5 +878,11 @@ void WriteParamValueToStream<ParamType::TFenceNVID>(std::ostream &os, gl::FenceN
     os << value.value;
 }
 
+// TODO(jmadill): Use query ID map. http://anglebug.com/3611
+template <>
+void WriteParamValueToStream<ParamType::TQueryID>(std::ostream &os, gl::QueryID value)
+{
+    os << value.value;
+}
 #endif  // ANGLE_CAPTURE_ENABLED
 }  // namespace angle

@@ -1250,7 +1250,7 @@ bool ValidateES3TexStorage3DParameters(Context *context,
                                                height, depth);
 }
 
-bool ValidateBeginQuery(gl::Context *context, QueryType target, GLuint id)
+bool ValidateBeginQuery(gl::Context *context, QueryType target, QueryID id)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1283,7 +1283,7 @@ bool ValidateGetQueryiv(Context *context, QueryType target, GLenum pname, GLint 
     return ValidateGetQueryivBase(context, target, pname, nullptr);
 }
 
-bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint *params)
+bool ValidateGetQueryObjectuiv(Context *context, QueryID id, GLenum pname, GLuint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2403,12 +2403,12 @@ bool ValidateCompressedTexSubImage3DRobustANGLE(Context *context,
                                            height, depth, format, imageSize, data);
 }
 
-bool ValidateGenQueries(Context *context, GLint n, GLuint *)
+bool ValidateGenQueries(Context *context, GLint n, QueryID *)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateDeleteQueries(Context *context, GLint n, const GLuint *)
+bool ValidateDeleteQueries(Context *context, GLint n, const QueryID *)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
@@ -3431,7 +3431,7 @@ bool ValidateUniform4uiv(Context *context, GLint location, GLsizei count, const 
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC4, location, count);
 }
 
-bool ValidateIsQuery(Context *context, GLuint id)
+bool ValidateIsQuery(Context *context, QueryID id)
 {
     if (context->getClientMajorVersion() < 3)
     {

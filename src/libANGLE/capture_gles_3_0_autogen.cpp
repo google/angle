@@ -23,12 +23,12 @@ namespace gl
 CallCapture CaptureBeginQuery(const Context *context,
                               bool isCallValid,
                               QueryType targetPacked,
-                              GLuint id)
+                              QueryID idPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TQueryType, targetPacked);
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
 
     return CallCapture(gl::EntryPoint::BeginQuery, std::move(paramBuffer));
 }
@@ -358,16 +358,16 @@ CallCapture CaptureCopyTexSubImage3D(const Context *context,
 CallCapture CaptureDeleteQueries(const Context *context,
                                  bool isCallValid,
                                  GLsizei n,
-                                 const GLuint *ids)
+                                 const QueryID *idsPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture idsParam("ids", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, ids, &idsParam.value);
-    CaptureDeleteQueries_ids(context, isCallValid, n, ids, &idsParam);
-    paramBuffer.addParam(std::move(idsParam));
+    ParamCapture idsPackedParam("idsPacked", ParamType::TQueryIDConstPointer);
+    InitParamValue(ParamType::TQueryIDConstPointer, idsPacked, &idsPackedParam.value);
+    CaptureDeleteQueries_idsPacked(context, isCallValid, n, idsPacked, &idsPackedParam);
+    paramBuffer.addParam(std::move(idsPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteQueries, std::move(paramBuffer));
 }
@@ -588,16 +588,19 @@ CallCapture CaptureFramebufferTextureLayer(const Context *context,
     return CallCapture(gl::EntryPoint::FramebufferTextureLayer, std::move(paramBuffer));
 }
 
-CallCapture CaptureGenQueries(const Context *context, bool isCallValid, GLsizei n, GLuint *ids)
+CallCapture CaptureGenQueries(const Context *context,
+                              bool isCallValid,
+                              GLsizei n,
+                              QueryID *idsPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture idsParam("ids", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, ids, &idsParam.value);
-    CaptureGenQueries_ids(context, isCallValid, n, ids, &idsParam);
-    paramBuffer.addParam(std::move(idsParam));
+    ParamCapture idsPackedParam("idsPacked", ParamType::TQueryIDPointer);
+    InitParamValue(ParamType::TQueryIDPointer, idsPacked, &idsPackedParam.value);
+    CaptureGenQueries_idsPacked(context, isCallValid, n, idsPacked, &idsPackedParam);
+    paramBuffer.addParam(std::move(idsPackedParam));
 
     return CallCapture(gl::EntryPoint::GenQueries, std::move(paramBuffer));
 }
@@ -914,19 +917,19 @@ CallCapture CaptureGetProgramBinary(const Context *context,
 
 CallCapture CaptureGetQueryObjectuiv(const Context *context,
                                      bool isCallValid,
-                                     GLuint id,
+                                     QueryID idPacked,
                                      GLenum pname,
                                      GLuint *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::QueryObjectParameterName, ParamType::TGLenum,
                              pname);
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetQueryObjectuiv_params(context, isCallValid, id, pname, params, &paramsParam);
+    CaptureGetQueryObjectuiv_params(context, isCallValid, idPacked, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjectuiv, std::move(paramBuffer));
@@ -1240,12 +1243,12 @@ CallCapture CaptureInvalidateSubFramebuffer(const Context *context,
 
 CallCapture CaptureIsQuery(const Context *context,
                            bool isCallValid,
-                           GLuint id,
+                           QueryID idPacked,
                            GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);

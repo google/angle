@@ -76,11 +76,11 @@ void CaptureCompressedTexSubImage3D_data(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteQueries_ids(const Context *context,
-                              bool isCallValid,
-                              GLsizei n,
-                              const GLuint *ids,
-                              ParamCapture *paramCapture)
+void CaptureDeleteQueries_idsPacked(const Context *context,
+                                    bool isCallValid,
+                                    GLsizei n,
+                                    const QueryID *ids,
+                                    ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -146,11 +146,11 @@ void CaptureDrawRangeElements_indices(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGenQueries_ids(const Context *context,
-                           bool isCallValid,
-                           GLsizei n,
-                           GLuint *ids,
-                           ParamCapture *paramCapture)
+void CaptureGenQueries_idsPacked(const Context *context,
+                                 bool isCallValid,
+                                 GLsizei n,
+                                 QueryID *ids,
+                                 ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -349,7 +349,7 @@ void CaptureGetProgramBinary_binary(const Context *context,
 
 void CaptureGetQueryObjectuiv_params(const Context *context,
                                      bool isCallValid,
-                                     GLuint id,
+                                     QueryID id,
                                      GLenum pname,
                                      GLuint *params,
                                      ParamCapture *paramCapture)

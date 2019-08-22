@@ -22,7 +22,7 @@ bool ValidateGetBufferSubData(Context *context,
                               GLintptr offset,
                               GLsizeiptr size,
                               void *data);
-bool ValidateGetQueryObjectiv(Context *context, GLuint id, GLenum pname, GLint *params);
+bool ValidateGetQueryObjectiv(Context *context, QueryID idPacked, GLenum pname, GLint *params);
 bool ValidateMapBuffer(Context *context, BufferBinding targetPacked, GLenum access);
 }  // namespace gl
 

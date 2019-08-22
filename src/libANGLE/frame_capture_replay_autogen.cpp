@@ -53,7 +53,7 @@ void FrameCapture::ReplayCall(gl::Context *context,
         case gl::EntryPoint::BeginQuery:
             context->beginQuery(
                 params.getParam("targetPacked", ParamType::TQueryType, 0).value.QueryTypeVal,
-                params.getParam("id", ParamType::TGLuint, 1).value.GLuintVal);
+                params.getParam("idPacked", ParamType::TQueryID, 1).value.QueryIDVal);
             break;
         case gl::EntryPoint::BeginTransformFeedback:
             context->beginTransformFeedback(
@@ -502,9 +502,10 @@ void FrameCapture::ReplayCall(gl::Context *context,
                     params.getParam("pipelines", ParamType::TGLuintConstPointer, 1)));
             break;
         case gl::EntryPoint::DeleteQueries:
-            context->deleteQueries(params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                                   replayContext->getAsConstPointer<const GLuint *>(
-                                       params.getParam("ids", ParamType::TGLuintConstPointer, 1)));
+            context->deleteQueries(
+                params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
+                replayContext->getAsConstPointer<const QueryID *>(
+                    params.getParam("idsPacked", ParamType::TQueryIDConstPointer, 1)));
             break;
         case gl::EntryPoint::DeleteRenderbuffers:
             context->deleteRenderbuffers(
@@ -814,8 +815,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::GenQueries:
             context->genQueries(params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                                replayContext->getReadBufferPointer<GLuint *>(
-                                    params.getParam("ids", ParamType::TGLuintPointer, 1)));
+                                replayContext->getReadBufferPointer<QueryID *>(
+                                    params.getParam("idsPacked", ParamType::TQueryIDPointer, 1)));
             break;
         case gl::EntryPoint::GenRenderbuffers:
             context->genRenderbuffers(
@@ -1221,28 +1222,28 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::GetQueryObjecti64v:
             context->getQueryObjecti64v(
-                params.getParam("id", ParamType::TGLuint, 0).value.GLuintVal,
+                params.getParam("idPacked", ParamType::TQueryID, 0).value.QueryIDVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLint64 *>(
                     params.getParam("params", ParamType::TGLint64Pointer, 2)));
             break;
         case gl::EntryPoint::GetQueryObjectiv:
             context->getQueryObjectiv(
-                params.getParam("id", ParamType::TGLuint, 0).value.GLuintVal,
+                params.getParam("idPacked", ParamType::TQueryID, 0).value.QueryIDVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLint *>(
                     params.getParam("params", ParamType::TGLintPointer, 2)));
             break;
         case gl::EntryPoint::GetQueryObjectui64v:
             context->getQueryObjectui64v(
-                params.getParam("id", ParamType::TGLuint, 0).value.GLuintVal,
+                params.getParam("idPacked", ParamType::TQueryID, 0).value.QueryIDVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLuint64 *>(
                     params.getParam("params", ParamType::TGLuint64Pointer, 2)));
             break;
         case gl::EntryPoint::GetQueryObjectuiv:
             context->getQueryObjectuiv(
-                params.getParam("id", ParamType::TGLuint, 0).value.GLuintVal,
+                params.getParam("idPacked", ParamType::TQueryID, 0).value.QueryIDVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLuint *>(
                     params.getParam("params", ParamType::TGLuintPointer, 2)));
@@ -1577,7 +1578,7 @@ void FrameCapture::ReplayCall(gl::Context *context,
                 params.getParam("pipeline", ParamType::TGLuint, 0).value.GLuintVal);
             break;
         case gl::EntryPoint::IsQuery:
-            context->isQuery(params.getParam("id", ParamType::TGLuint, 0).value.GLuintVal);
+            context->isQuery(params.getParam("idPacked", ParamType::TQueryID, 0).value.QueryIDVal);
             break;
         case gl::EntryPoint::IsRenderbuffer:
             context->isRenderbuffer(
@@ -2172,7 +2173,7 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::QueryCounter:
             context->queryCounter(
-                params.getParam("id", ParamType::TGLuint, 0).value.GLuintVal,
+                params.getParam("idPacked", ParamType::TQueryID, 0).value.QueryIDVal,
                 params.getParam("targetPacked", ParamType::TQueryType, 1).value.QueryTypeVal);
             break;
         case gl::EntryPoint::ReadBuffer:

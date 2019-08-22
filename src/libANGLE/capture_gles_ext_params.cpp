@@ -918,7 +918,7 @@ void CaptureGetQueryivRobustANGLE_params(const Context *context,
 
 void CaptureGetQueryObjectuivRobustANGLE_length(const Context *context,
                                                 bool isCallValid,
-                                                GLuint id,
+                                                QueryID id,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
@@ -930,7 +930,7 @@ void CaptureGetQueryObjectuivRobustANGLE_length(const Context *context,
 
 void CaptureGetQueryObjectuivRobustANGLE_params(const Context *context,
                                                 bool isCallValid,
-                                                GLuint id,
+                                                QueryID id,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
@@ -1710,7 +1710,7 @@ void CaptureGetSamplerParameterIuivRobustANGLE_params(const Context *context,
 
 void CaptureGetQueryObjectivRobustANGLE_length(const Context *context,
                                                bool isCallValid,
-                                               GLuint id,
+                                               QueryID id,
                                                GLenum pname,
                                                GLsizei bufSize,
                                                GLsizei *length,
@@ -1722,7 +1722,7 @@ void CaptureGetQueryObjectivRobustANGLE_length(const Context *context,
 
 void CaptureGetQueryObjectivRobustANGLE_params(const Context *context,
                                                bool isCallValid,
-                                               GLuint id,
+                                               QueryID id,
                                                GLenum pname,
                                                GLsizei bufSize,
                                                GLsizei *length,
@@ -1734,7 +1734,7 @@ void CaptureGetQueryObjectivRobustANGLE_params(const Context *context,
 
 void CaptureGetQueryObjecti64vRobustANGLE_length(const Context *context,
                                                  bool isCallValid,
-                                                 GLuint id,
+                                                 QueryID id,
                                                  GLenum pname,
                                                  GLsizei bufSize,
                                                  GLsizei *length,
@@ -1746,7 +1746,7 @@ void CaptureGetQueryObjecti64vRobustANGLE_length(const Context *context,
 
 void CaptureGetQueryObjecti64vRobustANGLE_params(const Context *context,
                                                  bool isCallValid,
-                                                 GLuint id,
+                                                 QueryID id,
                                                  GLenum pname,
                                                  GLsizei bufSize,
                                                  GLsizei *length,
@@ -1758,7 +1758,7 @@ void CaptureGetQueryObjecti64vRobustANGLE_params(const Context *context,
 
 void CaptureGetQueryObjectui64vRobustANGLE_length(const Context *context,
                                                   bool isCallValid,
-                                                  GLuint id,
+                                                  QueryID id,
                                                   GLenum pname,
                                                   GLsizei bufSize,
                                                   GLsizei *length,
@@ -1770,7 +1770,7 @@ void CaptureGetQueryObjectui64vRobustANGLE_length(const Context *context,
 
 void CaptureGetQueryObjectui64vRobustANGLE_params(const Context *context,
                                                   bool isCallValid,
-                                                  GLuint id,
+                                                  QueryID id,
                                                   GLenum pname,
                                                   GLsizei bufSize,
                                                   GLsizei *length,
@@ -2171,27 +2171,27 @@ void CaptureDiscardFramebufferEXT_attachments(const Context *context,
     CaptureMemory(attachments, sizeof(GLenum) * numAttachments, paramCapture);
 }
 
-void CaptureDeleteQueriesEXT_ids(const Context *context,
-                                 bool isCallValid,
-                                 GLsizei n,
-                                 const GLuint *ids,
-                                 ParamCapture *paramCapture)
+void CaptureDeleteQueriesEXT_idsPacked(const Context *context,
+                                       bool isCallValid,
+                                       GLsizei n,
+                                       const QueryID *ids,
+                                       ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureGenQueriesEXT_ids(const Context *context,
-                              bool isCallValid,
-                              GLsizei n,
-                              GLuint *ids,
-                              ParamCapture *paramCapture)
+void CaptureGenQueriesEXT_idsPacked(const Context *context,
+                                    bool isCallValid,
+                                    GLsizei n,
+                                    QueryID *ids,
+                                    ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
 void CaptureGetQueryObjecti64vEXT_params(const Context *context,
                                          bool isCallValid,
-                                         GLuint id,
+                                         QueryID id,
                                          GLenum pname,
                                          GLint64 *params,
                                          ParamCapture *paramCapture)
@@ -2201,7 +2201,7 @@ void CaptureGetQueryObjecti64vEXT_params(const Context *context,
 
 void CaptureGetQueryObjectivEXT_params(const Context *context,
                                        bool isCallValid,
-                                       GLuint id,
+                                       QueryID id,
                                        GLenum pname,
                                        GLint *params,
                                        ParamCapture *paramCapture)
@@ -2211,7 +2211,7 @@ void CaptureGetQueryObjectivEXT_params(const Context *context,
 
 void CaptureGetQueryObjectui64vEXT_params(const Context *context,
                                           bool isCallValid,
-                                          GLuint id,
+                                          QueryID id,
                                           GLenum pname,
                                           GLuint64 *params,
                                           ParamCapture *paramCapture)
@@ -2221,7 +2221,7 @@ void CaptureGetQueryObjectui64vEXT_params(const Context *context,
 
 void CaptureGetQueryObjectuivEXT_params(const Context *context,
                                         bool isCallValid,
-                                        GLuint id,
+                                        QueryID id,
                                         GLenum pname,
                                         GLuint *params,
                                         ParamCapture *paramCapture)

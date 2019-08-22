@@ -29,14 +29,15 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
     if (context)
     {
         QueryType targetPacked                        = FromGL<QueryType>(target);
+        QueryID idPacked                              = FromGL<QueryID>(id);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBeginQuery(context, targetPacked, id));
+            (context->skipValidation() || ValidateBeginQuery(context, targetPacked, idPacked));
         if (isCallValid)
         {
-            context->beginQuery(targetPacked, id);
+            context->beginQuery(targetPacked, idPacked);
         }
-        ANGLE_CAPTURE(BeginQuery, isCallValid, context, targetPacked, id);
+        ANGLE_CAPTURE(BeginQuery, isCallValid, context, targetPacked, idPacked);
     }
 }
 
@@ -470,13 +471,15 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
 
     if (context)
     {
+        const QueryID *idsPacked                      = FromGL<const QueryID *>(ids);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateDeleteQueries(context, n, ids));
+        bool isCallValid =
+            (context->skipValidation() || ValidateDeleteQueries(context, n, idsPacked));
         if (isCallValid)
         {
-            context->deleteQueries(n, ids);
+            context->deleteQueries(n, idsPacked);
         }
-        ANGLE_CAPTURE(DeleteQueries, isCallValid, context, n, ids);
+        ANGLE_CAPTURE(DeleteQueries, isCallValid, context, n, idsPacked);
     }
 }
 
@@ -785,13 +788,14 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
 
     if (context)
     {
+        QueryID *idsPacked                            = FromGL<QueryID *>(ids);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateGenQueries(context, n, ids));
+        bool isCallValid = (context->skipValidation() || ValidateGenQueries(context, n, idsPacked));
         if (isCallValid)
         {
-            context->genQueries(n, ids);
+            context->genQueries(n, idsPacked);
         }
-        ANGLE_CAPTURE(GenQueries, isCallValid, context, n, ids);
+        ANGLE_CAPTURE(GenQueries, isCallValid, context, n, idsPacked);
     }
 }
 
@@ -1141,14 +1145,15 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 
     if (context)
     {
+        QueryID idPacked                              = FromGL<QueryID>(id);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetQueryObjectuiv(context, id, pname, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetQueryObjectuiv(context, idPacked, pname, params));
         if (isCallValid)
         {
-            context->getQueryObjectuiv(id, pname, params);
+            context->getQueryObjectuiv(idPacked, pname, params);
         }
-        ANGLE_CAPTURE(GetQueryObjectuiv, isCallValid, context, id, pname, params);
+        ANGLE_CAPTURE(GetQueryObjectuiv, isCallValid, context, idPacked, pname, params);
     }
 }
 
@@ -1488,17 +1493,18 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
     GLboolean returnValue;
     if (context)
     {
+        QueryID idPacked                              = FromGL<QueryID>(id);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateIsQuery(context, id));
+        bool isCallValid = (context->skipValidation() || ValidateIsQuery(context, idPacked));
         if (isCallValid)
         {
-            returnValue = context->isQuery(id);
+            returnValue = context->isQuery(idPacked);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
         }
-        ANGLE_CAPTURE(IsQuery, isCallValid, context, id, returnValue);
+        ANGLE_CAPTURE(IsQuery, isCallValid, context, idPacked, returnValue);
     }
     else
     {

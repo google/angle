@@ -269,6 +269,16 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
             WriteParamValueToStream<ParamType::TProvokingVertexConvention>(
                 os, paramValue.ProvokingVertexConventionVal);
             break;
+        case ParamType::TQueryID:
+            WriteParamValueToStream<ParamType::TQueryID>(os, paramValue.QueryIDVal);
+            break;
+        case ParamType::TQueryIDConstPointer:
+            WriteParamValueToStream<ParamType::TQueryIDConstPointer>(
+                os, paramValue.QueryIDConstPointerVal);
+            break;
+        case ParamType::TQueryIDPointer:
+            WriteParamValueToStream<ParamType::TQueryIDPointer>(os, paramValue.QueryIDPointerVal);
+            break;
         case ParamType::TQueryType:
             WriteParamValueToStream<ParamType::TQueryType>(os, paramValue.QueryTypeVal);
             break;
@@ -502,6 +512,12 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLenum";
         case ParamType::TProvokingVertexConvention:
             return "GLenum";
+        case ParamType::TQueryID:
+            return "GLuint";
+        case ParamType::TQueryIDConstPointer:
+            return "const GLuint *";
+        case ParamType::TQueryIDPointer:
+            return "GLuint *";
         case ParamType::TQueryType:
             return "GLenum";
         case ParamType::TRenderbufferID:

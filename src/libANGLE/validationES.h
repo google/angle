@@ -172,14 +172,14 @@ bool ValidateReadnPixelsRobustANGLE(Context *context,
                                     GLsizei *rows,
                                     void *data);
 
-bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, GLuint *ids);
-bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids);
-bool ValidateIsQueryEXT(gl::Context *context, GLuint id);
-bool ValidateBeginQueryBase(Context *context, QueryType target, GLuint id);
-bool ValidateBeginQueryEXT(Context *context, QueryType target, GLuint id);
+bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, QueryID *ids);
+bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const QueryID *ids);
+bool ValidateIsQueryEXT(gl::Context *context, QueryID id);
+bool ValidateBeginQueryBase(Context *context, QueryType target, QueryID id);
+bool ValidateBeginQueryEXT(Context *context, QueryType target, QueryID id);
 bool ValidateEndQueryBase(Context *context, QueryType target);
 bool ValidateEndQueryEXT(Context *context, QueryType target);
-bool ValidateQueryCounterEXT(Context *context, GLuint id, QueryType target);
+bool ValidateQueryCounterEXT(Context *context, QueryID id, QueryType target);
 bool ValidateGetQueryivBase(Context *context, QueryType target, GLenum pname, GLsizei *numParams);
 bool ValidateGetQueryivEXT(Context *context, QueryType target, GLenum pname, GLint *params);
 bool ValidateGetQueryivRobustANGLE(Context *context,
@@ -188,31 +188,34 @@ bool ValidateGetQueryivRobustANGLE(Context *context,
                                    GLsizei bufSize,
                                    GLsizei *length,
                                    GLint *params);
-bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname, GLsizei *numParams);
-bool ValidateGetQueryObjectivEXT(Context *context, GLuint id, GLenum pname, GLint *params);
+bool ValidateGetQueryObjectValueBase(Context *context,
+                                     QueryID id,
+                                     GLenum pname,
+                                     GLsizei *numParams);
+bool ValidateGetQueryObjectivEXT(Context *context, QueryID id, GLenum pname, GLint *params);
 bool ValidateGetQueryObjectivRobustANGLE(Context *context,
-                                         GLuint id,
+                                         QueryID id,
                                          GLenum pname,
                                          GLsizei bufSize,
                                          GLsizei *length,
                                          GLint *params);
-bool ValidateGetQueryObjectuivEXT(Context *context, GLuint id, GLenum pname, GLuint *params);
+bool ValidateGetQueryObjectuivEXT(Context *context, QueryID id, GLenum pname, GLuint *params);
 bool ValidateGetQueryObjectuivRobustANGLE(Context *context,
-                                          GLuint id,
+                                          QueryID id,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
                                           GLuint *params);
-bool ValidateGetQueryObjecti64vEXT(Context *context, GLuint id, GLenum pname, GLint64 *params);
+bool ValidateGetQueryObjecti64vEXT(Context *context, QueryID id, GLenum pname, GLint64 *params);
 bool ValidateGetQueryObjecti64vRobustANGLE(Context *context,
-                                           GLuint id,
+                                           QueryID id,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            GLsizei *length,
                                            GLint64 *params);
-bool ValidateGetQueryObjectui64vEXT(Context *context, GLuint id, GLenum pname, GLuint64 *params);
+bool ValidateGetQueryObjectui64vEXT(Context *context, QueryID id, GLenum pname, GLuint64 *params);
 bool ValidateGetQueryObjectui64vRobustANGLE(Context *context,
-                                            GLuint id,
+                                            QueryID id,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             GLsizei *length,

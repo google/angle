@@ -27,8 +27,11 @@ bool ValidateColorP3uiv(Context *context, GLenum type, const GLuint *color);
 bool ValidateColorP4ui(Context *context, GLenum type, GLuint color);
 bool ValidateColorP4uiv(Context *context, GLenum type, const GLuint *color);
 bool ValidateGetFragDataIndex(Context *context, GLuint program, const GLchar *name);
-bool ValidateGetQueryObjecti64v(Context *context, GLuint id, GLenum pname, GLint64 *params);
-bool ValidateGetQueryObjectui64v(Context *context, GLuint id, GLenum pname, GLuint64 *params);
+bool ValidateGetQueryObjecti64v(Context *context, QueryID idPacked, GLenum pname, GLint64 *params);
+bool ValidateGetQueryObjectui64v(Context *context,
+                                 QueryID idPacked,
+                                 GLenum pname,
+                                 GLuint64 *params);
 bool ValidateGetSamplerParameterIiv(Context *context,
                                     SamplerID samplerPacked,
                                     GLenum pname,
@@ -59,7 +62,7 @@ bool ValidateMultiTexCoordP4uiv(Context *context,
                                 const GLuint *coords);
 bool ValidateNormalP3ui(Context *context, GLenum type, GLuint coords);
 bool ValidateNormalP3uiv(Context *context, GLenum type, const GLuint *coords);
-bool ValidateQueryCounter(Context *context, GLuint id, QueryType targetPacked);
+bool ValidateQueryCounter(Context *context, QueryID idPacked, QueryType targetPacked);
 bool ValidateSamplerParameterIiv(Context *context,
                                  SamplerID samplerPacked,
                                  GLenum pname,

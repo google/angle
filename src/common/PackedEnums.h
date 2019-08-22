@@ -401,6 +401,11 @@ struct FenceNVID
     GLuint value;
 };
 
+struct QueryID
+{
+    GLuint value;
+};
+
 // Used to unbox typed values.
 template <typename ResourceIDType>
 GLuint GetIDValue(ResourceIDType id);

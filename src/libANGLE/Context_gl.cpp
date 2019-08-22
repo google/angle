@@ -2263,7 +2263,7 @@ void Context::vertexP4uiv(GLenum type, const GLuint *value)
     UNIMPLEMENTED();
 }
 
-void Context::beginQueryIndexed(GLenum target, GLuint index, GLuint id)
+void Context::beginQueryIndexed(GLenum target, GLuint index, QueryID id)
 {
     UNIMPLEMENTED();
 }

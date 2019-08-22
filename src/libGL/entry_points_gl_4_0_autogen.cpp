@@ -35,14 +35,15 @@ void GL_APIENTRY BeginQueryIndexed(GLenum target, GLuint index, GLuint id)
 
     if (context)
     {
+        QueryID idPacked                              = FromGL<QueryID>(id);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateBeginQueryIndexed(context, target, index, id));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateBeginQueryIndexed(context, target, index, idPacked));
         if (isCallValid)
         {
-            context->beginQueryIndexed(target, index, id);
+            context->beginQueryIndexed(target, index, idPacked);
         }
-        ANGLE_CAPTURE(BeginQueryIndexed, isCallValid, context, target, index, id);
+        ANGLE_CAPTURE(BeginQueryIndexed, isCallValid, context, target, index, idPacked);
     }
 }
 

@@ -29,7 +29,7 @@ namespace gl
 class Query final : public RefCountObject, public LabeledObject
 {
   public:
-    Query(rx::QueryImpl *impl, GLuint id);
+    Query(rx::QueryImpl *impl, QueryID id);
     ~Query() override;
     void onDestroy(const Context *context) override;
 

@@ -17,7 +17,7 @@ namespace gl
 {
 class Context;
 
-bool ValidateBeginQueryIndexed(Context *context, GLenum target, GLuint index, GLuint id);
+bool ValidateBeginQueryIndexed(Context *context, GLenum target, GLuint index, QueryID idPacked);
 bool ValidateBlendEquationSeparatei(Context *context, GLuint buf, GLenum modeRGB, GLenum modeAlpha);
 bool ValidateBlendEquationi(Context *context, GLuint buf, GLenum mode);
 bool ValidateBlendFuncSeparatei(Context *context,

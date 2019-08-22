@@ -17,7 +17,8 @@
         "func": "AlphaTestFunc"
     },
     "glBeginQuery": {
-        "target": "QueryType"
+        "target": "QueryType",
+        "id": "QueryID"
     },
     "glBeginTransformFeedback": {
         "primitiveMode": "PrimitiveMode"
@@ -359,7 +360,8 @@
         "target": "QueryType"
     },
     "glGetQueryivRobust": {
-        "target": "QueryType"
+        "target": "QueryType",
+        "id": "QueryID"
     },
     "glGetSamplerParameterfv": {
         "sampler": "SamplerID"
@@ -606,7 +608,8 @@
         "mode": "ProvokingVertexConvention"
     },
     "glQueryCounter": {
-        "target": "QueryType"
+        "target": "QueryType",
+        "id": "QueryID"
     },
     "glSamplerParameterf": {
         "sampler": "SamplerID"
@@ -878,5 +881,41 @@
     },
     "glGenFencesNV": {
         "fences": "FenceNVID *"
+    },
+    "glGenQueries": {
+        "ids": "QueryID *"
+    },
+    "glDeleteQueries": {
+        "ids":  "const QueryID *"
+    },
+    "glBeginQueryIndexed": {
+        "id": "QueryID"
+    },
+    "glIsQuery": {
+        "id": "QueryID"
+    },
+    "glGetQueryObjectuiv": {
+        "id": "QueryID"
+    },
+    "glGetQueryObjectiv": {
+        "id": "QueryID"
+    },
+    "glGetQueryObjecti64v": {
+        "id": "QueryID"
+    },
+    "glGetQueryObjectui64v": {
+        "id": "QueryID"
+    },
+    "glGetQueryObjectivRobust": {
+        "id": "QueryID"
+    },
+    "glGetQueryObjecti64vRobust": {
+        "id": "QueryID"
+    },
+    "glGetQueryObjectui64vRobust": {
+        "id": "QueryID"
+    },
+    "glGetQueryObjectuivRobust": {
+        "id": "QueryID"
     }
 }

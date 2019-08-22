@@ -357,7 +357,7 @@ bool ValidateGetQueryivRobustANGLE(Context *context,
                                    GLsizei *length,
                                    GLint *params);
 bool ValidateGetQueryObjectuivRobustANGLE(Context *context,
-                                          GLuint id,
+                                          QueryID idPacked,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -564,19 +564,19 @@ bool ValidateGetSamplerParameterIuivRobustANGLE(Context *context,
                                                 GLsizei *length,
                                                 GLuint *params);
 bool ValidateGetQueryObjectivRobustANGLE(Context *context,
-                                         GLuint id,
+                                         QueryID idPacked,
                                          GLenum pname,
                                          GLsizei bufSize,
                                          GLsizei *length,
                                          GLint *params);
 bool ValidateGetQueryObjecti64vRobustANGLE(Context *context,
-                                           GLuint id,
+                                           QueryID idPacked,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            GLsizei *length,
                                            GLint64 *params);
 bool ValidateGetQueryObjectui64vRobustANGLE(Context *context,
-                                            GLuint id,
+                                            QueryID idPacked,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             GLsizei *length,
@@ -797,17 +797,23 @@ bool ValidateDiscardFramebufferEXT(Context *context,
                                    const GLenum *attachments);
 
 // GL_EXT_disjoint_timer_query
-bool ValidateBeginQueryEXT(Context *context, QueryType targetPacked, GLuint id);
-bool ValidateDeleteQueriesEXT(Context *context, GLsizei n, const GLuint *ids);
+bool ValidateBeginQueryEXT(Context *context, QueryType targetPacked, QueryID idPacked);
+bool ValidateDeleteQueriesEXT(Context *context, GLsizei n, const QueryID *idsPacked);
 bool ValidateEndQueryEXT(Context *context, QueryType targetPacked);
-bool ValidateGenQueriesEXT(Context *context, GLsizei n, GLuint *ids);
-bool ValidateGetQueryObjecti64vEXT(Context *context, GLuint id, GLenum pname, GLint64 *params);
-bool ValidateGetQueryObjectivEXT(Context *context, GLuint id, GLenum pname, GLint *params);
-bool ValidateGetQueryObjectui64vEXT(Context *context, GLuint id, GLenum pname, GLuint64 *params);
-bool ValidateGetQueryObjectuivEXT(Context *context, GLuint id, GLenum pname, GLuint *params);
+bool ValidateGenQueriesEXT(Context *context, GLsizei n, QueryID *idsPacked);
+bool ValidateGetQueryObjecti64vEXT(Context *context,
+                                   QueryID idPacked,
+                                   GLenum pname,
+                                   GLint64 *params);
+bool ValidateGetQueryObjectivEXT(Context *context, QueryID idPacked, GLenum pname, GLint *params);
+bool ValidateGetQueryObjectui64vEXT(Context *context,
+                                    QueryID idPacked,
+                                    GLenum pname,
+                                    GLuint64 *params);
+bool ValidateGetQueryObjectuivEXT(Context *context, QueryID idPacked, GLenum pname, GLuint *params);
 bool ValidateGetQueryivEXT(Context *context, QueryType targetPacked, GLenum pname, GLint *params);
-bool ValidateIsQueryEXT(Context *context, GLuint id);
-bool ValidateQueryCounterEXT(Context *context, GLuint id, QueryType targetPacked);
+bool ValidateIsQueryEXT(Context *context, QueryID idPacked);
+bool ValidateQueryCounterEXT(Context *context, QueryID idPacked, QueryType targetPacked);
 
 // GL_EXT_draw_buffers
 bool ValidateDrawBuffersEXT(Context *context, GLsizei n, const GLenum *bufs);

@@ -11,7 +11,7 @@
 namespace gl
 {
 
-bool ValidateBeginQueryIndexed(Context *context, GLenum target, GLuint index, GLuint id)
+bool ValidateBeginQueryIndexed(Context *context, GLenum target, GLuint index, QueryID id)
 {
     return true;
 }

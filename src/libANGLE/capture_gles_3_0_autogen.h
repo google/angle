@@ -23,7 +23,7 @@ class Context;
 angle::CallCapture CaptureBeginQuery(const Context *context,
                                      bool isCallValid,
                                      QueryType targetPacked,
-                                     GLuint id);
+                                     QueryID idPacked);
 angle::CallCapture CaptureBeginTransformFeedback(const Context *context,
                                                  bool isCallValid,
                                                  PrimitiveMode primitiveModePacked);
@@ -132,7 +132,7 @@ angle::CallCapture CaptureCopyTexSubImage3D(const Context *context,
 angle::CallCapture CaptureDeleteQueries(const Context *context,
                                         bool isCallValid,
                                         GLsizei n,
-                                        const GLuint *ids);
+                                        const QueryID *idsPacked);
 angle::CallCapture CaptureDeleteSamplers(const Context *context,
                                          bool isCallValid,
                                          GLsizei count,
@@ -195,7 +195,7 @@ angle::CallCapture CaptureFramebufferTextureLayer(const Context *context,
 angle::CallCapture CaptureGenQueries(const Context *context,
                                      bool isCallValid,
                                      GLsizei n,
-                                     GLuint *ids);
+                                     QueryID *idsPacked);
 angle::CallCapture CaptureGenSamplers(const Context *context,
                                       bool isCallValid,
                                       GLsizei count,
@@ -273,7 +273,7 @@ angle::CallCapture CaptureGetProgramBinary(const Context *context,
                                            void *binary);
 angle::CallCapture CaptureGetQueryObjectuiv(const Context *context,
                                             bool isCallValid,
-                                            GLuint id,
+                                            QueryID idPacked,
                                             GLenum pname,
                                             GLuint *params);
 angle::CallCapture CaptureGetQueryiv(const Context *context,
@@ -354,7 +354,7 @@ angle::CallCapture CaptureInvalidateSubFramebuffer(const Context *context,
                                                    GLsizei height);
 angle::CallCapture CaptureIsQuery(const Context *context,
                                   bool isCallValid,
-                                  GLuint id,
+                                  QueryID idPacked,
                                   GLboolean returnValue);
 angle::CallCapture CaptureIsSampler(const Context *context,
                                     bool isCallValid,
@@ -638,11 +638,11 @@ void CaptureCompressedTexSubImage3D_data(const Context *context,
                                          GLsizei imageSize,
                                          const void *data,
                                          angle::ParamCapture *paramCapture);
-void CaptureDeleteQueries_ids(const Context *context,
-                              bool isCallValid,
-                              GLsizei n,
-                              const GLuint *ids,
-                              angle::ParamCapture *paramCapture);
+void CaptureDeleteQueries_idsPacked(const Context *context,
+                                    bool isCallValid,
+                                    GLsizei n,
+                                    const QueryID *idsPacked,
+                                    angle::ParamCapture *paramCapture);
 void CaptureDeleteSamplers_samplersPacked(const Context *context,
                                           bool isCallValid,
                                           GLsizei count,
@@ -680,11 +680,11 @@ void CaptureDrawRangeElements_indices(const Context *context,
                                       DrawElementsType typePacked,
                                       const void *indices,
                                       angle::ParamCapture *paramCapture);
-void CaptureGenQueries_ids(const Context *context,
-                           bool isCallValid,
-                           GLsizei n,
-                           GLuint *ids,
-                           angle::ParamCapture *paramCapture);
+void CaptureGenQueries_idsPacked(const Context *context,
+                                 bool isCallValid,
+                                 GLsizei n,
+                                 QueryID *idsPacked,
+                                 angle::ParamCapture *paramCapture);
 void CaptureGenSamplers_samplersPacked(const Context *context,
                                        bool isCallValid,
                                        GLsizei count,
@@ -807,7 +807,7 @@ void CaptureGetProgramBinary_binary(const Context *context,
                                     angle::ParamCapture *paramCapture);
 void CaptureGetQueryObjectuiv_params(const Context *context,
                                      bool isCallValid,
-                                     GLuint id,
+                                     QueryID idPacked,
                                      GLenum pname,
                                      GLuint *params,
                                      angle::ParamCapture *paramCapture);

@@ -17,7 +17,7 @@ namespace gl
 {
 class Context;
 
-bool ValidateBeginQuery(Context *context, QueryType targetPacked, GLuint id);
+bool ValidateBeginQuery(Context *context, QueryType targetPacked, QueryID idPacked);
 bool ValidateBeginTransformFeedback(Context *context, PrimitiveMode primitiveModePacked);
 bool ValidateBindBufferBase(Context *context,
                             BufferBinding targetPacked,
@@ -90,7 +90,7 @@ bool ValidateCopyTexSubImage3D(Context *context,
                                GLint y,
                                GLsizei width,
                                GLsizei height);
-bool ValidateDeleteQueries(Context *context, GLsizei n, const GLuint *ids);
+bool ValidateDeleteQueries(Context *context, GLsizei n, const QueryID *idsPacked);
 bool ValidateDeleteSamplers(Context *context, GLsizei count, const SamplerID *samplersPacked);
 bool ValidateDeleteSync(Context *context, GLsync sync);
 bool ValidateDeleteTransformFeedbacks(Context *context, GLsizei n, const GLuint *ids);
@@ -127,7 +127,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
                                      TextureID texturePacked,
                                      GLint level,
                                      GLint layer);
-bool ValidateGenQueries(Context *context, GLsizei n, GLuint *ids);
+bool ValidateGenQueries(Context *context, GLsizei n, QueryID *idsPacked);
 bool ValidateGenSamplers(Context *context, GLsizei count, SamplerID *samplersPacked);
 bool ValidateGenTransformFeedbacks(Context *context, GLsizei n, GLuint *ids);
 bool ValidateGenVertexArrays(Context *context, GLsizei n, GLuint *arrays);
@@ -172,7 +172,7 @@ bool ValidateGetProgramBinary(Context *context,
                               GLsizei *length,
                               GLenum *binaryFormat,
                               void *binary);
-bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint *params);
+bool ValidateGetQueryObjectuiv(Context *context, QueryID idPacked, GLenum pname, GLuint *params);
 bool ValidateGetQueryiv(Context *context, QueryType targetPacked, GLenum pname, GLint *params);
 bool ValidateGetSamplerParameterfv(Context *context,
                                    SamplerID samplerPacked,
@@ -218,7 +218,7 @@ bool ValidateInvalidateSubFramebuffer(Context *context,
                                       GLint y,
                                       GLsizei width,
                                       GLsizei height);
-bool ValidateIsQuery(Context *context, GLuint id);
+bool ValidateIsQuery(Context *context, QueryID idPacked);
 bool ValidateIsSampler(Context *context, SamplerID samplerPacked);
 bool ValidateIsSync(Context *context, GLsync sync);
 bool ValidateIsTransformFeedback(Context *context, GLuint id);

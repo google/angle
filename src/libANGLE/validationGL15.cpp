@@ -20,7 +20,7 @@ bool ValidateGetBufferSubData(Context *context,
     return true;
 }
 
-bool ValidateGetQueryObjectiv(Context *context, GLuint id, GLenum pname, GLint *params)
+bool ValidateGetQueryObjectiv(Context *context, QueryID id, GLenum pname, GLint *params)
 {
     return true;
 }

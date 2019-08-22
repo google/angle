@@ -11,7 +11,7 @@
 #define ANGLE_CONTEXT_GL_4_0_AUTOGEN_H_
 
 #define ANGLE_GL_4_0_CONTEXT_API                                                                   \
-    void beginQueryIndexed(GLenum target, GLuint index, GLuint id);                                \
+    void beginQueryIndexed(GLenum target, GLuint index, QueryID idPacked);                         \
     void blendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha);                     \
     void blendEquationi(GLuint buf, GLenum mode);                                                  \
     void blendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,             \

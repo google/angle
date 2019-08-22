@@ -1366,7 +1366,7 @@ CallCapture CaptureGetQueryivRobustANGLE(const Context *context,
 
 CallCapture CaptureGetQueryObjectuivRobustANGLE(const Context *context,
                                                 bool isCallValid,
-                                                GLuint id,
+                                                QueryID idPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
@@ -1374,20 +1374,20 @@ CallCapture CaptureGetQueryObjectuivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetQueryObjectuivRobustANGLE_length(context, isCallValid, id, pname, bufSize, length,
-                                               params, &lengthParam);
+    CaptureGetQueryObjectuivRobustANGLE_length(context, isCallValid, idPacked, pname, bufSize,
+                                               length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetQueryObjectuivRobustANGLE_params(context, isCallValid, id, pname, bufSize, length,
-                                               params, &paramsParam);
+    CaptureGetQueryObjectuivRobustANGLE_params(context, isCallValid, idPacked, pname, bufSize,
+                                               length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjectuivRobustANGLE, std::move(paramBuffer));
@@ -2343,7 +2343,7 @@ CallCapture CaptureGetSamplerParameterIuivRobustANGLE(const Context *context,
 
 CallCapture CaptureGetQueryObjectivRobustANGLE(const Context *context,
                                                bool isCallValid,
-                                               GLuint id,
+                                               QueryID idPacked,
                                                GLenum pname,
                                                GLsizei bufSize,
                                                GLsizei *length,
@@ -2351,20 +2351,20 @@ CallCapture CaptureGetQueryObjectivRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetQueryObjectivRobustANGLE_length(context, isCallValid, id, pname, bufSize, length,
-                                              params, &lengthParam);
+    CaptureGetQueryObjectivRobustANGLE_length(context, isCallValid, idPacked, pname, bufSize,
+                                              length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetQueryObjectivRobustANGLE_params(context, isCallValid, id, pname, bufSize, length,
-                                              params, &paramsParam);
+    CaptureGetQueryObjectivRobustANGLE_params(context, isCallValid, idPacked, pname, bufSize,
+                                              length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjectivRobustANGLE, std::move(paramBuffer));
@@ -2372,7 +2372,7 @@ CallCapture CaptureGetQueryObjectivRobustANGLE(const Context *context,
 
 CallCapture CaptureGetQueryObjecti64vRobustANGLE(const Context *context,
                                                  bool isCallValid,
-                                                 GLuint id,
+                                                 QueryID idPacked,
                                                  GLenum pname,
                                                  GLsizei bufSize,
                                                  GLsizei *length,
@@ -2380,20 +2380,20 @@ CallCapture CaptureGetQueryObjecti64vRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetQueryObjecti64vRobustANGLE_length(context, isCallValid, id, pname, bufSize, length,
-                                                params, &lengthParam);
+    CaptureGetQueryObjecti64vRobustANGLE_length(context, isCallValid, idPacked, pname, bufSize,
+                                                length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLint64Pointer);
     InitParamValue(ParamType::TGLint64Pointer, params, &paramsParam.value);
-    CaptureGetQueryObjecti64vRobustANGLE_params(context, isCallValid, id, pname, bufSize, length,
-                                                params, &paramsParam);
+    CaptureGetQueryObjecti64vRobustANGLE_params(context, isCallValid, idPacked, pname, bufSize,
+                                                length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjecti64vRobustANGLE, std::move(paramBuffer));
@@ -2401,7 +2401,7 @@ CallCapture CaptureGetQueryObjecti64vRobustANGLE(const Context *context,
 
 CallCapture CaptureGetQueryObjectui64vRobustANGLE(const Context *context,
                                                   bool isCallValid,
-                                                  GLuint id,
+                                                  QueryID idPacked,
                                                   GLenum pname,
                                                   GLsizei bufSize,
                                                   GLsizei *length,
@@ -2409,20 +2409,20 @@ CallCapture CaptureGetQueryObjectui64vRobustANGLE(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetQueryObjectui64vRobustANGLE_length(context, isCallValid, id, pname, bufSize, length,
-                                                 params, &lengthParam);
+    CaptureGetQueryObjectui64vRobustANGLE_length(context, isCallValid, idPacked, pname, bufSize,
+                                                 length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLuint64Pointer);
     InitParamValue(ParamType::TGLuint64Pointer, params, &paramsParam.value);
-    CaptureGetQueryObjectui64vRobustANGLE_params(context, isCallValid, id, pname, bufSize, length,
-                                                 params, &paramsParam);
+    CaptureGetQueryObjectui64vRobustANGLE_params(context, isCallValid, idPacked, pname, bufSize,
+                                                 length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjectui64vRobustANGLE, std::move(paramBuffer));
@@ -3436,12 +3436,12 @@ CallCapture CaptureDiscardFramebufferEXT(const Context *context,
 CallCapture CaptureBeginQueryEXT(const Context *context,
                                  bool isCallValid,
                                  QueryType targetPacked,
-                                 GLuint id)
+                                 QueryID idPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TQueryType, targetPacked);
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
 
     return CallCapture(gl::EntryPoint::BeginQueryEXT, std::move(paramBuffer));
 }
@@ -3449,16 +3449,16 @@ CallCapture CaptureBeginQueryEXT(const Context *context,
 CallCapture CaptureDeleteQueriesEXT(const Context *context,
                                     bool isCallValid,
                                     GLsizei n,
-                                    const GLuint *ids)
+                                    const QueryID *idsPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture idsParam("ids", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, ids, &idsParam.value);
-    CaptureDeleteQueriesEXT_ids(context, isCallValid, n, ids, &idsParam);
-    paramBuffer.addParam(std::move(idsParam));
+    ParamCapture idsPackedParam("idsPacked", ParamType::TQueryIDConstPointer);
+    InitParamValue(ParamType::TQueryIDConstPointer, idsPacked, &idsPackedParam.value);
+    CaptureDeleteQueriesEXT_idsPacked(context, isCallValid, n, idsPacked, &idsPackedParam);
+    paramBuffer.addParam(std::move(idsPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteQueriesEXT, std::move(paramBuffer));
 }
@@ -3472,35 +3472,39 @@ CallCapture CaptureEndQueryEXT(const Context *context, bool isCallValid, QueryTy
     return CallCapture(gl::EntryPoint::EndQueryEXT, std::move(paramBuffer));
 }
 
-CallCapture CaptureGenQueriesEXT(const Context *context, bool isCallValid, GLsizei n, GLuint *ids)
+CallCapture CaptureGenQueriesEXT(const Context *context,
+                                 bool isCallValid,
+                                 GLsizei n,
+                                 QueryID *idsPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture idsParam("ids", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, ids, &idsParam.value);
-    CaptureGenQueriesEXT_ids(context, isCallValid, n, ids, &idsParam);
-    paramBuffer.addParam(std::move(idsParam));
+    ParamCapture idsPackedParam("idsPacked", ParamType::TQueryIDPointer);
+    InitParamValue(ParamType::TQueryIDPointer, idsPacked, &idsPackedParam.value);
+    CaptureGenQueriesEXT_idsPacked(context, isCallValid, n, idsPacked, &idsPackedParam);
+    paramBuffer.addParam(std::move(idsPackedParam));
 
     return CallCapture(gl::EntryPoint::GenQueriesEXT, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetQueryObjecti64vEXT(const Context *context,
                                          bool isCallValid,
-                                         GLuint id,
+                                         QueryID idPacked,
                                          GLenum pname,
                                          GLint64 *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::QueryObjectParameterName, ParamType::TGLenum,
                              pname);
 
     ParamCapture paramsParam("params", ParamType::TGLint64Pointer);
     InitParamValue(ParamType::TGLint64Pointer, params, &paramsParam.value);
-    CaptureGetQueryObjecti64vEXT_params(context, isCallValid, id, pname, params, &paramsParam);
+    CaptureGetQueryObjecti64vEXT_params(context, isCallValid, idPacked, pname, params,
+                                        &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjecti64vEXT, std::move(paramBuffer));
@@ -3508,19 +3512,19 @@ CallCapture CaptureGetQueryObjecti64vEXT(const Context *context,
 
 CallCapture CaptureGetQueryObjectivEXT(const Context *context,
                                        bool isCallValid,
-                                       GLuint id,
+                                       QueryID idPacked,
                                        GLenum pname,
                                        GLint *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::QueryObjectParameterName, ParamType::TGLenum,
                              pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetQueryObjectivEXT_params(context, isCallValid, id, pname, params, &paramsParam);
+    CaptureGetQueryObjectivEXT_params(context, isCallValid, idPacked, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjectivEXT, std::move(paramBuffer));
@@ -3528,19 +3532,20 @@ CallCapture CaptureGetQueryObjectivEXT(const Context *context,
 
 CallCapture CaptureGetQueryObjectui64vEXT(const Context *context,
                                           bool isCallValid,
-                                          GLuint id,
+                                          QueryID idPacked,
                                           GLenum pname,
                                           GLuint64 *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::QueryObjectParameterName, ParamType::TGLenum,
                              pname);
 
     ParamCapture paramsParam("params", ParamType::TGLuint64Pointer);
     InitParamValue(ParamType::TGLuint64Pointer, params, &paramsParam.value);
-    CaptureGetQueryObjectui64vEXT_params(context, isCallValid, id, pname, params, &paramsParam);
+    CaptureGetQueryObjectui64vEXT_params(context, isCallValid, idPacked, pname, params,
+                                         &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjectui64vEXT, std::move(paramBuffer));
@@ -3548,19 +3553,19 @@ CallCapture CaptureGetQueryObjectui64vEXT(const Context *context,
 
 CallCapture CaptureGetQueryObjectuivEXT(const Context *context,
                                         bool isCallValid,
-                                        GLuint id,
+                                        QueryID idPacked,
                                         GLenum pname,
                                         GLuint *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::QueryObjectParameterName, ParamType::TGLenum,
                              pname);
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetQueryObjectuivEXT_params(context, isCallValid, id, pname, params, &paramsParam);
+    CaptureGetQueryObjectuivEXT_params(context, isCallValid, idPacked, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjectuivEXT, std::move(paramBuffer));
@@ -3587,12 +3592,12 @@ CallCapture CaptureGetQueryivEXT(const Context *context,
 
 CallCapture CaptureIsQueryEXT(const Context *context,
                               bool isCallValid,
-                              GLuint id,
+                              QueryID idPacked,
                               GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
@@ -3603,12 +3608,12 @@ CallCapture CaptureIsQueryEXT(const Context *context,
 
 CallCapture CaptureQueryCounterEXT(const Context *context,
                                    bool isCallValid,
-                                   GLuint id,
+                                   QueryID idPacked,
                                    QueryType targetPacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
     paramBuffer.addValueParam("targetPacked", ParamType::TQueryType, targetPacked);
 
     return CallCapture(gl::EntryPoint::QueryCounterEXT, std::move(paramBuffer));

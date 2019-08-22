@@ -123,7 +123,7 @@
                                        GLsizei imageSize, GLsizei dataSize, const GLvoid *data);   \
     void getQueryivRobust(QueryType targetPacked, GLenum pname, GLsizei bufSize, GLsizei *length,  \
                           GLint *params);                                                          \
-    void getQueryObjectuivRobust(GLuint id, GLenum pname, GLsizei bufSize, GLsizei *length,        \
+    void getQueryObjectuivRobust(QueryID idPacked, GLenum pname, GLsizei bufSize, GLsizei *length, \
                                  GLuint *params);                                                  \
     void getBufferPointervRobust(BufferBinding targetPacked, GLenum pname, GLsizei bufSize,        \
                                  GLsizei *length, void **params);                                  \
@@ -191,12 +191,12 @@
                                       GLsizei *length, GLint *params);                             \
     void getSamplerParameterIuivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,     \
                                        GLsizei *length, GLuint *params);                           \
-    void getQueryObjectivRobust(GLuint id, GLenum pname, GLsizei bufSize, GLsizei *length,         \
+    void getQueryObjectivRobust(QueryID idPacked, GLenum pname, GLsizei bufSize, GLsizei *length,  \
                                 GLint *params);                                                    \
-    void getQueryObjecti64vRobust(GLuint id, GLenum pname, GLsizei bufSize, GLsizei *length,       \
-                                  GLint64 *params);                                                \
-    void getQueryObjectui64vRobust(GLuint id, GLenum pname, GLsizei bufSize, GLsizei *length,      \
-                                   GLuint64 *params);                                              \
+    void getQueryObjecti64vRobust(QueryID idPacked, GLenum pname, GLsizei bufSize,                 \
+                                  GLsizei *length, GLint64 *params);                               \
+    void getQueryObjectui64vRobust(QueryID idPacked, GLenum pname, GLsizei bufSize,                \
+                                   GLsizei *length, GLuint64 *params);                             \
     /* GL_ANGLE_texture_external_update */                                                         \
     void texImage2DExternal(TextureTarget targetPacked, GLint level, GLint internalformat,         \
                             GLsizei width, GLsizei height, GLint border, GLenum format,            \
@@ -313,10 +313,10 @@
     /* GL_EXT_discard_framebuffer */                                                               \
     void discardFramebuffer(GLenum target, GLsizei numAttachments, const GLenum *attachments);     \
     /* GL_EXT_disjoint_timer_query */                                                              \
-    void getQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params);                             \
-    void getQueryObjectiv(GLuint id, GLenum pname, GLint *params);                                 \
-    void getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params);                           \
-    void queryCounter(GLuint id, QueryType targetPacked);                                          \
+    void getQueryObjecti64v(QueryID idPacked, GLenum pname, GLint64 *params);                      \
+    void getQueryObjectiv(QueryID idPacked, GLenum pname, GLint *params);                          \
+    void getQueryObjectui64v(QueryID idPacked, GLenum pname, GLuint64 *params);                    \
+    void queryCounter(QueryID idPacked, QueryType targetPacked);                                   \
     /* GL_EXT_draw_buffers */                                                                      \
     /* GL_EXT_geometry_shader */                                                                   \
     void framebufferTexture(GLenum target, GLenum attachment, TextureID texturePacked,             \

@@ -1006,7 +1006,7 @@ gl::LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) con
         case GL_VERTEX_ARRAY:
             return getVertexArray(name);
         case GL_QUERY:
-            return getQuery(name);
+            return getQuery({name});
         case GL_TRANSFORM_FEEDBACK:
             return getTransformFeedback(name);
         case GL_SAMPLER:
@@ -1180,7 +1180,7 @@ void Context::bindProgramPipeline(GLuint pipelineHandle)
     mState.setProgramPipelineBinding(this, pipeline);
 }
 
-void Context::beginQuery(QueryType target, GLuint query)
+void Context::beginQuery(QueryType target, QueryID query)
 {
     Query *queryObject = getQuery(query, true, target);
     ASSERT(queryObject);
@@ -1206,7 +1206,7 @@ void Context::endQuery(QueryType target)
     mStateCache.onQueryChange(this);
 }
 
-void Context::queryCounter(GLuint id, QueryType target)
+void Context::queryCounter(QueryID id, QueryType target)
 {
     ASSERT(target == QueryType::Timestamp);
 
@@ -1263,12 +1263,12 @@ void Context::getUnsignedBytei_v(GLenum target, GLuint index, GLubyte *data)
     UNIMPLEMENTED();
 }
 
-void Context::getQueryObjectiv(GLuint id, GLenum pname, GLint *params)
+void Context::getQueryObjectiv(QueryID id, GLenum pname, GLint *params)
 {
     ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
-void Context::getQueryObjectivRobust(GLuint id,
+void Context::getQueryObjectivRobust(QueryID id,
                                      GLenum pname,
                                      GLsizei bufSize,
                                      GLsizei *length,
@@ -1277,12 +1277,12 @@ void Context::getQueryObjectivRobust(GLuint id,
     getQueryObjectiv(id, pname, params);
 }
 
-void Context::getQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
+void Context::getQueryObjectuiv(QueryID id, GLenum pname, GLuint *params)
 {
     ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
-void Context::getQueryObjectuivRobust(GLuint id,
+void Context::getQueryObjectuivRobust(QueryID id,
                                       GLenum pname,
                                       GLsizei bufSize,
                                       GLsizei *length,
@@ -1291,12 +1291,12 @@ void Context::getQueryObjectuivRobust(GLuint id,
     getQueryObjectuiv(id, pname, params);
 }
 
-void Context::getQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params)
+void Context::getQueryObjecti64v(QueryID id, GLenum pname, GLint64 *params)
 {
     ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
-void Context::getQueryObjecti64vRobust(GLuint id,
+void Context::getQueryObjecti64vRobust(QueryID id,
                                        GLenum pname,
                                        GLsizei bufSize,
                                        GLsizei *length,
@@ -1305,12 +1305,12 @@ void Context::getQueryObjecti64vRobust(GLuint id,
     getQueryObjecti64v(id, pname, params);
 }
 
-void Context::getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params)
+void Context::getQueryObjectui64v(QueryID id, GLenum pname, GLuint64 *params)
 {
     ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
-void Context::getQueryObjectui64vRobust(GLuint id,
+void Context::getQueryObjectui64vRobust(QueryID id,
                                         GLenum pname,
                                         GLsizei bufSize,
                                         GLsizei *length,
@@ -1329,7 +1329,7 @@ FenceNV *Context::getFenceNV(FenceNVID handle)
     return mFenceNVMap.query(handle);
 }
 
-Query *Context::getQuery(GLuint handle, bool create, QueryType type)
+Query *Context::getQuery(QueryID handle, bool create, QueryType type)
 {
     if (!mQueryMap.contains(handle))
     {
@@ -1347,7 +1347,7 @@ Query *Context::getQuery(GLuint handle, bool create, QueryType type)
     return query;
 }
 
-Query *Context::getQuery(GLuint handle) const
+Query *Context::getQuery(QueryID handle) const
 {
     return mQueryMap.query(handle);
 }
@@ -6645,26 +6645,26 @@ void Context::uniform4uiv(GLint location, GLsizei count, const GLuint *value)
     program->setUniform4uiv(location, count, value);
 }
 
-void Context::genQueries(GLsizei n, GLuint *ids)
+void Context::genQueries(GLsizei n, QueryID *ids)
 {
     for (GLsizei i = 0; i < n; i++)
     {
-        GLuint handle = mQueryHandleAllocator.allocate();
+        QueryID handle = QueryID{mQueryHandleAllocator.allocate()};
         mQueryMap.assign(handle, nullptr);
         ids[i] = handle;
     }
 }
 
-void Context::deleteQueries(GLsizei n, const GLuint *ids)
+void Context::deleteQueries(GLsizei n, const QueryID *ids)
 {
     for (int i = 0; i < n; i++)
     {
-        GLuint query = ids[i];
+        QueryID query = ids[i];
 
         Query *queryObject = nullptr;
         if (mQueryMap.erase(query, &queryObject))
         {
-            mQueryHandleAllocator.release(query);
+            mQueryHandleAllocator.release(query.value);
             if (queryObject)
             {
                 queryObject->release(this);
@@ -6673,7 +6673,7 @@ void Context::deleteQueries(GLsizei n, const GLuint *ids)
     }
 }
 
-GLboolean Context::isQuery(GLuint id)
+GLboolean Context::isQuery(QueryID id)
 {
     return ConvertToGLBoolean(getQuery(id, false, QueryType::InvalidEnum) != nullptr);
 }

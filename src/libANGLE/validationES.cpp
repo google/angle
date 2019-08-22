@@ -1595,7 +1595,7 @@ bool ValidateReadnPixelsRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGenQueriesEXT(Context *context, GLsizei n, GLuint *ids)
+bool ValidateGenQueriesEXT(Context *context, GLsizei n, QueryID *ids)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
@@ -1607,7 +1607,7 @@ bool ValidateGenQueriesEXT(Context *context, GLsizei n, GLuint *ids)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateDeleteQueriesEXT(Context *context, GLsizei n, const GLuint *ids)
+bool ValidateDeleteQueriesEXT(Context *context, GLsizei n, const QueryID *ids)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
@@ -1619,7 +1619,7 @@ bool ValidateDeleteQueriesEXT(Context *context, GLsizei n, const GLuint *ids)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateIsQueryEXT(Context *context, GLuint id)
+bool ValidateIsQueryEXT(Context *context, QueryID id)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
@@ -1631,7 +1631,7 @@ bool ValidateIsQueryEXT(Context *context, GLuint id)
     return true;
 }
 
-bool ValidateBeginQueryBase(Context *context, QueryType target, GLuint id)
+bool ValidateBeginQueryBase(Context *context, QueryType target, QueryID id)
 {
     if (!ValidQueryType(context, target))
     {
@@ -1639,7 +1639,7 @@ bool ValidateBeginQueryBase(Context *context, QueryType target, GLuint id)
         return false;
     }
 
-    if (id == 0)
+    if (id.value == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kInvalidQueryId);
         return false;
@@ -1686,7 +1686,7 @@ bool ValidateBeginQueryBase(Context *context, QueryType target, GLuint id)
     return true;
 }
 
-bool ValidateBeginQueryEXT(Context *context, QueryType target, GLuint id)
+bool ValidateBeginQueryEXT(Context *context, QueryType target, QueryID id)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery && !context->getExtensions().syncQuery)
@@ -1729,7 +1729,7 @@ bool ValidateEndQueryEXT(Context *context, QueryType target)
     return ValidateEndQueryBase(context, target);
 }
 
-bool ValidateQueryCounterEXT(Context *context, GLuint id, QueryType target)
+bool ValidateQueryCounterEXT(Context *context, QueryID id, QueryType target)
 {
     if (!context->getExtensions().disjointTimerQuery)
     {
@@ -1844,7 +1844,7 @@ bool ValidateGetQueryivRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname, GLsizei *numParams)
+bool ValidateGetQueryObjectValueBase(Context *context, QueryID id, GLenum pname, GLsizei *numParams)
 {
     if (numParams)
     {
@@ -1895,7 +1895,7 @@ bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname, 
     return true;
 }
 
-bool ValidateGetQueryObjectivEXT(Context *context, GLuint id, GLenum pname, GLint *params)
+bool ValidateGetQueryObjectivEXT(Context *context, QueryID id, GLenum pname, GLint *params)
 {
     if (!context->getExtensions().disjointTimerQuery)
     {
@@ -1906,7 +1906,7 @@ bool ValidateGetQueryObjectivEXT(Context *context, GLuint id, GLenum pname, GLin
 }
 
 bool ValidateGetQueryObjectivRobustANGLE(Context *context,
-                                         GLuint id,
+                                         QueryID id,
                                          GLenum pname,
                                          GLsizei bufSize,
                                          GLsizei *length,
@@ -1940,7 +1940,7 @@ bool ValidateGetQueryObjectivRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGetQueryObjectuivEXT(Context *context, GLuint id, GLenum pname, GLuint *params)
+bool ValidateGetQueryObjectuivEXT(Context *context, QueryID id, GLenum pname, GLuint *params)
 {
     if (!context->getExtensions().disjointTimerQuery &&
         !context->getExtensions().occlusionQueryBoolean && !context->getExtensions().syncQuery)
@@ -1952,7 +1952,7 @@ bool ValidateGetQueryObjectuivEXT(Context *context, GLuint id, GLenum pname, GLu
 }
 
 bool ValidateGetQueryObjectuivRobustANGLE(Context *context,
-                                          GLuint id,
+                                          QueryID id,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -1987,7 +1987,7 @@ bool ValidateGetQueryObjectuivRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGetQueryObjecti64vEXT(Context *context, GLuint id, GLenum pname, GLint64 *params)
+bool ValidateGetQueryObjecti64vEXT(Context *context, QueryID id, GLenum pname, GLint64 *params)
 {
     if (!context->getExtensions().disjointTimerQuery)
     {
@@ -1998,7 +1998,7 @@ bool ValidateGetQueryObjecti64vEXT(Context *context, GLuint id, GLenum pname, GL
 }
 
 bool ValidateGetQueryObjecti64vRobustANGLE(Context *context,
-                                           GLuint id,
+                                           QueryID id,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            GLsizei *length,
@@ -2032,7 +2032,7 @@ bool ValidateGetQueryObjecti64vRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGetQueryObjectui64vEXT(Context *context, GLuint id, GLenum pname, GLuint64 *params)
+bool ValidateGetQueryObjectui64vEXT(Context *context, QueryID id, GLenum pname, GLuint64 *params)
 {
     if (!context->getExtensions().disjointTimerQuery)
     {
@@ -2043,7 +2043,7 @@ bool ValidateGetQueryObjectui64vEXT(Context *context, GLuint id, GLenum pname, G
 }
 
 bool ValidateGetQueryObjectui64vRobustANGLE(Context *context,
-                                            GLuint id,
+                                            QueryID id,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             GLsizei *length,

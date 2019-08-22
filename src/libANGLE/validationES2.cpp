@@ -2439,7 +2439,7 @@ static bool ValidateObjectIdentifierAndName(Context *context, GLenum identifier,
             return true;
 
         case GL_QUERY:
-            if (context->getQuery(name) == nullptr)
+            if (context->getQuery({name}) == nullptr)
             {
                 context->validationError(GL_INVALID_VALUE, kInvalidQueryName);
                 return false;

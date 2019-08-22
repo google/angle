@@ -45,12 +45,12 @@ bool ValidateGetFragDataIndex(Context *context, GLuint program, const GLchar *na
     return true;
 }
 
-bool ValidateGetQueryObjecti64v(Context *context, GLuint id, GLenum pname, GLint64 *params)
+bool ValidateGetQueryObjecti64v(Context *context, QueryID id, GLenum pname, GLint64 *params)
 {
     return true;
 }
 
-bool ValidateGetQueryObjectui64v(Context *context, GLuint id, GLenum pname, GLuint64 *params)
+bool ValidateGetQueryObjectui64v(Context *context, QueryID id, GLenum pname, GLuint64 *params)
 {
     return true;
 }
@@ -121,7 +121,7 @@ bool ValidateNormalP3uiv(Context *context, GLenum type, const GLuint *coords)
     return true;
 }
 
-bool ValidateQueryCounter(Context *context, GLuint id, QueryType targetPacked)
+bool ValidateQueryCounter(Context *context, QueryID id, QueryType targetPacked)
 {
     return true;
 }

@@ -11,7 +11,7 @@
 #define ANGLE_CONTEXT_GLES_3_0_AUTOGEN_H_
 
 #define ANGLE_GLES_3_0_CONTEXT_API                                                                 \
-    void beginQuery(QueryType targetPacked, GLuint id);                                            \
+    void beginQuery(QueryType targetPacked, QueryID idPacked);                                     \
     void beginTransformFeedback(PrimitiveMode primitiveModePacked);                                \
     void bindBufferBase(BufferBinding targetPacked, GLuint index, BufferID bufferPacked);          \
     void bindBufferRange(BufferBinding targetPacked, GLuint index, BufferID bufferPacked,          \
@@ -37,7 +37,7 @@
                            GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size);            \
     void copyTexSubImage3D(TextureTarget targetPacked, GLint level, GLint xoffset, GLint yoffset,  \
                            GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);        \
-    void deleteQueries(GLsizei n, const GLuint *ids);                                              \
+    void deleteQueries(GLsizei n, const QueryID *idsPacked);                                       \
     void deleteSamplers(GLsizei count, const SamplerID *samplersPacked);                           \
     void deleteSync(GLsync sync);                                                                  \
     void deleteTransformFeedbacks(GLsizei n, const GLuint *ids);                                   \
@@ -56,7 +56,7 @@
     void flushMappedBufferRange(BufferBinding targetPacked, GLintptr offset, GLsizeiptr length);   \
     void framebufferTextureLayer(GLenum target, GLenum attachment, TextureID texturePacked,        \
                                  GLint level, GLint layer);                                        \
-    void genQueries(GLsizei n, GLuint *ids);                                                       \
+    void genQueries(GLsizei n, QueryID *idsPacked);                                                \
     void genSamplers(GLsizei count, SamplerID *samplersPacked);                                    \
     void genTransformFeedbacks(GLsizei n, GLuint *ids);                                            \
     void genVertexArrays(GLsizei n, GLuint *arrays);                                               \
@@ -76,7 +76,7 @@
                              GLint *params);                                                       \
     void getProgramBinary(GLuint program, GLsizei bufSize, GLsizei *length, GLenum *binaryFormat,  \
                           void *binary);                                                           \
-    void getQueryObjectuiv(GLuint id, GLenum pname, GLuint *params);                               \
+    void getQueryObjectuiv(QueryID idPacked, GLenum pname, GLuint *params);                        \
     void getQueryiv(QueryType targetPacked, GLenum pname, GLint *params);                          \
     void getSamplerParameterfv(SamplerID samplerPacked, GLenum pname, GLfloat *params);            \
     void getSamplerParameteriv(SamplerID samplerPacked, GLenum pname, GLint *params);              \
@@ -94,7 +94,7 @@
     void invalidateSubFramebuffer(GLenum target, GLsizei numAttachments,                           \
                                   const GLenum *attachments, GLint x, GLint y, GLsizei width,      \
                                   GLsizei height);                                                 \
-    GLboolean isQuery(GLuint id);                                                                  \
+    GLboolean isQuery(QueryID idPacked);                                                           \
     GLboolean isSampler(SamplerID samplerPacked);                                                  \
     GLboolean isSync(GLsync sync);                                                                 \
     GLboolean isTransformFeedback(GLuint id);                                                      \

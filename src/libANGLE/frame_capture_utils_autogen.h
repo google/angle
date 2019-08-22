@@ -91,6 +91,9 @@ enum class ParamType
     TPointParameter,
     TPrimitiveMode,
     TProvokingVertexConvention,
+    TQueryID,
+    TQueryIDConstPointer,
+    TQueryIDPointer,
     TQueryType,
     TRenderbufferID,
     TRenderbufferIDConstPointer,
@@ -190,6 +193,9 @@ union ParamValue
     gl::PointParameter PointParameterVal;
     gl::PrimitiveMode PrimitiveModeVal;
     gl::ProvokingVertexConvention ProvokingVertexConventionVal;
+    gl::QueryID QueryIDVal;
+    const gl::QueryID *QueryIDConstPointerVal;
+    gl::QueryID *QueryIDPointerVal;
     gl::QueryType QueryTypeVal;
     gl::RenderbufferID RenderbufferIDVal;
     const gl::RenderbufferID *RenderbufferIDConstPointerVal;
@@ -699,6 +705,25 @@ GetParamVal<ParamType::TProvokingVertexConvention, gl::ProvokingVertexConvention
 }
 
 template <>
+inline gl::QueryID GetParamVal<ParamType::TQueryID, gl::QueryID>(const ParamValue &value)
+{
+    return value.QueryIDVal;
+}
+
+template <>
+inline const gl::QueryID *GetParamVal<ParamType::TQueryIDConstPointer, const gl::QueryID *>(
+    const ParamValue &value)
+{
+    return value.QueryIDConstPointerVal;
+}
+
+template <>
+inline gl::QueryID *GetParamVal<ParamType::TQueryIDPointer, gl::QueryID *>(const ParamValue &value)
+{
+    return value.QueryIDPointerVal;
+}
+
+template <>
 inline gl::QueryType GetParamVal<ParamType::TQueryType, gl::QueryType>(const ParamValue &value)
 {
     return value.QueryTypeVal;
@@ -998,6 +1023,12 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TPrimitiveMode, T>(value);
         case ParamType::TProvokingVertexConvention:
             return GetParamVal<ParamType::TProvokingVertexConvention, T>(value);
+        case ParamType::TQueryID:
+            return GetParamVal<ParamType::TQueryID, T>(value);
+        case ParamType::TQueryIDConstPointer:
+            return GetParamVal<ParamType::TQueryIDConstPointer, T>(value);
+        case ParamType::TQueryIDPointer:
+            return GetParamVal<ParamType::TQueryIDPointer, T>(value);
         case ParamType::TQueryType:
             return GetParamVal<ParamType::TQueryType, T>(value);
         case ParamType::TRenderbufferID:
@@ -1515,6 +1546,25 @@ inline void SetParamVal<ParamType::TProvokingVertexConvention>(
 }
 
 template <>
+inline void SetParamVal<ParamType::TQueryID>(gl::QueryID valueIn, ParamValue *valueOut)
+{
+    valueOut->QueryIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TQueryIDConstPointer>(const gl::QueryID *valueIn,
+                                                         ParamValue *valueOut)
+{
+    valueOut->QueryIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TQueryIDPointer>(gl::QueryID *valueIn, ParamValue *valueOut)
+{
+    valueOut->QueryIDPointerVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TQueryType>(gl::QueryType valueIn, ParamValue *valueOut)
 {
     valueOut->QueryTypeVal = valueIn;
@@ -1881,6 +1931,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TProvokingVertexConvention:
             SetParamVal<ParamType::TProvokingVertexConvention>(valueIn, valueOut);
+            break;
+        case ParamType::TQueryID:
+            SetParamVal<ParamType::TQueryID>(valueIn, valueOut);
+            break;
+        case ParamType::TQueryIDConstPointer:
+            SetParamVal<ParamType::TQueryIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TQueryIDPointer:
+            SetParamVal<ParamType::TQueryIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TQueryType:
             SetParamVal<ParamType::TQueryType>(valueIn, valueOut);
