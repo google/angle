@@ -491,9 +491,6 @@ config("angle_backend_config") {
   }
   if (angle_enable_gl) {
     defines += [ "ANGLE_ENABLE_OPENGL" ]
-    if (use_x11) {
-      defines += [ "ANGLE_USE_X11" ]
-    }
     if (angle_enable_gl_null) {
       defines += [ "ANGLE_ENABLE_OPENGL_NULL" ]
     }
@@ -531,6 +528,10 @@ config("libANGLE_config") {
     } else {
       libs += [ "android" ]
     }
+  }
+
+  if (use_x11) {
+    defines += [ "ANGLE_USE_X11" ]
   }
 }
 
