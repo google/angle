@@ -112,6 +112,15 @@ SystemInfo *GetTestSystemInfo()
             std::cerr << "Warning: incomplete system info collection.\n";
         }
 
+        // On dual-GPU Macs we want the active GPU to always appear to be the
+        // high-performance GPU for tests.
+        // We can call the generic GPU info collector which selects the
+        // non-Intel GPU as the active one on dual-GPU machines.
+        if (IsOSX())
+        {
+            GetDualGPUInfo(sSystemInfo);
+        }
+
         // Print complete system info when available.
         // Seems to trip up Android test expectation parsing.
         // Also don't print info when a config is selected to prevent test spam.

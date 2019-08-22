@@ -108,6 +108,11 @@ bool IsVeriSilicon(VendorID vendorId);
 bool IsVMWare(VendorID vendorId);
 bool IsVivante(VendorID vendorId);
 
+// Use a heuristic to attempt to find the GPU used for 3D graphics. Sets activeGPUIndex,
+// isOptimus, and isAMDSwitchable.
+// Always assumes the non-Intel GPU is active on dual-GPU machines.
+void GetDualGPUInfo(SystemInfo *info);
+
 // Dumps the system info to stdout.
 void PrintSystemInfo(const SystemInfo &info);
 }  // namespace angle
