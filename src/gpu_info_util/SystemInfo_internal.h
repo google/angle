@@ -29,10 +29,6 @@ bool ParseMacMachineModel(const std::string &identifier,
                           int32_t *minor);
 bool CMDeviceIDToDeviceAndVendorID(const std::string &id, uint32_t *vendorId, uint32_t *deviceId);
 
-// Use a heuristic to attempt to find the GPU used for 3D graphics. Sets activeGPUIndex,
-// isOptimus, and isAMDSwitchable. Deprecated: also sets primaryGPUIndex.
-void FindActiveGPU(SystemInfo *info);
-
 }  // namespace angle
 
 #endif  // GPU_INFO_UTIL_SYSTEM_INFO_INTERNAL_H_

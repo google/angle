@@ -238,7 +238,7 @@ bool CMDeviceIDToDeviceAndVendorID(const std::string &id, uint32_t *vendorId, ui
     return success;
 }
 
-void FindActiveGPU(SystemInfo *info)
+void GetDualGPUInfo(SystemInfo *info)
 {
     ASSERT(!info->gpus.empty());
 
