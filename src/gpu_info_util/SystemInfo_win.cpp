@@ -88,8 +88,8 @@ bool GetSystemInfo(SystemInfo *info)
         return false;
     }
 
-    // Call GetDualGPUInfo to populate activeGPUIndex, isOptimus, and isAMDSwitchable.
-    GetDualGPUInfo(info);
+    // Call FindActiveGPU to populate activeGPUIndex, isOptimus, and isAMDSwitchable.
+    FindActiveGPU(info);
 
     // Override activeGPUIndex. The first index returned by EnumAdapters is the active GPU. We
     // can override the heuristic to find the active GPU

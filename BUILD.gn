@@ -371,7 +371,6 @@ angle_static_library("angle_gpu_info_util") {
       "IOKit.framework",
       "CoreFoundation.framework",
       "CoreGraphics.framework",
-      "OpenGL.framework",
     ]
   }
 }
