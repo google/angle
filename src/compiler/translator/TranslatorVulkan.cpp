@@ -237,12 +237,12 @@ void FlipBuiltinVariable(TIntermBlock *root,
 
     // Create the corrected variable and copy the value of the original builtin.
     TIntermSequence *sequence = new TIntermSequence();
-    sequence->push_back(builtinRef);
+    sequence->push_back(builtinRef->deepCopy());
     TIntermAggregate *aggregate = TIntermAggregate::CreateConstructor(builtin->getType(), sequence);
     TIntermBinary *assignment   = new TIntermBinary(EOpInitialize, flippedBuiltinRef, aggregate);
 
     // Create an assignment to the replaced variable's y.
-    TIntermSwizzle *correctedY = new TIntermSwizzle(flippedBuiltinRef, swizzleOffsetY);
+    TIntermSwizzle *correctedY = new TIntermSwizzle(flippedBuiltinRef->deepCopy(), swizzleOffsetY);
     TIntermBinary *assignToY   = new TIntermBinary(EOpAssign, correctedY, plusPivot);
 
     // Add this assigment at the beginning of the main function
