@@ -267,6 +267,9 @@ void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os,
                                                          gl::RenderbufferID value);
 
 template <>
+void WriteParamValueToStream<ParamType::TPathID>(std::ostream &os, gl::PathID value);
+
+template <>
 void WriteParamValueToStream<ParamType::TTextureID>(std::ostream &os, gl::TextureID value);
 
 template <>

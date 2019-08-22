@@ -857,6 +857,13 @@ void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os, gl::R
     os << "gRenderbufferMap[" << value.value << "]";
 }
 
+// TODO(jmadill): Use path ID map. http://anglebug.com/3611
+template <>
+void WriteParamValueToStream<ParamType::TPathID>(std::ostream &os, gl::PathID value)
+{
+    os << value.value;
+}
+
 // TODO(jmadill): Use texture ID map. http://anglebug.com/3611
 template <>
 void WriteParamValueToStream<ParamType::TTextureID>(std::ostream &os, gl::TextureID value)

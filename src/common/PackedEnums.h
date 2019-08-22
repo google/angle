@@ -386,6 +386,11 @@ struct RenderbufferID
     GLuint value;
 };
 
+struct PathID
+{
+    GLuint value;
+};
+
 struct TextureID
 {
     GLuint value;

@@ -224,41 +224,43 @@
     void loseContext(GraphicsResetStatus currentPacked, GraphicsResetStatus otherPacked);          \
     /* GL_CHROMIUM_path_rendering */                                                               \
     GLuint genPaths(GLsizei range);                                                                \
-    void deletePaths(GLuint first, GLsizei range);                                                 \
-    GLboolean isPath(GLuint path);                                                                 \
-    void pathCommands(GLuint path, GLsizei numCommands, const GLubyte *commands,                   \
+    void deletePaths(PathID firstPacked, GLsizei range);                                           \
+    GLboolean isPath(PathID pathPacked);                                                           \
+    void pathCommands(PathID pathPacked, GLsizei numCommands, const GLubyte *commands,             \
                       GLsizei numCoords, GLenum coordType, const void *coords);                    \
-    void pathParameterf(GLuint path, GLenum pname, GLfloat value);                                 \
-    void pathParameteri(GLuint path, GLenum pname, GLint value);                                   \
-    void getPathParameterfv(GLuint path, GLenum pname, GLfloat *value);                            \
-    void getPathParameteriv(GLuint path, GLenum pname, GLint *value);                              \
+    void pathParameterf(PathID pathPacked, GLenum pname, GLfloat value);                           \
+    void pathParameteri(PathID pathPacked, GLenum pname, GLint value);                             \
+    void getPathParameterfv(PathID pathPacked, GLenum pname, GLfloat *value);                      \
+    void getPathParameteriv(PathID pathPacked, GLenum pname, GLint *value);                        \
     void pathStencilFunc(GLenum func, GLint ref, GLuint mask);                                     \
-    void stencilFillPath(GLuint path, GLenum fillMode, GLuint mask);                               \
-    void stencilStrokePath(GLuint path, GLint reference, GLuint mask);                             \
-    void coverFillPath(GLuint path, GLenum coverMode);                                             \
-    void coverStrokePath(GLuint path, GLenum coverMode);                                           \
-    void stencilThenCoverFillPath(GLuint path, GLenum fillMode, GLuint mask, GLenum coverMode);    \
-    void stencilThenCoverStrokePath(GLuint path, GLint reference, GLuint mask, GLenum coverMode);  \
+    void stencilFillPath(PathID pathPacked, GLenum fillMode, GLuint mask);                         \
+    void stencilStrokePath(PathID pathPacked, GLint reference, GLuint mask);                       \
+    void coverFillPath(PathID pathPacked, GLenum coverMode);                                       \
+    void coverStrokePath(PathID pathPacked, GLenum coverMode);                                     \
+    void stencilThenCoverFillPath(PathID pathPacked, GLenum fillMode, GLuint mask,                 \
+                                  GLenum coverMode);                                               \
+    void stencilThenCoverStrokePath(PathID pathPacked, GLint reference, GLuint mask,               \
+                                    GLenum coverMode);                                             \
     void coverFillPathInstanced(GLsizei numPath, GLenum pathNameType, const void *paths,           \
-                                GLuint pathBase, GLenum coverMode, GLenum transformType,           \
+                                PathID pathBasePacked, GLenum coverMode, GLenum transformType,     \
                                 const GLfloat *transformValues);                                   \
     void coverStrokePathInstanced(GLsizei numPath, GLenum pathNameType, const void *paths,         \
-                                  GLuint pathBase, GLenum coverMode, GLenum transformType,         \
+                                  PathID pathBasePacked, GLenum coverMode, GLenum transformType,   \
                                   const GLfloat *transformValues);                                 \
     void stencilStrokePathInstanced(GLsizei numPath, GLenum pathNameType, const void *paths,       \
-                                    GLuint pathBase, GLint reference, GLuint mask,                 \
+                                    PathID pathBasePacked, GLint reference, GLuint mask,           \
                                     GLenum transformType, const GLfloat *transformValues);         \
     void stencilFillPathInstanced(GLsizei numPaths, GLenum pathNameType, const void *paths,        \
-                                  GLuint pathBase, GLenum fillMode, GLuint mask,                   \
+                                  PathID pathBasePacked, GLenum fillMode, GLuint mask,             \
                                   GLenum transformType, const GLfloat *transformValues);           \
     void stencilThenCoverFillPathInstanced(GLsizei numPaths, GLenum pathNameType,                  \
-                                           const void *paths, GLuint pathBase, GLenum fillMode,    \
-                                           GLuint mask, GLenum coverMode, GLenum transformType,    \
-                                           const GLfloat *transformValues);                        \
-    void stencilThenCoverStrokePathInstanced(GLsizei numPaths, GLenum pathNameType,                \
-                                             const void *paths, GLuint pathBase, GLint reference,  \
-                                             GLuint mask, GLenum coverMode, GLenum transformType,  \
-                                             const GLfloat *transformValues);                      \
+                                           const void *paths, PathID pathBasePacked,               \
+                                           GLenum fillMode, GLuint mask, GLenum coverMode,         \
+                                           GLenum transformType, const GLfloat *transformValues);  \
+    void stencilThenCoverStrokePathInstanced(                                                      \
+        GLsizei numPaths, GLenum pathNameType, const void *paths, PathID pathBasePacked,           \
+        GLint reference, GLuint mask, GLenum coverMode, GLenum transformType,                      \
+        const GLfloat *transformValues);                                                           \
     void bindFragmentInputLocation(GLuint programs, GLint location, const GLchar *name);           \
     void programPathFragmentInputGen(GLuint program, GLint location, GLenum genMode,               \
                                      GLint components, const GLfloat *coeffs);                     \

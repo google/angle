@@ -257,17 +257,17 @@ class PathManager : public ResourceManagerBase<HandleRangeAllocator>
   public:
     PathManager();
 
-    angle::Result createPaths(Context *context, GLsizei range, GLuint *numCreated);
-    void deletePaths(GLuint first, GLsizei range);
-    Path *getPath(GLuint handle) const;
-    bool hasPath(GLuint handle) const;
+    angle::Result createPaths(Context *context, GLsizei range, PathID *numCreated);
+    void deletePaths(PathID first, GLsizei range);
+    Path *getPath(PathID handle) const;
+    bool hasPath(PathID handle) const;
 
   protected:
     ~PathManager() override;
     void reset(const Context *context) override;
 
   private:
-    ResourceMap<Path> mPaths;
+    ResourceMap<Path, PathID> mPaths;
 };
 
 class FramebufferManager

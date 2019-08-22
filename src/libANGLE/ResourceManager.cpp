@@ -347,9 +347,9 @@ Sync *SyncManager::getSync(GLuint handle) const
 
 PathManager::PathManager() = default;
 
-angle::Result PathManager::createPaths(Context *context, GLsizei range, GLuint *createdOut)
+angle::Result PathManager::createPaths(Context *context, GLsizei range, PathID *createdOut)
 {
-    *createdOut = 0;
+    *createdOut = {0};
 
     // Allocate client side handles.
     const GLuint client = mHandleAllocator.allocateRange(static_cast<GLuint>(range));
@@ -372,34 +372,35 @@ angle::Result PathManager::createPaths(Context *context, GLsizei range, GLuint *
     for (GLsizei i = 0; i < range; ++i)
     {
         rx::PathImpl *impl = paths[static_cast<unsigned>(i)];
-        const auto id      = client + i;
+        PathID id          = PathID{client + i};
         mPaths.assign(id, new Path(impl));
     }
-    *createdOut = client;
+    *createdOut = PathID{client};
     return angle::Result::Continue;
 }
 
-void PathManager::deletePaths(GLuint first, GLsizei range)
+void PathManager::deletePaths(PathID first, GLsizei range)
 {
+    GLuint firstHandle = first.value;
     for (GLsizei i = 0; i < range; ++i)
     {
-        const auto id = first + i;
-        Path *p       = nullptr;
-        if (!mPaths.erase(id, &p))
+        GLuint id = firstHandle + i;
+        Path *p   = nullptr;
+        if (!mPaths.erase({id}, &p))
             continue;
         delete p;
     }
-    mHandleAllocator.releaseRange(first, static_cast<GLuint>(range));
+    mHandleAllocator.releaseRange(firstHandle, static_cast<GLuint>(range));
 }
 
-Path *PathManager::getPath(GLuint handle) const
+Path *PathManager::getPath(PathID handle) const
 {
     return mPaths.query(handle);
 }
 
-bool PathManager::hasPath(GLuint handle) const
+bool PathManager::hasPath(PathID handle) const
 {
-    return mHandleAllocator.isUsed(handle);
+    return mHandleAllocator.isUsed(GetIDValue(handle));
 }
 
 PathManager::~PathManager()

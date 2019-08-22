@@ -61,7 +61,7 @@ template <typename T>
 std::vector<Path *> GatherPaths(PathManager &resourceManager,
                                 GLsizei numPaths,
                                 const void *paths,
-                                GLuint pathBase)
+                                PathID pathBase)
 {
     std::vector<Path *> ret;
     ret.reserve(numPaths);
@@ -70,9 +70,9 @@ std::vector<Path *> GatherPaths(PathManager &resourceManager,
 
     for (GLsizei i = 0; i < numPaths; ++i)
     {
-        const GLuint pathName = nameArray[i] + pathBase;
+        const GLuint pathName = nameArray[i] + pathBase.value;
 
-        ret.push_back(resourceManager.getPath(pathName));
+        ret.push_back(resourceManager.getPath({pathName}));
     }
 
     return ret;
@@ -82,7 +82,7 @@ std::vector<Path *> GatherPaths(PathManager &resourceManager,
                                 GLsizei numPaths,
                                 GLenum pathNameType,
                                 const void *paths,
-                                GLuint pathBase)
+                                PathID pathBase)
 {
     switch (pathNameType)
     {
@@ -702,16 +702,16 @@ RenderbufferID Context::createRenderbuffer()
     return mState.mRenderbufferManager->createRenderbuffer();
 }
 
-void Context::tryGenPaths(GLsizei range, GLuint *createdOut)
+void Context::tryGenPaths(GLsizei range, PathID *createdOut)
 {
     ANGLE_CONTEXT_TRY(mState.mPathManager->createPaths(this, range, createdOut));
 }
 
 GLuint Context::genPaths(GLsizei range)
 {
-    GLuint created = 0;
+    PathID created = {0};
     tryGenPaths(range, &created);
-    return created;
+    return created.value;
 }
 
 // Returns an unused framebuffer name
@@ -821,12 +821,12 @@ void Context::deleteSemaphore(GLuint semaphore)
     mState.mSemaphoreManager->deleteSemaphore(this, semaphore);
 }
 
-void Context::deletePaths(GLuint first, GLsizei range)
+void Context::deletePaths(PathID first, GLsizei range)
 {
     mState.mPathManager->deletePaths(first, range);
 }
 
-GLboolean Context::isPath(GLuint path)
+GLboolean Context::isPath(PathID path)
 {
     const auto *pathObj = mState.mPathManager->getPath(path);
     if (pathObj == nullptr)
@@ -835,12 +835,12 @@ GLboolean Context::isPath(GLuint path)
     return pathObj->hasPathData();
 }
 
-bool Context::isPathGenerated(GLuint path) const
+bool Context::isPathGenerated(PathID path) const
 {
     return mState.mPathManager->hasPath(path);
 }
 
-void Context::pathCommands(GLuint path,
+void Context::pathCommands(PathID path,
                            GLsizei numCommands,
                            const GLubyte *commands,
                            GLsizei numCoords,
@@ -852,7 +852,7 @@ void Context::pathCommands(GLuint path,
     ANGLE_CONTEXT_TRY(pathObject->setCommands(numCommands, commands, numCoords, coordType, coords));
 }
 
-void Context::pathParameterf(GLuint path, GLenum pname, GLfloat value)
+void Context::pathParameterf(PathID path, GLenum pname, GLfloat value)
 {
     Path *pathObj = mState.mPathManager->getPath(path);
 
@@ -879,13 +879,13 @@ void Context::pathParameterf(GLuint path, GLenum pname, GLfloat value)
     }
 }
 
-void Context::pathParameteri(GLuint path, GLenum pname, GLint value)
+void Context::pathParameteri(PathID path, GLenum pname, GLint value)
 {
     // TODO(jmadill): Should use proper clamping/casting.
     pathParameterf(path, pname, static_cast<GLfloat>(value));
 }
 
-void Context::getPathParameterfv(GLuint path, GLenum pname, GLfloat *value)
+void Context::getPathParameterfv(PathID path, GLenum pname, GLfloat *value)
 {
     const Path *pathObj = mState.mPathManager->getPath(path);
 
@@ -912,7 +912,7 @@ void Context::getPathParameterfv(GLuint path, GLenum pname, GLfloat *value)
     }
 }
 
-void Context::getPathParameteriv(GLuint path, GLenum pname, GLint *value)
+void Context::getPathParameteriv(PathID path, GLenum pname, GLint *value)
 {
     GLfloat val = 0.0f;
     getPathParameterfv(path, pname, value != nullptr ? &val : nullptr);
@@ -2367,7 +2367,7 @@ void Context::matrixLoadIdentity(GLenum matrixMode)
     mState.loadPathRenderingMatrix(matrixMode, I);
 }
 
-void Context::stencilFillPath(GLuint path, GLenum fillMode, GLuint mask)
+void Context::stencilFillPath(PathID path, GLenum fillMode, GLuint mask)
 {
     const auto *pathObj = mState.mPathManager->getPath(path);
     if (!pathObj)
@@ -2378,7 +2378,7 @@ void Context::stencilFillPath(GLuint path, GLenum fillMode, GLuint mask)
     mImplementation->stencilFillPath(pathObj, fillMode, mask);
 }
 
-void Context::stencilStrokePath(GLuint path, GLint reference, GLuint mask)
+void Context::stencilStrokePath(PathID path, GLint reference, GLuint mask)
 {
     const auto *pathObj = mState.mPathManager->getPath(path);
     if (!pathObj)
@@ -2389,7 +2389,7 @@ void Context::stencilStrokePath(GLuint path, GLint reference, GLuint mask)
     mImplementation->stencilStrokePath(pathObj, reference, mask);
 }
 
-void Context::coverFillPath(GLuint path, GLenum coverMode)
+void Context::coverFillPath(PathID path, GLenum coverMode)
 {
     const auto *pathObj = mState.mPathManager->getPath(path);
     if (!pathObj)
@@ -2400,7 +2400,7 @@ void Context::coverFillPath(GLuint path, GLenum coverMode)
     mImplementation->coverFillPath(pathObj, coverMode);
 }
 
-void Context::coverStrokePath(GLuint path, GLenum coverMode)
+void Context::coverStrokePath(PathID path, GLenum coverMode)
 {
     const auto *pathObj = mState.mPathManager->getPath(path);
     if (!pathObj)
@@ -2411,7 +2411,7 @@ void Context::coverStrokePath(GLuint path, GLenum coverMode)
     mImplementation->coverStrokePath(pathObj, coverMode);
 }
 
-void Context::stencilThenCoverFillPath(GLuint path, GLenum fillMode, GLuint mask, GLenum coverMode)
+void Context::stencilThenCoverFillPath(PathID path, GLenum fillMode, GLuint mask, GLenum coverMode)
 {
     const auto *pathObj = mState.mPathManager->getPath(path);
     if (!pathObj)
@@ -2422,7 +2422,7 @@ void Context::stencilThenCoverFillPath(GLuint path, GLenum fillMode, GLuint mask
     mImplementation->stencilThenCoverFillPath(pathObj, fillMode, mask, coverMode);
 }
 
-void Context::stencilThenCoverStrokePath(GLuint path,
+void Context::stencilThenCoverStrokePath(PathID path,
                                          GLint reference,
                                          GLuint mask,
                                          GLenum coverMode)
@@ -2439,7 +2439,7 @@ void Context::stencilThenCoverStrokePath(GLuint path,
 void Context::coverFillPathInstanced(GLsizei numPaths,
                                      GLenum pathNameType,
                                      const void *paths,
-                                     GLuint pathBase,
+                                     PathID pathBase,
                                      GLenum coverMode,
                                      GLenum transformType,
                                      const GLfloat *transformValues)
@@ -2455,7 +2455,7 @@ void Context::coverFillPathInstanced(GLsizei numPaths,
 void Context::coverStrokePathInstanced(GLsizei numPaths,
                                        GLenum pathNameType,
                                        const void *paths,
-                                       GLuint pathBase,
+                                       PathID pathBase,
                                        GLenum coverMode,
                                        GLenum transformType,
                                        const GLfloat *transformValues)
@@ -2473,7 +2473,7 @@ void Context::coverStrokePathInstanced(GLsizei numPaths,
 void Context::stencilFillPathInstanced(GLsizei numPaths,
                                        GLenum pathNameType,
                                        const void *paths,
-                                       GLuint pathBase,
+                                       PathID pathBase,
                                        GLenum fillMode,
                                        GLuint mask,
                                        GLenum transformType,
@@ -2492,7 +2492,7 @@ void Context::stencilFillPathInstanced(GLsizei numPaths,
 void Context::stencilStrokePathInstanced(GLsizei numPaths,
                                          GLenum pathNameType,
                                          const void *paths,
-                                         GLuint pathBase,
+                                         PathID pathBase,
                                          GLint reference,
                                          GLuint mask,
                                          GLenum transformType,
@@ -2510,7 +2510,7 @@ void Context::stencilStrokePathInstanced(GLsizei numPaths,
 void Context::stencilThenCoverFillPathInstanced(GLsizei numPaths,
                                                 GLenum pathNameType,
                                                 const void *paths,
-                                                GLuint pathBase,
+                                                PathID pathBase,
                                                 GLenum fillMode,
                                                 GLuint mask,
                                                 GLenum coverMode,
@@ -2529,7 +2529,7 @@ void Context::stencilThenCoverFillPathInstanced(GLsizei numPaths,
 void Context::stencilThenCoverStrokePathInstanced(GLsizei numPaths,
                                                   GLenum pathNameType,
                                                   const void *paths,
-                                                  GLuint pathBase,
+                                                  PathID pathBase,
                                                   GLint reference,
                                                   GLuint mask,
                                                   GLenum coverMode,

@@ -673,34 +673,46 @@ bool ValidateLoseContextCHROMIUM(Context *context,
 
 // GL_CHROMIUM_path_rendering
 bool ValidateGenPathsCHROMIUM(Context *context, GLsizei range);
-bool ValidateDeletePathsCHROMIUM(Context *context, GLuint first, GLsizei range);
-bool ValidateIsPathCHROMIUM(Context *context, GLuint path);
+bool ValidateDeletePathsCHROMIUM(Context *context, PathID firstPacked, GLsizei range);
+bool ValidateIsPathCHROMIUM(Context *context, PathID pathPacked);
 bool ValidatePathCommandsCHROMIUM(Context *context,
-                                  GLuint path,
+                                  PathID pathPacked,
                                   GLsizei numCommands,
                                   const GLubyte *commands,
                                   GLsizei numCoords,
                                   GLenum coordType,
                                   const void *coords);
-bool ValidatePathParameterfCHROMIUM(Context *context, GLuint path, GLenum pname, GLfloat value);
-bool ValidatePathParameteriCHROMIUM(Context *context, GLuint path, GLenum pname, GLint value);
+bool ValidatePathParameterfCHROMIUM(Context *context,
+                                    PathID pathPacked,
+                                    GLenum pname,
+                                    GLfloat value);
+bool ValidatePathParameteriCHROMIUM(Context *context, PathID pathPacked, GLenum pname, GLint value);
 bool ValidateGetPathParameterfvCHROMIUM(Context *context,
-                                        GLuint path,
+                                        PathID pathPacked,
                                         GLenum pname,
                                         GLfloat *value);
-bool ValidateGetPathParameterivCHROMIUM(Context *context, GLuint path, GLenum pname, GLint *value);
+bool ValidateGetPathParameterivCHROMIUM(Context *context,
+                                        PathID pathPacked,
+                                        GLenum pname,
+                                        GLint *value);
 bool ValidatePathStencilFuncCHROMIUM(Context *context, GLenum func, GLint ref, GLuint mask);
-bool ValidateStencilFillPathCHROMIUM(Context *context, GLuint path, GLenum fillMode, GLuint mask);
-bool ValidateStencilStrokePathCHROMIUM(Context *context, GLuint path, GLint reference, GLuint mask);
-bool ValidateCoverFillPathCHROMIUM(Context *context, GLuint path, GLenum coverMode);
-bool ValidateCoverStrokePathCHROMIUM(Context *context, GLuint path, GLenum coverMode);
+bool ValidateStencilFillPathCHROMIUM(Context *context,
+                                     PathID pathPacked,
+                                     GLenum fillMode,
+                                     GLuint mask);
+bool ValidateStencilStrokePathCHROMIUM(Context *context,
+                                       PathID pathPacked,
+                                       GLint reference,
+                                       GLuint mask);
+bool ValidateCoverFillPathCHROMIUM(Context *context, PathID pathPacked, GLenum coverMode);
+bool ValidateCoverStrokePathCHROMIUM(Context *context, PathID pathPacked, GLenum coverMode);
 bool ValidateStencilThenCoverFillPathCHROMIUM(Context *context,
-                                              GLuint path,
+                                              PathID pathPacked,
                                               GLenum fillMode,
                                               GLuint mask,
                                               GLenum coverMode);
 bool ValidateStencilThenCoverStrokePathCHROMIUM(Context *context,
-                                                GLuint path,
+                                                PathID pathPacked,
                                                 GLint reference,
                                                 GLuint mask,
                                                 GLenum coverMode);
@@ -708,7 +720,7 @@ bool ValidateCoverFillPathInstancedCHROMIUM(Context *context,
                                             GLsizei numPath,
                                             GLenum pathNameType,
                                             const void *paths,
-                                            GLuint pathBase,
+                                            PathID pathBasePacked,
                                             GLenum coverMode,
                                             GLenum transformType,
                                             const GLfloat *transformValues);
@@ -716,7 +728,7 @@ bool ValidateCoverStrokePathInstancedCHROMIUM(Context *context,
                                               GLsizei numPath,
                                               GLenum pathNameType,
                                               const void *paths,
-                                              GLuint pathBase,
+                                              PathID pathBasePacked,
                                               GLenum coverMode,
                                               GLenum transformType,
                                               const GLfloat *transformValues);
@@ -724,7 +736,7 @@ bool ValidateStencilStrokePathInstancedCHROMIUM(Context *context,
                                                 GLsizei numPath,
                                                 GLenum pathNameType,
                                                 const void *paths,
-                                                GLuint pathBase,
+                                                PathID pathBasePacked,
                                                 GLint reference,
                                                 GLuint mask,
                                                 GLenum transformType,
@@ -733,7 +745,7 @@ bool ValidateStencilFillPathInstancedCHROMIUM(Context *context,
                                               GLsizei numPaths,
                                               GLenum pathNameType,
                                               const void *paths,
-                                              GLuint pathBase,
+                                              PathID pathBasePacked,
                                               GLenum fillMode,
                                               GLuint mask,
                                               GLenum transformType,
@@ -742,7 +754,7 @@ bool ValidateStencilThenCoverFillPathInstancedCHROMIUM(Context *context,
                                                        GLsizei numPaths,
                                                        GLenum pathNameType,
                                                        const void *paths,
-                                                       GLuint pathBase,
+                                                       PathID pathBasePacked,
                                                        GLenum fillMode,
                                                        GLuint mask,
                                                        GLenum coverMode,
@@ -752,7 +764,7 @@ bool ValidateStencilThenCoverStrokePathInstancedCHROMIUM(Context *context,
                                                          GLsizei numPaths,
                                                          GLenum pathNameType,
                                                          const void *paths,
-                                                         GLuint pathBase,
+                                                         PathID pathBasePacked,
                                                          GLint reference,
                                                          GLuint mask,
                                                          GLenum coverMode,

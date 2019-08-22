@@ -88,6 +88,7 @@ enum class ParamType
     TLogicalOperation,
     TMaterialParameter,
     TMatrixType,
+    TPathID,
     TPointParameter,
     TPrimitiveMode,
     TProvokingVertexConvention,
@@ -190,6 +191,7 @@ union ParamValue
     gl::LogicalOperation LogicalOperationVal;
     gl::MaterialParameter MaterialParameterVal;
     gl::MatrixType MatrixTypeVal;
+    gl::PathID PathIDVal;
     gl::PointParameter PointParameterVal;
     gl::PrimitiveMode PrimitiveModeVal;
     gl::ProvokingVertexConvention ProvokingVertexConventionVal;
@@ -683,6 +685,12 @@ inline gl::MatrixType GetParamVal<ParamType::TMatrixType, gl::MatrixType>(const 
 }
 
 template <>
+inline gl::PathID GetParamVal<ParamType::TPathID, gl::PathID>(const ParamValue &value)
+{
+    return value.PathIDVal;
+}
+
+template <>
 inline gl::PointParameter GetParamVal<ParamType::TPointParameter, gl::PointParameter>(
     const ParamValue &value)
 {
@@ -1017,6 +1025,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TMaterialParameter, T>(value);
         case ParamType::TMatrixType:
             return GetParamVal<ParamType::TMatrixType, T>(value);
+        case ParamType::TPathID:
+            return GetParamVal<ParamType::TPathID, T>(value);
         case ParamType::TPointParameter:
             return GetParamVal<ParamType::TPointParameter, T>(value);
         case ParamType::TPrimitiveMode:
@@ -1525,6 +1535,12 @@ inline void SetParamVal<ParamType::TMatrixType>(gl::MatrixType valueIn, ParamVal
 }
 
 template <>
+inline void SetParamVal<ParamType::TPathID>(gl::PathID valueIn, ParamValue *valueOut)
+{
+    valueOut->PathIDVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TPointParameter>(gl::PointParameter valueIn,
                                                     ParamValue *valueOut)
 {
@@ -1922,6 +1938,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TMatrixType:
             SetParamVal<ParamType::TMatrixType>(valueIn, valueOut);
+            break;
+        case ParamType::TPathID:
+            SetParamVal<ParamType::TPathID>(valueIn, valueOut);
             break;
         case ParamType::TPointParameter:
             SetParamVal<ParamType::TPointParameter>(valueIn, valueOut);

@@ -2765,12 +2765,12 @@ CallCapture CaptureGenPathsCHROMIUM(const Context *context,
 
 CallCapture CaptureDeletePathsCHROMIUM(const Context *context,
                                        bool isCallValid,
-                                       GLuint first,
+                                       PathID firstPacked,
                                        GLsizei range)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("first", ParamType::TGLuint, first);
+    paramBuffer.addValueParam("firstPacked", ParamType::TPathID, firstPacked);
     paramBuffer.addValueParam("range", ParamType::TGLsizei, range);
 
     return CallCapture(gl::EntryPoint::DeletePathsCHROMIUM, std::move(paramBuffer));
@@ -2778,12 +2778,12 @@ CallCapture CaptureDeletePathsCHROMIUM(const Context *context,
 
 CallCapture CaptureIsPathCHROMIUM(const Context *context,
                                   bool isCallValid,
-                                  GLuint path,
+                                  PathID pathPacked,
                                   GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
@@ -2794,7 +2794,7 @@ CallCapture CaptureIsPathCHROMIUM(const Context *context,
 
 CallCapture CapturePathCommandsCHROMIUM(const Context *context,
                                         bool isCallValid,
-                                        GLuint path,
+                                        PathID pathPacked,
                                         GLsizei numCommands,
                                         const GLubyte *commands,
                                         GLsizei numCoords,
@@ -2803,12 +2803,12 @@ CallCapture CapturePathCommandsCHROMIUM(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addValueParam("numCommands", ParamType::TGLsizei, numCommands);
 
     ParamCapture commandsParam("commands", ParamType::TGLubyteConstPointer);
     InitParamValue(ParamType::TGLubyteConstPointer, commands, &commandsParam.value);
-    CapturePathCommandsCHROMIUM_commands(context, isCallValid, path, numCommands, commands,
+    CapturePathCommandsCHROMIUM_commands(context, isCallValid, pathPacked, numCommands, commands,
                                          numCoords, coordType, coords, &commandsParam);
     paramBuffer.addParam(std::move(commandsParam));
 
@@ -2817,8 +2817,8 @@ CallCapture CapturePathCommandsCHROMIUM(const Context *context,
 
     ParamCapture coordsParam("coords", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, coords, &coordsParam.value);
-    CapturePathCommandsCHROMIUM_coords(context, isCallValid, path, numCommands, commands, numCoords,
-                                       coordType, coords, &coordsParam);
+    CapturePathCommandsCHROMIUM_coords(context, isCallValid, pathPacked, numCommands, commands,
+                                       numCoords, coordType, coords, &coordsParam);
     paramBuffer.addParam(std::move(coordsParam));
 
     return CallCapture(gl::EntryPoint::PathCommandsCHROMIUM, std::move(paramBuffer));
@@ -2826,13 +2826,13 @@ CallCapture CapturePathCommandsCHROMIUM(const Context *context,
 
 CallCapture CapturePathParameterfCHROMIUM(const Context *context,
                                           bool isCallValid,
-                                          GLuint path,
+                                          PathID pathPacked,
                                           GLenum pname,
                                           GLfloat value)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("value", ParamType::TGLfloat, value);
 
@@ -2841,13 +2841,13 @@ CallCapture CapturePathParameterfCHROMIUM(const Context *context,
 
 CallCapture CapturePathParameteriCHROMIUM(const Context *context,
                                           bool isCallValid,
-                                          GLuint path,
+                                          PathID pathPacked,
                                           GLenum pname,
                                           GLint value)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("value", ParamType::TGLint, value);
 
@@ -2856,18 +2856,19 @@ CallCapture CapturePathParameteriCHROMIUM(const Context *context,
 
 CallCapture CaptureGetPathParameterfvCHROMIUM(const Context *context,
                                               bool isCallValid,
-                                              GLuint path,
+                                              PathID pathPacked,
                                               GLenum pname,
                                               GLfloat *value)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
 
     ParamCapture valueParam("value", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, value, &valueParam.value);
-    CaptureGetPathParameterfvCHROMIUM_value(context, isCallValid, path, pname, value, &valueParam);
+    CaptureGetPathParameterfvCHROMIUM_value(context, isCallValid, pathPacked, pname, value,
+                                            &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
     return CallCapture(gl::EntryPoint::GetPathParameterfvCHROMIUM, std::move(paramBuffer));
@@ -2875,18 +2876,19 @@ CallCapture CaptureGetPathParameterfvCHROMIUM(const Context *context,
 
 CallCapture CaptureGetPathParameterivCHROMIUM(const Context *context,
                                               bool isCallValid,
-                                              GLuint path,
+                                              PathID pathPacked,
                                               GLenum pname,
                                               GLint *value)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
 
     ParamCapture valueParam("value", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, value, &valueParam.value);
-    CaptureGetPathParameterivCHROMIUM_value(context, isCallValid, path, pname, value, &valueParam);
+    CaptureGetPathParameterivCHROMIUM_value(context, isCallValid, pathPacked, pname, value,
+                                            &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
     return CallCapture(gl::EntryPoint::GetPathParameterivCHROMIUM, std::move(paramBuffer));
@@ -2909,13 +2911,13 @@ CallCapture CapturePathStencilFuncCHROMIUM(const Context *context,
 
 CallCapture CaptureStencilFillPathCHROMIUM(const Context *context,
                                            bool isCallValid,
-                                           GLuint path,
+                                           PathID pathPacked,
                                            GLenum fillMode,
                                            GLuint mask)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addEnumParam("fillMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, fillMode);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
 
@@ -2924,13 +2926,13 @@ CallCapture CaptureStencilFillPathCHROMIUM(const Context *context,
 
 CallCapture CaptureStencilStrokePathCHROMIUM(const Context *context,
                                              bool isCallValid,
-                                             GLuint path,
+                                             PathID pathPacked,
                                              GLint reference,
                                              GLuint mask)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addValueParam("reference", ParamType::TGLint, reference);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
 
@@ -2939,12 +2941,12 @@ CallCapture CaptureStencilStrokePathCHROMIUM(const Context *context,
 
 CallCapture CaptureCoverFillPathCHROMIUM(const Context *context,
                                          bool isCallValid,
-                                         GLuint path,
+                                         PathID pathPacked,
                                          GLenum coverMode)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addEnumParam("coverMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, coverMode);
 
     return CallCapture(gl::EntryPoint::CoverFillPathCHROMIUM, std::move(paramBuffer));
@@ -2952,12 +2954,12 @@ CallCapture CaptureCoverFillPathCHROMIUM(const Context *context,
 
 CallCapture CaptureCoverStrokePathCHROMIUM(const Context *context,
                                            bool isCallValid,
-                                           GLuint path,
+                                           PathID pathPacked,
                                            GLenum coverMode)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addEnumParam("coverMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, coverMode);
 
     return CallCapture(gl::EntryPoint::CoverStrokePathCHROMIUM, std::move(paramBuffer));
@@ -2965,14 +2967,14 @@ CallCapture CaptureCoverStrokePathCHROMIUM(const Context *context,
 
 CallCapture CaptureStencilThenCoverFillPathCHROMIUM(const Context *context,
                                                     bool isCallValid,
-                                                    GLuint path,
+                                                    PathID pathPacked,
                                                     GLenum fillMode,
                                                     GLuint mask,
                                                     GLenum coverMode)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addEnumParam("fillMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, fillMode);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
     paramBuffer.addEnumParam("coverMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, coverMode);
@@ -2982,14 +2984,14 @@ CallCapture CaptureStencilThenCoverFillPathCHROMIUM(const Context *context,
 
 CallCapture CaptureStencilThenCoverStrokePathCHROMIUM(const Context *context,
                                                       bool isCallValid,
-                                                      GLuint path,
+                                                      PathID pathPacked,
                                                       GLint reference,
                                                       GLuint mask,
                                                       GLenum coverMode)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+    paramBuffer.addValueParam("pathPacked", ParamType::TPathID, pathPacked);
     paramBuffer.addValueParam("reference", ParamType::TGLint, reference);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
     paramBuffer.addEnumParam("coverMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, coverMode);
@@ -3002,7 +3004,7 @@ CallCapture CaptureCoverFillPathInstancedCHROMIUM(const Context *context,
                                                   GLsizei numPath,
                                                   GLenum pathNameType,
                                                   const void *paths,
-                                                  GLuint pathBase,
+                                                  PathID pathBasePacked,
                                                   GLenum coverMode,
                                                   GLenum transformType,
                                                   const GLfloat *transformValues)
@@ -3016,11 +3018,11 @@ CallCapture CaptureCoverFillPathInstancedCHROMIUM(const Context *context,
     ParamCapture pathsParam("paths", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, paths, &pathsParam.value);
     CaptureCoverFillPathInstancedCHROMIUM_paths(context, isCallValid, numPath, pathNameType, paths,
-                                                pathBase, coverMode, transformType, transformValues,
-                                                &pathsParam);
+                                                pathBasePacked, coverMode, transformType,
+                                                transformValues, &pathsParam);
     paramBuffer.addParam(std::move(pathsParam));
 
-    paramBuffer.addValueParam("pathBase", ParamType::TGLuint, pathBase);
+    paramBuffer.addValueParam("pathBasePacked", ParamType::TPathID, pathBasePacked);
     paramBuffer.addEnumParam("coverMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, coverMode);
     paramBuffer.addEnumParam("transformType", GLenumGroup::DefaultGroup, ParamType::TGLenum,
                              transformType);
@@ -3028,8 +3030,8 @@ CallCapture CaptureCoverFillPathInstancedCHROMIUM(const Context *context,
     ParamCapture transformValuesParam("transformValues", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, transformValues, &transformValuesParam.value);
     CaptureCoverFillPathInstancedCHROMIUM_transformValues(
-        context, isCallValid, numPath, pathNameType, paths, pathBase, coverMode, transformType,
-        transformValues, &transformValuesParam);
+        context, isCallValid, numPath, pathNameType, paths, pathBasePacked, coverMode,
+        transformType, transformValues, &transformValuesParam);
     paramBuffer.addParam(std::move(transformValuesParam));
 
     return CallCapture(gl::EntryPoint::CoverFillPathInstancedCHROMIUM, std::move(paramBuffer));
@@ -3040,7 +3042,7 @@ CallCapture CaptureCoverStrokePathInstancedCHROMIUM(const Context *context,
                                                     GLsizei numPath,
                                                     GLenum pathNameType,
                                                     const void *paths,
-                                                    GLuint pathBase,
+                                                    PathID pathBasePacked,
                                                     GLenum coverMode,
                                                     GLenum transformType,
                                                     const GLfloat *transformValues)
@@ -3054,11 +3056,11 @@ CallCapture CaptureCoverStrokePathInstancedCHROMIUM(const Context *context,
     ParamCapture pathsParam("paths", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, paths, &pathsParam.value);
     CaptureCoverStrokePathInstancedCHROMIUM_paths(context, isCallValid, numPath, pathNameType,
-                                                  paths, pathBase, coverMode, transformType,
+                                                  paths, pathBasePacked, coverMode, transformType,
                                                   transformValues, &pathsParam);
     paramBuffer.addParam(std::move(pathsParam));
 
-    paramBuffer.addValueParam("pathBase", ParamType::TGLuint, pathBase);
+    paramBuffer.addValueParam("pathBasePacked", ParamType::TPathID, pathBasePacked);
     paramBuffer.addEnumParam("coverMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, coverMode);
     paramBuffer.addEnumParam("transformType", GLenumGroup::DefaultGroup, ParamType::TGLenum,
                              transformType);
@@ -3066,8 +3068,8 @@ CallCapture CaptureCoverStrokePathInstancedCHROMIUM(const Context *context,
     ParamCapture transformValuesParam("transformValues", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, transformValues, &transformValuesParam.value);
     CaptureCoverStrokePathInstancedCHROMIUM_transformValues(
-        context, isCallValid, numPath, pathNameType, paths, pathBase, coverMode, transformType,
-        transformValues, &transformValuesParam);
+        context, isCallValid, numPath, pathNameType, paths, pathBasePacked, coverMode,
+        transformType, transformValues, &transformValuesParam);
     paramBuffer.addParam(std::move(transformValuesParam));
 
     return CallCapture(gl::EntryPoint::CoverStrokePathInstancedCHROMIUM, std::move(paramBuffer));
@@ -3078,7 +3080,7 @@ CallCapture CaptureStencilStrokePathInstancedCHROMIUM(const Context *context,
                                                       GLsizei numPath,
                                                       GLenum pathNameType,
                                                       const void *paths,
-                                                      GLuint pathBase,
+                                                      PathID pathBasePacked,
                                                       GLint reference,
                                                       GLuint mask,
                                                       GLenum transformType,
@@ -3093,11 +3095,11 @@ CallCapture CaptureStencilStrokePathInstancedCHROMIUM(const Context *context,
     ParamCapture pathsParam("paths", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, paths, &pathsParam.value);
     CaptureStencilStrokePathInstancedCHROMIUM_paths(context, isCallValid, numPath, pathNameType,
-                                                    paths, pathBase, reference, mask, transformType,
-                                                    transformValues, &pathsParam);
+                                                    paths, pathBasePacked, reference, mask,
+                                                    transformType, transformValues, &pathsParam);
     paramBuffer.addParam(std::move(pathsParam));
 
-    paramBuffer.addValueParam("pathBase", ParamType::TGLuint, pathBase);
+    paramBuffer.addValueParam("pathBasePacked", ParamType::TPathID, pathBasePacked);
     paramBuffer.addValueParam("reference", ParamType::TGLint, reference);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
     paramBuffer.addEnumParam("transformType", GLenumGroup::DefaultGroup, ParamType::TGLenum,
@@ -3106,7 +3108,7 @@ CallCapture CaptureStencilStrokePathInstancedCHROMIUM(const Context *context,
     ParamCapture transformValuesParam("transformValues", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, transformValues, &transformValuesParam.value);
     CaptureStencilStrokePathInstancedCHROMIUM_transformValues(
-        context, isCallValid, numPath, pathNameType, paths, pathBase, reference, mask,
+        context, isCallValid, numPath, pathNameType, paths, pathBasePacked, reference, mask,
         transformType, transformValues, &transformValuesParam);
     paramBuffer.addParam(std::move(transformValuesParam));
 
@@ -3118,7 +3120,7 @@ CallCapture CaptureStencilFillPathInstancedCHROMIUM(const Context *context,
                                                     GLsizei numPaths,
                                                     GLenum pathNameType,
                                                     const void *paths,
-                                                    GLuint pathBase,
+                                                    PathID pathBasePacked,
                                                     GLenum fillMode,
                                                     GLuint mask,
                                                     GLenum transformType,
@@ -3133,11 +3135,11 @@ CallCapture CaptureStencilFillPathInstancedCHROMIUM(const Context *context,
     ParamCapture pathsParam("paths", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, paths, &pathsParam.value);
     CaptureStencilFillPathInstancedCHROMIUM_paths(context, isCallValid, numPaths, pathNameType,
-                                                  paths, pathBase, fillMode, mask, transformType,
-                                                  transformValues, &pathsParam);
+                                                  paths, pathBasePacked, fillMode, mask,
+                                                  transformType, transformValues, &pathsParam);
     paramBuffer.addParam(std::move(pathsParam));
 
-    paramBuffer.addValueParam("pathBase", ParamType::TGLuint, pathBase);
+    paramBuffer.addValueParam("pathBasePacked", ParamType::TPathID, pathBasePacked);
     paramBuffer.addEnumParam("fillMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, fillMode);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
     paramBuffer.addEnumParam("transformType", GLenumGroup::DefaultGroup, ParamType::TGLenum,
@@ -3146,7 +3148,7 @@ CallCapture CaptureStencilFillPathInstancedCHROMIUM(const Context *context,
     ParamCapture transformValuesParam("transformValues", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, transformValues, &transformValuesParam.value);
     CaptureStencilFillPathInstancedCHROMIUM_transformValues(
-        context, isCallValid, numPaths, pathNameType, paths, pathBase, fillMode, mask,
+        context, isCallValid, numPaths, pathNameType, paths, pathBasePacked, fillMode, mask,
         transformType, transformValues, &transformValuesParam);
     paramBuffer.addParam(std::move(transformValuesParam));
 
@@ -3158,7 +3160,7 @@ CallCapture CaptureStencilThenCoverFillPathInstancedCHROMIUM(const Context *cont
                                                              GLsizei numPaths,
                                                              GLenum pathNameType,
                                                              const void *paths,
-                                                             GLuint pathBase,
+                                                             PathID pathBasePacked,
                                                              GLenum fillMode,
                                                              GLuint mask,
                                                              GLenum coverMode,
@@ -3174,11 +3176,11 @@ CallCapture CaptureStencilThenCoverFillPathInstancedCHROMIUM(const Context *cont
     ParamCapture pathsParam("paths", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, paths, &pathsParam.value);
     CaptureStencilThenCoverFillPathInstancedCHROMIUM_paths(
-        context, isCallValid, numPaths, pathNameType, paths, pathBase, fillMode, mask, coverMode,
-        transformType, transformValues, &pathsParam);
+        context, isCallValid, numPaths, pathNameType, paths, pathBasePacked, fillMode, mask,
+        coverMode, transformType, transformValues, &pathsParam);
     paramBuffer.addParam(std::move(pathsParam));
 
-    paramBuffer.addValueParam("pathBase", ParamType::TGLuint, pathBase);
+    paramBuffer.addValueParam("pathBasePacked", ParamType::TPathID, pathBasePacked);
     paramBuffer.addEnumParam("fillMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, fillMode);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
     paramBuffer.addEnumParam("coverMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, coverMode);
@@ -3188,8 +3190,8 @@ CallCapture CaptureStencilThenCoverFillPathInstancedCHROMIUM(const Context *cont
     ParamCapture transformValuesParam("transformValues", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, transformValues, &transformValuesParam.value);
     CaptureStencilThenCoverFillPathInstancedCHROMIUM_transformValues(
-        context, isCallValid, numPaths, pathNameType, paths, pathBase, fillMode, mask, coverMode,
-        transformType, transformValues, &transformValuesParam);
+        context, isCallValid, numPaths, pathNameType, paths, pathBasePacked, fillMode, mask,
+        coverMode, transformType, transformValues, &transformValuesParam);
     paramBuffer.addParam(std::move(transformValuesParam));
 
     return CallCapture(gl::EntryPoint::StencilThenCoverFillPathInstancedCHROMIUM,
@@ -3201,7 +3203,7 @@ CallCapture CaptureStencilThenCoverStrokePathInstancedCHROMIUM(const Context *co
                                                                GLsizei numPaths,
                                                                GLenum pathNameType,
                                                                const void *paths,
-                                                               GLuint pathBase,
+                                                               PathID pathBasePacked,
                                                                GLint reference,
                                                                GLuint mask,
                                                                GLenum coverMode,
@@ -3217,11 +3219,11 @@ CallCapture CaptureStencilThenCoverStrokePathInstancedCHROMIUM(const Context *co
     ParamCapture pathsParam("paths", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, paths, &pathsParam.value);
     CaptureStencilThenCoverStrokePathInstancedCHROMIUM_paths(
-        context, isCallValid, numPaths, pathNameType, paths, pathBase, reference, mask, coverMode,
-        transformType, transformValues, &pathsParam);
+        context, isCallValid, numPaths, pathNameType, paths, pathBasePacked, reference, mask,
+        coverMode, transformType, transformValues, &pathsParam);
     paramBuffer.addParam(std::move(pathsParam));
 
-    paramBuffer.addValueParam("pathBase", ParamType::TGLuint, pathBase);
+    paramBuffer.addValueParam("pathBasePacked", ParamType::TPathID, pathBasePacked);
     paramBuffer.addValueParam("reference", ParamType::TGLint, reference);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
     paramBuffer.addEnumParam("coverMode", GLenumGroup::DefaultGroup, ParamType::TGLenum, coverMode);
@@ -3231,8 +3233,8 @@ CallCapture CaptureStencilThenCoverStrokePathInstancedCHROMIUM(const Context *co
     ParamCapture transformValuesParam("transformValues", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, transformValues, &transformValuesParam.value);
     CaptureStencilThenCoverStrokePathInstancedCHROMIUM_transformValues(
-        context, isCallValid, numPaths, pathNameType, paths, pathBase, reference, mask, coverMode,
-        transformType, transformValues, &transformValuesParam);
+        context, isCallValid, numPaths, pathNameType, paths, pathBasePacked, reference, mask,
+        coverMode, transformType, transformValues, &transformValuesParam);
     paramBuffer.addParam(std::move(transformValuesParam));
 
     return CallCapture(gl::EntryPoint::StencilThenCoverStrokePathInstancedCHROMIUM,

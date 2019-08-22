@@ -917,5 +917,129 @@
     },
     "glGetQueryObjectuivRobust": {
         "id": "QueryID"
+    },
+    "glDeletePaths": {
+        "first": "PathID"
+    },
+    "glIsPath": {
+        "path": "PathID"
+    },
+    "glPathCommands": {
+        "path": "PathID"
+    },
+    "glPathCoords": {
+        "path": "PathID"
+    },
+    "glPathSubCommands": {
+        "path": "PathID"
+    },
+    "glPathSubCoords": {
+        "path": "PathID"
+    },
+    "glPathString": {
+        "path": "PathID"
+    },
+    "glPathGlyphs": {
+        "pathParameterTemplate": "PathID"
+    },
+    "glPathGlyphRange": {
+        "pathParameterTemplate": "PathID"
+    },
+    "glInterpolatePaths": {
+        "pathA": "PathID",
+        "pathB": "PathID"
+    },
+    "glPathParameteriv": {
+        "path": "PathID"
+    },
+    "glPathParameteri": {
+        "path": "PathID"
+    },
+    "glPathParameterfv": {
+        "path": "PathID"
+    },
+    "glPathParameterf": {
+        "path": "PathID"
+    },
+    "glPathDashArray": {
+        "path": "PathID"
+    },
+    "glStencilStrokePath": {
+        "path": "PathID"
+    },
+    "glStencilFillPath": {
+        "path": "PathID"
+    },
+    "glStencilFillPathInstanced": {
+        "pathBase": "PathID"
+    },
+    "glStencilStrokePathInstanced": {
+        "pathBase": "PathID"
+    },
+    "glCoverFillPath": {
+        "path": "PathID"
+    },
+    "glCoverStrokePath": {
+        "path": "PathID"
+    },
+    "glCoverFillPathInstanced": {
+        "pathBase": "PathID"
+    },
+    "glCoverStrokePathInstanced": {
+        "pathBase": "PathID"
+    },
+    "glGetPathParameteriv": {
+        "path": "PathID"
+    },
+    "glGetPathParameterfv": {
+        "path": "PathID"
+    },
+    "glGetPathCommands": {
+        "path": "PathID"
+    },
+    "glGetPathCoords": {
+        "path": "PathID"
+    },
+    "glGetPathDashArray": {
+        "path": "PathID"
+    },
+    "glGetPathMetrics": {
+        "pathBase": "PathID"
+    },
+    "glGetPathSpacing": {
+        "pathBase": "PathID"
+    },
+    "glIsPointInFillPath": {
+        "path": "PathID"
+    },
+    "glIsPointInStrokePath": {
+        "path": "PathID"
+    },
+    "glGetPathLength": {
+        "path": "PathID"
+    },
+    "glPointAlongPath": {
+        "path": "PathID"
+    },
+    "glStencilThenCoverFillPath": {
+        "path": "PathID"
+    },
+    "glStencilThenCoverStrokePath": {
+        "path": "PathID"
+    },
+    "glStencilThenCoverFillPathInstanced": {
+        "pathBase": "PathID"
+    },
+    "glStencilThenCoverStrokePathInstanced": {
+        "pathBase": "PathID"
+    },
+    "glPathGlyphIndexRange": {
+        "path": "PathID"
+    },
+    "glPathGlyphIndexArray": {
+        "path": "PathID"
+    },
+    "glPathMemoryGlyphIndexArray": {
+        "path": "PathID"
     }
 }
