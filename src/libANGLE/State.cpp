@@ -1503,7 +1503,7 @@ void State::setProgramPipelineBinding(const Context *context, ProgramPipeline *p
     mProgramPipeline.set(context, pipeline);
 }
 
-void State::detachProgramPipeline(const Context *context, GLuint pipeline)
+void State::detachProgramPipeline(const Context *context, ProgramPipelineID pipeline)
 {
     mProgramPipeline.set(context, nullptr);
 }

@@ -17,7 +17,9 @@ namespace gl
 {
 class Context;
 
-bool ValidateActiveShaderProgram(Context *context, GLuint pipeline, GLuint program);
+bool ValidateActiveShaderProgram(Context *context,
+                                 ProgramPipelineID pipelinePacked,
+                                 GLuint program);
 bool ValidateBindImageTexture(Context *context,
                               GLuint unit,
                               TextureID texturePacked,
@@ -26,7 +28,7 @@ bool ValidateBindImageTexture(Context *context,
                               GLint layer,
                               GLenum access,
                               GLenum format);
-bool ValidateBindProgramPipeline(Context *context, GLuint pipeline);
+bool ValidateBindProgramPipeline(Context *context, ProgramPipelineID pipelinePacked);
 bool ValidateBindVertexBuffer(Context *context,
                               GLuint bindingindex,
                               BufferID bufferPacked,
@@ -36,7 +38,9 @@ bool ValidateCreateShaderProgramv(Context *context,
                                   ShaderType typePacked,
                                   GLsizei count,
                                   const GLchar *const *strings);
-bool ValidateDeleteProgramPipelines(Context *context, GLsizei n, const GLuint *pipelines);
+bool ValidateDeleteProgramPipelines(Context *context,
+                                    GLsizei n,
+                                    const ProgramPipelineID *pipelinesPacked);
 bool ValidateDispatchCompute(Context *context,
                              GLuint num_groups_x,
                              GLuint num_groups_y,
@@ -48,7 +52,7 @@ bool ValidateDrawElementsIndirect(Context *context,
                                   DrawElementsType typePacked,
                                   const void *indirect);
 bool ValidateFramebufferParameteri(Context *context, GLenum target, GLenum pname, GLint param);
-bool ValidateGenProgramPipelines(Context *context, GLsizei n, GLuint *pipelines);
+bool ValidateGenProgramPipelines(Context *context, GLsizei n, ProgramPipelineID *pipelinesPacked);
 bool ValidateGetBooleani_v(Context *context, GLenum target, GLuint index, GLboolean *data);
 bool ValidateGetFramebufferParameteriv(Context *context,
                                        GLenum target,
@@ -61,11 +65,14 @@ bool ValidateGetProgramInterfaceiv(Context *context,
                                    GLenum pname,
                                    GLint *params);
 bool ValidateGetProgramPipelineInfoLog(Context *context,
-                                       GLuint pipeline,
+                                       ProgramPipelineID pipelinePacked,
                                        GLsizei bufSize,
                                        GLsizei *length,
                                        GLchar *infoLog);
-bool ValidateGetProgramPipelineiv(Context *context, GLuint pipeline, GLenum pname, GLint *params);
+bool ValidateGetProgramPipelineiv(Context *context,
+                                  ProgramPipelineID pipelinePacked,
+                                  GLenum pname,
+                                  GLint *params);
 bool ValidateGetProgramResourceIndex(Context *context,
                                      GLuint program,
                                      GLenum programInterface,
@@ -100,7 +107,7 @@ bool ValidateGetTexLevelParameteriv(Context *context,
                                     GLint level,
                                     GLenum pname,
                                     GLint *params);
-bool ValidateIsProgramPipeline(Context *context, GLuint pipeline);
+bool ValidateIsProgramPipeline(Context *context, ProgramPipelineID pipelinePacked);
 bool ValidateMemoryBarrier(Context *context, GLbitfield barriers);
 bool ValidateMemoryBarrierByRegion(Context *context, GLbitfield barriers);
 bool ValidateProgramUniform1f(Context *context, GLuint program, GLint location, GLfloat v0);
@@ -278,8 +285,11 @@ bool ValidateTexStorage2DMultisample(Context *context,
                                      GLsizei width,
                                      GLsizei height,
                                      GLboolean fixedsamplelocations);
-bool ValidateUseProgramStages(Context *context, GLuint pipeline, GLbitfield stages, GLuint program);
-bool ValidateValidateProgramPipeline(Context *context, GLuint pipeline);
+bool ValidateUseProgramStages(Context *context,
+                              ProgramPipelineID pipelinePacked,
+                              GLbitfield stages,
+                              GLuint program);
+bool ValidateValidateProgramPipeline(Context *context, ProgramPipelineID pipelinePacked);
 bool ValidateVertexAttribBinding(Context *context, GLuint attribindex, GLuint bindingindex);
 bool ValidateVertexAttribFormat(Context *context,
                                 GLuint attribindex,

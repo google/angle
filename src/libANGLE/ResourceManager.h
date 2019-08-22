@@ -296,19 +296,22 @@ class FramebufferManager
     ~FramebufferManager() override {}
 };
 
-class ProgramPipelineManager
-    : public TypedResourceManager<ProgramPipeline, HandleAllocator, ProgramPipelineManager>
+class ProgramPipelineManager : public TypedResourceManager<ProgramPipeline,
+                                                           HandleAllocator,
+                                                           ProgramPipelineManager,
+                                                           ProgramPipelineID>
 {
   public:
-    GLuint createProgramPipeline();
-    ProgramPipeline *getProgramPipeline(GLuint handle) const;
+    ProgramPipelineID createProgramPipeline();
+    ProgramPipeline *getProgramPipeline(ProgramPipelineID handle) const;
 
-    ProgramPipeline *checkProgramPipelineAllocation(rx::GLImplFactory *factory, GLuint handle)
+    ProgramPipeline *checkProgramPipelineAllocation(rx::GLImplFactory *factory,
+                                                    ProgramPipelineID handle)
     {
         return checkObjectAllocation(factory, handle);
     }
 
-    static ProgramPipeline *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
+    static ProgramPipeline *AllocateNewObject(rx::GLImplFactory *factory, ProgramPipelineID handle);
     static void DeleteObject(const Context *context, ProgramPipeline *pipeline);
 
   protected:

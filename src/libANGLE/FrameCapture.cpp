@@ -851,6 +851,14 @@ void WriteParamValueToStream<ParamType::TBufferID>(std::ostream &os, gl::BufferI
     os << value.value;
 }
 
+// TODO(jmadill): Use program pipeline ID map. http://anglebug.com/3611
+template <>
+void WriteParamValueToStream<ParamType::TProgramPipelineID>(std::ostream &os,
+                                                            gl::ProgramPipelineID value)
+{
+    os << value.value;
+}
+
 template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os, gl::RenderbufferID value)
 {

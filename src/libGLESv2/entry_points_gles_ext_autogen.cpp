@@ -7056,14 +7056,15 @@ void GL_APIENTRY ActiveShaderProgramContextANGLE(GLeglContext ctx, GLuint pipeli
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        ProgramPipelineID pipelinePacked              = FromGL<ProgramPipelineID>(pipeline);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateActiveShaderProgram(context, pipeline, program));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateActiveShaderProgram(context, pipelinePacked, program));
         if (isCallValid)
         {
-            context->activeShaderProgram(pipeline, program);
+            context->activeShaderProgram(pipelinePacked, program);
         }
-        ANGLE_CAPTURE(ActiveShaderProgram, isCallValid, context, pipeline, program);
+        ANGLE_CAPTURE(ActiveShaderProgram, isCallValid, context, pipelinePacked, program);
     }
 }
 
@@ -7455,14 +7456,15 @@ void GL_APIENTRY BindProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeli
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        ProgramPipelineID pipelinePacked              = FromGL<ProgramPipelineID>(pipeline);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBindProgramPipeline(context, pipeline));
+            (context->skipValidation() || ValidateBindProgramPipeline(context, pipelinePacked));
         if (isCallValid)
         {
-            context->bindProgramPipeline(pipeline);
+            context->bindProgramPipeline(pipelinePacked);
         }
-        ANGLE_CAPTURE(BindProgramPipeline, isCallValid, context, pipeline);
+        ANGLE_CAPTURE(BindProgramPipeline, isCallValid, context, pipelinePacked);
     }
 }
 
@@ -9245,14 +9247,15 @@ void GL_APIENTRY DeleteProgramPipelinesContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        const ProgramPipelineID *pipelinesPacked = FromGL<const ProgramPipelineID *>(pipelines);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateDeleteProgramPipelines(context, n, pipelines));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateDeleteProgramPipelines(context, n, pipelinesPacked));
         if (isCallValid)
         {
-            context->deleteProgramPipelines(n, pipelines);
+            context->deleteProgramPipelines(n, pipelinesPacked);
         }
-        ANGLE_CAPTURE(DeleteProgramPipelines, isCallValid, context, n, pipelines);
+        ANGLE_CAPTURE(DeleteProgramPipelines, isCallValid, context, n, pipelinesPacked);
     }
 }
 
@@ -11125,14 +11128,15 @@ void GL_APIENTRY GenProgramPipelinesContextANGLE(GLeglContext ctx, GLsizei n, GL
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        ProgramPipelineID *pipelinesPacked            = FromGL<ProgramPipelineID *>(pipelines);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGenProgramPipelines(context, n, pipelines));
+            (context->skipValidation() || ValidateGenProgramPipelines(context, n, pipelinesPacked));
         if (isCallValid)
         {
-            context->genProgramPipelines(n, pipelines);
+            context->genProgramPipelines(n, pipelinesPacked);
         }
-        ANGLE_CAPTURE(GenProgramPipelines, isCallValid, context, n, pipelines);
+        ANGLE_CAPTURE(GenProgramPipelines, isCallValid, context, n, pipelinesPacked);
     }
 }
 
@@ -12621,16 +12625,17 @@ void GL_APIENTRY GetProgramPipelineInfoLogContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        ProgramPipelineID pipelinePacked              = FromGL<ProgramPipelineID>(pipeline);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetProgramPipelineInfoLog(context, pipeline, bufSize, length, infoLog));
+             ValidateGetProgramPipelineInfoLog(context, pipelinePacked, bufSize, length, infoLog));
         if (isCallValid)
         {
-            context->getProgramPipelineInfoLog(pipeline, bufSize, length, infoLog);
+            context->getProgramPipelineInfoLog(pipelinePacked, bufSize, length, infoLog);
         }
-        ANGLE_CAPTURE(GetProgramPipelineInfoLog, isCallValid, context, pipeline, bufSize, length,
-                      infoLog);
+        ANGLE_CAPTURE(GetProgramPipelineInfoLog, isCallValid, context, pipelinePacked, bufSize,
+                      length, infoLog);
     }
 }
 
@@ -12649,14 +12654,15 @@ void GL_APIENTRY GetProgramPipelineivContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        ProgramPipelineID pipelinePacked              = FromGL<ProgramPipelineID>(pipeline);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetProgramPipelineiv(context, pipeline, pname, params));
+                            ValidateGetProgramPipelineiv(context, pipelinePacked, pname, params));
         if (isCallValid)
         {
-            context->getProgramPipelineiv(pipeline, pname, params);
+            context->getProgramPipelineiv(pipelinePacked, pname, params);
         }
-        ANGLE_CAPTURE(GetProgramPipelineiv, isCallValid, context, pipeline, pname, params);
+        ANGLE_CAPTURE(GetProgramPipelineiv, isCallValid, context, pipelinePacked, pname, params);
     }
 }
 
@@ -14607,18 +14613,19 @@ GLboolean GL_APIENTRY IsProgramPipelineContextANGLE(GLeglContext ctx, GLuint pip
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        ProgramPipelineID pipelinePacked              = FromGL<ProgramPipelineID>(pipeline);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateIsProgramPipeline(context, pipeline));
+            (context->skipValidation() || ValidateIsProgramPipeline(context, pipelinePacked));
         if (isCallValid)
         {
-            returnValue = context->isProgramPipeline(pipeline);
+            returnValue = context->isProgramPipeline(pipelinePacked);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsProgramPipeline, GLboolean>();
         }
-        ANGLE_CAPTURE(IsProgramPipeline, isCallValid, context, pipeline, returnValue);
+        ANGLE_CAPTURE(IsProgramPipeline, isCallValid, context, pipelinePacked, returnValue);
     }
     else
     {
@@ -20306,14 +20313,15 @@ void GL_APIENTRY UseProgramStagesContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        ProgramPipelineID pipelinePacked              = FromGL<ProgramPipelineID>(pipeline);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateUseProgramStages(context, pipeline, stages, program));
+                            ValidateUseProgramStages(context, pipelinePacked, stages, program));
         if (isCallValid)
         {
-            context->useProgramStages(pipeline, stages, program);
+            context->useProgramStages(pipelinePacked, stages, program);
         }
-        ANGLE_CAPTURE(UseProgramStages, isCallValid, context, pipeline, stages, program);
+        ANGLE_CAPTURE(UseProgramStages, isCallValid, context, pipelinePacked, stages, program);
     }
 }
 
@@ -20344,14 +20352,15 @@ void GL_APIENTRY ValidateProgramPipelineContextANGLE(GLeglContext ctx, GLuint pi
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        ProgramPipelineID pipelinePacked              = FromGL<ProgramPipelineID>(pipeline);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateValidateProgramPipeline(context, pipeline));
+            (context->skipValidation() || ValidateValidateProgramPipeline(context, pipelinePacked));
         if (isCallValid)
         {
-            context->validateProgramPipeline(pipeline);
+            context->validateProgramPipeline(pipelinePacked);
         }
-        ANGLE_CAPTURE(ValidateProgramPipeline, isCallValid, context, pipeline);
+        ANGLE_CAPTURE(ValidateProgramPipeline, isCallValid, context, pipelinePacked);
     }
 }
 

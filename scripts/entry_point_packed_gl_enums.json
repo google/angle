@@ -1041,5 +1041,32 @@
     },
     "glPathMemoryGlyphIndexArray": {
         "path": "PathID"
+    },
+    "glUseProgramStages": {
+        "pipeline": "ProgramPipelineID"
+    },
+    "glActiveShaderProgram": {
+        "pipeline": "ProgramPipelineID"
+    },
+    "glBindProgramPipeline": {
+        "pipeline": "ProgramPipelineID"
+    },
+    "glValidateProgramPipeline": {
+        "pipeline": "ProgramPipelineID"
+    },
+    "glGetProgramPipelineInfoLog": {
+        "pipeline": "ProgramPipelineID"
+    },
+    "glIsProgramPipeline": {
+        "pipeline": "ProgramPipelineID"
+    },
+    "glGetProgramPipelineiv": {
+        "pipeline": "ProgramPipelineID"
+    },
+    "glGenProgramPipelines": {
+        "pipelines": "ProgramPipelineID *"
+    },
+    "glDeleteProgramPipelines": {
+        "pipelines": "const ProgramPipelineID *"
     }
 }

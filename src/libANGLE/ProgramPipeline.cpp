@@ -26,8 +26,8 @@ const std::string &ProgramPipelineState::getLabel() const
     return mLabel;
 }
 
-ProgramPipeline::ProgramPipeline(rx::GLImplFactory *factory, GLuint handle)
-    : RefCountObject(handle), mProgramPipeline(factory->createProgramPipeline(mState))
+ProgramPipeline::ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID handle)
+    : RefCountObject(handle.value), mProgramPipeline(factory->createProgramPipeline(mState))
 {
     ASSERT(mProgramPipeline);
 }

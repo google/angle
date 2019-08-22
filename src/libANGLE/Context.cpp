@@ -730,7 +730,7 @@ void Context::genFencesNV(GLsizei n, FenceNVID *fences)
     }
 }
 
-GLuint Context::createProgramPipeline()
+ProgramPipelineID Context::createProgramPipeline()
 {
     return mState.mProgramPipelineManager->createProgramPipeline();
 }
@@ -801,7 +801,7 @@ void Context::deleteSync(GLsync sync)
     mState.mSyncManager->deleteObject(this, static_cast<GLuint>(reinterpret_cast<uintptr_t>(sync)));
 }
 
-void Context::deleteProgramPipeline(GLuint pipeline)
+void Context::deleteProgramPipeline(ProgramPipelineID pipeline)
 {
     if (mState.mProgramPipelineManager->getProgramPipeline(pipeline))
     {
@@ -988,7 +988,7 @@ TransformFeedback *Context::getTransformFeedback(GLuint handle) const
     return mTransformFeedbackMap.query(handle);
 }
 
-ProgramPipeline *Context::getProgramPipeline(GLuint handle) const
+ProgramPipeline *Context::getProgramPipeline(ProgramPipelineID handle) const
 {
     return mState.mProgramPipelineManager->getProgramPipeline(handle);
 }
@@ -1160,7 +1160,7 @@ void Context::useProgram(GLuint program)
     mStateCache.onProgramExecutableChange(this);
 }
 
-void Context::useProgramStages(GLuint pipeline, GLbitfield stages, GLuint program)
+void Context::useProgramStages(ProgramPipelineID pipeline, GLbitfield stages, GLuint program)
 {
     UNIMPLEMENTED();
 }
@@ -1173,7 +1173,7 @@ void Context::bindTransformFeedback(GLenum target, GLuint transformFeedbackHandl
     mState.setTransformFeedbackBinding(this, transformFeedback);
 }
 
-void Context::bindProgramPipeline(GLuint pipelineHandle)
+void Context::bindProgramPipeline(ProgramPipelineID pipelineHandle)
 {
     ProgramPipeline *pipeline = mState.mProgramPipelineManager->checkProgramPipelineAllocation(
         mImplementation.get(), pipelineHandle);
@@ -2858,7 +2858,7 @@ void Context::detachSampler(SamplerID sampler)
     mState.detachSampler(this, sampler);
 }
 
-void Context::detachProgramPipeline(GLuint pipeline)
+void Context::detachProgramPipeline(ProgramPipelineID pipeline)
 {
     mState.detachProgramPipeline(this, pipeline);
 }
@@ -4627,7 +4627,7 @@ angle::Result Context::syncStateForPathOperation()
     return angle::Result::Continue;
 }
 
-void Context::activeShaderProgram(GLuint pipeline, GLuint program)
+void Context::activeShaderProgram(ProgramPipelineID pipeline, GLuint program)
 {
     UNIMPLEMENTED();
 }
@@ -6105,7 +6105,7 @@ void Context::getProgramivRobust(GLuint program,
     getProgramiv(program, pname, params);
 }
 
-void Context::getProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *params)
+void Context::getProgramPipelineiv(ProgramPipelineID pipeline, GLenum pname, GLint *params)
 {
     UNIMPLEMENTED();
 }
@@ -6127,7 +6127,7 @@ void Context::getProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei *length
     programObject->getInfoLog(bufsize, length, infolog);
 }
 
-void Context::getProgramPipelineInfoLog(GLuint pipeline,
+void Context::getProgramPipelineInfoLog(ProgramPipelineID pipeline,
                                         GLsizei bufSize,
                                         GLsizei *length,
                                         GLchar *infoLog)
@@ -6569,7 +6569,7 @@ void Context::validateProgram(GLuint program)
     programObject->validate(mState.mCaps);
 }
 
-void Context::validateProgramPipeline(GLuint pipeline)
+void Context::validateProgramPipeline(ProgramPipelineID pipeline)
 {
     UNIMPLEMENTED();
 }
@@ -7363,7 +7363,7 @@ bool Context::isCurrentTransformFeedback(const TransformFeedback *tf) const
     return mState.isCurrentTransformFeedback(tf);
 }
 
-void Context::genProgramPipelines(GLsizei count, GLuint *pipelines)
+void Context::genProgramPipelines(GLsizei count, ProgramPipelineID *pipelines)
 {
     for (int i = 0; i < count; i++)
     {
@@ -7371,20 +7371,20 @@ void Context::genProgramPipelines(GLsizei count, GLuint *pipelines)
     }
 }
 
-void Context::deleteProgramPipelines(GLsizei count, const GLuint *pipelines)
+void Context::deleteProgramPipelines(GLsizei count, const ProgramPipelineID *pipelines)
 {
     for (int i = 0; i < count; i++)
     {
-        if (pipelines[i] != 0)
+        if (pipelines[i].value != 0)
         {
             deleteProgramPipeline(pipelines[i]);
         }
     }
 }
 
-GLboolean Context::isProgramPipeline(GLuint pipeline)
+GLboolean Context::isProgramPipeline(ProgramPipelineID pipeline)
 {
-    if (pipeline == 0)
+    if (pipeline.value == 0)
     {
         return GL_FALSE;
     }
@@ -8611,7 +8611,7 @@ bool Context::isFramebufferGenerated(GLuint framebuffer) const
     return mState.mFramebufferManager->isHandleGenerated(framebuffer);
 }
 
-bool Context::isProgramPipelineGenerated(GLuint pipeline) const
+bool Context::isProgramPipelineGenerated(ProgramPipelineID pipeline) const
 {
     return mState.mProgramPipelineManager->isHandleGenerated(pipeline);
 }

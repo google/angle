@@ -22,12 +22,12 @@ namespace gl
 
 CallCapture CaptureActiveShaderProgram(const Context *context,
                                        bool isCallValid,
-                                       GLuint pipeline,
+                                       ProgramPipelineID pipelinePacked,
                                        GLuint program)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pipeline", ParamType::TGLuint, pipeline);
+    paramBuffer.addValueParam("pipelinePacked", ParamType::TProgramPipelineID, pipelinePacked);
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
 
     return CallCapture(gl::EntryPoint::ActiveShaderProgram, std::move(paramBuffer));
@@ -56,11 +56,13 @@ CallCapture CaptureBindImageTexture(const Context *context,
     return CallCapture(gl::EntryPoint::BindImageTexture, std::move(paramBuffer));
 }
 
-CallCapture CaptureBindProgramPipeline(const Context *context, bool isCallValid, GLuint pipeline)
+CallCapture CaptureBindProgramPipeline(const Context *context,
+                                       bool isCallValid,
+                                       ProgramPipelineID pipelinePacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pipeline", ParamType::TGLuint, pipeline);
+    paramBuffer.addValueParam("pipelinePacked", ParamType::TProgramPipelineID, pipelinePacked);
 
     return CallCapture(gl::EntryPoint::BindProgramPipeline, std::move(paramBuffer));
 }
@@ -110,16 +112,18 @@ CallCapture CaptureCreateShaderProgramv(const Context *context,
 CallCapture CaptureDeleteProgramPipelines(const Context *context,
                                           bool isCallValid,
                                           GLsizei n,
-                                          const GLuint *pipelines)
+                                          const ProgramPipelineID *pipelinesPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture pipelinesParam("pipelines", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, pipelines, &pipelinesParam.value);
-    CaptureDeleteProgramPipelines_pipelines(context, isCallValid, n, pipelines, &pipelinesParam);
-    paramBuffer.addParam(std::move(pipelinesParam));
+    ParamCapture pipelinesPackedParam("pipelinesPacked", ParamType::TProgramPipelineIDConstPointer);
+    InitParamValue(ParamType::TProgramPipelineIDConstPointer, pipelinesPacked,
+                   &pipelinesPackedParam.value);
+    CaptureDeleteProgramPipelines_pipelinesPacked(context, isCallValid, n, pipelinesPacked,
+                                                  &pipelinesPackedParam);
+    paramBuffer.addParam(std::move(pipelinesPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteProgramPipelines, std::move(paramBuffer));
 }
@@ -206,16 +210,18 @@ CallCapture CaptureFramebufferParameteri(const Context *context,
 CallCapture CaptureGenProgramPipelines(const Context *context,
                                        bool isCallValid,
                                        GLsizei n,
-                                       GLuint *pipelines)
+                                       ProgramPipelineID *pipelinesPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture pipelinesParam("pipelines", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, pipelines, &pipelinesParam.value);
-    CaptureGenProgramPipelines_pipelines(context, isCallValid, n, pipelines, &pipelinesParam);
-    paramBuffer.addParam(std::move(pipelinesParam));
+    ParamCapture pipelinesPackedParam("pipelinesPacked", ParamType::TProgramPipelineIDPointer);
+    InitParamValue(ParamType::TProgramPipelineIDPointer, pipelinesPacked,
+                   &pipelinesPackedParam.value);
+    CaptureGenProgramPipelines_pipelinesPacked(context, isCallValid, n, pipelinesPacked,
+                                               &pipelinesPackedParam);
+    paramBuffer.addParam(std::move(pipelinesPackedParam));
 
     return CallCapture(gl::EntryPoint::GenProgramPipelines, std::move(paramBuffer));
 }
@@ -305,25 +311,25 @@ CallCapture CaptureGetProgramInterfaceiv(const Context *context,
 
 CallCapture CaptureGetProgramPipelineInfoLog(const Context *context,
                                              bool isCallValid,
-                                             GLuint pipeline,
+                                             ProgramPipelineID pipelinePacked,
                                              GLsizei bufSize,
                                              GLsizei *length,
                                              GLchar *infoLog)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pipeline", ParamType::TGLuint, pipeline);
+    paramBuffer.addValueParam("pipelinePacked", ParamType::TProgramPipelineID, pipelinePacked);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetProgramPipelineInfoLog_length(context, isCallValid, pipeline, bufSize, length,
+    CaptureGetProgramPipelineInfoLog_length(context, isCallValid, pipelinePacked, bufSize, length,
                                             infoLog, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture infoLogParam("infoLog", ParamType::TGLcharPointer);
     InitParamValue(ParamType::TGLcharPointer, infoLog, &infoLogParam.value);
-    CaptureGetProgramPipelineInfoLog_infoLog(context, isCallValid, pipeline, bufSize, length,
+    CaptureGetProgramPipelineInfoLog_infoLog(context, isCallValid, pipelinePacked, bufSize, length,
                                              infoLog, &infoLogParam);
     paramBuffer.addParam(std::move(infoLogParam));
 
@@ -332,19 +338,20 @@ CallCapture CaptureGetProgramPipelineInfoLog(const Context *context,
 
 CallCapture CaptureGetProgramPipelineiv(const Context *context,
                                         bool isCallValid,
-                                        GLuint pipeline,
+                                        ProgramPipelineID pipelinePacked,
                                         GLenum pname,
                                         GLint *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pipeline", ParamType::TGLuint, pipeline);
+    paramBuffer.addValueParam("pipelinePacked", ParamType::TProgramPipelineID, pipelinePacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::PipelineParameterName, ParamType::TGLenum,
                              pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetProgramPipelineiv_params(context, isCallValid, pipeline, pname, params, &paramsParam);
+    CaptureGetProgramPipelineiv_params(context, isCallValid, pipelinePacked, pname, params,
+                                       &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetProgramPipelineiv, std::move(paramBuffer));
@@ -522,12 +529,12 @@ CallCapture CaptureGetTexLevelParameteriv(const Context *context,
 
 CallCapture CaptureIsProgramPipeline(const Context *context,
                                      bool isCallValid,
-                                     GLuint pipeline,
+                                     ProgramPipelineID pipelinePacked,
                                      GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pipeline", ParamType::TGLuint, pipeline);
+    paramBuffer.addValueParam("pipelinePacked", ParamType::TProgramPipelineID, pipelinePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
@@ -1291,13 +1298,13 @@ CallCapture CaptureTexStorage2DMultisample(const Context *context,
 
 CallCapture CaptureUseProgramStages(const Context *context,
                                     bool isCallValid,
-                                    GLuint pipeline,
+                                    ProgramPipelineID pipelinePacked,
                                     GLbitfield stages,
                                     GLuint program)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pipeline", ParamType::TGLuint, pipeline);
+    paramBuffer.addValueParam("pipelinePacked", ParamType::TProgramPipelineID, pipelinePacked);
     paramBuffer.addEnumParam("stages", GLenumGroup::UseProgramStageMask, ParamType::TGLbitfield,
                              stages);
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
@@ -1307,11 +1314,11 @@ CallCapture CaptureUseProgramStages(const Context *context,
 
 CallCapture CaptureValidateProgramPipeline(const Context *context,
                                            bool isCallValid,
-                                           GLuint pipeline)
+                                           ProgramPipelineID pipelinePacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pipeline", ParamType::TGLuint, pipeline);
+    paramBuffer.addValueParam("pipelinePacked", ParamType::TProgramPipelineID, pipelinePacked);
 
     return CallCapture(gl::EntryPoint::ValidateProgramPipeline, std::move(paramBuffer));
 }

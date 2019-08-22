@@ -115,7 +115,7 @@ template class TypedResourceManager<Framebuffer, HandleAllocator, FramebufferMan
 template class TypedResourceManager<ProgramPipeline,
                                     HandleAllocator,
                                     ProgramPipelineManager,
-                                    GLuint>;
+                                    ProgramPipelineID>;
 
 // BufferManager Implementation.
 
@@ -465,7 +465,7 @@ void FramebufferManager::invalidateFramebufferComplenessCache() const
 
 // static
 ProgramPipeline *ProgramPipelineManager::AllocateNewObject(rx::GLImplFactory *factory,
-                                                           GLuint handle)
+                                                           ProgramPipelineID handle)
 {
     ProgramPipeline *pipeline = new ProgramPipeline(factory, handle);
     pipeline->addRef();
@@ -478,12 +478,12 @@ void ProgramPipelineManager::DeleteObject(const Context *context, ProgramPipelin
     pipeline->release(context);
 }
 
-GLuint ProgramPipelineManager::createProgramPipeline()
+ProgramPipelineID ProgramPipelineManager::createProgramPipeline()
 {
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
-ProgramPipeline *ProgramPipelineManager::getProgramPipeline(GLuint handle) const
+ProgramPipeline *ProgramPipelineManager::getProgramPipeline(ProgramPipelineID handle) const
 {
     return mObjectMap.query(handle);
 }

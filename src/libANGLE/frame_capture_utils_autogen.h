@@ -91,6 +91,9 @@ enum class ParamType
     TPathID,
     TPointParameter,
     TPrimitiveMode,
+    TProgramPipelineID,
+    TProgramPipelineIDConstPointer,
+    TProgramPipelineIDPointer,
     TProvokingVertexConvention,
     TQueryID,
     TQueryIDConstPointer,
@@ -194,6 +197,9 @@ union ParamValue
     gl::PathID PathIDVal;
     gl::PointParameter PointParameterVal;
     gl::PrimitiveMode PrimitiveModeVal;
+    gl::ProgramPipelineID ProgramPipelineIDVal;
+    const gl::ProgramPipelineID *ProgramPipelineIDConstPointerVal;
+    gl::ProgramPipelineID *ProgramPipelineIDPointerVal;
     gl::ProvokingVertexConvention ProvokingVertexConventionVal;
     gl::QueryID QueryIDVal;
     const gl::QueryID *QueryIDConstPointerVal;
@@ -705,6 +711,28 @@ inline gl::PrimitiveMode GetParamVal<ParamType::TPrimitiveMode, gl::PrimitiveMod
 }
 
 template <>
+inline gl::ProgramPipelineID GetParamVal<ParamType::TProgramPipelineID, gl::ProgramPipelineID>(
+    const ParamValue &value)
+{
+    return value.ProgramPipelineIDVal;
+}
+
+template <>
+inline const gl::ProgramPipelineID *
+GetParamVal<ParamType::TProgramPipelineIDConstPointer, const gl::ProgramPipelineID *>(
+    const ParamValue &value)
+{
+    return value.ProgramPipelineIDConstPointerVal;
+}
+
+template <>
+inline gl::ProgramPipelineID *
+GetParamVal<ParamType::TProgramPipelineIDPointer, gl::ProgramPipelineID *>(const ParamValue &value)
+{
+    return value.ProgramPipelineIDPointerVal;
+}
+
+template <>
 inline gl::ProvokingVertexConvention
 GetParamVal<ParamType::TProvokingVertexConvention, gl::ProvokingVertexConvention>(
     const ParamValue &value)
@@ -1031,6 +1059,12 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TPointParameter, T>(value);
         case ParamType::TPrimitiveMode:
             return GetParamVal<ParamType::TPrimitiveMode, T>(value);
+        case ParamType::TProgramPipelineID:
+            return GetParamVal<ParamType::TProgramPipelineID, T>(value);
+        case ParamType::TProgramPipelineIDConstPointer:
+            return GetParamVal<ParamType::TProgramPipelineIDConstPointer, T>(value);
+        case ParamType::TProgramPipelineIDPointer:
+            return GetParamVal<ParamType::TProgramPipelineIDPointer, T>(value);
         case ParamType::TProvokingVertexConvention:
             return GetParamVal<ParamType::TProvokingVertexConvention, T>(value);
         case ParamType::TQueryID:
@@ -1554,6 +1588,28 @@ inline void SetParamVal<ParamType::TPrimitiveMode>(gl::PrimitiveMode valueIn, Pa
 }
 
 template <>
+inline void SetParamVal<ParamType::TProgramPipelineID>(gl::ProgramPipelineID valueIn,
+                                                       ParamValue *valueOut)
+{
+    valueOut->ProgramPipelineIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TProgramPipelineIDConstPointer>(
+    const gl::ProgramPipelineID *valueIn,
+    ParamValue *valueOut)
+{
+    valueOut->ProgramPipelineIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TProgramPipelineIDPointer>(gl::ProgramPipelineID *valueIn,
+                                                              ParamValue *valueOut)
+{
+    valueOut->ProgramPipelineIDPointerVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TProvokingVertexConvention>(
     gl::ProvokingVertexConvention valueIn,
     ParamValue *valueOut)
@@ -1947,6 +2003,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TPrimitiveMode:
             SetParamVal<ParamType::TPrimitiveMode>(valueIn, valueOut);
+            break;
+        case ParamType::TProgramPipelineID:
+            SetParamVal<ParamType::TProgramPipelineID>(valueIn, valueOut);
+            break;
+        case ParamType::TProgramPipelineIDConstPointer:
+            SetParamVal<ParamType::TProgramPipelineIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TProgramPipelineIDPointer:
+            SetParamVal<ParamType::TProgramPipelineIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TProvokingVertexConvention:
             SetParamVal<ParamType::TProvokingVertexConvention>(valueIn, valueOut);

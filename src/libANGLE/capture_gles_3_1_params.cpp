@@ -23,11 +23,11 @@ void CaptureCreateShaderProgramv_strings(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteProgramPipelines_pipelines(const Context *context,
-                                             bool isCallValid,
-                                             GLsizei n,
-                                             const GLuint *pipelines,
-                                             ParamCapture *paramCapture)
+void CaptureDeleteProgramPipelines_pipelinesPacked(const Context *context,
+                                                   bool isCallValid,
+                                                   GLsizei n,
+                                                   const ProgramPipelineID *pipelines,
+                                                   ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -51,11 +51,11 @@ void CaptureDrawElementsIndirect_indirect(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGenProgramPipelines_pipelines(const Context *context,
-                                          bool isCallValid,
-                                          GLsizei n,
-                                          GLuint *pipelines,
-                                          ParamCapture *paramCapture)
+void CaptureGenProgramPipelines_pipelinesPacked(const Context *context,
+                                                bool isCallValid,
+                                                GLsizei n,
+                                                ProgramPipelineID *pipelines,
+                                                ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -103,7 +103,7 @@ void CaptureGetProgramInterfaceiv_params(const Context *context,
 
 void CaptureGetProgramPipelineInfoLog_length(const Context *context,
                                              bool isCallValid,
-                                             GLuint pipeline,
+                                             ProgramPipelineID pipeline,
                                              GLsizei bufSize,
                                              GLsizei *length,
                                              GLchar *infoLog,
@@ -114,7 +114,7 @@ void CaptureGetProgramPipelineInfoLog_length(const Context *context,
 
 void CaptureGetProgramPipelineInfoLog_infoLog(const Context *context,
                                               bool isCallValid,
-                                              GLuint pipeline,
+                                              ProgramPipelineID pipeline,
                                               GLsizei bufSize,
                                               GLsizei *length,
                                               GLchar *infoLog,
@@ -125,7 +125,7 @@ void CaptureGetProgramPipelineInfoLog_infoLog(const Context *context,
 
 void CaptureGetProgramPipelineiv_params(const Context *context,
                                         bool isCallValid,
-                                        GLuint pipeline,
+                                        ProgramPipelineID pipeline,
                                         GLenum pname,
                                         GLint *params,
                                         ParamCapture *paramCapture)

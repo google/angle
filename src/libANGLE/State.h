@@ -325,7 +325,7 @@ class State : angle::NonCopyable
 
     // Program Pipeline binding manipulation
     void setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline);
-    void detachProgramPipeline(const Context *context, GLuint pipeline);
+    void detachProgramPipeline(const Context *context, ProgramPipelineID pipeline);
 
     //// Typed buffer binding point manipulation ////
     ANGLE_INLINE void setBufferBinding(const Context *context, BufferBinding target, Buffer *buffer)

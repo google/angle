@@ -268,6 +268,18 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
         case ParamType::TPrimitiveMode:
             WriteParamValueToStream<ParamType::TPrimitiveMode>(os, paramValue.PrimitiveModeVal);
             break;
+        case ParamType::TProgramPipelineID:
+            WriteParamValueToStream<ParamType::TProgramPipelineID>(os,
+                                                                   paramValue.ProgramPipelineIDVal);
+            break;
+        case ParamType::TProgramPipelineIDConstPointer:
+            WriteParamValueToStream<ParamType::TProgramPipelineIDConstPointer>(
+                os, paramValue.ProgramPipelineIDConstPointerVal);
+            break;
+        case ParamType::TProgramPipelineIDPointer:
+            WriteParamValueToStream<ParamType::TProgramPipelineIDPointer>(
+                os, paramValue.ProgramPipelineIDPointerVal);
+            break;
         case ParamType::TProvokingVertexConvention:
             WriteParamValueToStream<ParamType::TProvokingVertexConvention>(
                 os, paramValue.ProvokingVertexConventionVal);
@@ -515,6 +527,12 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLenum";
         case ParamType::TPrimitiveMode:
             return "GLenum";
+        case ParamType::TProgramPipelineID:
+            return "GLuint";
+        case ParamType::TProgramPipelineIDConstPointer:
+            return "const GLuint *";
+        case ParamType::TProgramPipelineIDPointer:
+            return "GLuint *";
         case ParamType::TProvokingVertexConvention:
             return "GLenum";
         case ParamType::TQueryID:

@@ -1653,17 +1653,17 @@ static bool ValidateGenOrDeleteES31(Context *context, GLint n)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateGenProgramPipelines(Context *context, GLint n, GLuint *)
+bool ValidateGenProgramPipelines(Context *context, GLint n, ProgramPipelineID *pipelines)
 {
     return ValidateGenOrDeleteES31(context, n);
 }
 
-bool ValidateDeleteProgramPipelines(Context *context, GLint n, const GLuint *)
+bool ValidateDeleteProgramPipelines(Context *context, GLint n, const ProgramPipelineID *pipelines)
 {
     return ValidateGenOrDeleteES31(context, n);
 }
 
-bool ValidateBindProgramPipeline(Context *context, GLuint pipeline)
+bool ValidateBindProgramPipeline(Context *context, ProgramPipelineID pipeline)
 {
     if (context->getClientVersion() < ES_3_1)
     {
@@ -1671,7 +1671,7 @@ bool ValidateBindProgramPipeline(Context *context, GLuint pipeline)
         return false;
     }
 
-    if (!context->isProgramPipelineGenerated(pipeline))
+    if (!context->isProgramPipelineGenerated({pipeline}))
     {
         context->validationError(GL_INVALID_OPERATION, kObjectNotGenerated);
         return false;
@@ -1680,7 +1680,7 @@ bool ValidateBindProgramPipeline(Context *context, GLuint pipeline)
     return true;
 }
 
-bool ValidateIsProgramPipeline(Context *context, GLuint pipeline)
+bool ValidateIsProgramPipeline(Context *context, ProgramPipelineID pipeline)
 {
     if (context->getClientVersion() < ES_3_1)
     {
@@ -1691,13 +1691,16 @@ bool ValidateIsProgramPipeline(Context *context, GLuint pipeline)
     return true;
 }
 
-bool ValidateUseProgramStages(Context *context, GLuint pipeline, GLbitfield stages, GLuint program)
+bool ValidateUseProgramStages(Context *context,
+                              ProgramPipelineID pipeline,
+                              GLbitfield stages,
+                              GLuint program)
 {
     UNIMPLEMENTED();
     return false;
 }
 
-bool ValidateActiveShaderProgram(Context *context, GLuint pipeline, GLuint program)
+bool ValidateActiveShaderProgram(Context *context, ProgramPipelineID pipeline, GLuint program)
 {
     UNIMPLEMENTED();
     return false;
@@ -1712,20 +1715,23 @@ bool ValidateCreateShaderProgramv(Context *context,
     return false;
 }
 
-bool ValidateGetProgramPipelineiv(Context *context, GLuint pipeline, GLenum pname, GLint *params)
+bool ValidateGetProgramPipelineiv(Context *context,
+                                  ProgramPipelineID pipeline,
+                                  GLenum pname,
+                                  GLint *params)
 {
     UNIMPLEMENTED();
     return false;
 }
 
-bool ValidateValidateProgramPipeline(Context *context, GLuint pipeline)
+bool ValidateValidateProgramPipeline(Context *context, ProgramPipelineID pipeline)
 {
     UNIMPLEMENTED();
     return false;
 }
 
 bool ValidateGetProgramPipelineInfoLog(Context *context,
-                                       GLuint pipeline,
+                                       ProgramPipelineID pipeline,
                                        GLsizei bufSize,
                                        GLsizei *length,
                                        GLchar *infoLog)

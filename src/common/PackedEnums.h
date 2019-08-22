@@ -381,6 +381,11 @@ struct BufferID
     GLuint value;
 };
 
+struct ProgramPipelineID
+{
+    GLuint value;
+};
+
 struct RenderbufferID
 {
     GLuint value;

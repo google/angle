@@ -45,7 +45,7 @@ class ProgramPipelineState final : angle::NonCopyable
 class ProgramPipeline final : public RefCountObject, public LabeledObject
 {
   public:
-    ProgramPipeline(rx::GLImplFactory *factory, GLuint handle);
+    ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID handle);
     ~ProgramPipeline() override;
 
     void onDestroy(const Context *context) override;

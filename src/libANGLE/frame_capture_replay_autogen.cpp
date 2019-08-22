@@ -29,7 +29,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
     {
         case gl::EntryPoint::ActiveShaderProgram:
             context->activeShaderProgram(
-                params.getParam("pipeline", ParamType::TGLuint, 0).value.GLuintVal,
+                params.getParam("pipelinePacked", ParamType::TProgramPipelineID, 0)
+                    .value.ProgramPipelineIDVal,
                 params.getParam("program", ParamType::TGLuint, 1).value.GLuintVal);
             break;
         case gl::EntryPoint::ActiveTexture:
@@ -121,7 +122,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::BindProgramPipeline:
             context->bindProgramPipeline(
-                params.getParam("pipeline", ParamType::TGLuint, 0).value.GLuintVal);
+                params.getParam("pipelinePacked", ParamType::TProgramPipelineID, 0)
+                    .value.ProgramPipelineIDVal);
             break;
         case gl::EntryPoint::BindRenderbuffer:
             context->bindRenderbuffer(
@@ -498,8 +500,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
         case gl::EntryPoint::DeleteProgramPipelines:
             context->deleteProgramPipelines(
                 params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                replayContext->getAsConstPointer<const GLuint *>(
-                    params.getParam("pipelines", ParamType::TGLuintConstPointer, 1)));
+                replayContext->getAsConstPointer<const ProgramPipelineID *>(params.getParam(
+                    "pipelinesPacked", ParamType::TProgramPipelineIDConstPointer, 1)));
             break;
         case gl::EntryPoint::DeleteQueries:
             context->deleteQueries(
@@ -810,8 +812,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
         case gl::EntryPoint::GenProgramPipelines:
             context->genProgramPipelines(
                 params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                replayContext->getReadBufferPointer<GLuint *>(
-                    params.getParam("pipelines", ParamType::TGLuintPointer, 1)));
+                replayContext->getReadBufferPointer<ProgramPipelineID *>(
+                    params.getParam("pipelinesPacked", ParamType::TProgramPipelineIDPointer, 1)));
             break;
         case gl::EntryPoint::GenQueries:
             context->genQueries(params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
@@ -1154,7 +1156,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::GetProgramPipelineInfoLog:
             context->getProgramPipelineInfoLog(
-                params.getParam("pipeline", ParamType::TGLuint, 0).value.GLuintVal,
+                params.getParam("pipelinePacked", ParamType::TProgramPipelineID, 0)
+                    .value.ProgramPipelineIDVal,
                 params.getParam("bufSize", ParamType::TGLsizei, 1).value.GLsizeiVal,
                 replayContext->getReadBufferPointer<GLsizei *>(
                     params.getParam("length", ParamType::TGLsizeiPointer, 2)),
@@ -1163,7 +1166,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::GetProgramPipelineiv:
             context->getProgramPipelineiv(
-                params.getParam("pipeline", ParamType::TGLuint, 0).value.GLuintVal,
+                params.getParam("pipelinePacked", ParamType::TProgramPipelineID, 0)
+                    .value.ProgramPipelineIDVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLint *>(
                     params.getParam("params", ParamType::TGLintPointer, 2)));
@@ -1575,7 +1579,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::IsProgramPipeline:
             context->isProgramPipeline(
-                params.getParam("pipeline", ParamType::TGLuint, 0).value.GLuintVal);
+                params.getParam("pipelinePacked", ParamType::TProgramPipelineID, 0)
+                    .value.ProgramPipelineIDVal);
             break;
         case gl::EntryPoint::IsQuery:
             context->isQuery(params.getParam("idPacked", ParamType::TQueryID, 0).value.QueryIDVal);
@@ -2845,7 +2850,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::UseProgramStages:
             context->useProgramStages(
-                params.getParam("pipeline", ParamType::TGLuint, 0).value.GLuintVal,
+                params.getParam("pipelinePacked", ParamType::TProgramPipelineID, 0)
+                    .value.ProgramPipelineIDVal,
                 params.getParam("stages", ParamType::TGLbitfield, 1).value.GLbitfieldVal,
                 params.getParam("program", ParamType::TGLuint, 2).value.GLuintVal);
             break;
@@ -2855,7 +2861,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::ValidateProgramPipeline:
             context->validateProgramPipeline(
-                params.getParam("pipeline", ParamType::TGLuint, 0).value.GLuintVal);
+                params.getParam("pipelinePacked", ParamType::TProgramPipelineID, 0)
+                    .value.ProgramPipelineIDVal);
             break;
         case gl::EntryPoint::VertexAttrib1f:
             context->vertexAttrib1f(params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,

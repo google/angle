@@ -22,7 +22,7 @@ class Context;
 
 angle::CallCapture CaptureActiveShaderProgram(const Context *context,
                                               bool isCallValid,
-                                              GLuint pipeline,
+                                              ProgramPipelineID pipelinePacked,
                                               GLuint program);
 angle::CallCapture CaptureBindImageTexture(const Context *context,
                                            bool isCallValid,
@@ -35,7 +35,7 @@ angle::CallCapture CaptureBindImageTexture(const Context *context,
                                            GLenum format);
 angle::CallCapture CaptureBindProgramPipeline(const Context *context,
                                               bool isCallValid,
-                                              GLuint pipeline);
+                                              ProgramPipelineID pipelinePacked);
 angle::CallCapture CaptureBindVertexBuffer(const Context *context,
                                            bool isCallValid,
                                            GLuint bindingindex,
@@ -51,7 +51,7 @@ angle::CallCapture CaptureCreateShaderProgramv(const Context *context,
 angle::CallCapture CaptureDeleteProgramPipelines(const Context *context,
                                                  bool isCallValid,
                                                  GLsizei n,
-                                                 const GLuint *pipelines);
+                                                 const ProgramPipelineID *pipelinesPacked);
 angle::CallCapture CaptureDispatchCompute(const Context *context,
                                           bool isCallValid,
                                           GLuint num_groups_x,
@@ -77,7 +77,7 @@ angle::CallCapture CaptureFramebufferParameteri(const Context *context,
 angle::CallCapture CaptureGenProgramPipelines(const Context *context,
                                               bool isCallValid,
                                               GLsizei n,
-                                              GLuint *pipelines);
+                                              ProgramPipelineID *pipelinesPacked);
 angle::CallCapture CaptureGetBooleani_v(const Context *context,
                                         bool isCallValid,
                                         GLenum target,
@@ -101,13 +101,13 @@ angle::CallCapture CaptureGetProgramInterfaceiv(const Context *context,
                                                 GLint *params);
 angle::CallCapture CaptureGetProgramPipelineInfoLog(const Context *context,
                                                     bool isCallValid,
-                                                    GLuint pipeline,
+                                                    ProgramPipelineID pipelinePacked,
                                                     GLsizei bufSize,
                                                     GLsizei *length,
                                                     GLchar *infoLog);
 angle::CallCapture CaptureGetProgramPipelineiv(const Context *context,
                                                bool isCallValid,
-                                               GLuint pipeline,
+                                               ProgramPipelineID pipelinePacked,
                                                GLenum pname,
                                                GLint *params);
 angle::CallCapture CaptureGetProgramResourceIndex(const Context *context,
@@ -154,7 +154,7 @@ angle::CallCapture CaptureGetTexLevelParameteriv(const Context *context,
                                                  GLint *params);
 angle::CallCapture CaptureIsProgramPipeline(const Context *context,
                                             bool isCallValid,
-                                            GLuint pipeline,
+                                            ProgramPipelineID pipelinePacked,
                                             GLboolean returnValue);
 angle::CallCapture CaptureMemoryBarrier(const Context *context,
                                         bool isCallValid,
@@ -389,12 +389,12 @@ angle::CallCapture CaptureTexStorage2DMultisample(const Context *context,
                                                   GLboolean fixedsamplelocations);
 angle::CallCapture CaptureUseProgramStages(const Context *context,
                                            bool isCallValid,
-                                           GLuint pipeline,
+                                           ProgramPipelineID pipelinePacked,
                                            GLbitfield stages,
                                            GLuint program);
 angle::CallCapture CaptureValidateProgramPipeline(const Context *context,
                                                   bool isCallValid,
-                                                  GLuint pipeline);
+                                                  ProgramPipelineID pipelinePacked);
 angle::CallCapture CaptureVertexAttribBinding(const Context *context,
                                               bool isCallValid,
                                               GLuint attribindex,
@@ -425,11 +425,11 @@ void CaptureCreateShaderProgramv_strings(const Context *context,
                                          GLsizei count,
                                          const GLchar *const *strings,
                                          angle::ParamCapture *paramCapture);
-void CaptureDeleteProgramPipelines_pipelines(const Context *context,
-                                             bool isCallValid,
-                                             GLsizei n,
-                                             const GLuint *pipelines,
-                                             angle::ParamCapture *paramCapture);
+void CaptureDeleteProgramPipelines_pipelinesPacked(const Context *context,
+                                                   bool isCallValid,
+                                                   GLsizei n,
+                                                   const ProgramPipelineID *pipelinesPacked,
+                                                   angle::ParamCapture *paramCapture);
 void CaptureDrawArraysIndirect_indirect(const Context *context,
                                         bool isCallValid,
                                         PrimitiveMode modePacked,
@@ -441,11 +441,11 @@ void CaptureDrawElementsIndirect_indirect(const Context *context,
                                           DrawElementsType typePacked,
                                           const void *indirect,
                                           angle::ParamCapture *paramCapture);
-void CaptureGenProgramPipelines_pipelines(const Context *context,
-                                          bool isCallValid,
-                                          GLsizei n,
-                                          GLuint *pipelines,
-                                          angle::ParamCapture *paramCapture);
+void CaptureGenProgramPipelines_pipelinesPacked(const Context *context,
+                                                bool isCallValid,
+                                                GLsizei n,
+                                                ProgramPipelineID *pipelinesPacked,
+                                                angle::ParamCapture *paramCapture);
 void CaptureGetBooleani_v_data(const Context *context,
                                bool isCallValid,
                                GLenum target,
@@ -473,21 +473,21 @@ void CaptureGetProgramInterfaceiv_params(const Context *context,
                                          angle::ParamCapture *paramCapture);
 void CaptureGetProgramPipelineInfoLog_length(const Context *context,
                                              bool isCallValid,
-                                             GLuint pipeline,
+                                             ProgramPipelineID pipelinePacked,
                                              GLsizei bufSize,
                                              GLsizei *length,
                                              GLchar *infoLog,
                                              angle::ParamCapture *paramCapture);
 void CaptureGetProgramPipelineInfoLog_infoLog(const Context *context,
                                               bool isCallValid,
-                                              GLuint pipeline,
+                                              ProgramPipelineID pipelinePacked,
                                               GLsizei bufSize,
                                               GLsizei *length,
                                               GLchar *infoLog,
                                               angle::ParamCapture *paramCapture);
 void CaptureGetProgramPipelineiv_params(const Context *context,
                                         bool isCallValid,
-                                        GLuint pipeline,
+                                        ProgramPipelineID pipelinePacked,
                                         GLenum pname,
                                         GLint *params,
                                         angle::ParamCapture *paramCapture);
