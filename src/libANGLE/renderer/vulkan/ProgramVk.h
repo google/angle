@@ -123,6 +123,7 @@ class ProgramVk : public ProgramImpl
     bool hasUniformBuffers() const { return !mState.getUniformBlocks().empty(); }
     bool hasStorageBuffers() const { return !mState.getShaderStorageBlocks().empty(); }
     bool hasAtomicCounterBuffers() const { return !mState.getAtomicCounterBuffers().empty(); }
+    bool hasImages() const { return !mState.getImageBindings().empty(); }
     bool hasTransformFeedbackOutput() const
     {
         return !mState.getLinkedTransformFeedbackVaryings().empty();
@@ -190,6 +191,8 @@ class ProgramVk : public ProgramImpl
                                     VkDescriptorType descriptorType);
     void updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
                                                  vk::CommandGraphResource *recorder);
+    angle::Result updateImagesDescriptorSet(ContextVk *contextVk,
+                                            vk::CommandGraphResource *recorder);
 
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;
@@ -206,6 +209,7 @@ class ProgramVk : public ProgramImpl
     {
         return mAtomicCounterBufferBindingsOffset;
     }
+    uint32_t getImageBindingsOffset() const { return mImageBindingsOffset; }
 
     class ShaderInfo;
     ANGLE_INLINE angle::Result initShaders(ContextVk *contextVk,
@@ -321,10 +325,11 @@ class ProgramVk : public ProgramImpl
     gl::ShaderMap<std::string> mShaderSources;
 
     // In their descriptor set, uniform buffers are placed first, then storage buffers, then atomic
-    // counter buffers.  These cached values contain the offsets where storage buffer and atomic
-    // counter buffer bindings start.
+    // counter buffers and then images.  These cached values contain the offsets where storage
+    // buffer, atomic counter buffer and image bindings start.
     uint32_t mStorageBlockBindingsOffset;
     uint32_t mAtomicCounterBufferBindingsOffset;
+    uint32_t mImageBindingsOffset;
 
     // Store descriptor pools here. We store the descriptors in the Program to facilitate descriptor
     // cache management. It can also allow fewer descriptors for shaders which use fewer

@@ -241,7 +241,11 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                      const char *file,
                      const char *function,
                      unsigned int line) override;
-    const gl::ActiveTextureArray<vk::TextureUnit> &getActiveTextures() const;
+    const gl::ActiveTextureArray<vk::TextureUnit> &getActiveTextures() const
+    {
+        return mActiveTextures;
+    }
+    const gl::ActiveTextureArray<TextureVk *> &getActiveImages() const { return mActiveImages; }
 
     void setIndexBufferDirty()
     {
@@ -407,6 +411,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     angle::Result updateActiveTextures(const gl::Context *context,
                                        vk::CommandGraphResource *recorder);
+    angle::Result updateActiveImages(const gl::Context *context,
+                                     vk::CommandGraphResource *recorder);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
     ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
@@ -587,6 +593,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // index (also in the shader). This info is used in the descriptor update step.
     gl::ActiveTextureArray<vk::TextureUnit> mActiveTextures;
     vk::TextureDescriptorDesc mActiveTexturesDesc;
+
+    gl::ActiveTextureArray<TextureVk *> mActiveImages;
 
     // "Current Value" aka default vertex attribute state.
     gl::AttributesMask mDirtyDefaultAttribsMask;

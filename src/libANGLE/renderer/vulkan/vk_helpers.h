@@ -627,12 +627,13 @@ enum class ImageLayout
     ComputeShaderReadOnly      = 4,
     ComputeShaderWrite         = 5,
     AllGraphicsShadersReadOnly = 6,
-    ColorAttachment            = 7,
-    DepthStencilAttachment     = 8,
-    Present                    = 9,
+    AllGraphicsShadersWrite    = 7,
+    ColorAttachment            = 8,
+    DepthStencilAttachment     = 9,
+    Present                    = 10,
 
-    InvalidEnum = 10,
-    EnumCount   = 10,
+    InvalidEnum = 11,
+    EnumCount   = 11,
 };
 
 class ImageHelper final : public CommandGraphResource

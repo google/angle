@@ -209,9 +209,10 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxVertexUniformVectors                              = maxUniformVectors;
     mNativeCaps.maxFragmentUniformVectors                            = maxUniformVectors;
     mNativeCaps.maxFragmentInputComponents                           = maxUniformComponents;
-    mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Vertex]   = maxUniformComponents;
-    mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Fragment] = maxUniformComponents;
-    mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Compute]  = maxUniformComponents;
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        mNativeCaps.maxShaderUniformComponents[shaderType] = maxUniformComponents;
+    }
     mNativeCaps.maxUniformLocations                                  = maxUniformVectors;
 
     // Every stage has 1 reserved uniform buffer for the default uniforms, and 1 for the driver
@@ -225,9 +226,10 @@ void RendererVk::ensureCapsInitialized() const
         limitsVk.maxPerStageDescriptorUniformBuffers - kTotalReservedPerStageUniformBuffers;
     const uint32_t maxCombinedUniformBuffers =
         limitsVk.maxDescriptorSetUniformBuffers - kTotalReservedUniformBuffers;
-    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Vertex]   = maxPerStageUniformBuffers;
-    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Fragment] = maxPerStageUniformBuffers;
-    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Compute]  = maxPerStageUniformBuffers;
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        mNativeCaps.maxShaderUniformBlocks[shaderType] = maxPerStageUniformBuffers;
+    }
     mNativeCaps.maxCombinedUniformBlocks                         = maxCombinedUniformBuffers;
 
     mNativeCaps.maxUniformBufferBindings = maxCombinedUniformBuffers;
@@ -241,9 +243,10 @@ void RendererVk::ensureCapsInitialized() const
                                                   limitsVk.maxPerStageDescriptorSampledImages);
     const uint32_t maxCombinedTextures =
         std::min(limitsVk.maxDescriptorSetSamplers, limitsVk.maxDescriptorSetSampledImages);
-    mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]   = maxPerStageTextures;
-    mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Fragment] = maxPerStageTextures;
-    mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Compute]  = maxPerStageTextures;
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        mNativeCaps.maxShaderTextureImageUnits[shaderType] = maxPerStageTextures;
+    }
     mNativeCaps.maxCombinedTextureImageUnits                         = maxCombinedTextures;
 
     uint32_t maxPerStageStorageBuffers    = limitsVk.maxPerStageDescriptorStorageBuffers;
@@ -340,6 +343,16 @@ void RendererVk::ensureCapsInitialized() const
         mNativeCaps.maxShaderAtomicCounters[shaderType] = maxAtomicCounters;
     }
     mNativeCaps.maxCombinedAtomicCounters = maxAtomicCounters;
+
+    // GL Images correspond to Vulkan Storage Images.
+    const uint32_t maxPerStageImages = limitsVk.maxPerStageDescriptorStorageImages;
+    const uint32_t maxCombinedImages = limitsVk.maxDescriptorSetStorageImages;
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        mNativeCaps.maxShaderImageUniforms[shaderType] = maxPerStageImages;
+    }
+    mNativeCaps.maxCombinedImageUniforms = maxCombinedImages;
+    mNativeCaps.maxImageUnits            = maxCombinedImages;
 
     mNativeCaps.minProgramTexelOffset = mPhysicalDeviceProperties.limits.minTexelOffset;
     mNativeCaps.maxProgramTexelOffset = mPhysicalDeviceProperties.limits.maxTexelOffset;

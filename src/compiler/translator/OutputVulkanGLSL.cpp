@@ -44,9 +44,9 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     const TType &type = variable->getType();
 
     bool needsCustomLayout =
-        (type.getQualifier() == EvqAttribute || type.getQualifier() == EvqFragmentOut ||
-         type.getQualifier() == EvqVertexIn || IsVarying(type.getQualifier()) ||
-         IsSampler(type.getBasicType()) || type.isInterfaceBlock());
+        type.getQualifier() == EvqAttribute || type.getQualifier() == EvqFragmentOut ||
+        type.getQualifier() == EvqVertexIn || IsVarying(type.getQualifier()) ||
+        IsSampler(type.getBasicType()) || type.isInterfaceBlock() || IsImage(type.getBasicType());
 
     if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout)
     {

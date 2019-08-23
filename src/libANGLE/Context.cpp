@@ -3424,6 +3424,11 @@ void Context::initCaps()
     }
 
     LimitCap(&mState.mCaps.maxImageUnits, IMPLEMENTATION_MAX_IMAGE_UNITS);
+    LimitCap(&mState.mCaps.maxCombinedImageUniforms, IMPLEMENTATION_MAX_IMAGE_UNITS);
+    for (ShaderType shaderType : AllShaderTypes())
+    {
+        LimitCap(&mState.mCaps.maxShaderImageUniforms[shaderType], IMPLEMENTATION_MAX_IMAGE_UNITS);
+    }
 
     for (ShaderType shaderType : AllShaderTypes())
     {

@@ -66,7 +66,7 @@ bool ForceCPUPathForCopy(RendererVk *renderer, const vk::ImageHelper &image)
     return image.getLayerCount() > 1 && renderer->getFeatures().forceCPUPathForCubeMapCopy.enabled;
 }
 
-uint32_t GetRenderTargetLayerCount(const vk::ImageHelper &image)
+uint32_t GetImageLayerCountForView(const vk::ImageHelper &image)
 {
     // Depth > 1 means this is a 3D texture and depth is our layer count
     return image.getExtents().depth > 1 ? image.getExtents().depth : image.getLayerCount();
@@ -1208,7 +1208,7 @@ angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
     if (!m3DRenderTargets.empty())
         return angle::Result::Continue;
 
-    uint32_t layerCount = GetRenderTargetLayerCount(*mImage);
+    uint32_t layerCount = GetImageLayerCountForView(*mImage);
 
     mLayerFetchImageView.resize(layerCount);
     m3DRenderTargets.resize(layerCount);
@@ -1420,36 +1420,50 @@ const vk::ImageView &TextureVk::getFetchImageView() const
     return activeView->mFetchMipmapImageView;
 }
 
+vk::ImageView *TextureVk::getLayerLevelImageViewImpl(vk::LayerLevelImageViewVector *imageViews,
+                                                     size_t layer,
+                                                     size_t level)
+{
+    ASSERT(mImage->valid());
+    ASSERT(!mImage->getFormat().imageFormat().isBlock);
+
+    uint32_t layerCount = GetImageLayerCountForView(*mImage);
+
+    // Lazily allocate the storage for image views
+    if (imageViews->empty())
+    {
+        imageViews->resize(layerCount);
+    }
+    ASSERT(imageViews->size() > layer);
+
+    return getLevelImageViewImpl(&(*imageViews)[layer], level);
+}
+
+vk::ImageView *TextureVk::getLevelImageViewImpl(vk::ImageViewVector *imageViews, size_t level)
+{
+    // Lazily allocate the storage for image views
+    if (imageViews->empty())
+    {
+        imageViews->resize(mImage->getLevelCount());
+    }
+    ASSERT(imageViews->size() > level);
+
+    return &(*imageViews)[level];
+}
+
 angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
                                                     size_t layer,
                                                     size_t level,
                                                     const vk::ImageView **imageViewOut)
 {
-    ASSERT(mImage->valid());
-    ASSERT(!mImage->getFormat().imageFormat().isBlock);
-
-    // For 3D textures, layer count is tracked as depth
-    uint32_t layerCount = mState.getType() == gl::TextureType::_3D ? mImage->getExtents().depth
-                                                                   : mImage->getLayerCount();
-    // Lazily allocate the storage for image views
-    if (mLayerLevelDrawImageViews.empty())
-    {
-        mLayerLevelDrawImageViews.resize(layerCount);
-    }
-    ASSERT(mLayerLevelDrawImageViews.size() > layer);
-
-    if (mLayerLevelDrawImageViews[layer].empty())
-    {
-        mLayerLevelDrawImageViews[layer].resize(mImage->getLevelCount());
-    }
-    ASSERT(mLayerLevelDrawImageViews[layer].size() > level);
-
-    vk::ImageView *imageView = &mLayerLevelDrawImageViews[layer][level];
+    vk::ImageView *imageView = getLayerLevelImageViewImpl(&mLayerLevelDrawImageViews, layer, level);
     *imageViewOut            = imageView;
     if (imageView->valid())
     {
         return angle::Result::Continue;
     }
+
+    uint32_t layerCount = GetImageLayerCountForView(*mImage);
 
     // Lazily allocate the image view itself.
     // Note that these views are specifically made to be used as color attachments, and therefore
@@ -1459,6 +1473,50 @@ angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
                                       gl::SwizzleState(), imageView,
                                       getNativeImageLevel(static_cast<uint32_t>(level)), 1,
                                       getNativeImageLayer(static_cast<uint32_t>(layer)), 1);
+}
+
+angle::Result TextureVk::getLayerLevelStorageImageView(ContextVk *contextVk,
+                                                       bool allLayers,
+                                                       size_t singleLayer,
+                                                       size_t level,
+                                                       const vk::ImageView **imageViewOut)
+{
+    gl::TextureType viewType = mState.getType();
+    uint32_t nativeLevel     = getNativeImageLevel(static_cast<uint32_t>(level));
+    uint32_t nativeLayer     = getNativeImageLayer(static_cast<uint32_t>(singleLayer));
+    uint32_t layerCount      = 1;
+
+    vk::ImageView *imageView = nullptr;
+
+    if (allLayers)
+    {
+        // Ignore the layer parameter and create a view with all layers of the level.
+        imageView = getLevelImageViewImpl(&mLevelStorageImageViews, level);
+
+        // If layered, the view has the same type as the texture.
+        nativeLayer = getNativeImageLayer(0);
+        layerCount  = mImage->getLayerCount();
+    }
+    else
+    {
+        // Create a view of the selected layer.
+        imageView = getLayerLevelImageViewImpl(&mLayerLevelStorageImageViews, singleLayer, level);
+
+        // If viewing a single layer, the image is always 2D.  Note that GLES doesn't support
+        // multisampled storage images.
+        viewType = gl::TextureType::_2D;
+    }
+
+    *imageViewOut = imageView;
+    if (imageView->valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    // Create the view.  Note that storage images are not affected by swizzle parameters.
+    return mImage->initLayerImageView(contextVk, viewType, mImage->getAspectFlags(),
+                                      gl::SwizzleState(), imageView, nativeLevel, 1, nativeLayer,
+                                      layerCount);
 }
 
 const vk::Sampler &TextureVk::getSampler() const
@@ -1477,6 +1535,8 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     VkImageUsageFlags imageUsageFlags = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
                                         VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
                                         VK_IMAGE_USAGE_SAMPLED_BIT;
+
+    // If the image has depth/stencil support, add those as possible usage.
     if (renderer->hasImageFormatFeatureBits(format.vkImageFormat,
                                             VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT))
     {
@@ -1486,6 +1546,13 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
                                                  VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
     {
         imageUsageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    }
+
+    // If the image has storage support, add it for ES3.1 image support.
+    if (renderer->hasImageFormatFeatureBits(format.vkImageFormat,
+                                            VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT))
+    {
+        imageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
     }
 
     VkExtent3D vkExtent;
@@ -1615,7 +1682,7 @@ void TextureVk::releaseImageViews(ContextVk *contextVk)
 
     mStencilViews.release(contextVk, currentSerial);
 
-    for (auto &layerViews : mLayerLevelDrawImageViews)
+    for (vk::ImageViewVector &layerViews : mLayerLevelDrawImageViews)
     {
         for (vk::ImageView &imageView : layerViews)
         {
@@ -1628,6 +1695,19 @@ void TextureVk::releaseImageViews(ContextVk *contextVk)
         contextVk->releaseObject(currentSerial, &imageView);
     }
     mLayerFetchImageView.clear();
+    for (vk::ImageView &imageView : mLevelStorageImageViews)
+    {
+        contextVk->releaseObject(currentSerial, &imageView);
+    }
+    mLevelStorageImageViews.clear();
+    for (vk::ImageViewVector &layerViews : mLayerLevelStorageImageViews)
+    {
+        for (vk::ImageView &imageView : layerViews)
+        {
+            contextVk->releaseObject(currentSerial, &imageView);
+        }
+    }
+    mLayerLevelStorageImageViews.clear();
 }
 
 void TextureVk::releaseStagingBuffer(ContextVk *contextVk)

@@ -2470,6 +2470,14 @@ GLuint Program::getSamplerUniformBinding(const VariableLocation &uniformLocation
     return boundTextureUnits[uniformLocation.arrayIndex];
 }
 
+GLuint Program::getImageUniformBinding(const VariableLocation &uniformLocation) const
+{
+    ASSERT(mLinkResolved);
+    GLuint imageIndex = mState.getImageIndexFromUniformIndex(uniformLocation.index);
+    const std::vector<GLuint> &boundImageUnits = mState.mImageBindings[imageIndex].boundImageUnits;
+    return boundImageUnits[uniformLocation.arrayIndex];
+}
+
 void Program::getUniformfv(const Context *context, GLint location, GLfloat *v) const
 {
     ASSERT(mLinkResolved);
@@ -2479,6 +2487,11 @@ void Program::getUniformfv(const Context *context, GLint location, GLfloat *v) c
     if (uniform.isSampler())
     {
         *v = static_cast<GLfloat>(getSamplerUniformBinding(uniformLocation));
+        return;
+    }
+    else if (uniform.isImage())
+    {
+        *v = static_cast<GLfloat>(getImageUniformBinding(uniformLocation));
         return;
     }
 
@@ -2504,6 +2517,11 @@ void Program::getUniformiv(const Context *context, GLint location, GLint *v) con
         *v = static_cast<GLint>(getSamplerUniformBinding(uniformLocation));
         return;
     }
+    else if (uniform.isImage())
+    {
+        *v = static_cast<GLint>(getImageUniformBinding(uniformLocation));
+        return;
+    }
 
     const GLenum nativeType = gl::VariableComponentType(uniform.type);
     if (nativeType == GL_INT || nativeType == GL_BOOL)
@@ -2525,6 +2543,11 @@ void Program::getUniformuiv(const Context *context, GLint location, GLuint *v) c
     if (uniform.isSampler())
     {
         *v = getSamplerUniformBinding(uniformLocation);
+        return;
+    }
+    else if (uniform.isImage())
+    {
+        *v = getImageUniformBinding(uniformLocation);
         return;
     }
 

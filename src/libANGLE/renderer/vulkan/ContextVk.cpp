@@ -300,6 +300,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mComputeDirtyBits  = mNewComputeCommandBufferDirtyBits;
 
     mActiveTextures.fill({nullptr, nullptr});
+    mActiveImages.fill(nullptr);
 
     mPipelineDirtyBitsMask.set();
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
@@ -769,8 +770,13 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
     vk::CommandBuffer *commandBuffer,
     vk::CommandGraphResource *recorder)
 {
+    if (mProgram->hasImages())
+    {
+        ANGLE_TRY(updateActiveImages(context, recorder));
+    }
+
     if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers() ||
-        mProgram->hasAtomicCounterBuffers())
+        mProgram->hasAtomicCounterBuffers() || mProgram->hasImages())
     {
         ANGLE_TRY(mProgram->updateShaderResourcesDescriptorSet(this, recorder));
     }
@@ -1812,7 +1818,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     static_cast<uint32_t>(glState.getStencilClearValue());
                 break;
             case gl::State::DIRTY_BIT_UNPACK_STATE:
-                // This is a no-op, its only important to use the right unpack state when we do
+                // This is a no-op, it's only important to use the right unpack state when we do
                 // setImage or setSubImage in TextureVk, which is plumbed through the frontend call
                 break;
             case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
@@ -1926,6 +1932,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 invalidateDriverUniforms();
                 break;
             case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
+                invalidateCurrentShaderResources();
                 break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
                 // TODO(syoussefi): this should configure the pipeline to render as if
@@ -2152,7 +2159,7 @@ void ContextVk::invalidateCurrentShaderResources()
 {
     ASSERT(mProgram);
     if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers() ||
-        mProgram->hasAtomicCounterBuffers())
+        mProgram->hasAtomicCounterBuffers() || mProgram->hasImages())
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
         mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
@@ -2535,9 +2542,60 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-const gl::ActiveTextureArray<vk::TextureUnit> &ContextVk::getActiveTextures() const
+angle::Result ContextVk::updateActiveImages(const gl::Context *context,
+                                            vk::CommandGraphResource *recorder)
 {
-    return mActiveTextures;
+    const gl::State &glState   = mState;
+    const gl::Program *program = glState.getProgram();
+
+    mActiveImages.fill(nullptr);
+
+    const gl::ActiveTextureMask &activeImages = program->getActiveImagesMask();
+
+    for (size_t imageUnitIndex : activeImages)
+    {
+        const gl::ImageUnit &imageUnit = glState.getImageUnit(imageUnitIndex);
+        const gl::Texture *texture     = imageUnit.texture.get();
+        if (texture == nullptr)
+        {
+            continue;
+        }
+
+        TextureVk *textureVk   = vk::GetImpl(texture);
+        vk::ImageHelper *image = &textureVk->getImage();
+
+        // The image should be flushed and ready to use at this point. There may still be lingering
+        // staged updates in its staging buffer for unused texture mip levels or layers. Therefore
+        // we can't verify it has no staged updates right here.
+
+        // TODO(syoussefi): make sure front-end syncs textures that are used as images (they are
+        // already notified of content change).
+        // Test: SimpleStateChangeTestES31.DispatchWithImageTextureTexSubImageThenDispatchAgain
+        // http://anglebug.com/3539
+        ANGLE_TRY(textureVk->ensureImageInitialized(this));
+
+        vk::ImageLayout imageLayout = vk::ImageLayout::AllGraphicsShadersWrite;
+        if (program->isCompute())
+        {
+            imageLayout = vk::ImageLayout::ComputeShaderWrite;
+        }
+
+        // Ensure the image is in read-only layout
+        if (image->isLayoutChangeNecessary(imageLayout))
+        {
+            vk::CommandBuffer *layoutChange;
+            ANGLE_TRY(image->recordCommands(this, &layoutChange));
+
+            VkImageAspectFlags aspectFlags = image->getAspectFlags();
+            image->changeLayout(aspectFlags, imageLayout, layoutChange);
+        }
+
+        image->addWriteDependency(recorder);
+
+        mActiveImages[imageUnitIndex] = textureVk;
+    }
+
+    return angle::Result::Continue;
 }
 
 void ContextVk::insertWaitSemaphore(const vk::Semaphore *waitSemaphore)
