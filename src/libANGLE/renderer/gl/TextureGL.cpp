@@ -879,8 +879,8 @@ angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
         !destSRGB && sourceGL->getType() == gl::TextureType::_2D)
     {
         bool copySucceeded = false;
-        ANGLE_TRY(blitter->copyTexSubImage(sourceGL, sourceLevel, this, target, level, sourceArea,
-                                           destOffset, &copySucceeded));
+        ANGLE_TRY(blitter->copyTexSubImage(context, sourceGL, sourceLevel, this, target, level,
+                                           sourceArea, destOffset, &copySucceeded));
         if (copySucceeded)
         {
             return angle::Result::Continue;
@@ -1802,7 +1802,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
         int levelDepth = mState.getImageDesc(imageIndex).size.depth;
 
         bool clearSucceeded = false;
-        ANGLE_TRY(blitter->clearRenderableTexture(this, nativeInternalFormat, levelDepth,
+        ANGLE_TRY(blitter->clearRenderableTexture(context, this, nativeInternalFormat, levelDepth,
                                                   imageIndex, &clearSucceeded));
         if (clearSucceeded)
         {

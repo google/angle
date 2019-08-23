@@ -113,7 +113,7 @@ GLuint RenderbufferGL::getRenderbufferID() const
 angle::Result RenderbufferGL::initializeContents(const gl::Context *context,
                                                  const gl::ImageIndex &imageIndex)
 {
-    return mBlitter->clearRenderbuffer(this, mNativeInternalFormat);
+    return mBlitter->clearRenderbuffer(context, this, mNativeInternalFormat);
 }
 
 GLenum RenderbufferGL::getNativeInternalFormat() const
