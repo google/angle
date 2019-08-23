@@ -555,21 +555,21 @@ void SemaphoreManager::reset(const Context *context)
 {
     while (!mSemaphores.empty())
     {
-        deleteSemaphore(context, mSemaphores.begin()->first);
+        deleteSemaphore(context, {mSemaphores.begin()->first});
     }
     mSemaphores.clear();
 }
 
-GLuint SemaphoreManager::createSemaphore(rx::GLImplFactory *factory)
+SemaphoreID SemaphoreManager::createSemaphore(rx::GLImplFactory *factory)
 {
-    GLuint handle        = mHandleAllocator.allocate();
+    SemaphoreID handle   = SemaphoreID{mHandleAllocator.allocate()};
     Semaphore *semaphore = new Semaphore(factory, handle);
     semaphore->addRef();
     mSemaphores.assign(handle, semaphore);
     return handle;
 }
 
-void SemaphoreManager::deleteSemaphore(const Context *context, GLuint handle)
+void SemaphoreManager::deleteSemaphore(const Context *context, SemaphoreID handle)
 {
     Semaphore *semaphore = nullptr;
     if (!mSemaphores.erase(handle, &semaphore))
@@ -578,7 +578,7 @@ void SemaphoreManager::deleteSemaphore(const Context *context, GLuint handle)
     }
 
     // Requires an explicit this-> because of C++ template rules.
-    this->mHandleAllocator.release(handle);
+    this->mHandleAllocator.release(handle.value);
 
     if (semaphore)
     {
@@ -586,7 +586,7 @@ void SemaphoreManager::deleteSemaphore(const Context *context, GLuint handle)
     }
 }
 
-Semaphore *SemaphoreManager::getSemaphore(GLuint handle) const
+Semaphore *SemaphoreManager::getSemaphore(SemaphoreID handle) const
 {
     return mSemaphores.query(handle);
 }

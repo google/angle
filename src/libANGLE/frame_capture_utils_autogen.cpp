@@ -330,6 +330,17 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
             WriteParamValueToStream<ParamType::TSamplerIDPointer>(os,
                                                                   paramValue.SamplerIDPointerVal);
             break;
+        case ParamType::TSemaphoreID:
+            WriteParamValueToStream<ParamType::TSemaphoreID>(os, paramValue.SemaphoreIDVal);
+            break;
+        case ParamType::TSemaphoreIDConstPointer:
+            WriteParamValueToStream<ParamType::TSemaphoreIDConstPointer>(
+                os, paramValue.SemaphoreIDConstPointerVal);
+            break;
+        case ParamType::TSemaphoreIDPointer:
+            WriteParamValueToStream<ParamType::TSemaphoreIDPointer>(
+                os, paramValue.SemaphoreIDPointerVal);
+            break;
         case ParamType::TShaderProgramID:
             WriteParamValueToStream<ParamType::TShaderProgramID>(os, paramValue.ShaderProgramIDVal);
             break;
@@ -582,6 +593,12 @@ const char *ParamTypeToString(ParamType paramType)
         case ParamType::TSamplerIDConstPointer:
             return "const GLuint *";
         case ParamType::TSamplerIDPointer:
+            return "GLuint *";
+        case ParamType::TSemaphoreID:
+            return "GLuint";
+        case ParamType::TSemaphoreIDConstPointer:
+            return "const GLuint *";
+        case ParamType::TSemaphoreIDPointer:
             return "GLuint *";
         case ParamType::TShaderProgramID:
             return "GLuint";

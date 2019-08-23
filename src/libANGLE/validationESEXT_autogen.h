@@ -952,26 +952,26 @@ bool ValidateReadnPixelsEXT(Context *context,
                             void *data);
 
 // GL_EXT_semaphore
-bool ValidateDeleteSemaphoresEXT(Context *context, GLsizei n, const GLuint *semaphores);
-bool ValidateGenSemaphoresEXT(Context *context, GLsizei n, GLuint *semaphores);
+bool ValidateDeleteSemaphoresEXT(Context *context, GLsizei n, const SemaphoreID *semaphoresPacked);
+bool ValidateGenSemaphoresEXT(Context *context, GLsizei n, SemaphoreID *semaphoresPacked);
 bool ValidateGetSemaphoreParameterui64vEXT(Context *context,
-                                           GLuint semaphore,
+                                           SemaphoreID semaphorePacked,
                                            GLenum pname,
                                            GLuint64 *params);
-bool ValidateIsSemaphoreEXT(Context *context, GLuint semaphore);
+bool ValidateIsSemaphoreEXT(Context *context, SemaphoreID semaphorePacked);
 bool ValidateSemaphoreParameterui64vEXT(Context *context,
-                                        GLuint semaphore,
+                                        SemaphoreID semaphorePacked,
                                         GLenum pname,
                                         const GLuint64 *params);
 bool ValidateSignalSemaphoreEXT(Context *context,
-                                GLuint semaphore,
+                                SemaphoreID semaphorePacked,
                                 GLuint numBufferBarriers,
                                 const BufferID *buffersPacked,
                                 GLuint numTextureBarriers,
                                 const TextureID *texturesPacked,
                                 const GLenum *dstLayouts);
 bool ValidateWaitSemaphoreEXT(Context *context,
-                              GLuint semaphore,
+                              SemaphoreID semaphorePacked,
                               GLuint numBufferBarriers,
                               const BufferID *buffersPacked,
                               GLuint numTextureBarriers,
@@ -980,7 +980,7 @@ bool ValidateWaitSemaphoreEXT(Context *context,
 
 // GL_EXT_semaphore_fd
 bool ValidateImportSemaphoreFdEXT(Context *context,
-                                  GLuint semaphore,
+                                  SemaphoreID semaphorePacked,
                                   HandleType handleTypePacked,
                                   GLint fd);
 

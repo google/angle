@@ -274,6 +274,9 @@ void WriteParamValueToStream<ParamType::TShaderProgramID>(std::ostream &os,
                                                           gl::ShaderProgramID value);
 
 template <>
+void WriteParamValueToStream<ParamType::TSemaphoreID>(std::ostream &os, gl::SemaphoreID value);
+
+template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os,
                                                          gl::RenderbufferID value);
 

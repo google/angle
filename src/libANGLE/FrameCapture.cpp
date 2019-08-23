@@ -876,6 +876,12 @@ void WriteParamValueToStream<ParamType::TFramebufferID>(std::ostream &os, gl::Fr
 }
 
 template <>
+void WriteParamValueToStream<ParamType::TSemaphoreID>(std::ostream &os, gl::SemaphoreID value)
+{
+    os << value.value;
+}
+
+template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os, gl::RenderbufferID value)
 {
     os << "gRenderbufferMap[" << value.value << "]";

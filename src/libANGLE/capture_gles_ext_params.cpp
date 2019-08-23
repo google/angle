@@ -2354,27 +2354,27 @@ void CaptureReadnPixelsEXT_data(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteSemaphoresEXT_semaphores(const Context *context,
-                                           bool isCallValid,
-                                           GLsizei n,
-                                           const GLuint *semaphores,
-                                           ParamCapture *paramCapture)
+void CaptureDeleteSemaphoresEXT_semaphoresPacked(const Context *context,
+                                                 bool isCallValid,
+                                                 GLsizei n,
+                                                 const SemaphoreID *semaphores,
+                                                 ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureGenSemaphoresEXT_semaphores(const Context *context,
-                                        bool isCallValid,
-                                        GLsizei n,
-                                        GLuint *semaphores,
-                                        ParamCapture *paramCapture)
+void CaptureGenSemaphoresEXT_semaphoresPacked(const Context *context,
+                                              bool isCallValid,
+                                              GLsizei n,
+                                              SemaphoreID *semaphores,
+                                              ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
 void CaptureGetSemaphoreParameterui64vEXT_params(const Context *context,
                                                  bool isCallValid,
-                                                 GLuint semaphore,
+                                                 SemaphoreID semaphore,
                                                  GLenum pname,
                                                  GLuint64 *params,
                                                  ParamCapture *paramCapture)
@@ -2384,7 +2384,7 @@ void CaptureGetSemaphoreParameterui64vEXT_params(const Context *context,
 
 void CaptureSemaphoreParameterui64vEXT_params(const Context *context,
                                               bool isCallValid,
-                                              GLuint semaphore,
+                                              SemaphoreID semaphore,
                                               GLenum pname,
                                               const GLuint64 *params,
                                               ParamCapture *paramCapture)
@@ -2394,7 +2394,7 @@ void CaptureSemaphoreParameterui64vEXT_params(const Context *context,
 
 void CaptureSignalSemaphoreEXT_buffersPacked(const Context *context,
                                              bool isCallValid,
-                                             GLuint semaphore,
+                                             SemaphoreID semaphore,
                                              GLuint numBufferBarriers,
                                              const BufferID *buffers,
                                              GLuint numTextureBarriers,
@@ -2407,7 +2407,7 @@ void CaptureSignalSemaphoreEXT_buffersPacked(const Context *context,
 
 void CaptureSignalSemaphoreEXT_texturesPacked(const Context *context,
                                               bool isCallValid,
-                                              GLuint semaphore,
+                                              SemaphoreID semaphore,
                                               GLuint numBufferBarriers,
                                               const BufferID *buffers,
                                               GLuint numTextureBarriers,
@@ -2420,7 +2420,7 @@ void CaptureSignalSemaphoreEXT_texturesPacked(const Context *context,
 
 void CaptureSignalSemaphoreEXT_dstLayouts(const Context *context,
                                           bool isCallValid,
-                                          GLuint semaphore,
+                                          SemaphoreID semaphore,
                                           GLuint numBufferBarriers,
                                           const BufferID *buffers,
                                           GLuint numTextureBarriers,
@@ -2433,7 +2433,7 @@ void CaptureSignalSemaphoreEXT_dstLayouts(const Context *context,
 
 void CaptureWaitSemaphoreEXT_buffersPacked(const Context *context,
                                            bool isCallValid,
-                                           GLuint semaphore,
+                                           SemaphoreID semaphore,
                                            GLuint numBufferBarriers,
                                            const BufferID *buffers,
                                            GLuint numTextureBarriers,
@@ -2446,7 +2446,7 @@ void CaptureWaitSemaphoreEXT_buffersPacked(const Context *context,
 
 void CaptureWaitSemaphoreEXT_texturesPacked(const Context *context,
                                             bool isCallValid,
-                                            GLuint semaphore,
+                                            SemaphoreID semaphore,
                                             GLuint numBufferBarriers,
                                             const BufferID *buffers,
                                             GLuint numTextureBarriers,
@@ -2459,7 +2459,7 @@ void CaptureWaitSemaphoreEXT_texturesPacked(const Context *context,
 
 void CaptureWaitSemaphoreEXT_srcLayouts(const Context *context,
                                         bool isCallValid,
-                                        GLuint semaphore,
+                                        SemaphoreID semaphore,
                                         GLuint numBufferBarriers,
                                         const BufferID *buffers,
                                         GLuint numTextureBarriers,

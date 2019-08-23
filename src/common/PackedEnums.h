@@ -391,6 +391,11 @@ struct FramebufferID
     GLuint value;
 };
 
+struct SemaphoreID
+{
+    GLuint value;
+};
+
 struct RenderbufferID
 {
     GLuint value;

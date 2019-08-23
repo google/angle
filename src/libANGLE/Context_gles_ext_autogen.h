@@ -362,19 +362,20 @@
     void readnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,  \
                      GLsizei bufSize, void *data);                                                 \
     /* GL_EXT_semaphore */                                                                         \
-    void deleteSemaphores(GLsizei n, const GLuint *semaphores);                                    \
-    void genSemaphores(GLsizei n, GLuint *semaphores);                                             \
-    void getSemaphoreParameterui64v(GLuint semaphore, GLenum pname, GLuint64 *params);             \
-    GLboolean isSemaphore(GLuint semaphore);                                                       \
-    void semaphoreParameterui64v(GLuint semaphore, GLenum pname, const GLuint64 *params);          \
-    void signalSemaphore(GLuint semaphore, GLuint numBufferBarriers,                               \
+    void deleteSemaphores(GLsizei n, const SemaphoreID *semaphoresPacked);                         \
+    void genSemaphores(GLsizei n, SemaphoreID *semaphoresPacked);                                  \
+    void getSemaphoreParameterui64v(SemaphoreID semaphorePacked, GLenum pname, GLuint64 *params);  \
+    GLboolean isSemaphore(SemaphoreID semaphorePacked);                                            \
+    void semaphoreParameterui64v(SemaphoreID semaphorePacked, GLenum pname,                        \
+                                 const GLuint64 *params);                                          \
+    void signalSemaphore(SemaphoreID semaphorePacked, GLuint numBufferBarriers,                    \
                          const BufferID *buffersPacked, GLuint numTextureBarriers,                 \
                          const TextureID *texturesPacked, const GLenum *dstLayouts);               \
-    void waitSemaphore(GLuint semaphore, GLuint numBufferBarriers, const BufferID *buffersPacked,  \
-                       GLuint numTextureBarriers, const TextureID *texturesPacked,                 \
-                       const GLenum *srcLayouts);                                                  \
+    void waitSemaphore(SemaphoreID semaphorePacked, GLuint numBufferBarriers,                      \
+                       const BufferID *buffersPacked, GLuint numTextureBarriers,                   \
+                       const TextureID *texturesPacked, const GLenum *srcLayouts);                 \
     /* GL_EXT_semaphore_fd */                                                                      \
-    void importSemaphoreFd(GLuint semaphore, HandleType handleTypePacked, GLint fd);               \
+    void importSemaphoreFd(SemaphoreID semaphorePacked, HandleType handleTypePacked, GLint fd);    \
     /* GL_EXT_texture_storage */                                                                   \
     void texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width);        \
     /* GL_KHR_debug */                                                                             \

@@ -108,6 +108,9 @@ enum class ParamType
     TSamplerID,
     TSamplerIDConstPointer,
     TSamplerIDPointer,
+    TSemaphoreID,
+    TSemaphoreIDConstPointer,
+    TSemaphoreIDPointer,
     TShaderProgramID,
     TShaderProgramIDConstPointer,
     TShaderProgramIDPointer,
@@ -220,6 +223,9 @@ union ParamValue
     gl::SamplerID SamplerIDVal;
     const gl::SamplerID *SamplerIDConstPointerVal;
     gl::SamplerID *SamplerIDPointerVal;
+    gl::SemaphoreID SemaphoreIDVal;
+    const gl::SemaphoreID *SemaphoreIDConstPointerVal;
+    gl::SemaphoreID *SemaphoreIDPointerVal;
     gl::ShaderProgramID ShaderProgramIDVal;
     const gl::ShaderProgramID *ShaderProgramIDConstPointerVal;
     gl::ShaderProgramID *ShaderProgramIDPointerVal;
@@ -840,6 +846,27 @@ inline gl::SamplerID *GetParamVal<ParamType::TSamplerIDPointer, gl::SamplerID *>
 }
 
 template <>
+inline gl::SemaphoreID GetParamVal<ParamType::TSemaphoreID, gl::SemaphoreID>(
+    const ParamValue &value)
+{
+    return value.SemaphoreIDVal;
+}
+
+template <>
+inline const gl::SemaphoreID *
+GetParamVal<ParamType::TSemaphoreIDConstPointer, const gl::SemaphoreID *>(const ParamValue &value)
+{
+    return value.SemaphoreIDConstPointerVal;
+}
+
+template <>
+inline gl::SemaphoreID *GetParamVal<ParamType::TSemaphoreIDPointer, gl::SemaphoreID *>(
+    const ParamValue &value)
+{
+    return value.SemaphoreIDPointerVal;
+}
+
+template <>
 inline gl::ShaderProgramID GetParamVal<ParamType::TShaderProgramID, gl::ShaderProgramID>(
     const ParamValue &value)
 {
@@ -1147,6 +1174,12 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TSamplerIDConstPointer, T>(value);
         case ParamType::TSamplerIDPointer:
             return GetParamVal<ParamType::TSamplerIDPointer, T>(value);
+        case ParamType::TSemaphoreID:
+            return GetParamVal<ParamType::TSemaphoreID, T>(value);
+        case ParamType::TSemaphoreIDConstPointer:
+            return GetParamVal<ParamType::TSemaphoreIDConstPointer, T>(value);
+        case ParamType::TSemaphoreIDPointer:
+            return GetParamVal<ParamType::TSemaphoreIDPointer, T>(value);
         case ParamType::TShaderProgramID:
             return GetParamVal<ParamType::TShaderProgramID, T>(value);
         case ParamType::TShaderProgramIDConstPointer:
@@ -1769,6 +1802,26 @@ inline void SetParamVal<ParamType::TSamplerIDPointer>(gl::SamplerID *valueIn, Pa
 }
 
 template <>
+inline void SetParamVal<ParamType::TSemaphoreID>(gl::SemaphoreID valueIn, ParamValue *valueOut)
+{
+    valueOut->SemaphoreIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TSemaphoreIDConstPointer>(const gl::SemaphoreID *valueIn,
+                                                             ParamValue *valueOut)
+{
+    valueOut->SemaphoreIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TSemaphoreIDPointer>(gl::SemaphoreID *valueIn,
+                                                        ParamValue *valueOut)
+{
+    valueOut->SemaphoreIDPointerVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TShaderProgramID>(gl::ShaderProgramID valueIn,
                                                      ParamValue *valueOut)
 {
@@ -2161,6 +2214,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TSamplerIDPointer:
             SetParamVal<ParamType::TSamplerIDPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TSemaphoreID:
+            SetParamVal<ParamType::TSemaphoreID>(valueIn, valueOut);
+            break;
+        case ParamType::TSemaphoreIDConstPointer:
+            SetParamVal<ParamType::TSemaphoreIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TSemaphoreIDPointer:
+            SetParamVal<ParamType::TSemaphoreIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TShaderProgramID:
             SetParamVal<ParamType::TShaderProgramID>(valueIn, valueOut);

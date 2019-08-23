@@ -346,9 +346,9 @@ class SemaphoreManager : public ResourceManagerBase<HandleAllocator>
   public:
     SemaphoreManager();
 
-    GLuint createSemaphore(rx::GLImplFactory *factory);
-    void deleteSemaphore(const Context *context, GLuint handle);
-    Semaphore *getSemaphore(GLuint handle) const;
+    SemaphoreID createSemaphore(rx::GLImplFactory *factory);
+    void deleteSemaphore(const Context *context, SemaphoreID handle);
+    Semaphore *getSemaphore(SemaphoreID handle) const;
 
   protected:
     ~SemaphoreManager() override;
@@ -356,7 +356,7 @@ class SemaphoreManager : public ResourceManagerBase<HandleAllocator>
   private:
     void reset(const Context *context) override;
 
-    ResourceMap<Semaphore> mSemaphores;
+    ResourceMap<Semaphore, SemaphoreID> mSemaphores;
 };
 
 }  // namespace gl

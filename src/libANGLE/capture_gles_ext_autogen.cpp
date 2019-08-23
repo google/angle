@@ -4110,16 +4110,18 @@ CallCapture CaptureReadnPixelsEXT(const Context *context,
 CallCapture CaptureDeleteSemaphoresEXT(const Context *context,
                                        bool isCallValid,
                                        GLsizei n,
-                                       const GLuint *semaphores)
+                                       const SemaphoreID *semaphoresPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture semaphoresParam("semaphores", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, semaphores, &semaphoresParam.value);
-    CaptureDeleteSemaphoresEXT_semaphores(context, isCallValid, n, semaphores, &semaphoresParam);
-    paramBuffer.addParam(std::move(semaphoresParam));
+    ParamCapture semaphoresPackedParam("semaphoresPacked", ParamType::TSemaphoreIDConstPointer);
+    InitParamValue(ParamType::TSemaphoreIDConstPointer, semaphoresPacked,
+                   &semaphoresPackedParam.value);
+    CaptureDeleteSemaphoresEXT_semaphoresPacked(context, isCallValid, n, semaphoresPacked,
+                                                &semaphoresPackedParam);
+    paramBuffer.addParam(std::move(semaphoresPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteSemaphoresEXT, std::move(paramBuffer));
 }
@@ -4127,36 +4129,37 @@ CallCapture CaptureDeleteSemaphoresEXT(const Context *context,
 CallCapture CaptureGenSemaphoresEXT(const Context *context,
                                     bool isCallValid,
                                     GLsizei n,
-                                    GLuint *semaphores)
+                                    SemaphoreID *semaphoresPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture semaphoresParam("semaphores", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, semaphores, &semaphoresParam.value);
-    CaptureGenSemaphoresEXT_semaphores(context, isCallValid, n, semaphores, &semaphoresParam);
-    paramBuffer.addParam(std::move(semaphoresParam));
+    ParamCapture semaphoresPackedParam("semaphoresPacked", ParamType::TSemaphoreIDPointer);
+    InitParamValue(ParamType::TSemaphoreIDPointer, semaphoresPacked, &semaphoresPackedParam.value);
+    CaptureGenSemaphoresEXT_semaphoresPacked(context, isCallValid, n, semaphoresPacked,
+                                             &semaphoresPackedParam);
+    paramBuffer.addParam(std::move(semaphoresPackedParam));
 
     return CallCapture(gl::EntryPoint::GenSemaphoresEXT, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetSemaphoreParameterui64vEXT(const Context *context,
                                                  bool isCallValid,
-                                                 GLuint semaphore,
+                                                 SemaphoreID semaphorePacked,
                                                  GLenum pname,
                                                  GLuint64 *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("semaphore", ParamType::TGLuint, semaphore);
+    paramBuffer.addValueParam("semaphorePacked", ParamType::TSemaphoreID, semaphorePacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::SemaphoreParameterName, ParamType::TGLenum,
                              pname);
 
     ParamCapture paramsParam("params", ParamType::TGLuint64Pointer);
     InitParamValue(ParamType::TGLuint64Pointer, params, &paramsParam.value);
-    CaptureGetSemaphoreParameterui64vEXT_params(context, isCallValid, semaphore, pname, params,
-                                                &paramsParam);
+    CaptureGetSemaphoreParameterui64vEXT_params(context, isCallValid, semaphorePacked, pname,
+                                                params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetSemaphoreParameterui64vEXT, std::move(paramBuffer));
@@ -4164,12 +4167,12 @@ CallCapture CaptureGetSemaphoreParameterui64vEXT(const Context *context,
 
 CallCapture CaptureIsSemaphoreEXT(const Context *context,
                                   bool isCallValid,
-                                  GLuint semaphore,
+                                  SemaphoreID semaphorePacked,
                                   GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("semaphore", ParamType::TGLuint, semaphore);
+    paramBuffer.addValueParam("semaphorePacked", ParamType::TSemaphoreID, semaphorePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
@@ -4180,19 +4183,19 @@ CallCapture CaptureIsSemaphoreEXT(const Context *context,
 
 CallCapture CaptureSemaphoreParameterui64vEXT(const Context *context,
                                               bool isCallValid,
-                                              GLuint semaphore,
+                                              SemaphoreID semaphorePacked,
                                               GLenum pname,
                                               const GLuint64 *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("semaphore", ParamType::TGLuint, semaphore);
+    paramBuffer.addValueParam("semaphorePacked", ParamType::TSemaphoreID, semaphorePacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::SemaphoreParameterName, ParamType::TGLenum,
                              pname);
 
     ParamCapture paramsParam("params", ParamType::TGLuint64ConstPointer);
     InitParamValue(ParamType::TGLuint64ConstPointer, params, &paramsParam.value);
-    CaptureSemaphoreParameterui64vEXT_params(context, isCallValid, semaphore, pname, params,
+    CaptureSemaphoreParameterui64vEXT_params(context, isCallValid, semaphorePacked, pname, params,
                                              &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
@@ -4201,7 +4204,7 @@ CallCapture CaptureSemaphoreParameterui64vEXT(const Context *context,
 
 CallCapture CaptureSignalSemaphoreEXT(const Context *context,
                                       bool isCallValid,
-                                      GLuint semaphore,
+                                      SemaphoreID semaphorePacked,
                                       GLuint numBufferBarriers,
                                       const BufferID *buffersPacked,
                                       GLuint numTextureBarriers,
@@ -4210,28 +4213,28 @@ CallCapture CaptureSignalSemaphoreEXT(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("semaphore", ParamType::TGLuint, semaphore);
+    paramBuffer.addValueParam("semaphorePacked", ParamType::TSemaphoreID, semaphorePacked);
     paramBuffer.addValueParam("numBufferBarriers", ParamType::TGLuint, numBufferBarriers);
 
     ParamCapture buffersPackedParam("buffersPacked", ParamType::TBufferIDConstPointer);
     InitParamValue(ParamType::TBufferIDConstPointer, buffersPacked, &buffersPackedParam.value);
-    CaptureSignalSemaphoreEXT_buffersPacked(context, isCallValid, semaphore, numBufferBarriers,
-                                            buffersPacked, numTextureBarriers, texturesPacked,
-                                            dstLayouts, &buffersPackedParam);
+    CaptureSignalSemaphoreEXT_buffersPacked(context, isCallValid, semaphorePacked,
+                                            numBufferBarriers, buffersPacked, numTextureBarriers,
+                                            texturesPacked, dstLayouts, &buffersPackedParam);
     paramBuffer.addParam(std::move(buffersPackedParam));
 
     paramBuffer.addValueParam("numTextureBarriers", ParamType::TGLuint, numTextureBarriers);
 
     ParamCapture texturesPackedParam("texturesPacked", ParamType::TTextureIDConstPointer);
     InitParamValue(ParamType::TTextureIDConstPointer, texturesPacked, &texturesPackedParam.value);
-    CaptureSignalSemaphoreEXT_texturesPacked(context, isCallValid, semaphore, numBufferBarriers,
-                                             buffersPacked, numTextureBarriers, texturesPacked,
-                                             dstLayouts, &texturesPackedParam);
+    CaptureSignalSemaphoreEXT_texturesPacked(context, isCallValid, semaphorePacked,
+                                             numBufferBarriers, buffersPacked, numTextureBarriers,
+                                             texturesPacked, dstLayouts, &texturesPackedParam);
     paramBuffer.addParam(std::move(texturesPackedParam));
 
     ParamCapture dstLayoutsParam("dstLayouts", ParamType::TGLenumConstPointer);
     InitParamValue(ParamType::TGLenumConstPointer, dstLayouts, &dstLayoutsParam.value);
-    CaptureSignalSemaphoreEXT_dstLayouts(context, isCallValid, semaphore, numBufferBarriers,
+    CaptureSignalSemaphoreEXT_dstLayouts(context, isCallValid, semaphorePacked, numBufferBarriers,
                                          buffersPacked, numTextureBarriers, texturesPacked,
                                          dstLayouts, &dstLayoutsParam);
     paramBuffer.addParam(std::move(dstLayoutsParam));
@@ -4241,7 +4244,7 @@ CallCapture CaptureSignalSemaphoreEXT(const Context *context,
 
 CallCapture CaptureWaitSemaphoreEXT(const Context *context,
                                     bool isCallValid,
-                                    GLuint semaphore,
+                                    SemaphoreID semaphorePacked,
                                     GLuint numBufferBarriers,
                                     const BufferID *buffersPacked,
                                     GLuint numTextureBarriers,
@@ -4250,12 +4253,12 @@ CallCapture CaptureWaitSemaphoreEXT(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("semaphore", ParamType::TGLuint, semaphore);
+    paramBuffer.addValueParam("semaphorePacked", ParamType::TSemaphoreID, semaphorePacked);
     paramBuffer.addValueParam("numBufferBarriers", ParamType::TGLuint, numBufferBarriers);
 
     ParamCapture buffersPackedParam("buffersPacked", ParamType::TBufferIDConstPointer);
     InitParamValue(ParamType::TBufferIDConstPointer, buffersPacked, &buffersPackedParam.value);
-    CaptureWaitSemaphoreEXT_buffersPacked(context, isCallValid, semaphore, numBufferBarriers,
+    CaptureWaitSemaphoreEXT_buffersPacked(context, isCallValid, semaphorePacked, numBufferBarriers,
                                           buffersPacked, numTextureBarriers, texturesPacked,
                                           srcLayouts, &buffersPackedParam);
     paramBuffer.addParam(std::move(buffersPackedParam));
@@ -4264,14 +4267,14 @@ CallCapture CaptureWaitSemaphoreEXT(const Context *context,
 
     ParamCapture texturesPackedParam("texturesPacked", ParamType::TTextureIDConstPointer);
     InitParamValue(ParamType::TTextureIDConstPointer, texturesPacked, &texturesPackedParam.value);
-    CaptureWaitSemaphoreEXT_texturesPacked(context, isCallValid, semaphore, numBufferBarriers,
+    CaptureWaitSemaphoreEXT_texturesPacked(context, isCallValid, semaphorePacked, numBufferBarriers,
                                            buffersPacked, numTextureBarriers, texturesPacked,
                                            srcLayouts, &texturesPackedParam);
     paramBuffer.addParam(std::move(texturesPackedParam));
 
     ParamCapture srcLayoutsParam("srcLayouts", ParamType::TGLenumConstPointer);
     InitParamValue(ParamType::TGLenumConstPointer, srcLayouts, &srcLayoutsParam.value);
-    CaptureWaitSemaphoreEXT_srcLayouts(context, isCallValid, semaphore, numBufferBarriers,
+    CaptureWaitSemaphoreEXT_srcLayouts(context, isCallValid, semaphorePacked, numBufferBarriers,
                                        buffersPacked, numTextureBarriers, texturesPacked,
                                        srcLayouts, &srcLayoutsParam);
     paramBuffer.addParam(std::move(srcLayoutsParam));
@@ -4281,13 +4284,13 @@ CallCapture CaptureWaitSemaphoreEXT(const Context *context,
 
 CallCapture CaptureImportSemaphoreFdEXT(const Context *context,
                                         bool isCallValid,
-                                        GLuint semaphore,
+                                        SemaphoreID semaphorePacked,
                                         HandleType handleTypePacked,
                                         GLint fd)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("semaphore", ParamType::TGLuint, semaphore);
+    paramBuffer.addValueParam("semaphorePacked", ParamType::TSemaphoreID, semaphorePacked);
     paramBuffer.addValueParam("handleTypePacked", ParamType::THandleType, handleTypePacked);
     paramBuffer.addValueParam("fd", ParamType::TGLint, fd);
 
