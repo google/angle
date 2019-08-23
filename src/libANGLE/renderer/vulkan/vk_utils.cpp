@@ -52,8 +52,8 @@ egl::Error ToEGL(Result result, rx::DisplayVk *displayVk, EGLint errorCode)
 
 namespace rx
 {
-// Unified layer that includes full validation layer stack
-const char *g_VkStdValidationLayerName = "VK_LAYER_KHRONOS_validation";
+// Mirrors std_validation_str in loader.c
+const char *g_VkStdValidationLayerName = "VK_LAYER_LUNARG_standard_validation";
 const char *g_VkValidationLayerNames[] = {
     "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
     "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
