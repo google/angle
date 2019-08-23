@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7254219_22c02c8f",
+        "filename": "src/libANGLE/gen_overlay_fonts.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-23T20:47:36Z",
+      "side": 1,
+      "message": "you can use vpython to ensure freetype is available. you\u0027ll need to request the freetype wheel be installed. see gen_builtin_symbols for a prior example of using a vpython wheen in angle.\n\nto request the freetype wheel follow the instructions here:\n\nhttps://chromium.googlesource.com/infra/infra/+/master/doc/users/vpython.md#contact",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 65
+      },
+      "revId": "d3516338442a36cc2febec63e712d0d662d6bba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
