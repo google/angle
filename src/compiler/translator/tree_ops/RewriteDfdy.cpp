@@ -64,7 +64,8 @@ bool Traverser::visitUnary(Visit visit, TIntermUnary *node)
 
     // Correct dFdy()'s value:
     // (dFdy() * ANGLEUniforms.viewportYScale)
-    TIntermBinary *correctedDfdy = new TIntermBinary(multiplyOp, newDfdy, mViewportYScale);
+    TIntermBinary *correctedDfdy =
+        new TIntermBinary(multiplyOp, newDfdy, mViewportYScale->deepCopy());
 
     // Replace the old dFdy node with the new node that contains the corrected value
     queueReplacement(correctedDfdy, OriginalNode::IS_DROPPED);
