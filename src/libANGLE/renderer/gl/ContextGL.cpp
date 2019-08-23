@@ -91,8 +91,14 @@ TextureImpl *ContextGL::createTexture(const gl::TextureState &state)
 
 RenderbufferImpl *ContextGL::createRenderbuffer(const gl::RenderbufferState &state)
 {
-    return new RenderbufferGL(state, getFunctions(), getFeaturesGL(), getStateManager(),
-                              mRenderer->getBlitter(), getNativeTextureCaps());
+    const FunctionsGL *functions = getFunctions();
+    StateManagerGL *stateManager = getStateManager();
+
+    GLuint renderbuffer = 0;
+    functions->genRenderbuffers(1, &renderbuffer);
+    stateManager->bindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+
+    return new RenderbufferGL(state, renderbuffer);
 }
 
 BufferImpl *ContextGL::createBuffer(const gl::BufferState &state)
