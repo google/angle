@@ -105,7 +105,12 @@ RenderbufferImpl *ContextGL::createRenderbuffer(const gl::RenderbufferState &sta
 
 BufferImpl *ContextGL::createBuffer(const gl::BufferState &state)
 {
-    return new BufferGL(state, getFunctions(), getStateManager());
+    const FunctionsGL *functions = getFunctions();
+
+    GLuint buffer = 0;
+    functions->genBuffers(1, &buffer);
+
+    return new BufferGL(state, buffer);
 }
 
 VertexArrayImpl *ContextGL::createVertexArray(const gl::VertexArrayState &data)

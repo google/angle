@@ -492,6 +492,13 @@ struct FeaturesGL : FeatureSetBase
         "Speculative fix for issues on Linux/Wayland where exposing GLX_OML_sync_control renders "
         "Chrome unusable",
         &members, "https://crbug.com/1137851"};
+
+    // Buffers need to maintain a shadow copy of data when buffer data readback is not possible
+    // through the GL API
+    Feature keepBufferShadowCopy = {
+        "keep_buffer_shadow_copy", FeatureCategory::OpenGLWorkarounds,
+        "Maintain a shadow copy of buffer data when the GL API does not permit reading data back.",
+        &members};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
