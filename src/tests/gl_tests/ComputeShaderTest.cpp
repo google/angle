@@ -3441,6 +3441,63 @@ TEST_P(ComputeShaderTest, InvalidMemoryBarrier)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
+// test atomic counter increment
+// http://anglebug.com/3246
+TEST_P(ComputeShaderTest, AtomicCounterIncrement)
+{
+    constexpr char kComputeShader[] = R"(#version 310 es
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(binding = 1, std430) buffer Output {
+  uint preGet[1];
+  uint increment[1];
+  uint postGet[1];
+} sb_in;
+layout(binding=0) uniform atomic_uint counter0;
+
+void main(void)
+{
+  uint id = (gl_GlobalInvocationID.x);
+  sb_in.preGet[0u]    = atomicCounter(counter0);
+  sb_in.increment[0u] = atomicCounterIncrement(counter0);
+  sb_in.postGet[0u]   = atomicCounter(counter0);
+}
+)";
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    constexpr unsigned int kBytesPerComponent = sizeof(GLuint);
+
+    GLBuffer shaderStorageBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 3 * kBytesPerComponent, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr GLuint atomicBufferInitialData[] = {2u};
+    GLuint atomicBuffer;
+    glGenBuffers(1, &atomicBuffer);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(atomicBufferInitialData), atomicBufferInitialData,
+                 GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    glFinish();
+    EXPECT_GL_NO_ERROR();
+
+    // read back
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 3 * kBytesPerComponent, GL_MAP_READ_BIT));
+    EXPECT_EQ(2u, ptr[0]);
+    EXPECT_EQ(2u, ptr[1]);
+    EXPECT_EQ(3u, ptr[2]);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 ANGLE_INSTANTIATE_TEST(ComputeShaderTest,
                        ES31_OPENGL(),
                        ES31_OPENGLES(),
