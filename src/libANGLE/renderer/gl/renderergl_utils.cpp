@@ -1693,6 +1693,52 @@ const angle::FeaturesGL &GetFeaturesGL(const gl::Context *context)
     return GetImplAs<ContextGL>(context)->getFeaturesGL();
 }
 
+void ClearErrors(const gl::Context *context,
+                 const char *file,
+                 const char *function,
+                 unsigned int line)
+{
+    const FunctionsGL *functions = GetFunctionsGL(context);
+
+    GLenum error = functions->getError();
+    while (error != GL_NO_ERROR)
+    {
+        ERR() << "Preexisting GL error " << gl::FmtHex(error) << " as of " << file << ", "
+              << function << ":" << line << ". ";
+        error = functions->getError();
+    }
+}
+
+angle::Result CheckError(const gl::Context *context,
+                         const char *call,
+                         const char *file,
+                         const char *function,
+                         unsigned int line)
+{
+    const FunctionsGL *functions = GetFunctionsGL(context);
+
+    GLenum error = functions->getError();
+    if (ANGLE_UNLIKELY(error != GL_NO_ERROR))
+    {
+        ContextGL *contextGL = GetImplAs<ContextGL>(context);
+        contextGL->handleError(error, "Unexpected driver error.", file, function, line);
+        ERR() << "GL call " << call << " generated error " << gl::FmtHex(error) << " in " << file
+              << ", " << function << ":" << line << ". ";
+
+        // Check that only one GL error was generated, ClearErrors should have been called first
+        GLenum nextError = functions->getError();
+        while (nextError != GL_NO_ERROR)
+        {
+            ERR() << "Additional GL error " << gl::FmtHex(nextError) << " generated.";
+            nextError = functions->getError();
+        }
+
+        return angle::Result::Stop;
+    }
+
+    return angle::Result::Continue;
+}
+
 bool CanMapBufferForRead(const FunctionsGL *functions)
 {
     return (functions->mapBufferRange != nullptr) ||

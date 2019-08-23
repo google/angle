@@ -2983,11 +2983,8 @@ TEST_P(Texture2DTestES3, TextureRGB9E5ImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTestES3, TextureCOMPRESSEDRGB8ETC2ImplicitAlpha1)
 {
-    // Seems to fail on OSX 10.12 Intel.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsIntel() && IsOpenGL());
-
-    // http://anglebug.com/2190
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
+    // ETC texture formats are not supported on Mac OpenGL. http://anglebug.com/3853
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -3003,11 +3000,8 @@ TEST_P(Texture2DTestES3, TextureCOMPRESSEDRGB8ETC2ImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTestES3, TextureCOMPRESSEDSRGB8ETC2ImplicitAlpha1)
 {
-    // Seems to fail on OSX 10.12 Intel.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsIntel() && IsOpenGL());
-
-    // http://anglebug.com/2190
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
+    // ETC texture formats are not supported on Mac OpenGL. http://anglebug.com/3853
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);

@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_
 #define LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_
 
+#include "common/debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Version.h"
 #include "libANGLE/angletypes.h"
@@ -54,6 +55,29 @@ StateManagerGL *GetStateManagerGL(const gl::Context *context);
 BlitGL *GetBlitGL(const gl::Context *context);
 ClearMultiviewGL *GetMultiviewClearer(const gl::Context *context);
 const angle::FeaturesGL &GetFeaturesGL(const gl::Context *context);
+
+// Clear all errors on the stored context, emits console warnings
+void ClearErrors(const gl::Context *context,
+                 const char *file,
+                 const char *function,
+                 unsigned int line);
+
+// Check for a single error
+angle::Result CheckError(const gl::Context *context,
+                         const char *call,
+                         const char *file,
+                         const char *function,
+                         unsigned int line);
+
+#define ANGLE_GL_TRY_ALWAYS_CHECK(context, call)                      \
+    (ClearErrors(context, __FILE__, __FUNCTION__, __LINE__), (call)); \
+    ANGLE_TRY(CheckError(context, #call, __FILE__, __FUNCTION__, __LINE__))
+
+#if defined(ANGLE_ENABLE_ASSERTS)
+#    define ANGLE_GL_TRY(context, call) ANGLE_GL_TRY_ALWAYS_CHECK(context, call)
+#else
+#    define ANGLE_GL_TRY(context, call) call
+#endif
 
 namespace nativegl_gl
 {

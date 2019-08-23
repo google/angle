@@ -198,31 +198,31 @@ class TextureGL : public TextureImpl
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
 
-    void setMinFilter(const gl::Context *context, GLenum filter);
-    void setMagFilter(const gl::Context *context, GLenum filter);
+    angle::Result setMinFilter(const gl::Context *context, GLenum filter);
+    angle::Result setMagFilter(const gl::Context *context, GLenum filter);
 
-    void setSwizzle(const gl::Context *context, GLint swizzle[4]);
+    angle::Result setSwizzle(const gl::Context *context, GLint swizzle[4]);
 
     GLenum getNativeInternalFormat(const gl::ImageIndex &index) const;
     bool hasEmulatedAlphaChannel(const gl::ImageIndex &index) const;
 
   private:
-    void setImageHelper(const gl::Context *context,
-                        gl::TextureTarget target,
-                        size_t level,
-                        GLenum internalFormat,
-                        const gl::Extents &size,
-                        GLenum format,
-                        GLenum type,
-                        const uint8_t *pixels);
+    angle::Result setImageHelper(const gl::Context *context,
+                                 gl::TextureTarget target,
+                                 size_t level,
+                                 GLenum internalFormat,
+                                 const gl::Extents &size,
+                                 GLenum format,
+                                 GLenum type,
+                                 const uint8_t *pixels);
     // This changes the current pixel unpack state that will have to be reapplied.
-    void reserveTexImageToBeFilled(const gl::Context *context,
-                                   gl::TextureTarget target,
-                                   size_t level,
-                                   GLenum internalFormat,
-                                   const gl::Extents &size,
-                                   GLenum format,
-                                   GLenum type);
+    angle::Result reserveTexImageToBeFilled(const gl::Context *context,
+                                            gl::TextureTarget target,
+                                            size_t level,
+                                            GLenum internalFormat,
+                                            const gl::Extents &size,
+                                            GLenum format,
+                                            GLenum type);
     angle::Result setSubImageRowByRowWorkaround(const gl::Context *context,
                                                 gl::TextureTarget target,
                                                 size_t level,
@@ -243,11 +243,11 @@ class TextureGL : public TextureImpl
                                                const gl::Buffer *unpackBuffer,
                                                const uint8_t *pixels);
 
-    void syncTextureStateSwizzle(const gl::Context *context,
-                                 const FunctionsGL *functions,
-                                 GLenum name,
-                                 GLenum value,
-                                 GLenum *outValue);
+    angle::Result syncTextureStateSwizzle(const gl::Context *context,
+                                          const FunctionsGL *functions,
+                                          GLenum name,
+                                          GLenum value,
+                                          GLenum *outValue);
 
     void setLevelInfo(const gl::Context *context,
                       gl::TextureTarget target,

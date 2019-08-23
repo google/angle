@@ -558,10 +558,10 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
         }
 
         GLint swizzle[4] = {luminance, luminance, luminance, alpha};
-        source->setSwizzle(context, swizzle);
+        ANGLE_TRY(source->setSwizzle(context, swizzle));
     }
-    source->setMinFilter(context, GL_NEAREST);
-    source->setMagFilter(context, GL_NEAREST);
+    ANGLE_TRY(source->setMinFilter(context, GL_NEAREST));
+    ANGLE_TRY(source->setMagFilter(context, GL_NEAREST));
     ANGLE_TRY(source->setBaseLevel(context, static_cast<GLuint>(sourceLevel)));
 
     // Render to the destination texture, sampling from the source texture

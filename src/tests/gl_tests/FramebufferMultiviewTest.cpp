@@ -262,6 +262,9 @@ TEST_P(FramebufferMultiviewTest, CopyTex)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
+    // glCopyTexImage2D generates GL_INVALID_FRAMEBUFFER_OPERATION. http://anglebug.com/3857
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL());
+
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
