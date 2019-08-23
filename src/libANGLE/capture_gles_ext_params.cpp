@@ -2260,27 +2260,27 @@ void CaptureDrawElementsInstancedEXT_indices(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureCreateMemoryObjectsEXT_memoryObjects(const Context *context,
-                                                 bool isCallValid,
-                                                 GLsizei n,
-                                                 GLuint *memoryObjects,
-                                                 ParamCapture *paramCapture)
+void CaptureCreateMemoryObjectsEXT_memoryObjectsPacked(const Context *context,
+                                                       bool isCallValid,
+                                                       GLsizei n,
+                                                       MemoryObjectID *memoryObjects,
+                                                       ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteMemoryObjectsEXT_memoryObjects(const Context *context,
-                                                 bool isCallValid,
-                                                 GLsizei n,
-                                                 const GLuint *memoryObjects,
-                                                 ParamCapture *paramCapture)
+void CaptureDeleteMemoryObjectsEXT_memoryObjectsPacked(const Context *context,
+                                                       bool isCallValid,
+                                                       GLsizei n,
+                                                       const MemoryObjectID *memoryObjects,
+                                                       ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
 void CaptureGetMemoryObjectParameterivEXT_params(const Context *context,
                                                  bool isCallValid,
-                                                 GLuint memoryObject,
+                                                 MemoryObjectID memoryObject,
                                                  GLenum pname,
                                                  GLint *params,
                                                  ParamCapture *paramCapture)
@@ -2309,7 +2309,7 @@ void CaptureGetUnsignedBytei_vEXT_data(const Context *context,
 
 void CaptureMemoryObjectParameterivEXT_params(const Context *context,
                                               bool isCallValid,
-                                              GLuint memoryObject,
+                                              MemoryObjectID memoryObject,
                                               GLenum pname,
                                               const GLint *params,
                                               ParamCapture *paramCapture)

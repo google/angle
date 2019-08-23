@@ -868,19 +868,23 @@ bool ValidateMapBufferRangeEXT(Context *context,
 bool ValidateBufferStorageMemEXT(Context *context,
                                  TextureType targetPacked,
                                  GLsizeiptr size,
-                                 GLuint memory,
+                                 MemoryObjectID memoryPacked,
                                  GLuint64 offset);
-bool ValidateCreateMemoryObjectsEXT(Context *context, GLsizei n, GLuint *memoryObjects);
-bool ValidateDeleteMemoryObjectsEXT(Context *context, GLsizei n, const GLuint *memoryObjects);
+bool ValidateCreateMemoryObjectsEXT(Context *context,
+                                    GLsizei n,
+                                    MemoryObjectID *memoryObjectsPacked);
+bool ValidateDeleteMemoryObjectsEXT(Context *context,
+                                    GLsizei n,
+                                    const MemoryObjectID *memoryObjectsPacked);
 bool ValidateGetMemoryObjectParameterivEXT(Context *context,
-                                           GLuint memoryObject,
+                                           MemoryObjectID memoryObjectPacked,
                                            GLenum pname,
                                            GLint *params);
 bool ValidateGetUnsignedBytevEXT(Context *context, GLenum pname, GLubyte *data);
 bool ValidateGetUnsignedBytei_vEXT(Context *context, GLenum target, GLuint index, GLubyte *data);
-bool ValidateIsMemoryObjectEXT(Context *context, GLuint memoryObject);
+bool ValidateIsMemoryObjectEXT(Context *context, MemoryObjectID memoryObjectPacked);
 bool ValidateMemoryObjectParameterivEXT(Context *context,
-                                        GLuint memoryObject,
+                                        MemoryObjectID memoryObjectPacked,
                                         GLenum pname,
                                         const GLint *params);
 bool ValidateTexStorageMem2DEXT(Context *context,
@@ -889,7 +893,7 @@ bool ValidateTexStorageMem2DEXT(Context *context,
                                 GLenum internalFormat,
                                 GLsizei width,
                                 GLsizei height,
-                                GLuint memory,
+                                MemoryObjectID memoryPacked,
                                 GLuint64 offset);
 bool ValidateTexStorageMem2DMultisampleEXT(Context *context,
                                            TextureType targetPacked,
@@ -898,7 +902,7 @@ bool ValidateTexStorageMem2DMultisampleEXT(Context *context,
                                            GLsizei width,
                                            GLsizei height,
                                            GLboolean fixedSampleLocations,
-                                           GLuint memory,
+                                           MemoryObjectID memoryPacked,
                                            GLuint64 offset);
 bool ValidateTexStorageMem3DEXT(Context *context,
                                 TextureType targetPacked,
@@ -907,7 +911,7 @@ bool ValidateTexStorageMem3DEXT(Context *context,
                                 GLsizei width,
                                 GLsizei height,
                                 GLsizei depth,
-                                GLuint memory,
+                                MemoryObjectID memoryPacked,
                                 GLuint64 offset);
 bool ValidateTexStorageMem3DMultisampleEXT(Context *context,
                                            TextureType targetPacked,
@@ -917,12 +921,12 @@ bool ValidateTexStorageMem3DMultisampleEXT(Context *context,
                                            GLsizei height,
                                            GLsizei depth,
                                            GLboolean fixedSampleLocations,
-                                           GLuint memory,
+                                           MemoryObjectID memoryPacked,
                                            GLuint64 offset);
 
 // GL_EXT_memory_object_fd
 bool ValidateImportMemoryFdEXT(Context *context,
-                               GLuint memory,
+                               MemoryObjectID memoryPacked,
                                GLuint64 size,
                                HandleType handleTypePacked,
                                GLint fd);

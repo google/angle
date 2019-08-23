@@ -270,6 +270,17 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
         case ParamType::TMatrixType:
             WriteParamValueToStream<ParamType::TMatrixType>(os, paramValue.MatrixTypeVal);
             break;
+        case ParamType::TMemoryObjectID:
+            WriteParamValueToStream<ParamType::TMemoryObjectID>(os, paramValue.MemoryObjectIDVal);
+            break;
+        case ParamType::TMemoryObjectIDConstPointer:
+            WriteParamValueToStream<ParamType::TMemoryObjectIDConstPointer>(
+                os, paramValue.MemoryObjectIDConstPointerVal);
+            break;
+        case ParamType::TMemoryObjectIDPointer:
+            WriteParamValueToStream<ParamType::TMemoryObjectIDPointer>(
+                os, paramValue.MemoryObjectIDPointerVal);
+            break;
         case ParamType::TPathID:
             WriteParamValueToStream<ParamType::TPathID>(os, paramValue.PathIDVal);
             break;
@@ -560,6 +571,12 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLenum";
         case ParamType::TMatrixType:
             return "GLenum";
+        case ParamType::TMemoryObjectID:
+            return "GLuint";
+        case ParamType::TMemoryObjectIDConstPointer:
+            return "const GLuint *";
+        case ParamType::TMemoryObjectIDPointer:
+            return "GLuint *";
         case ParamType::TPathID:
             return "GLuint";
         case ParamType::TPointParameter:

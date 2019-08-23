@@ -68,7 +68,8 @@
         "usage": "BufferUsage"
     },
     "glBufferStorageMem": {
-        "target": "TextureType"
+        "target": "TextureType",
+        "memory": "MemoryObjectID"
     },
     "glBufferSubData": {
         "target": "BufferBinding"
@@ -463,6 +464,7 @@
         "texture": "TextureID"
     },
     "glImportMemoryFd": {
+        "memory": "MemoryObjectID",
         "handleType": "HandleType"
     },
     "glImportSemaphoreFd": {
@@ -750,16 +752,20 @@
         "target": "TextureType"
     },
     "glTexStorageMem2D": {
-        "target": "TextureType"
+        "target": "TextureType",
+        "memory": "MemoryObjectID"
     },
     "glTexStorageMem2DMultisample": {
-        "target": "TextureType"
+        "target": "TextureType",
+        "memory": "MemoryObjectID"
     },
     "glTexStorageMem3D": {
-        "target": "TextureType"
+        "target": "TextureType",
+        "memory": "MemoryObjectID"
     },
     "glTexStorageMem3DMultisample": {
-        "target": "TextureType"
+        "target": "TextureType",
+        "memory": "MemoryObjectID"
     },
     "glTexSubImage2D": {
         "target": "TextureTarget"
@@ -1529,5 +1535,20 @@
     },
     "glGetSemaphoreParameterui64v": {
         "semaphore": "SemaphoreID"
+    },
+    "glIsMemoryObject": {
+        "memoryObject": "MemoryObjectID"
+    },
+    "glDeleteMemoryObjects": {
+        "memoryObjects": "const MemoryObjectID *"
+    },
+    "glCreateMemoryObjects": {
+        "memoryObjects": "MemoryObjectID *"
+    },
+    "glMemoryObjectParameteriv": {
+        "memoryObject": "MemoryObjectID"
+    },
+    "glGetMemoryObjectParameteriv": {
+        "memoryObject": "MemoryObjectID"
     }
 }

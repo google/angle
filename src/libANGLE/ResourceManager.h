@@ -328,9 +328,9 @@ class MemoryObjectManager : public ResourceManagerBase<HandleAllocator>
   public:
     MemoryObjectManager();
 
-    GLuint createMemoryObject(rx::GLImplFactory *factory);
-    void deleteMemoryObject(const Context *context, GLuint handle);
-    MemoryObject *getMemoryObject(GLuint handle) const;
+    MemoryObjectID createMemoryObject(rx::GLImplFactory *factory);
+    void deleteMemoryObject(const Context *context, MemoryObjectID handle);
+    MemoryObject *getMemoryObject(MemoryObjectID handle) const;
 
   protected:
     ~MemoryObjectManager() override;
@@ -338,7 +338,7 @@ class MemoryObjectManager : public ResourceManagerBase<HandleAllocator>
   private:
     void reset(const Context *context) override;
 
-    ResourceMap<MemoryObject> mMemoryObjects;
+    ResourceMap<MemoryObject, MemoryObjectID> mMemoryObjects;
 };
 
 class SemaphoreManager : public ResourceManagerBase<HandleAllocator>

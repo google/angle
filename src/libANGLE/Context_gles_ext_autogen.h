@@ -329,29 +329,34 @@
     /* GL_EXT_instanced_arrays */                                                                  \
     /* GL_EXT_map_buffer_range */                                                                  \
     /* GL_EXT_memory_object */                                                                     \
-    void bufferStorageMem(TextureType targetPacked, GLsizeiptr size, GLuint memory,                \
+    void bufferStorageMem(TextureType targetPacked, GLsizeiptr size, MemoryObjectID memoryPacked,  \
                           GLuint64 offset);                                                        \
-    void createMemoryObjects(GLsizei n, GLuint *memoryObjects);                                    \
-    void deleteMemoryObjects(GLsizei n, const GLuint *memoryObjects);                              \
-    void getMemoryObjectParameteriv(GLuint memoryObject, GLenum pname, GLint *params);             \
+    void createMemoryObjects(GLsizei n, MemoryObjectID *memoryObjectsPacked);                      \
+    void deleteMemoryObjects(GLsizei n, const MemoryObjectID *memoryObjectsPacked);                \
+    void getMemoryObjectParameteriv(MemoryObjectID memoryObjectPacked, GLenum pname,               \
+                                    GLint *params);                                                \
     void getUnsignedBytev(GLenum pname, GLubyte *data);                                            \
     void getUnsignedBytei_v(GLenum target, GLuint index, GLubyte *data);                           \
-    GLboolean isMemoryObject(GLuint memoryObject);                                                 \
-    void memoryObjectParameteriv(GLuint memoryObject, GLenum pname, const GLint *params);          \
+    GLboolean isMemoryObject(MemoryObjectID memoryObjectPacked);                                   \
+    void memoryObjectParameteriv(MemoryObjectID memoryObjectPacked, GLenum pname,                  \
+                                 const GLint *params);                                             \
     void texStorageMem2D(TextureType targetPacked, GLsizei levels, GLenum internalFormat,          \
-                         GLsizei width, GLsizei height, GLuint memory, GLuint64 offset);           \
-    void texStorageMem2DMultisample(                                                               \
-        TextureType targetPacked, GLsizei samples, GLenum internalFormat, GLsizei width,           \
-        GLsizei height, GLboolean fixedSampleLocations, GLuint memory, GLuint64 offset);           \
-    void texStorageMem3D(TextureType targetPacked, GLsizei levels, GLenum internalFormat,          \
-                         GLsizei width, GLsizei height, GLsizei depth, GLuint memory,              \
+                         GLsizei width, GLsizei height, MemoryObjectID memoryPacked,               \
                          GLuint64 offset);                                                         \
+    void texStorageMem2DMultisample(TextureType targetPacked, GLsizei samples,                     \
+                                    GLenum internalFormat, GLsizei width, GLsizei height,          \
+                                    GLboolean fixedSampleLocations, MemoryObjectID memoryPacked,   \
+                                    GLuint64 offset);                                              \
+    void texStorageMem3D(TextureType targetPacked, GLsizei levels, GLenum internalFormat,          \
+                         GLsizei width, GLsizei height, GLsizei depth,                             \
+                         MemoryObjectID memoryPacked, GLuint64 offset);                            \
     void texStorageMem3DMultisample(TextureType targetPacked, GLsizei samples,                     \
                                     GLenum internalFormat, GLsizei width, GLsizei height,          \
-                                    GLsizei depth, GLboolean fixedSampleLocations, GLuint memory,  \
-                                    GLuint64 offset);                                              \
+                                    GLsizei depth, GLboolean fixedSampleLocations,                 \
+                                    MemoryObjectID memoryPacked, GLuint64 offset);                 \
     /* GL_EXT_memory_object_fd */                                                                  \
-    void importMemoryFd(GLuint memory, GLuint64 size, HandleType handleTypePacked, GLint fd);      \
+    void importMemoryFd(MemoryObjectID memoryPacked, GLuint64 size, HandleType handleTypePacked,   \
+                        GLint fd);                                                                 \
     /* GL_EXT_occlusion_query_boolean */                                                           \
     /* GL_EXT_robustness */                                                                        \
     GLenum getGraphicsResetStatus();                                                               \

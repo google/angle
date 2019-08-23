@@ -355,14 +355,14 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     TextureID createTexture();
     RenderbufferID createRenderbuffer();
     ProgramPipelineID createProgramPipeline();
-    GLuint createMemoryObject();
+    MemoryObjectID createMemoryObject();
     SemaphoreID createSemaphore();
 
     void deleteBuffer(BufferID buffer);
     void deleteTexture(TextureID texture);
     void deleteRenderbuffer(RenderbufferID renderbuffer);
     void deleteProgramPipeline(ProgramPipelineID pipeline);
-    void deleteMemoryObject(GLuint memoryObject);
+    void deleteMemoryObject(MemoryObjectID memoryObject);
     void deleteSemaphore(SemaphoreID semaphore);
 
     // CHROMIUM_path_rendering
@@ -387,7 +387,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Query *getQuery(QueryID handle) const;
     TransformFeedback *getTransformFeedback(GLuint handle) const;
     ProgramPipeline *getProgramPipeline(ProgramPipelineID handle) const;
-    MemoryObject *getMemoryObject(GLuint handle) const;
+    MemoryObject *getMemoryObject(MemoryObjectID handle) const;
     Semaphore *getSemaphore(SemaphoreID handle) const;
 
     Texture *getTextureByType(TextureType type) const;

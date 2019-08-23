@@ -91,6 +91,9 @@ enum class ParamType
     TLogicalOperation,
     TMaterialParameter,
     TMatrixType,
+    TMemoryObjectID,
+    TMemoryObjectIDConstPointer,
+    TMemoryObjectIDPointer,
     TPathID,
     TPointParameter,
     TPrimitiveMode,
@@ -206,6 +209,9 @@ union ParamValue
     gl::LogicalOperation LogicalOperationVal;
     gl::MaterialParameter MaterialParameterVal;
     gl::MatrixType MatrixTypeVal;
+    gl::MemoryObjectID MemoryObjectIDVal;
+    const gl::MemoryObjectID *MemoryObjectIDConstPointerVal;
+    gl::MemoryObjectID *MemoryObjectIDPointerVal;
     gl::PathID PathIDVal;
     gl::PointParameter PointParameterVal;
     gl::PrimitiveMode PrimitiveModeVal;
@@ -730,6 +736,27 @@ inline gl::MatrixType GetParamVal<ParamType::TMatrixType, gl::MatrixType>(const 
 }
 
 template <>
+inline gl::MemoryObjectID GetParamVal<ParamType::TMemoryObjectID, gl::MemoryObjectID>(
+    const ParamValue &value)
+{
+    return value.MemoryObjectIDVal;
+}
+
+template <>
+inline const gl::MemoryObjectID *GetParamVal<ParamType::TMemoryObjectIDConstPointer,
+                                             const gl::MemoryObjectID *>(const ParamValue &value)
+{
+    return value.MemoryObjectIDConstPointerVal;
+}
+
+template <>
+inline gl::MemoryObjectID *GetParamVal<ParamType::TMemoryObjectIDPointer, gl::MemoryObjectID *>(
+    const ParamValue &value)
+{
+    return value.MemoryObjectIDPointerVal;
+}
+
+template <>
 inline gl::PathID GetParamVal<ParamType::TPathID, gl::PathID>(const ParamValue &value)
 {
     return value.PathIDVal;
@@ -1140,6 +1167,12 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TMaterialParameter, T>(value);
         case ParamType::TMatrixType:
             return GetParamVal<ParamType::TMatrixType, T>(value);
+        case ParamType::TMemoryObjectID:
+            return GetParamVal<ParamType::TMemoryObjectID, T>(value);
+        case ParamType::TMemoryObjectIDConstPointer:
+            return GetParamVal<ParamType::TMemoryObjectIDConstPointer, T>(value);
+        case ParamType::TMemoryObjectIDPointer:
+            return GetParamVal<ParamType::TMemoryObjectIDPointer, T>(value);
         case ParamType::TPathID:
             return GetParamVal<ParamType::TPathID, T>(value);
         case ParamType::TPointParameter:
@@ -1688,6 +1721,27 @@ inline void SetParamVal<ParamType::TMatrixType>(gl::MatrixType valueIn, ParamVal
 }
 
 template <>
+inline void SetParamVal<ParamType::TMemoryObjectID>(gl::MemoryObjectID valueIn,
+                                                    ParamValue *valueOut)
+{
+    valueOut->MemoryObjectIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TMemoryObjectIDConstPointer>(const gl::MemoryObjectID *valueIn,
+                                                                ParamValue *valueOut)
+{
+    valueOut->MemoryObjectIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TMemoryObjectIDPointer>(gl::MemoryObjectID *valueIn,
+                                                           ParamValue *valueOut)
+{
+    valueOut->MemoryObjectIDPointerVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TPathID>(gl::PathID valueIn, ParamValue *valueOut)
 {
     valueOut->PathIDVal = valueIn;
@@ -2163,6 +2217,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TMatrixType:
             SetParamVal<ParamType::TMatrixType>(valueIn, valueOut);
+            break;
+        case ParamType::TMemoryObjectID:
+            SetParamVal<ParamType::TMemoryObjectID>(valueIn, valueOut);
+            break;
+        case ParamType::TMemoryObjectIDConstPointer:
+            SetParamVal<ParamType::TMemoryObjectIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TMemoryObjectIDPointer:
+            SetParamVal<ParamType::TMemoryObjectIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TPathID:
             SetParamVal<ParamType::TPathID>(valueIn, valueOut);

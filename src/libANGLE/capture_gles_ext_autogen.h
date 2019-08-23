@@ -1081,19 +1081,19 @@ angle::CallCapture CaptureBufferStorageMemEXT(const Context *context,
                                               bool isCallValid,
                                               TextureType targetPacked,
                                               GLsizeiptr size,
-                                              GLuint memory,
+                                              MemoryObjectID memoryPacked,
                                               GLuint64 offset);
 angle::CallCapture CaptureCreateMemoryObjectsEXT(const Context *context,
                                                  bool isCallValid,
                                                  GLsizei n,
-                                                 GLuint *memoryObjects);
+                                                 MemoryObjectID *memoryObjectsPacked);
 angle::CallCapture CaptureDeleteMemoryObjectsEXT(const Context *context,
                                                  bool isCallValid,
                                                  GLsizei n,
-                                                 const GLuint *memoryObjects);
+                                                 const MemoryObjectID *memoryObjectsPacked);
 angle::CallCapture CaptureGetMemoryObjectParameterivEXT(const Context *context,
                                                         bool isCallValid,
-                                                        GLuint memoryObject,
+                                                        MemoryObjectID memoryObjectPacked,
                                                         GLenum pname,
                                                         GLint *params);
 angle::CallCapture CaptureGetUnsignedBytevEXT(const Context *context,
@@ -1107,11 +1107,11 @@ angle::CallCapture CaptureGetUnsignedBytei_vEXT(const Context *context,
                                                 GLubyte *data);
 angle::CallCapture CaptureIsMemoryObjectEXT(const Context *context,
                                             bool isCallValid,
-                                            GLuint memoryObject,
+                                            MemoryObjectID memoryObjectPacked,
                                             GLboolean returnValue);
 angle::CallCapture CaptureMemoryObjectParameterivEXT(const Context *context,
                                                      bool isCallValid,
-                                                     GLuint memoryObject,
+                                                     MemoryObjectID memoryObjectPacked,
                                                      GLenum pname,
                                                      const GLint *params);
 angle::CallCapture CaptureTexStorageMem2DEXT(const Context *context,
@@ -1121,7 +1121,7 @@ angle::CallCapture CaptureTexStorageMem2DEXT(const Context *context,
                                              GLenum internalFormat,
                                              GLsizei width,
                                              GLsizei height,
-                                             GLuint memory,
+                                             MemoryObjectID memoryPacked,
                                              GLuint64 offset);
 angle::CallCapture CaptureTexStorageMem2DMultisampleEXT(const Context *context,
                                                         bool isCallValid,
@@ -1131,7 +1131,7 @@ angle::CallCapture CaptureTexStorageMem2DMultisampleEXT(const Context *context,
                                                         GLsizei width,
                                                         GLsizei height,
                                                         GLboolean fixedSampleLocations,
-                                                        GLuint memory,
+                                                        MemoryObjectID memoryPacked,
                                                         GLuint64 offset);
 angle::CallCapture CaptureTexStorageMem3DEXT(const Context *context,
                                              bool isCallValid,
@@ -1141,7 +1141,7 @@ angle::CallCapture CaptureTexStorageMem3DEXT(const Context *context,
                                              GLsizei width,
                                              GLsizei height,
                                              GLsizei depth,
-                                             GLuint memory,
+                                             MemoryObjectID memoryPacked,
                                              GLuint64 offset);
 angle::CallCapture CaptureTexStorageMem3DMultisampleEXT(const Context *context,
                                                         bool isCallValid,
@@ -1152,13 +1152,13 @@ angle::CallCapture CaptureTexStorageMem3DMultisampleEXT(const Context *context,
                                                         GLsizei height,
                                                         GLsizei depth,
                                                         GLboolean fixedSampleLocations,
-                                                        GLuint memory,
+                                                        MemoryObjectID memoryPacked,
                                                         GLuint64 offset);
 
 // GL_EXT_memory_object_fd
 angle::CallCapture CaptureImportMemoryFdEXT(const Context *context,
                                             bool isCallValid,
-                                            GLuint memory,
+                                            MemoryObjectID memoryPacked,
                                             GLuint64 size,
                                             HandleType handleTypePacked,
                                             GLint fd);
@@ -3287,19 +3287,19 @@ void CaptureDrawElementsInstancedEXT_indices(const Context *context,
                                              const void *indices,
                                              GLsizei primcount,
                                              angle::ParamCapture *paramCapture);
-void CaptureCreateMemoryObjectsEXT_memoryObjects(const Context *context,
-                                                 bool isCallValid,
-                                                 GLsizei n,
-                                                 GLuint *memoryObjects,
-                                                 angle::ParamCapture *paramCapture);
-void CaptureDeleteMemoryObjectsEXT_memoryObjects(const Context *context,
-                                                 bool isCallValid,
-                                                 GLsizei n,
-                                                 const GLuint *memoryObjects,
-                                                 angle::ParamCapture *paramCapture);
+void CaptureCreateMemoryObjectsEXT_memoryObjectsPacked(const Context *context,
+                                                       bool isCallValid,
+                                                       GLsizei n,
+                                                       MemoryObjectID *memoryObjectsPacked,
+                                                       angle::ParamCapture *paramCapture);
+void CaptureDeleteMemoryObjectsEXT_memoryObjectsPacked(const Context *context,
+                                                       bool isCallValid,
+                                                       GLsizei n,
+                                                       const MemoryObjectID *memoryObjectsPacked,
+                                                       angle::ParamCapture *paramCapture);
 void CaptureGetMemoryObjectParameterivEXT_params(const Context *context,
                                                  bool isCallValid,
-                                                 GLuint memoryObject,
+                                                 MemoryObjectID memoryObjectPacked,
                                                  GLenum pname,
                                                  GLint *params,
                                                  angle::ParamCapture *paramCapture);
@@ -3316,7 +3316,7 @@ void CaptureGetUnsignedBytei_vEXT_data(const Context *context,
                                        angle::ParamCapture *paramCapture);
 void CaptureMemoryObjectParameterivEXT_params(const Context *context,
                                               bool isCallValid,
-                                              GLuint memoryObject,
+                                              MemoryObjectID memoryObjectPacked,
                                               GLenum pname,
                                               const GLint *params,
                                               angle::ParamCapture *paramCapture);

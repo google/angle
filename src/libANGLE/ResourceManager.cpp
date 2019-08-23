@@ -506,21 +506,21 @@ void MemoryObjectManager::reset(const Context *context)
 {
     while (!mMemoryObjects.empty())
     {
-        deleteMemoryObject(context, mMemoryObjects.begin()->first);
+        deleteMemoryObject(context, {mMemoryObjects.begin()->first});
     }
     mMemoryObjects.clear();
 }
 
-GLuint MemoryObjectManager::createMemoryObject(rx::GLImplFactory *factory)
+MemoryObjectID MemoryObjectManager::createMemoryObject(rx::GLImplFactory *factory)
 {
-    GLuint handle              = mHandleAllocator.allocate();
+    MemoryObjectID handle      = MemoryObjectID{mHandleAllocator.allocate()};
     MemoryObject *memoryObject = new MemoryObject(factory, handle);
     memoryObject->addRef();
     mMemoryObjects.assign(handle, memoryObject);
     return handle;
 }
 
-void MemoryObjectManager::deleteMemoryObject(const Context *context, GLuint handle)
+void MemoryObjectManager::deleteMemoryObject(const Context *context, MemoryObjectID handle)
 {
     MemoryObject *memoryObject = nullptr;
     if (!mMemoryObjects.erase(handle, &memoryObject))
@@ -529,7 +529,7 @@ void MemoryObjectManager::deleteMemoryObject(const Context *context, GLuint hand
     }
 
     // Requires an explicit this-> because of C++ template rules.
-    this->mHandleAllocator.release(handle);
+    this->mHandleAllocator.release(handle.value);
 
     if (memoryObject)
     {
@@ -537,7 +537,7 @@ void MemoryObjectManager::deleteMemoryObject(const Context *context, GLuint hand
     }
 }
 
-MemoryObject *MemoryObjectManager::getMemoryObject(GLuint handle) const
+MemoryObject *MemoryObjectManager::getMemoryObject(MemoryObjectID handle) const
 {
     return mMemoryObjects.query(handle);
 }

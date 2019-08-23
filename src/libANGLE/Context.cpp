@@ -745,7 +745,7 @@ GLuint Context::createShaderProgramv(ShaderType type, GLsizei count, const GLcha
     return 0u;
 }
 
-GLuint Context::createMemoryObject()
+MemoryObjectID Context::createMemoryObject()
 {
     return mState.mMemoryObjectManager->createMemoryObject(mImplementation.get());
 }
@@ -815,7 +815,7 @@ void Context::deleteProgramPipeline(ProgramPipelineID pipeline)
     mState.mProgramPipelineManager->deleteObject(this, pipeline);
 }
 
-void Context::deleteMemoryObject(GLuint memoryObject)
+void Context::deleteMemoryObject(MemoryObjectID memoryObject)
 {
     mState.mMemoryObjectManager->deleteMemoryObject(this, memoryObject);
 }
@@ -6127,7 +6127,7 @@ void Context::getProgramPipelineiv(ProgramPipelineID pipeline, GLenum pname, GLi
     UNIMPLEMENTED();
 }
 
-MemoryObject *Context::getMemoryObject(GLuint handle) const
+MemoryObject *Context::getMemoryObject(MemoryObjectID handle) const
 {
     return mState.mMemoryObjectManager->getMemoryObject(handle);
 }
@@ -7619,7 +7619,7 @@ GLboolean Context::testFenceNV(FenceNVID fence)
     return result;
 }
 
-void Context::deleteMemoryObjects(GLsizei n, const GLuint *memoryObjects)
+void Context::deleteMemoryObjects(GLsizei n, const MemoryObjectID *memoryObjects)
 {
     for (int i = 0; i < n; i++)
     {
@@ -7627,9 +7627,9 @@ void Context::deleteMemoryObjects(GLsizei n, const GLuint *memoryObjects)
     }
 }
 
-GLboolean Context::isMemoryObject(GLuint memoryObject)
+GLboolean Context::isMemoryObject(MemoryObjectID memoryObject)
 {
-    if (memoryObject == 0)
+    if (memoryObject.value == 0)
     {
         return GL_FALSE;
     }
@@ -7637,7 +7637,7 @@ GLboolean Context::isMemoryObject(GLuint memoryObject)
     return ConvertToGLBoolean(getMemoryObject(memoryObject));
 }
 
-void Context::createMemoryObjects(GLsizei n, GLuint *memoryObjects)
+void Context::createMemoryObjects(GLsizei n, MemoryObjectID *memoryObjects)
 {
     for (int i = 0; i < n; i++)
     {
@@ -7645,12 +7645,14 @@ void Context::createMemoryObjects(GLsizei n, GLuint *memoryObjects)
     }
 }
 
-void Context::memoryObjectParameteriv(GLuint memoryObject, GLenum pname, const GLint *params)
+void Context::memoryObjectParameteriv(MemoryObjectID memoryObject,
+                                      GLenum pname,
+                                      const GLint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getMemoryObjectParameteriv(GLuint memoryObject, GLenum pname, GLint *params)
+void Context::getMemoryObjectParameteriv(MemoryObjectID memoryObject, GLenum pname, GLint *params)
 {
     UNIMPLEMENTED();
 }
@@ -7660,7 +7662,7 @@ void Context::texStorageMem2D(TextureType target,
                               GLenum internalFormat,
                               GLsizei width,
                               GLsizei height,
-                              GLuint memory,
+                              MemoryObjectID memory,
                               GLuint64 offset)
 {
     MemoryObject *memoryObject = getMemoryObject(memory);
@@ -7677,7 +7679,7 @@ void Context::texStorageMem2DMultisample(TextureType target,
                                          GLsizei width,
                                          GLsizei height,
                                          GLboolean fixedSampleLocations,
-                                         GLuint memory,
+                                         MemoryObjectID memory,
                                          GLuint64 offset)
 {
     UNIMPLEMENTED();
@@ -7689,7 +7691,7 @@ void Context::texStorageMem3D(TextureType target,
                               GLsizei width,
                               GLsizei height,
                               GLsizei depth,
-                              GLuint memory,
+                              MemoryObjectID memory,
                               GLuint64 offset)
 {
     UNIMPLEMENTED();
@@ -7702,18 +7704,21 @@ void Context::texStorageMem3DMultisample(TextureType target,
                                          GLsizei height,
                                          GLsizei depth,
                                          GLboolean fixedSampleLocations,
-                                         GLuint memory,
+                                         MemoryObjectID memory,
                                          GLuint64 offset)
 {
     UNIMPLEMENTED();
 }
 
-void Context::bufferStorageMem(TextureType target, GLsizeiptr size, GLuint memory, GLuint64 offset)
+void Context::bufferStorageMem(TextureType target,
+                               GLsizeiptr size,
+                               MemoryObjectID memory,
+                               GLuint64 offset)
 {
     UNIMPLEMENTED();
 }
 
-void Context::importMemoryFd(GLuint memory, GLuint64 size, HandleType handleType, GLint fd)
+void Context::importMemoryFd(MemoryObjectID memory, GLuint64 size, HandleType handleType, GLint fd)
 {
     MemoryObject *memoryObject = getMemoryObject(memory);
     ASSERT(memoryObject != nullptr);

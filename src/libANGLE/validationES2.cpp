@@ -3230,7 +3230,7 @@ bool ValidateMapBufferRangeEXT(Context *context,
 bool ValidateBufferStorageMemEXT(Context *context,
                                  TextureType target,
                                  GLsizeiptr size,
-                                 GLuint memory,
+                                 MemoryObjectID memory,
                                  GLuint64 offset)
 {
     if (!context->getExtensions().memoryObject)
@@ -3243,7 +3243,7 @@ bool ValidateBufferStorageMemEXT(Context *context,
     return false;
 }
 
-bool ValidateCreateMemoryObjectsEXT(Context *context, GLsizei n, GLuint *memoryObjects)
+bool ValidateCreateMemoryObjectsEXT(Context *context, GLsizei n, MemoryObjectID *memoryObjects)
 {
     if (!context->getExtensions().memoryObject)
     {
@@ -3254,7 +3254,9 @@ bool ValidateCreateMemoryObjectsEXT(Context *context, GLsizei n, GLuint *memoryO
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateDeleteMemoryObjectsEXT(Context *context, GLsizei n, const GLuint *memoryObjects)
+bool ValidateDeleteMemoryObjectsEXT(Context *context,
+                                    GLsizei n,
+                                    const MemoryObjectID *memoryObjects)
 {
     if (!context->getExtensions().memoryObject)
     {
@@ -3266,7 +3268,7 @@ bool ValidateDeleteMemoryObjectsEXT(Context *context, GLsizei n, const GLuint *m
 }
 
 bool ValidateGetMemoryObjectParameterivEXT(Context *context,
-                                           GLuint memoryObject,
+                                           MemoryObjectID memoryObject,
                                            GLenum pname,
                                            GLint *params)
 {
@@ -3304,7 +3306,7 @@ bool ValidateGetUnsignedBytei_vEXT(Context *context, GLenum target, GLuint index
     return false;
 }
 
-bool ValidateIsMemoryObjectEXT(Context *context, GLuint memoryObject)
+bool ValidateIsMemoryObjectEXT(Context *context, MemoryObjectID memoryObject)
 {
     if (!context->getExtensions().memoryObject)
     {
@@ -3316,7 +3318,7 @@ bool ValidateIsMemoryObjectEXT(Context *context, GLuint memoryObject)
 }
 
 bool ValidateMemoryObjectParameterivEXT(Context *context,
-                                        GLuint memoryObject,
+                                        MemoryObjectID memoryObject,
                                         GLenum pname,
                                         const GLint *params)
 {
@@ -3336,7 +3338,7 @@ bool ValidateTexStorageMem2DEXT(Context *context,
                                 GLenum internalFormat,
                                 GLsizei width,
                                 GLsizei height,
-                                GLuint memory,
+                                MemoryObjectID memory,
                                 GLuint64 offset)
 {
     if (!context->getExtensions().memoryObject)
@@ -3363,7 +3365,7 @@ bool ValidateTexStorageMem3DEXT(Context *context,
                                 GLsizei width,
                                 GLsizei height,
                                 GLsizei depth,
-                                GLuint memory,
+                                MemoryObjectID memory,
                                 GLuint64 offset)
 {
     if (!context->getExtensions().memoryObject)
@@ -3377,7 +3379,7 @@ bool ValidateTexStorageMem3DEXT(Context *context,
 }
 
 bool ValidateImportMemoryFdEXT(Context *context,
-                               GLuint memory,
+                               MemoryObjectID memory,
                                GLuint64 size,
                                HandleType handleType,
                                GLint fd)
