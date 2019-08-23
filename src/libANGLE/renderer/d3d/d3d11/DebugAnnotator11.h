@@ -11,7 +11,7 @@
 
 #include "libANGLE/LoggingAnnotator.h"
 
-#include <mutex>
+#include <thread>
 
 namespace rx
 {
@@ -29,10 +29,14 @@ class DebugAnnotator11 : public angle::LoggingAnnotator
     bool getStatus() override;
 
   private:
+    bool loggingEnabledForThisThread() const;
+
     angle::ComPtr<ID3DUserDefinedAnnotation> mUserDefinedAnnotation;
     static constexpr size_t kMaxMessageLength = 256;
     wchar_t mWCharMessage[kMaxMessageLength];
-    std::mutex mAnnotationMutex;
+
+    // Only log annotations from the thread used to initialize the debug annotator
+    std::thread::id mAnnotationThread;
 };
 
 }  // namespace rx
