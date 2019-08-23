@@ -1012,7 +1012,7 @@ VkResult WindowSurfaceVk::nextSwapchainImage(vk::Context *context)
 {
     VkDevice device = context->getDevice();
 
-    vk::Scoped<vk::Semaphore> acquireImageSemaphore(device);
+    vk::DeviceScoped<vk::Semaphore> acquireImageSemaphore(device);
     VkResult result = acquireImageSemaphore.get().init(device);
     if (ANGLE_UNLIKELY(result != VK_SUCCESS))
     {

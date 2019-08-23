@@ -835,8 +835,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         else
         {
             // Create depth- and stencil-only views for reading.
-            vk::Scoped<vk::ImageView> depthView(contextVk->getDevice());
-            vk::Scoped<vk::ImageView> stencilView(contextVk->getDevice());
+            vk::DeviceScoped<vk::ImageView> depthView(contextVk->getDevice());
+            vk::DeviceScoped<vk::ImageView> stencilView(contextVk->getDevice());
 
             vk::ImageHelper *depthStencilImage = &readRenderTarget->getImage();
             uint32_t levelIndex                = readRenderTarget->getLevelIndex();
@@ -1460,7 +1460,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     // If the source image is multisampled, we need to resolve it into a temporary image before
     // performing a readback.
     bool isMultisampled = srcImage->getSamples() > 1;
-    vk::Scoped<vk::ImageHelper> resolvedImage(contextVk->getDevice());
+    vk::DeviceScoped<vk::ImageHelper> resolvedImage(contextVk->getDevice());
     if (isMultisampled)
     {
         ANGLE_TRY(resolvedImage.get().init2DStaging(

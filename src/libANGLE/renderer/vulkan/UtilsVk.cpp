@@ -1170,7 +1170,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
                                     &descriptorPoolBinding, &descriptorSet));
 
     // Create a temporary buffer to blit/resolve stencil into.
-    vk::Scoped<vk::BufferHelper> blitBuffer(contextVk->getDevice());
+    vk::ContextScoped<vk::BufferHelper> blitBuffer(contextVk);
 
     uint32_t bufferRowLengthInUints = UnsignedCeilDivide(params.blitArea.width, sizeof(uint32_t));
     VkDeviceSize bufferSize = bufferRowLengthInUints * sizeof(uint32_t) * params.blitArea.height;
@@ -1316,8 +1316,6 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     commandBuffer->copyBufferToImage(blitBuffer.get().getBuffer().getHandle(),
                                      depthStencilImage->getImage(),
                                      depthStencilImage->getCurrentLayout(), 1, &region);
-
-    blitBuffer.get().release(contextVk);
 
     return angle::Result::Continue;
 }

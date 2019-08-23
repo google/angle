@@ -317,11 +317,11 @@ enum class RecordingMode
 // Helper class to handle RAII patterns for initialization. Requires that T have a destroy method
 // that takes a VkDevice and returns void.
 template <typename T>
-class Scoped final : angle::NonCopyable
+class DeviceScoped final : angle::NonCopyable
 {
   public:
-    Scoped(VkDevice device) : mDevice(device) {}
-    ~Scoped() { mVar.destroy(mDevice); }
+    DeviceScoped(VkDevice device) : mDevice(device) {}
+    ~DeviceScoped() { mVar.destroy(mDevice); }
 
     const T &get() const { return mVar; }
     T &get() { return mVar; }
@@ -330,6 +330,25 @@ class Scoped final : angle::NonCopyable
 
   private:
     VkDevice mDevice;
+    T mVar;
+};
+
+// Similar to DeviceScoped, but releases objects instead of destroying them. Requires that T have a
+// release method that takes a ContextVk * and returns void.
+template <typename T>
+class ContextScoped final : angle::NonCopyable
+{
+  public:
+    ContextScoped(ContextVk *contextVk) : mContextVk(contextVk) {}
+    ~ContextScoped() { mVar.release(mContextVk); }
+
+    const T &get() const { return mVar; }
+    T &get() { return mVar; }
+
+    T &&release() { return std::move(mVar); }
+
+  private:
+    ContextVk *mContextVk;
     T mVar;
 };
 

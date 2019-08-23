@@ -876,7 +876,7 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     fenceInfo.flags             = 0;
 
     VkDevice device = getDevice();
-    vk::Scoped<CommandBatch> scopedBatch(device);
+    vk::DeviceScoped<CommandBatch> scopedBatch(device);
     CommandBatch &batch = scopedBatch.get();
     ANGLE_TRY(getNextSubmitFence(&batch.fence));
 
@@ -1019,7 +1019,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
     eventCreateInfo.flags             = 0;
 
     VkDevice device = getDevice();
-    vk::Scoped<vk::Event> cpuReady(device), gpuReady(device), gpuDone(device);
+    vk::DeviceScoped<vk::Event> cpuReady(device), gpuReady(device), gpuDone(device);
     ANGLE_VK_TRY(this, cpuReady.get().init(device, eventCreateInfo));
     ANGLE_VK_TRY(this, gpuReady.get().init(device, eventCreateInfo));
     ANGLE_VK_TRY(this, gpuDone.get().init(device, eventCreateInfo));
@@ -1038,7 +1038,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         ANGLE_VK_TRY(this, gpuDone.get().reset(device));
 
         // Record the command buffer
-        vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(device);
+        vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(device);
         vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
 
         if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
@@ -2552,7 +2552,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flush");
 
-    vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(getDevice());
+    vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(getDevice());
     if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
     {
         ANGLE_TRY(mPrimaryCommandPool.alloc(this, &commandBatch.get()));
@@ -2795,13 +2795,13 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
 
     // Create a query used to receive the GPU timestamp
     VkDevice device = getDevice();
-    vk::Scoped<vk::DynamicQueryPool> timestampQueryPool(device);
+    vk::DeviceScoped<vk::DynamicQueryPool> timestampQueryPool(device);
     vk::QueryHelper timestampQuery;
     ANGLE_TRY(timestampQueryPool.get().init(this, VK_QUERY_TYPE_TIMESTAMP, 1));
     ANGLE_TRY(timestampQueryPool.get().allocateQuery(this, &timestampQuery));
 
     // Record the command buffer
-    vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(device);
+    vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(device);
     vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
 
     if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
@@ -2839,7 +2839,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     fenceInfo.flags             = 0;
 
-    vk::Scoped<vk::Fence> fence(device);
+    vk::DeviceScoped<vk::Fence> fence(device);
     ANGLE_VK_TRY(this, fence.get().init(device, fenceInfo));
 
     // Submit the command buffer
