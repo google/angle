@@ -20,7 +20,7 @@ namespace
 // Only applies to D3D11
 struct Captures final : private angle::NonCopyable
 {
-    Timer *timer           = CreateTimer();
+    Timer timer;
     size_t loadDLLsMS      = 0;
     size_t createDeviceMS  = 0;
     size_t initResourcesMS = 0;
@@ -29,7 +29,7 @@ struct Captures final : private angle::NonCopyable
 double CapturePlatform_currentTime(angle::PlatformMethods *platformMethods)
 {
     Captures *captures = static_cast<Captures *>(platformMethods->context);
-    return captures->timer->getElapsedTime();
+    return captures->timer.getElapsedTime();
 }
 
 void CapturePlatform_histogramCustomCounts(angle::PlatformMethods *platformMethods,

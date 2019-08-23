@@ -131,6 +131,17 @@ const char *GetPathSeparator()
     return ";";
 }
 
+double GetCurrentTime()
+{
+    LARGE_INTEGER frequency = {};
+    QueryPerformanceFrequency(&frequency);
+
+    LARGE_INTEGER curTime;
+    QueryPerformanceCounter(&curTime);
+
+    return static_cast<double>(curTime.QuadPart) / frequency.QuadPart;
+}
+
 bool RunApp(const std::vector<const char *> &args,
             std::string *stdoutOut,
             std::string *stderrOut,

@@ -26,6 +26,9 @@ const char *GetPathSeparator();
 bool PrependPathToEnvironmentVar(const char *variableName, const char *path);
 bool IsDirectory(const char *filename);
 
+// Get absolute time in seconds.  Use this function to get an absolute time with an unknown origin.
+double GetCurrentTime();
+
 // Run an application and get the output.  Gets a nullptr-terminated set of args to execute the
 // application with, and returns the stdout and stderr outputs as well as the exit code.
 //

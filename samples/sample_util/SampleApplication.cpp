@@ -68,7 +68,6 @@ SampleApplication::SampleApplication(std::string name,
         angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ApplicationDir));
 
     mEGLWindow = EGLWindow::New(glesMajorVersion, glesMinorVersion);
-    mTimer.reset(CreateTimer());
     mOSWindow = OSWindow::New();
 }
 
@@ -158,12 +157,12 @@ int SampleApplication::run()
         result   = -1;
     }
 
-    mTimer->start();
+    mTimer.start();
     double prevTime = 0.0;
 
     while (mRunning)
     {
-        double elapsedTime = mTimer->getElapsedTime();
+        double elapsedTime = mTimer.getElapsedTime();
         double deltaTime   = elapsedTime - prevTime;
 
         step(static_cast<float>(deltaTime), elapsedTime);

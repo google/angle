@@ -61,7 +61,7 @@ class SampleApplication
     uint32_t mHeight;
     bool mRunning;
 
-    std::unique_ptr<Timer> mTimer;
+    Timer mTimer;
     EGLWindow *mEGLWindow;
     OSWindow *mOSWindow;
 

@@ -427,19 +427,17 @@ bool X11Window::resize(int width, int height)
     XResizeWindow(mDisplay, mWindow, width, height);
     XFlush(mDisplay);
 
-    Timer *timer = CreateTimer();
-    timer->start();
+    Timer timer;
+    timer.start();
 
     // Wait until the window as actually been resized so that the code calling resize
     // can assume the window has been resized.
     const double kResizeWaitDelay = 0.2;
-    while ((mHeight != height || mWidth != width) && timer->getElapsedTime() < kResizeWaitDelay)
+    while ((mHeight != height || mWidth != width) && timer.getElapsedTime() < kResizeWaitDelay)
     {
         messageLoop();
         angle::Sleep(10);
     }
-
-    delete timer;
 
     return true;
 }

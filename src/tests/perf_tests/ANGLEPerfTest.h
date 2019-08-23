@@ -69,8 +69,6 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     // Called right before timer is stopped to let the test wait for asynchronous operations.
     virtual void finishTest() {}
 
-    Timer *getTimer() const { return mTimer; }
-
   protected:
     void run();
     void SetUp() override;
@@ -88,7 +86,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     std::string mName;
     std::string mBackend;
     std::string mStory;
-    Timer *mTimer;
+    Timer mTimer;
     uint64_t mGPUTimeNs;
     bool mSkipTest;
     std::unique_ptr<perf_test::PerfResultReporter> mReporter;

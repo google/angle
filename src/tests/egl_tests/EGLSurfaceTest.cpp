@@ -376,28 +376,28 @@ TEST_P(EGLSurfaceTest, SwapInterval)
     {
         if (maxInterval >= 1)
         {
-            std::unique_ptr<Timer> timer(CreateTimer());
+            Timer timer;
 
             eglSwapInterval(mDisplay, 1);
-            timer->start();
+            timer.start();
             for (int i = 0; i < 180; ++i)
             {
                 eglSwapBuffers(mDisplay, mWindowSurface);
             }
-            timer->stop();
+            timer.stop();
             ASSERT_EGL_SUCCESS();
 
             // 120 frames at 60fps should take 3s.  At lower fps, it should take even longer.  At
             // 144fps, it would take 1.25s.  Let's use 1s as a lower bound.
-            ASSERT_GT(timer->getElapsedTime(), 1);
+            ASSERT_GT(timer.getElapsedTime(), 1);
         }
 
         if (minInterval <= 0)
         {
-            std::unique_ptr<Timer> timer(CreateTimer());
+            Timer timer;
 
             eglSwapInterval(mDisplay, 0);
-            timer->start();
+            timer.start();
             for (int i = 0; i < 100; ++i)
             {
                 eglSwapBuffers(mDisplay, mWindowSurface);
@@ -406,7 +406,7 @@ TEST_P(EGLSurfaceTest, SwapInterval)
                 // http://anglebug.com/3144.
                 ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
             }
-            timer->stop();
+            timer.stop();
             ASSERT_EGL_SUCCESS();
 
             // 100 no-op swaps should be fairly fast, though there is no guarantee how fast it can
@@ -415,7 +415,7 @@ TEST_P(EGLSurfaceTest, SwapInterval)
             // TODO(syoussefi): if a surface doesn't truly allow no-vsync, this can fail.  Until
             // there's a way to query the exact minInterval from the surface, this test cannot be
             // enabled.
-            // ASSERT_LT(timer->getElapsedTime(), 1);
+            // ASSERT_LT(timer.getElapsedTime(), 1);
         }
     }
 }

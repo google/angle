@@ -48,7 +48,7 @@ class Win32Window : public OSWindow
     std::string mChildClassName;
 
     bool mIsVisible;
-    Timer *mSetVisibleTimer;
+    Timer mSetVisibleTimer;
 
     bool mIsMouseInWindow;
 
