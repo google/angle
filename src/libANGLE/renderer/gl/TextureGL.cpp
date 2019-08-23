@@ -1721,6 +1721,9 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
     unpackState.alignment = 1;
     stateManager->setPixelUnpackState(unpackState);
 
+    GLuint prevUnpackBuffer = stateManager->getBufferID(gl::BufferBinding::PixelUnpack);
+    stateManager->bindBuffer(gl::BufferBinding::PixelUnpack, 0);
+
     stateManager->bindTexture(getType(), mTextureID);
     if (internalFormatInfo.compressed)
     {
@@ -1786,6 +1789,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
     // glTexImage call, we need to make sure that the texture data to be uploaded later has the
     // expected unpack state.
     stateManager->setPixelUnpackState(context->getState().getUnpackState());
+    stateManager->bindBuffer(gl::BufferBinding::PixelUnpack, prevUnpackBuffer);
 
     return angle::Result::Continue;
 }
