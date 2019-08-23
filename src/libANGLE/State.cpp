@@ -108,6 +108,8 @@ TextureManager *AllocateOrGetSharedTextureManager(const State *shareContextState
         return new TextureManager();
     }
 }
+
+int gIDCounter = 1;
 }  // namespace
 
 template <typename BindingT, typename... ArgsT>
@@ -241,7 +243,8 @@ State::State(ContextID contextIn,
              bool clientArraysEnabled,
              bool robustResourceInit,
              bool programBinaryCacheEnabled)
-    : mClientType(clientType),
+    : mID(gIDCounter++),
+      mClientType(clientType),
       mClientVersion(clientVersion),
       mContext(contextIn),
       mBufferManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mBufferManager)),

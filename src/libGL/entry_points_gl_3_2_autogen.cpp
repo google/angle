@@ -28,11 +28,14 @@ namespace gl
 {
 GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
-    EVENT("(GLsync sync = 0x%016" PRIxPTR ", GLbitfield flags = %s, GLuint64 timeout = %llu)",
-          (uintptr_t)sync, GLbitfieldToString(GLenumGroup::SyncObjectMask, flags).c_str(),
+    Context *context = GetValidGlobalContext();
+    EVENT("glClientWaitSync",
+          "context = %d, GLsync sync = 0x%016" PRIxPTR
+          ", GLbitfield flags = %s, GLuint64 timeout = %llu",
+          CID(context), (uintptr_t)sync,
+          GLbitfieldToString(GLenumGroup::SyncObjectMask, flags).c_str(),
           static_cast<unsigned long long>(timeout));
 
-    Context *context = GetValidGlobalContext();
     GLenum returnValue;
     if (context)
     {
@@ -58,9 +61,10 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
 
 void GL_APIENTRY DeleteSync(GLsync sync)
 {
-    EVENT("(GLsync sync = 0x%016" PRIxPTR ")", (uintptr_t)sync);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDeleteSync", "context = %d, GLsync sync = 0x%016" PRIxPTR "", CID(context),
+          (uintptr_t)sync);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -79,13 +83,13 @@ void GL_APIENTRY DrawElementsBaseVertex(GLenum mode,
                                         const void *indices,
                                         GLint basevertex)
 {
-    EVENT(
-        "(GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void *indices = "
-        "0x%016" PRIxPTR ", GLint basevertex = %d)",
-        GLenumToString(GLenumGroup::PrimitiveType, mode), count,
-        GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDrawElementsBaseVertex",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -108,14 +112,14 @@ void GL_APIENTRY DrawElementsInstancedBaseVertex(GLenum mode,
                                                  GLsizei instancecount,
                                                  GLint basevertex)
 {
-    EVENT(
-        "(GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void *indices = "
-        "0x%016" PRIxPTR ", GLsizei instancecount = %d, GLint basevertex = %d)",
-        GLenumToString(GLenumGroup::PrimitiveType, mode), count,
-        GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount,
-        basevertex);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDrawElementsInstancedBaseVertex",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLsizei instancecount = %d, GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount,
+          basevertex);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -140,13 +144,13 @@ void GL_APIENTRY DrawRangeElementsBaseVertex(GLenum mode,
                                              const void *indices,
                                              GLint basevertex)
 {
-    EVENT(
-        "(GLenum mode = %s, GLuint start = %u, GLuint end = %u, GLsizei count = %d, GLenum type = "
-        "%s, const void *indices = 0x%016" PRIxPTR ", GLint basevertex = %d)",
-        GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
-        GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDrawRangeElementsBaseVertex",
+          "context = %d, GLenum mode = %s, GLuint start = %u, GLuint end = %u, GLsizei count = %d, "
+          "GLenum type = %s, const void *indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -165,11 +169,11 @@ void GL_APIENTRY DrawRangeElementsBaseVertex(GLenum mode,
 
 GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
 {
-    EVENT("(GLenum condition = %s, GLbitfield flags = %s)",
+    Context *context = GetValidGlobalContext();
+    EVENT("glFenceSync", "context = %d, GLenum condition = %s, GLbitfield flags = %s", CID(context),
           GLenumToString(GLenumGroup::SyncCondition, condition),
           GLbitfieldToString(GLenumGroup::DefaultGroup, flags).c_str());
 
-    Context *context = GetValidGlobalContext();
     GLsync returnValue;
     if (context)
     {
@@ -195,11 +199,13 @@ GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
 
 void GL_APIENTRY FramebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level)
 {
-    EVENT("(GLenum target = %s, GLenum attachment = %s, GLuint texture = %u, GLint level = %d)",
-          GLenumToString(GLenumGroup::FramebufferTarget, target),
+    Context *context = GetValidGlobalContext();
+    EVENT("glFramebufferTexture",
+          "context = %d, GLenum target = %s, GLenum attachment = %s, GLuint texture = %u, GLint "
+          "level = %d",
+          CID(context), GLenumToString(GLenumGroup::FramebufferTarget, target),
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment), texture, level);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -218,11 +224,13 @@ void GL_APIENTRY FramebufferTexture(GLenum target, GLenum attachment, GLuint tex
 
 void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLint64 *params = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::BufferTargetARB, target),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetBufferParameteri64v",
+          "context = %d, GLenum target = %s, GLenum pname = %s, GLint64 *params = 0x%016" PRIxPTR
+          "",
+          CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferBinding targetPacked                    = FromGL<BufferBinding>(target);
@@ -239,10 +247,11 @@ void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *pa
 
 void GL_APIENTRY GetInteger64i_v(GLenum target, GLuint index, GLint64 *data)
 {
-    EVENT("(GLenum target = %s, GLuint index = %u, GLint64 *data = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TypeEnum, target), index, (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetInteger64i_v",
+          "context = %d, GLenum target = %s, GLuint index = %u, GLint64 *data = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::TypeEnum, target), index, (uintptr_t)data);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -258,10 +267,10 @@ void GL_APIENTRY GetInteger64i_v(GLenum target, GLuint index, GLint64 *data)
 
 void GL_APIENTRY GetInteger64v(GLenum pname, GLint64 *data)
 {
-    EVENT("(GLenum pname = %s, GLint64 *data = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetInteger64v", "context = %d, GLenum pname = %s, GLint64 *data = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -277,10 +286,11 @@ void GL_APIENTRY GetInteger64v(GLenum pname, GLint64 *data)
 
 void GL_APIENTRY GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
 {
-    EVENT("(GLenum pname = %s, GLuint index = %u, GLfloat *val = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::DefaultGroup, pname), index, (uintptr_t)val);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetMultisamplefv",
+          "context = %d, GLenum pname = %s, GLuint index = %u, GLfloat *val = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), index, (uintptr_t)val);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -297,13 +307,14 @@ void GL_APIENTRY GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
 void GL_APIENTRY
 GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
 {
-    EVENT("(GLsync sync = 0x%016" PRIxPTR
-          ", GLenum pname = %s, GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
-          ", GLint *values = 0x%016" PRIxPTR ")",
-          (uintptr_t)sync, GLenumToString(GLenumGroup::SyncParameterName, pname), bufSize,
-          (uintptr_t)length, (uintptr_t)values);
-
     Context *context = GetGlobalContext();
+    EVENT("glGetSynciv",
+          "context = %d, GLsync sync = 0x%016" PRIxPTR
+          ", GLenum pname = %s, GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
+          ", GLint *values = 0x%016" PRIxPTR "",
+          CID(context), (uintptr_t)sync, GLenumToString(GLenumGroup::SyncParameterName, pname),
+          bufSize, (uintptr_t)length, (uintptr_t)values);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -319,9 +330,10 @@ GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *va
 
 GLboolean GL_APIENTRY IsSync(GLsync sync)
 {
-    EVENT("(GLsync sync = 0x%016" PRIxPTR ")", (uintptr_t)sync);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glIsSync", "context = %d, GLsync sync = 0x%016" PRIxPTR "", CID(context),
+          (uintptr_t)sync);
+
     GLboolean returnValue;
     if (context)
     {
@@ -351,14 +363,15 @@ void GL_APIENTRY MultiDrawElementsBaseVertex(GLenum mode,
                                              GLsizei drawcount,
                                              const GLint *basevertex)
 {
-    EVENT("(GLenum mode = %s, const GLsizei *count = 0x%016" PRIxPTR
+    Context *context = GetValidGlobalContext();
+    EVENT("glMultiDrawElementsBaseVertex",
+          "context = %d, GLenum mode = %s, const GLsizei *count = 0x%016" PRIxPTR
           ", GLenum type = %s, const void *const*indices = 0x%016" PRIxPTR
-          ", GLsizei drawcount = %d, const GLint *basevertex = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)count,
+          ", GLsizei drawcount = %d, const GLint *basevertex = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, drawcount,
           (uintptr_t)basevertex);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -376,9 +389,10 @@ void GL_APIENTRY MultiDrawElementsBaseVertex(GLenum mode,
 
 void GL_APIENTRY ProvokingVertex(GLenum mode)
 {
-    EVENT("(GLenum mode = %s)", GLenumToString(GLenumGroup::VertexProvokingMode, mode));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProvokingVertex", "context = %d, GLenum mode = %s", CID(context),
+          GLenumToString(GLenumGroup::VertexProvokingMode, mode));
+
     if (context)
     {
         ProvokingVertexConvention modePacked          = FromGL<ProvokingVertexConvention>(mode);
@@ -395,10 +409,10 @@ void GL_APIENTRY ProvokingVertex(GLenum mode)
 
 void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
 {
-    EVENT("(GLuint maskNumber = %u, GLbitfield mask = %s)", maskNumber,
-          GLbitfieldToString(GLenumGroup::DefaultGroup, mask).c_str());
-
     Context *context = GetValidGlobalContext();
+    EVENT("glSampleMaski", "context = %d, GLuint maskNumber = %u, GLbitfield mask = %s",
+          CID(context), maskNumber, GLbitfieldToString(GLenumGroup::DefaultGroup, mask).c_str());
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -419,14 +433,14 @@ void GL_APIENTRY TexImage2DMultisample(GLenum target,
                                        GLsizei height,
                                        GLboolean fixedsamplelocations)
 {
-    EVENT(
-        "(GLenum target = %s, GLsizei samples = %d, GLenum internalformat = %s, GLsizei width = "
-        "%d, GLsizei height = %d, GLboolean fixedsamplelocations = %s)",
-        GLenumToString(GLenumGroup::TextureTarget, target), samples,
-        GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height,
-        GLbooleanToString(fixedsamplelocations));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTexImage2DMultisample",
+          "context = %d, GLenum target = %s, GLsizei samples = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d, GLsizei height = %d, GLboolean fixedsamplelocations = %s",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), samples,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height,
+          GLbooleanToString(fixedsamplelocations));
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -451,14 +465,15 @@ void GL_APIENTRY TexImage3DMultisample(GLenum target,
                                        GLsizei depth,
                                        GLboolean fixedsamplelocations)
 {
-    EVENT(
-        "(GLenum target = %s, GLsizei samples = %d, GLenum internalformat = %s, GLsizei width = "
-        "%d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedsamplelocations = %s)",
-        GLenumToString(GLenumGroup::TextureTarget, target), samples,
-        GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth,
-        GLbooleanToString(fixedsamplelocations));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTexImage3DMultisample",
+          "context = %d, GLenum target = %s, GLsizei samples = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLboolean "
+          "fixedsamplelocations = %s",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), samples,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth,
+          GLbooleanToString(fixedsamplelocations));
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -478,11 +493,14 @@ void GL_APIENTRY TexImage3DMultisample(GLenum target,
 
 void GL_APIENTRY WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
-    EVENT("(GLsync sync = 0x%016" PRIxPTR ", GLbitfield flags = %s, GLuint64 timeout = %llu)",
-          (uintptr_t)sync, GLbitfieldToString(GLenumGroup::DefaultGroup, flags).c_str(),
+    Context *context = GetValidGlobalContext();
+    EVENT("glWaitSync",
+          "context = %d, GLsync sync = 0x%016" PRIxPTR
+          ", GLbitfield flags = %s, GLuint64 timeout = %llu",
+          CID(context), (uintptr_t)sync,
+          GLbitfieldToString(GLenumGroup::DefaultGroup, flags).c_str(),
           static_cast<unsigned long long>(timeout));
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);

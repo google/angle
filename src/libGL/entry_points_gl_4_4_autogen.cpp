@@ -28,12 +28,13 @@ namespace gl
 {
 void GL_APIENTRY BindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint *buffers)
 {
-    EVENT(
-        "(GLenum target = %s, GLuint first = %u, GLsizei count = %d, const GLuint *buffers = "
-        "0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::BufferTargetARB, target), first, count, (uintptr_t)buffers);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindBuffersBase",
+          "context = %d, GLenum target = %s, GLuint first = %u, GLsizei count = %d, const GLuint "
+          "*buffers = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target), first, count,
+          (uintptr_t)buffers);
+
     if (context)
     {
         const BufferID *buffersPacked                 = FromGL<const BufferID *>(buffers);
@@ -55,14 +56,14 @@ void GL_APIENTRY BindBuffersRange(GLenum target,
                                   const GLintptr *offsets,
                                   const GLsizeiptr *sizes)
 {
-    EVENT(
-        "(GLenum target = %s, GLuint first = %u, GLsizei count = %d, const GLuint *buffers = "
-        "0x%016" PRIxPTR ", const GLintptr *offsets = 0x%016" PRIxPTR
-        ", const GLsizeiptr *sizes = 0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::BufferTargetARB, target), first, count, (uintptr_t)buffers,
-        (uintptr_t)offsets, (uintptr_t)sizes);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindBuffersRange",
+          "context = %d, GLenum target = %s, GLuint first = %u, GLsizei count = %d, const GLuint "
+          "*buffers = 0x%016" PRIxPTR ", const GLintptr *offsets = 0x%016" PRIxPTR
+          ", const GLsizeiptr *sizes = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target), first, count,
+          (uintptr_t)buffers, (uintptr_t)offsets, (uintptr_t)sizes);
+
     if (context)
     {
         const BufferID *buffersPacked                 = FromGL<const BufferID *>(buffers);
@@ -81,10 +82,12 @@ void GL_APIENTRY BindBuffersRange(GLenum target,
 
 void GL_APIENTRY BindImageTextures(GLuint first, GLsizei count, const GLuint *textures)
 {
-    EVENT("(GLuint first = %u, GLsizei count = %d, const GLuint *textures = 0x%016" PRIxPTR ")",
-          first, count, (uintptr_t)textures);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindImageTextures",
+          "context = %d, GLuint first = %u, GLsizei count = %d, const GLuint *textures = "
+          "0x%016" PRIxPTR "",
+          CID(context), first, count, (uintptr_t)textures);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -100,10 +103,12 @@ void GL_APIENTRY BindImageTextures(GLuint first, GLsizei count, const GLuint *te
 
 void GL_APIENTRY BindSamplers(GLuint first, GLsizei count, const GLuint *samplers)
 {
-    EVENT("(GLuint first = %u, GLsizei count = %d, const GLuint *samplers = 0x%016" PRIxPTR ")",
-          first, count, (uintptr_t)samplers);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindSamplers",
+          "context = %d, GLuint first = %u, GLsizei count = %d, const GLuint *samplers = "
+          "0x%016" PRIxPTR "",
+          CID(context), first, count, (uintptr_t)samplers);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -119,10 +124,12 @@ void GL_APIENTRY BindSamplers(GLuint first, GLsizei count, const GLuint *sampler
 
 void GL_APIENTRY BindTextures(GLuint first, GLsizei count, const GLuint *textures)
 {
-    EVENT("(GLuint first = %u, GLsizei count = %d, const GLuint *textures = 0x%016" PRIxPTR ")",
-          first, count, (uintptr_t)textures);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindTextures",
+          "context = %d, GLuint first = %u, GLsizei count = %d, const GLuint *textures = "
+          "0x%016" PRIxPTR "",
+          CID(context), first, count, (uintptr_t)textures);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -142,12 +149,13 @@ void GL_APIENTRY BindVertexBuffers(GLuint first,
                                    const GLintptr *offsets,
                                    const GLsizei *strides)
 {
-    EVENT("(GLuint first = %u, GLsizei count = %d, const GLuint *buffers = 0x%016" PRIxPTR
-          ", const GLintptr *offsets = 0x%016" PRIxPTR ", const GLsizei *strides = 0x%016" PRIxPTR
-          ")",
-          first, count, (uintptr_t)buffers, (uintptr_t)offsets, (uintptr_t)strides);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindVertexBuffers",
+          "context = %d, GLuint first = %u, GLsizei count = %d, const GLuint *buffers = "
+          "0x%016" PRIxPTR ", const GLintptr *offsets = 0x%016" PRIxPTR
+          ", const GLsizei *strides = 0x%016" PRIxPTR "",
+          CID(context), first, count, (uintptr_t)buffers, (uintptr_t)offsets, (uintptr_t)strides);
+
     if (context)
     {
         const BufferID *buffersPacked                 = FromGL<const BufferID *>(buffers);
@@ -166,13 +174,14 @@ void GL_APIENTRY BindVertexBuffers(GLuint first,
 
 void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags)
 {
-    EVENT("(GLenum target = %s, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
-          ", GLbitfield flags = %s)",
-          GLenumToString(GLenumGroup::BufferStorageTarget, target),
+    Context *context = GetValidGlobalContext();
+    EVENT("glBufferStorage",
+          "context = %d, GLenum target = %s, GLsizeiptr size = %llu, const void *data = "
+          "0x%016" PRIxPTR ", GLbitfield flags = %s",
+          CID(context), GLenumToString(GLenumGroup::BufferStorageTarget, target),
           static_cast<unsigned long long>(size), (uintptr_t)data,
           GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -189,13 +198,13 @@ void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data,
 void GL_APIENTRY
 ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const void *data)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLenum format = %s, GLenum type = %s, const void "
-        "*data = 0x%016" PRIxPTR ")",
-        texture, level, GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glClearTexImage",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLenum format = %s, GLenum type = "
+          "%s, const void *data = 0x%016" PRIxPTR "",
+          CID(context), texture, level, GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -224,15 +233,15 @@ void GL_APIENTRY ClearTexSubImage(GLuint texture,
                                   GLenum type,
                                   const void *data)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
-        "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
-        "= %s, GLenum type = %s, const void *data = 0x%016" PRIxPTR ")",
-        texture, level, xoffset, yoffset, zoffset, width, height, depth,
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glClearTexSubImage",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset "
+          "= %d, GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
+          "GLenum format = %s, GLenum type = %s, const void *data = 0x%016" PRIxPTR "",
+          CID(context), texture, level, xoffset, yoffset, zoffset, width, height, depth,
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);

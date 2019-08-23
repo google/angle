@@ -259,7 +259,7 @@ void Trace(LogSeverity severity, const char *message)
         {
             *file << LogSeverityName(severity) << ": ";
         }
-        *file << str;
+        *file << str << "\n";
         file->flush();
     }
 #endif  // defined(ANGLE_ENABLE_DEBUG_TRACE)

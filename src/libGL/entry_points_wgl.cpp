@@ -17,6 +17,7 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/Thread.h"
+#include "libANGLE/entry_points_utils.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationEGL.h"
 #include "libGL/proc_table_wgl.h"
@@ -221,7 +222,7 @@ wglGetLayerPaletteEntries(HDC hdc, int iLayerPlane, int iStart, int cEntries, CO
 PROC GL_APIENTRY wglGetProcAddress(LPCSTR lpszProc)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(const char *procname = \"%s\")", lpszProc);
+    FUNC_EVENT("const char *procname = \"%s\"", lpszProc);
     egl::Thread *thread = egl::GetCurrentThread();
 
     ProcEntry *entry =

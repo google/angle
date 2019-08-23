@@ -34,14 +34,14 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
                                   GLenum access,
                                   GLenum format)
 {
-    EVENT(
-        "(GLuint unit = %u, GLuint texture = %u, GLint level = %d, GLboolean layered = %s, GLint "
-        "layer = %d, GLenum access = %s, GLenum format = %s)",
-        unit, texture, level, GLbooleanToString(layered), layer,
-        GLenumToString(GLenumGroup::BufferAccessARB, access),
-        GLenumToString(GLenumGroup::InternalFormat, format));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindImageTexture",
+          "context = %d, GLuint unit = %u, GLuint texture = %u, GLint level = %d, GLboolean "
+          "layered = %s, GLint layer = %d, GLenum access = %s, GLenum format = %s",
+          CID(context), unit, texture, level, GLbooleanToString(layered), layer,
+          GLenumToString(GLenumGroup::BufferAccessARB, access),
+          GLenumToString(GLenumGroup::InternalFormat, format));
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -64,13 +64,13 @@ void GL_APIENTRY DrawArraysInstancedBaseInstance(GLenum mode,
                                                  GLsizei instancecount,
                                                  GLuint baseinstance)
 {
-    EVENT(
-        "(GLenum mode = %s, GLint first = %d, GLsizei count = %d, GLsizei instancecount = %d, "
-        "GLuint baseinstance = %u)",
-        GLenumToString(GLenumGroup::PrimitiveType, mode), first, count, instancecount,
-        baseinstance);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDrawArraysInstancedBaseInstance",
+          "context = %d, GLenum mode = %s, GLint first = %d, GLsizei count = %d, GLsizei "
+          "instancecount = %d, GLuint baseinstance = %u",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), first, count,
+          instancecount, baseinstance);
+
     if (context)
     {
         PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
@@ -95,14 +95,14 @@ void GL_APIENTRY DrawElementsInstancedBaseInstance(GLenum mode,
                                                    GLsizei instancecount,
                                                    GLuint baseinstance)
 {
-    EVENT(
-        "(GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void *indices = "
-        "0x%016" PRIxPTR ", GLsizei instancecount = %d, GLuint baseinstance = %u)",
-        GLenumToString(GLenumGroup::PrimitiveType, mode), count,
-        GLenumToString(GLenumGroup::PrimitiveType, type), (uintptr_t)indices, instancecount,
-        baseinstance);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDrawElementsInstancedBaseInstance",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLsizei instancecount = %d, GLuint baseinstance = %u",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::PrimitiveType, type), (uintptr_t)indices, instancecount,
+          baseinstance);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -127,15 +127,15 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstance(GLenum mode,
                                                              GLint basevertex,
                                                              GLuint baseinstance)
 {
-    EVENT(
-        "(GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void *indices = "
-        "0x%016" PRIxPTR
-        ", GLsizei instancecount = %d, GLint basevertex = %d, GLuint baseinstance = %u)",
-        GLenumToString(GLenumGroup::PrimitiveType, mode), count,
-        GLenumToString(GLenumGroup::PrimitiveType, type), (uintptr_t)indices, instancecount,
-        basevertex, baseinstance);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDrawElementsInstancedBaseVertexBaseInstance",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR
+          ", GLsizei instancecount = %d, GLint basevertex = %d, GLuint baseinstance = %u",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::PrimitiveType, type), (uintptr_t)indices, instancecount,
+          basevertex, baseinstance);
+
     if (context)
     {
         PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
@@ -157,10 +157,11 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstance(GLenum mode,
 
 void GL_APIENTRY DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount)
 {
-    EVENT("(GLenum mode = %s, GLuint id = %u, GLsizei instancecount = %d)",
-          GLenumToString(GLenumGroup::PrimitiveType, mode), id, instancecount);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDrawTransformFeedbackInstanced",
+          "context = %d, GLenum mode = %s, GLuint id = %u, GLsizei instancecount = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), id, instancecount);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -180,10 +181,13 @@ void GL_APIENTRY DrawTransformFeedbackStreamInstanced(GLenum mode,
                                                       GLuint stream,
                                                       GLsizei instancecount)
 {
-    EVENT("(GLenum mode = %s, GLuint id = %u, GLuint stream = %u, GLsizei instancecount = %d)",
-          GLenumToString(GLenumGroup::PrimitiveType, mode), id, stream, instancecount);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDrawTransformFeedbackStreamInstanced",
+          "context = %d, GLenum mode = %s, GLuint id = %u, GLuint stream = %u, GLsizei "
+          "instancecount = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), id, stream,
+          instancecount);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -204,13 +208,13 @@ void GL_APIENTRY GetActiveAtomicCounterBufferiv(GLuint program,
                                                 GLenum pname,
                                                 GLint *params)
 {
-    EVENT(
-        "(GLuint program = %u, GLuint bufferIndex = %u, GLenum pname = %s, GLint *params = "
-        "0x%016" PRIxPTR ")",
-        program, bufferIndex, GLenumToString(GLenumGroup::AtomicCounterBufferPName, pname),
-        (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetActiveAtomicCounterBufferiv",
+          "context = %d, GLuint program = %u, GLuint bufferIndex = %u, GLenum pname = %s, GLint "
+          "*params = 0x%016" PRIxPTR "",
+          CID(context), program, bufferIndex,
+          GLenumToString(GLenumGroup::AtomicCounterBufferPName, pname), (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -232,14 +236,14 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
                                      GLsizei bufSize,
                                      GLint *params)
 {
-    EVENT(
-        "(GLenum target = %s, GLenum internalformat = %s, GLenum pname = %s, GLsizei bufSize = %d, "
-        "GLint *params = 0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::TextureTarget, target),
-        GLenumToString(GLenumGroup::InternalFormat, internalformat),
-        GLenumToString(GLenumGroup::InternalFormatPName, pname), bufSize, (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetInternalformativ",
+          "context = %d, GLenum target = %s, GLenum internalformat = %s, GLenum pname = %s, "
+          "GLsizei bufSize = %d, GLint *params = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
+          GLenumToString(GLenumGroup::InternalFormat, internalformat),
+          GLenumToString(GLenumGroup::InternalFormatPName, pname), bufSize, (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -257,10 +261,10 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
 
 void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
 {
-    EVENT("(GLbitfield barriers = %s)",
+    Context *context = GetValidGlobalContext();
+    EVENT("glMemoryBarrier", "context = %d, GLbitfield barriers = %s", CID(context),
           GLbitfieldToString(GLenumGroup::MemoryBarrierMask, barriers).c_str());
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -275,12 +279,13 @@ void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
 
 void GL_APIENTRY TexStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width)
 {
-    EVENT(
-        "(GLenum target = %s, GLsizei levels = %d, GLenum internalformat = %s, GLsizei width = %d)",
-        GLenumToString(GLenumGroup::TextureTarget, target), levels,
-        GLenumToString(GLenumGroup::InternalFormat, internalformat), width);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTexStorage1D",
+          "context = %d, GLenum target = %s, GLsizei levels = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -297,13 +302,13 @@ void GL_APIENTRY TexStorage1D(GLenum target, GLsizei levels, GLenum internalform
 void GL_APIENTRY
 TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    EVENT(
-        "(GLenum target = %s, GLsizei levels = %d, GLenum internalformat = %s, GLsizei width = %d, "
-        "GLsizei height = %d)",
-        GLenumToString(GLenumGroup::TextureTarget, target), levels,
-        GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTexStorage2D",
+          "context = %d, GLenum target = %s, GLsizei levels = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d, GLsizei height = %d",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
+
     if (context)
     {
         TextureType targetPacked                      = FromGL<TextureType>(target);
@@ -327,13 +332,13 @@ void GL_APIENTRY TexStorage3D(GLenum target,
                               GLsizei height,
                               GLsizei depth)
 {
-    EVENT(
-        "(GLenum target = %s, GLsizei levels = %d, GLenum internalformat = %s, GLsizei width = %d, "
-        "GLsizei height = %d, GLsizei depth = %d)",
-        GLenumToString(GLenumGroup::TextureTarget, target), levels,
-        GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTexStorage3D",
+          "context = %d, GLenum target = %s, GLsizei levels = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth);
+
     if (context)
     {
         TextureType targetPacked                      = FromGL<TextureType>(target);

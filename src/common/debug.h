@@ -241,12 +241,12 @@ std::ostream &FmtHex(std::ostream &os, T value)
 // A macro to log a performance event around a scope.
 #if defined(ANGLE_TRACE_ENABLED)
 #    if defined(_MSC_VER)
-#        define EVENT(message, ...)                                                      \
-            gl::ScopedPerfEventHelper scopedPerfEventHelper##__LINE__("%s" message "\n", \
-                                                                      __FUNCTION__, __VA_ARGS__)
+#        define EVENT(function, message, ...)                                                      \
+            gl::ScopedPerfEventHelper scopedPerfEventHelper##__LINE__("%s(" message ")", function, \
+                                                                      __VA_ARGS__)
 #    else
-#        define EVENT(message, ...)                                                          \
-            gl::ScopedPerfEventHelper scopedPerfEventHelper("%s" message "\n", __FUNCTION__, \
+#        define EVENT(function, message, ...)                                            \
+            gl::ScopedPerfEventHelper scopedPerfEventHelper("%s(" message ")", function, \
                                                             ##__VA_ARGS__)
 #    endif  // _MSC_VER
 #else

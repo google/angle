@@ -28,10 +28,10 @@ namespace gl
 {
 void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
 {
-    EVENT("(GLenum target = %s, GLuint id = %u)", GLenumToString(GLenumGroup::QueryTarget, target),
-          id);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBeginQuery", "context = %d, GLenum target = %s, GLuint id = %u", CID(context),
+          GLenumToString(GLenumGroup::QueryTarget, target), id);
+
     if (context)
     {
         QueryType targetPacked                        = FromGL<QueryType>(target);
@@ -48,10 +48,10 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
 
 void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
 {
-    EVENT("(GLenum target = %s, GLuint buffer = %u)",
+    Context *context = GetValidGlobalContext();
+    EVENT("glBindBuffer", "context = %d, GLenum target = %s, GLuint buffer = %u", CID(context),
           GLenumToString(GLenumGroup::BufferTargetARB, target), buffer);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferBinding targetPacked                    = FromGL<BufferBinding>(target);
@@ -69,13 +69,14 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
 
 void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage)
 {
-    EVENT("(GLenum target = %s, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
-          ", GLenum usage = %s)",
-          GLenumToString(GLenumGroup::BufferTargetARB, target),
+    Context *context = GetValidGlobalContext();
+    EVENT("glBufferData",
+          "context = %d, GLenum target = %s, GLsizeiptr size = %llu, const void *data = "
+          "0x%016" PRIxPTR ", GLenum usage = %s",
+          CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           static_cast<unsigned long long>(size), (uintptr_t)data,
           GLenumToString(GLenumGroup::BufferUsageARB, usage));
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferBinding targetPacked                    = FromGL<BufferBinding>(target);
@@ -93,14 +94,14 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
 
 void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data)
 {
-    EVENT(
-        "(GLenum target = %s, GLintptr offset = %llu, GLsizeiptr size = %llu, const void *data = "
-        "0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::BufferTargetARB, target),
-        static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
-        (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBufferSubData",
+          "context = %d, GLenum target = %s, GLintptr offset = %llu, GLsizeiptr size = %llu, const "
+          "void *data = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
+          static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
+          (uintptr_t)data);
+
     if (context)
     {
         BufferBinding targetPacked                    = FromGL<BufferBinding>(target);
@@ -117,9 +118,11 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
 
 void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
 {
-    EVENT("(GLsizei n = %d, const GLuint *buffers = 0x%016" PRIxPTR ")", n, (uintptr_t)buffers);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDeleteBuffers",
+          "context = %d, GLsizei n = %d, const GLuint *buffers = 0x%016" PRIxPTR "", CID(context),
+          n, (uintptr_t)buffers);
+
     if (context)
     {
         const BufferID *buffersPacked                 = FromGL<const BufferID *>(buffers);
@@ -136,9 +139,10 @@ void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
 
 void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
 {
-    EVENT("(GLsizei n = %d, const GLuint *ids = 0x%016" PRIxPTR ")", n, (uintptr_t)ids);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDeleteQueries", "context = %d, GLsizei n = %d, const GLuint *ids = 0x%016" PRIxPTR "",
+          CID(context), n, (uintptr_t)ids);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -153,9 +157,10 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
 
 void GL_APIENTRY EndQuery(GLenum target)
 {
-    EVENT("(GLenum target = %s)", GLenumToString(GLenumGroup::QueryTarget, target));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glEndQuery", "context = %d, GLenum target = %s", CID(context),
+          GLenumToString(GLenumGroup::QueryTarget, target));
+
     if (context)
     {
         QueryType targetPacked                        = FromGL<QueryType>(target);
@@ -171,9 +176,10 @@ void GL_APIENTRY EndQuery(GLenum target)
 
 void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
 {
-    EVENT("(GLsizei n = %d, GLuint *buffers = 0x%016" PRIxPTR ")", n, (uintptr_t)buffers);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGenBuffers", "context = %d, GLsizei n = %d, GLuint *buffers = 0x%016" PRIxPTR "",
+          CID(context), n, (uintptr_t)buffers);
+
     if (context)
     {
         BufferID *buffersPacked                       = FromGL<BufferID *>(buffers);
@@ -190,9 +196,10 @@ void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
 
 void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
 {
-    EVENT("(GLsizei n = %d, GLuint *ids = 0x%016" PRIxPTR ")", n, (uintptr_t)ids);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGenQueries", "context = %d, GLsizei n = %d, GLuint *ids = 0x%016" PRIxPTR "",
+          CID(context), n, (uintptr_t)ids);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -207,11 +214,12 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
 
 void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::BufferTargetARB, target),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetBufferParameteriv",
+          "context = %d, GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferBinding targetPacked                    = FromGL<BufferBinding>(target);
@@ -228,11 +236,12 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params
 
 void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, void **params = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::BufferTargetARB, target),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetBufferPointerv",
+          "context = %d, GLenum target = %s, GLenum pname = %s, void **params = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferBinding targetPacked                    = FromGL<BufferBinding>(target);
@@ -249,14 +258,14 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
 
 void GL_APIENTRY GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void *data)
 {
-    EVENT(
-        "(GLenum target = %s, GLintptr offset = %llu, GLsizeiptr size = %llu, void *data = "
-        "0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::BufferTargetARB, target),
-        static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
-        (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetBufferSubData",
+          "context = %d, GLenum target = %s, GLintptr offset = %llu, GLsizeiptr size = %llu, void "
+          "*data = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
+          static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
+          (uintptr_t)data);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -272,10 +281,12 @@ void GL_APIENTRY GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr siz
 
 void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint id = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", id,
-          GLenumToString(GLenumGroup::QueryObjectParameterName, pname), (uintptr_t)params);
-
     Context *context = GetGlobalContext();
+    EVENT("glGetQueryObjectiv",
+          "context = %d, GLuint id = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR "",
+          CID(context), id, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -291,10 +302,12 @@ void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
 
 void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 {
-    EVENT("(GLuint id = %u, GLenum pname = %s, GLuint *params = 0x%016" PRIxPTR ")", id,
-          GLenumToString(GLenumGroup::QueryObjectParameterName, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetQueryObjectuiv",
+          "context = %d, GLuint id = %u, GLenum pname = %s, GLuint *params = 0x%016" PRIxPTR "",
+          CID(context), id, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -310,11 +323,12 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 
 void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::QueryTarget, target),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetQueryiv",
+          "context = %d, GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::QueryTarget, target),
           GLenumToString(GLenumGroup::QueryParameterName, pname), (uintptr_t)params);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         QueryType targetPacked                        = FromGL<QueryType>(target);
@@ -331,9 +345,9 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
 
 GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
 {
-    EVENT("(GLuint buffer = %u)", buffer);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glIsBuffer", "context = %d, GLuint buffer = %u", CID(context), buffer);
+
     GLboolean returnValue;
     if (context)
     {
@@ -359,9 +373,9 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
 
 GLboolean GL_APIENTRY IsQuery(GLuint id)
 {
-    EVENT("(GLuint id = %u)", id);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glIsQuery", "context = %d, GLuint id = %u", CID(context), id);
+
     GLboolean returnValue;
     if (context)
     {
@@ -386,11 +400,11 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
 
 void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
 {
-    EVENT("(GLenum target = %s, GLenum access = %s)",
+    Context *context = GetValidGlobalContext();
+    EVENT("glMapBuffer", "context = %d, GLenum target = %s, GLenum access = %s", CID(context),
           GLenumToString(GLenumGroup::BufferTargetARB, target),
           GLenumToString(GLenumGroup::BufferAccessARB, access));
 
-    Context *context = GetValidGlobalContext();
     void *returnValue;
     if (context)
     {
@@ -417,9 +431,10 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
 
 GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
 {
-    EVENT("(GLenum target = %s)", GLenumToString(GLenumGroup::BufferTargetARB, target));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glUnmapBuffer", "context = %d, GLenum target = %s", CID(context),
+          GLenumToString(GLenumGroup::BufferTargetARB, target));
+
     GLboolean returnValue;
     if (context)
     {

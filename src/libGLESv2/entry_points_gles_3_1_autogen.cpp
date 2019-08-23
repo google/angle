@@ -22,9 +22,10 @@ namespace gl
 {
 void GL_APIENTRY ActiveShaderProgram(GLuint pipeline, GLuint program)
 {
-    EVENT("(GLuint pipeline = %u, GLuint program = %u)", pipeline, program);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glActiveShaderProgram", "context = %d, GLuint pipeline = %u, GLuint program = %u",
+          CID(context), pipeline, program);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -46,14 +47,14 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
                                   GLenum access,
                                   GLenum format)
 {
-    EVENT(
-        "(GLuint unit = %u, GLuint texture = %u, GLint level = %d, GLboolean layered = %s, GLint "
-        "layer = %d, GLenum access = %s, GLenum format = %s)",
-        unit, texture, level, GLbooleanToString(layered), layer,
-        GLenumToString(GLenumGroup::BufferAccessARB, access),
-        GLenumToString(GLenumGroup::InternalFormat, format));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindImageTexture",
+          "context = %d, GLuint unit = %u, GLuint texture = %u, GLint level = %d, GLboolean "
+          "layered = %s, GLint layer = %d, GLenum access = %s, GLenum format = %s",
+          CID(context), unit, texture, level, GLbooleanToString(layered), layer,
+          GLenumToString(GLenumGroup::BufferAccessARB, access),
+          GLenumToString(GLenumGroup::InternalFormat, format));
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -72,9 +73,9 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
 
 void GL_APIENTRY BindProgramPipeline(GLuint pipeline)
 {
-    EVENT("(GLuint pipeline = %u)", pipeline);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindProgramPipeline", "context = %d, GLuint pipeline = %u", CID(context), pipeline);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -93,12 +94,12 @@ void GL_APIENTRY BindVertexBuffer(GLuint bindingindex,
                                   GLintptr offset,
                                   GLsizei stride)
 {
-    EVENT(
-        "(GLuint bindingindex = %u, GLuint buffer = %u, GLintptr offset = %llu, GLsizei stride = "
-        "%d)",
-        bindingindex, buffer, static_cast<unsigned long long>(offset), stride);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindVertexBuffer",
+          "context = %d, GLuint bindingindex = %u, GLuint buffer = %u, GLintptr offset = %llu, "
+          "GLsizei stride = %d",
+          CID(context), bindingindex, buffer, static_cast<unsigned long long>(offset), stride);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -117,10 +118,12 @@ void GL_APIENTRY BindVertexBuffer(GLuint bindingindex,
 
 GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar *const *strings)
 {
-    EVENT("(GLenum type = %s, GLsizei count = %d, const GLchar *const*strings = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::ShaderType, type), count, (uintptr_t)strings);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateShaderProgramv",
+          "context = %d, GLenum type = %s, GLsizei count = %d, const GLchar *const*strings = "
+          "0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::ShaderType, type), count, (uintptr_t)strings);
+
     GLuint returnValue;
     if (context)
     {
@@ -148,9 +151,11 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
 
 void GL_APIENTRY DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
 {
-    EVENT("(GLsizei n = %d, const GLuint *pipelines = 0x%016" PRIxPTR ")", n, (uintptr_t)pipelines);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDeleteProgramPipelines",
+          "context = %d, GLsizei n = %d, const GLuint *pipelines = 0x%016" PRIxPTR "", CID(context),
+          n, (uintptr_t)pipelines);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -166,10 +171,12 @@ void GL_APIENTRY DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
 
 void GL_APIENTRY DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GLuint num_groups_z)
 {
-    EVENT("(GLuint num_groups_x = %u, GLuint num_groups_y = %u, GLuint num_groups_z = %u)",
-          num_groups_x, num_groups_y, num_groups_z);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDispatchCompute",
+          "context = %d, GLuint num_groups_x = %u, GLuint num_groups_y = %u, GLuint num_groups_z = "
+          "%u",
+          CID(context), num_groups_x, num_groups_y, num_groups_z);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -187,9 +194,10 @@ void GL_APIENTRY DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GLuin
 
 void GL_APIENTRY DispatchComputeIndirect(GLintptr indirect)
 {
-    EVENT("(GLintptr indirect = %llu)", static_cast<unsigned long long>(indirect));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDispatchComputeIndirect", "context = %d, GLintptr indirect = %llu", CID(context),
+          static_cast<unsigned long long>(indirect));
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -205,10 +213,11 @@ void GL_APIENTRY DispatchComputeIndirect(GLintptr indirect)
 
 void GL_APIENTRY DrawArraysIndirect(GLenum mode, const void *indirect)
 {
-    EVENT("(GLenum mode = %s, const void *indirect = 0x%016" PRIxPTR ")",
+    Context *context = GetValidGlobalContext();
+    EVENT("glDrawArraysIndirect",
+          "context = %d, GLenum mode = %s, const void *indirect = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)indirect);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
@@ -225,11 +234,13 @@ void GL_APIENTRY DrawArraysIndirect(GLenum mode, const void *indirect)
 
 void GL_APIENTRY DrawElementsIndirect(GLenum mode, GLenum type, const void *indirect)
 {
-    EVENT("(GLenum mode = %s, GLenum type = %s, const void *indirect = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::PrimitiveType, mode),
+    Context *context = GetValidGlobalContext();
+    EVENT("glDrawElementsIndirect",
+          "context = %d, GLenum mode = %s, GLenum type = %s, const void *indirect = 0x%016" PRIxPTR
+          "",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode),
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indirect);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
@@ -248,11 +259,12 @@ void GL_APIENTRY DrawElementsIndirect(GLenum mode, GLenum type, const void *indi
 
 void GL_APIENTRY FramebufferParameteri(GLenum target, GLenum pname, GLint param)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLint param = %d)",
+    Context *context = GetValidGlobalContext();
+    EVENT("glFramebufferParameteri",
+          "context = %d, GLenum target = %s, GLenum pname = %s, GLint param = %d", CID(context),
           GLenumToString(GLenumGroup::FramebufferTarget, target),
           GLenumToString(GLenumGroup::FramebufferParameterName, pname), param);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -268,9 +280,11 @@ void GL_APIENTRY FramebufferParameteri(GLenum target, GLenum pname, GLint param)
 
 void GL_APIENTRY GenProgramPipelines(GLsizei n, GLuint *pipelines)
 {
-    EVENT("(GLsizei n = %d, GLuint *pipelines = 0x%016" PRIxPTR ")", n, (uintptr_t)pipelines);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGenProgramPipelines",
+          "context = %d, GLsizei n = %d, GLuint *pipelines = 0x%016" PRIxPTR "", CID(context), n,
+          (uintptr_t)pipelines);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -286,10 +300,12 @@ void GL_APIENTRY GenProgramPipelines(GLsizei n, GLuint *pipelines)
 
 void GL_APIENTRY GetBooleani_v(GLenum target, GLuint index, GLboolean *data)
 {
-    EVENT("(GLenum target = %s, GLuint index = %u, GLboolean *data = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::BufferTargetARB, target), index, (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT(
+        "glGetBooleani_v",
+        "context = %d, GLenum target = %s, GLuint index = %u, GLboolean *data = 0x%016" PRIxPTR "",
+        CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target), index, (uintptr_t)data);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -305,12 +321,13 @@ void GL_APIENTRY GetBooleani_v(GLenum target, GLuint index, GLboolean *data)
 
 void GL_APIENTRY GetFramebufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
-    EVENT("(GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::FramebufferTarget, target),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetFramebufferParameteriv",
+          "context = %d, GLenum target = %s, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::FramebufferTarget, target),
           GLenumToString(GLenumGroup::FramebufferAttachmentParameterName, pname),
           (uintptr_t)params);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -326,10 +343,11 @@ void GL_APIENTRY GetFramebufferParameteriv(GLenum target, GLenum pname, GLint *p
 
 void GL_APIENTRY GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
 {
-    EVENT("(GLenum pname = %s, GLuint index = %u, GLfloat *val = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::DefaultGroup, pname), index, (uintptr_t)val);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetMultisamplefv",
+          "context = %d, GLenum pname = %s, GLuint index = %u, GLfloat *val = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), index, (uintptr_t)val);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -348,13 +366,13 @@ void GL_APIENTRY GetProgramInterfaceiv(GLuint program,
                                        GLenum pname,
                                        GLint *params)
 {
-    EVENT(
-        "(GLuint program = %u, GLenum programInterface = %s, GLenum pname = %s, GLint *params = "
-        "0x%016" PRIxPTR ")",
-        program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
-        GLenumToString(GLenumGroup::ProgramInterfacePName, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetProgramInterfaceiv",
+          "context = %d, GLuint program = %u, GLenum programInterface = %s, GLenum pname = %s, "
+          "GLint *params = 0x%016" PRIxPTR "",
+          CID(context), program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
+          GLenumToString(GLenumGroup::ProgramInterfacePName, pname), (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -375,11 +393,13 @@ void GL_APIENTRY GetProgramPipelineInfoLog(GLuint pipeline,
                                            GLsizei *length,
                                            GLchar *infoLog)
 {
-    EVENT("(GLuint pipeline = %u, GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
-          ", GLchar *infoLog = 0x%016" PRIxPTR ")",
-          pipeline, bufSize, (uintptr_t)length, (uintptr_t)infoLog);
-
     Context *context = GetValidGlobalContext();
+    EVENT(
+        "glGetProgramPipelineInfoLog",
+        "context = %d, GLuint pipeline = %u, GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
+        ", GLchar *infoLog = 0x%016" PRIxPTR "",
+        CID(context), pipeline, bufSize, (uintptr_t)length, (uintptr_t)infoLog);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -397,10 +417,13 @@ void GL_APIENTRY GetProgramPipelineInfoLog(GLuint pipeline,
 
 void GL_APIENTRY GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint pipeline = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", pipeline,
-          GLenumToString(GLenumGroup::PipelineParameterName, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetProgramPipelineiv",
+          "context = %d, GLuint pipeline = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR
+          "",
+          CID(context), pipeline, GLenumToString(GLenumGroup::PipelineParameterName, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -418,12 +441,13 @@ GLuint GL_APIENTRY GetProgramResourceIndex(GLuint program,
                                            GLenum programInterface,
                                            const GLchar *name)
 {
-    EVENT("(GLuint program = %u, GLenum programInterface = %s, const GLchar *name = 0x%016" PRIxPTR
-          ")",
-          program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetProgramResourceIndex",
+          "context = %d, GLuint program = %u, GLenum programInterface = %s, const GLchar *name = "
+          "0x%016" PRIxPTR "",
+          CID(context), program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
           (uintptr_t)name);
 
-    Context *context = GetValidGlobalContext();
     GLuint returnValue;
     if (context)
     {
@@ -453,12 +477,13 @@ GLint GL_APIENTRY GetProgramResourceLocation(GLuint program,
                                              GLenum programInterface,
                                              const GLchar *name)
 {
-    EVENT("(GLuint program = %u, GLenum programInterface = %s, const GLchar *name = 0x%016" PRIxPTR
-          ")",
-          program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetProgramResourceLocation",
+          "context = %d, GLuint program = %u, GLenum programInterface = %s, const GLchar *name = "
+          "0x%016" PRIxPTR "",
+          CID(context), program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
           (uintptr_t)name);
 
-    Context *context = GetValidGlobalContext();
     GLint returnValue;
     if (context)
     {
@@ -491,13 +516,14 @@ void GL_APIENTRY GetProgramResourceName(GLuint program,
                                         GLsizei *length,
                                         GLchar *name)
 {
-    EVENT(
-        "(GLuint program = %u, GLenum programInterface = %s, GLuint index = %u, GLsizei bufSize = "
-        "%d, GLsizei *length = 0x%016" PRIxPTR ", GLchar *name = 0x%016" PRIxPTR ")",
-        program, GLenumToString(GLenumGroup::ProgramInterface, programInterface), index, bufSize,
-        (uintptr_t)length, (uintptr_t)name);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetProgramResourceName",
+          "context = %d, GLuint program = %u, GLenum programInterface = %s, GLuint index = %u, "
+          "GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR ", GLchar *name = 0x%016" PRIxPTR
+          "",
+          CID(context), program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
+          index, bufSize, (uintptr_t)length, (uintptr_t)name);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -523,15 +549,15 @@ void GL_APIENTRY GetProgramResourceiv(GLuint program,
                                       GLsizei *length,
                                       GLint *params)
 {
-    EVENT(
-        "(GLuint program = %u, GLenum programInterface = %s, GLuint index = %u, GLsizei propCount "
-        "= %d, const GLenum *props = 0x%016" PRIxPTR
-        ", GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
-        ", GLint *params = 0x%016" PRIxPTR ")",
-        program, GLenumToString(GLenumGroup::ProgramInterface, programInterface), index, propCount,
-        (uintptr_t)props, bufSize, (uintptr_t)length, (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetProgramResourceiv",
+          "context = %d, GLuint program = %u, GLenum programInterface = %s, GLuint index = %u, "
+          "GLsizei propCount = %d, const GLenum *props = 0x%016" PRIxPTR
+          ", GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
+          ", GLint *params = 0x%016" PRIxPTR "",
+          CID(context), program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
+          index, propCount, (uintptr_t)props, bufSize, (uintptr_t)length, (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -551,13 +577,13 @@ void GL_APIENTRY GetProgramResourceiv(GLuint program,
 
 void GL_APIENTRY GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params)
 {
-    EVENT(
-        "(GLenum target = %s, GLint level = %d, GLenum pname = %s, GLfloat *params = 0x%016" PRIxPTR
-        ")",
-        GLenumToString(GLenumGroup::TextureTarget, target), level,
-        GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTexLevelParameterfv",
+          "context = %d, GLenum target = %s, GLint level = %d, GLenum pname = %s, GLfloat *params "
+          "= 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
+          GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
+
     if (context)
     {
         TextureTarget targetPacked                    = FromGL<TextureTarget>(target);
@@ -576,12 +602,13 @@ void GL_APIENTRY GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname
 
 void GL_APIENTRY GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params)
 {
-    EVENT("(GLenum target = %s, GLint level = %d, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR
-          ")",
-          GLenumToString(GLenumGroup::TextureTarget, target), level,
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetTexLevelParameteriv",
+          "context = %d, GLenum target = %s, GLint level = %d, GLenum pname = %s, GLint *params = "
+          "0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         TextureTarget targetPacked                    = FromGL<TextureTarget>(target);
@@ -600,9 +627,9 @@ void GL_APIENTRY GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname
 
 GLboolean GL_APIENTRY IsProgramPipeline(GLuint pipeline)
 {
-    EVENT("(GLuint pipeline = %u)", pipeline);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glIsProgramPipeline", "context = %d, GLuint pipeline = %u", CID(context), pipeline);
+
     GLboolean returnValue;
     if (context)
     {
@@ -628,10 +655,10 @@ GLboolean GL_APIENTRY IsProgramPipeline(GLuint pipeline)
 
 void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
 {
-    EVENT("(GLbitfield barriers = %s)",
+    Context *context = GetValidGlobalContext();
+    EVENT("glMemoryBarrier", "context = %d, GLbitfield barriers = %s", CID(context),
           GLbitfieldToString(GLenumGroup::MemoryBarrierMask, barriers).c_str());
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -646,10 +673,10 @@ void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
 
 void GL_APIENTRY MemoryBarrierByRegion(GLbitfield barriers)
 {
-    EVENT("(GLbitfield barriers = %s)",
+    Context *context = GetValidGlobalContext();
+    EVENT("glMemoryBarrierByRegion", "context = %d, GLbitfield barriers = %s", CID(context),
           GLbitfieldToString(GLenumGroup::MemoryBarrierMask, barriers).c_str());
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -665,9 +692,11 @@ void GL_APIENTRY MemoryBarrierByRegion(GLbitfield barriers)
 
 void GL_APIENTRY ProgramUniform1f(GLuint program, GLint location, GLfloat v0)
 {
-    EVENT("(GLuint program = %u, GLint location = %d, GLfloat v0 = %f)", program, location, v0);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform1f",
+          "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f", CID(context),
+          program, location, v0);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -686,12 +715,12 @@ void GL_APIENTRY ProgramUniform1fv(GLuint program,
                                    GLsizei count,
                                    const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLfloat *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform1fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -707,9 +736,11 @@ void GL_APIENTRY ProgramUniform1fv(GLuint program,
 
 void GL_APIENTRY ProgramUniform1i(GLuint program, GLint location, GLint v0)
 {
-    EVENT("(GLuint program = %u, GLint location = %d, GLint v0 = %d)", program, location, v0);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform1i",
+          "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d", CID(context),
+          program, location, v0);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -728,12 +759,12 @@ void GL_APIENTRY ProgramUniform1iv(GLuint program,
                                    GLsizei count,
                                    const GLint *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform1iv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint "
+          "*value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -749,9 +780,11 @@ void GL_APIENTRY ProgramUniform1iv(GLuint program,
 
 void GL_APIENTRY ProgramUniform1ui(GLuint program, GLint location, GLuint v0)
 {
-    EVENT("(GLuint program = %u, GLint location = %d, GLuint v0 = %u)", program, location, v0);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform1ui",
+          "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u", CID(context),
+          program, location, v0);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -770,12 +803,12 @@ void GL_APIENTRY ProgramUniform1uiv(GLuint program,
                                     GLsizei count,
                                     const GLuint *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLuint *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform1uiv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
+          "GLuint *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -791,10 +824,12 @@ void GL_APIENTRY ProgramUniform1uiv(GLuint program,
 
 void GL_APIENTRY ProgramUniform2f(GLuint program, GLint location, GLfloat v0, GLfloat v1)
 {
-    EVENT("(GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = %f)", program,
-          location, v0, v1);
-
     Context *context = GetValidGlobalContext();
+    EVENT(
+        "glProgramUniform2f",
+        "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = %f",
+        CID(context), program, location, v0, v1);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -813,12 +848,12 @@ void GL_APIENTRY ProgramUniform2fv(GLuint program,
                                    GLsizei count,
                                    const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLfloat *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform2fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -834,10 +869,11 @@ void GL_APIENTRY ProgramUniform2fv(GLuint program,
 
 void GL_APIENTRY ProgramUniform2i(GLuint program, GLint location, GLint v0, GLint v1)
 {
-    EVENT("(GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d)", program,
-          location, v0, v1);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform2i",
+          "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d",
+          CID(context), program, location, v0, v1);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -856,12 +892,12 @@ void GL_APIENTRY ProgramUniform2iv(GLuint program,
                                    GLsizei count,
                                    const GLint *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform2iv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint "
+          "*value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -877,10 +913,11 @@ void GL_APIENTRY ProgramUniform2iv(GLuint program,
 
 void GL_APIENTRY ProgramUniform2ui(GLuint program, GLint location, GLuint v0, GLuint v1)
 {
-    EVENT("(GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u)", program,
-          location, v0, v1);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform2ui",
+          "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u",
+          CID(context), program, location, v0, v1);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -899,12 +936,12 @@ void GL_APIENTRY ProgramUniform2uiv(GLuint program,
                                     GLsizei count,
                                     const GLuint *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLuint *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform2uiv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
+          "GLuint *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -921,12 +958,12 @@ void GL_APIENTRY ProgramUniform2uiv(GLuint program,
 void GL_APIENTRY
 ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = %f, GLfloat v2 = "
-        "%f)",
-        program, location, v0, v1, v2);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform3f",
+          "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = "
+          "%f, GLfloat v2 = %f",
+          CID(context), program, location, v0, v1, v2);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -945,12 +982,12 @@ void GL_APIENTRY ProgramUniform3fv(GLuint program,
                                    GLsizei count,
                                    const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLfloat *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform3fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -966,10 +1003,12 @@ void GL_APIENTRY ProgramUniform3fv(GLuint program,
 
 void GL_APIENTRY ProgramUniform3i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2)
 {
-    EVENT("(GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d, GLint v2 = %d)",
-          program, location, v0, v1, v2);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform3i",
+          "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d, "
+          "GLint v2 = %d",
+          CID(context), program, location, v0, v1, v2);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -988,12 +1027,12 @@ void GL_APIENTRY ProgramUniform3iv(GLuint program,
                                    GLsizei count,
                                    const GLint *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform3iv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint "
+          "*value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1009,12 +1048,12 @@ void GL_APIENTRY ProgramUniform3iv(GLuint program,
 
 void GL_APIENTRY ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, GLuint v2 = "
-        "%u)",
-        program, location, v0, v1, v2);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform3ui",
+          "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, "
+          "GLuint v2 = %u",
+          CID(context), program, location, v0, v1, v2);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1033,12 +1072,12 @@ void GL_APIENTRY ProgramUniform3uiv(GLuint program,
                                     GLsizei count,
                                     const GLuint *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLuint *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform3uiv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
+          "GLuint *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1055,12 +1094,12 @@ void GL_APIENTRY ProgramUniform3uiv(GLuint program,
 void GL_APIENTRY
 ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = %f, GLfloat v2 = "
-        "%f, GLfloat v3 = %f)",
-        program, location, v0, v1, v2, v3);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform4f",
+          "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = "
+          "%f, GLfloat v2 = %f, GLfloat v3 = %f",
+          CID(context), program, location, v0, v1, v2, v3);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1079,12 +1118,12 @@ void GL_APIENTRY ProgramUniform4fv(GLuint program,
                                    GLsizei count,
                                    const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLfloat *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform4fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1101,12 +1140,12 @@ void GL_APIENTRY ProgramUniform4fv(GLuint program,
 void GL_APIENTRY
 ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d, GLint v2 = %d, "
-        "GLint v3 = %d)",
-        program, location, v0, v1, v2, v3);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform4i",
+          "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d, "
+          "GLint v2 = %d, GLint v3 = %d",
+          CID(context), program, location, v0, v1, v2, v3);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1125,12 +1164,12 @@ void GL_APIENTRY ProgramUniform4iv(GLuint program,
                                    GLsizei count,
                                    const GLint *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform4iv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint "
+          "*value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1147,12 +1186,12 @@ void GL_APIENTRY ProgramUniform4iv(GLuint program,
 void GL_APIENTRY
 ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, GLuint v2 = "
-        "%u, GLuint v3 = %u)",
-        program, location, v0, v1, v2, v3);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform4ui",
+          "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, "
+          "GLuint v2 = %u, GLuint v3 = %u",
+          CID(context), program, location, v0, v1, v2, v3);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1171,12 +1210,12 @@ void GL_APIENTRY ProgramUniform4uiv(GLuint program,
                                     GLsizei count,
                                     const GLuint *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLuint *value = "
-        "0x%016" PRIxPTR ")",
-        program, location, count, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniform4uiv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
+          "GLuint *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1196,12 +1235,12 @@ void GL_APIENTRY ProgramUniformMatrix2fv(GLuint program,
                                          GLboolean transpose,
                                          const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, "
-        "const GLfloat *value = 0x%016" PRIxPTR ")",
-        program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniformMatrix2fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
+          "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1223,12 +1262,12 @@ void GL_APIENTRY ProgramUniformMatrix2x3fv(GLuint program,
                                            GLboolean transpose,
                                            const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, "
-        "const GLfloat *value = 0x%016" PRIxPTR ")",
-        program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniformMatrix2x3fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
+          "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1250,12 +1289,12 @@ void GL_APIENTRY ProgramUniformMatrix2x4fv(GLuint program,
                                            GLboolean transpose,
                                            const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, "
-        "const GLfloat *value = 0x%016" PRIxPTR ")",
-        program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniformMatrix2x4fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
+          "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1277,12 +1316,12 @@ void GL_APIENTRY ProgramUniformMatrix3fv(GLuint program,
                                          GLboolean transpose,
                                          const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, "
-        "const GLfloat *value = 0x%016" PRIxPTR ")",
-        program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniformMatrix3fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
+          "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1304,12 +1343,12 @@ void GL_APIENTRY ProgramUniformMatrix3x2fv(GLuint program,
                                            GLboolean transpose,
                                            const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, "
-        "const GLfloat *value = 0x%016" PRIxPTR ")",
-        program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniformMatrix3x2fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
+          "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1331,12 +1370,12 @@ void GL_APIENTRY ProgramUniformMatrix3x4fv(GLuint program,
                                            GLboolean transpose,
                                            const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, "
-        "const GLfloat *value = 0x%016" PRIxPTR ")",
-        program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniformMatrix3x4fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
+          "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1358,12 +1397,12 @@ void GL_APIENTRY ProgramUniformMatrix4fv(GLuint program,
                                          GLboolean transpose,
                                          const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, "
-        "const GLfloat *value = 0x%016" PRIxPTR ")",
-        program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniformMatrix4fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
+          "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1385,12 +1424,12 @@ void GL_APIENTRY ProgramUniformMatrix4x2fv(GLuint program,
                                            GLboolean transpose,
                                            const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, "
-        "const GLfloat *value = 0x%016" PRIxPTR ")",
-        program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniformMatrix4x2fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
+          "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1412,12 +1451,12 @@ void GL_APIENTRY ProgramUniformMatrix4x3fv(GLuint program,
                                            GLboolean transpose,
                                            const GLfloat *value)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, "
-        "const GLfloat *value = 0x%016" PRIxPTR ")",
-        program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glProgramUniformMatrix4x3fv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
+          "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1435,10 +1474,10 @@ void GL_APIENTRY ProgramUniformMatrix4x3fv(GLuint program,
 
 void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
 {
-    EVENT("(GLuint maskNumber = %u, GLbitfield mask = %s)", maskNumber,
-          GLbitfieldToString(GLenumGroup::DefaultGroup, mask).c_str());
-
     Context *context = GetValidGlobalContext();
+    EVENT("glSampleMaski", "context = %d, GLuint maskNumber = %u, GLbitfield mask = %s",
+          CID(context), maskNumber, GLbitfieldToString(GLenumGroup::DefaultGroup, mask).c_str());
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1459,14 +1498,14 @@ void GL_APIENTRY TexStorage2DMultisample(GLenum target,
                                          GLsizei height,
                                          GLboolean fixedsamplelocations)
 {
-    EVENT(
-        "(GLenum target = %s, GLsizei samples = %d, GLenum internalformat = %s, GLsizei width = "
-        "%d, GLsizei height = %d, GLboolean fixedsamplelocations = %s)",
-        GLenumToString(GLenumGroup::TextureTarget, target), samples,
-        GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height,
-        GLbooleanToString(fixedsamplelocations));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTexStorage2DMultisample",
+          "context = %d, GLenum target = %s, GLsizei samples = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d, GLsizei height = %d, GLboolean fixedsamplelocations = %s",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), samples,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height,
+          GLbooleanToString(fixedsamplelocations));
+
     if (context)
     {
         TextureType targetPacked                      = FromGL<TextureType>(target);
@@ -1487,10 +1526,12 @@ void GL_APIENTRY TexStorage2DMultisample(GLenum target,
 
 void GL_APIENTRY UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint program)
 {
-    EVENT("(GLuint pipeline = %u, GLbitfield stages = %s, GLuint program = %u)", pipeline,
+    Context *context = GetValidGlobalContext();
+    EVENT("glUseProgramStages",
+          "context = %d, GLuint pipeline = %u, GLbitfield stages = %s, GLuint program = %u",
+          CID(context), pipeline,
           GLbitfieldToString(GLenumGroup::UseProgramStageMask, stages).c_str(), program);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1506,9 +1547,10 @@ void GL_APIENTRY UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint pro
 
 void GL_APIENTRY ValidateProgramPipeline(GLuint pipeline)
 {
-    EVENT("(GLuint pipeline = %u)", pipeline);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glValidateProgramPipeline", "context = %d, GLuint pipeline = %u", CID(context),
+          pipeline);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1524,9 +1566,11 @@ void GL_APIENTRY ValidateProgramPipeline(GLuint pipeline)
 
 void GL_APIENTRY VertexAttribBinding(GLuint attribindex, GLuint bindingindex)
 {
-    EVENT("(GLuint attribindex = %u, GLuint bindingindex = %u)", attribindex, bindingindex);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexAttribBinding",
+          "context = %d, GLuint attribindex = %u, GLuint bindingindex = %u", CID(context),
+          attribindex, bindingindex);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1546,13 +1590,13 @@ void GL_APIENTRY VertexAttribFormat(GLuint attribindex,
                                     GLboolean normalized,
                                     GLuint relativeoffset)
 {
-    EVENT(
-        "(GLuint attribindex = %u, GLint size = %d, GLenum type = %s, GLboolean normalized = %s, "
-        "GLuint relativeoffset = %u)",
-        attribindex, size, GLenumToString(GLenumGroup::DefaultGroup, type),
-        GLbooleanToString(normalized), relativeoffset);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexAttribFormat",
+          "context = %d, GLuint attribindex = %u, GLint size = %d, GLenum type = %s, GLboolean "
+          "normalized = %s, GLuint relativeoffset = %u",
+          CID(context), attribindex, size, GLenumToString(GLenumGroup::DefaultGroup, type),
+          GLbooleanToString(normalized), relativeoffset);
+
     if (context)
     {
         VertexAttribType typePacked                   = FromGL<VertexAttribType>(type);
@@ -1574,11 +1618,13 @@ void GL_APIENTRY VertexAttribIFormat(GLuint attribindex,
                                      GLenum type,
                                      GLuint relativeoffset)
 {
-    EVENT(
-        "(GLuint attribindex = %u, GLint size = %d, GLenum type = %s, GLuint relativeoffset = %u)",
-        attribindex, size, GLenumToString(GLenumGroup::DefaultGroup, type), relativeoffset);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexAttribIFormat",
+          "context = %d, GLuint attribindex = %u, GLint size = %d, GLenum type = %s, GLuint "
+          "relativeoffset = %u",
+          CID(context), attribindex, size, GLenumToString(GLenumGroup::DefaultGroup, type),
+          relativeoffset);
+
     if (context)
     {
         VertexAttribType typePacked                   = FromGL<VertexAttribType>(type);
@@ -1597,9 +1643,10 @@ void GL_APIENTRY VertexAttribIFormat(GLuint attribindex,
 
 void GL_APIENTRY VertexBindingDivisor(GLuint bindingindex, GLuint divisor)
 {
-    EVENT("(GLuint bindingindex = %u, GLuint divisor = %u)", bindingindex, divisor);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexBindingDivisor", "context = %d, GLuint bindingindex = %u, GLuint divisor = %u",
+          CID(context), bindingindex, divisor);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);

@@ -31,12 +31,12 @@ void GL_APIENTRY UniformMatrix2x3fv(GLint location,
                                     GLboolean transpose,
                                     const GLfloat *value)
 {
-    EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
-        "= 0x%016" PRIxPTR ")",
-        location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glUniformMatrix2x3fv",
+          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -55,12 +55,12 @@ void GL_APIENTRY UniformMatrix2x4fv(GLint location,
                                     GLboolean transpose,
                                     const GLfloat *value)
 {
-    EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
-        "= 0x%016" PRIxPTR ")",
-        location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glUniformMatrix2x4fv",
+          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -79,12 +79,12 @@ void GL_APIENTRY UniformMatrix3x2fv(GLint location,
                                     GLboolean transpose,
                                     const GLfloat *value)
 {
-    EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
-        "= 0x%016" PRIxPTR ")",
-        location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glUniformMatrix3x2fv",
+          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -103,12 +103,12 @@ void GL_APIENTRY UniformMatrix3x4fv(GLint location,
                                     GLboolean transpose,
                                     const GLfloat *value)
 {
-    EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
-        "= 0x%016" PRIxPTR ")",
-        location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glUniformMatrix3x4fv",
+          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -127,12 +127,12 @@ void GL_APIENTRY UniformMatrix4x2fv(GLint location,
                                     GLboolean transpose,
                                     const GLfloat *value)
 {
-    EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
-        "= 0x%016" PRIxPTR ")",
-        location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glUniformMatrix4x2fv",
+          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -151,12 +151,12 @@ void GL_APIENTRY UniformMatrix4x3fv(GLint location,
                                     GLboolean transpose,
                                     const GLfloat *value)
 {
-    EVENT(
-        "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const GLfloat *value "
-        "= 0x%016" PRIxPTR ")",
-        location, count, GLbooleanToString(transpose), (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glUniformMatrix4x3fv",
+          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);

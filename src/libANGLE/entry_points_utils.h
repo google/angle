@@ -88,6 +88,20 @@ constexpr ANGLE_INLINE ReturnType GetDefaultReturnValue()
 #    define ANGLE_CAPTURE(...)
 #endif  // ANGLE_CAPTURE_ENABLED
 
+#define FUNC_EVENT(format, ...) EVENT(__FUNCTION__, format, __VA_ARGS__)
+
+inline int CID(const Context *context)
+{
+    return context != nullptr ? context->id() : 0;
+}
 }  // namespace gl
+
+namespace egl
+{
+inline int CID(EGLContext context)
+{
+    return gl::CID(reinterpret_cast<const gl::Context *>(context));
+}
+}  // namespace egl
 
 #endif  // LIBANGLE_ENTRY_POINT_UTILS_H_

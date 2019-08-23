@@ -150,9 +150,9 @@ template_entry_point_decl = """ANGLE_EXPORT {return_type}GL_APIENTRY {name}{expl
 
 template_entry_point_no_return = """void GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
-    {event_comment}EVENT("({format_params})"{comma_if_needed}{pass_params});
-
     Context *context = {context_getter};
+    {event_comment}EVENT("gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+
     if (context)
     {{{assert_explicit_context}{packed_gl_enum_conversions}
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -168,9 +168,9 @@ template_entry_point_no_return = """void GL_APIENTRY {name}{explicit_context_suf
 
 template_entry_point_with_return = """{return_type}GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
-    {event_comment}EVENT("({format_params})"{comma_if_needed}{pass_params});
-
     Context *context = {context_getter};
+    {event_comment}EVENT("gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+
     {return_type} returnValue;
     if (context)
     {{{assert_explicit_context}{packed_gl_enum_conversions}
@@ -438,7 +438,7 @@ template_sources_includes_gl32 = """#include "libGL/entry_points_{}_autogen.h"
 #include "libGLESv2/global_state.h"
 """
 
-template_event_comment = """// Don't run an EVENT() macro on the EXT_debug_marker entry points.
+template_event_comment = """// Don't run the EVENT() macro on the EXT_debug_marker entry points.
     // It can interfere with the debug events being set by the caller.
     // """
 

@@ -67,6 +67,8 @@ class State : angle::NonCopyable
           bool programBinaryCacheEnabled);
     ~State();
 
+    int id() const { return mID; }
+
     void initialize(Context *context);
     void reset(const Context *context);
 
@@ -725,6 +727,8 @@ class State : angle::NonCopyable
 
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;
+
+    int mID;
 
     EGLenum mClientType;
     Version mClientVersion;

@@ -28,9 +28,10 @@ namespace gl
 {
 void GL_APIENTRY BindTextureUnit(GLuint unit, GLuint texture)
 {
-    EVENT("(GLuint unit = %u, GLuint texture = %u)", unit, texture);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBindTextureUnit", "context = %d, GLuint unit = %u, GLuint texture = %u", CID(context),
+          unit, texture);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -58,15 +59,15 @@ void GL_APIENTRY BlitNamedFramebuffer(GLuint readFramebuffer,
                                       GLbitfield mask,
                                       GLenum filter)
 {
-    EVENT(
-        "(GLuint readFramebuffer = %u, GLuint drawFramebuffer = %u, GLint srcX0 = %d, GLint srcY0 "
-        "= %d, GLint srcX1 = %d, GLint srcY1 = %d, GLint dstX0 = %d, GLint dstY0 = %d, GLint dstX1 "
-        "= %d, GLint dstY1 = %d, GLbitfield mask = %s, GLenum filter = %s)",
-        readFramebuffer, drawFramebuffer, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
-        GLbitfieldToString(GLenumGroup::ClearBufferMask, mask).c_str(),
-        GLenumToString(GLenumGroup::BlitFramebufferFilter, filter));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glBlitNamedFramebuffer",
+          "context = %d, GLuint readFramebuffer = %u, GLuint drawFramebuffer = %u, GLint srcX0 = "
+          "%d, GLint srcY0 = %d, GLint srcX1 = %d, GLint srcY1 = %d, GLint dstX0 = %d, GLint dstY0 "
+          "= %d, GLint dstX1 = %d, GLint dstY1 = %d, GLbitfield mask = %s, GLenum filter = %s",
+          CID(context), readFramebuffer, drawFramebuffer, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0,
+          dstX1, dstY1, GLbitfieldToString(GLenumGroup::ClearBufferMask, mask).c_str(),
+          GLenumToString(GLenumGroup::BlitFramebufferFilter, filter));
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -86,10 +87,11 @@ void GL_APIENTRY BlitNamedFramebuffer(GLuint readFramebuffer,
 
 GLenum GL_APIENTRY CheckNamedFramebufferStatus(GLuint framebuffer, GLenum target)
 {
-    EVENT("(GLuint framebuffer = %u, GLenum target = %s)", framebuffer,
+    Context *context = GetValidGlobalContext();
+    EVENT("glCheckNamedFramebufferStatus",
+          "context = %d, GLuint framebuffer = %u, GLenum target = %s", CID(context), framebuffer,
           GLenumToString(GLenumGroup::FramebufferTarget, target));
 
-    Context *context = GetValidGlobalContext();
     GLenum returnValue;
     if (context)
     {
@@ -120,14 +122,14 @@ void GL_APIENTRY ClearNamedBufferData(GLuint buffer,
                                       GLenum type,
                                       const void *data)
 {
-    EVENT(
-        "(GLuint buffer = %u, GLenum internalformat = %s, GLenum format = %s, GLenum type = %s, "
-        "const void *data = 0x%016" PRIxPTR ")",
-        buffer, GLenumToString(GLenumGroup::InternalFormat, internalformat),
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glClearNamedBufferData",
+          "context = %d, GLuint buffer = %u, GLenum internalformat = %s, GLenum format = %s, "
+          "GLenum type = %s, const void *data = 0x%016" PRIxPTR "",
+          CID(context), buffer, GLenumToString(GLenumGroup::InternalFormat, internalformat),
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -152,15 +154,16 @@ void GL_APIENTRY ClearNamedBufferSubData(GLuint buffer,
                                          GLenum type,
                                          const void *data)
 {
-    EVENT(
-        "(GLuint buffer = %u, GLenum internalformat = %s, GLintptr offset = %llu, GLsizeiptr size "
-        "= %llu, GLenum format = %s, GLenum type = %s, const void *data = 0x%016" PRIxPTR ")",
-        buffer, GLenumToString(GLenumGroup::InternalFormat, internalformat),
-        static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glClearNamedBufferSubData",
+          "context = %d, GLuint buffer = %u, GLenum internalformat = %s, GLintptr offset = %llu, "
+          "GLsizeiptr size = %llu, GLenum format = %s, GLenum type = %s, const void *data = "
+          "0x%016" PRIxPTR "",
+          CID(context), buffer, GLenumToString(GLenumGroup::InternalFormat, internalformat),
+          static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -184,12 +187,13 @@ void GL_APIENTRY ClearNamedFramebufferfi(GLuint framebuffer,
                                          GLfloat depth,
                                          GLint stencil)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLenum buffer = %s, GLint drawbuffer = %d, GLfloat depth = %f, "
-        "GLint stencil = %d)",
-        framebuffer, GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer, depth, stencil);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glClearNamedFramebufferfi",
+          "context = %d, GLuint framebuffer = %u, GLenum buffer = %s, GLint drawbuffer = %d, "
+          "GLfloat depth = %f, GLint stencil = %d",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer, depth,
+          stencil);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -210,12 +214,13 @@ void GL_APIENTRY ClearNamedFramebufferfv(GLuint framebuffer,
                                          GLint drawbuffer,
                                          const GLfloat *value)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLenum buffer = %s, GLint drawbuffer = %d, const GLfloat *value "
-        "= 0x%016" PRIxPTR ")",
-        framebuffer, GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glClearNamedFramebufferfv",
+          "context = %d, GLuint framebuffer = %u, GLenum buffer = %s, GLint drawbuffer = %d, const "
+          "GLfloat *value = 0x%016" PRIxPTR "",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer,
+          (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -236,12 +241,13 @@ void GL_APIENTRY ClearNamedFramebufferiv(GLuint framebuffer,
                                          GLint drawbuffer,
                                          const GLint *value)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLenum buffer = %s, GLint drawbuffer = %d, const GLint *value = "
-        "0x%016" PRIxPTR ")",
-        framebuffer, GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glClearNamedFramebufferiv",
+          "context = %d, GLuint framebuffer = %u, GLenum buffer = %s, GLint drawbuffer = %d, const "
+          "GLint *value = 0x%016" PRIxPTR "",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer,
+          (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -262,12 +268,13 @@ void GL_APIENTRY ClearNamedFramebufferuiv(GLuint framebuffer,
                                           GLint drawbuffer,
                                           const GLuint *value)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLenum buffer = %s, GLint drawbuffer = %d, const GLuint *value "
-        "= 0x%016" PRIxPTR ")",
-        framebuffer, GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer, (uintptr_t)value);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glClearNamedFramebufferuiv",
+          "context = %d, GLuint framebuffer = %u, GLenum buffer = %s, GLint drawbuffer = %d, const "
+          "GLuint *value = 0x%016" PRIxPTR "",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer,
+          (uintptr_t)value);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -285,11 +292,11 @@ void GL_APIENTRY ClearNamedFramebufferuiv(GLuint framebuffer,
 
 void GL_APIENTRY ClipControl(GLenum origin, GLenum depth)
 {
-    EVENT("(GLenum origin = %s, GLenum depth = %s)",
+    Context *context = GetValidGlobalContext();
+    EVENT("glClipControl", "context = %d, GLenum origin = %s, GLenum depth = %s", CID(context),
           GLenumToString(GLenumGroup::ClipControlOrigin, origin),
           GLenumToString(GLenumGroup::ClipControlDepth, depth));
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -311,13 +318,13 @@ void GL_APIENTRY CompressedTextureSubImage1D(GLuint texture,
                                              GLsizei imageSize,
                                              const void *data)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLsizei width = %d, GLenum "
-        "format = %s, GLsizei imageSize = %d, const void *data = 0x%016" PRIxPTR ")",
-        texture, level, xoffset, width, GLenumToString(GLenumGroup::PixelFormat, format), imageSize,
-        (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCompressedTextureSubImage1D",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLsizei width "
+          "= %d, GLenum format = %s, GLsizei imageSize = %d, const void *data = 0x%016" PRIxPTR "",
+          CID(context), texture, level, xoffset, width,
+          GLenumToString(GLenumGroup::PixelFormat, format), imageSize, (uintptr_t)data);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -345,14 +352,14 @@ void GL_APIENTRY CompressedTextureSubImage2D(GLuint texture,
                                              GLsizei imageSize,
                                              const void *data)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLsizei "
-        "width = %d, GLsizei height = %d, GLenum format = %s, GLsizei imageSize = %d, const void "
-        "*data = 0x%016" PRIxPTR ")",
-        texture, level, xoffset, yoffset, width, height,
-        GLenumToString(GLenumGroup::PixelFormat, format), imageSize, (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCompressedTextureSubImage2D",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset "
+          "= %d, GLsizei width = %d, GLsizei height = %d, GLenum format = %s, GLsizei imageSize = "
+          "%d, const void *data = 0x%016" PRIxPTR "",
+          CID(context), texture, level, xoffset, yoffset, width, height,
+          GLenumToString(GLenumGroup::PixelFormat, format), imageSize, (uintptr_t)data);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -383,14 +390,14 @@ void GL_APIENTRY CompressedTextureSubImage3D(GLuint texture,
                                              GLsizei imageSize,
                                              const void *data)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
-        "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
-        "= %s, GLsizei imageSize = %d, const void *data = 0x%016" PRIxPTR ")",
-        texture, level, xoffset, yoffset, zoffset, width, height, depth,
-        GLenumToString(GLenumGroup::PixelFormat, format), imageSize, (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCompressedTextureSubImage3D",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset "
+          "= %d, GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
+          "GLenum format = %s, GLsizei imageSize = %d, const void *data = 0x%016" PRIxPTR "",
+          CID(context), texture, level, xoffset, yoffset, zoffset, width, height, depth,
+          GLenumToString(GLenumGroup::PixelFormat, format), imageSize, (uintptr_t)data);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -415,13 +422,13 @@ void GL_APIENTRY CopyNamedBufferSubData(GLuint readBuffer,
                                         GLintptr writeOffset,
                                         GLsizeiptr size)
 {
-    EVENT(
-        "(GLuint readBuffer = %u, GLuint writeBuffer = %u, GLintptr readOffset = %llu, GLintptr "
-        "writeOffset = %llu, GLsizeiptr size = %llu)",
-        readBuffer, writeBuffer, static_cast<unsigned long long>(readOffset),
-        static_cast<unsigned long long>(writeOffset), static_cast<unsigned long long>(size));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCopyNamedBufferSubData",
+          "context = %d, GLuint readBuffer = %u, GLuint writeBuffer = %u, GLintptr readOffset = "
+          "%llu, GLintptr writeOffset = %llu, GLsizeiptr size = %llu",
+          CID(context), readBuffer, writeBuffer, static_cast<unsigned long long>(readOffset),
+          static_cast<unsigned long long>(writeOffset), static_cast<unsigned long long>(size));
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -440,12 +447,12 @@ void GL_APIENTRY CopyNamedBufferSubData(GLuint readBuffer,
 void GL_APIENTRY
 CopyTextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint x = %d, GLint y = %d, "
-        "GLsizei width = %d)",
-        texture, level, xoffset, x, y, width);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCopyTextureSubImage1D",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint x = %d, "
+          "GLint y = %d, GLsizei width = %d",
+          CID(context), texture, level, xoffset, x, y, width);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -471,12 +478,12 @@ void GL_APIENTRY CopyTextureSubImage2D(GLuint texture,
                                        GLsizei width,
                                        GLsizei height)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint x = "
-        "%d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
-        texture, level, xoffset, yoffset, x, y, width, height);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCopyTextureSubImage2D",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset "
+          "= %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d",
+          CID(context), texture, level, xoffset, yoffset, x, y, width, height);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -504,12 +511,13 @@ void GL_APIENTRY CopyTextureSubImage3D(GLuint texture,
                                        GLsizei width,
                                        GLsizei height)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
-        "zoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
-        texture, level, xoffset, yoffset, zoffset, x, y, width, height);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCopyTextureSubImage3D",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset "
+          "= %d, GLint zoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei "
+          "height = %d",
+          CID(context), texture, level, xoffset, yoffset, zoffset, x, y, width, height);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -529,9 +537,10 @@ void GL_APIENTRY CopyTextureSubImage3D(GLuint texture,
 
 void GL_APIENTRY CreateBuffers(GLsizei n, GLuint *buffers)
 {
-    EVENT("(GLsizei n = %d, GLuint *buffers = 0x%016" PRIxPTR ")", n, (uintptr_t)buffers);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateBuffers", "context = %d, GLsizei n = %d, GLuint *buffers = 0x%016" PRIxPTR "",
+          CID(context), n, (uintptr_t)buffers);
+
     if (context)
     {
         BufferID *buffersPacked                       = FromGL<BufferID *>(buffers);
@@ -548,9 +557,11 @@ void GL_APIENTRY CreateBuffers(GLsizei n, GLuint *buffers)
 
 void GL_APIENTRY CreateFramebuffers(GLsizei n, GLuint *framebuffers)
 {
-    EVENT("(GLsizei n = %d, GLuint *framebuffers = 0x%016" PRIxPTR ")", n, (uintptr_t)framebuffers);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateFramebuffers",
+          "context = %d, GLsizei n = %d, GLuint *framebuffers = 0x%016" PRIxPTR "", CID(context), n,
+          (uintptr_t)framebuffers);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -566,9 +577,11 @@ void GL_APIENTRY CreateFramebuffers(GLsizei n, GLuint *framebuffers)
 
 void GL_APIENTRY CreateProgramPipelines(GLsizei n, GLuint *pipelines)
 {
-    EVENT("(GLsizei n = %d, GLuint *pipelines = 0x%016" PRIxPTR ")", n, (uintptr_t)pipelines);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateProgramPipelines",
+          "context = %d, GLsizei n = %d, GLuint *pipelines = 0x%016" PRIxPTR "", CID(context), n,
+          (uintptr_t)pipelines);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -584,10 +597,11 @@ void GL_APIENTRY CreateProgramPipelines(GLsizei n, GLuint *pipelines)
 
 void GL_APIENTRY CreateQueries(GLenum target, GLsizei n, GLuint *ids)
 {
-    EVENT("(GLenum target = %s, GLsizei n = %d, GLuint *ids = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::QueryTarget, target), n, (uintptr_t)ids);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateQueries",
+          "context = %d, GLenum target = %s, GLsizei n = %d, GLuint *ids = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::QueryTarget, target), n, (uintptr_t)ids);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -603,10 +617,11 @@ void GL_APIENTRY CreateQueries(GLenum target, GLsizei n, GLuint *ids)
 
 void GL_APIENTRY CreateRenderbuffers(GLsizei n, GLuint *renderbuffers)
 {
-    EVENT("(GLsizei n = %d, GLuint *renderbuffers = 0x%016" PRIxPTR ")", n,
-          (uintptr_t)renderbuffers);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateRenderbuffers",
+          "context = %d, GLsizei n = %d, GLuint *renderbuffers = 0x%016" PRIxPTR "", CID(context),
+          n, (uintptr_t)renderbuffers);
+
     if (context)
     {
         RenderbufferID *renderbuffersPacked           = FromGL<RenderbufferID *>(renderbuffers);
@@ -623,9 +638,10 @@ void GL_APIENTRY CreateRenderbuffers(GLsizei n, GLuint *renderbuffers)
 
 void GL_APIENTRY CreateSamplers(GLsizei n, GLuint *samplers)
 {
-    EVENT("(GLsizei n = %d, GLuint *samplers = 0x%016" PRIxPTR ")", n, (uintptr_t)samplers);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateSamplers", "context = %d, GLsizei n = %d, GLuint *samplers = 0x%016" PRIxPTR "",
+          CID(context), n, (uintptr_t)samplers);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -641,10 +657,11 @@ void GL_APIENTRY CreateSamplers(GLsizei n, GLuint *samplers)
 
 void GL_APIENTRY CreateTextures(GLenum target, GLsizei n, GLuint *textures)
 {
-    EVENT("(GLenum target = %s, GLsizei n = %d, GLuint *textures = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::TextureTarget, target), n, (uintptr_t)textures);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateTextures",
+          "context = %d, GLenum target = %s, GLsizei n = %d, GLuint *textures = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), n, (uintptr_t)textures);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -660,9 +677,11 @@ void GL_APIENTRY CreateTextures(GLenum target, GLsizei n, GLuint *textures)
 
 void GL_APIENTRY CreateTransformFeedbacks(GLsizei n, GLuint *ids)
 {
-    EVENT("(GLsizei n = %d, GLuint *ids = 0x%016" PRIxPTR ")", n, (uintptr_t)ids);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateTransformFeedbacks",
+          "context = %d, GLsizei n = %d, GLuint *ids = 0x%016" PRIxPTR "", CID(context), n,
+          (uintptr_t)ids);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -678,9 +697,11 @@ void GL_APIENTRY CreateTransformFeedbacks(GLsizei n, GLuint *ids)
 
 void GL_APIENTRY CreateVertexArrays(GLsizei n, GLuint *arrays)
 {
-    EVENT("(GLsizei n = %d, GLuint *arrays = 0x%016" PRIxPTR ")", n, (uintptr_t)arrays);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glCreateVertexArrays",
+          "context = %d, GLsizei n = %d, GLuint *arrays = 0x%016" PRIxPTR "", CID(context), n,
+          (uintptr_t)arrays);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -696,9 +717,10 @@ void GL_APIENTRY CreateVertexArrays(GLsizei n, GLuint *arrays)
 
 void GL_APIENTRY DisableVertexArrayAttrib(GLuint vaobj, GLuint index)
 {
-    EVENT("(GLuint vaobj = %u, GLuint index = %u)", vaobj, index);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glDisableVertexArrayAttrib", "context = %d, GLuint vaobj = %u, GLuint index = %u",
+          CID(context), vaobj, index);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -714,9 +736,10 @@ void GL_APIENTRY DisableVertexArrayAttrib(GLuint vaobj, GLuint index)
 
 void GL_APIENTRY EnableVertexArrayAttrib(GLuint vaobj, GLuint index)
 {
-    EVENT("(GLuint vaobj = %u, GLuint index = %u)", vaobj, index);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glEnableVertexArrayAttrib", "context = %d, GLuint vaobj = %u, GLuint index = %u",
+          CID(context), vaobj, index);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -732,10 +755,12 @@ void GL_APIENTRY EnableVertexArrayAttrib(GLuint vaobj, GLuint index)
 
 void GL_APIENTRY FlushMappedNamedBufferRange(GLuint buffer, GLintptr offset, GLsizeiptr length)
 {
-    EVENT("(GLuint buffer = %u, GLintptr offset = %llu, GLsizeiptr length = %llu)", buffer,
-          static_cast<unsigned long long>(offset), static_cast<unsigned long long>(length));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glFlushMappedNamedBufferRange",
+          "context = %d, GLuint buffer = %u, GLintptr offset = %llu, GLsizeiptr length = %llu",
+          CID(context), buffer, static_cast<unsigned long long>(offset),
+          static_cast<unsigned long long>(length));
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -754,9 +779,9 @@ void GL_APIENTRY FlushMappedNamedBufferRange(GLuint buffer, GLintptr offset, GLs
 
 void GL_APIENTRY GenerateTextureMipmap(GLuint texture)
 {
-    EVENT("(GLuint texture = %u)", texture);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGenerateTextureMipmap", "context = %d, GLuint texture = %u", CID(context), texture);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -776,12 +801,12 @@ void GL_APIENTRY GetCompressedTextureImage(GLuint texture,
                                            GLsizei bufSize,
                                            void *pixels)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLsizei bufSize = %d, void *pixels = "
-        "0x%016" PRIxPTR ")",
-        texture, level, bufSize, (uintptr_t)pixels);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetCompressedTextureImage",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLsizei bufSize = %d, void *pixels "
+          "= 0x%016" PRIxPTR "",
+          CID(context), texture, level, bufSize, (uintptr_t)pixels);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -809,14 +834,14 @@ void GL_APIENTRY GetCompressedTextureSubImage(GLuint texture,
                                               GLsizei bufSize,
                                               void *pixels)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
-        "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLsizei "
-        "bufSize = %d, void *pixels = 0x%016" PRIxPTR ")",
-        texture, level, xoffset, yoffset, zoffset, width, height, depth, bufSize,
-        (uintptr_t)pixels);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetCompressedTextureSubImage",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset "
+          "= %d, GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
+          "GLsizei bufSize = %d, void *pixels = 0x%016" PRIxPTR "",
+          CID(context), texture, level, xoffset, yoffset, zoffset, width, height, depth, bufSize,
+          (uintptr_t)pixels);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -837,9 +862,9 @@ void GL_APIENTRY GetCompressedTextureSubImage(GLuint texture,
 
 GLenum GL_APIENTRY GetGraphicsResetStatus()
 {
-    EVENT("()");
-
     Context *context = GetGlobalContext();
+    EVENT("glGetGraphicsResetStatus", "context = %d", CID(context));
+
     GLenum returnValue;
     if (context)
     {
@@ -864,10 +889,13 @@ GLenum GL_APIENTRY GetGraphicsResetStatus()
 
 void GL_APIENTRY GetNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLint64 *params)
 {
-    EVENT("(GLuint buffer = %u, GLenum pname = %s, GLint64 *params = 0x%016" PRIxPTR ")", buffer,
-          GLenumToString(GLenumGroup::VertexBufferObjectParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetNamedBufferParameteri64v",
+          "context = %d, GLuint buffer = %u, GLenum pname = %s, GLint64 *params = 0x%016" PRIxPTR
+          "",
+          CID(context), buffer, GLenumToString(GLenumGroup::VertexBufferObjectParameter, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -885,10 +913,12 @@ void GL_APIENTRY GetNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLint6
 
 void GL_APIENTRY GetNamedBufferParameteriv(GLuint buffer, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint buffer = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", buffer,
-          GLenumToString(GLenumGroup::VertexBufferObjectParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetNamedBufferParameteriv",
+          "context = %d, GLuint buffer = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR "",
+          CID(context), buffer, GLenumToString(GLenumGroup::VertexBufferObjectParameter, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -905,10 +935,12 @@ void GL_APIENTRY GetNamedBufferParameteriv(GLuint buffer, GLenum pname, GLint *p
 
 void GL_APIENTRY GetNamedBufferPointerv(GLuint buffer, GLenum pname, void **params)
 {
-    EVENT("(GLuint buffer = %u, GLenum pname = %s, void **params = 0x%016" PRIxPTR ")", buffer,
-          GLenumToString(GLenumGroup::VertexBufferObjectParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetNamedBufferPointerv",
+          "context = %d, GLuint buffer = %u, GLenum pname = %s, void **params = 0x%016" PRIxPTR "",
+          CID(context), buffer, GLenumToString(GLenumGroup::VertexBufferObjectParameter, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -925,13 +957,13 @@ void GL_APIENTRY GetNamedBufferPointerv(GLuint buffer, GLenum pname, void **para
 
 void GL_APIENTRY GetNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, void *data)
 {
-    EVENT(
-        "(GLuint buffer = %u, GLintptr offset = %llu, GLsizeiptr size = %llu, void *data = "
-        "0x%016" PRIxPTR ")",
-        buffer, static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
-        (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetNamedBufferSubData",
+          "context = %d, GLuint buffer = %u, GLintptr offset = %llu, GLsizeiptr size = %llu, void "
+          "*data = 0x%016" PRIxPTR "",
+          CID(context), buffer, static_cast<unsigned long long>(offset),
+          static_cast<unsigned long long>(size), (uintptr_t)data);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -953,13 +985,14 @@ void GL_APIENTRY GetNamedFramebufferAttachmentParameteriv(GLuint framebuffer,
                                                           GLenum pname,
                                                           GLint *params)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLenum attachment = %s, GLenum pname = %s, GLint *params = "
-        "0x%016" PRIxPTR ")",
-        framebuffer, GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
-        GLenumToString(GLenumGroup::FramebufferAttachmentParameterName, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetNamedFramebufferAttachmentParameteriv",
+          "context = %d, GLuint framebuffer = %u, GLenum attachment = %s, GLenum pname = %s, GLint "
+          "*params = 0x%016" PRIxPTR "",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
+          GLenumToString(GLenumGroup::FramebufferAttachmentParameterName, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -978,11 +1011,13 @@ void GL_APIENTRY GetNamedFramebufferAttachmentParameteriv(GLuint framebuffer,
 
 void GL_APIENTRY GetNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname, GLint *param)
 {
-    EVENT("(GLuint framebuffer = %u, GLenum pname = %s, GLint *param = 0x%016" PRIxPTR ")",
-          framebuffer, GLenumToString(GLenumGroup::GetFramebufferParameter, pname),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetNamedFramebufferParameteriv",
+          "context = %d, GLuint framebuffer = %u, GLenum pname = %s, GLint *param = 0x%016" PRIxPTR
+          "",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::GetFramebufferParameter, pname),
           (uintptr_t)param);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -999,11 +1034,14 @@ void GL_APIENTRY GetNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname
 
 void GL_APIENTRY GetNamedRenderbufferParameteriv(GLuint renderbuffer, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint renderbuffer = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")",
-          renderbuffer, GLenumToString(GLenumGroup::RenderbufferParameterName, pname),
-          (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT(
+        "glGetNamedRenderbufferParameteriv",
+        "context = %d, GLuint renderbuffer = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR
+        "",
+        CID(context), renderbuffer, GLenumToString(GLenumGroup::RenderbufferParameterName, pname),
+        (uintptr_t)params);
+
     if (context)
     {
         RenderbufferID renderbufferPacked             = FromGL<RenderbufferID>(renderbuffer);
@@ -1022,11 +1060,13 @@ void GL_APIENTRY GetNamedRenderbufferParameteriv(GLuint renderbuffer, GLenum pna
 
 void GL_APIENTRY GetQueryBufferObjecti64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
 {
-    EVENT("(GLuint id = %u, GLuint buffer = %u, GLenum pname = %s, GLintptr offset = %llu)", id,
-          buffer, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetQueryBufferObjecti64v",
+          "context = %d, GLuint id = %u, GLuint buffer = %u, GLenum pname = %s, GLintptr offset = "
+          "%llu",
+          CID(context), id, buffer, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
           static_cast<unsigned long long>(offset));
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -1045,11 +1085,13 @@ void GL_APIENTRY GetQueryBufferObjecti64v(GLuint id, GLuint buffer, GLenum pname
 
 void GL_APIENTRY GetQueryBufferObjectiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
 {
-    EVENT("(GLuint id = %u, GLuint buffer = %u, GLenum pname = %s, GLintptr offset = %llu)", id,
-          buffer, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetQueryBufferObjectiv",
+          "context = %d, GLuint id = %u, GLuint buffer = %u, GLenum pname = %s, GLintptr offset = "
+          "%llu",
+          CID(context), id, buffer, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
           static_cast<unsigned long long>(offset));
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -1068,11 +1110,13 @@ void GL_APIENTRY GetQueryBufferObjectiv(GLuint id, GLuint buffer, GLenum pname, 
 
 void GL_APIENTRY GetQueryBufferObjectui64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
 {
-    EVENT("(GLuint id = %u, GLuint buffer = %u, GLenum pname = %s, GLintptr offset = %llu)", id,
-          buffer, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetQueryBufferObjectui64v",
+          "context = %d, GLuint id = %u, GLuint buffer = %u, GLenum pname = %s, GLintptr offset = "
+          "%llu",
+          CID(context), id, buffer, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
           static_cast<unsigned long long>(offset));
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -1091,11 +1135,13 @@ void GL_APIENTRY GetQueryBufferObjectui64v(GLuint id, GLuint buffer, GLenum pnam
 
 void GL_APIENTRY GetQueryBufferObjectuiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
 {
-    EVENT("(GLuint id = %u, GLuint buffer = %u, GLenum pname = %s, GLintptr offset = %llu)", id,
-          buffer, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetQueryBufferObjectuiv",
+          "context = %d, GLuint id = %u, GLuint buffer = %u, GLenum pname = %s, GLintptr offset = "
+          "%llu",
+          CID(context), id, buffer, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
           static_cast<unsigned long long>(offset));
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -1119,13 +1165,13 @@ void GL_APIENTRY GetTextureImage(GLuint texture,
                                  GLsizei bufSize,
                                  void *pixels)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLenum format = %s, GLenum type = %s, GLsizei "
-        "bufSize = %d, void *pixels = 0x%016" PRIxPTR ")",
-        texture, level, GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)pixels);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTextureImage",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLenum format = %s, GLenum type = "
+          "%s, GLsizei bufSize = %d, void *pixels = 0x%016" PRIxPTR "",
+          CID(context), texture, level, GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)pixels);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -1147,12 +1193,13 @@ void GL_APIENTRY GetTextureLevelParameterfv(GLuint texture,
                                             GLenum pname,
                                             GLfloat *params)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLenum pname = %s, GLfloat *params = "
-        "0x%016" PRIxPTR ")",
-        texture, level, GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTextureLevelParameterfv",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLenum pname = %s, GLfloat *params "
+          "= 0x%016" PRIxPTR "",
+          CID(context), texture, level, GLenumToString(GLenumGroup::GetTextureParameter, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -1174,12 +1221,13 @@ void GL_APIENTRY GetTextureLevelParameteriv(GLuint texture,
                                             GLenum pname,
                                             GLint *params)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR
-        ")",
-        texture, level, GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTextureLevelParameteriv",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLenum pname = %s, GLint *params = "
+          "0x%016" PRIxPTR "",
+          CID(context), texture, level, GLenumToString(GLenumGroup::GetTextureParameter, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -1198,10 +1246,12 @@ void GL_APIENTRY GetTextureLevelParameteriv(GLuint texture,
 
 void GL_APIENTRY GetTextureParameterIiv(GLuint texture, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", texture,
-          GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTextureParameterIiv",
+          "context = %d, GLuint texture = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR "",
+          CID(context), texture, GLenumToString(GLenumGroup::GetTextureParameter, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -1218,10 +1268,13 @@ void GL_APIENTRY GetTextureParameterIiv(GLuint texture, GLenum pname, GLint *par
 
 void GL_APIENTRY GetTextureParameterIuiv(GLuint texture, GLenum pname, GLuint *params)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, GLuint *params = 0x%016" PRIxPTR ")", texture,
-          GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTextureParameterIuiv",
+          "context = %d, GLuint texture = %u, GLenum pname = %s, GLuint *params = 0x%016" PRIxPTR
+          "",
+          CID(context), texture, GLenumToString(GLenumGroup::GetTextureParameter, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -1238,10 +1291,13 @@ void GL_APIENTRY GetTextureParameterIuiv(GLuint texture, GLenum pname, GLuint *p
 
 void GL_APIENTRY GetTextureParameterfv(GLuint texture, GLenum pname, GLfloat *params)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, GLfloat *params = 0x%016" PRIxPTR ")", texture,
-          GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTextureParameterfv",
+          "context = %d, GLuint texture = %u, GLenum pname = %s, GLfloat *params = 0x%016" PRIxPTR
+          "",
+          CID(context), texture, GLenumToString(GLenumGroup::GetTextureParameter, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -1258,10 +1314,12 @@ void GL_APIENTRY GetTextureParameterfv(GLuint texture, GLenum pname, GLfloat *pa
 
 void GL_APIENTRY GetTextureParameteriv(GLuint texture, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR ")", texture,
-          GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTextureParameteriv",
+          "context = %d, GLuint texture = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR "",
+          CID(context), texture, GLenumToString(GLenumGroup::GetTextureParameter, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -1289,15 +1347,17 @@ void GL_APIENTRY GetTextureSubImage(GLuint texture,
                                     GLsizei bufSize,
                                     void *pixels)
 {
+    Context *context = GetValidGlobalContext();
     EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
-        "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
-        "= %s, GLenum type = %s, GLsizei bufSize = %d, void *pixels = 0x%016" PRIxPTR ")",
-        texture, level, xoffset, yoffset, zoffset, width, height, depth,
+        "glGetTextureSubImage",
+        "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = "
+        "%d, GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
+        "GLenum format = %s, GLenum type = %s, GLsizei bufSize = %d, void *pixels = 0x%016" PRIxPTR
+        "",
+        CID(context), texture, level, xoffset, yoffset, zoffset, width, height, depth,
         GLenumToString(GLenumGroup::PixelFormat, format),
         GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)pixels);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -1318,11 +1378,13 @@ void GL_APIENTRY GetTextureSubImage(GLuint texture,
 
 void GL_APIENTRY GetTransformFeedbacki64_v(GLuint xfb, GLenum pname, GLuint index, GLint64 *param)
 {
-    EVENT("(GLuint xfb = %u, GLenum pname = %s, GLuint index = %u, GLint64 *param = 0x%016" PRIxPTR
-          ")",
-          xfb, GLenumToString(GLenumGroup::TransformFeedbackPName, pname), index, (uintptr_t)param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTransformFeedbacki64_v",
+          "context = %d, GLuint xfb = %u, GLenum pname = %s, GLuint index = %u, GLint64 *param = "
+          "0x%016" PRIxPTR "",
+          CID(context), xfb, GLenumToString(GLenumGroup::TransformFeedbackPName, pname), index,
+          (uintptr_t)param);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1338,11 +1400,13 @@ void GL_APIENTRY GetTransformFeedbacki64_v(GLuint xfb, GLenum pname, GLuint inde
 
 void GL_APIENTRY GetTransformFeedbacki_v(GLuint xfb, GLenum pname, GLuint index, GLint *param)
 {
-    EVENT("(GLuint xfb = %u, GLenum pname = %s, GLuint index = %u, GLint *param = 0x%016" PRIxPTR
-          ")",
-          xfb, GLenumToString(GLenumGroup::TransformFeedbackPName, pname), index, (uintptr_t)param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTransformFeedbacki_v",
+          "context = %d, GLuint xfb = %u, GLenum pname = %s, GLuint index = %u, GLint *param = "
+          "0x%016" PRIxPTR "",
+          CID(context), xfb, GLenumToString(GLenumGroup::TransformFeedbackPName, pname), index,
+          (uintptr_t)param);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1358,10 +1422,12 @@ void GL_APIENTRY GetTransformFeedbacki_v(GLuint xfb, GLenum pname, GLuint index,
 
 void GL_APIENTRY GetTransformFeedbackiv(GLuint xfb, GLenum pname, GLint *param)
 {
-    EVENT("(GLuint xfb = %u, GLenum pname = %s, GLint *param = 0x%016" PRIxPTR ")", xfb,
-          GLenumToString(GLenumGroup::TransformFeedbackPName, pname), (uintptr_t)param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetTransformFeedbackiv",
+          "context = %d, GLuint xfb = %u, GLenum pname = %s, GLint *param = 0x%016" PRIxPTR "",
+          CID(context), xfb, GLenumToString(GLenumGroup::TransformFeedbackPName, pname),
+          (uintptr_t)param);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1377,12 +1443,13 @@ void GL_APIENTRY GetTransformFeedbackiv(GLuint xfb, GLenum pname, GLint *param)
 
 void GL_APIENTRY GetVertexArrayIndexed64iv(GLuint vaobj, GLuint index, GLenum pname, GLint64 *param)
 {
-    EVENT(
-        "(GLuint vaobj = %u, GLuint index = %u, GLenum pname = %s, GLint64 *param = 0x%016" PRIxPTR
-        ")",
-        vaobj, index, GLenumToString(GLenumGroup::VertexArrayPName, pname), (uintptr_t)param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetVertexArrayIndexed64iv",
+          "context = %d, GLuint vaobj = %u, GLuint index = %u, GLenum pname = %s, GLint64 *param = "
+          "0x%016" PRIxPTR "",
+          CID(context), vaobj, index, GLenumToString(GLenumGroup::VertexArrayPName, pname),
+          (uintptr_t)param);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1398,11 +1465,13 @@ void GL_APIENTRY GetVertexArrayIndexed64iv(GLuint vaobj, GLuint index, GLenum pn
 
 void GL_APIENTRY GetVertexArrayIndexediv(GLuint vaobj, GLuint index, GLenum pname, GLint *param)
 {
-    EVENT("(GLuint vaobj = %u, GLuint index = %u, GLenum pname = %s, GLint *param = 0x%016" PRIxPTR
-          ")",
-          vaobj, index, GLenumToString(GLenumGroup::VertexArrayPName, pname), (uintptr_t)param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetVertexArrayIndexediv",
+          "context = %d, GLuint vaobj = %u, GLuint index = %u, GLenum pname = %s, GLint *param = "
+          "0x%016" PRIxPTR "",
+          CID(context), vaobj, index, GLenumToString(GLenumGroup::VertexArrayPName, pname),
+          (uintptr_t)param);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1418,10 +1487,12 @@ void GL_APIENTRY GetVertexArrayIndexediv(GLuint vaobj, GLuint index, GLenum pnam
 
 void GL_APIENTRY GetVertexArrayiv(GLuint vaobj, GLenum pname, GLint *param)
 {
-    EVENT("(GLuint vaobj = %u, GLenum pname = %s, GLint *param = 0x%016" PRIxPTR ")", vaobj,
-          GLenumToString(GLenumGroup::VertexArrayPName, pname), (uintptr_t)param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetVertexArrayiv",
+          "context = %d, GLuint vaobj = %u, GLenum pname = %s, GLint *param = 0x%016" PRIxPTR "",
+          CID(context), vaobj, GLenumToString(GLenumGroup::VertexArrayPName, pname),
+          (uintptr_t)param);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1438,14 +1509,14 @@ void GL_APIENTRY GetVertexArrayiv(GLuint vaobj, GLenum pname, GLint *param)
 void GL_APIENTRY
 GetnColorTable(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void *table)
 {
-    EVENT(
-        "(GLenum target = %s, GLenum format = %s, GLenum type = %s, GLsizei bufSize = %d, void "
-        "*table = 0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::ColorTableTarget, target),
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)table);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnColorTable",
+          "context = %d, GLenum target = %s, GLenum format = %s, GLenum type = %s, GLsizei bufSize "
+          "= %d, void *table = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::ColorTableTarget, target),
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)table);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1461,11 +1532,13 @@ GetnColorTable(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void 
 
 void GL_APIENTRY GetnCompressedTexImage(GLenum target, GLint lod, GLsizei bufSize, void *pixels)
 {
-    EVENT("(GLenum target = %s, GLint lod = %d, GLsizei bufSize = %d, void *pixels = 0x%016" PRIxPTR
-          ")",
-          GLenumToString(GLenumGroup::TextureTarget, target), lod, bufSize, (uintptr_t)pixels);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnCompressedTexImage",
+          "context = %d, GLenum target = %s, GLint lod = %d, GLsizei bufSize = %d, void *pixels = "
+          "0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), lod, bufSize,
+          (uintptr_t)pixels);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1482,14 +1555,14 @@ void GL_APIENTRY GetnCompressedTexImage(GLenum target, GLint lod, GLsizei bufSiz
 void GL_APIENTRY
 GetnConvolutionFilter(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void *image)
 {
-    EVENT(
-        "(GLenum target = %s, GLenum format = %s, GLenum type = %s, GLsizei bufSize = %d, void "
-        "*image = 0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::ConvolutionTarget, target),
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)image);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnConvolutionFilter",
+          "context = %d, GLenum target = %s, GLenum format = %s, GLenum type = %s, GLsizei bufSize "
+          "= %d, void *image = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::ConvolutionTarget, target),
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)image);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1512,14 +1585,14 @@ void GL_APIENTRY GetnHistogram(GLenum target,
                                GLsizei bufSize,
                                void *values)
 {
-    EVENT(
-        "(GLenum target = %s, GLboolean reset = %s, GLenum format = %s, GLenum type = %s, GLsizei "
-        "bufSize = %d, void *values = 0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::HistogramTargetEXT, target), GLbooleanToString(reset),
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)values);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnHistogram",
+          "context = %d, GLenum target = %s, GLboolean reset = %s, GLenum format = %s, GLenum type "
+          "= %s, GLsizei bufSize = %d, void *values = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::HistogramTargetEXT, target),
+          GLbooleanToString(reset), GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)values);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1537,13 +1610,13 @@ void GL_APIENTRY GetnHistogram(GLenum target,
 
 void GL_APIENTRY GetnMapdv(GLenum target, GLenum query, GLsizei bufSize, GLdouble *v)
 {
-    EVENT(
-        "(GLenum target = %s, GLenum query = %s, GLsizei bufSize = %d, GLdouble *v = 0x%016" PRIxPTR
-        ")",
-        GLenumToString(GLenumGroup::MapTarget, target),
-        GLenumToString(GLenumGroup::MapQuery, query), bufSize, (uintptr_t)v);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnMapdv",
+          "context = %d, GLenum target = %s, GLenum query = %s, GLsizei bufSize = %d, GLdouble *v "
+          "= 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::MapTarget, target),
+          GLenumToString(GLenumGroup::MapQuery, query), bufSize, (uintptr_t)v);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1559,13 +1632,13 @@ void GL_APIENTRY GetnMapdv(GLenum target, GLenum query, GLsizei bufSize, GLdoubl
 
 void GL_APIENTRY GetnMapfv(GLenum target, GLenum query, GLsizei bufSize, GLfloat *v)
 {
-    EVENT(
-        "(GLenum target = %s, GLenum query = %s, GLsizei bufSize = %d, GLfloat *v = 0x%016" PRIxPTR
-        ")",
-        GLenumToString(GLenumGroup::MapTarget, target),
-        GLenumToString(GLenumGroup::MapQuery, query), bufSize, (uintptr_t)v);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnMapfv",
+          "context = %d, GLenum target = %s, GLenum query = %s, GLsizei bufSize = %d, GLfloat *v = "
+          "0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::MapTarget, target),
+          GLenumToString(GLenumGroup::MapQuery, query), bufSize, (uintptr_t)v);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1581,12 +1654,13 @@ void GL_APIENTRY GetnMapfv(GLenum target, GLenum query, GLsizei bufSize, GLfloat
 
 void GL_APIENTRY GetnMapiv(GLenum target, GLenum query, GLsizei bufSize, GLint *v)
 {
-    EVENT("(GLenum target = %s, GLenum query = %s, GLsizei bufSize = %d, GLint *v = 0x%016" PRIxPTR
-          ")",
-          GLenumToString(GLenumGroup::MapTarget, target),
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetnMapiv",
+          "context = %d, GLenum target = %s, GLenum query = %s, GLsizei bufSize = %d, GLint *v = "
+          "0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::MapTarget, target),
           GLenumToString(GLenumGroup::MapQuery, query), bufSize, (uintptr_t)v);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1607,14 +1681,14 @@ void GL_APIENTRY GetnMinmax(GLenum target,
                             GLsizei bufSize,
                             void *values)
 {
-    EVENT(
-        "(GLenum target = %s, GLboolean reset = %s, GLenum format = %s, GLenum type = %s, GLsizei "
-        "bufSize = %d, void *values = 0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::MinmaxTargetEXT, target), GLbooleanToString(reset),
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)values);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnMinmax",
+          "context = %d, GLenum target = %s, GLboolean reset = %s, GLenum format = %s, GLenum type "
+          "= %s, GLsizei bufSize = %d, void *values = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::MinmaxTargetEXT, target),
+          GLbooleanToString(reset), GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)values);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1632,10 +1706,12 @@ void GL_APIENTRY GetnMinmax(GLenum target,
 
 void GL_APIENTRY GetnPixelMapfv(GLenum map, GLsizei bufSize, GLfloat *values)
 {
-    EVENT("(GLenum map = %s, GLsizei bufSize = %d, GLfloat *values = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::PixelMap, map), bufSize, (uintptr_t)values);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnPixelMapfv",
+          "context = %d, GLenum map = %s, GLsizei bufSize = %d, GLfloat *values = 0x%016" PRIxPTR
+          "",
+          CID(context), GLenumToString(GLenumGroup::PixelMap, map), bufSize, (uintptr_t)values);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1651,10 +1727,11 @@ void GL_APIENTRY GetnPixelMapfv(GLenum map, GLsizei bufSize, GLfloat *values)
 
 void GL_APIENTRY GetnPixelMapuiv(GLenum map, GLsizei bufSize, GLuint *values)
 {
-    EVENT("(GLenum map = %s, GLsizei bufSize = %d, GLuint *values = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::PixelMap, map), bufSize, (uintptr_t)values);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnPixelMapuiv",
+          "context = %d, GLenum map = %s, GLsizei bufSize = %d, GLuint *values = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::PixelMap, map), bufSize, (uintptr_t)values);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1670,10 +1747,12 @@ void GL_APIENTRY GetnPixelMapuiv(GLenum map, GLsizei bufSize, GLuint *values)
 
 void GL_APIENTRY GetnPixelMapusv(GLenum map, GLsizei bufSize, GLushort *values)
 {
-    EVENT("(GLenum map = %s, GLsizei bufSize = %d, GLushort *values = 0x%016" PRIxPTR ")",
-          GLenumToString(GLenumGroup::PixelMap, map), bufSize, (uintptr_t)values);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnPixelMapusv",
+          "context = %d, GLenum map = %s, GLsizei bufSize = %d, GLushort *values = 0x%016" PRIxPTR
+          "",
+          CID(context), GLenumToString(GLenumGroup::PixelMap, map), bufSize, (uintptr_t)values);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1689,10 +1768,11 @@ void GL_APIENTRY GetnPixelMapusv(GLenum map, GLsizei bufSize, GLushort *values)
 
 void GL_APIENTRY GetnPolygonStipple(GLsizei bufSize, GLubyte *pattern)
 {
-    EVENT("(GLsizei bufSize = %d, GLubyte *pattern = 0x%016" PRIxPTR ")", bufSize,
-          (uintptr_t)pattern);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnPolygonStipple",
+          "context = %d, GLsizei bufSize = %d, GLubyte *pattern = 0x%016" PRIxPTR "", CID(context),
+          bufSize, (uintptr_t)pattern);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1715,16 +1795,17 @@ void GL_APIENTRY GetnSeparableFilter(GLenum target,
                                      void *column,
                                      void *span)
 {
-    EVENT(
-        "(GLenum target = %s, GLenum format = %s, GLenum type = %s, GLsizei rowBufSize = %d, void "
-        "*row = 0x%016" PRIxPTR ", GLsizei columnBufSize = %d, void *column = 0x%016" PRIxPTR
-        ", void *span = 0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::SeparableTargetEXT, target),
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), rowBufSize, (uintptr_t)row, columnBufSize,
-        (uintptr_t)column, (uintptr_t)span);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnSeparableFilter",
+          "context = %d, GLenum target = %s, GLenum format = %s, GLenum type = %s, GLsizei "
+          "rowBufSize = %d, void *row = 0x%016" PRIxPTR
+          ", GLsizei columnBufSize = %d, void *column = 0x%016" PRIxPTR
+          ", void *span = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::SeparableTargetEXT, target),
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), rowBufSize, (uintptr_t)row, columnBufSize,
+          (uintptr_t)column, (uintptr_t)span);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1744,14 +1825,14 @@ void GL_APIENTRY GetnSeparableFilter(GLenum target,
 void GL_APIENTRY
 GetnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels)
 {
-    EVENT(
-        "(GLenum target = %s, GLint level = %d, GLenum format = %s, GLenum type = %s, GLsizei "
-        "bufSize = %d, void *pixels = 0x%016" PRIxPTR ")",
-        GLenumToString(GLenumGroup::TextureTarget, target), level,
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)pixels);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnTexImage",
+          "context = %d, GLenum target = %s, GLint level = %d, GLenum format = %s, GLenum type = "
+          "%s, GLsizei bufSize = %d, void *pixels = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)pixels);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1769,12 +1850,12 @@ GetnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei buf
 
 void GL_APIENTRY GetnUniformdv(GLuint program, GLint location, GLsizei bufSize, GLdouble *params)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei bufSize = %d, GLdouble *params = "
-        "0x%016" PRIxPTR ")",
-        program, location, bufSize, (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnUniformdv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei bufSize = %d, GLdouble "
+          "*params = 0x%016" PRIxPTR "",
+          CID(context), program, location, bufSize, (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1790,12 +1871,12 @@ void GL_APIENTRY GetnUniformdv(GLuint program, GLint location, GLsizei bufSize, 
 
 void GL_APIENTRY GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei bufSize = %d, GLfloat *params = "
-        "0x%016" PRIxPTR ")",
-        program, location, bufSize, (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnUniformfv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei bufSize = %d, GLfloat "
+          "*params = 0x%016" PRIxPTR "",
+          CID(context), program, location, bufSize, (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1811,12 +1892,12 @@ void GL_APIENTRY GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, 
 
 void GL_APIENTRY GetnUniformiv(GLuint program, GLint location, GLsizei bufSize, GLint *params)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei bufSize = %d, GLint *params = "
-        "0x%016" PRIxPTR ")",
-        program, location, bufSize, (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnUniformiv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei bufSize = %d, GLint "
+          "*params = 0x%016" PRIxPTR "",
+          CID(context), program, location, bufSize, (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1832,12 +1913,12 @@ void GL_APIENTRY GetnUniformiv(GLuint program, GLint location, GLsizei bufSize, 
 
 void GL_APIENTRY GetnUniformuiv(GLuint program, GLint location, GLsizei bufSize, GLuint *params)
 {
-    EVENT(
-        "(GLuint program = %u, GLint location = %d, GLsizei bufSize = %d, GLuint *params = "
-        "0x%016" PRIxPTR ")",
-        program, location, bufSize, (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glGetnUniformuiv",
+          "context = %d, GLuint program = %u, GLint location = %d, GLsizei bufSize = %d, GLuint "
+          "*params = 0x%016" PRIxPTR "",
+          CID(context), program, location, bufSize, (uintptr_t)params);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1855,12 +1936,12 @@ void GL_APIENTRY InvalidateNamedFramebufferData(GLuint framebuffer,
                                                 GLsizei numAttachments,
                                                 const GLenum *attachments)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLsizei numAttachments = %d, const GLenum *attachments = "
-        "0x%016" PRIxPTR ")",
-        framebuffer, numAttachments, (uintptr_t)attachments);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glInvalidateNamedFramebufferData",
+          "context = %d, GLuint framebuffer = %u, GLsizei numAttachments = %d, const GLenum "
+          "*attachments = 0x%016" PRIxPTR "",
+          CID(context), framebuffer, numAttachments, (uintptr_t)attachments);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1884,12 +1965,13 @@ void GL_APIENTRY InvalidateNamedFramebufferSubData(GLuint framebuffer,
                                                    GLsizei width,
                                                    GLsizei height)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLsizei numAttachments = %d, const GLenum *attachments = "
-        "0x%016" PRIxPTR ", GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
-        framebuffer, numAttachments, (uintptr_t)attachments, x, y, width, height);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glInvalidateNamedFramebufferSubData",
+          "context = %d, GLuint framebuffer = %u, GLsizei numAttachments = %d, const GLenum "
+          "*attachments = 0x%016" PRIxPTR
+          ", GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d",
+          CID(context), framebuffer, numAttachments, (uintptr_t)attachments, x, y, width, height);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1908,10 +1990,10 @@ void GL_APIENTRY InvalidateNamedFramebufferSubData(GLuint framebuffer,
 
 void *GL_APIENTRY MapNamedBuffer(GLuint buffer, GLenum access)
 {
-    EVENT("(GLuint buffer = %u, GLenum access = %s)", buffer,
-          GLenumToString(GLenumGroup::BufferAccessARB, access));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glMapNamedBuffer", "context = %d, GLuint buffer = %u, GLenum access = %s", CID(context),
+          buffer, GLenumToString(GLenumGroup::BufferAccessARB, access));
+
     void *returnValue;
     if (context)
     {
@@ -1941,13 +2023,14 @@ void *GL_APIENTRY MapNamedBufferRange(GLuint buffer,
                                       GLsizeiptr length,
                                       GLbitfield access)
 {
-    EVENT(
-        "(GLuint buffer = %u, GLintptr offset = %llu, GLsizeiptr length = %llu, GLbitfield access "
-        "= %s)",
-        buffer, static_cast<unsigned long long>(offset), static_cast<unsigned long long>(length),
-        GLbitfieldToString(GLenumGroup::BufferAccessMask, access).c_str());
-
     Context *context = GetValidGlobalContext();
+    EVENT("glMapNamedBufferRange",
+          "context = %d, GLuint buffer = %u, GLintptr offset = %llu, GLsizeiptr length = %llu, "
+          "GLbitfield access = %s",
+          CID(context), buffer, static_cast<unsigned long long>(offset),
+          static_cast<unsigned long long>(length),
+          GLbitfieldToString(GLenumGroup::BufferAccessMask, access).c_str());
+
     void *returnValue;
     if (context)
     {
@@ -1976,10 +2059,10 @@ void *GL_APIENTRY MapNamedBufferRange(GLuint buffer,
 
 void GL_APIENTRY MemoryBarrierByRegion(GLbitfield barriers)
 {
-    EVENT("(GLbitfield barriers = %s)",
+    Context *context = GetValidGlobalContext();
+    EVENT("glMemoryBarrierByRegion", "context = %d, GLbitfield barriers = %s", CID(context),
           GLbitfieldToString(GLenumGroup::MemoryBarrierMask, barriers).c_str());
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -1995,12 +2078,13 @@ void GL_APIENTRY MemoryBarrierByRegion(GLbitfield barriers)
 
 void GL_APIENTRY NamedBufferData(GLuint buffer, GLsizeiptr size, const void *data, GLenum usage)
 {
-    EVENT("(GLuint buffer = %u, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
-          ", GLenum usage = %s)",
-          buffer, static_cast<unsigned long long>(size), (uintptr_t)data,
+    Context *context = GetValidGlobalContext();
+    EVENT("glNamedBufferData",
+          "context = %d, GLuint buffer = %u, GLsizeiptr size = %llu, const void *data = "
+          "0x%016" PRIxPTR ", GLenum usage = %s",
+          CID(context), buffer, static_cast<unsigned long long>(size), (uintptr_t)data,
           GLenumToString(GLenumGroup::VertexBufferObjectUsage, usage));
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -2020,12 +2104,13 @@ void GL_APIENTRY NamedBufferStorage(GLuint buffer,
                                     const void *data,
                                     GLbitfield flags)
 {
-    EVENT("(GLuint buffer = %u, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
-          ", GLbitfield flags = %s)",
-          buffer, static_cast<unsigned long long>(size), (uintptr_t)data,
+    Context *context = GetValidGlobalContext();
+    EVENT("glNamedBufferStorage",
+          "context = %d, GLuint buffer = %u, GLsizeiptr size = %llu, const void *data = "
+          "0x%016" PRIxPTR ", GLbitfield flags = %s",
+          CID(context), buffer, static_cast<unsigned long long>(size), (uintptr_t)data,
           GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -2045,13 +2130,13 @@ void GL_APIENTRY NamedBufferSubData(GLuint buffer,
                                     GLsizeiptr size,
                                     const void *data)
 {
-    EVENT(
-        "(GLuint buffer = %u, GLintptr offset = %llu, GLsizeiptr size = %llu, const void *data = "
-        "0x%016" PRIxPTR ")",
-        buffer, static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
-        (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glNamedBufferSubData",
+          "context = %d, GLuint buffer = %u, GLintptr offset = %llu, GLsizeiptr size = %llu, const "
+          "void *data = 0x%016" PRIxPTR "",
+          CID(context), buffer, static_cast<unsigned long long>(offset),
+          static_cast<unsigned long long>(size), (uintptr_t)data);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -2068,10 +2153,10 @@ void GL_APIENTRY NamedBufferSubData(GLuint buffer,
 
 void GL_APIENTRY NamedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf)
 {
-    EVENT("(GLuint framebuffer = %u, GLenum buf = %s)", framebuffer,
-          GLenumToString(GLenumGroup::ColorBuffer, buf));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glNamedFramebufferDrawBuffer", "context = %d, GLuint framebuffer = %u, GLenum buf = %s",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::ColorBuffer, buf));
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2087,10 +2172,13 @@ void GL_APIENTRY NamedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf)
 
 void GL_APIENTRY NamedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, const GLenum *bufs)
 {
-    EVENT("(GLuint framebuffer = %u, GLsizei n = %d, const GLenum *bufs = 0x%016" PRIxPTR ")",
-          framebuffer, n, (uintptr_t)bufs);
-
     Context *context = GetValidGlobalContext();
+    EVENT(
+        "glNamedFramebufferDrawBuffers",
+        "context = %d, GLuint framebuffer = %u, GLsizei n = %d, const GLenum *bufs = 0x%016" PRIxPTR
+        "",
+        CID(context), framebuffer, n, (uintptr_t)bufs);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2106,10 +2194,12 @@ void GL_APIENTRY NamedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, cons
 
 void GL_APIENTRY NamedFramebufferParameteri(GLuint framebuffer, GLenum pname, GLint param)
 {
-    EVENT("(GLuint framebuffer = %u, GLenum pname = %s, GLint param = %d)", framebuffer,
-          GLenumToString(GLenumGroup::FramebufferParameterName, pname), param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glNamedFramebufferParameteri",
+          "context = %d, GLuint framebuffer = %u, GLenum pname = %s, GLint param = %d",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::FramebufferParameterName, pname),
+          param);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2125,10 +2215,10 @@ void GL_APIENTRY NamedFramebufferParameteri(GLuint framebuffer, GLenum pname, GL
 
 void GL_APIENTRY NamedFramebufferReadBuffer(GLuint framebuffer, GLenum src)
 {
-    EVENT("(GLuint framebuffer = %u, GLenum src = %s)", framebuffer,
-          GLenumToString(GLenumGroup::ColorBuffer, src));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glNamedFramebufferReadBuffer", "context = %d, GLuint framebuffer = %u, GLenum src = %s",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::ColorBuffer, src));
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2147,13 +2237,13 @@ void GL_APIENTRY NamedFramebufferRenderbuffer(GLuint framebuffer,
                                               GLenum renderbuffertarget,
                                               GLuint renderbuffer)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLenum attachment = %s, GLenum renderbuffertarget = %s, GLuint "
-        "renderbuffer = %u)",
-        framebuffer, GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
-        GLenumToString(GLenumGroup::RenderbufferTarget, renderbuffertarget), renderbuffer);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glNamedFramebufferRenderbuffer",
+          "context = %d, GLuint framebuffer = %u, GLenum attachment = %s, GLenum "
+          "renderbuffertarget = %s, GLuint renderbuffer = %u",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
+          GLenumToString(GLenumGroup::RenderbufferTarget, renderbuffertarget), renderbuffer);
+
     if (context)
     {
         RenderbufferID renderbufferPacked             = FromGL<RenderbufferID>(renderbuffer);
@@ -2177,12 +2267,13 @@ void GL_APIENTRY NamedFramebufferTexture(GLuint framebuffer,
                                          GLuint texture,
                                          GLint level)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLenum attachment = %s, GLuint texture = %u, GLint level = %d)",
-        framebuffer, GLenumToString(GLenumGroup::FramebufferAttachment, attachment), texture,
-        level);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glNamedFramebufferTexture",
+          "context = %d, GLuint framebuffer = %u, GLenum attachment = %s, GLuint texture = %u, "
+          "GLint level = %d",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
+          texture, level);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2205,13 +2296,13 @@ void GL_APIENTRY NamedFramebufferTextureLayer(GLuint framebuffer,
                                               GLint level,
                                               GLint layer)
 {
-    EVENT(
-        "(GLuint framebuffer = %u, GLenum attachment = %s, GLuint texture = %u, GLint level = %d, "
-        "GLint layer = %d)",
-        framebuffer, GLenumToString(GLenumGroup::FramebufferAttachment, attachment), texture, level,
-        layer);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glNamedFramebufferTextureLayer",
+          "context = %d, GLuint framebuffer = %u, GLenum attachment = %s, GLuint texture = %u, "
+          "GLint level = %d, GLint layer = %d",
+          CID(context), framebuffer, GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
+          texture, level, layer);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2234,12 +2325,13 @@ void GL_APIENTRY NamedRenderbufferStorage(GLuint renderbuffer,
                                           GLsizei width,
                                           GLsizei height)
 {
-    EVENT(
-        "(GLuint renderbuffer = %u, GLenum internalformat = %s, GLsizei width = %d, GLsizei height "
-        "= %d)",
-        renderbuffer, GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glNamedRenderbufferStorage",
+          "context = %d, GLuint renderbuffer = %u, GLenum internalformat = %s, GLsizei width = %d, "
+          "GLsizei height = %d",
+          CID(context), renderbuffer, GLenumToString(GLenumGroup::InternalFormat, internalformat),
+          width, height);
+
     if (context)
     {
         RenderbufferID renderbufferPacked             = FromGL<RenderbufferID>(renderbuffer);
@@ -2262,13 +2354,13 @@ void GL_APIENTRY NamedRenderbufferStorageMultisample(GLuint renderbuffer,
                                                      GLsizei width,
                                                      GLsizei height)
 {
-    EVENT(
-        "(GLuint renderbuffer = %u, GLsizei samples = %d, GLenum internalformat = %s, GLsizei "
-        "width = %d, GLsizei height = %d)",
-        renderbuffer, samples, GLenumToString(GLenumGroup::InternalFormat, internalformat), width,
-        height);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glNamedRenderbufferStorageMultisample",
+          "context = %d, GLuint renderbuffer = %u, GLsizei samples = %d, GLenum internalformat = "
+          "%s, GLsizei width = %d, GLsizei height = %d",
+          CID(context), renderbuffer, samples,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
+
     if (context)
     {
         RenderbufferID renderbufferPacked             = FromGL<RenderbufferID>(renderbuffer);
@@ -2296,13 +2388,14 @@ void GL_APIENTRY ReadnPixels(GLint x,
                              GLsizei bufSize,
                              void *data)
 {
-    EVENT(
-        "(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, GLenum format = %s, "
-        "GLenum type = %s, GLsizei bufSize = %d, void *data = 0x%016" PRIxPTR ")",
-        x, y, width, height, GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)data);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glReadnPixels",
+          "context = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, "
+          "GLenum format = %s, GLenum type = %s, GLsizei bufSize = %d, void *data = 0x%016" PRIxPTR
+          "",
+          CID(context), x, y, width, height, GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)data);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2320,9 +2413,9 @@ void GL_APIENTRY ReadnPixels(GLint x,
 
 void GL_APIENTRY TextureBarrier()
 {
-    EVENT("()");
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureBarrier", "context = %d", CID(context));
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2337,10 +2430,12 @@ void GL_APIENTRY TextureBarrier()
 
 void GL_APIENTRY TextureBuffer(GLuint texture, GLenum internalformat, GLuint buffer)
 {
-    EVENT("(GLuint texture = %u, GLenum internalformat = %s, GLuint buffer = %u)", texture,
-          GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureBuffer",
+          "context = %d, GLuint texture = %u, GLenum internalformat = %s, GLuint buffer = %u",
+          CID(context), texture, GLenumToString(GLenumGroup::InternalFormat, internalformat),
+          buffer);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2364,13 +2459,13 @@ void GL_APIENTRY TextureBufferRange(GLuint texture,
                                     GLintptr offset,
                                     GLsizeiptr size)
 {
-    EVENT(
-        "(GLuint texture = %u, GLenum internalformat = %s, GLuint buffer = %u, GLintptr offset = "
-        "%llu, GLsizeiptr size = %llu)",
-        texture, GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer,
-        static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureBufferRange",
+          "context = %d, GLuint texture = %u, GLenum internalformat = %s, GLuint buffer = %u, "
+          "GLintptr offset = %llu, GLsizeiptr size = %llu",
+          CID(context), texture, GLenumToString(GLenumGroup::InternalFormat, internalformat),
+          buffer, static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size));
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2390,10 +2485,14 @@ void GL_APIENTRY TextureBufferRange(GLuint texture,
 
 void GL_APIENTRY TextureParameterIiv(GLuint texture, GLenum pname, const GLint *params)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, const GLint *params = 0x%016" PRIxPTR ")",
-          texture, GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT(
+        "glTextureParameterIiv",
+        "context = %d, GLuint texture = %u, GLenum pname = %s, const GLint *params = 0x%016" PRIxPTR
+        "",
+        CID(context), texture, GLenumToString(GLenumGroup::TextureParameterName, pname),
+        (uintptr_t)params);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2410,10 +2509,13 @@ void GL_APIENTRY TextureParameterIiv(GLuint texture, GLenum pname, const GLint *
 
 void GL_APIENTRY TextureParameterIuiv(GLuint texture, GLenum pname, const GLuint *params)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, const GLuint *params = 0x%016" PRIxPTR ")",
-          texture, GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureParameterIuiv",
+          "context = %d, GLuint texture = %u, GLenum pname = %s, const GLuint *params = "
+          "0x%016" PRIxPTR "",
+          CID(context), texture, GLenumToString(GLenumGroup::TextureParameterName, pname),
+          (uintptr_t)params);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2430,10 +2532,11 @@ void GL_APIENTRY TextureParameterIuiv(GLuint texture, GLenum pname, const GLuint
 
 void GL_APIENTRY TextureParameterf(GLuint texture, GLenum pname, GLfloat param)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, GLfloat param = %f)", texture,
-          GLenumToString(GLenumGroup::TextureParameterName, pname), param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureParameterf",
+          "context = %d, GLuint texture = %u, GLenum pname = %s, GLfloat param = %f", CID(context),
+          texture, GLenumToString(GLenumGroup::TextureParameterName, pname), param);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2450,10 +2553,13 @@ void GL_APIENTRY TextureParameterf(GLuint texture, GLenum pname, GLfloat param)
 
 void GL_APIENTRY TextureParameterfv(GLuint texture, GLenum pname, const GLfloat *param)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, const GLfloat *param = 0x%016" PRIxPTR ")",
-          texture, GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureParameterfv",
+          "context = %d, GLuint texture = %u, GLenum pname = %s, const GLfloat *param = "
+          "0x%016" PRIxPTR "",
+          CID(context), texture, GLenumToString(GLenumGroup::TextureParameterName, pname),
+          (uintptr_t)param);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2470,10 +2576,11 @@ void GL_APIENTRY TextureParameterfv(GLuint texture, GLenum pname, const GLfloat 
 
 void GL_APIENTRY TextureParameteri(GLuint texture, GLenum pname, GLint param)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, GLint param = %d)", texture,
-          GLenumToString(GLenumGroup::TextureParameterName, pname), param);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureParameteri",
+          "context = %d, GLuint texture = %u, GLenum pname = %s, GLint param = %d", CID(context),
+          texture, GLenumToString(GLenumGroup::TextureParameterName, pname), param);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2490,10 +2597,14 @@ void GL_APIENTRY TextureParameteri(GLuint texture, GLenum pname, GLint param)
 
 void GL_APIENTRY TextureParameteriv(GLuint texture, GLenum pname, const GLint *param)
 {
-    EVENT("(GLuint texture = %u, GLenum pname = %s, const GLint *param = 0x%016" PRIxPTR ")",
-          texture, GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)param);
-
     Context *context = GetValidGlobalContext();
+    EVENT(
+        "glTextureParameteriv",
+        "context = %d, GLuint texture = %u, GLenum pname = %s, const GLint *param = 0x%016" PRIxPTR
+        "",
+        CID(context), texture, GLenumToString(GLenumGroup::TextureParameterName, pname),
+        (uintptr_t)param);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2513,12 +2624,13 @@ void GL_APIENTRY TextureStorage1D(GLuint texture,
                                   GLenum internalformat,
                                   GLsizei width)
 {
-    EVENT(
-        "(GLuint texture = %u, GLsizei levels = %d, GLenum internalformat = %s, GLsizei width = "
-        "%d)",
-        texture, levels, GLenumToString(GLenumGroup::InternalFormat, internalformat), width);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureStorage1D",
+          "context = %d, GLuint texture = %u, GLsizei levels = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d",
+          CID(context), texture, levels,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2541,13 +2653,13 @@ void GL_APIENTRY TextureStorage2D(GLuint texture,
                                   GLsizei width,
                                   GLsizei height)
 {
-    EVENT(
-        "(GLuint texture = %u, GLsizei levels = %d, GLenum internalformat = %s, GLsizei width = "
-        "%d, GLsizei height = %d)",
-        texture, levels, GLenumToString(GLenumGroup::InternalFormat, internalformat), width,
-        height);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureStorage2D",
+          "context = %d, GLuint texture = %u, GLsizei levels = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d, GLsizei height = %d",
+          CID(context), texture, levels,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2571,13 +2683,14 @@ void GL_APIENTRY TextureStorage2DMultisample(GLuint texture,
                                              GLsizei height,
                                              GLboolean fixedsamplelocations)
 {
-    EVENT(
-        "(GLuint texture = %u, GLsizei samples = %d, GLenum internalformat = %s, GLsizei width = "
-        "%d, GLsizei height = %d, GLboolean fixedsamplelocations = %s)",
-        texture, samples, GLenumToString(GLenumGroup::InternalFormat, internalformat), width,
-        height, GLbooleanToString(fixedsamplelocations));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureStorage2DMultisample",
+          "context = %d, GLuint texture = %u, GLsizei samples = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d, GLsizei height = %d, GLboolean fixedsamplelocations = %s",
+          CID(context), texture, samples,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height,
+          GLbooleanToString(fixedsamplelocations));
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2603,13 +2716,13 @@ void GL_APIENTRY TextureStorage3D(GLuint texture,
                                   GLsizei height,
                                   GLsizei depth)
 {
-    EVENT(
-        "(GLuint texture = %u, GLsizei levels = %d, GLenum internalformat = %s, GLsizei width = "
-        "%d, GLsizei height = %d, GLsizei depth = %d)",
-        texture, levels, GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height,
-        depth);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureStorage3D",
+          "context = %d, GLuint texture = %u, GLsizei levels = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d",
+          CID(context), texture, levels,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2634,13 +2747,15 @@ void GL_APIENTRY TextureStorage3DMultisample(GLuint texture,
                                              GLsizei depth,
                                              GLboolean fixedsamplelocations)
 {
-    EVENT(
-        "(GLuint texture = %u, GLsizei samples = %d, GLenum internalformat = %s, GLsizei width = "
-        "%d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedsamplelocations = %s)",
-        texture, samples, GLenumToString(GLenumGroup::InternalFormat, internalformat), width,
-        height, depth, GLbooleanToString(fixedsamplelocations));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureStorage3DMultisample",
+          "context = %d, GLuint texture = %u, GLsizei samples = %d, GLenum internalformat = %s, "
+          "GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLboolean "
+          "fixedsamplelocations = %s",
+          CID(context), texture, samples,
+          GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth,
+          GLbooleanToString(fixedsamplelocations));
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2667,13 +2782,14 @@ void GL_APIENTRY TextureSubImage1D(GLuint texture,
                                    GLenum type,
                                    const void *pixels)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLsizei width = %d, GLenum "
-        "format = %s, GLenum type = %s, const void *pixels = 0x%016" PRIxPTR ")",
-        texture, level, xoffset, width, GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureSubImage1D",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLsizei width "
+          "= %d, GLenum format = %s, GLenum type = %s, const void *pixels = 0x%016" PRIxPTR "",
+          CID(context), texture, level, xoffset, width,
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2700,15 +2816,15 @@ void GL_APIENTRY TextureSubImage2D(GLuint texture,
                                    GLenum type,
                                    const void *pixels)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLsizei "
-        "width = %d, GLsizei height = %d, GLenum format = %s, GLenum type = %s, const void *pixels "
-        "= 0x%016" PRIxPTR ")",
-        texture, level, xoffset, yoffset, width, height,
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureSubImage2D",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset "
+          "= %d, GLsizei width = %d, GLsizei height = %d, GLenum format = %s, GLenum type = %s, "
+          "const void *pixels = 0x%016" PRIxPTR "",
+          CID(context), texture, level, xoffset, yoffset, width, height,
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2739,15 +2855,15 @@ void GL_APIENTRY TextureSubImage3D(GLuint texture,
                                    GLenum type,
                                    const void *pixels)
 {
-    EVENT(
-        "(GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
-        "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
-        "= %s, GLenum type = %s, const void *pixels = 0x%016" PRIxPTR ")",
-        texture, level, xoffset, yoffset, zoffset, width, height, depth,
-        GLenumToString(GLenumGroup::PixelFormat, format),
-        GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTextureSubImage3D",
+          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset "
+          "= %d, GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
+          "GLenum format = %s, GLenum type = %s, const void *pixels = 0x%016" PRIxPTR "",
+          CID(context), texture, level, xoffset, yoffset, zoffset, width, height, depth,
+          GLenumToString(GLenumGroup::PixelFormat, format),
+          GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
+
     if (context)
     {
         TextureID texturePacked                       = FromGL<TextureID>(texture);
@@ -2768,9 +2884,11 @@ void GL_APIENTRY TextureSubImage3D(GLuint texture,
 
 void GL_APIENTRY TransformFeedbackBufferBase(GLuint xfb, GLuint index, GLuint buffer)
 {
-    EVENT("(GLuint xfb = %u, GLuint index = %u, GLuint buffer = %u)", xfb, index, buffer);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTransformFeedbackBufferBase",
+          "context = %d, GLuint xfb = %u, GLuint index = %u, GLuint buffer = %u", CID(context), xfb,
+          index, buffer);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -2791,13 +2909,13 @@ void GL_APIENTRY TransformFeedbackBufferRange(GLuint xfb,
                                               GLintptr offset,
                                               GLsizeiptr size)
 {
-    EVENT(
-        "(GLuint xfb = %u, GLuint index = %u, GLuint buffer = %u, GLintptr offset = %llu, "
-        "GLsizeiptr size = %llu)",
-        xfb, index, buffer, static_cast<unsigned long long>(offset),
-        static_cast<unsigned long long>(size));
-
     Context *context = GetValidGlobalContext();
+    EVENT("glTransformFeedbackBufferRange",
+          "context = %d, GLuint xfb = %u, GLuint index = %u, GLuint buffer = %u, GLintptr offset = "
+          "%llu, GLsizeiptr size = %llu",
+          CID(context), xfb, index, buffer, static_cast<unsigned long long>(offset),
+          static_cast<unsigned long long>(size));
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -2816,9 +2934,9 @@ void GL_APIENTRY TransformFeedbackBufferRange(GLuint xfb,
 
 GLboolean GL_APIENTRY UnmapNamedBuffer(GLuint buffer)
 {
-    EVENT("(GLuint buffer = %u)", buffer);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glUnmapNamedBuffer", "context = %d, GLuint buffer = %u", CID(context), buffer);
+
     GLboolean returnValue;
     if (context)
     {
@@ -2845,10 +2963,11 @@ GLboolean GL_APIENTRY UnmapNamedBuffer(GLuint buffer)
 
 void GL_APIENTRY VertexArrayAttribBinding(GLuint vaobj, GLuint attribindex, GLuint bindingindex)
 {
-    EVENT("(GLuint vaobj = %u, GLuint attribindex = %u, GLuint bindingindex = %u)", vaobj,
-          attribindex, bindingindex);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexArrayAttribBinding",
+          "context = %d, GLuint vaobj = %u, GLuint attribindex = %u, GLuint bindingindex = %u",
+          CID(context), vaobj, attribindex, bindingindex);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2871,13 +2990,14 @@ void GL_APIENTRY VertexArrayAttribFormat(GLuint vaobj,
                                          GLboolean normalized,
                                          GLuint relativeoffset)
 {
-    EVENT(
-        "(GLuint vaobj = %u, GLuint attribindex = %u, GLint size = %d, GLenum type = %s, GLboolean "
-        "normalized = %s, GLuint relativeoffset = %u)",
-        vaobj, attribindex, size, GLenumToString(GLenumGroup::VertexAttribType, type),
-        GLbooleanToString(normalized), relativeoffset);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexArrayAttribFormat",
+          "context = %d, GLuint vaobj = %u, GLuint attribindex = %u, GLint size = %d, GLenum type "
+          "= %s, GLboolean normalized = %s, GLuint relativeoffset = %u",
+          CID(context), vaobj, attribindex, size,
+          GLenumToString(GLenumGroup::VertexAttribType, type), GLbooleanToString(normalized),
+          relativeoffset);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2900,13 +3020,13 @@ void GL_APIENTRY VertexArrayAttribIFormat(GLuint vaobj,
                                           GLenum type,
                                           GLuint relativeoffset)
 {
-    EVENT(
-        "(GLuint vaobj = %u, GLuint attribindex = %u, GLint size = %d, GLenum type = %s, GLuint "
-        "relativeoffset = %u)",
-        vaobj, attribindex, size, GLenumToString(GLenumGroup::VertexAttribType, type),
-        relativeoffset);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexArrayAttribIFormat",
+          "context = %d, GLuint vaobj = %u, GLuint attribindex = %u, GLint size = %d, GLenum type "
+          "= %s, GLuint relativeoffset = %u",
+          CID(context), vaobj, attribindex, size,
+          GLenumToString(GLenumGroup::VertexAttribType, type), relativeoffset);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2928,13 +3048,13 @@ void GL_APIENTRY VertexArrayAttribLFormat(GLuint vaobj,
                                           GLenum type,
                                           GLuint relativeoffset)
 {
-    EVENT(
-        "(GLuint vaobj = %u, GLuint attribindex = %u, GLint size = %d, GLenum type = %s, GLuint "
-        "relativeoffset = %u)",
-        vaobj, attribindex, size, GLenumToString(GLenumGroup::VertexAttribType, type),
-        relativeoffset);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexArrayAttribLFormat",
+          "context = %d, GLuint vaobj = %u, GLuint attribindex = %u, GLint size = %d, GLenum type "
+          "= %s, GLuint relativeoffset = %u",
+          CID(context), vaobj, attribindex, size,
+          GLenumToString(GLenumGroup::VertexAttribType, type), relativeoffset);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2952,10 +3072,11 @@ void GL_APIENTRY VertexArrayAttribLFormat(GLuint vaobj,
 
 void GL_APIENTRY VertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor)
 {
-    EVENT("(GLuint vaobj = %u, GLuint bindingindex = %u, GLuint divisor = %u)", vaobj, bindingindex,
-          divisor);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexArrayBindingDivisor",
+          "context = %d, GLuint vaobj = %u, GLuint bindingindex = %u, GLuint divisor = %u",
+          CID(context), vaobj, bindingindex, divisor);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -2973,9 +3094,10 @@ void GL_APIENTRY VertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GL
 
 void GL_APIENTRY VertexArrayElementBuffer(GLuint vaobj, GLuint buffer)
 {
-    EVENT("(GLuint vaobj = %u, GLuint buffer = %u)", vaobj, buffer);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexArrayElementBuffer", "context = %d, GLuint vaobj = %u, GLuint buffer = %u",
+          CID(context), vaobj, buffer);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -2996,12 +3118,13 @@ void GL_APIENTRY VertexArrayVertexBuffer(GLuint vaobj,
                                          GLintptr offset,
                                          GLsizei stride)
 {
-    EVENT(
-        "(GLuint vaobj = %u, GLuint bindingindex = %u, GLuint buffer = %u, GLintptr offset = %llu, "
-        "GLsizei stride = %d)",
-        vaobj, bindingindex, buffer, static_cast<unsigned long long>(offset), stride);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexArrayVertexBuffer",
+          "context = %d, GLuint vaobj = %u, GLuint bindingindex = %u, GLuint buffer = %u, GLintptr "
+          "offset = %llu, GLsizei stride = %d",
+          CID(context), vaobj, bindingindex, buffer, static_cast<unsigned long long>(offset),
+          stride);
+
     if (context)
     {
         BufferID bufferPacked                         = FromGL<BufferID>(buffer);
@@ -3025,13 +3148,14 @@ void GL_APIENTRY VertexArrayVertexBuffers(GLuint vaobj,
                                           const GLintptr *offsets,
                                           const GLsizei *strides)
 {
-    EVENT(
-        "(GLuint vaobj = %u, GLuint first = %u, GLsizei count = %d, const GLuint *buffers = "
-        "0x%016" PRIxPTR ", const GLintptr *offsets = 0x%016" PRIxPTR
-        ", const GLsizei *strides = 0x%016" PRIxPTR ")",
-        vaobj, first, count, (uintptr_t)buffers, (uintptr_t)offsets, (uintptr_t)strides);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glVertexArrayVertexBuffers",
+          "context = %d, GLuint vaobj = %u, GLuint first = %u, GLsizei count = %d, const GLuint "
+          "*buffers = 0x%016" PRIxPTR ", const GLintptr *offsets = 0x%016" PRIxPTR
+          ", const GLsizei *strides = 0x%016" PRIxPTR "",
+          CID(context), vaobj, first, count, (uintptr_t)buffers, (uintptr_t)offsets,
+          (uintptr_t)strides);
+
     if (context)
     {
         const BufferID *buffersPacked                 = FromGL<const BufferID *>(buffers);

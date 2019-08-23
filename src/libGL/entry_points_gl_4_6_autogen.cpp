@@ -32,12 +32,13 @@ void GL_APIENTRY MultiDrawArraysIndirectCount(GLenum mode,
                                               GLsizei maxdrawcount,
                                               GLsizei stride)
 {
-    EVENT("(GLenum mode = %s, const void *indirect = 0x%016" PRIxPTR
-          ", GLintptr drawcount = %llu, GLsizei maxdrawcount = %d, GLsizei stride = %d)",
-          GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)indirect,
+    Context *context = GetValidGlobalContext();
+    EVENT("glMultiDrawArraysIndirectCount",
+          "context = %d, GLenum mode = %s, const void *indirect = 0x%016" PRIxPTR
+          ", GLintptr drawcount = %llu, GLsizei maxdrawcount = %d, GLsizei stride = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)indirect,
           static_cast<unsigned long long>(drawcount), maxdrawcount, stride);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -60,13 +61,14 @@ void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
                                                 GLsizei maxdrawcount,
                                                 GLsizei stride)
 {
-    EVENT("(GLenum mode = %s, GLenum type = %s, const void *indirect = 0x%016" PRIxPTR
-          ", GLintptr drawcount = %llu, GLsizei maxdrawcount = %d, GLsizei stride = %d)",
-          GLenumToString(GLenumGroup::PrimitiveType, mode),
+    Context *context = GetValidGlobalContext();
+    EVENT("glMultiDrawElementsIndirectCount",
+          "context = %d, GLenum mode = %s, GLenum type = %s, const void *indirect = 0x%016" PRIxPTR
+          ", GLintptr drawcount = %llu, GLsizei maxdrawcount = %d, GLsizei stride = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode),
           GLenumToString(GLenumGroup::DefaultGroup, type), (uintptr_t)indirect,
           static_cast<unsigned long long>(drawcount), maxdrawcount, stride);
 
-    Context *context = GetValidGlobalContext();
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -85,9 +87,11 @@ void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
 
 void GL_APIENTRY PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp)
 {
-    EVENT("(GLfloat factor = %f, GLfloat units = %f, GLfloat clamp = %f)", factor, units, clamp);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glPolygonOffsetClamp",
+          "context = %d, GLfloat factor = %f, GLfloat units = %f, GLfloat clamp = %f", CID(context),
+          factor, units, clamp);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
@@ -107,13 +111,14 @@ void GL_APIENTRY SpecializeShader(GLuint shader,
                                   const GLuint *pConstantIndex,
                                   const GLuint *pConstantValue)
 {
-    EVENT("(GLuint shader = %u, const GLchar *pEntryPoint = 0x%016" PRIxPTR
-          ", GLuint numSpecializationConstants = %u, const GLuint *pConstantIndex = 0x%016" PRIxPTR
-          ", const GLuint *pConstantValue = 0x%016" PRIxPTR ")",
-          shader, (uintptr_t)pEntryPoint, numSpecializationConstants, (uintptr_t)pConstantIndex,
-          (uintptr_t)pConstantValue);
-
     Context *context = GetValidGlobalContext();
+    EVENT("glSpecializeShader",
+          "context = %d, GLuint shader = %u, const GLchar *pEntryPoint = 0x%016" PRIxPTR
+          ", GLuint numSpecializationConstants = %u, const GLuint *pConstantIndex = 0x%016" PRIxPTR
+          ", const GLuint *pConstantValue = 0x%016" PRIxPTR "",
+          CID(context), shader, (uintptr_t)pEntryPoint, numSpecializationConstants,
+          (uintptr_t)pConstantIndex, (uintptr_t)pConstantValue);
+
     if (context)
     {
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
