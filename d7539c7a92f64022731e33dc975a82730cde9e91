@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1e1da201_ffdb28dd",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e7f2b1e_dbf39062",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 0
+      },
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "812fd9f9_c1e0ebb1",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fc235f7_6287e433",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "812fd9f9_c1e0ebb1",
+      "range": {
+        "startLine": 63,
+        "startChar": 6,
+        "endLine": 63,
+        "endChar": 19
+      },
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d6dcdb05_d8033aa5",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6fcd1887_562f45aa",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 36
+      },
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af49b1ea_48e6a819",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
         "patchSetId": 4
@@ -91,6 +163,30 @@
       "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbc08e10_7697a29b",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Done. Changed to widget as the term commonly used in UI libraries.",
+      "parentUuid": "af49b1ea_48e6a819",
+      "range": {
+        "startLine": 465,
+        "startChar": 33,
+        "endLine": 465,
+        "endChar": 38
+      },
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "bdd0aa10_11b5c6d8",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc9eae69_370968dd",
+      "range": {
+        "startLine": 472,
+        "startChar": 49,
+        "endLine": 472,
+        "endChar": 58
+      },
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f42f658b_00e6efca",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.h",
         "patchSetId": 4
@@ -137,6 +257,30 @@
       "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76985b67_fda79b5a",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f42f658b_00e6efca",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 78,
+        "endChar": 10
+      },
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "df38c7cd_a4f27290",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75aeb571_635306fb",
+      "range": {
+        "startLine": 184,
+        "startChar": 10,
+        "endLine": 184,
+        "endChar": 17
+      },
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c49ba98f_40484732",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.h",
         "patchSetId": 4
@@ -183,6 +351,30 @@
       "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14004faa_2d47703e",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Done. Split the classes too and moved to the front-end. Did some cleanup by moving the widget definitions to their own file and have these (in the front end) handle the \"object\" stuff. The backend part now does purely Vulkan calls.",
+      "parentUuid": "c49ba98f_40484732",
+      "range": {
+        "startLine": 222,
+        "startChar": 6,
+        "endLine": 222,
+        "endChar": 20
+      },
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "8da49041_bb5174fa",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Maybe we could think of something as a follow up? The way I thought of it was for various locations in the code to get a widget and add data to it, and if overlay is disabled, that would just be a noop. So it\u0027s not just onPresent that anything interacts with the overlay.",
+      "parentUuid": "ac596b87_50fb8ef2",
+      "range": {
+        "startLine": 249,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 0
+      },
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e8b58727_263125b4",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_overlay_fonts.py",
         "patchSetId": 4
@@ -223,6 +439,24 @@
       "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56bd5efe_54952ce0",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_overlay_fonts.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-23T20:01:22Z",
+      "side": 1,
+      "message": "Didn\u0027t. Done.\n\nManaged to get almost identical font array data (yeay!)",
+      "parentUuid": "e8b58727_263125b4",
+      "revId": "d7539c7a92f64022731e33dc975a82730cde9e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
