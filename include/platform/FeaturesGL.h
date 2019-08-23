@@ -338,6 +338,12 @@ struct FeaturesGL : FeatureSetBase
         "clip_src_region_for_blitframebuffer", FeatureCategory::OpenGLWorkarounds,
         "Mac has issues with blitFramebuffer when the parameters don't match the framebuffer size.",
         &members, "http://crbug.com/830046"};
+
+    // Calling glTexImage2D with zero size on a rectangle texture generates GL errors
+    Feature resettingRectangleTexturesGeneratesErrors = {
+        "reset_rectangle_texture_generates_errors", FeatureCategory::OpenGLWorkarounds,
+        "Calling glTexImage2D with zero size on a rectangle texture generates errors.", &members,
+        "http://anglebug.com/3859"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

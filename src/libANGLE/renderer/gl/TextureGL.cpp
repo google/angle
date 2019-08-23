@@ -1191,16 +1191,22 @@ angle::Result TextureGL::bindTexImage(const gl::Context *context, egl::Surface *
 
 angle::Result TextureGL::releaseTexImage(const gl::Context *context)
 {
-    // Not all Surface implementations reset the size of mip 0 when releasing, do it manually
     ASSERT(getType() == gl::TextureType::_2D || getType() == gl::TextureType::Rectangle);
 
-    const FunctionsGL *functions = GetFunctionsGL(context);
-    StateManagerGL *stateManager = GetStateManagerGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+    if (getType() != gl::TextureType::Rectangle &&
+        !features.resettingRectangleTexturesGeneratesErrors.enabled)
+    {
+        // Not all Surface implementations reset the size of mip 0 when releasing, do it manually
+        const FunctionsGL *functions = GetFunctionsGL(context);
+        StateManagerGL *stateManager = GetStateManagerGL(context);
 
-    stateManager->bindTexture(getType(), mTextureID);
-    ASSERT(nativegl::UseTexImage2D(getType()));
-    functions->texImage2D(ToGLenum(getType()), 0, GL_RGBA, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                          nullptr);
+        stateManager->bindTexture(getType(), mTextureID);
+        ASSERT(nativegl::UseTexImage2D(getType()));
+        functions->texImage2D(ToGLenum(getType()), 0, GL_RGBA, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                              nullptr);
+    }
+
     return angle::Result::Continue;
 }
 
