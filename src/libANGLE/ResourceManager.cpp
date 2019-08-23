@@ -111,7 +111,10 @@ template class TypedResourceManager<Renderbuffer,
                                     RenderbufferID>;
 template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager, SamplerID>;
 template class TypedResourceManager<Sync, HandleAllocator, SyncManager, GLuint>;
-template class TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager, GLuint>;
+template class TypedResourceManager<Framebuffer,
+                                    HandleAllocator,
+                                    FramebufferManager,
+                                    FramebufferID>;
 template class TypedResourceManager<ProgramPipeline,
                                     HandleAllocator,
                                     ProgramPipelineManager,
@@ -421,7 +424,7 @@ void PathManager::reset(const Context *context)
 
 // static
 Framebuffer *FramebufferManager::AllocateNewObject(rx::GLImplFactory *factory,
-                                                   GLuint handle,
+                                                   FramebufferID handle,
                                                    const Caps &caps)
 {
     // Make sure the caller isn't using a reserved handle.
@@ -436,12 +439,12 @@ void FramebufferManager::DeleteObject(const Context *context, Framebuffer *frame
     delete framebuffer;
 }
 
-GLuint FramebufferManager::createFramebuffer()
+FramebufferID FramebufferManager::createFramebuffer()
 {
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
-Framebuffer *FramebufferManager::getFramebuffer(GLuint handle) const
+Framebuffer *FramebufferManager::getFramebuffer(FramebufferID handle) const
 {
     return mObjectMap.query(handle);
 }

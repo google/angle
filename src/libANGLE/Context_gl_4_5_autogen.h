@@ -15,19 +15,19 @@
     void blitNamedFramebuffer(GLuint readFramebuffer, GLuint drawFramebuffer, GLint srcX0,         \
                               GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0,     \
                               GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);           \
-    GLenum checkNamedFramebufferStatus(GLuint framebuffer, GLenum target);                         \
+    GLenum checkNamedFramebufferStatus(FramebufferID framebufferPacked, GLenum target);            \
     void clearNamedBufferData(BufferID bufferPacked, GLenum internalformat, GLenum format,         \
                               GLenum type, const void *data);                                      \
     void clearNamedBufferSubData(BufferID bufferPacked, GLenum internalformat, GLintptr offset,    \
                                  GLsizeiptr size, GLenum format, GLenum type, const void *data);   \
-    void clearNamedFramebufferfi(GLuint framebuffer, GLenum buffer, GLint drawbuffer,              \
+    void clearNamedFramebufferfi(FramebufferID framebufferPacked, GLenum buffer, GLint drawbuffer, \
                                  GLfloat depth, GLint stencil);                                    \
-    void clearNamedFramebufferfv(GLuint framebuffer, GLenum buffer, GLint drawbuffer,              \
+    void clearNamedFramebufferfv(FramebufferID framebufferPacked, GLenum buffer, GLint drawbuffer, \
                                  const GLfloat *value);                                            \
-    void clearNamedFramebufferiv(GLuint framebuffer, GLenum buffer, GLint drawbuffer,              \
+    void clearNamedFramebufferiv(FramebufferID framebufferPacked, GLenum buffer, GLint drawbuffer, \
                                  const GLint *value);                                              \
-    void clearNamedFramebufferuiv(GLuint framebuffer, GLenum buffer, GLint drawbuffer,             \
-                                  const GLuint *value);                                            \
+    void clearNamedFramebufferuiv(FramebufferID framebufferPacked, GLenum buffer,                  \
+                                  GLint drawbuffer, const GLuint *value);                          \
     void clipControl(GLenum origin, GLenum depth);                                                 \
     void compressedTextureSubImage1D(TextureID texturePacked, GLint level, GLint xoffset,          \
                                      GLsizei width, GLenum format, GLsizei imageSize,              \
@@ -70,9 +70,10 @@
     void getNamedBufferPointerv(BufferID bufferPacked, GLenum pname, void **params);               \
     void getNamedBufferSubData(BufferID bufferPacked, GLintptr offset, GLsizeiptr size,            \
                                void *data);                                                        \
-    void getNamedFramebufferAttachmentParameteriv(GLuint framebuffer, GLenum attachment,           \
-                                                  GLenum pname, GLint *params);                    \
-    void getNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname, GLint *param);           \
+    void getNamedFramebufferAttachmentParameteriv(FramebufferID framebufferPacked,                 \
+                                                  GLenum attachment, GLenum pname, GLint *params); \
+    void getNamedFramebufferParameteriv(FramebufferID framebufferPacked, GLenum pname,             \
+                                        GLint *param);                                             \
     void getNamedRenderbufferParameteriv(RenderbufferID renderbufferPacked, GLenum pname,          \
                                          GLint *params);                                           \
     void getQueryBufferObjecti64v(GLuint id, BufferID bufferPacked, GLenum pname,                  \
@@ -123,11 +124,11 @@
                        GLdouble *params);                                                          \
     void getnUniformuiv(ShaderProgramID programPacked, GLint location, GLsizei bufSize,            \
                         GLuint *params);                                                           \
-    void invalidateNamedFramebufferData(GLuint framebuffer, GLsizei numAttachments,                \
+    void invalidateNamedFramebufferData(FramebufferID framebufferPacked, GLsizei numAttachments,   \
                                         const GLenum *attachments);                                \
-    void invalidateNamedFramebufferSubData(GLuint framebuffer, GLsizei numAttachments,             \
-                                           const GLenum *attachments, GLint x, GLint y,            \
-                                           GLsizei width, GLsizei height);                         \
+    void invalidateNamedFramebufferSubData(FramebufferID framebufferPacked,                        \
+                                           GLsizei numAttachments, const GLenum *attachments,      \
+                                           GLint x, GLint y, GLsizei width, GLsizei height);       \
     void *mapNamedBuffer(BufferID bufferPacked, GLenum access);                                    \
     void *mapNamedBufferRange(BufferID bufferPacked, GLintptr offset, GLsizeiptr length,           \
                               GLbitfield access);                                                  \
@@ -136,16 +137,17 @@
                             GLbitfield flags);                                                     \
     void namedBufferSubData(BufferID bufferPacked, GLintptr offset, GLsizeiptr size,               \
                             const void *data);                                                     \
-    void namedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf);                               \
-    void namedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, const GLenum *bufs);           \
-    void namedFramebufferParameteri(GLuint framebuffer, GLenum pname, GLint param);                \
-    void namedFramebufferReadBuffer(GLuint framebuffer, GLenum src);                               \
-    void namedFramebufferRenderbuffer(GLuint framebuffer, GLenum attachment,                       \
+    void namedFramebufferDrawBuffer(FramebufferID framebufferPacked, GLenum buf);                  \
+    void namedFramebufferDrawBuffers(FramebufferID framebufferPacked, GLsizei n,                   \
+                                     const GLenum *bufs);                                          \
+    void namedFramebufferParameteri(FramebufferID framebufferPacked, GLenum pname, GLint param);   \
+    void namedFramebufferReadBuffer(FramebufferID framebufferPacked, GLenum src);                  \
+    void namedFramebufferRenderbuffer(FramebufferID framebufferPacked, GLenum attachment,          \
                                       GLenum renderbuffertarget,                                   \
                                       RenderbufferID renderbufferPacked);                          \
-    void namedFramebufferTexture(GLuint framebuffer, GLenum attachment, TextureID texturePacked,   \
-                                 GLint level);                                                     \
-    void namedFramebufferTextureLayer(GLuint framebuffer, GLenum attachment,                       \
+    void namedFramebufferTexture(FramebufferID framebufferPacked, GLenum attachment,               \
+                                 TextureID texturePacked, GLint level);                            \
+    void namedFramebufferTextureLayer(FramebufferID framebufferPacked, GLenum attachment,          \
                                       TextureID texturePacked, GLint level, GLint layer);          \
     void namedRenderbufferStorage(RenderbufferID renderbufferPacked, GLenum internalformat,        \
                                   GLsizei width, GLsizei height);                                  \

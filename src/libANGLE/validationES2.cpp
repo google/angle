@@ -2479,7 +2479,7 @@ static bool ValidateObjectIdentifierAndName(Context *context, GLenum identifier,
             return true;
 
         case GL_FRAMEBUFFER:
-            if (context->getFramebuffer(name) == nullptr)
+            if (context->getFramebuffer({name}) == nullptr)
             {
                 context->validationError(GL_INVALID_VALUE, kInvalidFramebufferName);
                 return false;
@@ -4972,7 +4972,7 @@ bool ValidateBindAttribLocation(Context *context,
     return GetValidProgram(context, program) != nullptr;
 }
 
-bool ValidateBindFramebuffer(Context *context, GLenum target, GLuint framebuffer)
+bool ValidateBindFramebuffer(Context *context, GLenum target, FramebufferID framebuffer)
 {
     if (!ValidFramebufferTarget(context, target))
     {
@@ -5749,7 +5749,7 @@ bool ValidateIsBuffer(Context *context, BufferID buffer)
     return true;
 }
 
-bool ValidateIsFramebuffer(Context *context, GLuint framebuffer)
+bool ValidateIsFramebuffer(Context *context, FramebufferID framebuffer)
 {
     return true;
 }
@@ -6263,7 +6263,7 @@ bool ValidateDeleteBuffers(Context *context, GLint n, const BufferID *buffers)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateDeleteFramebuffers(Context *context, GLint n, const GLuint *)
+bool ValidateDeleteFramebuffers(Context *context, GLint n, const FramebufferID *framebuffers)
 {
     return ValidateGenOrDelete(context, n);
 }
@@ -6519,7 +6519,7 @@ bool ValidateGenBuffers(Context *context, GLint n, BufferID *buffers)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateGenFramebuffers(Context *context, GLint n, GLuint *)
+bool ValidateGenFramebuffers(Context *context, GLint n, FramebufferID *framebuffers)
 {
     return ValidateGenOrDelete(context, n);
 }

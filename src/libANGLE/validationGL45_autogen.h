@@ -31,7 +31,9 @@ bool ValidateBlitNamedFramebuffer(Context *context,
                                   GLint dstY1,
                                   GLbitfield mask,
                                   GLenum filter);
-bool ValidateCheckNamedFramebufferStatus(Context *context, GLuint framebuffer, GLenum target);
+bool ValidateCheckNamedFramebufferStatus(Context *context,
+                                         FramebufferID framebufferPacked,
+                                         GLenum target);
 bool ValidateClearNamedBufferData(Context *context,
                                   BufferID bufferPacked,
                                   GLenum internalformat,
@@ -47,23 +49,23 @@ bool ValidateClearNamedBufferSubData(Context *context,
                                      GLenum type,
                                      const void *data);
 bool ValidateClearNamedFramebufferfi(Context *context,
-                                     GLuint framebuffer,
+                                     FramebufferID framebufferPacked,
                                      GLenum buffer,
                                      GLint drawbuffer,
                                      GLfloat depth,
                                      GLint stencil);
 bool ValidateClearNamedFramebufferfv(Context *context,
-                                     GLuint framebuffer,
+                                     FramebufferID framebufferPacked,
                                      GLenum buffer,
                                      GLint drawbuffer,
                                      const GLfloat *value);
 bool ValidateClearNamedFramebufferiv(Context *context,
-                                     GLuint framebuffer,
+                                     FramebufferID framebufferPacked,
                                      GLenum buffer,
                                      GLint drawbuffer,
                                      const GLint *value);
 bool ValidateClearNamedFramebufferuiv(Context *context,
-                                      GLuint framebuffer,
+                                      FramebufferID framebufferPacked,
                                       GLenum buffer,
                                       GLint drawbuffer,
                                       const GLuint *value);
@@ -181,12 +183,12 @@ bool ValidateGetNamedBufferSubData(Context *context,
                                    GLsizeiptr size,
                                    void *data);
 bool ValidateGetNamedFramebufferAttachmentParameteriv(Context *context,
-                                                      GLuint framebuffer,
+                                                      FramebufferID framebufferPacked,
                                                       GLenum attachment,
                                                       GLenum pname,
                                                       GLint *params);
 bool ValidateGetNamedFramebufferParameteriv(Context *context,
-                                            GLuint framebuffer,
+                                            FramebufferID framebufferPacked,
                                             GLenum pname,
                                             GLint *param);
 bool ValidateGetNamedRenderbufferParameteriv(Context *context,
@@ -356,11 +358,11 @@ bool ValidateGetnUniformuiv(Context *context,
                             GLsizei bufSize,
                             GLuint *params);
 bool ValidateInvalidateNamedFramebufferData(Context *context,
-                                            GLuint framebuffer,
+                                            FramebufferID framebufferPacked,
                                             GLsizei numAttachments,
                                             const GLenum *attachments);
 bool ValidateInvalidateNamedFramebufferSubData(Context *context,
-                                               GLuint framebuffer,
+                                               FramebufferID framebufferPacked,
                                                GLsizei numAttachments,
                                                const GLenum *attachments,
                                                GLint x,
@@ -388,28 +390,32 @@ bool ValidateNamedBufferSubData(Context *context,
                                 GLintptr offset,
                                 GLsizeiptr size,
                                 const void *data);
-bool ValidateNamedFramebufferDrawBuffer(Context *context, GLuint framebuffer, GLenum buf);
+bool ValidateNamedFramebufferDrawBuffer(Context *context,
+                                        FramebufferID framebufferPacked,
+                                        GLenum buf);
 bool ValidateNamedFramebufferDrawBuffers(Context *context,
-                                         GLuint framebuffer,
+                                         FramebufferID framebufferPacked,
                                          GLsizei n,
                                          const GLenum *bufs);
 bool ValidateNamedFramebufferParameteri(Context *context,
-                                        GLuint framebuffer,
+                                        FramebufferID framebufferPacked,
                                         GLenum pname,
                                         GLint param);
-bool ValidateNamedFramebufferReadBuffer(Context *context, GLuint framebuffer, GLenum src);
+bool ValidateNamedFramebufferReadBuffer(Context *context,
+                                        FramebufferID framebufferPacked,
+                                        GLenum src);
 bool ValidateNamedFramebufferRenderbuffer(Context *context,
-                                          GLuint framebuffer,
+                                          FramebufferID framebufferPacked,
                                           GLenum attachment,
                                           GLenum renderbuffertarget,
                                           RenderbufferID renderbufferPacked);
 bool ValidateNamedFramebufferTexture(Context *context,
-                                     GLuint framebuffer,
+                                     FramebufferID framebufferPacked,
                                      GLenum attachment,
                                      TextureID texturePacked,
                                      GLint level);
 bool ValidateNamedFramebufferTextureLayer(Context *context,
-                                          GLuint framebuffer,
+                                          FramebufferID framebufferPacked,
                                           GLenum attachment,
                                           TextureID texturePacked,
                                           GLint level,

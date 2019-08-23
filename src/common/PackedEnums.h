@@ -386,6 +386,11 @@ struct ProgramPipelineID
     GLuint value;
 };
 
+struct FramebufferID
+{
+    GLuint value;
+};
+
 struct RenderbufferID
 {
     GLuint value;
@@ -420,6 +425,16 @@ struct QueryID
 {
     GLuint value;
 };
+
+// Util funcs for resourceIDs
+inline bool operator==(const FramebufferID &lhs, const FramebufferID &rhs)
+{
+    return lhs.value == rhs.value;
+}
+inline bool operator!=(const FramebufferID &lhs, const FramebufferID &rhs)
+{
+    return lhs.value != rhs.value;
+}
 
 // Used to unbox typed values.
 template <typename ResourceIDType>

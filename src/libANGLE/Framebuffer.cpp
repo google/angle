@@ -277,7 +277,7 @@ FramebufferState::FramebufferState()
     mEnabledDrawBuffers.set(0);
 }
 
-FramebufferState::FramebufferState(const Caps &caps, GLuint id)
+FramebufferState::FramebufferState(const Caps &caps, FramebufferID id)
     : mId(id),
       mLabel(),
       mColorAttachments(caps.maxColorAttachments),
@@ -628,7 +628,9 @@ bool FramebufferState::isDefault() const
     return mId == Framebuffer::kDefaultDrawFramebufferHandle;
 }
 
-Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id)
+const FramebufferID Framebuffer::kDefaultDrawFramebufferHandle = {0};
+
+Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, FramebufferID id)
     : mState(caps, id),
       mImpl(factory->createFramebuffer(mState)),
       mCachedStatus(),
@@ -1947,7 +1949,7 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context) const
     const Program *program = state.getProgram();
 
     // TODO(jmadill): Default framebuffer feedback loops.
-    if (mState.mId == 0)
+    if (mState.isDefault())
     {
         return false;
     }
@@ -2011,7 +2013,7 @@ bool Framebuffer::formsCopyingFeedbackLoopWith(GLuint copyTextureID,
                                                GLint copyTextureLevel,
                                                GLint copyTextureLayer) const
 {
-    if (mState.mId == 0)
+    if (mState.isDefault())
     {
         // It seems impossible to form a texture copying feedback loop with the default FBO.
         return false;

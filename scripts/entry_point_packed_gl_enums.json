@@ -572,12 +572,15 @@
         "buffer": "BufferID"
     },
     "glNamedFramebufferRenderbuffer": {
+        "framebuffer": "FramebufferID",
         "renderbuffer": "RenderbufferID"
     },
     "glNamedFramebufferTexture": {
+        "framebuffer": "FramebufferID",
         "texture": "TextureID"
     },
     "glNamedFramebufferTextureLayer": {
+        "framebuffer": "FramebufferID",
         "texture": "TextureID"
     },
     "glNamedRenderbufferStorage": {
@@ -1457,5 +1460,56 @@
     },
     "glShaderStorageBlockBinding": {
         "program": "ShaderProgramID"
+    },
+    "glIsFramebuffer": {
+        "framebuffer": "FramebufferID"
+    },
+    "glBindFramebuffer": {
+        "framebuffer": "FramebufferID"
+    },
+    "glClearNamedFramebufferfi": {
+        "framebuffer": "FramebufferID"
+    },
+    "glClearNamedFramebufferfv": {
+        "framebuffer": "FramebufferID"
+    },
+    "glClearNamedFramebufferiv": {
+        "framebuffer": "FramebufferID"
+    },
+    "glClearNamedFramebufferuiv": {
+        "framebuffer": "FramebufferID"
+    },
+    "glCheckNamedFramebufferStatus": {
+        "framebuffer": "FramebufferID"
+    },
+    "glGetNamedFramebufferAttachmentParameteriv": {
+        "framebuffer": "FramebufferID"
+    },
+    "glGetNamedFramebufferParameteriv": {
+        "framebuffer": "FramebufferID"
+    },
+    "glInvalidateNamedFramebufferData": {
+        "framebuffer": "FramebufferID"
+    },
+    "glInvalidateNamedFramebufferSubData": {
+        "framebuffer": "FramebufferID"
+    },
+    "glNamedFramebufferDrawBuffer": {
+        "framebuffer": "FramebufferID"
+    },
+    "glNamedFramebufferDrawBuffers": {
+        "framebuffer": "FramebufferID"
+    },
+    "glNamedFramebufferParameteri": {
+        "framebuffer": "FramebufferID"
+    },
+    "glNamedFramebufferReadBuffer": {
+        "framebuffer": "FramebufferID"
+    },
+    "glGenFramebuffers": {
+        "framebuffers": "FramebufferID *"
+    },
+    "glDeleteFramebuffers": {
+        "framebuffers": "const FramebufferID *"
     }
 }

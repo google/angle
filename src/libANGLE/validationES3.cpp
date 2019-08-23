@@ -807,7 +807,7 @@ static bool EqualOrFirstZero(GLuint first, GLuint second)
 
 static bool IsValidES3CopyTexImageCombination(const InternalFormat &textureFormatInfo,
                                               const InternalFormat &framebufferFormatInfo,
-                                              GLuint readBufferHandle)
+                                              FramebufferID readBufferHandle)
 {
     if (!ValidES3CopyConversion(textureFormatInfo.format, framebufferFormatInfo.format))
     {
@@ -873,7 +873,7 @@ static bool IsValidES3CopyTexImageCombination(const InternalFormat &textureForma
     //      is used if the FRAMEBUFFER_ATTACHMENT_ENCODING is LINEAR and table 3.18 is used if the
     //      FRAMEBUFFER_ATTACHMENT_ENCODING is SRGB.
     const InternalFormat *sourceEffectiveFormat = nullptr;
-    if (readBufferHandle != 0)
+    if (readBufferHandle.value != 0)
     {
         // Not the default framebuffer, therefore the read buffer must be a user-created texture or
         // renderbuffer
@@ -971,16 +971,16 @@ bool ValidateES3CopyTexImageParametersBase(Context *context,
     }
     ASSERT(textureFormat.valid() || !isSubImage);
 
-    const auto &state            = context->getState();
-    gl::Framebuffer *framebuffer = state.getReadFramebuffer();
-    GLuint readFramebufferID     = framebuffer->id();
+    const auto &state               = context->getState();
+    gl::Framebuffer *framebuffer    = state.getReadFramebuffer();
+    FramebufferID readFramebufferID = framebuffer->id();
 
     if (!ValidateFramebufferComplete(context, framebuffer))
     {
         return false;
     }
 
-    if (readFramebufferID != 0 && !ValidateFramebufferNotMultisampled(context, framebuffer))
+    if (!framebuffer->isDefault() && !ValidateFramebufferNotMultisampled(context, framebuffer))
     {
         return false;
     }

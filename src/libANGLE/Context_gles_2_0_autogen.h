@@ -15,7 +15,7 @@
     void attachShader(ShaderProgramID programPacked, ShaderProgramID shaderPacked);                \
     void bindAttribLocation(ShaderProgramID programPacked, GLuint index, const GLchar *name);      \
     void bindBuffer(BufferBinding targetPacked, BufferID bufferPacked);                            \
-    void bindFramebuffer(GLenum target, GLuint framebuffer);                                       \
+    void bindFramebuffer(GLenum target, FramebufferID framebufferPacked);                          \
     void bindRenderbuffer(GLenum target, RenderbufferID renderbufferPacked);                       \
     void bindTexture(TextureType targetPacked, TextureID texturePacked);                           \
     void blendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);                      \
@@ -49,7 +49,7 @@
     GLuint createShader(ShaderType typePacked);                                                    \
     void cullFace(CullFaceMode modePacked);                                                        \
     void deleteBuffers(GLsizei n, const BufferID *buffersPacked);                                  \
-    void deleteFramebuffers(GLsizei n, const GLuint *framebuffers);                                \
+    void deleteFramebuffers(GLsizei n, const FramebufferID *framebuffersPacked);                   \
     void deleteProgram(ShaderProgramID programPacked);                                             \
     void deleteRenderbuffers(GLsizei n, const RenderbufferID *renderbuffersPacked);                \
     void deleteShader(ShaderProgramID shaderPacked);                                               \
@@ -73,7 +73,7 @@
                               TextureID texturePacked, GLint level);                               \
     void frontFace(GLenum mode);                                                                   \
     void genBuffers(GLsizei n, BufferID *buffersPacked);                                           \
-    void genFramebuffers(GLsizei n, GLuint *framebuffers);                                         \
+    void genFramebuffers(GLsizei n, FramebufferID *framebuffersPacked);                            \
     void genRenderbuffers(GLsizei n, RenderbufferID *renderbuffersPacked);                         \
     void genTextures(GLsizei n, TextureID *texturesPacked);                                        \
     void generateMipmap(TextureType targetPacked);                                                 \
@@ -114,7 +114,7 @@
     void hint(GLenum target, GLenum mode);                                                         \
     GLboolean isBuffer(BufferID bufferPacked);                                                     \
     GLboolean isEnabled(GLenum cap);                                                               \
-    GLboolean isFramebuffer(GLuint framebuffer);                                                   \
+    GLboolean isFramebuffer(FramebufferID framebufferPacked);                                      \
     GLboolean isProgram(ShaderProgramID programPacked);                                            \
     GLboolean isRenderbuffer(RenderbufferID renderbufferPacked);                                   \
     GLboolean isShader(ShaderProgramID shaderPacked);                                              \

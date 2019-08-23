@@ -368,8 +368,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // CHROMIUM_path_rendering
     bool isPathGenerated(PathID path) const;
 
-    void bindReadFramebuffer(GLuint framebufferHandle);
-    void bindDrawFramebuffer(GLuint framebufferHandle);
+    void bindReadFramebuffer(FramebufferID framebufferHandle);
+    void bindDrawFramebuffer(FramebufferID framebufferHandle);
 
     Buffer *getBuffer(BufferID handle) const;
     FenceNV *getFenceNV(FenceNVID handle);
@@ -379,7 +379,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         return mState.mTextureManager->getTexture(handle);
     }
 
-    Framebuffer *getFramebuffer(GLuint handle) const;
+    Framebuffer *getFramebuffer(FramebufferID handle) const;
     Renderbuffer *getRenderbuffer(RenderbufferID handle) const;
     VertexArray *getVertexArray(GLuint handle) const;
     Sampler *getSampler(SamplerID handle) const;
@@ -406,8 +406,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void getPointerv(GLenum pname, void **params) const;
 
     // Framebuffers are owned by the Context, so these methods do not pass through
-    GLuint createFramebuffer();
-    void deleteFramebuffer(GLuint framebuffer);
+    FramebufferID createFramebuffer();
+    void deleteFramebuffer(FramebufferID framebuffer);
 
     bool hasActiveTransformFeedback(ShaderProgramID program) const;
 
@@ -537,7 +537,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     }
 
     bool isRenderbufferGenerated(RenderbufferID renderbuffer) const;
-    bool isFramebufferGenerated(GLuint framebuffer) const;
+    bool isFramebufferGenerated(FramebufferID framebuffer) const;
     bool isProgramPipelineGenerated(ProgramPipelineID pipeline) const;
 
     bool usingDisplayTextureShareGroup() const;
@@ -597,7 +597,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     void detachBuffer(Buffer *buffer);
     void detachTexture(TextureID texture);
-    void detachFramebuffer(GLuint framebuffer);
+    void detachFramebuffer(FramebufferID framebuffer);
     void detachRenderbuffer(RenderbufferID renderbuffer);
     void detachVertexArray(GLuint vertexArray);
     void detachTransformFeedback(GLuint transformFeedback);

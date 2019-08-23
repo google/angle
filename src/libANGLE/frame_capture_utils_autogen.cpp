@@ -59,6 +59,17 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
             WriteParamValueToStream<ParamType::TFenceNVIDPointer>(os,
                                                                   paramValue.FenceNVIDPointerVal);
             break;
+        case ParamType::TFramebufferID:
+            WriteParamValueToStream<ParamType::TFramebufferID>(os, paramValue.FramebufferIDVal);
+            break;
+        case ParamType::TFramebufferIDConstPointer:
+            WriteParamValueToStream<ParamType::TFramebufferIDConstPointer>(
+                os, paramValue.FramebufferIDConstPointerVal);
+            break;
+        case ParamType::TFramebufferIDPointer:
+            WriteParamValueToStream<ParamType::TFramebufferIDPointer>(
+                os, paramValue.FramebufferIDPointerVal);
+            break;
         case ParamType::TGLDEBUGPROC:
             WriteParamValueToStream<ParamType::TGLDEBUGPROC>(os, paramValue.GLDEBUGPROCVal);
             break;
@@ -413,6 +424,12 @@ const char *ParamTypeToString(ParamType paramType)
         case ParamType::TFenceNVIDConstPointer:
             return "const GLuint *";
         case ParamType::TFenceNVIDPointer:
+            return "GLuint *";
+        case ParamType::TFramebufferID:
+            return "GLuint";
+        case ParamType::TFramebufferIDConstPointer:
+            return "const GLuint *";
+        case ParamType::TFramebufferIDPointer:
             return "GLuint *";
         case ParamType::TGLDEBUGPROC:
             return "GLDEBUGPROC";

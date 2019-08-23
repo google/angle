@@ -95,18 +95,19 @@ GLenum GL_APIENTRY CheckNamedFramebufferStatus(GLuint framebuffer, GLenum target
     GLenum returnValue;
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateCheckNamedFramebufferStatus(context, framebuffer, target));
+        bool isCallValid = (context->skipValidation() || ValidateCheckNamedFramebufferStatus(
+                                                             context, framebufferPacked, target));
         if (isCallValid)
         {
-            returnValue = context->checkNamedFramebufferStatus(framebuffer, target);
+            returnValue = context->checkNamedFramebufferStatus(framebufferPacked, target);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::CheckNamedFramebufferStatus, GLenum>();
         }
-        ANGLE_CAPTURE(CheckNamedFramebufferStatus, isCallValid, context, framebuffer, target,
+        ANGLE_CAPTURE(CheckNamedFramebufferStatus, isCallValid, context, framebufferPacked, target,
                       returnValue);
     }
     else
@@ -196,15 +197,16 @@ void GL_APIENTRY ClearNamedFramebufferfi(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateClearNamedFramebufferfi(context, framebuffer, buffer,
+                            ValidateClearNamedFramebufferfi(context, framebufferPacked, buffer,
                                                             drawbuffer, depth, stencil));
         if (isCallValid)
         {
-            context->clearNamedFramebufferfi(framebuffer, buffer, drawbuffer, depth, stencil);
+            context->clearNamedFramebufferfi(framebufferPacked, buffer, drawbuffer, depth, stencil);
         }
-        ANGLE_CAPTURE(ClearNamedFramebufferfi, isCallValid, context, framebuffer, buffer,
+        ANGLE_CAPTURE(ClearNamedFramebufferfi, isCallValid, context, framebufferPacked, buffer,
                       drawbuffer, depth, stencil);
     }
 }
@@ -223,15 +225,16 @@ void GL_APIENTRY ClearNamedFramebufferfv(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateClearNamedFramebufferfv(context, framebuffer, buffer, drawbuffer, value));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateClearNamedFramebufferfv(context, framebufferPacked, buffer,
+                                                            drawbuffer, value));
         if (isCallValid)
         {
-            context->clearNamedFramebufferfv(framebuffer, buffer, drawbuffer, value);
+            context->clearNamedFramebufferfv(framebufferPacked, buffer, drawbuffer, value);
         }
-        ANGLE_CAPTURE(ClearNamedFramebufferfv, isCallValid, context, framebuffer, buffer,
+        ANGLE_CAPTURE(ClearNamedFramebufferfv, isCallValid, context, framebufferPacked, buffer,
                       drawbuffer, value);
     }
 }
@@ -250,15 +253,16 @@ void GL_APIENTRY ClearNamedFramebufferiv(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateClearNamedFramebufferiv(context, framebuffer, buffer, drawbuffer, value));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateClearNamedFramebufferiv(context, framebufferPacked, buffer,
+                                                            drawbuffer, value));
         if (isCallValid)
         {
-            context->clearNamedFramebufferiv(framebuffer, buffer, drawbuffer, value);
+            context->clearNamedFramebufferiv(framebufferPacked, buffer, drawbuffer, value);
         }
-        ANGLE_CAPTURE(ClearNamedFramebufferiv, isCallValid, context, framebuffer, buffer,
+        ANGLE_CAPTURE(ClearNamedFramebufferiv, isCallValid, context, framebufferPacked, buffer,
                       drawbuffer, value);
     }
 }
@@ -277,15 +281,16 @@ void GL_APIENTRY ClearNamedFramebufferuiv(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateClearNamedFramebufferuiv(context, framebuffer, buffer, drawbuffer, value));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateClearNamedFramebufferuiv(context, framebufferPacked, buffer,
+                                                             drawbuffer, value));
         if (isCallValid)
         {
-            context->clearNamedFramebufferuiv(framebuffer, buffer, drawbuffer, value);
+            context->clearNamedFramebufferuiv(framebufferPacked, buffer, drawbuffer, value);
         }
-        ANGLE_CAPTURE(ClearNamedFramebufferuiv, isCallValid, context, framebuffer, buffer,
+        ANGLE_CAPTURE(ClearNamedFramebufferuiv, isCallValid, context, framebufferPacked, buffer,
                       drawbuffer, value);
     }
 }
@@ -995,17 +1000,18 @@ void GL_APIENTRY GetNamedFramebufferAttachmentParameteriv(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetNamedFramebufferAttachmentParameteriv(
-                                              context, framebuffer, attachment, pname, params));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateGetNamedFramebufferAttachmentParameteriv(
+                                context, framebufferPacked, attachment, pname, params));
         if (isCallValid)
         {
-            context->getNamedFramebufferAttachmentParameteriv(framebuffer, attachment, pname,
+            context->getNamedFramebufferAttachmentParameteriv(framebufferPacked, attachment, pname,
                                                               params);
         }
-        ANGLE_CAPTURE(GetNamedFramebufferAttachmentParameteriv, isCallValid, context, framebuffer,
-                      attachment, pname, params);
+        ANGLE_CAPTURE(GetNamedFramebufferAttachmentParameteriv, isCallValid, context,
+                      framebufferPacked, attachment, pname, params);
     }
 }
 
@@ -1020,15 +1026,17 @@ void GL_APIENTRY GetNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateGetNamedFramebufferParameteriv(
-                                                             context, framebuffer, pname, param));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetNamedFramebufferParameteriv(context, framebufferPacked, pname, param));
         if (isCallValid)
         {
-            context->getNamedFramebufferParameteriv(framebuffer, pname, param);
+            context->getNamedFramebufferParameteriv(framebufferPacked, pname, param);
         }
-        ANGLE_CAPTURE(GetNamedFramebufferParameteriv, isCallValid, context, framebuffer, pname,
-                      param);
+        ANGLE_CAPTURE(GetNamedFramebufferParameteriv, isCallValid, context, framebufferPacked,
+                      pname, param);
     }
 }
 
@@ -1956,15 +1964,16 @@ void GL_APIENTRY InvalidateNamedFramebufferData(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateInvalidateNamedFramebufferData(
-                                              context, framebuffer, numAttachments, attachments));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateInvalidateNamedFramebufferData(context, framebufferPacked,
+                                                                   numAttachments, attachments));
         if (isCallValid)
         {
-            context->invalidateNamedFramebufferData(framebuffer, numAttachments, attachments);
+            context->invalidateNamedFramebufferData(framebufferPacked, numAttachments, attachments);
         }
-        ANGLE_CAPTURE(InvalidateNamedFramebufferData, isCallValid, context, framebuffer,
+        ANGLE_CAPTURE(InvalidateNamedFramebufferData, isCallValid, context, framebufferPacked,
                       numAttachments, attachments);
     }
 }
@@ -1986,16 +1995,18 @@ void GL_APIENTRY InvalidateNamedFramebufferSubData(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateInvalidateNamedFramebufferSubData(
-                                                             context, framebuffer, numAttachments,
-                                                             attachments, x, y, width, height));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateInvalidateNamedFramebufferSubData(context, framebufferPacked, numAttachments,
+                                                       attachments, x, y, width, height));
         if (isCallValid)
         {
-            context->invalidateNamedFramebufferSubData(framebuffer, numAttachments, attachments, x,
-                                                       y, width, height);
+            context->invalidateNamedFramebufferSubData(framebufferPacked, numAttachments,
+                                                       attachments, x, y, width, height);
         }
-        ANGLE_CAPTURE(InvalidateNamedFramebufferSubData, isCallValid, context, framebuffer,
+        ANGLE_CAPTURE(InvalidateNamedFramebufferSubData, isCallValid, context, framebufferPacked,
                       numAttachments, attachments, x, y, width, height);
     }
 }
@@ -2171,14 +2182,15 @@ void GL_APIENTRY NamedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf)
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateNamedFramebufferDrawBuffer(context, framebuffer, buf));
+                            ValidateNamedFramebufferDrawBuffer(context, framebufferPacked, buf));
         if (isCallValid)
         {
-            context->namedFramebufferDrawBuffer(framebuffer, buf);
+            context->namedFramebufferDrawBuffer(framebufferPacked, buf);
         }
-        ANGLE_CAPTURE(NamedFramebufferDrawBuffer, isCallValid, context, framebuffer, buf);
+        ANGLE_CAPTURE(NamedFramebufferDrawBuffer, isCallValid, context, framebufferPacked, buf);
     }
 }
 
@@ -2193,14 +2205,16 @@ void GL_APIENTRY NamedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, cons
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateNamedFramebufferDrawBuffers(context, framebuffer, n, bufs));
+        bool isCallValid = (context->skipValidation() || ValidateNamedFramebufferDrawBuffers(
+                                                             context, framebufferPacked, n, bufs));
         if (isCallValid)
         {
-            context->namedFramebufferDrawBuffers(framebuffer, n, bufs);
+            context->namedFramebufferDrawBuffers(framebufferPacked, n, bufs);
         }
-        ANGLE_CAPTURE(NamedFramebufferDrawBuffers, isCallValid, context, framebuffer, n, bufs);
+        ANGLE_CAPTURE(NamedFramebufferDrawBuffers, isCallValid, context, framebufferPacked, n,
+                      bufs);
     }
 }
 
@@ -2214,14 +2228,17 @@ void GL_APIENTRY NamedFramebufferParameteri(GLuint framebuffer, GLenum pname, GL
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateNamedFramebufferParameteri(context, framebuffer, pname, param));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateNamedFramebufferParameteri(context, framebufferPacked, pname, param));
         if (isCallValid)
         {
-            context->namedFramebufferParameteri(framebuffer, pname, param);
+            context->namedFramebufferParameteri(framebufferPacked, pname, param);
         }
-        ANGLE_CAPTURE(NamedFramebufferParameteri, isCallValid, context, framebuffer, pname, param);
+        ANGLE_CAPTURE(NamedFramebufferParameteri, isCallValid, context, framebufferPacked, pname,
+                      param);
     }
 }
 
@@ -2233,14 +2250,15 @@ void GL_APIENTRY NamedFramebufferReadBuffer(GLuint framebuffer, GLenum src)
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateNamedFramebufferReadBuffer(context, framebuffer, src));
+                            ValidateNamedFramebufferReadBuffer(context, framebufferPacked, src));
         if (isCallValid)
         {
-            context->namedFramebufferReadBuffer(framebuffer, src);
+            context->namedFramebufferReadBuffer(framebufferPacked, src);
         }
-        ANGLE_CAPTURE(NamedFramebufferReadBuffer, isCallValid, context, framebuffer, src);
+        ANGLE_CAPTURE(NamedFramebufferReadBuffer, isCallValid, context, framebufferPacked, src);
     }
 }
 
@@ -2258,19 +2276,20 @@ void GL_APIENTRY NamedFramebufferRenderbuffer(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         RenderbufferID renderbufferPacked             = FromGL<RenderbufferID>(renderbuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateNamedFramebufferRenderbuffer(context, framebuffer, attachment,
+             ValidateNamedFramebufferRenderbuffer(context, framebufferPacked, attachment,
                                                   renderbuffertarget, renderbufferPacked));
         if (isCallValid)
         {
-            context->namedFramebufferRenderbuffer(framebuffer, attachment, renderbuffertarget,
+            context->namedFramebufferRenderbuffer(framebufferPacked, attachment, renderbuffertarget,
                                                   renderbufferPacked);
         }
-        ANGLE_CAPTURE(NamedFramebufferRenderbuffer, isCallValid, context, framebuffer, attachment,
-                      renderbuffertarget, renderbufferPacked);
+        ANGLE_CAPTURE(NamedFramebufferRenderbuffer, isCallValid, context, framebufferPacked,
+                      attachment, renderbuffertarget, renderbufferPacked);
     }
 }
 
@@ -2288,16 +2307,17 @@ void GL_APIENTRY NamedFramebufferTexture(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         TextureID texturePacked                       = FromGL<TextureID>(texture);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateNamedFramebufferTexture(context, framebuffer, attachment,
+                            ValidateNamedFramebufferTexture(context, framebufferPacked, attachment,
                                                             texturePacked, level));
         if (isCallValid)
         {
-            context->namedFramebufferTexture(framebuffer, attachment, texturePacked, level);
+            context->namedFramebufferTexture(framebufferPacked, attachment, texturePacked, level);
         }
-        ANGLE_CAPTURE(NamedFramebufferTexture, isCallValid, context, framebuffer, attachment,
+        ANGLE_CAPTURE(NamedFramebufferTexture, isCallValid, context, framebufferPacked, attachment,
                       texturePacked, level);
     }
 }
@@ -2317,18 +2337,19 @@ void GL_APIENTRY NamedFramebufferTextureLayer(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         TextureID texturePacked                       = FromGL<TextureID>(texture);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateNamedFramebufferTextureLayer(context, framebuffer, attachment,
-                                                                 texturePacked, level, layer));
+        bool isCallValid = (context->skipValidation() || ValidateNamedFramebufferTextureLayer(
+                                                             context, framebufferPacked, attachment,
+                                                             texturePacked, level, layer));
         if (isCallValid)
         {
-            context->namedFramebufferTextureLayer(framebuffer, attachment, texturePacked, level,
-                                                  layer);
+            context->namedFramebufferTextureLayer(framebufferPacked, attachment, texturePacked,
+                                                  level, layer);
         }
-        ANGLE_CAPTURE(NamedFramebufferTextureLayer, isCallValid, context, framebuffer, attachment,
-                      texturePacked, level, layer);
+        ANGLE_CAPTURE(NamedFramebufferTextureLayer, isCallValid, context, framebufferPacked,
+                      attachment, texturePacked, level, layer);
     }
 }
 

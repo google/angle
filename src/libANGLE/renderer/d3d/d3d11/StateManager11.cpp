@@ -1938,7 +1938,7 @@ angle::Result StateManager11::syncFramebuffer(const gl::Context *context)
     // Check for zero-sized default framebuffer, which is a special case.
     // in this case we do not wish to modify any state and just silently return false.
     // this will not report any gl error but will cause the calling method to return.
-    if (mFramebuffer11->getState().id() == 0)
+    if (mFramebuffer11->getState().isDefault())
     {
         RenderTarget11 *firstRT = mFramebuffer11->getFirstRenderTarget();
         const gl::Extents &size = firstRT->getExtents();

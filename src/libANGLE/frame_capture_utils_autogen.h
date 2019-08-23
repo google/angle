@@ -29,6 +29,9 @@ enum class ParamType
     TFenceNVID,
     TFenceNVIDConstPointer,
     TFenceNVIDPointer,
+    TFramebufferID,
+    TFramebufferIDConstPointer,
+    TFramebufferIDPointer,
     TGLDEBUGPROC,
     TGLDEBUGPROCKHR,
     TGLbitfield,
@@ -138,6 +141,9 @@ union ParamValue
     gl::FenceNVID FenceNVIDVal;
     const gl::FenceNVID *FenceNVIDConstPointerVal;
     gl::FenceNVID *FenceNVIDPointerVal;
+    gl::FramebufferID FramebufferIDVal;
+    const gl::FramebufferID *FramebufferIDConstPointerVal;
+    gl::FramebufferID *FramebufferIDPointerVal;
     GLDEBUGPROC GLDEBUGPROCVal;
     GLDEBUGPROCKHR GLDEBUGPROCKHRVal;
     GLbitfield GLbitfieldVal;
@@ -316,6 +322,27 @@ inline gl::FenceNVID *GetParamVal<ParamType::TFenceNVIDPointer, gl::FenceNVID *>
     const ParamValue &value)
 {
     return value.FenceNVIDPointerVal;
+}
+
+template <>
+inline gl::FramebufferID GetParamVal<ParamType::TFramebufferID, gl::FramebufferID>(
+    const ParamValue &value)
+{
+    return value.FramebufferIDVal;
+}
+
+template <>
+inline const gl::FramebufferID *GetParamVal<ParamType::TFramebufferIDConstPointer,
+                                            const gl::FramebufferID *>(const ParamValue &value)
+{
+    return value.FramebufferIDConstPointerVal;
+}
+
+template <>
+inline gl::FramebufferID *GetParamVal<ParamType::TFramebufferIDPointer, gl::FramebufferID *>(
+    const ParamValue &value)
+{
+    return value.FramebufferIDPointerVal;
 }
 
 template <>
@@ -962,6 +989,12 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TFenceNVIDConstPointer, T>(value);
         case ParamType::TFenceNVIDPointer:
             return GetParamVal<ParamType::TFenceNVIDPointer, T>(value);
+        case ParamType::TFramebufferID:
+            return GetParamVal<ParamType::TFramebufferID, T>(value);
+        case ParamType::TFramebufferIDConstPointer:
+            return GetParamVal<ParamType::TFramebufferIDConstPointer, T>(value);
+        case ParamType::TFramebufferIDPointer:
+            return GetParamVal<ParamType::TFramebufferIDPointer, T>(value);
         case ParamType::TGLDEBUGPROC:
             return GetParamVal<ParamType::TGLDEBUGPROC, T>(value);
         case ParamType::TGLDEBUGPROCKHR:
@@ -1228,6 +1261,26 @@ template <>
 inline void SetParamVal<ParamType::TFenceNVIDPointer>(gl::FenceNVID *valueIn, ParamValue *valueOut)
 {
     valueOut->FenceNVIDPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TFramebufferID>(gl::FramebufferID valueIn, ParamValue *valueOut)
+{
+    valueOut->FramebufferIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TFramebufferIDConstPointer>(const gl::FramebufferID *valueIn,
+                                                               ParamValue *valueOut)
+{
+    valueOut->FramebufferIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TFramebufferIDPointer>(gl::FramebufferID *valueIn,
+                                                          ParamValue *valueOut)
+{
+    valueOut->FramebufferIDPointerVal = valueIn;
 }
 
 template <>
@@ -1871,6 +1924,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TFenceNVIDPointer:
             SetParamVal<ParamType::TFenceNVIDPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TFramebufferID:
+            SetParamVal<ParamType::TFramebufferID>(valueIn, valueOut);
+            break;
+        case ParamType::TFramebufferIDConstPointer:
+            SetParamVal<ParamType::TFramebufferIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TFramebufferIDPointer:
+            SetParamVal<ParamType::TFramebufferIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TGLDEBUGPROC:
             SetParamVal<ParamType::TGLDEBUGPROC>(valueIn, valueOut);

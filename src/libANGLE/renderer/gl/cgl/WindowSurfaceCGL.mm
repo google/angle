@@ -252,7 +252,7 @@ egl::Error WindowSurfaceCGL::swap(const gl::Context *context)
         texture.height = height;
     }
 
-    FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(context->getFramebuffer(0));
+    FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(context->getFramebuffer({0}));
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebufferGL->getFramebufferID());
     functions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                     mSwapState.beingRendered->texture, 0);

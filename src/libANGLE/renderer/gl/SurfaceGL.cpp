@@ -37,7 +37,7 @@ egl::Error SurfaceGL::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuin
 angle::Result SurfaceGL::initializeContents(const gl::Context *context,
                                             const gl::ImageIndex &imageIndex)
 {
-    FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(context->getFramebuffer(0));
+    FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(context->getFramebuffer({0}));
     ASSERT(framebufferGL->isDefault());
 
     BlitGL *blitter = GetBlitGL(context);

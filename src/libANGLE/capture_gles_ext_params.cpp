@@ -2763,11 +2763,11 @@ void CaptureDrawTexxvOES_coords(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteFramebuffersOES_framebuffers(const Context *context,
-                                               bool isCallValid,
-                                               GLsizei n,
-                                               const GLuint *framebuffers,
-                                               ParamCapture *paramCapture)
+void CaptureDeleteFramebuffersOES_framebuffersPacked(const Context *context,
+                                                     bool isCallValid,
+                                                     GLsizei n,
+                                                     const FramebufferID *framebuffers,
+                                                     ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -2781,11 +2781,11 @@ void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGenFramebuffersOES_framebuffers(const Context *context,
-                                            bool isCallValid,
-                                            GLsizei n,
-                                            GLuint *framebuffers,
-                                            ParamCapture *paramCapture)
+void CaptureGenFramebuffersOES_framebuffersPacked(const Context *context,
+                                                  bool isCallValid,
+                                                  GLsizei n,
+                                                  FramebufferID *framebuffers,
+                                                  ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }

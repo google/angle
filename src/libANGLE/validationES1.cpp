@@ -1462,13 +1462,13 @@ bool ValidateQueryMatrixxOES(Context *context, GLfixed *mantissa, GLint *exponen
     return true;
 }
 
-bool ValidateGenFramebuffersOES(Context *context, GLsizei n, GLuint *framebuffers)
+bool ValidateGenFramebuffersOES(Context *context, GLsizei n, FramebufferID *framebuffers)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateDeleteFramebuffersOES(Context *context, GLsizei n, const GLuint *framebuffers)
+bool ValidateDeleteFramebuffersOES(Context *context, GLsizei n, const FramebufferID *framebuffers)
 {
     UNIMPLEMENTED();
     return true;
@@ -1488,7 +1488,7 @@ bool ValidateDeleteRenderbuffersOES(Context *context,
     return true;
 }
 
-bool ValidateBindFramebufferOES(Context *context, GLenum target, GLuint framebuffer)
+bool ValidateBindFramebufferOES(Context *context, GLenum target, FramebufferID framebuffer)
 {
     UNIMPLEMENTED();
     return true;
@@ -1552,7 +1552,7 @@ bool ValidateGetRenderbufferParameterivOES(Context *context,
     return true;
 }
 
-bool ValidateIsFramebufferOES(Context *context, GLuint framebuffer)
+bool ValidateIsFramebufferOES(Context *context, FramebufferID framebuffer)
 {
     UNIMPLEMENTED();
     return true;

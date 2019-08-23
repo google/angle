@@ -2999,7 +2999,7 @@ void Context::blitNamedFramebuffer(GLuint readFramebuffer,
     UNIMPLEMENTED();
 }
 
-GLenum Context::checkNamedFramebufferStatus(GLuint framebuffer, GLenum target)
+GLenum Context::checkNamedFramebufferStatus(FramebufferID framebuffer, GLenum target)
 {
     UNIMPLEMENTED();
     return 0;
@@ -3025,7 +3025,7 @@ void Context::clearNamedBufferSubData(BufferID buffer,
     UNIMPLEMENTED();
 }
 
-void Context::clearNamedFramebufferfi(GLuint framebuffer,
+void Context::clearNamedFramebufferfi(FramebufferID framebuffer,
                                       GLenum buffer,
                                       GLint drawbuffer,
                                       GLfloat depth,
@@ -3034,7 +3034,7 @@ void Context::clearNamedFramebufferfi(GLuint framebuffer,
     UNIMPLEMENTED();
 }
 
-void Context::clearNamedFramebufferfv(GLuint framebuffer,
+void Context::clearNamedFramebufferfv(FramebufferID framebuffer,
                                       GLenum buffer,
                                       GLint drawbuffer,
                                       const GLfloat *value)
@@ -3042,7 +3042,7 @@ void Context::clearNamedFramebufferfv(GLuint framebuffer,
     UNIMPLEMENTED();
 }
 
-void Context::clearNamedFramebufferiv(GLuint framebuffer,
+void Context::clearNamedFramebufferiv(FramebufferID framebuffer,
                                       GLenum buffer,
                                       GLint drawbuffer,
                                       const GLint *value)
@@ -3050,7 +3050,7 @@ void Context::clearNamedFramebufferiv(GLuint framebuffer,
     UNIMPLEMENTED();
 }
 
-void Context::clearNamedFramebufferuiv(GLuint framebuffer,
+void Context::clearNamedFramebufferuiv(FramebufferID framebuffer,
                                        GLenum buffer,
                                        GLint drawbuffer,
                                        const GLuint *value)
@@ -3253,7 +3253,7 @@ void Context::getNamedBufferSubData(BufferID buffer, GLintptr offset, GLsizeiptr
     UNIMPLEMENTED();
 }
 
-void Context::getNamedFramebufferAttachmentParameteriv(GLuint framebuffer,
+void Context::getNamedFramebufferAttachmentParameteriv(FramebufferID framebuffer,
                                                        GLenum attachment,
                                                        GLenum pname,
                                                        GLint *params)
@@ -3261,7 +3261,7 @@ void Context::getNamedFramebufferAttachmentParameteriv(GLuint framebuffer,
     UNIMPLEMENTED();
 }
 
-void Context::getNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname, GLint *param)
+void Context::getNamedFramebufferParameteriv(FramebufferID framebuffer, GLenum pname, GLint *param)
 {
     UNIMPLEMENTED();
 }
@@ -3501,14 +3501,14 @@ void Context::getnUniformuiv(ShaderProgramID program,
     UNIMPLEMENTED();
 }
 
-void Context::invalidateNamedFramebufferData(GLuint framebuffer,
+void Context::invalidateNamedFramebufferData(FramebufferID framebuffer,
                                              GLsizei numAttachments,
                                              const GLenum *attachments)
 {
     UNIMPLEMENTED();
 }
 
-void Context::invalidateNamedFramebufferSubData(GLuint framebuffer,
+void Context::invalidateNamedFramebufferSubData(FramebufferID framebuffer,
                                                 GLsizei numAttachments,
                                                 const GLenum *attachments,
                                                 GLint x,
@@ -3555,27 +3555,27 @@ void Context::namedBufferSubData(BufferID buffer,
     UNIMPLEMENTED();
 }
 
-void Context::namedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf)
+void Context::namedFramebufferDrawBuffer(FramebufferID framebuffer, GLenum buf)
 {
     UNIMPLEMENTED();
 }
 
-void Context::namedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, const GLenum *bufs)
+void Context::namedFramebufferDrawBuffers(FramebufferID framebuffer, GLsizei n, const GLenum *bufs)
 {
     UNIMPLEMENTED();
 }
 
-void Context::namedFramebufferParameteri(GLuint framebuffer, GLenum pname, GLint param)
+void Context::namedFramebufferParameteri(FramebufferID framebuffer, GLenum pname, GLint param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::namedFramebufferReadBuffer(GLuint framebuffer, GLenum src)
+void Context::namedFramebufferReadBuffer(FramebufferID framebuffer, GLenum src)
 {
     UNIMPLEMENTED();
 }
 
-void Context::namedFramebufferRenderbuffer(GLuint framebuffer,
+void Context::namedFramebufferRenderbuffer(FramebufferID framebuffer,
                                            GLenum attachment,
                                            GLenum renderbuffertarget,
                                            RenderbufferID renderbuffer)
@@ -3583,7 +3583,7 @@ void Context::namedFramebufferRenderbuffer(GLuint framebuffer,
     UNIMPLEMENTED();
 }
 
-void Context::namedFramebufferTexture(GLuint framebuffer,
+void Context::namedFramebufferTexture(FramebufferID framebuffer,
                                       GLenum attachment,
                                       TextureID texture,
                                       GLint level)
@@ -3591,7 +3591,7 @@ void Context::namedFramebufferTexture(GLuint framebuffer,
     UNIMPLEMENTED();
 }
 
-void Context::namedFramebufferTextureLayer(GLuint framebuffer,
+void Context::namedFramebufferTextureLayer(FramebufferID framebuffer,
                                            GLenum attachment,
                                            TextureID texture,
                                            GLint level,

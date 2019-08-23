@@ -276,24 +276,24 @@ class PathManager : public ResourceManagerBase<HandleRangeAllocator>
 };
 
 class FramebufferManager
-    : public TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager>
+    : public TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager, FramebufferID>
 {
   public:
-    GLuint createFramebuffer();
-    Framebuffer *getFramebuffer(GLuint handle) const;
+    FramebufferID createFramebuffer();
+    Framebuffer *getFramebuffer(FramebufferID handle) const;
     void setDefaultFramebuffer(Framebuffer *framebuffer);
 
     void invalidateFramebufferCompletenessCache() const;
 
     Framebuffer *checkFramebufferAllocation(rx::GLImplFactory *factory,
                                             const Caps &caps,
-                                            GLuint handle)
+                                            FramebufferID handle)
     {
         return checkObjectAllocation<const Caps &>(factory, handle, caps);
     }
 
     static Framebuffer *AllocateNewObject(rx::GLImplFactory *factory,
-                                          GLuint handle,
+                                          FramebufferID handle,
                                           const Caps &caps);
     static void DeleteObject(const Context *context, Framebuffer *framebuffer);
 

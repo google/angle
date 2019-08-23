@@ -266,8 +266,8 @@ class State : angle::NonCopyable
     Framebuffer *getReadFramebuffer() const { return mReadFramebuffer; }
     Framebuffer *getDrawFramebuffer() const { return mDrawFramebuffer; }
 
-    bool removeReadFramebufferBinding(GLuint framebuffer);
-    bool removeDrawFramebufferBinding(GLuint framebuffer);
+    bool removeReadFramebufferBinding(FramebufferID framebuffer);
+    bool removeDrawFramebufferBinding(FramebufferID framebuffer);
 
     // Vertex array object binding manipulation
     void setVertexArrayBinding(const Context *context, VertexArray *vertexArray);

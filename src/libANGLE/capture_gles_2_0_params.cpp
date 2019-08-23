@@ -103,11 +103,11 @@ void CaptureDeleteBuffers_buffersPacked(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteFramebuffers_framebuffers(const Context *context,
-                                            bool isCallValid,
-                                            GLsizei n,
-                                            const GLuint *framebuffers,
-                                            ParamCapture *paramCapture)
+void CaptureDeleteFramebuffers_framebuffersPacked(const Context *context,
+                                                  bool isCallValid,
+                                                  GLsizei n,
+                                                  const FramebufferID *framebuffers,
+                                                  ParamCapture *paramCapture)
 {
     CaptureMemory(framebuffers, sizeof(GLuint) * n, paramCapture);
 }
@@ -159,11 +159,11 @@ void CaptureGenBuffers_buffersPacked(const Context *context,
     paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;
 }
 
-void CaptureGenFramebuffers_framebuffers(const Context *context,
-                                         bool isCallValid,
-                                         GLsizei n,
-                                         GLuint *framebuffers,
-                                         ParamCapture *paramCapture)
+void CaptureGenFramebuffers_framebuffersPacked(const Context *context,
+                                               bool isCallValid,
+                                               GLsizei n,
+                                               FramebufferID *framebuffers,
+                                               ParamCapture *paramCapture)
 {
     paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;
 }

@@ -870,6 +870,12 @@ void WriteParamValueToStream<ParamType::TProgramPipelineID>(std::ostream &os,
 }
 
 template <>
+void WriteParamValueToStream<ParamType::TFramebufferID>(std::ostream &os, gl::FramebufferID value)
+{
+    os << value.value;
+}
+
+template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os, gl::RenderbufferID value)
 {
     os << "gRenderbufferMap[" << value.value << "]";

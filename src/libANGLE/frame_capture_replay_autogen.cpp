@@ -114,7 +114,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
         case gl::EntryPoint::BindFramebuffer:
             context->bindFramebuffer(
                 params.getParam("target", ParamType::TGLenum, 0).value.GLenumVal,
-                params.getParam("framebuffer", ParamType::TGLuint, 1).value.GLuintVal);
+                params.getParam("framebufferPacked", ParamType::TFramebufferID, 1)
+                    .value.FramebufferIDVal);
             break;
         case gl::EntryPoint::BindImageTexture:
             context->bindImageTexture(
@@ -496,8 +497,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
         case gl::EntryPoint::DeleteFramebuffers:
             context->deleteFramebuffers(
                 params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                replayContext->getAsConstPointer<const GLuint *>(
-                    params.getParam("framebuffers", ParamType::TGLuintConstPointer, 1)));
+                replayContext->getAsConstPointer<const FramebufferID *>(params.getParam(
+                    "framebuffersPacked", ParamType::TFramebufferIDConstPointer, 1)));
             break;
         case gl::EntryPoint::DeleteProgram:
             context->deleteProgram(params.getParam("programPacked", ParamType::TShaderProgramID, 0)
@@ -814,9 +815,10 @@ void FrameCapture::ReplayCall(gl::Context *context,
                                      "fencesPacked", ParamType::TFenceNVIDPointer, 1)));
             break;
         case gl::EntryPoint::GenFramebuffers:
-            context->genFramebuffers(params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                                     replayContext->getReadBufferPointer<GLuint *>(params.getParam(
-                                         "framebuffers", ParamType::TGLuintPointer, 1)));
+            context->genFramebuffers(
+                params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
+                replayContext->getReadBufferPointer<FramebufferID *>(
+                    params.getParam("framebuffersPacked", ParamType::TFramebufferIDPointer, 1)));
             break;
         case gl::EntryPoint::GenProgramPipelines:
             context->genProgramPipelines(
@@ -1610,7 +1612,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::IsFramebuffer:
             context->isFramebuffer(
-                params.getParam("framebuffer", ParamType::TGLuint, 0).value.GLuintVal);
+                params.getParam("framebufferPacked", ParamType::TFramebufferID, 0)
+                    .value.FramebufferIDVal);
             break;
         case gl::EntryPoint::IsProgram:
             context->isProgram(params.getParam("programPacked", ParamType::TShaderProgramID, 0)

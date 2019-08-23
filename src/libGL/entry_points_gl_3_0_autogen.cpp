@@ -145,14 +145,15 @@ void GL_APIENTRY BindFramebuffer(GLenum target, GLuint framebuffer)
 
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateBindFramebuffer(context, target, framebuffer));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateBindFramebuffer(context, target, framebufferPacked));
         if (isCallValid)
         {
-            context->bindFramebuffer(target, framebuffer);
+            context->bindFramebuffer(target, framebufferPacked);
         }
-        ANGLE_CAPTURE(BindFramebuffer, isCallValid, context, target, framebuffer);
+        ANGLE_CAPTURE(BindFramebuffer, isCallValid, context, target, framebufferPacked);
     }
 }
 
@@ -393,14 +394,15 @@ void GL_APIENTRY DeleteFramebuffers(GLsizei n, const GLuint *framebuffers)
 
     if (context)
     {
+        const FramebufferID *framebuffersPacked       = FromGL<const FramebufferID *>(framebuffers);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateDeleteFramebuffers(context, n, framebuffers));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateDeleteFramebuffers(context, n, framebuffersPacked));
         if (isCallValid)
         {
-            context->deleteFramebuffers(n, framebuffers);
+            context->deleteFramebuffers(n, framebuffersPacked);
         }
-        ANGLE_CAPTURE(DeleteFramebuffers, isCallValid, context, n, framebuffers);
+        ANGLE_CAPTURE(DeleteFramebuffers, isCallValid, context, n, framebuffersPacked);
     }
 }
 
@@ -701,14 +703,15 @@ void GL_APIENTRY GenFramebuffers(GLsizei n, GLuint *framebuffers)
 
     if (context)
     {
+        FramebufferID *framebuffersPacked             = FromGL<FramebufferID *>(framebuffers);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGenFramebuffers(context, n, framebuffers));
+            (context->skipValidation() || ValidateGenFramebuffers(context, n, framebuffersPacked));
         if (isCallValid)
         {
-            context->genFramebuffers(n, framebuffers);
+            context->genFramebuffers(n, framebuffersPacked);
         }
-        ANGLE_CAPTURE(GenFramebuffers, isCallValid, context, n, framebuffers);
+        ANGLE_CAPTURE(GenFramebuffers, isCallValid, context, n, framebuffersPacked);
     }
 }
 
@@ -1100,18 +1103,19 @@ GLboolean GL_APIENTRY IsFramebuffer(GLuint framebuffer)
     GLboolean returnValue;
     if (context)
     {
+        FramebufferID framebufferPacked               = FromGL<FramebufferID>(framebuffer);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateIsFramebuffer(context, framebuffer));
+            (context->skipValidation() || ValidateIsFramebuffer(context, framebufferPacked));
         if (isCallValid)
         {
-            returnValue = context->isFramebuffer(framebuffer);
+            returnValue = context->isFramebuffer(framebufferPacked);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsFramebuffer, GLboolean>();
         }
-        ANGLE_CAPTURE(IsFramebuffer, isCallValid, context, framebuffer, returnValue);
+        ANGLE_CAPTURE(IsFramebuffer, isCallValid, context, framebufferPacked, returnValue);
     }
     else
     {
