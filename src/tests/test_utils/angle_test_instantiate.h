@@ -139,4 +139,14 @@ extern std::string gSelectedConfig;
 extern bool gSeparateProcessPerConfig;
 }  // namespace angle
 
+#define ANGLE_SKIP_TEST_IF(COND)                                  \
+    do                                                            \
+    {                                                             \
+        if (COND)                                                 \
+        {                                                         \
+            std::cout << "Test skipped: " #COND "." << std::endl; \
+            return;                                               \
+        }                                                         \
+    } while (0)
+
 #endif  // ANGLE_TEST_INSTANTIATE_H_
