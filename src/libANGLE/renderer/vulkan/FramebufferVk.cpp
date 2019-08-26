@@ -1500,10 +1500,10 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
                                          commandBuffer);
 
         // Make the resolved image the target of buffer copy.
-        srcImage  = &resolvedImage.get();
-        level     = 0;
-        layer     = 0;
-        srcOffset = {0, 0, 0};
+        srcImage                      = &resolvedImage.get();
+        level                         = 0;
+        layer                         = 0;
+        srcOffset                     = {0, 0, 0};
         srcSubresource.baseArrayLayer = 0;
         srcSubresource.layerCount     = 1;
         srcSubresource.mipLevel       = 0;

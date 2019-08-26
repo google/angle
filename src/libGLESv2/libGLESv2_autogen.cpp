@@ -3826,6 +3826,27 @@ void GL_APIENTRY glImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handle
     return gl::ImportMemoryFdEXT(memory, size, handleType, fd);
 }
 
+// GL_EXT_multisampled_render_to_texture
+void GL_APIENTRY glFramebufferTexture2DMultisampleEXT(GLenum target,
+                                                      GLenum attachment,
+                                                      GLenum textarget,
+                                                      GLuint texture,
+                                                      GLint level,
+                                                      GLsizei samples)
+{
+    return gl::FramebufferTexture2DMultisampleEXT(target, attachment, textarget, texture, level,
+                                                  samples);
+}
+
+void GL_APIENTRY glRenderbufferStorageMultisampleEXT(GLenum target,
+                                                     GLsizei samples,
+                                                     GLenum internalformat,
+                                                     GLsizei width,
+                                                     GLsizei height)
+{
+    return gl::RenderbufferStorageMultisampleEXT(target, samples, internalformat, width, height);
+}
+
 // GL_EXT_occlusion_query_boolean
 
 // GL_EXT_robustness
@@ -5602,6 +5623,18 @@ void GL_APIENTRY glFramebufferTexture2DContextANGLE(GLeglContext ctx,
                                                     GLint level)
 {
     return gl::FramebufferTexture2DContextANGLE(ctx, target, attachment, textarget, texture, level);
+}
+
+void GL_APIENTRY glFramebufferTexture2DMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                                  GLenum target,
+                                                                  GLenum attachment,
+                                                                  GLenum textarget,
+                                                                  GLuint texture,
+                                                                  GLint level,
+                                                                  GLsizei samples)
+{
+    return gl::FramebufferTexture2DMultisampleEXTContextANGLE(ctx, target, attachment, textarget,
+                                                              texture, level, samples);
 }
 
 void GL_APIENTRY glFramebufferTexture2DOESContextANGLE(GLeglContext ctx,
@@ -7547,6 +7580,17 @@ void GL_APIENTRY glRenderbufferStorageMultisampleANGLEContextANGLE(GLeglContext 
 {
     return gl::RenderbufferStorageMultisampleANGLEContextANGLE(ctx, target, samples, internalformat,
                                                                width, height);
+}
+
+void GL_APIENTRY glRenderbufferStorageMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                                 GLenum target,
+                                                                 GLsizei samples,
+                                                                 GLenum internalformat,
+                                                                 GLsizei width,
+                                                                 GLsizei height)
+{
+    return gl::RenderbufferStorageMultisampleEXTContextANGLE(ctx, target, samples, internalformat,
+                                                             width, height);
 }
 
 void GL_APIENTRY glRenderbufferStorageOESContextANGLE(GLeglContext ctx,

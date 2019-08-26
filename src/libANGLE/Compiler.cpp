@@ -112,6 +112,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     mResources.OVR_multiview2 = extensions.multiview2;
     mResources.MaxViewsOVR    = extensions.maxViews;
 
+    // EXT_multisampled_render_to_texture
+    mResources.EXT_multisampled_render_to_texture = extensions.multisampledRenderToTexture;
+
     // GLSL ES 3.0 constants
     mResources.MaxVertexOutputVectors  = caps.maxVertexOutputComponents / 4;
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;

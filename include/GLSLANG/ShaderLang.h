@@ -351,6 +351,7 @@ struct ShBuiltInResources
     int ARM_shader_framebuffer_fetch;
     int OVR_multiview;
     int OVR_multiview2;
+    int EXT_multisampled_render_to_texture;
     int EXT_YUV_target;
     int EXT_geometry_shader;
     int OES_texture_storage_multisample_2d_array;

@@ -357,6 +357,9 @@
     /* GL_EXT_memory_object_fd */                                                                  \
     void importMemoryFd(MemoryObjectID memoryPacked, GLuint64 size, HandleType handleTypePacked,   \
                         GLint fd);                                                                 \
+    /* GL_EXT_multisampled_render_to_texture */                                                    \
+    void framebufferTexture2DMultisample(GLenum target, GLenum attachment, GLenum textarget,       \
+                                         GLuint texture, GLint level, GLsizei samples);            \
     /* GL_EXT_occlusion_query_boolean */                                                           \
     /* GL_EXT_robustness */                                                                        \
     GLenum getGraphicsResetStatus();                                                               \

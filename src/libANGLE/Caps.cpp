@@ -772,6 +772,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_blend_minmax"] = enableableExtension(&Extensions::blendMinMax);
         map["GL_ANGLE_framebuffer_blit"] = enableableExtension(&Extensions::framebufferBlit);
         map["GL_ANGLE_framebuffer_multisample"] = enableableExtension(&Extensions::framebufferMultisample);
+        map["GL_EXT_multisampled_render_to_texture"] = enableableExtension(&Extensions::multisampledRenderToTexture);
         map["GL_ANGLE_instanced_arrays"] = enableableExtension(&Extensions::instancedArraysANGLE);
         map["GL_EXT_instanced_arrays"] = enableableExtension(&Extensions::instancedArraysEXT);
         map["GL_ANGLE_pack_reverse_row_order"] = enableableExtension(&Extensions::packReverseRowOrder);
@@ -946,6 +947,9 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxShaderTextureImageUnits[ShaderType::Fragment] = 8;
         caps.maxFragmentUniformVectors                        = 16;
         caps.maxRenderbufferSize                              = 1;
+
+        // Table 3.35
+        caps.maxSamples = 4;
     }
 
     if (clientVersion >= Version(3, 0))
@@ -1014,9 +1018,6 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxTransformFeedbackInterleavedComponents = 64;
         caps.maxTransformFeedbackSeparateAttributes    = 4;
         caps.maxTransformFeedbackSeparateComponents    = 4;
-
-        // Table 3.35
-        caps.maxSamples = 4;
     }
 
     if (clientVersion >= Version(3, 1))

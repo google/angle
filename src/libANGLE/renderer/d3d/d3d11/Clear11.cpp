@@ -477,7 +477,8 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
         }
 
         RenderTarget11 *renderTarget = nullptr;
-        ANGLE_TRY(attachment.getRenderTarget(context, &renderTarget));
+        ANGLE_TRY(attachment.getRenderTarget(context, attachment.getRenderToTextureSamples(),
+                                             &renderTarget));
 
         const gl::InternalFormat &formatInfo = *attachment.getFormat().info;
 
@@ -574,7 +575,9 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
         RenderTarget11 *depthStencilRenderTarget = nullptr;
 
         ASSERT(depthStencilAttachment != nullptr);
-        ANGLE_TRY(depthStencilAttachment->getRenderTarget(context, &depthStencilRenderTarget));
+        ANGLE_TRY(depthStencilAttachment->getRenderTarget(
+            context, depthStencilAttachment->getRenderToTextureSamples(),
+            &depthStencilRenderTarget));
 
         dsv = depthStencilRenderTarget->getDepthStencilView().get();
         ASSERT(dsv != nullptr);

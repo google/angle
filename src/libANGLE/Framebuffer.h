@@ -385,11 +385,13 @@ class Framebuffer final : public angle::ObserverInterface,
                        FramebufferAttachmentObject *resource,
                        GLsizei numViews,
                        GLuint baseViewIndex,
-                       bool isMultiview);
+                       bool isMultiview,
+                       GLsizei samples);
     void commitWebGL1DepthStencilIfConsistent(const Context *context,
                                               GLsizei numViews,
                                               GLuint baseViewIndex,
-                                              bool isMultiview);
+                                              bool isMultiview,
+                                              GLsizei samples);
     void setAttachmentImpl(const Context *context,
                            GLenum type,
                            GLenum binding,
@@ -397,7 +399,8 @@ class Framebuffer final : public angle::ObserverInterface,
                            FramebufferAttachmentObject *resource,
                            GLsizei numViews,
                            GLuint baseViewIndex,
-                           bool isMultiview);
+                           bool isMultiview,
+                           GLsizei samples);
     void updateAttachment(const Context *context,
                           FramebufferAttachment *attachment,
                           size_t dirtyBit,
@@ -408,7 +411,8 @@ class Framebuffer final : public angle::ObserverInterface,
                           FramebufferAttachmentObject *resource,
                           GLsizei numViews,
                           GLuint baseViewIndex,
-                          bool isMultiview);
+                          bool isMultiview,
+                          GLsizei samples);
 
     void markDrawAttachmentsInitialized(bool color, bool depth, bool stencil);
     void markBufferInitialized(GLenum bufferType, GLint bufferIndex);

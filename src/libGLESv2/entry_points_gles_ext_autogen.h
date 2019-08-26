@@ -791,6 +791,19 @@ ANGLE_EXPORT void GL_APIENTRY ImportMemoryFdEXT(GLuint memory,
                                                 GLenum handleType,
                                                 GLint fd);
 
+// GL_EXT_multisampled_render_to_texture
+ANGLE_EXPORT void GL_APIENTRY FramebufferTexture2DMultisampleEXT(GLenum target,
+                                                                 GLenum attachment,
+                                                                 GLenum textarget,
+                                                                 GLuint texture,
+                                                                 GLint level,
+                                                                 GLsizei samples);
+ANGLE_EXPORT void GL_APIENTRY RenderbufferStorageMultisampleEXT(GLenum target,
+                                                                GLsizei samples,
+                                                                GLenum internalformat,
+                                                                GLsizei width,
+                                                                GLsizei height);
+
 // GL_EXT_occlusion_query_boolean
 
 // GL_EXT_robustness
@@ -1639,6 +1652,13 @@ ANGLE_EXPORT void GL_APIENTRY FramebufferTexture2DContextANGLE(GLeglContext ctx,
                                                                GLenum textarget,
                                                                GLuint texture,
                                                                GLint level);
+ANGLE_EXPORT void GL_APIENTRY FramebufferTexture2DMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                                             GLenum target,
+                                                                             GLenum attachment,
+                                                                             GLenum textarget,
+                                                                             GLuint texture,
+                                                                             GLint level,
+                                                                             GLsizei samples);
 ANGLE_EXPORT void GL_APIENTRY FramebufferTexture2DOESContextANGLE(GLeglContext ctx,
                                                                   GLenum target,
                                                                   GLenum attachment,
@@ -2617,6 +2637,12 @@ ANGLE_EXPORT void GL_APIENTRY RenderbufferStorageMultisampleANGLEContextANGLE(GL
                                                                               GLenum internalformat,
                                                                               GLsizei width,
                                                                               GLsizei height);
+ANGLE_EXPORT void GL_APIENTRY RenderbufferStorageMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                                            GLenum target,
+                                                                            GLsizei samples,
+                                                                            GLenum internalformat,
+                                                                            GLsizei width,
+                                                                            GLsizei height);
 ANGLE_EXPORT void GL_APIENTRY RenderbufferStorageOESContextANGLE(GLeglContext ctx,
                                                                  GLenum target,
                                                                  GLenum internalformat,

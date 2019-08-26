@@ -7245,6 +7245,27 @@ bool ValidateProvokingVertexANGLE(Context *context, ProvokingVertexConvention mo
     return true;
 }
 
+bool ValidateFramebufferTexture2DMultisampleEXT(Context *context,
+                                                GLenum target,
+                                                GLenum attachment,
+                                                GLenum textarget,
+                                                GLuint texture,
+                                                GLint level,
+                                                GLsizei samples)
+{
+    return true;
+}
+
+bool ValidateRenderbufferStorageMultisampleEXT(Context *context,
+                                               GLenum target,
+                                               GLsizei samples,
+                                               GLenum internalformat,
+                                               GLsizei width,
+                                               GLsizei height)
+{
+    return true;
+}
+
 void RecordBindTextureTypeError(Context *context, TextureType target)
 {
     ASSERT(!context->getStateCache().isValidBindTextureType(target));

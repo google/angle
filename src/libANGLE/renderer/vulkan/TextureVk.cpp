@@ -1144,6 +1144,7 @@ angle::Result TextureVk::releaseTexImage(const gl::Context *context)
 angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                                    GLenum binding,
                                                    const gl::ImageIndex &imageIndex,
+                                                   GLsizei samples,
                                                    FramebufferAttachmentRenderTarget **rtOut)
 {
     // Non-zero mip level attachments are an ES 3.0 feature.

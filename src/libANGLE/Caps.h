@@ -302,6 +302,9 @@ struct Extensions
     // GL_ANGLE_framebuffer_multisample
     bool framebufferMultisample = false;
 
+    // GL_EXT_multisampled_render_to_texture
+    bool multisampledRenderToTexture = false;
+
     // GL_ANGLE_instanced_arrays
     bool instancedArraysANGLE = false;
     // GL_EXT_instanced_arrays

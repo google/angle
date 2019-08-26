@@ -662,6 +662,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glFramebufferTexture1D";
         case EntryPoint::FramebufferTexture2D:
             return "glFramebufferTexture2D";
+        case EntryPoint::FramebufferTexture2DMultisampleEXT:
+            return "glFramebufferTexture2DMultisampleEXT";
         case EntryPoint::FramebufferTexture2DOES:
             return "glFramebufferTexture2DOES";
         case EntryPoint::FramebufferTexture3D:
@@ -1910,6 +1912,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glRenderbufferStorageMultisample";
         case EntryPoint::RenderbufferStorageMultisampleANGLE:
             return "glRenderbufferStorageMultisampleANGLE";
+        case EntryPoint::RenderbufferStorageMultisampleEXT:
+            return "glRenderbufferStorageMultisampleEXT";
         case EntryPoint::RenderbufferStorageOES:
             return "glRenderbufferStorageOES";
         case EntryPoint::RequestExtensionANGLE:

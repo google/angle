@@ -931,6 +931,21 @@ bool ValidateImportMemoryFdEXT(Context *context,
                                HandleType handleTypePacked,
                                GLint fd);
 
+// GL_EXT_multisampled_render_to_texture
+bool ValidateFramebufferTexture2DMultisampleEXT(Context *context,
+                                                GLenum target,
+                                                GLenum attachment,
+                                                GLenum textarget,
+                                                GLuint texture,
+                                                GLint level,
+                                                GLsizei samples);
+bool ValidateRenderbufferStorageMultisampleEXT(Context *context,
+                                               GLenum target,
+                                               GLsizei samples,
+                                               GLenum internalformat,
+                                               GLsizei width,
+                                               GLsizei height);
+
 // GL_EXT_occlusion_query_boolean
 
 // GL_EXT_robustness

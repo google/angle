@@ -163,7 +163,8 @@ angle::Result RenderTargetCache<RenderTargetT>::updateCachedRenderTarget(
     if (attachment)
     {
         ASSERT(attachment->isAttached());
-        ANGLE_TRY(attachment->getRenderTarget(context, &newRenderTarget));
+        ANGLE_TRY(attachment->getRenderTarget(context, attachment->getRenderToTextureSamples(),
+                                              &newRenderTarget));
     }
     *cachedRenderTarget = newRenderTarget;
     return angle::Result::Continue;

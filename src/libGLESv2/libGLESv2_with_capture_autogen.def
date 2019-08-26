@@ -630,6 +630,10 @@ EXPORTS
     ; GL_EXT_memory_object_fd
     glImportMemoryFdEXT
 
+    ; GL_EXT_multisampled_render_to_texture
+    glFramebufferTexture2DMultisampleEXT
+    glRenderbufferStorageMultisampleEXT
+
     ; GL_EXT_occlusion_query_boolean
 
     ; GL_EXT_robustness
@@ -946,6 +950,7 @@ EXPORTS
     glFramebufferRenderbufferContextANGLE
     glFramebufferRenderbufferOESContextANGLE
     glFramebufferTexture2DContextANGLE
+    glFramebufferTexture2DMultisampleEXTContextANGLE
     glFramebufferTexture2DOESContextANGLE
     glFramebufferTexture3DOESContextANGLE
     glFramebufferTextureEXTContextANGLE
@@ -1274,6 +1279,7 @@ EXPORTS
     glRenderbufferStorageContextANGLE
     glRenderbufferStorageMultisampleContextANGLE
     glRenderbufferStorageMultisampleANGLEContextANGLE
+    glRenderbufferStorageMultisampleEXTContextANGLE
     glRenderbufferStorageOESContextANGLE
     glRequestExtensionANGLEContextANGLE
     glResumeTransformFeedbackContextANGLE

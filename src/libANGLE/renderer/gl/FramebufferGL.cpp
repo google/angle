@@ -556,8 +556,8 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
                                   GLbitfield mask,
                                   GLenum filter)
 {
-    const FunctionsGL *functions = GetFunctionsGL(context);
-    StateManagerGL *stateManager = GetStateManagerGL(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     const Framebuffer *sourceFramebuffer = context->getState().getReadFramebuffer();

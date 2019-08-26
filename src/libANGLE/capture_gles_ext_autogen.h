@@ -1163,6 +1163,23 @@ angle::CallCapture CaptureImportMemoryFdEXT(const Context *context,
                                             HandleType handleTypePacked,
                                             GLint fd);
 
+// GL_EXT_multisampled_render_to_texture
+angle::CallCapture CaptureFramebufferTexture2DMultisampleEXT(const Context *context,
+                                                             bool isCallValid,
+                                                             GLenum target,
+                                                             GLenum attachment,
+                                                             GLenum textarget,
+                                                             GLuint texture,
+                                                             GLint level,
+                                                             GLsizei samples);
+angle::CallCapture CaptureRenderbufferStorageMultisampleEXT(const Context *context,
+                                                            bool isCallValid,
+                                                            GLenum target,
+                                                            GLsizei samples,
+                                                            GLenum internalformat,
+                                                            GLsizei width,
+                                                            GLsizei height);
+
 // GL_EXT_occlusion_query_boolean
 
 // GL_EXT_robustness

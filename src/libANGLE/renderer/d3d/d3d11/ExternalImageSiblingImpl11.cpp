@@ -92,6 +92,7 @@ angle::Result ExternalImageSiblingImpl11::getAttachmentRenderTarget(
     const gl::Context *context,
     GLenum binding,
     const gl::ImageIndex &imageIndex,
+    GLsizei samples,
     FramebufferAttachmentRenderTarget **rtOut)
 {
     ANGLE_TRY(createRenderTarget(context));

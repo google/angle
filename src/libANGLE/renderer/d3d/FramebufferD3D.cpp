@@ -201,7 +201,8 @@ GLenum FramebufferD3D::getImplementationColorReadFormat(const gl::Context *conte
     }
 
     RenderTargetD3D *attachmentRenderTarget = nullptr;
-    angle::Result error = readAttachment->getRenderTarget(context, &attachmentRenderTarget);
+    angle::Result error                     = readAttachment->getRenderTarget(
+        context, readAttachment->getRenderToTextureSamples(), &attachmentRenderTarget);
     if (error != angle::Result::Continue)
     {
         return GL_NONE;
@@ -224,7 +225,8 @@ GLenum FramebufferD3D::getImplementationColorReadType(const gl::Context *context
     }
 
     RenderTargetD3D *attachmentRenderTarget = nullptr;
-    angle::Result error = readAttachment->getRenderTarget(context, &attachmentRenderTarget);
+    angle::Result error                     = readAttachment->getRenderTarget(
+        context, readAttachment->getRenderToTextureSamples(), &attachmentRenderTarget);
     if (error != angle::Result::Continue)
     {
         return GL_NONE;
