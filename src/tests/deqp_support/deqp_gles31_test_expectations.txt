@@ -44,11 +44,6 @@
 // Failing Tests on Linux on Intel HD 630.
 2349 LINUX INTEL : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.program_binary = FAIL
 
-
-1442 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.default_block_struct_member = SKIP
-1442 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.array_size.vertex_fragment.default_block_struct_member = SKIP
-1442 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.name_length.vertex_fragment.default_block_struct_member = SKIP
-1442 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.type.vertex_fragment.struct.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.image_load_store.* = SKIP
 
 // Times out shader compilation because it uses so many resources.
@@ -623,6 +618,9 @@
 3726 VULKAN ANDROID : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.*atomic_counter* = FAIL
 3726 VULKAN ANDROID : dEQP-GLES31.functional.compute.basic.atomic_counter* = FAIL
 
+// Validation error on SPIR-V (but only on Android!)
+3882 VULKAN ANDROID : dEQP-GLES31.functional.uniform_location.nested_array.*sampler* = FAIL
+
 // General Vulkan failures
 
 // Limits:
@@ -708,9 +706,6 @@
 // Block name matching failure:
 3459 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.mismatch_with_and_without_instance_name = FAIL
 
-// Shader support for arrays-of-arrays
-3604 VULKAN : dEQP-GLES31.functional.uniform_location.nested_array.* = SKIP
-
 // Indirect draw:
 3564 VULKAN : dEQP-GLES31.functional.draw_indirect.* = SKIP
 
@@ -723,9 +718,6 @@
 // Debug:
 3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.* = SKIP
 3590 VULKAN : dEQP-GLES31.functional.debug.error_groups.case_14 = SKIP
-
-// Transform feedback:
-3205 VULKAN : dEQP-GLES31.functional.debug.*transform_feedback = SKIP
 
 // Stencil textures (some missing support for base level):
 3683 VULKAN PIXEL2 : dEQP-GLES31.functional.stencil_texturing.format.* = FAIL
@@ -748,10 +740,10 @@
 3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture_2d.compressed_float = SKIP
 
 // Vulkan creates the image view with the same format as the texture.
-3563 VULKAN : dEQP-GLES31.functional.image_load_store.*.format_reinterpret.* = FAIL
+3885 VULKAN : dEQP-GLES31.functional.image_load_store.*.format_reinterpret.* = FAIL
 
 // Cannot create 2D (array) view of 3D texture.
-3188 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
+3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
 
 // Inactive SSBOs with flexible array member (about 20% of these tests are affected):
 3714 VULKAN : dEQP-GLES31.functional.ssbo.layout.random.* = FAIL
