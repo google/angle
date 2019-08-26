@@ -402,7 +402,7 @@ ANGLE_EXPORT EGLImageKHR EGLAPIENTRY EGL_CreateImageKHR(EGLDisplay dpy,
                ", EGLenum target = 0x%X, "
                "EGLClientBuffer buffer = 0x%016" PRIxPTR
                ", const EGLAttrib *attrib_list = 0x%016" PRIxPTR,
-               (uintptr_t)dpy, CID(ctx), target, (uintptr_t)buffer, (uintptr_t)attrib_list);
+               (uintptr_t)dpy, CID(dpy, ctx), target, (uintptr_t)buffer, (uintptr_t)attrib_list);
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *display   = static_cast<egl::Display *>(dpy);

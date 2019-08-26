@@ -368,7 +368,7 @@ EGLContext EGLAPIENTRY EGL_CreateContext(EGLDisplay dpy,
     FUNC_EVENT("EGLDisplay dpy = 0x%016" PRIxPTR ", EGLConfig config = 0x%016" PRIxPTR
                ", EGLContext share_context = %d, "
                "const EGLint *attrib_list = 0x%016" PRIxPTR,
-               (uintptr_t)dpy, (uintptr_t)config, CID(share_context), (uintptr_t)attrib_list);
+               (uintptr_t)dpy, (uintptr_t)config, CID(dpy, share_context), (uintptr_t)attrib_list);
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *display        = static_cast<egl::Display *>(dpy);
@@ -393,7 +393,8 @@ EGLContext EGLAPIENTRY EGL_CreateContext(EGLDisplay dpy,
 EGLBoolean EGLAPIENTRY EGL_DestroyContext(EGLDisplay dpy, EGLContext ctx)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    FUNC_EVENT("EGLDisplay dpy = 0x%016" PRIxPTR ", EGLContext ctx = %d", (uintptr_t)dpy, CID(ctx));
+    FUNC_EVENT("EGLDisplay dpy = 0x%016" PRIxPTR ", EGLContext ctx = %d", (uintptr_t)dpy,
+               CID(dpy, ctx));
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *display = static_cast<egl::Display *>(dpy);
@@ -426,7 +427,7 @@ EGLBoolean EGLAPIENTRY EGL_MakeCurrent(EGLDisplay dpy,
                ", EGLSurface read = 0x%016" PRIxPTR
                ", "
                "EGLContext ctx = %d",
-               (uintptr_t)dpy, (uintptr_t)draw, (uintptr_t)read, CID(ctx));
+               (uintptr_t)dpy, (uintptr_t)draw, (uintptr_t)read, CID(dpy, ctx));
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *display = static_cast<egl::Display *>(dpy);
@@ -502,7 +503,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryContext(EGLDisplay dpy,
                ", EGLContext ctx = %d"
                ", EGLint attribute = %d, EGLint *value "
                "= 0x%016" PRIxPTR,
-               (uintptr_t)dpy, CID(ctx), attribute, (uintptr_t)value);
+               (uintptr_t)dpy, CID(dpy, ctx), attribute, (uintptr_t)value);
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *display = static_cast<egl::Display *>(dpy);
@@ -934,7 +935,7 @@ EGLImage EGLAPIENTRY EGL_CreateImage(EGLDisplay dpy,
                ", EGLenum target = 0x%X, "
                "EGLClientBuffer buffer = 0x%016" PRIxPTR
                ", const EGLAttrib *attrib_list = 0x%016" PRIxPTR,
-               (uintptr_t)dpy, CID(ctx), target, (uintptr_t)buffer, (uintptr_t)attrib_list);
+               (uintptr_t)dpy, CID(dpy, ctx), target, (uintptr_t)buffer, (uintptr_t)attrib_list);
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *display   = static_cast<egl::Display *>(dpy);

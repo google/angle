@@ -14,6 +14,7 @@
 #include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "common/mathutil.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/entry_points_enum_autogen.h"
 
 namespace gl
@@ -98,9 +99,19 @@ inline int CID(const Context *context)
 
 namespace egl
 {
-inline int CID(EGLContext context)
+inline int CID(EGLDisplay display, EGLContext context)
 {
-    return gl::CID(reinterpret_cast<const gl::Context *>(context));
+    auto *displayPtr = reinterpret_cast<const egl::Display *>(display);
+    if (!Display::isValidDisplay(displayPtr))
+    {
+        return -1;
+    }
+    auto *contextPtr = reinterpret_cast<const gl::Context *>(context);
+    if (!displayPtr->isValidContext(contextPtr))
+    {
+        return -1;
+    }
+    return gl::CID(contextPtr);
 }
 }  // namespace egl
 
