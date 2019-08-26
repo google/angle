@@ -20,7 +20,7 @@
 #ifndef GL_ANGLE_request_extension
 #define GL_ANGLE_request_extension 1
 #define GL_REQUESTABLE_EXTENSIONS_ANGLE   0x93A8
-#define GL_NUM_REQUESTABLE_EXTENSIONS_ANGLE 0x93A8
+#define GL_NUM_REQUESTABLE_EXTENSIONS_ANGLE 0x93A9
 typedef void (GL_APIENTRYP PFNGLREQUESTEXTENSIONANGLEPROC) (const GLchar *name);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glRequestExtensionANGLE (const GLchar *name);
