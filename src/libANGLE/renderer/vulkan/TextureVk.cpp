@@ -762,15 +762,12 @@ angle::Result TextureVk::setStorage(const gl::Context *context,
     const vk::Format &format = renderer->getFormat(internalFormat);
     ANGLE_TRY(ensureImageAllocated(contextVk, format));
 
-    vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-
     if (mImage->valid())
     {
         releaseImage(contextVk);
     }
 
-    ANGLE_TRY(initImage(contextVk, format, size, static_cast<uint32_t>(levels), commandBuffer));
+    ANGLE_TRY(initImage(contextVk, format, size, static_cast<uint32_t>(levels)));
     return angle::Result::Continue;
 }
 
@@ -1193,14 +1190,13 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-
     if (!mImage->valid())
     {
-        ANGLE_TRY(initImage(contextVk, format, baseLevelExtents, levelCount, commandBuffer));
+        ANGLE_TRY(initImage(contextVk, format, baseLevelExtents, levelCount));
     }
 
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
     return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
                                       getNativeImageLayer(0), mImage->getLayerCount(),
                                       commandBuffer);
@@ -1473,8 +1469,7 @@ const vk::Sampler &TextureVk::getSampler() const
 angle::Result TextureVk::initImage(ContextVk *contextVk,
                                    const vk::Format &format,
                                    const gl::Extents &extents,
-                                   const uint32_t levelCount,
-                                   vk::CommandBuffer *commandBuffer)
+                                   const uint32_t levelCount)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
