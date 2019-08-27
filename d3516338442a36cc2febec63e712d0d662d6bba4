@@ -22,6 +22,30 @@
       "revId": "d3516338442a36cc2febec63e712d0d662d6bba4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f233a556_b48200c4",
+        "filename": "src/libANGLE/gen_overlay_fonts.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-27T21:36:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7254219_22c02c8f",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 65
+      },
+      "revId": "d3516338442a36cc2febec63e712d0d662d6bba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
