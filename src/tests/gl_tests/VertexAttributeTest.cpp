@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 //
 #include "anglebase/numerics/safe_conversions.h"
+#include "common/mathutil.h"
 #include "platform/FeaturesVk.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
@@ -22,6 +23,8 @@ GLsizei TypeStride(GLenum attribType)
             return 1;
         case GL_UNSIGNED_SHORT:
         case GL_SHORT:
+        case GL_HALF_FLOAT:
+        case GL_HALF_FLOAT_OES:
             return 2;
         case GL_UNSIGNED_INT:
         case GL_INT:
@@ -124,7 +127,9 @@ class VertexAttributeTest : public ANGLETest
         glEnableVertexAttribArray(mExpectedAttrib);
     }
 
-    void checkPixels()
+    void checkPixels() { checkRGBPixels(true); }
+
+    void checkRGBPixels(bool checkAlpha)
     {
         GLint viewportSize[4];
         glGetIntegerv(GL_VIEWPORT, viewportSize);
@@ -135,10 +140,20 @@ class VertexAttributeTest : public ANGLETest
         // We need to offset our checks from triangle edges to ensure we don't fall on a single tri
         // Avoid making assumptions of drawQuad with four checks to check the four possible tri
         // regions
-        EXPECT_PIXEL_EQ((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255, 255);
-        EXPECT_PIXEL_EQ((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255, 255);
-        EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255, 255);
-        EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255, 255);
+        if (checkAlpha)
+        {
+            EXPECT_PIXEL_EQ((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255, 255);
+            EXPECT_PIXEL_EQ((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255, 255);
+            EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255, 255);
+            EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255, 255);
+        }
+        else
+        {
+            EXPECT_PIXEL_RGB_EQUAL((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255);
+            EXPECT_PIXEL_RGB_EQUAL((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255);
+            EXPECT_PIXEL_RGB_EQUAL(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255);
+            EXPECT_PIXEL_RGB_EQUAL(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255);
+        }
     }
 
     void checkPixelsUnEqual()
@@ -177,7 +192,16 @@ class VertexAttributeTest : public ANGLETest
 
             if (checkPixelEqual)
             {
-                checkPixels();
+                if ((test.type == GL_HALF_FLOAT || test.type == GL_HALF_FLOAT_OES) && IsVulkan() &&
+                    typeSize == 3)
+                {  // We need a special case for RGB16F format on a Vulkan backend due to the fact
+                   // that in such a usecase, we need to ignore the alpha channel.
+                    checkRGBPixels(false);
+                }
+                else
+                {
+                    checkPixels();
+                }
             }
             else
             {
@@ -418,6 +442,34 @@ TEST_P(VertexAttributeTest, ShortNormalized)
 
     TestData data(GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData.data(), expectedData.data());
     runTest(data);
+}
+
+// Verify that vertex data is updated correctly when using a float/half-float client memory pointer.
+TEST_P(VertexAttributeTest, HalfFloatClientMemoryPointer)
+{
+    std::array<GLhalf, kVertexCount> inputData;
+    std::array<GLfloat, kVertexCount> expectedData = {
+        {0.f, 1.5f, 2.3f, 3.2f, -1.8f, -2.2f, -3.9f, -4.f, 34.5f, 32.2f, -78.8f, -77.4f, -76.1f}};
+
+    for (size_t i = 0; i < kVertexCount; i++)
+    {
+        inputData[i] = gl::float32ToFloat16(expectedData[i]);
+    }
+
+    // If the extension is enabled run the test on all contexts
+    if (IsGLExtensionEnabled("GL_OES_vertex_half_float"))
+    {
+        TestData imediateData(GL_HALF_FLOAT_OES, GL_FALSE, Source::IMMEDIATE, inputData.data(),
+                              expectedData.data());
+        runTest(imediateData);
+    }
+    // Otherwise run the test only if it is an ES3 context
+    else if (getClientMajorVersion() >= 3)
+    {
+        TestData imediateData(GL_HALF_FLOAT, GL_FALSE, Source::IMMEDIATE, inputData.data(),
+                              expectedData.data());
+        runTest(imediateData);
+    }
 }
 
 // Verify that using the same client memory pointer in different format won't mess up the draw.

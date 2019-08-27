@@ -333,9 +333,10 @@ enum class VertexAttribType
     Fixed              = 12,  // GLenum == 0x140C
     MaxBasicType       = 12,
     UnsignedInt2101010 = 13,  // GLenum == 0x8368
-    Int2101010         = 14,  // GLenum == 0x8D9F
-    InvalidEnum        = 15,
-    EnumCount          = 15,
+    HalfFloatOES       = 14,  // GLenum == 0x8D61
+    Int2101010         = 15,  // GLenum == 0x8D9F
+    InvalidEnum        = 16,
+    EnumCount          = 17,
 };
 
 template <>
@@ -346,6 +347,8 @@ constexpr VertexAttribType FromGLenum<VertexAttribType>(GLenum from)
         return static_cast<VertexAttribType>(packed);
     if (from == GL_UNSIGNED_INT_2_10_10_10_REV)
         return VertexAttribType::UnsignedInt2101010;
+    if (from == GL_HALF_FLOAT_OES)
+        return VertexAttribType::HalfFloatOES;
     if (from == GL_INT_2_10_10_10_REV)
         return VertexAttribType::Int2101010;
     return VertexAttribType::InvalidEnum;
@@ -356,6 +359,8 @@ constexpr GLenum ToGLenum(VertexAttribType from)
     // This could be optimized using a constexpr table.
     if (from == VertexAttribType::Int2101010)
         return GL_INT_2_10_10_10_REV;
+    if (from == VertexAttribType::HalfFloatOES)
+        return GL_HALF_FLOAT_OES;
     if (from == VertexAttribType::UnsignedInt2101010)
         return GL_UNSIGNED_INT_2_10_10_10_REV;
     return static_cast<GLenum>(from) + GL_BYTE;
@@ -371,6 +376,7 @@ ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, Float, GL_FLOAT);
 ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, HalfFloat, GL_HALF_FLOAT);
 ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, Fixed, GL_FIXED);
 ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, Int2101010, GL_INT_2_10_10_10_REV);
+ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, HalfFloatOES, GL_HALF_FLOAT_OES);
 ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, UnsignedInt2101010, GL_UNSIGNED_INT_2_10_10_10_REV);
 
 std::ostream &operator<<(std::ostream &os, VertexAttribType value);

@@ -9316,6 +9316,10 @@ void StateCache::updateTransformFeedbackActiveUnpaused(Context *context)
 
 void StateCache::updateVertexAttribTypesValidation(Context *context)
 {
+    VertexAttribTypeCase halfFloatValidity = (context->getExtensions().vertexHalfFloat)
+                                                 ? VertexAttribTypeCase::Valid
+                                                 : VertexAttribTypeCase::Invalid;
+
     if (context->getClientMajorVersion() <= 2)
     {
         mCachedVertexAttribTypesValidation = {{
@@ -9325,6 +9329,7 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
             {VertexAttribType::UnsignedShort, VertexAttribTypeCase::Valid},
             {VertexAttribType::Float, VertexAttribTypeCase::Valid},
             {VertexAttribType::Fixed, VertexAttribTypeCase::Valid},
+            {VertexAttribType::HalfFloatOES, halfFloatValidity},
         }};
     }
     else
@@ -9340,6 +9345,7 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
             {VertexAttribType::HalfFloat, VertexAttribTypeCase::Valid},
             {VertexAttribType::Fixed, VertexAttribTypeCase::Valid},
             {VertexAttribType::Int2101010, VertexAttribTypeCase::ValidSize4Only},
+            {VertexAttribType::HalfFloatOES, halfFloatValidity},
             {VertexAttribType::UnsignedInt2101010, VertexAttribTypeCase::ValidSize4Only},
         }};
 
