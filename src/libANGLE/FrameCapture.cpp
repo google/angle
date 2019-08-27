@@ -60,17 +60,22 @@ ParamCapture::~ParamCapture() {}
 
 FrameCapture::FrameCapture() {}
 FrameCapture::~FrameCapture() {}
-void FrameCapture::onEndFrame() {}
+void FrameCapture::onEndFrame(const gl::Context *context) {}
 void FrameCapture::replay(gl::Context *context) {}
 #else
 namespace
 {
-std::string GetCaptureFileName(size_t frameIndex, const char *suffix)
+std::string GetCaptureFileName(int contextId, size_t frameIndex, const char *suffix)
 {
     std::stringstream fnameStream;
-    fnameStream << "angle_capture_frame" << std::setfill('0') << std::setw(3) << frameIndex
-                << suffix;
-    return ANGLE_CAPTURE_PATH + fnameStream.str();
+    fnameStream << "angle_capture_context" << contextId << "_frame" << std::setfill('0')
+                << std::setw(3) << frameIndex << suffix;
+    return fnameStream.str();
+}
+
+std::string GetCaptureFilePath(int contextId, size_t frameIndex, const char *suffix)
+{
+    return ANGLE_CAPTURE_PATH + GetCaptureFileName(contextId, frameIndex, suffix);
 }
 
 void WriteParamStaticVarName(const CallCapture &call,
@@ -100,7 +105,9 @@ constexpr size_t kInlineDataThreshold = 128;
 void WriteStringParamReplay(std::ostream &out, const ParamCapture &param)
 {
     const std::vector<uint8_t> &data = param.data[0];
-    std::string str(data.begin(), data.end());
+    // null terminate C style string
+    ASSERT(data.size() > 0 && data.back() == '\0');
+    std::string str(data.begin(), data.end() - 1);
     out << "\"" << str << "\"";
 }
 }  // anonymous namespace
@@ -417,17 +424,17 @@ bool FrameCapture::anyClientArray() const
     return false;
 }
 
-void FrameCapture::onEndFrame()
+void FrameCapture::onEndFrame(const gl::Context *context)
 {
     if (!mCalls.empty())
     {
-        saveCapturedFrameAsCpp();
+        saveCapturedFrameAsCpp(context->id());
         reset();
         mFrameIndex++;
     }
 }
 
-void FrameCapture::saveCapturedFrameAsCpp()
+void FrameCapture::saveCapturedFrameAsCpp(int contextId)
 {
     bool useClientArrays = anyClientArray();
 
@@ -493,16 +500,17 @@ void FrameCapture::saveCapturedFrameAsCpp()
 
     if (!binaryData.empty())
     {
-        std::string fname = GetCaptureFileName(mFrameIndex, ".angledata");
+        std::string dataFilepath = GetCaptureFilePath(contextId, mFrameIndex, ".angledata");
 
-        FILE *fp = fopen(fname.c_str(), "wb");
+        FILE *fp = fopen(dataFilepath.c_str(), "wb");
         if (!fp)
         {
-            FATAL() << "file " << fname << " can not be created!: " << strerror(errno);
+            FATAL() << "file " << dataFilepath << " can not be created!: " << strerror(errno);
         }
         fwrite(binaryData.data(), 1, binaryData.size(), fp);
         fclose(fp);
 
+        std::string fname = GetCaptureFileName(contextId, mFrameIndex, ".angledata");
         header << "std::vector<uint8_t> gBinaryData;\n";
         header << "void LoadBinaryData()\n";
         header << "{\n";
@@ -526,16 +534,16 @@ void FrameCapture::saveCapturedFrameAsCpp()
     std::string outString    = out.str();
     std::string headerString = header.str();
 
-    std::string fname = GetCaptureFileName(mFrameIndex, ".cpp");
-    FILE *fp          = fopen(fname.c_str(), "w");
+    std::string cppFilePath = GetCaptureFilePath(contextId, mFrameIndex, ".cpp");
+    FILE *fp                = fopen(cppFilePath.c_str(), "w");
     if (!fp)
     {
-        FATAL() << "file " << fname << " can not be created!: " << strerror(errno);
+        FATAL() << "file " << cppFilePath << " can not be created!: " << strerror(errno);
     }
     fprintf(fp, "%s\n\n%s", headerString.c_str(), outString.c_str());
     fclose(fp);
 
-    printf("Saved '%s'.\n", fname.c_str());
+    printf("Saved '%s'.\n", cppFilePath.c_str());
 }
 
 int FrameCapture::getAndIncrementCounter(gl::EntryPoint entryPoint, const std::string &paramName)
@@ -557,7 +565,9 @@ void FrameCapture::writeStringPointerParamReplay(std::ostream &out,
 
     for (const std::vector<uint8_t> &data : param.data)
     {
-        std::string str(data.begin(), data.end());
+        // null terminate C style string
+        ASSERT(data.size() > 0 && data.back() == '\0');
+        std::string str(data.begin(), data.end() - 1);
         header << "    R\"(" << str << ")\",\n";
     }
 

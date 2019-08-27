@@ -156,7 +156,7 @@ class FrameCapture final : angle::NonCopyable
     ~FrameCapture();
 
     void captureCall(const gl::Context *context, CallCapture &&call);
-    void onEndFrame();
+    void onEndFrame(const gl::Context *context);
     bool enabled() const;
     void replay(gl::Context *context);
 
@@ -175,7 +175,7 @@ class FrameCapture final : angle::NonCopyable
     void reset();
     int getAndIncrementCounter(gl::EntryPoint entryPoint, const std::string &paramName);
     bool anyClientArray() const;
-    void saveCapturedFrameAsCpp();
+    void saveCapturedFrameAsCpp(int contextId);
     void writeStringPointerParamReplay(std::ostream &out,
                                        std::ostream &header,
                                        const CallCapture &call,
