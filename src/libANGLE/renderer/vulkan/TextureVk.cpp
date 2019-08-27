@@ -61,15 +61,15 @@ bool CanCopyWithDraw(RendererVk *renderer,
                                                VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
 }
 
-bool ForceCpuPathForCopy(RendererVk *renderer, vk::ImageHelper *image)
+bool ForceCPUPathForCopy(RendererVk *renderer, const vk::ImageHelper &image)
 {
-    return image->getLayerCount() > 1 && renderer->getFeatures().forceCpuPathForCubeMapCopy.enabled;
+    return image.getLayerCount() > 1 && renderer->getFeatures().forceCPUPathForCubeMapCopy.enabled;
 }
 
-uint32_t GetRenderTargetLayerCount(vk::ImageHelper *image)
+uint32_t GetRenderTargetLayerCount(const vk::ImageHelper &image)
 {
     // Depth > 1 means this is a 3D texture and depth is our layer count
-    return image->getExtents().depth > 1 ? image->getExtents().depth : image->getLayerCount();
+    return image.getExtents().depth > 1 ? image.getExtents().depth : image.getLayerCount();
 }
 
 bool HasBothDepthAndStencilAspects(VkImageAspectFlags aspectFlags)
@@ -435,10 +435,10 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
                                             &colorReadRT->getImage());
     }
 
-    bool forceCpuPath = ForceCpuPathForCopy(renderer, mImage);
+    bool forceCPUPath = ForceCPUPathForCopy(renderer, *mImage);
 
     // If it's possible to perform the copy with a draw call, do that.
-    if (CanCopyWithDraw(renderer, srcFormat, destFormat) && !forceCpuPath)
+    if (CanCopyWithDraw(renderer, srcFormat, destFormat) && !forceCPUPath)
     {
         // Layer count can only be 1 as the source is a framebuffer.
         ASSERT(offsetImageIndex.getLayerCount() == 1);
@@ -486,10 +486,10 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
                                             sourceLevel, 0, sourceArea, &source->getImage());
     }
 
-    bool forceCpuPath = ForceCpuPathForCopy(renderer, mImage);
+    bool forceCPUPath = ForceCPUPathForCopy(renderer, *mImage);
 
     // If it's possible to perform the copy with a draw call, do that.
-    if (CanCopyWithDraw(renderer, sourceVkFormat, destVkFormat) && !forceCpuPath)
+    if (CanCopyWithDraw(renderer, sourceVkFormat, destVkFormat) && !forceCPUPath)
     {
         return copySubImageImplWithDraw(contextVk, offsetImageIndex, destOffset, destVkFormat,
                                         sourceLevel, sourceArea, false, unpackFlipY,
@@ -881,12 +881,12 @@ uint32_t TextureVk::getNativeImageLayer(uint32_t frontendLayer) const
     return mImageLayerOffset + frontendLayer;
 }
 
-void TextureVk::releaseAndDeleteImage(ContextVk *context)
+void TextureVk::releaseAndDeleteImage(ContextVk *contextVk)
 {
     if (mImage)
     {
-        releaseImage(context);
-        releaseStagingBuffer(context);
+        releaseImage(contextVk);
+        releaseStagingBuffer(contextVk);
         SafeDelete(mImage);
     }
 }
@@ -1208,7 +1208,7 @@ angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
     if (!m3DRenderTargets.empty())
         return angle::Result::Continue;
 
-    uint32_t layerCount = GetRenderTargetLayerCount(mImage);
+    uint32_t layerCount = GetRenderTargetLayerCount(*mImage);
 
     mLayerFetchImageView.resize(layerCount);
     m3DRenderTargets.resize(layerCount);
@@ -1629,11 +1629,11 @@ void TextureVk::releaseImageViews(ContextVk *contextVk)
     mLayerFetchImageView.clear();
 }
 
-void TextureVk::releaseStagingBuffer(ContextVk *context)
+void TextureVk::releaseStagingBuffer(ContextVk *contextVk)
 {
     if (mImage)
     {
-        mImage->releaseStagingBuffer(context);
+        mImage->releaseStagingBuffer(contextVk);
     }
 }
 

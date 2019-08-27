@@ -86,7 +86,7 @@ struct FeaturesVk : FeatureSetBase
     // Whether texture copies on cube map targets should be done on GPU.  This is a workaround for
     // Intel drivers on windows that have an issue with creating single-layer views on cube map
     // textures.
-    Feature forceCpuPathForCubeMapCopy = {
+    Feature forceCPUPathForCubeMapCopy = {
         "force_cpu_path_for_cube_map_copy", FeatureCategory::VulkanWorkarounds,
         "Some Intel Windows drivers have an issue with creating single-layer "
         "views on cube map textures",

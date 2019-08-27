@@ -201,7 +201,7 @@ class TextureVk : public TextureImpl
                         uint32_t imageLevelOffset,
                         uint32_t imageLayerOffset,
                         bool selfOwned);
-    void updateImageHelper(ContextVk *context, const vk::Format &internalFormat);
+    void updateImageHelper(ContextVk *contextVk, const vk::Format &internalFormat);
 
     angle::Result redefineImage(const gl::Context *context,
                                 const gl::ImageIndex &index,
@@ -286,9 +286,9 @@ class TextureVk : public TextureImpl
                             const vk::Format &format,
                             const gl::Extents &extents,
                             const uint32_t levelCount);
-    void releaseImage(ContextVk *context);
+    void releaseImage(ContextVk *contextVk);
     void releaseImageViews(ContextVk *contextVk);
-    void releaseStagingBuffer(ContextVk *context);
+    void releaseStagingBuffer(ContextVk *contextVk);
     uint32_t getLevelCount() const;
     angle::Result initImageViews(ContextVk *contextVk,
                                  const vk::Format &format,

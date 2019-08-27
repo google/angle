@@ -1198,7 +1198,7 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     mFeatures.extraCopyBufferRegion.enabled = IsIntel(mPhysicalDeviceProperties.vendorID);
 
     // http://anglebug.com/3055
-    mFeatures.forceCpuPathForCubeMapCopy.enabled = IsIntel(mPhysicalDeviceProperties.vendorID);
+    mFeatures.forceCPUPathForCubeMapCopy.enabled = IsIntel(mPhysicalDeviceProperties.vendorID);
 #endif
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
