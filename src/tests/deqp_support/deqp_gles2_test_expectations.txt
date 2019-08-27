@@ -80,10 +80,6 @@
 3467 D3D11 : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
 3467 D3D11 : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 
-// Half float OES either has an implementation bug or a dEQP bug.
-3283 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_half_float_oes = FAIL
-3283 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgb_half_float_oes = FAIL
-
 // Shader failures.
 3434 NEXUS5X GLES : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_* = FAIL
 
