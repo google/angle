@@ -7350,6 +7350,78 @@ bool ValidateFramebufferTexture2DMultisampleEXT(Context *context,
                                                 GLint level,
                                                 GLsizei samples)
 {
+    if (!context->getExtensions().multisampledRenderToTexture)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (samples < 0)
+    {
+        return false;
+    }
+
+    // EXT_multisampled_render_to_texture states that the value of samples
+    // must be less than or equal to MAX_SAMPLES_EXT (Context::getCaps().maxSamples)
+    // otherwise GL_INVALID_VALUE is generated.
+    if (static_cast<GLuint>(samples) > context->getCaps().maxSamples)
+    {
+        context->validationError(GL_INVALID_VALUE, kSamplesOutOfRange);
+        return false;
+    }
+
+    if (!ValidFramebufferTarget(context, target))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidFramebufferTarget);
+        return false;
+    }
+
+    if (attachment != GL_COLOR_ATTACHMENT0)
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidAttachment);
+        return false;
+    }
+
+    TextureTarget textargetPacked = FromGLenum<TextureTarget>(textarget);
+    if (!ValidTexture2DDestinationTarget(context, textargetPacked))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
+        return false;
+    }
+
+    if (texture != 0)
+    {
+        TextureID texturePacked = FromGL<TextureID>(texture);
+        Texture *tex            = context->getTexture(texturePacked);
+
+        if (tex == nullptr)
+        {
+            context->validationError(GL_INVALID_OPERATION, kMissingTexture);
+            return false;
+        }
+
+        if (level < 0)
+        {
+            context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
+            return false;
+        }
+
+        // EXT_multisampled_render_to_texture returns INVALID_OPERATION when a sample number higher
+        // than the maximum sample number supported by this format is passed.
+        // The TextureCaps::getMaxSamples method is only guarenteed to be valid when the context is
+        // ES3.
+        if (context->getClientMajorVersion() >= 3)
+        {
+            GLenum internalformat = tex->getFormat(textargetPacked, level).info->internalFormat;
+            const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
+            if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+            {
+                context->validationError(GL_INVALID_OPERATION, kSamplesOutOfRange);
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
@@ -7360,6 +7432,40 @@ bool ValidateRenderbufferStorageMultisampleEXT(Context *context,
                                                GLsizei width,
                                                GLsizei height)
 {
+    if (!context->getExtensions().multisampledRenderToTexture)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+    if (!ValidateRenderbufferStorageParametersBase(context, target, samples, internalformat, width,
+                                                   height))
+    {
+        return false;
+    }
+
+    // EXT_multisampled_render_to_texture states that the value of samples
+    // must be less than or equal to MAX_SAMPLES_EXT (Context::getCaps().maxSamples)
+    // otherwise GL_INVALID_VALUE is generated.
+    if (static_cast<GLuint>(samples) > context->getCaps().maxSamples)
+    {
+        context->validationError(GL_INVALID_VALUE, kSamplesOutOfRange);
+        return false;
+    }
+
+    // EXT_multisampled_render_to_texture returns GL_OUT_OF_MEMORY on failure to create
+    // the specified storage. This is different than ES 3.0 in which a sample number higher
+    // than the maximum sample number supported by this format generates a GL_INVALID_VALUE.
+    // The TextureCaps::getMaxSamples method is only guarenteed to be valid when the context is ES3.
+    if (context->getClientMajorVersion() >= 3)
+    {
+        const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
+        if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+        {
+            context->validationError(GL_OUT_OF_MEMORY, kSamplesOutOfRange);
+            return false;
+        }
+    }
+
     return true;
 }
 

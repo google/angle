@@ -81,6 +81,7 @@ angle_end2end_tests_sources = [
   "gl_tests/MipmapTest.cpp",
   "gl_tests/MultiDrawTest.cpp",
   "gl_tests/MultisampleCompatibilityTest.cpp",
+  "gl_tests/MultisampledRenderToTextureTest.cpp",
   "gl_tests/MultisampleTest.cpp",
   "gl_tests/MultithreadingTest.cpp",
   "gl_tests/MultiviewDrawTest.cpp",

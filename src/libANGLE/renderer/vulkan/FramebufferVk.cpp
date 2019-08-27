@@ -635,7 +635,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     const bool blitDepthBuffer   = (mask & GL_DEPTH_BUFFER_BIT) != 0;
     const bool blitStencilBuffer = (mask & GL_STENCIL_BUFFER_BIT) != 0;
 
-    const bool isResolve = srcFramebuffer->getCachedSamples(context) > 1;
+    const bool isResolve =
+        srcFramebuffer->getCachedSamples(context, gl::AttachmentSampleType::Resource) > 1;
 
     FramebufferVk *srcFramebufferVk    = vk::GetImpl(srcFramebuffer);
     const bool srcFramebufferFlippedY  = contextVk->isViewportFlipEnabledForReadFBO();

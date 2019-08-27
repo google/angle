@@ -1113,6 +1113,17 @@ void QueryFramebufferAttachmentParameteriv(const Context *context,
             *params = attachmentObject->isLayered();
             break;
 
+        case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_SAMPLES_EXT:
+            if (attachmentObject->type() == GL_TEXTURE)
+            {
+                *params = attachmentObject->getSamples();
+            }
+            else
+            {
+                *params = 0;
+            }
+            break;
+
         default:
             UNREACHABLE();
             break;

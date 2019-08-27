@@ -184,6 +184,14 @@ class TextureStorage11 : public TextureStorage
     // Clear all cached non-swizzle SRVs and invalidate the swizzle cache.
     void clearSRVCache();
 
+    // Helper for resolving MS shadowed texture
+    angle::Result resolveTextureHelper(const gl::Context *context, const TextureHelper11 &texture);
+    angle::Result releaseMultisampledTexStorageForLevel(size_t level) override;
+    angle::Result getMultisampledRenderTarget(const gl::Context *context,
+                                              const gl::ImageIndex &index,
+                                              GLsizei samples,
+                                              RenderTargetD3D **outRT);
+
     Renderer11 *mRenderer;
     int mTopLevel;
     unsigned int mMipLevels;
@@ -297,6 +305,8 @@ class TextureStorage11_2D : public TextureStorage11
                                            DropStencil *dropStencilOut) override;
 
     angle::Result ensureTextureExists(const gl::Context *context, int mipLevels);
+
+    angle::Result resolveAndReleaseTexture(const gl::Context *context) override;
 
   private:
     angle::Result createSRVForSampler(const gl::Context *context,
@@ -538,6 +548,8 @@ class TextureStorage11_Cube : public TextureStorage11
                                            DropStencil *dropStencilOut) override;
 
     angle::Result ensureTextureExists(const gl::Context *context, int mipLevels);
+
+    angle::Result resolveAndReleaseTexture(const gl::Context *context) override;
 
   private:
     angle::Result createSRVForSampler(const gl::Context *context,
