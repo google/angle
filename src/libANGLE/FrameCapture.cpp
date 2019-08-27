@@ -114,7 +114,9 @@ void WriteStringParamReplay(std::ostream &out, const ParamCapture &param)
 
 ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
 
-ParamCapture::ParamCapture(const char *nameIn, ParamType typeIn) : name(nameIn), type(typeIn) {}
+ParamCapture::ParamCapture(const char *nameIn, ParamType typeIn)
+    : name(nameIn), type(typeIn), enumGroup(gl::GLenumGroup::DefaultGroup)
+{}
 
 ParamCapture::~ParamCapture() = default;
 
@@ -707,11 +709,11 @@ void FrameCapture::writeCallReplay(const CallCapture &call,
         {
             if (param.type == ParamType::TGLenum)
             {
-                callOut << GLenumToString(param.enumGroup, param.value.GLenumVal);
+                OutputGLenumString(callOut, param.enumGroup, param.value.GLenumVal);
             }
             else if (param.type == ParamType::TGLbitfield)
             {
-                callOut << GLbitfieldToString(param.enumGroup, param.value.GLbitfieldVal);
+                OutputGLbitfieldString(callOut, param.enumGroup, param.value.GLbitfieldVal);
             }
             else
             {

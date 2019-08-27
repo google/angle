@@ -141,6 +141,8 @@ bool ValidateMultiDrawElementsInstancedANGLE(Context *context,
                                              const GLsizei *instanceCounts,
                                              GLsizei drawcount);
 
+// GL_ANGLE_program_binary
+
 // GL_ANGLE_provoking_vertex
 bool ValidateProvokingVertexANGLE(Context *context, ProvokingVertexConvention modePacked);
 

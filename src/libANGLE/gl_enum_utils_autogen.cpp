@@ -17,6 +17,29 @@
 namespace gl
 {
 
+namespace
+{
+constexpr char kEnumUnknown[] = "EnumUnknown";
+}  // anonymous namespace
+
+void OutputGLenumString(std::ostream &out, GLenumGroup enumGroup, unsigned int value)
+{
+    const char *enumStr = GLenumToString(enumGroup, value);
+    if (enumStr != kEnumUnknown)
+    {
+        out << enumStr;
+    }
+    else
+    {
+        out << std::hex << value << std::dec;
+    }
+}
+
+void OutputGLbitfieldString(std::ostream &out, GLenumGroup enumGroup, unsigned int value)
+{
+    out << GLbitfieldToString(enumGroup, value);
+}
+
 const char *GLbooleanToString(unsigned int value)
 {
     switch (value)
@@ -26,7 +49,7 @@ const char *GLbooleanToString(unsigned int value)
         case 0x1:
             return "GL_TRUE";
         default:
-            return "EnumUnknown";
+            return kEnumUnknown;
     }
 }
 
@@ -49,7 +72,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x104:
                     return "GL_ADD";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -74,7 +97,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x207:
                     return "GL_ALWAYS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -103,7 +126,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x92cb:
                     return "GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_FRAGMENT_SHADER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -156,7 +179,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xffffffff:
                     return "GL_ALL_ATTRIB_BITS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -219,7 +242,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8b6a:
                     return "GL_FLOAT_MAT4x3";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -230,7 +253,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8e22:
                     return "GL_TRANSFORM_FEEDBACK";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -247,7 +270,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x800b:
                     return "GL_FUNC_REVERSE_SUBTRACT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -294,7 +317,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x88fb:
                     return "GL_ONE_MINUS_SRC1_ALPHA";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -307,7 +330,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2601:
                     return "GL_LINEAR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -320,7 +343,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1:
                     return "GL_TRUE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -335,7 +358,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1802:
                     return "GL_STENCIL";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -350,7 +373,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x88ba:
                     return "GL_READ_WRITE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -375,7 +398,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x80:
                     return "GL_MAP_COHERENT_BIT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -412,7 +435,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x92c0:
                     return "GL_ATOMIC_COUNTER_BUFFER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -449,7 +472,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x92c0:
                     return "GL_ATOMIC_COUNTER_BUFFER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -476,7 +499,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x88ea:
                     return "GL_DYNAMIC_COPY";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -491,7 +514,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8d40:
                     return "GL_FRAMEBUFFER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -508,7 +531,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x4000:
                     return "GL_COLOR_BUFFER_BIT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -523,7 +546,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xffffffff:
                     return "GL_CLIENT_ALL_ATTRIB_BITS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -536,7 +559,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x935f:
                     return "GL_ZERO_TO_ONE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -549,7 +572,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8ca2:
                     return "GL_UPPER_LEFT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -574,7 +597,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x3007:
                     return "GL_CLIP_DISTANCE7";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -667,7 +690,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8cff:
                     return "GL_COLOR_ATTACHMENT31";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -682,7 +705,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x408:
                     return "GL_FRONT_AND_BACK";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -701,7 +724,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1602:
                     return "GL_AMBIENT_AND_DIFFUSE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -726,7 +749,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x140a:
                     return "GL_DOUBLE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -743,7 +766,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8:
                     return "GL_CONTEXT_FLAG_NO_ERROR_BIT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -756,7 +779,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2:
                     return "GL_CONTEXT_COMPATIBILITY_PROFILE_BIT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -793,7 +816,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x92c0:
                     return "GL_ATOMIC_COUNTER_BUFFER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -808,7 +831,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x408:
                     return "GL_FRONT_AND_BACK";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -825,7 +848,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9148:
                     return "GL_DEBUG_SEVERITY_LOW";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -848,7 +871,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x824b:
                     return "GL_DEBUG_SOURCE_OTHER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -877,7 +900,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x826a:
                     return "GL_DEBUG_TYPE_POP_GROUP";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2403,6 +2426,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE";
                 case 0x93a1:
                     return "GL_BGRA8_EXT";
+                case 0x93a6:
+                    return "GL_PROGRAM_BINARY_ANGLE";
                 case 0x93b0:
                     return "GL_COMPRESSED_RGBA_ASTC_4x4";
                 case 0x93b1:
@@ -2484,7 +2509,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9633:
                     return "GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_OVR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2509,7 +2534,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x207:
                     return "GL_ALWAYS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2546,7 +2571,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x40c:
                     return "GL_AUX3";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2561,7 +2586,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1405:
                     return "GL_UNSIGNED_INT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2702,7 +2727,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8079:
                     return "GL_EDGE_FLAG_ARRAY";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2725,7 +2750,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x506:
                     return "GL_INVALID_FRAMEBUFFER_OPERATION";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2736,7 +2761,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9586:
                     return "GL_HANDLE_TYPE_OPAQUE_FD_EXT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2761,7 +2786,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x707:
                     return "GL_LINE_RESET_TOKEN";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2780,7 +2805,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x604:
                     return "GL_4D_COLOR_TEXTURE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2793,7 +2818,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x140a:
                     return "GL_DOUBLE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2808,7 +2833,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2601:
                     return "GL_LINEAR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2829,7 +2854,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8450:
                     return "GL_FOG_COORD_SRC";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2850,7 +2875,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xb66:
                     return "GL_FOG_COLOR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2863,7 +2888,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x140a:
                     return "GL_DOUBLE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2876,7 +2901,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x140a:
                     return "GL_DOUBLE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2953,7 +2978,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8d00:
                     return "GL_DEPTH_ATTACHMENT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -2988,7 +3013,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8da7:
                     return "GL_FRAMEBUFFER_ATTACHMENT_LAYERED";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3007,7 +3032,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9314:
                     return "GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3034,7 +3059,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8da8:
                     return "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3049,7 +3074,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8d40:
                     return "GL_FRAMEBUFFER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3062,7 +3087,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x901:
                     return "GL_CCW";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3093,7 +3118,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9314:
                     return "GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3108,7 +3133,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xa02:
                     return "GL_DOMAIN";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3607,7 +3632,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9598:
                     return "GL_DRIVER_UUID_EXT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3636,7 +3661,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xc79:
                     return "GL_PIXEL_MAP_A_TO_A";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3665,7 +3690,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8245:
                     return "GL_DEBUG_CALLBACK_USER_PARAM";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3708,7 +3733,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8067:
                     return "GL_TEXTURE_RESIDENT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3723,7 +3748,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8255:
                     return "GL_UNKNOWN_CONTEXT_RESET";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3738,7 +3763,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1102:
                     return "GL_NICEST";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3765,7 +3790,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8b8b:
                     return "GL_FRAGMENT_SHADER_DERIVATIVE_HINT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3782,7 +3807,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x140a:
                     return "GL_DOUBLE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -3819,7 +3844,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2a2d:
                     return "GL_T4F_C4F_N3F_V4F";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4058,7 +4083,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9279:
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4209,7 +4234,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9380:
                     return "GL_NUM_SAMPLE_COUNTS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4224,7 +4249,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2100:
                     return "GL_MODULATE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4237,7 +4262,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x81fa:
                     return "GL_SEPARATE_SPECULAR_COLOR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4254,7 +4279,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x81f8:
                     return "GL_LIGHT_MODEL_COLOR_CONTROL";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4279,7 +4304,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x4007:
                     return "GL_LIGHT7";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4308,7 +4333,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1209:
                     return "GL_QUADRATIC_ATTENUATION";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4321,7 +4346,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1301:
                     return "GL_COMPILE_AND_EXECUTE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4350,7 +4375,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1409:
                     return "GL_4_BYTES";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4391,7 +4416,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x150f:
                     return "GL_SET";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4420,7 +4445,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x200:
                     return "GL_CLIENT_STORAGE_BIT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4435,7 +4460,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xa02:
                     return "GL_DOMAIN";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4480,7 +4505,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xdb8:
                     return "GL_MAP2_VERTEX_4";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4495,7 +4520,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x408:
                     return "GL_FRONT_AND_BACK";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4518,7 +4543,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1603:
                     return "GL_COLOR_INDEXES";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4533,7 +4558,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1702:
                     return "GL_TEXTURE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4574,7 +4599,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xffffffff:
                     return "GL_ALL_BARRIER_BITS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4587,7 +4612,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x959b:
                     return "GL_PROTECTED_MEMORY_OBJECT_EXT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4600,7 +4625,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1b01:
                     return "GL_LINE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4615,7 +4640,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1b02:
                     return "GL_FILL";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4634,7 +4659,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x140a:
                     return "GL_DOUBLE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4665,7 +4690,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8e22:
                     return "GL_TRANSFORM_FEEDBACK";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4680,7 +4705,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8e74:
                     return "GL_PATCH_DEFAULT_OUTER_LEVEL";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4691,7 +4716,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8577:
                     return "GL_PRIMARY_COLOR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4702,7 +4727,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x150a:
                     return "GL_INVERT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4713,7 +4738,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x0:
                     return "GL_NONE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4730,7 +4755,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8576:
                     return "GL_CONSTANT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4741,7 +4766,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x0:
                     return "GL_NONE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4764,7 +4789,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8e88:
                     return "GL_TESS_CONTROL_SHADER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4779,7 +4804,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1802:
                     return "GL_STENCIL";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4814,7 +4839,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x190a:
                     return "GL_LUMINANCE_ALPHA";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4843,7 +4868,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xc79:
                     return "GL_PIXEL_MAP_A_TO_A";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4884,7 +4909,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x806e:
                     return "GL_UNPACK_IMAGE_HEIGHT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4903,7 +4928,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x190a:
                     return "GL_LUMINANCE_ALPHA";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4940,7 +4965,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xd1f:
                     return "GL_DEPTH_BIAS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4975,7 +5000,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8036:
                     return "GL_UNSIGNED_INT_10_10_10_2";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -4992,7 +5017,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8129:
                     return "GL_POINT_DISTANCE_ATTENUATION";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5007,7 +5032,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1b02:
                     return "GL_FILL";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5028,7 +5053,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8df5:
                     return "GL_HIGH_INT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5067,7 +5092,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xe:
                     return "GL_PATCHES";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5116,7 +5141,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x92f4:
                     return "GL_TRANSFORM_FEEDBACK_VARYING";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5133,7 +5158,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x92f8:
                     return "GL_MAX_NUM_COMPATIBLE_SUBROUTINES";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5146,7 +5171,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8258:
                     return "GL_PROGRAM_SEPARABLE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5195,7 +5220,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x92d9:
                     return "GL_ACTIVE_ATOMIC_COUNTER_BUFFERS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5214,7 +5239,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8e49:
                     return "GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5231,7 +5256,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9194:
                     return "GL_QUERY_RESULT_NO_WAIT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5244,7 +5269,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8865:
                     return "GL_CURRENT_QUERY";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5265,7 +5290,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8d6a:
                     return "GL_ANY_SAMPLES_PASSED_CONSERVATIVE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5298,7 +5323,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x40c:
                     return "GL_AUX3";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5327,7 +5352,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8d55:
                     return "GL_RENDERBUFFER_STENCIL_SIZE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5338,7 +5363,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8d41:
                     return "GL_RENDERBUFFER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5353,7 +5378,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1c02:
                     return "GL_SELECT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5382,7 +5407,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x884d:
                     return "GL_TEXTURE_COMPARE_FUNC";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5401,7 +5426,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8b88:
                     return "GL_SHADER_SOURCE_LENGTH";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5422,7 +5447,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x91b9:
                     return "GL_COMPUTE_SHADER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5435,7 +5460,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1d01:
                     return "GL_SMOOTH";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5450,7 +5475,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x408:
                     return "GL_FRONT_AND_BACK";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5475,7 +5500,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x207:
                     return "GL_ALWAYS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5496,7 +5521,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1e03:
                     return "GL_DECR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5515,7 +5540,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8b8c:
                     return "GL_SHADING_LANGUAGE_VERSION";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5532,7 +5557,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8e4b:
                     return "GL_COMPATIBLE_SUBROUTINES";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5543,7 +5568,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9117:
                     return "GL_SYNC_GPU_COMMANDS_COMPLETE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5554,7 +5579,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x1:
                     return "GL_SYNC_FLUSH_COMMANDS_BIT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5571,7 +5596,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9115:
                     return "GL_SYNC_FLAGS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5588,7 +5613,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x911d:
                     return "GL_WAIT_FAILED";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5605,7 +5630,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x140a:
                     return "GL_DOUBLE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5622,7 +5647,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2003:
                     return "GL_Q";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5639,7 +5664,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2101:
                     return "GL_DECAL";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5652,7 +5677,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2201:
                     return "GL_TEXTURE_ENV_COLOR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5663,7 +5688,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2300:
                     return "GL_TEXTURE_ENV";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5678,7 +5703,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2402:
                     return "GL_SPHERE_MAP";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5693,7 +5718,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2502:
                     return "GL_EYE_PLANE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5720,7 +5745,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9593:
                     return "GL_LAYOUT_TRANSFER_DST_EXT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5733,7 +5758,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2601:
                     return "GL_LINEAR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5754,7 +5779,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x2703:
                     return "GL_LINEAR_MIPMAP_LINEAR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5829,7 +5854,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9580:
                     return "GL_TEXTURE_TILING_EXT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5890,7 +5915,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9103:
                     return "GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5963,7 +5988,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x84df:
                     return "GL_TEXTURE31";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5980,7 +6005,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x812f:
                     return "GL_CLAMP_TO_EDGE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -5999,7 +6024,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8e24:
                     return "GL_TRANSFORM_FEEDBACK_ACTIVE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6016,7 +6041,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8e16:
                     return "GL_QUERY_BY_REGION_NO_WAIT";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6047,7 +6072,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x90ec:
                     return "GL_UNIFORM_BLOCK_REFERENCED_BY_COMPUTE_SHADER";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6074,7 +6099,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x92da:
                     return "GL_UNIFORM_ATOMIC_COUNTER_BUFFER_INDEX";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6097,7 +6122,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0xffffffff:
                     return "GL_ALL_SHADER_BITS";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6124,7 +6149,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x88fe:
                     return "GL_VERTEX_ATTRIB_ARRAY_DIVISOR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6151,7 +6176,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x88fe:
                     return "GL_VERTEX_ATTRIB_ARRAY_DIVISOR";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6186,7 +6211,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8d9f:
                     return "GL_INT_2_10_10_10_REV";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6221,7 +6246,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8d9f:
                     return "GL_INT_2_10_10_10_REV";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6248,7 +6273,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x9121:
                     return "GL_BUFFER_MAP_OFFSET";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6275,7 +6300,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x88ea:
                     return "GL_DYNAMIC_COPY";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6292,7 +6317,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x140a:
                     return "GL_DOUBLE";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
@@ -6305,12 +6330,12 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8e4e:
                     return "GL_LAST_VERTEX_CONVENTION";
                 default:
-                    return "EnumUnknown";
+                    return kEnumUnknown;
             }
         }
 
         default:
-            return "EnumUnknown";
+            return kEnumUnknown;
     }
 }
 
@@ -6329,7 +6354,7 @@ std::string GLbitfieldToString(GLenumGroup enumGroup, unsigned int value)
         first = false;
 
         unsigned int mask = 1u << index;
-        st << GLenumToString(enumGroup, mask);
+        OutputGLenumString(st, enumGroup, mask);
     }
 
     return st.str();

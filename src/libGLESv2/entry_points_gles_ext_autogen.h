@@ -133,6 +133,8 @@ ANGLE_EXPORT void GL_APIENTRY MultiDrawElementsInstancedANGLE(GLenum mode,
                                                               const GLsizei *instanceCounts,
                                                               GLsizei drawcount);
 
+// GL_ANGLE_program_binary
+
 // GL_ANGLE_provoking_vertex
 ANGLE_EXPORT void GL_APIENTRY ProvokingVertexANGLE(GLenum mode);
 

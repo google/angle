@@ -11,6 +11,7 @@
 #ifndef LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
 #define LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
 
+#include <ostream>
 #include <string>
 
 #include "common/PackedGLEnums_autogen.h"
@@ -224,6 +225,10 @@ const char *GLbooleanToString(unsigned int value);
 const char *GLenumToString(GLenumGroup enumGroup, unsigned int value);
 
 std::string GLbitfieldToString(GLenumGroup enumGroup, unsigned int value);
+
+void OutputGLenumString(std::ostream &out, GLenumGroup enumGroup, unsigned int value);
+
+void OutputGLbitfieldString(std::ostream &out, GLenumGroup enumGroup, unsigned int value);
 
 }  // namespace gl
 

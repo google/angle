@@ -442,6 +442,8 @@ EXPORTS
     glMultiDrawElementsANGLE
     glMultiDrawElementsInstancedANGLE
 
+    ; GL_ANGLE_program_binary
+
     ; GL_ANGLE_provoking_vertex
     glProvokingVertexANGLE
 

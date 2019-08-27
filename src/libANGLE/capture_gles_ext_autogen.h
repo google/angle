@@ -163,6 +163,8 @@ angle::CallCapture CaptureMultiDrawElementsInstancedANGLE(const Context *context
                                                           const GLsizei *instanceCounts,
                                                           GLsizei drawcount);
 
+// GL_ANGLE_program_binary
+
 // GL_ANGLE_provoking_vertex
 angle::CallCapture CaptureProvokingVertexANGLE(const Context *context,
                                                bool isCallValid,

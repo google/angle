@@ -2593,6 +2593,8 @@ void GL_APIENTRY glMultiDrawElementsInstancedANGLE(GLenum mode,
                                                drawcount);
 }
 
+// GL_ANGLE_program_binary
+
 // GL_ANGLE_provoking_vertex
 void GL_APIENTRY glProvokingVertexANGLE(GLenum mode)
 {
