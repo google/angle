@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89e6d46a_5943c01a",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-08-28T20:19:26Z",
+      "side": 1,
+      "message": "is_tsn disables validation layer build so make sure to not try and enable layers in that case",
+      "revId": "9cb3dd177cb12c6219851c1a3b787ff5c12e1fde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
