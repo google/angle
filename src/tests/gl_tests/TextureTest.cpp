@@ -2132,6 +2132,9 @@ TEST_P(Texture2DTestES3, DrawWithLevelZeroUndefined)
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 {
+    // TODO(crbug.com/998505): Test failing on Android FYI Release (NVIDIA Shield TV)
+    ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     std::vector<GLColor> texDataRed(8u * 8u, GLColor::red);
@@ -2483,6 +2486,9 @@ TEST_P(Texture2DTestES3, ImmutableTextureBaseLevelOutOfRange)
 // Test that changing base level works when it affects the format of the texture.
 TEST_P(Texture2DTestES3, TextureFormatChangesWithBaseLevel)
 {
+    // TODO(crbug.com/998505): Test failing on Android FYI Release (NVIDIA Shield TV)
+    ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
+
     ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsDesktopOpenGL());
 
     // Observed incorrect rendering on AMD OpenGL.

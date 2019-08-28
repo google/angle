@@ -1280,6 +1280,9 @@ TEST_P(GLSLTest_ES3, MissingReturnArrayOfStructs)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest_ES3, MissingReturnStructOfArrays)
 {
+    // TODO(crbug.com/998505): Test failing on Android FYI Release (NVIDIA Shield TV)
+    ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
+
     constexpr char kVS[] =
         "#version 300 es\n"
         "in float v_varying;\n"
