@@ -99,6 +99,78 @@ class OffscreenSurfaceVk : public SurfaceVk
     AttachmentImage mDepthStencilAttachment;
 };
 
+// Data structures used in WindowSurfaceVk
+namespace impl
+{
+// The submission fence of the context used to throttle the CPU.
+struct SwapHistory : angle::NonCopyable
+{
+    SwapHistory();
+    SwapHistory(SwapHistory &&other) = delete;
+    SwapHistory &operator=(SwapHistory &&other) = delete;
+    ~SwapHistory();
+
+    void destroy(RendererVk *renderer);
+
+    angle::Result waitFence(ContextVk *contextVk);
+
+    // Fence associated with the last submitted work to render to this swapchain image.
+    vk::Shared<vk::Fence> sharedFence;
+};
+static constexpr size_t kSwapHistorySize = 2;
+
+// Old swapchain and associated present semaphores that need to be scheduled for destruction when
+// appropriate.
+struct SwapchainCleanupData : angle::NonCopyable
+{
+    SwapchainCleanupData();
+    SwapchainCleanupData(SwapchainCleanupData &&other);
+    ~SwapchainCleanupData();
+
+    void destroy(VkDevice device, vk::Recycler<vk::Semaphore> *semaphoreRecycler);
+
+    // The swapchain to be destroyed.
+    VkSwapchainKHR swapchain = VK_NULL_HANDLE;
+    // Any present semaphores that were pending destruction at the time the swapchain was
+    // recreated will be scheduled for destruction at the same time as the swapchain.
+    std::vector<vk::Semaphore> semaphores;
+};
+
+// A circular buffer per image stores the semaphores used for presenting that image.  Taking the
+// swap history into account, only the oldest semaphore is guaranteed to be no longer in use by the
+// presentation engine.  See doc/PresentSemaphores.md for details.
+//
+// Old swapchains are scheduled to be destroyed at the same time as the first semaphore used to
+// present an image of the new swapchain.  This is to ensure that the presentation engine is no
+// longer presenting an image from the old swapchain.
+struct ImagePresentHistory : angle::NonCopyable
+{
+    ImagePresentHistory();
+    ImagePresentHistory(ImagePresentHistory &&other);
+    ~ImagePresentHistory();
+
+    vk::Semaphore semaphore;
+    std::vector<SwapchainCleanupData> oldSwapchains;
+};
+
+// Swapchain images and their associated objects.
+struct SwapchainImage : angle::NonCopyable
+{
+    SwapchainImage();
+    SwapchainImage(SwapchainImage &&other);
+    ~SwapchainImage();
+
+    vk::ImageHelper image;
+    vk::ImageView imageView;
+    vk::Framebuffer framebuffer;
+
+    // A circular array of semaphores used for presenting this image.
+    static constexpr size_t kPresentHistorySize = kSwapHistorySize + 1;
+    std::array<ImagePresentHistory, kPresentHistorySize> presentHistory;
+    size_t currentPresentHistoryIndex = 0;
+};
+}  // namespace impl
+
 class WindowSurfaceVk : public SurfaceVk
 {
   public:
@@ -163,6 +235,7 @@ class WindowSurfaceVk : public SurfaceVk
     angle::Result checkForOutOfDateSwapchain(ContextVk *contextVk,
                                              uint32_t swapHistoryIndex,
                                              bool presentOutOfDate);
+    angle::Result resizeSwapchainImages(vk::Context *context, uint32_t imageCount);
     void releaseSwapchainImages(ContextVk *contextVk);
     void destroySwapChainImages(DisplayVk *displayVk);
     VkResult nextSwapchainImage(vk::Context *context);
@@ -172,6 +245,8 @@ class WindowSurfaceVk : public SurfaceVk
                           bool *presentOutOfDate);
 
     angle::Result swapImpl(const gl::Context *context, EGLint *rects, EGLint n_rects);
+
+    angle::Result newPresentSemaphore(vk::Context *context, vk::Semaphore *semaphoreOut);
 
     bool isMultiSampled() const;
 
@@ -186,46 +261,25 @@ class WindowSurfaceVk : public SurfaceVk
     VkSurfaceTransformFlagBitsKHR mPreTransform;
     VkCompositeAlphaFlagBitsKHR mCompositeAlpha;
 
+    // A circular buffer that stores the submission fence of the context on every swap.  The CPU is
+    // throttled by waiting for the 2nd previous serial to finish.
+    std::array<impl::SwapHistory, impl::kSwapHistorySize> mSwapHistory;
+    size_t mCurrentSwapHistoryIndex;
+
+    // The previous swapchain which needs to be scheduled for destruction when appropriate.  This
+    // will be done when the first image of the current swapchain is presented.  If there were
+    // older swapchains pending destruction when the swapchain is recreated, they will accumulate
+    // and be destroyed with the previous swapchain.
+    //
+    // Note that if the user resizes the window such that the swapchain is recreated every frame,
+    // this array can go grow indefinitely.
+    std::vector<impl::SwapchainCleanupData> mOldSwapchains;
+
+    std::vector<impl::SwapchainImage> mSwapchainImages;
+    vk::Semaphore mAcquireImageSemaphore;
     uint32_t mCurrentSwapchainImageIndex;
 
-    struct SwapchainImage : angle::NonCopyable
-    {
-        SwapchainImage();
-        SwapchainImage(SwapchainImage &&other);
-        ~SwapchainImage();
-
-        vk::ImageHelper image;
-        vk::ImageView imageView;
-        vk::Framebuffer framebuffer;
-    };
-
-    std::vector<SwapchainImage> mSwapchainImages;
-    vk::Semaphore mAcquireImageSemaphore;
-
-    // A circular buffer that stores the serial of the renderer on every swap.  The CPU is
-    // throttled by waiting for the 2nd previous serial to finish.  Old swapchains are scheduled to
-    // be destroyed at the same time.
-    struct SwapHistory : angle::NonCopyable
-    {
-        SwapHistory();
-        SwapHistory(SwapHistory &&other) = delete;
-        SwapHistory &operator=(SwapHistory &&other) = delete;
-        ~SwapHistory();
-
-        void destroy(RendererVk *renderer);
-
-        angle::Result waitFence(ContextVk *contextVk);
-
-        // Fence associated with the last submitted work to render to this swapchain image.
-        vk::Shared<vk::Fence> sharedFence;
-
-        vk::Semaphore presentImageSemaphore;
-
-        VkSwapchainKHR swapchain = VK_NULL_HANDLE;
-    };
-    static constexpr size_t kSwapHistorySize = 2;
-    std::array<SwapHistory, kSwapHistorySize> mSwapHistory;
-    size_t mCurrentSwapHistoryIndex;
+    vk::Recycler<vk::Semaphore> mPresentSemaphoreRecycler;
 
     // Depth/stencil image.  Possibly multisampled.
     vk::ImageHelper mDepthStencilImage;

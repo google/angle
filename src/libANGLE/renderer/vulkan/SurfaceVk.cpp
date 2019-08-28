@@ -321,40 +321,77 @@ vk::ImageHelper *OffscreenSurfaceVk::getColorAttachmentImage()
     return &mColorAttachment.image;
 }
 
-WindowSurfaceVk::SwapchainImage::SwapchainImage()  = default;
-WindowSurfaceVk::SwapchainImage::~SwapchainImage() = default;
-
-WindowSurfaceVk::SwapchainImage::SwapchainImage(SwapchainImage &&other)
-    : image(std::move(other.image)),
-      imageView(std::move(other.imageView)),
-      framebuffer(std::move(other.framebuffer))
-{}
-
-WindowSurfaceVk::SwapHistory::SwapHistory() = default;
-
-WindowSurfaceVk::SwapHistory::~SwapHistory() = default;
-
-void WindowSurfaceVk::SwapHistory::destroy(RendererVk *renderer)
+namespace impl
 {
-    if (swapchain != VK_NULL_HANDLE)
+SwapchainCleanupData::SwapchainCleanupData() = default;
+SwapchainCleanupData::~SwapchainCleanupData()
+{
+    ASSERT(swapchain == VK_NULL_HANDLE);
+    ASSERT(semaphores.empty());
+}
+
+SwapchainCleanupData::SwapchainCleanupData(SwapchainCleanupData &&other)
+    : swapchain(other.swapchain), semaphores(std::move(other.semaphores))
+{
+    other.swapchain = VK_NULL_HANDLE;
+}
+
+void SwapchainCleanupData::destroy(VkDevice device, vk::Recycler<vk::Semaphore> *semaphoreRecycler)
+{
+    if (swapchain)
     {
-        vkDestroySwapchainKHR(renderer->getDevice(), swapchain, nullptr);
+        vkDestroySwapchainKHR(device, swapchain, nullptr);
         swapchain = VK_NULL_HANDLE;
     }
 
-    renderer->resetSharedFence(&sharedFence);
-    presentImageSemaphore.destroy(renderer->getDevice());
+    for (vk::Semaphore &semaphore : semaphores)
+    {
+        semaphoreRecycler->recycle(std::move(semaphore));
+    }
+    semaphores.clear();
 }
 
-angle::Result WindowSurfaceVk::SwapHistory::waitFence(ContextVk *contextVk)
+ImagePresentHistory::ImagePresentHistory() = default;
+ImagePresentHistory::~ImagePresentHistory()
 {
-    if (sharedFence.isReferenced())
-    {
-        ANGLE_VK_TRY(contextVk, sharedFence.get().wait(contextVk->getDevice(),
-                                                       std::numeric_limits<uint64_t>::max()));
-    }
+    ASSERT(!semaphore.valid());
+    ASSERT(oldSwapchains.empty());
+}
+
+ImagePresentHistory::ImagePresentHistory(ImagePresentHistory &&other)
+    : semaphore(std::move(other.semaphore)), oldSwapchains(std::move(other.oldSwapchains))
+{}
+
+SwapchainImage::SwapchainImage()  = default;
+SwapchainImage::~SwapchainImage() = default;
+
+SwapchainImage::SwapchainImage(SwapchainImage &&other)
+    : image(std::move(other.image)),
+      imageView(std::move(other.imageView)),
+      framebuffer(std::move(other.framebuffer)),
+      presentHistory(std::move(other.presentHistory)),
+      currentPresentHistoryIndex(other.currentPresentHistoryIndex)
+{}
+
+SwapHistory::SwapHistory() = default;
+
+SwapHistory::~SwapHistory() = default;
+
+void SwapHistory::destroy(RendererVk *renderer)
+{
+    renderer->resetSharedFence(&sharedFence);
+}
+
+angle::Result SwapHistory::waitFence(ContextVk *contextVk)
+{
+    ASSERT(sharedFence.isReferenced());
+    ANGLE_VK_TRY(contextVk, sharedFence.get().wait(contextVk->getDevice(),
+                                                   std::numeric_limits<uint64_t>::max()));
     return angle::Result::Continue;
 }
+}  // namespace impl
+
+using namespace impl;
 
 WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
                                  EGLNativeWindowType window,
@@ -370,8 +407,8 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mMinImageCount(0),
       mPreTransform(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR),
       mCompositeAlpha(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR),
-      mCurrentSwapchainImageIndex(0),
-      mCurrentSwapHistoryIndex(0)
+      mCurrentSwapHistoryIndex(0),
+      mCurrentSwapchainImageIndex(0)
 {
     // Initialize the color render target with the multisampled targets.  If not multisampled, the
     // render target will be updated to refer to a swapchain image on every acquire.
@@ -408,6 +445,12 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
         mSwapchain = VK_NULL_HANDLE;
     }
 
+    for (SwapchainCleanupData &oldSwapchain : mOldSwapchains)
+    {
+        oldSwapchain.destroy(device, &mPresentSemaphoreRecycler);
+    }
+    mOldSwapchains.clear();
+
     if (mSurface)
     {
         vkDestroySurfaceKHR(instance, mSurface, nullptr);
@@ -415,6 +458,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     }
 
     mAcquireImageSemaphore.destroy(device);
+    mPresentSemaphoreRecycler.destroy(device);
 }
 
 egl::Error WindowSurfaceVk::initialize(const egl::Display *display)
@@ -538,27 +582,131 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk,
                                                  const gl::Extents &extents,
                                                  uint32_t swapHistoryIndex)
 {
-    VkSwapchainKHR oldSwapchain = mSwapchain;
-    mSwapchain                  = VK_NULL_HANDLE;
+    // If mOldSwapchains is not empty, it means that a new swapchain was created, but before
+    // any of its images were presented, it's asked to be recreated.  In this case, we can destroy
+    // the current swapchain immediately (although the old swapchains still need to be kept to be
+    // scheduled for destruction).  This can happen for example if vkQueuePresentKHR returns
+    // OUT_OF_DATE, the swapchain is recreated and the following vkAcquireNextImageKHR again
+    // returns OUT_OF_DATE.
+    //
+    // Otherwise, keep the current swapchain as the old swapchain to be scheduled for destruction
+    // and create a new one.
 
-    if (oldSwapchain)
+    VkSwapchainKHR swapchainToDestroy = VK_NULL_HANDLE;
+
+    if (!mOldSwapchains.empty())
     {
-        // Note: the old swapchain must be destroyed regardless of whether creating the new
-        // swapchain succeeds.  We can only destroy the swapchain once rendering to all its images
-        // have finished.  We therefore store the handle to the swapchain being destroyed in the
-        // swap history (alongside the serial of the last submission) so it can be destroyed once we
-        // wait on that serial as part of the CPU throttling.
-        mSwapHistory[swapHistoryIndex].swapchain = oldSwapchain;
+        // Keep the old swapchain, destroy the current (never-used) swapchain.
+        swapchainToDestroy = mSwapchain;
+
+        // Recycle present semaphores.
+        for (SwapchainImage &swapchainImage : mSwapchainImages)
+        {
+            for (ImagePresentHistory &presentHistory : swapchainImage.presentHistory)
+            {
+                ASSERT(presentHistory.semaphore.valid());
+                ASSERT(presentHistory.oldSwapchains.empty());
+
+                mPresentSemaphoreRecycler.recycle(std::move(presentHistory.semaphore));
+            }
+        }
     }
+    else
+    {
+        SwapchainCleanupData cleanupData;
+
+        // Remember the current swapchain to be scheduled for destruction later.
+        cleanupData.swapchain = mSwapchain;
+
+        // Accumulate the semaphores to be destroyed at the same time as the swapchain.
+        for (SwapchainImage &swapchainImage : mSwapchainImages)
+        {
+            for (ImagePresentHistory &presentHistory : swapchainImage.presentHistory)
+            {
+                ASSERT(presentHistory.semaphore.valid());
+                cleanupData.semaphores.emplace_back(std::move(presentHistory.semaphore));
+
+                // Accumulate any previous swapchains that are pending destruction too.
+                for (SwapchainCleanupData &oldSwapchain : presentHistory.oldSwapchains)
+                {
+                    mOldSwapchains.emplace_back(std::move(oldSwapchain));
+                }
+                presentHistory.oldSwapchains.clear();
+            }
+        }
+
+        // If too many old swapchains have accumulated, wait idle and destroy them.  This is to
+        // prevent failures due to too many swapchains allocated.
+        //
+        // Note: Nvidia has been observed to fail creation of swapchains after 20 are allocated on
+        // desktop, or less than 10 on Quadro P400.
+        static constexpr size_t kMaxOldSwapchains = 5;
+        if (mOldSwapchains.size() > kMaxOldSwapchains)
+        {
+            ANGLE_TRY(contextVk->getRenderer()->queueWaitIdle(contextVk));
+            for (SwapchainCleanupData &oldSwapchain : mOldSwapchains)
+            {
+                oldSwapchain.destroy(contextVk->getDevice(), &mPresentSemaphoreRecycler);
+            }
+            mOldSwapchains.clear();
+        }
+
+        mOldSwapchains.emplace_back(std::move(cleanupData));
+    }
+
+    // Recreate the swapchain based on the most recent one.
+    VkSwapchainKHR lastSwapchain = mSwapchain;
+    mSwapchain                   = VK_NULL_HANDLE;
 
     releaseSwapchainImages(contextVk);
 
-    return createSwapChain(contextVk, extents, oldSwapchain);
+    angle::Result result = createSwapChain(contextVk, extents, lastSwapchain);
+
+    // If the most recent swapchain was never used, destroy it right now.
+    if (swapchainToDestroy)
+    {
+        vkDestroySwapchainKHR(contextVk->getDevice(), swapchainToDestroy, nullptr);
+    }
+
+    return result;
+}
+
+angle::Result WindowSurfaceVk::newPresentSemaphore(vk::Context *context,
+                                                   vk::Semaphore *semaphoreOut)
+{
+    if (mPresentSemaphoreRecycler.empty())
+    {
+        ANGLE_VK_TRY(context, semaphoreOut->init(context->getDevice()));
+    }
+    else
+    {
+        mPresentSemaphoreRecycler.fetch(semaphoreOut);
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result WindowSurfaceVk::resizeSwapchainImages(vk::Context *context, uint32_t imageCount)
+{
+    mSwapchainImages.resize(imageCount);
+
+    // At this point, if there was a previous swapchain, the previous present semaphores have all
+    // been moved to mOldSwapchains to be scheduled for destruction, so all semaphore handles in
+    // mSwapchainImages should be invalid.
+    for (SwapchainImage &swapchainImage : mSwapchainImages)
+    {
+        for (ImagePresentHistory &presentHistory : swapchainImage.presentHistory)
+        {
+            ASSERT(!presentHistory.semaphore.valid());
+            ANGLE_TRY(newPresentSemaphore(context, &presentHistory.semaphore));
+        }
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
                                                const gl::Extents &extents,
-                                               VkSwapchainKHR oldSwapchain)
+                                               VkSwapchainKHR lastSwapchain)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::createSwapchain");
 
@@ -592,7 +740,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     swapchainInfo.compositeAlpha        = mCompositeAlpha;
     swapchainInfo.presentMode           = mDesiredSwapchainPresentMode;
     swapchainInfo.clipped               = VK_TRUE;
-    swapchainInfo.oldSwapchain          = oldSwapchain;
+    swapchainInfo.oldSwapchain          = lastSwapchain;
 
     // TODO(syoussefi): Once EGL_SWAP_BEHAVIOR_PRESERVED_BIT is supported, the contents of the old
     // swapchain need to carry over to the new one.  http://anglebug.com/2942
@@ -632,7 +780,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         mColorImageMS.stageClearIfEmulatedFormat(gl::ImageIndex::Make2D(0), format);
     }
 
-    mSwapchainImages.resize(imageCount);
+    ANGLE_TRY(resizeSwapchainImages(context, imageCount));
 
     for (uint32_t imageIndex = 0; imageIndex < imageCount; ++imageIndex)
     {
@@ -765,14 +913,14 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
         swapchainImage.image.resetImageWeakReference();
         swapchainImage.image.destroy(contextVk->getDevice());
 
-        if (swapchainImage.imageView.valid())
-        {
-            contextVk->releaseObject(imageSerial, &swapchainImage.imageView);
-        }
+        contextVk->releaseObject(imageSerial, &swapchainImage.imageView);
+        contextVk->releaseObject(imageSerial, &swapchainImage.framebuffer);
 
-        if (swapchainImage.framebuffer.valid())
+        // present history must have already been taken care of.
+        for (ImagePresentHistory &presentHistory : swapchainImage.presentHistory)
         {
-            contextVk->releaseObject(imageSerial, &swapchainImage.framebuffer);
+            ASSERT(!presentHistory.semaphore.valid());
+            ASSERT(presentHistory.oldSwapchains.empty());
         }
     }
 
@@ -802,25 +950,39 @@ void WindowSurfaceVk::destroySwapChainImages(DisplayVk *displayVk)
         mFramebufferMS.dumpResources(&garbageObjects);
     }
 
+    VkDevice device = displayVk->getDevice();
+
     for (vk::GarbageObjectBase &garbage : garbageObjects)
     {
-        garbage.destroy(displayVk->getDevice());
+        garbage.destroy(device);
     }
 
     for (SwapchainImage &swapchainImage : mSwapchainImages)
     {
         // We don't own the swapchain image handles, so we just remove our reference to it.
         swapchainImage.image.resetImageWeakReference();
-        swapchainImage.image.destroy(displayVk->getDevice());
+        swapchainImage.image.destroy(device);
 
         if (swapchainImage.imageView.valid())
         {
-            swapchainImage.imageView.destroy(displayVk->getDevice());
+            swapchainImage.imageView.destroy(device);
         }
 
         if (swapchainImage.framebuffer.valid())
         {
-            swapchainImage.framebuffer.destroy(displayVk->getDevice());
+            swapchainImage.framebuffer.destroy(device);
+        }
+
+        for (ImagePresentHistory &presentHistory : swapchainImage.presentHistory)
+        {
+            ASSERT(presentHistory.semaphore.valid());
+
+            mPresentSemaphoreRecycler.recycle(std::move(presentHistory.semaphore));
+            for (SwapchainCleanupData &oldSwapchain : presentHistory.oldSwapchains)
+            {
+                oldSwapchain.destroy(device, &mPresentSemaphoreRecycler);
+            }
+            presentHistory.oldSwapchains.clear();
         }
     }
 
@@ -861,8 +1023,11 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     SwapHistory &swap = mSwapHistory[mCurrentSwapHistoryIndex];
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present: Throttle CPU");
-        ANGLE_TRY(swap.waitFence(contextVk));
-        swap.destroy(contextVk->getRenderer());
+        if (swap.sharedFence.isReferenced())
+        {
+            ANGLE_TRY(swap.waitFence(contextVk));
+            swap.destroy(contextVk->getRenderer());
+        }
     }
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
@@ -899,14 +1064,34 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     }
     image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present, swapCommands);
 
-    ANGLE_VK_TRY(contextVk, swap.presentImageSemaphore.init(contextVk->getDevice()));
+    // Knowing that the kSwapHistorySize'th submission ago has finished, we can know that the
+    // (kSwapHistorySize+1)'th present ago of this image is definitely finished and so its wait
+    // semaphore can be reused.  See doc/PresentSemaphores.md for details.
+    //
+    // This also means the swapchain(s) scheduled to be deleted at the same time can be deleted.
+    ImagePresentHistory &presentHistory = image.presentHistory[image.currentPresentHistoryIndex];
+    vk::Semaphore *presentSemaphore     = &presentHistory.semaphore;
+    ASSERT(presentSemaphore->valid());
 
-    ANGLE_TRY(contextVk->flushImpl(&swap.presentImageSemaphore));
+    for (SwapchainCleanupData &oldSwapchain : presentHistory.oldSwapchains)
+    {
+        oldSwapchain.destroy(contextVk->getDevice(), &mPresentSemaphoreRecycler);
+    }
+    presentHistory.oldSwapchains.clear();
+
+    // Schedule pending old swapchains to be destroyed at the same time the semaphore for this
+    // present can be destroyed.
+    presentHistory.oldSwapchains = std::move(mOldSwapchains);
+
+    image.currentPresentHistoryIndex =
+        (image.currentPresentHistoryIndex + 1) % image.presentHistory.size();
+
+    ANGLE_TRY(contextVk->flushImpl(presentSemaphore));
 
     VkPresentInfoKHR presentInfo   = {};
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     presentInfo.waitSemaphoreCount = 1;
-    presentInfo.pWaitSemaphores    = swap.presentImageSemaphore.ptr();
+    presentInfo.pWaitSemaphores    = presentSemaphore->ptr();
     presentInfo.swapchainCount     = 1;
     presentInfo.pSwapchains        = &mSwapchain;
     presentInfo.pImageIndices      = &mCurrentSwapchainImageIndex;
@@ -956,7 +1141,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
     // continuing.
-    // If VK_SUBOPTIMAL_KHR is returned we it's because the device orientation changed and we should
+    // If VK_SUBOPTIMAL_KHR is returned it's because the device orientation changed and we should
     // recreate the swapchain with a new window orientation. We aren't quite ready for that so just
     // ignore for now.
     // TODO: Check for preRotation: http://anglebug.com/3502

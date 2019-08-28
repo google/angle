@@ -493,7 +493,7 @@ class Shared final : angle::NonCopyable
             if (!mRefCounted->isReferenced())
             {
                 ASSERT(mRefCounted->get().valid());
-                recycler->recyle(std::move(mRefCounted->get()));
+                recycler->recycle(std::move(mRefCounted->get()));
                 SafeDelete(mRefCounted);
             }
 
@@ -530,9 +530,9 @@ class Recycler final : angle::NonCopyable
   public:
     Recycler() = default;
 
-    void recyle(T &&garbageObject) { mObjectFreeList.emplace_back(std::move(garbageObject)); }
+    void recycle(T &&garbageObject) { mObjectFreeList.emplace_back(std::move(garbageObject)); }
 
-    void fetch(VkDevice device, T *outObject)
+    void fetch(T *outObject)
     {
         ASSERT(!empty());
         *outObject = std::move(mObjectFreeList.back());
