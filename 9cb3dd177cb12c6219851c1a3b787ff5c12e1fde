@@ -34,6 +34,24 @@
       "revId": "9cb3dd177cb12c6219851c1a3b787ff5c12e1fde",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0757ccc_a43221e7",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-08-28T22:31:54Z",
+      "side": 1,
+      "message": "Yes, modified code to always return false when we\u0027re not building layers",
+      "parentUuid": "dc589c4d_b656e8ca",
+      "revId": "9cb3dd177cb12c6219851c1a3b787ff5c12e1fde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
