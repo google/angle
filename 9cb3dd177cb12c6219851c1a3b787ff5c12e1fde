@@ -16,6 +16,24 @@
       "revId": "9cb3dd177cb12c6219851c1a3b787ff5c12e1fde",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc589c4d_b656e8ca",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-28T21:13:11Z",
+      "side": 1,
+      "message": "I think it also disables them for ubsan/asan/etc. Maybe we should make a new define for ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT that mirrors angle_enable_vulkan_validation_layers?",
+      "parentUuid": "89e6d46a_5943c01a",
+      "revId": "9cb3dd177cb12c6219851c1a3b787ff5c12e1fde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
