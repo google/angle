@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a7a0ec5_0f8ee43d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3412,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T23:57:26Z",
+      "side": 1,
+      "message": "Can/Should we collapse all of these loops into one big block?   There are only a handful of shaders, so it isn\u0027t a huge waste to do it a few times, it just looks a little funny.",
+      "revId": "2f7de4913b695ac24af1333aec3b65c5046651d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f93ffc48_06508f35",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 808,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T23:57:26Z",
+      "side": 1,
+      "message": "As blocks like this get added, are there any concerns about how many bindings there are that this value should be checked against to make sure it doesn\u0027t get too large?",
+      "range": {
+        "startLine": 808,
+        "startChar": 4,
+        "endLine": 808,
+        "endChar": 16
+      },
+      "revId": "2f7de4913b695ac24af1333aec3b65c5046651d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73c6fa1f_6ca54aa5",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T23:57:26Z",
+      "side": 1,
+      "message": "Is there a reason to use template values here rather than normal parameters?   Are there differences in usability/debugability that would favor one over the other?",
+      "revId": "2f7de4913b695ac24af1333aec3b65c5046651d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81d0ac24_9758c0ee",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T23:57:26Z",
+      "side": 1,
+      "message": "Does the \"offset \u003d 4\" cause ac to start with bufferData[1]?",
+      "revId": "2f7de4913b695ac24af1333aec3b65c5046651d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
