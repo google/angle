@@ -368,6 +368,10 @@
 2137 MAC OPENGL : dEQP-GLES3.functional.shaders.loops.short_circuit.* = FAIL
 3317 MAC OPENGL : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_linear = FAIL
 
+// ETC compressed formats not supported
+3853 MAC OPENGL : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage* = FAIL
+3853 MAC OPENGL : dEQP-GLES3.functional.negative_api.texture.generatemipmap = FAIL
+
 // Mac AMD failures
 2137 MAC OPENGL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip = FAIL
 2137 MAC OPENGL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_center = FAIL
