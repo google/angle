@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "008789bf_36d9a42d",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "We can assume this is always the default FBO and remove the parameter.",
+      "range": {
+        "startLine": 647,
+        "startChar": 25,
+        "endLine": 648,
+        "endChar": 51
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70920e7a_617bd0ed",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "This could be refactored into a setReadSurface because it\u0027s used in two constructors.",
+      "range": {
+        "startLine": 663,
+        "startChar": 0,
+        "endLine": 667,
+        "endChar": 42
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abdab077_78184b33",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "This is also always a default FBO.",
+      "range": {
+        "startLine": 690,
+        "startChar": 25,
+        "endLine": 690,
+        "endChar": 40
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fd471eb_8c956fb9",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2220,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "I think this will end up initializing the read attachment many times.  We probably need a bool next to mDefaultFramebufferReadAttachment to know if it\u0027s been initialize (similar to mState.mResourceNeedsInit).",
+      "range": {
+        "startLine": 2220,
+        "startChar": 12,
+        "endLine": 2220,
+        "endChar": 90
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3d61215_b358b032",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "The ID now gives us enough information to know if this is the default FBO, we don\u0027t need to pass this in anymore.",
+      "range": {
+        "startLine": 55,
+        "startChar": 21,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38984a72_f935d19a",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "I think we can remove mIsDefault and replace it with mId \u003d\u003d 0",
+      "range": {
+        "startLine": 115,
+        "startChar": 36,
+        "endLine": 115,
+        "endChar": 46
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "717a2d9f_5a4fa425",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "nit: I think this can be removed now, it should only need to be set at constructor time.",
+      "range": {
+        "startLine": 116,
+        "startChar": 4,
+        "endLine": 116,
+        "endChar": 65
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "408cef2f_80fe4f28",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "remove mIsDefaultFramebuffer and change this to mState.isDefault()",
+      "range": {
+        "startLine": 322,
+        "startChar": 36,
+        "endLine": 322,
+        "endChar": 57
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0f6d192_59d571be",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "Also can be removed.",
+      "range": {
+        "startLine": 323,
+        "startChar": 4,
+        "endLine": 323,
+        "endChar": 49
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c23251b_edf51cab",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "I think this becomes unnecessary.",
+      "range": {
+        "startLine": 451,
+        "startChar": 0,
+        "endLine": 454,
+        "endChar": 5
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5c1d315_1a63206c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "This check only works for the default framebuffer.  I think this may be a general bug that we don\u0027t allow blitting between a single framebuffer when it\u0027s read and draw attachments arn\u0027t the same.\n\nMaybe just leave this check for now and add a comment.",
+      "range": {
+        "startLine": 1318,
+        "startChar": 9,
+        "endLine": 1318,
+        "endChar": 77
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7919d0e8_f940346f",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-28T16:42:46Z",
+      "side": 1,
+      "message": "Pass GetParameters().majorVersion and remove the new function parameter.",
+      "range": {
+        "startLine": 121,
+        "startChar": 65,
+        "endLine": 121,
+        "endChar": 72
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
