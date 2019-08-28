@@ -22,6 +22,30 @@
       "revId": "f4526f0c1af8c609dcaae55cb1c4fc91ad0376f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0629888_2a1be341",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-28T19:00:34Z",
+      "side": 1,
+      "message": "Oh, yeah, what was I thinking!",
+      "parentUuid": "e354b73e_af5948e5",
+      "range": {
+        "startLine": 346,
+        "startChar": 0,
+        "endLine": 348,
+        "endChar": 85
+      },
+      "revId": "f4526f0c1af8c609dcaae55cb1c4fc91ad0376f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
