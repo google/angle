@@ -1615,7 +1615,7 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display,
                 break;
 
             case EGL_TEXTURE_INTERNAL_FORMAT_ANGLE:
-                if (buftype != EGL_IOSURFACE_ANGLE)
+                if (buftype != EGL_IOSURFACE_ANGLE && buftype != EGL_D3D_TEXTURE_ANGLE)
                 {
                     return EglBadAttribute() << "<buftype> doesn't support texture internal format";
                 }
@@ -1901,6 +1901,15 @@ Error ValidateCreateImage(const Display *display,
                 {
                     return EglBadParameter() << "EGL_GL_TEXTURE_ZOFFSET cannot be used "
                                                 "without KHR_gl_texture_3D_image support.";
+                }
+                break;
+
+            case EGL_TEXTURE_INTERNAL_FORMAT_ANGLE:
+                if (!displayExtensions.imageD3D11Texture)
+                {
+                    return EglBadParameter()
+                           << "EGL_TEXTURE_INTERNAL_FORMAT_ANGLE and EGL_TEXTURE_TYPE_ANGLE cannot "
+                              "be used without EGL_ANGLE_image_d3d11_texture support.";
                 }
                 break;
 

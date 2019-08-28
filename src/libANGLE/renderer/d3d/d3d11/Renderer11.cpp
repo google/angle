@@ -1239,9 +1239,11 @@ NativeWindowD3D *Renderer11::createNativeWindow(EGLNativeWindowType window,
 
 egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
                                          IUnknown *texture,
+                                         const egl::AttributeMap &attribs,
                                          EGLint *width,
                                          EGLint *height,
-                                         EGLint *samples,
+                                         GLsizei *samples,
+                                         gl::Format *glFormat,
                                          const angle::Format **angleFormat) const
 {
     angle::ComPtr<ID3D11Texture2D> d3dTexture =
@@ -1270,7 +1272,7 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
         *height = static_cast<EGLint>(desc.Height);
     }
 
-    EGLint sampleCount = static_cast<EGLint>(desc.SampleDesc.Count);
+    GLsizei sampleCount = static_cast<GLsizei>(desc.SampleDesc.Count);
     if (configuration && (configuration->samples != sampleCount))
     {
         // Both the texture and EGL config sample count may not be the same when multi-sampling
@@ -1304,12 +1306,51 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
 
         default:
             return egl::EglBadParameter()
-                   << "Unknown client buffer texture format: " << desc.Format;
+                   << "Invalid client buffer texture format: " << desc.Format;
+    }
+
+    const angle::Format *textureAngleFormat = &d3d11_angle::GetFormat(desc.Format);
+    ASSERT(textureAngleFormat);
+
+    GLenum sizedInternalFormat = textureAngleFormat->glInternalFormat;
+
+    if (attribs.contains(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE))
+    {
+        const GLenum internalFormat =
+            static_cast<GLenum>(attribs.get(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE));
+        switch (internalFormat)
+        {
+            case GL_RGBA:
+            case GL_BGRA_EXT:
+            case GL_RGB:
+                break;
+            default:
+                return egl::EglBadParameter()
+                       << "Invalid client buffer texture internal format: " << std::hex
+                       << internalFormat;
+        }
+
+        const GLenum type = gl::GetSizedInternalFormatInfo(sizedInternalFormat).type;
+
+        const auto format = gl::Format(internalFormat, type);
+        if (!format.valid())
+        {
+            return egl::EglBadParameter()
+                   << "Invalid client buffer texture internal format: " << std::hex
+                   << internalFormat;
+        }
+
+        sizedInternalFormat = format.info->sizedInternalFormat;
+    }
+
+    if (glFormat)
+    {
+        *glFormat = gl::Format(sizedInternalFormat);
     }
 
     if (angleFormat)
     {
-        *angleFormat = &d3d11_angle::GetFormat(desc.Format);
+        *angleFormat = textureAngleFormat;
     }
 
     return egl::NoError();
@@ -2942,7 +2983,7 @@ ExternalImageSiblingImpl *Renderer11::createExternalImageSibling(const gl::Conte
     switch (target)
     {
         case EGL_D3D11_TEXTURE_ANGLE:
-            return new ExternalImageSiblingImpl11(this, buffer);
+            return new ExternalImageSiblingImpl11(this, buffer, attribs);
 
         default:
             UNREACHABLE();

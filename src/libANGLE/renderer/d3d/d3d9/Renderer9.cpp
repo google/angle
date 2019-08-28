@@ -715,9 +715,11 @@ SwapChainD3D *Renderer9::createSwapChain(NativeWindowD3D *nativeWindow,
 
 egl::Error Renderer9::getD3DTextureInfo(const egl::Config *configuration,
                                         IUnknown *d3dTexture,
+                                        const egl::AttributeMap &attribs,
                                         EGLint *width,
                                         EGLint *height,
-                                        EGLint *samples,
+                                        GLsizei *samples,
+                                        gl::Format *glFormat,
                                         const angle::Format **angleFormat) const
 {
     IDirect3DTexture9 *texture = nullptr;
@@ -773,10 +775,17 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *configuration,
                    << "Unknown client buffer texture format: " << desc.Format;
     }
 
+    const auto &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
+    ASSERT(d3dFormatInfo.info().id != angle::FormatID::NONE);
+
+    if (glFormat)
+    {
+        *glFormat = gl::Format(d3dFormatInfo.info().glInternalFormat);
+    }
+
     if (angleFormat)
     {
-        const auto &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
-        ASSERT(d3dFormatInfo.info().id != angle::FormatID::NONE);
+
         *angleFormat = &d3dFormatInfo.info();
     }
 
