@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "364ee36c_03ff1dc2",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "008789bf_36d9a42d",
+      "range": {
+        "startLine": 647,
+        "startChar": 25,
+        "endLine": 648,
+        "endChar": 51
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70920e7a_617bd0ed",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 12
@@ -45,6 +69,30 @@
       "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c81dfc3_2bf49a51",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70920e7a_617bd0ed",
+      "range": {
+        "startLine": 663,
+        "startChar": 0,
+        "endLine": 667,
+        "endChar": 42
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a31a3b80_408165cc",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "abdab077_78184b33",
+      "range": {
+        "startLine": 690,
+        "startChar": 25,
+        "endLine": 690,
+        "endChar": 40
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2fd471eb_8c956fb9",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 12
@@ -91,6 +163,30 @@
       "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "952b2622_5f0e6765",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2220,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2fd471eb_8c956fb9",
+      "range": {
+        "startLine": 2220,
+        "startChar": 12,
+        "endLine": 2220,
+        "endChar": 90
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "49e8edba_84eb7ae0",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3d61215_b358b032",
+      "range": {
+        "startLine": 55,
+        "startChar": 21,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "38984a72_f935d19a",
         "filename": "src/libANGLE/Framebuffer.h",
         "patchSetId": 12
@@ -137,6 +257,30 @@
       "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6a7693f_14a7c530",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38984a72_f935d19a",
+      "range": {
+        "startLine": 115,
+        "startChar": 36,
+        "endLine": 115,
+        "endChar": 46
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "3e50a081_1b85db79",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "717a2d9f_5a4fa425",
+      "range": {
+        "startLine": 116,
+        "startChar": 4,
+        "endLine": 116,
+        "endChar": 65
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "408cef2f_80fe4f28",
         "filename": "src/libANGLE/Framebuffer.h",
         "patchSetId": 12
@@ -183,6 +351,30 @@
       "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8b7293b_c0808254",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "408cef2f_80fe4f28",
+      "range": {
+        "startLine": 322,
+        "startChar": 36,
+        "endLine": 322,
+        "endChar": 57
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "8ca01c45_7a0f9741",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0f6d192_59d571be",
+      "range": {
+        "startLine": 323,
+        "startChar": 4,
+        "endLine": 323,
+        "endChar": 49
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c23251b_edf51cab",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 12
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "718230d9_7be28560",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c23251b_edf51cab",
+      "range": {
+        "startLine": 451,
+        "startChar": 0,
+        "endLine": 454,
+        "endChar": 5
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5c1d315_1a63206c",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12
@@ -243,6 +483,30 @@
       "writtenOn": "2019-08-28T16:42:46Z",
       "side": 1,
       "message": "This check only works for the default framebuffer.  I think this may be a general bug that we don\u0027t allow blitting between a single framebuffer when it\u0027s read and draw attachments arn\u0027t the same.\n\nMaybe just leave this check for now and add a comment.",
+      "range": {
+        "startLine": 1318,
+        "startChar": 9,
+        "endLine": 1318,
+        "endChar": 77
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f144dcbd_1bdf8b43",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "It\u0027s actually a spec requirement that we don\u0027t allow blitting between a single framebuffer.\n\nhttps://www.khronos.org/registry/OpenGL-Refpages/es3.1/html/glBlitFramebuffer.xhtml\nGL_INVALID_OPERATION is generated if the source and destination buffers are identical.\n\nHowever, other tests require that blitting to the same framebuffer is supported, as long as the draw and read surfaces are separate.   This is actually the root of this bug to begin with, since that\u0027s how android.opengl.cts.FramebufferTest#testBlitFramebuffer behaves (and is currently failing).\n\n\nTo make sure I add the right comment, is your point here that only the default framebuffer can have separate read/draw surfaces?",
+      "parentUuid": "c5c1d315_1a63206c",
       "range": {
         "startLine": 1318,
         "startChar": 9,
@@ -275,6 +539,30 @@
       "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00bdb8be_a63b5b5c",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-28T17:48:14Z",
+      "side": 1,
+      "message": "Oh, cool. Much cleaner.",
+      "parentUuid": "7919d0e8_f940346f",
+      "range": {
+        "startLine": 121,
+        "startChar": 65,
+        "endLine": 121,
+        "endChar": 72
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
