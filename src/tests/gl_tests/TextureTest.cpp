@@ -2132,9 +2132,6 @@ TEST_P(Texture2DTestES3, DrawWithLevelZeroUndefined)
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 {
-    // TODO(crbug.com/998505): Test failing on Android FYI Release (NVIDIA Shield TV)
-    ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     std::vector<GLColor> texDataRed(8u * 8u, GLColor::red);
@@ -2271,6 +2268,9 @@ TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeUndefined)
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 {
+    // TODO(crbug.com/998505): Test failing on Android FYI Release (NVIDIA Shield TV)
+    ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, m2DArrayTexture);
     std::vector<GLColor> texDataRed(8u * 8u * 8u, GLColor::red);
