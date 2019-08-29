@@ -581,12 +581,6 @@
 2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
 
 // Base/Max levels:
-3148 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_2d_texture_base_level_gettexparameter* = SKIP
-3148 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_3d_texture_base_level_gettexparameter* = SKIP
-3148 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_2d_array_texture_base_level_gettexparameter* = SKIP
-3148 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_cube_map_texture_base_level_gettexparameter* = SKIP
-3148 VULKAN : dEQP-GLES3.functional.texture.mipmap.*base_level* = SKIP
-3148 VULKAN : dEQP-GLES3.functional.texture.mipmap.*max_level* = FAIL
 3148 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.* = SKIP
 
 // Misc unimplemented:

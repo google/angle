@@ -107,11 +107,12 @@ angle::Result OverlayVk::createFont(ContextVk *contextVk)
     fontDataBuffer.get().onExternalWrite(VK_ACCESS_HOST_WRITE_BIT);
 
     // Create the font image.
-    ANGLE_TRY(mFontImage.init(
-        contextVk, gl::TextureType::_2D,
-        VkExtent3D{gl::overlay::kFontImageWidth, gl::overlay::kFontImageHeight, 1},
-        rendererVk->getFormat(angle::FormatID::R8_UNORM), 1,
-        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, 1, gl::overlay::kFontCount));
+    ANGLE_TRY(
+        mFontImage.init(contextVk, gl::TextureType::_2D,
+                        VkExtent3D{gl::overlay::kFontImageWidth, gl::overlay::kFontImageHeight, 1},
+                        rendererVk->getFormat(angle::FormatID::R8_UNORM), 1,
+                        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, 0, 0, 1,
+                        gl::overlay::kFontCount));
     ANGLE_TRY(mFontImage.initMemory(contextVk, rendererVk->getMemoryProperties(),
                                     VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     ANGLE_TRY(mFontImage.initImageView(contextVk, gl::TextureType::_2DArray,
@@ -186,7 +187,8 @@ angle::Result OverlayVk::cullWidgets(ContextVk *contextVk)
 
     ANGLE_TRY(mCulledWidgets.init(contextVk, gl::TextureType::_2D, culledWidgetsExtent,
                                   rendererVk->getFormat(angle::FormatID::R32G32_UINT), 1,
-                                  VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, 1, 1));
+                                  VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, 0, 0, 1,
+                                  1));
     ANGLE_TRY(mCulledWidgets.initMemory(contextVk, rendererVk->getMemoryProperties(),
                                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     ANGLE_TRY(mCulledWidgets.initImageView(contextVk, gl::TextureType::_2D,

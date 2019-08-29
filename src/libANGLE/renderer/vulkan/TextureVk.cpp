@@ -505,7 +505,8 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
 
     // Read back the requested region of the source texture
     uint8_t *sourceData = nullptr;
-    ANGLE_TRY(source->copyImageDataToBuffer(contextVk, sourceLevel, 1, sourceArea, &sourceData));
+    ANGLE_TRY(source->copyImageDataToBufferAndGetData(contextVk, sourceLevel, 1, sourceArea,
+                                                      &sourceData));
 
     const angle::Format &sourceTextureFormat = sourceVkFormat.imageFormat();
     const angle::Format &destTextureFormat   = destVkFormat.imageFormat();
@@ -788,7 +789,7 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
 
     const vk::Format &format = renderer->getFormat(internalFormat);
 
-    setImageHelper(contextVk, new vk::ImageHelper(), mState.getType(), format, 0, 0, true);
+    setImageHelper(contextVk, new vk::ImageHelper(), mState.getType(), format, 0, 0, 0, true);
 
     ANGLE_TRY(
         memoryObjectVk->createImage(context, type, levels, internalFormat, size, offset, mImage));
@@ -825,7 +826,8 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
 
     ImageVk *imageVk = vk::GetImpl(image);
     setImageHelper(contextVk, imageVk->getImage(), imageVk->getImageTextureType(), format,
-                   imageVk->getImageLevel(), imageVk->getImageLayer(), false);
+                   imageVk->getImageLevel(), imageVk->getImageLayer(),
+                   mState.getEffectiveBaseLevel(), false);
 
     ASSERT(type != gl::TextureType::CubeMap);
     ANGLE_TRY(initImageViews(contextVk, format, image->getFormat().info->sized, 1, 1));
@@ -897,7 +899,7 @@ angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Fo
 {
     if (mImage == nullptr)
     {
-        setImageHelper(contextVk, new vk::ImageHelper(), mState.getType(), format, 0, 0, true);
+        setImageHelper(contextVk, new vk::ImageHelper(), mState.getType(), format, 0, 0, 0, true);
     }
     else
     {
@@ -913,6 +915,7 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
                                const vk::Format &format,
                                uint32_t imageLevelOffset,
                                uint32_t imageLayerOffset,
+                               uint32_t imageBaseLevel,
                                bool selfOwned)
 {
     ASSERT(mImage == nullptr);
@@ -981,53 +984,73 @@ angle::Result TextureVk::redefineImage(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
-                                               size_t sourceLevel,
-                                               uint32_t layerCount,
-                                               const gl::Rectangle &sourceArea,
-                                               uint8_t **outDataPtr)
+angle::Result TextureVk::copyImageDataToBufferAndGetData(ContextVk *contextVk,
+                                                         size_t sourceLevel,
+                                                         uint32_t layerCount,
+                                                         const gl::Rectangle &sourceArea,
+                                                         uint8_t **outDataPtr)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "TextureVk::copyImageDataToBuffer");
+    ANGLE_TRACE_EVENT0("gpu.angle", "TextureVk::copyImageDataToBufferAndGetData");
+
     // Make sure the source is initialized and it's images are flushed.
     ANGLE_TRY(ensureImageInitialized(contextVk));
 
+    gl::Box area(0, 0, 0, sourceArea.width, sourceArea.height, 1);
+
+    VkBuffer copyBufferHandle     = VK_NULL_HANDLE;
+    VkDeviceSize sourceCopyOffset = 0;
+
+    ANGLE_TRY(copyImageDataToBuffer(contextVk, sourceLevel, layerCount, 0, area, &copyBufferHandle,
+                                    &sourceCopyOffset, outDataPtr));
+
+    // Explicitly finish. If new use cases arise where we don't want to block we can change this.
+    ANGLE_TRY(contextVk->finishImpl());
+
+    return angle::Result::Continue;
+}
+
+angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
+                                               size_t sourceLevel,
+                                               uint32_t layerCount,
+                                               uint32_t baseLayer,
+                                               const gl::Box &sourceArea,
+                                               VkBuffer *bufferHandleOut,
+                                               VkDeviceSize *bufferOffsetOut,
+                                               uint8_t **outDataPtr)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "TextureVk::copyImageDataToBuffer");
+
     const angle::Format &imageFormat = getImage().getFormat().imageFormat();
-    size_t sourceCopyAllocationSize =
-        sourceArea.width * sourceArea.height * imageFormat.pixelBytes * layerCount;
+    size_t sourceCopyAllocationSize  = sourceArea.width * sourceArea.height * sourceArea.depth *
+                                      imageFormat.pixelBytes * layerCount;
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
 
-    // Requirement of the copyImageToBuffer, the source image must be in SRC_OPTIMAL layout.
+    // Transition the image to readable layout
     mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc, commandBuffer);
 
-    // Allocate enough memory to copy the sourceArea region of the source texture into its pixel
-    // buffer.
-    VkBuffer copyBufferHandle     = VK_NULL_HANDLE;
-    VkDeviceSize sourceCopyOffset = 0;
+    // Allocate staging buffer data
     ANGLE_TRY(mImage->allocateStagingMemory(contextVk, sourceCopyAllocationSize, outDataPtr,
-                                            &copyBufferHandle, &sourceCopyOffset, nullptr));
+                                            bufferHandleOut, bufferOffsetOut, nullptr));
 
     VkBufferImageCopy region               = {};
-    region.bufferOffset                    = sourceCopyOffset;
+    region.bufferOffset                    = *bufferOffsetOut;
     region.bufferRowLength                 = 0;
     region.bufferImageHeight               = 0;
     region.imageExtent.width               = sourceArea.width;
     region.imageExtent.height              = sourceArea.height;
-    region.imageExtent.depth               = 1;
+    region.imageExtent.depth               = sourceArea.depth;
     region.imageOffset.x                   = sourceArea.x;
     region.imageOffset.y                   = sourceArea.y;
-    region.imageOffset.z                   = 0;
+    region.imageOffset.z                   = sourceArea.z;
     region.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    region.imageSubresource.baseArrayLayer = 0;
+    region.imageSubresource.baseArrayLayer = baseLayer;
     region.imageSubresource.layerCount     = layerCount;
     region.imageSubresource.mipLevel       = static_cast<uint32_t>(sourceLevel);
 
     commandBuffer->copyImageToBuffer(mImage->getImage(), mImage->getCurrentLayout(),
-                                     copyBufferHandle, 1, &region);
-
-    // Explicitly finish. If new use cases arise where we don't want to block we can change this.
-    ANGLE_TRY(contextVk->finishImpl());
+                                     *bufferHandleOut, 1, &region);
 
     return angle::Result::Continue;
 }
@@ -1041,8 +1064,9 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
 
     uint8_t *imageData = nullptr;
     gl::Rectangle imageArea(0, 0, baseLevelExtents.width, baseLevelExtents.height);
-    ANGLE_TRY(copyImageDataToBuffer(contextVk, mState.getEffectiveBaseLevel(), imageLayerCount,
-                                    imageArea, &imageData));
+
+    ANGLE_TRY(copyImageDataToBufferAndGetData(contextVk, mState.getEffectiveBaseLevel(),
+                                              imageLayerCount, imageArea, &imageData));
 
     const angle::Format &angleFormat = mImage->getFormat().imageFormat();
     GLuint sourceRowPitch            = baseLevelExtents.width * angleFormat.pixelBytes;
@@ -1095,7 +1119,8 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
     if (renderer->hasImageFormatFeatureBits(mImage->getFormat().vkImageFormat, kBlitFeatureFlags))
     {
         ANGLE_TRY(ensureImageInitialized(contextVk));
-        ANGLE_TRY(mImage->generateMipmapsWithBlit(contextVk, mState.getMipmapMaxLevel()));
+        ANGLE_TRY(mImage->generateMipmapsWithBlit(
+            contextVk, mState.getMipmapMaxLevel() - mState.getEffectiveBaseLevel()));
     }
     else
     {
@@ -1107,8 +1132,108 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
 
 angle::Result TextureVk::setBaseLevel(const gl::Context *context, GLuint baseLevel)
 {
-    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop;
+    return angle::Result::Continue;
+}
+
+angle::Result TextureVk::changeLevels(ContextVk *contextVk, GLuint baseLevel, GLuint maxLevel)
+{
+    if (!mImage)
+    {
+        return angle::Result::Continue;
+    }
+
+    // Track the previous levels for use in update loop below
+    uint32_t previousBaseLevel = mImage->getBaseLevel();
+
+    if (baseLevel == previousBaseLevel && mImage->getLevelCount() == maxLevel + 1)
+    {
+        // This scenario is a noop, most likely maxLevel has been lowered to a level that already
+        // reflects the current state of the image
+        return angle::Result::Continue;
+    }
+
+    if (!mImage->valid())
+    {
+        // Track the levels in our ImageHelper
+        mImage->setBaseAndMaxLevels(baseLevel, maxLevel);
+
+        // No further work to do, let staged updates handle the new levels
+        return angle::Result::Continue;
+    }
+
+    // If we get here, we already have a valid image and it needs to be recreated
+    // to reflect new base or max levels.
+
+    // First, flush any pending updates so we have good data in the existing vkImage
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+    ANGLE_TRY(mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
+                                         getNativeImageLayer(0), mImage->getLayerCount(),
+                                         commandBuffer));
+
+    // After flushing, track the new levels (they are used in the flush, hence the wait)
+    mImage->setBaseAndMaxLevels(baseLevel, maxLevel);
+
+    // Next, back up any data we need to preserve by staging it as updates to the new image.
+
+    // Stage updates for all levels in the GL texture, while preserving the data in the vkImage.
+    // This ensures we propagate all the current image data, even as max level moves around.
+    uint32_t updateCount =
+        std::max<GLuint>(mState.getMipmapMaxLevel() + 1, mImage->getLevelCount());
+
+    // The staged updates won't be applied until the image has the requisite mip levels
+    for (uint32_t layer = 0; layer < mImage->getLayerCount(); layer++)
+    {
+        for (uint32_t level = 0; level < updateCount; level++)
+        {
+            if (mImage->isUpdateStaged(level, layer))
+            {
+                // If there is still an update staged for the surface at the designated
+                // layer/level, we don't need to propagate any data from this image.
+                // This can happen for original texture levels that have never fit into
+                // the vkImage due to base/max level, and for vkImage data that has been
+                // staged by previous calls to changeLevels that didn't fit into the
+                // new vkImage.
+                continue;
+            }
+
+            // Pull data from the current image and stage it as an update for the new image
+
+            // First we populate the staging buffer with current level data
+            const gl::ImageDesc &desc =
+                mState.getImageDesc(gl::TextureTypeToTarget(mState.getType(), layer), level);
+            const gl::Extents &extents     = desc.size;
+            const gl::InternalFormat &info = *desc.format.info;
+
+            // We need to adjust the source Vulkan level to reflect the previous base level.
+            // vk level 0 previously aligned with whatever the base level was.
+            uint32_t srcLevelVK = level - previousBaseLevel;
+
+            // Now copy from the image to the staging buffer
+            VkBuffer stagingBufferHandle     = VK_NULL_HANDLE;
+            VkDeviceSize stagingBufferOffset = 0;
+            ANGLE_TRY(copyImageDataToBuffer(
+                contextVk, srcLevelVK, 1, layer,
+                gl::Box(0, 0, 0, extents.width, extents.height, extents.depth),
+                &stagingBufferHandle, &stagingBufferOffset, nullptr));
+
+            // Stage an update to the new image that we will populate with existing mip levels
+            // We're providing the buffer handle and offset to use, since we *just* populated it
+            size_t bufferSize = extents.width * extents.height * extents.depth * info.pixelBytes;
+            ANGLE_TRY(mImage->stageSubresourceUpdateFromBuffer(
+                contextVk, bufferSize, level, layer, 1, extents, gl::Offset(), stagingBufferHandle,
+                stagingBufferOffset));
+        }
+    }
+
+    // Inform the front end that we've updated the staging buffer
+    onStagingBufferChange();
+
+    // Now that we've staged all the updates, release the current image so that it will be
+    // recreated with the correct number of mip levels, base level, and max level.
+    releaseImage(contextVk);
+
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *surface)
@@ -1124,7 +1249,7 @@ angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *
     // eglBindTexImage can only be called with pbuffer (offscreen) surfaces
     OffscreenSurfaceVk *offscreenSurface = GetImplAs<OffscreenSurfaceVk>(surface);
     setImageHelper(contextVk, offscreenSurface->getColorAttachmentImage(), mState.getType(), format,
-                   surface->getMipmapLevel(), 0, false);
+                   surface->getMipmapLevel(), 0, mState.getEffectiveBaseLevel(), false);
 
     ASSERT(mImage->getLayerCount() == 1);
     gl::Format glFormat(internalFormat);
@@ -1177,7 +1302,7 @@ angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk)
 {
     const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
     const gl::Extents &baseLevelExtents = baseLevelDesc.size;
-    const uint32_t levelCount           = getLevelCount();
+    const uint32_t levelCount           = getLevelCount() - mState.getEffectiveBaseLevel();
 
     const vk::Format &format =
         contextVk->getRenderer()->getFormat(baseLevelDesc.format.info->sizedInternalFormat);
@@ -1281,6 +1406,14 @@ angle::Result TextureVk::syncState(const gl::Context *context,
                                    const gl::Texture::DirtyBits &dirtyBits)
 {
     ContextVk *contextVk = vk::GetImpl(context);
+
+    // Set base and max level before initializing the image
+    if (dirtyBits.test(gl::Texture::DIRTY_BIT_MAX_LEVEL) ||
+        dirtyBits.test(gl::Texture::DIRTY_BIT_BASE_LEVEL))
+    {
+        ANGLE_TRY(
+            changeLevels(contextVk, mState.getEffectiveBaseLevel(), mState.getEffectiveMaxLevel()));
+    }
 
     // Initialize the image storage and flush the pixel buffer.
     ANGLE_TRY(ensureImageInitialized(contextVk));
@@ -1577,6 +1710,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     gl_vk::GetExtentsAndLayerCount(mState.getType(), extents, &vkExtent, &layerCount);
 
     ANGLE_TRY(mImage->init(contextVk, mState.getType(), vkExtent, format, 1, imageUsageFlags,
+                           mState.getEffectiveBaseLevel(), mState.getEffectiveMaxLevel(),
                            levelCount, layerCount));
 
     const VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
@@ -1735,8 +1869,6 @@ void TextureVk::releaseStagingBuffer(ContextVk *contextVk)
 
 uint32_t TextureVk::getLevelCount() const
 {
-    ASSERT(mState.getEffectiveBaseLevel() == 0);
-
     // getMipmapMaxLevel will be 0 here if mipmaps are not used, so the levelCount is always +1.
     return mState.getMipmapMaxLevel() + 1;
 }
