@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0afd9c75_1294b526",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Yes, we have been out of sets for a long time.\n\nThese all fit quite nicely though as SSBO, atomic counters and images usually go together. UBOs are in the set too, but in the majority of cases (usual old style draw calls) you have none of the others (so UBOs have their own set, which is nice).",
+      "parentUuid": "b15a15a9_2eb25ee4",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 0
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d3825b9_436f62cb",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 17
@@ -36,6 +60,30 @@
       "writtenOn": "2019-08-29T16:47:50Z",
       "side": 1,
       "message": "nice. front-end fixes should probably enable d3d/gl back-end tests as well. not sure if you checked.",
+      "range": {
+        "startLine": 2492,
+        "startChar": 0,
+        "endLine": 2496,
+        "endChar": 5
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dd08d85_657b7e46",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2496,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Didn\u0027t really check. Could take a look, though I don\u0027t remember which tests were blocked by this :-S\n\n---\n\nEdit: enabled a few suspect tests on D3D, but there are still failures. They are blanket suppressions, so maybe _something_ is fixed, but nothing I can easily enable without spending time triaging.",
+      "parentUuid": "2d3825b9_436f62cb",
       "range": {
         "startLine": 2492,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7bd5e491_6c9565dc",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fee56706_d3b60770",
+      "range": {
+        "startLine": 245,
+        "startChar": 24,
+        "endLine": 245,
+        "endChar": 38
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ecdfecf9_76a740bb",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 17
@@ -91,6 +163,30 @@
       "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f3f323a_cc89c2ec",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecdfecf9_76a740bb",
+      "range": {
+        "startLine": 249,
+        "startChar": 5,
+        "endLine": 249,
+        "endChar": 32
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "7be65dc7_a45c211c",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3454b24e_fa2d75b6",
+      "range": {
+        "startLine": 678,
+        "startChar": 44,
+        "endLine": 678,
+        "endChar": 46
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc5a51e0_37e9b7c0",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 17
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "e407a31f_15706d9c",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Done. Added emplace_back to FixedVector.",
+      "parentUuid": "bc5a51e0_37e9b7c0",
+      "range": {
+        "startLine": 690,
+        "startChar": 24,
+        "endLine": 690,
+        "endChar": 33
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22b03269_4fe7b3b0",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 17
@@ -151,6 +295,30 @@
       "writtenOn": "2019-08-29T16:47:50Z",
       "side": 1,
       "message": "maybe we should cache the array in ContextVk as we do with active textures, when the bindings change.",
+      "range": {
+        "startLine": 1466,
+        "startChar": 12,
+        "endLine": 1466,
+        "endChar": 56
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d73429b_6021b947",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1466,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Maybe as a separate optimization?",
+      "parentUuid": "22b03269_4fe7b3b0",
       "range": {
         "startLine": 1466,
         "startChar": 12,
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "cc25055f_f8f06b98",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1480,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Enabled those tests (some ES3 ones were missing too).\n\nA syncImages could work, but syncTextures would be enough here too. Would you mind if I tackled this separately? I\u0027d rather get this base implementation in soon (in case I \"run out of time\").\n\nThe ensureImageInitialized below is necessary though, I missed it originally and dEQP caught it.\n\n---\n\nSimpleStateChangeTestES31 exposed a bug here; if the bindings don\u0027t change, we don\u0027t need to update the set, which means the pending texture changes don\u0027t get flushed. Again, would you mind if I address this in a separate CL?",
+      "parentUuid": "7cc07242_8b0a55ad",
+      "range": {
+        "startLine": 1478,
+        "startChar": 0,
+        "endLine": 1480,
+        "endChar": 77
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fbc944db_13f8e8e7",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.cpp",
         "patchSetId": 17
@@ -206,6 +398,30 @@
       "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8788c4c5_b4d1dc24",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbc944db_13f8e8e7",
+      "range": {
+        "startLine": 403,
+        "startChar": 0,
+        "endLine": 405,
+        "endChar": 26
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "542e1527_1aa0909c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1700,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Yes. It was a copy paste of a loop above. Fixed both.",
+      "parentUuid": "8940d3fd_f783ac02",
+      "range": {
+        "startLine": 1700,
+        "startChar": 9,
+        "endLine": 1700,
+        "endChar": 13
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a9de910_ba32dba1",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 17
@@ -243,6 +483,30 @@
       "writtenOn": "2019-08-29T16:47:50Z",
       "side": 1,
       "message": "Can\u0027t this be a const * that it returns? same with getLayerLevelDrawImageView.",
+      "range": {
+        "startLine": 168,
+        "startChar": 48,
+        "endLine": 168,
+        "endChar": 61
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dbc06d4d_2f1efde6",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "No, this lazily allocates views.",
+      "parentUuid": "3a9de910_ba32dba1",
       "range": {
         "startLine": 168,
         "startChar": 48,
@@ -278,6 +542,30 @@
     },
     {
       "key": {
+        "uuid": "e34cbbf9_2de9e697",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f339087e_7244d69a",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 60
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e1591d67_f6093bf8",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 17
@@ -298,6 +586,30 @@
       "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f4ab2f0_34ee085c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T18:04:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1591d67_f6093bf8",
+      "range": {
+        "startLine": 195,
+        "startChar": 10,
+        "endLine": 195,
+        "endChar": 31
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
