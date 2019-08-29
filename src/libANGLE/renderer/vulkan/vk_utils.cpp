@@ -52,9 +52,9 @@ egl::Error ToEGL(Result result, rx::DisplayVk *displayVk, EGLint errorCode)
 
 namespace rx
 {
-// Unified layer that includes full validation layer stack
-const char *g_VkKhronosValidationLayerName = "VK_LAYER_KHRONOS_validation";
-const char *g_VkValidationLayerNames[]     = {
+// Mirrors std_validation_str in loader.c
+const char *g_VkStdValidationLayerName = "VK_LAYER_LUNARG_standard_validation";
+const char *g_VkValidationLayerNames[] = {
     "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
     "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
     "VK_LAYER_GOOGLE_unique_objects"};
@@ -72,9 +72,9 @@ bool HasValidationLayer(const std::vector<VkLayerProperties> &layerProps, const 
     return false;
 }
 
-bool HasKhronosValidationLayer(const std::vector<VkLayerProperties> &layerProps)
+bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps)
 {
-    return HasValidationLayer(layerProps, g_VkKhronosValidationLayerName);
+    return HasValidationLayer(layerProps, g_VkStdValidationLayerName);
 }
 
 bool HasValidationLayers(const std::vector<VkLayerProperties> &layerProps)
@@ -218,10 +218,9 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
                                   bool mustHaveLayers,
                                   VulkanLayerVector *enabledLayerNames)
 {
-    // Favor unified Khronos layer, but fallback to standard validation
-    if (HasKhronosValidationLayer(layerProps))
+    if (HasStandardValidationLayer(layerProps))
     {
-        enabledLayerNames->push_back(g_VkKhronosValidationLayerName);
+        enabledLayerNames->push_back(g_VkStdValidationLayerName);
     }
     else if (HasValidationLayers(layerProps))
     {

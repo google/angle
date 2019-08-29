@@ -537,29 +537,25 @@ config("libANGLE_config") {
 
 if (angle_enable_vulkan) {
   config("vulkan_config") {
-    defines = []
     if (is_android) {
       libs = [ "vulkan" ]
-    }
-    if (angle_enable_vulkan_validation_layers) {
-      defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]
     }
   }
 
   # Use this target to include everything ANGLE needs for Vulkan.
   group("angle_vulkan") {
     public_deps = [
-      "$angle_root/third_party/vulkan-headers/src:vulkan_headers",
+      "$angle_root/third_party/vulkan-headers:vulkan_headers",
     ]
     public_configs = [ ":vulkan_config" ]
     data_deps = []
     if (!is_android && !is_fuchsia) {
       deps = [
-        "$angle_root/third_party/vulkan-loader/src:libvulkan",
+        "$angle_root/third_party/vulkan-loader:libvulkan",
       ]
-      data_deps += [ "$angle_root/third_party/vulkan-tools/src:VkICD_mock_icd" ]
+      data_deps += [ "$angle_root/third_party/vulkan-tools:VkICD_mock_icd" ]
       public_configs +=
-          [ "$angle_root/third_party/vulkan-loader/src:vulkan_loader_config" ]
+          [ "$angle_root/third_party/vulkan-loader:vulkan_loader_config" ]
     }
     if (is_fuchsia) {
       public_deps += [
@@ -575,9 +571,9 @@ if (angle_enable_vulkan) {
           "//third_party/fuchsia-sdk:vulkan_validation",
         ]
       } else {
-        data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_validation_layers" ]
+        data_deps += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_validation_layers" ]
         if (!is_android) {
-          data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_gen_json_files" ]
+          data_deps += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_gen_json_files" ]
         }
       }
     }
@@ -698,8 +694,7 @@ angle_source_set("libANGLE_base") {
       "${angle_glslang_dir}:glslang_sources",
       "${angle_spirv_tools_dir}:spvtools_val",
     ]
-    public_deps +=
-        [ "$angle_root/third_party/vulkan-headers/src:vulkan_headers" ]
+    public_deps += [ "$angle_root/third_party/vulkan-headers:vulkan_headers" ]
 
     # Include generated shaders.
     import("src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.gni")
@@ -1225,9 +1220,8 @@ if (!is_component_build && is_android && symbol_level != 0) {
 
     if (angle_enable_vulkan_validation_layers) {
       foreach(_layer, vulkan_validation_layers) {
-        deps += [
-          "${angle_root}/third_party/vulkan-validation-layers/src:${_layer}",
-        ]
+        deps +=
+            [ "${angle_root}/third_party/vulkan-validation-layers:${_layer}" ]
       }
     }
 
