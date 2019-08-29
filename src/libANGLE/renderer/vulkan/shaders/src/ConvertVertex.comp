@@ -214,8 +214,8 @@ SrcType loadSourceComponent(uint cd)
     // A2B10G10R10's components are not byte-aligned, hardcoding values for efficiency.
 #if A2BGR10SintToSint || A2BGR10UintToUint || A2BGR10SnormToFloat || A2BGR10SintToFloat || \
     A2BGR10UintToFloat
-    uint valueBits = 10;
-    uint shiftBits = valueBits * component;
+    uint valueBits = component == 3 ? 2 : 10;
+    uint shiftBits = 10 * component;
     uint valueMask = component == 3 ? 0x03 : 0x3FF;
 #else
     uint shiftBits = getShiftBits(offset, Bs);
