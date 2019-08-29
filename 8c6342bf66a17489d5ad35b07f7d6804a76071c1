@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2130b270_b4314594",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2212,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-29T20:48:15Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "13e04dfd_e927c73c",
+      "range": {
+        "startLine": 2212,
+        "startChar": 27,
+        "endLine": 2212,
+        "endChar": 79
+      },
+      "revId": "8c6342bf66a17489d5ad35b07f7d6804a76071c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35c22e9a_800eaf60",
         "filename": "src/libANGLE/renderer/RenderTargetCache.h",
         "patchSetId": 16
@@ -45,6 +69,30 @@
       "revId": "8c6342bf66a17489d5ad35b07f7d6804a76071c1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9526a254_57d6acc7",
+        "filename": "src/libANGLE/renderer/RenderTargetCache.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-29T20:48:15Z",
+      "side": 1,
+      "message": "Just so it\u0027s written here too.   Geoff and I worked through the failure in CopyTexImageTest.CopyTexSubImageToNonCubeCompleteDestination/ES3_Vulkan and fixed it with a change to updateColorRenderTarget().",
+      "parentUuid": "35c22e9a_800eaf60",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 53
+      },
+      "revId": "8c6342bf66a17489d5ad35b07f7d6804a76071c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
