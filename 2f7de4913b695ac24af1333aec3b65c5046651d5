@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4c4713c8_fe5bc9ea",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3412,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T16:42:18Z",
+      "side": 1,
+      "message": "They are kind of grouped together based on the resource they are limiting.\n\nIf you don\u0027t mind, I\u0027d like to defer this to a more thorough clean up of this in another CL. In particular, I\u0027d like the limits to be audited to find the missing LimitCap calls (as this change finds for example: https://chromium-review.googlesource.com/c/angle/angle/+/1734786)",
+      "parentUuid": "4a7a0ec5_0f8ee43d",
+      "revId": "2f7de4913b695ac24af1333aec3b65c5046651d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f93ffc48_06508f35",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
         "patchSetId": 16
@@ -30,6 +48,30 @@
       "writtenOn": "2019-08-28T23:57:26Z",
       "side": 1,
       "message": "As blocks like this get added, are there any concerns about how many bindings there are that this value should be checked against to make sure it doesn\u0027t get too large?",
+      "range": {
+        "startLine": 808,
+        "startChar": 4,
+        "endLine": 808,
+        "endChar": 16
+      },
+      "revId": "2f7de4913b695ac24af1333aec3b65c5046651d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42554c94_9eba4cdf",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 808,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T16:42:18Z",
+      "side": 1,
+      "message": "I believe VVL would catch any errors here?",
+      "parentUuid": "f93ffc48_06508f35",
       "range": {
         "startLine": 808,
         "startChar": 4,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "a49933b7_14ad4f29",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T16:42:18Z",
+      "side": 1,
+      "message": "Copy paste artifact. Changed to parameter.",
+      "parentUuid": "73c6fa1f_6ca54aa5",
+      "revId": "2f7de4913b695ac24af1333aec3b65c5046651d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "81d0ac24_9758c0ee",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 16
@@ -73,6 +133,24 @@
       "revId": "2f7de4913b695ac24af1333aec3b65c5046651d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa3da389_681ac355",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-29T16:42:18Z",
+      "side": 1,
+      "message": "Yes!",
+      "parentUuid": "81d0ac24_9758c0ee",
+      "revId": "2f7de4913b695ac24af1333aec3b65c5046651d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
