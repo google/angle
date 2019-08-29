@@ -400,6 +400,9 @@ std::string SecondaryCommandBuffer::dumpCommands(const char *separator) const
                 case CommandID::Dispatch:
                     result += "Dispatch";
                     break;
+                case CommandID::DispatchIndirect:
+                    result += "DispatchIndirect";
+                    break;
                 case CommandID::Draw:
                     result += "Draw";
                     break;
