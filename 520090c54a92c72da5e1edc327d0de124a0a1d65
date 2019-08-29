@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "489f4d0e_d93c5191",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-08-29T21:48:03Z",
+      "side": 1,
+      "message": "Should this live under rx::vk namespace?",
+      "revId": "520090c54a92c72da5e1edc327d0de124a0a1d65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85c90862_f3fbdf2b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-08-29T21:48:03Z",
+      "side": 1,
+      "message": "Should these be caps?\nhttp://go/cstyle#Enumerator_Names",
+      "revId": "520090c54a92c72da5e1edc327d0de124a0a1d65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
