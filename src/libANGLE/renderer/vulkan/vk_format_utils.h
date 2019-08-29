@@ -155,6 +155,7 @@ size_t GetVertexInputAlignment(const vk::Format &format);
 
 void MapSwizzleState(const ContextVk *contextVk,
                      const vk::Format &format,
+                     const bool sized,
                      const gl::SwizzleState &swizzleState,
                      gl::SwizzleState *swizzleStateOut);
 }  // namespace rx

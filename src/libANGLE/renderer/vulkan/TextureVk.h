@@ -289,6 +289,7 @@ class TextureVk : public TextureImpl
 
     angle::Result initImage(ContextVk *contextVk,
                             const vk::Format &format,
+                            const bool sized,
                             const gl::Extents &extents,
                             const uint32_t levelCount);
     void releaseImage(ContextVk *contextVk);
@@ -297,6 +298,7 @@ class TextureVk : public TextureImpl
     uint32_t getLevelCount() const;
     angle::Result initImageViews(ContextVk *contextVk,
                                  const vk::Format &format,
+                                 const bool sized,
                                  uint32_t levelCount,
                                  uint32_t layerCount);
     angle::Result init3DRenderTargets(ContextVk *contextVk);

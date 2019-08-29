@@ -334,6 +334,7 @@ void ComposeSwizzleState(const gl::SwizzleState &first,
 
 void MapSwizzleState(const ContextVk *contextVk,
                      const vk::Format &format,
+                     const bool sized,
                      const gl::SwizzleState &swizzleState,
                      gl::SwizzleState *swizzleStateOut)
 {
@@ -367,7 +368,8 @@ void MapSwizzleState(const ContextVk *contextVk,
                 bool hasRed = angleFormat.depthBits > 0;
                 // In OES_depth_texture/ARB_depth_texture, depth
                 // textures are treated as luminance.
-                bool hasGB = hasRed && contextVk->getClientMajorVersion() <= 2;
+                // If the internalformat was not sized, use OES_depth_texture behavior
+                bool hasGB = hasRed && !sized;
 
                 internalSwizzle.swizzleRed   = hasRed ? GL_RED : GL_ZERO;
                 internalSwizzle.swizzleGreen = hasGB ? GL_RED : GL_ZERO;

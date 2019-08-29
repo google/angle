@@ -767,7 +767,9 @@ angle::Result TextureVk::setStorage(const gl::Context *context,
         releaseImage(contextVk);
     }
 
-    ANGLE_TRY(initImage(contextVk, format, size, static_cast<uint32_t>(levels)));
+    gl::Format glFormat(internalFormat);
+    ANGLE_TRY(
+        initImage(contextVk, format, glFormat.info->sized, size, static_cast<uint32_t>(levels)));
     return angle::Result::Continue;
 }
 
@@ -792,8 +794,9 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
     ANGLE_TRY(
         memoryObjectVk->createImage(context, type, levels, internalFormat, size, offset, mImage));
 
-    ANGLE_TRY(
-        initImageViews(contextVk, format, static_cast<uint32_t>(levels), mImage->getLayerCount()));
+    gl::Format glFormat(internalFormat);
+    ANGLE_TRY(initImageViews(contextVk, format, glFormat.info->sized, static_cast<uint32_t>(levels),
+                             mImage->getLayerCount()));
 
     // TODO(spang): This needs to be reworked when semaphores are added.
     // http://anglebug.com/3289
@@ -826,7 +829,7 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
                    imageVk->getImageLevel(), imageVk->getImageLayer(), false);
 
     ASSERT(type != gl::TextureType::CubeMap);
-    ANGLE_TRY(initImageViews(contextVk, format, 1, 1));
+    ANGLE_TRY(initImageViews(contextVk, format, image->getFormat().info->sized, 1, 1));
 
     // Transfer the image to this queue if needed
     uint32_t rendererQueueFamilyIndex = renderer->getQueueFamilyIndex();
@@ -1116,7 +1119,8 @@ angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *
 
     releaseAndDeleteImage(contextVk);
 
-    const vk::Format &format = renderer->getFormat(surface->getConfig()->renderTargetFormat);
+    GLenum internalFormat    = surface->getConfig()->renderTargetFormat;
+    const vk::Format &format = renderer->getFormat(internalFormat);
 
     // eglBindTexImage can only be called with pbuffer (offscreen) surfaces
     OffscreenSurfaceVk *offscreenSurface = GetImplAs<OffscreenSurfaceVk>(surface);
@@ -1124,7 +1128,8 @@ angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *
                    surface->getMipmapLevel(), 0, false);
 
     ASSERT(mImage->getLayerCount() == 1);
-    return initImageViews(contextVk, format, 1, 1);
+    gl::Format glFormat(internalFormat);
+    return initImageViews(contextVk, format, glFormat.info->sized, 1, 1);
 }
 
 angle::Result TextureVk::releaseTexImage(const gl::Context *context)
@@ -1192,7 +1197,10 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
 
     if (!mImage->valid())
     {
-        ANGLE_TRY(initImage(contextVk, format, baseLevelExtents, levelCount));
+        const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+
+        ANGLE_TRY(initImage(contextVk, format, baseLevelDesc.format.info->sized, baseLevelExtents,
+                            levelCount));
     }
 
     vk::CommandBuffer *commandBuffer = nullptr;
@@ -1209,6 +1217,7 @@ angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
         return angle::Result::Continue;
 
     uint32_t layerCount = GetImageLayerCountForView(*mImage);
+    const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
 
     mLayerFetchImageView.resize(layerCount);
     m3DRenderTargets.resize(layerCount);
@@ -1221,7 +1230,8 @@ angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
         // Users of the render target expect the views to directly view the desired layer, so we
         // need create a fetch view for each layer as well.
         gl::SwizzleState mappedSwizzle;
-        MapSwizzleState(contextVk, mImage->getFormat(), mState.getSwizzleState(), &mappedSwizzle);
+        MapSwizzleState(contextVk, mImage->getFormat(), baseLevelDesc.format.info->sized,
+                        mState.getSwizzleState(), &mappedSwizzle);
         gl::TextureType arrayType = vk::Get2DTextureType(layerCount, mImage->getSamples());
         ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, mImage->getAspectFlags(),
                                              mappedSwizzle, &mLayerFetchImageView[layerIndex],
@@ -1240,6 +1250,8 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
     if (!mCubeMapRenderTargets.empty())
         return angle::Result::Continue;
 
+    const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+
     mLayerFetchImageView.resize(gl::kCubeFaceCount);
     mCubeMapRenderTargets.resize(gl::kCubeFaceCount);
     for (uint32_t cubeMapFaceIndex = 0; cubeMapFaceIndex < gl::kCubeFaceCount; ++cubeMapFaceIndex)
@@ -1250,7 +1262,8 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
         // Users of the render target expect the views to directly view the desired layer, so we
         // need create a fetch view for each layer as well.
         gl::SwizzleState mappedSwizzle;
-        MapSwizzleState(contextVk, mImage->getFormat(), mState.getSwizzleState(), &mappedSwizzle);
+        MapSwizzleState(contextVk, mImage->getFormat(), baseLevelDesc.format.info->sized,
+                        mState.getSwizzleState(), &mappedSwizzle);
         gl::TextureType arrayType = vk::Get2DTextureType(gl::kCubeFaceCount, mImage->getSamples());
         ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, mImage->getAspectFlags(),
                                              mappedSwizzle, &mLayerFetchImageView[cubeMapFaceIndex],
@@ -1296,7 +1309,10 @@ angle::Result TextureVk::syncState(const gl::Context *context,
                 mState.getType() == gl::TextureType::_2D ? 1 : mImage->getLayerCount();
 
             releaseImageViews(contextVk);
-            ANGLE_TRY(initImageViews(contextVk, mImage->getFormat(), mImage->getLevelCount(),
+            const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+
+            ANGLE_TRY(initImageViews(contextVk, mImage->getFormat(),
+                                     baseLevelDesc.format.info->sized, mImage->getLevelCount(),
                                      layerCount));
         }
     }
@@ -1527,6 +1543,7 @@ const vk::Sampler &TextureVk::getSampler() const
 
 angle::Result TextureVk::initImage(ContextVk *contextVk,
                                    const vk::Format &format,
+                                   const bool sized,
                                    const gl::Extents &extents,
                                    const uint32_t levelCount)
 {
@@ -1566,7 +1583,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
     ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
 
-    ANGLE_TRY(initImageViews(contextVk, format, levelCount, layerCount));
+    ANGLE_TRY(initImageViews(contextVk, format, sized, levelCount, layerCount));
 
     // If the image has an emulated channel, always clear it.  These channels will be masked out in
     // future writes, and shouldn't contain uninitialized values.
@@ -1631,13 +1648,14 @@ angle::Result TextureVk::initImageViewImpl(ContextVk *contextVk,
 
 angle::Result TextureVk::initImageViews(ContextVk *contextVk,
                                         const vk::Format &format,
+                                        const bool sized,
                                         uint32_t levelCount,
                                         uint32_t layerCount)
 {
     ASSERT(mImage != nullptr);
 
     gl::SwizzleState mappedSwizzle;
-    MapSwizzleState(contextVk, format, mState.getSwizzleState(), &mappedSwizzle);
+    MapSwizzleState(contextVk, format, sized, mState.getSwizzleState(), &mappedSwizzle);
 
     VkImageAspectFlags aspectFlags = vk::GetFormatAspectFlags(format.angleFormat());
     if (HasBothDepthAndStencilAspects(aspectFlags))

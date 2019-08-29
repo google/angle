@@ -4341,6 +4341,169 @@ TEST_P(Texture2DTestES3, DepthTexturesWithMipmaps)
     ASSERT_GL_NO_ERROR();
 }
 
+class Texture2DDepthTest : public Texture2DTest
+{
+  protected:
+    Texture2DDepthTest() : Texture2DTest() {}
+
+    const char *getVertexShaderSource() override
+    {
+        return "attribute vec4 vPosition;\n"
+               "void main() {\n"
+               "  gl_Position = vPosition;\n"
+               "}\n";
+    }
+
+    const char *getFragmentShaderSource() override
+    {
+        return "precision mediump float;\n"
+               "uniform sampler2D ShadowMap;"
+               "void main() {\n"
+               "  vec4 shadow_value = texture2D(ShadowMap, vec2(0.5, 0.5));"
+               "  if (shadow_value.x == shadow_value.z && shadow_value.x != 0.0) {"
+               "    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);"
+               "  } else {"
+               "    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+               "  }"
+               "}\n";
+    }
+
+    bool checkTexImageFormatSupport(GLenum format, GLenum internalformat, GLenum type)
+    {
+        EXPECT_GL_NO_ERROR();
+
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, 1, 1, 0, format, type, nullptr);
+
+        return (glGetError() == GL_NO_ERROR);
+    }
+
+    void testBehavior(bool useSizedComponent)
+    {
+        int w                 = getWindowWidth();
+        int h                 = getWindowHeight();
+        GLuint format         = GL_DEPTH_COMPONENT;
+        GLuint internalFormat = GL_DEPTH_COMPONENT;
+
+        if (useSizedComponent)
+        {
+            internalFormat = GL_DEPTH_COMPONENT24;
+        }
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        ASSERT_GL_NO_ERROR();
+
+        GLTexture depthTexture;
+        glBindTexture(GL_TEXTURE_2D, depthTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        TexCoordDrawTest::setUpProgram();
+        GLint shadowMapLocation = glGetUniformLocation(mProgram, "ShadowMap");
+        ASSERT_NE(-1, shadowMapLocation);
+
+        GLint positionLocation = glGetAttribLocation(mProgram, "vPosition");
+        ASSERT_NE(-1, positionLocation);
+
+        ANGLE_SKIP_TEST_IF(!checkTexImageFormatSupport(format, internalFormat, GL_UNSIGNED_INT));
+        glBindTexture(GL_TEXTURE_2D, depthTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, format, GL_UNSIGNED_INT, nullptr);
+        ASSERT_GL_NO_ERROR();
+
+        // try adding a color buffer.
+        GLuint colorTex = 0;
+        glGenTextures(1, &colorTex);
+        glBindTexture(GL_TEXTURE_2D, colorTex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GL_NO_ERROR();
+
+        glViewport(0, 0, w, h);
+        // Fill depthTexture with 0.75
+        glClearDepthf(0.75);
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        // Revert to normal framebuffer to test depth shader
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, w, h);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearDepthf(0.0f);
+        ASSERT_GL_NO_ERROR();
+
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        ASSERT_GL_NO_ERROR();
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, depthTexture);
+
+        glUseProgram(mProgram);
+        ASSERT_GL_NO_ERROR();
+
+        glUniform1i(shadowMapLocation, 0);
+
+        const GLfloat gTriangleVertices[] = {-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f};
+
+        glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 0, gTriangleVertices);
+        ASSERT_GL_NO_ERROR();
+        glEnableVertexAttribArray(positionLocation);
+        ASSERT_GL_NO_ERROR();
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        ASSERT_GL_NO_ERROR();
+
+        GLuint pixels[1];
+        glReadPixels(w / 2, h / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        ASSERT_GL_NO_ERROR();
+
+        // The GLES 3.x spec says that the depth texture sample can be found in the RED component.
+        // However, the OES_depth_texture indicates that the depth value is treated as luminance and
+        // is in all the color components. Multiple implementations implement a workaround that
+        // follows the OES_depth_texture behavior if the internalformat given at glTexImage2D was a
+        // unsized format (e.g. DEPTH_COMPONENT) and the GLES 3.x behavior if it was a sized
+        // internalformat such as GL_DEPTH_COMPONENT24. The shader will write out a different color
+        // depending on if it sees the texture sample in only the RED component.
+        if (useSizedComponent)
+        {
+            ASSERT_NE(pixels[0], 0xff0000ff);
+        }
+        else
+        {
+            ASSERT_EQ(pixels[0], 0xff0000ff);
+        }
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDeleteProgram(mProgram);
+    }
+};
+
+// Test depth texture compatibility with OES_depth_texture. Uses unsized internformat.
+TEST_P(Texture2DDepthTest, DepthTextureES2Compatibility)
+{
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsD3D9());
+
+    // When the depth texture is specified with unsized internalformat implementations follow
+    // OES_depth_texture behavior. Otherwise they follow GLES 3.0 behavior.
+    testBehavior(false);
+}
+
+// Test depth texture compatibility with GLES3 using sized internalformat.
+TEST_P(Texture2DDepthTest, DepthTextureES3Compatibility)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+
+    testBehavior(true);
+}
+
 // Tests unpacking into the unsized GL_ALPHA format.
 TEST_P(Texture2DTestES3, UnsizedAlphaUnpackBuffer)
 {
@@ -5105,5 +5268,12 @@ ANGLE_INSTANTIATE_TEST(TextureCubeIntegerEdgeTestES3, ES3_D3D11(), ES3_OPENGL())
 ANGLE_INSTANTIATE_TEST(Texture2DIntegerProjectiveOffsetTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(Texture2DArrayIntegerTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(Texture3DIntegerTestES3, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(Texture2DDepthTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 
 }  // anonymous namespace
