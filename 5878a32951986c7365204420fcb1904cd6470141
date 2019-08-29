@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b26c97b2_a7b4fcac",
+        "filename": "BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T19:27:32Z",
+      "side": 1,
+      "message": "heads up, just something I noticed in tandem.\n\nI think we should get rid of the extra loader defines and move the angle defines into this target. I have a WIP CL that does that. Possibly we can get rid of the extra loader defines functionality if it\u0027s not necessary.",
+      "range": {
+        "startLine": 539,
+        "startChar": 10,
+        "endLine": 539,
+        "endChar": 23
+      },
+      "revId": "5878a32951986c7365204420fcb1904cd6470141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "012ebe02_ee641017",
+        "filename": "build_overrides/vulkan_loader.gni",
+        "patchSetId": 15
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T19:27:32Z",
+      "side": 1,
+      "message": "see other comment.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 1
+      },
+      "revId": "5878a32951986c7365204420fcb1904cd6470141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
