@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "f513afa3_493cce8c",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T18:07:30Z",
+      "side": 1,
+      "message": "Oh, derp. Didn\u0027t realize this was a FixedVector. Thanks.",
+      "parentUuid": "e407a31f_15706d9c",
+      "range": {
+        "startLine": 690,
+        "startChar": 24,
+        "endLine": 690,
+        "endChar": 33
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22b03269_4fe7b3b0",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 17
@@ -331,6 +355,30 @@
     },
     {
       "key": {
+        "uuid": "af4a36d5_42ff5d82",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1466,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T18:07:30Z",
+      "side": 1,
+      "message": "That\u0027s fine. Although I would prefer it\u0027s done as part of the initial implementation before you go as it\u0027s consistent with how Textures are stores in ContextVk.",
+      "parentUuid": "4d73429b_6021b947",
+      "range": {
+        "startLine": 1466,
+        "startChar": 12,
+        "endLine": 1466,
+        "endChar": 56
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7cc07242_8b0a55ad",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 17
@@ -375,6 +423,30 @@
       "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42230636_d1799751",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1480,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T18:07:30Z",
+      "side": 1,
+      "message": "Yes, seems the Intel change was correct because of a lack of back-end testing.",
+      "parentUuid": "cc25055f_f8f06b98",
+      "range": {
+        "startLine": 1478,
+        "startChar": 0,
+        "endLine": 1480,
+        "endChar": 77
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
