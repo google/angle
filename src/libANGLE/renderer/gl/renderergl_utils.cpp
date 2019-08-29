@@ -1554,7 +1554,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     features->clipSrcRegionBlitFramebuffer.enabled = IsApple();
 
-    features->resettingRectangleTexturesGeneratesErrors.enabled = IsApple();
+    features->resettingTexturesGeneratesErrors.enabled =
+        IsApple() || (IsWindows() && IsAMD(device));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

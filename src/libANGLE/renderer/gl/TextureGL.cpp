@@ -1244,8 +1244,7 @@ angle::Result TextureGL::releaseTexImage(const gl::Context *context)
     ASSERT(getType() == gl::TextureType::_2D || getType() == gl::TextureType::Rectangle);
 
     const angle::FeaturesGL &features = GetFeaturesGL(context);
-    if (getType() != gl::TextureType::Rectangle &&
-        !features.resettingRectangleTexturesGeneratesErrors.enabled)
+    if (!features.resettingTexturesGeneratesErrors.enabled)
     {
         // Not all Surface implementations reset the size of mip 0 when releasing, do it manually
         const FunctionsGL *functions = GetFunctionsGL(context);
