@@ -519,6 +519,30 @@
     },
     {
       "key": {
+        "uuid": "e831ccda_7da097e1",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-29T15:59:57Z",
+      "side": 1,
+      "message": "Ah, thanks for the pointer.\n\nI think the validation is still slightly off though, it should only permit the framebuffers to be equal when the surfaces are different AND the default framebuffer is bound.",
+      "parentUuid": "f144dcbd_1bdf8b43",
+      "range": {
+        "startLine": 1318,
+        "startChar": 9,
+        "endLine": 1318,
+        "endChar": 77
+      },
+      "revId": "13f7cd6b60fd3e3cd674820fa6d3d94a264b7ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7919d0e8_f940346f",
         "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
         "patchSetId": 12

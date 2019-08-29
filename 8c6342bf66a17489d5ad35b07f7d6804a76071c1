@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13e04dfd_e927c73c",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2212,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-29T15:59:57Z",
+      "side": 1,
+      "message": "nit: this needs to move into a nested if, otherwise it will fall into the old path once it\u0027s been initialize.",
+      "range": {
+        "startLine": 2212,
+        "startChar": 27,
+        "endLine": 2212,
+        "endChar": 79
+      },
+      "revId": "8c6342bf66a17489d5ad35b07f7d6804a76071c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35c22e9a_800eaf60",
+        "filename": "src/libANGLE/renderer/RenderTargetCache.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-29T15:59:57Z",
+      "side": 1,
+      "message": "Can this still not just return mReadRenderTarget?",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 53
+      },
+      "revId": "8c6342bf66a17489d5ad35b07f7d6804a76071c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
