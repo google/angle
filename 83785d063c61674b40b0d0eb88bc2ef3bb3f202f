@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1b898aad_135b21ca",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-08-29T16:38:10Z",
+      "side": 0,
+      "message": "Done, pulled var definition into this case to avoid compile error and made alternate case always return \"false\" since layers won\u0027t be available.",
+      "parentUuid": "4f8c7c89_3877cf02",
+      "range": {
+        "startLine": 310,
+        "startChar": 12,
+        "endLine": 310,
+        "endChar": 32
+      },
+      "revId": "83785d063c61674b40b0d0eb88bc2ef3bb3f202f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7fa0fa90_3df3c50e",
         "filename": "src/libANGLE/renderer/renderer_utils.cpp",
         "patchSetId": 11
@@ -45,6 +69,30 @@
       "revId": "83785d063c61674b40b0d0eb88bc2ef3bb3f202f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4bf8c06_41fbbf95",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-08-29T16:38:10Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "7fa0fa90_3df3c50e",
+      "range": {
+        "startLine": 314,
+        "startChar": 19,
+        "endLine": 314,
+        "endChar": 39
+      },
+      "revId": "83785d063c61674b40b0d0eb88bc2ef3bb3f202f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
