@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b15a15a9_2eb25ee4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "are we out of sets yet? if not, does it make sense to use the last one for image bindings? just wondering.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 0
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d3825b9_436f62cb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2496,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "nice. front-end fixes should probably enable d3d/gl back-end tests as well. not sure if you checked.",
+      "range": {
+        "startLine": 2492,
+        "startChar": 0,
+        "endLine": 2496,
+        "endChar": 5
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fee56706_d3b60770",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "isn\u0027t bindingIndex \u003d\u003d bindingStart + imageIndex? Not sure if you need another iterator var.",
+      "range": {
+        "startLine": 245,
+        "startChar": 24,
+        "endLine": 245,
+        "endChar": 38
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecdfecf9_76a740bb",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "\u0027Textrue\u0027",
+      "range": {
+        "startLine": 249,
+        "startChar": 5,
+        "endLine": 249,
+        "endChar": 32
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3454b24e_fa2d75b6",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "can this 3 be defined somewhere as a constant?",
+      "range": {
+        "startLine": 678,
+        "startChar": 44,
+        "endLine": 678,
+        "endChar": 46
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc5a51e0_37e9b7c0",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "nit: I think you can slightly optimize this as \n\nresourceSetSize.emplace_back(VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, imageCount);\n\nnot 100% sure. but generally we should prefer emplace_back anyway.\n\nsame would go for the other preexisting ones.",
+      "range": {
+        "startLine": 690,
+        "startChar": 24,
+        "endLine": 690,
+        "endChar": 33
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22b03269_4fe7b3b0",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1466,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "maybe we should cache the array in ContextVk as we do with active textures, when the bindings change.",
+      "range": {
+        "startLine": 1466,
+        "startChar": 12,
+        "endLine": 1466,
+        "endChar": 56
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cc07242_8b0a55ad",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1480,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "There\u0027s a bunch of tests for this in SimpleStateChangeTestES31. See https://chromium-review.googlesource.com/c/angle/angle/+/1390596 . Intel managed to convince me to remove syncImages. But maybe we might need it back. Can you try removing the \"ensure\" below and see if we can get any new failures?",
+      "range": {
+        "startLine": 1478,
+        "startChar": 0,
+        "endLine": 1480,
+        "endChar": 77
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbc944db_13f8e8e7",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "unrelated fix? land separately?",
+      "range": {
+        "startLine": 403,
+        "startChar": 0,
+        "endLine": 405,
+        "endChar": 26
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8940d3fd_f783ac02",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1700,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "isn\u0027t this just your typedef that you defined or something?",
+      "range": {
+        "startLine": 1700,
+        "startChar": 9,
+        "endLine": 1700,
+        "endChar": 13
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a9de910_ba32dba1",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "Can\u0027t this be a const * that it returns? same with getLayerLevelDrawImageView.",
+      "range": {
+        "startLine": 168,
+        "startChar": 48,
+        "endLine": 168,
+        "endChar": 61
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f339087e_7244d69a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "I\u0027d prefer if you didn\u0027t define separate types for Level and Layer image views. Just ImageViewVector seems correct. Also since it\u0027s so generic you could place it in vk_utils.h.",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 60
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1591d67_f6093bf8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-29T16:47:50Z",
+      "side": 1,
+      "message": "nit: no need to make it private or in-class. You can move it into the vk:: scope if you want.",
+      "range": {
+        "startLine": 195,
+        "startChar": 10,
+        "endLine": 195,
+        "endChar": 31
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
