@@ -615,6 +615,30 @@
     },
     {
       "key": {
+        "uuid": "821b119d_e0e1f566",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-30T18:11:25Z",
+      "side": 1,
+      "message": "Right... but I think the external code doesn\u0027t modify the imageView. Internally you could allocate the view and then return a const pointer, right?",
+      "parentUuid": "dbc06d4d_2f1efde6",
+      "range": {
+        "startLine": 168,
+        "startChar": 48,
+        "endLine": 168,
+        "endChar": 61
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f339087e_7244d69a",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 17
