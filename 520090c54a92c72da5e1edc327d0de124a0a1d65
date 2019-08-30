@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7af133d8_588662e5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-30T17:10:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb634372_49f2cdfa",
+      "range": {
+        "startLine": 72,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 18
+      },
+      "revId": "520090c54a92c72da5e1edc327d0de124a0a1d65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "489f4d0e_d93c5191",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "16fba5ce_578d2c5b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-30T17:10:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "489f4d0e_d93c5191",
+      "revId": "520090c54a92c72da5e1edc327d0de124a0a1d65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85c90862_f3fbdf2b",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 1
@@ -56,6 +98,24 @@
       "revId": "520090c54a92c72da5e1edc327d0de124a0a1d65",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9ffc5c2_f64cf9d0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-30T17:10:46Z",
+      "side": 1,
+      "message": "Uploaded a CL to update the style guide for ANGLE. We use \"enum class\" so we have a separate namespace for enum members. The constant style isn\u0027t necessary because of this.",
+      "parentUuid": "85c90862_f3fbdf2b",
+      "revId": "520090c54a92c72da5e1edc327d0de124a0a1d65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
