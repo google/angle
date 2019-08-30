@@ -126,7 +126,7 @@ class RendererVk : angle::NonCopyable
         return mFeatures;
     }
 
-    bool isMockICDEnabled() const { return mEnableMockICD; }
+    bool isMockICDEnabled() const { return mEnabledICD == vk::ICD::Mock; }
 
     // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
     // bufferFeatures).  Looks through mandatory features first, and falls back to querying the
@@ -192,7 +192,7 @@ class RendererVk : angle::NonCopyable
 
     VkInstance mInstance;
     bool mEnableValidationLayers;
-    bool mEnableMockICD;
+    vk::ICD mEnabledICD;
     VkDebugUtilsMessengerEXT mDebugUtilsMessenger;
     VkDebugReportCallbackEXT mDebugReportCallback;
     VkPhysicalDevice mPhysicalDevice;

@@ -87,9 +87,6 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
                                   bool mustHaveLayers,
                                   VulkanLayerVector *enabledLayerNames);
 
-extern const char *gVkLoaderLayersPathEnv;
-extern const char *gVkLoaderICDFilenamesEnv;
-
 enum class TextureDimension
 {
     TEX_2D,
@@ -101,6 +98,15 @@ enum class TextureDimension
 namespace vk
 {
 struct Format;
+
+extern const char *gLoaderLayersPathEnv;
+extern const char *gLoaderICDFilenamesEnv;
+
+enum class ICD
+{
+    Default,
+    Mock,
+};
 
 // Abstracts error handling. Implemented by both ContextVk for GL and DisplayVk for EGL errors.
 class Context : angle::NonCopyable
