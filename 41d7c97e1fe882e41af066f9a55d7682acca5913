@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afd5816a_e73a1cfd",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1074,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-08-30T22:24:26Z",
+      "side": 1,
+      "message": "How are you \"priming the pump\" here?   As in, when the application starts and frame 0 is being presented, there is no frame -2 that has resources to be freed/destroyed, so why is this assert not failing?",
+      "revId": "41d7c97e1fe882e41af066f9a55d7682acca5913",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
