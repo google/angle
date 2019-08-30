@@ -87,8 +87,8 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
                                   bool mustHaveLayers,
                                   VulkanLayerVector *enabledLayerNames);
 
-extern const char *g_VkLoaderLayersPathEnv;
-extern const char *g_VkICDPathEnv;
+extern const char *gVkLoaderLayersPathEnv;
+extern const char *gVkLoaderICDFilenamesEnv;
 
 enum class TextureDimension
 {

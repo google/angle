@@ -537,6 +537,10 @@ config("libANGLE_config") {
 
 if (angle_enable_vulkan) {
   config("vulkan_config") {
+    defines = [
+      "ANGLE_VK_LAYERS_DIR=\"$angle_data_dir\"",
+      "ANGLE_VK_MOCK_ICD_JSON=\"$angle_data_dir/VkICD_mock_icd.json\"",
+    ]
     if (is_android) {
       libs = [ "vulkan" ]
     }

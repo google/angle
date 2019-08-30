@@ -150,8 +150,8 @@ angle::Result AllocateBufferOrImageMemory(vk::Context *context,
     return angle::Result::Continue;
 }
 
-const char *g_VkLoaderLayersPathEnv = "VK_LAYER_PATH";
-const char *g_VkICDPathEnv          = "VK_ICD_FILENAMES";
+const char *gVkLoaderLayersPathEnv   = "VK_LAYER_PATH";
+const char *gVkLoaderICDFilenamesEnv = "VK_ICD_FILENAMES";
 
 const char *VulkanResultString(VkResult result)
 {

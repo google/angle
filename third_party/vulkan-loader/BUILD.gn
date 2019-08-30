@@ -166,11 +166,7 @@ config("vulkan_loader_config") {
     "$angle_root/third_party/vulkan-headers/src/include",
     "src/loader",
   ]
-  defines = [
-    "ANGLE_VK_DATA_DIR=\"$angle_data_dir\"",
-    "ANGLE_VK_ICD_JSON=\"$angle_data_dir/VkICD_mock_icd.json\"",
-    "API_NAME=\"Vulkan\"",
-  ]
+  defines = [ "API_NAME=\"Vulkan\"" ]
 
   if (is_win) {
     cflags = [ "/wd4201" ]

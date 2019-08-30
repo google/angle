@@ -339,7 +339,7 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
         : mEnableValidationLayers(enableValidationLayers),
           mEnableMockICD(enableMockICD),
           mChangedCWD(false),
-          mChangedICDPath(false)
+          mChangedICDEnv(false)
     {
 // Changing CWD and setting environment variables makes no sense on Android,
 // since this code is a part of Java application there.
@@ -349,9 +349,10 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
         {
             // Override environment variable to use built Mock ICD
             // ANGLE_VK_ICD_JSON gets set to the built mock ICD in BUILD.gn
-            mPreviousICDPath = angle::GetEnvironmentVar(g_VkICDPathEnv);
-            mChangedICDPath  = angle::SetEnvironmentVar(g_VkICDPathEnv, ANGLE_VK_ICD_JSON);
-            if (!mChangedICDPath)
+            mPreviousICDEnv = angle::GetEnvironmentVar(gVkLoaderICDFilenamesEnv);
+            mChangedICDEnv =
+                angle::SetEnvironmentVar(gVkLoaderICDFilenamesEnv, ANGLE_VK_MOCK_ICD_JSON);
+            if (!mChangedICDEnv)
             {
                 ERR() << "Error setting Path for Mock/Null Driver.";
                 mEnableMockICD = false;
@@ -383,7 +384,7 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
         // Override environment variable to use the ANGLE layers.
         if (mEnableValidationLayers)
         {
-            if (!angle::PrependPathToEnvironmentVar(g_VkLoaderLayersPathEnv, ANGLE_VK_DATA_DIR))
+            if (!angle::PrependPathToEnvironmentVar(gVkLoaderLayersPathEnv, ANGLE_VK_LAYERS_DIR))
             {
                 ERR() << "Error setting environment for Vulkan layers init.";
                 mEnableValidationLayers = false;
@@ -401,15 +402,15 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
             angle::SetCWD(mPreviousCWD.value().c_str());
 #endif  // !defined(ANGLE_PLATFORM_ANDROID)
         }
-        if (mChangedICDPath)
+        if (mChangedICDEnv)
         {
-            if (mPreviousICDPath.value().empty())
+            if (mPreviousICDEnv.value().empty())
             {
-                angle::UnsetEnvironmentVar(g_VkICDPathEnv);
+                angle::UnsetEnvironmentVar(gVkLoaderICDFilenamesEnv);
             }
             else
             {
-                angle::SetEnvironmentVar(g_VkICDPathEnv, mPreviousICDPath.value().c_str());
+                angle::SetEnvironmentVar(gVkLoaderICDFilenamesEnv, mPreviousICDEnv.value().c_str());
             }
         }
     }
@@ -423,8 +424,8 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
     bool mEnableMockICD;
     bool mChangedCWD;
     Optional<std::string> mPreviousCWD;
-    bool mChangedICDPath;
-    Optional<std::string> mPreviousICDPath;
+    bool mChangedICDEnv;
+    Optional<std::string> mPreviousICDEnv;
 };
 
 void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
