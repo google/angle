@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "bb634372_49f2cdfa",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-08-30T16:06:22Z",
+      "side": 1,
+      "message": "nit: handle EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE here and put UNREACHABLE in the default case.",
+      "range": {
+        "startLine": 72,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 18
+      },
+      "revId": "520090c54a92c72da5e1edc327d0de124a0a1d65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "489f4d0e_d93c5191",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 1
