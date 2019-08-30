@@ -639,6 +639,30 @@
     },
     {
       "key": {
+        "uuid": "d82f5f74_0159dad5",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-30T19:22:42Z",
+      "side": 1,
+      "message": "Oh, yes. I thought you meant return as in instead of `angle::Result`. Done.",
+      "parentUuid": "821b119d_e0e1f566",
+      "range": {
+        "startLine": 168,
+        "startChar": 48,
+        "endLine": 168,
+        "endChar": 61
+      },
+      "revId": "883b6845da12ec71b96f286f9108d8e221db2521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f339087e_7244d69a",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 17
