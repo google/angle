@@ -46,6 +46,30 @@
       "revId": "e218c047dd04eb700551ae32c14b0099747fd60f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dce0ffea_6e298402",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-08-30T19:23:43Z",
+      "side": 1,
+      "message": "that\u0027s what I meant. SGTM.",
+      "parentUuid": "a8a4fdf4_f01fd5e7",
+      "range": {
+        "startLine": 772,
+        "startChar": 0,
+        "endLine": 775,
+        "endChar": 5
+      },
+      "revId": "e218c047dd04eb700551ae32c14b0099747fd60f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
