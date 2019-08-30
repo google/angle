@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d091a05c_7feb7114",
+        "filename": "src/libANGLE/Overlay.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-30T19:58:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "470188ca_ed72cf55",
+      "range": {
+        "startLine": 29,
+        "startChar": 6,
+        "endLine": 29,
+        "endChar": 19
+      },
+      "revId": "4f01a42d1a6323da42d7b368705f4f4c7534b11c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9f93458_1c51e7d2",
         "filename": "src/libANGLE/Overlay.h",
         "patchSetId": 12
@@ -45,6 +69,30 @@
       "revId": "4f01a42d1a6323da42d7b368705f4f4c7534b11c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "096ea6ac_7d0d4807",
+        "filename": "src/libANGLE/Overlay.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-30T19:58:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9f93458_1c51e7d2",
+      "range": {
+        "startLine": 53,
+        "startChar": 44,
+        "endLine": 53,
+        "endChar": 51
+      },
+      "revId": "4f01a42d1a6323da42d7b368705f4f4c7534b11c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fbd533b8_4f45e07d",
+        "filename": "src/libANGLE/Overlay.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-30T19:58:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90fbc9e8_d3c12330",
+      "range": {
+        "startLine": 96,
+        "startChar": 15,
+        "endLine": 96,
+        "endChar": 41
+      },
+      "revId": "4f01a42d1a6323da42d7b368705f4f4c7534b11c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c73fba5f_3b73a861",
         "filename": "src/libANGLE/Overlay.h",
         "patchSetId": 12
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "b60b0a3f_71b32a55",
+        "filename": "src/libANGLE/Overlay.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-30T19:58:45Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c73fba5f_3b73a861",
+      "range": {
+        "startLine": 105,
+        "startChar": 21,
+        "endLine": 105,
+        "endChar": 26
+      },
+      "revId": "4f01a42d1a6323da42d7b368705f4f4c7534b11c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e0e1f1d2_b0e54fdb",
         "filename": "src/libANGLE/Surface.cpp",
         "patchSetId": 12
@@ -114,6 +210,30 @@
       "revId": "4f01a42d1a6323da42d7b368705f4f4c7534b11c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8e7487c_740ff662",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-30T19:58:45Z",
+      "side": 1,
+      "message": "I originally had this in WindowSufraceVk::swapImpl which covered all of these (which is how I missed those).\n\nAdded this call to those places too.",
+      "parentUuid": "e0e1f1d2_b0e54fdb",
+      "range": {
+        "startLine": 238,
+        "startChar": 4,
+        "endLine": 238,
+        "endChar": 47
+      },
+      "revId": "4f01a42d1a6323da42d7b368705f4f4c7534b11c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
