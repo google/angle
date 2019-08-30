@@ -160,7 +160,7 @@ class TextureVk : public TextureImpl
     angle::Result getLayerLevelDrawImageView(vk::Context *context,
                                              size_t layer,
                                              size_t level,
-                                             vk::ImageView **imageViewOut);
+                                             const vk::ImageView **imageViewOut);
     const vk::Sampler &getSampler() const;
 
     angle::Result ensureImageInitialized(ContextVk *contextVk);

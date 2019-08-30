@@ -872,8 +872,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             // Blit depth. If shader stencil export is present, blit stencil as well.
             if (blitDepthBuffer || (blitStencilBuffer && hasShaderStencilExport))
             {
-                vk::ImageView *depth = blitDepthBuffer ? &depthView.get() : nullptr;
-                vk::ImageView *stencil =
+                const vk::ImageView *depth = blitDepthBuffer ? &depthView.get() : nullptr;
+                const vk::ImageView *stencil =
                     blitStencilBuffer && hasShaderStencilExport ? &stencilView.get() : nullptr;
 
                 ANGLE_TRY(utilsVk.depthStencilBlitResolve(contextVk, this, depthStencilImage, depth,

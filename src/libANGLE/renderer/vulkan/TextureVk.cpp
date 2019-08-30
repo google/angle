@@ -692,7 +692,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
         {
             params.srcLayer = layerIndex;
 
-            vk::ImageView *destView;
+            const vk::ImageView *destView;
             ANGLE_TRY(
                 getLayerLevelDrawImageView(contextVk, baseLayer + layerIndex, level, &destView));
 
@@ -1215,7 +1215,7 @@ angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
 
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
-        vk::ImageView *drawView;
+        const vk::ImageView *drawView;
         ANGLE_TRY(getLayerLevelDrawImageView(contextVk, layerIndex, 0, &drawView));
 
         // Users of the render target expect the views to directly view the desired layer, so we
@@ -1244,7 +1244,7 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
     mCubeMapRenderTargets.resize(gl::kCubeFaceCount);
     for (uint32_t cubeMapFaceIndex = 0; cubeMapFaceIndex < gl::kCubeFaceCount; ++cubeMapFaceIndex)
     {
-        vk::ImageView *drawView;
+        const vk::ImageView *drawView;
         ANGLE_TRY(getLayerLevelDrawImageView(contextVk, cubeMapFaceIndex, 0, &drawView));
 
         // Users of the render target expect the views to directly view the desired layer, so we
@@ -1423,7 +1423,7 @@ const vk::ImageView &TextureVk::getFetchImageView() const
 angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
                                                     size_t layer,
                                                     size_t level,
-                                                    vk::ImageView **imageViewOut)
+                                                    const vk::ImageView **imageViewOut)
 {
     ASSERT(mImage->valid());
     ASSERT(!mImage->getFormat().imageFormat().isBlock);
@@ -1444,8 +1444,9 @@ angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
     }
     ASSERT(mLayerLevelDrawImageViews[layer].size() > level);
 
-    *imageViewOut = &mLayerLevelDrawImageViews[layer][level];
-    if ((*imageViewOut)->valid())
+    vk::ImageView *imageView = &mLayerLevelDrawImageViews[layer][level];
+    *imageViewOut            = imageView;
+    if (imageView->valid())
     {
         return angle::Result::Continue;
     }
@@ -1455,7 +1456,7 @@ angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
     // don't have swizzle.
     gl::TextureType viewType = vk::Get2DTextureType(layerCount, mImage->getSamples());
     return mImage->initLayerImageView(context, viewType, mImage->getAspectFlags(),
-                                      gl::SwizzleState(), *imageViewOut,
+                                      gl::SwizzleState(), imageView,
                                       getNativeImageLevel(static_cast<uint32_t>(level)), 1,
                                       getNativeImageLayer(static_cast<uint32_t>(layer)), 1);
 }
