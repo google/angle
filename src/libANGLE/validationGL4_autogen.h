@@ -27,8 +27,11 @@ bool ValidateBlendFuncSeparatei(Context *context,
                                 GLenum srcAlpha,
                                 GLenum dstAlpha);
 bool ValidateBlendFunci(Context *context, GLuint buf, GLenum src, GLenum dst);
-bool ValidateDrawTransformFeedback(Context *context, GLenum mode, GLuint id);
-bool ValidateDrawTransformFeedbackStream(Context *context, GLenum mode, GLuint id, GLuint stream);
+bool ValidateDrawTransformFeedback(Context *context, GLenum mode, TransformFeedbackID idPacked);
+bool ValidateDrawTransformFeedbackStream(Context *context,
+                                         GLenum mode,
+                                         TransformFeedbackID idPacked,
+                                         GLuint stream);
 bool ValidateEndQueryIndexed(Context *context, GLenum target, GLuint index);
 bool ValidateGetActiveSubroutineName(Context *context,
                                      ShaderProgramID programPacked,

@@ -2447,7 +2447,7 @@ static bool ValidateObjectIdentifierAndName(Context *context, GLenum identifier,
             return true;
 
         case GL_TRANSFORM_FEEDBACK:
-            if (context->getTransformFeedback(name) == nullptr)
+            if (context->getTransformFeedback({name}) == nullptr)
             {
                 context->validationError(GL_INVALID_VALUE, kInvalidTransformFeedbackName);
                 return false;

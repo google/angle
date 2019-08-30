@@ -46,7 +46,7 @@ angle::CallCapture CaptureBindSampler(const Context *context,
 angle::CallCapture CaptureBindTransformFeedback(const Context *context,
                                                 bool isCallValid,
                                                 GLenum target,
-                                                GLuint id);
+                                                TransformFeedbackID idPacked);
 angle::CallCapture CaptureBindVertexArray(const Context *context,
                                           bool isCallValid,
                                           VertexArrayID arrayPacked);
@@ -143,7 +143,7 @@ angle::CallCapture CaptureDeleteSync(const Context *context, bool isCallValid, G
 angle::CallCapture CaptureDeleteTransformFeedbacks(const Context *context,
                                                    bool isCallValid,
                                                    GLsizei n,
-                                                   const GLuint *ids);
+                                                   const TransformFeedbackID *idsPacked);
 angle::CallCapture CaptureDeleteVertexArrays(const Context *context,
                                              bool isCallValid,
                                              GLsizei n,
@@ -205,7 +205,7 @@ angle::CallCapture CaptureGenSamplers(const Context *context,
 angle::CallCapture CaptureGenTransformFeedbacks(const Context *context,
                                                 bool isCallValid,
                                                 GLsizei n,
-                                                GLuint *ids);
+                                                TransformFeedbackID *idsPacked);
 angle::CallCapture CaptureGenVertexArrays(const Context *context,
                                           bool isCallValid,
                                           GLsizei n,
@@ -368,7 +368,7 @@ angle::CallCapture CaptureIsSync(const Context *context,
                                  GLboolean returnValue);
 angle::CallCapture CaptureIsTransformFeedback(const Context *context,
                                               bool isCallValid,
-                                              GLuint id,
+                                              TransformFeedbackID idPacked,
                                               GLboolean returnValue);
 angle::CallCapture CaptureIsVertexArray(const Context *context,
                                         bool isCallValid,
@@ -650,11 +650,11 @@ void CaptureDeleteSamplers_samplersPacked(const Context *context,
                                           GLsizei count,
                                           const SamplerID *samplersPacked,
                                           angle::ParamCapture *paramCapture);
-void CaptureDeleteTransformFeedbacks_ids(const Context *context,
-                                         bool isCallValid,
-                                         GLsizei n,
-                                         const GLuint *ids,
-                                         angle::ParamCapture *paramCapture);
+void CaptureDeleteTransformFeedbacks_idsPacked(const Context *context,
+                                               bool isCallValid,
+                                               GLsizei n,
+                                               const TransformFeedbackID *idsPacked,
+                                               angle::ParamCapture *paramCapture);
 void CaptureDeleteVertexArrays_arraysPacked(const Context *context,
                                             bool isCallValid,
                                             GLsizei n,
@@ -692,11 +692,11 @@ void CaptureGenSamplers_samplersPacked(const Context *context,
                                        GLsizei count,
                                        SamplerID *samplersPacked,
                                        angle::ParamCapture *paramCapture);
-void CaptureGenTransformFeedbacks_ids(const Context *context,
-                                      bool isCallValid,
-                                      GLsizei n,
-                                      GLuint *ids,
-                                      angle::ParamCapture *paramCapture);
+void CaptureGenTransformFeedbacks_idsPacked(const Context *context,
+                                            bool isCallValid,
+                                            GLsizei n,
+                                            TransformFeedbackID *idsPacked,
+                                            angle::ParamCapture *paramCapture);
 void CaptureGenVertexArrays_arraysPacked(const Context *context,
                                          bool isCallValid,
                                          GLsizei n,

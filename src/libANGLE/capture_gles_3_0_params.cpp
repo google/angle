@@ -94,11 +94,11 @@ void CaptureDeleteSamplers_samplersPacked(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteTransformFeedbacks_ids(const Context *context,
-                                         bool isCallValid,
-                                         GLsizei n,
-                                         const GLuint *ids,
-                                         ParamCapture *paramCapture)
+void CaptureDeleteTransformFeedbacks_idsPacked(const Context *context,
+                                               bool isCallValid,
+                                               GLsizei n,
+                                               const TransformFeedbackID *ids,
+                                               ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -164,11 +164,11 @@ void CaptureGenSamplers_samplersPacked(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGenTransformFeedbacks_ids(const Context *context,
-                                      bool isCallValid,
-                                      GLsizei n,
-                                      GLuint *ids,
-                                      ParamCapture *paramCapture)
+void CaptureGenTransformFeedbacks_idsPacked(const Context *context,
+                                            bool isCallValid,
+                                            GLsizei n,
+                                            TransformFeedbackID *ids,
+                                            ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }

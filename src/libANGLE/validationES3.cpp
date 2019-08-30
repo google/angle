@@ -2426,12 +2426,12 @@ bool ValidateDeleteSamplers(Context *context, GLint count, const SamplerID *samp
     return ValidateGenOrDeleteCountES3(context, count);
 }
 
-bool ValidateGenTransformFeedbacks(Context *context, GLint n, GLuint *)
+bool ValidateGenTransformFeedbacks(Context *context, GLint n, TransformFeedbackID *ids)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateDeleteTransformFeedbacks(Context *context, GLint n, const GLuint *ids)
+bool ValidateDeleteTransformFeedbacks(Context *context, GLint n, const TransformFeedbackID *ids)
 {
     if (!ValidateGenOrDeleteES3(context, n))
     {
@@ -3601,7 +3601,7 @@ bool ValidateGetTransformFeedbackVarying(Context *context,
     return true;
 }
 
-bool ValidateBindTransformFeedback(Context *context, GLenum target, GLuint id)
+bool ValidateBindTransformFeedback(Context *context, GLenum target, TransformFeedbackID id)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3639,7 +3639,7 @@ bool ValidateBindTransformFeedback(Context *context, GLenum target, GLuint id)
     return true;
 }
 
-bool ValidateIsTransformFeedback(Context *context, GLuint id)
+bool ValidateIsTransformFeedback(Context *context, TransformFeedbackID id)
 {
     if (context->getClientMajorVersion() < 3)
     {

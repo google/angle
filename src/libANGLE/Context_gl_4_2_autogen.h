@@ -14,9 +14,10 @@
     void drawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type,        \
                                            const void *indices, GLsizei instancecount,     \
                                            GLuint baseinstance);                           \
-    void drawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount);    \
-    void drawTransformFeedbackStreamInstanced(GLenum mode, GLuint id, GLuint stream,       \
-                                              GLsizei instancecount);                      \
+    void drawTransformFeedbackInstanced(GLenum mode, TransformFeedbackID idPacked,         \
+                                        GLsizei instancecount);                            \
+    void drawTransformFeedbackStreamInstanced(GLenum mode, TransformFeedbackID idPacked,   \
+                                              GLuint stream, GLsizei instancecount);       \
     void getActiveAtomicCounterBufferiv(ShaderProgramID programPacked, GLuint bufferIndex, \
                                         GLenum pname, GLint *params);
 

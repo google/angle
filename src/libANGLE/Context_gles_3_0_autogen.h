@@ -17,7 +17,7 @@
     void bindBufferRange(BufferBinding targetPacked, GLuint index, BufferID bufferPacked,          \
                          GLintptr offset, GLsizeiptr size);                                        \
     void bindSampler(GLuint unit, SamplerID samplerPacked);                                        \
-    void bindTransformFeedback(GLenum target, GLuint id);                                          \
+    void bindTransformFeedback(GLenum target, TransformFeedbackID idPacked);                       \
     void bindVertexArray(VertexArrayID arrayPacked);                                               \
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0,          \
                          GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);   \
@@ -40,7 +40,7 @@
     void deleteQueries(GLsizei n, const QueryID *idsPacked);                                       \
     void deleteSamplers(GLsizei count, const SamplerID *samplersPacked);                           \
     void deleteSync(GLsync sync);                                                                  \
-    void deleteTransformFeedbacks(GLsizei n, const GLuint *ids);                                   \
+    void deleteTransformFeedbacks(GLsizei n, const TransformFeedbackID *idsPacked);                \
     void deleteVertexArrays(GLsizei n, const VertexArrayID *arraysPacked);                         \
     void drawArraysInstanced(PrimitiveMode modePacked, GLint first, GLsizei count,                 \
                              GLsizei instancecount);                                               \
@@ -58,7 +58,7 @@
                                  GLint level, GLint layer);                                        \
     void genQueries(GLsizei n, QueryID *idsPacked);                                                \
     void genSamplers(GLsizei count, SamplerID *samplersPacked);                                    \
-    void genTransformFeedbacks(GLsizei n, GLuint *ids);                                            \
+    void genTransformFeedbacks(GLsizei n, TransformFeedbackID *idsPacked);                         \
     void genVertexArrays(GLsizei n, VertexArrayID *arraysPacked);                                  \
     void getActiveUniformBlockName(ShaderProgramID programPacked, GLuint uniformBlockIndex,        \
                                    GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName);    \
@@ -97,7 +97,7 @@
     GLboolean isQuery(QueryID idPacked);                                                           \
     GLboolean isSampler(SamplerID samplerPacked);                                                  \
     GLboolean isSync(GLsync sync);                                                                 \
-    GLboolean isTransformFeedback(GLuint id);                                                      \
+    GLboolean isTransformFeedback(TransformFeedbackID idPacked);                                   \
     GLboolean isVertexArray(VertexArrayID arrayPacked);                                            \
     void *mapBufferRange(BufferBinding targetPacked, GLintptr offset, GLsizeiptr length,           \
                          GLbitfield access);                                                       \

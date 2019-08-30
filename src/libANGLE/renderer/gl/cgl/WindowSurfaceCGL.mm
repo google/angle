@@ -37,125 +37,125 @@
 - (id)initWithSharedState:(rx::SharedSwapState *)swapState
               withContext:(CGLContextObj)displayContext
             withFunctions:(const rx::FunctionsGL *)functions
+{
+    self = [super init];
+    if (self != nil)
     {
-        self = [super init];
-        if (self != nil)
+        self.asynchronous = YES;
+        mDisplayContext   = displayContext;
+
+        initialized = false;
+        mSwapState  = swapState;
+        mFunctions  = functions;
+
+        [self setFrame:CGRectMake(0, 0, mSwapState->textures[0].width,
+                                  mSwapState->textures[0].height)];
+    }
+    return self;
+}
+
+- (CGLPixelFormatObj)copyCGLPixelFormatForDisplayMask:(uint32_t)mask
+{
+    CGLPixelFormatAttribute attribs[] = {
+        kCGLPFADisplayMask, static_cast<CGLPixelFormatAttribute>(mask), kCGLPFAOpenGLProfile,
+        static_cast<CGLPixelFormatAttribute>(kCGLOGLPVersion_3_2_Core),
+        static_cast<CGLPixelFormatAttribute>(0)};
+
+    CGLPixelFormatObj pixelFormat = nullptr;
+    GLint numFormats              = 0;
+    CGLChoosePixelFormat(attribs, &pixelFormat, &numFormats);
+
+    return pixelFormat;
+}
+
+- (CGLContextObj)copyCGLContextForPixelFormat:(CGLPixelFormatObj)pixelFormat
+{
+    CGLContextObj context = nullptr;
+    CGLCreateContext(pixelFormat, mDisplayContext, &context);
+    return context;
+}
+
+- (BOOL)canDrawInCGLContext:(CGLContextObj)glContext
+                pixelFormat:(CGLPixelFormatObj)pixelFormat
+               forLayerTime:(CFTimeInterval)timeInterval
+                displayTime:(const CVTimeStamp *)timeStamp
+{
+    BOOL result = NO;
+
+    pthread_mutex_lock(&mSwapState->mutex);
+    {
+        if (mSwapState->lastRendered->swapId > mSwapState->beingPresented->swapId)
         {
-            self.asynchronous = YES;
-            mDisplayContext   = displayContext;
-
-            initialized = false;
-            mSwapState  = swapState;
-            mFunctions  = functions;
-
-            [self setFrame:CGRectMake(0, 0, mSwapState->textures[0].width,
-                                      mSwapState->textures[0].height)];
+            std::swap(mSwapState->lastRendered, mSwapState->beingPresented);
+            result = YES;
         }
-        return self;
+    }
+    pthread_mutex_unlock(&mSwapState->mutex);
+
+    return result;
+}
+
+- (void)drawInCGLContext:(CGLContextObj)glContext
+             pixelFormat:(CGLPixelFormatObj)pixelFormat
+            forLayerTime:(CFTimeInterval)timeInterval
+             displayTime:(const CVTimeStamp *)timeStamp
+{
+    CGLSetCurrentContext(glContext);
+    if (!initialized)
+    {
+        initialized = true;
+
+        mFunctions->genFramebuffers(1, &mReadFramebuffer);
     }
 
-    - (CGLPixelFormatObj)copyCGLPixelFormatForDisplayMask:(uint32_t)mask
+    const auto &texture = *mSwapState->beingPresented;
+    if ([self frame].size.width != texture.width || [self frame].size.height != texture.height)
     {
-        CGLPixelFormatAttribute attribs[] = {
-            kCGLPFADisplayMask, static_cast<CGLPixelFormatAttribute>(mask), kCGLPFAOpenGLProfile,
-            static_cast<CGLPixelFormatAttribute>(kCGLOGLPVersion_3_2_Core),
-            static_cast<CGLPixelFormatAttribute>(0)};
+        [self setFrame:CGRectMake(0, 0, texture.width, texture.height)];
 
-        CGLPixelFormatObj pixelFormat = nullptr;
-        GLint numFormats = 0;
-        CGLChoosePixelFormat(attribs, &pixelFormat, &numFormats);
-
-        return pixelFormat;
+        // Without this, the OSX compositor / window system doesn't see the resize.
+        [self setNeedsDisplay];
     }
 
-    - (CGLContextObj)copyCGLContextForPixelFormat:(CGLPixelFormatObj)pixelFormat
-    {
-        CGLContextObj context = nullptr;
-        CGLCreateContext(pixelFormat, mDisplayContext, &context);
-        return context;
-    }
+    // TODO(cwallez) support 2.1 contexts too that don't have blitFramebuffer nor the
+    // GL_DRAW_FRAMEBUFFER_BINDING query
+    GLint drawFBO;
+    mFunctions->getIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFBO);
 
-    - (BOOL)canDrawInCGLContext:(CGLContextObj)glContext
-                    pixelFormat:(CGLPixelFormatObj)pixelFormat
-                   forLayerTime:(CFTimeInterval)timeInterval
-                    displayTime:(const CVTimeStamp *)timeStamp
-    {
-        BOOL result = NO;
+    mFunctions->bindFramebuffer(GL_FRAMEBUFFER, mReadFramebuffer);
+    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                     texture.texture, 0);
 
-        pthread_mutex_lock(&mSwapState->mutex);
-        {
-            if (mSwapState->lastRendered->swapId > mSwapState->beingPresented->swapId)
-            {
-                std::swap(mSwapState->lastRendered, mSwapState->beingPresented);
-                result = YES;
-            }
-        }
-        pthread_mutex_unlock(&mSwapState->mutex);
+    mFunctions->bindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer);
+    mFunctions->bindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    mFunctions->blitFramebuffer(0, 0, texture.width, texture.height, 0, 0, texture.width,
+                                texture.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-        return result;
-    }
+    // Call the super method to flush the context
+    [super drawInCGLContext:glContext
+                pixelFormat:pixelFormat
+               forLayerTime:timeInterval
+                displayTime:timeStamp];
+}
+@end
 
-    - (void)drawInCGLContext:(CGLContextObj)glContext
-                 pixelFormat:(CGLPixelFormatObj)pixelFormat
-                forLayerTime:(CFTimeInterval)timeInterval
-                 displayTime:(const CVTimeStamp *)timeStamp
-    {
-        CGLSetCurrentContext(glContext);
-        if (!initialized)
-        {
-            initialized = true;
+namespace rx
+{
 
-            mFunctions->genFramebuffers(1, &mReadFramebuffer);
-        }
-
-        const auto &texture = *mSwapState->beingPresented;
-        if ([self frame].size.width != texture.width || [self frame].size.height != texture.height)
-        {
-            [self setFrame:CGRectMake(0, 0, texture.width, texture.height)];
-
-            // Without this, the OSX compositor / window system doesn't see the resize.
-            [self setNeedsDisplay];
-        }
-
-        // TODO(cwallez) support 2.1 contexts too that don't have blitFramebuffer nor the
-        // GL_DRAW_FRAMEBUFFER_BINDING query
-        GLint drawFBO;
-        mFunctions->getIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFBO);
-
-        mFunctions->bindFramebuffer(GL_FRAMEBUFFER, mReadFramebuffer);
-        mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                                         texture.texture, 0);
-
-        mFunctions->bindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer);
-        mFunctions->bindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
-        mFunctions->blitFramebuffer(0, 0, texture.width, texture.height, 0, 0, texture.width,
-                                    texture.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-        // Call the super method to flush the context
-        [super drawInCGLContext:glContext
-                    pixelFormat:pixelFormat
-                   forLayerTime:timeInterval
-                    displayTime:timeStamp];
-    }
-    @end
-
-    namespace rx
-    {
-
-    WindowSurfaceCGL::WindowSurfaceCGL(const egl::SurfaceState &state,
-                                       RendererGL *renderer,
-                                       EGLNativeWindowType layer,
-                                       CGLContextObj context)
-        : SurfaceGL(state),
-          mSwapLayer(nil),
-          mCurrentSwapId(0),
-          mLayer(reinterpret_cast<CALayer *>(layer)),
-          mContext(context),
-          mFunctions(renderer->getFunctions()),
-          mStateManager(renderer->getStateManager()),
-          mDSRenderbuffer(0)
-    {
-        pthread_mutex_init(&mSwapState.mutex, nullptr);
+WindowSurfaceCGL::WindowSurfaceCGL(const egl::SurfaceState &state,
+                                   RendererGL *renderer,
+                                   EGLNativeWindowType layer,
+                                   CGLContextObj context)
+    : SurfaceGL(state),
+      mSwapLayer(nil),
+      mCurrentSwapId(0),
+      mLayer(reinterpret_cast<CALayer *>(layer)),
+      mContext(context),
+      mFunctions(renderer->getFunctions()),
+      mStateManager(renderer->getStateManager()),
+      mDSRenderbuffer(0)
+{
+    pthread_mutex_init(&mSwapState.mutex, nullptr);
 }
 
 WindowSurfaceCGL::~WindowSurfaceCGL()

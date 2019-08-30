@@ -263,44 +263,48 @@ template <>
 void WriteParamValueToStream<ParamType::TBufferID>(std::ostream &os, gl::BufferID value);
 
 template <>
+void WriteParamValueToStream<ParamType::TFenceNVID>(std::ostream &os, gl::FenceNVID value);
+
+template <>
 void WriteParamValueToStream<ParamType::TFramebufferID>(std::ostream &os, gl::FramebufferID value);
-
-template <>
-void WriteParamValueToStream<ParamType::TProgramPipelineID>(std::ostream &os,
-                                                            gl::ProgramPipelineID value);
-
-template <>
-void WriteParamValueToStream<ParamType::TShaderProgramID>(std::ostream &os,
-                                                          gl::ShaderProgramID value);
-
-template <>
-void WriteParamValueToStream<ParamType::TSemaphoreID>(std::ostream &os, gl::SemaphoreID value);
 
 template <>
 void WriteParamValueToStream<ParamType::TMemoryObjectID>(std::ostream &os,
                                                          gl::MemoryObjectID value);
 
 template <>
-void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::VertexArrayID value);
+void WriteParamValueToStream<ParamType::TPathID>(std::ostream &os, gl::PathID value);
+
+template <>
+void WriteParamValueToStream<ParamType::TProgramPipelineID>(std::ostream &os,
+                                                            gl::ProgramPipelineID value);
+
+template <>
+void WriteParamValueToStream<ParamType::TQueryID>(std::ostream &os, gl::QueryID value);
 
 template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os,
                                                          gl::RenderbufferID value);
 
 template <>
-void WriteParamValueToStream<ParamType::TPathID>(std::ostream &os, gl::PathID value);
+void WriteParamValueToStream<ParamType::TSamplerID>(std::ostream &os, gl::SamplerID value);
+
+template <>
+void WriteParamValueToStream<ParamType::TSemaphoreID>(std::ostream &os, gl::SemaphoreID value);
+
+template <>
+void WriteParamValueToStream<ParamType::TShaderProgramID>(std::ostream &os,
+                                                          gl::ShaderProgramID value);
 
 template <>
 void WriteParamValueToStream<ParamType::TTextureID>(std::ostream &os, gl::TextureID value);
 
 template <>
-void WriteParamValueToStream<ParamType::TSamplerID>(std::ostream &os, gl::SamplerID value);
+void WriteParamValueToStream<ParamType::TTransformFeedbackID>(std::ostream &os,
+                                                              gl::TransformFeedbackID value);
 
 template <>
-void WriteParamValueToStream<ParamType::TFenceNVID>(std::ostream &os, gl::FenceNVID value);
-
-template <>
-void WriteParamValueToStream<ParamType::TQueryID>(std::ostream &os, gl::QueryID value);
+void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::VertexArrayID value);
 
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>

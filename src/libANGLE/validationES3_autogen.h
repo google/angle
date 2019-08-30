@@ -30,7 +30,7 @@ bool ValidateBindBufferRange(Context *context,
                              GLintptr offset,
                              GLsizeiptr size);
 bool ValidateBindSampler(Context *context, GLuint unit, SamplerID samplerPacked);
-bool ValidateBindTransformFeedback(Context *context, GLenum target, GLuint id);
+bool ValidateBindTransformFeedback(Context *context, GLenum target, TransformFeedbackID idPacked);
 bool ValidateBindVertexArray(Context *context, VertexArrayID arrayPacked);
 bool ValidateBlitFramebuffer(Context *context,
                              GLint srcX0,
@@ -93,7 +93,9 @@ bool ValidateCopyTexSubImage3D(Context *context,
 bool ValidateDeleteQueries(Context *context, GLsizei n, const QueryID *idsPacked);
 bool ValidateDeleteSamplers(Context *context, GLsizei count, const SamplerID *samplersPacked);
 bool ValidateDeleteSync(Context *context, GLsync sync);
-bool ValidateDeleteTransformFeedbacks(Context *context, GLsizei n, const GLuint *ids);
+bool ValidateDeleteTransformFeedbacks(Context *context,
+                                      GLsizei n,
+                                      const TransformFeedbackID *idsPacked);
 bool ValidateDeleteVertexArrays(Context *context, GLsizei n, const VertexArrayID *arraysPacked);
 bool ValidateDrawArraysInstanced(Context *context,
                                  PrimitiveMode modePacked,
@@ -129,7 +131,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
                                      GLint layer);
 bool ValidateGenQueries(Context *context, GLsizei n, QueryID *idsPacked);
 bool ValidateGenSamplers(Context *context, GLsizei count, SamplerID *samplersPacked);
-bool ValidateGenTransformFeedbacks(Context *context, GLsizei n, GLuint *ids);
+bool ValidateGenTransformFeedbacks(Context *context, GLsizei n, TransformFeedbackID *idsPacked);
 bool ValidateGenVertexArrays(Context *context, GLsizei n, VertexArrayID *arraysPacked);
 bool ValidateGetActiveUniformBlockName(Context *context,
                                        ShaderProgramID programPacked,
@@ -228,7 +230,7 @@ bool ValidateInvalidateSubFramebuffer(Context *context,
 bool ValidateIsQuery(Context *context, QueryID idPacked);
 bool ValidateIsSampler(Context *context, SamplerID samplerPacked);
 bool ValidateIsSync(Context *context, GLsync sync);
-bool ValidateIsTransformFeedback(Context *context, GLuint id);
+bool ValidateIsTransformFeedback(Context *context, TransformFeedbackID idPacked);
 bool ValidateIsVertexArray(Context *context, VertexArrayID arrayPacked);
 bool ValidateMapBufferRange(Context *context,
                             BufferBinding targetPacked,

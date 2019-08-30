@@ -394,6 +394,18 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
         case ParamType::TTextureType:
             WriteParamValueToStream<ParamType::TTextureType>(os, paramValue.TextureTypeVal);
             break;
+        case ParamType::TTransformFeedbackID:
+            WriteParamValueToStream<ParamType::TTransformFeedbackID>(
+                os, paramValue.TransformFeedbackIDVal);
+            break;
+        case ParamType::TTransformFeedbackIDConstPointer:
+            WriteParamValueToStream<ParamType::TTransformFeedbackIDConstPointer>(
+                os, paramValue.TransformFeedbackIDConstPointerVal);
+            break;
+        case ParamType::TTransformFeedbackIDPointer:
+            WriteParamValueToStream<ParamType::TTransformFeedbackIDPointer>(
+                os, paramValue.TransformFeedbackIDPointerVal);
+            break;
         case ParamType::TVertexArrayID:
             WriteParamValueToStream<ParamType::TVertexArrayID>(os, paramValue.VertexArrayIDVal);
             break;
@@ -652,6 +664,12 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLenum";
         case ParamType::TTextureType:
             return "GLenum";
+        case ParamType::TTransformFeedbackID:
+            return "GLuint";
+        case ParamType::TTransformFeedbackIDConstPointer:
+            return "const GLuint *";
+        case ParamType::TTransformFeedbackIDPointer:
+            return "GLuint *";
         case ParamType::TVertexArrayID:
             return "GLuint";
         case ParamType::TVertexArrayIDConstPointer:

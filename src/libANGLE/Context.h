@@ -385,7 +385,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Sampler *getSampler(SamplerID handle) const;
     Query *getQuery(QueryID handle, bool create, QueryType type);
     Query *getQuery(QueryID handle) const;
-    TransformFeedback *getTransformFeedback(GLuint handle) const;
+    TransformFeedback *getTransformFeedback(TransformFeedbackID handle) const;
     ProgramPipeline *getProgramPipeline(ProgramPipelineID handle) const;
     MemoryObject *getMemoryObject(MemoryObjectID handle) const;
     Semaphore *getSemaphore(SemaphoreID handle) const;
@@ -397,7 +397,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Compiler *getCompiler() const;
 
     bool isVertexArrayGenerated(VertexArrayID vertexArray);
-    bool isTransformFeedbackGenerated(GLuint vertexArray);
+    bool isTransformFeedbackGenerated(TransformFeedbackID transformFeedback);
 
     void getBooleanvImpl(GLenum pname, GLboolean *params);
     void getFloatvImpl(GLenum pname, GLfloat *params);
@@ -591,7 +591,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::Result syncStateForPathOperation();
 
     VertexArray *checkVertexArrayAllocation(VertexArrayID vertexArrayHandle);
-    TransformFeedback *checkTransformFeedbackAllocation(GLuint transformFeedback);
+    TransformFeedback *checkTransformFeedbackAllocation(TransformFeedbackID transformFeedback);
 
     angle::Result onProgramLink(Program *programObject);
 
@@ -600,7 +600,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void detachFramebuffer(FramebufferID framebuffer);
     void detachRenderbuffer(RenderbufferID renderbuffer);
     void detachVertexArray(VertexArrayID vertexArray);
-    void detachTransformFeedback(GLuint transformFeedback);
+    void detachTransformFeedback(TransformFeedbackID transformFeedback);
     void detachSampler(SamplerID sampler);
     void detachProgramPipeline(ProgramPipelineID pipeline);
 
@@ -658,7 +658,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     ResourceMap<VertexArray, VertexArrayID> mVertexArrayMap;
     HandleAllocator mVertexArrayHandleAllocator;
 
-    ResourceMap<TransformFeedback> mTransformFeedbackMap;
+    ResourceMap<TransformFeedback, TransformFeedbackID> mTransformFeedbackMap;
     HandleAllocator mTransformFeedbackHandleAllocator;
 
     const char *mVersionString;

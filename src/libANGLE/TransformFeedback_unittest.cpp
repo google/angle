@@ -41,7 +41,7 @@ class TransformFeedbackTest : public testing::Test
         // Set a reasonable number of tf attributes
         mCaps.maxTransformFeedbackSeparateAttributes = 8;
 
-        mFeedback = new gl::TransformFeedback(&mMockFactory, 1, mCaps);
+        mFeedback = new gl::TransformFeedback(&mMockFactory, gl::TransformFeedbackID{1}, mCaps);
         mFeedback->addRef();
 
         mImpl = rx::GetImplAs<rx::MockTransformFeedbackImpl>(mFeedback);

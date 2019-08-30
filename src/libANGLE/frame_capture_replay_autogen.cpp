@@ -151,7 +151,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
         case gl::EntryPoint::BindTransformFeedback:
             context->bindTransformFeedback(
                 params.getParam("target", ParamType::TGLenum, 0).value.GLenumVal,
-                params.getParam("id", ParamType::TGLuint, 1).value.GLuintVal);
+                params.getParam("idPacked", ParamType::TTransformFeedbackID, 1)
+                    .value.TransformFeedbackIDVal);
             break;
         case gl::EntryPoint::BindVertexArray:
             context->bindVertexArray(params.getParam("arrayPacked", ParamType::TVertexArrayID, 0)
@@ -544,8 +545,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
         case gl::EntryPoint::DeleteTransformFeedbacks:
             context->deleteTransformFeedbacks(
                 params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                replayContext->getAsConstPointer<const GLuint *>(
-                    params.getParam("ids", ParamType::TGLuintConstPointer, 1)));
+                replayContext->getAsConstPointer<const TransformFeedbackID *>(
+                    params.getParam("idsPacked", ParamType::TTransformFeedbackIDConstPointer, 1)));
             break;
         case gl::EntryPoint::DeleteVertexArrays:
             context->deleteVertexArrays(
@@ -850,8 +851,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
         case gl::EntryPoint::GenTransformFeedbacks:
             context->genTransformFeedbacks(
                 params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                replayContext->getReadBufferPointer<GLuint *>(
-                    params.getParam("ids", ParamType::TGLuintPointer, 1)));
+                replayContext->getReadBufferPointer<TransformFeedbackID *>(
+                    params.getParam("idsPacked", ParamType::TTransformFeedbackIDPointer, 1)));
             break;
         case gl::EntryPoint::GenVertexArrays:
             context->genVertexArrays(
@@ -1650,7 +1651,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::IsTransformFeedback:
             context->isTransformFeedback(
-                params.getParam("id", ParamType::TGLuint, 0).value.GLuintVal);
+                params.getParam("idPacked", ParamType::TTransformFeedbackID, 0)
+                    .value.TransformFeedbackIDVal);
             break;
         case gl::EntryPoint::IsVertexArray:
             context->isVertexArray(params.getParam("arrayPacked", ParamType::TVertexArrayID, 0)

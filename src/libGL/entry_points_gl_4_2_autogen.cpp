@@ -164,14 +164,16 @@ void GL_APIENTRY DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei 
 
     if (context)
     {
+        TransformFeedbackID idPacked                  = FromGL<TransformFeedbackID>(id);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateDrawTransformFeedbackInstanced(
-                                                             context, mode, id, instancecount));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDrawTransformFeedbackInstanced(context, mode, idPacked, instancecount));
         if (isCallValid)
         {
-            context->drawTransformFeedbackInstanced(mode, id, instancecount);
+            context->drawTransformFeedbackInstanced(mode, idPacked, instancecount);
         }
-        ANGLE_CAPTURE(DrawTransformFeedbackInstanced, isCallValid, context, mode, id,
+        ANGLE_CAPTURE(DrawTransformFeedbackInstanced, isCallValid, context, mode, idPacked,
                       instancecount);
     }
 }
@@ -190,16 +192,17 @@ void GL_APIENTRY DrawTransformFeedbackStreamInstanced(GLenum mode,
 
     if (context)
     {
+        TransformFeedbackID idPacked                  = FromGL<TransformFeedbackID>(id);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateDrawTransformFeedbackStreamInstanced(
-                                              context, mode, id, stream, instancecount));
+                                              context, mode, idPacked, stream, instancecount));
         if (isCallValid)
         {
-            context->drawTransformFeedbackStreamInstanced(mode, id, stream, instancecount);
+            context->drawTransformFeedbackStreamInstanced(mode, idPacked, stream, instancecount);
         }
-        ANGLE_CAPTURE(DrawTransformFeedbackStreamInstanced, isCallValid, context, mode, id, stream,
-                      instancecount);
+        ANGLE_CAPTURE(DrawTransformFeedbackStreamInstanced, isCallValid, context, mode, idPacked,
+                      stream, instancecount);
     }
 }
 

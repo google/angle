@@ -2292,12 +2292,12 @@ void Context::blendFunci(GLuint buf, GLenum src, GLenum dst)
     UNIMPLEMENTED();
 }
 
-void Context::drawTransformFeedback(GLenum mode, GLuint id)
+void Context::drawTransformFeedback(GLenum mode, TransformFeedbackID id)
 {
     UNIMPLEMENTED();
 }
 
-void Context::drawTransformFeedbackStream(GLenum mode, GLuint id, GLuint stream)
+void Context::drawTransformFeedbackStream(GLenum mode, TransformFeedbackID id, GLuint stream)
 {
     UNIMPLEMENTED();
 }
@@ -2761,13 +2761,15 @@ void Context::drawElementsInstancedBaseInstance(GLenum mode,
     UNIMPLEMENTED();
 }
 
-void Context::drawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount)
+void Context::drawTransformFeedbackInstanced(GLenum mode,
+                                             TransformFeedbackID id,
+                                             GLsizei instancecount)
 {
     UNIMPLEMENTED();
 }
 
 void Context::drawTransformFeedbackStreamInstanced(GLenum mode,
-                                                   GLuint id,
+                                                   TransformFeedbackID id,
                                                    GLuint stream,
                                                    GLsizei instancecount)
 {

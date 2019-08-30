@@ -1487,9 +1487,10 @@ void State::setTransformFeedbackBinding(const Context *context,
     mDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING);
 }
 
-bool State::removeTransformFeedbackBinding(const Context *context, GLuint transformFeedback)
+bool State::removeTransformFeedbackBinding(const Context *context,
+                                           TransformFeedbackID transformFeedback)
 {
-    if (mTransformFeedback.id() == transformFeedback)
+    if (mTransformFeedback.id() == transformFeedback.value)
     {
         if (mTransformFeedback.get())
             mTransformFeedback->onBindingChanged(context, false);

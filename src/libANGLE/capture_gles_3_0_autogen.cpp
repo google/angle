@@ -95,13 +95,13 @@ CallCapture CaptureBindSampler(const Context *context,
 CallCapture CaptureBindTransformFeedback(const Context *context,
                                          bool isCallValid,
                                          GLenum target,
-                                         GLuint id)
+                                         TransformFeedbackID idPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addEnumParam("target", GLenumGroup::BindTransformFeedbackTarget, ParamType::TGLenum,
                              target);
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TTransformFeedbackID, idPacked);
 
     return CallCapture(gl::EntryPoint::BindTransformFeedback, std::move(paramBuffer));
 }
@@ -404,16 +404,16 @@ CallCapture CaptureDeleteSync(const Context *context, bool isCallValid, GLsync s
 CallCapture CaptureDeleteTransformFeedbacks(const Context *context,
                                             bool isCallValid,
                                             GLsizei n,
-                                            const GLuint *ids)
+                                            const TransformFeedbackID *idsPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture idsParam("ids", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, ids, &idsParam.value);
-    CaptureDeleteTransformFeedbacks_ids(context, isCallValid, n, ids, &idsParam);
-    paramBuffer.addParam(std::move(idsParam));
+    ParamCapture idsPackedParam("idsPacked", ParamType::TTransformFeedbackIDConstPointer);
+    InitParamValue(ParamType::TTransformFeedbackIDConstPointer, idsPacked, &idsPackedParam.value);
+    CaptureDeleteTransformFeedbacks_idsPacked(context, isCallValid, n, idsPacked, &idsPackedParam);
+    paramBuffer.addParam(std::move(idsPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteTransformFeedbacks, std::move(paramBuffer));
 }
@@ -629,16 +629,16 @@ CallCapture CaptureGenSamplers(const Context *context,
 CallCapture CaptureGenTransformFeedbacks(const Context *context,
                                          bool isCallValid,
                                          GLsizei n,
-                                         GLuint *ids)
+                                         TransformFeedbackID *idsPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture idsParam("ids", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, ids, &idsParam.value);
-    CaptureGenTransformFeedbacks_ids(context, isCallValid, n, ids, &idsParam);
-    paramBuffer.addParam(std::move(idsParam));
+    ParamCapture idsPackedParam("idsPacked", ParamType::TTransformFeedbackIDPointer);
+    InitParamValue(ParamType::TTransformFeedbackIDPointer, idsPacked, &idsPackedParam.value);
+    CaptureGenTransformFeedbacks_idsPacked(context, isCallValid, n, idsPacked, &idsPackedParam);
+    paramBuffer.addParam(std::move(idsPackedParam));
 
     return CallCapture(gl::EntryPoint::GenTransformFeedbacks, std::move(paramBuffer));
 }
@@ -1295,12 +1295,12 @@ CallCapture CaptureIsSync(const Context *context,
 
 CallCapture CaptureIsTransformFeedback(const Context *context,
                                        bool isCallValid,
-                                       GLuint id,
+                                       TransformFeedbackID idPacked,
                                        GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+    paramBuffer.addValueParam("idPacked", ParamType::TTransformFeedbackID, idPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);

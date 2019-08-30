@@ -126,6 +126,9 @@ enum class ParamType
     TTextureIDPointer,
     TTextureTarget,
     TTextureType,
+    TTransformFeedbackID,
+    TTransformFeedbackIDConstPointer,
+    TTransformFeedbackIDPointer,
     TVertexArrayID,
     TVertexArrayIDConstPointer,
     TVertexArrayIDPointer,
@@ -247,6 +250,9 @@ union ParamValue
     gl::TextureID *TextureIDPointerVal;
     gl::TextureTarget TextureTargetVal;
     gl::TextureType TextureTypeVal;
+    gl::TransformFeedbackID TransformFeedbackIDVal;
+    const gl::TransformFeedbackID *TransformFeedbackIDConstPointerVal;
+    gl::TransformFeedbackID *TransformFeedbackIDPointerVal;
     gl::VertexArrayID VertexArrayIDVal;
     const gl::VertexArrayID *VertexArrayIDConstPointerVal;
     gl::VertexArrayID *VertexArrayIDPointerVal;
@@ -982,6 +988,28 @@ inline gl::TextureType GetParamVal<ParamType::TTextureType, gl::TextureType>(
 }
 
 template <>
+inline gl::TransformFeedbackID
+GetParamVal<ParamType::TTransformFeedbackID, gl::TransformFeedbackID>(const ParamValue &value)
+{
+    return value.TransformFeedbackIDVal;
+}
+
+template <>
+inline const gl::TransformFeedbackID *
+GetParamVal<ParamType::TTransformFeedbackIDConstPointer, const gl::TransformFeedbackID *>(
+    const ParamValue &value)
+{
+    return value.TransformFeedbackIDConstPointerVal;
+}
+
+template <>
+inline gl::TransformFeedbackID *GetParamVal<ParamType::TTransformFeedbackIDPointer,
+                                            gl::TransformFeedbackID *>(const ParamValue &value)
+{
+    return value.TransformFeedbackIDPointerVal;
+}
+
+template <>
 inline gl::VertexArrayID GetParamVal<ParamType::TVertexArrayID, gl::VertexArrayID>(
     const ParamValue &value)
 {
@@ -1264,6 +1292,12 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TTextureTarget, T>(value);
         case ParamType::TTextureType:
             return GetParamVal<ParamType::TTextureType, T>(value);
+        case ParamType::TTransformFeedbackID:
+            return GetParamVal<ParamType::TTransformFeedbackID, T>(value);
+        case ParamType::TTransformFeedbackIDConstPointer:
+            return GetParamVal<ParamType::TTransformFeedbackIDConstPointer, T>(value);
+        case ParamType::TTransformFeedbackIDPointer:
+            return GetParamVal<ParamType::TTransformFeedbackIDPointer, T>(value);
         case ParamType::TVertexArrayID:
             return GetParamVal<ParamType::TVertexArrayID, T>(value);
         case ParamType::TVertexArrayIDConstPointer:
@@ -1987,6 +2021,28 @@ inline void SetParamVal<ParamType::TTextureType>(gl::TextureType valueIn, ParamV
 }
 
 template <>
+inline void SetParamVal<ParamType::TTransformFeedbackID>(gl::TransformFeedbackID valueIn,
+                                                         ParamValue *valueOut)
+{
+    valueOut->TransformFeedbackIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TTransformFeedbackIDConstPointer>(
+    const gl::TransformFeedbackID *valueIn,
+    ParamValue *valueOut)
+{
+    valueOut->TransformFeedbackIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TTransformFeedbackIDPointer>(gl::TransformFeedbackID *valueIn,
+                                                                ParamValue *valueOut)
+{
+    valueOut->TransformFeedbackIDPointerVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TVertexArrayID>(gl::VertexArrayID valueIn, ParamValue *valueOut)
 {
     valueOut->VertexArrayIDVal = valueIn;
@@ -2375,6 +2431,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TTextureType:
             SetParamVal<ParamType::TTextureType>(valueIn, valueOut);
+            break;
+        case ParamType::TTransformFeedbackID:
+            SetParamVal<ParamType::TTransformFeedbackID>(valueIn, valueOut);
+            break;
+        case ParamType::TTransformFeedbackIDConstPointer:
+            SetParamVal<ParamType::TTransformFeedbackIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TTransformFeedbackIDPointer:
+            SetParamVal<ParamType::TTransformFeedbackIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TVertexArrayID:
             SetParamVal<ParamType::TVertexArrayID>(valueIn, valueOut);

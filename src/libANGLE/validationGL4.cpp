@@ -41,12 +41,15 @@ bool ValidateBlendFunci(Context *context, GLuint buf, GLenum src, GLenum dst)
     return true;
 }
 
-bool ValidateDrawTransformFeedback(Context *context, GLenum mode, GLuint id)
+bool ValidateDrawTransformFeedback(Context *context, GLenum mode, TransformFeedbackID id)
 {
     return true;
 }
 
-bool ValidateDrawTransformFeedbackStream(Context *context, GLenum mode, GLuint id, GLuint stream)
+bool ValidateDrawTransformFeedbackStream(Context *context,
+                                         GLenum mode,
+                                         TransformFeedbackID id,
+                                         GLuint stream)
 {
     return true;
 }

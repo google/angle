@@ -60,7 +60,7 @@ class TransformFeedbackState final : angle::NonCopyable
 class TransformFeedback final : public RefCountObject, public LabeledObject
 {
   public:
-    TransformFeedback(rx::GLImplFactory *implFactory, GLuint id, const Caps &caps);
+    TransformFeedback(rx::GLImplFactory *implFactory, TransformFeedbackID id, const Caps &caps);
     ~TransformFeedback() override;
     void onDestroy(const Context *context) override;
 

@@ -854,17 +854,15 @@ template <>
 void WriteParamValueToStream<ParamType::TGLDEBUGPROC>(std::ostream &os, GLDEBUGPROC value)
 {}
 
-// TODO(jmadill): Use buffer ID map. http://anglebug.com/3611
+// TODO(jmadill): Use resource ID map. http://anglebug.com/3611
 template <>
 void WriteParamValueToStream<ParamType::TBufferID>(std::ostream &os, gl::BufferID value)
 {
     os << value.value;
 }
 
-// TODO(jmadill): Use program pipeline ID map. http://anglebug.com/3611
 template <>
-void WriteParamValueToStream<ParamType::TProgramPipelineID>(std::ostream &os,
-                                                            gl::ProgramPipelineID value)
+void WriteParamValueToStream<ParamType::TFenceNVID>(std::ostream &os, gl::FenceNVID value)
 {
     os << value.value;
 }
@@ -876,19 +874,26 @@ void WriteParamValueToStream<ParamType::TFramebufferID>(std::ostream &os, gl::Fr
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TSemaphoreID>(std::ostream &os, gl::SemaphoreID value)
-{
-    os << value.value;
-}
-
-template <>
 void WriteParamValueToStream<ParamType::TMemoryObjectID>(std::ostream &os, gl::MemoryObjectID value)
 {
     os << value.value;
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::VertexArrayID value)
+void WriteParamValueToStream<ParamType::TPathID>(std::ostream &os, gl::PathID value)
+{
+    os << value.value;
+}
+
+template <>
+void WriteParamValueToStream<ParamType::TProgramPipelineID>(std::ostream &os,
+                                                            gl::ProgramPipelineID value)
+{
+    os << value.value;
+}
+
+template <>
+void WriteParamValueToStream<ParamType::TQueryID>(std::ostream &os, gl::QueryID value)
 {
     os << value.value;
 }
@@ -896,26 +901,17 @@ void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::Ve
 template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os, gl::RenderbufferID value)
 {
-    os << "gRenderbufferMap[" << value.value << "]";
-}
-
-// TODO(jmadill): Use path ID map. http://anglebug.com/3611
-template <>
-void WriteParamValueToStream<ParamType::TPathID>(std::ostream &os, gl::PathID value)
-{
     os << value.value;
 }
 
-// TODO(jmadill): Use texture ID map. http://anglebug.com/3611
-template <>
-void WriteParamValueToStream<ParamType::TTextureID>(std::ostream &os, gl::TextureID value)
-{
-    os << value.value;
-}
-
-// TODO(jmadill): Use sampler ID map. http://anglebug.com/3611
 template <>
 void WriteParamValueToStream<ParamType::TSamplerID>(std::ostream &os, gl::SamplerID value)
+{
+    os << value.value;
+}
+
+template <>
+void WriteParamValueToStream<ParamType::TSemaphoreID>(std::ostream &os, gl::SemaphoreID value)
 {
     os << value.value;
 }
@@ -927,16 +923,21 @@ void WriteParamValueToStream<ParamType::TShaderProgramID>(std::ostream &os,
     os << value.value;
 }
 
-// TODO(jmadill): Use FenceNV ID map. http://anglebug.com/3611
 template <>
-void WriteParamValueToStream<ParamType::TFenceNVID>(std::ostream &os, gl::FenceNVID value)
+void WriteParamValueToStream<ParamType::TTextureID>(std::ostream &os, gl::TextureID value)
 {
     os << value.value;
 }
 
-// TODO(jmadill): Use query ID map. http://anglebug.com/3611
 template <>
-void WriteParamValueToStream<ParamType::TQueryID>(std::ostream &os, gl::QueryID value)
+void WriteParamValueToStream<ParamType::TTransformFeedbackID>(std::ostream &os,
+                                                              gl::TransformFeedbackID value)
+{
+    os << value.value;
+}
+
+template <>
+void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::VertexArrayID value)
 {
     os << value.value;
 }

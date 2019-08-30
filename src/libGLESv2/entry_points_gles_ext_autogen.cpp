@@ -7643,14 +7643,15 @@ void GL_APIENTRY BindTransformFeedbackContextANGLE(GLeglContext ctx, GLenum targ
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        TransformFeedbackID idPacked                  = FromGL<TransformFeedbackID>(id);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBindTransformFeedback(context, target, id));
+            (context->skipValidation() || ValidateBindTransformFeedback(context, target, idPacked));
         if (isCallValid)
         {
-            context->bindTransformFeedback(target, id);
+            context->bindTransformFeedback(target, idPacked);
         }
-        ANGLE_CAPTURE(BindTransformFeedback, isCallValid, context, target, id);
+        ANGLE_CAPTURE(BindTransformFeedback, isCallValid, context, target, idPacked);
     }
 }
 
@@ -9560,14 +9561,15 @@ void GL_APIENTRY DeleteTransformFeedbacksContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        const TransformFeedbackID *idsPacked          = FromGL<const TransformFeedbackID *>(ids);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateDeleteTransformFeedbacks(context, n, ids));
+            (context->skipValidation() || ValidateDeleteTransformFeedbacks(context, n, idsPacked));
         if (isCallValid)
         {
-            context->deleteTransformFeedbacks(n, ids);
+            context->deleteTransformFeedbacks(n, idsPacked);
         }
-        ANGLE_CAPTURE(DeleteTransformFeedbacks, isCallValid, context, n, ids);
+        ANGLE_CAPTURE(DeleteTransformFeedbacks, isCallValid, context, n, idsPacked);
     }
 }
 
@@ -11399,14 +11401,15 @@ void GL_APIENTRY GenTransformFeedbacksContextANGLE(GLeglContext ctx, GLsizei n, 
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        TransformFeedbackID *idsPacked                = FromGL<TransformFeedbackID *>(ids);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGenTransformFeedbacks(context, n, ids));
+            (context->skipValidation() || ValidateGenTransformFeedbacks(context, n, idsPacked));
         if (isCallValid)
         {
-            context->genTransformFeedbacks(n, ids);
+            context->genTransformFeedbacks(n, idsPacked);
         }
-        ANGLE_CAPTURE(GenTransformFeedbacks, isCallValid, context, n, ids);
+        ANGLE_CAPTURE(GenTransformFeedbacks, isCallValid, context, n, idsPacked);
     }
 }
 
@@ -15074,17 +15077,19 @@ GLboolean GL_APIENTRY IsTransformFeedbackContextANGLE(GLeglContext ctx, GLuint i
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        TransformFeedbackID idPacked                  = FromGL<TransformFeedbackID>(id);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateIsTransformFeedback(context, id));
+        bool isCallValid =
+            (context->skipValidation() || ValidateIsTransformFeedback(context, idPacked));
         if (isCallValid)
         {
-            returnValue = context->isTransformFeedback(id);
+            returnValue = context->isTransformFeedback(idPacked);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
         }
-        ANGLE_CAPTURE(IsTransformFeedback, isCallValid, context, id, returnValue);
+        ANGLE_CAPTURE(IsTransformFeedback, isCallValid, context, idPacked, returnValue);
     }
     else
     {

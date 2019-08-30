@@ -40,11 +40,11 @@ bool ValidateDrawElementsInstancedBaseVertexBaseInstance(Context *context,
                                                          GLuint baseinstance);
 bool ValidateDrawTransformFeedbackInstanced(Context *context,
                                             GLenum mode,
-                                            GLuint id,
+                                            TransformFeedbackID idPacked,
                                             GLsizei instancecount);
 bool ValidateDrawTransformFeedbackStreamInstanced(Context *context,
                                                   GLenum mode,
-                                                  GLuint id,
+                                                  TransformFeedbackID idPacked,
                                                   GLuint stream,
                                                   GLsizei instancecount);
 bool ValidateGetActiveAtomicCounterBufferiv(Context *context,

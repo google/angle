@@ -381,7 +381,7 @@ struct BufferID
     GLuint value;
 };
 
-struct ProgramPipelineID
+struct FenceNVID
 {
     GLuint value;
 };
@@ -391,17 +391,22 @@ struct FramebufferID
     GLuint value;
 };
 
-struct SemaphoreID
-{
-    GLuint value;
-};
-
 struct MemoryObjectID
 {
     GLuint value;
 };
 
-struct VertexArrayID
+struct PathID
+{
+    GLuint value;
+};
+
+struct ProgramPipelineID
+{
+    GLuint value;
+};
+
+struct QueryID
 {
     GLuint value;
 };
@@ -411,7 +416,12 @@ struct RenderbufferID
     GLuint value;
 };
 
-struct PathID
+struct SamplerID
+{
+    GLuint value;
+};
+
+struct SemaphoreID
 {
     GLuint value;
 };
@@ -426,17 +436,12 @@ struct TextureID
     GLuint value;
 };
 
-struct SamplerID
+struct TransformFeedbackID
 {
     GLuint value;
 };
 
-struct FenceNVID
-{
-    GLuint value;
-};
-
-struct QueryID
+struct VertexArrayID
 {
     GLuint value;
 };

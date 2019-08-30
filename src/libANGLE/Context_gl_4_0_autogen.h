@@ -17,8 +17,8 @@
     void blendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,           \
                             GLenum dstAlpha);                                                    \
     void blendFunci(GLuint buf, GLenum src, GLenum dst);                                         \
-    void drawTransformFeedback(GLenum mode, GLuint id);                                          \
-    void drawTransformFeedbackStream(GLenum mode, GLuint id, GLuint stream);                     \
+    void drawTransformFeedback(GLenum mode, TransformFeedbackID idPacked);                       \
+    void drawTransformFeedbackStream(GLenum mode, TransformFeedbackID idPacked, GLuint stream);  \
     void endQueryIndexed(GLenum target, GLuint index);                                           \
     void getActiveSubroutineName(ShaderProgramID programPacked, GLenum shadertype, GLuint index, \
                                  GLsizei bufsize, GLsizei *length, GLchar *name);                \

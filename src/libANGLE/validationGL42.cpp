@@ -46,7 +46,7 @@ bool ValidateDrawElementsInstancedBaseVertexBaseInstance(Context *context,
 
 bool ValidateDrawTransformFeedbackInstanced(Context *context,
                                             GLenum mode,
-                                            GLuint id,
+                                            TransformFeedbackID id,
                                             GLsizei instancecount)
 {
     return true;
@@ -54,7 +54,7 @@ bool ValidateDrawTransformFeedbackInstanced(Context *context,
 
 bool ValidateDrawTransformFeedbackStreamInstanced(Context *context,
                                                   GLenum mode,
-                                                  GLuint id,
+                                                  TransformFeedbackID id,
                                                   GLuint stream,
                                                   GLsizei instancecount)
 {
