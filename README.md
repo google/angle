@@ -12,7 +12,7 @@ underway, and future plans include compute shader support (ES 3.1) and MacOS sup
 |----------------|:-------------:|:----------------:|:--------------:|:-------------:|:-------------:|
 | OpenGL ES 2.0  |    complete   |    complete      |    complete    |   complete    |    complete   |
 | OpenGL ES 3.0  |               |    complete      |    complete    |   complete    |  in progress  |
-| OpenGL ES 3.1  |               |   in progress    |     complete   |   complete    |  not started  |
+| OpenGL ES 3.1  |               |   in progress    |    complete    |   complete    |  in progress  |
 | OpenGL ES 3.2  |               |                  |    planned     |    planned    |    planned    |
 
 ### Platform support via backing renderers
