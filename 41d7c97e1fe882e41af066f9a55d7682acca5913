@@ -16,6 +16,24 @@
       "revId": "41d7c97e1fe882e41af066f9a55d7682acca5913",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3e01f02_7519d2d8",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1074,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-08-31T02:39:58Z",
+      "side": 1,
+      "message": "This is an old semaphore we know for sure to no longer be in use. At the start, all semaphores are unused. WindowSurfaceVk::resizeSwapchainImages is the one that\u0027s creating fresh new semaphores for the circular buffer.\n\nIn other words, image.presentHistory[*].semaphore is always valid for every element. Note also that validity does not mean \"unused by the PE\", this check just asserts that the semaphore is allocated.",
+      "parentUuid": "afd5816a_e73a1cfd",
+      "revId": "41d7c97e1fe882e41af066f9a55d7682acca5913",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
