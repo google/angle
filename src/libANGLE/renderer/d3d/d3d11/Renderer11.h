@@ -410,7 +410,8 @@ class Renderer11 : public RendererD3D
                              gl::PrimitiveMode mode,
                              GLint firstVertex,
                              GLsizei vertexCount,
-                             GLsizei instanceCount);
+                             GLsizei instanceCount,
+                             GLuint baseInstance);
     angle::Result drawElements(const gl::Context *context,
                                gl::PrimitiveMode mode,
                                GLint startVertex,
