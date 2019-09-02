@@ -2735,7 +2735,7 @@ void main()
 TEST_P(ComputeShaderTest, UniformDirty)
 {
     // glReadPixels is getting the result of the first dispatch call.  http://anglebug.com/3879
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && (IsAMD() || IsNVIDIA()));
 
     GLTexture texture[2];
     GLFramebuffer framebuffer;
