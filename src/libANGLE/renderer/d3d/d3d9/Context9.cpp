@@ -10,7 +10,6 @@
 #include "libANGLE/renderer/d3d/d3d9/Context9.h"
 
 #include "common/string_utils.h"
-#include "libANGLE/renderer/OverlayImpl.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
@@ -144,12 +143,6 @@ SemaphoreImpl *Context9::createSemaphore()
 {
     UNREACHABLE();
     return nullptr;
-}
-
-OverlayImpl *Context9::createOverlay(const gl::OverlayState &state)
-{
-    // Not implemented.
-    return new OverlayImpl(state);
 }
 
 angle::Result Context9::flush(const gl::Context *context)

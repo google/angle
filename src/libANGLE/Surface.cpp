@@ -235,8 +235,6 @@ Error Surface::swap(const gl::Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "egl::Surface::swap");
 
-    context->getState().getOverlay()->onSwap();
-
     ANGLE_TRY(mImplementation->swap(context));
     postSwap(context);
     return NoError();
@@ -244,8 +242,6 @@ Error Surface::swap(const gl::Context *context)
 
 Error Surface::swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects)
 {
-    context->getState().getOverlay()->onSwap();
-
     ANGLE_TRY(mImplementation->swapWithDamage(context, rects, n_rects));
     postSwap(context);
     return NoError();
@@ -261,8 +257,6 @@ Error Surface::postSubBuffer(const gl::Context *context,
     {
         return egl::NoError();
     }
-
-    context->getState().getOverlay()->onSwap();
 
     ANGLE_TRY(mImplementation->postSubBuffer(context, x, y, width, height));
     postSwap(context);

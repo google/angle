@@ -17,7 +17,6 @@
 #include "common/bitset_utils.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/GLES1State.h"
-#include "libANGLE/Overlay.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/ProgramPipeline.h"
 #include "libANGLE/RefCountObject.h"
@@ -59,7 +58,6 @@ class State : angle::NonCopyable
     State(ContextID contextIn,
           const State *shareContextState,
           TextureManager *shareTextures,
-          const OverlayType *overlay,
           const EGLenum clientType,
           const Version &clientVersion,
           bool debug,
@@ -680,8 +678,6 @@ class State : angle::NonCopyable
         mProvokingVertex = val;
     }
 
-    const OverlayType *getOverlay() const { return mOverlay; }
-
   private:
     friend class Context;
 
@@ -895,9 +891,6 @@ class State : angle::NonCopyable
     ActiveTextureMask mDirtyTextures;
     ActiveTextureMask mDirtySamplers;
     ImageUnitMask mDirtyImages;
-
-    // The Overlay object, used by the backend to render the overlay.
-    const OverlayType *mOverlay;
 };
 
 ANGLE_INLINE angle::Result State::syncDirtyObjects(const Context *context,

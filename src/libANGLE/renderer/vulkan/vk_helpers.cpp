@@ -1425,7 +1425,7 @@ void BufferHelper::unmap(VkDevice device)
     }
 }
 
-angle::Result BufferHelper::flush(ContextVk *contextVk, VkDeviceSize offset, VkDeviceSize size)
+angle::Result BufferHelper::flush(ContextVk *contextVk, size_t offset, size_t size)
 {
     bool hostVisible  = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
     bool hostCoherent = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
@@ -1441,7 +1441,7 @@ angle::Result BufferHelper::flush(ContextVk *contextVk, VkDeviceSize offset, VkD
     return angle::Result::Continue;
 }
 
-angle::Result BufferHelper::invalidate(ContextVk *contextVk, VkDeviceSize offset, VkDeviceSize size)
+angle::Result BufferHelper::invalidate(ContextVk *contextVk, size_t offset, size_t size)
 {
     bool hostVisible  = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
     bool hostCoherent = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;

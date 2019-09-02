@@ -182,7 +182,6 @@ class CommandGraphNode final : angle::NonCopyable
     uintptr_t getResourceIDForDiagnostics() const { return mResourceID; }
     bool hasDiagnosticID() const;
     std::string dumpCommandsForDiagnostics(const char *separator) const;
-    void getMemoryUsageStatsForDiagnostics(size_t *usedMemoryOut, size_t *allocatedMemoryOut) const;
 
     const gl::Rectangle &getRenderPassRenderArea() const { return mRenderPassRenderArea; }
 
@@ -515,7 +514,6 @@ class CommandGraph final : angle::NonCopyable
     void addDependenciesToNextBarrier(size_t begin, size_t end, CommandGraphNode *nextBarrier);
 
     void dumpGraphDotFile(std::ostream &out) const;
-    void updateOverlay(ContextVk *contextVk) const;
 
     std::vector<CommandGraphNode *> mNodes;
     bool mEnableGraphDiagnostics;

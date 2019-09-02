@@ -723,8 +723,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     // Note: we use a raw pointer here so we can exclude frame capture sources from the build.
     std::unique_ptr<angle::FrameCapture> mFrameCapture;
-
-    OverlayType mOverlay;
 };
 
 }  // namespace gl

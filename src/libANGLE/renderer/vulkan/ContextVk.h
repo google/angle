@@ -14,7 +14,6 @@
 
 #include "common/PackedEnums.h"
 #include "libANGLE/renderer/ContextImpl.h"
-#include "libANGLE/renderer/vulkan/OverlayVk.h"
 #include "libANGLE/renderer/vulkan/PersistentCommandPool.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
@@ -176,9 +175,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // Semaphore creation.
     SemaphoreImpl *createSemaphore() override;
 
-    // Overlay creation.
-    OverlayImpl *createOverlay(const gl::OverlayState &state) override;
-
     angle::Result dispatchCompute(const gl::Context *context,
                                   GLuint numGroupsX,
                                   GLuint numGroupsY,
@@ -338,8 +334,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
 
     bool useOldRewriteStructSamplers() const { return mUseOldRewriteStructSamplers; }
-
-    const gl::OverlayType *getOverlay() const { return mState.getOverlay(); }
 
   private:
     // Dirty bits.

@@ -293,9 +293,6 @@ DebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     bool isError    = (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) != 0;
     std::string msg = log.str();
 
-    RendererVk *rendererVk = static_cast<RendererVk *>(userData);
-    rendererVk->onNewValidationMessage(msg);
-
     if (isError)
     {
         ERR() << msg;
@@ -1655,17 +1652,4 @@ angle::Result RendererVk::cleanupGarbage(vk::Context *context, bool block)
     return angle::Result::Continue;
 }
 
-void RendererVk::onNewValidationMessage(const std::string &message)
-{
-    mLastValidationMessage = message;
-    ++mValidationMessageCount;
-}
-
-std::string RendererVk::getAndClearLastValidationMessage(uint32_t *countSinceLastClear)
-{
-    *countSinceLastClear    = mValidationMessageCount;
-    mValidationMessageCount = 0;
-
-    return std::move(mLastValidationMessage);
-}
 }  // namespace rx

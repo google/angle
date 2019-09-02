@@ -535,10 +535,10 @@ class BufferHelper final : public CommandGraphResource
     void unmap(VkDevice device);
 
     // After a sequence of writes, call flush to ensure the data is visible to the device.
-    angle::Result flush(ContextVk *contextVk, VkDeviceSize offset, VkDeviceSize size);
+    angle::Result flush(ContextVk *contextVk, size_t offset, size_t size);
 
     // After a sequence of writes, call invalidate to ensure the data is visible to the host.
-    angle::Result invalidate(ContextVk *contextVk, VkDeviceSize offset, VkDeviceSize size);
+    angle::Result invalidate(ContextVk *contextVk, size_t offset, size_t size);
 
   private:
     angle::Result mapImpl(ContextVk *contextVk);

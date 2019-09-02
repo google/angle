@@ -542,9 +542,6 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     // Parse the cmds in this cmd buffer into given primary cmd buffer for execution
     void executeCommands(VkCommandBuffer cmdBuffer);
 
-    // Calculate memory usage of this command buffer for diagnostics.
-    void getMemoryUsageStats(size_t *usedMemoryOut, size_t *allocatedMemoryOut) const;
-
     // Traverse the list of commands and build a summary for diagnostics.
     std::string dumpCommands(const char *separator) const;
 

@@ -296,8 +296,6 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void endRenderPass();
     void executeCommands(uint32_t commandBufferCount, const CommandBuffer *commandBuffers);
 
-    void getMemoryUsageStats(size_t *usedMemoryOut, size_t *allocatedMemoryOut);
-
     void executionBarrier(VkPipelineStageFlags stageMask);
 
     void fillBuffer(const Buffer &dstBuffer,
@@ -814,14 +812,6 @@ ANGLE_INLINE void CommandBuffer::executeCommands(uint32_t commandBufferCount,
 {
     ASSERT(valid());
     vkCmdExecuteCommands(mHandle, commandBufferCount, commandBuffers[0].ptr());
-}
-
-ANGLE_INLINE void CommandBuffer::getMemoryUsageStats(size_t *usedMemoryOut,
-                                                     size_t *allocatedMemoryOut)
-{
-    // No data available.
-    *usedMemoryOut      = 0;
-    *allocatedMemoryOut = 1;
 }
 
 ANGLE_INLINE void CommandBuffer::fillBuffer(const Buffer &dstBuffer,

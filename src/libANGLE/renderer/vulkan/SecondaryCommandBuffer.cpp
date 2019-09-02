@@ -344,27 +344,6 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
     }
 }
 
-void SecondaryCommandBuffer::getMemoryUsageStats(size_t *usedMemoryOut,
-                                                 size_t *allocatedMemoryOut) const
-{
-    *allocatedMemoryOut = kBlockSize * mCommands.size();
-
-    *usedMemoryOut = 0;
-    for (const CommandHeader *command : mCommands)
-    {
-        const CommandHeader *commandEnd = command;
-        while (commandEnd->id != CommandID::Invalid)
-        {
-            commandEnd = NextCommand(commandEnd);
-        }
-
-        *usedMemoryOut += reinterpret_cast<const uint8_t *>(commandEnd) -
-                          reinterpret_cast<const uint8_t *>(command) + sizeof(CommandHeader::id);
-    }
-
-    ASSERT(*usedMemoryOut <= *allocatedMemoryOut);
-}
-
 std::string SecondaryCommandBuffer::dumpCommands(const char *separator) const
 {
     std::string result;

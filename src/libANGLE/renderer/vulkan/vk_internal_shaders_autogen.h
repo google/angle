@@ -150,32 +150,6 @@ enum DestFormat
 constexpr size_t kArrayLen = 0x00000016;
 }  // namespace ImageCopy_frag
 
-namespace OverlayCull_comp
-{
-enum SubgroupSize
-{
-    kIs8x4 = 0x00000000,
-    kIs8x8 = 0x00000001,
-};
-enum SubgroupOp
-{
-    kSupportsBallot     = 0x00000000,
-    kSupportsArithmetic = 0x00000002,
-    kSupportsNone       = 0x00000004,
-};
-constexpr size_t kArrayLen = 0x00000006;
-}  // namespace OverlayCull_comp
-
-namespace OverlayDraw_comp
-{
-enum SubgroupSize
-{
-    kIs8x4 = 0x00000000,
-    kIs8x8 = 0x00000001,
-};
-constexpr size_t kArrayLen = 0x00000002;
-}  // namespace OverlayDraw_comp
-
 }  // namespace InternalShader
 
 class ShaderLibrary final : angle::NonCopyable
@@ -210,12 +184,6 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getImageCopy_frag(Context *context,
                                     uint32_t shaderFlags,
                                     RefCounted<ShaderAndSerial> **shaderOut);
-    angle::Result getOverlayCull_comp(Context *context,
-                                      uint32_t shaderFlags,
-                                      RefCounted<ShaderAndSerial> **shaderOut);
-    angle::Result getOverlayDraw_comp(Context *context,
-                                      uint32_t shaderFlags,
-                                      RefCounted<ShaderAndSerial> **shaderOut);
 
   private:
     RefCounted<ShaderAndSerial>
@@ -233,10 +201,6 @@ class ShaderLibrary final : angle::NonCopyable
     RefCounted<ShaderAndSerial>
         mImageClear_frag_shaders[InternalShader::ImageClear_frag::kArrayLen];
     RefCounted<ShaderAndSerial> mImageCopy_frag_shaders[InternalShader::ImageCopy_frag::kArrayLen];
-    RefCounted<ShaderAndSerial>
-        mOverlayCull_comp_shaders[InternalShader::OverlayCull_comp::kArrayLen];
-    RefCounted<ShaderAndSerial>
-        mOverlayDraw_comp_shaders[InternalShader::OverlayDraw_comp::kArrayLen];
 };
 }  // namespace vk
 }  // namespace rx
