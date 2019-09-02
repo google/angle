@@ -364,6 +364,7 @@ class GraphicsPipelineDesc final
                                      const gl::ComponentTypeMask &programAttribsTypeMask,
                                      const ShaderModule *vertexModule,
                                      const ShaderModule *fragmentModule,
+                                     const ShaderModule *geometryModule,
                                      Pipeline *pipelineOut) const;
 
     // Vertex input state. For ES 3.1 this should be separated into binding and attribute.
@@ -828,6 +829,7 @@ class GraphicsPipelineCache final : angle::NonCopyable
                                            const gl::ComponentTypeMask &programAttribsTypeMask,
                                            const vk::ShaderModule *vertexModule,
                                            const vk::ShaderModule *fragmentModule,
+                                           const vk::ShaderModule *geometryModule,
                                            const vk::GraphicsPipelineDesc &desc,
                                            const vk::GraphicsPipelineDesc **descPtrOut,
                                            vk::PipelineHelper **pipelineOut)
@@ -842,7 +844,7 @@ class GraphicsPipelineCache final : angle::NonCopyable
 
         return insertPipeline(contextVk, pipelineCacheVk, compatibleRenderPass, pipelineLayout,
                               activeAttribLocationsMask, programAttribsTypeMask, vertexModule,
-                              fragmentModule, desc, descPtrOut, pipelineOut);
+                              fragmentModule, geometryModule, desc, descPtrOut, pipelineOut);
     }
 
   private:
@@ -854,6 +856,7 @@ class GraphicsPipelineCache final : angle::NonCopyable
                                  const gl::ComponentTypeMask &programAttribsTypeMask,
                                  const vk::ShaderModule *vertexModule,
                                  const vk::ShaderModule *fragmentModule,
+                                 const vk::ShaderModule *geometryModule,
                                  const vk::GraphicsPipelineDesc &desc,
                                  const vk::GraphicsPipelineDesc **descPtrOut,
                                  vk::PipelineHelper **pipelineOut);
@@ -919,10 +922,10 @@ constexpr uint32_t kDriverUniformsDescriptorSetIndex = 3;
 
 // Only 1 driver uniform binding is used.
 constexpr uint32_t kReservedDriverUniformBindingCount = 1;
-// There is 1 default uniform binding used per stage.  Currently, a maxium of two stages are
+// There is 1 default uniform binding used per stage.  Currently, a maxium of three stages are
 // supported.
 constexpr uint32_t kReservedPerStageDefaultUniformBindingCount = 1;
-constexpr uint32_t kReservedDefaultUniformBindingCount         = 2;
+constexpr uint32_t kReservedDefaultUniformBindingCount         = 3;
 // Binding index start for transform feedback buffers:
 constexpr uint32_t kXfbBindingIndexStart = kReservedDefaultUniformBindingCount;
 }  // namespace rx

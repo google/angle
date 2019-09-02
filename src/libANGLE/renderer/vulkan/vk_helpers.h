@@ -1030,11 +1030,14 @@ class ShaderProgramHelper : angle::NonCopyable
         ShaderModule *fragmentShader = mShaders[gl::ShaderType::Fragment].valid()
                                            ? &mShaders[gl::ShaderType::Fragment].get().get()
                                            : nullptr;
+        ShaderModule *geometryShader = mShaders[gl::ShaderType::Geometry].valid()
+                                           ? &mShaders[gl::ShaderType::Geometry].get().get()
+                                           : nullptr;
 
-        return mGraphicsPipelines.getPipeline(contextVk, pipelineCache, *compatibleRenderPass,
-                                              pipelineLayout, activeAttribLocationsMask,
-                                              programAttribsTypeMask, vertexShader, fragmentShader,
-                                              pipelineDesc, descPtrOut, pipelineOut);
+        return mGraphicsPipelines.getPipeline(
+            contextVk, pipelineCache, *compatibleRenderPass, pipelineLayout,
+            activeAttribLocationsMask, programAttribsTypeMask, vertexShader, fragmentShader,
+            geometryShader, pipelineDesc, descPtrOut, pipelineOut);
     }
 
     angle::Result getComputePipeline(Context *context,

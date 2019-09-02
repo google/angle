@@ -182,6 +182,19 @@ void UnpackBlendAttachmentState(const vk::PackedColorBlendAttachmentState &packe
     stateOut->alphaBlendOp        = static_cast<VkBlendOp>(packedState.alphaBlendOp);
 }
 
+void SetPipelineShaderStageInfo(const VkStructureType type,
+                                const VkShaderStageFlagBits stage,
+                                const VkShaderModule module,
+                                VkPipelineShaderStageCreateInfo *shaderStage)
+{
+    shaderStage->sType               = type;
+    shaderStage->flags               = 0;
+    shaderStage->stage               = stage;
+    shaderStage->module              = module;
+    shaderStage->pName               = "main";
+    shaderStage->pSpecializationInfo = nullptr;
+}
+
 angle::Result InitializeRenderPassFromDesc(vk::Context *context,
                                            const RenderPassDesc &desc,
                                            const AttachmentOpsArray &ops,
@@ -601,9 +614,10 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     const gl::ComponentTypeMask &programAttribsTypeMask,
     const ShaderModule *vertexModule,
     const ShaderModule *fragmentModule,
+    const ShaderModule *geometryModule,
     Pipeline *pipelineOut) const
 {
-    angle::FixedVector<VkPipelineShaderStageCreateInfo, 2> shaderStages;
+    angle::FixedVector<VkPipelineShaderStageCreateInfo, 3> shaderStages;
     VkPipelineVertexInputStateCreateInfo vertexInputState     = {};
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyState = {};
     VkPipelineViewportStateCreateInfo viewportState           = {};
@@ -618,25 +632,27 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     // Vertex shader is always expected to be present.
     ASSERT(vertexModule != nullptr);
     VkPipelineShaderStageCreateInfo vertexStage = {};
-    vertexStage.sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    vertexStage.flags               = 0;
-    vertexStage.stage               = VK_SHADER_STAGE_VERTEX_BIT;
-    vertexStage.module              = vertexModule->getHandle();
-    vertexStage.pName               = "main";
-    vertexStage.pSpecializationInfo = nullptr;
+    SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                               VK_SHADER_STAGE_VERTEX_BIT, vertexModule->getHandle(), &vertexStage);
     shaderStages.push_back(vertexStage);
+
+    if (geometryModule)
+    {
+        VkPipelineShaderStageCreateInfo geometryStage = {};
+        SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                                   VK_SHADER_STAGE_GEOMETRY_BIT, geometryModule->getHandle(),
+                                   &geometryStage);
+        shaderStages.push_back(geometryStage);
+    }
 
     // Fragment shader is optional.
     // anglebug.com/3509 - Don't compile the fragment shader if rasterizationDiscardEnable = true
     if (fragmentModule && !mRasterizationAndMultisampleStateInfo.bits.rasterizationDiscardEnable)
     {
         VkPipelineShaderStageCreateInfo fragmentStage = {};
-        fragmentStage.sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-        fragmentStage.flags               = 0;
-        fragmentStage.stage               = VK_SHADER_STAGE_FRAGMENT_BIT;
-        fragmentStage.module              = fragmentModule->getHandle();
-        fragmentStage.pName               = "main";
-        fragmentStage.pSpecializationInfo = nullptr;
+        SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                                   VK_SHADER_STAGE_FRAGMENT_BIT, fragmentModule->getHandle(),
+                                   &fragmentStage);
         shaderStages.push_back(fragmentStage);
     }
 
@@ -1494,7 +1510,7 @@ void PipelineLayoutDesc::updatePushConstantRange(gl::ShaderType shaderType,
                                                  uint32_t size)
 {
     ASSERT(shaderType == gl::ShaderType::Vertex || shaderType == gl::ShaderType::Fragment ||
-           shaderType == gl::ShaderType::Compute);
+           shaderType == gl::ShaderType::Geometry || shaderType == gl::ShaderType::Compute);
     PackedPushConstantRange &packed = mPushConstantRanges[shaderType];
     packed.offset                   = offset;
     packed.size                     = size;
@@ -1705,6 +1721,7 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     const gl::ComponentTypeMask &programAttribsTypeMask,
     const vk::ShaderModule *vertexModule,
     const vk::ShaderModule *fragmentModule,
+    const vk::ShaderModule *geometryModule,
     const vk::GraphicsPipelineDesc &desc,
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut)
@@ -1718,7 +1735,7 @@ angle::Result GraphicsPipelineCache::insertPipeline(
         ANGLE_TRY(desc.initializePipeline(contextVk, pipelineCacheVk, compatibleRenderPass,
                                           pipelineLayout, activeAttribLocationsMask,
                                           programAttribsTypeMask, vertexModule, fragmentModule,
-                                          &newPipeline));
+                                          geometryModule, &newPipeline));
     }
 
     // The Serial will be updated outside of this query.

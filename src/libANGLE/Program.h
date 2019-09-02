@@ -544,10 +544,10 @@ class ProgramBindings final : angle::NonCopyable
 
 struct ProgramVaryingRef
 {
-    const sh::ShaderVariable *get() const { return vertex ? vertex : fragment; }
+    const sh::ShaderVariable *get() const { return frontShader ? frontShader : backShader; }
 
-    const sh::ShaderVariable *vertex   = nullptr;
-    const sh::ShaderVariable *fragment = nullptr;
+    const sh::ShaderVariable *frontShader = nullptr;
+    const sh::ShaderVariable *backShader  = nullptr;
 };
 
 using ProgramMergedVaryings = std::map<std::string, ProgramVaryingRef>;
