@@ -82,9 +82,6 @@ void main()
 
 TEST_P(MaxTextureSizeTest, SpecificationTexImage)
 {
-    // http://anglebug.com/2690
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
