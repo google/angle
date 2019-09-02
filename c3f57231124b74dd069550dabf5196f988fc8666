@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eaeed4b1_853fbbc9",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-09-02T19:00:21Z",
+      "side": 1,
+      "message": "I agreed with the document up till here (well thought-out, written, and presented).  I don\u0027t agree with this bullet for all possible PE architectures (due to things mentioned in the abandoned CL mentioned above).  I think it\u0027s true for most PEs though (e.g. Android).\n\nFor the sake of the document, I suggest removing this bullet.  Perhaps the wording can be changed.  Perhaps I\u0027m inferring something different than you by \"previous presentation ... is finished\".  It sounds to me like it\u0027s saying that the rendered image was shown to the user and now is no longer being shown to the user, because another rendered image is being shown.  Unfortunately, with the current API, you can\u0027t assume anything about when the user starts/stops seeing the rendered image.\n\nI still like the approach you\u0027re taking for managing the semaphores.  This is at least a \"good enough\" approach, and possibly \"one of the best\" approaches for ANGLE to take at this time, given the WSI spec issues.\n\nSorry for being really nit-picky!  This part of WSI is a mess!\n\nFYI ... MoltenVk was the PE that I mentioned in the abandoned CL; the one that allowed an application to get 1000\u0027s of frames in advance.  The fence in your approach will allow you to pace ANGLE with rendering, but not with actual PE presentations.  I recall another proposed/actual desktop driver that did something similar.  I think/hope both changed to bring their behavior more in line with application expectations, but I\u0027m not certain.",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6b2e19f_46bcf329",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-09-02T19:00:21Z",
+      "side": 1,
+      "message": "Perhaps change to:\n\n\"To summarize, we use the completion of a submission using an image for when it is safe to destroy or reuse the semaphore for the *previous* presentation of that image.\"",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f8c04ca_bc6d8512",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-09-02T19:00:21Z",
+      "side": 1,
+      "message": "\"... all images are eventually freed ...\"",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6855fcbd_6d9b121e",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-09-02T19:00:21Z",
+      "side": 1,
+      "message": "I\u0027m not so comfortable with some of the language in this whole \"Swapchain recreation\" section as it\u0027s again inferring when presentations have been done by the PE.  I\u0027ll draw the distinction between what ANGLE should do that should work for most PEs, and what is \"provable\" and what ANGLE can \"rely on\" (which is where my pedantic self starts to have a problem:-).",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93ee605e_7c7e771a",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-09-02T19:00:21Z",
+      "side": 1,
+      "message": "Forgive me, but where is this text coming from?  It sounds familiar, but I don\u0027t remember.",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
