@@ -123,14 +123,12 @@ config("extra_warnings") {
   }
   if (is_clang) {
     cflags += [
-      # Enable after anglebug.com/3128 is fixed.
-      # "-Wextra-semi-stmt",
-
+      "-Wexit-time-destructors",
+      "-Wextra-semi-stmt",
       "-Wfloat-conversion",
+      "-Wglobal-constructors",
       "-Wnon-virtual-dtor",
       "-Wunneeded-internal-declaration",
-      "-Wglobal-constructors",
-      "-Wexit-time-destructors",
 
       # The below warnings are used by WebKit. We enable them to make rolling
       # ANGLE in WebKit easier.

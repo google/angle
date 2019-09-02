@@ -94,7 +94,6 @@ egl::Error ImageVk::initialize(const egl::Display *display)
 
             ASSERT(mContext != nullptr);
             renderer = vk::GetImpl(mContext)->getRenderer();
-            ;
         }
         else if (egl::IsExternalImageTarget(mState.target))
         {

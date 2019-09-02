@@ -247,7 +247,7 @@ protected:
     memset(&c, 0, sizeof(CONTEXT));                               \
     c.ContextFlags = contextFlags;                                \
     RtlCaptureContext(&c);                                        \
-  } while (0);
+  } while (0)
 #endif
 
 #endif //defined(_MSC_VER)
