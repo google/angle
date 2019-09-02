@@ -49,7 +49,7 @@ deps = {
   },
 
   '{angle_root}/build': {
-    'url': '{chromium_git}/chromium/src/build.git@5262b9094642f42ac7ecd3fcfe2762e23cbefd97',
+    'url': '{chromium_git}/chromium/src/build.git@af1bbc9483aed572f1ea1a32e43bb504c3edb357',
     'condition': 'not build_with_chromium',
   },
 
@@ -59,7 +59,7 @@ deps = {
   },
 
   '{angle_root}/testing': {
-    'url': '{chromium_git}/chromium/src/testing@58990c945ffa4f0b333cf0fff30a39260a5d6c69',
+    'url': '{chromium_git}/chromium/src/testing@78e8d947158ba72b0e457abc9ea3fb30c2252646',
     'condition': 'not build_with_chromium',
   },
 
@@ -187,12 +187,12 @@ deps = {
   },
 
   '{angle_root}/third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@0f820c1d7165ba79e0429eab8b55c76f2be7d440',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@0044d0424c7f7d15436541ed1ecc89479b8bfda4',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@210f1dc3ebf8504ae246d925e9110ec427eef43f',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@2fef805e5b05b26a8c87c47865590b5f43218611',
     'condition': 'not build_with_chromium',
   },
 
