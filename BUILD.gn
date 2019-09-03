@@ -1113,6 +1113,7 @@ foreach(is_shared_library,
       public_deps += [
         "$angle_root/src/common/fuchsia_egl",
         "//third_party/fuchsia-sdk/sdk:async_loop_cpp",
+        "//third_party/fuchsia-sdk/sdk:async_loop_default",
         "//third_party/fuchsia-sdk/sdk:fdio",
         "//third_party/fuchsia-sdk/sdk:images",
         "//third_party/fuchsia-sdk/sdk:scenic_cpp",

@@ -12,6 +12,7 @@
 #include <fuchsia/images/cpp/fidl.h>
 #include <fuchsia/ui/views/cpp/fidl.h>
 #include <lib/async-loop/cpp/loop.h>
+#include <lib/async-loop/default.h>
 #include <lib/fdio/directory.h>
 #include <lib/fidl/cpp/interface_ptr.h>
 #include <lib/fidl/cpp/interface_request.h>
@@ -26,7 +27,7 @@ namespace
 
 async::Loop *GetDefaultLoop()
 {
-    static async::Loop *defaultLoop = new async::Loop(&kAsyncLoopConfigAttachToThread);
+    static async::Loop *defaultLoop = new async::Loop(&kAsyncLoopConfigAttachToCurrentThread);
     return defaultLoop;
 }
 
