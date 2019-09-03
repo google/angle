@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 220
+#define ANGLE_SH_VERSION 221
 
 enum ShShaderSpec
 {
@@ -313,6 +313,10 @@ const ShCompileOptions SH_ADD_BASE_VERTEX_TO_VERTEX_ID = UINT64_C(1) << 48;
 
 // This works around the dynamic lvalue indexing of swizzled vectors on various platforms.
 const ShCompileOptions SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR = UINT64_C(1) << 49;
+
+// This flag works a driver bug that fails to allocate ShaderResourceView for StructuredBuffer
+// on old Windows system with AMD driver.
+const ShCompileOptions SH_DONT_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UINT64_C(1) << 50;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
@@ -673,6 +677,9 @@ bool GetShaderStorageBlockRegister(const ShHandle handle,
 bool GetUniformBlockRegister(const ShHandle handle,
                              const std::string &uniformBlockName,
                              unsigned int *indexOut);
+
+bool ShouldUniformBlockUseStructuredBuffer(const ShHandle handle,
+                                           const std::string &uniformBlockName);
 
 // Gives a map from uniform names to compiler-assigned registers in the default uniform block.
 // Note that the map contains also registers of samplers that have been extracted from structs.

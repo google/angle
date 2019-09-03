@@ -1008,7 +1008,8 @@ TString StructNameString(const TStructure &structure)
 
 TString QualifiedStructNameString(const TStructure &structure,
                                   bool useHLSLRowMajorPacking,
-                                  bool useStd140Packing)
+                                  bool useStd140Packing,
+                                  bool forcePackingEnd)
 {
     if (structure.symbolType() == SymbolType::Empty)
     {
@@ -1028,6 +1029,11 @@ TString QualifiedStructNameString(const TStructure &structure,
     if (useHLSLRowMajorPacking)
     {
         prefix += "rm_";
+    }
+
+    if (forcePackingEnd)
+    {
+        prefix += "pe_";
     }
 
     return prefix + StructNameString(structure);

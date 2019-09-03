@@ -58,6 +58,7 @@ class OutputHLSL : public TIntermTraverser
 
     const std::map<std::string, unsigned int> &getShaderStorageBlockRegisterMap() const;
     const std::map<std::string, unsigned int> &getUniformBlockRegisterMap() const;
+    const std::map<std::string, bool> &getUniformBlockUseStructuredBufferMap() const;
     const std::map<std::string, unsigned int> &getUniformRegisterMap() const;
     unsigned int getReadonlyImage2DRegisterIndex() const;
     unsigned int getImage2DRegisterIndex() const;
