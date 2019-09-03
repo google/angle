@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1f3de85b_749b9633",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-09-03T18:01:10Z",
+      "side": 1,
+      "message": "I\u0027m thinking of changing the last sentence into something more, that will satisfy the strange/corner-case PEs out there, and keep the rest of the language relatively simple (like you\u0027ve had it).  Something like:\n\nIn addition, the Vulkan specification tries to abstract a large variety of PE architectures, some of which do not behave in a straight-forward manner.  This document describes an approach for destroying semaphores that should work with all valid PE architectures, but will be described in terms of more-common PE architectures (e.g. where the PE only backs each VkImage and VkSemaphore handle with one actual memory object, and where the PE cycles between the swapchain images in a straight-forward manner).  Thus, we speak in terms of the PE is presenting or has finished presenting an image to the user; and we can speak about when a semaphore is provably unused.",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eaeed4b1_853fbbc9",
         "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
         "patchSetId": 7
@@ -31,6 +48,24 @@
       "side": 1,
       "message": "Upon reread, yes the wording could be made more precise. What I _wanted_ to say is this:\n\nIf SAY is signaled, then the presentation engine has decided that I1 can be rendered to. Either this is because it\u0027s presenting some other image or (in the case of IMMEDIATE) doesn\u0027t care if the image is rendered to while being shown on the screen. Either way, the image is officially handed back to the application.\n\nHow about this new wording? \"The PE is done with the previous presentation of I1 (corresponding to SPX) and has handed I1 back to the application\"",
       "parentUuid": "eaeed4b1_853fbbc9",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a3209f2_575cb57a",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-09-03T18:01:10Z",
+      "side": 1,
+      "message": "Given the sentences that I suggested earlier, I\u0027m fine with this new wording.",
+      "parentUuid": "145bf5a8_fd711755",
       "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -136,6 +171,24 @@
       "side": 1,
       "message": "I think the issue is that there are two parts to presentation:\n\n1. The presentation engine is doing something with the image, and therefore needs the image \"locked\".\n2. The image is visible in the window\n\nEvery driver and present mode might be doing something different with 1, I don\u0027t know. But what I understand is that as soon as the Acquire semaphore for the image is signaled, the PE is finished with 1.\n\nI would argue that we don\u0027t need to concern ourselves with 2. My reasoning is this: say you have one swapchain, present images as usual and then terminate the application. Before the window is closed, you need to delete the swapchain and associated semaphores. No matter how much you wait (vkQueueWaitIdle()), the window is going to still show the last presented image. When the swapchain is eventually destroyed, the image is again still viewable in the window.\n\nThat tells me that images being visible in the window is irrelevant to ANGLE. It\u0027s only the first part (where the PE gets the image visible in the window) that would should synchronize with.\n\nSo in the whole document, when I say the PE is finished/done with the image, I mean it\u0027s finished with 1 (i.e. the acquire semaphore for the image has been signaled). With this clarification, what\u0027s your suggestion? I can put this clarification in the doc too (provided you verify that it\u0027s not utter nonsense :D)",
       "parentUuid": "6855fcbd_6d9b121e",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7494fa17_e2c5f2cd",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-09-03T18:01:10Z",
+      "side": 1,
+      "message": "You raise good points.  I think we\u0027re quibbling over different subtleties.  This document is about when it\u0027s safe to destroy semaphores.  It also talks about what the PE is doing with the images, which is something the KHR WSI extensions give no visibility into *for all PE architectures*.  My quibbles are about that (when is a PE doing something with an image).",
+      "parentUuid": "4879d616_9dd0c6ac",
       "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
