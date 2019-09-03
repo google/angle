@@ -195,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "d57263b9_1ae9bfc7",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-09-03T19:41:57Z",
+      "side": 1,
+      "message": "Coming back to this (sorry I don\u0027t know how to make this more concise yet still accurate).  In support of what you\u0027re saying ...\n\nWe could never come up with a good way to model/expose what the PE is doing and when.  For the app questions we were facing (e.g. how to make sure the app didn\u0027t acquire too many images), we rewrote some of the language away from \"ownership\" of an image to when has the app \"acquired\" or \"released\" use of the image.  Unfortunately, we didn\u0027t deal with when it\u0027s safe to destroy semaphores.  As you suggest, you can view the image as \"locked\" at times (you released it via QP and can use it again once the ANI semaphore says it can be used).  After QP, there\u0027s a time when the PE still can\u0027t use the image (e.g. while rendering is occuring, with FIFO).  Some PEs don\u0027t return an image from ANI until the image is ready to use, and some release it once they know which image will eventually be ready to use (using the semaphore to indicate readiness).\n\nFor ANGLE, we care about when the semaphore can be destroyed/reused.  For most PEs, what you wrote is accurate about the state of the PE and the image (which is irrelevant for when it\u0027s safe to destroy/reuse the semaphore, and not accurate for all PEs).  Since it\u0027s how most people think and talk about PEs, it seems fine to use that language as long as there\u0027s a caveat somewhere to indicate that we know there are strange PEs out there (e.g. for when somebody else comes into the ANGLE source code and isn\u0027t aware of strange cases).",
+      "parentUuid": "7494fa17_e2c5f2cd",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "93ee605e_7c7e771a",
         "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
         "patchSetId": 7
