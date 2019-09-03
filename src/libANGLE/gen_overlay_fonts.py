@@ -144,7 +144,8 @@ template_get_font_layer_pixel = u"""case {layer}:
 
 def main():
     if len(sys.argv) == 2 and sys.argv[1] == 'inputs':
-        print(font_file)
+        # disabled because of issues on Windows. http://anglebug.com/3892
+        # print(font_file)
         return
     if len(sys.argv) == 2 and sys.argv[1] == 'outputs':
         print(','.join([out_file_cpp, out_file_h]))
