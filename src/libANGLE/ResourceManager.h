@@ -59,10 +59,7 @@ class ResourceManagerBase : angle::NonCopyable
     size_t mRefCount;
 };
 
-template <typename ResourceType,
-          typename HandleAllocatorType,
-          typename ImplT,
-          typename IDType = GLuint>
+template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
 class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
 {
   public:
@@ -245,7 +242,7 @@ class SamplerManager
     ~SamplerManager() override {}
 };
 
-class SyncManager : public TypedResourceManager<Sync, HandleAllocator, SyncManager>
+class SyncManager : public TypedResourceManager<Sync, HandleAllocator, SyncManager, GLuint>
 {
   public:
     GLuint createSync(rx::GLImplFactory *factory);

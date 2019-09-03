@@ -16,7 +16,7 @@
 namespace gl
 {
 
-template <typename ResourceType, typename IDType = GLuint>
+template <typename ResourceType, typename IDType>
 class ResourceMap final : angle::NonCopyable
 {
   public:
