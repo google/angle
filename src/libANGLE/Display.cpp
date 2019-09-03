@@ -142,7 +142,7 @@ rx::DisplayImpl *CreateDisplayFromDevice(Device *eglDevice, const DisplayState &
 // On platforms with support for multiple back-ends, allow an environment variable to control
 // the default.  This is useful to run angle with benchmarks without having to modify the
 // benchmark source.  Possible values for this environment variable (ANGLE_DEFAULT_PLATFORM)
-// are: vulkan, gl, d3d11.
+// are: vulkan, gl, d3d11, null.
 EGLAttrib GetDisplayTypeFromEnvironment()
 {
     std::string angleDefaultEnv = angle::GetEnvironmentVar("ANGLE_DEFAULT_PLATFORM");
@@ -166,6 +166,13 @@ EGLAttrib GetDisplayTypeFromEnvironment()
     if (angleDefaultEnv == "d3d11")
     {
         return EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
+    }
+#endif
+
+#if defined(ANGLE_ENABLE_NULL)
+    if (angleDefaultEnv == "null")
+    {
+        return EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE;
     }
 #endif
 
