@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "145bf5a8_fd711755",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-09-03T15:21:58Z",
+      "side": 1,
+      "message": "Upon reread, yes the wording could be made more precise. What I _wanted_ to say is this:\n\nIf SAY is signaled, then the presentation engine has decided that I1 can be rendered to. Either this is because it\u0027s presenting some other image or (in the case of IMMEDIATE) doesn\u0027t care if the image is rendered to while being shown on the screen. Either way, the image is officially handed back to the application.\n\nHow about this new wording? \"The PE is done with the previous presentation of I1 (corresponding to SPX) and has handed I1 back to the application\"",
+      "parentUuid": "eaeed4b1_853fbbc9",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6b2e19f_46bcf329",
         "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
         "patchSetId": 7
@@ -33,6 +51,24 @@
       "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7045c9bb_6303592f",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-09-03T15:21:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6b2e19f_46bcf329",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "0b675daa_9cd8c6ad",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-09-03T15:21:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f8c04ca_bc6d8512",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6855fcbd_6d9b121e",
         "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
         "patchSetId": 7
@@ -64,6 +118,24 @@
       "writtenOn": "2019-09-02T19:00:21Z",
       "side": 1,
       "message": "I\u0027m not so comfortable with some of the language in this whole \"Swapchain recreation\" section as it\u0027s again inferring when presentations have been done by the PE.  I\u0027ll draw the distinction between what ANGLE should do that should work for most PEs, and what is \"provable\" and what ANGLE can \"rely on\" (which is where my pedantic self starts to have a problem:-).",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4879d616_9dd0c6ac",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-09-03T15:21:58Z",
+      "side": 1,
+      "message": "I think the issue is that there are two parts to presentation:\n\n1. The presentation engine is doing something with the image, and therefore needs the image \"locked\".\n2. The image is visible in the window\n\nEvery driver and present mode might be doing something different with 1, I don\u0027t know. But what I understand is that as soon as the Acquire semaphore for the image is signaled, the PE is finished with 1.\n\nI would argue that we don\u0027t need to concern ourselves with 2. My reasoning is this: say you have one swapchain, present images as usual and then terminate the application. Before the window is closed, you need to delete the swapchain and associated semaphores. No matter how much you wait (vkQueueWaitIdle()), the window is going to still show the last presented image. When the swapchain is eventually destroyed, the image is again still viewable in the window.\n\nThat tells me that images being visible in the window is irrelevant to ANGLE. It\u0027s only the first part (where the PE gets the image visible in the window) that would should synchronize with.\n\nSo in the whole document, when I say the PE is finished/done with the image, I mean it\u0027s finished with 1 (i.e. the acquire semaphore for the image has been signaled). With this clarification, what\u0027s your suggestion? I can put this clarification in the doc too (provided you verify that it\u0027s not utter nonsense :D)",
+      "parentUuid": "6855fcbd_6d9b121e",
       "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -84,6 +156,24 @@
       "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9127f061_be13fcf4",
+        "filename": "src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-09-03T15:21:58Z",
+      "side": 1,
+      "message": "You :)\n\nIt\u0027s not a quote (even though it uses \u003e). I used the style of Vulkan where \"Notes\" or \"Examples\" have a different visual (see how it looks in the rendered page: https://chromium.googlesource.com/angle/angle/+/c3f57231124b74dd069550dabf5196f988fc8666/src/libANGLE/renderer/vulkan/doc/PresentSemaphores.md#swapchain-recreation)",
+      "parentUuid": "93ee605e_7c7e771a",
+      "revId": "c3f57231124b74dd069550dabf5196f988fc8666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
