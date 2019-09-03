@@ -31,7 +31,7 @@ bool ValidateBindBufferRange(Context *context,
                              GLsizeiptr size);
 bool ValidateBindSampler(Context *context, GLuint unit, SamplerID samplerPacked);
 bool ValidateBindTransformFeedback(Context *context, GLenum target, GLuint id);
-bool ValidateBindVertexArray(Context *context, GLuint array);
+bool ValidateBindVertexArray(Context *context, VertexArrayID arrayPacked);
 bool ValidateBlitFramebuffer(Context *context,
                              GLint srcX0,
                              GLint srcY0,
@@ -94,7 +94,7 @@ bool ValidateDeleteQueries(Context *context, GLsizei n, const QueryID *idsPacked
 bool ValidateDeleteSamplers(Context *context, GLsizei count, const SamplerID *samplersPacked);
 bool ValidateDeleteSync(Context *context, GLsync sync);
 bool ValidateDeleteTransformFeedbacks(Context *context, GLsizei n, const GLuint *ids);
-bool ValidateDeleteVertexArrays(Context *context, GLsizei n, const GLuint *arrays);
+bool ValidateDeleteVertexArrays(Context *context, GLsizei n, const VertexArrayID *arraysPacked);
 bool ValidateDrawArraysInstanced(Context *context,
                                  PrimitiveMode modePacked,
                                  GLint first,
@@ -130,7 +130,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
 bool ValidateGenQueries(Context *context, GLsizei n, QueryID *idsPacked);
 bool ValidateGenSamplers(Context *context, GLsizei count, SamplerID *samplersPacked);
 bool ValidateGenTransformFeedbacks(Context *context, GLsizei n, GLuint *ids);
-bool ValidateGenVertexArrays(Context *context, GLsizei n, GLuint *arrays);
+bool ValidateGenVertexArrays(Context *context, GLsizei n, VertexArrayID *arraysPacked);
 bool ValidateGetActiveUniformBlockName(Context *context,
                                        ShaderProgramID programPacked,
                                        GLuint uniformBlockIndex,
@@ -229,7 +229,7 @@ bool ValidateIsQuery(Context *context, QueryID idPacked);
 bool ValidateIsSampler(Context *context, SamplerID samplerPacked);
 bool ValidateIsSync(Context *context, GLsync sync);
 bool ValidateIsTransformFeedback(Context *context, GLuint id);
-bool ValidateIsVertexArray(Context *context, GLuint array);
+bool ValidateIsVertexArray(Context *context, VertexArrayID arrayPacked);
 bool ValidateMapBufferRange(Context *context,
                             BufferBinding targetPacked,
                             GLintptr offset,

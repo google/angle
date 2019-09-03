@@ -394,6 +394,17 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
         case ParamType::TTextureType:
             WriteParamValueToStream<ParamType::TTextureType>(os, paramValue.TextureTypeVal);
             break;
+        case ParamType::TVertexArrayID:
+            WriteParamValueToStream<ParamType::TVertexArrayID>(os, paramValue.VertexArrayIDVal);
+            break;
+        case ParamType::TVertexArrayIDConstPointer:
+            WriteParamValueToStream<ParamType::TVertexArrayIDConstPointer>(
+                os, paramValue.VertexArrayIDConstPointerVal);
+            break;
+        case ParamType::TVertexArrayIDPointer:
+            WriteParamValueToStream<ParamType::TVertexArrayIDPointer>(
+                os, paramValue.VertexArrayIDPointerVal);
+            break;
         case ParamType::TVertexAttribType:
             WriteParamValueToStream<ParamType::TVertexAttribType>(os,
                                                                   paramValue.VertexAttribTypeVal);
@@ -641,6 +652,12 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLenum";
         case ParamType::TTextureType:
             return "GLenum";
+        case ParamType::TVertexArrayID:
+            return "GLuint";
+        case ParamType::TVertexArrayIDConstPointer:
+            return "const GLuint *";
+        case ParamType::TVertexArrayIDPointer:
+            return "GLuint *";
         case ParamType::TVertexAttribType:
             return "GLenum";
         case ParamType::TvoidConstPointer:

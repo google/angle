@@ -47,7 +47,9 @@ angle::CallCapture CaptureBindTransformFeedback(const Context *context,
                                                 bool isCallValid,
                                                 GLenum target,
                                                 GLuint id);
-angle::CallCapture CaptureBindVertexArray(const Context *context, bool isCallValid, GLuint array);
+angle::CallCapture CaptureBindVertexArray(const Context *context,
+                                          bool isCallValid,
+                                          VertexArrayID arrayPacked);
 angle::CallCapture CaptureBlitFramebuffer(const Context *context,
                                           bool isCallValid,
                                           GLint srcX0,
@@ -145,7 +147,7 @@ angle::CallCapture CaptureDeleteTransformFeedbacks(const Context *context,
 angle::CallCapture CaptureDeleteVertexArrays(const Context *context,
                                              bool isCallValid,
                                              GLsizei n,
-                                             const GLuint *arrays);
+                                             const VertexArrayID *arraysPacked);
 angle::CallCapture CaptureDrawArraysInstanced(const Context *context,
                                               bool isCallValid,
                                               PrimitiveMode modePacked,
@@ -207,7 +209,7 @@ angle::CallCapture CaptureGenTransformFeedbacks(const Context *context,
 angle::CallCapture CaptureGenVertexArrays(const Context *context,
                                           bool isCallValid,
                                           GLsizei n,
-                                          GLuint *arrays);
+                                          VertexArrayID *arraysPacked);
 angle::CallCapture CaptureGetActiveUniformBlockName(const Context *context,
                                                     bool isCallValid,
                                                     ShaderProgramID programPacked,
@@ -370,7 +372,7 @@ angle::CallCapture CaptureIsTransformFeedback(const Context *context,
                                               GLboolean returnValue);
 angle::CallCapture CaptureIsVertexArray(const Context *context,
                                         bool isCallValid,
-                                        GLuint array,
+                                        VertexArrayID arrayPacked,
                                         GLboolean returnValue);
 angle::CallCapture CaptureMapBufferRange(const Context *context,
                                          bool isCallValid,
@@ -653,11 +655,11 @@ void CaptureDeleteTransformFeedbacks_ids(const Context *context,
                                          GLsizei n,
                                          const GLuint *ids,
                                          angle::ParamCapture *paramCapture);
-void CaptureDeleteVertexArrays_arrays(const Context *context,
-                                      bool isCallValid,
-                                      GLsizei n,
-                                      const GLuint *arrays,
-                                      angle::ParamCapture *paramCapture);
+void CaptureDeleteVertexArrays_arraysPacked(const Context *context,
+                                            bool isCallValid,
+                                            GLsizei n,
+                                            const VertexArrayID *arraysPacked,
+                                            angle::ParamCapture *paramCapture);
 void CaptureDrawBuffers_bufs(const Context *context,
                              bool isCallValid,
                              GLsizei n,
@@ -695,11 +697,11 @@ void CaptureGenTransformFeedbacks_ids(const Context *context,
                                       GLsizei n,
                                       GLuint *ids,
                                       angle::ParamCapture *paramCapture);
-void CaptureGenVertexArrays_arrays(const Context *context,
-                                   bool isCallValid,
-                                   GLsizei n,
-                                   GLuint *arrays,
-                                   angle::ParamCapture *paramCapture);
+void CaptureGenVertexArrays_arraysPacked(const Context *context,
+                                         bool isCallValid,
+                                         GLsizei n,
+                                         VertexArrayID *arraysPacked,
+                                         angle::ParamCapture *paramCapture);
 void CaptureGetActiveUniformBlockName_length(const Context *context,
                                              bool isCallValid,
                                              ShaderProgramID programPacked,

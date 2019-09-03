@@ -95,7 +95,7 @@ void VertexArrayState::setAttribBinding(const Context *context,
 
 // VertexArray implementation.
 VertexArray::VertexArray(rx::GLImplFactory *factory,
-                         GLuint id,
+                         VertexArrayID id,
                          size_t maxAttribs,
                          size_t maxAttribBindings)
     : mId(id),

@@ -447,7 +447,7 @@ void Context::initialize()
 
     mState.initializeZeroTextures(this, mZeroTextures);
 
-    bindVertexArray(0);
+    bindVertexArray({0});
 
     if (getClientVersion() >= Version(3, 0))
     {
@@ -984,7 +984,7 @@ Sync *Context::getSync(GLsync handle) const
     return mState.mSyncManager->getSync(static_cast<GLuint>(reinterpret_cast<uintptr_t>(handle)));
 }
 
-VertexArray *Context::getVertexArray(GLuint handle) const
+VertexArray *Context::getVertexArray(VertexArrayID handle) const
 {
     return mVertexArrayMap.query(handle);
 }
@@ -1015,7 +1015,7 @@ gl::LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) con
         case GL_PROGRAM:
             return getProgramNoResolveLink({name});
         case GL_VERTEX_ARRAY:
-            return getVertexArray(name);
+            return getVertexArray({name});
         case GL_QUERY:
             return getQuery({name});
         case GL_TRANSFORM_FEEDBACK:
@@ -1124,7 +1124,7 @@ void Context::bindDrawFramebuffer(FramebufferID framebufferHandle)
     mStateCache.onDrawFramebufferChange(this);
 }
 
-void Context::bindVertexArray(GLuint vertexArrayHandle)
+void Context::bindVertexArray(VertexArrayID vertexArrayHandle)
 {
     VertexArray *vertexArray = checkVertexArrayAllocation(vertexArrayHandle);
     mState.setVertexArrayBinding(this, vertexArray);
@@ -2746,7 +2746,7 @@ EGLenum Context::getRenderBuffer() const
     return backAttachment->getSurface()->getRenderBuffer();
 }
 
-VertexArray *Context::checkVertexArrayAllocation(GLuint vertexArrayHandle)
+VertexArray *Context::checkVertexArrayAllocation(VertexArrayID vertexArrayHandle)
 {
     // Only called after a prior call to Gen.
     VertexArray *vertexArray = getVertexArray(vertexArrayHandle);
@@ -2778,9 +2778,9 @@ TransformFeedback *Context::checkTransformFeedbackAllocation(GLuint transformFee
     return transformFeedback;
 }
 
-bool Context::isVertexArrayGenerated(GLuint vertexArray)
+bool Context::isVertexArrayGenerated(VertexArrayID vertexArray)
 {
-    ASSERT(mVertexArrayMap.contains(0));
+    ASSERT(mVertexArrayMap.contains({0}));
     return mVertexArrayMap.contains(vertexArray);
 }
 
@@ -2839,7 +2839,7 @@ void Context::detachRenderbuffer(RenderbufferID renderbuffer)
     mState.detachRenderbuffer(this, renderbuffer);
 }
 
-void Context::detachVertexArray(GLuint vertexArray)
+void Context::detachVertexArray(VertexArrayID vertexArray)
 {
     // Vertex array detachment is handled by Context, because 0 is a valid
     // VAO, and a pointer to it must be passed from Context to State at
@@ -2850,7 +2850,7 @@ void Context::detachVertexArray(GLuint vertexArray)
     // for that object reverts to zero and the default vertex array becomes current.
     if (mState.removeVertexArrayBinding(this, vertexArray))
     {
-        bindVertexArray(0);
+        bindVertexArray({0});
     }
 }
 
@@ -6768,13 +6768,13 @@ void Context::uniformMatrix4x3fv(GLint location,
     program->setUniformMatrix4x3fv(location, count, transpose, value);
 }
 
-void Context::deleteVertexArrays(GLsizei n, const GLuint *arrays)
+void Context::deleteVertexArrays(GLsizei n, const VertexArrayID *arrays)
 {
     for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
     {
-        GLuint vertexArray = arrays[arrayIndex];
+        VertexArrayID vertexArray = arrays[arrayIndex];
 
-        if (arrays[arrayIndex] != 0)
+        if (arrays[arrayIndex].value != 0)
         {
             VertexArray *vertexArrayObject = nullptr;
             if (mVertexArrayMap.erase(vertexArray, &vertexArrayObject))
@@ -6785,25 +6785,25 @@ void Context::deleteVertexArrays(GLsizei n, const GLuint *arrays)
                     vertexArrayObject->onDestroy(this);
                 }
 
-                mVertexArrayHandleAllocator.release(vertexArray);
+                mVertexArrayHandleAllocator.release(vertexArray.value);
             }
         }
     }
 }
 
-void Context::genVertexArrays(GLsizei n, GLuint *arrays)
+void Context::genVertexArrays(GLsizei n, VertexArrayID *arrays)
 {
     for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
     {
-        GLuint vertexArray = mVertexArrayHandleAllocator.allocate();
+        VertexArrayID vertexArray = {mVertexArrayHandleAllocator.allocate()};
         mVertexArrayMap.assign(vertexArray, nullptr);
         arrays[arrayIndex] = vertexArray;
     }
 }
 
-GLboolean Context::isVertexArray(GLuint array)
+GLboolean Context::isVertexArray(VertexArrayID array)
 {
-    if (array == 0)
+    if (array.value == 0)
     {
         return GL_FALSE;
     }

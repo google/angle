@@ -55,9 +55,9 @@
     void createSamplers(GLsizei n, GLuint *samplers);                                              \
     void createTextures(GLenum target, GLsizei n, GLuint *textures);                               \
     void createTransformFeedbacks(GLsizei n, GLuint *ids);                                         \
-    void createVertexArrays(GLsizei n, GLuint *arrays);                                            \
-    void disableVertexArrayAttrib(GLuint vaobj, GLuint index);                                     \
-    void enableVertexArrayAttrib(GLuint vaobj, GLuint index);                                      \
+    void createVertexArrays(GLsizei n, VertexArrayID *arraysPacked);                               \
+    void disableVertexArrayAttrib(VertexArrayID vaobjPacked, GLuint index);                        \
+    void enableVertexArrayAttrib(VertexArrayID vaobjPacked, GLuint index);                         \
     void flushMappedNamedBufferRange(BufferID bufferPacked, GLintptr offset, GLsizeiptr length);   \
     void generateTextureMipmap(TextureID texturePacked);                                           \
     void getCompressedTextureImage(TextureID texturePacked, GLint level, GLsizei bufSize,          \
@@ -98,9 +98,11 @@
     void getTransformFeedbacki64_v(GLuint xfb, GLenum pname, GLuint index, GLint64 *param);        \
     void getTransformFeedbacki_v(GLuint xfb, GLenum pname, GLuint index, GLint *param);            \
     void getTransformFeedbackiv(GLuint xfb, GLenum pname, GLint *param);                           \
-    void getVertexArrayIndexed64iv(GLuint vaobj, GLuint index, GLenum pname, GLint64 *param);      \
-    void getVertexArrayIndexediv(GLuint vaobj, GLuint index, GLenum pname, GLint *param);          \
-    void getVertexArrayiv(GLuint vaobj, GLenum pname, GLint *param);                               \
+    void getVertexArrayIndexed64iv(VertexArrayID vaobjPacked, GLuint index, GLenum pname,          \
+                                   GLint64 *param);                                                \
+    void getVertexArrayIndexediv(VertexArrayID vaobjPacked, GLuint index, GLenum pname,            \
+                                 GLint *param);                                                    \
+    void getVertexArrayiv(VertexArrayID vaobjPacked, GLenum pname, GLint *param);                  \
     void getnColorTable(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void *table);  \
     void getnCompressedTexImage(GLenum target, GLint lod, GLsizei bufSize, void *pixels);          \
     void getnConvolutionFilter(GLenum target, GLenum format, GLenum type, GLsizei bufSize,         \
@@ -188,18 +190,20 @@
     void transformFeedbackBufferRange(GLuint xfb, GLuint index, BufferID bufferPacked,             \
                                       GLintptr offset, GLsizeiptr size);                           \
     GLboolean unmapNamedBuffer(BufferID bufferPacked);                                             \
-    void vertexArrayAttribBinding(GLuint vaobj, GLuint attribindex, GLuint bindingindex);          \
-    void vertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type,        \
-                                 GLboolean normalized, GLuint relativeoffset);                     \
-    void vertexArrayAttribIFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type,       \
-                                  GLuint relativeoffset);                                          \
-    void vertexArrayAttribLFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type,       \
-                                  GLuint relativeoffset);                                          \
-    void vertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor);             \
-    void vertexArrayElementBuffer(GLuint vaobj, BufferID bufferPacked);                            \
-    void vertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, BufferID bufferPacked,         \
-                                 GLintptr offset, GLsizei stride);                                 \
-    void vertexArrayVertexBuffers(GLuint vaobj, GLuint first, GLsizei count,                       \
+    void vertexArrayAttribBinding(VertexArrayID vaobjPacked, GLuint attribindex,                   \
+                                  GLuint bindingindex);                                            \
+    void vertexArrayAttribFormat(VertexArrayID vaobjPacked, GLuint attribindex, GLint size,        \
+                                 GLenum type, GLboolean normalized, GLuint relativeoffset);        \
+    void vertexArrayAttribIFormat(VertexArrayID vaobjPacked, GLuint attribindex, GLint size,       \
+                                  GLenum type, GLuint relativeoffset);                             \
+    void vertexArrayAttribLFormat(VertexArrayID vaobjPacked, GLuint attribindex, GLint size,       \
+                                  GLenum type, GLuint relativeoffset);                             \
+    void vertexArrayBindingDivisor(VertexArrayID vaobjPacked, GLuint bindingindex,                 \
+                                   GLuint divisor);                                                \
+    void vertexArrayElementBuffer(VertexArrayID vaobjPacked, BufferID bufferPacked);               \
+    void vertexArrayVertexBuffer(VertexArrayID vaobjPacked, GLuint bindingindex,                   \
+                                 BufferID bufferPacked, GLintptr offset, GLsizei stride);          \
+    void vertexArrayVertexBuffers(VertexArrayID vaobjPacked, GLuint first, GLsizei count,          \
                                   const BufferID *buffersPacked, const GLintptr *offsets,          \
                                   const GLsizei *strides);
 

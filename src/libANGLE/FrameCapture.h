@@ -281,6 +281,9 @@ void WriteParamValueToStream<ParamType::TMemoryObjectID>(std::ostream &os,
                                                          gl::MemoryObjectID value);
 
 template <>
+void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::VertexArrayID value);
+
+template <>
 void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os,
                                                          gl::RenderbufferID value);
 

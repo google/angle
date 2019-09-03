@@ -1654,7 +1654,7 @@ bool ValidateCompressedTexImage3DRobustANGLE(Context *context,
                                         depth, border, imageSize, data);
 }
 
-bool ValidateBindVertexArray(Context *context, GLuint array)
+bool ValidateBindVertexArray(Context *context, VertexArrayID array)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1665,7 +1665,7 @@ bool ValidateBindVertexArray(Context *context, GLuint array)
     return ValidateBindVertexArrayBase(context, array);
 }
 
-bool ValidateIsVertexArray(Context *context, GLuint array)
+bool ValidateIsVertexArray(Context *context, VertexArrayID array)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2450,12 +2450,12 @@ bool ValidateDeleteTransformFeedbacks(Context *context, GLint n, const GLuint *i
     return true;
 }
 
-bool ValidateGenVertexArrays(Context *context, GLint n, GLuint *)
+bool ValidateGenVertexArrays(Context *context, GLint n, VertexArrayID *arrays)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateDeleteVertexArrays(Context *context, GLint n, const GLuint *)
+bool ValidateDeleteVertexArrays(Context *context, GLint n, const VertexArrayID *arrays)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
@@ -3066,7 +3066,7 @@ bool ValidateVertexAttribIPointer(Context *context,
     // An INVALID_OPERATION error is generated when a non-zero vertex array object
     // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
     // and the pointer argument is not NULL.
-    if (context->getState().getVertexArrayId() != 0 &&
+    if (context->getState().getVertexArrayId().value != 0 &&
         context->getState().getTargetBuffer(BufferBinding::Array) == 0 && pointer != nullptr)
     {
         context->validationError(GL_INVALID_OPERATION, kClientDataInVertexArray);

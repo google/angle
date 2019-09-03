@@ -5931,11 +5931,13 @@ CallCapture CaptureTexStorage3DMultisampleOES(const Context *context,
     return CallCapture(gl::EntryPoint::TexStorage3DMultisampleOES, std::move(paramBuffer));
 }
 
-CallCapture CaptureBindVertexArrayOES(const Context *context, bool isCallValid, GLuint array)
+CallCapture CaptureBindVertexArrayOES(const Context *context,
+                                      bool isCallValid,
+                                      VertexArrayID arrayPacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("array", ParamType::TGLuint, array);
+    paramBuffer.addValueParam("arrayPacked", ParamType::TVertexArrayID, arrayPacked);
 
     return CallCapture(gl::EntryPoint::BindVertexArrayOES, std::move(paramBuffer));
 }
@@ -5943,16 +5945,17 @@ CallCapture CaptureBindVertexArrayOES(const Context *context, bool isCallValid, 
 CallCapture CaptureDeleteVertexArraysOES(const Context *context,
                                          bool isCallValid,
                                          GLsizei n,
-                                         const GLuint *arrays)
+                                         const VertexArrayID *arraysPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture arraysParam("arrays", ParamType::TGLuintConstPointer);
-    InitParamValue(ParamType::TGLuintConstPointer, arrays, &arraysParam.value);
-    CaptureDeleteVertexArraysOES_arrays(context, isCallValid, n, arrays, &arraysParam);
-    paramBuffer.addParam(std::move(arraysParam));
+    ParamCapture arraysPackedParam("arraysPacked", ParamType::TVertexArrayIDConstPointer);
+    InitParamValue(ParamType::TVertexArrayIDConstPointer, arraysPacked, &arraysPackedParam.value);
+    CaptureDeleteVertexArraysOES_arraysPacked(context, isCallValid, n, arraysPacked,
+                                              &arraysPackedParam);
+    paramBuffer.addParam(std::move(arraysPackedParam));
 
     return CallCapture(gl::EntryPoint::DeleteVertexArraysOES, std::move(paramBuffer));
 }
@@ -5960,28 +5963,29 @@ CallCapture CaptureDeleteVertexArraysOES(const Context *context,
 CallCapture CaptureGenVertexArraysOES(const Context *context,
                                       bool isCallValid,
                                       GLsizei n,
-                                      GLuint *arrays)
+                                      VertexArrayID *arraysPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
-    ParamCapture arraysParam("arrays", ParamType::TGLuintPointer);
-    InitParamValue(ParamType::TGLuintPointer, arrays, &arraysParam.value);
-    CaptureGenVertexArraysOES_arrays(context, isCallValid, n, arrays, &arraysParam);
-    paramBuffer.addParam(std::move(arraysParam));
+    ParamCapture arraysPackedParam("arraysPacked", ParamType::TVertexArrayIDPointer);
+    InitParamValue(ParamType::TVertexArrayIDPointer, arraysPacked, &arraysPackedParam.value);
+    CaptureGenVertexArraysOES_arraysPacked(context, isCallValid, n, arraysPacked,
+                                           &arraysPackedParam);
+    paramBuffer.addParam(std::move(arraysPackedParam));
 
     return CallCapture(gl::EntryPoint::GenVertexArraysOES, std::move(paramBuffer));
 }
 
 CallCapture CaptureIsVertexArrayOES(const Context *context,
                                     bool isCallValid,
-                                    GLuint array,
+                                    VertexArrayID arrayPacked,
                                     GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("array", ParamType::TGLuint, array);
+    paramBuffer.addValueParam("arrayPacked", ParamType::TVertexArrayID, arrayPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);

@@ -154,8 +154,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
                 params.getParam("id", ParamType::TGLuint, 1).value.GLuintVal);
             break;
         case gl::EntryPoint::BindVertexArray:
-            context->bindVertexArray(
-                params.getParam("array", ParamType::TGLuint, 0).value.GLuintVal);
+            context->bindVertexArray(params.getParam("arrayPacked", ParamType::TVertexArrayID, 0)
+                                         .value.VertexArrayIDVal);
             break;
         case gl::EntryPoint::BindVertexBuffer:
             context->bindVertexBuffer(
@@ -550,8 +550,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
         case gl::EntryPoint::DeleteVertexArrays:
             context->deleteVertexArrays(
                 params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                replayContext->getAsConstPointer<const GLuint *>(
-                    params.getParam("arrays", ParamType::TGLuintConstPointer, 1)));
+                replayContext->getAsConstPointer<const VertexArrayID *>(
+                    params.getParam("arraysPacked", ParamType::TVertexArrayIDConstPointer, 1)));
             break;
         case gl::EntryPoint::DepthFunc:
             context->depthFunc(params.getParam("func", ParamType::TGLenum, 0).value.GLenumVal);
@@ -854,9 +854,10 @@ void FrameCapture::ReplayCall(gl::Context *context,
                     params.getParam("ids", ParamType::TGLuintPointer, 1)));
             break;
         case gl::EntryPoint::GenVertexArrays:
-            context->genVertexArrays(params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
-                                     replayContext->getReadBufferPointer<GLuint *>(
-                                         params.getParam("arrays", ParamType::TGLuintPointer, 1)));
+            context->genVertexArrays(
+                params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal,
+                replayContext->getReadBufferPointer<VertexArrayID *>(
+                    params.getParam("arraysPacked", ParamType::TVertexArrayIDPointer, 1)));
             break;
         case gl::EntryPoint::GenerateMipmap:
             context->generateMipmap(
@@ -1652,7 +1653,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
                 params.getParam("id", ParamType::TGLuint, 0).value.GLuintVal);
             break;
         case gl::EntryPoint::IsVertexArray:
-            context->isVertexArray(params.getParam("array", ParamType::TGLuint, 0).value.GLuintVal);
+            context->isVertexArray(params.getParam("arrayPacked", ParamType::TVertexArrayID, 0)
+                                       .value.VertexArrayIDVal);
             break;
         case gl::EntryPoint::LightModelf:
             context->lightModelf(params.getParam("pname", ParamType::TGLenum, 0).value.GLenumVal,

@@ -845,12 +845,15 @@
         "buffer": "BufferID"
     },
     "glVertexArrayElementBuffer": {
+        "vaobj": "VertexArrayID",
         "buffer": "BufferID"
     },
     "glVertexArrayVertexBuffer": {
+        "vaobj": "VertexArrayID",
         "buffer": "BufferID"
     },
     "glVertexArrayVertexBuffers": {
+        "vaobj": "VertexArrayID",
         "buffers": "const BufferID *"
     },
     "glVertexAttribFormat": {
@@ -1550,5 +1553,50 @@
     },
     "glGetMemoryObjectParameteriv": {
         "memoryObject": "MemoryObjectID"
+    },
+    "glIsVertexArray": {
+        "array": "VertexArrayID"
+    },
+    "glGenVertexArrays": {
+        "arrays": "VertexArrayID *"
+    },
+    "glDeleteVertexArrays": {
+        "arrays": "const VertexArrayID *"
+    },
+    "glBindVertexArray": {
+        "array": "VertexArrayID"
+    },
+    "glCreateVertexArrays": {
+        "arrays": "VertexArrayID *"
+    },
+    "glDisableVertexArrayAttrib": {
+        "vaobj": "VertexArrayID"
+    },
+    "glEnableVertexArrayAttrib": {
+        "vaobj": "VertexArrayID"
+    },
+    "glGetVertexArrayIndexediv": {
+        "vaobj": "VertexArrayID"
+    },
+    "glGetVertexArrayIndexed64iv": {
+        "vaobj": "VertexArrayID"
+    },
+    "glGetVertexArrayiv": {
+        "vaobj": "VertexArrayID"
+    },
+    "glVertexArrayAttribBinding": {
+        "vaobj": "VertexArrayID"
+    },
+    "glVertexArrayAttribFormat": {
+        "vaobj": "VertexArrayID"
+    },
+    "glVertexArrayAttribIFormat": {
+        "vaobj": "VertexArrayID"
+    },
+    "glVertexArrayAttribLFormat": {
+        "vaobj": "VertexArrayID"
+    },
+    "glVertexArrayBindingDivisor": {
+        "vaobj": "VertexArrayID"
     }
 }

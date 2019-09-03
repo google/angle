@@ -352,7 +352,7 @@ bool ValidateVertexAttribFormatCommon(Context *context, GLuint relativeOffset)
 
     // [OpenGL ES 3.1] Section 10.3.1 page 243:
     // An INVALID_OPERATION error is generated if the default vertex array object is bound.
-    if (context->getState().getVertexArrayId() == 0)
+    if (context->getState().getVertexArrayId().value == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kDefaultVertexArray);
         return false;
@@ -431,7 +431,7 @@ bool ValidateDrawIndirectBase(Context *context, PrimitiveMode mode, const void *
 
     // An INVALID_OPERATION error is generated if zero is bound to VERTEX_ARRAY_BINDING,
     // DRAW_INDIRECT_BUFFER or to any enabled vertex array.
-    if (!state.getVertexArrayId())
+    if (state.getVertexArrayId().value == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kDefaultVertexArray);
         return false;
@@ -1186,7 +1186,7 @@ bool ValidateBindVertexBuffer(Context *context,
 
     // [OpenGL ES 3.1] Section 10.3.1 page 244:
     // An INVALID_OPERATION error is generated if the default vertex array object is bound.
-    if (context->getState().getVertexArrayId() == 0)
+    if (context->getState().getVertexArrayId().value == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kDefaultVertexArray);
         return false;
@@ -1212,7 +1212,7 @@ bool ValidateVertexBindingDivisor(Context *context, GLuint bindingIndex, GLuint 
 
     // [OpenGL ES 3.1] Section 10.3.1 page 243:
     // An INVALID_OPERATION error is generated if the default vertex array object is bound.
-    if (context->getState().getVertexArrayId() == 0)
+    if (context->getState().getVertexArrayId().value == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kDefaultVertexArray);
         return false;
@@ -1260,7 +1260,7 @@ bool ValidateVertexAttribBinding(Context *context, GLuint attribIndex, GLuint bi
 
     // [OpenGL ES 3.1] Section 10.3.1 page 243:
     // An INVALID_OPERATION error is generated if the default vertex array object is bound.
-    if (context->getState().getVertexArrayId() == 0)
+    if (context->getState().getVertexArrayId().value == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kDefaultVertexArray);
         return false;

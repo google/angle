@@ -95,7 +95,7 @@ ANGLE_INLINE bool ValidateVertexAttribPointer(Context *context,
     // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
     // and the pointer argument is not NULL.
     bool nullBufferAllowed = context->getState().areClientArraysEnabled() &&
-                             context->getState().getVertexArray()->id() == 0;
+                             context->getState().getVertexArray()->id().value == 0;
     if (!nullBufferAllowed && context->getState().getTargetBuffer(BufferBinding::Array) == 0 &&
         ptr != nullptr)
     {

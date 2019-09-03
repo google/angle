@@ -1725,18 +1725,18 @@ angle::CallCapture CaptureTexStorage3DMultisampleOES(const Context *context,
 // GL_OES_vertex_array_object
 angle::CallCapture CaptureBindVertexArrayOES(const Context *context,
                                              bool isCallValid,
-                                             GLuint array);
+                                             VertexArrayID arrayPacked);
 angle::CallCapture CaptureDeleteVertexArraysOES(const Context *context,
                                                 bool isCallValid,
                                                 GLsizei n,
-                                                const GLuint *arrays);
+                                                const VertexArrayID *arraysPacked);
 angle::CallCapture CaptureGenVertexArraysOES(const Context *context,
                                              bool isCallValid,
                                              GLsizei n,
-                                             GLuint *arrays);
+                                             VertexArrayID *arraysPacked);
 angle::CallCapture CaptureIsVertexArrayOES(const Context *context,
                                            bool isCallValid,
-                                           GLuint array,
+                                           VertexArrayID arrayPacked,
                                            GLboolean returnValue);
 
 // GL_OVR_multiview
@@ -3847,16 +3847,16 @@ void CaptureTexGenxvOES_params(const Context *context,
                                GLenum pname,
                                const GLfixed *params,
                                angle::ParamCapture *paramCapture);
-void CaptureDeleteVertexArraysOES_arrays(const Context *context,
-                                         bool isCallValid,
-                                         GLsizei n,
-                                         const GLuint *arrays,
-                                         angle::ParamCapture *paramCapture);
-void CaptureGenVertexArraysOES_arrays(const Context *context,
-                                      bool isCallValid,
-                                      GLsizei n,
-                                      GLuint *arrays,
-                                      angle::ParamCapture *paramCapture);
+void CaptureDeleteVertexArraysOES_arraysPacked(const Context *context,
+                                               bool isCallValid,
+                                               GLsizei n,
+                                               const VertexArrayID *arraysPacked,
+                                               angle::ParamCapture *paramCapture);
+void CaptureGenVertexArraysOES_arraysPacked(const Context *context,
+                                            bool isCallValid,
+                                            GLsizei n,
+                                            VertexArrayID *arraysPacked,
+                                            angle::ParamCapture *paramCapture);
 }  // namespace gl
 
 #endif  // LIBANGLE_CAPTURE_GLES_ext_AUTOGEN_H_

@@ -3136,20 +3136,20 @@ void CaptureTexGenxvOES_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteVertexArraysOES_arrays(const Context *context,
-                                         bool isCallValid,
-                                         GLsizei n,
-                                         const GLuint *arrays,
-                                         ParamCapture *paramCapture)
+void CaptureDeleteVertexArraysOES_arraysPacked(const Context *context,
+                                               bool isCallValid,
+                                               GLsizei n,
+                                               const VertexArrayID *arrays,
+                                               ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureGenVertexArraysOES_arrays(const Context *context,
-                                      bool isCallValid,
-                                      GLsizei n,
-                                      GLuint *arrays,
-                                      ParamCapture *paramCapture)
+void CaptureGenVertexArraysOES_arraysPacked(const Context *context,
+                                            bool isCallValid,
+                                            GLsizei n,
+                                            VertexArrayID *arrays,
+                                            ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }

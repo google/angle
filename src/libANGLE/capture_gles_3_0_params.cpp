@@ -103,11 +103,11 @@ void CaptureDeleteTransformFeedbacks_ids(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDeleteVertexArrays_arrays(const Context *context,
-                                      bool isCallValid,
-                                      GLsizei n,
-                                      const GLuint *arrays,
-                                      ParamCapture *paramCapture)
+void CaptureDeleteVertexArrays_arraysPacked(const Context *context,
+                                            bool isCallValid,
+                                            GLsizei n,
+                                            const VertexArrayID *arrays,
+                                            ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
@@ -173,11 +173,11 @@ void CaptureGenTransformFeedbacks_ids(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGenVertexArrays_arrays(const Context *context,
-                                   bool isCallValid,
-                                   GLsizei n,
-                                   GLuint *arrays,
-                                   ParamCapture *paramCapture)
+void CaptureGenVertexArrays_arraysPacked(const Context *context,
+                                         bool isCallValid,
+                                         GLsizei n,
+                                         VertexArrayID *arrays,
+                                         ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }

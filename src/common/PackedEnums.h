@@ -401,6 +401,11 @@ struct MemoryObjectID
     GLuint value;
 };
 
+struct VertexArrayID
+{
+    GLuint value;
+};
+
 struct RenderbufferID
 {
     GLuint value;

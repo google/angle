@@ -3478,12 +3478,12 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
     return true;
 }
 
-bool ValidateBindVertexArrayBase(Context *context, GLuint array)
+bool ValidateBindVertexArrayBase(Context *context, VertexArrayID array)
 {
     if (!context->isVertexArrayGenerated(array))
     {
         // The default VAO should always exist
-        ASSERT(array != 0);
+        ASSERT(array.value != 0);
         context->validationError(GL_INVALID_OPERATION, kInvalidVertexArray);
         return false;
     }

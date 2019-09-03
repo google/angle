@@ -6998,14 +6998,15 @@ void GL_APIENTRY BindVertexArrayOES(GLuint array)
 
     if (context)
     {
+        VertexArrayID arrayPacked                     = FromGL<VertexArrayID>(array);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBindVertexArrayOES(context, array));
+            (context->skipValidation() || ValidateBindVertexArrayOES(context, arrayPacked));
         if (isCallValid)
         {
-            context->bindVertexArray(array);
+            context->bindVertexArray(arrayPacked);
         }
-        ANGLE_CAPTURE(BindVertexArrayOES, isCallValid, context, array);
+        ANGLE_CAPTURE(BindVertexArrayOES, isCallValid, context, arrayPacked);
     }
 }
 
@@ -7018,14 +7019,15 @@ void GL_APIENTRY DeleteVertexArraysOES(GLsizei n, const GLuint *arrays)
 
     if (context)
     {
+        const VertexArrayID *arraysPacked             = FromGL<const VertexArrayID *>(arrays);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateDeleteVertexArraysOES(context, n, arrays));
+            (context->skipValidation() || ValidateDeleteVertexArraysOES(context, n, arraysPacked));
         if (isCallValid)
         {
-            context->deleteVertexArrays(n, arrays);
+            context->deleteVertexArrays(n, arraysPacked);
         }
-        ANGLE_CAPTURE(DeleteVertexArraysOES, isCallValid, context, n, arrays);
+        ANGLE_CAPTURE(DeleteVertexArraysOES, isCallValid, context, n, arraysPacked);
     }
 }
 
@@ -7038,14 +7040,15 @@ void GL_APIENTRY GenVertexArraysOES(GLsizei n, GLuint *arrays)
 
     if (context)
     {
+        VertexArrayID *arraysPacked                   = FromGL<VertexArrayID *>(arrays);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGenVertexArraysOES(context, n, arrays));
+            (context->skipValidation() || ValidateGenVertexArraysOES(context, n, arraysPacked));
         if (isCallValid)
         {
-            context->genVertexArrays(n, arrays);
+            context->genVertexArrays(n, arraysPacked);
         }
-        ANGLE_CAPTURE(GenVertexArraysOES, isCallValid, context, n, arrays);
+        ANGLE_CAPTURE(GenVertexArraysOES, isCallValid, context, n, arraysPacked);
     }
 }
 
@@ -7057,17 +7060,19 @@ GLboolean GL_APIENTRY IsVertexArrayOES(GLuint array)
     GLboolean returnValue;
     if (context)
     {
+        VertexArrayID arrayPacked                     = FromGL<VertexArrayID>(array);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateIsVertexArrayOES(context, array));
+        bool isCallValid =
+            (context->skipValidation() || ValidateIsVertexArrayOES(context, arrayPacked));
         if (isCallValid)
         {
-            returnValue = context->isVertexArray(array);
+            returnValue = context->isVertexArray(arrayPacked);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsVertexArrayOES, GLboolean>();
         }
-        ANGLE_CAPTURE(IsVertexArrayOES, isCallValid, context, array, returnValue);
+        ANGLE_CAPTURE(IsVertexArrayOES, isCallValid, context, arrayPacked, returnValue);
     }
     else
     {
@@ -7657,13 +7662,15 @@ void GL_APIENTRY BindVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexArrayID arrayPacked                     = FromGL<VertexArrayID>(array);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateBindVertexArray(context, array));
+        bool isCallValid =
+            (context->skipValidation() || ValidateBindVertexArray(context, arrayPacked));
         if (isCallValid)
         {
-            context->bindVertexArray(array);
+            context->bindVertexArray(arrayPacked);
         }
-        ANGLE_CAPTURE(BindVertexArray, isCallValid, context, array);
+        ANGLE_CAPTURE(BindVertexArray, isCallValid, context, arrayPacked);
     }
 }
 
@@ -7675,14 +7682,15 @@ void GL_APIENTRY BindVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array)
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexArrayID arrayPacked                     = FromGL<VertexArrayID>(array);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBindVertexArrayOES(context, array));
+            (context->skipValidation() || ValidateBindVertexArrayOES(context, arrayPacked));
         if (isCallValid)
         {
-            context->bindVertexArray(array);
+            context->bindVertexArray(arrayPacked);
         }
-        ANGLE_CAPTURE(BindVertexArrayOES, isCallValid, context, array);
+        ANGLE_CAPTURE(BindVertexArrayOES, isCallValid, context, arrayPacked);
     }
 }
 
@@ -9573,14 +9581,15 @@ void GL_APIENTRY DeleteVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, con
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        const VertexArrayID *arraysPacked             = FromGL<const VertexArrayID *>(arrays);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateDeleteVertexArrays(context, n, arrays));
+            (context->skipValidation() || ValidateDeleteVertexArrays(context, n, arraysPacked));
         if (isCallValid)
         {
-            context->deleteVertexArrays(n, arrays);
+            context->deleteVertexArrays(n, arraysPacked);
         }
-        ANGLE_CAPTURE(DeleteVertexArrays, isCallValid, context, n, arrays);
+        ANGLE_CAPTURE(DeleteVertexArrays, isCallValid, context, n, arraysPacked);
     }
 }
 
@@ -9596,14 +9605,15 @@ void GL_APIENTRY DeleteVertexArraysOESContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        const VertexArrayID *arraysPacked             = FromGL<const VertexArrayID *>(arrays);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateDeleteVertexArraysOES(context, n, arrays));
+            (context->skipValidation() || ValidateDeleteVertexArraysOES(context, n, arraysPacked));
         if (isCallValid)
         {
-            context->deleteVertexArrays(n, arrays);
+            context->deleteVertexArrays(n, arraysPacked);
         }
-        ANGLE_CAPTURE(DeleteVertexArraysOES, isCallValid, context, n, arrays);
+        ANGLE_CAPTURE(DeleteVertexArraysOES, isCallValid, context, n, arraysPacked);
     }
 }
 
@@ -11409,14 +11419,15 @@ void GL_APIENTRY GenVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, GLuint
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexArrayID *arraysPacked                   = FromGL<VertexArrayID *>(arrays);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGenVertexArrays(context, n, arrays));
+            (context->skipValidation() || ValidateGenVertexArrays(context, n, arraysPacked));
         if (isCallValid)
         {
-            context->genVertexArrays(n, arrays);
+            context->genVertexArrays(n, arraysPacked);
         }
-        ANGLE_CAPTURE(GenVertexArrays, isCallValid, context, n, arrays);
+        ANGLE_CAPTURE(GenVertexArrays, isCallValid, context, n, arraysPacked);
     }
 }
 
@@ -11430,14 +11441,15 @@ void GL_APIENTRY GenVertexArraysOESContextANGLE(GLeglContext ctx, GLsizei n, GLu
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexArrayID *arraysPacked                   = FromGL<VertexArrayID *>(arrays);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGenVertexArraysOES(context, n, arrays));
+            (context->skipValidation() || ValidateGenVertexArraysOES(context, n, arraysPacked));
         if (isCallValid)
         {
-            context->genVertexArrays(n, arrays);
+            context->genVertexArrays(n, arraysPacked);
         }
-        ANGLE_CAPTURE(GenVertexArraysOES, isCallValid, context, n, arrays);
+        ANGLE_CAPTURE(GenVertexArraysOES, isCallValid, context, n, arraysPacked);
     }
 }
 
@@ -15090,17 +15102,19 @@ GLboolean GL_APIENTRY IsVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexArrayID arrayPacked                     = FromGL<VertexArrayID>(array);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateIsVertexArray(context, array));
+        bool isCallValid =
+            (context->skipValidation() || ValidateIsVertexArray(context, arrayPacked));
         if (isCallValid)
         {
-            returnValue = context->isVertexArray(array);
+            returnValue = context->isVertexArray(arrayPacked);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsVertexArray, GLboolean>();
         }
-        ANGLE_CAPTURE(IsVertexArray, isCallValid, context, array, returnValue);
+        ANGLE_CAPTURE(IsVertexArray, isCallValid, context, arrayPacked, returnValue);
     }
     else
     {
@@ -15118,17 +15132,19 @@ GLboolean GL_APIENTRY IsVertexArrayOESContextANGLE(GLeglContext ctx, GLuint arra
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexArrayID arrayPacked                     = FromGL<VertexArrayID>(array);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateIsVertexArrayOES(context, array));
+        bool isCallValid =
+            (context->skipValidation() || ValidateIsVertexArrayOES(context, arrayPacked));
         if (isCallValid)
         {
-            returnValue = context->isVertexArray(array);
+            returnValue = context->isVertexArray(arrayPacked);
         }
         else
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsVertexArrayOES, GLboolean>();
         }
-        ANGLE_CAPTURE(IsVertexArrayOES, isCallValid, context, array, returnValue);
+        ANGLE_CAPTURE(IsVertexArrayOES, isCallValid, context, arrayPacked, returnValue);
     }
     else
     {

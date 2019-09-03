@@ -126,6 +126,9 @@ enum class ParamType
     TTextureIDPointer,
     TTextureTarget,
     TTextureType,
+    TVertexArrayID,
+    TVertexArrayIDConstPointer,
+    TVertexArrayIDPointer,
     TVertexAttribType,
     TvoidConstPointer,
     TvoidConstPointerPointer,
@@ -244,6 +247,9 @@ union ParamValue
     gl::TextureID *TextureIDPointerVal;
     gl::TextureTarget TextureTargetVal;
     gl::TextureType TextureTypeVal;
+    gl::VertexArrayID VertexArrayIDVal;
+    const gl::VertexArrayID *VertexArrayIDConstPointerVal;
+    gl::VertexArrayID *VertexArrayIDPointerVal;
     gl::VertexAttribType VertexAttribTypeVal;
     const void *voidConstPointerVal;
     const void *const *voidConstPointerPointerVal;
@@ -976,6 +982,27 @@ inline gl::TextureType GetParamVal<ParamType::TTextureType, gl::TextureType>(
 }
 
 template <>
+inline gl::VertexArrayID GetParamVal<ParamType::TVertexArrayID, gl::VertexArrayID>(
+    const ParamValue &value)
+{
+    return value.VertexArrayIDVal;
+}
+
+template <>
+inline const gl::VertexArrayID *GetParamVal<ParamType::TVertexArrayIDConstPointer,
+                                            const gl::VertexArrayID *>(const ParamValue &value)
+{
+    return value.VertexArrayIDConstPointerVal;
+}
+
+template <>
+inline gl::VertexArrayID *GetParamVal<ParamType::TVertexArrayIDPointer, gl::VertexArrayID *>(
+    const ParamValue &value)
+{
+    return value.VertexArrayIDPointerVal;
+}
+
+template <>
 inline gl::VertexAttribType GetParamVal<ParamType::TVertexAttribType, gl::VertexAttribType>(
     const ParamValue &value)
 {
@@ -1237,6 +1264,12 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TTextureTarget, T>(value);
         case ParamType::TTextureType:
             return GetParamVal<ParamType::TTextureType, T>(value);
+        case ParamType::TVertexArrayID:
+            return GetParamVal<ParamType::TVertexArrayID, T>(value);
+        case ParamType::TVertexArrayIDConstPointer:
+            return GetParamVal<ParamType::TVertexArrayIDConstPointer, T>(value);
+        case ParamType::TVertexArrayIDPointer:
+            return GetParamVal<ParamType::TVertexArrayIDPointer, T>(value);
         case ParamType::TVertexAttribType:
             return GetParamVal<ParamType::TVertexAttribType, T>(value);
         case ParamType::TvoidConstPointer:
@@ -1954,6 +1987,26 @@ inline void SetParamVal<ParamType::TTextureType>(gl::TextureType valueIn, ParamV
 }
 
 template <>
+inline void SetParamVal<ParamType::TVertexArrayID>(gl::VertexArrayID valueIn, ParamValue *valueOut)
+{
+    valueOut->VertexArrayIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TVertexArrayIDConstPointer>(const gl::VertexArrayID *valueIn,
+                                                               ParamValue *valueOut)
+{
+    valueOut->VertexArrayIDConstPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TVertexArrayIDPointer>(gl::VertexArrayID *valueIn,
+                                                          ParamValue *valueOut)
+{
+    valueOut->VertexArrayIDPointerVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TVertexAttribType>(gl::VertexAttribType valueIn,
                                                       ParamValue *valueOut)
 {
@@ -2322,6 +2375,15 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TTextureType:
             SetParamVal<ParamType::TTextureType>(valueIn, valueOut);
+            break;
+        case ParamType::TVertexArrayID:
+            SetParamVal<ParamType::TVertexArrayID>(valueIn, valueOut);
+            break;
+        case ParamType::TVertexArrayIDConstPointer:
+            SetParamVal<ParamType::TVertexArrayIDConstPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TVertexArrayIDPointer:
+            SetParamVal<ParamType::TVertexArrayIDPointer>(valueIn, valueOut);
             break;
         case ParamType::TVertexAttribType:
             SetParamVal<ParamType::TVertexAttribType>(valueIn, valueOut);

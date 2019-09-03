@@ -273,8 +273,8 @@ class State : angle::NonCopyable
 
     // Vertex array object binding manipulation
     void setVertexArrayBinding(const Context *context, VertexArray *vertexArray);
-    bool removeVertexArrayBinding(const Context *context, GLuint vertexArray);
-    GLuint getVertexArrayId() const;
+    bool removeVertexArrayBinding(const Context *context, VertexArrayID vertexArray);
+    VertexArrayID getVertexArrayId() const;
 
     VertexArray *getVertexArray() const
     {

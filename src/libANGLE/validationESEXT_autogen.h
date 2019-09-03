@@ -1315,10 +1315,10 @@ bool ValidateTexStorage3DMultisampleOES(Context *context,
                                         GLboolean fixedsamplelocations);
 
 // GL_OES_vertex_array_object
-bool ValidateBindVertexArrayOES(Context *context, GLuint array);
-bool ValidateDeleteVertexArraysOES(Context *context, GLsizei n, const GLuint *arrays);
-bool ValidateGenVertexArraysOES(Context *context, GLsizei n, GLuint *arrays);
-bool ValidateIsVertexArrayOES(Context *context, GLuint array);
+bool ValidateBindVertexArrayOES(Context *context, VertexArrayID arrayPacked);
+bool ValidateDeleteVertexArraysOES(Context *context, GLsizei n, const VertexArrayID *arraysPacked);
+bool ValidateGenVertexArraysOES(Context *context, GLsizei n, VertexArrayID *arraysPacked);
+bool ValidateIsVertexArrayOES(Context *context, VertexArrayID arrayPacked);
 
 // GL_OVR_multiview
 bool ValidateFramebufferTextureMultiviewOVR(Context *context,

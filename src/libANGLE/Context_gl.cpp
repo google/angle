@@ -3186,17 +3186,17 @@ void Context::createTransformFeedbacks(GLsizei n, GLuint *ids)
     UNIMPLEMENTED();
 }
 
-void Context::createVertexArrays(GLsizei n, GLuint *arrays)
+void Context::createVertexArrays(GLsizei n, VertexArrayID *arrays)
 {
     UNIMPLEMENTED();
 }
 
-void Context::disableVertexArrayAttrib(GLuint vaobj, GLuint index)
+void Context::disableVertexArrayAttrib(VertexArrayID vaobj, GLuint index)
 {
     UNIMPLEMENTED();
 }
 
-void Context::enableVertexArrayAttrib(GLuint vaobj, GLuint index)
+void Context::enableVertexArrayAttrib(VertexArrayID vaobj, GLuint index)
 {
     UNIMPLEMENTED();
 }
@@ -3370,17 +3370,20 @@ void Context::getTransformFeedbackiv(GLuint xfb, GLenum pname, GLint *param)
     UNIMPLEMENTED();
 }
 
-void Context::getVertexArrayIndexed64iv(GLuint vaobj, GLuint index, GLenum pname, GLint64 *param)
+void Context::getVertexArrayIndexed64iv(VertexArrayID vaobj,
+                                        GLuint index,
+                                        GLenum pname,
+                                        GLint64 *param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getVertexArrayIndexediv(GLuint vaobj, GLuint index, GLenum pname, GLint *param)
+void Context::getVertexArrayIndexediv(VertexArrayID vaobj, GLuint index, GLenum pname, GLint *param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getVertexArrayiv(GLuint vaobj, GLenum pname, GLint *param)
+void Context::getVertexArrayiv(VertexArrayID vaobj, GLenum pname, GLint *param)
 {
     UNIMPLEMENTED();
 }
@@ -3773,12 +3776,12 @@ GLboolean Context::unmapNamedBuffer(BufferID buffer)
     return false;
 }
 
-void Context::vertexArrayAttribBinding(GLuint vaobj, GLuint attribindex, GLuint bindingindex)
+void Context::vertexArrayAttribBinding(VertexArrayID vaobj, GLuint attribindex, GLuint bindingindex)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexArrayAttribFormat(GLuint vaobj,
+void Context::vertexArrayAttribFormat(VertexArrayID vaobj,
                                       GLuint attribindex,
                                       GLint size,
                                       GLenum type,
@@ -3788,7 +3791,7 @@ void Context::vertexArrayAttribFormat(GLuint vaobj,
     UNIMPLEMENTED();
 }
 
-void Context::vertexArrayAttribIFormat(GLuint vaobj,
+void Context::vertexArrayAttribIFormat(VertexArrayID vaobj,
                                        GLuint attribindex,
                                        GLint size,
                                        GLenum type,
@@ -3797,7 +3800,7 @@ void Context::vertexArrayAttribIFormat(GLuint vaobj,
     UNIMPLEMENTED();
 }
 
-void Context::vertexArrayAttribLFormat(GLuint vaobj,
+void Context::vertexArrayAttribLFormat(VertexArrayID vaobj,
                                        GLuint attribindex,
                                        GLint size,
                                        GLenum type,
@@ -3806,17 +3809,17 @@ void Context::vertexArrayAttribLFormat(GLuint vaobj,
     UNIMPLEMENTED();
 }
 
-void Context::vertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor)
+void Context::vertexArrayBindingDivisor(VertexArrayID vaobj, GLuint bindingindex, GLuint divisor)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexArrayElementBuffer(GLuint vaobj, BufferID buffer)
+void Context::vertexArrayElementBuffer(VertexArrayID vaobj, BufferID buffer)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexArrayVertexBuffer(GLuint vaobj,
+void Context::vertexArrayVertexBuffer(VertexArrayID vaobj,
                                       GLuint bindingindex,
                                       BufferID buffer,
                                       GLintptr offset,
@@ -3825,7 +3828,7 @@ void Context::vertexArrayVertexBuffer(GLuint vaobj,
     UNIMPLEMENTED();
 }
 
-void Context::vertexArrayVertexBuffers(GLuint vaobj,
+void Context::vertexArrayVertexBuffers(VertexArrayID vaobj,
                                        GLuint first,
                                        GLsizei count,
                                        const BufferID *buffers,

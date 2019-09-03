@@ -140,9 +140,9 @@ bool ValidateCreateRenderbuffers(Context *context, GLsizei n, RenderbufferID *re
 bool ValidateCreateSamplers(Context *context, GLsizei n, GLuint *samplers);
 bool ValidateCreateTextures(Context *context, GLenum target, GLsizei n, GLuint *textures);
 bool ValidateCreateTransformFeedbacks(Context *context, GLsizei n, GLuint *ids);
-bool ValidateCreateVertexArrays(Context *context, GLsizei n, GLuint *arrays);
-bool ValidateDisableVertexArrayAttrib(Context *context, GLuint vaobj, GLuint index);
-bool ValidateEnableVertexArrayAttrib(Context *context, GLuint vaobj, GLuint index);
+bool ValidateCreateVertexArrays(Context *context, GLsizei n, VertexArrayID *arraysPacked);
+bool ValidateDisableVertexArrayAttrib(Context *context, VertexArrayID vaobjPacked, GLuint index);
+bool ValidateEnableVertexArrayAttrib(Context *context, VertexArrayID vaobjPacked, GLuint index);
 bool ValidateFlushMappedNamedBufferRange(Context *context,
                                          BufferID bufferPacked,
                                          GLintptr offset,
@@ -273,16 +273,19 @@ bool ValidateGetTransformFeedbacki_v(Context *context,
                                      GLint *param);
 bool ValidateGetTransformFeedbackiv(Context *context, GLuint xfb, GLenum pname, GLint *param);
 bool ValidateGetVertexArrayIndexed64iv(Context *context,
-                                       GLuint vaobj,
+                                       VertexArrayID vaobjPacked,
                                        GLuint index,
                                        GLenum pname,
                                        GLint64 *param);
 bool ValidateGetVertexArrayIndexediv(Context *context,
-                                     GLuint vaobj,
+                                     VertexArrayID vaobjPacked,
                                      GLuint index,
                                      GLenum pname,
                                      GLint *param);
-bool ValidateGetVertexArrayiv(Context *context, GLuint vaobj, GLenum pname, GLint *param);
+bool ValidateGetVertexArrayiv(Context *context,
+                              VertexArrayID vaobjPacked,
+                              GLenum pname,
+                              GLint *param);
 bool ValidateGetnColorTable(Context *context,
                             GLenum target,
                             GLenum format,
@@ -550,41 +553,43 @@ bool ValidateTransformFeedbackBufferRange(Context *context,
                                           GLsizeiptr size);
 bool ValidateUnmapNamedBuffer(Context *context, BufferID bufferPacked);
 bool ValidateVertexArrayAttribBinding(Context *context,
-                                      GLuint vaobj,
+                                      VertexArrayID vaobjPacked,
                                       GLuint attribindex,
                                       GLuint bindingindex);
 bool ValidateVertexArrayAttribFormat(Context *context,
-                                     GLuint vaobj,
+                                     VertexArrayID vaobjPacked,
                                      GLuint attribindex,
                                      GLint size,
                                      GLenum type,
                                      GLboolean normalized,
                                      GLuint relativeoffset);
 bool ValidateVertexArrayAttribIFormat(Context *context,
-                                      GLuint vaobj,
+                                      VertexArrayID vaobjPacked,
                                       GLuint attribindex,
                                       GLint size,
                                       GLenum type,
                                       GLuint relativeoffset);
 bool ValidateVertexArrayAttribLFormat(Context *context,
-                                      GLuint vaobj,
+                                      VertexArrayID vaobjPacked,
                                       GLuint attribindex,
                                       GLint size,
                                       GLenum type,
                                       GLuint relativeoffset);
 bool ValidateVertexArrayBindingDivisor(Context *context,
-                                       GLuint vaobj,
+                                       VertexArrayID vaobjPacked,
                                        GLuint bindingindex,
                                        GLuint divisor);
-bool ValidateVertexArrayElementBuffer(Context *context, GLuint vaobj, BufferID bufferPacked);
+bool ValidateVertexArrayElementBuffer(Context *context,
+                                      VertexArrayID vaobjPacked,
+                                      BufferID bufferPacked);
 bool ValidateVertexArrayVertexBuffer(Context *context,
-                                     GLuint vaobj,
+                                     VertexArrayID vaobjPacked,
                                      GLuint bindingindex,
                                      BufferID bufferPacked,
                                      GLintptr offset,
                                      GLsizei stride);
 bool ValidateVertexArrayVertexBuffers(Context *context,
-                                      GLuint vaobj,
+                                      VertexArrayID vaobjPacked,
                                       GLuint first,
                                       GLsizei count,
                                       const BufferID *buffersPacked,
