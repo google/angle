@@ -6,10 +6,12 @@
 
 // SystemInfo_mac.cpp: implementation of the Mac-specific parts of SystemInfo.h
 
-#include "gpu_info_util/SystemInfo_internal.h"
+#if __has_include(<Cocoa/Cocoa.h>)
 
-#import <Cocoa/Cocoa.h>
-#import <IOKit/IOKitLib.h>
+#    include "gpu_info_util/SystemInfo_internal.h"
+
+#    import <Cocoa/Cocoa.h>
+#    import <IOKit/IOKitLib.h>
 
 namespace angle
 {
@@ -239,3 +241,5 @@ bool GetSystemInfo(SystemInfo *info)
 }
 
 }  // namespace angle
+
+#endif  // __has_include(<Cocoa/Cocoa.h>)

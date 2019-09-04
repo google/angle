@@ -6,20 +6,22 @@
 
 // DisplayCGL.mm: CGL implementation of egl::Display
 
-#include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
+#if __has_include(<Cocoa/Cocoa.h>)
 
-#import <Cocoa/Cocoa.h>
-#include <EGL/eglext.h>
-#include <dlfcn.h>
+#    include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 
-#include "common/debug.h"
-#include "gpu_info_util/SystemInfo.h"
-#include "libANGLE/Display.h"
-#include "libANGLE/renderer/gl/cgl/ContextCGL.h"
-#include "libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.h"
-#include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
-#include "libANGLE/renderer/gl/cgl/RendererCGL.h"
-#include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
+#    import <Cocoa/Cocoa.h>
+#    include <EGL/eglext.h>
+#    include <dlfcn.h>
+
+#    include "common/debug.h"
+#    include "gpu_info_util/SystemInfo.h"
+#    include "libANGLE/Display.h"
+#    include "libANGLE/renderer/gl/cgl/ContextCGL.h"
+#    include "libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.h"
+#    include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
+#    include "libANGLE/renderer/gl/cgl/RendererCGL.h"
+#    include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
 
 namespace
 {
@@ -437,3 +439,5 @@ void DisplayCGL::populateFeatureList(angle::FeatureList *features)
     mRenderer->getFeatures().populateFeatureList(features);
 }
 }
+
+#endif  // __has_include(<Cocoa/Cocoa.h>)
