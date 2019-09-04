@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "09a44324_305473a6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2022,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-04T18:53:42Z",
+      "side": 1,
+      "message": "For now, no, since that should result in a shader compilation error.   From the GLSL spec:\n\n4.3.4 Input Variables\n\nIt is a compile-time error to declare a vertex shader input with, or that contains, any of the\nfollowing types:\n• A boolean type\n• An opaque type\n• An array\n• A structure\n\nIt is a compile-time error to declare a fragment shader input with, or that contains, any of the\nfollowing types:\n• A boolean type\n• An opaque type\n• An array of arrays\n• An array of structures\n• A structure containing an array\n• A structure containing a structure\n\n\nPutting those together we can only compile programs with 1D arrays as inputs, so we can only query compiled programs for inputs that are 1D arrays.",
+      "parentUuid": "dbe5bbfa_a1a8dbd7",
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea7acbd3_c0774d00",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "3db77e9d_86868d59",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-04T18:53:42Z",
+      "side": 1,
+      "message": "The null-terminator is already accounted for, so +1 isn\u0027t necessary.   This case is tested for by dEQP, and here\u0027s the output with the +1 added:\n\ndEQP-GLES31.functional.program_interface_query.program_input.resource_list.separable_fragment.var_array\n\nResource list\nQuerying GL_PROGRAM_INPUT interface:\n\tGL_ACTIVE_RESOURCES \u003d 1\n\tGL_MAX_NAME_LENGTH \u003d 11\nQuerying all active resources\nGL returned resources:\n\t0: target[0]\nExpected list of resources:\n\t0: target[0]\nVerifying resource list contents.\nVerifying GetProgramResourceIndex returns correct indices for resource names.\nVerifying MAX_NAME_LENGTH, expecting 10 (i.e. consistent with the queried resource list)\nError, got 11\n\n\nThe string \"target[0]\" is only 9 characters and we would normally return \u002710\u0027, but this is bumped up to \u002711\u0027 with the additional +1 which causes the test to fail.",
+      "parentUuid": "ea7acbd3_c0774d00",
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25241b68_28233ee7",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 4
@@ -47,6 +83,30 @@
       "writtenOn": "2019-09-04T16:05:08Z",
       "side": 1,
       "message": "This is subtly different than before. This will always write 0 into length if it\u0027s non-null.\nBefore we only did that if the program wasn\u0027t linked. GL generally says that nothing changes if there is an error, this change may break that.",
+      "range": {
+        "startLine": 1933,
+        "startChar": 4,
+        "endLine": 1936,
+        "endChar": 5
+      },
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e940b47f_a9180d80",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1936,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-04T18:53:42Z",
+      "side": 1,
+      "message": "We do need do this every time, including when bufSize \u003d\u003d 0:\n\ndEQP-GLES31.functional.program_interface_query.buffer_limited_query.resource_query\nQuery to zero sized buffer\nQuerying 3 uniform prop(s) to a buffer with size 0. Expecting query to return 0 prop(s)\nError, expected write length of 0, got -1\n\n\nIn this case, the test intentionally initializes its \u0027length\u0027 value to -1 and verifies that we set the value to 0, even if they provide a 0-length buffer to write the data into.\n\nHowever, moving this to after we have done the program-\u003eisLinked() check (and not doing it at all in that case) also works for the dEQP-GLES31.functional.program_interface_query.* tests locally.   I\u0027ll need to try it on CQ to see if there are any other tests that get upset about not setting *length \u003d 0 if !program-\u003eisLinked().\n\nSo, we can either do it before the program-\u003eisLinked() check to keep the same behavior or afterward, but we can\u0027t only do it inside the program-\u003eisLinked() block.",
+      "parentUuid": "25241b68_28233ee7",
       "range": {
         "startLine": 1933,
         "startChar": 4,
