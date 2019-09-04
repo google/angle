@@ -744,12 +744,12 @@ GLint QueryProgramInterfaceMaxNameLength(const Program *program, GLenum programI
     switch (programInterface)
     {
         case GL_PROGRAM_INPUT:
-            maxNameLength = FindMaxSize(program->getAttributes(), &sh::Attribute::name);
+            maxNameLength = FindMaxSize(program->getAttributes(), &sh::ShaderVariable::name);
             break;
 
         case GL_PROGRAM_OUTPUT:
             maxNameLength =
-                FindMaxSize(program->getState().getOutputVariables(), &sh::OutputVariable::name);
+                FindMaxSize(program->getState().getOutputVariables(), &sh::ShaderVariable::name);
             break;
 
         case GL_UNIFORM:

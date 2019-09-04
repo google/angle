@@ -148,7 +148,7 @@ GLint GetVariableLocation(const std::vector<VarT> &list,
         // first element if given the base name. Uniforms don't allow this behavior and some code
         // seemingly depends on the opposite behavior, so only enable it for output variables.
         if (angle::BeginsWith(variable.name, name) &&
-            (!std::is_base_of<sh::OutputVariable, VarT>::value || variableLocation.arrayIndex == 0))
+            (!std::is_base_of<sh::ShaderVariable, VarT>::value || variableLocation.arrayIndex == 0))
         {
             if (name.length() == variable.name.length())
             {
@@ -380,7 +380,7 @@ const sh::ShaderVariable *FindVaryingOrField(const ProgramMergedVaryings &varyin
     const sh::ShaderVariable *var = nullptr;
     for (const auto &ref : varyings)
     {
-        const sh::Varying *varying = ref.second.get();
+        const sh::ShaderVariable *varying = ref.second.get();
         if (varying->name == name)
         {
             var = varying;
@@ -452,8 +452,8 @@ const char *GetLinkMismatchErrorString(LinkMismatchError linkError)
     }
 }
 
-LinkMismatchError LinkValidateInterfaceBlockFields(const sh::InterfaceBlockField &blockField1,
-                                                   const sh::InterfaceBlockField &blockField2,
+LinkMismatchError LinkValidateInterfaceBlockFields(const sh::ShaderVariable &blockField1,
+                                                   const sh::ShaderVariable &blockField2,
                                                    bool webglCompatibility,
                                                    std::string *mismatchedBlockFieldName)
 {
@@ -506,8 +506,8 @@ LinkMismatchError AreMatchingInterfaceBlocks(const sh::InterfaceBlock &interface
     const unsigned int numBlockMembers = static_cast<unsigned int>(interfaceBlock1.fields.size());
     for (unsigned int blockMemberIndex = 0; blockMemberIndex < numBlockMembers; blockMemberIndex++)
     {
-        const sh::InterfaceBlockField &member1 = interfaceBlock1.fields[blockMemberIndex];
-        const sh::InterfaceBlockField &member2 = interfaceBlock2.fields[blockMemberIndex];
+        const sh::ShaderVariable &member1 = interfaceBlock1.fields[blockMemberIndex];
+        const sh::ShaderVariable &member2 = interfaceBlock2.fields[blockMemberIndex];
 
         LinkMismatchError linkError = LinkValidateInterfaceBlockFields(
             member1, member2, webglCompatibility, mismatchedBlockFieldName);
@@ -929,7 +929,7 @@ int ProgramBindings::getBindingByName(const std::string &name) const
     return (iter != mBindings.end()) ? iter->second.location : -1;
 }
 
-int ProgramBindings::getBinding(const sh::VariableWithLocation &variable) const
+int ProgramBindings::getBinding(const sh::ShaderVariable &variable) const
 {
     const std::string &name = variable.name;
 
@@ -1096,7 +1096,7 @@ GLuint ProgramState::getUniformIndexFromImageIndex(GLuint imageIndex) const
 
 GLuint ProgramState::getAttributeLocation(const std::string &name) const
 {
-    for (const sh::Attribute &attribute : mAttributes)
+    for (const sh::ShaderVariable &attribute : mAttributes)
     {
         if (attribute.name == name)
         {
@@ -1257,7 +1257,7 @@ BindingInfo Program::getFragmentInputBindingInfo(GLint index) const
     ASSERT(fragmentShader);
 
     // Find the actual fragment shader varying we're interested in
-    const std::vector<sh::Varying> &inputs = fragmentShader->getInputVaryings();
+    const std::vector<sh::ShaderVariable> &inputs = fragmentShader->getInputVaryings();
 
     for (const auto &binding : mFragmentInputBindings)
     {
@@ -1898,7 +1898,7 @@ void Program::getActiveAttribute(GLuint index,
     }
 
     ASSERT(index < mState.mAttributes.size());
-    const sh::Attribute &attrib = mState.mAttributes[index];
+    const sh::ShaderVariable &attrib = mState.mAttributes[index];
 
     if (bufsize > 0)
     {
@@ -1931,7 +1931,7 @@ GLint Program::getActiveAttributeMaxLength() const
 
     size_t maxLength = 0;
 
-    for (const sh::Attribute &attrib : mState.mAttributes)
+    for (const sh::ShaderVariable &attrib : mState.mAttributes)
     {
         maxLength = std::max(attrib.name.length() + 1, maxLength);
     }
@@ -1939,7 +1939,7 @@ GLint Program::getActiveAttributeMaxLength() const
     return static_cast<GLint>(maxLength);
 }
 
-const std::vector<sh::Attribute> &Program::getAttributes() const
+const std::vector<sh::ShaderVariable> &Program::getAttributes() const
 {
     ASSERT(mLinkResolved);
     return mState.mAttributes;
@@ -2067,14 +2067,14 @@ void Program::getBufferVariableResourceName(GLuint index,
     getResourceName(index, mState.mBufferVariables, bufSize, length, name);
 }
 
-const sh::Attribute &Program::getInputResource(GLuint index) const
+const sh::ShaderVariable &Program::getInputResource(GLuint index) const
 {
     ASSERT(mLinkResolved);
     ASSERT(index < mState.mAttributes.size());
     return mState.mAttributes[index];
 }
 
-const sh::OutputVariable &Program::getOutputResource(GLuint index) const
+const sh::ShaderVariable &Program::getOutputResource(GLuint index) const
 {
     ASSERT(mLinkResolved);
     ASSERT(index < mState.mOutputVariables.size());
@@ -3064,12 +3064,12 @@ bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
 {
     ASSERT(generatingShader->getShaderVersion() == consumingShader->getShaderVersion());
 
-    const std::vector<sh::Varying> &outputVaryings = generatingShader->getOutputVaryings();
-    const std::vector<sh::Varying> &inputVaryings  = consumingShader->getInputVaryings();
+    const std::vector<sh::ShaderVariable> &outputVaryings = generatingShader->getOutputVaryings();
+    const std::vector<sh::ShaderVariable> &inputVaryings  = consumingShader->getInputVaryings();
 
     bool validateGeometryShaderInputs = consumingShader->getType() == ShaderType::Geometry;
 
-    for (const sh::Varying &input : inputVaryings)
+    for (const sh::ShaderVariable &input : inputVaryings)
     {
         bool matched = false;
 
@@ -3084,7 +3084,7 @@ bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
         // - the two variables match in name, type, and qualification; or
         // - the two variables are declared with the same location qualifier and
         //   match in type and qualification.
-        for (const sh::Varying &output : outputVaryings)
+        for (const sh::ShaderVariable &output : outputVaryings)
         {
             bool namesMatch     = input.name == output.name;
             bool locationsMatch = (input.location != -1) && (input.location == output.location);
@@ -3138,7 +3138,7 @@ bool Program::linkValidateFragmentInputBindings(gl::InfoLog &infoLog) const
         return true;
     }
 
-    for (const sh::Varying &input : fragmentShader->getInputVaryings())
+    for (const sh::ShaderVariable &input : fragmentShader->getInputVaryings())
     {
         if (input.isBuiltIn() || !input.staticUse)
         {
@@ -3330,10 +3330,10 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
     }
 
     GLuint maxAttribs = caps.maxVertexAttributes;
-    std::vector<sh::Attribute *> usedAttribMap(maxAttribs, nullptr);
+    std::vector<sh::ShaderVariable *> usedAttribMap(maxAttribs, nullptr);
 
     // Assign locations to attributes that have a binding location and check for attribute aliasing.
-    for (sh::Attribute &attribute : mState.mAttributes)
+    for (sh::ShaderVariable &attribute : mState.mAttributes)
     {
         // GLSL ES 3.10 January 2016 section 4.3.4: Vertex shader inputs can't be arrays or
         // structures, so we don't need to worry about adjusting their names or generating entries
@@ -3389,7 +3389,7 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
     }
 
     // Assign locations to attributes that don't have a binding location.
-    for (sh::Attribute &attribute : mState.mAttributes)
+    for (sh::ShaderVariable &attribute : mState.mAttributes)
     {
         // Not set by glBindAttribLocation or by location layout qualifier
         if (attribute.location == -1)
@@ -3428,7 +3428,7 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
         }
     }
 
-    for (const sh::Attribute &attribute : mState.mAttributes)
+    for (const sh::ShaderVariable &attribute : mState.mAttributes)
     {
         ASSERT(attribute.active);
         ASSERT(attribute.location != -1);
@@ -3600,8 +3600,8 @@ LinkMismatchError Program::LinkValidateVariablesBase(const sh::ShaderVariable &v
     return LinkMismatchError::NO_MISMATCH;
 }
 
-LinkMismatchError Program::LinkValidateVaryings(const sh::Varying &outputVarying,
-                                                const sh::Varying &inputVarying,
+LinkMismatchError Program::LinkValidateVaryings(const sh::ShaderVariable &outputVarying,
+                                                const sh::ShaderVariable &inputVarying,
                                                 int shaderVersion,
                                                 bool validateGeometryShaderInputVarying,
                                                 std::string *mismatchedStructFieldName)
@@ -3675,7 +3675,7 @@ bool Program::linkValidateBuiltInVaryings(InfoLog &infoLog) const
     bool glFragCoordIsInvariant  = false;
     bool glPointCoordIsInvariant = false;
 
-    for (const sh::Varying &varying : vertexVaryings)
+    for (const sh::ShaderVariable &varying : vertexVaryings)
     {
         if (!varying.isBuiltIn())
         {
@@ -3691,7 +3691,7 @@ bool Program::linkValidateBuiltInVaryings(InfoLog &infoLog) const
         }
     }
 
-    for (const sh::Varying &varying : fragmentVaryings)
+    for (const sh::ShaderVariable &varying : fragmentVaryings)
     {
         if (!varying.isBuiltIn())
         {
@@ -3843,9 +3843,8 @@ bool Program::linkValidateTransformFeedback(const Version &version,
 
 bool Program::linkValidateGlobalNames(InfoLog &infoLog) const
 {
-    std::unordered_map<std::string, const sh::Uniform *> uniformMap;
-    using BlockAndFieldPair =
-        std::pair<const sh::InterfaceBlock *, const sh::InterfaceBlockField *>;
+    std::unordered_map<std::string, const sh::ShaderVariable *> uniformMap;
+    using BlockAndFieldPair = std::pair<const sh::InterfaceBlock *, const sh::ShaderVariable *>;
     std::unordered_map<std::string, std::vector<BlockAndFieldPair>> uniformBlockFieldMap;
 
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
@@ -3857,7 +3856,7 @@ bool Program::linkValidateGlobalNames(InfoLog &infoLog) const
         }
 
         // Build a map of Uniforms
-        const std::vector<sh::Uniform> uniforms = shader->getUniforms();
+        const std::vector<sh::ShaderVariable> uniforms = shader->getUniforms();
         for (const auto &uniform : uniforms)
         {
             uniformMap[uniform.name] = &uniform;
@@ -3897,8 +3896,7 @@ bool Program::linkValidateGlobalNames(InfoLog &infoLog) const
                 for (const auto &prevBlockFieldPair : prevBlockFieldPairs)
                 {
                     const sh::InterfaceBlock *prevUniformBlock = prevBlockFieldPair.first;
-                    const sh::InterfaceBlockField *prevUniformBlockField =
-                        prevBlockFieldPair.second;
+                    const sh::ShaderVariable *prevUniformBlockField = prevBlockFieldPair.second;
 
                     if (uniformBlock.isSameInterfaceBlockAtLinkTime(*prevUniformBlock))
                     {
@@ -3968,7 +3966,7 @@ void Program::gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyi
         }
         for (const auto &ref : varyings)
         {
-            const sh::Varying *varying = ref.second.get();
+            const sh::ShaderVariable *varying = ref.second.get();
             if (baseName == varying->name)
             {
                 mState.mLinkedTransformFeedbackVaryings.emplace_back(
@@ -3996,7 +3994,7 @@ ProgramMergedVaryings Program::getMergedVaryings() const
     Shader *vertexShader = mState.mAttachedShaders[ShaderType::Vertex];
     if (vertexShader)
     {
-        for (const sh::Varying &varying : vertexShader->getOutputVaryings())
+        for (const sh::ShaderVariable &varying : vertexShader->getOutputVaryings())
         {
             merged[varying.name].vertex = &varying;
         }
@@ -4005,7 +4003,7 @@ ProgramMergedVaryings Program::getMergedVaryings() const
     Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
     if (fragmentShader)
     {
-        for (const sh::Varying &varying : fragmentShader->getInputVaryings())
+        for (const sh::ShaderVariable &varying : fragmentShader->getInputVaryings())
         {
             merged[varying.name].fragment = &varying;
         }
@@ -4014,12 +4012,12 @@ ProgramMergedVaryings Program::getMergedVaryings() const
     return merged;
 }
 
-bool CompareOutputVariable(const sh::OutputVariable &a, const sh::OutputVariable &b)
+bool CompareOutputVariable(const sh::ShaderVariable &a, const sh::ShaderVariable &b)
 {
     return a.getArraySizeProduct() > b.getArraySizeProduct();
 }
 
-int Program::getOutputLocationForLink(const sh::OutputVariable &outputVariable) const
+int Program::getOutputLocationForLink(const sh::ShaderVariable &outputVariable) const
 {
     if (outputVariable.location != -1)
     {
@@ -4033,7 +4031,7 @@ int Program::getOutputLocationForLink(const sh::OutputVariable &outputVariable) 
     return -1;
 }
 
-bool Program::isOutputSecondaryForLink(const sh::OutputVariable &outputVariable) const
+bool Program::isOutputSecondaryForLink(const sh::ShaderVariable &outputVariable) const
 {
     if (outputVariable.index != -1)
     {
@@ -4186,7 +4184,7 @@ bool Program::linkOutputVariables(const Caps &caps,
     mState.mOutputVariables = outputVariables;
     // TODO(jmadill): any caps validation here?
 
-    for (sh::OutputVariable &outputVariable : mState.mOutputVariables)
+    for (sh::ShaderVariable &outputVariable : mState.mOutputVariables)
     {
         if (outputVariable.isArray())
         {
@@ -4232,7 +4230,7 @@ bool Program::linkOutputVariables(const Caps &caps,
         for (unsigned int outputVariableIndex = 0;
              outputVariableIndex < mState.mOutputVariables.size(); outputVariableIndex++)
         {
-            const sh::OutputVariable &outputVariable = mState.mOutputVariables[outputVariableIndex];
+            const sh::ShaderVariable &outputVariable = mState.mOutputVariables[outputVariableIndex];
             // Check that the binding corresponds to an output array and its array index fits.
             if (outputVariable.isBuiltIn() || !outputVariable.isArray() ||
                 !angle::BeginsWith(outputVariable.name, binding.first,
@@ -4271,7 +4269,7 @@ bool Program::linkOutputVariables(const Caps &caps,
     for (unsigned int outputVariableIndex = 0; outputVariableIndex < mState.mOutputVariables.size();
          outputVariableIndex++)
     {
-        const sh::OutputVariable &outputVariable = mState.mOutputVariables[outputVariableIndex];
+        const sh::ShaderVariable &outputVariable = mState.mOutputVariables[outputVariableIndex];
 
         // Don't store outputs for gl_FragDepth, gl_FragColor, etc.
         if (outputVariable.isBuiltIn())
@@ -4319,7 +4317,7 @@ bool Program::linkOutputVariables(const Caps &caps,
     for (unsigned int outputVariableIndex = 0; outputVariableIndex < mState.mOutputVariables.size();
          outputVariableIndex++)
     {
-        const sh::OutputVariable &outputVariable = mState.mOutputVariables[outputVariableIndex];
+        const sh::ShaderVariable &outputVariable = mState.mOutputVariables[outputVariableIndex];
 
         // Don't store outputs for gl_FragDepth, gl_FragColor, etc.
         if (outputVariable.isBuiltIn())
@@ -4685,7 +4683,7 @@ void Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) 
     stream.writeInt(mState.getActiveAttribLocationsMask().to_ulong());
 
     stream.writeInt(mState.getAttributes().size());
-    for (const sh::Attribute &attrib : mState.getAttributes())
+    for (const sh::ShaderVariable &attrib : mState.getAttributes())
     {
         WriteShaderVar(&stream, attrib);
         stream.writeInt(attrib.location);
@@ -4761,7 +4759,7 @@ void Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) 
     stream.writeInt(mState.getTransformFeedbackBufferMode());
 
     stream.writeInt(mState.getOutputVariables().size());
-    for (const sh::OutputVariable &output : mState.getOutputVariables())
+    for (const sh::ShaderVariable &output : mState.getOutputVariables())
     {
         WriteShaderVar(&stream, output);
         stream.writeInt(output.location);
@@ -4881,7 +4879,7 @@ angle::Result Program::deserialize(const Context *context,
     ASSERT(mState.mAttributes.empty());
     for (unsigned int attribIndex = 0; attribIndex < attribCount; ++attribIndex)
     {
-        sh::Attribute attrib;
+        sh::ShaderVariable attrib;
         LoadShaderVar(&stream, &attrib);
         attrib.location = stream.readInt<int>();
         mState.mAttributes.push_back(attrib);
@@ -4977,7 +4975,7 @@ angle::Result Program::deserialize(const Context *context,
          transformFeedbackVaryingIndex < transformFeedbackVaryingCount;
          ++transformFeedbackVaryingIndex)
     {
-        sh::Varying varying;
+        sh::ShaderVariable varying;
         stream.readIntVector<unsigned int>(&varying.arraySizes);
         stream.readInt(&varying.type);
         stream.readString(&varying.name);
@@ -4993,7 +4991,7 @@ angle::Result Program::deserialize(const Context *context,
     ASSERT(mState.mOutputVariables.empty());
     for (unsigned int outputIndex = 0; outputIndex < outputCount; ++outputIndex)
     {
-        sh::OutputVariable output;
+        sh::ShaderVariable output;
         LoadShaderVar(&stream, &output);
         output.location = stream.readInt<int>();
         output.index    = stream.readInt<int>();

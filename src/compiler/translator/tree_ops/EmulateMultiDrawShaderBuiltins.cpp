@@ -120,7 +120,7 @@ class FindGLBaseInstanceTraverser : public TIntermTraverser
 bool EmulateGLDrawID(TCompiler *compiler,
                      TIntermBlock *root,
                      TSymbolTable *symbolTable,
-                     std::vector<sh::Uniform> *uniforms,
+                     std::vector<sh::ShaderVariable> *uniforms,
                      bool shouldCollect)
 {
     FindGLDrawIDTraverser traverser;
@@ -136,7 +136,7 @@ bool EmulateGLDrawID(TCompiler *compiler,
         // AngleInternal variables don't get collected
         if (shouldCollect)
         {
-            Uniform uniform;
+            ShaderVariable uniform;
             uniform.name       = kEmulatedGLDrawIDName.data();
             uniform.mappedName = kEmulatedGLDrawIDName.data();
             uniform.type       = GLVariableType(*type);
@@ -164,12 +164,12 @@ bool EmulateGLDrawID(TCompiler *compiler,
 bool EmulateGLBaseVertexBaseInstance(TCompiler *compiler,
                                      TIntermBlock *root,
                                      TSymbolTable *symbolTable,
-                                     std::vector<sh::Uniform> *uniforms,
+                                     std::vector<sh::ShaderVariable> *uniforms,
                                      bool shouldCollect,
                                      bool addBaseVertexToVertexID)
 {
     bool addBaseVertex = false, addBaseInstance = false;
-    Uniform uniformBaseVertex, uniformBaseInstance;
+    ShaderVariable uniformBaseVertex, uniformBaseInstance;
 
     if (addBaseVertexToVertexID)
     {

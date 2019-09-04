@@ -70,17 +70,17 @@ class ShaderState final : angle::NonCopyable
     ShaderType getShaderType() const { return mShaderType; }
     int getShaderVersion() const { return mShaderVersion; }
 
-    const std::vector<sh::Varying> &getInputVaryings() const { return mInputVaryings; }
-    const std::vector<sh::Varying> &getOutputVaryings() const { return mOutputVaryings; }
-    const std::vector<sh::Uniform> &getUniforms() const { return mUniforms; }
+    const std::vector<sh::ShaderVariable> &getInputVaryings() const { return mInputVaryings; }
+    const std::vector<sh::ShaderVariable> &getOutputVaryings() const { return mOutputVaryings; }
+    const std::vector<sh::ShaderVariable> &getUniforms() const { return mUniforms; }
     const std::vector<sh::InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
     const std::vector<sh::InterfaceBlock> &getShaderStorageBlocks() const
     {
         return mShaderStorageBlocks;
     }
-    const std::vector<sh::Attribute> &getActiveAttributes() const { return mActiveAttributes; }
-    const std::vector<sh::Attribute> &getAllAttributes() const { return mAllAttributes; }
-    const std::vector<sh::OutputVariable> &getActiveOutputVariables() const
+    const std::vector<sh::ShaderVariable> &getActiveAttributes() const { return mActiveAttributes; }
+    const std::vector<sh::ShaderVariable> &getAllAttributes() const { return mAllAttributes; }
+    const std::vector<sh::ShaderVariable> &getActiveOutputVariables() const
     {
         return mActiveOutputVariables;
     }
@@ -99,14 +99,14 @@ class ShaderState final : angle::NonCopyable
 
     sh::WorkGroupSize mLocalSize;
 
-    std::vector<sh::Varying> mInputVaryings;
-    std::vector<sh::Varying> mOutputVaryings;
-    std::vector<sh::Uniform> mUniforms;
+    std::vector<sh::ShaderVariable> mInputVaryings;
+    std::vector<sh::ShaderVariable> mOutputVaryings;
+    std::vector<sh::ShaderVariable> mUniforms;
     std::vector<sh::InterfaceBlock> mUniformBlocks;
     std::vector<sh::InterfaceBlock> mShaderStorageBlocks;
-    std::vector<sh::Attribute> mAllAttributes;
-    std::vector<sh::Attribute> mActiveAttributes;
-    std::vector<sh::OutputVariable> mActiveOutputVariables;
+    std::vector<sh::ShaderVariable> mAllAttributes;
+    std::vector<sh::ShaderVariable> mActiveAttributes;
+    std::vector<sh::ShaderVariable> mActiveOutputVariables;
 
     // ANGLE_multiview.
     int mNumViews;
@@ -164,14 +164,14 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
     int getShaderVersion();
 
-    const std::vector<sh::Varying> &getInputVaryings();
-    const std::vector<sh::Varying> &getOutputVaryings();
-    const std::vector<sh::Uniform> &getUniforms();
+    const std::vector<sh::ShaderVariable> &getInputVaryings();
+    const std::vector<sh::ShaderVariable> &getOutputVaryings();
+    const std::vector<sh::ShaderVariable> &getUniforms();
     const std::vector<sh::InterfaceBlock> &getUniformBlocks();
     const std::vector<sh::InterfaceBlock> &getShaderStorageBlocks();
-    const std::vector<sh::Attribute> &getActiveAttributes();
-    const std::vector<sh::Attribute> &getAllAttributes();
-    const std::vector<sh::OutputVariable> &getActiveOutputVariables();
+    const std::vector<sh::ShaderVariable> &getActiveAttributes();
+    const std::vector<sh::ShaderVariable> &getAllAttributes();
+    const std::vector<sh::ShaderVariable> &getActiveOutputVariables();
 
     // Returns mapped name of a transform feedback varying. The original name may contain array
     // brackets with an index inside, which will get copied to the mapped name. The varying must be

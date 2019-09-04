@@ -26,7 +26,7 @@ struct InterfaceBlock;
 struct ShaderVariable;
 class BlockEncoderVisitor;
 class ShaderVariableVisitor;
-struct Uniform;
+struct ShaderVariable;
 }  // namespace sh
 
 namespace gl

@@ -155,7 +155,7 @@ void HLSLVariableRegisterCount(const ShaderVarType &variable, HLSLBlockEncoder *
     }
 }
 
-unsigned int HLSLVariableRegisterCount(const Uniform &variable, ShShaderOutput outputType)
+unsigned int HLSLVariableRegisterCount(const ShaderVariable &variable, ShShaderOutput outputType)
 {
     HLSLBlockEncoder encoder(HLSLBlockEncoder::GetStrategyFor(outputType), true);
     HLSLVariableRegisterCount(variable, &encoder);

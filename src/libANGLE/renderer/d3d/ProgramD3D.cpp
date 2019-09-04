@@ -47,7 +47,7 @@ void GetDefaultInputLayoutFromShader(gl::Shader *vertexShader, gl::InputLayout *
         return;
     }
 
-    for (const sh::Attribute &shaderAttr : vertexShader->getActiveAttributes())
+    for (const sh::ShaderVariable &shaderAttr : vertexShader->getActiveAttributes())
     {
         if (shaderAttr.type != GL_NONE)
         {
@@ -101,12 +101,13 @@ void GetDefaultOutputLayoutFromShader(
     }
 }
 
-void GetDefaultImage2DBindLayoutFromComputeShader(const std::vector<sh::Uniform> &image2DUniforms,
-                                                  gl::ImageUnitTextureTypeMap *image2DBindLayout)
+void GetDefaultImage2DBindLayoutFromComputeShader(
+    const std::vector<sh::ShaderVariable> &image2DUniforms,
+    gl::ImageUnitTextureTypeMap *image2DBindLayout)
 {
     image2DBindLayout->clear();
 
-    for (const sh::Uniform &image2D : image2DUniforms)
+    for (const sh::ShaderVariable &image2D : image2DUniforms)
     {
         if (gl::IsImage2DType(image2D.type))
         {
@@ -155,7 +156,7 @@ gl::PrimitiveMode GetGeometryShaderTypeFromDrawMode(gl::PrimitiveMode drawMode)
     }
 }
 
-bool HasFlatInterpolationVarying(const std::vector<sh::Varying> &varyings)
+bool HasFlatInterpolationVarying(const std::vector<sh::ShaderVariable> &varyings)
 {
     // Note: this assumes nested structs can only be packed with one interpolation.
     for (const auto &varying : varyings)
@@ -2005,7 +2006,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
 
         linkResources(resources);
 
-        for (const sh::Uniform &uniform : computeShader->getUniforms())
+        for (const sh::ShaderVariable &uniform : computeShader->getUniforms())
         {
             if (gl::IsImageType(uniform.type) && gl::IsImage2DType(uniform.type))
             {
@@ -2435,7 +2436,7 @@ void ProgramD3D::defineUniformsAndAssignRegisters()
         gl::Shader *shader = mState.getAttachedShader(shaderType);
         if (shader)
         {
-            for (const sh::Uniform &uniform : shader->getUniforms())
+            for (const sh::ShaderVariable &uniform : shader->getUniforms())
             {
                 if (uniform.active)
                 {
@@ -2483,7 +2484,7 @@ void ProgramD3D::defineUniformsAndAssignRegisters()
 }
 
 void ProgramD3D::defineUniformBase(const gl::Shader *shader,
-                                   const sh::Uniform &uniform,
+                                   const sh::ShaderVariable &uniform,
                                    D3DUniformMap *uniformMap)
 {
     sh::DummyBlockEncoder dummyEncoder;
@@ -2956,7 +2957,7 @@ void ProgramD3D::initAttribLocationsToD3DSemantic()
 
     // Init semantic index
     int semanticIndex = 0;
-    for (const sh::Attribute &attribute : vertexShader->getActiveAttributes())
+    for (const sh::ShaderVariable &attribute : vertexShader->getActiveAttributes())
     {
         int regCount    = gl::VariableRegisterCount(attribute.type);
         GLuint location = mState.getAttributeLocation(attribute.name);

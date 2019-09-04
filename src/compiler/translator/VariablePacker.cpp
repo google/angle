@@ -392,8 +392,8 @@ int GetTypePackingRows(sh::GLenum type)
     }
 }
 
-template <typename T>
-bool CheckVariablesInPackingLimits(unsigned int maxVectors, const std::vector<T> &variables)
+bool CheckVariablesInPackingLimits(unsigned int maxVectors,
+                                   const std::vector<ShaderVariable> &variables)
 {
     VariablePacker packer;
     std::vector<sh::ShaderVariable> expandedVariables;
@@ -404,10 +404,7 @@ bool CheckVariablesInPackingLimits(unsigned int maxVectors, const std::vector<T>
     return packer.checkExpandedVariablesWithinPackingLimits(maxVectors, &expandedVariables);
 }
 
-template bool CheckVariablesInPackingLimits<ShaderVariable>(
-    unsigned int maxVectors,
-    const std::vector<ShaderVariable> &variables);
-template bool CheckVariablesInPackingLimits<Uniform>(unsigned int maxVectors,
-                                                     const std::vector<Uniform> &variables);
+bool CheckVariablesInPackingLimits(unsigned int maxVectors,
+                                   const std::vector<ShaderVariable> &variables);
 
 }  // namespace sh

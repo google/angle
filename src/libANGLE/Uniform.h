@@ -45,7 +45,7 @@ struct ActiveVariable
 };
 
 // Helper struct representing a single shader uniform
-struct LinkedUniform : public sh::Uniform, public ActiveVariable
+struct LinkedUniform : public sh::ShaderVariable, public ActiveVariable
 {
     LinkedUniform();
     LinkedUniform(GLenum type,
@@ -57,7 +57,7 @@ struct LinkedUniform : public sh::Uniform, public ActiveVariable
                   const int location,
                   const int bufferIndex,
                   const sh::BlockMemberInfo &blockInfo);
-    LinkedUniform(const sh::Uniform &uniform);
+    LinkedUniform(const sh::ShaderVariable &uniform);
     LinkedUniform(const LinkedUniform &uniform);
     LinkedUniform &operator=(const LinkedUniform &uniform);
     ~LinkedUniform() override;

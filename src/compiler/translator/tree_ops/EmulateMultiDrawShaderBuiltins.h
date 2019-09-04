@@ -24,7 +24,7 @@
 
 namespace sh
 {
-struct Uniform;
+struct ShaderVariable;
 class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
@@ -32,13 +32,13 @@ class TSymbolTable;
 ANGLE_NO_DISCARD bool EmulateGLDrawID(TCompiler *compiler,
                                       TIntermBlock *root,
                                       TSymbolTable *symbolTable,
-                                      std::vector<sh::Uniform> *uniforms,
+                                      std::vector<sh::ShaderVariable> *uniforms,
                                       bool shouldCollect);
 
 ANGLE_NO_DISCARD bool EmulateGLBaseVertexBaseInstance(TCompiler *compiler,
                                                       TIntermBlock *root,
                                                       TSymbolTable *symbolTable,
-                                                      std::vector<sh::Uniform> *uniforms,
+                                                      std::vector<sh::ShaderVariable> *uniforms,
                                                       bool shouldCollect,
                                                       bool addBaseVertexToVertexID);
 

@@ -438,7 +438,7 @@ class ProgramD3D : public ProgramImpl
 
     void defineUniformsAndAssignRegisters();
     void defineUniformBase(const gl::Shader *shader,
-                           const sh::Uniform &uniform,
+                           const sh::ShaderVariable &uniform,
                            D3DUniformMap *uniformMap);
     void assignAllSamplerRegisters();
     void assignSamplerRegisters(size_t uniformIndex);
@@ -566,7 +566,7 @@ class ProgramD3D : public ProgramImpl
     std::array<unsigned int, gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS>
         mComputeAtomicCounterBufferRegisterIndices;
 
-    std::vector<sh::Uniform> mImage2DUniforms;
+    std::vector<sh::ShaderVariable> mImage2DUniforms;
     gl::ImageUnitTextureTypeMap mComputeShaderImage2DBindLayoutCache;
     Optional<size_t> mCachedComputeExecutableIndex;
 

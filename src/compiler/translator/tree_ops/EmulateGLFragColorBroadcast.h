@@ -16,7 +16,7 @@
 
 namespace sh
 {
-struct OutputVariable;
+struct ShaderVariable;
 class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
@@ -27,7 +27,7 @@ class TSymbolTable;
 ANGLE_NO_DISCARD bool EmulateGLFragColorBroadcast(TCompiler *compiler,
                                                   TIntermBlock *root,
                                                   int maxDrawBuffers,
-                                                  std::vector<OutputVariable> *outputVariables,
+                                                  std::vector<ShaderVariable> *outputVariables,
                                                   TSymbolTable *symbolTable,
                                                   int shaderVersion);
 }  // namespace sh

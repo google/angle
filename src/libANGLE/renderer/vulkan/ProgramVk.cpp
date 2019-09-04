@@ -45,7 +45,7 @@ class VulkanDefaultBlockEncoder : public sh::Std140BlockEncoder
     }
 };
 
-void InitDefaultUniformBlock(const std::vector<sh::Uniform> &uniforms,
+void InitDefaultUniformBlock(const std::vector<sh::ShaderVariable> &uniforms,
                              sh::BlockLayoutMap *blockLayoutMapOut,
                              size_t *blockSizeOut)
 {
@@ -770,7 +770,7 @@ void ProgramVk::generateUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> &
 
         if (shader)
         {
-            const std::vector<sh::Uniform> &uniforms = shader->getUniforms();
+            const std::vector<sh::ShaderVariable> &uniforms = shader->getUniforms();
             InitDefaultUniformBlock(uniforms, &layoutMap[shaderType],
                                     &requiredBufferSize[shaderType]);
         }

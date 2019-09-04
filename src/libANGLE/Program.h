@@ -242,15 +242,15 @@ struct SamplerBinding
 
 // A varying with tranform feedback enabled. If it's an array, either the whole array or one of its
 // elements specified by 'arrayIndex' can set to be enabled.
-struct TransformFeedbackVarying : public sh::Varying
+struct TransformFeedbackVarying : public sh::ShaderVariable
 {
-    TransformFeedbackVarying(const sh::Varying &varyingIn, GLuint index)
-        : sh::Varying(varyingIn), arrayIndex(index)
+    TransformFeedbackVarying(const sh::ShaderVariable &varyingIn, GLuint index)
+        : sh::ShaderVariable(varyingIn), arrayIndex(index)
     {
         ASSERT(!isArrayOfArrays());
     }
 
-    TransformFeedbackVarying(const sh::ShaderVariable &field, const sh::Varying &parent)
+    TransformFeedbackVarying(const sh::ShaderVariable &field, const sh::ShaderVariable &parent)
         : arrayIndex(GL_INVALID_INDEX)
     {
         sh::ShaderVariable *thisVar = this;
@@ -321,7 +321,7 @@ class ProgramState final : angle::NonCopyable
     {
         return mActiveUniformBlockBindings;
     }
-    const std::vector<sh::Attribute> &getAttributes() const { return mAttributes; }
+    const std::vector<sh::ShaderVariable> &getAttributes() const { return mAttributes; }
     const AttributesMask &getActiveAttribLocationsMask() const
     {
         return mActiveAttribLocationsMask;
@@ -329,7 +329,7 @@ class ProgramState final : angle::NonCopyable
     const AttributesMask &getNonBuiltinAttribLocationsMask() const { return mAttributesMask; }
     unsigned int getMaxActiveAttribLocation() const { return mMaxActiveAttribLocation; }
     DrawBufferMask getActiveOutputVariables() const { return mActiveOutputVariables; }
-    const std::vector<sh::OutputVariable> &getOutputVariables() const { return mOutputVariables; }
+    const std::vector<sh::ShaderVariable> &getOutputVariables() const { return mOutputVariables; }
     const std::vector<VariableLocation> &getOutputLocations() const { return mOutputLocations; }
     const std::vector<VariableLocation> &getSecondaryOutputLocations() const
     {
@@ -425,7 +425,7 @@ class ProgramState final : angle::NonCopyable
     // For faster iteration on the blocks currently being bound.
     UniformBlockBindingMask mActiveUniformBlockBindings;
 
-    std::vector<sh::Attribute> mAttributes;
+    std::vector<sh::ShaderVariable> mAttributes;
     angle::BitSet<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
     unsigned int mMaxActiveAttribLocation;
     ComponentTypeMask mAttributesTypeMask;
@@ -462,7 +462,7 @@ class ProgramState final : angle::NonCopyable
 
     // Names and mapped names of output variables that are arrays include [0] in the end, similarly
     // to uniforms.
-    std::vector<sh::OutputVariable> mOutputVariables;
+    std::vector<sh::ShaderVariable> mOutputVariables;
     std::vector<VariableLocation> mOutputLocations;
 
     // EXT_blend_func_extended secondary outputs (ones with index 1) in ESSL 3.00 shaders.
@@ -529,7 +529,7 @@ class ProgramBindings final : angle::NonCopyable
 
     void bindLocation(GLuint index, const std::string &name);
     int getBindingByName(const std::string &name) const;
-    int getBinding(const sh::VariableWithLocation &variable) const;
+    int getBinding(const sh::ShaderVariable &variable) const;
 
     using const_iterator = std::unordered_map<std::string, ProgramBinding>::const_iterator;
     const_iterator begin() const;
@@ -541,10 +541,10 @@ class ProgramBindings final : angle::NonCopyable
 
 struct ProgramVaryingRef
 {
-    const sh::Varying *get() const { return vertex ? vertex : fragment; }
+    const sh::ShaderVariable *get() const { return vertex ? vertex : fragment; }
 
-    const sh::Varying *vertex   = nullptr;
-    const sh::Varying *fragment = nullptr;
+    const sh::ShaderVariable *vertex   = nullptr;
+    const sh::ShaderVariable *fragment = nullptr;
 };
 
 using ProgramMergedVaryings = std::map<std::string, ProgramVaryingRef>;
@@ -636,7 +636,7 @@ class Program final : angle::NonCopyable, public LabeledObject
                             GLchar *name) const;
     GLint getActiveAttributeCount() const;
     GLint getActiveAttributeMaxLength() const;
-    const std::vector<sh::Attribute> &getAttributes() const;
+    const std::vector<sh::ShaderVariable> &getAttributes() const;
 
     GLint getFragDataLocation(const std::string &name) const;
     size_t getOutputResourceCount() const;
@@ -879,8 +879,8 @@ class Program final : angle::NonCopyable, public LabeledObject
                                        GLsizei bufSize,
                                        GLsizei *length,
                                        GLchar *name) const;
-    const sh::Attribute &getInputResource(GLuint index) const;
-    const sh::OutputVariable &getOutputResource(GLuint index) const;
+    const sh::ShaderVariable &getInputResource(GLuint index) const;
+    const sh::ShaderVariable &getOutputResource(GLuint index) const;
 
     const ProgramBindings &getAttributeBindings() const;
     const ProgramBindings &getUniformLocationBindings() const;
@@ -966,8 +966,8 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void updateLinkedShaderStages();
 
-    static LinkMismatchError LinkValidateVaryings(const sh::Varying &outputVarying,
-                                                  const sh::Varying &inputVarying,
+    static LinkMismatchError LinkValidateVaryings(const sh::ShaderVariable &outputVarying,
+                                                  const sh::ShaderVariable &inputVarying,
                                                   int shaderVersion,
                                                   bool validateGeometryShaderInputVarying,
                                                   std::string *mismatchedStructFieldName);
@@ -990,8 +990,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     void gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings);
 
     ProgramMergedVaryings getMergedVaryings() const;
-    int getOutputLocationForLink(const sh::OutputVariable &outputVariable) const;
-    bool isOutputSecondaryForLink(const sh::OutputVariable &outputVariable) const;
+    int getOutputLocationForLink(const sh::ShaderVariable &outputVariable) const;
+    bool isOutputSecondaryForLink(const sh::ShaderVariable &outputVariable) const;
     bool linkOutputVariables(const Caps &caps,
                              const Extensions &extensions,
                              const Version &version,

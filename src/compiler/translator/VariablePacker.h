@@ -24,8 +24,8 @@ int GetTypePackingRows(sh::GLenum type);
 
 // Returns true if the passed in variables pack in maxVectors.
 // T should be ShaderVariable or one of the subclasses of ShaderVariable.
-template <typename T>
-bool CheckVariablesInPackingLimits(unsigned int maxVectors, const std::vector<T> &variables);
+bool CheckVariablesInPackingLimits(unsigned int maxVectors,
+                                   const std::vector<ShaderVariable> &variables);
 
 }  // namespace sh
 

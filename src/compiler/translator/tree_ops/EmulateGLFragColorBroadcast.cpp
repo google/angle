@@ -105,7 +105,7 @@ bool GLFragColorBroadcastTraverser::broadcastGLFragColor(TCompiler *compiler, TI
 bool EmulateGLFragColorBroadcast(TCompiler *compiler,
                                  TIntermBlock *root,
                                  int maxDrawBuffers,
-                                 std::vector<sh::OutputVariable> *outputVariables,
+                                 std::vector<sh::ShaderVariable> *outputVariables,
                                  TSymbolTable *symbolTable,
                                  int shaderVersion)
 {

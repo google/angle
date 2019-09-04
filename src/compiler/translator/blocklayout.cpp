@@ -338,7 +338,7 @@ size_t Std430BlockEncoder::getTypeBaseAlignment(GLenum type, bool isRowMajorMatr
     return GetStd430BaseAlignment(type, isRowMajorMatrix);
 }
 
-void GetInterfaceBlockInfo(const std::vector<InterfaceBlockField> &fields,
+void GetInterfaceBlockInfo(const std::vector<ShaderVariable> &fields,
                            const std::string &prefix,
                            BlockLayoutEncoder *encoder,
                            BlockLayoutMap *blockInfoOut)
@@ -348,7 +348,7 @@ void GetInterfaceBlockInfo(const std::vector<InterfaceBlockField> &fields,
     GetInterfaceBlockInfo(fields, prefix, encoder, false, blockInfoOut);
 }
 
-void GetUniformBlockInfo(const std::vector<Uniform> &uniforms,
+void GetUniformBlockInfo(const std::vector<ShaderVariable> &uniforms,
                          const std::string &prefix,
                          BlockLayoutEncoder *encoder,
                          BlockLayoutMap *blockInfoOut)

@@ -62,7 +62,7 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
 // This method returns the number of used registers for a ShaderVariable. It is dependent on the
 // HLSLBlockEncoder class to count the number of used registers in a struct (which are individually
 // packed according to the same rules).
-unsigned int HLSLVariableRegisterCount(const Uniform &variable, ShShaderOutput outputType);
+unsigned int HLSLVariableRegisterCount(const ShaderVariable &variable, ShShaderOutput outputType);
 }  // namespace sh
 
 #endif  // COMMON_BLOCKLAYOUTHLSL_H_

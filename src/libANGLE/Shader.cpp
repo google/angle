@@ -559,19 +559,19 @@ int Shader::getShaderVersion()
     return mState.mShaderVersion;
 }
 
-const std::vector<sh::Varying> &Shader::getInputVaryings()
+const std::vector<sh::ShaderVariable> &Shader::getInputVaryings()
 {
     resolveCompile();
     return mState.getInputVaryings();
 }
 
-const std::vector<sh::Varying> &Shader::getOutputVaryings()
+const std::vector<sh::ShaderVariable> &Shader::getOutputVaryings()
 {
     resolveCompile();
     return mState.getOutputVaryings();
 }
 
-const std::vector<sh::Uniform> &Shader::getUniforms()
+const std::vector<sh::ShaderVariable> &Shader::getUniforms()
 {
     resolveCompile();
     return mState.getUniforms();
@@ -589,19 +589,19 @@ const std::vector<sh::InterfaceBlock> &Shader::getShaderStorageBlocks()
     return mState.getShaderStorageBlocks();
 }
 
-const std::vector<sh::Attribute> &Shader::getActiveAttributes()
+const std::vector<sh::ShaderVariable> &Shader::getActiveAttributes()
 {
     resolveCompile();
     return mState.getActiveAttributes();
 }
 
-const std::vector<sh::Attribute> &Shader::getAllAttributes()
+const std::vector<sh::ShaderVariable> &Shader::getAllAttributes()
 {
     resolveCompile();
     return mState.getAllAttributes();
 }
 
-const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables()
+const std::vector<sh::ShaderVariable> &Shader::getActiveOutputVariables()
 {
     resolveCompile();
     return mState.getActiveOutputVariables();

@@ -46,8 +46,8 @@ void SetActive(std::vector<VarT> *list, const std::string &name, ShaderType shad
 }
 
 // GLSL ES Spec 3.00.3, section 4.3.5.
-LinkMismatchError LinkValidateUniforms(const sh::Uniform &uniform1,
-                                       const sh::Uniform &uniform2,
+LinkMismatchError LinkValidateUniforms(const sh::ShaderVariable &uniform1,
+                                       const sh::ShaderVariable &uniform2,
                                        std::string *mismatchedStructFieldName)
 {
 #if ANGLE_PROGRAM_LINK_VALIDATE_UNIFORM_PRECISION == ANGLE_ENABLED
@@ -83,7 +83,7 @@ LinkMismatchError LinkValidateUniforms(const sh::Uniform &uniform1,
     return LinkMismatchError::NO_MISMATCH;
 }
 
-using ShaderUniform = std::pair<ShaderType, const sh::Uniform *>;
+using ShaderUniform = std::pair<ShaderType, const sh::ShaderVariable *>;
 
 bool ValidateGraphicsUniformsPerShader(Shader *shaderToLink,
                                        bool extendLinkedUniforms,
@@ -92,12 +92,12 @@ bool ValidateGraphicsUniformsPerShader(Shader *shaderToLink,
 {
     ASSERT(shaderToLink && linkedUniforms);
 
-    for (const sh::Uniform &uniform : shaderToLink->getUniforms())
+    for (const sh::ShaderVariable &uniform : shaderToLink->getUniforms())
     {
         const auto &entry = linkedUniforms->find(uniform.name);
         if (entry != linkedUniforms->end())
         {
-            const sh::Uniform &linkedUniform = *(entry->second.second);
+            const sh::ShaderVariable &linkedUniform = *(entry->second.second);
             std::string mismatchedStructFieldName;
             LinkMismatchError linkError =
                 LinkValidateUniforms(uniform, linkedUniform, &mismatchedStructFieldName);
@@ -377,7 +377,7 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
 {
   public:
     FlattenUniformVisitor(ShaderType shaderType,
-                          const sh::Uniform &uniform,
+                          const sh::ShaderVariable &uniform,
                           std::vector<LinkedUniform> *uniforms,
                           std::vector<LinkedUniform> *samplerUniforms,
                           std::vector<LinkedUniform> *imageUniforms,
@@ -714,7 +714,7 @@ bool UniformLinker::validateGraphicsUniforms(InfoLog &infoLog) const
         {
             if (shaderType == ShaderType::Vertex)
             {
-                for (const sh::Uniform &vertexUniform : currentShader->getUniforms())
+                for (const sh::ShaderVariable &vertexUniform : currentShader->getUniforms())
                 {
                     linkedUniforms[vertexUniform.name] =
                         std::make_pair(ShaderType::Vertex, &vertexUniform);
@@ -927,7 +927,7 @@ bool UniformLinker::flattenUniformsAndCheckCapsForShader(
     InfoLog &infoLog)
 {
     ShaderUniformCount shaderUniformCount;
-    for (const sh::Uniform &uniform : shader->getUniforms())
+    for (const sh::ShaderVariable &uniform : shader->getUniforms())
     {
         FlattenUniformVisitor flattener(shader->getType(), uniform, &mUniforms, &samplerUniforms,
                                         &imageUniforms, &atomicCounterUniforms, &unusedUniforms);

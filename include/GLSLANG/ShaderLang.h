@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 215
+#define ANGLE_SH_VERSION 216
 
 enum ShShaderSpec
 {
@@ -613,12 +613,12 @@ const std::map<std::string, std::string> *GetNameHashingMap(const ShHandle handl
 // Returns NULL on failure.
 // Parameters:
 // handle: Specifies the compiler
-const std::vector<sh::Uniform> *GetUniforms(const ShHandle handle);
-const std::vector<sh::Varying> *GetVaryings(const ShHandle handle);
-const std::vector<sh::Varying> *GetInputVaryings(const ShHandle handle);
-const std::vector<sh::Varying> *GetOutputVaryings(const ShHandle handle);
-const std::vector<sh::Attribute> *GetAttributes(const ShHandle handle);
-const std::vector<sh::OutputVariable> *GetOutputVariables(const ShHandle handle);
+const std::vector<sh::ShaderVariable> *GetUniforms(const ShHandle handle);
+const std::vector<sh::ShaderVariable> *GetVaryings(const ShHandle handle);
+const std::vector<sh::ShaderVariable> *GetInputVaryings(const ShHandle handle);
+const std::vector<sh::ShaderVariable> *GetOutputVaryings(const ShHandle handle);
+const std::vector<sh::ShaderVariable> *GetAttributes(const ShHandle handle);
+const std::vector<sh::ShaderVariable> *GetOutputVariables(const ShHandle handle);
 const std::vector<sh::InterfaceBlock> *GetInterfaceBlocks(const ShHandle handle);
 const std::vector<sh::InterfaceBlock> *GetUniformBlocks(const ShHandle handle);
 const std::vector<sh::InterfaceBlock> *GetShaderStorageBlocks(const ShHandle handle);

@@ -287,8 +287,8 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
 
     for (const auto &ref : mergedVaryings)
     {
-        const sh::Varying *input  = ref.second.vertex;
-        const sh::Varying *output = ref.second.fragment;
+        const sh::ShaderVariable *input  = ref.second.vertex;
+        const sh::ShaderVariable *output = ref.second.fragment;
 
         // Only pack statically used varyings that have a matched input or output, plus special
         // builtins. Note that we pack all statically used user-defined varyings even if they are
@@ -299,7 +299,7 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
             (input && input->isBuiltIn() && input->active) ||
             (output && output->isBuiltIn() && output->active))
         {
-            const sh::Varying *varying = output ? output : input;
+            const sh::ShaderVariable *varying = output ? output : input;
 
             // Don't count gl_Position. Also don't count gl_PointSize for D3D9.
             if (varying->name != "gl_Position" &&

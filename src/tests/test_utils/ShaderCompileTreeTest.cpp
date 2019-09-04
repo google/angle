@@ -153,13 +153,13 @@ bool ShaderCompileTreeTest::hasWarning() const
     return mInfoLog.find("WARNING: ") != std::string::npos;
 }
 
-const std::vector<sh::Uniform> &ShaderCompileTreeTest::getUniforms() const
+const std::vector<sh::ShaderVariable> &ShaderCompileTreeTest::getUniforms() const
 {
     ASSERT(mExtraCompileOptions & SH_VARIABLES);
     return mTranslator->getUniforms();
 }
 
-const std::vector<sh::Attribute> &ShaderCompileTreeTest::getAttributes() const
+const std::vector<sh::ShaderVariable> &ShaderCompileTreeTest::getAttributes() const
 {
     ASSERT(mExtraCompileOptions & SH_VARIABLES);
     return mTranslator->getAttributes();

@@ -267,7 +267,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         }
 
         // Bind attribute locations to match the GL layer.
-        for (const sh::Attribute &attribute : mState.getAttributes())
+        for (const sh::ShaderVariable &attribute : mState.getAttributes())
         {
             if (!attribute.active || attribute.isBuiltIn())
             {
@@ -350,7 +350,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                     if (outputLocation.arrayIndex == 0 && outputLocation.used() &&
                         !outputLocation.ignored)
                     {
-                        const sh::OutputVariable &outputVar =
+                        const sh::ShaderVariable &outputVar =
                             mState.getOutputVariables()[outputLocation.index];
                         if (outputVar.location == -1)
                         {
@@ -373,7 +373,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                     if (outputLocation.arrayIndex == 0 && outputLocation.used() &&
                         !outputLocation.ignored)
                     {
-                        const sh::OutputVariable &outputVar =
+                        const sh::ShaderVariable &outputVar =
                             mState.getOutputVariables()[outputLocation.index];
                         if (outputVar.location == -1 || outputVar.index == -1)
                         {

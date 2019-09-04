@@ -144,7 +144,7 @@ DynamicHLSL::DynamicHLSL(RendererD3D *const renderer) : mRenderer(renderer) {}
 std::string DynamicHLSL::generateVertexShaderForInputLayout(
     const std::string &sourceShader,
     const InputLayout &inputLayout,
-    const std::vector<sh::Attribute> &shaderAttributes) const
+    const std::vector<sh::ShaderVariable> &shaderAttributes) const
 {
     std::ostringstream structStream;
     std::ostringstream initStream;
@@ -178,7 +178,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
 
     for (size_t attributeIndex = 0; attributeIndex < shaderAttributes.size(); ++attributeIndex)
     {
-        const sh::Attribute &shaderAttribute = shaderAttributes[attributeIndex];
+        const sh::ShaderVariable &shaderAttribute = shaderAttributes[attributeIndex];
         if (!shaderAttribute.name.empty())
         {
             ASSERT(inputIndex < MAX_VERTEX_ATTRIBS);
@@ -357,7 +357,7 @@ std::string DynamicHLSL::generateComputeShaderForImage2DBindSignature(
     const d3d::Context *context,
     ProgramD3D &programD3D,
     const gl::ProgramState &programData,
-    std::vector<sh::Uniform> &image2DUniforms,
+    std::vector<sh::ShaderVariable> &image2DUniforms,
     const gl::ImageUnitTextureTypeMap &image2DBindLayout) const
 {
     std::string computeHLSL(

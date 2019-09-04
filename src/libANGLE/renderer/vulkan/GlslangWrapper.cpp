@@ -385,7 +385,7 @@ uint32_t CountExplicitOutputs(OutputIter outputsBegin,
                               ImplicitIter implicitsBegin,
                               ImplicitIter implicitsEnd)
 {
-    auto reduce = [implicitsBegin, implicitsEnd](uint32_t count, const sh::OutputVariable &var) {
+    auto reduce = [implicitsBegin, implicitsEnd](uint32_t count, const sh::ShaderVariable &var) {
         bool isExplicit = std::find(implicitsBegin, implicitsEnd, var.name) == implicitsEnd;
         return count + isExplicit;
     };
@@ -497,7 +497,7 @@ void AssignAttributeLocations(const gl::ProgramState &programState,
 
     // Parse attribute locations and replace them in the vertex shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
-    for (const sh::Attribute &attribute : programState.getAttributes())
+    for (const sh::ShaderVariable &attribute : programState.getAttributes())
     {
         // Warning: If we end up supporting ES 3.0 shaders and up, Program::linkAttributes is
         // going to bring us all attributes in this list instead of only the active ones.
@@ -530,7 +530,7 @@ void AssignOutputLocations(const gl::ProgramState &programState,
     {
         if (outputLocation.arrayIndex == 0 && outputLocation.used() && !outputLocation.ignored)
         {
-            const sh::OutputVariable &outputVar = outputVariables[outputLocation.index];
+            const sh::ShaderVariable &outputVar = outputVariables[outputLocation.index];
 
             // In the following:
             //
@@ -851,7 +851,7 @@ void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
         // The attributes in the programState could have been filled with active attributes only
         // depending on the shader version. If there is inactive attributes left, we have to remove
         // their @@ QUALIFIER and @@ LAYOUT markers.
-        for (const sh::Attribute &attribute : shader->getAllAttributes())
+        for (const sh::ShaderVariable &attribute : shader->getAllAttributes())
         {
             if (attribute.active)
             {

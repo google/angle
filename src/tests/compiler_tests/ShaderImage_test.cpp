@@ -72,7 +72,7 @@ void CheckImageLoadCall(TIntermNode *astRoot,
 }
 
 // Checks whether the image is properly exported as a uniform by the compiler.
-void CheckExportedImageUniform(const std::vector<sh::Uniform> &uniforms,
+void CheckExportedImageUniform(const std::vector<sh::ShaderVariable> &uniforms,
                                size_t uniformIndex,
                                ::GLenum imageTypeGL,
                                const TString &imageName)

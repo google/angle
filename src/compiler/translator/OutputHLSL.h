@@ -45,7 +45,7 @@ class OutputHLSL : public TIntermTraverser
                ShShaderOutput outputType,
                int numRenderTargets,
                int maxDualSourceDrawBuffers,
-               const std::vector<Uniform> &uniforms,
+               const std::vector<ShaderVariable> &uniforms,
                ShCompileOptions compileOptions,
                sh::WorkGroupSize workGroupSize,
                TSymbolTable *symbolTable,

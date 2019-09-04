@@ -65,8 +65,8 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
     ASSERT(!isArray() || !isStruct());
 }
 
-LinkedUniform::LinkedUniform(const sh::Uniform &uniform)
-    : sh::Uniform(uniform),
+LinkedUniform::LinkedUniform(const sh::ShaderVariable &uniform)
+    : sh::ShaderVariable(uniform),
       typeInfo(&GetUniformTypeInfo(type)),
       bufferIndex(-1),
       blockInfo(sh::kDefaultBlockMemberInfo)
@@ -76,7 +76,7 @@ LinkedUniform::LinkedUniform(const sh::Uniform &uniform)
 }
 
 LinkedUniform::LinkedUniform(const LinkedUniform &uniform)
-    : sh::Uniform(uniform),
+    : sh::ShaderVariable(uniform),
       ActiveVariable(uniform),
       typeInfo(uniform.typeInfo),
       bufferIndex(uniform.bufferIndex),
@@ -86,7 +86,7 @@ LinkedUniform::LinkedUniform(const LinkedUniform &uniform)
 
 LinkedUniform &LinkedUniform::operator=(const LinkedUniform &uniform)
 {
-    sh::Uniform::operator   =(uniform);
+    sh::ShaderVariable::operator=(uniform);
     ActiveVariable::operator=(uniform);
     typeInfo                = uniform.typeInfo;
     bufferIndex             = uniform.bufferIndex;

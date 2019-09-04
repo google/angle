@@ -20,9 +20,6 @@
 namespace sh
 {
 struct ShaderVariable;
-struct InterfaceBlockField;
-struct Uniform;
-struct Varying;
 struct InterfaceBlock;
 
 struct BlockMemberInfo
@@ -176,13 +173,13 @@ class Std430BlockEncoder : public Std140BlockEncoder
 
 using BlockLayoutMap = std::map<std::string, BlockMemberInfo>;
 
-void GetInterfaceBlockInfo(const std::vector<InterfaceBlockField> &fields,
+void GetInterfaceBlockInfo(const std::vector<ShaderVariable> &fields,
                            const std::string &prefix,
                            BlockLayoutEncoder *encoder,
                            BlockLayoutMap *blockInfoOut);
 
 // Used for laying out the default uniform block on the Vulkan backend.
-void GetUniformBlockInfo(const std::vector<Uniform> &uniforms,
+void GetUniformBlockInfo(const std::vector<ShaderVariable> &uniforms,
                          const std::string &prefix,
                          BlockLayoutEncoder *encoder,
                          BlockLayoutMap *blockInfoOut);
