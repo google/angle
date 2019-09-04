@@ -475,6 +475,17 @@ bool ValidateES3TexImageParametersBase(Context *context,
         return false;
     }
 
+    if (isCompressed && texType == TextureType::_3D)
+    {
+        GLenum compressedDataFormat = isSubImage ? format : internalformat;
+        if (IsETC2EACFormat(compressedDataFormat))
+        {
+            // ES 3.1, Section 8.7, page 169.
+            context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);
+            return false;
+        }
+    }
+
     // Validate texture formats
     GLenum actualInternalFormat =
         isSubImage ? texture->getFormat(target, level).info->internalFormat : internalformat;
@@ -531,13 +542,6 @@ bool ValidateES3TexImageParametersBase(Context *context,
         if (!actualFormatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
         {
             context->validationError(GL_INVALID_ENUM, kInvalidFormat);
-            return false;
-        }
-
-        if ((texType == TextureType::_3D) && IsETC2EACFormat(internalformat))
-        {
-            // ES 3.1, Section 8.7, page 169.
-            context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);
             return false;
         }
 
