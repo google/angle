@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dbe5bbfa_a1a8dbd7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2022,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-09-04T16:05:08Z",
+      "side": 1,
+      "message": "Do we need to worry about multi-dimensional arrays? e.g. a[1][2]",
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea7acbd3_c0774d00",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-09-04T16:05:08Z",
+      "side": 1,
+      "message": "Need a +1 here to account for \\0 at end of string?",
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25241b68_28233ee7",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1936,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-09-04T16:05:08Z",
+      "side": 1,
+      "message": "This is subtly different than before. This will always write 0 into length if it\u0027s non-null.\nBefore we only did that if the program wasn\u0027t linked. GL generally says that nothing changes if there is an error, this change may break that.",
+      "range": {
+        "startLine": 1933,
+        "startChar": 4,
+        "endLine": 1936,
+        "endChar": 5
+      },
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
