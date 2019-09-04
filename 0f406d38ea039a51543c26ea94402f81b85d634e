@@ -37,6 +37,52 @@
     },
     {
       "key": {
+        "uuid": "cb984c3c_bd001a68",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-04T19:14:51Z",
+      "side": 1,
+      "message": "At this point I think we should just move all the type info into ShaderVariable and deprecate the specialized variable types. It just causes more difficulty than it helps safety.",
+      "range": {
+        "startLine": 431,
+        "startChar": 20,
+        "endLine": 431,
+        "endChar": 27
+      },
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81db8794_94dfe1fe",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-04T19:14:51Z",
+      "side": 1,
+      "message": "drive-by: should probably keep calling these \"get\" to be consistent. write implies write to disk or gpu or something.",
+      "range": {
+        "startLine": 878,
+        "startChar": 9,
+        "endLine": 878,
+        "endChar": 31
+      },
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea7acbd3_c0774d00",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 4
