@@ -32,10 +32,6 @@
 // Don't run these tests for faster turnover
 1101 : dEQP-GLES3.functional.flush_finish.* = SKIP
 
-// Figure out why this caused this regression in Chrome:
-// https://bugs.chromium.org/p/chromium/issues/detail?id=833809#
-2321 : dEQP-GLES3.functional.state_query.fbo.framebuffer_unspecified_attachment_x_size_rbo = FAIL
-
 // TODO(jmadill): Figure out why these fail on the bots, but not locally.
 1108 WIN D3D11 : dEQP-GLES3.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL
 1094 WIN D3D11 : dEQP-GLES3.functional.shaders.invariance.highp.loop_2 = FAIL
