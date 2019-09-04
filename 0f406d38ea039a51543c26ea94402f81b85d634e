@@ -60,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "66edd144_2c62d67d",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-04T19:57:15Z",
+      "side": 1,
+      "message": "Ok, I\u0027ll give that a shot and see how it turns out.",
+      "parentUuid": "cb984c3c_bd001a68",
+      "range": {
+        "startLine": 431,
+        "startChar": 20,
+        "endLine": 431,
+        "endChar": 27
+      },
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "81db8794_94dfe1fe",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 4
@@ -71,6 +95,30 @@
       "writtenOn": "2019-09-04T19:14:51Z",
       "side": 1,
       "message": "drive-by: should probably keep calling these \"get\" to be consistent. write implies write to disk or gpu or something.",
+      "range": {
+        "startLine": 878,
+        "startChar": 9,
+        "endLine": 878,
+        "endChar": 31
+      },
+      "revId": "0f406d38ea039a51543c26ea94402f81b85d634e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fa12875_b97cbf76",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-04T19:57:15Z",
+      "side": 1,
+      "message": "I changed these to \u0027write\u0027, since I needed a new getInputResourceName() that can be used for both glGetProgramResourceName() and glGetProgramResourceiv()+GL_NAME_LENGTH.\n\nI went with \u0027write\u0027 here, since these functions are writing the string to the caller\u0027s buffer.   Maybe \u0027copy\u0027 would be better, or I can overload getInputResourceName() instead if that\u0027s preferred?",
+      "parentUuid": "81db8794_94dfe1fe",
       "range": {
         "startLine": 878,
         "startChar": 9,
