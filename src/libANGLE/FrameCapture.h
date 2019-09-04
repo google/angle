@@ -174,9 +174,6 @@ class FrameCapture final : angle::NonCopyable
     void replay(gl::Context *context);
 
   private:
-    // <CallName, ParamName>
-    using Counter = std::tuple<gl::EntryPoint, std::string>;
-
     void captureClientArraySnapshot(const gl::Context *context,
                                     size_t vertexCount,
                                     size_t instanceCount);
@@ -192,10 +189,16 @@ class FrameCapture final : angle::NonCopyable
     void maybeCaptureClientData(const gl::Context *context, const CallCapture &call);
     void maybeUpdateResourceIDs(const gl::Context *context, const CallCapture &call);
 
+    template <typename IDType>
+    void captureUpdateResourceIDs(const gl::Context *context,
+                                  const CallCapture &call,
+                                  const ParamCapture &param);
+
     std::vector<CallCapture> mCalls;
     gl::AttribArray<int> mClientVertexArrayMap;
     size_t mFrameIndex;
     gl::AttribArray<size_t> mClientArraySizes;
+    angle::PackedEnumMap<ResourceIDType, uint32_t, angle::kParamTypeCount> mResourceIDCounts;
     size_t mReadBufferSize;
 
     static void ReplayCall(gl::Context *context,
@@ -242,6 +245,13 @@ std::ostream &operator<<(std::ostream &os, const ParamCapture &capture);
 // Pointer capture helpers.
 void CaptureMemory(const void *source, size_t size, ParamCapture *paramCapture);
 void CaptureString(const GLchar *str, ParamCapture *paramCapture);
+void CaptureGenHandlesImpl(GLsizei n, GLuint *handles, ParamCapture *paramCapture);
+
+template <typename T>
+void CaptureGenHandles(GLsizei n, T *handles, ParamCapture *paramCapture)
+{
+    CaptureGenHandlesImpl(n, reinterpret_cast<GLuint *>(handles), paramCapture);
+}
 
 template <ParamType ParamT, typename T>
 void WriteParamValueToStream(std::ostream &os, T value);

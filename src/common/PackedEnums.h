@@ -107,7 +107,7 @@ class PackedEnumMap
 
     // No explicit construct/copy/destroy for aggregate type
     void fill(const T &u) { mPrivateData.fill(u); }
-    void swap(PackedEnumMap<E, T> &a) noexcept { mPrivateData.swap(a.mPrivateData); }
+    void swap(PackedEnumMap<E, T, MaxSize> &a) noexcept { mPrivateData.swap(a.mPrivateData); }
 
     // iterators:
     iterator begin() noexcept { return mPrivateData.begin(); }
