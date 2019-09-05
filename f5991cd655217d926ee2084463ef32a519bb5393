@@ -192,6 +192,30 @@
       "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3fca92d_92f3b526",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1104,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-05T20:32:21Z",
+      "side": 1,
+      "message": "my bad, \"mState.getMipmapMaxLevel()\" is a GLuint not a GL enum but still a GL data type",
+      "parentUuid": "0d54f6b3_227e9465",
+      "range": {
+        "startLine": 1101,
+        "startChar": 12,
+        "endLine": 1104,
+        "endChar": 36
+      },
+      "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
