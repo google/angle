@@ -200,6 +200,11 @@ deps = {
     'url': '{chromium_git}/chromium/src/tools/md_browser@0bfd826f8566a99923e64a782908faca72bc457c',
     'condition': 'not build_with_chromium',
   },
+
+  '{angle_root}/tools/memory': {
+    'url': '{chromium_git}/chromium/src/tools/memory@89552acb6e60f528fe3c98eac7b445d4c34183ee',
+    'condition': 'not build_with_chromium',
+  },
 }
 
 hooks = [
