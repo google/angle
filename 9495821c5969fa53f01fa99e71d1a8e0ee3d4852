@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74f3ac_ba0616a6",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-05T04:04:57Z",
+      "side": 1,
+      "message": "This block of typedefs is the ugliest piece, but I\u0027m not sure what\u0027s involved with coordinating changes in ANGLE and that gpu/command_buffer/service or what other callers may be using these.",
+      "revId": "9495821c5969fa53f01fa99e71d1a8e0ee3d4852",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
