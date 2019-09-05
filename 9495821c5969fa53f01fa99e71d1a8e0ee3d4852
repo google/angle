@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "eb780a49_bb1bfa34",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-05T16:17:56Z",
+      "side": 1,
+      "message": "need to update this before landing.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 6
+      },
+      "revId": "9495821c5969fa53f01fa99e71d1a8e0ee3d4852",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9d75a04_9f0a5d0c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-05T16:17:56Z",
+      "side": 1,
+      "message": "nit: update",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "9495821c5969fa53f01fa99e71d1a8e0ee3d4852",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5a74f3ac_ba0616a6",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 5
@@ -13,6 +59,24 @@
       "writtenOn": "2019-09-05T04:04:57Z",
       "side": 1,
       "message": "This block of typedefs is the ugliest piece, but I\u0027m not sure what\u0027s involved with coordinating changes in ANGLE and that gpu/command_buffer/service or what other callers may be using these.",
+      "revId": "9495821c5969fa53f01fa99e71d1a8e0ee3d4852",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f42eb9b4_ecc43186",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-05T16:17:56Z",
+      "side": 1,
+      "message": "Maybe leave a TODO with an anglebug tag once we roll this in and update chromium.",
+      "parentUuid": "5a74f3ac_ba0616a6",
       "revId": "9495821c5969fa53f01fa99e71d1a8e0ee3d4852",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
