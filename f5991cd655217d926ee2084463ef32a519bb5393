@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "91b5b82f_9cb83693",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-05T19:54:45Z",
+      "side": 1,
+      "message": "initially it was modified in the validation layer but geoff didnt find that appropriate, this was the next place we felt appropriate",
+      "parentUuid": "1e0932ad_1fc618a9",
+      "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d5d4d50_e3b5b3f3",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 11
@@ -117,6 +135,30 @@
       "writtenOn": "2019-09-05T19:49:43Z",
       "side": 1,
       "message": "I think this can be called internally in generateMipmapsWithBlit. Seems fairly fine though.",
+      "range": {
+        "startLine": 1101,
+        "startChar": 12,
+        "endLine": 1104,
+        "endChar": 36
+      },
+      "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e568f472_76a6465a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1104,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-05T19:54:45Z",
+      "side": 1,
+      "message": "yeah, could have gone either way but since \"generateMipmapsWithBlit\" already took in a GL enum didn\u0027t feel it was out of place",
+      "parentUuid": "4121dbaf_9d59c391",
       "range": {
         "startLine": 1101,
         "startChar": 12,
