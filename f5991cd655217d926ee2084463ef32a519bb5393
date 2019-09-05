@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5870d2a9_bf994afa",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3274,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-05T19:49:43Z",
+      "side": 1,
+      "message": "Not sure about this stuff, will let Geoff take a look.",
+      "parentUuid": "52e0ccca_2e5e0781",
+      "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4061b67d_d85a16b6",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 11
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "1e0932ad_1fc618a9",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-05T19:49:43Z",
+      "side": 1,
+      "message": "It\u0027s gross for sure. Seems okay though. There\u0027s probably other ways to do it, like defining different internal texture formats. But not much of an issue, as we will not be exposing 2.0 in a short while.",
+      "parentUuid": "095df843_f480d940",
+      "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d5d4d50_e3b5b3f3",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 11
@@ -64,6 +100,29 @@
       "writtenOn": "2019-09-05T19:43:56Z",
       "side": 1,
       "message": "geoff, jamie, want to call attention to this section for comments",
+      "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4121dbaf_9d59c391",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-05T19:49:43Z",
+      "side": 1,
+      "message": "I think this can be called internally in generateMipmapsWithBlit. Seems fairly fine though.",
+      "range": {
+        "startLine": 1101,
+        "startChar": 12,
+        "endLine": 1104,
+        "endChar": 36
+      },
       "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
