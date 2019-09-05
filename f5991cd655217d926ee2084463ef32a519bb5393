@@ -168,6 +168,30 @@
       "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d54f6b3_227e9465",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-05T20:04:55Z",
+      "side": 1,
+      "message": "Yeah I would move it into the generate call. I don\u0027t see where generateMipmaps is taking a GLenum prior to this.",
+      "parentUuid": "e568f472_76a6465a",
+      "range": {
+        "startLine": 1101,
+        "startChar": 12,
+        "endLine": 1104,
+        "endChar": 36
+      },
+      "revId": "f5991cd655217d926ee2084463ef32a519bb5393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
