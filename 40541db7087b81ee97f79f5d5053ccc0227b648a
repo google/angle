@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11732069_44599e06",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1502,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-06T16:29:26Z",
+      "side": 1,
+      "message": "maybe put right after updateLinkedShaderStages.",
+      "range": {
+        "startLine": 1502,
+        "startChar": 11,
+        "endLine": 1502,
+        "endChar": 39
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4f30c01_30cc5e57",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-06T16:29:26Z",
+      "side": 1,
+      "message": "I think this logic might have to be updated for compute, geometry, tess, etc shaders. Right now it looks at all the shaders.",
+      "range": {
+        "startLine": 1650,
+        "startChar": 4,
+        "endLine": 1654,
+        "endChar": 60
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aabf443f_61f33a47",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-06T16:29:26Z",
+      "side": 1,
+      "message": "I still don\u0027t understand why you have to change this from get to copy.. would prefer if you left out this renaming.",
+      "range": {
+        "startLine": 2114,
+        "startChar": 14,
+        "endLine": 2114,
+        "endChar": 30
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0eae74f1_b06d2731",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-06T16:29:26Z",
+      "side": 1,
+      "message": "I think this could potentially be cleaned up. Can\u0027t you check \"ShaderBitSet mActiveUseBits\" in the variable itself?",
+      "range": {
+        "startLine": 633,
+        "startChar": 0,
+        "endLine": 659,
+        "endChar": 9
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e56c185_e9fbaae1",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1878,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-06T16:29:26Z",
+      "side": 1,
+      "message": "possibly should be a helper in program, like getInputResourceLocation?",
+      "range": {
+        "startLine": 1863,
+        "startChar": 0,
+        "endLine": 1878,
+        "endChar": 9
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
