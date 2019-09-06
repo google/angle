@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "621c17a2_333fbb30",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1502,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-06T21:33:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11732069_44599e06",
+      "range": {
+        "startLine": 1502,
+        "startChar": 11,
+        "endLine": 1502,
+        "endChar": 39
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4f30c01_30cc5e57",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2019-09-06T16:29:26Z",
       "side": 1,
       "message": "I think this logic might have to be updated for compute, geometry, tess, etc shaders. Right now it looks at all the shaders.",
+      "range": {
+        "startLine": 1650,
+        "startChar": 4,
+        "endLine": 1654,
+        "endChar": 60
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86247810_66910fd2",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-06T21:33:22Z",
+      "side": 1,
+      "message": "Do we only want to do this for fragement shaders?\n\nIn CollectVariablesTraverser::visitDeclaration() it looks like we treat all shaders (except vertex) the same and add all inputs to mInputVaryings, which will get processed here.\n\nbool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node)\n{\n[[[...]]]\n            switch (qualifier)\n            {\n                case EvqAttribute:\n                case EvqVertexIn:\n                    mAttribs-\u003epush_back(recordAttribute(variable));\n                    break;\n                case EvqFragmentOut:\n                    mOutputVariables-\u003epush_back(recordOutputVariable(variable));\n                    break;\n                case EvqUniform:\n                    mUniforms-\u003epush_back(recordUniform(variable));\n                    break;\n                default:\n                    if (IsVaryingIn(qualifier))\n                    {\n[[[... Fragment shader inputs get added here, so I assumed all others (except vertex) do as well ...]]]\n                        mInputVaryings-\u003epush_back(recordVarying(variable));\n                    }\n                    else\n                    {\n                        ASSERT(IsVaryingOut(qualifier));\n                        mOutputVaryings-\u003epush_back(recordVarying(variable));\n                    }\n                    break;\n            }",
+      "parentUuid": "d4f30c01_30cc5e57",
       "range": {
         "startLine": 1650,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "943218c8_161144b8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-06T21:33:22Z",
+      "side": 1,
+      "message": "I changed it because I added a getInputResourceName() below, and the functionality of the old getInputResourceName() (which calls this) is different enough that overloading the name is misleading.   That means we\u0027d end up with:\n\ngetResourceName\ngetUniformResourceName\ncopyInputResourceName\ngetOutputResourceName\ngetUniformResourceName\ngetBufferVariableResourceName\n\nFurther, these getters aren\u0027t actually returning anything since all of their return types are \u0027void\u0027.   Instead, they are copying the data into the destination buffer.   So, rather than having one function with a different name, I\u0027m updating the names to avoid the overloading and better indicate what they are doing.",
+      "parentUuid": "aabf443f_61f33a47",
+      "range": {
+        "startLine": 2114,
+        "startChar": 14,
+        "endLine": 2114,
+        "endChar": 30
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0eae74f1_b06d2731",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
@@ -82,6 +154,30 @@
       "writtenOn": "2019-09-06T16:29:26Z",
       "side": 1,
       "message": "I think this could potentially be cleaned up. Can\u0027t you check \"ShaderBitSet mActiveUseBits\" in the variable itself?",
+      "range": {
+        "startLine": 633,
+        "startChar": 0,
+        "endLine": 659,
+        "endChar": 9
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9da6adb6_224ed4e2",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-06T21:33:22Z",
+      "side": 1,
+      "message": "The variable here is a ShaderVariable, while mActiveUseBits is within ActiveVariable which ShaderVariable does not inherit from.   Unfortunately, looking through ShaderVariable, nothing is jumping out that would provide the same type of information.\n\nHowever, it is possible to move the ActiveVariable functionality into ShaderVariable, so that the structs in Uniform.h only inherit from ShaderVariable.   This makes isActive() available here, letting this look nice and clean.   Unfortunately, that refactor requires including libANGLE/angletypes.h and accessing the gl:: namespace within GLSLANG/ShaderVars.h, which doesn\u0027t feel right.  I can upload a patchset with these changes if you\u0027d like to see them.\n\nThoughts?",
+      "parentUuid": "0eae74f1_b06d2731",
       "range": {
         "startLine": 633,
         "startChar": 0,
@@ -114,6 +210,30 @@
       "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f8abfe8_88b9a6a1",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1878,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-06T21:33:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e56c185_e9fbaae1",
+      "range": {
+        "startLine": 1863,
+        "startChar": 0,
+        "endLine": 1878,
+        "endChar": 9
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
