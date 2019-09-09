@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "ce513648_a6b9bd4e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-09T17:12:35Z",
+      "side": 1,
+      "message": "Ah, ok, the problem is the order that the shaders are returned by getAttachedShaders().   It\u0027s doing:\n\n    Vertex   \u003d 0,\n    Fragment \u003d 1,\n    Geometry \u003d 2,  \u003c\u003c--- We need this to be \u00271\u0027 (between vertex and fragment)\n    Compute  \u003d 3,\n\nIn order to match the render pipeline, we actually want to use kAllGraphicsShaderTypes:\n\nconstexpr std::array\u003cShaderType, kGraphicsShaderCount\u003e kAllGraphicsShaderTypes \u003d {\n    ShaderType::Vertex, ShaderType::Geometry, ShaderType::Fragment};\n\nI made a new ProgramState::getFirstAttachedShaderStageType() to pull this logic out since it\u0027s actually required in a few places (here, queryutils.cpp).",
+      "parentUuid": "106db404_dff7b755",
+      "range": {
+        "startLine": 1650,
+        "startChar": 4,
+        "endLine": 1654,
+        "endChar": 60
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aabf443f_61f33a47",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 8
@@ -191,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "f02ff6a0_095e26a4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-09T17:12:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18b90a23_60d523a8",
+      "range": {
+        "startLine": 2114,
+        "startChar": 14,
+        "endLine": 2114,
+        "endChar": 30
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0eae74f1_b06d2731",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
@@ -250,6 +298,30 @@
       "side": 1,
       "message": "Well, how about this?\n\ncase GL_REFERENCED_BY_FRAGMENT_SHADER:\n   return program-\u003ehasLinkedShaderStage(ShaderType::Fragment);\ncase GL_REFERENCED_BY_COMPUTE_SHADER:\n   return program-\u003ehasLinkedShaderStage(ShaderType::Compute);\n\netc...",
       "parentUuid": "9da6adb6_224ed4e2",
+      "range": {
+        "startLine": 633,
+        "startChar": 0,
+        "endLine": 659,
+        "endChar": 9
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81c7a3c5_bb6dc040",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-09T17:12:35Z",
+      "side": 1,
+      "message": "That doesn\u0027t satisfy the following condition:\n\n\u003e If program contains multiple shader stages then input variables from any stage other than the first will not be enumerated.\n\nWhich causes the following test to fail:\ndEQP-GLES31.functional.program_interface_query.program_input.referenced_by.referenced_by_vertex_fragment\n\nIn that case, the program has both a vertex and fragment shader with an input named \"shaderInput\":\nVerifying GL_REFERENCED_BY_VERTEX_SHADER, expecting TRUE\nGL_REFERENCED_BY_VERTEX_SHADER \u003d GL_TRUE\nVerifying GL_REFERENCED_BY_FRAGMENT_SHADER, expecting FALSE\nGL_REFERENCED_BY_FRAGMENT_SHADER \u003d GL_TRUE\nError, got unexpected value\n\nI can use getFirstAttachedShaderStageType() here to clean this up a bit though.",
+      "parentUuid": "18ec2fa3_23dad979",
       "range": {
         "startLine": 633,
         "startChar": 0,
