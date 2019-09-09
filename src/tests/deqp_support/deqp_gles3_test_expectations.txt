@@ -539,11 +539,6 @@
 // MAX_FRAGMENT_INPUT_COMPONENTS is 0
 3676 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 
-//  New or broken formats in ES 3.0:
-3816 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgba16* = FAIL
-3816 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgb16* = FAIL
-3816 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rg32* = FAIL
-
 // Formats:
 3677 ANDROID VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgba32f = FAIL
 3677 ANDROID VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgba32f = FAIL
