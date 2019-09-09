@@ -46,6 +46,30 @@
       "revId": "3101c060a25e812c4ef19bb7aec21cb3cd0f4b12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b84abab2_3fdcc463",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-09-09T18:10:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63ad40e1_15badbad",
+      "range": {
+        "startLine": 633,
+        "startChar": 0,
+        "endLine": 653,
+        "endChar": 13
+      },
+      "revId": "3101c060a25e812c4ef19bb7aec21cb3cd0f4b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
