@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a344866_e74ed52d",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-09T17:29:34Z",
+      "side": 1,
+      "message": "this still seems like it could be cleaned up.\n\ncase GL_REFERENCED_BY_FRAGMENT_SHADER:\n   return program-\u003egetState().getFirstAttachedShaderStageType() \u003d\u003d ShaderType::Vertex;\n...",
+      "range": {
+        "startLine": 633,
+        "startChar": 0,
+        "endLine": 653,
+        "endChar": 13
+      },
+      "revId": "3101c060a25e812c4ef19bb7aec21cb3cd0f4b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
