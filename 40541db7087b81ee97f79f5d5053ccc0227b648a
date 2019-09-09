@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "106db404_dff7b755",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-09T13:44:27Z",
+      "side": 1,
+      "message": "I\u0027m not sure why you brought up CollectVariablesTraverser.\n\nThe case we have to care about is when you link a separable program with more than one shader. i.e. Geometry and Fragment. In that case the input varyings would be in the geometry shader and not in the fragment. But both might have varyings. I almost think you want the first bit from the active shader stage array.",
+      "parentUuid": "86247810_66910fd2",
+      "range": {
+        "startLine": 1650,
+        "startChar": 4,
+        "endLine": 1654,
+        "endChar": 60
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aabf443f_61f33a47",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 8
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "I changed it because I added a getInputResourceName() below, and the functionality of the old getInputResourceName() (which calls this) is different enough that overloading the name is misleading.   That means we\u0027d end up with:\n\ngetResourceName\ngetUniformResourceName\ncopyInputResourceName\ngetOutputResourceName\ngetUniformResourceName\ngetBufferVariableResourceName\n\nFurther, these getters aren\u0027t actually returning anything since all of their return types are \u0027void\u0027.   Instead, they are copying the data into the destination buffer.   So, rather than having one function with a different name, I\u0027m updating the names to avoid the overloading and better indicate what they are doing.",
       "parentUuid": "aabf443f_61f33a47",
+      "range": {
+        "startLine": 2114,
+        "startChar": 14,
+        "endLine": 2114,
+        "endChar": 30
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18b90a23_60d523a8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-09T13:44:27Z",
+      "side": 1,
+      "message": "The functions do in fact return values, in the *dest out parameter.",
+      "parentUuid": "943218c8_161144b8",
       "range": {
         "startLine": 2114,
         "startChar": 14,
