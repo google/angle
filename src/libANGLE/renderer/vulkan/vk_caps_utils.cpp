@@ -215,6 +215,10 @@ void RendererVk::ensureCapsInitialized() const
     }
     mNativeCaps.maxUniformLocations                                  = maxUniformVectors;
 
+    // Pass through min/max texel gather offsets
+    mNativeCaps.minProgramTextureGatherOffset = limitsVk.minTexelGatherOffset;
+    mNativeCaps.maxProgramTextureGatherOffset = limitsVk.maxTexelGatherOffset;
+
     // Every stage has 1 reserved uniform buffer for the default uniforms, and 1 for the driver
     // uniforms.
     constexpr uint32_t kTotalReservedPerStageUniformBuffers =

@@ -628,8 +628,6 @@
 3520 VULKAN : dEQP-GLES31.functional.state_query.integer.max_framebuffer_samples* = FAIL
 // MAX_UNIFORM_LOCATIONS is 0
 3520 VULKAN : dEQP-GLES31.functional.state_query.integer.max_uniform_locations* = FAIL
-// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.
-3605 VULKAN : dEQP-GLES31.functional.texture.gather.offset.* = FAIL
 
 // Front-end query bugs:
 3520 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.resource_query = FAIL
