@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2953f844_7142ba08",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3282,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-09T18:05:56Z",
+      "side": 1,
+      "message": "We could split this up to not do both at once:\n\n        if (!supportedExtensions.textureFloat)\n        {\n            supportedExtensions.textureFloatLinear \u003d false;\n        }\n        if (!supportedExtensions.textureHalfFloat)\n        {\n            supportedExtensions.textureHalfFloatLinear \u003d false;\n        }",
+      "range": {
+        "startLine": 3278,
+        "startChar": 8,
+        "endLine": 3282,
+        "endChar": 9
+      },
+      "revId": "1ce1231980cd28b3096c98d4c600f6ea61e9e21b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f4ff108_aea50706",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-09T18:05:56Z",
+      "side": 1,
+      "message": "I\u0027ve recently done a pass over these and fixed the dEQP failures you were seeing: https://chromium-review.googlesource.com/c/angle/angle/+/1773304",
+      "revId": "1ce1231980cd28b3096c98d4c600f6ea61e9e21b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56120f9f_c4392902",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2030,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-09T18:05:56Z",
+      "side": 1,
+      "message": "Isn\u0027t linear sampling required to generate mipmaps?\n\nAlso, can you put this on the line above, this is difficult to read.",
+      "range": {
+        "startLine": 2027,
+        "startChar": 12,
+        "endLine": 2030,
+        "endChar": 35
+      },
+      "revId": "1ce1231980cd28b3096c98d4c600f6ea61e9e21b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
