@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "eefd5198_2569b4d4",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3282,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-09T21:57:08Z",
+      "side": 1,
+      "message": "spec for OES_texture_float_linear or the half float version says -\n\n\"\nEither\n     - OES_texture_half_float and OES_texture_float are required.\n    or\n     - OpenGL ES 3.0 is required.\n\"",
+      "parentUuid": "2953f844_7142ba08",
+      "range": {
+        "startLine": 3278,
+        "startChar": 8,
+        "endLine": 3282,
+        "endChar": 9
+      },
+      "revId": "1ce1231980cd28b3096c98d4c600f6ea61e9e21b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3f4ff108_aea50706",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 13
@@ -77,6 +101,30 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "56120f9f_c4392902",
+      "range": {
+        "startLine": 2027,
+        "startChar": 12,
+        "endLine": 2030,
+        "endChar": 35
+      },
+      "revId": "1ce1231980cd28b3096c98d4c600f6ea61e9e21b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc39cf5c_ffe92cb4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2030,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-09T21:57:08Z",
+      "side": 1,
+      "message": "\u003e ... linear sampling ...\n\nunsized formats are exempt from the filterability requirement\n\n\u003e ... put this on the line above ...\n\nwill do",
+      "parentUuid": "1b0f73f6_1289d90b",
       "range": {
         "startLine": 2027,
         "startChar": 12,
