@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "18ec2fa3_23dad979",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-09T13:41:45Z",
+      "side": 1,
+      "message": "Well, how about this?\n\ncase GL_REFERENCED_BY_FRAGMENT_SHADER:\n   return program-\u003ehasLinkedShaderStage(ShaderType::Fragment);\ncase GL_REFERENCED_BY_COMPUTE_SHADER:\n   return program-\u003ehasLinkedShaderStage(ShaderType::Compute);\n\netc...",
+      "parentUuid": "9da6adb6_224ed4e2",
+      "range": {
+        "startLine": 633,
+        "startChar": 0,
+        "endLine": 659,
+        "endChar": 9
+      },
+      "revId": "40541db7087b81ee97f79f5d5053ccc0227b648a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2e56c185_e9fbaae1",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
