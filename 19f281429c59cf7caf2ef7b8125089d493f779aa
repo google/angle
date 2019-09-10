@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6675d399_8ad14b80",
+        "filename": "src/common/PackedEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-10T19:33:13Z",
+      "side": 1,
+      "message": "do you have an umbrella anglebug that tracks auto-promotion task? if you do there may be a few changes that can be reverted or that needs a re-look at that time. Makes it easier to track if we list such bugs under the umbrella anglebug",
+      "parentUuid": "5fb32706_ca88f6d7",
+      "range": {
+        "startLine": 336,
+        "startChar": 4,
+        "endLine": 336,
+        "endChar": 23
+      },
+      "revId": "19f281429c59cf7caf2ef7b8125089d493f779aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "178b1645_a44f0079",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-09-10T13:28:33Z",
       "side": 1,
       "message": "this looks wrong to me",
+      "range": {
+        "startLine": 9319,
+        "startChar": 12,
+        "endLine": 9319,
+        "endChar": 71
+      },
+      "revId": "19f281429c59cf7caf2ef7b8125089d493f779aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c131d75f_aca3d0e1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9319,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-10T19:33:13Z",
+      "side": 1,
+      "message": "for 2.0 contexts, yup, it looks like we need to",
+      "parentUuid": "178b1645_a44f0079",
       "range": {
         "startLine": 9319,
         "startChar": 12,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "444c1d33_c1b4db9b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9321,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-10T19:33:13Z",
+      "side": 1,
+      "message": "for 2.0 contexts, yup, it looks like we need to",
+      "parentUuid": "b245afae_31f3636e",
+      "range": {
+        "startLine": 9321,
+        "startChar": 46,
+        "endLine": 9321,
+        "endChar": 72
+      },
+      "revId": "19f281429c59cf7caf2ef7b8125089d493f779aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fb33e508_94b3df87",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "f4f12c3e_f0156f16",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9337,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-10T19:33:13Z",
+      "side": 1,
+      "message": "3.0 has HalfFloat as core, why make the check?",
+      "parentUuid": "fb33e508_94b3df87",
+      "range": {
+        "startLine": 9337,
+        "startChar": 45,
+        "endLine": 9337,
+        "endChar": 72
+      },
+      "revId": "19f281429c59cf7caf2ef7b8125089d493f779aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "83a7f672_a2137d0d",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 2
@@ -105,6 +201,30 @@
       "writtenOn": "2019-09-10T13:28:33Z",
       "side": 1,
       "message": "nit: comments before tests.",
+      "range": {
+        "startLine": 528,
+        "startChar": 0,
+        "endLine": 528,
+        "endChar": 6
+      },
+      "revId": "19f281429c59cf7caf2ef7b8125089d493f779aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5bcf6e22_d90262c9",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-10T19:33:13Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "83a7f672_a2137d0d",
       "range": {
         "startLine": 528,
         "startChar": 0,
