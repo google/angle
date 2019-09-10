@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "257a056e_5bcc32a6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9322,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-10T22:07:13Z",
+      "side": 1,
+      "message": "nit: can cache in a temporary.",
+      "range": {
+        "startLine": 9322,
+        "startChar": 8,
+        "endLine": 9322,
+        "endChar": 53
+      },
+      "revId": "023f814be7d85772199267cef04a3f863f249ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e3143e7_49cbd3f5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9324,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-10T22:07:13Z",
+      "side": 1,
+      "message": "Didn\u0027t notice before this was for GLES 2.0. Is this to work around the dEQP bug? I think this should probably be GLES 3.0+ ideally.",
+      "range": {
+        "startLine": 9324,
+        "startChar": 11,
+        "endLine": 9324,
+        "endChar": 75
+      },
+      "revId": "023f814be7d85772199267cef04a3f863f249ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de8cb00e_e9fc19e2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9327,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-10T22:07:13Z",
+      "side": 1,
+      "message": "same comments as below",
+      "range": {
+        "startLine": 9326,
+        "startChar": 0,
+        "endLine": 9327,
+        "endChar": 43
+      },
+      "revId": "023f814be7d85772199267cef04a3f863f249ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d898bec_23ed1f2c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9350,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-10T22:07:13Z",
+      "side": 1,
+      "message": "can you bake this into the constructor?\n\n{VertexAttribType::HalfFloatOES, hasHalfFloat}",
+      "range": {
+        "startLine": 9346,
+        "startChar": 0,
+        "endLine": 9350,
+        "endChar": 9
+      },
+      "revId": "023f814be7d85772199267cef04a3f863f249ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
