@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e2e8919b_0a594c9e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9322,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-10T22:46:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "257a056e_5bcc32a6",
+      "range": {
+        "startLine": 9322,
+        "startChar": 8,
+        "endLine": 9322,
+        "endChar": 53
+      },
+      "revId": "023f814be7d85772199267cef04a3f863f249ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e3143e7_49cbd3f5",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2019-09-10T22:07:13Z",
       "side": 1,
       "message": "Didn\u0027t notice before this was for GLES 2.0. Is this to work around the dEQP bug? I think this should probably be GLES 3.0+ ideally.",
+      "range": {
+        "startLine": 9324,
+        "startChar": 11,
+        "endLine": 9324,
+        "endChar": 75
+      },
+      "revId": "023f814be7d85772199267cef04a3f863f249ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec652aeb_4dae46a1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9324,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-10T22:46:45Z",
+      "side": 1,
+      "message": "possible copy-paste error, will upload patch without it to confirm",
+      "parentUuid": "0e3143e7_49cbd3f5",
       "range": {
         "startLine": 9324,
         "startChar": 11,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "1ea4b177_a6a8d8be",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9327,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-10T22:46:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de8cb00e_e9fc19e2",
+      "range": {
+        "startLine": 9326,
+        "startChar": 0,
+        "endLine": 9327,
+        "endChar": 43
+      },
+      "revId": "023f814be7d85772199267cef04a3f863f249ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d898bec_23ed1f2c",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "023f814be7d85772199267cef04a3f863f249ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38222aa0_8fa9a466",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9350,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-10T22:46:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d898bec_23ed1f2c",
+      "range": {
+        "startLine": 9346,
+        "startChar": 0,
+        "endLine": 9350,
+        "endChar": 9
+      },
+      "revId": "023f814be7d85772199267cef04a3f863f249ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
