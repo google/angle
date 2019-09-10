@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "edd9b741_b6c3c26b",
+        "filename": "src/common/PackedEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-10T19:40:36Z",
+      "side": 1,
+      "message": "Actually we should probably leave this enum in if it\u0027s expected in the ecosystem. But generally we use individual bugs for each.",
+      "parentUuid": "6675d399_8ad14b80",
+      "range": {
+        "startLine": 336,
+        "startChar": 4,
+        "endLine": 336,
+        "endChar": 23
+      },
+      "revId": "19f281429c59cf7caf2ef7b8125089d493f779aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "178b1645_a44f0079",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 2
@@ -143,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "52c400bc_53d6d547",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9321,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-10T19:40:36Z",
+      "side": 1,
+      "message": "I think it should always check for the extension for the OES variant.",
+      "parentUuid": "444c1d33_c1b4db9b",
+      "range": {
+        "startLine": 9321,
+        "startChar": 46,
+        "endLine": 9321,
+        "endChar": 72
+      },
+      "revId": "19f281429c59cf7caf2ef7b8125089d493f779aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fb33e508_94b3df87",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 2
@@ -178,6 +226,30 @@
       "side": 1,
       "message": "3.0 has HalfFloat as core, why make the check?",
       "parentUuid": "fb33e508_94b3df87",
+      "range": {
+        "startLine": 9337,
+        "startChar": 45,
+        "endLine": 9337,
+        "endChar": 72
+      },
+      "revId": "19f281429c59cf7caf2ef7b8125089d493f779aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf165544_41109e41",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9337,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-10T19:40:36Z",
+      "side": 1,
+      "message": "Technically correct to check for the extension for the OES type.",
+      "parentUuid": "f4f12c3e_f0156f16",
       "range": {
         "startLine": 9337,
         "startChar": 45,
