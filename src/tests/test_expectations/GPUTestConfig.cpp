@@ -323,6 +323,15 @@ inline bool GetGPUTestSystemInfo(SystemInfo **sysInfo)
         }
         else
         {
+            // On dual-GPU Macs we want the active GPU to always appear to be the
+            // high-performance GPU for tests.
+            // We can call the generic GPU info collector which selects the
+            // non-Intel GPU as the active one on dual-GPU machines.
+            // See https://anglebug.com/3701.
+            if (IsMac())
+            {
+                GetDualGPUInfo(sSystemInfo);
+            }
             sPopulated = true;
         }
     }
