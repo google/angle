@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63dada81_3ac50ff0",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-11T18:29:20Z",
+      "side": 1,
+      "message": "See float32ToFloat16 in common/mathutil.h",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 1
+      },
+      "revId": "fdb26b0d404cd22f8289dae57d56ddfae1e69ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7d828de_8e32d412",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-11T18:29:20Z",
+      "side": 1,
+      "message": "Why doesn\u0027t it work on these backends? Bugs?",
+      "range": {
+        "startLine": 531,
+        "startChar": 4,
+        "endLine": 531,
+        "endChar": 46
+      },
+      "revId": "fdb26b0d404cd22f8289dae57d56ddfae1e69ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e61cd0bf_c64cfc9e",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-11T18:29:20Z",
+      "side": 1,
+      "message": "getMajorClientVersion() \u003e\u003d 3",
+      "range": {
+        "startLine": 550,
+        "startChar": 13,
+        "endLine": 550,
+        "endChar": 75
+      },
+      "revId": "fdb26b0d404cd22f8289dae57d56ddfae1e69ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
