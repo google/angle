@@ -963,13 +963,7 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
     }
 
-    // OpenGL 4.2 is required for GL_ARB_compute_shader, some platform drivers have the extension,
-    // but their maximum supported GL versions are less than 4.2. Explicitly limit the minimum
-    // GL version to 4.2.
-    if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
-        (functions->isAtLeastGL(gl::Version(4, 2)) &&
-         functions->hasGLExtension("GL_ARB_compute_shader") &&
-         functions->hasGLExtension("GL_ARB_shader_storage_buffer_object")))
+    if (nativegl::SupportsCompute(functions))
     {
         for (GLuint index = 0u; index < 3u; ++index)
         {
@@ -1572,6 +1566,18 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
 
 namespace nativegl
 {
+bool SupportsCompute(const FunctionsGL *functions)
+{
+    // OpenGL 4.2 is required for GL_ARB_compute_shader, some platform drivers have the extension,
+    // but their maximum supported GL versions are less than 4.2. Explicitly limit the minimum
+    // GL version to 4.2.
+    return (functions->isAtLeastGL(gl::Version(4, 3)) ||
+            functions->isAtLeastGLES(gl::Version(3, 1)) ||
+            (functions->isAtLeastGL(gl::Version(4, 2)) &&
+             functions->hasGLExtension("GL_ARB_compute_shader") &&
+             functions->hasGLExtension("GL_ARB_shader_storage_buffer_object")));
+}
+
 bool SupportsFenceSync(const FunctionsGL *functions)
 {
     return functions->isAtLeastGL(gl::Version(3, 2)) || functions->hasGLExtension("GL_ARB_sync") ||
@@ -1667,6 +1673,47 @@ GLenum GetTextureBindingQuery(gl::TextureType textureType)
             UNREACHABLE();
             return 0;
     }
+}
+
+GLenum GetBufferBindingQuery(gl::BufferBinding bufferBinding)
+{
+    switch (bufferBinding)
+    {
+        case gl::BufferBinding::Array:
+            return GL_ARRAY_BUFFER_BINDING;
+        case gl::BufferBinding::AtomicCounter:
+            return GL_ATOMIC_COUNTER_BUFFER_BINDING;
+        case gl::BufferBinding::CopyRead:
+            return GL_COPY_READ_BUFFER_BINDING;
+        case gl::BufferBinding::CopyWrite:
+            return GL_COPY_WRITE_BUFFER_BINDING;
+        case gl::BufferBinding::DispatchIndirect:
+            return GL_DISPATCH_INDIRECT_BUFFER_BINDING;
+        case gl::BufferBinding::DrawIndirect:
+            return GL_DRAW_INDIRECT_BUFFER_BINDING;
+        case gl::BufferBinding::ElementArray:
+            return GL_ELEMENT_ARRAY_BUFFER_BINDING;
+        case gl::BufferBinding::PixelPack:
+            return GL_PIXEL_PACK_BUFFER_BINDING;
+        case gl::BufferBinding::PixelUnpack:
+            return GL_PIXEL_UNPACK_BUFFER_BINDING;
+        case gl::BufferBinding::ShaderStorage:
+            return GL_SHADER_STORAGE_BUFFER_BINDING;
+        case gl::BufferBinding::TransformFeedback:
+            return GL_TRANSFORM_FEEDBACK_BUFFER_BINDING;
+        case gl::BufferBinding::Uniform:
+            return GL_UNIFORM_BUFFER_BINDING;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+std::string GetBufferBindingString(gl::BufferBinding bufferBinding)
+{
+    std::ostringstream os;
+    os << bufferBinding << "_BINDING";
+    return os.str();
 }
 
 }  // namespace nativegl

@@ -242,6 +242,8 @@ class ContextGL : public ContextImpl
 
     void invalidateTexture(gl::TextureType target) override;
 
+    void validateState() const;
+
   private:
     angle::Result setDrawArraysState(const gl::Context *context,
                                      GLint first,

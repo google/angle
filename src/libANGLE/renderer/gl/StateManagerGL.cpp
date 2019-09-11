@@ -34,6 +34,28 @@
 namespace rx
 {
 
+namespace
+{
+
+static void ValidateStateHelper(const FunctionsGL *functions,
+                                const GLuint localValue,
+                                const GLenum pname,
+                                const char *localName,
+                                const char *driverName)
+{
+    GLint queryValue;
+    functions->getIntegerv(pname, &queryValue);
+    if (localValue != static_cast<GLuint>(queryValue))
+    {
+        WARN() << localName << " (" << localValue << ") != " << driverName << " (" << queryValue
+               << ")";
+        // Re-add ASSERT: http://anglebug.com/3900
+        // ASSERT(false);
+    }
+}
+
+}  // anonymous namespace
+
 StateManagerGL::IndexedBufferBinding::IndexedBufferBinding() : offset(0), size(0), buffer(0) {}
 
 StateManagerGL::StateManagerGL(const FunctionsGL *functions,
@@ -2113,4 +2135,34 @@ void StateManagerGL::syncTransformFeedbackState(const gl::Context *context)
         mCurrentTransformFeedback = nullptr;
     }
 }
+
+void StateManagerGL::validateState() const
+{
+    // Current program
+    ValidateStateHelper(mFunctions, mProgram, GL_CURRENT_PROGRAM, "mProgram", "GL_CURRENT_PROGRAM");
+
+    // Buffers
+    for (gl::BufferBinding bindingType : angle::AllEnums<gl::BufferBinding>())
+    {
+        // These binding types need compute support to be queried
+        if (bindingType == gl::BufferBinding::AtomicCounter ||
+            bindingType == gl::BufferBinding::DispatchIndirect ||
+            bindingType == gl::BufferBinding::ShaderStorage)
+        {
+            if (!nativegl::SupportsCompute(mFunctions))
+            {
+                continue;
+            }
+        }
+        GLenum bindingTypeGL  = nativegl::GetBufferBindingQuery(bindingType);
+        std::string localName = "mBuffers[" + ToString(bindingType) + "]";
+        ValidateStateHelper(mFunctions, mBuffers[bindingType], bindingTypeGL, localName.c_str(),
+                            nativegl::GetBufferBindingString(bindingType).c_str());
+    }
+
+    // Vertex array object
+    ValidateStateHelper(mFunctions, mVAO, GL_VERTEX_ARRAY_BINDING, "mVAO",
+                        "GL_VERTEX_ARRAY_BINDING");
+}
+
 }  // namespace rx
