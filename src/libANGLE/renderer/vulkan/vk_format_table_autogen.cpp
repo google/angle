@@ -978,19 +978,35 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::L16A16_FLOAT:
-            // This format is not implemented in Vulkan.
+            internalFormat           = GL_LUMINANCE_ALPHA16F_EXT;
+            imageFormatID            = angle::FormatID::R16G16_FLOAT;
+            vkImageFormat            = VK_FORMAT_R16G16_SFLOAT;
+            imageInitializerFunction = nullptr;
+
             break;
 
         case angle::FormatID::L16_FLOAT:
-            // This format is not implemented in Vulkan.
+            internalFormat           = GL_LUMINANCE16F_EXT;
+            imageFormatID            = angle::FormatID::R16_FLOAT;
+            vkImageFormat            = VK_FORMAT_R16_SFLOAT;
+            imageInitializerFunction = nullptr;
+
             break;
 
         case angle::FormatID::L32A32_FLOAT:
-            // This format is not implemented in Vulkan.
+            internalFormat           = GL_LUMINANCE_ALPHA32F_EXT;
+            imageFormatID            = angle::FormatID::R32G32_FLOAT;
+            vkImageFormat            = VK_FORMAT_R32G32_SFLOAT;
+            imageInitializerFunction = nullptr;
+
             break;
 
         case angle::FormatID::L32_FLOAT:
-            // This format is not implemented in Vulkan.
+            internalFormat           = GL_LUMINANCE32F_EXT;
+            imageFormatID            = angle::FormatID::R32_FLOAT;
+            vkImageFormat            = VK_FORMAT_R32_SFLOAT;
+            imageInitializerFunction = nullptr;
+
             break;
 
         case angle::FormatID::L8A8_UNORM:

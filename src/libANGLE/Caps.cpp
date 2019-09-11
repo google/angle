@@ -257,11 +257,20 @@ static bool DetermineHalfFloatTextureSupport(const TextureCapsMap &textureCaps)
 }
 
 // Checks for GL_OES_texture_half_float_linear support
-static bool DetermineHalfFloatTextureFilteringSupport(const TextureCapsMap &textureCaps)
+static bool DetermineHalfFloatTextureFilteringSupport(const TextureCapsMap &textureCaps,
+                                                      bool checkLegacyFormats)
 {
-    constexpr GLenum requiredFormats[] = {
-        GL_RGBA16F, GL_RGB16F, GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE16F_EXT, GL_ALPHA16F_EXT,
-    };
+    constexpr GLenum requiredFormats[] = {GL_RGBA16F, GL_RGB16F};
+    // If GL_OES_texture_half_float is present, this extension must also support legacy formats
+    // introduced by that extension
+    constexpr GLenum requiredFormatsES2[] = {GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE16F_EXT,
+                                             GL_ALPHA16F_EXT};
+
+    if (checkLegacyFormats &&
+        !GetFormatSupport(textureCaps, requiredFormatsES2, false, true, false, false))
+    {
+        return false;
+    }
 
     return GetFormatSupport(textureCaps, requiredFormats, false, true, false, false);
 }
@@ -277,11 +286,26 @@ static bool DetermineFloatTextureSupport(const TextureCapsMap &textureCaps)
 }
 
 // Checks for GL_OES_texture_float_linear support
-static bool DetermineFloatTextureFilteringSupport(const TextureCapsMap &textureCaps)
+static bool DetermineFloatTextureFilteringSupport(const TextureCapsMap &textureCaps,
+                                                  bool checkLegacyFormats)
 {
     constexpr GLenum requiredFormats[] = {
-        GL_RGBA32F, GL_RGB32F, GL_LUMINANCE_ALPHA32F_EXT, GL_LUMINANCE32F_EXT, GL_ALPHA32F_EXT,
+        GL_RGBA32F,
+        GL_RGB32F,
     };
+    // If GL_OES_texture_float is present, this extension must also support legacy formats
+    // introduced by that extension
+    constexpr GLenum requiredFormatsES2[] = {
+        GL_LUMINANCE_ALPHA32F_EXT,
+        GL_LUMINANCE32F_EXT,
+        GL_ALPHA32F_EXT,
+    };
+
+    if (checkLegacyFormats &&
+        !GetFormatSupport(textureCaps, requiredFormatsES2, false, true, false, false))
+    {
+        return false;
+    }
 
     return GetFormatSupport(textureCaps, requiredFormats, false, true, false, false);
 }
@@ -664,9 +688,9 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     textureFormatBGRA8888 = DetermineBGRA8TextureSupport(textureCaps);
     textureHalfFloat      = DetermineHalfFloatTextureSupport(textureCaps);
     textureHalfFloatLinear =
-        textureHalfFloat && DetermineHalfFloatTextureFilteringSupport(textureCaps);
+        DetermineHalfFloatTextureFilteringSupport(textureCaps, textureHalfFloat);
     textureFloat           = DetermineFloatTextureSupport(textureCaps);
-    textureFloatLinear     = textureFloat && DetermineFloatTextureFilteringSupport(textureCaps);
+    textureFloatLinear     = DetermineFloatTextureFilteringSupport(textureCaps, textureFloat);
     textureRG              = DetermineRGTextureSupport(textureCaps, textureHalfFloat, textureFloat);
     colorBufferHalfFloat   = textureHalfFloat && DetermineColorBufferHalfFloatSupport(textureCaps);
     textureCompressionDXT1 = DetermineDXT1TextureSupport(textureCaps);

@@ -2021,8 +2021,13 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint 
         mipWidth  = nextMipWidth;
         mipHeight = nextMipHeight;
 
-        commandBuffer->blitImage(mImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, mImage,
-                                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, VK_FILTER_LINEAR);
+        bool formatSupportsLinearFiltering = contextVk->getRenderer()->hasImageFormatFeatureBits(
+            getFormat().vkImageFormat, VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
+
+        commandBuffer->blitImage(
+            mImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, mImage,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,
+            formatSupportsLinearFiltering ? VK_FILTER_LINEAR : VK_FILTER_NEAREST);
     }
 
     // Transition the last mip level to the same layout as all the other ones, so we can declare

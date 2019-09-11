@@ -3271,6 +3271,15 @@ Extensions Context::generateSupportedExtensions() const
         {
             supportedExtensions.textureSRGBDecode = false;
         }
+
+        // Don't expose GL_OES_texture_float_linear without full legacy float texture support
+        // The renderer may report OES_texture_float_linear without OES_texture_float
+        // This is valid in a GLES 3.0 context, but not in a GLES 2.0 context
+        if (!(supportedExtensions.textureFloat && supportedExtensions.textureHalfFloat))
+        {
+            supportedExtensions.textureFloatLinear     = false;
+            supportedExtensions.textureHalfFloatLinear = false;
+        }
     }
 
     if (getClientVersion() < ES_3_1)
@@ -3287,6 +3296,20 @@ Extensions Context::generateSupportedExtensions() const
     {
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
         // supportedExtensions.sRGB = false;
+
+        // If colorBufferFloat is disabled but colorBufferHalfFloat is enabled, then we will expose
+        // some floating-point formats as color buffer targets but reject blits between fixed-point
+        // and floating-point formats (this behavior is only enabled in colorBufferFloat, and must
+        // be rejected if only colorBufferHalfFloat is enabled).
+        // dEQP does not check for this, and will assume that floating-point and fixed-point formats
+        // can be blit onto each other if the format is available.
+        // We require colorBufferFloat to be present in order to enable colorBufferHalfFloat, so
+        // that blitting is always allowed if the requested formats are exposed and have the correct
+        // feature capabilities
+        if (!supportedExtensions.colorBufferFloat)
+        {
+            supportedExtensions.colorBufferHalfFloat = false;
+        }
     }
 
     // Some extensions are always available because they are implemented in the GL layer.

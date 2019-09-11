@@ -172,6 +172,18 @@
         "A32_FLOAT": {
             "image": "R32_FLOAT"
         },
+        "L16_FLOAT": {
+            "image": "R16_FLOAT"
+        },
+        "L32_FLOAT": {
+            "image": "R32_FLOAT"
+        },
+        "L16A16_FLOAT": {
+            "image": "R16G16_FLOAT"
+        },
+        "L32A32_FLOAT": {
+            "image": "R32G32_FLOAT"
+        },
         "A8_UNORM": {
             "image": "R8_UNORM"
         },
