@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7d82375_08c7a88a",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-11T15:11:25Z",
+      "side": 1,
+      "message": "geoff, AlwaysSupported is technically not true, it still needs these 2 extensions. We made it more explicit",
+      "revId": "5816f340a2eb8abb6f7d9d9b9d3180ed852572f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12c50867_6b6086e2",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-11T15:11:25Z",
+      "side": 1,
+      "message": "geoff, these are negative tests and the tests passed after you made the change only because half float was an invalid enum. With the addition of half float, we are back to the problem where deqp is not checking for extensions if the context is 2.0 and not a backwards compatible 3.0 context.\n\ndeqp still needs a fix or at the least, we need to disable these tests until ANGLE can expose a backwards compatible 3.0 context by default",
+      "revId": "5816f340a2eb8abb6f7d9d9b9d3180ed852572f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
