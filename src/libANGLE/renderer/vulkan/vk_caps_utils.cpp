@@ -215,10 +215,6 @@ void RendererVk::ensureCapsInitialized() const
     }
     mNativeCaps.maxUniformLocations                                  = maxUniformVectors;
 
-    // Pass through min/max texel gather offsets
-    mNativeCaps.minProgramTextureGatherOffset = limitsVk.minTexelGatherOffset;
-    mNativeCaps.maxProgramTextureGatherOffset = limitsVk.maxTexelGatherOffset;
-
     // Every stage has 1 reserved uniform buffer for the default uniforms, and 1 for the driver
     // uniforms.
     constexpr uint32_t kTotalReservedPerStageUniformBuffers =
@@ -358,8 +354,10 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxCombinedImageUniforms = maxCombinedImages;
     mNativeCaps.maxImageUnits            = maxCombinedImages;
 
-    mNativeCaps.minProgramTexelOffset = mPhysicalDeviceProperties.limits.minTexelOffset;
-    mNativeCaps.maxProgramTexelOffset = mPhysicalDeviceProperties.limits.maxTexelOffset;
+    mNativeCaps.minProgramTexelOffset         = limitsVk.minTexelOffset;
+    mNativeCaps.maxProgramTexelOffset         = limitsVk.maxTexelOffset;
+    mNativeCaps.minProgramTextureGatherOffset = limitsVk.minTexelGatherOffset;
+    mNativeCaps.maxProgramTextureGatherOffset = limitsVk.maxTexelGatherOffset;
 
     // There is no additional limit to the combined number of components.  We can have up to a
     // maximum number of uniform buffers, each having the maximum number of components.  Note that

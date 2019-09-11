@@ -730,7 +730,6 @@
 3148 VULKAN : dEQP-GLES31.functional.texture.gather.*base_level* = SKIP
 
 // 2D array textures:
-3189 VULKAN : dEQP-GLES31.functional.texture.gather.*2d_array* = SKIP
 3189 VULKAN : dEQP-GLES31.functional.state_query.*2d_array* = SKIP
 
 // Compressed integer textures:
