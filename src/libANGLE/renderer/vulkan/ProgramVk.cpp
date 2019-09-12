@@ -798,6 +798,7 @@ void ProgramVk::initDefaultUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap
                 {
                     // Gets the uniform name without the [0] at the end.
                     uniformName = gl::StripLastArrayIndex(uniformName);
+                    ASSERT(uniformName.size() != uniform.name.size());
                 }
 
                 bool found = false;

@@ -522,13 +522,6 @@ void AssignAttributeLocations(const gl::ProgramState &programState,
     }
 }
 
-std::string RemoveArrayZeroSubscript(const std::string &expression)
-{
-    ASSERT(expression.size() > 3);
-    ASSERT(expression.substr(expression.size() - 3) == "[0]");
-    return expression.substr(0, expression.size() - 3);
-}
-
 void AssignOutputLocations(const gl::ProgramState &programState,
                            IntermediateShaderSource *fragmentSource)
 {
@@ -545,21 +538,7 @@ void AssignOutputLocations(const gl::ProgramState &programState,
         {
             const sh::ShaderVariable &outputVar = outputVariables[outputLocation.index];
 
-            // In the following:
-            //
-            //     out vec4 fragOutput[N];
-            //
-            // The varying name is |fragOutput[0]|.  We need to remove the extra |[0]|.
             std::string name = outputVar.name;
-            if (outputVar.isArray())
-            {
-                name = RemoveArrayZeroSubscript(name);
-                if (outputVar.isArrayOfArrays())
-                {
-                    name = RemoveArrayZeroSubscript(name);
-                }
-            }
-
             std::string locationString;
             if (outputVar.location != -1)
             {

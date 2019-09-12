@@ -650,28 +650,40 @@ GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop
 
 GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLenum prop)
 {
-    const auto &outputVariable = program->getOutputResource(index);
+    const sh::ShaderVariable &outputVariable = program->getOutputResource(index);
+
     switch (prop)
     {
         case GL_TYPE:
         case GL_ARRAY_SIZE:
-        case GL_NAME_LENGTH:
             return GetCommonVariableProperty(outputVariable, prop);
 
+        case GL_NAME_LENGTH:
+            return clampCast<GLint>(program->getOutputResourceName(index).size() + 1u);
+
         case GL_LOCATION:
-            return program->getFragDataLocation(outputVariable.name);
+            return outputVariable.location;
 
         case GL_LOCATION_INDEX_EXT:
             // EXT_blend_func_extended
-            return program->getFragDataIndex(outputVariable.name);
+            if (program->getState().getLastAttachedShaderStageType() == gl::ShaderType::Fragment)
+            {
+                return program->getFragDataIndex(outputVariable.name);
+            }
+            return GL_INVALID_INDEX;
 
-        case GL_REFERENCED_BY_FRAGMENT_SHADER:
-            return 1;
-
+        // The set of active user-defined outputs from the final shader stage in this program. If
+        // the final stage is a Fragment Shader, then this represents the fragment outputs that get
+        // written to individual color buffers. If the program only contains a Compute Shader, then
+        // there are no user-defined outputs.
         case GL_REFERENCED_BY_VERTEX_SHADER:
+            return program->getState().getLastAttachedShaderStageType() == ShaderType::Vertex;
+        case GL_REFERENCED_BY_FRAGMENT_SHADER:
+            return program->getState().getLastAttachedShaderStageType() == ShaderType::Fragment;
         case GL_REFERENCED_BY_COMPUTE_SHADER:
+            return program->getState().getLastAttachedShaderStageType() == ShaderType::Compute;
         case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
-            return 0;
+            return program->getState().getLastAttachedShaderStageType() == ShaderType::Geometry;
 
         default:
             UNREACHABLE();
@@ -756,8 +768,7 @@ GLint QueryProgramInterfaceMaxNameLength(const Program *program, GLenum programI
             break;
 
         case GL_PROGRAM_OUTPUT:
-            maxNameLength =
-                FindMaxSize(program->getState().getOutputVariables(), &sh::ShaderVariable::name);
+            maxNameLength = program->getOutputResourceMaxNameSize();
             break;
 
         case GL_UNIFORM:
@@ -1847,7 +1858,7 @@ GLint QueryProgramResourceLocation(const Program *program,
             return program->getInputResourceLocation(name);
 
         case GL_PROGRAM_OUTPUT:
-            return program->getFragDataLocation(name);
+            return program->getOutputResourceLocation(name);
 
         case GL_UNIFORM:
             return program->getUniformLocation(name);
