@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c85999b_4f4906aa",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-12T22:04:28Z",
+      "side": 1,
+      "message": "nit: isSnormAndGLES20 || vertexFormat.vertexLoadRequiresConversion",
+      "range": {
+        "startLine": 36,
+        "startChar": 11,
+        "endLine": 36,
+        "endChar": 84
+      },
+      "revId": "8ed4f6fd878f5cb9a0ad5f79671a7b11371adff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19b608e5_ecffc349",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp",
+        "patchSetId": 3
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-12T22:04:28Z",
+      "side": 1,
+      "message": "I think we can make this choice by compiling separate shaders.  If you add this as a paremeter to the \u0027Flags\u0027 here https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp.json it will generate a different specialized shader.",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 261,
+        "endChar": 5
+      },
+      "revId": "8ed4f6fd878f5cb9a0ad5f79671a7b11371adff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfc67304_698dc04f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-12T22:04:28Z",
+      "side": 1,
+      "message": "This down-cast isn\u0027t guaranteed to always be valid, you may need to change the parameter to the function instead.",
+      "range": {
+        "startLine": 687,
+        "startChar": 55,
+        "endLine": 687,
+        "endChar": 88
+      },
+      "revId": "8ed4f6fd878f5cb9a0ad5f79671a7b11371adff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55c5e7a1_9ccdc03b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-12T22:04:28Z",
+      "side": 1,
+      "message": "nit: no need for ternary here.",
+      "range": {
+        "startLine": 401,
+        "startChar": 15,
+        "endLine": 402,
+        "endChar": 25
+      },
+      "revId": "8ed4f6fd878f5cb9a0ad5f79671a7b11371adff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62116b1c_cda5fe2d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-12T22:04:28Z",
+      "side": 1,
+      "message": "nit: ASSERT channelCount is 4 or specifically handle it and assert in the default case.",
+      "revId": "8ed4f6fd878f5cb9a0ad5f79671a7b11371adff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2322f2f3_8a68afee",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-12T22:04:28Z",
+      "side": 1,
+      "message": "Add a case for what type this is handling and have the default unreachable case.",
+      "range": {
+        "startLine": 464,
+        "startChar": 12,
+        "endLine": 464,
+        "endChar": 20
+      },
+      "revId": "8ed4f6fd878f5cb9a0ad5f79671a7b11371adff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e551c98_425032e0",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-09-12T22:04:28Z",
+      "side": 1,
+      "message": "You should use getClientMajorVersion() \u003d\u003d 2.",
+      "range": {
+        "startLine": 562,
+        "startChar": 0,
+        "endLine": 562,
+        "endChar": 20
+      },
+      "revId": "8ed4f6fd878f5cb9a0ad5f79671a7b11371adff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
