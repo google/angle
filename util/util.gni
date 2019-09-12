@@ -16,6 +16,7 @@ util_sources = [
   "util/util_export.h",
   "util/util_gl.h",
   "util/Event.h",
+  "util/EGLPlatformParameters.h",
   "util/EGLWindow.cpp",
   "util/EGLWindow.h",
   "util/Matrix.cpp",

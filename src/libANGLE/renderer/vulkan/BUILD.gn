@@ -160,6 +160,7 @@ if (angle_swiftshader) {
   action("angle_swiftshader_icd") {
     deps = [
       ":angle_swiftshader_icd_rename",
+      "$angle_root/third_party/vulkan-headers/src:vulkan_headers",
     ]
     script = "$angle_root/scripts/generate_vulkan_layers_json.py"
     sources = [
