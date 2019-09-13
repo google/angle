@@ -968,19 +968,7 @@ Error ValidateCreateContext(Display *display,
                             gl::Context *shareContext,
                             const AttributeMap &attributes)
 {
-    if (configuration)
-    {
-        ANGLE_TRY(ValidateConfig(display, configuration));
-    }
-    else
-    {
-        ANGLE_TRY(ValidateDisplay(display));
-        const DisplayExtensions &displayExtensions = display->getExtensions();
-        if (!displayExtensions.noConfigContext)
-        {
-            return EglBadConfig();
-        }
-    }
+    ANGLE_TRY(ValidateConfig(display, configuration));
 
     // Get the requested client version (default is 1) and check it is 2 or 3.
     EGLAttrib clientMajorVersion = 1;
@@ -1203,12 +1191,7 @@ Error ValidateCreateContext(Display *display,
             {
                 return EglBadAttribute();
             }
-            if (configuration == EGL_NO_CONFIG_KHR)
-            {
-                return EglBadMatch();
-            }
-            if ((configuration != EGL_NO_CONFIG_KHR) &&
-                !(configuration->renderableType & EGL_OPENGL_ES_BIT))
+            if (!(configuration->renderableType & EGL_OPENGL_ES_BIT))
             {
                 return EglBadMatch();
             }
@@ -1219,8 +1202,7 @@ Error ValidateCreateContext(Display *display,
             {
                 return EglBadAttribute();
             }
-            if ((configuration != EGL_NO_CONFIG_KHR) &&
-                !(configuration->renderableType & EGL_OPENGL_ES2_BIT))
+            if (!(configuration->renderableType & EGL_OPENGL_ES2_BIT))
             {
                 return EglBadMatch();
             }
@@ -1230,8 +1212,7 @@ Error ValidateCreateContext(Display *display,
             {
                 return EglBadAttribute();
             }
-            if ((configuration != EGL_NO_CONFIG_KHR) &&
-                !(configuration->renderableType & EGL_OPENGL_ES3_BIT))
+            if (!(configuration->renderableType & EGL_OPENGL_ES3_BIT))
             {
                 return EglBadMatch();
             }
@@ -1793,65 +1774,32 @@ Error ValidateMakeCurrent(Display *display, Surface *draw, Surface *read, gl::Co
     if (read != EGL_NO_SURFACE)
     {
         ANGLE_TRY(ValidateSurface(display, read));
-        ANGLE_TRY(ValidateCompatibleSurface(display, context, read));
+        ANGLE_TRY(ValidateCompatibleConfigs(display, read->getConfig(), read, context->getConfig(),
+                                            read->getType()));
     }
 
     if (draw != read)
     {
         if (draw)
         {
-            ANGLE_TRY(ValidateCompatibleSurface(display, context, draw));
+            ANGLE_TRY(ValidateCompatibleConfigs(display, draw->getConfig(), draw,
+                                                context->getConfig(), draw->getType()));
         }
         if (read)
         {
-            ANGLE_TRY(ValidateCompatibleSurface(display, context, read));
+            ANGLE_TRY(ValidateCompatibleConfigs(display, read->getConfig(), read,
+                                                context->getConfig(), read->getType()));
         }
     }
     return NoError();
 }
 
-Error ValidateCompatibleSurface(const Display *display,
-                                gl::Context *context,
-                                const Surface *surface)
+Error ValidateCompatibleConfigs(const Display *display,
+                                const Config *surfaceConfig,
+                                const Surface *surface,
+                                const Config *contextConfig,
+                                EGLint surfaceType)
 {
-    const Config *contextConfig = context->getConfig();
-    const Config *surfaceConfig = surface->getConfig();
-
-    // Surface compatible with client API - only OPENGL_ES supported
-    switch (context->getClientMajorVersion())
-    {
-        case 1:
-            if (!(surfaceConfig->renderableType & EGL_OPENGL_ES_BIT))
-            {
-                return EglBadMatch() << "Surface not compatible with OpenGL ES 1.x.";
-            }
-            break;
-        case 2:
-            if (!(surfaceConfig->renderableType & EGL_OPENGL_ES2_BIT))
-            {
-                return EglBadMatch() << "Surface not compatible with OpenGL ES 2.x.";
-            }
-            break;
-        case 3:
-            if (!(surfaceConfig->renderableType & EGL_OPENGL_ES3_BIT))
-            {
-                return EglBadMatch() << "Surface not compatible with OpenGL ES 3.x.";
-            }
-            break;
-        default:
-            return EglBadMatch() << "Surface not compatible with Context API.";
-    }
-
-    // EGL KHR no config context
-    if (context->getConfig() == EGL_NO_CONFIG_KHR)
-    {
-        const DisplayExtensions &displayExtensions = display->getExtensions();
-        if (displayExtensions.noConfigContext)
-        {
-            return NoError();
-        }
-        return EglBadMatch() << "Context with no config is not supported.";
-    }
 
     if (!surface->flexibleSurfaceCompatibilityRequested())
     {
@@ -1888,10 +1836,11 @@ Error ValidateCompatibleSurface(const Display *display,
         }
     }
 
-    bool surfaceTypeCompat = (surfaceConfig->surfaceType & contextConfig->surfaceType) != 0;
+    bool surfaceTypeCompat =
+        (surfaceConfig->surfaceType & contextConfig->surfaceType & surfaceType) != 0;
     if (!surfaceTypeCompat)
     {
-        return EglBadMatch() << "Surface type is not compatible.";
+        return EglBadMatch() << "Surface types are not compatible.";
     }
 
     return NoError();

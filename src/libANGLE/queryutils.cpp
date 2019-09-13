@@ -2909,14 +2909,7 @@ void QueryContextAttrib(const gl::Context *context, EGLint attribute, EGLint *va
     switch (attribute)
     {
         case EGL_CONFIG_ID:
-            if (context->getConfig() != EGL_NO_CONFIG_KHR)
-            {
-                *value = context->getConfig()->configID;
-            }
-            else
-            {
-                *value = 0;
-            }
+            *value = context->getConfig()->configID;
             break;
         case EGL_CONTEXT_CLIENT_TYPE:
             *value = context->getClientType();

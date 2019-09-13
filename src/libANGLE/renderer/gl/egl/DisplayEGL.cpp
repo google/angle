@@ -151,8 +151,6 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     outExtensions->nativeFenceSyncANDROID = mEGL->hasExtension("EGL_ANDROID_native_fence_sync");
 
-    outExtensions->noConfigContext = mEGL->hasExtension("EGL_KHR_no_config_context");
-
     DisplayGL::generateExtensions(outExtensions);
 }
 

@@ -925,9 +925,6 @@ struct DisplayExtensions
 
     // EGL_ANGLE_create_context_backwards_compatible
     bool createContextBackwardsCompatible = false;
-
-    // EGL_KHR_no_config_context
-    bool noConfigContext = false;
 };
 
 struct DeviceExtensions
