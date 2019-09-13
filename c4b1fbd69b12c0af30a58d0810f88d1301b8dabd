@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a9b61ab_f74a41f9",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1835,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-09-13T22:48:35Z",
+      "side": 1,
+      "message": "A GLES 3.x client is compatible with a GLES 2.x Surface. Logic needs amended.",
+      "revId": "c4b1fbd69b12c0af30a58d0810f88d1301b8dabd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
