@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c87ed0c_5424d7a4",
+        "filename": "src/libANGLE/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-09-16T16:37:19Z",
+      "side": 1,
+      "message": "Just curious if you had a specific reason for std::tuple here instead of std::pair? With a quick search it wasn\u0027t clear to me if either should be favored so just curious if you were intentionally favoring tuple for any reason.",
+      "revId": "f1fdef0338906a9b55eeb723e9a7b8e9665e7f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "356dde9d_fb1fc9ea",
+        "filename": "src/libANGLE/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-09-16T16:37:19Z",
+      "side": 1,
+      "message": "Do these need to be ordered? Else favor unordered_map for faster access.",
+      "revId": "f1fdef0338906a9b55eeb723e9a7b8e9665e7f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
