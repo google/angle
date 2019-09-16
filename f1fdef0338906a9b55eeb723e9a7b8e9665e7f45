@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fa2ff1af_435aa54f",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-16T22:45:04Z",
+      "side": 1,
+      "message": "It\u0027s deliberate... a bit of a hack. It prepends the initialization of the variable before the call. Like this\n\n....RegularCall();\n\nbecomes:\n\n....\u003cInsertedCallHere();\\n\n....\u003eRegularCall();",
+      "parentUuid": "2cc1b329_30093e8a",
+      "range": {
+        "startLine": 167,
+        "startChar": 20,
+        "endLine": 167,
+        "endChar": 24
+      },
+      "revId": "f1fdef0338906a9b55eeb723e9a7b8e9665e7f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c87ed0c_5424d7a4",
         "filename": "src/libANGLE/FrameCapture.h",
         "patchSetId": 3
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "c5b044d3_a2cec066",
+        "filename": "src/libANGLE/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-16T22:45:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c87ed0c_5424d7a4",
+      "revId": "f1fdef0338906a9b55eeb723e9a7b8e9665e7f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "356dde9d_fb1fc9ea",
         "filename": "src/libANGLE/FrameCapture.h",
         "patchSetId": 3
@@ -56,6 +98,24 @@
       "revId": "f1fdef0338906a9b55eeb723e9a7b8e9665e7f45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ed9c76d_a15d6d65",
+        "filename": "src/libANGLE/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-16T22:45:04Z",
+      "side": 1,
+      "message": "std::less is automatically generated for most types. std::hash not so much. Anyone who feels like implementing a hash algorithm for this type could do it. But left it for now.",
+      "parentUuid": "356dde9d_fb1fc9ea",
+      "revId": "f1fdef0338906a9b55eeb723e9a7b8e9665e7f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
