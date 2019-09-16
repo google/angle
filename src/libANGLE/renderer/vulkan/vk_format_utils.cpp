@@ -32,8 +32,13 @@ void FillTextureFormatCaps(RendererVk *renderer, VkFormat format, gl::TextureCap
         renderer->hasImageFormatFeatureBits(format, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
     outTextureCaps->filterable = renderer->hasImageFormatFeatureBits(
         format, VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
+
+    // For renderbuffer and texture attachments we require transfer and sampling for
+    // GLES 2.0 CopyTexImage support. Sampling is also required for other features like
+    // blits and EGLImages.
     outTextureCaps->textureAttachment =
-        hasColorAttachmentFeatureBit || hasDepthAttachmentFeatureBit;
+        outTextureCaps->texturable &&
+        (hasColorAttachmentFeatureBit || hasDepthAttachmentFeatureBit);
     outTextureCaps->renderbuffer = outTextureCaps->textureAttachment;
 
     if (outTextureCaps->renderbuffer)
