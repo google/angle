@@ -7,6 +7,7 @@ import("//build/config/sanitizers/sanitizers.gni")
 import("//build/config/ui.gni")  # import the use_x11 variable
 import("//build_overrides/angle.gni")
 import("//build_overrides/build.gni")
+import("//build_overrides/swiftshader.gni")
 import("//testing/test.gni")
 if (is_android) {
   import("//build/config/android/config.gni")

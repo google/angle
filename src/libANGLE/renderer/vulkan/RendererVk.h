@@ -39,7 +39,7 @@ class FramebufferVk;
 namespace vk
 {
 struct Format;
-}
+}  // namespace vk
 
 // Supports one semaphore from current surface, and one semaphore passed to
 // glSignalSemaphoreEXT.

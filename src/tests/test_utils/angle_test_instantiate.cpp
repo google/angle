@@ -262,6 +262,13 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
                     case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
                     case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
                     case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
+                        // SwiftShader temporarily disabled on AMD.
+                        // TODO(jmadill): Re-enable. http://anglebug.com/3876
+                        if (param.eglParameters.deviceType ==
+                            EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE)
+                        {
+                            return !IsAMD(vendorID);
+                        }
                         return true;
                     case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
                         // ES 3.1+ back-end is not supported properly.

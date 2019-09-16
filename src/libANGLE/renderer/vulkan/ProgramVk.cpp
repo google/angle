@@ -1533,7 +1533,7 @@ angle::Result ProgramVk::updateTransformFeedbackDescriptorSet(ContextVk *context
 
 void ProgramVk::updateTransformFeedbackDescriptorSetImpl(ContextVk *contextVk)
 {
-    const gl::State &glState = contextVk->getState();
+    const gl::State &glState                 = contextVk->getState();
     gl::TransformFeedback *transformFeedback = glState.getCurrentTransformFeedback();
 
     if (!hasTransformFeedbackOutput())
