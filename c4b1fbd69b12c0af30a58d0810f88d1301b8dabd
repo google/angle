@@ -34,6 +34,24 @@
       "revId": "c4b1fbd69b12c0af30a58d0810f88d1301b8dabd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d71007a6_46aceff7",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1835,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-16T14:16:40Z",
+      "side": 1,
+      "message": "Go ahead and upload a re-land:\n\n1. cherry-pick in your original CL\n2. remove the change-id tag to regenerate it\n3. upload the original unmodified CL\n4. apply your fixes and update the CL description\n5. upload the fixed CL as patch set 2 so reviewers can diff between 1 \u0026 2 to see what changed",
+      "parentUuid": "acd90b0d_43aea0a4",
+      "revId": "c4b1fbd69b12c0af30a58d0810f88d1301b8dabd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
