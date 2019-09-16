@@ -17,6 +17,10 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/gl_enum_utils_autogen.h"
 
+#if !ANGLE_CAPTURE_ENABLED
+#    error Frame capture must be enbled to include this file.
+#endif  // !ANGLE_CAPTURE_ENABLED
+
 #ifdef ANGLE_PLATFORM_ANDROID
 #    define ANGLE_CAPTURE_PATH ("/sdcard/Android/data/" + CurrentAPKName() + "/")
 
@@ -53,16 +57,6 @@ std::string CurrentAPKName()
 
 namespace angle
 {
-#if !ANGLE_CAPTURE_ENABLED
-CallCapture::~CallCapture() {}
-ParamBuffer::~ParamBuffer() {}
-ParamCapture::~ParamCapture() {}
-
-FrameCapture::FrameCapture() {}
-FrameCapture::~FrameCapture() {}
-void FrameCapture::onEndFrame(const gl::Context *context) {}
-void FrameCapture::replay(gl::Context *context) {}
-#else
 namespace
 {
 std::string GetCaptureFileName(int contextId, size_t frameIndex, const char *suffix)
@@ -1138,5 +1132,4 @@ void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::Ve
 {
     os << "gVertexArrayMap[" << value.value << "]";
 }
-#endif  // ANGLE_CAPTURE_ENABLED
 }  // namespace angle
