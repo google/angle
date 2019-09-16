@@ -110,6 +110,135 @@ void WriteStringParamReplay(std::ostream &out, const ParamCapture &param)
     std::string str(data.begin(), data.end() - 1);
     out << "\"" << str << "\"";
 }
+
+void WriteStringPointerParamReplay(DataCounters *counters,
+                                   std::ostream &out,
+                                   std::ostream &header,
+                                   const CallCapture &call,
+                                   const ParamCapture &param)
+{
+    int counter = counters->getAndIncrement(call.entryPoint, param.name);
+
+    header << "const char *";
+    WriteParamStaticVarName(call, param, counter, header);
+    header << "[] = { \n";
+
+    for (const std::vector<uint8_t> &data : param.data)
+    {
+        // null terminate C style string
+        ASSERT(data.size() > 0 && data.back() == '\0');
+        std::string str(data.begin(), data.end() - 1);
+        header << "    R\"(" << str << ")\",\n";
+    }
+
+    header << " };\n";
+    WriteParamStaticVarName(call, param, counter, out);
+}
+
+template <typename ParamT>
+void WriteResourceIDPointerParamReplay(DataCounters *counters,
+                                       std::ostream &out,
+                                       std::ostream &header,
+                                       const CallCapture &call,
+                                       const ParamCapture &param)
+{
+    int counter = counters->getAndIncrement(call.entryPoint, param.name);
+
+    header << "const GLuint ";
+    WriteParamStaticVarName(call, param, counter, header);
+    header << "[] = { ";
+
+    // TODO(jmadill): Other resource types. http://anglebug.com/3611
+    const char *name = "Renderbuffer";
+
+    GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+    ASSERT(param.data.size() == 1);
+    const ParamT *returnedIDs = reinterpret_cast<const ParamT *>(param.data[0].data());
+    for (GLsizei resIndex = 0; resIndex < n; ++resIndex)
+    {
+        ParamT id = returnedIDs[resIndex];
+        if (resIndex > 0)
+        {
+            header << ", ";
+        }
+        header << "g" << name << "Map[" << id.value << "]";
+    }
+
+    header << " };\n    ";
+
+    WriteParamStaticVarName(call, param, counter, out);
+}
+
+void WriteBinaryParamReplay(DataCounters *counters,
+                            std::ostream &out,
+                            std::ostream &header,
+                            const CallCapture &call,
+                            const ParamCapture &param,
+                            std::vector<uint8_t> *binaryData)
+{
+    int counter = counters->getAndIncrement(call.entryPoint, param.name);
+
+    ASSERT(param.data.size() == 1);
+    const std::vector<uint8_t> &data = param.data[0];
+
+    if (data.size() > kInlineDataThreshold)
+    {
+        size_t offset = binaryData->size();
+        binaryData->resize(offset + data.size());
+        memcpy(binaryData->data() + offset, data.data(), data.size());
+        if (param.type == ParamType::TvoidConstPointer || param.type == ParamType::TvoidPointer)
+        {
+            out << "&gBinaryData[" << offset << "]";
+        }
+        else
+        {
+            out << "reinterpret_cast<" << ParamTypeToString(param.type) << ">(&gBinaryData["
+                << offset << "])";
+        }
+    }
+    else
+    {
+        ParamType overrideType = param.type;
+        if (param.type == ParamType::TGLvoidConstPointer ||
+            param.type == ParamType::TvoidConstPointer)
+        {
+            overrideType = ParamType::TGLubyteConstPointer;
+        }
+
+        std::string paramTypeString = ParamTypeToString(overrideType);
+        header << paramTypeString.substr(0, paramTypeString.length() - 1);
+        WriteParamStaticVarName(call, param, counter, header);
+
+        header << "[] = { ";
+
+        switch (overrideType)
+        {
+            case ParamType::TGLintConstPointer:
+                WriteInlineData<GLint>(data, header);
+                break;
+            case ParamType::TGLshortConstPointer:
+                WriteInlineData<GLshort>(data, header);
+                break;
+            case ParamType::TGLfloatConstPointer:
+                WriteInlineData<GLfloat>(data, header);
+                break;
+            case ParamType::TGLubyteConstPointer:
+                WriteInlineData<GLubyte, int>(data, header);
+                break;
+            case ParamType::TGLuintConstPointer:
+            case ParamType::TGLenumConstPointer:
+                WriteInlineData<GLuint>(data, header);
+                break;
+            default:
+                UNIMPLEMENTED();
+                break;
+        }
+
+        header << " };\n";
+
+        WriteParamStaticVarName(call, param, counter, out);
+    }
+}
 }  // anonymous namespace
 
 ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
@@ -152,6 +281,7 @@ ParamBuffer &ParamBuffer::operator=(ParamBuffer &&other)
     std::swap(mParamCaptures, other.mParamCaptures);
     std::swap(mClientArrayDataParam, other.mClientArrayDataParam);
     std::swap(mReadBufferSize, other.mReadBufferSize);
+    std::swap(mReturnValueCapture, other.mReturnValueCapture);
     return *this;
 }
 
@@ -440,6 +570,8 @@ void FrameCapture::saveCapturedFrameAsCpp(int contextId)
 {
     bool useClientArrays = anyClientArray();
 
+    DataCounters counters;
+
     std::stringstream out;
     std::stringstream header;
     std::vector<uint8_t> binaryData;
@@ -496,7 +628,7 @@ void FrameCapture::saveCapturedFrameAsCpp(int contextId)
     for (const CallCapture &call : mCalls)
     {
         out << "    ";
-        writeCallReplay(call, out, header, &binaryData);
+        writeCallReplay(call, &counters, out, header, &binaryData);
         out << ";\n";
     }
 
@@ -548,138 +680,18 @@ void FrameCapture::saveCapturedFrameAsCpp(int contextId)
     printf("Saved '%s'.\n", cppFilePath.c_str());
 }
 
-int FrameCapture::getAndIncrementCounter(gl::EntryPoint entryPoint, const std::string &paramName)
+DataCounters::DataCounters() = default;
+
+DataCounters::~DataCounters() = default;
+
+int DataCounters::getAndIncrement(gl::EntryPoint entryPoint, const std::string &paramName)
 {
-    auto counterKey = std::tie(entryPoint, paramName);
-    return mDataCounters[counterKey]++;
-}
-
-void FrameCapture::writeStringPointerParamReplay(std::ostream &out,
-                                                 std::ostream &header,
-                                                 const CallCapture &call,
-                                                 const ParamCapture &param)
-{
-    int counter = getAndIncrementCounter(call.entryPoint, param.name);
-
-    header << "const char *";
-    WriteParamStaticVarName(call, param, counter, header);
-    header << "[] = { \n";
-
-    for (const std::vector<uint8_t> &data : param.data)
-    {
-        // null terminate C style string
-        ASSERT(data.size() > 0 && data.back() == '\0');
-        std::string str(data.begin(), data.end() - 1);
-        header << "    R\"(" << str << ")\",\n";
-    }
-
-    header << " };\n";
-    WriteParamStaticVarName(call, param, counter, out);
-}
-
-void FrameCapture::writeRenderbufferIDPointerParamReplay(std::ostream &out,
-                                                         std::ostream &header,
-                                                         const CallCapture &call,
-                                                         const ParamCapture &param)
-{
-    int counter = getAndIncrementCounter(call.entryPoint, param.name);
-
-    header << "const GLuint ";
-    WriteParamStaticVarName(call, param, counter, header);
-    header << "[] = { ";
-
-    GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
-    const ParamCapture &renderbuffers =
-        call.params.getParam("renderbuffersPacked", ParamType::TRenderbufferIDConstPointer, 1);
-    ASSERT(renderbuffers.data.size() == 1);
-    const gl::RenderbufferID *returnedIDs =
-        reinterpret_cast<const gl::RenderbufferID *>(renderbuffers.data[0].data());
-    for (GLsizei resIndex = 0; resIndex < n; ++resIndex)
-    {
-        gl::RenderbufferID id = returnedIDs[resIndex];
-        if (resIndex > 0)
-        {
-            header << ", ";
-        }
-        header << "gRenderbufferMap[" << id.value << "]";
-    }
-
-    header << " };\n    ";
-
-    WriteParamStaticVarName(call, param, counter, out);
-}
-
-void FrameCapture::writeBinaryParamReplay(std::ostream &out,
-                                          std::ostream &header,
-                                          const CallCapture &call,
-                                          const ParamCapture &param,
-                                          std::vector<uint8_t> *binaryData)
-{
-    int counter = getAndIncrementCounter(call.entryPoint, param.name);
-
-    ASSERT(param.data.size() == 1);
-    const std::vector<uint8_t> &data = param.data[0];
-
-    if (data.size() > kInlineDataThreshold)
-    {
-        size_t offset = binaryData->size();
-        binaryData->resize(offset + data.size());
-        memcpy(binaryData->data() + offset, data.data(), data.size());
-        if (param.type == ParamType::TvoidConstPointer || param.type == ParamType::TvoidPointer)
-        {
-            out << "&gBinaryData[" << offset << "]";
-        }
-        else
-        {
-            out << "reinterpret_cast<" << ParamTypeToString(param.type) << ">(&gBinaryData["
-                << offset << "])";
-        }
-    }
-    else
-    {
-        ParamType overrideType = param.type;
-        if (param.type == ParamType::TGLvoidConstPointer ||
-            param.type == ParamType::TvoidConstPointer)
-        {
-            overrideType = ParamType::TGLubyteConstPointer;
-        }
-
-        std::string paramTypeString = ParamTypeToString(overrideType);
-        header << paramTypeString.substr(0, paramTypeString.length() - 1);
-        WriteParamStaticVarName(call, param, counter, header);
-
-        header << "[] = { ";
-
-        switch (overrideType)
-        {
-            case ParamType::TGLintConstPointer:
-                WriteInlineData<GLint>(data, header);
-                break;
-            case ParamType::TGLshortConstPointer:
-                WriteInlineData<GLshort>(data, header);
-                break;
-            case ParamType::TGLfloatConstPointer:
-                WriteInlineData<GLfloat>(data, header);
-                break;
-            case ParamType::TGLubyteConstPointer:
-                WriteInlineData<GLubyte, int>(data, header);
-                break;
-            case ParamType::TGLuintConstPointer:
-            case ParamType::TGLenumConstPointer:
-                WriteInlineData<GLuint>(data, header);
-                break;
-            default:
-                UNIMPLEMENTED();
-                break;
-        }
-
-        header << " };\n";
-
-        WriteParamStaticVarName(call, param, counter, out);
-    }
+    Counter counterKey = {entryPoint, paramName};
+    return mData[counterKey]++;
 }
 
 void FrameCapture::writeCallReplay(const CallCapture &call,
+                                   DataCounters *counters,
                                    std::ostream &out,
                                    std::ostream &header,
                                    std::vector<uint8_t> *binaryData)
@@ -728,16 +740,17 @@ void FrameCapture::writeCallReplay(const CallCapture &call,
                     WriteStringParamReplay(callOut, param);
                     break;
                 case ParamType::TGLcharConstPointerPointer:
-                    writeStringPointerParamReplay(callOut, header, call, param);
+                    WriteStringPointerParamReplay(counters, callOut, header, call, param);
                     break;
                 case ParamType::TRenderbufferIDConstPointer:
-                    writeRenderbufferIDPointerParamReplay(callOut, out, call, param);
+                    WriteResourceIDPointerParamReplay<gl::RenderbufferID>(counters, callOut, out,
+                                                                          call, param);
                     break;
                 case ParamType::TRenderbufferIDPointer:
                     UNIMPLEMENTED();
                     break;
                 default:
-                    writeBinaryParamReplay(callOut, header, call, param, binaryData);
+                    WriteBinaryParamReplay(counters, callOut, header, call, param, binaryData);
                     break;
             }
         }
@@ -795,7 +808,6 @@ void FrameCapture::reset()
     mCalls.clear();
     mClientVertexArrayMap.fill(-1);
     mClientArraySizes.fill(0);
-    mDataCounters.clear();
     mReadBufferSize = 0;
 }
 
