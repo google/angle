@@ -4610,6 +4610,8 @@ TEST_P(Texture2DFloatTestES2, TextureFloatRenderTest)
     // EXT_color_buffer_half_float requires at least one format to be renderable, but does not
     // require a specific one
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_color_buffer_half_float"));
+    // https://crbug.com/1003971
+    ANGLE_SKIP_TEST_IF(IsOzone());
 
     bool atLeastOneSupported = false;
 
