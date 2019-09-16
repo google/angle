@@ -352,6 +352,12 @@ struct FeaturesGL : FeatureSetBase
         "reset_texture_generates_errors", FeatureCategory::OpenGLWorkarounds,
         "Calling glTexImage2D with zero size generates errors.", &members,
         "http://anglebug.com/3859"};
+
+    // Mac Intel samples transparent black from GL_COMPRESSED_RGB_S3TC_DXT1_EXT
+    Feature rgbDXT1TexturesSampleZeroAlpha = {
+        "rgb_dxt1_textures_sample_zero_alpha", FeatureCategory::OpenGLWorkarounds,
+        "Sampling BLACK texels from RGB DXT1 textures returns transparent black on Mac.", &members,
+        "http://anglebug.com/3729"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

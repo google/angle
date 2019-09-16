@@ -731,13 +731,13 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
         case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
         {
             static constexpr Format info(GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
-                                         angle::FormatID::BC1_RGB_UNORM_BLOCK,
-                                         DXGI_FORMAT_BC1_UNORM,
-                                         DXGI_FORMAT_BC1_UNORM,
+                                         angle::FormatID::BC3_RGBA_UNORM_BLOCK,
+                                         DXGI_FORMAT_BC3_UNORM,
+                                         DXGI_FORMAT_BC3_UNORM,
                                          DXGI_FORMAT_UNKNOWN,
                                          DXGI_FORMAT_UNKNOWN,
                                          DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_BC1_UNORM,
+                                         DXGI_FORMAT_BC3_UNORM,
                                          GL_RGBA8,
                                          nullptr);
             return info;
@@ -1235,13 +1235,13 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
         case GL_COMPRESSED_SRGB_S3TC_DXT1_EXT:
         {
             static constexpr Format info(GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,
-                                         angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK,
-                                         DXGI_FORMAT_BC1_UNORM_SRGB,
-                                         DXGI_FORMAT_BC1_UNORM_SRGB,
+                                         angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK,
+                                         DXGI_FORMAT_BC3_UNORM_SRGB,
+                                         DXGI_FORMAT_BC3_UNORM_SRGB,
                                          DXGI_FORMAT_UNKNOWN,
                                          DXGI_FORMAT_UNKNOWN,
                                          DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_BC1_UNORM_SRGB,
+                                         DXGI_FORMAT_BC3_UNORM_SRGB,
                                          GL_RGBA8,
                                          nullptr);
             return info;
