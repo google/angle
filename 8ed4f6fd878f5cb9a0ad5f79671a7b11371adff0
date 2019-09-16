@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "77142700_fe788cda",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-09-16T15:58:43Z",
+      "side": 1,
+      "message": "geoff, is there a preferred way to go from vk::Context to ContextVk? even if we change the method parameter, we will need to dynamic_cast there as well right?",
+      "parentUuid": "dfc67304_698dc04f",
+      "range": {
+        "startLine": 687,
+        "startChar": 55,
+        "endLine": 687,
+        "endChar": 88
+      },
+      "revId": "8ed4f6fd878f5cb9a0ad5f79671a7b11371adff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "55c5e7a1_9ccdc03b",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
         "patchSetId": 3
