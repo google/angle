@@ -95,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "e6b3d632_f3d3653e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-16T16:36:18Z",
+      "side": 1,
+      "message": "We can\u0027t use dynamic_cast as we force dynamic type info off. As Geoff said you\u0027ll need to change the call stack to use ContextVk instead. Which is fine because pipeline creation always happens at a ContextVk level (from GL commands) not a vk::Context level (could be from EGL)",
+      "parentUuid": "77142700_fe788cda",
+      "range": {
+        "startLine": 687,
+        "startChar": 55,
+        "endLine": 687,
+        "endChar": 88
+      },
+      "revId": "8ed4f6fd878f5cb9a0ad5f79671a7b11371adff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "55c5e7a1_9ccdc03b",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
         "patchSetId": 3
