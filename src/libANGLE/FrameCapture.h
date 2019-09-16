@@ -178,14 +178,7 @@ class FrameCapture final : angle::NonCopyable
                                     size_t vertexCount,
                                     size_t instanceCount);
 
-    void writeCallReplay(const CallCapture &call,
-                         DataCounters *counters,
-                         std::ostream &out,
-                         std::ostream &header,
-                         std::vector<uint8_t> *binaryData);
     void reset();
-    bool anyClientArray() const;
-    void saveCapturedFrameAsCpp(int contextId);
     void maybeCaptureClientData(const gl::Context *context, const CallCapture &call);
     void maybeUpdateResourceIDs(const gl::Context *context, const CallCapture &call);
 
@@ -196,9 +189,8 @@ class FrameCapture final : angle::NonCopyable
 
     std::vector<CallCapture> mCalls;
     gl::AttribArray<int> mClientVertexArrayMap;
-    size_t mFrameIndex;
+    uint32_t mFrameIndex;
     gl::AttribArray<size_t> mClientArraySizes;
-    angle::PackedEnumMap<ResourceIDType, uint32_t, angle::kParamTypeCount> mResourceIDCounts;
     size_t mReadBufferSize;
 
     static void ReplayCall(gl::Context *context,
