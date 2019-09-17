@@ -548,6 +548,9 @@ void Context::initialize()
 
 egl::Error Context::onDestroy(const egl::Display *display)
 {
+    // Dump frame capture if enabled.
+    mFrameCapture->onEndFrame(this);
+
     if (mGLES1Renderer)
     {
         mGLES1Renderer->onDestroy(this, &mState);
