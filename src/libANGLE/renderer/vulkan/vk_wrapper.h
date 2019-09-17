@@ -189,7 +189,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
 
     static bool SupportsQueries(const VkPhysicalDeviceFeatures &features)
     {
-        return features.inheritedQueries;
+        return (features.inheritedQueries == VK_TRUE);
     }
 
     // Vulkan command buffers are executed as secondary command buffers within a primary command

@@ -88,7 +88,8 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.instancedArraysEXT   = mMaxVertexAttribDivisor > 1;
 
     // Only expose robust buffer access if the physical device supports it.
-    mNativeExtensions.robustBufferAccessBehavior = mPhysicalDeviceFeatures.robustBufferAccess;
+    mNativeExtensions.robustBufferAccessBehavior =
+        (mPhysicalDeviceFeatures.robustBufferAccess == VK_TRUE);
 
     mNativeExtensions.eglSync = true;
 

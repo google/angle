@@ -1901,7 +1901,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     // No additional work is needed here. We will update the pipeline desc later.
                     invalidateDefaultAttributes(
                         context->getStateCache().getActiveDefaultAttribsMask());
-                    bool useVertexBuffer = (mProgram->getState().getMaxActiveAttribLocation());
+                    bool useVertexBuffer = (mProgram->getState().getMaxActiveAttribLocation() > 0);
                     mNonIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
                     mIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
                     mCurrentGraphicsPipeline = nullptr;

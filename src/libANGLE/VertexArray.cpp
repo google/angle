@@ -315,7 +315,8 @@ bool VertexArray::bindVertexBufferImpl(const Context *context,
         mCachedTransformFeedbackConflictedBindingsMask.set(
             bindingIndex, boundBuffer->isBoundForTransformFeedbackAndOtherUse());
         mState.mClientMemoryAttribsMask &= ~binding->getBoundAttributesMask();
-        updateCachedMappedArrayBuffers(boundBuffer->isMapped(), binding->getBoundAttributesMask());
+        updateCachedMappedArrayBuffers((boundBuffer->isMapped() == GL_TRUE),
+                                       binding->getBoundAttributesMask());
     }
     else
     {

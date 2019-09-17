@@ -2227,8 +2227,8 @@ angle::Result Renderer11::copyImageInternal(const gl::Context *context,
     {
         TextureHelper11 tex;
         ANGLE_TRY(resolveMultisampledTexture(context, sourceRenderTarget,
-                                             colorAttachment->getDepthSize(),
-                                             colorAttachment->getStencilSize(), &tex));
+                                             colorAttachment->getDepthSize() > 0,
+                                             colorAttachment->getStencilSize() > 0, &tex));
 
         D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
         viewDesc.Format                    = sourceRenderTarget->getFormatSet().srvFormat;
