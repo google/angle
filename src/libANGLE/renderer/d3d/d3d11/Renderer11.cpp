@@ -402,6 +402,7 @@ Renderer11::Renderer11(egl::Display *display)
     mRenderer11DeviceCaps.B5G5R5A1support                        = 0;
 
     mD3d11Module          = nullptr;
+    mD3d12Module          = nullptr;
     mDxgiModule           = nullptr;
     mDCompModule          = nullptr;
     mCreatedWithDeviceEXT = false;
@@ -668,35 +669,119 @@ HRESULT Renderer11::callD3D11CreateDevice(PFN_D3D11_CREATE_DEVICE createDevice, 
         D3D11_SDK_VERSION, &mDevice, &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
 }
 
+HRESULT Renderer11::callD3D11On12CreateDevice(PFN_D3D12_CREATE_DEVICE createDevice12,
+                                              PFN_D3D11ON12_CREATE_DEVICE createDevice11on12,
+                                              bool debug)
+{
+    angle::ComPtr<IDXGIFactory4> factory;
+    HRESULT result = CreateDXGIFactory1(IID_PPV_ARGS(&factory));
+    if (FAILED(result))
+    {
+        return result;
+    }
+
+    if (mRequestedDriverType == D3D_DRIVER_TYPE_WARP)
+    {
+        angle::ComPtr<IDXGIAdapter> warpAdapter;
+        result = factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter));
+        if (SUCCEEDED(result))
+        {
+            result = createDevice12(warpAdapter.Get(), mAvailableFeatureLevels[0],
+                                    IID_PPV_ARGS(&mDevice12));
+        }
+    }
+    else
+    {
+        // Passing nullptr into pAdapter chooses the default adapter which will be the hardware
+        // adapter if it exists.
+        result = createDevice12(nullptr, mAvailableFeatureLevels[0], IID_PPV_ARGS(&mDevice12));
+    }
+
+    if (SUCCEEDED(result))
+    {
+        D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+        queueDesc.Flags                    = D3D12_COMMAND_QUEUE_FLAG_NONE;
+        queueDesc.Type                     = D3D12_COMMAND_LIST_TYPE_DIRECT;
+        result = mDevice12->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mCommandQueue));
+    }
+
+    if (SUCCEEDED(result))
+    {
+        result = createDevice11on12(
+            mDevice12.Get(), debug ? D3D11_CREATE_DEVICE_DEBUG : 0, mAvailableFeatureLevels.data(),
+            static_cast<unsigned int>(mAvailableFeatureLevels.size()),
+            reinterpret_cast<IUnknown **>(mCommandQueue.GetAddressOf()), 1 /* NumQueues */,
+            0 /* NodeMask */, &mDevice, &mDeviceContext, &(mRenderer11DeviceCaps.featureLevel));
+    }
+
+    return result;
+}
+
 egl::Error Renderer11::initializeD3DDevice()
 {
     HRESULT result = S_OK;
+    bool createD3D11on12Device = false;
 
     if (!mCreatedWithDeviceEXT)
     {
 #if !defined(ANGLE_ENABLE_WINDOWS_UWP)
         PFN_D3D11_CREATE_DEVICE D3D11CreateDevice = nullptr;
+        PFN_D3D12_CREATE_DEVICE D3D12CreateDevice         = nullptr;
+        PFN_D3D11ON12_CREATE_DEVICE D3D11on12CreateDevice = nullptr;
         {
             ANGLE_TRACE_EVENT0("gpu.angle", "Renderer11::initialize (Load DLLs)");
             mDxgiModule  = LoadLibrary(TEXT("dxgi.dll"));
             mD3d11Module = LoadLibrary(TEXT("d3d11.dll"));
             mDCompModule = LoadLibrary(TEXT("dcomp.dll"));
 
-            if (mD3d11Module == nullptr || mDxgiModule == nullptr)
-            {
-                return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
-                       << "Could not load D3D11 or DXGI library.";
-            }
-
             // create the D3D11 device
             ASSERT(mDevice == nullptr);
-            D3D11CreateDevice = reinterpret_cast<PFN_D3D11_CREATE_DEVICE>(
-                GetProcAddress(mD3d11Module, "D3D11CreateDevice"));
 
-            if (D3D11CreateDevice == nullptr)
+            const egl::AttributeMap &attributes = mDisplay->getAttributeMap();
+            createD3D11on12Device =
+                static_cast<EGLint>(attributes.get(EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE, EGL_FALSE));
+
+            if (createD3D11on12Device)
             {
-                return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
-                       << "Could not retrieve D3D11CreateDevice address.";
+                mD3d12Module = LoadLibrary(TEXT("d3d12.dll"));
+                if (mD3d12Module == nullptr)
+                {
+                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
+                           << "Could not load D3D12 library.";
+                }
+
+                D3D12CreateDevice = reinterpret_cast<PFN_D3D12_CREATE_DEVICE>(
+                    GetProcAddress(mD3d12Module, "D3D12CreateDevice"));
+                if (D3D12CreateDevice == nullptr)
+                {
+                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
+                           << "Could not retrieve D3D12CreateDevice address.";
+                }
+
+                D3D11on12CreateDevice = reinterpret_cast<PFN_D3D11ON12_CREATE_DEVICE>(
+                    GetProcAddress(mD3d11Module, "D3D11On12CreateDevice"));
+                if (D3D11on12CreateDevice == nullptr)
+                {
+                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
+                           << "Could not retrieve D3D11On12CreateDevice address.";
+                }
+            }
+            else
+            {
+                if (mD3d11Module == nullptr || mDxgiModule == nullptr)
+                {
+                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
+                           << "Could not load D3D11 or DXGI library.";
+                }
+
+                D3D11CreateDevice = reinterpret_cast<PFN_D3D11_CREATE_DEVICE>(
+                    GetProcAddress(mD3d11Module, "D3D11CreateDevice"));
+
+                if (D3D11CreateDevice == nullptr)
+                {
+                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
+                           << "Could not retrieve D3D11CreateDevice address.";
+                }
             }
         }
 #endif
@@ -704,7 +789,14 @@ egl::Error Renderer11::initializeD3DDevice()
         if (mCreateDebugDevice)
         {
             ANGLE_TRACE_EVENT0("gpu.angle", "D3D11CreateDevice (Debug)");
-            result = callD3D11CreateDevice(D3D11CreateDevice, true);
+            if (createD3D11on12Device)
+            {
+                result = callD3D11On12CreateDevice(D3D12CreateDevice, D3D11on12CreateDevice, true);
+            }
+            else
+            {
+                result = callD3D11CreateDevice(D3D11CreateDevice, true);
+            }
 
             if (result == E_INVALIDARG && mAvailableFeatureLevels.size() > 1u &&
                 mAvailableFeatureLevels[0] == D3D_FEATURE_LEVEL_11_1)
@@ -713,7 +805,15 @@ egl::Error Renderer11::initializeD3DDevice()
                 // Try again without passing D3D_FEATURE_LEVEL_11_1 in case we have other feature
                 // levels to fall back on.
                 mAvailableFeatureLevels.erase(mAvailableFeatureLevels.begin());
-                result = callD3D11CreateDevice(D3D11CreateDevice, true);
+                if (createD3D11on12Device)
+                {
+                    result =
+                        callD3D11On12CreateDevice(D3D12CreateDevice, D3D11on12CreateDevice, true);
+                }
+                else
+                {
+                    result = callD3D11CreateDevice(D3D11CreateDevice, true);
+                }
             }
 
             if (!mDevice || FAILED(result))
@@ -725,8 +825,14 @@ egl::Error Renderer11::initializeD3DDevice()
         if (!mDevice || FAILED(result))
         {
             ANGLE_TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
-
-            result = callD3D11CreateDevice(D3D11CreateDevice, false);
+            if (createD3D11on12Device)
+            {
+                result = callD3D11On12CreateDevice(D3D12CreateDevice, D3D11on12CreateDevice, false);
+            }
+            else
+            {
+                result = callD3D11CreateDevice(D3D11CreateDevice, false);
+            }
 
             if (result == E_INVALIDARG && mAvailableFeatureLevels.size() > 1u &&
                 mAvailableFeatureLevels[0] == D3D_FEATURE_LEVEL_11_1)
@@ -735,7 +841,15 @@ egl::Error Renderer11::initializeD3DDevice()
                 // Try again without passing D3D_FEATURE_LEVEL_11_1 in case we have other feature
                 // levels to fall back on.
                 mAvailableFeatureLevels.erase(mAvailableFeatureLevels.begin());
-                result = callD3D11CreateDevice(D3D11CreateDevice, false);
+                if (createD3D11on12Device)
+                {
+                    result =
+                        callD3D11On12CreateDevice(D3D12CreateDevice, D3D11on12CreateDevice, false);
+                }
+                else
+                {
+                    result = callD3D11CreateDevice(D3D11CreateDevice, false);
+                }
             }
 
             // Cleanup done by destructor
@@ -1968,6 +2082,15 @@ void Renderer11::release()
     {
         FreeLibrary(mDCompModule);
         mDCompModule = nullptr;
+    }
+
+    mDevice12.Reset();
+    mCommandQueue.Reset();
+
+    if (mD3d12Module)
+    {
+        FreeLibrary(mD3d12Module);
+        mD3d12Module = nullptr;
     }
 
     mCompiler.release();

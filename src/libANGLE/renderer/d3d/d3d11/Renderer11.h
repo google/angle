@@ -553,6 +553,9 @@ class Renderer11 : public RendererD3D
         const gl::TextureCaps &depthStencilBufferFormatCaps) const;
 
     HRESULT callD3D11CreateDevice(PFN_D3D11_CREATE_DEVICE createDevice, bool debug);
+    HRESULT callD3D11On12CreateDevice(PFN_D3D12_CREATE_DEVICE createDevice12,
+                                      PFN_D3D11ON12_CREATE_DEVICE createDevice11on12,
+                                      bool debug);
     egl::Error initializeD3DDevice();
     egl::Error initializeDevice();
     void releaseDeviceResources();
@@ -569,6 +572,7 @@ class Renderer11 : public RendererD3D
                                                              UINT vertexCount);
 
     HMODULE mD3d11Module;
+    HMODULE mD3d12Module;
     HMODULE mDxgiModule;
     HMODULE mDCompModule;
     std::vector<D3D_FEATURE_LEVEL> mAvailableFeatureLevels;
@@ -602,6 +606,9 @@ class Renderer11 : public RendererD3D
     std::set<const Buffer11 *> mAliveBuffers;
 
     double mLastHistogramUpdateTime;
+
+    angle::ComPtr<ID3D12Device> mDevice12;
+    angle::ComPtr<ID3D12CommandQueue> mCommandQueue;
 
     ID3D11Device *mDevice;
     Renderer11DeviceCaps mRenderer11DeviceCaps;

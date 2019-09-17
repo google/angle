@@ -970,6 +970,9 @@ struct ClientExtensions
     // EGL_ANGLE_platform_angle_d3d
     bool platformANGLED3D = false;
 
+    // EGL_ANGLE_platform_angle_d3d11on12
+    bool platformANGLED3D11ON12 = false;
+
     // EGL_ANGLE_platform_angle_opengl
     bool platformANGLEOpenGL = false;
 

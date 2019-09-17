@@ -42,6 +42,8 @@
 #include "libANGLE/trace.h"
 
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+#    include <versionhelpers.h>
+
 #    include "libANGLE/renderer/d3d/DisplayD3D.h"
 #endif
 
@@ -1221,6 +1223,10 @@ static ClientExtensions GenerateClientExtensions()
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
     extensions.platformANGLED3D = true;
     extensions.platformDevice   = true;
+#endif
+
+#if defined(ANGLE_ENABLE_D3D11)
+    extensions.platformANGLED3D11ON12 = IsWindows10OrGreater();
 #endif
 
 #if defined(ANGLE_ENABLE_OPENGL)

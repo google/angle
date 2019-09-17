@@ -387,6 +387,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
     {
         EGLAttrib platformType       = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
         bool enableAutoTrimSpecified = false;
+        bool enableD3D11on12         = false;
         bool presentPathSpecified    = false;
 
         Optional<EGLAttrib> majorVersion;
@@ -431,6 +432,25 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                             return EglBadAttribute() << "Invalid automatic trim attribute";
                     }
                     enableAutoTrimSpecified = true;
+                    break;
+
+                case EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE:
+                    if (!clientExtensions.platformANGLED3D ||
+                        !clientExtensions.platformANGLED3D11ON12)
+                    {
+                        return EglBadAttribute()
+                               << "EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE extension not active.";
+                    }
+
+                    switch (value)
+                    {
+                        case EGL_TRUE:
+                        case EGL_FALSE:
+                            break;
+                        default:
+                            return EglBadAttribute() << "Invalid D3D11on12 attribute";
+                    }
+                    enableD3D11on12 = true;
                     break;
 
                 case EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE:
@@ -548,6 +568,24 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
             return EglBadAttribute() << "EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE "
                                         "requires a device type of "
                                         "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.";
+        }
+
+        if (enableD3D11on12)
+        {
+            if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+            {
+                return EglBadAttribute() << "EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE "
+                                            "requires a platform type of "
+                                            "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.";
+            }
+
+            if (deviceType.valid() && deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE &&
+                deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE)
+            {
+                return EglBadAttribute() << "EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE requires a device "
+                                            "type of EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE "
+                                            "or EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE";
+            }
         }
 
         if (presentPathSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
