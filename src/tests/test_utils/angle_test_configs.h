@@ -111,7 +111,6 @@ EGLPlatformParameters OPENGL_OR_GLES_NULL();
 
 EGLPlatformParameters VULKAN();
 EGLPlatformParameters VULKAN_NULL();
-EGLPlatformParameters VULKAN_SWIFTSHADER();
 
 }  // namespace egl_platform
 
@@ -177,7 +176,6 @@ PlatformParameters ES1_VULKAN();
 PlatformParameters ES1_VULKAN_NULL();
 PlatformParameters ES2_VULKAN();
 PlatformParameters ES2_VULKAN_NULL();
-PlatformParameters ES2_VULKAN_SWIFTSHADER();
 PlatformParameters ES3_VULKAN();
 PlatformParameters ES3_VULKAN_NULL();
 PlatformParameters ES31_VULKAN();

@@ -28,7 +28,6 @@ def main():
     parser.add_argument('target_dir')
     parser.add_argument('version_header', help='path to vulkan_core.h')
     parser.add_argument('json_files', nargs='*')
-    parser.add_argument('--replacement', help='replacement for the library', default=None)
     args = parser.parse_args()
 
     source_dir = args.source_dir
@@ -47,8 +46,7 @@ def main():
         os.makedirs(target_dir)
 
     # Copy the *.json files from source dir to target dir
-    if (set(glob_slash(os.path.join(source_dir, '*.json'))) !=
-            set(json_files)) and data_key != 'ICD':
+    if (set(glob_slash(os.path.join(source_dir, '*.json'))) != set(json_files)):
         print(glob.glob(os.path.join(source_dir, '*.json')))
         print('.json list in gn file is out-of-date', file=sys.stderr)
         return 1
@@ -66,10 +64,7 @@ def main():
         # The standard validation layer has no library path.
         if 'library_path' in data[data_key]:
             prev_name = os.path.basename(data[data_key]['library_path'])
-            if args.replacement:
-                data[data_key]['library_path'] = args.replacement
-            else:
-                data[data_key]['library_path'] = prev_name
+            data[data_key]['library_path'] = prev_name
 
         target_fname = os.path.join(target_dir, os.path.basename(json_fname))
         with open(target_fname, 'wb') as outfile:
@@ -78,15 +73,14 @@ def main():
     # Get the Vulkan version from the vulkan_core.h file
     vk_header_filename = args.version_header
     vk_version = None
-    if data_key != 'ICD':
-        with open(vk_header_filename) as vk_header_file:
-            for line in vk_header_file:
-                if line.startswith('#define VK_HEADER_VERSION'):
-                    vk_version = line.split()[-1]
-                    break
-        if not vk_version:
-            print('failed to extract vk_version', file=sys.stderr)
-            return 1
+    with open(vk_header_filename) as vk_header_file:
+        for line in vk_header_file:
+            if line.startswith('#define VK_HEADER_VERSION'):
+                vk_version = line.split()[-1]
+                break
+    if not vk_version:
+        print('failed to extract vk_version', file=sys.stderr)
+        return 1
 
     # Set json file prefix and suffix for generating files, default to Linux.
     relative_path_prefix = '../lib'

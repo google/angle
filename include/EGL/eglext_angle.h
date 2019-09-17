@@ -82,11 +82,6 @@
 #define EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE 0x3450
 #endif /* EGL_ANGLE_platform_angle_vulkan */
 
-#ifndef EGL_ANGLE_platform_angle_device_type_swiftshader
-#define EGL_ANGLE_platform_angle_device_type_swiftshader
-#define EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE 0x3487
-#endif /* EGL_ANGLE_platform_angle_device_type_swiftshader */
-
 #ifndef EGL_ANGLE_platform_angle_context_virtualization
 #define EGL_ANGLE_platform_angle_context_virtualization 1
 #define EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_ANGLE 0x3481

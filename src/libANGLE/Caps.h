@@ -996,9 +996,6 @@ struct ClientExtensions
 
     // EGL_ANGLE_feature_control
     bool featureControlANGLE = false;
-
-    // EGL_ANGLE_platform_angle_device_type_swiftshader
-    bool platformANGLEDeviceTypeSwiftShader = false;
 };
 
 }  // namespace egl
