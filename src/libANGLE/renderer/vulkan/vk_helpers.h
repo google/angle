@@ -1010,7 +1010,7 @@ class ShaderProgramHelper : angle::NonCopyable
 
     // For getting a vk::Pipeline and from the pipeline cache.
     ANGLE_INLINE angle::Result getGraphicsPipeline(
-        Context *context,
+        ContextVk *contextVk,
         RenderPassCache *renderPassCache,
         const PipelineCache &pipelineCache,
         Serial currentQueueSerial,
@@ -1023,15 +1023,16 @@ class ShaderProgramHelper : angle::NonCopyable
     {
         // Pull in a compatible RenderPass.
         vk::RenderPass *compatibleRenderPass = nullptr;
-        ANGLE_TRY(renderPassCache->getCompatibleRenderPass(
-            context, currentQueueSerial, pipelineDesc.getRenderPassDesc(), &compatibleRenderPass));
+        ANGLE_TRY(renderPassCache->getCompatibleRenderPass(contextVk, currentQueueSerial,
+                                                           pipelineDesc.getRenderPassDesc(),
+                                                           &compatibleRenderPass));
 
         ShaderModule *vertexShader   = &mShaders[gl::ShaderType::Vertex].get().get();
         ShaderModule *fragmentShader = mShaders[gl::ShaderType::Fragment].valid()
                                            ? &mShaders[gl::ShaderType::Fragment].get().get()
                                            : nullptr;
 
-        return mGraphicsPipelines.getPipeline(context, pipelineCache, *compatibleRenderPass,
+        return mGraphicsPipelines.getPipeline(contextVk, pipelineCache, *compatibleRenderPass,
                                               pipelineLayout, activeAttribLocationsMask,
                                               programAttribsTypeMask, vertexShader, fragmentShader,
                                               pipelineDesc, descPtrOut, pipelineOut);

@@ -593,7 +593,7 @@ void GraphicsPipelineDesc::initDefaults()
 }
 
 angle::Result GraphicsPipelineDesc::initializePipeline(
-    vk::Context *context,
+    ContextVk *contextVk,
     const vk::PipelineCache &pipelineCacheVk,
     const RenderPass &compatibleRenderPass,
     const PipelineLayout &pipelineLayout,
@@ -682,7 +682,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
         // Get the corresponding VkFormat for the attrib's format.
         angle::FormatID formatID         = static_cast<angle::FormatID>(packedAttrib.format);
-        const vk::Format &format         = context->getRenderer()->getFormat(formatID);
+        const vk::Format &format         = contextVk->getRenderer()->getFormat(formatID);
         const angle::Format &angleFormat = format.angleFormat();
         VkFormat vkFormat                = format.vkBufferFormat;
 
@@ -855,8 +855,8 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     createInfo.basePipelineHandle  = VK_NULL_HANDLE;
     createInfo.basePipelineIndex   = 0;
 
-    ANGLE_VK_TRY(context,
-                 pipelineOut->initGraphics(context->getDevice(), createInfo, pipelineCacheVk));
+    ANGLE_VK_TRY(contextVk,
+                 pipelineOut->initGraphics(contextVk->getDevice(), createInfo, pipelineCacheVk));
     return angle::Result::Continue;
 }
 
@@ -1592,7 +1592,7 @@ void RenderPassCache::destroy(VkDevice device)
     mPayload.clear();
 }
 
-angle::Result RenderPassCache::addRenderPass(vk::Context *context,
+angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
                                              Serial serial,
                                              const vk::RenderPassDesc &desc,
                                              vk::RenderPass **renderPassOut)
@@ -1623,7 +1623,7 @@ angle::Result RenderPassCache::addRenderPass(vk::Context *context,
                         VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
     }
 
-    return getRenderPassWithOps(context, serial, desc, ops, renderPassOut);
+    return getRenderPassWithOps(contextVk, serial, desc, ops, renderPassOut);
 }
 
 angle::Result RenderPassCache::getRenderPassWithOps(vk::Context *context,
@@ -1697,7 +1697,7 @@ void GraphicsPipelineCache::release(ContextVk *context)
 }
 
 angle::Result GraphicsPipelineCache::insertPipeline(
-    vk::Context *context,
+    ContextVk *contextVk,
     const vk::PipelineCache &pipelineCacheVk,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
@@ -1712,10 +1712,10 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     vk::Pipeline newPipeline;
 
     // This "if" is left here for the benefit of VulkanPipelineCachePerfTest.
-    if (context != nullptr)
+    if (contextVk != nullptr)
     {
-        context->getRenderer()->onNewGraphicsPipeline();
-        ANGLE_TRY(desc.initializePipeline(context, pipelineCacheVk, compatibleRenderPass,
+        contextVk->getRenderer()->onNewGraphicsPipeline();
+        ANGLE_TRY(desc.initializePipeline(contextVk, pipelineCacheVk, compatibleRenderPass,
                                           pipelineLayout, activeAttribLocationsMask,
                                           programAttribsTypeMask, vertexModule, fragmentModule,
                                           &newPipeline));
