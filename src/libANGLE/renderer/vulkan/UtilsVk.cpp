@@ -90,15 +90,20 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
         ((params.srcFormat->vertexAttribType == gl::VertexAttribType::UnsignedInt1010102) ||
          params.srcFormat->vertexAttribType == gl::VertexAttribType::Int1010102) &&
         !params.srcFormat->alphaBits;
-    bool destIsSint  = params.destFormat->isSint();
-    bool destIsUint  = params.destFormat->isUint();
-    bool destIsFloat = params.destFormat->isFloat();
+    bool srcIsHalfFloat = params.srcFormat->isVertexTypeHalfFloat();
+
+    bool destIsSint      = params.destFormat->isSint();
+    bool destIsUint      = params.destFormat->isUint();
+    bool destIsFloat     = params.destFormat->isFloat();
+    bool destIsHalfFloat = params.destFormat->isVertexTypeHalfFloat();
 
     // Assert on the types to make sure the shader supports its.  These are based on
     // ConvertVertex_comp::Conversion values.
     ASSERT(!destIsSint || srcIsSint);    // If destination is sint, src must be sint too
     ASSERT(!destIsUint || srcIsUint);    // If destination is uint, src must be uint too
     ASSERT(!srcIsFixed || destIsFloat);  // If source is fixed, dest must be float
+    ASSERT(srcIsHalfFloat == destIsHalfFloat);  // Both src and dest are half float or neither
+
     // One of each bool set must be true
     ASSERT(srcIsSint || srcIsUint || srcIsSnorm || srcIsUnorm || srcIsFixed || srcIsFloat);
     ASSERT(destIsSint || destIsUint || destIsFloat);
@@ -186,6 +191,10 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
         {
             UNREACHABLE();
         }
+    }
+    else if (srcIsHalfFloat && destIsHalfFloat)
+    {
+        flags |= ConvertVertex_comp::kHalfFloatToHalfFloat;
     }
     else if (srcIsSint && destIsSint)
     {

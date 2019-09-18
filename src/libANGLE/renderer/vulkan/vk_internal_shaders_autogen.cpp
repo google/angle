@@ -100,6 +100,8 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000027.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000028.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000029.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000002A.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000002B.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000001.inc"
@@ -252,6 +254,8 @@ constexpr ShaderBlob kConvertVertex_comp_shaders[] = {
     {kConvertVertex_comp_00000027, sizeof(kConvertVertex_comp_00000027)},
     {kConvertVertex_comp_00000028, sizeof(kConvertVertex_comp_00000028)},
     {kConvertVertex_comp_00000029, sizeof(kConvertVertex_comp_00000029)},
+    {kConvertVertex_comp_0000002A, sizeof(kConvertVertex_comp_0000002A)},
+    {kConvertVertex_comp_0000002B, sizeof(kConvertVertex_comp_0000002B)},
 };
 constexpr ShaderBlob kFullScreenQuad_vert_shaders[] = {
     {kFullScreenQuad_vert_00000000, sizeof(kFullScreenQuad_vert_00000000)},

@@ -550,6 +550,34 @@ TEST_P(VertexAttributeTest, HalfFloatClientMemoryPointer)
     }
 }
 
+// Verify that vertex data is updated correctly when using a float/half-float buffer.
+TEST_P(VertexAttributeTest, HalfFloatBuffer)
+{
+    std::array<GLhalf, kVertexCount> inputData;
+    std::array<GLfloat, kVertexCount> expectedData = {
+        {0.f, 1.5f, 2.3f, 3.2f, -1.8f, -2.2f, -3.9f, -4.f, 34.5f, 32.2f, -78.8f, -77.4f, -76.1f}};
+
+    for (size_t i = 0; i < kVertexCount; i++)
+    {
+        inputData[i] = gl::float32ToFloat16(expectedData[i]);
+    }
+
+    // If the extension is enabled run the test on all contexts
+    if (IsGLExtensionEnabled("GL_OES_vertex_half_float"))
+    {
+        TestData bufferData(GL_HALF_FLOAT_OES, GL_FALSE, Source::BUFFER, inputData.data(),
+                            expectedData.data());
+        runTest(bufferData);
+    }
+    // Otherwise run the test only if it is an ES3 context
+    else if (getClientMajorVersion() >= 3)
+    {
+        TestData bufferData(GL_HALF_FLOAT, GL_FALSE, Source::BUFFER, inputData.data(),
+                            expectedData.data());
+        runTest(bufferData);
+    }
+}
+
 // Verify that using the same client memory pointer in different format won't mess up the draw.
 TEST_P(VertexAttributeTest, UsingDifferentFormatAndSameClientMemoryPointer)
 {

@@ -85,29 +85,30 @@ enum flags
 };
 enum Conversion
 {
-    kSintToSint          = 0x00000000,
-    kUintToUint          = 0x00000002,
-    kSintToFloat         = 0x00000004,
-    kUintToFloat         = 0x00000006,
-    kSnormToFloat        = 0x00000008,
-    kUnormToFloat        = 0x0000000A,
-    kFixedToFloat        = 0x0000000C,
-    kFloatToFloat        = 0x0000000E,
-    kA2BGR10SintToSint   = 0x00000010,
-    kA2BGR10UintToUint   = 0x00000012,
-    kA2BGR10SintToFloat  = 0x00000014,
-    kA2BGR10UintToFloat  = 0x00000016,
-    kA2BGR10SnormToFloat = 0x00000018,
-    kRGB10A2SintToFloat  = 0x0000001A,
-    kRGB10A2UintToFloat  = 0x0000001C,
-    kRGB10A2SnormToFloat = 0x0000001E,
-    kRGB10A2UnormToFloat = 0x00000020,
-    kRGB10X2SintToFloat  = 0x00000022,
-    kRGB10X2UintToFloat  = 0x00000024,
-    kRGB10X2SnormToFloat = 0x00000026,
-    kRGB10X2UnormToFloat = 0x00000028,
+    kSintToSint           = 0x00000000,
+    kUintToUint           = 0x00000002,
+    kSintToFloat          = 0x00000004,
+    kUintToFloat          = 0x00000006,
+    kSnormToFloat         = 0x00000008,
+    kUnormToFloat         = 0x0000000A,
+    kFixedToFloat         = 0x0000000C,
+    kFloatToFloat         = 0x0000000E,
+    kA2BGR10SintToSint    = 0x00000010,
+    kA2BGR10UintToUint    = 0x00000012,
+    kA2BGR10SintToFloat   = 0x00000014,
+    kA2BGR10UintToFloat   = 0x00000016,
+    kA2BGR10SnormToFloat  = 0x00000018,
+    kRGB10A2SintToFloat   = 0x0000001A,
+    kRGB10A2UintToFloat   = 0x0000001C,
+    kRGB10A2SnormToFloat  = 0x0000001E,
+    kRGB10A2UnormToFloat  = 0x00000020,
+    kRGB10X2SintToFloat   = 0x00000022,
+    kRGB10X2UintToFloat   = 0x00000024,
+    kRGB10X2SnormToFloat  = 0x00000026,
+    kRGB10X2UnormToFloat  = 0x00000028,
+    kHalfFloatToHalfFloat = 0x0000002A,
 };
-constexpr size_t kArrayLen = 0x0000002A;
+constexpr size_t kArrayLen = 0x0000002C;
 }  // namespace ConvertVertex_comp
 
 namespace FullScreenQuad_vert
