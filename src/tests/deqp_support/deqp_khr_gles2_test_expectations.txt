@@ -39,11 +39,6 @@
 // GL_OES_rgb8_rgba8 only enables GL_RGBA8 for render buffers (not textures)
 3797 VULKAN : KHR-GLES2.texture_3d.copy_sub_image.rgba8 = FAIL
 
-// Compressed texture tests on Android
-3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.rgba_astc_* = SKIP
-3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.sgb8_alpha8_astc_* = SKIP
-3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.srgb8_alpha8_astc_* = SKIP
-
 // Bug in dEQP uses an incorrect enum (GL_HALF_FLOAT instead of GL_HALF_FLOAT_OES)
 3451 : KHR-GLES2.core.internalformat.texture2d.rgb_half_float_rgb16f = FAIL
 3451 : KHR-GLES2.core.internalformat.texture2d.rgba_half_float_rgba16f = FAIL
