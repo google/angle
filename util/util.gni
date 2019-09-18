@@ -37,7 +37,9 @@ util_win_sources = [
   "util/windows/WGLWindow.h",
 ]
 
-util_win_shared_sources = [ "util/windows/WGLWindow.cpp" ]
+if (current_os != "winuwp") {
+  util_win_shared_sources = [ "util/windows/WGLWindow.cpp" ]
+}
 
 util_posix_sources = [
   "util/posix/Posix_crash_handler.cpp",

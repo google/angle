@@ -13,7 +13,7 @@
 
 #include <set>
 
-#if defined(ANGLE_ENABLE_WINDOWS_STORE)
+#if defined(ANGLE_ENABLE_WINDOWS_UWP)
 #    include <windows.applicationmodel.core.h>
 #    include <windows.graphics.display.h>
 #    include <wrl.h>
@@ -1078,7 +1078,7 @@ EGLClientBuffer GLObjectHandleToEGLClientBuffer(GLuint handle)
 
 }  // namespace gl_egl
 
-#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
+#if !defined(ANGLE_ENABLE_WINDOWS_UWP)
 std::string getTempPath()
 {
 #    ifdef ANGLE_PLATFORM_WINDOWS
@@ -1116,7 +1116,7 @@ void writeFile(const char *path, const void *content, size_t size)
     fwrite(content, sizeof(char), size, file);
     fclose(file);
 }
-#endif  // !ANGLE_ENABLE_WINDOWS_STORE
+#endif  // !ANGLE_ENABLE_WINDOWS_UWP
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
 

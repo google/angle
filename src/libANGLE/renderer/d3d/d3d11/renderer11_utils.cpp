@@ -1693,7 +1693,7 @@ void GenerateCaps(ID3D11Device *device,
     // D3D11 does not support vertex attribute aliasing
     limitations->noVertexAttributeAliasing = true;
 
-#ifdef ANGLE_ENABLE_WINDOWS_STORE
+#ifdef ANGLE_ENABLE_WINDOWS_UWP
     // Setting a non-zero divisor on attribute zero doesn't work on certain Windows Phone 8-era
     // devices. We should prevent developers from doing this on ALL Windows Store devices. This will
     // maintain consistency across all Windows devices. We allow non-zero divisors on attribute zero

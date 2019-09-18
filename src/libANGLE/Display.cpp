@@ -1368,7 +1368,7 @@ bool Display::isValidNativeDisplay(EGLNativeDisplayType display)
         return true;
     }
 
-#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(ANGLE_ENABLE_WINDOWS_STORE)
+#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(ANGLE_ENABLE_WINDOWS_UWP)
     if (display == EGL_SOFTWARE_DISPLAY_ANGLE || display == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
         display == EGL_D3D11_ONLY_DISPLAY_ANGLE)
     {

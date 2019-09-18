@@ -66,6 +66,8 @@ is_debug = true     (enable debugging, true is the default)
 ```
 For a release build run `gn args out/Release` and set `is_debug = false`.
 
+On Windows, you can build for the Universal Windows Platform (UWP) by setting `target_os = "winuwp"` in the args.
+
 For more information on GN run `gn help`.
 
 Ninja can be used to compile on all platforms with one of the following commands:

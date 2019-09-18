@@ -47,6 +47,9 @@ declare_args() {
   }
   angle_shared_libvulkan = false
 
+  # There's no "is_winuwp" helper in BUILDCONFIG.gn, so we define one ourselves
+  angle_is_winuwp = is_win && current_os == "winuwp"
+
   # Default to using "_angle" suffix on Android
   if (is_android) {
     angle_libs_suffix = "_angle"
@@ -56,16 +59,18 @@ declare_args() {
 }
 
 declare_args() {
-  angle_enable_d3d9 = is_win
+  angle_enable_d3d9 = is_win && !angle_is_winuwp
   angle_enable_d3d11 = is_win
-  angle_enable_gl = (ozone_platform_gbm || !is_linux ||
-                     (use_x11 && !is_chromeos)) && !is_fuchsia
+  angle_enable_gl =
+      (ozone_platform_gbm || !is_linux || (use_x11 && !is_chromeos)) &&
+      !is_fuchsia && !angle_is_winuwp
 
   # ANGLE Vulkan backend on Android requires API level 26, i.e. Oreo, due to
   # Vulkan Validation Layers compatibility issues, see http://crrev/c/1405714.
   # Otherwise, API level 24 would have been enough.
-  angle_enable_vulkan = is_win || (is_linux && use_x11 && !is_chromeos) ||
-                        (is_android && ndk_api_level_at_least_26) || is_fuchsia
+  angle_enable_vulkan =
+      (is_win && !angle_is_winuwp) || (is_linux && use_x11 && !is_chromeos) ||
+      (is_android && ndk_api_level_at_least_26) || is_fuchsia
   angle_enable_null = true
   angle_enable_essl = true
   angle_enable_glsl = true

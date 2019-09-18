@@ -25,9 +25,13 @@ declare_args() {
   # Defaults to capture building to $root_out_dir/angle_libs/with_capture.
   # Switch on to build capture to $root_out_dir.
   angle_with_capture_by_default = false
+
+  # Don't build extra (test, samples etc) for Windows UWP. We don't have
+  # infrastructure (e.g. windowing helper functions) in place to run them.
+  angle_build_all = !angle_is_winuwp
 }
 
-if (!build_with_chromium) {
+if (!build_with_chromium && angle_build_all) {
   group("all") {
     testonly = true
     deps = [
@@ -139,6 +143,10 @@ config("extra_warnings") {
       "-Wshorten-64-to-32",
     ]
   }
+
+  if (angle_is_winuwp) {
+    cflags += [ "/wd4447" ]  # 'main' signature found without threading model.
+  }
 }
 
 # This config adds build-ids to the associated library.
@@ -222,7 +230,7 @@ config("angle_common_config") {
   }
 }
 
-if (is_win) {
+if (is_win && !angle_is_winuwp) {
   angle_source_set("angle_stack_walker") {
     sources = [
       "util/windows/third_party/StackWalker/src/StackWalker.cpp",
@@ -338,7 +346,9 @@ angle_static_library("angle_gpu_info_util") {
 
   if (is_win) {
     sources += libangle_gpu_info_util_win_sources
-    libs += [ "setupapi.lib" ]
+    if (!angle_is_winuwp) {
+      libs += [ "setupapi.lib" ]
+    }
     libs += [ "dxgi.lib" ]
   }
 
@@ -622,7 +632,13 @@ angle_source_set("libANGLE_base") {
 
   if (angle_enable_d3d11) {
     sources += libangle_d3d11_sources
-    sources += libangle_d3d11_win32_sources
+
+    if (angle_is_winuwp) {
+      sources += libangle_d3d11_winuwp_sources
+    } else {
+      sources += libangle_d3d11_win32_sources
+    }
+
     libs += [ "dxguid.lib" ]
     import("src/libANGLE/renderer/d3d/d3d11/d3d11_blit_shaders_autogen.gni")
     sources += libangle_d3d11_blit_shaders
@@ -852,7 +868,7 @@ angle_libGLESv2("libGLESv2_capture_complement") {
   }
 }
 
-if (is_win) {
+if (is_win && !angle_is_winuwp) {
   angle_shared_library("libGL") {
     sources = libgl_sources
 
@@ -1006,7 +1022,7 @@ angle_source_set("angle_util_loader_headers") {
     "util/util_export.h",
   ]
 
-  if (is_win) {
+  if (is_win && !angle_is_winuwp) {
     sources += [ "util/windows/wgl_loader_autogen.h" ]
   }
 
@@ -1023,7 +1039,7 @@ angle_source_set("angle_util_loader") {
     "util/gles_loader_autogen.cpp",
   ]
 
-  if (is_win) {
+  if (is_win && !angle_is_winuwp) {
     sources += [ "util/windows/wgl_loader_autogen.cpp" ]
   }
 
@@ -1069,7 +1085,7 @@ foreach(is_shared_library,
     public_deps = []
     libs = []
 
-    if (is_win) {
+    if (is_win && !angle_is_winuwp) {
       sources += util_win_sources
       deps += [ ":angle_stack_walker" ]
     }
@@ -1129,7 +1145,7 @@ foreach(is_shared_library,
     if (is_shared_library) {
       defines = [ "LIBANGLE_UTIL_IMPLEMENTATION" ]
 
-      if (is_win) {
+      if (is_win && !angle_is_winuwp) {
         sources += util_win_shared_sources
       }
 

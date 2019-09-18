@@ -88,7 +88,11 @@ if (is_mac) {
 }
 
 if (is_win) {
-  angle_system_utils_sources += [ "src/common/system_utils_win.cpp" ]
+  if (current_os == "winuwp") {
+    angle_system_utils_sources += [ "src/common/system_utils_winuwp.cpp" ]
+  } else {
+    angle_system_utils_sources += [ "src/common/system_utils_win.cpp" ]
+  }
 }
 
 libangle_image_util_sources = [
@@ -669,7 +673,7 @@ libangle_d3d11_win32_sources = [
   "src/third_party/systeminfo/SystemInfo.h",
 ]
 
-libangle_d3d11_winrt_sources = [
+libangle_d3d11_winuwp_sources = [
   "src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp",
   "src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.h",
   "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp",
