@@ -309,7 +309,6 @@
 2830 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.primitives.line_loop = FAIL
 2830 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.primitives.line_strip = FAIL
 2830 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.primitives.lines = FAIL
-2830 VULKAN ANDROID : dEQP-GLES2.functional.clipping.line.long_line_clip = FAIL
 
 // Failing on the Pixel 2.
 2808 VULKAN ANDROID : dEQP-GLES2.functional.shaders.builtin_variable.fragcoord_w = FAIL

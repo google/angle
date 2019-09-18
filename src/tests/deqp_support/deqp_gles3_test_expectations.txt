@@ -580,9 +580,6 @@
 2672 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
 2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
 
-// Fails after OpenGL line rasterization rules implementation. Possibly a bug in FragCoord.
-2830 VULKAN ANDROID : dEQP-GLES3.functional.clipping.line.long_line_clip = FAIL
-
 // Base/Max levels:
 3148 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_2d_texture_base_level_gettexparameter* = SKIP
 3148 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_3d_texture_base_level_gettexparameter* = SKIP

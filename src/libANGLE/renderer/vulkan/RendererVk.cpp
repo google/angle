@@ -1234,7 +1234,12 @@ gl::Version RendererVk::getMaxConformantESVersion() const
 void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 {
     // Use OpenGL line rasterization rules by default.
+    // TODO(jmadill): Fix Android support. http://anglebug.com/2830
+#if defined(ANGLE_PLATFORM_ANDROID)
+    mFeatures.basicGLLineRasterization.enabled = false;
+#else
     mFeatures.basicGLLineRasterization.enabled = true;
+#endif  // defined(ANGLE_PLATFORM_ANDROID)
 
     if ((mPhysicalDeviceProperties.apiVersion >= VK_MAKE_VERSION(1, 1, 0)) ||
         ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionNames))
