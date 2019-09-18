@@ -164,6 +164,8 @@ class RendererVk : angle::NonCopyable
     void onNewValidationMessage(const std::string &message);
     std::string getAndClearLastValidationMessage(uint32_t *countSinceLastClear);
 
+    uint64_t getMaxFenceWaitTimeNs() const;
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;

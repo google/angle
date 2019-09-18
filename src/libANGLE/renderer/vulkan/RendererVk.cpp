@@ -49,8 +49,6 @@ namespace
 {
 // Update the pipeline cache every this many swaps.
 constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
-// Wait a maximum of 10s.  If that times out, we declare it a failure.
-constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
 // Per the Vulkan specification, as long as Vulkan 1.1+ is returned by vkEnumerateInstanceVersion,
 // ANGLE must indicate the highest version of Vulkan functionality that it uses.  The Vulkan
 // validation layers will issue messages for any core functionality that requires a higher version.
@@ -481,7 +479,7 @@ angle::Result WaitFences(vk::Context *context,
                          std::vector<vk::Shared<vk::Fence>> *fences,
                          bool block)
 {
-    uint64_t timeout = block ? kMaxFenceWaitTimeNs : 0;
+    uint64_t timeout = block ? context->getRenderer()->getMaxFenceWaitTimeNs() : 0;
 
     // Iterate backwards over the fences, removing them from the list in constant time when they are
     // complete.
@@ -1668,4 +1666,18 @@ std::string RendererVk::getAndClearLastValidationMessage(uint32_t *countSinceLas
 
     return std::move(mLastValidationMessage);
 }
+
+uint64_t RendererVk::getMaxFenceWaitTimeNs() const
+{
+    // Wait a maximum of 10s.  If that times out, we declare it a failure.
+    constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
+
+#if defined(NDEBUG)
+    return kMaxFenceWaitTimeNs;
+#else
+    // More time in debug builds (e.g. SwiftShader debug needs more time)
+    return kMaxFenceWaitTimeNs * 100;
+#endif
+}
+
 }  // namespace rx

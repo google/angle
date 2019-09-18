@@ -504,6 +504,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     bool shouldUseOldRewriteStructSamplers() const;
 
+    uint64_t getMaxFenceWaitTimeNs() const;
+
     vk::PipelineHelper *mCurrentGraphicsPipeline;
     vk::PipelineAndSerial *mCurrentComputePipeline;
     gl::PrimitiveMode mCurrentDrawMode;

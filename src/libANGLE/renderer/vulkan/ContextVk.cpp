@@ -98,9 +98,6 @@ constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
 constexpr size_t kDefaultPoolAllocatorPageSize  = 16 * 1024;
 constexpr size_t kDriverUniformsAllocatorPageSize = 4 * 1024;
 
-// Wait a maximum of 10s.  If that times out, we declare it a failure.
-constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
-
 constexpr size_t kInFlightCommandsLimit = 100u;
 
 // Initially dumping the command graphs is disabled.
@@ -1293,7 +1290,7 @@ void ContextVk::handleDeviceLost()
     for (CommandBatch &batch : mInFlightCommands)
     {
         // On device loss we need to wait for fence to be signaled before destroying it
-        VkResult status = batch.fence.get().wait(device, kMaxFenceWaitTimeNs);
+        VkResult status = batch.fence.get().wait(device, getMaxFenceWaitTimeNs());
         // If the wait times out, it is probably not possible to recover from lost device
         ASSERT(status == VK_SUCCESS || status == VK_ERROR_DEVICE_LOST);
 
@@ -2741,7 +2738,7 @@ angle::Result ContextVk::checkCompletedCommands()
 angle::Result ContextVk::finishToSerial(Serial serial)
 {
     bool timedOut        = false;
-    angle::Result result = finishToSerialOrTimeout(serial, kMaxFenceWaitTimeNs, &timedOut);
+    angle::Result result = finishToSerialOrTimeout(serial, getMaxFenceWaitTimeNs(), &timedOut);
 
     // Don't tolerate timeout.  If such a large wait time results in timeout, something's wrong.
     if (timedOut)
@@ -2775,7 +2772,7 @@ angle::Result ContextVk::finishToSerialOrTimeout(Serial serial, uint64_t timeout
 
     // Wait for it finish
     VkDevice device = getDevice();
-    VkResult status = batch.fence.get().wait(device, kMaxFenceWaitTimeNs);
+    VkResult status = batch.fence.get().wait(device, getMaxFenceWaitTimeNs());
 
     // If timed out, report it as such.
     if (status == VK_TIMEOUT)
@@ -2918,7 +2915,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
 
     // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
     // in parallel with what's already running on the GPU.
-    ANGLE_VK_TRY(this, fence.get().wait(device, kMaxFenceWaitTimeNs));
+    ANGLE_VK_TRY(this, fence.get().wait(device, getMaxFenceWaitTimeNs()));
 
     // Get the query results
     constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
@@ -3026,4 +3023,10 @@ bool ContextVk::shouldUseOldRewriteStructSamplers() const
 {
     return mRenderer->getFeatures().forceOldRewriteStructSamplers.enabled;
 }
+
+uint64_t ContextVk::getMaxFenceWaitTimeNs() const
+{
+    return getRenderer()->getMaxFenceWaitTimeNs();
+}
+
 }  // namespace rx
