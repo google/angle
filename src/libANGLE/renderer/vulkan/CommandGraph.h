@@ -18,6 +18,7 @@ namespace rx
 
 namespace vk
 {
+class CommandGraph;
 
 enum class VisitedState
 {
@@ -282,31 +283,22 @@ class CommandGraphResource : angle::NonCopyable
     virtual ~CommandGraphResource();
 
     // Returns true if the resource is in use by the renderer.
-    bool isResourceInUse(ContextVk *context) const;
+    bool isResourceInUse(ContextVk *contextVk) const;
 
     // Get the current queue serial for this resource. Used to release resources, and for
     // queries, to know if the queue they are submitted on has finished execution.
     Serial getStoredQueueSerial() const { return mStoredQueueSerial; }
 
     // Sets up dependency relations. 'this' resource is the resource being written to.
-    void addWriteDependency(CommandGraphResource *writingResource);
+    void addWriteDependency(ContextVk *contextVk, CommandGraphResource *writingResource);
 
     // Sets up dependency relations. 'this' resource is the resource being read.
-    void addReadDependency(CommandGraphResource *readingResource);
+    void addReadDependency(ContextVk *contextVk, CommandGraphResource *readingResource);
 
     // Updates the in-use serial tracked for this resource. Will clear dependencies if the resource
     // was not used in this set of command nodes.
-    ANGLE_INLINE void updateQueueSerial(Serial queueSerial)
-    {
-        ASSERT(queueSerial >= mStoredQueueSerial);
-
-        if (queueSerial > mStoredQueueSerial)
-        {
-            mCurrentWritingNode = nullptr;
-            mCurrentReadingNodes.clear();
-            mStoredQueueSerial = queueSerial;
-        }
-    }
+    // TODO(jmadill): Remove serial once migrated. http://angelbug.com/2464
+    void onGraphAccess(Serial serial, CommandGraph *commandGraph);
 
     // Reset the current queue serial for this resource. Will clear dependencies if the resource
     // was not used in this set of command nodes.
@@ -328,113 +320,47 @@ class CommandGraphResource : angle::NonCopyable
                                   CommandBuffer **commandBufferOut);
 
     // Checks if we're in a RenderPass without children.
-    bool hasStartedRenderPass() const
-    {
-        return hasChildlessWritingNode() &&
-               mCurrentWritingNode->getInsideRenderPassCommands()->valid();
-    }
+    bool hasStartedRenderPass() const;
 
     // Checks if we're in a RenderPass that encompasses renderArea, returning true if so. Updates
     // serial internally. Returns the started command buffer in commandBufferOut.
-    ANGLE_INLINE bool appendToStartedRenderPass(Serial currentQueueSerial,
-                                                const gl::Rectangle &renderArea,
-                                                CommandBuffer **commandBufferOut)
-    {
-        updateQueueSerial(currentQueueSerial);
-        if (hasStartedRenderPass())
-        {
-            if (mCurrentWritingNode->getRenderPassRenderArea().encloses(renderArea))
-            {
-                *commandBufferOut = mCurrentWritingNode->getInsideRenderPassCommands();
-                return true;
-            }
-        }
-
-        return false;
-    }
+    bool appendToStartedRenderPass(Serial serial,
+                                   CommandGraph *graph,
+                                   const gl::Rectangle &renderArea,
+                                   CommandBuffer **commandBufferOut);
 
     // Returns true if the render pass is started, but there are no commands yet recorded in it.
     // This is useful to know if the render pass ops can be modified.
-    bool renderPassStartedButEmpty() const
-    {
-        return hasStartedRenderPass() &&
-               (!vk::CommandBuffer::CanKnowIfEmpty() ||
-                mCurrentWritingNode->getInsideRenderPassCommands()->empty());
-    }
+    bool renderPassStartedButEmpty() const;
 
-    void clearRenderPassColorAttachment(size_t attachmentIndex, const VkClearColorValue &clearValue)
-    {
-        ASSERT(renderPassStartedButEmpty());
-        mCurrentWritingNode->clearRenderPassColorAttachment(attachmentIndex, clearValue);
-    }
+    void clearRenderPassColorAttachment(size_t attachmentIndex,
+                                        const VkClearColorValue &clearValue);
+    void clearRenderPassDepthAttachment(size_t attachmentIndex, float depth);
+    void clearRenderPassStencilAttachment(size_t attachmentIndex, uint32_t stencil);
 
-    void clearRenderPassDepthAttachment(size_t attachmentIndex, float depth)
-    {
-        ASSERT(renderPassStartedButEmpty());
-        mCurrentWritingNode->clearRenderPassDepthAttachment(attachmentIndex, depth);
-    }
-
-    void clearRenderPassStencilAttachment(size_t attachmentIndex, uint32_t stencil)
-    {
-        ASSERT(renderPassStartedButEmpty());
-        mCurrentWritingNode->clearRenderPassStencilAttachment(attachmentIndex, stencil);
-    }
-
-    void invalidateRenderPassColorAttachment(size_t attachmentIndex)
-    {
-        ASSERT(hasStartedRenderPass());
-        mCurrentWritingNode->invalidateRenderPassColorAttachment(attachmentIndex);
-    }
-
-    void invalidateRenderPassDepthAttachment(size_t attachmentIndex)
-    {
-        ASSERT(hasStartedRenderPass());
-        mCurrentWritingNode->invalidateRenderPassDepthAttachment(attachmentIndex);
-    }
-
-    void invalidateRenderPassStencilAttachment(size_t attachmentIndex)
-    {
-        ASSERT(hasStartedRenderPass());
-        mCurrentWritingNode->invalidateRenderPassStencilAttachment(attachmentIndex);
-    }
+    void invalidateRenderPassColorAttachment(size_t attachmentIndex);
+    void invalidateRenderPassDepthAttachment(size_t attachmentIndex);
+    void invalidateRenderPassStencilAttachment(size_t attachmentIndex);
 
     // Accessor for RenderPass RenderArea.
-    const gl::Rectangle &getRenderPassRenderArea() const
-    {
-        ASSERT(hasStartedRenderPass());
-        return mCurrentWritingNode->getRenderPassRenderArea();
-    }
+    const gl::Rectangle &getRenderPassRenderArea() const;
 
     // Called when 'this' object changes, but we'd like to start a new command buffer later.
     void finishCurrentCommands(ContextVk *contextVk);
 
     // Store a deferred memory barrier. Will be recorded into a primary command buffer at submit.
-    void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess, VkPipelineStageFlags stages)
-    {
-        ASSERT(mCurrentWritingNode);
-        mCurrentWritingNode->addGlobalMemoryBarrier(srcAccess, dstAccess, stages);
-    }
+    void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess, VkPipelineStageFlags stages);
 
   protected:
     explicit CommandGraphResource(CommandGraphResourceType resourceType);
 
   private:
     // Returns true if this node has a current writing node with no children.
-    ANGLE_INLINE bool hasChildlessWritingNode() const
-    {
-        // Note: currently, we don't have a resource that can issue both generic and special
-        // commands.  We don't create read/write dependencies between mixed generic/special
-        // resources either.  As such, we expect the function to always be generic here.  If such a
-        // resource is added in the future, this can add a check for function == generic and fail if
-        // false.
-        ASSERT(mCurrentWritingNode == nullptr ||
-               mCurrentWritingNode->getFunction() == CommandGraphNodeFunction::Generic);
-        return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
-    }
+    ANGLE_INLINE bool hasChildlessWritingNode() const;
 
     void startNewCommands(ContextVk *contextVk);
 
-    void onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial);
+    void onWriteImpl(ContextVk *contextVk, CommandGraphNode *writingNode);
 
     Serial mStoredQueueSerial;
 
@@ -570,6 +496,118 @@ class CommandGraph final : angle::NonCopyable
     static constexpr size_t kInvalidNodeIndex = std::numeric_limits<std::size_t>::max();
     size_t mLastBarrierIndex;
 };
+
+// CommandGraphResource inlines.
+ANGLE_INLINE bool CommandGraphResource::hasStartedRenderPass() const
+{
+    return hasChildlessWritingNode() && mCurrentWritingNode->getInsideRenderPassCommands()->valid();
+}
+
+ANGLE_INLINE void CommandGraphResource::onGraphAccess(Serial serial, CommandGraph *commandGraph)
+{
+    ASSERT(serial >= mStoredQueueSerial);
+
+    // TODO(jmadill: Store reference to usage in graph. http://anglebug.com/2464
+
+    if (serial > mStoredQueueSerial)
+    {
+        mCurrentWritingNode = nullptr;
+        mCurrentReadingNodes.clear();
+        mStoredQueueSerial = serial;
+    }
+}
+
+ANGLE_INLINE bool CommandGraphResource::appendToStartedRenderPass(Serial serial,
+                                                                  CommandGraph *graph,
+                                                                  const gl::Rectangle &renderArea,
+                                                                  CommandBuffer **commandBufferOut)
+{
+    onGraphAccess(serial, graph);
+    if (hasStartedRenderPass())
+    {
+        if (mCurrentWritingNode->getRenderPassRenderArea().encloses(renderArea))
+        {
+            *commandBufferOut = mCurrentWritingNode->getInsideRenderPassCommands();
+            return true;
+        }
+    }
+
+    return false;
+}
+
+ANGLE_INLINE bool CommandGraphResource::renderPassStartedButEmpty() const
+{
+    return hasStartedRenderPass() && (!vk::CommandBuffer::CanKnowIfEmpty() ||
+                                      mCurrentWritingNode->getInsideRenderPassCommands()->empty());
+}
+
+ANGLE_INLINE void CommandGraphResource::clearRenderPassColorAttachment(
+    size_t attachmentIndex,
+    const VkClearColorValue &clearValue)
+{
+    ASSERT(renderPassStartedButEmpty());
+    mCurrentWritingNode->clearRenderPassColorAttachment(attachmentIndex, clearValue);
+}
+
+ANGLE_INLINE void CommandGraphResource::clearRenderPassDepthAttachment(size_t attachmentIndex,
+                                                                       float depth)
+{
+    ASSERT(renderPassStartedButEmpty());
+    mCurrentWritingNode->clearRenderPassDepthAttachment(attachmentIndex, depth);
+}
+
+ANGLE_INLINE void CommandGraphResource::clearRenderPassStencilAttachment(size_t attachmentIndex,
+                                                                         uint32_t stencil)
+{
+    ASSERT(renderPassStartedButEmpty());
+    mCurrentWritingNode->clearRenderPassStencilAttachment(attachmentIndex, stencil);
+}
+
+ANGLE_INLINE void CommandGraphResource::invalidateRenderPassColorAttachment(size_t attachmentIndex)
+{
+    ASSERT(hasStartedRenderPass());
+    mCurrentWritingNode->invalidateRenderPassColorAttachment(attachmentIndex);
+}
+
+ANGLE_INLINE void CommandGraphResource::invalidateRenderPassDepthAttachment(size_t attachmentIndex)
+{
+    ASSERT(hasStartedRenderPass());
+    mCurrentWritingNode->invalidateRenderPassDepthAttachment(attachmentIndex);
+}
+
+ANGLE_INLINE void CommandGraphResource::invalidateRenderPassStencilAttachment(
+    size_t attachmentIndex)
+{
+    ASSERT(hasStartedRenderPass());
+    mCurrentWritingNode->invalidateRenderPassStencilAttachment(attachmentIndex);
+}
+
+ANGLE_INLINE const gl::Rectangle &CommandGraphResource::getRenderPassRenderArea() const
+{
+    ASSERT(hasStartedRenderPass());
+    return mCurrentWritingNode->getRenderPassRenderArea();
+}
+
+ANGLE_INLINE void CommandGraphResource::addGlobalMemoryBarrier(VkFlags srcAccess,
+                                                               VkFlags dstAccess,
+                                                               VkPipelineStageFlags stages)
+{
+    ASSERT(mCurrentWritingNode);
+    mCurrentWritingNode->addGlobalMemoryBarrier(srcAccess, dstAccess, stages);
+}
+
+ANGLE_INLINE bool CommandGraphResource::hasChildlessWritingNode() const
+{
+    // Note: currently, we don't have a resource that can issue both generic and special
+    // commands.  We don't create read/write dependencies between mixed generic/special
+    // resources either.  As such, we expect the function to always be generic here.  If such a
+    // resource is added in the future, this can add a check for function == generic and fail if
+    // false.
+    ASSERT(mCurrentWritingNode == nullptr ||
+           mCurrentWritingNode->getFunction() == CommandGraphNodeFunction::Generic);
+    return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
+}
+
 }  // namespace vk
 }  // namespace rx
 

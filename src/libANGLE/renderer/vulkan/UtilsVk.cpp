@@ -956,7 +956,8 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     vk::CommandBuffer *commandBuffer;
     if (!framebuffer->appendToStartedRenderPass(contextVk->getCurrentQueueSerial(),
-                                                scissoredRenderArea, &commandBuffer))
+                                                contextVk->getCommandGraph(), scissoredRenderArea,
+                                                &commandBuffer))
     {
         ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, scissoredRenderArea, &commandBuffer));
     }
@@ -1184,14 +1185,15 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     }
 
     vk::CommandBuffer *commandBuffer;
-    if (!framebuffer->appendToStartedRenderPass(contextVk->getCurrentQueueSerial(), params.blitArea,
+    if (!framebuffer->appendToStartedRenderPass(contextVk->getCurrentQueueSerial(),
+                                                contextVk->getCommandGraph(), params.blitArea,
                                                 &commandBuffer))
     {
         ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, params.blitArea, &commandBuffer));
     }
 
     // Source's layout change should happen before rendering
-    src->addReadDependency(framebuffer->getFramebuffer());
+    src->addReadDependency(contextVk, framebuffer->getFramebuffer());
 
     VkDescriptorImageInfo imageInfos[2] = {};
 
@@ -1295,7 +1297,8 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     ANGLE_TRY(
         blitBuffer.get().init(contextVk, blitBufferInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-    blitBuffer.get().updateQueueSerial(contextVk->getCurrentQueueSerial());
+    blitBuffer.get().onGraphAccess(contextVk->getCurrentQueueSerial(),
+                                   contextVk->getCommandGraph());
 
     BlitResolveStencilNoExportShaderParams shaderParams;
     if (isResolve)
@@ -1338,7 +1341,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(framebuffer->getFramebuffer()->recordCommands(contextVk, &commandBuffer));
 
-    src->addReadDependency(framebuffer->getFramebuffer());
+    src->addReadDependency(contextVk, framebuffer->getFramebuffer());
 
     // Blit/resolve stencil into the buffer.
     VkDescriptorImageInfo imageInfo = {};
@@ -1524,7 +1527,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
         startRenderPass(contextVk, dest, destView, renderPassDesc, renderArea, &commandBuffer));
 
     // Source's layout change should happen before rendering
-    src->addReadDependency(dest);
+    src->addReadDependency(contextVk, dest);
 
     VkDescriptorImageInfo imageInfo = {};
     imageInfo.imageView             = srcView->getHandle();
@@ -1590,7 +1593,7 @@ angle::Result UtilsVk::cullOverlayWidgets(ContextVk *contextVk,
     dest->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ComputeShaderWrite,
                        commandBuffer);
 
-    enabledWidgetsBuffer->onRead(dest, VK_ACCESS_SHADER_READ_BIT);
+    enabledWidgetsBuffer->onRead(contextVk, dest, VK_ACCESS_SHADER_READ_BIT);
 
     VkDescriptorImageInfo imageInfo = {};
     imageInfo.imageView             = destView->getHandle();
@@ -1665,10 +1668,10 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     dest->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ComputeShaderWrite,
                        commandBuffer);
 
-    culledWidgets->addReadDependency(dest);
-    font->addReadDependency(dest);
-    textWidgetsBuffer->onRead(dest, VK_ACCESS_SHADER_READ_BIT);
-    graphWidgetsBuffer->onRead(dest, VK_ACCESS_SHADER_READ_BIT);
+    culledWidgets->addReadDependency(contextVk, dest);
+    font->addReadDependency(contextVk, dest);
+    textWidgetsBuffer->onRead(contextVk, dest, VK_ACCESS_SHADER_READ_BIT);
+    graphWidgetsBuffer->onRead(contextVk, dest, VK_ACCESS_SHADER_READ_BIT);
 
     VkDescriptorImageInfo imageInfos[3] = {};
     imageInfos[0].imageView             = destView->getHandle();

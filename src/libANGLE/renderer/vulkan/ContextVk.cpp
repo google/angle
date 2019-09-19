@@ -494,8 +494,9 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
 
         gl::Rectangle scissoredRenderArea = mDrawFramebuffer->getScissoredRenderArea(this);
-        if (!mDrawFramebuffer->appendToStartedRenderPass(
-                getCurrentQueueSerial(), scissoredRenderArea, &mRenderPassCommandBuffer))
+        if (!mDrawFramebuffer->appendToStartedRenderPass(mCurrentQueueSerial, &mCommandGraph,
+                                                         scissoredRenderArea,
+                                                         &mRenderPassCommandBuffer))
         {
             ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, scissoredRenderArea,
                                                            &mRenderPassCommandBuffer));
@@ -739,7 +740,7 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(const gl::Context *con
         vk::BufferHelper *arrayBuffer = arrayBufferResources[attribIndex];
         if (arrayBuffer)
         {
-            arrayBuffer->onRead(framebuffer, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT);
+            arrayBuffer->onRead(this, framebuffer, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT);
         }
     }
 
@@ -757,7 +758,7 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(const gl::Context *conte
                                    gl_vk::kIndexTypeMap[mCurrentDrawElementsType]);
 
     vk::FramebufferHelper *framebuffer = mDrawFramebuffer->getFramebuffer();
-    elementArrayBuffer->onRead(framebuffer, VK_ACCESS_INDEX_READ_BIT);
+    elementArrayBuffer->onRead(this, framebuffer, VK_ACCESS_INDEX_READ_BIT);
 
     return angle::Result::Continue;
 }
@@ -2219,7 +2220,7 @@ angle::Result ContextVk::dispatchComputeIndirect(const gl::Context *context, GLi
 
     gl::Buffer *glBuffer     = getState().getTargetBuffer(gl::BufferBinding::DispatchIndirect);
     vk::BufferHelper &buffer = vk::GetImpl(glBuffer)->getBuffer();
-    buffer.onRead(&mDispatcher, VK_ACCESS_INDIRECT_COMMAND_READ_BIT);
+    buffer.onRead(this, &mDispatcher, VK_ACCESS_INDIRECT_COMMAND_READ_BIT);
 
     commandBuffer->dispatchIndirect(buffer.getBuffer(), indirect);
 
@@ -2526,7 +2527,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
             image.changeLayout(aspectFlags, textureLayout, srcLayoutChange);
         }
 
-        image.addReadDependency(recorder);
+        image.addReadDependency(this, recorder);
 
         mActiveTextures[textureUnit].texture = textureVk;
         mActiveTextures[textureUnit].sampler = samplerVk;
@@ -2587,7 +2588,7 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
             image->changeLayout(aspectFlags, imageLayout, layoutChange);
         }
 
-        image->addWriteDependency(recorder);
+        image->addWriteDependency(this, recorder);
 
         mActiveImages[imageUnitIndex] = textureVk;
     }

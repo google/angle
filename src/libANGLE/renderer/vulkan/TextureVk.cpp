@@ -593,7 +593,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
                              commandBuffer);
 
         // Source's layout change should happen before the copy
-        srcImage->addReadDependency(mImage);
+        srcImage->addReadDependency(contextVk, mImage);
 
         VkImageSubresourceLayers destSubresource = srcSubresource;
         destSubresource.mipLevel                 = level;
@@ -628,7 +628,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
                                    commandBuffer);
 
         // Source's layout change should happen before the copy
-        srcImage->addReadDependency(stagingImage.get());
+        srcImage->addReadDependency(contextVk, stagingImage.get());
 
         VkImageSubresourceLayers destSubresource = srcSubresource;
         destSubresource.mipLevel                 = 0;
@@ -1217,7 +1217,7 @@ angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
     if (!m3DRenderTargets.empty())
         return angle::Result::Continue;
 
-    uint32_t layerCount = GetImageLayerCountForView(*mImage);
+    uint32_t layerCount                = GetImageLayerCountForView(*mImage);
     const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
 
     mLayerFetchImageView.resize(layerCount);

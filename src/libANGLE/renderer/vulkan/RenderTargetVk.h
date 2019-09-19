@@ -62,10 +62,12 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     const vk::ImageHelper &getImage() const;
 
     // getImageForRead will also transition the resource to the given layout.
-    vk::ImageHelper *getImageForRead(vk::CommandGraphResource *readingResource,
+    vk::ImageHelper *getImageForRead(ContextVk *contextVk,
+                                     vk::CommandGraphResource *readingResource,
                                      vk::ImageLayout layout,
                                      vk::CommandBuffer *commandBuffer);
-    vk::ImageHelper *getImageForWrite(vk::CommandGraphResource *writingResource) const;
+    vk::ImageHelper *getImageForWrite(ContextVk *contextVk,
+                                      vk::CommandGraphResource *writingResource) const;
 
     const vk::ImageView *getDrawImageView() const;
     const vk::ImageView *getReadImageView() const;

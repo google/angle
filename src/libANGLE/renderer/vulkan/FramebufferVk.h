@@ -113,10 +113,11 @@ class FramebufferVk : public FramebufferImpl
 
     // This will clear the current write operation if it is complete.
     bool appendToStartedRenderPass(Serial currentQueueSerial,
+                                   vk::CommandGraph *graph,
                                    const gl::Rectangle &renderArea,
                                    vk::CommandBuffer **commandBufferOut)
     {
-        return mFramebuffer.appendToStartedRenderPass(currentQueueSerial, renderArea,
+        return mFramebuffer.appendToStartedRenderPass(currentQueueSerial, graph, renderArea,
                                                       commandBufferOut);
     }
 

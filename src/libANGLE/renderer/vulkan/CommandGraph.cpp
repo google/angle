@@ -245,9 +245,9 @@ CommandGraphResource::CommandGraphResource(CommandGraphResourceType resourceType
 
 CommandGraphResource::~CommandGraphResource() = default;
 
-bool CommandGraphResource::isResourceInUse(ContextVk *context) const
+bool CommandGraphResource::isResourceInUse(ContextVk *contextVk) const
 {
-    return context->isSerialInUse(mStoredQueueSerial);
+    return contextVk->isSerialInUse(mStoredQueueSerial);
 }
 
 void CommandGraphResource::resetQueueSerial()
@@ -260,7 +260,7 @@ void CommandGraphResource::resetQueueSerial()
 angle::Result CommandGraphResource::recordCommands(ContextVk *context,
                                                    CommandBuffer **commandBufferOut)
 {
-    updateQueueSerial(context->getCurrentQueueSerial());
+    onGraphAccess(context->getCurrentQueueSerial(), context->getCommandGraph());
 
     if (!hasChildlessWritingNode() || hasStartedRenderPass())
     {
@@ -306,17 +306,19 @@ angle::Result CommandGraphResource::beginRenderPass(
     return mCurrentWritingNode->beginInsideRenderPassRecording(contextVk, commandBufferOut);
 }
 
-void CommandGraphResource::addWriteDependency(CommandGraphResource *writingResource)
+void CommandGraphResource::addWriteDependency(ContextVk *contextVk,
+                                              CommandGraphResource *writingResource)
 {
     CommandGraphNode *writingNode = writingResource->mCurrentWritingNode;
     ASSERT(writingNode);
 
-    onWriteImpl(writingNode, writingResource->getStoredQueueSerial());
+    onWriteImpl(contextVk, writingNode);
 }
 
-void CommandGraphResource::addReadDependency(CommandGraphResource *readingResource)
+void CommandGraphResource::addReadDependency(ContextVk *contextVk,
+                                             CommandGraphResource *readingResource)
 {
-    updateQueueSerial(readingResource->getStoredQueueSerial());
+    onGraphAccess(contextVk->getCurrentQueueSerial(), contextVk->getCommandGraph());
 
     CommandGraphNode *readingNode = readingResource->mCurrentWritingNode;
     ASSERT(readingNode);
@@ -341,12 +343,12 @@ void CommandGraphResource::startNewCommands(ContextVk *contextVk)
     CommandGraphNode *newCommands =
         contextVk->getCommandGraph()->allocateNode(CommandGraphNodeFunction::Generic);
     newCommands->setDiagnosticInfo(mResourceType, reinterpret_cast<uintptr_t>(this));
-    onWriteImpl(newCommands, contextVk->getCurrentQueueSerial());
+    onWriteImpl(contextVk, newCommands);
 }
 
-void CommandGraphResource::onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial)
+void CommandGraphResource::onWriteImpl(ContextVk *contextVk, CommandGraphNode *writingNode)
 {
-    updateQueueSerial(currentSerial);
+    onGraphAccess(contextVk->getCurrentQueueSerial(), contextVk->getCommandGraph());
 
     // Make sure any open reads and writes finish before we execute 'writingNode'.
     if (!mCurrentReadingNodes.empty())

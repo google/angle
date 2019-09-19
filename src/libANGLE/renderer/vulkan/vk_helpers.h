@@ -460,9 +460,9 @@ class BufferHelper final : public CommandGraphResource
     // made for dependencies to non-buffer resources, as only one of two resources participating in
     // the dependency would require a memory barrier.  Note that onWrite takes read access flags
     // too, as output buffers could be read as well.
-    void onRead(CommandGraphResource *reader, VkAccessFlags readAccessType)
+    void onRead(ContextVk *contextVk, CommandGraphResource *reader, VkAccessFlags readAccessType)
     {
-        addReadDependency(reader);
+        addReadDependency(contextVk, reader);
         onReadAccess(reader, readAccessType);
     }
     void onWrite(ContextVk *contextVk,
@@ -470,7 +470,7 @@ class BufferHelper final : public CommandGraphResource
                  VkAccessFlags readAccessType,
                  VkAccessFlags writeAccessType)
     {
-        addWriteDependency(writer);
+        addWriteDependency(contextVk, writer);
         onWriteAccess(contextVk, readAccessType, writeAccessType);
     }
     // Helper for setting a graph dependency between two buffers.  This is a specialized function as
@@ -481,7 +481,7 @@ class BufferHelper final : public CommandGraphResource
                         VkAccessFlags readAccessType,
                         VkAccessFlags writeAccessType)
     {
-        addReadDependency(reader);
+        addReadDependency(contextVk, reader);
         onReadAccess(reader, readAccessType);
         reader->onWriteAccess(contextVk, 0, writeAccessType);
     }

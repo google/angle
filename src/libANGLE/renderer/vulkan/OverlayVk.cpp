@@ -122,7 +122,7 @@ angle::Result OverlayVk::createFont(ContextVk *contextVk)
     vk::CommandBuffer *fontDataUpload;
     ANGLE_TRY(mFontImage.recordCommands(contextVk, &fontDataUpload));
 
-    fontDataBuffer.get().onRead(&mFontImage, VK_ACCESS_TRANSFER_READ_BIT);
+    fontDataBuffer.get().onRead(contextVk, &mFontImage, VK_ACCESS_TRANSFER_READ_BIT);
 
     mFontImage.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
                             fontDataUpload);

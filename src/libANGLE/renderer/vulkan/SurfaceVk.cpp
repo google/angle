@@ -1053,7 +1053,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                                    multisampledTransition);
 
         // Setup graph dependency between the swapchain image and the multisampled one.
-        image.image.addReadDependency(&mColorImageMS);
+        image.image.addReadDependency(contextVk, &mColorImageMS);
 
         VkImageResolve resolveRegion                = {};
         resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;

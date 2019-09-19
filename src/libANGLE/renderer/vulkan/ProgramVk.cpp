@@ -1233,7 +1233,8 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
         }
         else
         {
-            mEmptyBuffer.updateQueueSerial(contextVk->getCurrentQueueSerial());
+            mEmptyBuffer.onGraphAccess(contextVk->getCurrentQueueSerial(),
+                                       contextVk->getCommandGraph());
             bufferInfo.buffer = mEmptyBuffer.getBuffer().getHandle();
         }
 
@@ -1333,7 +1334,7 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
         }
         else
         {
-            bufferHelper.onRead(recorder, VK_ACCESS_UNIFORM_READ_BIT);
+            bufferHelper.onRead(contextVk, recorder, VK_ACCESS_UNIFORM_READ_BIT);
         }
 
         ++writeCount;
@@ -1398,7 +1399,7 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
     }
 
     // Bind the empty buffer to every array slot that's unused.
-    mEmptyBuffer.updateQueueSerial(contextVk->getCurrentQueueSerial());
+    mEmptyBuffer.onGraphAccess(contextVk->getCurrentQueueSerial(), contextVk->getCommandGraph());
     for (size_t binding : ~writtenBindings)
     {
         VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[binding];
