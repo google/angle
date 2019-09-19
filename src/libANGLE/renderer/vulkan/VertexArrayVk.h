@@ -52,6 +52,13 @@ class VertexArrayVk : public VertexArrayImpl
                                  const void *indices,
                                  uint32_t *indexCountOut);
 
+    angle::Result handleLineLoopIndirect(ContextVk *contextVk,
+                                         BufferVk *indirectBufferVk,
+                                         gl::DrawElementsType glIndexType,
+                                         VkDeviceSize indirectBufferOffset,
+                                         vk::BufferHelper **indirectBufferOut,
+                                         VkDeviceSize *indirectBufferOffsetOut);
+
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const
     {
         return mCurrentArrayBufferHandles;

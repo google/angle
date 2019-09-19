@@ -214,6 +214,21 @@ angle::Result VertexArrayVk::convertIndexBufferIndirectGPU(ContextVk *contextVk,
                                                             dest, src, params);
 }
 
+angle::Result VertexArrayVk::handleLineLoopIndirect(ContextVk *contextVk,
+                                                    BufferVk *indirectBufferVk,
+                                                    gl::DrawElementsType glIndexType,
+                                                    VkDeviceSize indirectBufferOffset,
+                                                    vk::BufferHelper **indirectBufferOut,
+                                                    VkDeviceSize *indirectBufferOffsetOut)
+{
+    ANGLE_TRY(mLineLoopHelper.streamIndicesIndirect(
+        contextVk, glIndexType, mCurrentElementArrayBuffer, &indirectBufferVk->getBuffer(),
+        indirectBufferOffset, &mCurrentElementArrayBuffer, &mCurrentElementArrayBufferOffset,
+        indirectBufferOut, indirectBufferOffsetOut));
+
+    return angle::Result::Continue;
+}
+
 angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
                                                    gl::DrawElementsType indexType,
                                                    size_t indexCount,

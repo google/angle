@@ -60,6 +60,8 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertIndex.comp.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertIndex.comp.00000002.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertIndex.comp.00000003.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ConvertIndexIndirectLineLoop.comp.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ConvertIndexIndirectLineLoop.comp.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000002.inc"
@@ -214,6 +216,12 @@ constexpr ShaderBlob kConvertIndex_comp_shaders[] = {
     {kConvertIndex_comp_00000001, sizeof(kConvertIndex_comp_00000001)},
     {kConvertIndex_comp_00000002, sizeof(kConvertIndex_comp_00000002)},
     {kConvertIndex_comp_00000003, sizeof(kConvertIndex_comp_00000003)},
+};
+constexpr ShaderBlob kConvertIndexIndirectLineLoop_comp_shaders[] = {
+    {kConvertIndexIndirectLineLoop_comp_00000000,
+     sizeof(kConvertIndexIndirectLineLoop_comp_00000000)},
+    {kConvertIndexIndirectLineLoop_comp_00000001,
+     sizeof(kConvertIndexIndirectLineLoop_comp_00000001)},
 };
 constexpr ShaderBlob kConvertVertex_comp_shaders[] = {
     {kConvertVertex_comp_00000000, sizeof(kConvertVertex_comp_00000000)},
@@ -373,6 +381,10 @@ void ShaderLibrary::destroy(VkDevice device)
     {
         shader.get().destroy(device);
     }
+    for (RefCounted<ShaderAndSerial> &shader : mConvertIndexIndirectLineLoop_comp_shaders)
+    {
+        shader.get().destroy(device);
+    }
     for (RefCounted<ShaderAndSerial> &shader : mConvertVertex_comp_shaders)
     {
         shader.get().destroy(device);
@@ -431,6 +443,16 @@ angle::Result ShaderLibrary::getConvertIndex_comp(Context *context,
 {
     return GetShader(context, mConvertIndex_comp_shaders, kConvertIndex_comp_shaders,
                      ArraySize(kConvertIndex_comp_shaders), shaderFlags, shaderOut);
+}
+
+angle::Result ShaderLibrary::getConvertIndexIndirectLineLoop_comp(
+    Context *context,
+    uint32_t shaderFlags,
+    RefCounted<ShaderAndSerial> **shaderOut)
+{
+    return GetShader(context, mConvertIndexIndirectLineLoop_comp_shaders,
+                     kConvertIndexIndirectLineLoop_comp_shaders,
+                     ArraySize(kConvertIndexIndirectLineLoop_comp_shaders), shaderFlags, shaderOut);
 }
 
 angle::Result ShaderLibrary::getConvertVertex_comp(Context *context,

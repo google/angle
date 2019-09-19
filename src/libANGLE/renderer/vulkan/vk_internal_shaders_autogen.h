@@ -78,6 +78,15 @@ enum flags
 constexpr size_t kArrayLen = 0x00000004;
 }  // namespace ConvertIndex_comp
 
+namespace ConvertIndexIndirectLineLoop_comp
+{
+enum flags
+{
+    kIs32Bit = 0x00000001,
+};
+constexpr size_t kArrayLen = 0x00000002;
+}  // namespace ConvertIndexIndirectLineLoop_comp
+
 namespace ConvertVertex_comp
 {
 enum flags
@@ -208,6 +217,9 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getConvertIndex_comp(Context *context,
                                        uint32_t shaderFlags,
                                        RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getConvertIndexIndirectLineLoop_comp(Context *context,
+                                                       uint32_t shaderFlags,
+                                                       RefCounted<ShaderAndSerial> **shaderOut);
     angle::Result getConvertVertex_comp(Context *context,
                                         uint32_t shaderFlags,
                                         RefCounted<ShaderAndSerial> **shaderOut);
@@ -236,6 +248,8 @@ class ShaderLibrary final : angle::NonCopyable
         mBufferUtils_comp_shaders[InternalShader::BufferUtils_comp::kArrayLen];
     RefCounted<ShaderAndSerial>
         mConvertIndex_comp_shaders[InternalShader::ConvertIndex_comp::kArrayLen];
+    RefCounted<ShaderAndSerial> mConvertIndexIndirectLineLoop_comp_shaders
+        [InternalShader::ConvertIndexIndirectLineLoop_comp::kArrayLen];
     RefCounted<ShaderAndSerial>
         mConvertVertex_comp_shaders[InternalShader::ConvertVertex_comp::kArrayLen];
     RefCounted<ShaderAndSerial>

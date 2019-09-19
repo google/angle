@@ -625,7 +625,6 @@
 
 // Indirect draw:
 3564 VULKAN : dEQP-GLES31.functional.draw_indirect.draw_arrays_indirect.line_loop.* = SKIP
-3564 VULKAN : dEQP-GLES31.functional.draw_indirect.draw_elements_indirect.line_loop.* = SKIP
 3564 VULKAN : dEQP-GLES31.functional.draw_indirect.random.* = SKIP
 
 // Tessellation geometry interaction:

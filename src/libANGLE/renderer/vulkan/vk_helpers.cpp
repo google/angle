@@ -34,10 +34,14 @@ constexpr VkClearColorValue kEmulatedInitColorValue = {{0, 0, 0, 1.0f}};
 // these values for emulated depth/stencil textures too.
 constexpr VkClearDepthStencilValue kWebGLInitDepthStencilValue = {1.0f, 0};
 
-constexpr VkBufferUsageFlags kLineLoopDynamicBufferUsage =
-    VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
-    VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
+constexpr VkBufferUsageFlags kLineLoopDynamicBufferUsage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT |
+                                                           VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+                                                           VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 constexpr int kLineLoopDynamicBufferInitialSize = 1024 * 1024;
+constexpr VkBufferUsageFlags kLineLoopDynamicIndirectBufferUsage =
+    VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+    VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+constexpr int kLineLoopDynamicIndirectBufferInitialSize = sizeof(VkDrawIndirectCommand) * 16;
 
 // This is an arbitrary max. We can change this later if necessary.
 constexpr uint32_t kDefaultDescriptorPoolMaxSets = 128;
@@ -1067,6 +1071,8 @@ LineLoopHelper::LineLoopHelper(RendererVk *renderer)
     // must be a multiple of the type indicated by indexType'.
     mDynamicIndexBuffer.init(renderer, kLineLoopDynamicBufferUsage, sizeof(uint32_t),
                              kLineLoopDynamicBufferInitialSize, true);
+    mDynamicIndirectBuffer.init(renderer, kLineLoopDynamicIndirectBufferUsage, sizeof(uint32_t),
+                                kLineLoopDynamicIndirectBufferInitialSize, true);
 }
 
 LineLoopHelper::~LineLoopHelper() = default;
@@ -1210,14 +1216,73 @@ angle::Result LineLoopHelper::streamIndices(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+angle::Result LineLoopHelper::streamIndicesIndirect(ContextVk *contextVk,
+                                                    gl::DrawElementsType glIndexType,
+                                                    vk::BufferHelper *indexBuffer,
+                                                    vk::BufferHelper *indirectBuffer,
+                                                    VkDeviceSize indirectBufferOffset,
+                                                    vk::BufferHelper **indexBufferOut,
+                                                    VkDeviceSize *indexBufferOffsetOut,
+                                                    vk::BufferHelper **indirectBufferOut,
+                                                    VkDeviceSize *indirectBufferOffsetOut)
+{
+    VkIndexType indexType = gl_vk::kIndexTypeMap[glIndexType];
+
+    auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
+    size_t allocateBytes = static_cast<size_t>(indexBuffer->getSize() + unitSize);
+
+    if (contextVk->getState().isPrimitiveRestartEnabled())
+    {
+        // If primitive restart, new index buffer is 135% the size of the original index buffer. The
+        // smallest lineloop with primitive restart is 3 indices (point 1, point 2 and restart
+        // value) when converted to linelist becomes 4 vertices. Expansion of 4/3. Any larger
+        // lineloops would have less overhead and require less extra space. Any incomplete
+        // primitives can be dropped or left incomplete and thus not increase the size of the
+        // destination index buffer. Since we don't know the number of indices being used we'll use
+        // the size of the index buffer as allocated as the index count.
+        size_t numInputIndices    = static_cast<size_t>(indexBuffer->getSize() / unitSize);
+        size_t numNewInputIndices = ((numInputIndices * 4) / 3) + 1;
+        allocateBytes             = static_cast<size_t>(numNewInputIndices * unitSize);
+    }
+
+    mDynamicIndexBuffer.releaseInFlightBuffers(contextVk);
+    mDynamicIndirectBuffer.releaseInFlightBuffers(contextVk);
+
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(contextVk, allocateBytes, nullptr, nullptr,
+                                           indexBufferOffsetOut, nullptr));
+    *indexBufferOut = mDynamicIndexBuffer.getCurrentBuffer();
+
+    ANGLE_TRY(mDynamicIndirectBuffer.allocate(contextVk, sizeof(VkDrawIndexedIndirectCommand),
+                                              nullptr, nullptr, indirectBufferOffsetOut, nullptr));
+    *indirectBufferOut = mDynamicIndirectBuffer.getCurrentBuffer();
+
+    vk::BufferHelper *destIndexBuffer    = mDynamicIndexBuffer.getCurrentBuffer();
+    vk::BufferHelper *destIndirectBuffer = mDynamicIndirectBuffer.getCurrentBuffer();
+
+    // Copy relevant section of the source into destination at allocated offset.  Note that the
+    // offset returned by allocate() above is in bytes. As is the indices offset pointer.
+    UtilsVk::ConvertLineLoopIndexIndirectParameters params = {};
+    params.indirectBufferOffset    = static_cast<uint32_t>(indirectBufferOffset);
+    params.dstIndirectBufferOffset = static_cast<uint32_t>(*indirectBufferOffsetOut);
+    params.dstIndexBufferOffset    = static_cast<uint32_t>(*indexBufferOffsetOut);
+    params.is32Bit                 = unitSize == 4;
+
+    ANGLE_TRY(contextVk->getUtils().convertLineLoopIndexIndirectBuffer(
+        contextVk, indirectBuffer, destIndirectBuffer, destIndexBuffer, indexBuffer, params));
+
+    return angle::Result::Continue;
+}
+
 void LineLoopHelper::release(ContextVk *contextVk)
 {
     mDynamicIndexBuffer.release(contextVk->getRenderer());
+    mDynamicIndirectBuffer.release(contextVk->getRenderer());
 }
 
 void LineLoopHelper::destroy(VkDevice device)
 {
     mDynamicIndexBuffer.destroy(device);
+    mDynamicIndirectBuffer.destroy(device);
 }
 
 // static
