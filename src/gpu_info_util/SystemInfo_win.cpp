@@ -53,11 +53,11 @@ bool GetDevicesFromDXGI(std::vector<GPUDeviceInfo> *devices)
         uint64_t intVersion = umdVersion.QuadPart;
         std::ostringstream o;
 
-        const uint64_t kMask = 0xFF;
-        o << ((intVersion >> 48) & kMask) << ".";
-        o << ((intVersion >> 32) & kMask) << ".";
-        o << ((intVersion >> 16) & kMask) << ".";
-        o << (intVersion & kMask);
+        constexpr uint64_t kMask16 = std::numeric_limits<uint16_t>::max();
+        o << ((intVersion >> 48) & kMask16) << ".";
+        o << ((intVersion >> 32) & kMask16) << ".";
+        o << ((intVersion >> 16) & kMask16) << ".";
+        o << (intVersion & kMask16);
 
         GPUDeviceInfo device;
         device.vendorId      = desc.VendorId;
