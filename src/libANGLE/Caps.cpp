@@ -1247,24 +1247,25 @@ std::vector<std::string> ClientExtensions::getStrings() const
     std::vector<std::string> extensionStrings;
 
     // clang-format off
-    //                   | Extension name                                   | Supported flag                   | Output vector   |
-    InsertExtensionString("EGL_EXT_client_extensions",                       clientExtensions,                   &extensionStrings);
-    InsertExtensionString("EGL_EXT_platform_base",                           platformBase,                       &extensionStrings);
-    InsertExtensionString("EGL_EXT_platform_device",                         platformDevice,                     &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_platform_angle",                        platformANGLE,                      &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_platform_angle_d3d",                    platformANGLED3D,                   &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_platform_angle_opengl",                 platformANGLEOpenGL,                &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_platform_angle_null",                   platformANGLENULL,                  &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_platform_angle_vulkan",                 platformANGLEVulkan,                &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_platform_angle_context_virtualization", platformANGLEContextVirtualization, &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_device_creation",                       deviceCreation,                     &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_device_creation_d3d11",                 deviceCreationD3D11,                &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_x11_visual",                            x11Visual,                          &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_experimental_present_path",             experimentalPresentPath,            &extensionStrings);
-    InsertExtensionString("EGL_KHR_client_get_all_proc_addresses",           clientGetAllProcAddresses,          &extensionStrings);
-    InsertExtensionString("EGL_KHR_debug",                                   debug,                              &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_explicit_context",                      explicitContext,                    &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_feature_control",                       featureControlANGLE,                &extensionStrings);
+    //                   | Extension name                                    | Supported flag                   | Output vector   |
+    InsertExtensionString("EGL_EXT_client_extensions",                        clientExtensions,                   &extensionStrings);
+    InsertExtensionString("EGL_EXT_platform_base",                            platformBase,                       &extensionStrings);
+    InsertExtensionString("EGL_EXT_platform_device",                          platformDevice,                     &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle",                         platformANGLE,                      &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle_d3d",                     platformANGLED3D,                   &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle_device_type_swiftshader", platformANGLEDeviceTypeSwiftShader, &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle_opengl",                  platformANGLEOpenGL,                &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle_null",                    platformANGLENULL,                  &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle_vulkan",                  platformANGLEVulkan,                &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle_context_virtualization",  platformANGLEContextVirtualization, &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_device_creation",                        deviceCreation,                     &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_device_creation_d3d11",                  deviceCreationD3D11,                &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_x11_visual",                             x11Visual,                          &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_experimental_present_path",              experimentalPresentPath,            &extensionStrings);
+    InsertExtensionString("EGL_KHR_client_get_all_proc_addresses",            clientGetAllProcAddresses,          &extensionStrings);
+    InsertExtensionString("EGL_KHR_debug",                                    debug,                              &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_explicit_context",                       explicitContext,                    &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_feature_control",                        featureControlANGLE,                &extensionStrings);
     // clang-format on
 
     return extensionStrings;

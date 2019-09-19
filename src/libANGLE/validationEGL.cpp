@@ -468,6 +468,14 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                             }
                             break;
 
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
+                            if (!clientExtensions.platformANGLEDeviceTypeSwiftShader)
+                            {
+                                return EglBadAttribute() << "EGL_ANGLE_platform_angle_device_type_"
+                                                            "swiftshader is not supported";
+                            }
+                            break;
+
                         default:
                             return EglBadAttribute() << "Invalid value for "
                                                         "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE "
@@ -563,6 +571,16 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                                   "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE.";
                     }
                     break;
+
+                case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
+                    if (platformType != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+                    {
+                        return EglBadAttribute()
+                               << "This device type requires a "
+                                  "platform type of EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE.";
+                    }
+                    break;
+
                 default:
                     break;
             }

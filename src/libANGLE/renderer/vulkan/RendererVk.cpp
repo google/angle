@@ -39,6 +39,8 @@ namespace
 const uint32_t kMockVendorID                              = 0xba5eba11;
 const uint32_t kMockDeviceID                              = 0xf005ba11;
 constexpr char kMockDeviceName[]                          = "Vulkan Mock Device";
+const uint32_t kSwiftShaderDeviceID                       = 0xC0DE;
+constexpr char kSwiftShaderDeviceName[]                   = "SwiftShader Device";
 constexpr VkFormatFeatureFlags kInvalidFormatFeatureFlags = static_cast<VkFormatFeatureFlags>(-1);
 }  // anonymous namespace
 
@@ -69,6 +71,8 @@ vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
             break;
         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
             return vk::ICD::Mock;
+        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
+            return vk::ICD::SwiftShader;
         default:
             UNREACHABLE();
             break;
@@ -363,6 +367,13 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
                 ERR() << "Error setting environment for Mock/Null Driver.";
             }
         }
+        else if (icd == vk::ICD::SwiftShader)
+        {
+            if (!setICDEnvironment(ANGLE_VK_SWIFTSHADER_ICD_JSON))
+            {
+                ERR() << "Error setting environment for SwiftShader.";
+            }
+        }
         if (mEnableValidationLayers || icd != vk::ICD::Default)
         {
             const auto &cwd = angle::GetCWD();
@@ -447,28 +458,48 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
     Optional<std::string> mPreviousICDEnv;
 };
 
+using ICDFilterFunc = std::function<bool(const VkPhysicalDeviceProperties &)>;
+
+ICDFilterFunc GetFilterForICD(vk::ICD preferredICD)
+{
+    switch (preferredICD)
+    {
+        case vk::ICD::Mock:
+            return [](const VkPhysicalDeviceProperties &deviceProperties) {
+                return ((deviceProperties.vendorID == kMockVendorID) &&
+                        (deviceProperties.deviceID == kMockDeviceID) &&
+                        (strcmp(deviceProperties.deviceName, kMockDeviceName) == 0));
+            };
+        case vk::ICD::SwiftShader:
+            return [](const VkPhysicalDeviceProperties &deviceProperties) {
+                return ((deviceProperties.vendorID == VENDOR_ID_GOOGLE) &&
+                        (deviceProperties.deviceID == kSwiftShaderDeviceID) &&
+                        (strcmp(deviceProperties.deviceName, kSwiftShaderDeviceName) == 0));
+            };
+        default:
+            return [](const VkPhysicalDeviceProperties &deviceProperties) { return true; };
+    }
+}
+
 void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
                           vk::ICD preferredICD,
                           VkPhysicalDevice *physicalDeviceOut,
                           VkPhysicalDeviceProperties *physicalDevicePropertiesOut)
 {
     ASSERT(!physicalDevices.empty());
-    if (preferredICD == vk::ICD::Mock)
+
+    ICDFilterFunc filter = GetFilterForICD(preferredICD);
+
+    for (const VkPhysicalDevice &physicalDevice : physicalDevices)
     {
-        for (const VkPhysicalDevice &physicalDevice : physicalDevices)
+        vkGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
+        if (filter(*physicalDevicePropertiesOut))
         {
-            vkGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
-            if ((kMockVendorID == physicalDevicePropertiesOut->vendorID) &&
-                (kMockDeviceID == physicalDevicePropertiesOut->deviceID) &&
-                (strcmp(kMockDeviceName, physicalDevicePropertiesOut->deviceName) == 0))
-            {
-                *physicalDeviceOut = physicalDevice;
-                return;
-            }
+            *physicalDeviceOut = physicalDevice;
+            return;
         }
-        WARN() << "Vulkan Mock Driver was requested but Mock Device was not found. Using default "
-                  "physicalDevice instead.";
     }
+    WARN() << "Preferred device ICD not found. Using default physicalDevice instead.";
 
     // Fall back to first device.
     *physicalDeviceOut = physicalDevices[0];
@@ -481,8 +512,8 @@ angle::Result WaitFences(vk::Context *context,
 {
     uint64_t timeout = block ? context->getRenderer()->getMaxFenceWaitTimeNs() : 0;
 
-    // Iterate backwards over the fences, removing them from the list in constant time when they are
-    // complete.
+    // Iterate backwards over the fences, removing them from the list in constant time when they
+    // are complete.
     while (!fences->empty())
     {
         VkResult result = fences->back().get().wait(context->getDevice(), timeout);
@@ -499,7 +530,7 @@ angle::Result WaitFences(vk::Context *context,
     return angle::Result::Continue;
 }
 
-}  // anonymous namespace
+}  // namespace
 
 // RendererVk implementation.
 RendererVk::RendererVk()

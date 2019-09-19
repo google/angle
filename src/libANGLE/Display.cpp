@@ -1241,7 +1241,8 @@ static ClientExtensions GenerateClientExtensions()
 #endif
 
 #if defined(ANGLE_ENABLE_VULKAN)
-    extensions.platformANGLEVulkan = true;
+    extensions.platformANGLEVulkan                = true;
+    extensions.platformANGLEDeviceTypeSwiftShader = true;
 #endif
 
 #if defined(ANGLE_USE_X11)
