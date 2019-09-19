@@ -23,7 +23,7 @@ SamplerVk::~SamplerVk() = default;
 void SamplerVk::onDestroy(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mSampler);
+    contextVk->addGarbage(&mSampler);
 }
 
 const vk::Sampler &SamplerVk::getSampler() const
@@ -43,7 +43,7 @@ angle::Result SamplerVk::syncState(const gl::Context *context, const bool dirty)
         {
             return angle::Result::Continue;
         }
-        contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mSampler);
+        contextVk->addGarbage(&mSampler);
     }
 
     const gl::Extensions &extensions = renderer->getNativeExtensions();

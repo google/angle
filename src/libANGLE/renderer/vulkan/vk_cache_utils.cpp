@@ -1690,7 +1690,7 @@ void GraphicsPipelineCache::release(ContextVk *context)
     for (auto &item : mPayload)
     {
         vk::PipelineHelper &pipeline = item.second;
-        context->releaseObject(pipeline.getSerial(), &pipeline.getPipeline());
+        context->addGarbage(&pipeline.getPipeline());
     }
 
     mPayload.clear();

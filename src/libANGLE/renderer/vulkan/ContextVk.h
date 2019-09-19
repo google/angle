@@ -269,16 +269,9 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     bool isSerialInUse(Serial serial) const;
 
     template <typename T>
-    void releaseObject(Serial resourceSerial, T *object)
+    void addGarbage(T *object)
     {
-        if (!isSerialInUse(resourceSerial))
-        {
-            object->destroy(getDevice());
-        }
-        else
-        {
-            object->dumpResources(resourceSerial, &mGarbage);
-        }
+        object->dumpResources(mCurrentQueueSerial, &mGarbage);
     }
 
     // Check to see which batches have finished completion (forward progress for

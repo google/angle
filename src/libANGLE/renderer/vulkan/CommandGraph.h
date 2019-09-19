@@ -339,19 +339,6 @@ class SharedResourceUse final : angle::NonCopyable
         return mUse->serial;
     }
 
-    ANGLE_INLINE void updateSerial(Serial serial)
-    {
-        ASSERT(valid());
-        ASSERT(mUse->serial < serial);
-        mUse->serial = serial;
-    }
-
-    ANGLE_INLINE void resetSerial()
-    {
-        ASSERT(valid());
-        mUse->serial = Serial();
-    }
-
     ANGLE_INLINE uint32_t getCounter() const
     {
         ASSERT(valid());
@@ -376,9 +363,8 @@ class CommandGraphResource : angle::NonCopyable
     // Returns true if the resource is in use by the renderer.
     bool isResourceInUse(ContextVk *contextVk) const;
 
-    // Get the current queue serial for this resource. Used to release resources, and for
     // queries, to know if the queue they are submitted on has finished execution.
-    Serial getStoredQueueSerial() const { return mUse.getSerial(); }
+    Serial getLatestSerial() const { return mUse.getSerial(); }
 
     // Sets up dependency relations. 'this' resource is the resource being written to.
     void addWriteDependency(ContextVk *contextVk, CommandGraphResource *writingResource);
@@ -388,12 +374,7 @@ class CommandGraphResource : angle::NonCopyable
 
     // Updates the in-use serial tracked for this resource. Will clear dependencies if the resource
     // was not used in this set of command nodes.
-    // TODO(jmadill): Remove serial once migrated. http://angelbug.com/2464
-    void onGraphAccess(Serial serial, CommandGraph *commandGraph);
-
-    // Reset the current queue serial for this resource. Will clear dependencies if the resource
-    // was not used in this set of command nodes.
-    void resetQueueSerial();
+    void onGraphAccess(CommandGraph *commandGraph);
 
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
@@ -415,8 +396,7 @@ class CommandGraphResource : angle::NonCopyable
 
     // Checks if we're in a RenderPass that encompasses renderArea, returning true if so. Updates
     // serial internally. Returns the started command buffer in commandBufferOut.
-    bool appendToStartedRenderPass(Serial serial,
-                                   CommandGraph *graph,
+    bool appendToStartedRenderPass(CommandGraph *graph,
                                    const gl::Rectangle &renderArea,
                                    CommandBuffer **commandBufferOut);
 
@@ -601,25 +581,24 @@ ANGLE_INLINE bool CommandGraphResource::hasStartedRenderPass() const
     return hasChildlessWritingNode() && mCurrentWritingNode->getInsideRenderPassCommands()->valid();
 }
 
-ANGLE_INLINE void CommandGraphResource::onGraphAccess(Serial serial, CommandGraph *commandGraph)
+ANGLE_INLINE void CommandGraphResource::onGraphAccess(CommandGraph *commandGraph)
 {
-    // Store reference to usage in graph.
-    commandGraph->onResourceUse(mUse);
-
-    if (serial > mUse.getSerial())
+    // Clear dependencies if this is a new access. The minimum counter value is 1.
+    if (mUse.getCounter() == 1)
     {
         mCurrentWritingNode = nullptr;
         mCurrentReadingNodes.clear();
-        mUse.updateSerial(serial);
     }
+
+    // Store reference to usage in graph.
+    commandGraph->onResourceUse(mUse);
 }
 
-ANGLE_INLINE bool CommandGraphResource::appendToStartedRenderPass(Serial serial,
-                                                                  CommandGraph *graph,
+ANGLE_INLINE bool CommandGraphResource::appendToStartedRenderPass(CommandGraph *graph,
                                                                   const gl::Rectangle &renderArea,
                                                                   CommandBuffer **commandBufferOut)
 {
-    onGraphAccess(serial, graph);
+    onGraphAccess(graph);
     if (hasStartedRenderPass())
     {
         if (mCurrentWritingNode->getRenderPassRenderArea().encloses(renderArea))

@@ -354,8 +354,7 @@ angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
         {
             ANGLE_TRY(flush(contextVk));
             mBuffer->unmap(contextVk->getDevice());
-            mBuffer->onGraphAccess(contextVk->getCurrentQueueSerial(),
-                                   contextVk->getCommandGraph());
+            mBuffer->onGraphAccess(contextVk->getCommandGraph());
 
             mInFlightBuffers.push_back(mBuffer);
             mBuffer = nullptr;
@@ -495,7 +494,7 @@ void DynamicBuffer::release(ContextVk *contextVk)
         // The buffers may not have been recording commands, but they could be used to store data so
         // they should live until at most this frame.  For example a vertex buffer filled entirely
         // by the CPU currently never gets a chance to have its serial set.
-        mBuffer->onGraphAccess(contextVk->getCurrentQueueSerial(), contextVk->getCommandGraph());
+        mBuffer->onGraphAccess(contextVk->getCommandGraph());
         mBuffer->release(contextVk);
         delete mBuffer;
         mBuffer = nullptr;
@@ -645,7 +644,7 @@ void DescriptorPoolHelper::destroy(VkDevice device)
 
 void DescriptorPoolHelper::release(ContextVk *contextVk)
 {
-    contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mDescriptorPool);
+    contextVk->addGarbage(&mDescriptorPool);
 }
 
 angle::Result DescriptorPoolHelper::allocateSets(ContextVk *contextVk,
@@ -1306,9 +1305,9 @@ void BufferHelper::release(ContextVk *contextVk)
     mSize       = 0;
     mViewFormat = nullptr;
 
-    contextVk->releaseObject(getStoredQueueSerial(), &mBuffer);
-    contextVk->releaseObject(getStoredQueueSerial(), &mBufferView);
-    contextVk->releaseObject(getStoredQueueSerial(), &mDeviceMemory);
+    contextVk->addGarbage(&mBuffer);
+    contextVk->addGarbage(&mBufferView);
+    contextVk->addGarbage(&mDeviceMemory);
 }
 
 void BufferHelper::release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue)
@@ -1568,8 +1567,8 @@ angle::Result ImageHelper::initExternal(Context *context,
 
 void ImageHelper::releaseImage(ContextVk *contextVk)
 {
-    contextVk->releaseObject(getStoredQueueSerial(), &mImage);
-    contextVk->releaseObject(getStoredQueueSerial(), &mDeviceMemory);
+    contextVk->addGarbage(&mImage);
+    contextVk->addGarbage(&mDeviceMemory);
 }
 
 void ImageHelper::releaseImage(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue)
@@ -2730,7 +2729,7 @@ angle::Result FramebufferHelper::init(ContextVk *contextVk,
 
 void FramebufferHelper::release(ContextVk *contextVk)
 {
-    contextVk->releaseObject(getStoredQueueSerial(), &mFramebuffer);
+    contextVk->addGarbage(&mFramebuffer);
 }
 
 // FramebufferHelper implementation.
@@ -2762,7 +2761,7 @@ void ShaderProgramHelper::destroy(VkDevice device)
 void ShaderProgramHelper::release(ContextVk *contextVk)
 {
     mGraphicsPipelines.release(contextVk);
-    contextVk->releaseObject(mComputePipeline.getSerial(), &mComputePipeline.get());
+    contextVk->addGarbage(&mComputePipeline.get());
     for (BindingPointer<ShaderAndSerial> &shader : mShaders)
     {
         shader.reset();

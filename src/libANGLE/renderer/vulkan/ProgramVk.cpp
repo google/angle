@@ -1233,8 +1233,7 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
         }
         else
         {
-            mEmptyBuffer.onGraphAccess(contextVk->getCurrentQueueSerial(),
-                                       contextVk->getCommandGraph());
+            mEmptyBuffer.onGraphAccess(contextVk->getCommandGraph());
             bufferInfo.buffer = mEmptyBuffer.getBuffer().getHandle();
         }
 
@@ -1399,7 +1398,7 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
     }
 
     // Bind the empty buffer to every array slot that's unused.
-    mEmptyBuffer.onGraphAccess(contextVk->getCurrentQueueSerial(), contextVk->getCommandGraph());
+    mEmptyBuffer.onGraphAccess(contextVk->getCommandGraph());
     for (size_t binding : ~writtenBindings)
     {
         VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[binding];

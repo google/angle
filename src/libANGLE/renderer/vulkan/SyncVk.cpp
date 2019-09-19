@@ -25,7 +25,7 @@ void FenceSyncVk::onDestroy(ContextVk *contextVk)
 {
     if (mEvent.valid())
     {
-        contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mEvent);
+        contextVk->addGarbage(&mEvent);
     }
 
     for (vk::Shared<vk::Fence> &fence : mFences)

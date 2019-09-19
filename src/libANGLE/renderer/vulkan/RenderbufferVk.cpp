@@ -233,8 +233,8 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
         mImage = nullptr;
     }
 
-    contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mImageView);
-    contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mCubeImageFetchView);
+    contextVk->addGarbage(&mImageView);
+    contextVk->addGarbage(&mCubeImageFetchView);
 }
 
 }  // namespace rx

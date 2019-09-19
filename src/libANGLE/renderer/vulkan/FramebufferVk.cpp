@@ -196,7 +196,7 @@ angle::Result FramebufferVk::invalidate(const gl::Context *context,
                                         const GLenum *attachments)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    mFramebuffer.onGraphAccess(contextVk->getCurrentQueueSerial(), contextVk->getCommandGraph());
+    mFramebuffer.onGraphAccess(contextVk->getCommandGraph());
 
     if (mFramebuffer.valid() && mFramebuffer.hasStartedRenderPass())
     {
@@ -212,7 +212,7 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
                                            const gl::Rectangle &area)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    mFramebuffer.onGraphAccess(contextVk->getCurrentQueueSerial(), contextVk->getCommandGraph());
+    mFramebuffer.onGraphAccess(contextVk->getCommandGraph());
 
     // RenderPass' storeOp cannot be made conditional to a specific region, so we only apply this
     // hint if the requested area encompasses the render area.
@@ -263,7 +263,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    mFramebuffer.onGraphAccess(contextVk->getCurrentQueueSerial(), contextVk->getCommandGraph());
+    mFramebuffer.onGraphAccess(contextVk->getCommandGraph());
 
     // This function assumes that only enabled attachments are asked to be cleared.
     ASSERT((clearColorBuffers & mState.getEnabledDrawBuffers()) == clearColorBuffers);
@@ -899,8 +899,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             vk::ImageView depthViewObject   = depthView.release();
             vk::ImageView stencilViewObject = stencilView.release();
 
-            contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &depthViewObject);
-            contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &stencilViewObject);
+            contextVk->addGarbage(&depthViewObject);
+            contextVk->addGarbage(&stencilViewObject);
         }
     }
 
@@ -1485,8 +1485,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
             contextVk, renderer->getMemoryProperties(), gl::Extents(area.width, area.height, 1),
             srcImage->getFormat(),
             VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT, 1));
-        resolvedImage.get().onGraphAccess(contextVk->getCurrentQueueSerial(),
-                                          contextVk->getCommandGraph());
+        resolvedImage.get().onGraphAccess(contextVk->getCommandGraph());
 
         // Note: resolve only works on color images (not depth/stencil).
         //
@@ -1605,7 +1604,7 @@ void FramebufferVk::onScissorChange(ContextVk *contextVk)
     // is too small, we need to start a new one.  The latter can happen if a scissored clear starts
     // a render pass, the scissor is disabled and a draw call is issued to affect the whole
     // framebuffer.
-    mFramebuffer.onGraphAccess(contextVk->getCurrentQueueSerial(), contextVk->getCommandGraph());
+    mFramebuffer.onGraphAccess(contextVk->getCommandGraph());
     if (mFramebuffer.hasStartedRenderPass() &&
         !mFramebuffer.getRenderPassRenderArea().encloses(scissoredRenderArea))
     {

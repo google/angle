@@ -222,7 +222,7 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
             ANGLE_TRY(contextVk->flushImpl(nullptr));
         }
         // Make sure the GPU is done with the buffer.
-        ANGLE_TRY(contextVk->finishToSerial(mBuffer.getStoredQueueSerial()));
+        ANGLE_TRY(contextVk->finishToSerial(mBuffer.getLatestSerial()));
 
         ASSERT(!mBuffer.isResourceInUse(contextVk));
     }
@@ -319,7 +319,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
                                          VK_ACCESS_HOST_WRITE_BIT, copyRegion));
 
         // Immediately release staging buffer. We should probably be using a DynamicBuffer here.
-        contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &stagingBuffer);
+        contextVk->addGarbage(&stagingBuffer);
     }
     else
     {

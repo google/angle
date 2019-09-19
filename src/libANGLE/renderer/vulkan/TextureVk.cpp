@@ -83,13 +83,13 @@ bool HasBothDepthAndStencilAspects(VkImageAspectFlags aspectFlags)
 TextureVk::TextureVkViews::TextureVkViews() {}
 TextureVk::TextureVkViews::~TextureVkViews() {}
 
-void TextureVk::TextureVkViews::release(ContextVk *contextVk, Serial currentSerial)
+void TextureVk::TextureVkViews::release(ContextVk *contextVk)
 {
-    contextVk->releaseObject(currentSerial, &mDrawBaseLevelImageView);
-    contextVk->releaseObject(currentSerial, &mReadBaseLevelImageView);
-    contextVk->releaseObject(currentSerial, &mReadMipmapImageView);
-    contextVk->releaseObject(currentSerial, &mFetchBaseLevelImageView);
-    contextVk->releaseObject(currentSerial, &mFetchMipmapImageView);
+    contextVk->addGarbage(&mDrawBaseLevelImageView);
+    contextVk->addGarbage(&mReadBaseLevelImageView);
+    contextVk->addGarbage(&mReadMipmapImageView);
+    contextVk->addGarbage(&mFetchBaseLevelImageView);
+    contextVk->addGarbage(&mFetchMipmapImageView);
 }
 
 angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
@@ -159,7 +159,7 @@ void TextureVk::onDestroy(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
 
     releaseAndDeleteImage(contextVk);
-    contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mSampler);
+    contextVk->addGarbage(&mSampler);
 }
 
 angle::Result TextureVk::setImage(const gl::Context *context,
@@ -660,9 +660,8 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
                                                   vk::ImageHelper *srcImage,
                                                   const vk::ImageView *srcView)
 {
-    RendererVk *renderer      = contextVk->getRenderer();
-    UtilsVk &utilsVk          = contextVk->getUtils();
-    Serial currentQueueSerial = contextVk->getCurrentQueueSerial();
+    RendererVk *renderer = contextVk->getRenderer();
+    UtilsVk &utilsVk     = contextVk->getUtils();
 
     UtilsVk::CopyImageParameters params;
     params.srcOffset[0]        = sourceArea.x;
@@ -731,7 +730,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
 
             // Queue the resource for cleanup as soon as the copy above is finished.  There's no
             // need to keep it around.
-            contextVk->releaseObject(currentQueueSerial, &stagingView);
+            contextVk->addGarbage(&stagingView);
         }
 
         // Stage the copy for when the image storage is actually created.
@@ -1294,7 +1293,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     RendererVk *renderer = contextVk->getRenderer();
     if (mSampler.valid())
     {
-        contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mSampler);
+        contextVk->addGarbage(&mSampler);
     }
 
     if (dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
@@ -1695,35 +1694,32 @@ void TextureVk::releaseImage(ContextVk *contextVk)
 
 void TextureVk::releaseImageViews(ContextVk *contextVk)
 {
-    Serial currentSerial = contextVk->getCurrentQueueSerial();
-
-    mDefaultViews.release(contextVk, currentSerial);
-
-    mStencilViews.release(contextVk, currentSerial);
+    mDefaultViews.release(contextVk);
+    mStencilViews.release(contextVk);
 
     for (vk::ImageViewVector &layerViews : mLayerLevelDrawImageViews)
     {
         for (vk::ImageView &imageView : layerViews)
         {
-            contextVk->releaseObject(currentSerial, &imageView);
+            contextVk->addGarbage(&imageView);
         }
     }
     mLayerLevelDrawImageViews.clear();
     for (vk::ImageView &imageView : mLayerFetchImageView)
     {
-        contextVk->releaseObject(currentSerial, &imageView);
+        contextVk->addGarbage(&imageView);
     }
     mLayerFetchImageView.clear();
     for (vk::ImageView &imageView : mLevelStorageImageViews)
     {
-        contextVk->releaseObject(currentSerial, &imageView);
+        contextVk->addGarbage(&imageView);
     }
     mLevelStorageImageViews.clear();
     for (vk::ImageViewVector &layerViews : mLayerLevelStorageImageViews)
     {
         for (vk::ImageView &imageView : layerViews)
         {
-            contextVk->releaseObject(currentSerial, &imageView);
+            contextVk->addGarbage(&imageView);
         }
     }
     mLayerLevelStorageImageViews.clear();

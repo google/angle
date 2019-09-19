@@ -184,7 +184,8 @@ class TextureVk : public TextureImpl
         TextureVkViews();
         ~TextureVkViews();
 
-        void release(ContextVk *contextVk, Serial currentSerial);
+        void release(ContextVk *contextVk);
+
         vk::ImageView mDrawBaseLevelImageView;
         vk::ImageView mReadBaseLevelImageView;
         vk::ImageView mReadMipmapImageView;

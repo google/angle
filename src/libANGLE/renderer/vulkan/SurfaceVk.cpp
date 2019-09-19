@@ -896,36 +896,32 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
 {
     if (mDepthStencilImage.valid())
     {
-        Serial depthStencilSerial = mDepthStencilImage.getStoredQueueSerial();
         mDepthStencilImage.releaseImage(contextVk);
         mDepthStencilImage.releaseStagingBuffer(contextVk);
 
         if (mDepthStencilImageView.valid())
         {
-            contextVk->releaseObject(depthStencilSerial, &mDepthStencilImageView);
+            contextVk->addGarbage(&mDepthStencilImageView);
         }
     }
 
     if (mColorImageMS.valid())
     {
-        Serial serial = mColorImageMS.getStoredQueueSerial();
         mColorImageMS.releaseImage(contextVk);
         mColorImageMS.releaseStagingBuffer(contextVk);
 
-        contextVk->releaseObject(serial, &mColorImageViewMS);
-        contextVk->releaseObject(serial, &mFramebufferMS);
+        contextVk->addGarbage(&mColorImageViewMS);
+        contextVk->addGarbage(&mFramebufferMS);
     }
 
     for (SwapchainImage &swapchainImage : mSwapchainImages)
     {
-        Serial imageSerial = swapchainImage.image.getStoredQueueSerial();
-
         // We don't own the swapchain image handles, so we just remove our reference to it.
         swapchainImage.image.resetImageWeakReference();
         swapchainImage.image.destroy(contextVk->getDevice());
 
-        contextVk->releaseObject(imageSerial, &swapchainImage.imageView);
-        contextVk->releaseObject(imageSerial, &swapchainImage.framebuffer);
+        contextVk->addGarbage(&swapchainImage.imageView);
+        contextVk->addGarbage(&swapchainImage.framebuffer);
 
         // present history must have already been taken care of.
         for (ImagePresentHistory &presentHistory : swapchainImage.presentHistory)
@@ -1229,17 +1225,6 @@ VkResult WindowSurfaceVk::nextSwapchainImage(vk::Context *context)
     mAcquireImageSemaphore = acquireImageSemaphore.release();
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
-
-    // This swap chain image is new, reset any dependency information it has.
-    //
-    // When the Vulkan backend is multithreading, different contexts can have very different current
-    // serials.  If a surface is rendered to by multiple contexts in different frames, the last
-    // context to write a particular swap chain image has no bearing on the current context writing
-    // to that image.
-    //
-    // Clear the image's queue serial because it's possible that it appears to be in the future to
-    // the next context that writes to the image.
-    image.image.resetQueueSerial();
 
     // Update RenderTarget pointers to this swapchain image if not multisampling.  Note: a possible
     // optimization is to defer the |vkAcquireNextImageKHR| call itself to |present()| if

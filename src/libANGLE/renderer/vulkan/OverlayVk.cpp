@@ -151,9 +151,8 @@ angle::Result OverlayVk::cullWidgets(ContextVk *contextVk)
     RendererVk *rendererVk = contextVk->getRenderer();
 
     // Release old culledWidgets image
-    Serial currentSerial = contextVk->getCurrentQueueSerial();
-    contextVk->releaseObject(currentSerial, &mCulledWidgets);
-    contextVk->releaseObject(currentSerial, &mCulledWidgetsView);
+    contextVk->addGarbage(&mCulledWidgets);
+    contextVk->addGarbage(&mCulledWidgetsView);
 
     // Create a buffer to contain coordinates of enabled text and graph widgets.  This buffer will
     // be used to perform tiled culling and can be discarded immediately after.
