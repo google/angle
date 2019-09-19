@@ -98,8 +98,16 @@ enum Conversion
     kA2BGR10SintToFloat  = 0x00000014,
     kA2BGR10UintToFloat  = 0x00000016,
     kA2BGR10SnormToFloat = 0x00000018,
+    kRGB10A2SintToFloat  = 0x0000001A,
+    kRGB10A2UintToFloat  = 0x0000001C,
+    kRGB10A2SnormToFloat = 0x0000001E,
+    kRGB10A2UnormToFloat = 0x00000020,
+    kRGB10X2SintToFloat  = 0x00000022,
+    kRGB10X2UintToFloat  = 0x00000024,
+    kRGB10X2SnormToFloat = 0x00000026,
+    kRGB10X2UnormToFloat = 0x00000028,
 };
-constexpr size_t kArrayLen = 0x0000001A;
+constexpr size_t kArrayLen = 0x0000002A;
 }  // namespace ConvertVertex_comp
 
 namespace FullScreenQuad_vert

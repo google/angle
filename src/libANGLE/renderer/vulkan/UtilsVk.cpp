@@ -82,7 +82,14 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
     bool srcIsA2BGR10 =
         ((params.srcFormat->vertexAttribType == gl::VertexAttribType::UnsignedInt2101010) ||
          (params.srcFormat->vertexAttribType == gl::VertexAttribType::Int2101010));
-
+    bool srcIsRGB10A2 =
+        ((params.srcFormat->vertexAttribType == gl::VertexAttribType::UnsignedInt1010102) ||
+         params.srcFormat->vertexAttribType == gl::VertexAttribType::Int1010102) &&
+        params.srcFormat->alphaBits;
+    bool srcIsRGB10X2 =
+        ((params.srcFormat->vertexAttribType == gl::VertexAttribType::UnsignedInt1010102) ||
+         params.srcFormat->vertexAttribType == gl::VertexAttribType::Int1010102) &&
+        !params.srcFormat->alphaBits;
     bool destIsSint  = params.destFormat->isSint();
     bool destIsUint  = params.destFormat->isUint();
     bool destIsFloat = params.destFormat->isFloat();
@@ -128,6 +135,52 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
         else if (srcIsSnorm)
         {
             flags |= ConvertVertex_comp::kA2BGR10SnormToFloat;
+        }
+        else
+        {
+            UNREACHABLE();
+        }
+    }
+    else if (srcIsRGB10A2)
+    {
+        if (srcIsSint)
+        {
+            flags |= ConvertVertex_comp::kRGB10A2SintToFloat;
+        }
+        else if (srcIsUint)
+        {
+            flags |= ConvertVertex_comp::kRGB10A2UintToFloat;
+        }
+        else if (srcIsSnorm)
+        {
+            flags |= ConvertVertex_comp::kRGB10A2SnormToFloat;
+        }
+        else if (srcIsUnorm)
+        {
+            flags |= ConvertVertex_comp::kRGB10A2UnormToFloat;
+        }
+        else
+        {
+            UNREACHABLE();
+        }
+    }
+    else if (srcIsRGB10X2)
+    {
+        if (srcIsSint)
+        {
+            flags |= ConvertVertex_comp::kRGB10X2SintToFloat;
+        }
+        else if (srcIsUint)
+        {
+            flags |= ConvertVertex_comp::kRGB10X2UintToFloat;
+        }
+        else if (srcIsSnorm)
+        {
+            flags |= ConvertVertex_comp::kRGB10X2SnormToFloat;
+        }
+        else if (srcIsUnorm)
+        {
+            flags |= ConvertVertex_comp::kRGB10X2UnormToFloat;
         }
         else
         {

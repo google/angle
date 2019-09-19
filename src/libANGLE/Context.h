@@ -122,6 +122,7 @@ enum class VertexAttribTypeCase
     Invalid        = 0,
     Valid          = 1,
     ValidSize4Only = 2,
+    ValidSize3or4  = 3,
 };
 
 // Helper class for managing cache variables and state changes.

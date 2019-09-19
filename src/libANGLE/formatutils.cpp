@@ -1679,6 +1679,49 @@ angle::FormatID GetVertexFormatID(VertexAttribType type,
             if (normalized)
                 return angle::FormatID::R10G10B10A2_UNORM;
             return angle::FormatID::R10G10B10A2_USCALED;
+        case VertexAttribType::Int1010102:
+            switch (components)
+            {
+                case 3:
+                    if (pureInteger)
+                        return angle::FormatID::X2R10G10B10_SINT_VERTEX;
+                    if (normalized)
+                        return angle::FormatID::X2R10G10B10_SNORM_VERTEX;
+                    return angle::FormatID::X2R10G10B10_SSCALED_VERTEX;
+                case 4:
+                    if (pureInteger)
+                        return angle::FormatID::A2R10G10B10_SINT_VERTEX;
+                    if (normalized)
+                        return angle::FormatID::A2R10G10B10_SNORM_VERTEX;
+                    return angle::FormatID::A2R10G10B10_SSCALED_VERTEX;
+                default:
+                    UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                    return angle::FormatID::NONE;
+#endif
+            }
+        case VertexAttribType::UnsignedInt1010102:
+            switch (components)
+            {
+                case 3:
+                    if (pureInteger)
+                        return angle::FormatID::X2R10G10B10_UINT_VERTEX;
+                    if (normalized)
+                        return angle::FormatID::X2R10G10B10_UNORM_VERTEX;
+                    return angle::FormatID::X2R10G10B10_USCALED_VERTEX;
+
+                case 4:
+                    if (pureInteger)
+                        return angle::FormatID::A2R10G10B10_UINT_VERTEX;
+                    if (normalized)
+                        return angle::FormatID::A2R10G10B10_UNORM_VERTEX;
+                    return angle::FormatID::A2R10G10B10_USCALED_VERTEX;
+                default:
+                    UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                    return angle::FormatID::NONE;
+#endif
+            }
         default:
             UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
@@ -2166,6 +2209,61 @@ const VertexFormat &GetVertexFormatFromID(angle::FormatID vertexFormatID)
             static const VertexFormat format(GL_UNSIGNED_INT_2_10_10_10_REV, GL_FALSE, 4, true);
             return format;
         }
+        case angle::FormatID::A2R10G10B10_SSCALED_VERTEX:
+        {
+            static const VertexFormat format(GL_INT_10_10_10_2_OES, GL_FALSE, 4, false);
+            return format;
+        }
+        case angle::FormatID::A2R10G10B10_USCALED_VERTEX:
+        {
+            static const VertexFormat format(GL_UNSIGNED_INT_10_10_10_2_OES, GL_FALSE, 4, false);
+            return format;
+        }
+        case angle::FormatID::A2R10G10B10_SNORM_VERTEX:
+        {
+            static const VertexFormat format(GL_INT_10_10_10_2_OES, GL_TRUE, 4, false);
+            return format;
+        }
+        case angle::FormatID::A2R10G10B10_UNORM_VERTEX:
+        {
+            static const VertexFormat format(GL_UNSIGNED_INT_10_10_10_2_OES, GL_TRUE, 4, false);
+            return format;
+        }
+        case angle::FormatID::A2R10G10B10_SINT_VERTEX:
+        {
+            static const VertexFormat format(GL_INT_10_10_10_2_OES, GL_FALSE, 4, true);
+            return format;
+        }
+        case angle::FormatID::A2R10G10B10_UINT_VERTEX:
+        {
+            static const VertexFormat format(GL_UNSIGNED_INT_10_10_10_2_OES, GL_FALSE, 4, true);
+            return format;
+        }
+        case angle::FormatID::X2R10G10B10_SSCALED_VERTEX:
+        {
+            static const VertexFormat format(GL_INT_10_10_10_2_OES, GL_FALSE, 4, false);
+            return format;
+        }
+        case angle::FormatID::X2R10G10B10_USCALED_VERTEX:
+        {
+            static const VertexFormat format(GL_UNSIGNED_INT_10_10_10_2_OES, GL_FALSE, 4, false);
+            return format;
+        }
+        case angle::FormatID::X2R10G10B10_SNORM_VERTEX:
+        {
+            static const VertexFormat format(GL_INT_10_10_10_2_OES, GL_TRUE, 4, false);
+            return format;
+        }
+        case angle::FormatID::X2R10G10B10_UNORM_VERTEX:
+        {
+            static const VertexFormat format(GL_UNSIGNED_INT_10_10_10_2_OES, GL_TRUE, 4, false);
+            return format;
+        }
+        case angle::FormatID::X2R10G10B10_SINT_VERTEX:
+        {
+            static const VertexFormat format(GL_INT_10_10_10_2_OES, GL_FALSE, 4, true);
+            return format;
+        }
         default:
         {
             static const VertexFormat format(GL_NONE, GL_FALSE, 0, false);
@@ -2236,6 +2334,18 @@ size_t GetVertexFormatSize(angle::FormatID vertexFormatID)
         case angle::FormatID::R10G10B10A2_UNORM:
         case angle::FormatID::R10G10B10A2_SINT:
         case angle::FormatID::R10G10B10A2_UINT:
+        case angle::FormatID::A2R10G10B10_SSCALED_VERTEX:
+        case angle::FormatID::A2R10G10B10_USCALED_VERTEX:
+        case angle::FormatID::A2R10G10B10_SINT_VERTEX:
+        case angle::FormatID::A2R10G10B10_UINT_VERTEX:
+        case angle::FormatID::A2R10G10B10_SNORM_VERTEX:
+        case angle::FormatID::A2R10G10B10_UNORM_VERTEX:
+        case angle::FormatID::X2R10G10B10_SSCALED_VERTEX:
+        case angle::FormatID::X2R10G10B10_USCALED_VERTEX:
+        case angle::FormatID::X2R10G10B10_SINT_VERTEX:
+        case angle::FormatID::X2R10G10B10_UINT_VERTEX:
+        case angle::FormatID::X2R10G10B10_SNORM_VERTEX:
+        case angle::FormatID::X2R10G10B10_UNORM_VERTEX:
             return 4;
 
         case angle::FormatID::R16G16B16_SSCALED:

@@ -29,6 +29,8 @@ GLsizei TypeStride(GLenum attribType)
         case GL_UNSIGNED_INT:
         case GL_INT:
         case GL_FLOAT:
+        case GL_UNSIGNED_INT_10_10_10_2_OES:
+        case GL_INT_10_10_10_2_OES:
             return 4;
         default:
             EXPECT_TRUE(false);
@@ -49,6 +51,82 @@ GLfloat Normalize(T value)
     else
     {
         return static_cast<GLfloat>(value) / static_cast<GLfloat>(std::numeric_limits<T>::max());
+    }
+}
+
+// Normalization for each channel of signed/unsigned 10_10_10_2 types
+template <typename T>
+GLfloat Normalize10(T value)
+{
+    static_assert(std::is_integral<T>::value, "Integer required.");
+    GLfloat floatOutput;
+    if (std::is_signed<T>::value)
+    {
+        const uint32_t signMask     = 0x200;       // 1 set at the 9th bit
+        const uint32_t negativeMask = 0xFFFFFC00;  // All bits from 10 to 31 set to 1
+
+        if (value & signMask)
+        {
+            int negativeNumber = value | negativeMask;
+            floatOutput        = static_cast<GLfloat>(negativeNumber);
+        }
+        else
+        {
+            floatOutput = static_cast<GLfloat>(value);
+        }
+
+        const int32_t maxValue = 0x1FF;       // 1 set in bits 0 through 8
+        const int32_t minValue = 0xFFFFFE01;  // Inverse of maxValue
+
+        // A 10-bit two's complement number has the possibility of being minValue - 1 but
+        // OpenGL's normalization rules dictate that it should be clamped to minValue in
+        // this case.
+        if (floatOutput < minValue)
+            floatOutput = minValue;
+
+        const int32_t halfRange = (maxValue - minValue) >> 1;
+        floatOutput             = ((floatOutput - minValue) / halfRange) - 1.0f;
+    }
+    else
+    {
+        const GLfloat maxValue = 1023.0f;  // 1 set in bits 0 through 9
+        floatOutput            = static_cast<GLfloat>(value) / maxValue;
+    }
+    return floatOutput;
+}
+
+template <typename T>
+GLfloat Normalize2(T value)
+{
+    static_assert(std::is_integral<T>::value, "Integer required.");
+    if (std::is_signed<T>::value)
+        return static_cast<float>(value * 2 + 1) / 3.0f;
+    else
+        return static_cast<float>(value) / 3.0f;
+}
+
+template <typename DestT, typename SrcT>
+DestT Pack1010102(std::array<SrcT, 4> input)
+{
+    static_assert(std::is_integral<SrcT>::value, "Integer required.");
+    static_assert(std::is_integral<DestT>::value, "Integer required.");
+    static_assert(std::is_unsigned<SrcT>::value == std::is_unsigned<DestT>::value,
+                  "Signedness should be equal.");
+    DestT rOut, gOut, bOut, aOut;
+    rOut = static_cast<DestT>(input[0]);
+    gOut = static_cast<DestT>(input[1]);
+    bOut = static_cast<DestT>(input[2]);
+    aOut = static_cast<DestT>(input[3]);
+
+    if (std::is_unsigned<SrcT>::value)
+    {
+        return rOut << 22 | gOut << 12 | bOut << 2 | aOut;
+    }
+    else
+    {
+        // Need to apply bit mask to account for sign extension
+        return (0xFFC00000u & rOut << 22) | (0x003FF000u & gOut << 12) | (0x00000FFCu & bOut << 2) |
+               (0x00000003u & aOut);
     }
 }
 
@@ -600,6 +678,217 @@ TEST_P(VertexAttributeTest, MixedUsingBufferAndClientMemoryPointer)
     TestData normalizedData(GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData.data(),
                             normalizedExpectedData.data());
     runTest(normalizedData);
+}
+
+// Verify signed unnormalized INT_10_10_10_2 vertex type
+TEST_P(VertexAttributeTest, SignedPacked1010102ExtensionUnnormalized)
+{
+    std::string extensionList(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)));
+    ANGLE_SKIP_TEST_IF((extensionList.find("OES_vertex_type_10_10_10_2") == std::string::npos));
+
+    // RGB channels are 10-bits, alpha is 2-bits
+    std::array<std::array<GLshort, 4>, kVertexCount / 4> unpackedInput = {{{0, 1, 2, 0},
+                                                                           {254, 255, 256, 1},
+                                                                           {256, 255, 254, -2},
+                                                                           {511, 510, 509, -1},
+                                                                           {-512, -511, -500, -2},
+                                                                           {-1, -2, -3, 1}}};
+
+    std::array<GLint, kVertexCount> packedInput;
+    std::array<GLfloat, kVertexCount> expectedTypeSize4;
+    std::array<GLfloat, kVertexCount> expectedTypeSize3;
+
+    for (size_t i = 0; i < kVertexCount / 4; i++)
+    {
+        packedInput[i] = Pack1010102<GLint, GLshort>(unpackedInput[i]);
+
+        expectedTypeSize3[i * 3 + 0] = expectedTypeSize4[i * 4 + 0] = unpackedInput[i][0];
+        expectedTypeSize3[i * 3 + 1] = expectedTypeSize4[i * 4 + 1] = unpackedInput[i][1];
+        expectedTypeSize3[i * 3 + 2] = expectedTypeSize4[i * 4 + 2] = unpackedInput[i][2];
+
+        // when the type size is 3, alpha will be 1.0f by GLES driver
+        expectedTypeSize4[i * 4 + 3] = unpackedInput[i][3];
+    }
+
+    TestData data4(GL_INT_10_10_10_2_OES, GL_FALSE, Source::IMMEDIATE, packedInput.data(),
+                   expectedTypeSize4.data());
+    TestData bufferedData4(GL_INT_10_10_10_2_OES, GL_FALSE, Source::BUFFER, packedInput.data(),
+                           expectedTypeSize4.data());
+    TestData data3(GL_INT_10_10_10_2_OES, GL_FALSE, Source::IMMEDIATE, packedInput.data(),
+                   expectedTypeSize3.data());
+    TestData bufferedData3(GL_INT_10_10_10_2_OES, GL_FALSE, Source::BUFFER, packedInput.data(),
+                           expectedTypeSize3.data());
+
+    std::array<std::pair<const TestData &, GLint>, 4> dataSet = {
+        {{data4, 4}, {bufferedData4, 4}, {data3, 3}, {bufferedData3, 3}}};
+
+    for (auto data : dataSet)
+    {
+        setupTest(data.first, data.second);
+        drawQuad(mProgram, "position", 0.5f);
+        glDisableVertexAttribArray(mTestAttrib);
+        glDisableVertexAttribArray(mExpectedAttrib);
+        checkPixels();
+    }
+}
+
+// Verify signed normalized INT_10_10_10_2 vertex type
+TEST_P(VertexAttributeTest, SignedPacked1010102ExtensionNormalized)
+{
+    std::string extensionList(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)));
+    ANGLE_SKIP_TEST_IF((extensionList.find("OES_vertex_type_10_10_10_2") == std::string::npos));
+
+    // RGB channels are 10-bits, alpha is 2-bits
+    std::array<std::array<GLshort, 4>, kVertexCount / 4> unpackedInput = {{{0, 1, 2, 0},
+                                                                           {254, 255, 256, 1},
+                                                                           {256, 255, 254, -2},
+                                                                           {511, 510, 509, -1},
+                                                                           {-512, -511, -500, -2},
+                                                                           {-1, -2, -3, 1}}};
+    std::array<GLint, kVertexCount> packedInput;
+    std::array<GLfloat, kVertexCount> expectedNormalizedTypeSize4;
+    std::array<GLfloat, kVertexCount> expectedNormalizedTypeSize3;
+
+    for (size_t i = 0; i < kVertexCount / 4; i++)
+    {
+        packedInput[i] = Pack1010102<GLint, GLshort>(unpackedInput[i]);
+
+        expectedNormalizedTypeSize3[i * 3 + 0] = expectedNormalizedTypeSize4[i * 4 + 0] =
+            Normalize10<GLshort>(unpackedInput[i][0]);
+        expectedNormalizedTypeSize3[i * 3 + 1] = expectedNormalizedTypeSize4[i * 4 + 1] =
+            Normalize10<GLshort>(unpackedInput[i][1]);
+        expectedNormalizedTypeSize3[i * 3 + 2] = expectedNormalizedTypeSize4[i * 4 + 2] =
+            Normalize10<GLshort>(unpackedInput[i][2]);
+
+        // when the type size is 3, alpha will be 1.0f by GLES driver
+        expectedNormalizedTypeSize4[i * 4 + 3] = Normalize2<GLshort>(unpackedInput[i][3]);
+    }
+
+    TestData bufferedData4(GL_INT_10_10_10_2_OES, GL_TRUE, Source::BUFFER, packedInput.data(),
+                           expectedNormalizedTypeSize4.data());
+    TestData data3(GL_INT_10_10_10_2_OES, GL_TRUE, Source::IMMEDIATE, packedInput.data(),
+                   expectedNormalizedTypeSize3.data());
+    TestData bufferedData3(GL_INT_10_10_10_2_OES, GL_TRUE, Source::BUFFER, packedInput.data(),
+                           expectedNormalizedTypeSize3.data());
+
+    std::array<std::pair<const TestData &, GLint>, 3> dataSet = {
+        {{bufferedData4, 4}, {data3, 3}, {bufferedData3, 3}}};
+
+    for (auto data : dataSet)
+    {
+        setupTest(data.first, data.second);
+        drawQuad(mProgram, "position", 0.5f);
+        glDisableVertexAttribArray(mTestAttrib);
+        glDisableVertexAttribArray(mExpectedAttrib);
+        checkPixels();
+    }
+}
+
+// Verify unsigned unnormalized INT_10_10_10_2 vertex type
+TEST_P(VertexAttributeTest, UnsignedPacked1010102ExtensionUnnormalized)
+{
+    std::string extensionList(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)));
+    ANGLE_SKIP_TEST_IF((extensionList.find("OES_vertex_type_10_10_10_2") == std::string::npos));
+
+    // RGB channels are 10-bits, alpha is 2-bits
+    std::array<std::array<GLushort, 4>, kVertexCount / 4> unpackedInput = {{{0, 1, 2, 0},
+                                                                            {511, 512, 513, 1},
+                                                                            {1023, 1022, 1021, 3},
+                                                                            {513, 512, 511, 2},
+                                                                            {2, 1, 0, 3},
+                                                                            {1023, 1022, 1022, 0}}};
+
+    std::array<GLuint, kVertexCount> packedInput;
+    std::array<GLfloat, kVertexCount> expectedTypeSize3;
+    std::array<GLfloat, kVertexCount> expectedTypeSize4;
+
+    for (size_t i = 0; i < kVertexCount / 4; i++)
+    {
+        packedInput[i] = Pack1010102<GLuint, GLushort>(unpackedInput[i]);
+
+        expectedTypeSize3[i * 3 + 0] = expectedTypeSize4[i * 4 + 0] = unpackedInput[i][0];
+        expectedTypeSize3[i * 3 + 1] = expectedTypeSize4[i * 4 + 1] = unpackedInput[i][1];
+        expectedTypeSize3[i * 3 + 2] = expectedTypeSize4[i * 4 + 2] = unpackedInput[i][2];
+
+        // when the type size is 3, alpha will be 1.0f by GLES driver
+        expectedTypeSize4[i * 4 + 3] = unpackedInput[i][3];
+    }
+
+    TestData data4(GL_UNSIGNED_INT_10_10_10_2_OES, GL_FALSE, Source::IMMEDIATE, packedInput.data(),
+                   expectedTypeSize4.data());
+    TestData bufferedData4(GL_UNSIGNED_INT_10_10_10_2_OES, GL_FALSE, Source::BUFFER,
+                           packedInput.data(), expectedTypeSize4.data());
+    TestData data3(GL_UNSIGNED_INT_10_10_10_2_OES, GL_FALSE, Source::BUFFER, packedInput.data(),
+                   expectedTypeSize3.data());
+    TestData bufferedData3(GL_UNSIGNED_INT_10_10_10_2_OES, GL_FALSE, Source::BUFFER,
+                           packedInput.data(), expectedTypeSize3.data());
+
+    std::array<std::pair<const TestData &, GLint>, 4> dataSet = {
+        {{data4, 4}, {bufferedData4, 4}, {data3, 3}, {bufferedData3, 3}}};
+
+    for (auto data : dataSet)
+    {
+        setupTest(data.first, data.second);
+        drawQuad(mProgram, "position", 0.5f);
+        glDisableVertexAttribArray(mTestAttrib);
+        glDisableVertexAttribArray(mExpectedAttrib);
+        checkPixels();
+    }
+}
+
+// Verify unsigned normalized INT_10_10_10_2 vertex type
+TEST_P(VertexAttributeTest, UnsignedPacked1010102ExtensionNormalized)
+{
+    std::string extensionList(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)));
+    ANGLE_SKIP_TEST_IF((extensionList.find("OES_vertex_type_10_10_10_2") == std::string::npos));
+
+    // RGB channels are 10-bits, alpha is 2-bits
+    std::array<std::array<GLushort, 4>, kVertexCount / 4> unpackedInput = {{{0, 1, 2, 0},
+                                                                            {511, 512, 513, 1},
+                                                                            {1023, 1022, 1021, 3},
+                                                                            {513, 512, 511, 2},
+                                                                            {2, 1, 0, 3},
+                                                                            {1023, 1022, 1022, 0}}};
+
+    std::array<GLuint, kVertexCount> packedInput;
+    std::array<GLfloat, kVertexCount> expectedTypeSize4;
+    std::array<GLfloat, kVertexCount> expectedTypeSize3;
+
+    for (size_t i = 0; i < kVertexCount / 4; i++)
+    {
+        packedInput[i] = Pack1010102<GLuint, GLushort>(unpackedInput[i]);
+
+        expectedTypeSize3[i * 3 + 0] = expectedTypeSize4[i * 4 + 0] =
+            Normalize10<GLushort>(unpackedInput[i][0]);
+        expectedTypeSize3[i * 3 + 1] = expectedTypeSize4[i * 4 + 1] =
+            Normalize10<GLushort>(unpackedInput[i][1]);
+        expectedTypeSize3[i * 3 + 2] = expectedTypeSize4[i * 4 + 2] =
+            Normalize10<GLushort>(unpackedInput[i][2]);
+
+        // when the type size is 3, alpha will be 1.0f by GLES driver
+        expectedTypeSize4[i * 4 + 3] = Normalize2<GLushort>(unpackedInput[i][3]);
+    }
+
+    TestData data4(GL_UNSIGNED_INT_10_10_10_2_OES, GL_TRUE, Source::IMMEDIATE, packedInput.data(),
+                   expectedTypeSize4.data());
+    TestData bufferedData4(GL_UNSIGNED_INT_10_10_10_2_OES, GL_TRUE, Source::BUFFER,
+                           packedInput.data(), expectedTypeSize4.data());
+    TestData data3(GL_UNSIGNED_INT_10_10_10_2_OES, GL_TRUE, Source::IMMEDIATE, packedInput.data(),
+                   expectedTypeSize3.data());
+    TestData bufferedData3(GL_UNSIGNED_INT_10_10_10_2_OES, GL_TRUE, Source::BUFFER,
+                           packedInput.data(), expectedTypeSize3.data());
+
+    std::array<std::pair<const TestData &, GLint>, 4> dataSet = {
+        {{data4, 4}, {bufferedData4, 4}, {data3, 3}, {bufferedData3, 3}}};
+
+    for (auto data : dataSet)
+    {
+        setupTest(data.first, data.second);
+        drawQuad(mProgram, "position", 0.5f);
+        glDisableVertexAttribArray(mTestAttrib);
+        glDisableVertexAttribArray(mExpectedAttrib);
+        checkPixels();
+    };
 }
 
 class VertexAttributeTestES3 : public VertexAttributeTest

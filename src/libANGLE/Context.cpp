@@ -9343,6 +9343,10 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
                                                  ? VertexAttribTypeCase::Valid
                                                  : VertexAttribTypeCase::Invalid;
 
+    VertexAttribTypeCase vertexType101010102Validity =
+        (context->getExtensions().vertexAttribType101010102) ? VertexAttribTypeCase::ValidSize3or4
+                                                             : VertexAttribTypeCase::Invalid;
+
     if (context->getClientMajorVersion() <= 2)
     {
         mCachedVertexAttribTypesValidation = {{
@@ -9353,6 +9357,8 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
             {VertexAttribType::Float, VertexAttribTypeCase::Valid},
             {VertexAttribType::Fixed, VertexAttribTypeCase::Valid},
             {VertexAttribType::HalfFloatOES, halfFloatValidity},
+            {VertexAttribType::Int1010102, vertexType101010102Validity},
+            {VertexAttribType::UnsignedInt1010102, vertexType101010102Validity},
         }};
     }
     else
@@ -9370,6 +9376,8 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
             {VertexAttribType::Int2101010, VertexAttribTypeCase::ValidSize4Only},
             {VertexAttribType::HalfFloatOES, halfFloatValidity},
             {VertexAttribType::UnsignedInt2101010, VertexAttribTypeCase::ValidSize4Only},
+            {VertexAttribType::Int1010102, vertexType101010102Validity},
+            {VertexAttribType::UnsignedInt1010102, vertexType101010102Validity},
         }};
 
         mCachedIntegerVertexAttribTypesValidation = {{
