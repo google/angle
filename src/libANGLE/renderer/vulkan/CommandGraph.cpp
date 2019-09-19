@@ -240,21 +240,21 @@ float CalculateSecondaryCommandBufferPoolWaste(const std::vector<CommandGraphNod
 
 // CommandGraphResource implementation.
 CommandGraphResource::CommandGraphResource(CommandGraphResourceType resourceType)
-    : mCurrentWritingNode(nullptr), mResourceType(resourceType)
+    : mUse(new ResourceUse), mCurrentWritingNode(nullptr), mResourceType(resourceType)
 {}
 
 CommandGraphResource::~CommandGraphResource() = default;
 
 bool CommandGraphResource::isResourceInUse(ContextVk *contextVk) const
 {
-    return contextVk->isSerialInUse(mStoredQueueSerial);
+    return mUse->counter > 0 || contextVk->isSerialInUse(mUse->serial);
 }
 
 void CommandGraphResource::resetQueueSerial()
 {
     mCurrentWritingNode = nullptr;
     mCurrentReadingNodes.clear();
-    mStoredQueueSerial = Serial();
+    mUse->serial = Serial();
 }
 
 angle::Result CommandGraphResource::recordCommands(ContextVk *context,
@@ -904,6 +904,8 @@ angle::Result CommandGraph::submitCommands(ContextVk *context,
         dumpGraphDotFile(std::cout);
     }
 
+    releaseResourceUsesAndUpdateSerials(serial);
+
     std::vector<CommandGraphNode *> nodeStack;
 
     VkCommandBufferBeginInfo beginInfo = {};
@@ -1228,5 +1230,17 @@ void CommandGraph::addDependenciesToNextBarrier(size_t begin,
     }
 }
 
+void CommandGraph::releaseResourceUsesAndUpdateSerials(Serial serial)
+{
+    for (SharedResourceUse &use : mResourceUses)
+    {
+        ASSERT(use->counter > 0);
+        use->counter--;
+        ASSERT(use->serial <= serial);
+        use->serial = serial;
+    }
+
+    mResourceUses.clear();
+}
 }  // namespace vk
 }  // namespace rx

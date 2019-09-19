@@ -271,6 +271,20 @@ class CommandGraphNode final : angle::NonCopyable
     RenderPassOwner *mRenderPassOwner;
 };
 
+// Tracks how a resource is used in a command graph and in a VkQueue. The reference count indicates
+// the number of times a resource is used in the graph. The serial indicates the last current use
+// of a resource in the VkQueue. The reference count and serial together can determine if a
+// resource is in use.
+struct ResourceUse
+{
+    ResourceUse() = default;
+
+    uint32_t counter = 0;
+    Serial serial;
+};
+
+using SharedResourceUse = std::shared_ptr<ResourceUse>;
+
 // This is a helper class for back-end objects used in Vk command buffers. It records a serial
 // at command recording times indicating an order in the queue. We use Fences to detect when
 // commands finish, and then release any unreferenced and deleted resources based on the stored
@@ -287,7 +301,7 @@ class CommandGraphResource : angle::NonCopyable
 
     // Get the current queue serial for this resource. Used to release resources, and for
     // queries, to know if the queue they are submitted on has finished execution.
-    Serial getStoredQueueSerial() const { return mStoredQueueSerial; }
+    Serial getStoredQueueSerial() const { return mUse->serial; }
 
     // Sets up dependency relations. 'this' resource is the resource being written to.
     void addWriteDependency(ContextVk *contextVk, CommandGraphResource *writingResource);
@@ -362,7 +376,8 @@ class CommandGraphResource : angle::NonCopyable
 
     void onWriteImpl(ContextVk *contextVk, CommandGraphNode *writingNode);
 
-    Serial mStoredQueueSerial;
+    // Current resource lifetime.
+    SharedResourceUse mUse;
 
     std::vector<CommandGraphNode *> mCurrentReadingNodes;
 
@@ -432,6 +447,8 @@ class CommandGraph final : angle::NonCopyable
     // Host-visible buffer write availability operation:
     void makeHostVisibleBufferWriteAvailable();
 
+    void onResourceUse(const SharedResourceUse &resourceUse);
+
   private:
     CommandGraphNode *allocateBarrierNode(CommandGraphNodeFunction function,
                                           CommandGraphResourceType resourceType,
@@ -442,6 +459,7 @@ class CommandGraph final : angle::NonCopyable
 
     void dumpGraphDotFile(std::ostream &out) const;
     void updateOverlay(ContextVk *contextVk) const;
+    void releaseResourceUsesAndUpdateSerials(Serial serial);
 
     std::vector<CommandGraphNode *> mNodes;
     bool mEnableGraphDiagnostics;
@@ -495,6 +513,8 @@ class CommandGraph final : angle::NonCopyable
     // issued.
     static constexpr size_t kInvalidNodeIndex = std::numeric_limits<std::size_t>::max();
     size_t mLastBarrierIndex;
+
+    std::vector<SharedResourceUse> mResourceUses;
 };
 
 // CommandGraphResource inlines.
@@ -505,15 +525,16 @@ ANGLE_INLINE bool CommandGraphResource::hasStartedRenderPass() const
 
 ANGLE_INLINE void CommandGraphResource::onGraphAccess(Serial serial, CommandGraph *commandGraph)
 {
-    ASSERT(serial >= mStoredQueueSerial);
+    ASSERT(serial >= mUse->serial);
 
-    // TODO(jmadill: Store reference to usage in graph. http://anglebug.com/2464
+    // Store reference to usage in graph.
+    commandGraph->onResourceUse(mUse);
 
-    if (serial > mStoredQueueSerial)
+    if (serial > mUse->serial)
     {
         mCurrentWritingNode = nullptr;
         mCurrentReadingNodes.clear();
-        mStoredQueueSerial = serial;
+        mUse->serial = serial;
     }
 }
 
@@ -608,6 +629,13 @@ ANGLE_INLINE bool CommandGraphResource::hasChildlessWritingNode() const
     return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
 }
 
+// CommandGraph inlines.
+ANGLE_INLINE void CommandGraph::onResourceUse(const SharedResourceUse &resourceUse)
+{
+    ASSERT(resourceUse->counter < std::numeric_limits<uint32_t>::max());
+    resourceUse->counter++;
+    mResourceUses.push_back(resourceUse);
+}
 }  // namespace vk
 }  // namespace rx
 
