@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3b82e8aa_5f545842",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1675fb8_15769333",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 64
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6dcce17_96b171f0",
         "filename": "BUILD.gn",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "ac4897b24556d063ba38044350db5781a44d656b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4861a2bb_1cf1912b",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6dcce17_96b171f0",
+      "range": {
+        "startLine": 635,
+        "startChar": 17,
+        "endLine": 635,
+        "endChar": 45
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6cdff56f_0437acac",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 854,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Looks like this \"just works\" now! Some of my other fixes must have fixed this project. I\u0027ve reenabled it.",
+      "parentUuid": "1630eceb_081ece8c",
+      "range": {
+        "startLine": 854,
+        "startChar": 5,
+        "endLine": 854,
+        "endChar": 20
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "400dcf92_4025f8f6",
         "filename": "src/common/system_utils_winuwp.cpp",
         "patchSetId": 5
@@ -91,6 +163,30 @@
       "revId": "ac4897b24556d063ba38044350db5781a44d656b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "baac9193_708f3304",
+        "filename": "src/common/system_utils_winuwp.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "400dcf92_4025f8f6",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "a949a06a_5060c535",
+        "filename": "src/common/system_utils_winuwp.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a819c687_f53605ec",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 19
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb383558_72a4dabc",
         "filename": "src/gpu_info_util/SystemInfo_winuwp.cpp",
         "patchSetId": 5
@@ -131,6 +251,24 @@
       "revId": "ac4897b24556d063ba38044350db5781a44d656b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8bae2fef_d743fb1f",
+        "filename": "src/gpu_info_util/SystemInfo_winuwp.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb383558_72a4dabc",
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "f1116a97_8f9d8d42",
+        "filename": "src/libANGLE/features.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e81c6663_e6abab2e",
+      "range": {
+        "startLine": 58,
+        "startChar": 5,
+        "endLine": 58,
+        "endChar": 42
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8258c066_3b3f30ec",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
         "patchSetId": 5
@@ -177,6 +339,30 @@
       "revId": "ac4897b24556d063ba38044350db5781a44d656b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c878170c_ca097360",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8258c066_3b3f30ec",
+      "range": {
+        "startLine": 70,
+        "startChar": 1,
+        "endLine": 70,
+        "endChar": 8
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -203,6 +389,30 @@
     },
     {
       "key": {
+        "uuid": "9e1db3a4_271e3a7b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1223,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "228c239f_9c002117",
+      "range": {
+        "startLine": 1223,
+        "startChar": 1,
+        "endLine": 1223,
+        "endChar": 7
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3bed60f4_f13a9916",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 5
@@ -223,6 +433,30 @@
       "revId": "ac4897b24556d063ba38044350db5781a44d656b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bc98be3_1c021aa3",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2019-09-20T15:34:55Z",
+      "side": 1,
+      "message": "Looks like I don\u0027t need to change this file at all now, since I filter it out in the main BUILD.gn file",
+      "parentUuid": "3bed60f4_f13a9916",
+      "range": {
+        "startLine": 29,
+        "startChar": 9,
+        "endLine": 29,
+        "endChar": 24
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
