@@ -3364,10 +3364,9 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
 
     if (getShaderVersion() >= 300)
     {
-        const UnmangledBuiltIn *builtIn =
-            symbolTable.getUnmangledBuiltInForShaderVersion(function->name(), getShaderVersion());
-        if (builtIn &&
-            (builtIn->extension == TExtension::UNDEFINED || isExtensionEnabled(builtIn->extension)))
+
+        if (symbolTable.isUnmangledBuiltInName(function->name(), getShaderVersion(),
+                                               extensionBehavior()))
         {
             // With ESSL 3.00 and above, names of built-in functions cannot be redeclared as
             // functions. Therefore overloading or redefining builtin functions is an error.
