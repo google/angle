@@ -683,17 +683,10 @@
 
 // Multisampled textures:
 3565 VULKAN : dEQP-GLES31.functional.texture.multisample.* = SKIP
-3565 VULKAN : dEQP-GLES31.functional.state_query.texture.*multisample.* = SKIP
+3565 VULKAN : dEQP-GLES31.functional.state_query.texture*multisample.* = SKIP
 
 // Base texture level:
 3148 VULKAN : dEQP-GLES31.functional.texture.gather.*base_level* = SKIP
-
-// 2D array textures:
-3189 VULKAN : dEQP-GLES31.functional.state_query.*2d_array* = SKIP
-
-// Compressed integer textures:
-3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture_2d.compressed_integer = SKIP
-3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture_2d.compressed_float = SKIP
 
 // Vulkan creates the image view with the same format as the texture.
 3885 VULKAN : dEQP-GLES31.functional.image_load_store.*.format_reinterpret.* = FAIL
@@ -703,7 +696,3 @@
 
 // Inactive SSBOs with flexible array member (about 20% of these tests are affected):
 3714 VULKAN : dEQP-GLES31.functional.ssbo.layout.random.* = FAIL
-
-// Validation errors:
-// Optimal tiling not supported for format:
-3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture* = SKIP
