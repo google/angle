@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "c1675fb8_15769333",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-09-20T15:08:24Z",
+      "side": 1,
+      "message": "one other minor request, but can you wrap the description to 71 chars?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 64
+      },
+      "revId": "ac4897b24556d063ba38044350db5781a44d656b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d6dcce17_96b171f0",
         "filename": "BUILD.gn",
         "patchSetId": 5
