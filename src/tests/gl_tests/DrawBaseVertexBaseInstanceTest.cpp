@@ -309,18 +309,18 @@ void main()
 
         const uint32_t countPerDraw = kCountY * 6;
 
-            const GLsizei drawCount = kCountX;
-            const std::vector<GLsizei> counts(drawCount, countPerDraw);
-            const std::vector<GLsizei> firsts(drawCount, 0);
-            const std::vector<GLsizei> instanceCounts(drawCount, 2);
-            std::vector<GLuint> baseInstances(drawCount);
-            for (size_t i = 0; i < drawCount; i++)
-            {
-                baseInstances[i] = i * 2;
-            }
-            glMultiDrawArraysInstancedBaseInstanceANGLE(GL_TRIANGLES, drawCount, counts.data(),
-                                                        instanceCounts.data(), firsts.data(),
-                                                        baseInstances.data());
+        const GLsizei drawCount = kCountX / 2;
+        const std::vector<GLsizei> counts(drawCount, countPerDraw);
+        const std::vector<GLsizei> firsts(drawCount, 0);
+        const std::vector<GLsizei> instanceCounts(drawCount, 2);
+        std::vector<GLuint> baseInstances(drawCount);
+        for (size_t i = 0; i < drawCount; i++)
+        {
+            baseInstances[i] = i * 2;
+        }
+        glMultiDrawArraysInstancedBaseInstanceANGLE(GL_TRIANGLES, drawCount, counts.data(),
+                                                    instanceCounts.data(), firsts.data(),
+                                                    baseInstances.data());
     }
 
     void doDrawElementsInstancedBaseVertexBaseInstance()
@@ -331,12 +331,12 @@ void main()
 
         for (uint32_t v = 0; v < kCountY; v++)
         {
-                for (uint32_t i = 0; i < kCountX; i += 2)
-                {
-                    glDrawElementsInstancedBaseVertexBaseInstanceANGLE(
-                        GL_TRIANGLES, countPerDraw, GL_UNSIGNED_SHORT,
-                        reinterpret_cast<GLvoid *>(static_cast<uintptr_t>(0)), 2, v * 4, i);
-                }
+            for (uint32_t i = 0; i < kCountX; i += 2)
+            {
+                glDrawElementsInstancedBaseVertexBaseInstanceANGLE(
+                    GL_TRIANGLES, countPerDraw, GL_UNSIGNED_SHORT,
+                    reinterpret_cast<GLvoid *>(static_cast<uintptr_t>(0)), 2, v * 4, i);
+            }
         }
     }
 
