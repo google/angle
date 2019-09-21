@@ -1237,7 +1237,7 @@ void Context::getQueryiv(QueryType target, GLenum pname, GLint *params)
     switch (pname)
     {
         case GL_CURRENT_QUERY_EXT:
-            params[0] = mState.getActiveQueryId(target);
+            params[0] = mState.getActiveQueryId(target).value;
             break;
         case GL_QUERY_COUNTER_BITS_EXT:
             switch (target)

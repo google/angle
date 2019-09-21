@@ -2608,7 +2608,7 @@ Error ValidateStreamConsumerGLTextureExternalKHR(const Display *display,
 
     // Lookup the texture and ensure it is correct
     gl::Texture *texture = context->getState().getTargetTexture(gl::TextureType::External);
-    if (texture == nullptr || texture->getId() == 0)
+    if (texture == nullptr || texture->id().value == 0)
     {
         return EglBadAccess() << "No external texture bound";
     }
@@ -2813,7 +2813,7 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
 
         // Lookup the texture and ensure it is correct
         gl::Texture *texture = context->getState().getTargetTexture(gl::TextureType::External);
-        if (texture == nullptr || texture->getId() == 0)
+        if (texture == nullptr || texture->id().value == 0)
         {
             return EglBadAccess() << "No external texture bound";
         }
@@ -2848,7 +2848,7 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
             {
                 gl::Texture *texture = context->getState().getSamplerTexture(
                     static_cast<unsigned int>(plane[i]), gl::TextureType::External);
-                if (texture == nullptr || texture->getId() == 0)
+                if (texture == nullptr || texture->id().value == 0)
                 {
                     return EglBadAccess()
                            << "No external texture bound at one or more specified texture units";

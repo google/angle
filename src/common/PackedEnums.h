@@ -394,82 +394,108 @@ ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, UnsignedInt1010102, GL_UNSIGNED_INT
 std::ostream &operator<<(std::ostream &os, VertexAttribType value);
 
 // Typesafe object handles.
-struct BufferID
-{
-    GLuint value;
-};
 
-struct FenceNVID
-{
-    GLuint value;
-};
+template <typename T>
+struct ResourceTypeToID;
 
-struct FramebufferID
-{
-    GLuint value;
-};
+template <typename T>
+struct IsResourceIDType;
 
-struct MemoryObjectID
-{
-    GLuint value;
-};
+// Clang Format doesn't like the following X macro.
+// clang-format off
+#define ANGLE_ID_TYPES_OP(X) \
+    X(Buffer)                \
+    X(FenceNV)               \
+    X(Framebuffer)           \
+    X(MemoryObject)          \
+    X(Path)                  \
+    X(ProgramPipeline)       \
+    X(Query)                 \
+    X(Renderbuffer)          \
+    X(Sampler)               \
+    X(Semaphore)             \
+    X(Texture)               \
+    X(TransformFeedback)     \
+    X(VertexArray)
+// clang-format on
 
-struct PathID
-{
-    GLuint value;
-};
+#define ANGLE_DEFINE_ID_TYPE(Type)          \
+    class Type;                             \
+    struct Type##ID                         \
+    {                                       \
+        GLuint value;                       \
+    };                                      \
+    template <>                             \
+    struct ResourceTypeToID<Type>           \
+    {                                       \
+        using IDType = Type##ID;            \
+    };                                      \
+    template <>                             \
+    struct IsResourceIDType<Type##ID>       \
+    {                                       \
+        static constexpr bool value = true; \
+    };
 
-struct ProgramPipelineID
-{
-    GLuint value;
-};
+ANGLE_ID_TYPES_OP(ANGLE_DEFINE_ID_TYPE)
 
-struct QueryID
-{
-    GLuint value;
-};
+#undef ANGLE_DEFINE_ID_TYPE
+#undef ANGLE_ID_TYPES_OP
 
-struct RenderbufferID
-{
-    GLuint value;
-};
-
-struct SamplerID
-{
-    GLuint value;
-};
-
-struct SemaphoreID
-{
-    GLuint value;
-};
-
+// Shaders and programs are a bit special as they share IDs.
 struct ShaderProgramID
 {
     GLuint value;
 };
 
-struct TextureID
+template <>
+struct IsResourceIDType<ShaderProgramID>
 {
-    GLuint value;
+    constexpr static bool value = true;
 };
 
-struct TransformFeedbackID
+class Shader;
+template <>
+struct ResourceTypeToID<Shader>
 {
-    GLuint value;
+    using IDType = ShaderProgramID;
 };
 
-struct VertexArrayID
+class Program;
+template <>
+struct ResourceTypeToID<Program>
 {
-    GLuint value;
+    using IDType = ShaderProgramID;
 };
 
-// Util funcs for resourceIDs
-inline bool operator==(const FramebufferID &lhs, const FramebufferID &rhs)
+template <typename T>
+struct ResourceTypeToID
+{
+    using IDType = void;
+};
+
+template <typename T>
+struct IsResourceIDType
+{
+    static constexpr bool value = false;
+};
+
+template <typename T>
+bool ValueEquals(T lhs, T rhs)
 {
     return lhs.value == rhs.value;
 }
-inline bool operator!=(const FramebufferID &lhs, const FramebufferID &rhs)
+
+// Util funcs for resourceIDs
+template <typename T>
+typename std::enable_if<IsResourceIDType<T>::value, bool>::type operator==(const T &lhs,
+                                                                           const T &rhs)
+{
+    return lhs.value == rhs.value;
+}
+
+template <typename T>
+typename std::enable_if<IsResourceIDType<T>::value, bool>::type operator!=(const T &lhs,
+                                                                           const T &rhs)
 {
     return lhs.value != rhs.value;
 }

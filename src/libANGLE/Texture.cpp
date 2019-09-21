@@ -616,7 +616,7 @@ void TextureState::clearImageDescs()
 }
 
 Texture::Texture(rx::GLImplFactory *factory, TextureID id, TextureType type)
-    : RefCountObject(id.value),
+    : RefCountObject(id),
       mState(type),
       mTexture(factory->createTexture(mState)),
       mImplObserver(this, rx::kTextureImageImplObserverMessageIndex),
@@ -1673,7 +1673,7 @@ void Texture::onDetach(const Context *context)
 
 GLuint Texture::getId() const
 {
-    return id();
+    return id().value;
 }
 
 GLuint Texture::getNativeID() const

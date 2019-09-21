@@ -234,7 +234,7 @@ class State : angle::NonCopyable
         return mSamplerTextures[type][sampler].get();
     }
 
-    GLuint getSamplerTextureId(unsigned int sampler, TextureType type) const;
+    TextureID getSamplerTextureId(unsigned int sampler, TextureType type) const;
     void detachTexture(const Context *context, const TextureMap &zeroTextures, TextureID texture);
     void initializeZeroTextures(const Context *context, const TextureMap &zeroTextures);
 
@@ -242,7 +242,7 @@ class State : angle::NonCopyable
 
     // Sampler object binding manipulation
     void setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler);
-    GLuint getSamplerId(GLuint textureUnit) const
+    SamplerID getSamplerId(GLuint textureUnit) const
     {
         ASSERT(textureUnit < mSamplers.size());
         return mSamplers[textureUnit].id();
@@ -257,7 +257,7 @@ class State : angle::NonCopyable
 
     // Renderbuffer binding manipulation
     void setRenderbufferBinding(const Context *context, Renderbuffer *renderbuffer);
-    GLuint getRenderbufferId() const { return mRenderbuffer.id(); }
+    RenderbufferID getRenderbufferId() const { return mRenderbuffer.id(); }
     Renderbuffer *getCurrentRenderbuffer() const { return mRenderbuffer.get(); }
     void detachRenderbuffer(const Context *context, RenderbufferID renderbuffer);
 
@@ -323,7 +323,7 @@ class State : angle::NonCopyable
     bool isQueryActive(QueryType type) const;
     bool isQueryActive(Query *query) const;
     void setActiveQuery(const Context *context, QueryType type, Query *query);
-    GLuint getActiveQueryId(QueryType type) const;
+    QueryID getActiveQueryId(QueryType type) const;
     Query *getActiveQuery(QueryType type) const;
 
     // Program Pipeline binding manipulation
