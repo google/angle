@@ -742,7 +742,7 @@ class GroupedList:
                 obj_data = self.objs[hash_val]
 
                 data = []
-                data.append('"{name}"'.format(name=obj_data['name']))
+                data.append('ImmutableString("{name}")'.format(name=obj_data['name']))
 
                 symbol = obj_data['obj'] if 'obj' in obj_data else 'nullptr'
                 var = '&TSymbolTableBase::{}'.format(
@@ -816,7 +816,7 @@ class GroupedList:
 
                 code.append('SymbolEntry(' + ', '.join(data) + ')')
             else:
-                code.append("""SymbolEntry("",
+                code.append("""SymbolEntry(ImmutableString(""),
                        nullptr, nullptr, -1, -1, Shader::ALL,
                        nullptr, nullptr, -1, Shader::ALL, nullptr,
                        nullptr, nullptr, -1, Shader::ALL, nullptr)""")
@@ -1304,7 +1304,7 @@ def get_variable_name_to_store_parameters(parameters):
 
 
 def define_constexpr_variable(template_args, variable_declarations):
-    template_variable_declaration = 'constexpr const TVariable k{name_with_suffix}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});'
+    template_variable_declaration = 'constexpr const TVariable kVar_{name_with_suffix}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});'
     variable_declarations.append(template_variable_declaration.format(**template_args))
 
 
@@ -1470,7 +1470,7 @@ def process_single_function_group(
                 template_args['name_with_suffix'], parameters)
             template_args['mangled_name_length'] = len(template_args['mangled_name'])
 
-            obj = '&BuiltInFunction::{unique_name}'.format(**template_args)
+            obj = '&BuiltInFunction::function_{unique_name}'.format(**template_args)
             get_builtin_if_statements.add_obj(
                 essl_level, glsl_level, shader_type, template_args['mangled_name'], obj,
                 template_args['essl_extension'], template_args['glsl_extension'],
@@ -1503,7 +1503,7 @@ def process_single_function_group(
                     define_constexpr_variable(param_template_args, variable_declarations)
                     defined_parameter_names.add(unique_param_name)
                 parameters_list.append(
-                    '&BuiltInVariable::k{name_with_suffix}'.format(**param_template_args))
+                    '&BuiltInVariable::kVar_{name_with_suffix}'.format(**param_template_args))
 
             template_args['parameters_var_name'] = get_variable_name_to_store_parameters(
                 parameters)
@@ -1519,7 +1519,7 @@ def process_single_function_group(
                     'parameters_var_name']] = template_parameter_list_declaration.format(
                         **template_args)
 
-            template_function_declaration = 'constexpr const TFunction {unique_name}(BuiltInId::{human_readable_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
+            template_function_declaration = 'constexpr const TFunction function_{unique_name}(BuiltInId::{human_readable_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
             function_declarations.append(template_function_declaration.format(**template_args))
 
             id_counter += 1
@@ -1662,7 +1662,7 @@ def process_single_variable_group(shader_type, group_name, group, builtin_id_dec
             if 'private' in props and props['private']:
                 is_member = False
             else:
-                template_init_variable = '    m_{name_with_suffix} = {name_with_suffix};'
+                template_init_variable = '    mVar_{name_with_suffix} = {name_with_suffix};'
 
         elif 'initDynamicType' in props:
             # Handle variables whose type can't be expressed as TStaticType
@@ -1672,7 +1672,7 @@ def process_single_variable_group(shader_type, group_name, group, builtin_id_dec
             template_args['initDynamicType'] = props['initDynamicType'].format(**template_args)
             template_init_variable = """    {initDynamicType}
     {type_name}->realize();
-    m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});"""
+    mVar_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});"""
 
         elif 'value' in props:
             # Handle variables with constant value, such as gl_MaxDrawBuffers.
@@ -1684,21 +1684,21 @@ def process_single_variable_group(shader_type, group_name, group, builtin_id_dec
                 resources_key = props['valueKey']
             template_args['value'] = 'resources.' + resources_key
             template_args['object_size'] = TType(props['type']).get_object_size()
-            template_init_variable = """    m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});
+            template_init_variable = """    mVar_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});
     {{
         TConstantUnion *unionArray = new TConstantUnion[{object_size}];
         unionArray[0].setIConst({value});
-        static_cast<TVariable *>(m_{name_with_suffix})->shareConstPointer(unionArray);
+        static_cast<TVariable *>(mVar_{name_with_suffix})->shareConstPointer(unionArray);
     }}"""
             if template_args['object_size'] > 1:
-                template_init_variable = """    m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});
+                template_init_variable = """    mVar_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});
     {{
         TConstantUnion *unionArray = new TConstantUnion[{object_size}];
         for (size_t index = 0u; index < {object_size}; ++index)
         {{
             unionArray[index].setIConst({value}[index]);
         }}
-        static_cast<TVariable *>(m_{name_with_suffix})->shareConstPointer(unionArray);
+        static_cast<TVariable *>(mVar_{name_with_suffix})->shareConstPointer(unionArray);
     }}"""
 
         else:
@@ -1713,14 +1713,14 @@ def process_single_variable_group(shader_type, group_name, group, builtin_id_dec
 
             template_get_variable_definition = """const TVariable *{name_with_suffix}()
 {{
-    return &k{name_with_suffix};
+    return &kVar_{name_with_suffix};
 }}
 """
             get_variable_definitions.append(
                 template_get_variable_definition.format(**template_args))
 
             if essl_level != 'GLSL_BUILTINS':
-                obj = '&BuiltInVariable::k{name_with_suffix}'.format(**template_args)
+                obj = '&BuiltInVariable::kVar_{name_with_suffix}'.format(**template_args)
                 # TODO(http://anglebug.com/3835): Add GLSL level once GLSL built-in vars are added
                 get_builtin_if_statements.add_obj(
                     essl_level, 'COMMON_BUILTINS', shader_type, template_args['name'], obj,
@@ -1730,11 +1730,11 @@ def process_single_variable_group(shader_type, group_name, group, builtin_id_dec
         if is_member:
             init_member_variables.append(template_init_variable.format(**template_args))
 
-            template_declare_member_variable = 'TSymbol *m_{name_with_suffix} = nullptr;'
+            template_declare_member_variable = 'TSymbol *mVar_{name_with_suffix} = nullptr;'
             declare_member_variables.append(
                 template_declare_member_variable.format(**template_args))
 
-            obj = 'm_{name_with_suffix}'.format(**template_args)
+            obj = 'mVar_{name_with_suffix}'.format(**template_args)
 
             # TODO(http://anglebug.com/3835): Add GLSL level once GLSL built-in vars are added
             get_builtin_if_statements.add_obj(

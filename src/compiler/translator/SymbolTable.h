@@ -68,7 +68,7 @@ using ValidateExtension = int(ShBuiltInResources::*);
 
 struct SymbolEntry
 {
-    constexpr SymbolEntry(const char *name,
+    constexpr SymbolEntry(ImmutableString &&name,
                           const TSymbol *symbol,
                           VarPointer var,
                           int esslVersion,
@@ -89,7 +89,7 @@ struct SymbolEntry
                           int esslExtVersion2              = -1,
                           Shader esslExtShaderType2        = Shader::ALL,
                           ValidateExtension esslExtension2 = nullptr)
-        : name(name),
+        : name(std::move(name)),
           symbol(symbol),
           var(var),
           esslVersion(esslVersion),

@@ -133,7 +133,7 @@ bool TSymbolTable::setGlInArraySize(unsigned int inputArraySize)
     {
         return mGlInVariableWithArraySize->getType().getOutermostArraySize() == inputArraySize;
     }
-    const TInterfaceBlock *glPerVertex = static_cast<const TInterfaceBlock *>(m_gl_PerVertex);
+    const TInterfaceBlock *glPerVertex = static_cast<const TInterfaceBlock *>(mVar_gl_PerVertex);
     TType *glInType = new TType(glPerVertex, EvqPerVertexIn, TLayoutQualifier::Create());
     glInType->makeArray(inputArraySize);
     mGlInVariableWithArraySize =
@@ -149,12 +149,12 @@ TVariable *TSymbolTable::getGlInVariableWithArraySize() const
 
 const TVariable *TSymbolTable::gl_FragData() const
 {
-    return static_cast<const TVariable *>(m_gl_FragData);
+    return static_cast<const TVariable *>(mVar_gl_FragData);
 }
 
 const TVariable *TSymbolTable::gl_SecondaryFragDataEXT() const
 {
-    return static_cast<const TVariable *>(m_gl_SecondaryFragDataEXT);
+    return static_cast<const TVariable *>(mVar_gl_SecondaryFragDataEXT);
 }
 
 TSymbolTable::VariableMetadata *TSymbolTable::getOrCreateVariableMetadata(const TVariable &variable)
