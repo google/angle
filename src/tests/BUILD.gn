@@ -615,9 +615,6 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "-Wno-string-conversion",  # implicit conversion turns string literal into bool
         "-Wno-unused-local-typedef",
         "-Wno-unused-result",  # ignoring return value of function declared with 'nodiscard' attribute
-
-        # Suppress a spurious header warning. http://crbug.com/995046
-        "-Wno-nonportable-include-path",
       ]
     }
 
@@ -652,12 +649,20 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   set_defaults("angle_deqp_source_set") {
     public_configs = []
     configs = angle_common_configs
+    cflags = []
   }
 
   template("angle_deqp_source_set") {
     angle_source_set(target_name) {
       forward_variables_from(invoker, "*")
       suppressed_configs += deqp_undefine_configs
+
+      if (is_clang) {
+        cflags += [
+          # Suppress a spurious header warning. http://crbug.com/995046
+          "-Wno-nonportable-include-path",
+        ]
+      }
     }
   }
 
