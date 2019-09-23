@@ -642,7 +642,7 @@ if (angle_enable_vulkan) {
     }
 
     if (angle_swiftshader) {
-      deps += [
+      data_deps += [
         ":angle_swiftshader_icd",
         "$swiftshader_dir/src/Vulkan:swiftshader_libvulkan",
       ]
