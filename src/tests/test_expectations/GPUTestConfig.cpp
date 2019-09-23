@@ -509,7 +509,12 @@ inline bool IsGLES(const GPUTestConfig::API &api)
 // Check whether the backend API has been set to Vulkan in the constructor
 inline bool IsVulkan(const GPUTestConfig::API &api)
 {
-    return (api == GPUTestConfig::kAPIVulkan);
+    return (api == GPUTestConfig::kAPIVulkan) || (api == GPUTestConfig::kAPISwiftShader);
+}
+
+inline bool IsSwiftShader(const GPUTestConfig::API &api)
+{
+    return (api == GPUTestConfig::kAPISwiftShader);
 }
 
 }  // anonymous namespace
@@ -549,6 +554,7 @@ GPUTestConfig::GPUTestConfig()
     mConditions[kConditionGLDesktop] = true;
     mConditions[kConditionGLES]      = true;
     mConditions[kConditionVulkan]    = true;
+    mConditions[kConditionSwiftShader] = true;
 
     mConditions[kConditionNexus5X]          = IsNexus5X();
     mConditions[kConditionPixel2]           = IsPixel2();
@@ -563,6 +569,7 @@ GPUTestConfig::GPUTestConfig(const API &api) : GPUTestConfig()
     mConditions[kConditionGLDesktop] = IsGLDesktop(api);
     mConditions[kConditionGLES]      = IsGLES(api);
     mConditions[kConditionVulkan]    = IsVulkan(api);
+    mConditions[kConditionSwiftShader] = IsSwiftShader(api);
 }
 
 // Return a const reference to the list of all pre-calculated conditions.

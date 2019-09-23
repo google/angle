@@ -97,6 +97,15 @@ ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc)
     }
 #endif
 
+#if (DE_OS == DE_OS_WIN32) || (DE_OS == DE_OS_UNIX)
+    {
+        std::vector<eglw::EGLAttrib> swsAttribs = initAttribs(
+            EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE);
+        m_nativeDisplayFactoryRegistry.registerFactory(new ANGLENativeDisplayFactory(
+            "angle-swiftshader", "ANGLE SwiftShader Display", swsAttribs, &mEvents));
+    }
+#endif
+
     {
         std::vector<eglw::EGLAttrib> nullAttribs = initAttribs(EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE);
 
