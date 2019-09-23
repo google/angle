@@ -54,6 +54,13 @@ class UtilsVk : angle::NonCopyable
         uint32_t maxIndex  = 0;
     };
 
+    struct ConvertIndexIndirectParameters
+    {
+        uint32_t indirectBufferOffset = 0;
+        uint32_t dstOffset            = 0;
+        uint32_t maxIndex             = 0;
+    };
+
     struct ConvertVertexParameters
     {
         size_t vertexCount;
@@ -137,6 +144,12 @@ class UtilsVk : angle::NonCopyable
                                      vk::BufferHelper *dest,
                                      vk::BufferHelper *src,
                                      const ConvertIndexParameters &params);
+    angle::Result convertIndexIndirectBuffer(ContextVk *contextVk,
+                                             vk::BufferHelper *cmdBufferVk,
+                                             vk::BufferHelper *dest,
+                                             vk::BufferHelper *src,
+                                             const ConvertIndexIndirectParameters &params);
+
     angle::Result convertVertexBuffer(ContextVk *contextVk,
                                       vk::BufferHelper *dest,
                                       vk::BufferHelper *src,
@@ -205,6 +218,14 @@ class UtilsVk : angle::NonCopyable
     struct ConvertIndexShaderParams
     {
         uint32_t srcOffset     = 0;
+        uint32_t dstOffsetDiv4 = 0;
+        uint32_t maxIndex      = 0;
+        uint32_t _padding      = 0;
+    };
+
+    struct ConvertIndexIndirectShaderParams
+    {
+        uint32_t cmdOffsetDiv4 = 0;
         uint32_t dstOffsetDiv4 = 0;
         uint32_t maxIndex      = 0;
         uint32_t _padding      = 0;
@@ -310,9 +331,10 @@ class UtilsVk : angle::NonCopyable
         BlitResolveStencilNoExport = 6,
         OverlayCull                = 7,
         OverlayDraw                = 8,
+        ConvertIndexIndirectBuffer = 9,
 
-        InvalidEnum = 9,
-        EnumCount   = 9,
+        InvalidEnum = 10,
+        EnumCount   = 10,
     };
 
     // Common function that creates the pipeline for the specified function, binds it and prepares
@@ -346,6 +368,7 @@ class UtilsVk : angle::NonCopyable
     // appropriate parameters.
     angle::Result ensureBufferClearResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureConvertIndexResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureConvertIndexIndirectResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureConvertVertexResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureImageClearResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureImageCopyResourcesInitialized(ContextVk *contextVk);

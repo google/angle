@@ -73,8 +73,9 @@ namespace ConvertIndex_comp
 enum flags
 {
     kIsPrimitiveRestartEnabled = 0x00000001,
+    kIsIndirect                = 0x00000002,
 };
-constexpr size_t kArrayLen = 0x00000002;
+constexpr size_t kArrayLen = 0x00000004;
 }  // namespace ConvertIndex_comp
 
 namespace ConvertVertex_comp

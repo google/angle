@@ -605,6 +605,24 @@ angle::Result ContextVk::setupIndirectDraw(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result ContextVk::setupIndexedIndirectDraw(const gl::Context *context,
+                                                  gl::PrimitiveMode mode,
+                                                  gl::DrawElementsType indexType,
+                                                  vk::CommandBuffer **commandBufferOut,
+                                                  vk::Buffer **indirectBufferOut)
+{
+    ASSERT(mode != gl::PrimitiveMode::LineLoop);
+
+    if (indexType != mCurrentDrawElementsType)
+    {
+        mCurrentDrawElementsType = indexType;
+        setIndexBufferDirty();
+    }
+
+    return setupIndirectDraw(context, mode, mIndexedDirtyBitsMask, commandBufferOut,
+                             indirectBufferOut);
+}
+
 angle::Result ContextVk::setupLineLoopDraw(const gl::Context *context,
                                            gl::PrimitiveMode mode,
                                            GLint firstVertex,
@@ -1523,8 +1541,34 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
                                               gl::DrawElementsType type,
                                               const void *indirect)
 {
-    ANGLE_VK_UNREACHABLE(this);
-    return angle::Result::Stop;
+    gl::Buffer *indirectBuffer = mState.getTargetBuffer(gl::BufferBinding::DrawIndirect);
+    ASSERT(indirectBuffer);
+
+    const gl::Buffer *indexBuffer = mVertexArray->getState().getElementArrayBuffer();
+    ASSERT(indexBuffer);
+
+    if (type == gl::DrawElementsType::UnsignedByte && mGraphicsDirtyBits[DIRTY_BIT_INDEX_BUFFER])
+    {
+        BufferVk *indexVk     = vk::GetImpl(indexBuffer);
+        BufferVk *cmdBufferVk = vk::GetImpl(indirectBuffer);
+        ANGLE_TRY(
+            mVertexArray->convertIndexBufferIndirectGPU(this, cmdBufferVk, indexVk, indirect));
+    }
+
+    vk::CommandBuffer *commandBuffer = nullptr;
+    vk::Buffer *buffer               = nullptr;
+
+    ANGLE_TRY(setupIndexedIndirectDraw(context, mode, type, &commandBuffer, &buffer));
+
+    if (mode == gl::PrimitiveMode::LineLoop)
+    {
+        // TODO - http://anglebug.com/3564
+        ANGLE_VK_UNREACHABLE(this);
+        return angle::Result::Stop;
+    }
+
+    commandBuffer->drawIndexedIndirect(*buffer, reinterpret_cast<VkDeviceSize>(indirect), 1, 0);
+    return angle::Result::Continue;
 }
 
 gl::GraphicsResetStatus ContextVk::getResetStatus()

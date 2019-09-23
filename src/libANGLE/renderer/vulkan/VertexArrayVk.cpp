@@ -163,6 +163,35 @@ angle::Result VertexArrayVk::convertIndexBufferGPU(ContextVk *contextVk,
     return contextVk->getUtils().convertIndexBuffer(contextVk, dest, src, params);
 }
 
+angle::Result VertexArrayVk::convertIndexBufferIndirectGPU(ContextVk *contextVk,
+                                                           BufferVk *cmdBufferVk,
+                                                           BufferVk *indexBufferVk,
+                                                           const void *offset)
+{
+    intptr_t indirectBufferOffset = reinterpret_cast<intptr_t>(offset);
+    size_t srcDataSize            = static_cast<size_t>(indexBufferVk->getSize());
+
+    mTranslatedByteIndexData.releaseInFlightBuffers(contextVk);
+
+    ANGLE_TRY(mTranslatedByteIndexData.allocate(contextVk, sizeof(GLushort) * srcDataSize, nullptr,
+                                                nullptr, &mCurrentElementArrayBufferOffset,
+                                                nullptr));
+    mCurrentElementArrayBuffer = mTranslatedByteIndexData.getCurrentBuffer();
+
+    vk::BufferHelper *dest = mTranslatedByteIndexData.getCurrentBuffer();
+    vk::BufferHelper *src  = &indexBufferVk->getBuffer();
+
+    // Copy relevant section of the source into destination at allocated offset.  Note that the
+    // offset returned by allocate() above is in bytes. As is the indices offset pointer.
+    UtilsVk::ConvertIndexIndirectParameters params = {};
+    params.indirectBufferOffset                    = static_cast<uint32_t>(indirectBufferOffset);
+    params.dstOffset = static_cast<uint32_t>(mCurrentElementArrayBufferOffset);
+    params.maxIndex  = static_cast<uint32_t>(indexBufferVk->getSize());
+
+    return contextVk->getUtils().convertIndexIndirectBuffer(contextVk, &cmdBufferVk->getBuffer(),
+                                                            dest, src, params);
+}
+
 angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
                                                    gl::DrawElementsType indexType,
                                                    size_t indexCount,
@@ -486,7 +515,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                 }
                 else
                 {
-                    vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
+                    vk::BufferHelper &bufferHelper          = bufferVk->getBuffer();
                     mCurrentArrayBuffers[attribIndex]       = &bufferHelper;
                     mCurrentArrayBufferHandles[attribIndex] = bufferHelper.getBuffer().getHandle();
                     mCurrentArrayBufferOffsets[attribIndex] = binding.getOffset();

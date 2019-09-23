@@ -82,6 +82,11 @@ class VertexArrayVk : public VertexArrayImpl
                                         BufferVk *bufferVk,
                                         const void *indices);
 
+    angle::Result convertIndexBufferIndirectGPU(ContextVk *contextVk,
+                                                BufferVk *cmdBufferVk,
+                                                BufferVk *indexBufferVk,
+                                                const void *indices);
+
     angle::Result convertIndexBufferCPU(ContextVk *contextVk,
                                         gl::DrawElementsType indexType,
                                         size_t indexCount,

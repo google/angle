@@ -277,6 +277,10 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                                                     uint32_t firstIndex,
                                                     int32_t vertexOffset,
                                                     uint32_t firstInstance);
+    void drawIndexedIndirect(const Buffer &buffer,
+                             VkDeviceSize offset,
+                             uint32_t drawCount,
+                             uint32_t stride);
 
     VkResult end();
     void endQuery(VkQueryPool queryPool, uint32_t query);
@@ -964,6 +968,15 @@ ANGLE_INLINE void CommandBuffer::drawIndexedInstancedBaseVertexBaseInstance(uint
 {
     ASSERT(valid());
     vkCmdDrawIndexed(mHandle, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+}
+
+ANGLE_INLINE void CommandBuffer::drawIndexedIndirect(const Buffer &buffer,
+                                                     VkDeviceSize offset,
+                                                     uint32_t drawCount,
+                                                     uint32_t stride)
+{
+    ASSERT(valid());
+    vkCmdDrawIndexedIndirect(mHandle, buffer.getHandle(), offset, drawCount, stride);
 }
 
 ANGLE_INLINE void CommandBuffer::dispatch(uint32_t groupCountX,
