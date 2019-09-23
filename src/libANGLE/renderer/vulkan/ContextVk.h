@@ -302,7 +302,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     vk::Shared<vk::Fence> getLastSubmittedFence() const;
 
     // This should only be called from ResourceVk.
-    vk::CommandGraph *getCommandGraph();
+    vk::CommandGraph *getCommandGraph() { return &mCommandGraph; }
 
     vk::ShaderLibrary &getShaderLibrary() { return mShaderLibrary; }
     UtilsVk &getUtils() { return mUtils; }

@@ -283,7 +283,84 @@ struct ResourceUse
     Serial serial;
 };
 
-using SharedResourceUse = std::shared_ptr<ResourceUse>;
+class SharedResourceUse final : angle::NonCopyable
+{
+  public:
+    SharedResourceUse() : mUse(nullptr) {}
+    ~SharedResourceUse() { ASSERT(!valid()); }
+    SharedResourceUse(SharedResourceUse &&rhs) : mUse(rhs.mUse) { rhs.mUse = nullptr; }
+    SharedResourceUse &operator=(SharedResourceUse &&rhs)
+    {
+        std::swap(mUse, rhs.mUse);
+        return *this;
+    }
+
+    ANGLE_INLINE bool valid() const { return mUse != nullptr; }
+
+    void init()
+    {
+        ASSERT(!mUse);
+        mUse = new ResourceUse;
+        mUse->counter++;
+    }
+
+    ANGLE_INLINE void release()
+    {
+        ASSERT(valid());
+        ASSERT(mUse->counter > 0);
+        if (--mUse->counter == 0)
+        {
+            delete mUse;
+        }
+        mUse = nullptr;
+    }
+
+    ANGLE_INLINE void releaseAndUpdateSerial(Serial serial)
+    {
+        ASSERT(valid());
+        ASSERT(mUse->counter > 0);
+        ASSERT(mUse->serial <= serial);
+        mUse->serial = serial;
+        release();
+    }
+
+    ANGLE_INLINE void set(const SharedResourceUse &rhs)
+    {
+        ASSERT(rhs.valid());
+        ASSERT(!valid());
+        ASSERT(rhs.mUse->counter < std::numeric_limits<uint32_t>::max());
+        mUse = rhs.mUse;
+        mUse->counter++;
+    }
+
+    ANGLE_INLINE Serial getSerial() const
+    {
+        ASSERT(valid());
+        return mUse->serial;
+    }
+
+    ANGLE_INLINE void updateSerial(Serial serial)
+    {
+        ASSERT(valid());
+        ASSERT(mUse->serial < serial);
+        mUse->serial = serial;
+    }
+
+    ANGLE_INLINE void resetSerial()
+    {
+        ASSERT(valid());
+        mUse->serial = Serial();
+    }
+
+    ANGLE_INLINE uint32_t getCounter() const
+    {
+        ASSERT(valid());
+        return mUse->counter;
+    }
+
+  private:
+    ResourceUse *mUse;
+};
 
 // This is a helper class for back-end objects used in Vk command buffers. It records a serial
 // at command recording times indicating an order in the queue. We use Fences to detect when
@@ -301,7 +378,7 @@ class CommandGraphResource : angle::NonCopyable
 
     // Get the current queue serial for this resource. Used to release resources, and for
     // queries, to know if the queue they are submitted on has finished execution.
-    Serial getStoredQueueSerial() const { return mUse->serial; }
+    Serial getStoredQueueSerial() const { return mUse.getSerial(); }
 
     // Sets up dependency relations. 'this' resource is the resource being written to.
     void addWriteDependency(ContextVk *contextVk, CommandGraphResource *writingResource);
@@ -448,6 +525,7 @@ class CommandGraph final : angle::NonCopyable
     void makeHostVisibleBufferWriteAvailable();
 
     void onResourceUse(const SharedResourceUse &resourceUse);
+    void releaseResourceUses();
 
   private:
     CommandGraphNode *allocateBarrierNode(CommandGraphNodeFunction function,
@@ -525,16 +603,14 @@ ANGLE_INLINE bool CommandGraphResource::hasStartedRenderPass() const
 
 ANGLE_INLINE void CommandGraphResource::onGraphAccess(Serial serial, CommandGraph *commandGraph)
 {
-    ASSERT(serial >= mUse->serial);
-
     // Store reference to usage in graph.
     commandGraph->onResourceUse(mUse);
 
-    if (serial > mUse->serial)
+    if (serial > mUse.getSerial())
     {
         mCurrentWritingNode = nullptr;
         mCurrentReadingNodes.clear();
-        mUse->serial = serial;
+        mUse.updateSerial(serial);
     }
 }
 
@@ -632,9 +708,9 @@ ANGLE_INLINE bool CommandGraphResource::hasChildlessWritingNode() const
 // CommandGraph inlines.
 ANGLE_INLINE void CommandGraph::onResourceUse(const SharedResourceUse &resourceUse)
 {
-    ASSERT(resourceUse->counter < std::numeric_limits<uint32_t>::max());
-    resourceUse->counter++;
-    mResourceUses.push_back(resourceUse);
+    SharedResourceUse newUse;
+    newUse.set(resourceUse);
+    mResourceUses.emplace_back(std::move(newUse));
 }
 }  // namespace vk
 }  // namespace rx

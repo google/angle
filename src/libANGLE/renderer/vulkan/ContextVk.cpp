@@ -336,6 +336,8 @@ void ContextVk::onDestroy(const gl::Context *context)
         (void)finishImpl();
     }
 
+    mCommandGraph.releaseResourceUses();
+
     mUtils.destroy(device);
 
     mRenderPassCache.destroy(device);
@@ -2822,11 +2824,6 @@ vk::Shared<vk::Fence> ContextVk::getLastSubmittedFence() const
     }
 
     return fence;
-}
-
-vk::CommandGraph *ContextVk::getCommandGraph()
-{
-    return &mCommandGraph;
 }
 
 angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)

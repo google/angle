@@ -240,21 +240,26 @@ float CalculateSecondaryCommandBufferPoolWaste(const std::vector<CommandGraphNod
 
 // CommandGraphResource implementation.
 CommandGraphResource::CommandGraphResource(CommandGraphResourceType resourceType)
-    : mUse(new ResourceUse), mCurrentWritingNode(nullptr), mResourceType(resourceType)
-{}
+    : mCurrentWritingNode(nullptr), mResourceType(resourceType)
+{
+    mUse.init();
+}
 
-CommandGraphResource::~CommandGraphResource() = default;
+CommandGraphResource::~CommandGraphResource()
+{
+    mUse.release();
+}
 
 bool CommandGraphResource::isResourceInUse(ContextVk *contextVk) const
 {
-    return mUse->counter > 0 || contextVk->isSerialInUse(mUse->serial);
+    return mUse.getCounter() > 1 || contextVk->isSerialInUse(mUse.getSerial());
 }
 
 void CommandGraphResource::resetQueueSerial()
 {
     mCurrentWritingNode = nullptr;
     mCurrentReadingNodes.clear();
-    mUse->serial = Serial();
+    mUse.resetSerial();
 }
 
 angle::Result CommandGraphResource::recordCommands(ContextVk *context,
@@ -1230,14 +1235,21 @@ void CommandGraph::addDependenciesToNextBarrier(size_t begin,
     }
 }
 
+void CommandGraph::releaseResourceUses()
+{
+    for (SharedResourceUse &use : mResourceUses)
+    {
+        use.release();
+    }
+
+    mResourceUses.clear();
+}
+
 void CommandGraph::releaseResourceUsesAndUpdateSerials(Serial serial)
 {
     for (SharedResourceUse &use : mResourceUses)
     {
-        ASSERT(use->counter > 0);
-        use->counter--;
-        ASSERT(use->serial <= serial);
-        use->serial = serial;
+        use.releaseAndUpdateSerial(serial);
     }
 
     mResourceUses.clear();
