@@ -51,6 +51,7 @@ enum class CommandID : uint16_t
     DrawIndexedInstancedBaseVertexBaseInstance,
     DrawInstanced,
     DrawInstancedBaseInstance,
+    DrawIndirect,
     EndQuery,
     ExecutionBarrier,
     FillBuffer,
@@ -237,6 +238,13 @@ struct DispatchParams
     uint32_t groupCountZ;
 };
 VERIFY_4_BYTE_ALIGNMENT(DispatchParams)
+
+struct DrawIndirectParams
+{
+    VkBuffer buffer;
+    VkDeviceSize offset;
+};
+VERIFY_4_BYTE_ALIGNMENT(DrawIndirectParams)
 
 struct DispatchIndirectParams
 {
@@ -476,6 +484,10 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                                    uint32_t firstVertex,
                                    uint32_t firstInstance);
 
+    void drawIndirect(const Buffer &buffer,
+                      VkDeviceSize offset,
+                      uint32_t drawCount,
+                      uint32_t stride);
     void endQuery(VkQueryPool queryPool, uint32_t query);
 
     void executionBarrier(VkPipelineStageFlags stageMask);
@@ -941,6 +953,20 @@ ANGLE_INLINE void SecondaryCommandBuffer::drawInstancedBaseInstance(uint32_t ver
     paramStruct->instanceCount = instanceCount;
     paramStruct->firstVertex   = firstVertex;
     paramStruct->firstInstance = firstInstance;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::drawIndirect(const Buffer &buffer,
+                                                       VkDeviceSize offset,
+                                                       uint32_t drawCount,
+                                                       uint32_t stride)
+{
+    DrawIndirectParams *paramStruct = initCommand<DrawIndirectParams>(CommandID::DrawIndirect);
+    paramStruct->buffer             = buffer.getHandle();
+    paramStruct->offset             = offset;
+
+    // OpenGL ES doesn't have a way to specify a drawCount or stride, throw assert if something
+    // changes.
+    ASSERT(drawCount == 1);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::endQuery(VkQueryPool queryPool, uint32_t query)

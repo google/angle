@@ -460,10 +460,10 @@ angle::Result ContextVk::finish(const gl::Context *context)
 
 angle::Result ContextVk::setupDraw(const gl::Context *context,
                                    gl::PrimitiveMode mode,
-                                   GLint firstVertex,
+                                   GLint firstVertexOrInvalid,
                                    GLsizei vertexOrIndexCount,
                                    GLsizei instanceCount,
-                                   gl::DrawElementsType indexTypeOrNone,
+                                   gl::DrawElementsType indexTypeOrInvalid,
                                    const void *indices,
                                    DirtyBits dirtyBitMask,
                                    vk::CommandBuffer **commandBufferOut)
@@ -479,8 +479,10 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // Must be called before the command buffer is started. Can call finish.
     if (context->getStateCache().hasAnyActiveClientAttrib())
     {
-        ANGLE_TRY(mVertexArray->updateClientAttribs(context, firstVertex, vertexOrIndexCount,
-                                                    instanceCount, indexTypeOrNone, indices));
+        ASSERT(firstVertexOrInvalid != -1);
+        ANGLE_TRY(mVertexArray->updateClientAttribs(context, firstVertexOrInvalid,
+                                                    vertexOrIndexCount, instanceCount,
+                                                    indexTypeOrInvalid, indices));
         mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     }
 
@@ -517,7 +519,8 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // Update transform feedback offsets on every draw call.
     if (mState.isTransformFeedbackActiveUnpaused())
     {
-        mXfbBaseVertex = firstVertex;
+        ASSERT(firstVertexOrInvalid != -1);
+        mXfbBaseVertex = firstVertexOrInvalid;
         invalidateGraphicsDriverUniforms();
     }
 
@@ -578,6 +581,28 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
 
     return setupDraw(context, mode, 0, indexCount, instanceCount, indexType, indices,
                      mIndexedDirtyBitsMask, commandBufferOut);
+}
+
+angle::Result ContextVk::setupIndirectDraw(const gl::Context *context,
+                                           gl::PrimitiveMode mode,
+                                           DirtyBits dirtyBitMask,
+                                           vk::CommandBuffer **commandBufferOut,
+                                           vk::Buffer **indirectBufferOut)
+{
+    ASSERT(mode != gl::PrimitiveMode::LineLoop);
+
+    gl::Buffer *indirectBuffer = mState.getTargetBuffer(gl::BufferBinding::DrawIndirect);
+    ASSERT(indirectBuffer);
+
+    vk::BufferHelper &buffer           = vk::GetImpl(indirectBuffer)->getBuffer();
+    *indirectBufferOut                 = const_cast<vk::Buffer *>(&buffer.getBuffer());
+    vk::FramebufferHelper *framebuffer = mDrawFramebuffer->getFramebuffer();
+    buffer.onRead(this, framebuffer, VK_ACCESS_INDIRECT_COMMAND_READ_BIT);
+
+    ANGLE_TRY(setupDraw(context, mode, -1, 0, 0, gl::DrawElementsType::InvalidEnum, nullptr,
+                        dirtyBitMask, commandBufferOut));
+
+    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::setupLineLoopDraw(const gl::Context *context,
@@ -1477,8 +1502,20 @@ angle::Result ContextVk::drawArraysIndirect(const gl::Context *context,
                                             gl::PrimitiveMode mode,
                                             const void *indirect)
 {
-    ANGLE_VK_UNREACHABLE(this);
-    return angle::Result::Stop;
+    if (mode == gl::PrimitiveMode::LineLoop)
+    {
+        // TODO - http://anglebug.com/3564
+        ANGLE_VK_UNREACHABLE(this);
+        return angle::Result::Stop;
+    }
+
+    vk::CommandBuffer *commandBuffer = nullptr;
+    vk::Buffer *buffer               = nullptr;
+
+    ANGLE_TRY(setupIndirectDraw(context, mode, mNonIndexedDirtyBitsMask, &commandBuffer, &buffer));
+
+    commandBuffer->drawIndirect(*buffer, reinterpret_cast<VkDeviceSize>(indirect), 1, 0);
+    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,

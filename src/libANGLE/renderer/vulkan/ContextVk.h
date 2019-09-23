@@ -369,7 +369,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     angle::Result setupDraw(const gl::Context *context,
                             gl::PrimitiveMode mode,
-                            GLint firstVertex,
+                            GLint firstVertexOrInvalid,
                             GLsizei vertexOrIndexCount,
                             GLsizei instanceCount,
                             gl::DrawElementsType indexTypeOrInvalid,
@@ -383,6 +383,12 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                                    gl::DrawElementsType indexType,
                                    const void *indices,
                                    vk::CommandBuffer **commandBufferOut);
+    angle::Result setupIndirectDraw(const gl::Context *context,
+                                    gl::PrimitiveMode mode,
+                                    DirtyBits dirtyBitMask,
+                                    vk::CommandBuffer **commandBufferOut,
+                                    vk::Buffer **indirectBufferOut);
+
     angle::Result setupLineLoopDraw(const gl::Context *context,
                                     gl::PrimitiveMode mode,
                                     GLint firstVertex,
