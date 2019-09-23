@@ -368,6 +368,16 @@ angle::Result VertexArrayGL::streamAttributes(const gl::Context *context,
                                     static_cast<GLsizei>(destStride),
                                     static_cast<GLintptr>(vertexStartOffset));
 
+            // Update the state to track the streamed attribute
+            mAppliedAttributes[idx].format = attrib.format;
+
+            mAppliedAttributes[idx].relativeOffset = 0;
+            mAppliedAttributes[idx].bindingIndex   = static_cast<GLuint>(idx);
+
+            mAppliedBindings[idx].setStride(static_cast<GLsizei>(destStride));
+            mAppliedBindings[idx].setOffset(static_cast<GLintptr>(vertexStartOffset));
+            mAppliedBindings[idx].setBuffer(context, nullptr);
+
             curBufferOffset += destStride * streamedVertexCount;
         }
 
