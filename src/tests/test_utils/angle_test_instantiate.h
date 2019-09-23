@@ -23,6 +23,7 @@ bool IsLinux();
 bool IsOSX();
 bool IsOzone();
 bool IsWindows();
+bool IsWindows7();
 bool IsFuchsia();
 
 // Android devices

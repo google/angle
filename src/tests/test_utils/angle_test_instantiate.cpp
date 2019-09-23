@@ -21,6 +21,7 @@
 #include "util/system_utils.h"
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
+#    include <VersionHelpers.h>
 #    include "util/windows/WGLWindow.h"
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
@@ -177,6 +178,15 @@ bool IsWindows()
 #endif
 }
 
+bool IsWindows7()
+{
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    return ::IsWindows7OrGreater() && !::IsWindows8OrGreater();
+#else
+    return false;
+#endif
+}
+
 bool IsFuchsia()
 {
 #if defined(ANGLE_PLATFORM_FUCHSIA)
@@ -262,6 +272,13 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
                     case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
                     case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
                     case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
+                        // SwiftShader temporarily disabled on Win7.
+                        // TODO(jmadill): Re-enable. http://anglebug.com/3876
+                        if (param.eglParameters.deviceType ==
+                            EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE)
+                        {
+                            return !IsWindows7();
+                        }
                         return true;
                     case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
                         // ES 3.1+ back-end is not supported properly.
