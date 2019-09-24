@@ -785,6 +785,19 @@ class ImageHelper final : public CommandGraphResource
     // Data staging
     void removeStagedUpdates(ContextVk *contextVk, const gl::ImageIndex &index);
 
+    angle::Result stageSubresourceUpdateImpl(ContextVk *contextVk,
+                                             const gl::ImageIndex &index,
+                                             const gl::Extents &glExtents,
+                                             const gl::Offset &offset,
+                                             const gl::InternalFormat &formatInfo,
+                                             const gl::PixelUnpackState &unpack,
+                                             GLenum type,
+                                             const uint8_t *pixels,
+                                             const Format &vkFormat,
+                                             const GLuint inputRowPitch,
+                                             const GLuint inputDepthPitch,
+                                             const GLuint inputSkipBytes);
+
     angle::Result stageSubresourceUpdate(ContextVk *contextVk,
                                          const gl::ImageIndex &index,
                                          const gl::Extents &glExtents,
@@ -923,6 +936,16 @@ class ImageHelper final : public CommandGraphResource
                              uint32_t layer,
                              void *pixels,
                              DynamicBuffer *stagingBuffer);
+
+    angle::Result CalculateBufferInfo(ContextVk *contextVk,
+                                      const gl::Extents &glExtents,
+                                      const gl::InternalFormat &formatInfo,
+                                      const gl::PixelUnpackState &unpack,
+                                      GLenum type,
+                                      bool is3D,
+                                      GLuint *inputRowPitch,
+                                      GLuint *inputDepthPitch,
+                                      GLuint *inputSkipBytes);
 
   private:
     void forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
