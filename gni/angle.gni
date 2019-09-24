@@ -149,7 +149,16 @@ set_defaults("angle_static_library") {
 set_defaults("angle_test") {
   configs = angle_common_configs
   public_configs = []
+  public_deps = []
+  sources = []
+  data = []
+  main = ""
   suppressed_configs = angle_remove_configs
+
+  # TODO(jmadill): Migrate to standalone harness. http://anglebug.com/3162
+  if (build_with_chromium) {
+    suppressed_configs -= [ "//build/config/compiler:default_include_dirs" ]
+  }
 }
 
 template("angle_executable") {
@@ -232,6 +241,18 @@ template("angle_static_library") {
 }
 
 template("angle_test") {
+  _googletest_deps = [
+    "//testing/gmock",
+    "//testing/gtest",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest",
+  ]
+
+  # TODO(jmadill): Migrate to standalone harness. http://anglebug.com/3162
+  if (build_with_chromium) {
+    _googletest_deps += [ "//base/test:test_support" ]
+  }
+
   test(target_name) {
     forward_variables_from(invoker,
                            "*",
@@ -256,6 +277,17 @@ template("angle_test") {
     if (is_android) {
       configs += [ angle_root + ":build_id_config" ]
       configs -= [ "//build/config/android:hide_all_but_jni" ]
+    }
+
+    deps += _googletest_deps + [
+              "$angle_root:angle_common",
+              "$angle_root:includes",
+            ]
+
+    if (build_with_chromium) {
+      sources += [ "//gpu/${invoker.main}.cc" ]
+    } else {
+      sources += [ "${invoker.main}.cpp" ]
     }
   }
 }
