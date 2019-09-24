@@ -550,43 +550,13 @@
 1442 : dEQP-GLES31.functional.state_query.program_pipeline.* = FAIL
 1442 : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.atomic_counter_dispatch_100_calls_1k_invocations = FAIL
 1442 : dEQP-GLES31.functional.separate_shader.* = FAIL
-1442 : dEQP-GLES31.functional.debug.error_filters.case_11 = FAIL
-1442 : dEQP-GLES31.functional.debug.error_groups.case_11 = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.buffer.bind_buffer_range = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.shader.compile_compute_shader = SKIP
-1442 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.shader_directive.primitive_bounding_box = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.shader_directive.tessellation_shader = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.log.buffer.bind_buffer_range = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.log.shader.compile_compute_shader = SKIP
-1442 : dEQP-GLES31.functional.debug.negative_coverage.log.shader_directive.primitive_bounding_box = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.log.shader_directive.tessellation_shader = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.bind_buffer_range = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.read_pixels_format_mismatch = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.framebuffer_texture2d = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copyteximage2d_invalid_format = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copyteximage2d_inequal_width_height_cube = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copyteximage2d_max_width_height = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copytexsubimage2d_invalid_offset = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.compressedtexsubimage2d = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.compressedtexsubimage2d_invalid_size = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texsubimage3d_neg_level = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texsubimage3d_neg_offset = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copytexsubimage3d_invalid_offset = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.compressedtexsubimage3d = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.compressedtexsubimage3d_invalid_buffer_target = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.compile_compute_shader = SKIP
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.draw_range_elements = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.draw_range_elements_incomplete_primitive = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.primitive_bounding_box = FAIL
-1442 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.tessellation_shader = FAIL
 1442 : dEQP-GLES31.functional.debug.object_labels.program_pipeline = FAIL
 
 2324 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
 2324 : dEQP-GLES31.functional.debug.negative_coverage.log.compute.program_not_active = FAIL
 2324 : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.program_not_active = FAIL
-2324 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_storage.block_number_limits = FAIL
-2324 : dEQP-GLES31.functional.debug.negative_coverage.log.shader_storage.block_number_limits = FAIL
-2324 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.shader_storage.block_number_limits = FAIL
+2324 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.draw_range_elements = FAIL
+2324 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 
 // These tests are failing because of compile errors with SSBOs in compute shaders.
 1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.exceed_shared_memory_size_limit = FAIL
@@ -673,8 +643,7 @@
 3579 ANDROID VULKAN : dEQP-GLES31.functional.fbo.no_attachments.* = SKIP
 
 // Debug:
-3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.* = SKIP
-3590 VULKAN : dEQP-GLES31.functional.debug.error_groups.case_14 = SKIP
+3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.*exceed_shared_memory_size_limit = FAIL
 
 // Stencil textures (some missing support for base level):
 3683 VULKAN PIXEL2 : dEQP-GLES31.functional.stencil_texturing.format.* = FAIL
