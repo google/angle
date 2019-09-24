@@ -3462,6 +3462,57 @@ void main(void)
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
+// Create a 'very large' array inside of a function in a compute shader.
+TEST_P(ComputeShaderTest, VeryLargeArrayInsideFunction)
+{
+    constexpr char kComputeShader[] = R"(#version 310 es
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(binding = 0, std430) buffer Output {
+  int value[1];
+} output_data;
+
+void main()
+{
+    int values[1000];
+    for (int i = 0; i < values.length(); i++)
+    {
+        values[i] = 0;
+    }
+
+    int total = 0;
+    for (int i = 0; i < values.length(); i++)
+    {
+        total += i;
+        values[i] = total;
+    }
+    output_data.value[0u] = values[1000-1];
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    constexpr unsigned int kBytesPerComponent = sizeof(GLint);
+
+    GLBuffer shaderStorageBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 1 * kBytesPerComponent, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    glFinish();
+    EXPECT_GL_NO_ERROR();
+
+    // read back
+    const GLint *ptr = reinterpret_cast<const GLint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 1 * kBytesPerComponent, GL_MAP_READ_BIT));
+    EXPECT_EQ(499500, ptr[0]);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 ANGLE_INSTANTIATE_TEST(ComputeShaderTest,
                        ES31_OPENGL(),
                        ES31_OPENGLES(),

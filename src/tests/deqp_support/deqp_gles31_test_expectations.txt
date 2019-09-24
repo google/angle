@@ -518,6 +518,8 @@
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8.texture_swizzle.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8i.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8ui.* = FAIL
+3865 D3D11 : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
+3865 D3D11 : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
 
 // Failing with dEQP roll
 3447 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_per_block_buffers.22 = FAIL
@@ -545,8 +547,6 @@
 1442 D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
 
 // OpenGL/D3D11/Vulkan Failing Tests
-3865 : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
-3865 : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
 1442 : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL
 1442 : dEQP-GLES31.functional.state_query.integer.program_pipeline_binding_* = FAIL
 1442 : dEQP-GLES31.functional.state_query.program.program_separable_get_programiv = FAIL
