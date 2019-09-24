@@ -31,7 +31,9 @@ declare_args() {
   angle_build_all = !angle_is_winuwp
 
   # Currently SwiftShader's Vulkan front-end doesn't build on Android.
-  angle_swiftshader = !is_android
+  # SwiftShader is not needed on Fuchsia because Vulkan is supported on all
+  # devices that run Fuchsia.
+  angle_swiftshader = !is_android && !is_fuchsia
 }
 
 if (!build_with_chromium && angle_build_all) {
