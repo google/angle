@@ -540,10 +540,13 @@
 // An NVIDIA bug seems to occur when sending GL commands in a certain order to the driver
 2432 NVIDIA OPENGL : dEQP-GLES31.functional.vertex_attribute_binding.usage.mixed_usage.mixed_api_change_binding_point = SKIP
 
+// OpenGL/D3D11 Failing Tests
+1442 OPENGL : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
+1442 D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
+
 // OpenGL/D3D11/Vulkan Failing Tests
 3865 : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
 3865 : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
-1442 : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
 1442 : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL
 1442 : dEQP-GLES31.functional.state_query.integer.program_pipeline_binding_* = FAIL
 1442 : dEQP-GLES31.functional.state_query.program.program_separable_get_programiv = FAIL
@@ -588,8 +591,16 @@
 3726 VULKAN ANDROID : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.*atomic_counter* = FAIL
 3726 VULKAN ANDROID : dEQP-GLES31.functional.compute.basic.atomic_counter* = FAIL
 
-// Validation error on SPIR-V (but only on Android!)
+// Validation error on SPIR-V (but only on Android, possibly related to issue 2703)
 3882 VULKAN ANDROID : dEQP-GLES31.functional.uniform_location.nested_array.*sampler* = FAIL
+
+// Arrays of opaque types as function parameters (possibly related to issue 3882)
+2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_literal_vertex = FAIL
+2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_literal_fragment = FAIL
+2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_literal_compute = FAIL
+2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_expression_vertex = FAIL
+2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_expression_fragment = FAIL
+2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_expression_compute = FAIL
 
 // General Vulkan failures
 
@@ -604,18 +615,7 @@
 3520 VULKAN : dEQP-GLES31.functional.program_interface_query.shader_storage_block.buffer_data_size.* = FAIL
 
 // Shader support:
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.frexp.* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.ldexp.* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.pack_unpack.* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.integer.* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.uniform.* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.* = SKIP
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.frexp* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.ldexp* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.functions* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.linkage*uniform* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_constants.core.min_program_texel_offset = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.uniform_block.es31.valid.* = FAIL
+3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_* = SKIP
 
 // SSBO and Image qualifiers:
 3602 VULKAN : dEQP-GLES31.functional.synchronization.in_invocation.ssbo_alias_overwrite = FAIL
