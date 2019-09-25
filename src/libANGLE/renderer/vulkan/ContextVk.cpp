@@ -238,8 +238,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mIsAnyHostVisibleBufferWritten(false),
       mEmulateSeamfulCubeMapSampling(false),
       mUseOldRewriteStructSamplers(false),
-      mLastCompletedQueueSerial(renderer->nextSerial()),
-      mCurrentQueueSerial(renderer->nextSerial()),
       mPoolAllocator(kDefaultPoolAllocatorPageSize, 1),
       mCommandGraph(kEnableCommandGraphDiagnostics, &mPoolAllocator),
       mGpuEventsEnabled(false),
@@ -307,12 +305,14 @@ ContextVk::~ContextVk() = default;
 
 void ContextVk::onDestroy(const gl::Context *context)
 {
-    // Force a flush on destroy.
-    (void)finishImpl();
+    // This will not destroy any resources. It will release them to be collected after finish.
+    mIncompleteTextures.onDestroy(context);
+
+    // Need all commands in the share group to complete. For now finish all Contexts.
+    // TODO(jmadill): Remove global finish. http://anglebug.com/2464
+    (void)mRenderer->globalFinish();
 
     VkDevice device = getDevice();
-
-    mIncompleteTextures.onDestroy(context);
 
     for (DriverUniformsDescriptorSet &driverUniforms : mDriverUniforms)
     {
@@ -331,10 +331,7 @@ void ContextVk::onDestroy(const gl::Context *context)
         queryPool.destroy(device);
     }
 
-    if (!mInFlightCommands.empty() || !mGarbage.empty())
-    {
-        (void)finishImpl();
-    }
+    ASSERT(mInFlightCommands.empty() && mCurrentGarbage.empty() && mGarbageQueue.empty());
 
     mCommandGraph.releaseResourceUses();
 
@@ -886,22 +883,21 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     CommandBatch &batch = scopedBatch.get();
     ANGLE_TRY(getNextSubmitFence(&batch.fence));
 
-    ANGLE_TRY(getRenderer()->queueSubmit(this, submitInfo, batch.fence.get()));
+    ANGLE_TRY(mRenderer->queueSubmit(this, submitInfo, batch.fence.get(), &batch.serial));
 
-    // TODO: this comment still valid?
-    // Notify the Contexts that they should be starting new command buffers.
-    // We use one command pool per serial/submit associated with this VkQueue. We can also
-    // have multiple Contexts sharing one VkQueue. In ContextVk::setupDraw we don't explicitly
-    // check for a new serial when starting a new command buffer. We just check that the current
-    // recording command buffer is valid. Thus we need to explicitly notify every other Context
-    // using this VkQueue that they their current command buffer is no longer valid.
+    if (!mCurrentGarbage.empty())
+    {
+        mGarbageQueue.emplace_back(std::move(mCurrentGarbage), batch.serial);
+    }
+
+    // we need to explicitly notify every other Context using this VkQueue that their current
+    // command buffer is no longer valid.
     onRenderPassFinished();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
 
     // Store the primary CommandBuffer and command pool used for secondary CommandBuffers
     // in the in-flight list.
     ANGLE_TRY(releaseToCommandBatch(std::move(commandBuffer), &batch));
-    batch.serial = mCurrentQueueSerial;
 
     mInFlightCommands.emplace_back(scopedBatch.release());
 
@@ -913,9 +909,6 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     // so the limit is larger than the expected number of images.  The
     // InterleavedAttributeDataBenchmark perf test for example issues a large number of flushes.
     ASSERT(mInFlightCommands.size() <= kInFlightCommandsLimit);
-
-    mLastSubmittedQueueSerial = mCurrentQueueSerial;
-    mCurrentQueueSerial       = getRenderer()->nextSerial();
 
     ANGLE_TRY(checkCompletedCommands());
 
@@ -935,7 +928,8 @@ angle::Result ContextVk::flushCommandGraph(vk::PrimaryCommandBuffer *commandBatc
     }
     mIsAnyHostVisibleBufferWritten = false;
 
-    return mCommandGraph.submitCommands(this, mCurrentQueueSerial, &mRenderPassCache, commandBatch);
+    return mCommandGraph.submitCommands(this, getCurrentQueueSerial(), &mRenderPassCache,
+                                        commandBatch);
 }
 
 angle::Result ContextVk::synchronizeCpuGpuTime()
@@ -1172,7 +1166,7 @@ angle::Result ContextVk::traceGpuEventImpl(vk::PrimaryCommandBuffer *commandBuff
 
     event.name   = name;
     event.phase  = phase;
-    event.serial = mCurrentQueueSerial;
+    event.serial = getCurrentQueueSerial();
 
     ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &event.queryPoolIndex, &event.queryIndex));
 
@@ -1196,10 +1190,12 @@ angle::Result ContextVk::checkCompletedGpuEvents()
 
     int finishedCount = 0;
 
+    Serial lastCompletedSerial = getLastCompletedQueueSerial();
+
     for (GpuEventQuery &eventQuery : mInFlightGpuEventQueries)
     {
         // Only check the timestamp query if the submission has finished.
-        if (eventQuery.serial > mLastCompletedQueueSerial)
+        if (eventQuery.serial > lastCompletedSerial)
         {
             break;
         }
@@ -1283,6 +1279,25 @@ void ContextVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuT
     mGpuEvents.clear();
 }
 
+void ContextVk::clearAllGarbage()
+{
+    VkDevice device = getDevice();
+    for (vk::GarbageObjectBase &garbage : mCurrentGarbage)
+    {
+        garbage.destroy(device);
+    }
+    mCurrentGarbage.clear();
+
+    for (vk::GarbageAndSerial &garbageList : mGarbageQueue)
+    {
+        for (vk::GarbageObjectBase &garbage : garbageList.get())
+        {
+            garbage.destroy(device);
+        }
+    }
+    mGarbageQueue.clear();
+}
+
 void ContextVk::handleDeviceLost()
 {
     mCommandGraph.clear();
@@ -1304,14 +1319,7 @@ void ContextVk::handleDeviceLost()
         batch.fence.reset(device);
     }
     mInFlightCommands.clear();
-
-    for (vk::GarbageObject &garbage : mGarbage)
-    {
-        garbage.destroy(device);
-    }
-    mGarbage.clear();
-
-    mLastCompletedQueueSerial = mLastSubmittedQueueSerial;
+    clearAllGarbage();
 
     mRenderer->notifyDeviceLost();
 }
@@ -1985,7 +1993,6 @@ GLint64 ContextVk::getTimestamp()
 angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
 {
     ASSERT(mCommandGraph.empty());
-    mCurrentQueueSerial = getRenderer()->nextSerial();
 
     // Flip viewports if FeaturesVk::flipViewportY is enabled and the user did not request that the
     // surface is flipped.
@@ -2652,14 +2659,10 @@ angle::Result ContextVk::finishImpl()
 
     ANGLE_TRY(flushImpl(nullptr));
 
-    ANGLE_TRY(finishToSerial(mLastSubmittedQueueSerial));
+    ANGLE_TRY(finishToSerial(getLastSubmittedQueueSerial()));
     ASSERT(mInFlightCommands.empty());
 
-    for (vk::GarbageObject &garbage : mGarbage)
-    {
-        garbage.destroy(getDevice());
-    }
-    mGarbage.clear();
+    clearAllGarbage();
 
     if (mGpuEventsEnabled)
     {
@@ -2692,7 +2695,7 @@ const vk::CommandPool &ContextVk::getCommandPool() const
 
 bool ContextVk::isSerialInUse(Serial serial) const
 {
-    return serial > mLastCompletedQueueSerial;
+    return serial > getLastCompletedQueueSerial();
 }
 
 angle::Result ContextVk::checkCompletedCommands()
@@ -2710,8 +2713,7 @@ angle::Result ContextVk::checkCompletedCommands()
         }
         ANGLE_VK_TRY(this, result);
 
-        ASSERT(batch.serial > mLastCompletedQueueSerial);
-        mLastCompletedQueueSerial = batch.serial;
+        mRenderer->onCompletedSerial(batch.serial);
 
         mRenderer->resetSharedFence(&batch.fence);
         ANGLE_TRACE_EVENT0("gpu.angle", "command batch recycling");
@@ -2721,17 +2723,29 @@ angle::Result ContextVk::checkCompletedCommands()
 
     mInFlightCommands.erase(mInFlightCommands.begin(), mInFlightCommands.begin() + finishedCount);
 
+    Serial lastCompleted = getLastCompletedQueueSerial();
+
     size_t freeIndex = 0;
-    for (; freeIndex < mGarbage.size(); ++freeIndex)
+    for (; freeIndex < mGarbageQueue.size(); ++freeIndex)
     {
-        if (!mGarbage[freeIndex].destroyIfComplete(device, mLastCompletedQueueSerial))
+        vk::GarbageAndSerial &garbageList = mGarbageQueue[freeIndex];
+        if (garbageList.getSerial() < lastCompleted)
+        {
+            for (vk::GarbageObjectBase &garbage : garbageList.get())
+            {
+                garbage.destroy(device);
+            }
+        }
+        else
+        {
             break;
+        }
     }
 
     // Remove the entries from the garbage list - they should be ready to go.
     if (freeIndex > 0)
     {
-        mGarbage.erase(mGarbage.begin(), mGarbage.begin() + freeIndex);
+        mGarbageQueue.erase(mGarbageQueue.begin(), mGarbageQueue.begin() + freeIndex);
     }
 
     return angle::Result::Continue;
@@ -2754,7 +2768,7 @@ angle::Result ContextVk::finishToSerialOrTimeout(Serial serial, uint64_t timeout
 {
     *outTimedOut = false;
 
-    if (!isSerialInUse(serial) || mInFlightCommands.empty())
+    if (mInFlightCommands.empty())
     {
         return angle::Result::Continue;
     }
@@ -2792,14 +2806,15 @@ angle::Result ContextVk::finishToSerialOrTimeout(Serial serial, uint64_t timeout
 angle::Result ContextVk::getCompatibleRenderPass(const vk::RenderPassDesc &desc,
                                                  vk::RenderPass **renderPassOut)
 {
-    return mRenderPassCache.getCompatibleRenderPass(this, mCurrentQueueSerial, desc, renderPassOut);
+    return mRenderPassCache.getCompatibleRenderPass(this, getCurrentQueueSerial(), desc,
+                                                    renderPassOut);
 }
 
 angle::Result ContextVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
                                               const vk::AttachmentOpsArray &ops,
                                               vk::RenderPass **renderPassOut)
 {
-    return mRenderPassCache.getRenderPassWithOps(this, mCurrentQueueSerial, desc, ops,
+    return mRenderPassCache.getRenderPassWithOps(this, getCurrentQueueSerial(), desc, ops,
                                                  renderPassOut);
 }
 
@@ -2908,7 +2923,8 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores    = nullptr;
 
-    ANGLE_TRY(getRenderer()->queueSubmit(this, submitInfo, fence.get()));
+    Serial throwAwaySerial;
+    ANGLE_TRY(mRenderer->queueSubmit(this, submitInfo, fence.get(), &throwAwaySerial));
 
     // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
     // in parallel with what's already running on the GPU.

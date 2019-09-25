@@ -1755,10 +1755,10 @@ VkImageAspectFlags ImageHelper::getAspectFlags() const
     return GetFormatAspectFlags(mFormat->imageFormat());
 }
 
-void ImageHelper::dumpResources(Serial serial, std::vector<GarbageObject> *garbageQueue)
+void ImageHelper::dumpResources(GarbageList *garbageList)
 {
-    mImage.dumpResources(serial, garbageQueue);
-    mDeviceMemory.dumpResources(serial, garbageQueue);
+    mImage.dumpResources(garbageList);
+    mDeviceMemory.dumpResources(garbageList);
 }
 
 VkImageLayout ImageHelper::getCurrentLayout() const

@@ -339,10 +339,12 @@ class SharedResourceUse final : angle::NonCopyable
         return mUse->serial;
     }
 
-    ANGLE_INLINE uint32_t getCounter() const
+    // The base counter value for an live resource is "1". Any value greater than one indicates
+    // the resource is in use by a vk::CommandGraph.
+    ANGLE_INLINE bool isCurrentlyInGraph() const
     {
         ASSERT(valid());
-        return mUse->counter;
+        return mUse->counter > 1;
     }
 
   private:
@@ -583,8 +585,8 @@ ANGLE_INLINE bool CommandGraphResource::hasStartedRenderPass() const
 
 ANGLE_INLINE void CommandGraphResource::onGraphAccess(CommandGraph *commandGraph)
 {
-    // Clear dependencies if this is a new access. The minimum counter value is 1.
-    if (mUse.getCounter() == 1)
+    // Clear dependencies if this is a new access.
+    if (!mUse.isCurrentlyInGraph())
     {
         mCurrentWritingNode = nullptr;
         mCurrentReadingNodes.clear();

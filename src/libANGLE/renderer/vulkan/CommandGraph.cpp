@@ -252,7 +252,7 @@ CommandGraphResource::~CommandGraphResource()
 
 bool CommandGraphResource::isResourceInUse(ContextVk *contextVk) const
 {
-    return mUse.getCounter() > 1 || contextVk->isSerialInUse(mUse.getSerial());
+    return mUse.isCurrentlyInGraph() || contextVk->isSerialInUse(mUse.getSerial());
 }
 
 angle::Result CommandGraphResource::recordCommands(ContextVk *context,

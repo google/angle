@@ -262,16 +262,16 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     const vk::CommandPool &getCommandPool() const;
 
-    Serial getCurrentQueueSerial() const { return mCurrentQueueSerial; }
-    Serial getLastSubmittedQueueSerial() const { return mLastSubmittedQueueSerial; }
-    Serial getLastCompletedQueueSerial() const { return mLastCompletedQueueSerial; }
+    Serial getCurrentQueueSerial() const { return mRenderer->getCurrentQueueSerial(); }
+    Serial getLastSubmittedQueueSerial() const { return mRenderer->getLastSubmittedQueueSerial(); }
+    Serial getLastCompletedQueueSerial() const { return mRenderer->getLastCompletedQueueSerial(); }
 
     bool isSerialInUse(Serial serial) const;
 
     template <typename T>
     void addGarbage(T *object)
     {
-        object->dumpResources(mCurrentQueueSerial, &mGarbage);
+        object->dumpResources(&mCurrentGarbage);
     }
 
     // Check to see which batches have finished completion (forward progress for
@@ -498,6 +498,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     bool shouldUseOldRewriteStructSamplers() const;
 
     uint64_t getMaxFenceWaitTimeNs() const;
+    void clearAllGarbage();
 
     vk::PipelineHelper *mCurrentGraphicsPipeline;
     vk::PipelineAndSerial *mCurrentComputePipeline;
@@ -602,10 +603,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // We use a Persistent CommandPool with pre-allocated buffers for primary CommandBuffer
     vk::PersistentCommandPool mPrimaryCommandPool;
 
-    Serial mLastCompletedQueueSerial;
-    Serial mLastSubmittedQueueSerial;
-    Serial mCurrentQueueSerial;
-
     struct CommandBatch final : angle::NonCopyable
     {
         CommandBatch();
@@ -627,7 +624,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     angle::Result recycleCommandBatch(CommandBatch *batch);
 
     std::vector<CommandBatch> mInFlightCommands;
-    std::vector<vk::GarbageObject> mGarbage;
+    vk::GarbageList mCurrentGarbage;
+    vk::GarbageQueue mGarbageQueue;
 
     RenderPassCache mRenderPassCache;
 

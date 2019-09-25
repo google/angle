@@ -351,10 +351,10 @@ angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUs
     return angle::Result::Continue;
 }
 
-void StagingBuffer::dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue)
+void StagingBuffer::dumpResources(GarbageList *garbageList)
 {
-    mBuffer.dumpResources(serial, garbageQueue);
-    mDeviceMemory.dumpResources(serial, garbageQueue);
+    mBuffer.dumpResources(garbageList);
+    mDeviceMemory.dumpResources(garbageList);
 }
 
 angle::Result AllocateBufferMemory(vk::Context *context,
@@ -438,6 +438,18 @@ gl::TextureType Get2DTextureType(uint32_t layerCount, GLint samples)
 GarbageObjectBase::GarbageObjectBase() : mHandleType(HandleType::Invalid), mHandle(VK_NULL_HANDLE)
 {}
 
+GarbageObjectBase::GarbageObjectBase(GarbageObjectBase &&other) : GarbageObjectBase()
+{
+    *this = std::move(other);
+}
+
+GarbageObjectBase &GarbageObjectBase::operator=(GarbageObjectBase &&rhs)
+{
+    std::swap(mHandle, rhs.mHandle);
+    std::swap(mHandleType, rhs.mHandleType);
+    return *this;
+}
+
 // GarbageObjectBase implementation
 void GarbageObjectBase::destroy(VkDevice device)
 {
@@ -506,24 +518,6 @@ void GarbageObjectBase::destroy(VkDevice device)
             UNREACHABLE();
             break;
     }
-}
-
-// GarbageObject implementation.
-GarbageObject::GarbageObject() : mSerial() {}
-
-GarbageObject::GarbageObject(const GarbageObject &other) = default;
-
-GarbageObject &GarbageObject::operator=(const GarbageObject &other) = default;
-
-bool GarbageObject::destroyIfComplete(VkDevice device, Serial completedSerial)
-{
-    if (completedSerial >= mSerial)
-    {
-        destroy(device);
-        return true;
-    }
-
-    return false;
 }
 
 bool SamplerNameContainsNonZeroArrayElement(const std::string &name)

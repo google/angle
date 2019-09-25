@@ -30,16 +30,6 @@ class WrappedObject : angle::NonCopyable
     const HandleT *ptr() const { return &mHandle; }
 
     template <typename ResourceOutType>
-    void dumpResources(Serial serial, std::vector<ResourceOutType> *outQueue)
-    {
-        if (valid())
-        {
-            outQueue->emplace_back(serial, *static_cast<DerivedT *>(this));
-            mHandle = VK_NULL_HANDLE;
-        }
-    }
-
-    template <typename ResourceOutType>
     void dumpResources(std::vector<ResourceOutType> *outQueue)
     {
         if (valid())

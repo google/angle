@@ -139,11 +139,10 @@ class RendererVk : angle::NonCopyable
 
     angle::Result queueSubmit(vk::Context *context,
                               const VkSubmitInfo &submitInfo,
-                              const vk::Fence &fence);
+                              const vk::Fence &fence,
+                              Serial *serialOut);
     angle::Result queueWaitIdle(vk::Context *context);
     VkResult queuePresent(const VkPresentInfoKHR &presentInfo);
-
-    Serial nextSerial();
 
     angle::Result newSharedFence(vk::Context *context, vk::Shared<vk::Fence> *sharedFenceOut);
     inline void resetSharedFence(vk::Shared<vk::Fence> *sharedFenceIn)
@@ -165,6 +164,14 @@ class RendererVk : angle::NonCopyable
     std::string getAndClearLastValidationMessage(uint32_t *countSinceLastClear);
 
     uint64_t getMaxFenceWaitTimeNs() const;
+    Serial getCurrentQueueSerial() const { return mCurrentQueueSerial; }
+    Serial getLastSubmittedQueueSerial() const { return mLastSubmittedQueueSerial; }
+    Serial getLastCompletedQueueSerial() const { return mLastCompletedQueueSerial; }
+
+    void onCompletedSerial(Serial serial);
+
+    // Calls finish on every Context in the active set.
+    angle::Result globalFinish();
 
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
@@ -212,6 +219,9 @@ class RendererVk : angle::NonCopyable
     VkDevice mDevice;
     AtomicSerialFactory mQueueSerialFactory;
     AtomicSerialFactory mShaderSerialFactory;
+
+    Serial mLastCompletedQueueSerial;
+    Serial mLastSubmittedQueueSerial;
     Serial mCurrentQueueSerial;
 
     bool mDeviceLost;
