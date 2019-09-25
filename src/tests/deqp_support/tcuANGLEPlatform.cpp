@@ -26,7 +26,7 @@
 #include "egluGLContextFactory.hpp"
 #include "tcuANGLENativeDisplayFactory.h"
 #include "tcuNullContextFactory.hpp"
-#include "util/system_utils.h"
+#include "util/test_utils.h"
 
 static_assert(EGL_DONT_CARE == -1, "Unexpected value for EGL_DONT_CARE");
 

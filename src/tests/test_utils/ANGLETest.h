@@ -16,11 +16,11 @@
 
 #include "angle_test_configs.h"
 #include "common/angleutils.h"
+#include "common/system_utils.h"
 #include "common/vector_utils.h"
 #include "platform/Platform.h"
 #include "util/EGLWindow.h"
 #include "util/shader_utils.h"
-#include "util/system_utils.h"
 #include "util/util_gl.h"
 
 namespace angle
