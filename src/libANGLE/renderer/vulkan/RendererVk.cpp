@@ -1716,21 +1716,4 @@ void RendererVk::onCompletedSerial(Serial serial)
         mLastCompletedQueueSerial = serial;
     }
 }
-
-angle::Result RendererVk::globalFinish()
-{
-    for (gl::Context *context : mDisplay->getContextSet())
-    {
-        ContextVk *contextVk = vk::GetImpl(context);
-        ANGLE_TRY(contextVk->flushImpl(nullptr));
-    }
-
-    for (gl::Context *context : mDisplay->getContextSet())
-    {
-        ContextVk *contextVk = vk::GetImpl(context);
-        ANGLE_TRY(contextVk->finishImpl());
-    }
-
-    return angle::Result::Continue;
-}
 }  // namespace rx
