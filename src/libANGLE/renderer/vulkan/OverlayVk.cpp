@@ -151,7 +151,7 @@ angle::Result OverlayVk::cullWidgets(ContextVk *contextVk)
     RendererVk *rendererVk = contextVk->getRenderer();
 
     // Release old culledWidgets image
-    contextVk->addGarbage(&mCulledWidgets);
+    mCulledWidgets.releaseImage(contextVk);
     contextVk->addGarbage(&mCulledWidgetsView);
 
     // Create a buffer to contain coordinates of enabled text and graph widgets.  This buffer will

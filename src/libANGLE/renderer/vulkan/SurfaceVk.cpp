@@ -162,21 +162,13 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
 void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display)
 {
     DisplayVk *displayVk = vk::GetImpl(display);
-
-    std::vector<vk::GarbageObjectBase> garbageObjects;
-    image.releaseImage(displayVk, &garbageObjects);
-    image.releaseStagingBuffer(displayVk, &garbageObjects);
+    VkDevice device      = displayVk->getDevice();
 
     // It should be safe to immediately destroy the backing images of a surface on surface
-    // destruction.
-    // If this assumption is broken, we could track the last submit fence for the last context that
-    // used this surface to garbage collect the surfaces.
-    for (vk::GarbageObjectBase &garbage : garbageObjects)
-    {
-        garbage.destroy(displayVk->getDevice());
-    }
-
-    imageView.destroy(displayVk->getDevice());
+    // destruction. If this assumption is incorrect, we could use the last submit serial
+    // to determine when to destroy the surface.
+    image.destroy(device);
+    imageView.destroy(device);
 }
 
 OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState,
@@ -936,49 +928,21 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
 
 void WindowSurfaceVk::destroySwapChainImages(DisplayVk *displayVk)
 {
-    std::vector<vk::GarbageObjectBase> garbageObjects;
-    if (mDepthStencilImage.valid())
-    {
-        mDepthStencilImage.releaseImage(displayVk, &garbageObjects);
-        mDepthStencilImage.releaseStagingBuffer(displayVk, &garbageObjects);
-
-        if (mDepthStencilImageView.valid())
-        {
-            mDepthStencilImageView.dumpResources(&garbageObjects);
-        }
-    }
-
-    if (mColorImageMS.valid())
-    {
-        mColorImageMS.releaseImage(displayVk, &garbageObjects);
-        mColorImageMS.releaseImage(displayVk, &garbageObjects);
-
-        mColorImageViewMS.dumpResources(&garbageObjects);
-        mFramebufferMS.dumpResources(&garbageObjects);
-    }
-
     VkDevice device = displayVk->getDevice();
 
-    for (vk::GarbageObjectBase &garbage : garbageObjects)
-    {
-        garbage.destroy(device);
-    }
+    mDepthStencilImage.destroy(device);
+    mDepthStencilImageView.destroy(device);
+    mColorImageMS.destroy(device);
+    mColorImageViewMS.destroy(device);
+    mFramebufferMS.destroy(device);
 
     for (SwapchainImage &swapchainImage : mSwapchainImages)
     {
         // We don't own the swapchain image handles, so we just remove our reference to it.
         swapchainImage.image.resetImageWeakReference();
         swapchainImage.image.destroy(device);
-
-        if (swapchainImage.imageView.valid())
-        {
-            swapchainImage.imageView.destroy(device);
-        }
-
-        if (swapchainImage.framebuffer.valid())
-        {
-            swapchainImage.framebuffer.destroy(device);
-        }
+        swapchainImage.imageView.destroy(device);
+        swapchainImage.framebuffer.destroy(device);
 
         for (ImagePresentHistory &presentHistory : swapchainImage.presentHistory)
         {

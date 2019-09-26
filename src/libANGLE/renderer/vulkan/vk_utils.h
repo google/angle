@@ -226,27 +226,38 @@ class ObjectAndSerial final : angle::NonCopyable
 
 // Reference to a deleted object. The object is due to be destroyed at some point in the future.
 // |mHandleType| determines the type of the object and which destroy function should be called.
-class GarbageObjectBase
+class GarbageObject
 {
   public:
-    template <typename ObjectT>
-    GarbageObjectBase(const ObjectT &object)
-        : mHandleType(HandleTypeHelper<ObjectT>::kHandleType),
-          mHandle(reinterpret_cast<VkDevice>(object.getHandle()))
-    {}
-    GarbageObjectBase();
-    GarbageObjectBase(GarbageObjectBase &&other);
-    GarbageObjectBase &operator=(GarbageObjectBase &&rhs);
+    GarbageObject();
+    GarbageObject(GarbageObject &&other);
+    GarbageObject &operator=(GarbageObject &&rhs);
 
     void destroy(VkDevice device);
 
+    template <typename DerivedT, typename HandleT>
+    static GarbageObject Get(WrappedObject<DerivedT, HandleT> *object)
+    {
+        return GarbageObject(HandleTypeHelper<DerivedT>::kHandleType,
+                             reinterpret_cast<GarbageHandle>(object->release()));
+    }
+
   private:
+    VK_DEFINE_HANDLE(GarbageHandle)
+    GarbageObject(HandleType handleType, GarbageHandle handle);
+
     HandleType mHandleType;
-    VkDevice mHandle;
+    GarbageHandle mHandle;
 };
 
+template <typename T>
+GarbageObject GetGarbage(T *obj)
+{
+    return GarbageObject::Get(obj);
+}
+
 // A list of garbage objects. Has no object lifetime information.
-using GarbageList = std::vector<GarbageObjectBase>;
+using GarbageList = std::vector<GarbageObject>;
 
 // A list of garbage objects and the associated serial after which the objects can be destroyed.
 using GarbageAndSerial = ObjectAndSerial<GarbageList>;
@@ -277,6 +288,7 @@ class StagingBuffer final : angle::NonCopyable
 {
   public:
     StagingBuffer();
+    void release(ContextVk *contextVk);
     void destroy(VkDevice device);
 
     angle::Result init(Context *context, VkDeviceSize size, StagingUsage usage);
@@ -286,8 +298,6 @@ class StagingBuffer final : angle::NonCopyable
     DeviceMemory &getDeviceMemory() { return mDeviceMemory; }
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
     size_t getSize() const { return mSize; }
-
-    void dumpResources(GarbageList *garbageList);
 
   private:
     Buffer mBuffer;

@@ -319,7 +319,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
                                          VK_ACCESS_HOST_WRITE_BIT, copyRegion));
 
         // Immediately release staging buffer. We should probably be using a DynamicBuffer here.
-        contextVk->addGarbage(&stagingBuffer);
+        stagingBuffer.release(contextVk);
     }
     else
     {

@@ -19,46 +19,6 @@ namespace rx
 {
 namespace vk
 {
-// Base class for all wrapped vulkan objects. Implements several common helper routines.
-template <typename DerivedT, typename HandleT>
-class WrappedObject : angle::NonCopyable
-{
-  public:
-    HandleT getHandle() const { return mHandle; }
-    bool valid() const { return (mHandle != VK_NULL_HANDLE); }
-
-    const HandleT *ptr() const { return &mHandle; }
-
-    template <typename ResourceOutType>
-    void dumpResources(std::vector<ResourceOutType> *outQueue)
-    {
-        if (valid())
-        {
-            outQueue->emplace_back(*static_cast<DerivedT *>(this));
-            mHandle = VK_NULL_HANDLE;
-        }
-    }
-
-  protected:
-    WrappedObject() : mHandle(VK_NULL_HANDLE) {}
-    ~WrappedObject() { ASSERT(!valid()); }
-
-    WrappedObject(WrappedObject &&other) : mHandle(other.mHandle)
-    {
-        other.mHandle = VK_NULL_HANDLE;
-    }
-
-    // Only works to initialize empty objects, since we don't have the device handle.
-    WrappedObject &operator=(WrappedObject &&other)
-    {
-        ASSERT(!valid());
-        std::swap(mHandle, other.mHandle);
-        return *this;
-    }
-
-    HandleT mHandle;
-};
-
 // Helper macros that apply to all the wrapped object types.
 // Unimplemented handle types:
 // Instance
@@ -126,6 +86,43 @@ struct HandleTypeHelper<priv::CommandBuffer>
 };
 
 #undef ANGLE_HANDLE_TYPE_HELPER_FUNC
+
+// Base class for all wrapped vulkan objects. Implements several common helper routines.
+template <typename DerivedT, typename HandleT>
+class WrappedObject : angle::NonCopyable
+{
+  public:
+    HandleT getHandle() const { return mHandle; }
+    bool valid() const { return (mHandle != VK_NULL_HANDLE); }
+
+    const HandleT *ptr() const { return &mHandle; }
+
+    HandleT release()
+    {
+        HandleT handle = mHandle;
+        mHandle        = VK_NULL_HANDLE;
+        return handle;
+    }
+
+  protected:
+    WrappedObject() : mHandle(VK_NULL_HANDLE) {}
+    ~WrappedObject() { ASSERT(!valid()); }
+
+    WrappedObject(WrappedObject &&other) : mHandle(other.mHandle)
+    {
+        other.mHandle = VK_NULL_HANDLE;
+    }
+
+    // Only works to initialize empty objects, since we don't have the device handle.
+    WrappedObject &operator=(WrappedObject &&other)
+    {
+        ASSERT(!valid());
+        std::swap(mHandle, other.mHandle);
+        return *this;
+    }
+
+    HandleT mHandle;
+};
 
 class CommandPool final : public WrappedObject<CommandPool, VkCommandPool>
 {

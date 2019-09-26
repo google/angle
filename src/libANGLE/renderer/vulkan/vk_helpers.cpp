@@ -457,7 +457,7 @@ void DynamicBuffer::releaseBufferListToContext(ContextVk *contextVk,
 }
 
 void DynamicBuffer::releaseBufferListToDisplay(DisplayVk *display,
-                                               std::vector<GarbageObjectBase> *garbageQueue,
+                                               std::vector<GarbageObject> *garbageQueue,
                                                std::vector<BufferHelper *> *buffers)
 {
     for (BufferHelper *toFree : *buffers)
@@ -501,7 +501,7 @@ void DynamicBuffer::release(ContextVk *contextVk)
     }
 }
 
-void DynamicBuffer::release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue)
+void DynamicBuffer::release(DisplayVk *display, std::vector<GarbageObject> *garbageQueue)
 {
     reset();
 
@@ -1310,15 +1310,15 @@ void BufferHelper::release(ContextVk *contextVk)
     contextVk->addGarbage(&mDeviceMemory);
 }
 
-void BufferHelper::release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue)
+void BufferHelper::release(DisplayVk *display, std::vector<GarbageObject> *garbageQueue)
 {
     unmap(display->getDevice());
     mSize       = 0;
     mViewFormat = nullptr;
 
-    mBuffer.dumpResources(garbageQueue);
-    mBufferView.dumpResources(garbageQueue);
-    mDeviceMemory.dumpResources(garbageQueue);
+    garbageQueue->emplace_back(GetGarbage(&mBuffer));
+    garbageQueue->emplace_back(GetGarbage(&mBufferView));
+    garbageQueue->emplace_back(GetGarbage(&mDeviceMemory));
 }
 
 bool BufferHelper::needsOnWriteBarrier(VkAccessFlags readAccessType,
@@ -1571,10 +1571,10 @@ void ImageHelper::releaseImage(ContextVk *contextVk)
     contextVk->addGarbage(&mDeviceMemory);
 }
 
-void ImageHelper::releaseImage(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue)
+void ImageHelper::releaseImage(DisplayVk *display, std::vector<GarbageObject> *garbageQueue)
 {
-    mImage.dumpResources(garbageQueue);
-    mDeviceMemory.dumpResources(garbageQueue);
+    garbageQueue->emplace_back(GetGarbage(&mImage));
+    garbageQueue->emplace_back(GetGarbage(&mDeviceMemory));
 }
 
 void ImageHelper::releaseStagingBuffer(ContextVk *contextVk)
@@ -1588,8 +1588,7 @@ void ImageHelper::releaseStagingBuffer(ContextVk *contextVk)
     mSubresourceUpdates.clear();
 }
 
-void ImageHelper::releaseStagingBuffer(DisplayVk *display,
-                                       std::vector<GarbageObjectBase> *garbageQueue)
+void ImageHelper::releaseStagingBuffer(DisplayVk *display, std::vector<GarbageObject> *garbageQueue)
 {
     // Remove updates that never made it to the texture.
     for (SubresourceUpdate &update : mSubresourceUpdates)
@@ -1686,6 +1685,7 @@ void ImageHelper::destroy(VkDevice device)
 {
     mImage.destroy(device);
     mDeviceMemory.destroy(device);
+    mStagingBuffer.destroy(device);
     mCurrentLayout = ImageLayout::Undefined;
     mLayerCount    = 0;
     mLevelCount    = 0;
@@ -1753,12 +1753,6 @@ angle::Result ImageHelper::init2DStaging(Context *context,
 VkImageAspectFlags ImageHelper::getAspectFlags() const
 {
     return GetFormatAspectFlags(mFormat->imageFormat());
-}
-
-void ImageHelper::dumpResources(GarbageList *garbageList)
-{
-    mImage.dumpResources(garbageList);
-    mDeviceMemory.dumpResources(garbageList);
 }
 
 VkImageLayout ImageHelper::getCurrentLayout() const
@@ -2692,7 +2686,7 @@ void ImageHelper::SubresourceUpdate::release(ContextVk *contextVk)
 }
 
 void ImageHelper::SubresourceUpdate::release(DisplayVk *display,
-                                             std::vector<GarbageObjectBase> *garbageQueue)
+                                             std::vector<GarbageObject> *garbageQueue)
 {
     if (updateSource == UpdateSource::Image)
     {

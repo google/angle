@@ -32,7 +32,7 @@ void ImageVk::onDestroy(const egl::Display *display)
     DisplayVk *displayVk = vk::GetImpl(display);
     RendererVk *renderer = displayVk->getRenderer();
 
-    std::vector<vk::GarbageObjectBase> garbage;
+    std::vector<vk::GarbageObject> garbage;
 
     if (mImage != nullptr && mOwnsImage)
     {

@@ -36,8 +36,8 @@ void FenceSyncVk::onDestroy(ContextVk *contextVk)
 
 void FenceSyncVk::onDestroy(DisplayVk *display)
 {
-    std::vector<vk::GarbageObjectBase> garbage;
-    mEvent.dumpResources(&garbage);
+    std::vector<vk::GarbageObject> garbage;
+    garbage.emplace_back(vk::GetGarbage(&mEvent));
 
     display->getRenderer()->addGarbage(std::move(mFences), std::move(garbage));
 }

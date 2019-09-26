@@ -1616,8 +1616,7 @@ angle::Result RendererVk::newSharedFence(vk::Context *context,
     return angle::Result::Continue;
 }
 
-void RendererVk::addGarbage(vk::Shared<vk::Fence> &&fence,
-                            std::vector<vk::GarbageObjectBase> &&garbage)
+void RendererVk::addGarbage(vk::Shared<vk::Fence> &&fence, std::vector<vk::GarbageObject> &&garbage)
 {
     std::vector<vk::Shared<vk::Fence>> fences;
     fences.push_back(std::move(fence));
@@ -1625,7 +1624,7 @@ void RendererVk::addGarbage(vk::Shared<vk::Fence> &&fence,
 }
 
 void RendererVk::addGarbage(std::vector<vk::Shared<vk::Fence>> &&fences,
-                            std::vector<vk::GarbageObjectBase> &&garbage)
+                            std::vector<vk::GarbageObject> &&garbage)
 {
     std::lock_guard<decltype(mGarbageMutex)> lock(mGarbageMutex);
     mFencedGarbage.emplace_back(std::move(fences), std::move(garbage));
@@ -1677,7 +1676,7 @@ angle::Result RendererVk::cleanupGarbage(vk::Context *context, bool block)
         ANGLE_TRY(WaitFences(context, &garbageIter->first, block));
         if (garbageIter->first.empty())
         {
-            for (vk::GarbageObjectBase &garbageObject : garbageIter->second)
+            for (vk::GarbageObject &garbageObject : garbageIter->second)
             {
                 garbageObject.destroy(mDevice);
             }

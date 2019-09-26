@@ -83,7 +83,7 @@ class DynamicBuffer : angle::NonCopyable
 
     // This releases resources when they might currently be in use.
     void release(ContextVk *contextVk);
-    void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
+    void release(DisplayVk *display, std::vector<GarbageObject> *garbageQueue);
 
     // This releases all the buffers that have been allocated since this was last called.
     void releaseInFlightBuffers(ContextVk *contextVk);
@@ -103,7 +103,7 @@ class DynamicBuffer : angle::NonCopyable
     angle::Result allocateNewBuffer(ContextVk *contextVk);
     void releaseBufferListToContext(ContextVk *contextVk, std::vector<BufferHelper *> *buffers);
     void releaseBufferListToDisplay(DisplayVk *display,
-                                    std::vector<GarbageObjectBase> *garbageQueue,
+                                    std::vector<GarbageObject> *garbageQueue,
                                     std::vector<BufferHelper *> *buffers);
     void destroyBufferList(VkDevice device, std::vector<BufferHelper *> *buffers);
 
@@ -449,7 +449,7 @@ class BufferHelper final : public CommandGraphResource
     void destroy(VkDevice device);
 
     void release(ContextVk *contextVk);
-    void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
+    void release(DisplayVk *display, std::vector<GarbageObject> *garbageQueue);
 
     bool valid() const { return mBuffer.valid(); }
     const Buffer &getBuffer() const { return mBuffer; }
@@ -704,16 +704,15 @@ class ImageHelper final : public CommandGraphResource
                                 uint32_t layerCount);
 
     void releaseImage(ContextVk *contextVk);
-    void releaseImage(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
+    void releaseImage(DisplayVk *display, std::vector<GarbageObject> *garbageQueue);
 
     void releaseStagingBuffer(ContextVk *contextVk);
-    void releaseStagingBuffer(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
+    void releaseStagingBuffer(DisplayVk *display, std::vector<GarbageObject> *garbageQueue);
 
     bool valid() const { return mImage.valid(); }
 
     VkImageAspectFlags getAspectFlags() const;
     void destroy(VkDevice device);
-    void dumpResources(GarbageList *garbageList);
 
     void init2DWeakReference(VkImage handle,
                              const gl::Extents &glExtents,
@@ -885,7 +884,7 @@ class ImageHelper final : public CommandGraphResource
         SubresourceUpdate(const SubresourceUpdate &other);
 
         void release(ContextVk *contextVk);
-        void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
+        void release(DisplayVk *display, std::vector<GarbageObject> *garbageQueue);
 
         const VkImageSubresourceLayers &dstSubresource() const
         {

@@ -202,7 +202,7 @@ vk::ImageHelper *HardwareBufferImageSiblingVkAndroid::getImage() const
 }
 
 void HardwareBufferImageSiblingVkAndroid::release(DisplayVk *display,
-                                                  std::vector<vk::GarbageObjectBase> *garbageQueue)
+                                                  std::vector<vk::GarbageObject> *garbageQueue)
 {
     if (mImage != nullptr)
     {

@@ -271,7 +271,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     template <typename T>
     void addGarbage(T *object)
     {
-        object->dumpResources(&mCurrentGarbage);
+        mCurrentGarbage.emplace_back(vk::GetGarbage(object));
     }
 
     // Check to see which batches have finished completion (forward progress for

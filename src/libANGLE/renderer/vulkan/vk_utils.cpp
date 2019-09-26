@@ -351,10 +351,10 @@ angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUs
     return angle::Result::Continue;
 }
 
-void StagingBuffer::dumpResources(GarbageList *garbageList)
+void StagingBuffer::release(ContextVk *contextVk)
 {
-    mBuffer.dumpResources(garbageList);
-    mDeviceMemory.dumpResources(garbageList);
+    contextVk->addGarbage(&mBuffer);
+    contextVk->addGarbage(&mDeviceMemory);
 }
 
 angle::Result AllocateBufferMemory(vk::Context *context,
@@ -435,23 +435,26 @@ gl::TextureType Get2DTextureType(uint32_t layerCount, GLint samples)
     }
 }
 
-GarbageObjectBase::GarbageObjectBase() : mHandleType(HandleType::Invalid), mHandle(VK_NULL_HANDLE)
+GarbageObject::GarbageObject() : mHandleType(HandleType::Invalid), mHandle(VK_NULL_HANDLE) {}
+
+GarbageObject::GarbageObject(HandleType handleType, GarbageHandle handle)
+    : mHandleType(handleType), mHandle(handle)
 {}
 
-GarbageObjectBase::GarbageObjectBase(GarbageObjectBase &&other) : GarbageObjectBase()
+GarbageObject::GarbageObject(GarbageObject &&other) : GarbageObject()
 {
     *this = std::move(other);
 }
 
-GarbageObjectBase &GarbageObjectBase::operator=(GarbageObjectBase &&rhs)
+GarbageObject &GarbageObject::operator=(GarbageObject &&rhs)
 {
     std::swap(mHandle, rhs.mHandle);
     std::swap(mHandleType, rhs.mHandleType);
     return *this;
 }
 
-// GarbageObjectBase implementation
-void GarbageObjectBase::destroy(VkDevice device)
+// GarbageObject implementation
+void GarbageObject::destroy(VkDevice device)
 {
     switch (mHandleType)
     {
