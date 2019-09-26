@@ -225,8 +225,10 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
 {
     if (mImage && mOwnsImage)
     {
-        mImage->releaseImage(contextVk);
-        mImage->releaseStagingBuffer(contextVk);
+        RendererVk *renderer = contextVk->getRenderer();
+
+        mImage->releaseImage(renderer);
+        mImage->releaseStagingBuffer(renderer);
     }
     else
     {

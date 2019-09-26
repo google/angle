@@ -241,10 +241,10 @@ class TextureVk : public TextureImpl
     angle::Result copyImageDataToBuffer(ContextVk *contextVk,
                                         size_t sourceLevel,
                                         uint32_t layerCount,
-                                        uint32_t layer,
+                                        uint32_t baseLayer,
                                         const gl::Box &sourceArea,
-                                        VkBuffer *stagingBufferHandleOut,
-                                        VkDeviceSize *stagingOffsetOut,
+                                        vk::BufferHelper **bufferOut,
+                                        VkDeviceSize *bufferOffsetOut,
                                         uint8_t **outDataPtr);
 
     angle::Result generateMipmapsWithCPU(const gl::Context *context);

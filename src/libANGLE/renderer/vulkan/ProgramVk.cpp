@@ -446,15 +446,17 @@ void ProgramVk::reset(ContextVk *contextVk)
     }
     mPipelineLayout.reset();
 
+    RendererVk *renderer = contextVk->getRenderer();
+
     for (auto &uniformBlock : mDefaultUniformBlocks)
     {
-        uniformBlock.storage.release(contextVk);
+        uniformBlock.storage.release(renderer);
     }
 
     mDefaultShaderInfo.release(contextVk);
     mLineRasterShaderInfo.release(contextVk);
 
-    mEmptyBuffer.release(contextVk);
+    mEmptyBuffer.release(renderer);
 
     mDescriptorSets.clear();
     mEmptyDescriptorSets.fill(VK_NULL_HANDLE);
@@ -470,6 +472,7 @@ void ProgramVk::reset(ContextVk *contextVk)
     }
 
     mTextureDescriptorsCache.clear();
+    mDescriptorBuffersCache.clear();
 }
 
 std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
@@ -1219,6 +1222,8 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
 
     uint32_t bindingIndex = 0;
 
+    mDescriptorBuffersCache.clear();
+
     // Write default uniforms for each shader type.
     for (const gl::ShaderType shaderType : mState.getLinkedShaderStages())
     {
@@ -1228,13 +1233,15 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
 
         if (!uniformBlock.uniformData.empty())
         {
-            const vk::BufferHelper *bufferHelper = uniformBlock.storage.getCurrentBuffer();
-            bufferInfo.buffer                    = bufferHelper->getBuffer().getHandle();
+            vk::BufferHelper *bufferHelper = uniformBlock.storage.getCurrentBuffer();
+            bufferInfo.buffer              = bufferHelper->getBuffer().getHandle();
+            mDescriptorBuffersCache.emplace_back(bufferHelper);
         }
         else
         {
             mEmptyBuffer.onGraphAccess(contextVk->getCommandGraph());
             bufferInfo.buffer = mEmptyBuffer.getBuffer().getHandle();
+            mDescriptorBuffersCache.emplace_back(&mEmptyBuffer);
         }
 
         bufferInfo.offset = 0;
@@ -1749,6 +1756,11 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
         commandBuffer->bindDescriptorSets(mPipelineLayout.get(), pipelineBindPoint,
                                           descriptorSetIndex, 1, &descSet, uniformBlockOffsetCount,
                                           mDynamicBufferOffsets.data());
+    }
+
+    for (vk::BufferHelper *buffer : mDescriptorBuffersCache)
+    {
+        buffer->onGraphAccess(contextVk->getCommandGraph());
     }
 
     return angle::Result::Continue;

@@ -1023,10 +1023,10 @@ angle::Result TextureVk::copyImageDataToBufferAndGetData(ContextVk *contextVk,
 
     gl::Box area(0, 0, 0, sourceArea.width, sourceArea.height, 1);
 
-    VkBuffer copyBufferHandle     = VK_NULL_HANDLE;
+    vk::BufferHelper *copyBuffer  = nullptr;
     VkDeviceSize sourceCopyOffset = 0;
 
-    ANGLE_TRY(copyImageDataToBuffer(contextVk, sourceLevel, layerCount, 0, area, &copyBufferHandle,
+    ANGLE_TRY(copyImageDataToBuffer(contextVk, sourceLevel, layerCount, 0, area, &copyBuffer,
                                     &sourceCopyOffset, outDataPtr));
 
     // Explicitly finish. If new use cases arise where we don't want to block we can change this.
@@ -1040,7 +1040,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
                                                uint32_t layerCount,
                                                uint32_t baseLayer,
                                                const gl::Box &sourceArea,
-                                               VkBuffer *bufferHandleOut,
+                                               vk::BufferHelper **bufferOut,
                                                VkDeviceSize *bufferOffsetOut,
                                                uint8_t **outDataPtr)
 {
@@ -1058,7 +1058,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
 
     // Allocate staging buffer data
     ANGLE_TRY(mImage->allocateStagingMemory(contextVk, sourceCopyAllocationSize, outDataPtr,
-                                            bufferHandleOut, bufferOffsetOut, nullptr));
+                                            bufferOut, bufferOffsetOut, nullptr));
 
     VkBufferImageCopy region               = {};
     region.bufferOffset                    = *bufferOffsetOut;
@@ -1076,7 +1076,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     region.imageSubresource.mipLevel       = static_cast<uint32_t>(sourceLevel);
 
     commandBuffer->copyImageToBuffer(mImage->getImage(), mImage->getCurrentLayout(),
-                                     *bufferHandleOut, 1, &region);
+                                     (*bufferOut)->getBuffer().getHandle(), 1, &region);
 
     return angle::Result::Continue;
 }
@@ -1244,17 +1244,17 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk, GLuint baseLevel, GL
             }
 
             // Now copy from the image to the staging buffer
-            VkBuffer stagingBufferHandle     = VK_NULL_HANDLE;
+            vk::BufferHelper *stagingBuffer  = nullptr;
             VkDeviceSize stagingBufferOffset = 0;
-            ANGLE_TRY(copyImageDataToBuffer(contextVk, srcLevelVK, 1, layer, area,
-                                            &stagingBufferHandle, &stagingBufferOffset, nullptr));
+            ANGLE_TRY(copyImageDataToBuffer(contextVk, srcLevelVK, 1, layer, area, &stagingBuffer,
+                                            &stagingBufferOffset, nullptr));
 
             // Stage an update to the new image that we will populate with existing mip levels
             // We're providing the buffer handle and offset to use, since we *just* populated it
             size_t bufferSize = extents.width * extents.height * extents.depth * info.pixelBytes;
-            ANGLE_TRY(mImage->stageSubresourceUpdateFromBuffer(
-                contextVk, bufferSize, level, layer, 1, extents, gl::Offset(), stagingBufferHandle,
-                stagingBufferOffset));
+            ANGLE_TRY(mImage->stageSubresourceUpdateFromBuffer(contextVk, bufferSize, level, layer,
+                                                               1, extents, gl::Offset(),
+                                                               stagingBuffer, stagingBufferOffset));
         }
     }
 
@@ -1810,7 +1810,7 @@ void TextureVk::releaseImage(ContextVk *contextVk)
     {
         if (mOwnsImage)
         {
-            mImage->releaseImage(contextVk);
+            mImage->releaseImage(contextVk->getRenderer());
         }
         else
         {
@@ -1862,7 +1862,7 @@ void TextureVk::releaseStagingBuffer(ContextVk *contextVk)
 {
     if (mImage)
     {
-        mImage->releaseStagingBuffer(contextVk);
+        mImage->releaseStagingBuffer(contextVk->getRenderer());
     }
 }
 

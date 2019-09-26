@@ -340,7 +340,10 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     template <typename T>
     void addGarbage(T *object)
     {
-        mCurrentGarbage.emplace_back(vk::GetGarbage(object));
+        if (object->valid())
+        {
+            mCurrentGarbage.emplace_back(vk::GetGarbage(object));
+        }
     }
 
     // It would be nice if we didn't have to expose this for QueryVk::getResult.

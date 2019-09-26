@@ -1052,7 +1052,9 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(const gl::Context *con
         mVertexArray->getCurrentArrayBuffers();
     vk::FramebufferHelper *framebuffer = mDrawFramebuffer->getFramebuffer();
 
-    for (size_t attribIndex : context->getStateCache().getActiveBufferedAttribsMask())
+    // Mark all active vertex buffers as accessed by the graph.
+    gl::AttributesMask attribsMask = mProgram->getState().getActiveAttribLocationsMask();
+    for (size_t attribIndex : attribsMask)
     {
         vk::BufferHelper *arrayBuffer = arrayBufferResources[attribIndex];
         if (arrayBuffer)
@@ -3141,6 +3143,7 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
     ANGLE_TRY(defaultBuffer.flush(this));
 
     mVertexArray->updateDefaultAttrib(this, attribIndex, bufferHandle,
+                                      defaultBuffer.getCurrentBuffer(),
                                       static_cast<uint32_t>(offset));
     return angle::Result::Continue;
 }

@@ -181,7 +181,7 @@ void FramebufferVk::destroy(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
     mFramebuffer.release(contextVk);
 
-    mReadPixelBuffer.release(contextVk);
+    mReadPixelBuffer.release(contextVk->getRenderer());
 }
 
 angle::Result FramebufferVk::discard(const gl::Context *context,
@@ -263,7 +263,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    mFramebuffer.onGraphAccess(contextVk->getCommandGraph());
+    mFramebuffer.updateCurrentAccessNodes();
 
     // This function assumes that only enabled attachments are asked to be cleared.
     ASSERT((clearColorBuffers & mState.getEnabledDrawBuffers()) == clearColorBuffers);
@@ -1604,7 +1604,7 @@ void FramebufferVk::onScissorChange(ContextVk *contextVk)
     // is too small, we need to start a new one.  The latter can happen if a scissored clear starts
     // a render pass, the scissor is disabled and a draw call is issued to affect the whole
     // framebuffer.
-    mFramebuffer.onGraphAccess(contextVk->getCommandGraph());
+    mFramebuffer.updateCurrentAccessNodes();
     if (mFramebuffer.hasStartedRenderPass() &&
         !mFramebuffer.getRenderPassRenderArea().encloses(scissoredRenderArea))
     {

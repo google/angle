@@ -148,11 +148,13 @@ void VertexArrayVk::destroy(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    mTheNullBuffer.release(contextVk);
+    RendererVk *renderer = contextVk->getRenderer();
 
-    mDynamicVertexData.release(contextVk);
-    mDynamicIndexData.release(contextVk);
-    mTranslatedByteIndexData.release(contextVk);
+    mTheNullBuffer.release(renderer);
+
+    mDynamicVertexData.release(renderer);
+    mDynamicIndexData.release(renderer);
+    mTranslatedByteIndexData.release(renderer);
     mLineLoopHelper.release(contextVk);
 }
 
@@ -597,7 +599,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                                                    gl::DrawElementsType indexTypeOrInvalid,
                                                    const void *indices)
 {
-    ContextVk *contextVk                    = vk::GetImpl(context);
+    ContextVk *contextVk = vk::GetImpl(context);
     const gl::AttributesMask activeAttribs =
         context->getStateCache().getActiveClientAttribsMask() |
         context->getStateCache().getActiveBufferedAttribsMask();
@@ -631,7 +633,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
 
         ASSERT(GetVertexInputAlignment(vertexFormat) <= vk::kVertexBufferAlignment);
 
-        const uint8_t *src = static_cast<const uint8_t *>(attrib.pointer);
+        const uint8_t *src     = static_cast<const uint8_t *>(attrib.pointer);
         const uint32_t divisor = binding.getDivisor();
         if (divisor > 0)
         {
@@ -760,13 +762,14 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
 void VertexArrayVk::updateDefaultAttrib(ContextVk *contextVk,
                                         size_t attribIndex,
                                         VkBuffer bufferHandle,
+                                        vk::BufferHelper *buffer,
                                         uint32_t offset)
 {
     if (!mState.getEnabledAttributesMask().test(attribIndex))
     {
         mCurrentArrayBufferHandles[attribIndex] = bufferHandle;
         mCurrentArrayBufferOffsets[attribIndex] = offset;
-        mCurrentArrayBuffers[attribIndex]       = nullptr;
+        mCurrentArrayBuffers[attribIndex]       = buffer;
 
         setDefaultPackedInput(contextVk, attribIndex);
     }

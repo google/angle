@@ -255,28 +255,31 @@ bool CommandGraphResource::isResourceInUse(ContextVk *contextVk) const
     return mUse.isCurrentlyInGraph() || contextVk->isSerialInUse(mUse.getSerial());
 }
 
-angle::Result CommandGraphResource::recordCommands(ContextVk *context,
+angle::Result CommandGraphResource::recordCommands(ContextVk *contextVk,
                                                    CommandBuffer **commandBufferOut)
 {
-    onGraphAccess(context->getCommandGraph());
+    updateCurrentAccessNodes();
 
     if (!hasChildlessWritingNode() || hasStartedRenderPass())
     {
-        startNewCommands(context);
+        startNewCommands(contextVk);
         return mCurrentWritingNode->beginOutsideRenderPassRecording(
-            context, context->getCommandPool(), commandBufferOut);
+            contextVk, contextVk->getCommandPool(), commandBufferOut);
     }
 
     CommandBuffer *outsideRenderPassCommands = mCurrentWritingNode->getOutsideRenderPassCommands();
     if (!outsideRenderPassCommands->valid())
     {
         ANGLE_TRY(mCurrentWritingNode->beginOutsideRenderPassRecording(
-            context, context->getCommandPool(), commandBufferOut));
+            contextVk, contextVk->getCommandPool(), commandBufferOut));
     }
     else
     {
         *commandBufferOut = outsideRenderPassCommands;
     }
+
+    // Store reference to usage in graph.
+    contextVk->getCommandGraph()->onResourceUse(mUse);
 
     return angle::Result::Continue;
 }
@@ -822,6 +825,42 @@ void CommandGraphNode::getMemoryUsageStatsForDiagnostics(size_t *usedMemoryOut,
     *allocatedMemoryOut += commandBufferAllocated;
 }
 
+// SharedGarbage implementation.
+SharedGarbage::SharedGarbage() = default;
+
+SharedGarbage::SharedGarbage(SharedGarbage &&other)
+{
+    *this = std::move(other);
+}
+
+SharedGarbage::SharedGarbage(SharedResourceUse &&use, std::vector<GarbageObject> &&garbage)
+    : mLifetime(std::move(use)), mGarbage(std::move(garbage))
+{}
+
+SharedGarbage::~SharedGarbage() = default;
+
+SharedGarbage &SharedGarbage::operator=(SharedGarbage &&rhs)
+{
+    std::swap(mLifetime, rhs.mLifetime);
+    std::swap(mGarbage, rhs.mGarbage);
+    return *this;
+}
+
+bool SharedGarbage::destroyIfComplete(VkDevice device, Serial completedSerial)
+{
+    if (mLifetime.isCurrentlyInGraph() || mLifetime.getSerial() > completedSerial)
+        return false;
+
+    mLifetime.release();
+
+    for (GarbageObject &object : mGarbage)
+    {
+        object.destroy(device);
+    }
+
+    return true;
+}
+
 // CommandGraph implementation.
 CommandGraph::CommandGraph(bool enableGraphDiagnostics, angle::PoolAllocator *poolAllocator)
     : mEnableGraphDiagnostics(enableGraphDiagnostics),
@@ -835,6 +874,7 @@ CommandGraph::CommandGraph(bool enableGraphDiagnostics, angle::PoolAllocator *po
 CommandGraph::~CommandGraph()
 {
     ASSERT(empty());
+    ASSERT(mResourceUses.empty());
 }
 
 CommandGraphNode *CommandGraph::allocateNode(CommandGraphNodeFunction function)

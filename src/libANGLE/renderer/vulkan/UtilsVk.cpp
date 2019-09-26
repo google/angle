@@ -1371,7 +1371,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
                                     &descriptorPoolBinding, &descriptorSet));
 
     // Create a temporary buffer to blit/resolve stencil into.
-    vk::ContextScoped<vk::BufferHelper> blitBuffer(contextVk);
+    vk::RendererScoped<vk::BufferHelper> blitBuffer(contextVk->getRenderer());
 
     uint32_t bufferRowLengthInUints = UnsignedCeilDivide(params.blitArea.width, sizeof(uint32_t));
     VkDeviceSize bufferSize = bufferRowLengthInUints * sizeof(uint32_t) * params.blitArea.height;

@@ -78,11 +78,12 @@ void BufferVk::destroy(const gl::Context *context)
 
 void BufferVk::release(ContextVk *contextVk)
 {
-    mBuffer.release(contextVk);
+    RendererVk *renderer = contextVk->getRenderer();
+    mBuffer.release(renderer);
 
     for (ConversionBuffer &buffer : mVertexConversionBuffers)
     {
-        buffer.data.release(contextVk);
+        buffer.data.release(renderer);
     }
 }
 

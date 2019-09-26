@@ -354,7 +354,6 @@ angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
         {
             ANGLE_TRY(flush(contextVk));
             mBuffer->unmap(contextVk->getDevice());
-            mBuffer->onGraphAccess(contextVk->getCommandGraph());
 
             mInFlightBuffers.push_back(mBuffer);
             mBuffer = nullptr;
@@ -367,7 +366,7 @@ angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
             // Clear the free list since the free buffers are now too small.
             for (BufferHelper *toFree : mBufferFreeList)
             {
-                toFree->release(contextVk);
+                toFree->release(contextVk->getRenderer());
             }
             mBufferFreeList.clear();
         }
@@ -444,25 +443,12 @@ angle::Result DynamicBuffer::invalidate(ContextVk *contextVk)
     return angle::Result::Continue;
 }
 
-void DynamicBuffer::releaseBufferListToContext(ContextVk *contextVk,
-                                               std::vector<BufferHelper *> *buffers)
+void DynamicBuffer::releaseBufferListToRenderer(RendererVk *renderer,
+                                                std::vector<BufferHelper *> *buffers)
 {
     for (BufferHelper *toFree : *buffers)
     {
-        toFree->release(contextVk);
-        delete toFree;
-    }
-
-    buffers->clear();
-}
-
-void DynamicBuffer::releaseBufferListToDisplay(DisplayVk *display,
-                                               std::vector<GarbageObject> *garbageQueue,
-                                               std::vector<BufferHelper *> *buffers)
-{
-    for (BufferHelper *toFree : *buffers)
-    {
-        toFree->release(display, garbageQueue);
+        toFree->release(renderer);
         delete toFree;
     }
 
@@ -480,41 +466,17 @@ void DynamicBuffer::destroyBufferList(VkDevice device, std::vector<BufferHelper 
     buffers->clear();
 }
 
-void DynamicBuffer::release(ContextVk *contextVk)
+void DynamicBuffer::release(RendererVk *renderer)
 {
     reset();
 
-    releaseBufferListToContext(contextVk, &mInFlightBuffers);
-    releaseBufferListToContext(contextVk, &mBufferFreeList);
+    releaseBufferListToRenderer(renderer, &mInFlightBuffers);
+    releaseBufferListToRenderer(renderer, &mBufferFreeList);
 
     if (mBuffer)
     {
-        mBuffer->unmap(contextVk->getDevice());
-
-        // The buffers may not have been recording commands, but they could be used to store data so
-        // they should live until at most this frame.  For example a vertex buffer filled entirely
-        // by the CPU currently never gets a chance to have its serial set.
-        mBuffer->onGraphAccess(contextVk->getCommandGraph());
-        mBuffer->release(contextVk);
-        delete mBuffer;
-        mBuffer = nullptr;
-    }
-}
-
-void DynamicBuffer::release(DisplayVk *display, std::vector<GarbageObject> *garbageQueue)
-{
-    reset();
-
-    releaseBufferListToDisplay(display, garbageQueue, &mInFlightBuffers);
-    releaseBufferListToDisplay(display, garbageQueue, &mBufferFreeList);
-
-    if (mBuffer)
-    {
-        mBuffer->unmap(display->getDevice());
-
-        mBuffer->release(display, garbageQueue);
-        delete mBuffer;
-        mBuffer = nullptr;
+        mBuffer->release(renderer);
+        SafeDelete(mBuffer);
     }
 }
 
@@ -525,7 +487,7 @@ void DynamicBuffer::releaseInFlightBuffers(ContextVk *contextVk)
         // If the dynamic buffer was resized we cannot reuse the retained buffer.
         if (toRelease->getSize() < mSize)
         {
-            toRelease->release(contextVk);
+            toRelease->release(contextVk->getRenderer());
         }
         else
         {
@@ -1250,7 +1212,7 @@ angle::Result LineLoopHelper::streamIndices(ContextVk *contextVk,
 
 void LineLoopHelper::release(ContextVk *contextVk)
 {
-    mDynamicIndexBuffer.release(contextVk);
+    mDynamicIndexBuffer.release(contextVk->getRenderer());
 }
 
 void LineLoopHelper::destroy(VkDevice device)
@@ -1299,26 +1261,13 @@ void BufferHelper::destroy(VkDevice device)
     mDeviceMemory.destroy(device);
 }
 
-void BufferHelper::release(ContextVk *contextVk)
+void BufferHelper::release(RendererVk *renderer)
 {
-    unmap(contextVk->getDevice());
+    unmap(renderer->getDevice());
     mSize       = 0;
     mViewFormat = nullptr;
 
-    contextVk->addGarbage(&mBuffer);
-    contextVk->addGarbage(&mBufferView);
-    contextVk->addGarbage(&mDeviceMemory);
-}
-
-void BufferHelper::release(DisplayVk *display, std::vector<GarbageObject> *garbageQueue)
-{
-    unmap(display->getDevice());
-    mSize       = 0;
-    mViewFormat = nullptr;
-
-    garbageQueue->emplace_back(GetGarbage(&mBuffer));
-    garbageQueue->emplace_back(GetGarbage(&mBufferView));
-    garbageQueue->emplace_back(GetGarbage(&mDeviceMemory));
+    renderer->collectGarbageAndReinit(&mUse, &mBuffer, &mBufferView, &mDeviceMemory);
 }
 
 bool BufferHelper::needsOnWriteBarrier(VkAccessFlags readAccessType,
@@ -1578,37 +1527,19 @@ angle::Result ImageHelper::initExternal(Context *context,
     return angle::Result::Continue;
 }
 
-void ImageHelper::releaseImage(ContextVk *contextVk)
+void ImageHelper::releaseImage(RendererVk *renderer)
 {
-    contextVk->addGarbage(&mImage);
-    contextVk->addGarbage(&mDeviceMemory);
+    renderer->collectGarbageAndReinit(&mUse, &mImage, &mDeviceMemory);
 }
 
-void ImageHelper::releaseImage(DisplayVk *display, std::vector<GarbageObject> *garbageQueue)
-{
-    garbageQueue->emplace_back(GetGarbage(&mImage));
-    garbageQueue->emplace_back(GetGarbage(&mDeviceMemory));
-}
-
-void ImageHelper::releaseStagingBuffer(ContextVk *contextVk)
+void ImageHelper::releaseStagingBuffer(RendererVk *renderer)
 {
     // Remove updates that never made it to the texture.
     for (SubresourceUpdate &update : mSubresourceUpdates)
     {
-        update.release(contextVk);
+        update.release(renderer);
     }
-    mStagingBuffer.release(contextVk);
-    mSubresourceUpdates.clear();
-}
-
-void ImageHelper::releaseStagingBuffer(DisplayVk *display, std::vector<GarbageObject> *garbageQueue)
-{
-    // Remove updates that never made it to the texture.
-    for (SubresourceUpdate &update : mSubresourceUpdates)
-    {
-        update.release(display, garbageQueue);
-    }
-    mStagingBuffer.release(display, garbageQueue);
+    mStagingBuffer.release(renderer);
     mSubresourceUpdates.clear();
 }
 
@@ -2087,7 +2018,7 @@ void ImageHelper::removeStagedUpdates(ContextVk *contextVk, const gl::ImageIndex
         auto update = mSubresourceUpdates.begin() + index;
         if (update->isUpdateToLayerLevel(layerIndex, levelIndex))
         {
-            update->release(contextVk);
+            update->release(contextVk->getRenderer());
             mSubresourceUpdates.erase(update);
         }
         else
@@ -2272,7 +2203,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
         stencilCopy.imageOffset                     = copy.imageOffset;
         stencilCopy.imageExtent                     = copy.imageExtent;
         stencilCopy.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_STENCIL_BIT;
-        mSubresourceUpdates.emplace_back(bufferHandle, stencilCopy);
+        mSubresourceUpdates.emplace_back(mStagingBuffer.getCurrentBuffer(), stencilCopy);
 
         aspectFlags &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
     }
@@ -2296,7 +2227,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     if (aspectFlags)
     {
         copy.imageSubresource.aspectMask = aspectFlags;
-        mSubresourceUpdates.emplace_back(bufferHandle, copy);
+        mSubresourceUpdates.emplace_back(mStagingBuffer.getCurrentBuffer(), copy);
     }
 
     return angle::Result::Continue;
@@ -2329,7 +2260,7 @@ angle::Result ImageHelper::stageSubresourceUpdateAndGetData(ContextVk *contextVk
     gl_vk::GetOffset(offset, &copy.imageOffset);
     gl_vk::GetExtent(glExtents, &copy.imageExtent);
 
-    mSubresourceUpdates.emplace_back(bufferHandle, copy);
+    mSubresourceUpdates.emplace_back(mStagingBuffer.getCurrentBuffer(), copy);
 
     return angle::Result::Continue;
 }
@@ -2341,7 +2272,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromBuffer(ContextVk *contextVk
                                                             uint32_t layerCount,
                                                             const gl::Extents &glExtents,
                                                             const gl::Offset &offset,
-                                                            VkBuffer stagingBufferHandle,
+                                                            BufferHelper *bufferHelper,
                                                             VkDeviceSize stagingOffset)
 {
     // This function stages an update from explicitly provided handle and offset
@@ -2361,7 +2292,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromBuffer(ContextVk *contextVk
     gl_vk::GetOffset(offset, &copy.imageOffset);
     gl_vk::GetExtent(glExtents, &copy.imageExtent);
 
-    mSubresourceUpdates.emplace_back(stagingBufferHandle, copy);
+    mSubresourceUpdates.emplace_back(bufferHelper, copy);
 
     return angle::Result::Continue;
 }
@@ -2459,7 +2390,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     gl_vk::GetExtent(dstExtent, &copyToImage.imageExtent);
 
     // 3- enqueue the destination image subresource update
-    mSubresourceUpdates.emplace_back(bufferHandle, copyToImage);
+    mSubresourceUpdates.emplace_back(mStagingBuffer.getCurrentBuffer(), copyToImage);
     return angle::Result::Continue;
 }
 
@@ -2544,12 +2475,15 @@ void ImageHelper::stageSubresourceClear(const gl::ImageIndex &index,
 angle::Result ImageHelper::allocateStagingMemory(ContextVk *contextVk,
                                                  size_t sizeInBytes,
                                                  uint8_t **ptrOut,
-                                                 VkBuffer *handleOut,
+                                                 BufferHelper **bufferOut,
                                                  VkDeviceSize *offsetOut,
                                                  bool *newBufferAllocatedOut)
 {
-    return mStagingBuffer.allocate(contextVk, sizeInBytes, ptrOut, handleOut, offsetOut,
-                                   newBufferAllocatedOut);
+    VkBuffer handle;
+    ANGLE_TRY(mStagingBuffer.allocate(contextVk, sizeInBytes, ptrOut, &handle, offsetOut,
+                                      newBufferAllocatedOut));
+    *bufferOut = mStagingBuffer.getCurrentBuffer();
+    return angle::Result::Continue;
 }
 
 angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
@@ -2581,16 +2515,16 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
     for (SubresourceUpdate &update : mSubresourceUpdates)
     {
-        ASSERT(update.updateSource == SubresourceUpdate::UpdateSource::Clear ||
-               (update.updateSource == SubresourceUpdate::UpdateSource::Buffer &&
-                update.buffer.bufferHandle != VK_NULL_HANDLE) ||
-               (update.updateSource == SubresourceUpdate::UpdateSource::Image &&
-                update.image.image != nullptr && update.image.image->valid()));
+        ASSERT(update.updateSource == UpdateSource::Clear ||
+               (update.updateSource == UpdateSource::Buffer &&
+                update.buffer.bufferHelper != nullptr) ||
+               (update.updateSource == UpdateSource::Image && update.image.image != nullptr &&
+                update.image.image->valid()));
 
         uint32_t updateMipLevel;
         uint32_t updateBaseLayer;
         uint32_t updateLayerCount;
-        if (update.updateSource == SubresourceUpdate::UpdateSource::Clear)
+        if (update.updateSource == UpdateSource::Clear)
         {
             updateMipLevel   = update.clear.levelIndex;
             updateBaseLayer  = update.clear.layerIndex;
@@ -2627,15 +2561,15 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         if (mBaseLevel > 0)
         {
             // We need to shift the miplevel in the update to fall into the vkiamge
-            if (update.updateSource == SubresourceUpdate::UpdateSource::Clear)
+            if (update.updateSource == UpdateSource::Clear)
             {
                 update.clear.levelIndex -= mBaseLevel;
             }
-            else if (update.updateSource == SubresourceUpdate::UpdateSource::Buffer)
+            else if (update.updateSource == UpdateSource::Buffer)
             {
                 update.buffer.copyRegion.imageSubresource.mipLevel -= mBaseLevel;
             }
-            else if (update.updateSource == SubresourceUpdate::UpdateSource::Image)
+            else if (update.updateSource == UpdateSource::Image)
             {
                 update.image.copyRegion.dstSubresource.mipLevel -= mBaseLevel;
             }
@@ -2664,15 +2598,21 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             subresourceUploadsInProgress |= subresourceHash;
         }
 
-        if (update.updateSource == SubresourceUpdate::UpdateSource::Clear)
+        if (update.updateSource == UpdateSource::Clear)
         {
             clear(update.clear.value, updateMipLevel, updateBaseLayer, updateLayerCount,
                   commandBuffer);
         }
-        else if (update.updateSource == SubresourceUpdate::UpdateSource::Buffer)
+        else if (update.updateSource == UpdateSource::Buffer)
         {
-            commandBuffer->copyBufferToImage(update.buffer.bufferHandle, mImage, getCurrentLayout(),
-                                             1, &update.buffer.copyRegion);
+            BufferUpdate &bufferUpdate = update.buffer;
+
+            BufferHelper *currentBuffer = bufferUpdate.bufferHelper;
+            ASSERT(currentBuffer && currentBuffer->valid());
+            currentBuffer->onGraphAccess(contextVk->getCommandGraph());
+
+            commandBuffer->copyBufferToImage(currentBuffer->getBuffer().getHandle(), mImage,
+                                             getCurrentLayout(), 1, &update.buffer.copyRegion);
         }
         else
         {
@@ -2686,7 +2626,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                                      getCurrentLayout(), 1, &update.image.copyRegion);
         }
 
-        update.release(contextVk);
+        update.release(contextVk->getRenderer());
     }
 
     // Only remove the updates that were actually applied to the image.
@@ -2723,7 +2663,7 @@ bool ImageHelper::isUpdateStaged(uint32_t level, uint32_t layer)
         uint32_t updateBaseLayer;
         uint32_t updateLayerCount;
 
-        if (update.updateSource == SubresourceUpdate::UpdateSource::Clear)
+        if (update.updateSource == UpdateSource::Clear)
         {
             updateMipLevel   = update.clear.levelIndex;
             updateBaseLayer  = update.clear.layerIndex;
@@ -2755,12 +2695,12 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate()
     : updateSource(UpdateSource::Buffer), buffer{VK_NULL_HANDLE}
 {}
 
-ImageHelper::SubresourceUpdate::SubresourceUpdate(VkBuffer bufferHandleIn,
+ImageHelper::SubresourceUpdate::SubresourceUpdate(BufferHelper *bufferHelperIn,
                                                   const VkBufferImageCopy &copyRegionIn)
-    : updateSource(UpdateSource::Buffer), buffer{bufferHandleIn, copyRegionIn}
+    : updateSource(UpdateSource::Buffer), buffer{bufferHelperIn, copyRegionIn}
 {}
 
-ImageHelper::SubresourceUpdate::SubresourceUpdate(vk::ImageHelper *imageIn,
+ImageHelper::SubresourceUpdate::SubresourceUpdate(ImageHelper *imageIn,
                                                   const VkImageCopy &copyRegionIn)
     : updateSource(UpdateSource::Image), image{imageIn, copyRegionIn}
 {}
@@ -2792,23 +2732,12 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other
     }
 }
 
-void ImageHelper::SubresourceUpdate::release(ContextVk *contextVk)
+void ImageHelper::SubresourceUpdate::release(RendererVk *renderer)
 {
     if (updateSource == UpdateSource::Image)
     {
-        image.image->releaseImage(contextVk);
-        image.image->releaseStagingBuffer(contextVk);
-        SafeDelete(image.image);
-    }
-}
-
-void ImageHelper::SubresourceUpdate::release(DisplayVk *display,
-                                             std::vector<GarbageObject> *garbageQueue)
-{
-    if (updateSource == UpdateSource::Image)
-    {
-        image.image->releaseImage(display, garbageQueue);
-        image.image->releaseStagingBuffer(display, garbageQueue);
+        image.image->releaseImage(renderer);
+        image.image->releaseStagingBuffer(renderer);
         SafeDelete(image.image);
     }
 }

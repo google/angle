@@ -201,13 +201,12 @@ vk::ImageHelper *HardwareBufferImageSiblingVkAndroid::getImage() const
     return mImage;
 }
 
-void HardwareBufferImageSiblingVkAndroid::release(DisplayVk *display,
-                                                  std::vector<vk::GarbageObject> *garbageQueue)
+void HardwareBufferImageSiblingVkAndroid::release(RendererVk *renderer)
 {
     if (mImage != nullptr)
     {
-        mImage->releaseImage(display, garbageQueue);
-        mImage->releaseStagingBuffer(display, garbageQueue);
+        mImage->releaseImage(renderer);
+        mImage->releaseStagingBuffer(renderer);
         SafeDelete(mImage);
     }
 }
