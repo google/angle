@@ -195,16 +195,16 @@ void ContextVk::DriverUniformsDescriptorSet::destroy(VkDevice device)
 }
 
 // CommandBatch implementation.
-ContextVk::CommandBatch::CommandBatch() = default;
+CommandBatch::CommandBatch() = default;
 
-ContextVk::CommandBatch::~CommandBatch() = default;
+CommandBatch::~CommandBatch() = default;
 
-ContextVk::CommandBatch::CommandBatch(CommandBatch &&other)
+CommandBatch::CommandBatch(CommandBatch &&other)
 {
     *this = std::move(other);
 }
 
-ContextVk::CommandBatch &ContextVk::CommandBatch::operator=(CommandBatch &&other)
+CommandBatch &CommandBatch::operator=(CommandBatch &&other)
 {
     std::swap(primaryCommands, other.primaryCommands);
     std::swap(commandPool, other.commandPool);
@@ -213,13 +213,294 @@ ContextVk::CommandBatch &ContextVk::CommandBatch::operator=(CommandBatch &&other
     return *this;
 }
 
-void ContextVk::CommandBatch::destroy(VkDevice device)
+void CommandBatch::destroy(VkDevice device)
 {
     primaryCommands.destroy(device);
     commandPool.destroy(device);
     fence.reset(device);
 }
 
+// CommandQueue implementation.
+CommandQueue::CommandQueue()  = default;
+CommandQueue::~CommandQueue() = default;
+
+void CommandQueue::destroy(VkDevice device)
+{
+    mPrimaryCommandPool.destroy(device);
+    ASSERT(mInFlightCommands.empty() && mGarbageQueue.empty());
+}
+
+angle::Result CommandQueue::init(vk::Context *context)
+{
+    RendererVk *renderer = context->getRenderer();
+
+    // Initialize the command pool now that we know the queue family index.
+    uint32_t queueFamilyIndex = renderer->getQueueFamilyIndex();
+    if (!renderer->getFeatures().transientCommandBuffer.enabled)
+    {
+        ANGLE_TRY(mPrimaryCommandPool.init(context, queueFamilyIndex));
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result CommandQueue::checkCompletedCommands(vk::Context *context)
+{
+    RendererVk *renderer = context->getRenderer();
+    VkDevice device      = renderer->getDevice();
+
+    int finishedCount = 0;
+
+    for (CommandBatch &batch : mInFlightCommands)
+    {
+        VkResult result = batch.fence.get().getStatus(device);
+        if (result == VK_NOT_READY)
+        {
+            break;
+        }
+        ANGLE_VK_TRY(context, result);
+
+        renderer->onCompletedSerial(batch.serial);
+
+        renderer->resetSharedFence(&batch.fence);
+        ANGLE_TRACE_EVENT0("gpu.angle", "command buffer recycling");
+        batch.commandPool.destroy(device);
+        ANGLE_TRY(releasePrimaryCommandBuffer(context, std::move(batch.primaryCommands)));
+        ++finishedCount;
+    }
+
+    mInFlightCommands.erase(mInFlightCommands.begin(), mInFlightCommands.begin() + finishedCount);
+
+    Serial lastCompleted = renderer->getLastCompletedQueueSerial();
+
+    size_t freeIndex = 0;
+    for (; freeIndex < mGarbageQueue.size(); ++freeIndex)
+    {
+        vk::GarbageAndSerial &garbageList = mGarbageQueue[freeIndex];
+        if (garbageList.getSerial() < lastCompleted)
+        {
+            for (vk::GarbageObject &garbage : garbageList.get())
+            {
+                garbage.destroy(device);
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    // Remove the entries from the garbage list - they should be ready to go.
+    if (freeIndex > 0)
+    {
+        mGarbageQueue.erase(mGarbageQueue.begin(), mGarbageQueue.begin() + freeIndex);
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result CommandQueue::releaseToCommandBatch(vk::Context *context,
+                                                  vk::PrimaryCommandBuffer &&commandBuffer,
+                                                  vk::CommandPool *commandPool,
+                                                  CommandBatch *batch)
+{
+    RendererVk *renderer = context->getRenderer();
+    VkDevice device      = renderer->getDevice();
+
+    batch->primaryCommands = std::move(commandBuffer);
+
+    if (commandPool->valid())
+    {
+        batch->commandPool = std::move(*commandPool);
+        // Recreate CommandPool
+        VkCommandPoolCreateInfo poolInfo = {};
+        poolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        poolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+        poolInfo.queueFamilyIndex        = renderer->getQueueFamilyIndex();
+
+        ANGLE_VK_TRY(context, commandPool->init(device, poolInfo));
+    }
+
+    return angle::Result::Continue;
+}
+
+void CommandQueue::clearAllGarbage(VkDevice device)
+{
+    for (vk::GarbageAndSerial &garbageList : mGarbageQueue)
+    {
+        for (vk::GarbageObject &garbage : garbageList.get())
+        {
+            garbage.destroy(device);
+        }
+    }
+    mGarbageQueue.clear();
+}
+
+angle::Result CommandQueue::allocatePrimaryCommandBuffer(vk::Context *context,
+                                                         const vk::CommandPool &commandPool,
+                                                         vk::PrimaryCommandBuffer *commandBufferOut)
+{
+    RendererVk *renderer = context->getRenderer();
+    VkDevice device      = renderer->getDevice();
+
+    if (ANGLE_LIKELY(!renderer->getFeatures().transientCommandBuffer.enabled))
+    {
+        return mPrimaryCommandPool.allocate(context, commandBufferOut);
+    }
+
+    VkCommandBufferAllocateInfo commandBufferInfo = {};
+    commandBufferInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    commandBufferInfo.commandPool                 = commandPool.getHandle();
+    commandBufferInfo.level                       = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    commandBufferInfo.commandBufferCount          = 1;
+
+    ANGLE_VK_TRY(context, commandBufferOut->init(device, commandBufferInfo));
+    return angle::Result::Continue;
+}
+
+angle::Result CommandQueue::releasePrimaryCommandBuffer(vk::Context *context,
+                                                        vk::PrimaryCommandBuffer &&commandBuffer)
+{
+    RendererVk *renderer = context->getRenderer();
+    VkDevice device      = renderer->getDevice();
+
+    if (ANGLE_LIKELY(!renderer->getFeatures().transientCommandBuffer.enabled))
+    {
+        ASSERT(mPrimaryCommandPool.valid());
+        ANGLE_TRY(mPrimaryCommandPool.collect(context, std::move(commandBuffer)));
+    }
+    else
+    {
+        commandBuffer.destroy(device);
+    }
+
+    return angle::Result::Continue;
+}
+
+void CommandQueue::handleDeviceLost(RendererVk *renderer)
+{
+    VkDevice device = renderer->getDevice();
+
+    for (CommandBatch &batch : mInFlightCommands)
+    {
+        // On device loss we need to wait for fence to be signaled before destroying it
+        VkResult status = batch.fence.get().wait(device, renderer->getMaxFenceWaitTimeNs());
+        // If the wait times out, it is probably not possible to recover from lost device
+        ASSERT(status == VK_SUCCESS || status == VK_ERROR_DEVICE_LOST);
+
+        // On device lost, here simply destroy the CommandBuffer, it will fully cleared later
+        // by CommandPool::destroy
+        batch.primaryCommands.destroy(device);
+
+        batch.commandPool.destroy(device);
+        batch.fence.reset(device);
+    }
+    mInFlightCommands.clear();
+}
+
+bool CommandQueue::hasInFlightCommands() const
+{
+    return !mInFlightCommands.empty();
+}
+
+angle::Result CommandQueue::finishToSerialOrTimeout(vk::Context *context,
+                                                    Serial serial,
+                                                    uint64_t timeout,
+                                                    bool *outTimedOut)
+{
+    *outTimedOut = false;
+
+    if (mInFlightCommands.empty())
+    {
+        return angle::Result::Continue;
+    }
+
+    // Find the first batch with serial equal to or bigger than given serial (note that
+    // the batch serials are unique, otherwise upper-bound would have been necessary).
+    size_t batchIndex = mInFlightCommands.size() - 1;
+    for (size_t i = 0; i < mInFlightCommands.size(); ++i)
+    {
+        if (mInFlightCommands[i].serial >= serial)
+        {
+            batchIndex = i;
+            break;
+        }
+    }
+    const CommandBatch &batch = mInFlightCommands[batchIndex];
+
+    // Wait for it finish
+    VkDevice device = context->getDevice();
+    VkResult status =
+        batch.fence.get().wait(device, context->getRenderer()->getMaxFenceWaitTimeNs());
+
+    // If timed out, report it as such.
+    if (status == VK_TIMEOUT)
+    {
+        *outTimedOut = true;
+        return angle::Result::Continue;
+    }
+
+    ANGLE_VK_TRY(context, status);
+
+    // Clean up finished batches.
+    return checkCompletedCommands(context);
+}
+
+angle::Result CommandQueue::submitFrame(vk::Context *context,
+                                        const VkSubmitInfo &submitInfo,
+                                        const vk::Shared<vk::Fence> &sharedFence,
+                                        vk::GarbageList *currentGarbage,
+                                        vk::CommandPool *commandPool,
+                                        vk::PrimaryCommandBuffer &&commandBuffer)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitFrame");
+    VkFenceCreateInfo fenceInfo = {};
+    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags             = 0;
+
+    RendererVk *renderer = context->getRenderer();
+    VkDevice device      = renderer->getDevice();
+
+    vk::DeviceScoped<CommandBatch> scopedBatch(device);
+    CommandBatch &batch = scopedBatch.get();
+    batch.fence.copy(device, sharedFence);
+
+    ANGLE_TRY(renderer->queueSubmit(context, submitInfo, batch.fence.get(), &batch.serial));
+
+    if (!currentGarbage->empty())
+    {
+        mGarbageQueue.emplace_back(std::move(*currentGarbage), batch.serial);
+    }
+
+    // Store the primary CommandBuffer and command pool used for secondary CommandBuffers
+    // in the in-flight list.
+    ANGLE_TRY(releaseToCommandBatch(context, std::move(commandBuffer), commandPool, &batch));
+
+    mInFlightCommands.emplace_back(scopedBatch.release());
+
+    // CPU should be throttled to avoid mInFlightCommands from growing too fast.  That is done
+    // on swap() though, and there could be multiple submissions in between (through glFlush()
+    // calls), so the limit is larger than the expected number of images.  The
+    // InterleavedAttributeDataBenchmark perf test for example issues a large number of flushes.
+    ASSERT(mInFlightCommands.size() <= kInFlightCommandsLimit);
+
+    ANGLE_TRY(checkCompletedCommands(context));
+
+    return angle::Result::Continue;
+}
+
+vk::Shared<vk::Fence> CommandQueue::getLastSubmittedFence(const vk::Context *context) const
+{
+    vk::Shared<vk::Fence> fence;
+    if (!mInFlightCommands.empty())
+    {
+        fence.copy(context->getDevice(), mInFlightCommands.back().fence);
+    }
+
+    return fence;
+}
+
+// ContextVk implementation.
 ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk *renderer)
     : ContextImpl(state, errorSet),
       vk::Context(renderer),
@@ -331,7 +612,9 @@ void ContextVk::onDestroy(const gl::Context *context)
         queryPool.destroy(device);
     }
 
-    ASSERT(mInFlightCommands.empty() && mCurrentGarbage.empty() && mGarbageQueue.empty());
+    ASSERT(mCurrentGarbage.empty());
+
+    mCommandQueue.destroy(device);
 
     mCommandGraph.releaseResourceUses();
 
@@ -342,11 +625,6 @@ void ContextVk::onDestroy(const gl::Context *context)
     mShaderLibrary.destroy(device);
     mGpuEventQueryPool.destroy(device);
     mCommandPool.destroy(device);
-
-    if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
-    {
-        mPrimaryCommandPool.destroy(this);
-    }
 
     for (vk::CommandPool &pool : mCommandPoolFreeList)
     {
@@ -403,21 +681,17 @@ angle::Result ContextVk::initialize()
         buffer.init(mRenderer, kVertexBufferUsage, 1, kDefaultBufferSize, true);
     }
 
-    // Initialize the command pool now that we know the queue family index.
-    uint32_t queueFamilyIndex = getRenderer()->getQueueFamilyIndex();
-    if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
+    ANGLE_TRY(mCommandQueue.init(this));
+
+    if (mRenderer->getFeatures().transientCommandBuffer.enabled)
     {
-        ANGLE_TRY(mPrimaryCommandPool.init(this, queueFamilyIndex));
-    }
-    else
-    {
-        // Once the transientCommandBuffer issue being resolved, the commandPool will only
+        // Once http://anglebug.com/3508 is resolved, the commandPool will only
         // used for secondaryBuffer allocation, so we can guard this block of code use macro
-        // ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
+        // ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS.
         VkCommandPoolCreateInfo commandPoolInfo = {};
         commandPoolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
         commandPoolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-        commandPoolInfo.queueFamilyIndex        = queueFamilyIndex;
+        commandPoolInfo.queueFamilyIndex        = mRenderer->getQueueFamilyIndex();
 
         ANGLE_VK_TRY(this, mCommandPool.init(getDevice(), commandPoolInfo));
     }
@@ -426,8 +700,8 @@ angle::Result ContextVk::initialize()
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     ASSERT(platform);
 
-    // GPU tracing workaround for anglebug.com/2927.  The renderer should not emit gpu events during
-    // platform discovery.
+    // GPU tracing workaround for anglebug.com/2927.  The renderer should not emit gpu events
+    // during platform discovery.
     const unsigned char *gpuEventsEnabled =
         platform->getTraceCategoryEnabledFlag(platform, "gpu.angle.gpu");
     mGpuEventsEnabled = gpuEventsEnabled && *gpuEventsEnabled;
@@ -878,84 +1152,20 @@ angle::Result ContextVk::handleDirtyComputeDescriptorSets(const gl::Context *con
                                          mDriverUniforms[PipelineType::Compute]);
 }
 
-angle::Result ContextVk::releaseToCommandBatch(vk::PrimaryCommandBuffer &&commandBuffer,
-                                               CommandBatch *batch)
-{
-    batch->primaryCommands = std::move(commandBuffer);
-
-    if (mCommandPool.valid())
-    {
-        batch->commandPool = std::move(mCommandPool);
-        // Recreate CommandPool
-        VkCommandPoolCreateInfo poolInfo = {};
-        poolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-        poolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-        poolInfo.queueFamilyIndex        = getRenderer()->getQueueFamilyIndex();
-
-        ANGLE_VK_TRY(this, mCommandPool.init(getDevice(), poolInfo));
-    }
-
-    return angle::Result::Continue;
-}
-
-angle::Result ContextVk::recycleCommandBatch(CommandBatch *batch)
-{
-    batch->commandPool.destroy(getDevice());
-
-    if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
-    {
-        ASSERT(mPrimaryCommandPool.valid());
-        ANGLE_TRY(mPrimaryCommandPool.collect(this, std::move(batch->primaryCommands)));
-    }
-    else
-    {
-        batch->primaryCommands.destroy(getDevice());
-    }
-
-    return angle::Result::Continue;
-}
-
 angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
                                      vk::PrimaryCommandBuffer &&commandBuffer)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::submitFrame");
-    VkFenceCreateInfo fenceInfo = {};
-    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.flags             = 0;
-
-    VkDevice device = getDevice();
-    vk::DeviceScoped<CommandBatch> scopedBatch(device);
-    CommandBatch &batch = scopedBatch.get();
-    ANGLE_TRY(getNextSubmitFence(&batch.fence));
-
-    ANGLE_TRY(mRenderer->queueSubmit(this, submitInfo, batch.fence.get(), &batch.serial));
-
-    if (!mCurrentGarbage.empty())
-    {
-        mGarbageQueue.emplace_back(std::move(mCurrentGarbage), batch.serial);
-    }
+    ANGLE_TRY(ensureSubmitFenceInitialized());
+    ANGLE_TRY(mCommandQueue.submitFrame(this, submitInfo, mSubmitFence, &mCurrentGarbage,
+                                        &mCommandPool, std::move(commandBuffer)));
 
     // we need to explicitly notify every other Context using this VkQueue that their current
     // command buffer is no longer valid.
     onRenderPassFinished();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
 
-    // Store the primary CommandBuffer and command pool used for secondary CommandBuffers
-    // in the in-flight list.
-    ANGLE_TRY(releaseToCommandBatch(std::move(commandBuffer), &batch));
-
-    mInFlightCommands.emplace_back(scopedBatch.release());
-
     // Make sure a new fence is created for the next submission.
     mRenderer->resetSharedFence(&mSubmitFence);
-
-    // CPU should be throttled to avoid mInFlightCommands from growing too fast.  That is done on
-    // swap() though, and there could be multiple submissions in between (through glFlush() calls),
-    // so the limit is larger than the expected number of images.  The
-    // InterleavedAttributeDataBenchmark perf test for example issues a large number of flushes.
-    ASSERT(mInFlightCommands.size() <= kInFlightCommandsLimit);
-
-    ANGLE_TRY(checkCompletedCommands());
 
     if (mGpuEventsEnabled)
     {
@@ -984,8 +1194,8 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     ASSERT(platform);
 
-    // To synchronize CPU and GPU times, we need to get the CPU timestamp as close as possible to
-    // the GPU timestamp.  The process of getting the GPU timestamp is as follows:
+    // To synchronize CPU and GPU times, we need to get the CPU timestamp as close as possible
+    // to the GPU timestamp.  The process of getting the GPU timestamp is as follows:
     //
     //             CPU                            GPU
     //
@@ -1007,9 +1217,9 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
     //       Get query results
     //
     // The areas of unknown work (????) on the CPU indicate that the CPU may or may not have
-    // finished post-submission work while the GPU is executing in parallel. With no further work,
-    // querying CPU timestamps before submission and after getting query results give the bounds to
-    // Tgpu, which could be quite large.
+    // finished post-submission work while the GPU is executing in parallel. With no further
+    // work, querying CPU timestamps before submission and after getting query results give the
+    // bounds to Tgpu, which could be quite large.
     //
     // Using VkEvents, the GPU can be made to wait for the CPU and vice versa, in an effort to
     // reduce this range. This function implements the following procedure:
@@ -1043,8 +1253,8 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
     //
     // If Te-Ts > epsilon, a GPU or CPU interruption can be assumed and the operation can be
     // retried.  Once Te-Ts < epsilon, Tcpu can be taken to presumably match Tgpu.  Finding an
-    // epsilon that's valid for all devices may be difficult, so the loop can be performed only a
-    // limited number of times and the Tcpu,Tgpu pair corresponding to smallest Te-Ts used for
+    // epsilon that's valid for all devices may be difficult, so the loop can be performed only
+    // a limited number of times and the Tcpu,Tgpu pair corresponding to smallest Te-Ts used for
     // calibration.
     //
     // Note: Once VK_EXT_calibrated_timestamps is ubiquitous, this should be redone.
@@ -1086,20 +1296,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(device);
         vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
 
-        if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
-        {
-            ANGLE_TRY(mPrimaryCommandPool.alloc(this, &commandBuffer));
-        }
-        else
-        {
-            VkCommandBufferAllocateInfo commandBufferInfo = {};
-            commandBufferInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-            commandBufferInfo.commandPool        = mCommandPool.getHandle();
-            commandBufferInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-            commandBufferInfo.commandBufferCount = 1;
-
-            ANGLE_VK_TRY(this, commandBuffer.init(device, commandBufferInfo));
-        }
+        ANGLE_TRY(mCommandQueue.allocatePrimaryCommandBuffer(this, mCommandPool, &commandBuffer));
 
         VkCommandBufferBeginInfo beginInfo = {};
         beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -1294,7 +1491,8 @@ void ContextVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuT
     double nextGpuSyncDiffS = nextSyncCpuTimestampS - nextSyncGpuTimestampS;
 
     // No gpu trace events should have been generated before the clock sync, so if there is no
-    // "previous" clock sync, there should be no gpu events (i.e. the function early-outs above).
+    // "previous" clock sync, there should be no gpu events (i.e. the function early-outs
+    // above).
     ASSERT(mGpuClockSync.gpuTimestampS != std::numeric_limits<double>::max() &&
            mGpuClockSync.cpuTimestampS != std::numeric_limits<double>::max());
 
@@ -1312,8 +1510,8 @@ void ContextVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuT
         // Account for clock drift.
         gpuTimestampS += lastGpuSyncDiffS + gpuSyncDriftSlope * (gpuTimestampS - lastGpuSyncTimeS);
 
-        // Generate the trace now that the GPU timestamp is available and clock drifts are accounted
-        // for.
+        // Generate the trace now that the GPU timestamp is available and clock drifts are
+        // accounted for.
         static long long eventId = 1;
         static const unsigned char *categoryEnabled =
             TRACE_EVENT_API_GET_CATEGORY_ENABLED(platform, "gpu.angle.gpu");
@@ -1332,38 +1530,14 @@ void ContextVk::clearAllGarbage()
         garbage.destroy(device);
     }
     mCurrentGarbage.clear();
-
-    for (vk::GarbageAndSerial &garbageList : mGarbageQueue)
-    {
-        for (vk::GarbageObject &garbage : garbageList.get())
-        {
-            garbage.destroy(device);
-        }
-    }
-    mGarbageQueue.clear();
+    mCommandQueue.clearAllGarbage(device);
 }
 
 void ContextVk::handleDeviceLost()
 {
     mCommandGraph.clear();
-    // TODO: generate a new serial neccessary here?
-    VkDevice device = getDevice();
 
-    for (CommandBatch &batch : mInFlightCommands)
-    {
-        // On device loss we need to wait for fence to be signaled before destroying it
-        VkResult status = batch.fence.get().wait(device, getMaxFenceWaitTimeNs());
-        // If the wait times out, it is probably not possible to recover from lost device
-        ASSERT(status == VK_SUCCESS || status == VK_ERROR_DEVICE_LOST);
-
-        // On device lost, here simply destroy the CommandBuffer, it will fully cleared later
-        // by CommandPool::destroy
-        batch.primaryCommands.destroy(device);
-
-        batch.commandPool.destroy(device);
-        batch.fence.reset(device);
-    }
-    mInFlightCommands.clear();
+    mCommandQueue.handleDeviceLost(mRenderer);
     clearAllGarbage();
 
     mRenderer->notifyDeviceLost();
@@ -1909,7 +2083,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_UNPACK_STATE:
                 // This is a no-op, it's only important to use the right unpack state when we do
-                // setImage or setSubImage in TextureVk, which is plumbed through the frontend call
+                // setImage or setSubImage in TextureVk, which is plumbed through the frontend
+                // call
                 break;
             case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
                 break;
@@ -1930,11 +2105,12 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
-                // FramebufferVk::syncState signals that we should start a new command buffer. But
-                // changing the binding can skip FramebufferVk::syncState if the Framebuffer has no
-                // dirty bits. Thus we need to explicitly clear the current command buffer to
-                // ensure we start a new one. Note that we need a new command buffer because a
-                // command graph node can only support one RenderPass configuration at a time.
+                // FramebufferVk::syncState signals that we should start a new command buffer.
+                // But changing the binding can skip FramebufferVk::syncState if the Framebuffer
+                // has no dirty bits. Thus we need to explicitly clear the current command
+                // buffer to ensure we start a new one. Note that we need a new command buffer
+                // because a command graph node can only support one RenderPass configuration at
+                // a time.
                 onRenderPassFinished();
 
                 gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
@@ -1991,7 +2167,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 }
                 else
                 {
-                    // No additional work is needed here. We will update the pipeline desc later.
+                    // No additional work is needed here. We will update the pipeline desc
+                    // later.
                     invalidateDefaultAttributes(
                         context->getStateCache().getActiveDefaultAttribsMask());
                     bool useVertexBuffer = (mProgram->getState().getMaxActiveAttribLocation() > 0);
@@ -2030,8 +2207,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // coverage. See EXT_multisample_compatibility.  http://anglebug.com/3204
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
-                // TODO(syoussefi): this is part of EXT_multisample_compatibility.  The alphaToOne
-                // Vulkan feature should be enabled to support this extension.
+                // TODO(syoussefi): this is part of EXT_multisample_compatibility.  The
+                // alphaToOne Vulkan feature should be enabled to support this extension.
                 // http://anglebug.com/3204
                 mGraphicsPipelineDesc->updateAlphaToOneEnable(&mGraphicsPipelineTransition,
                                                               glState.isSampleAlphaToOneEnabled());
@@ -2077,8 +2254,8 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
 {
     ASSERT(mCommandGraph.empty());
 
-    // Flip viewports if FeaturesVk::flipViewportY is enabled and the user did not request that the
-    // surface is flipped.
+    // Flip viewports if FeaturesVk::flipViewportY is enabled and the user did not request that
+    // the surface is flipped.
     egl::Surface *drawSurface = context->getCurrentDrawSurface();
     mFlipYForCurrentSurface =
         drawSurface != nullptr && mRenderer->getFeatures().flipViewportY.enabled &&
@@ -2320,11 +2497,11 @@ angle::Result ContextVk::dispatchComputeIndirect(const gl::Context *context, GLi
 
 angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
-    // Note: most of the barriers specified here don't require us to issue a memory barrier, as the
-    // relevant resources already insert the appropriate barriers.  They do however require the
-    // resource writing nodes to finish so future buffer barriers are placed correctly, as well as
-    // resource dependencies not creating a graph loop.  This is done by inserting a command graph
-    // barrier that does nothing!
+    // Note: most of the barriers specified here don't require us to issue a memory barrier, as
+    // the relevant resources already insert the appropriate barriers.  They do however require
+    // the resource writing nodes to finish so future buffer barriers are placed correctly, as
+    // well as resource dependencies not creating a graph loop.  This is done by inserting a
+    // command graph barrier that does nothing!
 
     VkAccessFlags srcAccess = 0;
     VkAccessFlags dstAccess = 0;
@@ -2401,8 +2578,8 @@ void ContextVk::writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOu
             offsetDiff = static_cast<uint32_t>((offset - alignedOffset) / sizeof(uint32_t));
 
             // We expect offsetDiff to fit in an 8-bit value.  The maximum difference is
-            // minStorageBufferOffsetAlignment / 4, where minStorageBufferOffsetAlignment currently
-            // has a maximum value of 256 on any device.
+            // minStorageBufferOffsetAlignment / 4, where minStorageBufferOffsetAlignment
+            // currently has a maximum value of 256 on any device.
             ASSERT(offsetDiff < (1 << 8));
         }
 
@@ -2597,9 +2774,9 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
 
         vk::ImageHelper &image = textureVk->getImage();
 
-        // The image should be flushed and ready to use at this point. There may still be lingering
-        // staged updates in its staging buffer for unused texture mip levels or layers. Therefore
-        // we can't verify it has no staged updates right here.
+        // The image should be flushed and ready to use at this point. There may still be
+        // lingering staged updates in its staging buffer for unused texture mip levels or
+        // layers. Therefore we can't verify it has no staged updates right here.
 
         vk::ImageLayout textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
         if (program->isCompute())
@@ -2653,9 +2830,9 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         TextureVk *textureVk   = vk::GetImpl(texture);
         vk::ImageHelper *image = &textureVk->getImage();
 
-        // The image should be flushed and ready to use at this point. There may still be lingering
-        // staged updates in its staging buffer for unused texture mip levels or layers. Therefore
-        // we can't verify it has no staged updates right here.
+        // The image should be flushed and ready to use at this point. There may still be
+        // lingering staged updates in its staging buffer for unused texture mip levels or
+        // layers. Therefore we can't verify it has no staged updates right here.
 
         // TODO(syoussefi): make sure front-end syncs textures that are used as images (they are
         // already notified of content change).
@@ -2702,34 +2879,24 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flush");
 
-    vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(getDevice());
-    if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
-    {
-        ANGLE_TRY(mPrimaryCommandPool.alloc(this, &commandBatch.get()));
-    }
-    else
-    {
-        VkCommandBufferAllocateInfo commandBufferInfo = {};
-        commandBufferInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        commandBufferInfo.commandPool        = mCommandPool.getHandle();
-        commandBufferInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        commandBufferInfo.commandBufferCount = 1;
+    VkDevice device = getDevice();
 
-        ANGLE_VK_TRY(this, commandBatch.get().init(getDevice(), commandBufferInfo));
-    }
+    vk::DeviceScoped<vk::PrimaryCommandBuffer> primaryCommands(device);
+    ANGLE_TRY(
+        mCommandQueue.allocatePrimaryCommandBuffer(this, mCommandPool, &primaryCommands.get()));
 
     if (!mCommandGraph.empty())
     {
-        ANGLE_TRY(flushCommandGraph(&commandBatch.get()));
+        ANGLE_TRY(flushCommandGraph(&primaryCommands.get()));
     }
 
     waitForSwapchainImageIfNecessary();
 
     VkSubmitInfo submitInfo = {};
-    InitializeSubmitInfo(&submitInfo, commandBatch.get(), mWaitSemaphores,
+    InitializeSubmitInfo(&submitInfo, primaryCommands.get(), mWaitSemaphores,
                          &mWaitSemaphoreStageMasks, signalSemaphore);
 
-    ANGLE_TRY(submitFrame(submitInfo, commandBatch.release()));
+    ANGLE_TRY(submitFrame(submitInfo, primaryCommands.release()));
 
     mWaitSemaphores.clear();
 
@@ -2743,7 +2910,7 @@ angle::Result ContextVk::finishImpl()
     ANGLE_TRY(flushImpl(nullptr));
 
     ANGLE_TRY(finishToSerial(getLastSubmittedQueueSerial()));
-    ASSERT(mInFlightCommands.empty());
+    ASSERT(!mCommandQueue.hasInFlightCommands());
 
     clearAllGarbage();
 
@@ -2754,9 +2921,9 @@ angle::Result ContextVk::finishImpl()
         {
             ANGLE_TRY(checkCompletedGpuEvents());
         }
-        // Recalculate the CPU/GPU time difference to account for clock drifting.  Avoid unnecessary
-        // synchronization if there is no event to be adjusted (happens when finish() gets called
-        // multiple times towards the end of the application).
+        // Recalculate the CPU/GPU time difference to account for clock drifting.  Avoid
+        // unnecessary synchronization if there is no event to be adjusted (happens when
+        // finish() gets called multiple times towards the end of the application).
         if (mGpuEvents.size() > 0)
         {
             ANGLE_TRY(synchronizeCpuGpuTime());
@@ -2783,61 +2950,14 @@ bool ContextVk::isSerialInUse(Serial serial) const
 
 angle::Result ContextVk::checkCompletedCommands()
 {
-    VkDevice device = getDevice();
-
-    int finishedCount = 0;
-
-    for (CommandBatch &batch : mInFlightCommands)
-    {
-        VkResult result = batch.fence.get().getStatus(device);
-        if (result == VK_NOT_READY)
-        {
-            break;
-        }
-        ANGLE_VK_TRY(this, result);
-
-        mRenderer->onCompletedSerial(batch.serial);
-
-        mRenderer->resetSharedFence(&batch.fence);
-        ANGLE_TRACE_EVENT0("gpu.angle", "command batch recycling");
-        ANGLE_TRY(recycleCommandBatch(&batch));
-        ++finishedCount;
-    }
-
-    mInFlightCommands.erase(mInFlightCommands.begin(), mInFlightCommands.begin() + finishedCount);
-
-    Serial lastCompleted = getLastCompletedQueueSerial();
-
-    size_t freeIndex = 0;
-    for (; freeIndex < mGarbageQueue.size(); ++freeIndex)
-    {
-        vk::GarbageAndSerial &garbageList = mGarbageQueue[freeIndex];
-        if (garbageList.getSerial() < lastCompleted)
-        {
-            for (vk::GarbageObject &garbage : garbageList.get())
-            {
-                garbage.destroy(device);
-            }
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    // Remove the entries from the garbage list - they should be ready to go.
-    if (freeIndex > 0)
-    {
-        mGarbageQueue.erase(mGarbageQueue.begin(), mGarbageQueue.begin() + freeIndex);
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.checkCompletedCommands(this);
 }
 
 angle::Result ContextVk::finishToSerial(Serial serial)
 {
-    bool timedOut        = false;
-    angle::Result result = finishToSerialOrTimeout(serial, getMaxFenceWaitTimeNs(), &timedOut);
+    bool timedOut = false;
+    angle::Result result =
+        finishToSerialOrTimeout(serial, mRenderer->getMaxFenceWaitTimeNs(), &timedOut);
 
     // Don't tolerate timeout.  If such a large wait time results in timeout, something's wrong.
     if (timedOut)
@@ -2849,41 +2969,7 @@ angle::Result ContextVk::finishToSerial(Serial serial)
 
 angle::Result ContextVk::finishToSerialOrTimeout(Serial serial, uint64_t timeout, bool *outTimedOut)
 {
-    *outTimedOut = false;
-
-    if (mInFlightCommands.empty())
-    {
-        return angle::Result::Continue;
-    }
-
-    // Find the first batch with serial equal to or bigger than given serial (note that
-    // the batch serials are unique, otherwise upper-bound would have been necessary).
-    size_t batchIndex = mInFlightCommands.size() - 1;
-    for (size_t i = 0; i < mInFlightCommands.size(); ++i)
-    {
-        if (mInFlightCommands[i].serial >= serial)
-        {
-            batchIndex = i;
-            break;
-        }
-    }
-    const CommandBatch &batch = mInFlightCommands[batchIndex];
-
-    // Wait for it finish
-    VkDevice device = getDevice();
-    VkResult status = batch.fence.get().wait(device, getMaxFenceWaitTimeNs());
-
-    // If timed out, report it as such.
-    if (status == VK_TIMEOUT)
-    {
-        *outTimedOut = true;
-        return angle::Result::Continue;
-    }
-
-    ANGLE_VK_TRY(this, status);
-
-    // Clean up finished batches.
-    return checkCompletedCommands();
+    return mCommandQueue.finishToSerialOrTimeout(this, serial, timeout, outTimedOut);
 }
 
 angle::Result ContextVk::getCompatibleRenderPass(const vk::RenderPassDesc &desc,
@@ -2901,12 +2987,20 @@ angle::Result ContextVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
                                                  renderPassOut);
 }
 
+angle::Result ContextVk::ensureSubmitFenceInitialized()
+{
+    if (mSubmitFence.isReferenced())
+    {
+        return angle::Result::Continue;
+    }
+
+    return mRenderer->newSharedFence(this, &mSubmitFence);
+}
+
 angle::Result ContextVk::getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut)
 {
-    if (!mSubmitFence.isReferenced())
-    {
-        ANGLE_TRY(getRenderer()->newSharedFence(this, &mSubmitFence));
-    }
+    ANGLE_TRY(ensureSubmitFenceInitialized());
+
     ASSERT(!sharedFenceOut->isReferenced());
     sharedFenceOut->copy(getDevice(), mSubmitFence);
     return angle::Result::Continue;
@@ -2914,37 +3008,32 @@ angle::Result ContextVk::getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOu
 
 vk::Shared<vk::Fence> ContextVk::getLastSubmittedFence() const
 {
-    vk::Shared<vk::Fence> fence;
-    if (!mInFlightCommands.empty())
-    {
-        fence.copy(getDevice(), mInFlightCommands.back().fence);
-    }
-
-    return fence;
+    return mCommandQueue.getLastSubmittedFence(this);
 }
 
 angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
 {
-    // The intent of this function is to query the timestamp without stalling the GPU.  Currently,
-    // that seems impossible, so instead, we are going to make a small submission with just a
-    // timestamp query.  First, the disjoint timer query extension says:
+    // The intent of this function is to query the timestamp without stalling the GPU.
+    // Currently, that seems impossible, so instead, we are going to make a small submission
+    // with just a timestamp query.  First, the disjoint timer query extension says:
     //
     // > This will return the GL time after all previous commands have reached the GL server but
     // have not yet necessarily executed.
     //
-    // The previous commands are stored in the command graph at the moment and are not yet flushed.
-    // The wording allows us to make a submission to get the timestamp without performing a flush.
+    // The previous commands are stored in the command graph at the moment and are not yet
+    // flushed. The wording allows us to make a submission to get the timestamp without
+    // performing a flush.
     //
     // Second:
     //
-    // > By using a combination of this synchronous get command and the asynchronous timestamp query
-    // object target, applications can measure the latency between when commands reach the GL server
-    // and when they are realized in the framebuffer.
+    // > By using a combination of this synchronous get command and the asynchronous timestamp
+    // query object target, applications can measure the latency between when commands reach the
+    // GL server and when they are realized in the framebuffer.
     //
-    // This fits with the above strategy as well, although inevitably we are possibly introducing a
-    // GPU bubble.  This function directly generates a command buffer and submits it instead of
-    // using the other member functions.  This is to avoid changing any state, such as the queue
-    // serial.
+    // This fits with the above strategy as well, although inevitably we are possibly
+    // introducing a GPU bubble.  This function directly generates a command buffer and submits
+    // it instead of using the other member functions.  This is to avoid changing any state,
+    // such as the queue serial.
 
     // Create a query used to receive the GPU timestamp
     VkDevice device = getDevice();
@@ -2957,20 +3046,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(device);
     vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
 
-    if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
-    {
-        ANGLE_TRY(mPrimaryCommandPool.alloc(this, &commandBuffer));
-    }
-    else
-    {
-        VkCommandBufferAllocateInfo commandBufferInfo = {};
-        commandBufferInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        commandBufferInfo.commandPool        = mCommandPool.getHandle();
-        commandBufferInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        commandBufferInfo.commandBufferCount = 1;
-
-        ANGLE_VK_TRY(this, commandBuffer.init(device, commandBufferInfo));
-    }
+    ANGLE_TRY(mCommandQueue.allocatePrimaryCommandBuffer(this, mCommandPool, &commandBuffer));
 
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -3011,7 +3087,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
 
     // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
     // in parallel with what's already running on the GPU.
-    ANGLE_VK_TRY(this, fence.get().wait(device, getMaxFenceWaitTimeNs()));
+    ANGLE_VK_TRY(this, fence.get().wait(device, mRenderer->getMaxFenceWaitTimeNs()));
 
     // Get the query results
     constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
@@ -3027,16 +3103,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
         *timestampOut *
         static_cast<double>(getRenderer()->getPhysicalDeviceProperties().limits.timestampPeriod));
 
-    if (ANGLE_LIKELY(!mRenderer->getFeatures().transientCommandBuffer.enabled))
-    {
-        ANGLE_TRY(mPrimaryCommandPool.collect(this, commandBatch.release()));
-    }
-    else
-    {
-        commandBatch.get().destroy(getDevice());
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.releasePrimaryCommandBuffer(this, commandBatch.release());
 }
 
 void ContextVk::invalidateDefaultAttribute(size_t attribIndex)
@@ -3119,10 +3186,4 @@ bool ContextVk::shouldUseOldRewriteStructSamplers() const
 {
     return mRenderer->getFeatures().forceOldRewriteStructSamplers.enabled;
 }
-
-uint64_t ContextVk::getMaxFenceWaitTimeNs() const
-{
-    return getRenderer()->getMaxFenceWaitTimeNs();
-}
-
 }  // namespace rx
