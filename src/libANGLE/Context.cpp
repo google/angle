@@ -9055,7 +9055,7 @@ void StateCache::updateActiveAttribsMask(Context *context)
         return;
     }
 
-    AttributesMask activeAttribs = isGLES1 ? glState.gles1().getVertexArraysAttributeMask()
+    AttributesMask activeAttribs = isGLES1 ? glState.gles1().getActiveAttributesMask()
                                            : glState.getProgram()->getActiveAttribLocationsMask();
 
     const VertexArray *vao = glState.getVertexArray();
