@@ -1466,6 +1466,8 @@ LoadImageFunctionInfo DEPTH_COMPONENT24_to_D32_FLOAT_S8X24_UINT(GLenum type)
 {
     switch (type)
     {
+        case GL_UNSIGNED_INT:
+            return LoadImageFunctionInfo(LoadD32ToD32FX32, true);
         case GL_UNSIGNED_INT_24_8:
             return LoadImageFunctionInfo(LoadD24S8ToD32FS8X24, true);
         default:

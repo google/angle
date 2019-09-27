@@ -2184,8 +2184,24 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
 
             // The generic load functions don't handle tightly packing D32FS8 to D32F & S8 so call
             // special case load functions.
-            loadFunctionInfo.loadFunction = angle::LoadD32FS8X24ToD32F;
-            stencilLoadFunction           = angle::LoadX32S8ToS8;
+            switch (type)
+            {
+                case GL_UNSIGNED_INT:
+                    loadFunctionInfo.loadFunction = angle::LoadD32ToD32F;
+                    stencilLoadFunction           = nullptr;
+                    break;
+                case GL_DEPTH32F_STENCIL8:
+                case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
+                    loadFunctionInfo.loadFunction = angle::LoadD32FS8X24ToD32F;
+                    stencilLoadFunction           = angle::LoadX32S8ToS8;
+                    break;
+                case GL_UNSIGNED_INT_24_8_OES:
+                    loadFunctionInfo.loadFunction = angle::LoadD24S8ToD32F;
+                    stencilLoadFunction           = angle::LoadX24S8ToS8;
+                    break;
+                default:
+                    UNREACHABLE();
+            }
         }
         else
         {
