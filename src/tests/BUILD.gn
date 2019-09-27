@@ -159,7 +159,7 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
       use_native_activity = true
     }
     if (angle_enable_vulkan) {
-      deps += [ "${angle_root}:angle_vulkan" ]
+      deps += [ "${angle_root}/src/libANGLE/renderer/vulkan:angle_vulkan" ]
     }
   }
 }
