@@ -543,11 +543,10 @@
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.random.* = FAIL
 
 // Depth/Stencil textures:
-2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
-2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
-2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
-2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth32f_stencil8 = FAIL
-2905 VULKAN : dEQP-GLES3.functional.texture.format.sized.*.depth32f_stencil8* = FAIL
+3970 VULKAN NVIDIA : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
+3970 VULKAN NVIDIA : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
+3970 VULKAN NVIDIA : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
+3970 VULKAN NVIDIA : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth32f_stencil8 = FAIL
 
 // Shader support:
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
