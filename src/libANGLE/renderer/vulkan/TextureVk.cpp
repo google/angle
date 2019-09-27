@@ -79,6 +79,11 @@ void GetRenderTargetLayerCountAndIndex(vk::ImageHelper *image,
 {
     switch (index.getType())
     {
+        case gl::TextureType::_2D:
+            *layerIndex = 0;
+            *layerCount = 1;
+            return;
+
         case gl::TextureType::CubeMap:
             *layerIndex = index.cubeMapFaceIndex();
             *layerCount = gl::kCubeFaceCount;
@@ -894,10 +899,12 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     mImage->initStagingBuffer(contextVk->getRenderer(), format, vk::kStagingBufferFlags,
                               mStagingBufferInitialSize);
 
-    mRenderTarget.init(mImage, &mDrawImageView, getNativeImageLevel(0), getNativeImageLayer(0));
-
-    // Force re-creation of layered render targets next time they are needed
-    mLayerRenderTargets.clear();
+    // Force re-creation of render targets next time they are needed
+    for (vk::RenderTargetVector &renderTargetLevels : mRenderTargets)
+    {
+        renderTargetLevels.clear();
+    }
+    mRenderTargets.clear();
 
     mSerial = contextVk->generateTextureSerial();
 }
@@ -1251,31 +1258,18 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                                    GLsizei samples,
                                                    FramebufferAttachmentRenderTarget **rtOut)
 {
-    // Non-zero mip level attachments are an ES 3.0 feature.
-    ASSERT(imageIndex.getLevelIndex() == 0);
+    ASSERT(imageIndex.getLevelIndex() >= 0);
 
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(ensureImageInitialized(contextVk));
 
     GLuint layerIndex = 0, layerCount = 0;
+    GetRenderTargetLayerCountAndIndex(mImage, imageIndex, &layerCount, &layerIndex);
 
-    switch (imageIndex.getType())
-    {
-        case gl::TextureType::_2D:
-            *rtOut = &mRenderTarget;
-            break;
-        case gl::TextureType::CubeMap:
-        case gl::TextureType::_2DArray:
-        case gl::TextureType::_3D:
-            // Special handling required for different types, grab the count and index
-            GetRenderTargetLayerCountAndIndex(mImage, imageIndex, &layerCount, &layerIndex);
+    ANGLE_TRY(initRenderTargets(contextVk, layerCount, imageIndex.getLevelIndex()));
 
-            ANGLE_TRY(initLayerRenderTargets(contextVk, layerCount));
-            *rtOut = &mLayerRenderTargets[layerIndex];
-            break;
-        default:
-            UNREACHABLE();
-    }
+    ASSERT(imageIndex.getLevelIndex() < static_cast<int32_t>(mRenderTargets.size()));
+    *rtOut = &mRenderTargets[imageIndex.getLevelIndex()][layerIndex];
 
     return angle::Result::Continue;
 }
@@ -1317,20 +1311,27 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
                                       commandBuffer);
 }
 
-angle::Result TextureVk::initLayerRenderTargets(ContextVk *contextVk, GLuint layerCount)
+angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
+                                           GLuint layerCount,
+                                           GLuint levelIndex)
 {
+    if (mRenderTargets.size() <= levelIndex)
+    {
+        mRenderTargets.resize(levelIndex + 1);
+    }
+
     // Lazy init. Check if already initialized.
-    if (!mLayerRenderTargets.empty())
+    if (!mRenderTargets[levelIndex].empty())
         return angle::Result::Continue;
 
-    mLayerRenderTargets.resize(layerCount);
+    mRenderTargets[levelIndex].resize(layerCount);
 
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
         const vk::ImageView *drawView;
-        ANGLE_TRY(getLayerLevelDrawImageView(contextVk, layerIndex, 0, &drawView));
-        mLayerRenderTargets[layerIndex].init(mImage, drawView, getNativeImageLevel(0),
-                                             getNativeImageLayer(layerIndex));
+        ANGLE_TRY(getLayerLevelDrawImageView(contextVk, layerIndex, levelIndex, &drawView));
+        mRenderTargets[levelIndex][layerIndex].init(
+            mImage, drawView, getNativeImageLevel(levelIndex), getNativeImageLayer(layerIndex));
     }
     return angle::Result::Continue;
 }
@@ -1692,13 +1693,6 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
                                              layerCount));
     }
 
-    if (!format.imageFormat().isBlock)
-    {
-        ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), aspectFlags,
-                                             gl::SwizzleState(), &mDrawImageView, baseLevel, 1,
-                                             baseLayer, layerCount));
-    }
-
     return angle::Result::Continue;
 }
 
@@ -1718,7 +1712,13 @@ void TextureVk::releaseImage(ContextVk *contextVk)
 
     releaseImageViews(contextVk);
 
-    mLayerRenderTargets.clear();
+    for (vk::RenderTargetVector &renderTargetLevels : mRenderTargets)
+    {
+        // Clear the layers tracked for each level
+        renderTargetLevels.clear();
+    }
+    // Then clear the levels
+    mRenderTargets.clear();
 
     onStagingBufferChange();
 }
@@ -1728,7 +1728,6 @@ void TextureVk::releaseImageViews(ContextVk *contextVk)
     contextVk->addGarbage(&mReadImageView);
     contextVk->addGarbage(&mFetchImageView);
     contextVk->addGarbage(&mStencilReadImageView);
-    contextVk->addGarbage(&mDrawImageView);
 
     for (vk::ImageViewVector &layerViews : mLayerLevelDrawImageViews)
     {

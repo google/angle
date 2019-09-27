@@ -163,4 +163,5 @@ ANGLE_INSTANTIATE_TEST(FramebufferRenderMipmapTest,
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
-                       ES2_VULKAN());
+                       ES2_VULKAN(),
+                       ES3_VULKAN());

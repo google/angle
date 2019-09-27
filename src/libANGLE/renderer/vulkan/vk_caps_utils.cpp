@@ -124,6 +124,8 @@ void RendererVk::ensureCapsInitialized() const
     // Vulkan natively supports 32-bit indices, entry in kIndexTypeMap
     mNativeExtensions.elementIndexUint = true;
 
+    mNativeExtensions.fboRenderMipmap = true;
+
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex       = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize      = limitsVk.maxImageDimension3D;

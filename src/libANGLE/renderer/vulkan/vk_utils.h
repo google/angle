@@ -597,6 +597,8 @@ std::string GetMappedSamplerName(const std::string &originalName);
 using ImageViewVector = std::vector<ImageView>;
 // A vector of vector of image views.  Primary index is layer, secondary index is level.
 using LayerLevelImageViewVector = std::vector<ImageViewVector>;
+// A vector of rendertargets
+using RenderTargetVector = std::vector<RenderTargetVk>;
 
 }  // namespace vk
 
