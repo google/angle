@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6733b5cc_34a6ea8d",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2019-09-30T21:05:27Z",
+      "side": 0,
+      "message": "What about these?",
+      "range": {
+        "startLine": 578,
+        "startChar": 0,
+        "endLine": 581,
+        "endChar": 56
+      },
+      "revId": "cb16fb5fed93abdb8896650c0632cea097b4445f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd7cd22b_1d811d59",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2019-09-30T21:05:27Z",
+      "side": 0,
+      "message": "And these?",
+      "range": {
+        "startLine": 587,
+        "startChar": 0,
+        "endLine": 589,
+        "endChar": 83
+      },
+      "revId": "cb16fb5fed93abdb8896650c0632cea097b4445f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
