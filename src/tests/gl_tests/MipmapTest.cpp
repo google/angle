@@ -667,7 +667,7 @@ TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 TEST_P(MipmapTest, DefineValidExtraLevelAndUseItLater)
 {
     // TODO(cnorthrop): Enabled the group to cover texture base level, but this test
-    // needs some triage: http://anglebug.com/3148
+    // needs some triage: http://anglebug.com/3950
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -945,7 +945,7 @@ TEST_P(MipmapTestES3, MipmapForDeepTextureArray)
 TEST_P(MipmapTestES3, MipmapsForTexture3D)
 {
     // TODO(cnorthrop): Enabled the group to cover texture base level, but this test
-    // needs some triage: http://anglebug.com/3148
+    // needs some triage: http://anglebug.com/3950
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     int px = getWindowWidth() / 2;
@@ -1192,7 +1192,7 @@ TEST_P(MipmapTestES3, GenerateMipmapBaseLevelOutOfRange)
 // be clamped, so the call doesn't generate an error.
 TEST_P(MipmapTestES3, GenerateMipmapBaseLevelOutOfRangeImmutableTexture)
 {
-    // TODO(cnorthrop): Interacts with immutable texture supprt: http://anglebug.com/3148
+    // TODO(cnorthrop): Interacts with immutable texture supprt: http://anglebug.com/3950
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
@@ -1226,7 +1226,7 @@ TEST_P(MipmapTestES3, BaseLevelTextureBug)
     // Probably not Intel.
     ANGLE_SKIP_TEST_IF(IsOSX() && (IsNVIDIA() || IsIntel()));
 
-    // TODO(cnorthrop): Figure out what's going on here: http://anglebug.com/3148
+    // TODO(cnorthrop): Figure out what's going on here: http://anglebug.com/3950
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     std::vector<GLColor> texDataRed(2u * 2u, GLColor::red);

@@ -1970,7 +1970,7 @@ TEST_P(Texture2DTestES3, TextureImplPropogatesDirtyBits)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
     // D3D Debug device reports an error. http://anglebug.com/3501
     ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
-    // TODO(cnorthrop): Needs triage on Vulkan backend. http://anglebug.com/3148
+    // TODO(cnorthrop): Needs triage on Vulkan backend. http://anglebug.com/3950
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     // The workaround in the GL backend required to trigger this bug generates driver warning
@@ -2017,7 +2017,7 @@ TEST_P(Texture2DTestES3, FramebufferTextureChangingBaselevel)
     // TODO(geofflang): Investigate on D3D11. http://anglebug.com/2291
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    // TODO(cnorthrop): Framebuffer level support. http://anglebug.com/3148
+    // TODO(cnorthrop): Framebuffer level support. http://anglebug.com/3184
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     setUpProgram();
@@ -2305,9 +2305,6 @@ TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensio
 {
     // TODO(crbug.com/998505): Test failing on Android FYI Release (NVIDIA Shield TV)
     ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
-
-    // TODO(cnorthrop): Depth vs. array issue in VK backend. http://anglebug.com/3148
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, m2DArrayTexture);
@@ -2680,7 +2677,7 @@ TEST_P(ShadowSamplerPlusSampler3DTestES3, ShadowSamplerPlusSampler3DDraw)
 // samplerCubeShadow: TextureCube + SamplerComparisonState
 TEST_P(SamplerTypeMixTestES3, SamplerTypeMixDraw)
 {
-    // TODO(cnorthrop): Requires non-color staging buffer support. http://anglebug.com/3148
+    // TODO(cnorthrop): Requires non-color staging buffer support. http://anglebug.com/3949
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     glActiveTexture(GL_TEXTURE0);
@@ -4782,7 +4779,7 @@ TEST_P(Texture2DTestES3, DepthTexturesWithMipmaps)
     // Seems to fail on AMD D3D11. Possibly driver bug. http://anglebug.com/3342
     ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsD3D11());
 
-    // TODO(cnorthrop): Also failing on Vulkan/Windows/AMD. http://anglebug.com/3148
+    // TODO(cnorthrop): Also failing on Vulkan/Windows/AMD. http://anglebug.com/3950
     ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsVulkan());
 
     const int size = getWindowWidth();
@@ -5406,7 +5403,7 @@ TEST_P(Texture2DTestES3, GenerateMipmapAndBaseLevelLUMA)
 // this led to not sampling your texture data when minification occurred.
 TEST_P(Texture2DTestES3, MinificationWithSamplerNoMipmapping)
 {
-    // TODO: Triage this failure on Vulkan: http://anglebug.com/3148
+    // TODO: Triage this failure on Vulkan: http://anglebug.com/3950
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr char kVS[] =

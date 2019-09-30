@@ -3012,7 +3012,7 @@ TEST_P(ComputeShaderTest, ImageStoreMipmapSlice)
     // TODO(xinghua.cao@intel.com): http://anglebug.com/3101
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
 
-    // Non-zero-level render target attachments are not yet supported.  http://anglebug.com/3148
+    // Non-zero-level render target attachments are not yet supported.  http://anglebug.com/3184
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     GLTexture texture[2];

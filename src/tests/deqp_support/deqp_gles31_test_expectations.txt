@@ -650,14 +650,13 @@
 // Stencil textures (some missing support for base level):
 3683 VULKAN PIXEL2 : dEQP-GLES31.functional.stencil_texturing.format.* = FAIL
 3683 VULKAN PIXEL2 : dEQP-GLES31.functional.stencil_texturing.misc.compare_mode_effect = FAIL
-3148 VULKAN : dEQP-GLES31.functional.stencil_texturing.misc.base_level = SKIP
+
+// Need to support non-color when staging image updates
+3949 VULKAN : dEQP-GLES31.functional.stencil_texturing.misc.base_level = SKIP
 
 // Multisampled textures:
 3565 VULKAN : dEQP-GLES31.functional.texture.multisample.* = SKIP
 3565 VULKAN : dEQP-GLES31.functional.state_query.texture*multisample.* = SKIP
-
-// Base texture level:
-3148 VULKAN : dEQP-GLES31.functional.texture.gather.*base_level* = SKIP
 
 // Vulkan creates the image view with the same format as the texture.
 3885 VULKAN : dEQP-GLES31.functional.image_load_store.*.format_reinterpret.* = FAIL
