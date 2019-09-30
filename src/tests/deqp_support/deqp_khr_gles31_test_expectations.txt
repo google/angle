@@ -45,15 +45,9 @@
 // Multisampled textures:
 3565 VULKAN : KHR-GLES31.core.texture_storage_multisample.* = SKIP
 
-// 2D array textures:
-3189 VULKAN : KHR-GLES31.core.texture_gather*2darray = SKIP
-3189 VULKAN : KHR-GLES31.core.layout_binding.sampler2DArray_* = SKIP
-
-// 3D textures:
-3188 VULKAN : KHR-GLES31.core.layout_binding.sampler3D_* = SKIP
-
-// Base texture level:
-3184 VULKAN : KHR-GLES31.core.texture*base-level* = SKIP
+// 2D array and 3D textures for compute shaders:
+3810 VULKAN : KHR-GLES31.core.layout_binding.sampler2DArray_layout_binding_texture_ComputeShader = SKIP
+3810 VULKAN : KHR-GLES31.core.layout_binding.sampler3D_layout_binding_texture_ComputeShader = SKIP
 
 // Program Pipeline Objects:
 3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-draw-calls2 = FAIL
