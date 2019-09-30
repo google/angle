@@ -36,8 +36,8 @@
 3695 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.rgb*32f = FAIL
 
 // Depth/stencil related failures.
-3457 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth24_stencil8 = FAIL
-3457 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth32f_stencil8 = FAIL
+3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth24_stencil8 = FAIL
+3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth32f_stencil8 = FAIL
 
 // CopyTexImage conversion actually failing the test code.
 3458 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_texture2d = FAIL
