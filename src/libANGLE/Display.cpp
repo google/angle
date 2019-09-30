@@ -1389,8 +1389,8 @@ void Display::initVendorString()
 void Display::initializeFrontendFeatures()
 {
     // Enable on all Impls
-    mFrontendFeatures.loseContextOnOutOfMemory.enabled          = true;
-    mFrontendFeatures.scalarizeVecAndMatConstructorArgs.enabled = true;
+    ANGLE_FEATURE_CONDITION((&mFrontendFeatures), loseContextOnOutOfMemory, true)
+    ANGLE_FEATURE_CONDITION((&mFrontendFeatures), scalarizeVecAndMatConstructorArgs, true)
 
     mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
 
@@ -1542,6 +1542,9 @@ const char *Display::queryStringi(const EGLint name, const EGLint index)
             break;
         case EGL_FEATURE_STATUS_ANGLE:
             result = angle::FeatureStatusToString(mFeatures[index]->enabled);
+            break;
+        case EGL_FEATURE_CONDITION_ANGLE:
+            result = mFeatures[index]->condition;
             break;
         default:
             UNREACHABLE();

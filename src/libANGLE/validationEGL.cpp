@@ -3941,6 +3941,7 @@ Error ValidateQueryStringiANGLE(const Display *display, EGLint name, EGLint inde
         case EGL_FEATURE_DESCRIPTION_ANGLE:
         case EGL_FEATURE_BUG_ANGLE:
         case EGL_FEATURE_STATUS_ANGLE:
+        case EGL_FEATURE_CONDITION_ANGLE:
             break;
         default:
             return EglBadParameter() << "name is not valid.";
