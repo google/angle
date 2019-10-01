@@ -1089,8 +1089,7 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
         std::string fsOutputVariableQualifier;
         std::string sampleFunction;
         if (sourceComponentType != GL_UNSIGNED_INT && destComponentType != GL_UNSIGNED_INT &&
-            (sourceTextureType == gl::TextureType::_2D ||
-             sourceTextureType == gl::TextureType::External))
+            sourceTextureType != gl::TextureType::Rectangle)
         {
             // Simple case, float-to-float with 2D or external textures.  Only needs ESSL/GLSL 100
             version                   = "100";
@@ -1169,6 +1168,11 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
                     samplerType = "samplerExternalOES";
                     break;
 
+                case gl::TextureType::Rectangle:
+                    ASSERT(sourceComponentType != GL_UNSIGNED_INT);
+                    samplerType = "sampler2DRect";
+                    break;
+
                 default:
                     UNREACHABLE();
                     break;
@@ -1193,6 +1197,17 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
                     extensionRequirements = "#extension GL_OES_EGL_image_external : require";
                     break;
 
+                case gl::TextureType::Rectangle:
+                    if (mFunctions->hasGLExtension("GL_ARB_texture_rectangle"))
+                    {
+                        extensionRequirements = "#extension GL_ARB_texture_rectangle : require";
+                    }
+                    else
+                    {
+                        ASSERT(mFunctions->isAtLeastGL(gl::Version(3, 1)));
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -1210,10 +1225,18 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
                     break;
 
                 default:  //  float type
-                    ASSERT(version == "100");
-                    outputType         = "";
-                    outputVariableName = "gl_FragColor";
-                    outputMultiplier   = "1.0";
+                    if (version == "100")
+                    {
+                        outputType         = "";
+                        outputVariableName = "gl_FragColor";
+                        outputMultiplier   = "1.0";
+                    }
+                    else
+                    {
+                        outputType         = "vec4";
+                        outputVariableName = "outputFloat";
+                        outputMultiplier   = "1.0";
+                    }
                     break;
             }
 
@@ -1239,9 +1262,24 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
             fsSourceStream << "void main()\n";
             fsSourceStream << "{\n";
 
-            // discard if the texcoord is outside (0, 1)^2 so the blitframebuffer workaround
-            // doesn't write when the point sampled is outside of the source framebuffer.
-            fsSourceStream << "    if (clamp(v_texcoord, vec2(0.0), vec2(1.0)) != v_texcoord)\n";
+            std::string maxTexcoord;
+            switch (sourceTextureType)
+            {
+                case gl::TextureType::Rectangle:
+                    // Valid texcoords are within source texture size
+                    maxTexcoord = "vec2(textureSize(u_source_texture))";
+                    break;
+
+                default:
+                    // Valid texcoords are in [0, 1]
+                    maxTexcoord = "vec2(1.0)";
+                    break;
+            }
+
+            // discard if the texcoord is invalid so the blitframebuffer workaround doesn't
+            // write when the point sampled is outside of the source framebuffer.
+            fsSourceStream << "    if (clamp(v_texcoord, vec2(0.0), " << maxTexcoord
+                           << ") != v_texcoord)\n";
             fsSourceStream << "    {\n";
             fsSourceStream << "        discard;\n";
             fsSourceStream << "    }\n";

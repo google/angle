@@ -893,10 +893,7 @@ angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
     // Behavior for now is to fallback to CPU readback implementation if the destination texture
     // is a luminance format. The correct solution is to handle both source and destination in the
     // luma workaround.
-    // Temporarily disable GPU copies from rectangle textures until sampling issues are resolved in
-    // http://crbug.com/990368
-    if (!destSRGB && source->getType() != gl::TextureType::Rectangle &&
-        !destLevelInfo.lumaWorkaround.enabled &&
+    if (!destSRGB && !destLevelInfo.lumaWorkaround.enabled &&
         nativegl::SupportsNativeRendering(functions, getType(), destLevelInfo.nativeInternalFormat))
     {
         bool copySucceeded = false;
