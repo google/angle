@@ -307,7 +307,7 @@ angle::Result BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *con
     ANGLE_TRY(initializeResources(context));
 
     BlitProgram *blitProgram = nullptr;
-    ANGLE_TRY(getBlitProgram(context, BlitProgramType::FLOAT_TO_FLOAT, &blitProgram));
+    ANGLE_TRY(getBlitProgram(context, gl::TextureType::_2D, GL_FLOAT, GL_FLOAT, &blitProgram));
 
     // Blit the framebuffer to the first scratch texture
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
@@ -408,7 +408,7 @@ angle::Result BlitGL::blitColorBufferWithShader(const gl::Context *context,
     ANGLE_TRY(initializeResources(context));
 
     BlitProgram *blitProgram = nullptr;
-    ANGLE_TRY(getBlitProgram(context, BlitProgramType::FLOAT_TO_FLOAT, &blitProgram));
+    ANGLE_TRY(getBlitProgram(context, gl::TextureType::_2D, GL_FLOAT, GL_FLOAT, &blitProgram));
 
     // We'll keep things simple by removing reversed coordinates from the rectangles. In the end
     // we'll apply the reversal to the source texture coordinates if needed. The destination
@@ -550,10 +550,9 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    BlitProgramType blitProgramType =
-        getBlitProgramType(source->getType(), sourceComponentType, destComponentType);
     BlitProgram *blitProgram = nullptr;
-    ANGLE_TRY(getBlitProgram(context, blitProgramType, &blitProgram));
+    ANGLE_TRY(getBlitProgram(context, source->getType(), sourceComponentType, destComponentType,
+                             &blitProgram));
 
     // Setup the source texture
     if (needsLumaWorkaround)
@@ -1068,40 +1067,15 @@ angle::Result BlitGL::setScratchTextureParameter(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-BlitGL::BlitProgramType BlitGL::getBlitProgramType(gl::TextureType sourceTextureType,
-                                                   GLenum sourceComponentType,
-                                                   GLenum destComponentType)
-{
-    if (sourceComponentType == GL_UNSIGNED_INT)
-    {
-        ASSERT(destComponentType == GL_UNSIGNED_INT);
-        return BlitProgramType::UINT_TO_UINT;
-    }
-    else
-    {
-        // Source is a float type
-        ASSERT(sourceComponentType != GL_INT);
-        if (destComponentType == GL_UNSIGNED_INT)
-        {
-            return sourceTextureType == gl::TextureType::External
-                       ? BlitProgramType::FLOAT_TO_UINT_EXTERNAL
-                       : BlitProgramType::FLOAT_TO_UINT;
-        }
-        else
-        {
-            // Dest is a float type
-            return sourceTextureType == gl::TextureType::External
-                       ? BlitProgramType::FLOAT_TO_FLOAT_EXTERNAL
-                       : BlitProgramType::FLOAT_TO_FLOAT;
-        }
-    }
-}
-
 angle::Result BlitGL::getBlitProgram(const gl::Context *context,
-                                     BlitProgramType type,
+                                     gl::TextureType sourceTextureType,
+                                     GLenum sourceComponentType,
+                                     GLenum destComponentType,
                                      BlitProgram **program)
 {
-    BlitProgram &result = mBlitPrograms[type];
+
+    BlitProgramType programType(sourceTextureType, sourceComponentType, destComponentType);
+    BlitProgram &result = mBlitPrograms[programType];
     if (result.program == 0)
     {
         result.program = ANGLE_GL_TRY(context, mFunctions->createProgram());
@@ -1114,9 +1088,11 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
         std::string fsInputVariableQualifier;
         std::string fsOutputVariableQualifier;
         std::string sampleFunction;
-        if (type == BlitProgramType::FLOAT_TO_FLOAT ||
-            type == BlitProgramType::FLOAT_TO_FLOAT_EXTERNAL)
+        if (sourceComponentType != GL_UNSIGNED_INT && destComponentType != GL_UNSIGNED_INT &&
+            (sourceTextureType == gl::TextureType::_2D ||
+             sourceTextureType == gl::TextureType::External))
         {
+            // Simple case, float-to-float with 2D or external textures.  Only needs ESSL/GLSL 100
             version                   = "100";
             vsInputVariableQualifier  = "attribute";
             vsOutputVariableQualifier = "varying";
@@ -1173,26 +1149,24 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
         {
             // Sampling texture uniform changes depending on source texture type.
             std::string samplerType;
-            std::string samplerResultType;
-            std::string extensionRequirements;
-            switch (type)
+            switch (sourceTextureType)
             {
-                case BlitProgramType::FLOAT_TO_FLOAT:
-                case BlitProgramType::FLOAT_TO_UINT:
-                    samplerType       = "sampler2D";
-                    samplerResultType = "vec4";
+                case gl::TextureType::_2D:
+                    switch (sourceComponentType)
+                    {
+                        case GL_UNSIGNED_INT:
+                            samplerType = "usampler2D";
+                            break;
+
+                        default:  // Float type
+                            samplerType = "sampler2D";
+                            break;
+                    }
                     break;
 
-                case BlitProgramType::FLOAT_TO_FLOAT_EXTERNAL:
-                case BlitProgramType::FLOAT_TO_UINT_EXTERNAL:
-                    samplerType           = "samplerExternalOES";
-                    samplerResultType     = "vec4";
-                    extensionRequirements = "#extension GL_OES_EGL_image_external : require";
-                    break;
-
-                case BlitProgramType::UINT_TO_UINT:
-                    samplerType       = "usampler2D";
-                    samplerResultType = "uvec4";
+                case gl::TextureType::External:
+                    ASSERT(sourceComponentType != GL_UNSIGNED_INT);
+                    samplerType = "samplerExternalOES";
                     break;
 
                 default:
@@ -1200,30 +1174,46 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
                     break;
             }
 
+            std::string samplerResultType;
+            switch (sourceComponentType)
+            {
+                case GL_UNSIGNED_INT:
+                    samplerResultType = "uvec4";
+                    break;
+
+                default:  // Float type
+                    samplerResultType = "vec4";
+                    break;
+            }
+
+            std::string extensionRequirements;
+            switch (sourceTextureType)
+            {
+                case gl::TextureType::External:
+                    extensionRequirements = "#extension GL_OES_EGL_image_external : require";
+                    break;
+
+                default:
+                    break;
+            }
+
             // Output variables depend on the output type
             std::string outputType;
             std::string outputVariableName;
             std::string outputMultiplier;
-            switch (type)
+            switch (destComponentType)
             {
-                case BlitProgramType::FLOAT_TO_FLOAT:
-                case BlitProgramType::FLOAT_TO_FLOAT_EXTERNAL:
-                    ASSERT(version == "100");
-                    outputType         = "";
-                    outputVariableName = "gl_FragColor";
-                    outputMultiplier   = "1.0";
-                    break;
-
-                case BlitProgramType::FLOAT_TO_UINT:
-                case BlitProgramType::FLOAT_TO_UINT_EXTERNAL:
-                case BlitProgramType::UINT_TO_UINT:
+                case GL_UNSIGNED_INT:
                     outputType         = "uvec4";
                     outputVariableName = "outputUint";
                     outputMultiplier   = "255.0";
                     break;
 
-                default:
-                    UNREACHABLE();
+                default:  //  float type
+                    ASSERT(version == "100");
+                    outputType         = "";
+                    outputVariableName = "gl_FragColor";
+                    outputMultiplier   = "1.0";
                     break;
             }
 
