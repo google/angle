@@ -1300,6 +1300,46 @@ angle::Result LineLoopHelper::streamIndicesIndirect(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+angle::Result LineLoopHelper::streamArrayIndirect(ContextVk *contextVk,
+                                                  size_t vertexCount,
+                                                  vk::BufferHelper *arrayIndirectBuffer,
+                                                  VkDeviceSize arrayIndirectBufferOffset,
+                                                  vk::BufferHelper **indexBufferOut,
+                                                  VkDeviceSize *indexBufferOffsetOut,
+                                                  vk::BufferHelper **indexIndirectBufferOut,
+                                                  VkDeviceSize *indexIndirectBufferOffsetOut)
+{
+    auto unitSize        = sizeof(uint32_t);
+    size_t allocateBytes = static_cast<size_t>((vertexCount + 1) * unitSize);
+
+    mDynamicIndexBuffer.releaseInFlightBuffers(contextVk);
+    mDynamicIndirectBuffer.releaseInFlightBuffers(contextVk);
+
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(contextVk, allocateBytes, nullptr, nullptr,
+                                           indexBufferOffsetOut, nullptr));
+    *indexBufferOut = mDynamicIndexBuffer.getCurrentBuffer();
+
+    ANGLE_TRY(mDynamicIndirectBuffer.allocate(contextVk, sizeof(VkDrawIndexedIndirectCommand),
+                                              nullptr, nullptr, indexIndirectBufferOffsetOut,
+                                              nullptr));
+    *indexIndirectBufferOut = mDynamicIndirectBuffer.getCurrentBuffer();
+
+    vk::BufferHelper *destIndexBuffer    = mDynamicIndexBuffer.getCurrentBuffer();
+    vk::BufferHelper *destIndirectBuffer = mDynamicIndirectBuffer.getCurrentBuffer();
+
+    // Copy relevant section of the source into destination at allocated offset.  Note that the
+    // offset returned by allocate() above is in bytes. As is the indices offset pointer.
+    UtilsVk::ConvertLineLoopArrayIndirectParameters params = {};
+    params.indirectBufferOffset    = static_cast<uint32_t>(arrayIndirectBufferOffset);
+    params.dstIndirectBufferOffset = static_cast<uint32_t>(*indexIndirectBufferOffsetOut);
+    params.dstIndexBufferOffset    = static_cast<uint32_t>(*indexBufferOffsetOut);
+
+    ANGLE_TRY(contextVk->getUtils().convertLineLoopArrayIndirectBuffer(
+        contextVk, arrayIndirectBuffer, destIndirectBuffer, destIndexBuffer, params));
+
+    return angle::Result::Continue;
+}
+
 void LineLoopHelper::release(ContextVk *contextVk)
 {
     mDynamicIndexBuffer.release(contextVk->getRenderer());

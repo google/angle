@@ -393,6 +393,14 @@ void UtilsVk::destroy(VkDevice device)
     {
         program.destroy(device);
     }
+    for (vk::ShaderProgramHelper &program : mConvertIndirectLineLoopPrograms)
+    {
+        program.destroy(device);
+    }
+    for (vk::ShaderProgramHelper &program : mConvertIndexIndirectLineLoopPrograms)
+    {
+        program.destroy(device);
+    }
     for (vk::ShaderProgramHelper &program : mConvertVertexPrograms)
     {
         program.destroy(device);
@@ -515,10 +523,11 @@ angle::Result UtilsVk::ensureConvertIndexIndirectResourcesInitialized(ContextVk 
         return angle::Result::Continue;
     }
 
-    VkDescriptorPoolSize setSizes[3] = {
-        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},  // source index buffer
+    VkDescriptorPoolSize setSizes[4] = {
         {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},  // dest index buffer
-        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},  // cmd buffer
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},  // source index buffer
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},  // src indirect buffer
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},  // dest indirect buffer
     };
 
     return ensureResourcesInitialized(contextVk, Function::ConvertIndexIndirectBuffer, setSizes,
@@ -543,6 +552,24 @@ angle::Result UtilsVk::ensureConvertIndexIndirectLineLoopResourcesInitialized(Co
     return ensureResourcesInitialized(contextVk, Function::ConvertIndexIndirectLineLoopBuffer,
                                       setSizes, ArraySize(setSizes),
                                       sizeof(ConvertIndexIndirectLineLoopShaderParams));
+}
+
+angle::Result UtilsVk::ensureConvertIndirectLineLoopResourcesInitialized(ContextVk *contextVk)
+{
+    if (mPipelineLayouts[Function::ConvertIndirectLineLoopBuffer].valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    VkDescriptorPoolSize setSizes[3] = {
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},  // cmd buffer
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},  // dest cmd buffer
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},  // dest index buffer
+    };
+
+    return ensureResourcesInitialized(contextVk, Function::ConvertIndirectLineLoopBuffer, setSizes,
+                                      ArraySize(setSizes),
+                                      sizeof(ConvertIndirectLineLoopShaderParams));
 }
 
 angle::Result UtilsVk::ensureConvertVertexResourcesInitialized(ContextVk *contextVk)
@@ -877,44 +904,52 @@ angle::Result UtilsVk::convertIndexBuffer(ContextVk *contextVk,
 }
 
 angle::Result UtilsVk::convertIndexIndirectBuffer(ContextVk *contextVk,
-                                                  vk::BufferHelper *cmdBuffer,
-                                                  vk::BufferHelper *dest,
-                                                  vk::BufferHelper *src,
+                                                  vk::BufferHelper *srcIndirectBuf,
+                                                  vk::BufferHelper *srcIndexBuf,
+                                                  vk::BufferHelper *dstIndirectBuf,
+                                                  vk::BufferHelper *dstIndexBuf,
                                                   const ConvertIndexIndirectParameters &params)
 {
     ANGLE_TRY(ensureConvertIndexIndirectResourcesInitialized(contextVk));
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(dest->recordCommands(contextVk, &commandBuffer));
+    ANGLE_TRY(dstIndexBuf->recordCommands(contextVk, &commandBuffer));
 
     // Tell src we are going to read from it and dest it's being written to.
-    src->onReadByBuffer(contextVk, dest, VK_ACCESS_SHADER_READ_BIT, VK_ACCESS_SHADER_WRITE_BIT);
-    cmdBuffer->onReadByBuffer(contextVk, dest, VK_ACCESS_SHADER_READ_BIT,
-                              VK_ACCESS_SHADER_WRITE_BIT);
+    srcIndexBuf->onReadByBuffer(contextVk, dstIndexBuf, VK_ACCESS_SHADER_READ_BIT,
+                                VK_ACCESS_SHADER_WRITE_BIT);
+    srcIndirectBuf->onReadByBuffer(contextVk, dstIndexBuf, VK_ACCESS_SHADER_READ_BIT,
+                                   VK_ACCESS_SHADER_WRITE_BIT);
+
+    ANGLE_TRY(dstIndirectBuf->recordCommands(contextVk, &commandBuffer));
+    srcIndirectBuf->onReadByBuffer(contextVk, dstIndirectBuf, VK_ACCESS_SHADER_READ_BIT,
+                                   VK_ACCESS_SHADER_WRITE_BIT);
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(allocateDescriptorSet(contextVk, Function::ConvertIndexIndirectBuffer,
                                     &descriptorPoolBinding, &descriptorSet));
 
-    std::array<VkDescriptorBufferInfo, 3> buffers = {{
-        {dest->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
-        {src->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
-        {cmdBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+    std::array<VkDescriptorBufferInfo, 4> buffers = {{
+        {dstIndexBuf->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+        {srcIndexBuf->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+        {srcIndirectBuf->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+        {dstIndirectBuf->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
     }};
 
     VkWriteDescriptorSet writeInfo = {};
     writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeInfo.dstSet               = descriptorSet;
     writeInfo.dstBinding           = kConvertIndexDestinationBinding;
-    writeInfo.descriptorCount      = 3;
+    writeInfo.descriptorCount      = 4;
     writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
     writeInfo.pBufferInfo          = buffers.data();
 
     vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
 
-    ConvertIndexIndirectShaderParams shaderParams = {params.indirectBufferOffset >> 2,
-                                                     params.dstOffset >> 2, params.maxIndex, 0};
+    ConvertIndexIndirectShaderParams shaderParams = {params.srcIndirectBufOffset >> 2,
+                                                     params.dstIndexBufOffset >> 2, params.maxIndex,
+                                                     params.dstIndirectBufOffset >> 2};
 
     uint32_t flags = vk::InternalShader::ConvertIndex_comp::kIsIndirect;
     if (contextVk->getState().isPrimitiveRestartEnabled())
@@ -944,25 +979,25 @@ angle::Result UtilsVk::convertIndexIndirectBuffer(ContextVk *contextVk,
 angle::Result UtilsVk::convertLineLoopIndexIndirectBuffer(
     ContextVk *contextVk,
     vk::BufferHelper *srcIndirectBuffer,
-    vk::BufferHelper *destIndirectBuffer,
-    vk::BufferHelper *destIndexBuffer,
+    vk::BufferHelper *dstIndirectBuffer,
+    vk::BufferHelper *dstIndexBuffer,
     vk::BufferHelper *srcIndexBuffer,
     const ConvertLineLoopIndexIndirectParameters &params)
 {
     ANGLE_TRY(ensureConvertIndexIndirectLineLoopResourcesInitialized(contextVk));
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(destIndexBuffer->recordCommands(contextVk, &commandBuffer));
+    ANGLE_TRY(dstIndexBuffer->recordCommands(contextVk, &commandBuffer));
 
     // Tell src we are going to read from it and dest it's being written to.
-    srcIndexBuffer->onReadByBuffer(contextVk, destIndexBuffer, VK_ACCESS_SHADER_READ_BIT,
+    srcIndexBuffer->onReadByBuffer(contextVk, dstIndexBuffer, VK_ACCESS_SHADER_READ_BIT,
                                    VK_ACCESS_SHADER_WRITE_BIT);
-    srcIndirectBuffer->onReadByBuffer(contextVk, destIndexBuffer, VK_ACCESS_SHADER_READ_BIT,
+    srcIndirectBuffer->onReadByBuffer(contextVk, dstIndexBuffer, VK_ACCESS_SHADER_READ_BIT,
                                       VK_ACCESS_SHADER_WRITE_BIT);
 
-    ANGLE_TRY(destIndirectBuffer->recordCommands(contextVk, &commandBuffer));
+    ANGLE_TRY(dstIndirectBuffer->recordCommands(contextVk, &commandBuffer));
 
-    srcIndirectBuffer->onReadByBuffer(contextVk, destIndirectBuffer, VK_ACCESS_SHADER_READ_BIT,
+    srcIndirectBuffer->onReadByBuffer(contextVk, dstIndirectBuffer, VK_ACCESS_SHADER_READ_BIT,
                                       VK_ACCESS_SHADER_WRITE_BIT);
 
     VkDescriptorSet descriptorSet;
@@ -971,10 +1006,10 @@ angle::Result UtilsVk::convertLineLoopIndexIndirectBuffer(
                                     &descriptorPoolBinding, &descriptorSet));
 
     std::array<VkDescriptorBufferInfo, 4> buffers = {{
-        {srcIndirectBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
-        {destIndirectBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
-        {destIndexBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+        {dstIndexBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
         {srcIndexBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+        {srcIndirectBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+        {dstIndirectBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
     }};
 
     VkWriteDescriptorSet writeInfo = {};
@@ -1002,8 +1037,73 @@ angle::Result UtilsVk::convertLineLoopIndexIndirectBuffer(
                                                                                  &shader));
 
     ANGLE_TRY(setupProgram(contextVk, Function::ConvertIndexIndirectLineLoopBuffer, shader, nullptr,
-                           &mConvertIndexPrograms[flags], nullptr, descriptorSet, &shaderParams,
-                           sizeof(ConvertIndexIndirectLineLoopShaderParams), commandBuffer));
+                           &mConvertIndexIndirectLineLoopPrograms[flags], nullptr, descriptorSet,
+                           &shaderParams, sizeof(ConvertIndexIndirectLineLoopShaderParams),
+                           commandBuffer));
+
+    commandBuffer->dispatch(1, 1, 1);
+
+    descriptorPoolBinding.reset();
+
+    return angle::Result::Continue;
+}
+
+angle::Result UtilsVk::convertLineLoopArrayIndirectBuffer(
+    ContextVk *contextVk,
+    vk::BufferHelper *srcIndirectBuffer,
+    vk::BufferHelper *destIndirectBuffer,
+    vk::BufferHelper *destIndexBuffer,
+    const ConvertLineLoopArrayIndirectParameters &params)
+{
+    ANGLE_TRY(ensureConvertIndirectLineLoopResourcesInitialized(contextVk));
+
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(destIndexBuffer->recordCommands(contextVk, &commandBuffer));
+
+    // Tell src we are going to read from it and dest it's being written to.
+    srcIndirectBuffer->onReadByBuffer(contextVk, destIndexBuffer, VK_ACCESS_SHADER_READ_BIT,
+                                      VK_ACCESS_SHADER_WRITE_BIT);
+
+    ANGLE_TRY(destIndirectBuffer->recordCommands(contextVk, &commandBuffer));
+
+    srcIndirectBuffer->onReadByBuffer(contextVk, destIndirectBuffer, VK_ACCESS_SHADER_READ_BIT,
+                                      VK_ACCESS_SHADER_WRITE_BIT);
+
+    VkDescriptorSet descriptorSet;
+    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
+    ANGLE_TRY(allocateDescriptorSet(contextVk, Function::ConvertIndirectLineLoopBuffer,
+                                    &descriptorPoolBinding, &descriptorSet));
+
+    std::array<VkDescriptorBufferInfo, 3> buffers = {{
+        {srcIndirectBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+        {destIndirectBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+        {destIndexBuffer->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+    }};
+
+    VkWriteDescriptorSet writeInfo = {};
+    writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfo.dstSet               = descriptorSet;
+    writeInfo.dstBinding           = kConvertIndexDestinationBinding;
+    writeInfo.descriptorCount      = 3;
+    writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    writeInfo.pBufferInfo          = buffers.data();
+
+    vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
+
+    ConvertIndirectLineLoopShaderParams shaderParams = {params.indirectBufferOffset >> 2,
+                                                        params.dstIndirectBufferOffset >> 2,
+                                                        params.dstIndexBufferOffset >> 2};
+
+    uint32_t flags = 0;
+
+    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    ANGLE_TRY(
+        contextVk->getShaderLibrary().getConvertIndirectLineLoop_comp(contextVk, flags, &shader));
+
+    ANGLE_TRY(setupProgram(contextVk, Function::ConvertIndirectLineLoopBuffer, shader, nullptr,
+                           &mConvertIndirectLineLoopPrograms[flags], nullptr, descriptorSet,
+                           &shaderParams, sizeof(ConvertIndirectLineLoopShaderParams),
+                           commandBuffer));
 
     commandBuffer->dispatch(1, 1, 1);
 

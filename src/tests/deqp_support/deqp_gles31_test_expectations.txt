@@ -623,10 +623,6 @@
 // Block name matching failure:
 3459 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.mismatch_with_and_without_instance_name = FAIL
 
-// Indirect draw:
-3564 VULKAN : dEQP-GLES31.functional.draw_indirect.draw_arrays_indirect.line_loop.* = SKIP
-3564 VULKAN : dEQP-GLES31.functional.draw_indirect.random.* = SKIP
-
 // Tessellation geometry interaction:
 3572 VULKAN : dEQP-GLES31.functional.tessellation_geometry_interaction.* = FAIL
 

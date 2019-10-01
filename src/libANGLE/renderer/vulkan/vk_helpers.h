@@ -25,8 +25,11 @@ constexpr VkBufferUsageFlags kVertexBufferUsageFlags =
     VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 constexpr VkBufferUsageFlags kIndexBufferUsageFlags =
     VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-constexpr size_t kVertexBufferAlignment = 4;
-constexpr size_t kIndexBufferAlignment  = 4;
+constexpr VkBufferUsageFlags kIndirectBufferUsageFlags =
+    VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+constexpr size_t kVertexBufferAlignment   = 4;
+constexpr size_t kIndexBufferAlignment    = 4;
+constexpr size_t kIndirectBufferAlignment = 4;
 
 constexpr VkBufferUsageFlags kStagingBufferFlags =
     VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
@@ -431,6 +434,15 @@ class LineLoopHelper final : angle::NonCopyable
                                         VkDeviceSize *indexBufferOffsetOut,
                                         vk::BufferHelper **indirectBufferOut,
                                         VkDeviceSize *indirectBufferOffsetOut);
+
+    angle::Result streamArrayIndirect(ContextVk *contextVk,
+                                      size_t vertexCount,
+                                      vk::BufferHelper *arrayIndirectBuffer,
+                                      VkDeviceSize arrayIndirectBufferOffset,
+                                      vk::BufferHelper **indexBufferOut,
+                                      VkDeviceSize *indexBufferOffsetOut,
+                                      vk::BufferHelper **indexIndirectBufferOut,
+                                      VkDeviceSize *indexIndirectBufferOffsetOut);
 
     void release(ContextVk *contextVk);
     void destroy(VkDevice device);

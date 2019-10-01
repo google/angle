@@ -549,13 +549,6 @@
 // Flat shading:
 3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
 
-// Instanced rendering:
-2672 VULKAN : dEQP-GLES3.functional.draw.draw_arrays_instanced.line_loop.* = SKIP
-2672 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
-2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
-// - Primitive restart with line loops:
-2672 VULKAN : dEQP-GLES3.functional.primitive_restart.*.line_loop.*instanced = SKIP
-
 // Misc unimplemented:
 
 // Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).  Passes on 418.12 on Linux.
@@ -569,6 +562,11 @@
 2830 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.fbo.texture_2d.primitives.lines = FAIL
 2830 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.primitives.line* = FAIL
 2808 ANDROID VULKAN : dEQP-GLES3.functional.shaders.builtin_variable.fragcoord_w = FAIL
+
+// Pixel driver issues
+4024 PIXEL2 VULKAN : dEQP-GLES3.functional.draw.random.5 = SKIP
+4024 PIXEL2 VULKAN : dEQP-GLES3.functional.draw.random.49 = SKIP
+4024 PIXEL2 VULKAN : dEQP-GLES3.functional.draw.random.96 = FAIL
 
 // Fixed in later driver versions.
 2727 VULKAN ANDROID : dEQP-GLES3.functional.shaders.builtin_variable.pointcoord = FAIL

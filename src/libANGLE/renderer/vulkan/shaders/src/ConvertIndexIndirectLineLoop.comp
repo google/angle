@@ -16,29 +16,29 @@
 
 layout (local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
 
-layout (set = 0, binding = 0) readonly buffer cmd
+layout (set = 0, binding = 0) buffer dst
+{
+    // Shader invocation outputs linelist(s) here.
+    uint dstData[];
+};
+
+layout (set = 0, binding = 1) readonly buffer src
+{
+    // Source index buffer
+    uint srcData[];
+};
+
+layout (set = 0, binding = 2) readonly buffer cmd
 {
     // Shader invocations read the cmd data to determine what indices to convert
     // Command data at offset cmdOffset of buffer
     uint cmdData[];
 };
 
-layout (set = 0, binding = 1) buffer dstCmd
+layout (set = 0, binding = 3) buffer dstCmd
 {
     // Shader outputs updated indirect buffer here.
     uint dstCmdData[];
-};
-
-layout (set = 0, binding = 2) buffer dst
-{
-    // Shader invocation outputs linelist(s) here.
-    uint dstData[];
-};
-
-layout (set = 0, binding = 3) readonly buffer src
-{
-    // Source index buffer
-    uint srcData[];
 };
 
 layout (push_constant) uniform PushConstants

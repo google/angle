@@ -55,6 +55,7 @@ angle_vulkan_internal_shaders = [
   "shaders/gen/ConvertIndex.comp.00000003.inc",
   "shaders/gen/ConvertIndexIndirectLineLoop.comp.00000000.inc",
   "shaders/gen/ConvertIndexIndirectLineLoop.comp.00000001.inc",
+  "shaders/gen/ConvertIndirectLineLoop.comp.00000000.inc",
   "shaders/gen/ConvertVertex.comp.00000000.inc",
   "shaders/gen/ConvertVertex.comp.00000001.inc",
   "shaders/gen/ConvertVertex.comp.00000002.inc",
