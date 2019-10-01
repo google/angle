@@ -3072,6 +3072,8 @@ void main()
 // pipeline input. It works well. See http://anglebug.com/3658
 TEST_P(ComputeShaderTest, DrawTexture1DispatchTexture2)
 {
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 precision highp sampler2D;

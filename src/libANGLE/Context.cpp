@@ -3313,6 +3313,11 @@ Extensions Context::generateSupportedExtensions() const
         {
             supportedExtensions.colorBufferHalfFloat = false;
         }
+
+        // Disable support for CHROMIUM_color_buffer_float_rgb[a] in ES 3.0+, these extensions are
+        // non-conformant in ES 3.0 and superseded by EXT_color_buffer_float.
+        supportedExtensions.colorBufferFloatRGB  = false;
+        supportedExtensions.colorBufferFloatRGBA = false;
     }
 
     // Some extensions are always available because they are implemented in the GL layer.

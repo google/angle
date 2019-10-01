@@ -536,8 +536,6 @@
 3676 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 
 // Formats:
-3677 ANDROID VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgba32f = FAIL
-3677 ANDROID VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgba32f = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.basic.int.* = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.basic.uint.* = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.array.int* = FAIL
