@@ -832,6 +832,10 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     ChoosePhysicalDevice(physicalDevices, mEnabledICD, &mPhysicalDevice,
                          &mPhysicalDeviceProperties);
 
+    mGarbageCollectionFlushThreshold =
+        static_cast<uint32_t>(mPhysicalDeviceProperties.limits.maxMemoryAllocationCount *
+                              kPercentMaxMemoryAllocationCount);
+
     vkGetPhysicalDeviceFeatures(mPhysicalDevice, &mPhysicalDeviceFeatures);
 
     // Ensure we can find a graphics queue family.

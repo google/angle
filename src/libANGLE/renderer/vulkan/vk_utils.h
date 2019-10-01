@@ -292,7 +292,7 @@ class StagingBuffer final : angle::NonCopyable
     void release(ContextVk *contextVk);
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, VkDeviceSize size, StagingUsage usage);
+    angle::Result init(ContextVk *context, VkDeviceSize size, StagingUsage usage);
 
     Buffer &getBuffer() { return mBuffer; }
     const Buffer &getBuffer() const { return mBuffer; }

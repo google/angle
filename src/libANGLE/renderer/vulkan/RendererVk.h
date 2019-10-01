@@ -197,6 +197,11 @@ class RendererVk : angle::NonCopyable
 
     void onCompletedSerial(Serial serial);
 
+    bool shouldCleanupGarbage()
+    {
+        return (mSharedGarbage.size() > mGarbageCollectionFlushThreshold);
+    }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -280,6 +285,11 @@ class RendererVk : angle::NonCopyable
     // Latest validation data for debug overlay.
     std::string mLastValidationMessage;
     uint32_t mValidationMessageCount;
+
+    // How close to VkPhysicalDeviceLimits::maxMemoryAllocationCount we allow ourselves to get
+    static constexpr double kPercentMaxMemoryAllocationCount = 0.3;
+    // How many objects to garbage collect before issuing a flush()
+    uint32_t mGarbageCollectionFlushThreshold;
 };
 
 }  // namespace rx

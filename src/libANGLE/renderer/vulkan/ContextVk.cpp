@@ -2909,6 +2909,11 @@ void ContextVk::insertWaitSemaphore(const vk::Semaphore *waitSemaphore)
     mWaitSemaphores.push_back(waitSemaphore->getHandle());
 }
 
+bool ContextVk::shouldFlush()
+{
+    return getRenderer()->shouldCleanupGarbage();
+}
+
 angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 {
     if (mCommandGraph.empty() && !signalSemaphore && mWaitSemaphores.empty())
