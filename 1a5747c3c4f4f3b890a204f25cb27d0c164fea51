@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c06f3e6_bd01ce9a",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp",
+        "patchSetId": 8
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-10-02T17:19:37Z",
+      "side": 1,
+      "message": "Can we just use max here?",
+      "range": {
+        "startLine": 289,
+        "startChar": 12,
+        "endLine": 289,
+        "endChar": 56
+      },
+      "revId": "1a5747c3c4f4f3b890a204f25cb27d0c164fea51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
