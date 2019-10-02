@@ -92,7 +92,7 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.eglSync = true;
 
-    mNativeExtensions.vertexAttribType101010102 = true;
+    mNativeExtensions.vertexAttribType1010102 = true;
 
     // We use secondary command buffers almost everywhere and they require a feature to be
     // able to execute in the presence of queries.  As a result, we won't support queries

@@ -285,7 +285,8 @@ SrcType loadSourceComponent(uint cd)
         valueAsUint |= signExtension;
     }
     int valueAsInt = int(valueAsUint);
-    SrcType value = (2 * float(valueAsInt) + 1) / valueMask;
+    SrcType value = float(valueAsInt) / (valueMask >> 1);
+    value = max(value, float(-1));
 #elif UnormToFloat || RGB10A2UnormToFloat || RGB10X2UnormToFloat
     float positiveMax = valueMask;
     // Scale [0, P] to [0, 1]

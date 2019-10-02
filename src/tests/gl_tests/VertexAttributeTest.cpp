@@ -100,9 +100,15 @@ GLfloat Normalize2(T value)
 {
     static_assert(std::is_integral<T>::value, "Integer required.");
     if (std::is_signed<T>::value)
-        return static_cast<float>(value * 2 + 1) / 3.0f;
+    {
+        GLfloat outputValue = static_cast<float>(value) / 1.0f;
+        outputValue         = (outputValue >= -1.0f) ? (outputValue) : (-1.0f);
+        return outputValue;
+    }
     else
+    {
         return static_cast<float>(value) / 3.0f;
+    }
 }
 
 template <typename DestT, typename SrcT>
@@ -792,6 +798,8 @@ TEST_P(VertexAttributeTest, SignedPacked1010102ExtensionNormalized)
         expectedNormalizedTypeSize4[i * 4 + 3] = Normalize2<GLshort>(unpackedInput[i][3]);
     }
 
+    TestData data4(GL_INT_10_10_10_2_OES, GL_TRUE, Source::IMMEDIATE, packedInput.data(),
+                   expectedNormalizedTypeSize4.data());
     TestData bufferedData4(GL_INT_10_10_10_2_OES, GL_TRUE, Source::BUFFER, packedInput.data(),
                            expectedNormalizedTypeSize4.data());
     TestData data3(GL_INT_10_10_10_2_OES, GL_TRUE, Source::IMMEDIATE, packedInput.data(),
@@ -799,8 +807,8 @@ TEST_P(VertexAttributeTest, SignedPacked1010102ExtensionNormalized)
     TestData bufferedData3(GL_INT_10_10_10_2_OES, GL_TRUE, Source::BUFFER, packedInput.data(),
                            expectedNormalizedTypeSize3.data());
 
-    std::array<std::pair<const TestData &, GLint>, 3> dataSet = {
-        {{bufferedData4, 4}, {data3, 3}, {bufferedData3, 3}}};
+    std::array<std::pair<const TestData &, GLint>, 4> dataSet = {
+        {{data4, 4}, {bufferedData4, 4}, {data3, 3}, {bufferedData3, 3}}};
 
     for (auto data : dataSet)
     {

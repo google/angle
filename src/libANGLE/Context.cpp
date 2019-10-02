@@ -3283,6 +3283,11 @@ Extensions Context::generateSupportedExtensions() const
             supportedExtensions.textureFloatLinear     = false;
             supportedExtensions.textureHalfFloatLinear = false;
         }
+
+        // Because of the difference in the SNORM to FLOAT conversion formula
+        // between GLES 2.0 and 3.0, vertex type 10_10_10_2 is disabled
+        // when the context version is lower than 3.0
+        supportedExtensions.vertexAttribType1010102 = false;
     }
 
     if (getClientVersion() < ES_3_1)
@@ -9351,9 +9356,9 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
                                                  ? VertexAttribTypeCase::Valid
                                                  : VertexAttribTypeCase::Invalid;
 
-    VertexAttribTypeCase vertexType101010102Validity =
-        (context->getExtensions().vertexAttribType101010102) ? VertexAttribTypeCase::ValidSize3or4
-                                                             : VertexAttribTypeCase::Invalid;
+    VertexAttribTypeCase vertexType1010102Validity =
+        (context->getExtensions().vertexAttribType1010102) ? VertexAttribTypeCase::ValidSize3or4
+                                                           : VertexAttribTypeCase::Invalid;
 
     if (context->getClientMajorVersion() <= 2)
     {
@@ -9365,8 +9370,6 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
             {VertexAttribType::Float, VertexAttribTypeCase::Valid},
             {VertexAttribType::Fixed, VertexAttribTypeCase::Valid},
             {VertexAttribType::HalfFloatOES, halfFloatValidity},
-            {VertexAttribType::Int1010102, vertexType101010102Validity},
-            {VertexAttribType::UnsignedInt1010102, vertexType101010102Validity},
         }};
     }
     else
@@ -9384,8 +9387,8 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
             {VertexAttribType::Int2101010, VertexAttribTypeCase::ValidSize4Only},
             {VertexAttribType::HalfFloatOES, halfFloatValidity},
             {VertexAttribType::UnsignedInt2101010, VertexAttribTypeCase::ValidSize4Only},
-            {VertexAttribType::Int1010102, vertexType101010102Validity},
-            {VertexAttribType::UnsignedInt1010102, vertexType101010102Validity},
+            {VertexAttribType::Int1010102, vertexType1010102Validity},
+            {VertexAttribType::UnsignedInt1010102, vertexType1010102Validity},
         }};
 
         mCachedIntegerVertexAttribTypesValidation = {{

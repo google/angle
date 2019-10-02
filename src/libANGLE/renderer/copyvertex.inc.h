@@ -193,8 +193,8 @@ inline void CopyTo32FVertexData(const uint8_t *input, size_t stride, size_t coun
             {
                 if (NL::is_signed)
                 {
-                    const float divisor = 1.0f / (2 * static_cast<float>(NL::max()) + 1);
-                    offsetOutput[j]     = (2 * static_cast<float>(offsetInput[j]) + 1) * divisor;
+                    offsetOutput[j] = static_cast<float>(offsetInput[j]) / NL::max();
+                    offsetOutput[j] = (offsetOutput[j] >= -1.0f) ? (offsetOutput[j]) : (-1.0f);
                 }
                 else
                 {

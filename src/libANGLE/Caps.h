@@ -386,7 +386,7 @@ struct Extensions
     bool vertexArrayObject = false;
 
     // GL_OES_vertex_type_10_10_10_2
-    bool vertexAttribType101010102 = false;
+    bool vertexAttribType1010102 = false;
 
     // GL_KHR_debug
     bool debug                     = false;
