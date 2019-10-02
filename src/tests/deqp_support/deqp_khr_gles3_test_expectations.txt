@@ -31,12 +31,6 @@
 
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
 
-// Need to publish the "GL_CHROMIUM_color_buffer_float_rgb" extension, and then modify the dEQP
-// KHR test source code to consider GL_RGB32F as renderable:
-3695 VULKAN : KHR-GLES3.packed_pixels.rectangle.rgb*32f = FAIL
-3695 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.rgb*32f = FAIL
-3695 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgb*32f = FAIL
-
 // Depth/stencil related failures.
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth24_stencil8 = FAIL
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth32f_stencil8 = FAIL
@@ -143,6 +137,7 @@
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rg32f = FAIL
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgba32i = FAIL
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgba32ui = FAIL
+3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgba32f = FAIL
 
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgb = FAIL
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgb565 = FAIL
