@@ -186,11 +186,9 @@ class TextureVk : public TextureImpl
 
         void release(ContextVk *contextVk);
 
-        vk::ImageView mDrawBaseLevelImageView;
-        vk::ImageView mReadBaseLevelImageView;
-        vk::ImageView mReadMipmapImageView;
-        vk::ImageView mFetchBaseLevelImageView;
-        vk::ImageView mFetchMipmapImageView;
+        vk::ImageView mDrawImageView;
+        vk::ImageView mReadImageView;
+        vk::ImageView mFetchImageView;
     };
 
     // Transform an image index from the frontend into one that can be used on the backing

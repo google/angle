@@ -112,11 +112,9 @@ TextureVk::TextureVkViews::~TextureVkViews() {}
 
 void TextureVk::TextureVkViews::release(ContextVk *contextVk)
 {
-    contextVk->addGarbage(&mDrawBaseLevelImageView);
-    contextVk->addGarbage(&mReadBaseLevelImageView);
-    contextVk->addGarbage(&mReadMipmapImageView);
-    contextVk->addGarbage(&mFetchBaseLevelImageView);
-    contextVk->addGarbage(&mFetchMipmapImageView);
+    contextVk->addGarbage(&mDrawImageView);
+    contextVk->addGarbage(&mReadImageView);
+    contextVk->addGarbage(&mFetchImageView);
 }
 
 angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
@@ -955,9 +953,8 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     mImage->initStagingBuffer(contextVk->getRenderer(), format, vk::kStagingBufferFlags,
                               mStagingBufferInitialSize);
 
-    mRenderTarget.init(mImage, &mDefaultViews.mDrawBaseLevelImageView,
-                       &mDefaultViews.mFetchBaseLevelImageView, getNativeImageLevel(0),
-                       getNativeImageLayer(0));
+    mRenderTarget.init(mImage, &mDefaultViews.mDrawImageView, &mDefaultViews.mFetchImageView,
+                       getNativeImageLevel(0), getNativeImageLayer(0));
 
     // Force re-creation of layered render targets next time they are needed
     mLayerRenderTargets.clear();
@@ -1487,6 +1484,15 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
+    if (!gl::IsMipmapFiltered(samplerState))
+    {
+        // Per the Vulkan spec, GL_NEAREST and GL_LINEAR do not map directly to Vulkan, so
+        // they must be emulated (See "Mapping of OpenGL to Vulkan filter modes")
+        samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+        samplerInfo.minLod     = 0.0f;
+        samplerInfo.maxLod     = 0.25f;
+    }
+
     ANGLE_VK_TRY(contextVk, mSampler.init(contextVk->getDevice(), samplerInfo));
 
     // Regenerate the serial on a sampler change.
@@ -1543,18 +1549,13 @@ const vk::ImageView &TextureVk::getReadImageView() const
     ASSERT(mImage->valid());
     const TextureVkViews *activeView = getTextureViews();
 
-    if (!gl::IsMipmapFiltered(mState.getSamplerState()))
-    {
-        return activeView->mReadBaseLevelImageView;
-    }
-
-    return activeView->mReadMipmapImageView;
+    return activeView->mReadImageView;
 }
 
 const vk::ImageView &TextureVk::getFetchImageView() const
 {
 
-    if (!mDefaultViews.mFetchBaseLevelImageView.valid())
+    if (!mDefaultViews.mFetchImageView.valid())
     {
         return getReadImageView();
     }
@@ -1562,12 +1563,7 @@ const vk::ImageView &TextureVk::getFetchImageView() const
     ASSERT(mImage->valid());
     const TextureVkViews *activeView = getTextureViews();
 
-    if (!gl::IsMipmapFiltered(mState.getSamplerState()))
-    {
-        return activeView->mFetchBaseLevelImageView;
-    }
-
-    return activeView->mFetchMipmapImageView;
+    return activeView->mFetchImageView;
 }
 
 vk::ImageView *TextureVk::getLayerLevelImageViewImpl(vk::LayerLevelImageViewVector *imageViews,
@@ -1752,10 +1748,7 @@ angle::Result TextureVk::initImageViewImpl(ContextVk *contextVk,
     uint32_t baseLayer = getNativeImageLayer(0);
 
     ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), aspectFlags, mappedSwizzle,
-                                         &view->mReadMipmapImageView, baseLevel, levelCount,
-                                         baseLayer, layerCount));
-    ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), aspectFlags, mappedSwizzle,
-                                         &view->mReadBaseLevelImageView, baseLevel, 1, baseLayer,
+                                         &view->mReadImageView, baseLevel, levelCount, baseLayer,
                                          layerCount));
     if (mState.getType() == gl::TextureType::CubeMap ||
         mState.getType() == gl::TextureType::_2DArray ||
@@ -1764,17 +1757,14 @@ angle::Result TextureVk::initImageViewImpl(ContextVk *contextVk,
         gl::TextureType arrayType = vk::Get2DTextureType(layerCount, mImage->getSamples());
 
         ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, aspectFlags, mappedSwizzle,
-                                             &view->mFetchMipmapImageView, baseLevel, levelCount,
-                                             baseLayer, layerCount));
-        ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, aspectFlags, mappedSwizzle,
-                                             &view->mFetchBaseLevelImageView, baseLevel, 1,
+                                             &view->mFetchImageView, baseLevel, levelCount,
                                              baseLayer, layerCount));
     }
     if (!format.imageFormat().isBlock)
     {
         ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), aspectFlags,
-                                             gl::SwizzleState(), &view->mDrawBaseLevelImageView,
-                                             baseLevel, 1, baseLayer, layerCount));
+                                             gl::SwizzleState(), &view->mDrawImageView, baseLevel,
+                                             1, baseLayer, layerCount));
     }
 
     return angle::Result::Continue;

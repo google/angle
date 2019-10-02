@@ -5699,7 +5699,7 @@ ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3,
                        ES3_OPENGL(),
                        ES3_OPENGLES(),
                        ES3_VULKAN());
-ANGLE_INSTANTIATE_TEST(TextureSizeTextureArrayTest, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(TextureSizeTextureArrayTest, ES3_D3D11(), ES3_OPENGL(), ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(SamplerInStructTest,
                        ES2_D3D11(),
                        ES2_D3D9(),
