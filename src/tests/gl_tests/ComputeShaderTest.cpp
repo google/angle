@@ -1415,7 +1415,7 @@ void main()
 TEST_P(ComputeShaderTest, BindImageTextureWithOneLayerTexture3D)
 {
     // Vulkan validation error creating a 2D image view of a 3D image layer.
-    // http://anglebug.com/3188
+    // http://anglebug.com/3886
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     GLTexture texture[2];
