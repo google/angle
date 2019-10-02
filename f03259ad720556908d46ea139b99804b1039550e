@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14c5765d_54582cf5",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-02T13:43:03Z",
+      "side": 1,
+      "message": "this function proto doesn\u0027t have a definition, can you remove it?",
+      "range": {
+        "startLine": 510,
+        "startChar": 0,
+        "endLine": 513,
+        "endChar": 80
+      },
+      "revId": "f03259ad720556908d46ea139b99804b1039550e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
