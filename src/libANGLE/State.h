@@ -586,6 +586,7 @@ class State : angle::NonCopyable
         DIRTY_OBJECT_DRAW_FRAMEBUFFER,
         DIRTY_OBJECT_VERTEX_ARRAY,
         DIRTY_OBJECT_TEXTURES,  // Top-level dirty bit. Also see mDirtyTextures.
+        DIRTY_OBJECT_IMAGES,    // Top-level dirty bit. Also see mDirtyImages.
         DIRTY_OBJECT_SAMPLERS,  // Top-level dirty bit. Also see mDirtySamplers.
         DIRTY_OBJECT_PROGRAM,
         DIRTY_OBJECT_UNKNOWN,
@@ -702,6 +703,7 @@ class State : angle::NonCopyable
     angle::Result syncDrawFramebuffer(const Context *context);
     angle::Result syncVertexArray(const Context *context);
     angle::Result syncTextures(const Context *context);
+    angle::Result syncImages(const Context *context);
     angle::Result syncSamplers(const Context *context);
     angle::Result syncProgram(const Context *context);
 
@@ -709,8 +711,8 @@ class State : angle::NonCopyable
     static constexpr DirtyObjectHandler kDirtyObjectHandlers[DIRTY_OBJECT_MAX] = {
         &State::syncTexturesInit,    &State::syncImagesInit,      &State::syncReadAttachments,
         &State::syncDrawAttachments, &State::syncReadFramebuffer, &State::syncDrawFramebuffer,
-        &State::syncVertexArray,     &State::syncTextures,        &State::syncSamplers,
-        &State::syncProgram,
+        &State::syncVertexArray,     &State::syncTextures,        &State::syncImages,
+        &State::syncSamplers,        &State::syncProgram,
     };
 
     // Robust init must happen before Framebuffer init for the Vulkan back-end.
@@ -727,8 +729,9 @@ class State : angle::NonCopyable
     static_assert(DIRTY_OBJECT_DRAW_FRAMEBUFFER == 5, "check DIRTY_OBJECT_DRAW_FRAMEBUFFER index");
     static_assert(DIRTY_OBJECT_VERTEX_ARRAY == 6, "check DIRTY_OBJECT_VERTEX_ARRAY index");
     static_assert(DIRTY_OBJECT_TEXTURES == 7, "check DIRTY_OBJECT_TEXTURES index");
-    static_assert(DIRTY_OBJECT_SAMPLERS == 8, "check DIRTY_OBJECT_SAMPLERS index");
-    static_assert(DIRTY_OBJECT_PROGRAM == 9, "check DIRTY_OBJECT_PROGRAM index");
+    static_assert(DIRTY_OBJECT_IMAGES == 8, "check DIRTY_OBJECT_IMAGES index");
+    static_assert(DIRTY_OBJECT_SAMPLERS == 9, "check DIRTY_OBJECT_SAMPLERS index");
+    static_assert(DIRTY_OBJECT_PROGRAM == 10, "check DIRTY_OBJECT_PROGRAM index");
 
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;

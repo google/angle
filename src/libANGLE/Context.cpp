@@ -292,7 +292,9 @@ enum SubjectIndexes : angle::SubjectIndex
 {
     kTexture0SubjectIndex       = 0,
     kTextureMaxSubjectIndex     = kTexture0SubjectIndex + IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
-    kUniformBuffer0SubjectIndex = kTextureMaxSubjectIndex,
+    kImage0SubjectIndex         = kTextureMaxSubjectIndex,
+    kImageMaxSubjectIndex       = kImage0SubjectIndex + IMPLEMENTATION_MAX_IMAGE_UNITS,
+    kUniformBuffer0SubjectIndex = kImageMaxSubjectIndex,
     kUniformBufferMaxSubjectIndex =
         kUniformBuffer0SubjectIndex + IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS,
     kSampler0SubjectIndex    = kUniformBufferMaxSubjectIndex,
@@ -366,6 +368,12 @@ Context::Context(egl::Display *display,
          samplerIndex < kSamplerMaxSubjectIndex; ++samplerIndex)
     {
         mSamplerObserverBindings.emplace_back(this, samplerIndex);
+    }
+
+    for (angle::SubjectIndex imageIndex = kImage0SubjectIndex; imageIndex < kImageMaxSubjectIndex;
+         ++imageIndex)
+    {
+        mImageObserverBindings.emplace_back(this, imageIndex);
     }
 }
 
@@ -535,6 +543,7 @@ void Context::initialize()
     mComputeDirtyBits.set(State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM);
+    mComputeDirtyObjects.set(State::DIRTY_OBJECT_IMAGES);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_SAMPLERS);
 
     mCopyImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
@@ -1166,6 +1175,7 @@ void Context::bindImageTexture(GLuint unit,
 {
     Texture *tex = mState.mTextureManager->getTexture(texture);
     mState.setImageUnit(this, unit, tex, level, layered, layer, access, format);
+    mImageObserverBindings[unit].bind(tex);
 }
 
 void Context::useProgram(ShaderProgramID program)
@@ -2796,6 +2806,16 @@ bool Context::isTransformFeedbackGenerated(TransformFeedbackID transformFeedback
 
 void Context::detachTexture(TextureID texture)
 {
+    // The State cannot unbind image observers itself, they are owned by the Context
+    Texture *tex = mState.mTextureManager->getTexture(texture);
+    for (auto &imageBinding : mImageObserverBindings)
+    {
+        if (imageBinding.getSubject() == tex)
+        {
+            imageBinding.reset();
+        }
+    }
+
     // Simple pass-through to State's detachTexture method, as textures do not require
     // allocation map management either here or in the resource manager at detach time.
     // Zero textures are held by the Context, and we don't attempt to request them from
@@ -8837,6 +8857,14 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                 {
                     mState.onActiveTextureStateChange(this, index);
                     mStateCache.onActiveTextureChange(this);
+                }
+            }
+            else if (index < kImageMaxSubjectIndex)
+            {
+                mState.onImageStateChange(this, index - kImage0SubjectIndex);
+                if (message == angle::SubjectMessage::ContentsChanged)
+                {
+                    mState.mDirtyBits.set(State::DirtyBitType::DIRTY_BIT_IMAGE_BINDINGS);
                 }
             }
             else if (index < kUniformBufferMaxSubjectIndex)
