@@ -2903,6 +2903,11 @@ void GL_APIENTRY glRequestExtensionANGLE(const GLchar *name)
     return gl::RequestExtensionANGLE(name);
 }
 
+void GL_APIENTRY glDisableExtensionANGLE(const GLchar *name)
+{
+    return gl::DisableExtensionANGLE(name);
+}
+
 // GL_ANGLE_robust_client_memory
 void GL_APIENTRY glGetBooleanvRobustANGLE(GLenum pname,
                                           GLsizei bufSize,
@@ -9656,6 +9661,11 @@ void GL_APIENTRY glCompressedCopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
 void GL_APIENTRY glRequestExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar *name)
 {
     return gl::RequestExtensionANGLEContextANGLE(ctx, name);
+}
+
+void GL_APIENTRY glDisableExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar *name)
+{
+    return gl::DisableExtensionANGLEContextANGLE(ctx, name);
 }
 
 void GL_APIENTRY glGetBooleanvRobustANGLEContextANGLE(GLeglContext ctx,

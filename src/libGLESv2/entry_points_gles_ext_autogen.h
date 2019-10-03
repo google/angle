@@ -141,6 +141,7 @@ ANGLE_EXPORT void GL_APIENTRY ProvokingVertexANGLE(GLenum mode);
 
 // GL_ANGLE_request_extension
 ANGLE_EXPORT void GL_APIENTRY RequestExtensionANGLE(const GLchar *name);
+ANGLE_EXPORT void GL_APIENTRY DisableExtensionANGLE(const GLchar *name);
 
 // GL_ANGLE_robust_client_memory
 ANGLE_EXPORT void GL_APIENTRY GetBooleanvRobustANGLE(GLenum pname,
@@ -3608,6 +3609,8 @@ ANGLE_EXPORT void GL_APIENTRY CompressedCopyTextureCHROMIUMContextANGLE(GLeglCon
                                                                         GLuint sourceId,
                                                                         GLuint destId);
 ANGLE_EXPORT void GL_APIENTRY RequestExtensionANGLEContextANGLE(GLeglContext ctx,
+                                                                const GLchar *name);
+ANGLE_EXPORT void GL_APIENTRY DisableExtensionANGLEContextANGLE(GLeglContext ctx,
                                                                 const GLchar *name);
 ANGLE_EXPORT void GL_APIENTRY GetBooleanvRobustANGLEContextANGLE(GLeglContext ctx,
                                                                  GLenum pname,

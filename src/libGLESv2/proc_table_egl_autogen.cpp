@@ -373,6 +373,8 @@ ProcEntry g_procTable[] = {
     {"glDisableClientState", P(gl::DisableClientState)},
     {"glDisableClientStateContextANGLE", P(gl::DisableClientStateContextANGLE)},
     {"glDisableContextANGLE", P(gl::DisableContextANGLE)},
+    {"glDisableExtensionANGLE", P(gl::DisableExtensionANGLE)},
+    {"glDisableExtensionANGLEContextANGLE", P(gl::DisableExtensionANGLEContextANGLE)},
     {"glDisableVertexAttribArray", P(gl::DisableVertexAttribArray)},
     {"glDisableVertexAttribArrayContextANGLE", P(gl::DisableVertexAttribArrayContextANGLE)},
     {"glDiscardFramebufferEXT", P(gl::DiscardFramebufferEXT)},
@@ -1513,5 +1515,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1414;
+size_t g_numProcs = 1416;
 }  // namespace egl

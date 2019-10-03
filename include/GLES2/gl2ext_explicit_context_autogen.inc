@@ -289,6 +289,7 @@ typedef void (GL_APIENTRYP PFNGLCOPYTEXTURECHROMIUMCONTEXTANGLEPROC)(GLeglContex
 typedef void (GL_APIENTRYP PFNGLCOPYSUBTEXTURECHROMIUMCONTEXTANGLEPROC)(GLeglContext ctx, GLuint sourceId, GLint sourceLevel, GLenum destTarget, GLuint destId, GLint destLevel, GLint xoffset, GLint yoffset, GLint x, GLint y, GLint width, GLint height, GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);
 typedef void (GL_APIENTRYP PFNGLCOMPRESSEDCOPYTEXTURECHROMIUMCONTEXTANGLEPROC)(GLeglContext ctx, GLuint sourceId, GLuint destId);
 typedef void (GL_APIENTRYP PFNGLREQUESTEXTENSIONANGLECONTEXTANGLEPROC)(GLeglContext ctx, const GLchar * name);
+typedef void (GL_APIENTRYP PFNGLDISABLEEXTENSIONANGLECONTEXTANGLEPROC)(GLeglContext ctx, const GLchar * name);
 typedef void (GL_APIENTRYP PFNGLGETBOOLEANVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum pname, GLsizei bufSize, GLsizei * length, GLboolean * params);
 typedef void (GL_APIENTRYP PFNGLGETBUFFERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
 typedef void (GL_APIENTRYP PFNGLGETFLOATVROBUSTANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum pname, GLsizei bufSize, GLsizei * length, GLfloat * params);
@@ -654,6 +655,7 @@ GL_APICALL void GL_APIENTRY glCopyTextureCHROMIUMContextANGLE(GLeglContext ctx, 
 GL_APICALL void GL_APIENTRY glCopySubTextureCHROMIUMContextANGLE(GLeglContext ctx, GLuint sourceId, GLint sourceLevel, GLenum destTarget, GLuint destId, GLint destLevel, GLint xoffset, GLint yoffset, GLint x, GLint y, GLint width, GLint height, GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);
 GL_APICALL void GL_APIENTRY glCompressedCopyTextureCHROMIUMContextANGLE(GLeglContext ctx, GLuint sourceId, GLuint destId);
 GL_APICALL void GL_APIENTRY glRequestExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar * name);
+GL_APICALL void GL_APIENTRY glDisableExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar * name);
 GL_APICALL void GL_APIENTRY glGetBooleanvRobustANGLEContextANGLE(GLeglContext ctx, GLenum pname, GLsizei bufSize, GLsizei * length, GLboolean * params);
 GL_APICALL void GL_APIENTRY glGetBufferParameterivRobustANGLEContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, GLsizei bufSize, GLsizei * length, GLint * params);
 GL_APICALL void GL_APIENTRY glGetFloatvRobustANGLEContextANGLE(GLeglContext ctx, GLenum pname, GLsizei bufSize, GLsizei * length, GLfloat * params);

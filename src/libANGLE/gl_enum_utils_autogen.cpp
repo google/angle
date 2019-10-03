@@ -1806,6 +1806,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT";
                 case 0x8d6b:
                     return "GL_MAX_ELEMENT_INDEX";
+                case 0x8d6c:
+                    return "GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_SAMPLES_EXT";
                 case 0x8d94:
                     return "GL_RED_INTEGER";
                 case 0x8d95:

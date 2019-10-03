@@ -302,6 +302,14 @@ void CaptureRequestExtensionANGLE_name(const Context *context,
     UNIMPLEMENTED();
 }
 
+void CaptureDisableExtensionANGLE_name(const Context *context,
+                                       bool isCallValid,
+                                       const GLchar *name,
+                                       ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
 void CaptureGetBooleanvRobustANGLE_length(const Context *context,
                                           bool isCallValid,
                                           GLenum pname,

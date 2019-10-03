@@ -474,6 +474,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDisable";
         case EntryPoint::DisableClientState:
             return "glDisableClientState";
+        case EntryPoint::DisableExtensionANGLE:
+            return "glDisableExtensionANGLE";
         case EntryPoint::DisableVertexArrayAttrib:
             return "glDisableVertexArrayAttrib";
         case EntryPoint::DisableVertexAttribArray:

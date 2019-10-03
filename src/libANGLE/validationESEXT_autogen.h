@@ -148,6 +148,7 @@ bool ValidateProvokingVertexANGLE(Context *context, ProvokingVertexConvention mo
 
 // GL_ANGLE_request_extension
 bool ValidateRequestExtensionANGLE(Context *context, const GLchar *name);
+bool ValidateDisableExtensionANGLE(Context *context, const GLchar *name);
 
 // GL_ANGLE_robust_client_memory
 bool ValidateGetBooleanvRobustANGLE(Context *context,

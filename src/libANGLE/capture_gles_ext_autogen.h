@@ -174,6 +174,9 @@ angle::CallCapture CaptureProvokingVertexANGLE(const Context *context,
 angle::CallCapture CaptureRequestExtensionANGLE(const Context *context,
                                                 bool isCallValid,
                                                 const GLchar *name);
+angle::CallCapture CaptureDisableExtensionANGLE(const Context *context,
+                                                bool isCallValid,
+                                                const GLchar *name);
 
 // GL_ANGLE_robust_client_memory
 angle::CallCapture CaptureGetBooleanvRobustANGLE(const Context *context,
@@ -1971,6 +1974,10 @@ void CaptureMultiDrawElementsInstancedANGLE_instanceCounts(const Context *contex
                                                            GLsizei drawcount,
                                                            angle::ParamCapture *paramCapture);
 void CaptureRequestExtensionANGLE_name(const Context *context,
+                                       bool isCallValid,
+                                       const GLchar *name,
+                                       angle::ParamCapture *paramCapture);
+void CaptureDisableExtensionANGLE_name(const Context *context,
                                        bool isCallValid,
                                        const GLchar *name,
                                        angle::ParamCapture *paramCapture);

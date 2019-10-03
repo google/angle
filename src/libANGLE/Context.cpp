@@ -3227,12 +3227,30 @@ bool Context::isExtensionRequestable(const char *name)
            mSupportedExtensions.*(extension->second.ExtensionsMember);
 }
 
+bool Context::isExtensionDisablable(const char *name)
+{
+    const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
+    auto extension                         = extensionInfos.find(name);
+
+    return extension != extensionInfos.end() && extension->second.Disablable &&
+           mSupportedExtensions.*(extension->second.ExtensionsMember);
+}
+
 void Context::requestExtension(const char *name)
+{
+    setExtensionEnabled(name, true);
+}
+void Context::disableExtension(const char *name)
+{
+    setExtensionEnabled(name, false);
+}
+
+void Context::setExtensionEnabled(const char *name, bool enabled)
 {
     // OVR_multiview is implicitly enabled when OVR_multiview2 is enabled
     if (strcmp(name, "GL_OVR_multiview2") == 0)
     {
-        requestExtension("GL_OVR_multiview");
+        setExtensionEnabled("GL_OVR_multiview", enabled);
     }
     const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
     ASSERT(extensionInfos.find(name) != extensionInfos.end());
@@ -3240,13 +3258,19 @@ void Context::requestExtension(const char *name)
     ASSERT(extension.Requestable);
     ASSERT(isExtensionRequestable(name));
 
-    if (mState.mExtensions.*(extension.ExtensionsMember))
+    if (mState.mExtensions.*(extension.ExtensionsMember) == enabled)
     {
-        // Extension already enabled
+        // No change
         return;
     }
 
-    mState.mExtensions.*(extension.ExtensionsMember) = true;
+    mState.mExtensions.*(extension.ExtensionsMember) = enabled;
+
+    reinitializeAfterExtensionsChanged();
+}
+
+void Context::reinitializeAfterExtensionsChanged()
+{
     updateCaps();
     initExtensionStrings();
 

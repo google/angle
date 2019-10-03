@@ -592,6 +592,25 @@ void GL_APIENTRY RequestExtensionANGLE(const GLchar *name)
     }
 }
 
+void GL_APIENTRY DisableExtensionANGLE(const GLchar *name)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glDisableExtensionANGLE", "context = %d, const GLchar * name = 0x%016" PRIxPTR "",
+          CID(context), (uintptr_t)name);
+
+    if (context)
+    {
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateDisableExtensionANGLE(context, name));
+        if (isCallValid)
+        {
+            context->disableExtension(name);
+        }
+        ANGLE_CAPTURE(DisableExtensionANGLE, isCallValid, context, name);
+    }
+}
+
 // GL_ANGLE_robust_client_memory
 void GL_APIENTRY GetBooleanvRobustANGLE(GLenum pname,
                                         GLsizei bufSize,
@@ -23525,6 +23544,26 @@ void GL_APIENTRY RequestExtensionANGLEContextANGLE(GLeglContext ctx, const GLcha
             context->requestExtension(name);
         }
         ANGLE_CAPTURE(RequestExtensionANGLE, isCallValid, context, name);
+    }
+}
+
+void GL_APIENTRY DisableExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar *name)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glDisableExtensionANGLE", "context = %d, const GLchar * name = 0x%016" PRIxPTR "",
+          CID(context), (uintptr_t)name);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateDisableExtensionANGLE(context, name));
+        if (isCallValid)
+        {
+            context->disableExtension(name);
+        }
+        ANGLE_CAPTURE(DisableExtensionANGLE, isCallValid, context, name);
     }
 }
 

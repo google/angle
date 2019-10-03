@@ -4976,6 +4976,23 @@ bool ValidateRequestExtensionANGLE(Context *context, const GLchar *name)
     return true;
 }
 
+bool ValidateDisableExtensionANGLE(Context *context, const GLchar *name)
+{
+    if (!context->getExtensions().requestExtension)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (!context->isExtensionDisablable(name))
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotDisablable);
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateActiveTexture(Context *context, GLenum texture)
 {
     if (context->getClientMajorVersion() < 2)

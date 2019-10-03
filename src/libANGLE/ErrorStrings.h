@@ -121,6 +121,7 @@ MSG kExceedsNumRequestableExtensions = "Index must be within [0, NUM_REQUESTABLE
 MSG kExpectedProgramName = "Expected a program name = but found a shader name.";
 MSG kExpectedShaderName = "Expected a shader name = but found a program name.";
 MSG kExtensionNotEnabled = "Extension is not enabled.";
+MSG kExtensionNotDisablable = "Extension is not disablable.";
 MSG kExtensionNotRequestable = "Extension is not requestable.";
 MSG kExternalTextureNotSupported = "External texture extension not enabled";
 MSG kFeedbackLoop = "Feedback loop formed between Framebuffer and active Texture.";
