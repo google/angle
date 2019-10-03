@@ -352,6 +352,15 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     // Reset the extension behavior for each compilation unit.
     ResetExtensionBehavior(mExtensionBehavior);
 
+    if (compileOptions & SH_DISABLE_ARB_TEXTURE_RECTANGLE)
+    {
+        auto it = mExtensionBehavior.find(TExtension::ARB_texture_rectangle);
+        if (it != mExtensionBehavior.end())
+        {
+            mExtensionBehavior.erase(it);
+        }
+    }
+
     // If gl_DrawID is not supported, remove it from the available extensions
     // Currently we only allow emulation of gl_DrawID
     const bool glDrawIDSupported = (compileOptions & SH_EMULATE_GL_DRAW_ID) != 0u;

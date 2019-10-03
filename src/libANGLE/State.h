@@ -913,6 +913,9 @@ class State : angle::NonCopyable
     // GL_ANGLE_program_cache_control
     const bool mProgramBinaryCacheEnabled;
 
+    // GL_ANGLE_webgl_compatibility
+    bool mTextureRectangleEnabled;
+
     // GL_KHR_parallel_shader_compile
     GLuint mMaxShaderCompilerThreads;
 

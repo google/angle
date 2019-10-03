@@ -323,6 +323,11 @@ const ShCompileOptions SH_DONT_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UIN
 // implemented for the Vulkan backend.
 const ShCompileOptions SH_ADD_BRESENHAM_LINE_RASTER_EMULATION = UINT64_C(1) << 51;
 
+// This flag allows disabling ARB_texture_rectangle on a per-compile basis. This is necessary
+// for WebGL contexts becuase ARB_texture_rectangle may be necessary for the WebGL implementation
+// internally but shouldn't be exposed to WebGL user code.
+const ShCompileOptions SH_DISABLE_ARB_TEXTURE_RECTANGLE = UINT64_C(1) << 52;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {
