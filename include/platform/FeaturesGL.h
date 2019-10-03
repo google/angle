@@ -348,6 +348,13 @@ struct FeaturesGL : FeatureSetBase
         "rgb_dxt1_textures_sample_zero_alpha", FeatureCategory::OpenGLWorkarounds,
         "Sampling BLACK texels from RGB DXT1 textures returns transparent black on Mac.", &members,
         "http://anglebug.com/3729"};
+
+    // Mac incorrectly executes both sides of && and || expressions when they should short-circuit.
+    Feature unfoldShortCircuits = {
+        "unfold_short_circuits", FeatureCategory::OpenGLWorkarounds,
+        "Mac incorrectly executes both sides of && and || expressions when they should "
+        "short-circuit.",
+        &members, "http://anglebug.com/482"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

@@ -1562,6 +1562,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             IsApple() || (IsWindows() && isAMD))
 
     ANGLE_FEATURE_CONDITION(features, rgbDXT1TexturesSampleZeroAlpha, IsApple())
+
+    ANGLE_FEATURE_CONDITION(features, unfoldShortCircuits, IsApple())
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
