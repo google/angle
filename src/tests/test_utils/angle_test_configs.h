@@ -17,7 +17,6 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#include "GLSLANG/ShaderLang.h"
 #include "angle_test_instantiate.h"
 #include "util/EGLPlatformParameters.h"
 

@@ -87,14 +87,6 @@ declare_args() {
       angle_enable_vulkan && !is_ubsan && !is_tsan && !is_asan &&
       (is_debug || dcheck_always_on)
 
-  if (angle_enable_vulkan) {
-    # Enable Vulkan GPU trace event capability
-    angle_enable_vulkan_gpu_trace_events = false
-
-    # Enable custom (cpu-side) secondary command buffers
-    angle_enable_custom_vulkan_cmd_buffers = true
-  }
-
   # Disable overlay by default
   angle_enable_overlay = false
 }
