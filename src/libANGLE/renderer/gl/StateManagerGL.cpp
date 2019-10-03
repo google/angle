@@ -386,6 +386,7 @@ void StateManagerGL::bindBufferBase(gl::BufferBinding target, size_t index, GLui
         binding.buffer = buffer;
         binding.offset = static_cast<size_t>(-1);
         binding.size   = static_cast<size_t>(-1);
+        mBuffers[target] = buffer;
         mFunctions->bindBufferBase(gl::ToGLenum(target), static_cast<GLuint>(index), buffer);
     }
 }
@@ -402,6 +403,7 @@ void StateManagerGL::bindBufferRange(gl::BufferBinding target,
         binding.buffer = buffer;
         binding.offset = offset;
         binding.size   = size;
+        mBuffers[target] = buffer;
         mFunctions->bindBufferRange(gl::ToGLenum(target), static_cast<GLuint>(index), buffer,
                                     offset, size);
     }
