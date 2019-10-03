@@ -596,7 +596,7 @@ def get_destroy_call(shader_and_variation):
 
 
 def shader_path(shader):
-    return '"%s"' % slash(shader)
+    return '"src/libANGLE/renderer/vulkan/%s"' % slash(shader)
 
 
 def main():

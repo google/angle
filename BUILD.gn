@@ -29,6 +29,9 @@ declare_args() {
   # Don't build extra (test, samples etc) for Windows UWP. We don't have
   # infrastructure (e.g. windowing helper functions) in place to run them.
   angle_build_all = !angle_is_winuwp
+
+  # Currently SwiftShader's Vulkan front-end doesn't build on Android.
+  angle_swiftshader = !is_android
 }
 
 if (!build_with_chromium && angle_build_all) {
@@ -98,6 +101,12 @@ config("internal_config") {
     defines += [ "ANGLE_IS_64_BIT_CPU" ]
   } else {
     defines += [ "ANGLE_IS_32_BIT_CPU" ]
+  }
+
+  if (angle_enable_vulkan) {
+    if (angle_enable_vulkan_gpu_trace_events) {
+      defines += [ "ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS=1" ]
+    }
   }
 
   if (angle_enable_trace) {
@@ -198,7 +207,6 @@ angle_static_library("preprocessor") {
 
   public_deps = [
     ":angle_common",
-    ":angle_translator_headers",
   ]
 }
 
@@ -293,18 +301,11 @@ config("angle_image_util_config") {
   ]
 }
 
-angle_source_set("angle_image_util_headers") {
-  sources = libangle_image_util_headers
-  public_deps = [
-    ":angle_common",
-  ]
-}
-
 angle_static_library("angle_image_util") {
   sources = libangle_image_util_sources
   public_configs += [ ":angle_image_util_config" ]
   public_deps = [
-    ":angle_image_util_headers",
+    ":angle_common",
   ]
 }
 
@@ -386,13 +387,6 @@ angle_static_library("angle_gpu_info_util") {
   }
 }
 
-angle_source_set("angle_translator_headers") {
-  sources = angle_translator_exported_headers
-  public_deps = [
-    ":includes",
-  ]
-}
-
 angle_static_library("translator") {
   sources = angle_translator_sources
   defines = []
@@ -426,7 +420,6 @@ angle_static_library("translator") {
 
   public_deps = [
     ":angle_common",
-    ":angle_translator_headers",
   ]
 
   if (is_win) {
@@ -513,6 +506,12 @@ config("angle_backend_config") {
       defines += [ "ANGLE_ENABLE_OPENGL_NULL" ]
     }
   }
+  if (angle_enable_vulkan) {
+    defines += [ "ANGLE_ENABLE_VULKAN" ]
+    if (angle_enable_custom_vulkan_cmd_buffers) {
+      defines += [ "ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS=1" ]
+    }
+  }
   if (angle_enable_null) {
     defines += [ "ANGLE_ENABLE_NULL" ]
   }
@@ -547,12 +546,111 @@ config("libANGLE_config") {
   }
 }
 
-angle_source_set("libANGLE_headers") {
-  sources = libangle_headers
-  public_deps = [
-    ":angle_common",
-    ":angle_translator_headers",
-  ]
+if (angle_enable_vulkan) {
+  config("vulkan_config") {
+    defines = [
+      "ANGLE_VK_LAYERS_DIR=\"$angle_data_dir\"",
+      "ANGLE_VK_MOCK_ICD_JSON=\"$angle_data_dir/VkICD_mock_icd.json\"",
+      "ANGLE_VK_SWIFTSHADER_ICD_JSON=\"swiftshader/libvk_swiftshader_icd.json\"",
+    ]
+    if (is_android) {
+      libs = [ "vulkan" ]
+    }
+    if (angle_enable_vulkan_validation_layers) {
+      defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]
+    }
+  }
+
+  if (angle_swiftshader) {
+    copy("angle_swiftshader_icd_rename") {
+      sources = [
+        "$swiftshader_dir/src/Vulkan/vk_swiftshader_icd.json",
+      ]
+      outputs = [
+        "$root_gen_dir/angle/libvk_swiftshader_icd.json",
+      ]
+    }
+
+    action("angle_swiftshader_icd") {
+      deps = [
+        ":angle_swiftshader_icd_rename",
+      ]
+      script = "scripts/generate_vulkan_layers_json.py"
+      sources = [
+        "third_party/vulkan-headers/src/include/vulkan/vulkan_core.h",
+      ]
+
+      # Must be listed after vulkan_core.h. git cl format sorts them if they
+      # are in one list. So split up the sources manually.
+      sources += [ "$root_gen_dir/angle/libvk_swiftshader_icd.json" ]
+
+      outputs = [
+        "$root_out_dir/swiftshader/libvk_swiftshader_icd.json",
+      ]
+      data = outputs
+
+      _raw_sws_in = rebase_path("$root_gen_dir/angle", root_build_dir)
+      _raw_sws_out = rebase_path("$root_out_dir/swiftshader", root_build_dir)
+
+      _sws_output = ""
+      if (is_win) {
+        _sws_output += "vk_swiftshader.dll"
+      } else if (is_mac) {
+        _sws_output += "libvk_swiftshader.dylib"
+      } else {
+        _sws_output += "libvk_swiftshader.so"
+      }
+
+      args = [
+               "--icd",
+               "--replacement",
+               _sws_output,
+               _raw_sws_in,
+               _raw_sws_out,
+             ] + rebase_path(sources, root_build_dir)
+    }
+  }
+
+  # Use this target to include everything ANGLE needs for Vulkan.
+  group("angle_vulkan") {
+    public_deps = [
+      "$angle_root/third_party/vulkan-headers/src:vulkan_headers",
+    ]
+    public_configs = [ ":vulkan_config" ]
+    deps = []
+    data_deps = []
+    if (!is_android && !is_fuchsia) {
+      deps += [ "$angle_root/third_party/vulkan-loader/src:libvulkan" ]
+      data_deps += [ "$angle_root/third_party/vulkan-tools/src:VkICD_mock_icd" ]
+      public_configs +=
+          [ "$angle_root/third_party/vulkan-loader/src:vulkan_loader_config" ]
+    }
+    if (is_fuchsia) {
+      public_deps += [
+        "$angle_root/src/common/fuchsia_egl",
+        "//third_party/fuchsia-sdk:vulkan_base",
+        "//third_party/fuchsia-sdk/sdk:vulkan",
+      ]
+    }
+
+    if (angle_enable_vulkan_validation_layers) {
+      if (is_fuchsia) {
+        deps += [ "//third_party/fuchsia-sdk:vulkan_validation" ]
+      } else {
+        data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_validation_layers" ]
+        if (!is_android) {
+          data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_gen_json_files" ]
+        }
+      }
+    }
+
+    if (angle_swiftshader) {
+      data_deps += [
+        ":angle_swiftshader_icd",
+        "$swiftshader_dir/src/Vulkan:swiftshader_libvulkan",
+      ]
+    }
+  }
 }
 
 angle_source_set("libANGLE_base") {
@@ -569,17 +667,12 @@ angle_source_set("libANGLE_base") {
     ":angle_common",
     ":angle_gpu_info_util",
     ":angle_version",
-    ":libANGLE_headers",
     ":translator",
   ]
   deps = [
     ":angle_image_util",
     ":includes",
   ]
-
-  if (angle_enable_vulkan) {
-    public_deps += [ "src/libANGLE/renderer/vulkan:angle_vulkan_backend" ]
-  }
 
   # Enable extra Chromium style warnings for libANGLE.
   if (is_clang) {
@@ -653,6 +746,39 @@ angle_source_set("libANGLE_base") {
       sources += libangle_gl_egl_dl_sources
       sources += libangle_gl_ozone_sources
     }
+  }
+
+  if (angle_enable_vulkan) {
+    sources += libangle_vulkan_sources
+    if (is_win) {
+      sources += libangle_vulkan_win32_sources
+    }
+    if (is_linux) {
+      sources += libangle_vulkan_xcb_sources
+    }
+    if (is_fuchsia) {
+      sources += libangle_vulkan_fuchsia_sources
+      deps += [
+        "$angle_root/src/common/fuchsia_egl",
+        "$angle_root/src/common/fuchsia_egl:backend",
+      ]
+    }
+    if (is_android) {
+      sources += libangle_vulkan_android_sources
+      libs += [ "vulkan" ]
+    }
+    deps += [
+      ":angle_vulkan",
+      "${angle_glslang_dir}:glslang_default_resource_limits_sources",
+      "${angle_glslang_dir}:glslang_sources",
+      "${angle_spirv_tools_dir}:spvtools_val",
+    ]
+    public_deps +=
+        [ "$angle_root/third_party/vulkan-headers/src:vulkan_headers" ]
+
+    # Include generated shaders.
+    import("src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.gni")
+    sources += angle_vulkan_internal_shaders
   }
 
   if (angle_enable_null) {
@@ -1063,8 +1189,8 @@ foreach(is_shared_library,
     if (is_fuchsia) {
       sources += util_fuchsia_sources
       public_deps += [
+        ":angle_vulkan",
         "$angle_root/src/common/fuchsia_egl",
-        "src/libANGLE/renderer/vulkan:angle_vulkan",
         "//third_party/fuchsia-sdk/sdk:async_loop_cpp",
         "//third_party/fuchsia-sdk/sdk:async_loop_default",
         "//third_party/fuchsia-sdk/sdk:fdio",

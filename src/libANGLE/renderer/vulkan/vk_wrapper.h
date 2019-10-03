@@ -281,17 +281,13 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                              VkDeviceSize offset,
                              uint32_t drawCount,
                              uint32_t stride);
-    void drawIndirect(const Buffer &buffer,
-                      VkDeviceSize offset,
-                      uint32_t drawCount,
-                      uint32_t stride);
 
     VkResult end();
     void endQuery(VkQueryPool queryPool, uint32_t query);
     void endRenderPass();
     void executeCommands(uint32_t commandBufferCount, const CommandBuffer *commandBuffers);
 
-    void getMemoryUsageStats(size_t *usedMemoryOut, size_t *allocatedMemoryOut) const;
+    void getMemoryUsageStats(size_t *usedMemoryOut, size_t *allocatedMemoryOut);
 
     void executionBarrier(VkPipelineStageFlags stageMask);
 
@@ -812,7 +808,7 @@ ANGLE_INLINE void CommandBuffer::executeCommands(uint32_t commandBufferCount,
 }
 
 ANGLE_INLINE void CommandBuffer::getMemoryUsageStats(size_t *usedMemoryOut,
-                                                     size_t *allocatedMemoryOut) const
+                                                     size_t *allocatedMemoryOut)
 {
     // No data available.
     *usedMemoryOut      = 0;
@@ -981,15 +977,6 @@ ANGLE_INLINE void CommandBuffer::drawIndexedIndirect(const Buffer &buffer,
 {
     ASSERT(valid());
     vkCmdDrawIndexedIndirect(mHandle, buffer.getHandle(), offset, drawCount, stride);
-}
-
-ANGLE_INLINE void CommandBuffer::drawIndirect(const Buffer &buffer,
-                                              VkDeviceSize offset,
-                                              uint32_t drawCount,
-                                              uint32_t stride)
-{
-    ASSERT(valid());
-    vkCmdDrawIndirect(mHandle, buffer.getHandle(), offset, drawCount, stride);
 }
 
 ANGLE_INLINE void CommandBuffer::dispatch(uint32_t groupCountX,
