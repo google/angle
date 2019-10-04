@@ -22,6 +22,30 @@
       "revId": "7e821ac174a0c6d238d2635a0cda56484be95944",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93cd7e63_a6334afc",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-10-04T17:22:43Z",
+      "side": 1,
+      "message": "Can do:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/1841614\n\nJust a nit, it looks like it\u0027s DE_OS_UNIX (rather than LINUX):\n\n/* Operating systems. */\n#define DE_OS_VANILLA\t0\t\t\t/*!\u003c Vanilla OS.\t\t\t\t\t\t\t\t*/\n#define DE_OS_WIN32\t\t1\t\t\t/*!\u003c Microsoft Windows desktop\t\t\t\t\t*/\n#define DE_OS_UNIX      2\t\t\t/*!\u003c Unix (or compatible)\t\t\t\t\t\t*/\n#define DE_OS_WINCE\t\t3\t\t\t/*!\u003c Windows CE, Windows Mobile or Pocket PC\t*/\n#define DE_OS_OSX\t\t4\t\t\t/*!\u003c Mac OS X\t\t\t\t\t\t\t\t\t*/\n#define DE_OS_ANDROID\t5\t\t\t/*!\u003c Android\t\t\t\t\t\t\t\t\t*/\n#define DE_OS_SYMBIAN\t6\t\t\t/*!\u003c Symbian OS\t\t\t\t\t\t\t\t\t*/\n#define DE_OS_IOS\t\t7\t\t\t/*!\u003c iOS\t\t\t\t\t\t\t\t\t\t*/\n#define DE_OS_QNX       8           /*!\u003c QNX                                        */",
+      "parentUuid": "1e1decb6_755352b7",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 5
+      },
+      "revId": "7e821ac174a0c6d238d2635a0cda56484be95944",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
