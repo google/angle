@@ -22,6 +22,30 @@
       "revId": "97bde2c59e5d2c506f5153b7be38874e7e32e7f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99eb68f7_b9d5ecc2",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-10-04T18:05:54Z",
+      "side": 1,
+      "message": "cant we just repurpose the existing bug for this? do we need a new bug?",
+      "parentUuid": "64d101fc_c186d8b6",
+      "range": {
+        "startLine": 557,
+        "startChar": 0,
+        "endLine": 557,
+        "endChar": 5
+      },
+      "revId": "97bde2c59e5d2c506f5153b7be38874e7e32e7f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
