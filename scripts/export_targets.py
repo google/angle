@@ -107,7 +107,7 @@ print('Importing graph', file=sys.stderr)
 
 try:
     p = run_checked('gn', 'desc', '--format=json', str(OUT_DIR), '*', stdout=subprocess.PIPE,
-                env=GN_ENV, shell=(True if sys.platform == 'win32' else False))
+                shell=True, env=GN_ENV)
 except subprocess.CalledProcessError:
     sys.stderr.buffer.write(b'`gn` failed. Is depot_tools in your PATH?\n')
     exit(1)
@@ -157,17 +157,8 @@ INCLUDE_REGEX = re.compile(b'(?:^|\\n) *# *include +([<"])([^>"]+)[>"]')
 assert INCLUDE_REGEX.match(b'#include "foo"')
 assert INCLUDE_REGEX.match(b'\n#include "foo"')
 
-# Most of these are ignored because this script does not currently handle
-# #includes in #ifdefs properly, so they will erroneously be marked as being
-# included, but not part of the source list.
 IGNORED_INCLUDES = {
-    b'compiler/translator/TranslatorESSL.h',
-    b'compiler/translator/TranslatorGLSL.h',
-    b'compiler/translator/TranslatorHLSL.h',
     b'compiler/translator/TranslatorVulkan.h',
-    b'libANGLE/renderer/d3d/DeviceD3D.h',
-    b'libANGLE/renderer/d3d/DisplayD3D.h',
-    b'libANGLE/renderer/d3d/RenderTargetD3D.h',
     b'libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h',
     b'libANGLE/renderer/gl/glx/DisplayGLX.h',
     b'libANGLE/renderer/gl/cgl/DisplayCGL.h',
@@ -197,21 +188,7 @@ IGNORED_INCLUDE_PREFIXES = {
     b'X11',
 }
 
-IGNORED_DIRECTORIES = {
-    '//third_party/glslang',
-    '//third_party/spirv-tools',
-    '//third_party/SwiftShader',
-    '//third_party/vulkan-headers',
-    '//third_party/vulkan-loader',
-    '//third_party/vulkan-tools',
-    '//third_party/vulkan-validation-layers',
-}
-
 def has_all_includes(target_name: str, descs: dict) -> bool:
-    for ignored_directory in IGNORED_DIRECTORIES:
-        if target_name.startswith(ignored_directory):
-            return True
-
     flat = flattened_target(target_name, descs, stop_at_lib=False)
     acceptable_sources = flat.get('sources', []) + flat.get('outputs', [])
     acceptable_sources = {x.rsplit('/', 1)[-1].encode() for x in acceptable_sources}
@@ -285,6 +262,7 @@ for (k,desc) in out.items():
     for dep_name in set(desc['deps']):
         dep = descs[dep_name]
         if dep['type'] in LIBRARY_TYPES:
+            assert dep_name.startswith('//:'), dep_name
             dep_libs.add(dep_name[3:])
     desc['deps'] = sortedi(dep_libs)
 

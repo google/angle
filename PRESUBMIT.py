@@ -7,23 +7,13 @@ See http://dev.chromium.org/developers/how-tos/depottools/presubmit-scripts
 for more details on the presubmit API built into depot_tools.
 """
 
-import os
-import shutil
-import subprocess
-import tempfile
+from subprocess import call
 
 # Fragment of a regular expression that matches C++ and Objective-C++ implementation files.
 _IMPLEMENTATION_EXTENSIONS = r'\.(cc|cpp|cxx|mm)$'
 
 # Fragment of a regular expression that matches C++ and Objective-C++ header files.
 _HEADER_EXTENSIONS = r'\.(h|hpp|hxx)$'
-
-_PRIMARY_EXPORT_TARGETS = [
-    '//:libEGL',
-    '//:libGLESv1_CM',
-    '//:libGLESv2',
-    '//:translator',
-]
 
 
 def _CheckChangeHasBugField(input_api, output_api):
@@ -112,42 +102,12 @@ def _CheckNewHeaderWithoutGnChange(input_api, output_api):
     return []
 
 
-def _CheckExportValidity(input_api, output_api):
-    outdir = tempfile.mkdtemp()
-    try:
-        try:
-            subprocess.check_output(['gn', 'gen', outdir])
-        except subprocess.CalledProcessError as e:
-            return [
-                output_api.PresubmitError(
-                    'Unable to run gn gen for export_targets.py: %s' % e.output)
-            ]
-        export_target_script = os.path.join(input_api.PresubmitLocalPath(), 'scripts',
-                                            'export_targets.py')
-        try:
-            subprocess.check_output(
-                ['vpython3', export_target_script, outdir] + _PRIMARY_EXPORT_TARGETS,
-                stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            if input_api.is_committing:
-                return [output_api.PresubmitError('export_targets.py failed: %s' % e.output)]
-            return [
-                output_api.PresubmitPromptWarning(
-                    'export_targets.py failed, this may just be due to your local checkout: %s' %
-                    e.output)
-            ]
-        return []
-    finally:
-        shutil.rmtree(outdir)
-
-
 def CheckChangeOnUpload(input_api, output_api):
     results = []
     results.extend(_CheckCodeGeneration(input_api, output_api))
     results.extend(_CheckChangeHasBugField(input_api, output_api))
     results.extend(input_api.canned_checks.CheckChangeHasDescription(input_api, output_api))
     results.extend(_CheckNewHeaderWithoutGnChange(input_api, output_api))
-    results.extend(_CheckExportValidity(input_api, output_api))
     results.extend(
         input_api.canned_checks.CheckPatchFormatted(
             input_api, output_api, result_factory=output_api.PresubmitError))
@@ -161,6 +121,5 @@ def CheckChangeOnCommit(input_api, output_api):
         input_api.canned_checks.CheckPatchFormatted(
             input_api, output_api, result_factory=output_api.PresubmitError))
     results.extend(_CheckChangeHasBugField(input_api, output_api))
-    results.extend(_CheckExportValidity(input_api, output_api))
     results.extend(input_api.canned_checks.CheckChangeHasDescription(input_api, output_api))
     return results
