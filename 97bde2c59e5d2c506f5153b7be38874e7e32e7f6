@@ -46,6 +46,30 @@
       "revId": "97bde2c59e5d2c506f5153b7be38874e7e32e7f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de74f39c_0a66e772",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-04T18:11:27Z",
+      "side": 1,
+      "message": "It\u0027s probably easier on the NVIDIA people if we start a new bug instead of repurposing one to keep the communication clear. Filed http://anglebug.com/3970 , can you update these tags and re-land?",
+      "parentUuid": "99eb68f7_b9d5ecc2",
+      "range": {
+        "startLine": 557,
+        "startChar": 0,
+        "endLine": 557,
+        "endChar": 5
+      },
+      "revId": "97bde2c59e5d2c506f5153b7be38874e7e32e7f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
