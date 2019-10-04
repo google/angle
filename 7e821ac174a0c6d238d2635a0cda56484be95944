@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e1decb6_755352b7",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-04T17:14:11Z",
+      "side": 1,
+      "message": "actually I didn\u0027t notice these changes. Probably should make this DE_OS !\u003d DE_OS_LINUX",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 5
+      },
+      "revId": "7e821ac174a0c6d238d2635a0cda56484be95944",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
