@@ -554,8 +554,8 @@
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
 
 // Polygon offset:
-3678 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
-3678 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_factor_1_slope = FAIL
+3970 VULKAN NVIDIA : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
+3970 VULKAN NVIDIA : dEQP-GLES3.functional.polygon_offset.float32_factor_1_slope = FAIL
 
 // Flat shading:
 3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
