@@ -181,8 +181,8 @@ ANGLENativeDisplay::ANGLENativeDisplay(std::vector<EGLAttrib> attribs)
 NativePixmap::NativePixmap(EGLNativeDisplayType display, int width, int height, int bitDepth)
     : eglu::NativePixmap(kBitmapCapabilities), mPixmap(CreateOSPixmap())
 {
-#if (DE_OS == DE_OS_ANDROID)
-    throw tcu::NotSupportedError("Pixmap not supported on Android");
+#if (DE_OS != DE_OS_UNIX)
+    throw tcu::NotSupportedError("Pixmap not supported");
 #else
     if (!mPixmap)
     {
