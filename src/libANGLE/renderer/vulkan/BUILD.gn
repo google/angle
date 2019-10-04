@@ -4,6 +4,7 @@
 #
 # This file houses the build configuration for the ANGLE Vulkan back-end.
 
+import("//build_overrides/swiftshader.gni")
 import("../../../../gni/angle.gni")
 
 assert(angle_enable_vulkan)
