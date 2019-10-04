@@ -72,7 +72,7 @@ enum
     IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS = 8,
 
     // Implementation upper limits, real maximums depend on the hardware.
-    IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS = 64
+    IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS = 64,
 };
 
 namespace limits
@@ -80,6 +80,13 @@ namespace limits
 // Some of the minimums required by GL, used to detect if the backend meets the minimum requirement.
 // Currently, there's no need to separate these values per spec version.
 constexpr uint32_t kMinimumComputeStorageBuffers = 4;
+
+// OpenGL ES 3.0+ Minimum Values
+// Table 6.31 MAX_VERTEX_UNIFORM_BLOCKS minimum value = 12
+// Table 6.32 MAX_FRAGMENT_UNIFORM_BLOCKS minimum value = 12
+constexpr uint32_t kMinimumShaderUniformBlocks = 12;
+// Table 6.31 MAX_VERTEX_OUTPUT_COMPONENTS minimum value = 64
+constexpr uint32_t kMinimumVertexOutputComponents = 64;
 }  // namespace limits
 
 }  // namespace gl
