@@ -1613,12 +1613,10 @@ angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
         return angle::Result::Continue;
     }
 
-    uint32_t layerCount = GetImageLayerCountForView(*mImage);
-
     // Lazily allocate the image view itself.
     // Note that these views are specifically made to be used as color attachments, and therefore
     // don't have swizzle.
-    gl::TextureType viewType = vk::Get2DTextureType(layerCount, mImage->getSamples());
+    gl::TextureType viewType = vk::Get2DTextureType(1, mImage->getSamples());
     return mImage->initLayerImageView(context, viewType, mImage->getAspectFlags(),
                                       gl::SwizzleState(), imageView,
                                       getNativeImageLevel(static_cast<uint32_t>(level)), 1,
@@ -1649,12 +1647,7 @@ angle::Result TextureVk::getLayerLevelStorageImageView(ContextVk *contextVk,
     }
     else
     {
-        // Create a view of the selected layer.
-        imageView = getLayerLevelImageViewImpl(&mLayerLevelStorageImageViews, singleLayer, level);
-
-        // If viewing a single layer, the image is always 2D.  Note that GLES doesn't support
-        // multisampled storage images.
-        viewType = gl::TextureType::_2D;
+        return getLayerLevelDrawImageView(contextVk, singleLayer, level, imageViewOut);
     }
 
     *imageViewOut = imageView;
@@ -1841,14 +1834,6 @@ void TextureVk::releaseImageViews(ContextVk *contextVk)
         contextVk->addGarbage(&imageView);
     }
     mLevelStorageImageViews.clear();
-    for (vk::ImageViewVector &layerViews : mLayerLevelStorageImageViews)
-    {
-        for (vk::ImageView &imageView : layerViews)
-        {
-            contextVk->addGarbage(&imageView);
-        }
-    }
-    mLayerLevelStorageImageViews.clear();
 }
 
 void TextureVk::releaseStagingBuffer(ContextVk *contextVk)

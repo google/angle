@@ -358,7 +358,6 @@ class TextureVk : public TextureImpl
     vk::ImageViewVector mLayerFetchImageView;
     // Storage image views.
     vk::ImageViewVector mLevelStorageImageViews;
-    vk::LayerLevelImageViewVector mLayerLevelStorageImageViews;
 
     vk::Sampler mSampler;
     RenderTargetVk mRenderTarget;
