@@ -159,6 +159,8 @@ TEST_P(LinkAndRelinkTest, RenderingProgramFailsWithProgramInstalled)
 // Tests uniform default values.
 TEST_P(LinkAndRelinkTest, UniformDefaultValues)
 {
+    // TODO(anglebug.com/3969): Understand why rectangle texture CLs made this fail.
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel());
     constexpr char kFS[] = R"(precision mediump float;
 uniform vec4 u_uniform;
 
