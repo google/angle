@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64d101fc_c186d8b6",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-04T18:04:23Z",
+      "side": 1,
+      "message": "Could you file a separate bug describing your findings about the NVIDIA driver and tag these? We can cc colleagues from NVIDIA and ask them to look into if it\u0027s a Vulkan bug and/or missing CTS coverage.",
+      "range": {
+        "startLine": 557,
+        "startChar": 0,
+        "endLine": 557,
+        "endChar": 5
+      },
+      "revId": "97bde2c59e5d2c506f5153b7be38874e7e32e7f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
