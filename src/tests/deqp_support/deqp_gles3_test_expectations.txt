@@ -568,8 +568,14 @@
 2672 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
 2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
 
-// textureSize querying from LOD > 0 is failing
-3948 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.* = SKIP
+// Texture staging buffer needs non-color support
+3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2dshadow_vertex = SKIP
+3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2dshadow_fragment = SKIP
+3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2darrayshadow_vertex = SKIP
+3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2darrayshadow_fragment = SKIP
+3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.samplercubeshadow_vertex = SKIP
+3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.samplercubeshadow_fragment = SKIP
+
 
 // Misc unimplemented:
 
