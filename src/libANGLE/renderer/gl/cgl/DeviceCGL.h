@@ -1,25 +1,24 @@
 //
-// Copyright 2016 The ANGLE Project Authors. All rights reserved.
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// DeviceVk.h:
-//    Defines the class interface for DeviceVk, implementing DeviceImpl.
-//
 
-#ifndef LIBANGLE_RENDERER_VULKAN_DEVICEVK_H_
-#define LIBANGLE_RENDERER_VULKAN_DEVICEVK_H_
+// DeviceCGL.h: CGL implementation of egl::Device
 
+#ifndef LIBANGLE_RENDERER_GL_CGL_DEVICECGL_H_
+#define LIBANGLE_RENDERER_GL_CGL_DEVICECGL_H_
+
+#include "libANGLE/Device.h"
 #include "libANGLE/renderer/DeviceImpl.h"
 
 namespace rx
 {
-
-class DeviceVk : public DeviceImpl
+class DeviceCGL : public DeviceImpl
 {
   public:
-    DeviceVk();
-    ~DeviceVk() override;
+    DeviceCGL();
+    ~DeviceCGL() override;
 
     egl::Error initialize() override;
     egl::Error getAttribute(const egl::Display *display,
@@ -31,4 +30,4 @@ class DeviceVk : public DeviceImpl
 
 }  // namespace rx
 
-#endif  // LIBANGLE_RENDERER_VULKAN_DEVICEVK_H_
+#endif  // LIBANGLE_RENDERER_GL_CGL_DEVICECGL_H_

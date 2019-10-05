@@ -755,7 +755,7 @@ egl::Error Renderer11::initializeD3DDevice()
 
         // We should use the inputted D3D11 device instead
         void *device = nullptr;
-        ANGLE_TRY(deviceD3D->getDevice(&device));
+        ANGLE_TRY(deviceD3D->getAttribute(mDisplay, EGL_D3D11_DEVICE_ANGLE, &device));
 
         ID3D11Device *d3dDevice = static_cast<ID3D11Device *>(device);
         if (FAILED(d3dDevice->GetDeviceRemovedReason()))
