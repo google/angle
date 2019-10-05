@@ -354,8 +354,6 @@ class TextureVk : public TextureImpl
     TextureVkViews mStencilViews;
     // Draw views.
     vk::LayerLevelImageViewVector mLayerLevelDrawImageViews;
-    // Fetch views.
-    vk::ImageViewVector mLayerFetchImageView;
     // Storage image views.
     vk::ImageViewVector mLevelStorageImageViews;
 

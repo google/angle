@@ -88,7 +88,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         // Clear the renderbuffer if it has emulated channels.
         mImage->stageClearIfEmulatedFormat(gl::ImageIndex::Make2D(0), vkFormat);
 
-        mRenderTarget.init(mImage, &mImageView, nullptr, 0, 0);
+        mRenderTarget.init(mImage, &mImageView, 0, 0);
     }
 
     return angle::Result::Continue;
@@ -168,22 +168,19 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
                                      rendererQueueFamilyIndex, commandBuffer);
     }
 
-    ANGLE_TRY(mImage->initLayerImageView(contextVk, imageVk->getImageTextureType(), aspect,
-                                         gl::SwizzleState(), &mImageView, imageVk->getImageLevel(),
-                                         1, imageVk->getImageLayer(), 1));
+    gl::TextureType viewType = imageVk->getImageTextureType();
 
     if (imageVk->getImageTextureType() == gl::TextureType::CubeMap)
     {
-        gl::TextureType arrayType = vk::Get2DTextureType(imageVk->getImage()->getLayerCount(),
-                                                         imageVk->getImage()->getSamples());
-        ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, aspect, gl::SwizzleState(),
-                                             &mCubeImageFetchView, imageVk->getImageLevel(), 1,
-                                             imageVk->getImageLayer(), 1));
+        viewType = vk::Get2DTextureType(imageVk->getImage()->getLayerCount(),
+                                        imageVk->getImage()->getSamples());
     }
 
-    mRenderTarget.init(mImage, &mImageView,
-                       mCubeImageFetchView.valid() ? &mCubeImageFetchView : nullptr,
-                       imageVk->getImageLevel(), imageVk->getImageLayer());
+    ANGLE_TRY(mImage->initLayerImageView(contextVk, viewType, aspect, gl::SwizzleState(),
+                                         &mImageView, imageVk->getImageLevel(), 1,
+                                         imageVk->getImageLayer(), 1));
+
+    mRenderTarget.init(mImage, &mImageView, imageVk->getImageLevel(), imageVk->getImageLayer());
 
     return angle::Result::Continue;
 }
@@ -236,7 +233,6 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
     }
 
     contextVk->addGarbage(&mImageView);
-    contextVk->addGarbage(&mCubeImageFetchView);
 }
 
 }  // namespace rx

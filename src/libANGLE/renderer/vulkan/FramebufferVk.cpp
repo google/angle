@@ -821,7 +821,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         else
         {
             ANGLE_TRY(utilsVk.colorBlitResolve(contextVk, this, &readRenderTarget->getImage(),
-                                               readRenderTarget->getFetchImageView(), params));
+                                               readRenderTarget->getReadImageView(), params));
         }
     }
 
