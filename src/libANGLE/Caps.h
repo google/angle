@@ -83,7 +83,7 @@ void InitMinimumTextureCapsMap(const Version &clientVersion,
                                const Extensions &extensions,
                                TextureCapsMap *capsMap);
 
-// Returns true if all the formats required to support GL_CHROMIUM_compressed_texture_etc are
+// Returns true if all the formats required to support GL_ANGLE_compressed_texture_etc are
 // present. Does not determine if they are natively supported without decompression.
 bool DetermineCompressedTextureETCSupport(const TextureCapsMap &textureCaps);
 
@@ -234,7 +234,7 @@ struct Extensions
     // OES_compressed_EAC_RG11_signed_texture
     bool compressedEACRG11SignedTexture = false;
 
-    // GL_CHROMIUM_compressed_texture_etc
+    // ANGLE_compressed_texture_etc
     // ONLY exposed if ETC texture formats are natively supported without decompression
     // Backends should enable this extension explicitly. It is not enabled with
     // setTextureExtensionSupport, use DetermineCompressedTextureETCSupport to check if all of the

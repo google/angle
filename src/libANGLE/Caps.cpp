@@ -777,7 +777,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["OES_compressed_EAC_R11_signed_texture"] = enableableExtension(&Extensions::compressedEACR11SignedTexture);
         map["OES_compressed_EAC_RG11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACRG11UnsignedTexture);
         map["OES_compressed_EAC_RG11_signed_texture"] = enableableExtension(&Extensions::compressedEACRG11SignedTexture);
-        map["GL_CHROMIUM_compressed_texture_etc"] = enableableExtension(&Extensions::compressedTextureETC);
+        map["GL_ANGLE_compressed_texture_etc"] = enableableExtension(&Extensions::compressedTextureETC);
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextureANGLE);
         map["GL_OES_depth_texture"] = esOnlyExtension(&Extensions::depthTextureOES);

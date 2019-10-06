@@ -1404,7 +1404,7 @@ void GenerateCaps(const FunctionsGL *functions,
         functions->hasGLESExtension("GL_OES_draw_elements_base_vertex") ||
         functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex");
 
-    // GL_CHROMIUM_compressed_texture_etc
+    // ANGLE_compressed_texture_etc
     // Expose this extension only when we support the formats or we're running on top of a native
     // ES driver.
     extensions->compressedTextureETC = functions->standard == STANDARD_GL_ES &&
