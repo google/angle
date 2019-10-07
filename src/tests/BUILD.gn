@@ -307,6 +307,11 @@ if (build_angle_gles1_conform_tests) {
       "NULLWS",
     ]
 
+    # This is used by the tests to typedef uint32_t. For some reason only needed on mac.
+    if (is_mac) {
+      defines += [ "__linux" ]
+    }
+
     cflags = []
     if (is_clang) {
       # Remove when crbug.com/428099 is resolved.
@@ -322,6 +327,8 @@ if (build_angle_gles1_conform_tests) {
         # Upstream tests do null pointer arithmetic, so disable those warnings.
         "-Wno-null-pointer-arithmetic",
       ]
+    } else {
+      cflags += [ "/wd4101" ]  # unreferenced local variable
     }
   }
 
