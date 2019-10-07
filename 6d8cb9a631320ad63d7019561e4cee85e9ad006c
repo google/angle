@@ -16,6 +16,24 @@
       "revId": "6d8cb9a631320ad63d7019561e4cee85e9ad006c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7877763c_e90d152d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-10-07T16:21:46Z",
+      "side": 1,
+      "message": "The assertion is that if baseLevel was greater than zero before, there will be a staged update for it, and you won\u0027t reach this code.  That\u0027s key to this working for texStorage in particular.  I added the assert below because we were seeing very large level counts since srcLevelVK is unsigned.  It should help catch any new scenarios we haven\u0027t thought of yet.",
+      "parentUuid": "17476206_9ff7bf32",
+      "revId": "6d8cb9a631320ad63d7019561e4cee85e9ad006c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
