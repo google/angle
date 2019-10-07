@@ -767,16 +767,16 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_texture_compression_astc"] = enableableExtension(&Extensions::textureCompressionASTCOES);
         map["GL_EXT_texture_compression_bptc"] = enableableExtension(&Extensions::textureCompressionBPTC);
         map["GL_OES_compressed_ETC1_RGB8_texture"] = enableableExtension(&Extensions::compressedETC1RGB8Texture);
-        map["OES_compressed_ETC2_RGB8_texture"] = enableableExtension(&Extensions::compressedETC2RGB8Texture);
-        map["OES_compressed_ETC2_sRGB8_texture"] = enableableExtension(&Extensions::compressedETC2sRGB8Texture);
-        map["OES_compressed_ETC2_punchthroughA_RGBA8_texture"] = enableableExtension(&Extensions::compressedETC2PunchthroughARGB8Texture);
-        map["OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture"] = enableableExtension(&Extensions::compressedETC2PunchthroughAsRGB8AlphaTexture);
-        map["OES_compressed_ETC2_RGBA8_texture"] = enableableExtension(&Extensions::compressedETC2RGBA8Texture);
-        map["OES_compressed_ETC2_sRGB8_alpha8_texture"] = enableableExtension(&Extensions::compressedETC2sRGB8Alpha8Texture);
-        map["OES_compressed_EAC_R11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACR11UnsignedTexture);
-        map["OES_compressed_EAC_R11_signed_texture"] = enableableExtension(&Extensions::compressedEACR11SignedTexture);
-        map["OES_compressed_EAC_RG11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACRG11UnsignedTexture);
-        map["OES_compressed_EAC_RG11_signed_texture"] = enableableExtension(&Extensions::compressedEACRG11SignedTexture);
+        map["GL_OES_compressed_ETC2_RGB8_texture"] = enableableExtension(&Extensions::compressedETC2RGB8Texture);
+        map["GL_OES_compressed_ETC2_sRGB8_texture"] = enableableExtension(&Extensions::compressedETC2sRGB8Texture);
+        map["GL_OES_compressed_ETC2_punchthroughA_RGBA8_texture"] = enableableExtension(&Extensions::compressedETC2PunchthroughARGB8Texture);
+        map["GL_OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture"] = enableableExtension(&Extensions::compressedETC2PunchthroughAsRGB8AlphaTexture);
+        map["GL_OES_compressed_ETC2_RGBA8_texture"] = enableableExtension(&Extensions::compressedETC2RGBA8Texture);
+        map["GL_OES_compressed_ETC2_sRGB8_alpha8_texture"] = enableableExtension(&Extensions::compressedETC2sRGB8Alpha8Texture);
+        map["GL_OES_compressed_EAC_R11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACR11UnsignedTexture);
+        map["GL_OES_compressed_EAC_R11_signed_texture"] = enableableExtension(&Extensions::compressedEACR11SignedTexture);
+        map["GL_OES_compressed_EAC_RG11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACRG11UnsignedTexture);
+        map["GL_OES_compressed_EAC_RG11_signed_texture"] = enableableExtension(&Extensions::compressedEACRG11SignedTexture);
         map["GL_ANGLE_compressed_texture_etc"] = enableableExtension(&Extensions::compressedTextureETC);
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextureANGLE);
@@ -873,6 +873,14 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_draw_texture"] = enableableExtension(&Extensions::drawTexture);
         map["GL_ANGLE_memory_size"] = enableableExtension(&Extensions::memorySize);
         // clang-format on
+
+#if defined(ANGLE_ENABLE_ASSERTS)
+        // Verify all extension strings start with GL_
+        for (const auto &extension : map)
+        {
+            ASSERT(extension.first.rfind("GL_", 0) == 0);
+        }
+#endif
 
         return map;
     };
