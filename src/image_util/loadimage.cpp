@@ -1539,46 +1539,6 @@ void LoadRGB32FToRGB16F(size_t width,
     }
 }
 
-void LoadRGBDXT1ToRGBADXT3(size_t width,
-                           size_t height,
-                           size_t depth,
-                           const uint8_t *input,
-                           size_t inputRowPitch,
-                           size_t inputDepthPitch,
-                           uint8_t *output,
-                           size_t outputRowPitch,
-                           size_t outputDepthPitch)
-{
-    constexpr size_t kBlockWidth  = 4;
-    constexpr size_t kBlockHeight = 4;
-    constexpr size_t kBlockDepth  = 1;
-    constexpr size_t kBlockSize   = 8;
-
-    const size_t columns = (width + (kBlockWidth - 1)) / kBlockWidth;
-    const size_t rows    = (height + (kBlockHeight - 1)) / kBlockHeight;
-    const size_t layers  = (depth + (kBlockDepth - 1)) / kBlockDepth;
-
-    for (size_t z = 0; z < layers; ++z)
-    {
-        for (size_t y = 0; y < rows; ++y)
-        {
-            for (size_t x = 0; x < columns; x++)
-            {
-                const uint8_t *source =
-                    priv::OffsetDataPointer<uint8_t>(input, y, z, inputRowPitch, inputDepthPitch) +
-                    (x * kBlockSize);
-                uint8_t *dest = priv::OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch,
-                                                                 outputDepthPitch) +
-                                (x * kBlockSize * 2);
-
-                // DXT3 has a block for alpha then a block for color
-                memset(dest, 0xFF, kBlockSize);
-                memcpy(dest + kBlockSize, source, kBlockSize);
-            }
-        }
-    }
-}
-
 void LoadR32ToR16(size_t width,
                   size_t height,
                   size_t depth,

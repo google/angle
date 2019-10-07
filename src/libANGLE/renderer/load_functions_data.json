@@ -608,9 +608,6 @@
     }
   },
   "GL_COMPRESSED_RGB_S3TC_DXT1_EXT": {
-    "BC3_RGBA_UNORM_BLOCK": {
-      "GL_UNSIGNED_BYTE": "LoadRGBDXT1ToRGBADXT3"
-    },
     "NONE": {
       "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 1, 8>"
     }
@@ -846,9 +843,6 @@
     }
   },
   "GL_COMPRESSED_SRGB_S3TC_DXT1_EXT": {
-    "BC3_RGBA_UNORM_SRGB_BLOCK": {
-      "GL_UNSIGNED_BYTE": "LoadRGBDXT1ToRGBADXT3"
-    },
     "NONE": {
       "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 1, 8>"
     }

@@ -332,7 +332,7 @@ static D3D9FormatMap BuildD3D9FormatMap()
     InsertD3D9FormatInfo(&map, GL_BGRA4_ANGLEX,                     D3DFMT_A8R8G8B8,      D3DFMT_A8R8G8B8,       LoadBGRA4ToBGRA8                          );
     InsertD3D9FormatInfo(&map, GL_BGR5_A1_ANGLEX,                   D3DFMT_A8R8G8B8,      D3DFMT_A8R8G8B8,       LoadBGR5A1ToBGRA8                         );
 
-    InsertD3D9FormatInfo(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,     D3DFMT_DXT3,          D3DFMT_UNKNOWN,        LoadRGBDXT1ToRGBADXT3                     );
+    InsertD3D9FormatInfo(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,     D3DFMT_DXT1,          D3DFMT_UNKNOWN,        LoadCompressedToNative<4, 4, 1,  8>       );
     InsertD3D9FormatInfo(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,    D3DFMT_DXT1,          D3DFMT_UNKNOWN,        LoadCompressedToNative<4, 4, 1,  8>       );
     InsertD3D9FormatInfo(&map, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE,  D3DFMT_DXT3,          D3DFMT_UNKNOWN,        LoadCompressedToNative<4, 4, 1, 16>       );
     InsertD3D9FormatInfo(&map, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE,  D3DFMT_DXT5,          D3DFMT_UNKNOWN,        LoadCompressedToNative<4, 4, 1, 16>       );

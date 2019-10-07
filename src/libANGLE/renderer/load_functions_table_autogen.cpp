@@ -832,18 +832,6 @@ LoadImageFunctionInfo COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT_to_default(GLenum t
     }
 }
 
-LoadImageFunctionInfo COMPRESSED_RGB_S3TC_DXT1_EXT_to_BC3_RGBA_UNORM_BLOCK(GLenum type)
-{
-    switch (type)
-    {
-        case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadRGBDXT1ToRGBADXT3, true);
-        default:
-            UNREACHABLE();
-            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
-    }
-}
-
 LoadImageFunctionInfo COMPRESSED_RGB_S3TC_DXT1_EXT_to_default(GLenum type)
 {
     switch (type)
@@ -1358,18 +1346,6 @@ LoadImageFunctionInfo COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT_to_default(GLenum type
     {
         case GL_UNSIGNED_BYTE:
             return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
-        default:
-            UNREACHABLE();
-            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
-    }
-}
-
-LoadImageFunctionInfo COMPRESSED_SRGB_S3TC_DXT1_EXT_to_BC3_RGBA_UNORM_SRGB_BLOCK(GLenum type)
-{
-    switch (type)
-    {
-        case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadRGBDXT1ToRGBADXT3, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -3272,15 +3248,7 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
         case GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT:
             return COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT_to_default;
         case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-        {
-            switch (angleFormat)
-            {
-                case FormatID::BC3_RGBA_UNORM_BLOCK:
-                    return COMPRESSED_RGB_S3TC_DXT1_EXT_to_BC3_RGBA_UNORM_BLOCK;
-                default:
-                    return COMPRESSED_RGB_S3TC_DXT1_EXT_to_default;
-            }
-        }
+            return COMPRESSED_RGB_S3TC_DXT1_EXT_to_default;
         case GL_COMPRESSED_SIGNED_R11_EAC:
         {
             switch (angleFormat)
@@ -3429,15 +3397,7 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
         case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT:
             return COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT_to_default;
         case GL_COMPRESSED_SRGB_S3TC_DXT1_EXT:
-        {
-            switch (angleFormat)
-            {
-                case FormatID::BC3_RGBA_UNORM_SRGB_BLOCK:
-                    return COMPRESSED_SRGB_S3TC_DXT1_EXT_to_BC3_RGBA_UNORM_SRGB_BLOCK;
-                default:
-                    return COMPRESSED_SRGB_S3TC_DXT1_EXT_to_default;
-            }
-        }
+            return COMPRESSED_SRGB_S3TC_DXT1_EXT_to_default;
         case GL_DEPTH24_STENCIL8:
         {
             switch (angleFormat)
