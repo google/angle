@@ -52,6 +52,24 @@
       "revId": "e94f473753bea6cb8ddbfa5e894f55e4a272bf28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c277450_a41b9bbc",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-08T16:35:30Z",
+      "side": 0,
+      "message": "Sorry, that should read \"I\u0027m a bit hesitant to discard the change state after success pattern because it makes the usage in this class inconsistent.\"",
+      "parentUuid": "ba709146_eec3d4e5",
+      "revId": "e94f473753bea6cb8ddbfa5e894f55e4a272bf28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
