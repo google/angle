@@ -34,6 +34,24 @@
       "revId": "e94f473753bea6cb8ddbfa5e894f55e4a272bf28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba709146_eec3d4e5",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-08T16:34:35Z",
+      "side": 0,
+      "message": "I figured. It\u0027s a minor point but I\u0027m hesitant the \"only change state after a success\" pattern is inconsistent here.\n\nWe could change the getEffectiveMaxLevel usage. It should be \u003d\u003d the \"GLsizei levels\" parameter in this function. Do you recall where the usage(s) were?",
+      "parentUuid": "f0b2085e_db126757",
+      "revId": "e94f473753bea6cb8ddbfa5e894f55e4a272bf28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
