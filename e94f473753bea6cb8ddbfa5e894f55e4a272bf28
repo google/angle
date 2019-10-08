@@ -70,6 +70,24 @@
       "revId": "e94f473753bea6cb8ddbfa5e894f55e4a272bf28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ab7a8b4_adde4827",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-10-08T16:49:20Z",
+      "side": 0,
+      "message": "Ah, okay, understood, I didn\u0027t see that pattern.  In that case, yeah, need to update the helpers to not rely on state that hasn\u0027t been changed yet, or change the backend not to use the helpers.\n\nThe only usages I recall at the moment are getEffectiveMaxLevel and getEffectiveBaseLevel.  But looking at Texture.cpp, I see several other helpers that change their answer based on mImmutableFormat.",
+      "parentUuid": "6c277450_a41b9bbc",
+      "revId": "e94f473753bea6cb8ddbfa5e894f55e4a272bf28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
