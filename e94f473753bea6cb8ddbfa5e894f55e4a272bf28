@@ -16,6 +16,24 @@
       "revId": "e94f473753bea6cb8ddbfa5e894f55e4a272bf28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0b2085e_db126757",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2019-10-08T16:31:05Z",
+      "side": 0,
+      "message": "The VK backend calls back to the front end to get max level (TextureState::getEffectiveMaxLevel) and base level (TextureState::getEffectiveBaseLevel), and those functions check whether the surface is immutable (if (mImmutableFormat) {...}).  Those fields should be set before calling into the backend.\n\nI don\u0027t recall when I ran into this, but I think this is a clear problem.",
+      "parentUuid": "a2355ed6_7b222c50",
+      "revId": "e94f473753bea6cb8ddbfa5e894f55e4a272bf28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
