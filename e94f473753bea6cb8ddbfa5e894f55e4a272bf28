@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2355ed6_7b222c50",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-08T16:22:15Z",
+      "side": 0,
+      "message": "Cody, I didn\u0027t notice this change. Is it necessary to set?",
+      "revId": "e94f473753bea6cb8ddbfa5e894f55e4a272bf28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
