@@ -2551,6 +2551,21 @@ angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield ba
         dstAccess |= VK_ACCESS_INDIRECT_COMMAND_READ_BIT;
     }
 
+    if ((barriers & GL_SHADER_IMAGE_ACCESS_BARRIER_BIT) != 0)
+    {
+        srcAccess |= (VK_ACCESS_SHADER_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT);
+        dstAccess |= (VK_ACCESS_SHADER_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT);
+    }
+
+    if ((barriers & GL_FRAMEBUFFER_BARRIER_BIT) != 0)
+    {
+        srcAccess |=
+            (VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
+        dstAccess |=
+            (VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT |
+             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
+    }
+
     mCommandGraph.memoryBarrier(srcAccess, dstAccess, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
     return angle::Result::Continue;
 }

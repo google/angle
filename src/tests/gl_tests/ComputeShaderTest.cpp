@@ -2736,8 +2736,6 @@ TEST_P(ComputeShaderTest, UniformDirty)
 {
     // glReadPixels is getting the result of the first dispatch call.  http://anglebug.com/3879
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && (IsAMD() || IsNVIDIA()));
-    // Flaky on Linux FYI Release (Intel HD 630).  http://anglebug.com/3934
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux() && IsIntel());
 
     GLTexture texture[2];
     GLFramebuffer framebuffer;
