@@ -45,8 +45,8 @@ if (!build_with_chromium) {
   }
 }
 
-angle_executable("angle_unittests_helper") {
-  sources = angle_unittests_helper_sources
+angle_executable("test_utils_unittest_helper") {
+  sources = test_utils_unittest_helper_sources
 
   deps = [
     "${angle_root}:angle_common",
@@ -104,7 +104,7 @@ angle_test("angle_unittests") {
     # SystemUtils.RunApp, the only unittest using a helper binary, is not supported on these
     # platforms yet.
     data_deps = [
-      ":angle_unittests_helper",
+      ":test_utils_unittest_helper",
     ]
   }
 }
