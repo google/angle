@@ -241,6 +241,12 @@ struct Extensions
     // individual formats required to support this extension are available.
     bool compressedTextureETC = false;
 
+    // GL_IMG_texture_compression_pvrtc
+    bool compressedTexturePVRTC = false;
+
+    // GL_EXT_pvrtc_sRGB
+    bool compressedTexturePVRTCsRGB = false;
+
     // GL_EXT_sRGB
     // Implies that TextureCaps for GL_SRGB8_ALPHA8 and GL_SRGB8 exist
     // TODO: Don't advertise this extension in ES3

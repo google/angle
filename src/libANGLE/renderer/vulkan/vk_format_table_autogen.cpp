@@ -1101,6 +1101,38 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             // This format is not implemented in Vulkan.
             break;
 
+        case angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::PVRTC1_RGB_2BPP_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::PVRTC1_RGB_2BPP_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::PVRTC1_RGB_4BPP_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::PVRTC1_RGB_4BPP_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::FormatID::R10G10B10A2_SINT:
             internalFormat           = GL_RGB10_A2_SINT_ANGLEX;
             imageFormatID            = angle::FormatID::R10G10B10A2_SINT;

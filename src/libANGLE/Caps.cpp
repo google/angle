@@ -662,6 +662,26 @@ static bool DetermineBPTCTextureSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false);
 }
 
+// Check for GL_IMG_texture_compression_pvrtc
+static bool DeterminePVRTCTextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG, GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG,
+        GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG, GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG};
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false);
+}
+
+// Check for GL_EXT_pvrtc_sRGB
+static bool DeterminePVRTCsRGBTextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT, GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT,
+        GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT, GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT};
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false);
+}
+
 bool DetermineCompressedTextureETCSupport(const TextureCapsMap &textureCaps)
 {
     constexpr GLenum requiredFormats[] = {GL_COMPRESSED_R11_EAC,
@@ -722,6 +742,8 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     colorBufferFloat                 = DetermineColorBufferFloatSupport(textureCaps);
     textureNorm16                    = DetermineTextureNorm16Support(textureCaps);
     textureCompressionBPTC           = DetermineBPTCTextureSupport(textureCaps);
+    compressedTexturePVRTC           = DeterminePVRTCTextureSupport(textureCaps);
+    compressedTexturePVRTCsRGB       = DeterminePVRTCsRGBTextureSupport(textureCaps);
 }
 
 const ExtensionInfoMap &GetExtensionInfoMap()
@@ -778,6 +800,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_compressed_EAC_RG11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACRG11UnsignedTexture);
         map["GL_OES_compressed_EAC_RG11_signed_texture"] = enableableExtension(&Extensions::compressedEACRG11SignedTexture);
         map["GL_ANGLE_compressed_texture_etc"] = enableableExtension(&Extensions::compressedTextureETC);
+        map["GL_IMG_texture_compression_pvrtc"] = enableableExtension(&Extensions::compressedTexturePVRTC);
+        map["GL_EXT_pvrtc_sRGB"] = enableableExtension(&Extensions::compressedTexturePVRTCsRGB);
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextureANGLE);
         map["GL_OES_depth_texture"] = esOnlyExtension(&Extensions::depthTextureOES);

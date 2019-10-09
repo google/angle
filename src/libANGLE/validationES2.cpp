@@ -727,6 +727,36 @@ bool ValidateES2CopyTexImageParameters(Context *context,
                     return false;
                 }
                 break;
+            case GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
+            case GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
+            case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
+            case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
+                if (context->getExtensions().compressedTexturePVRTC)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
+                    return false;
+                }
+                else
+                {
+                    context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                    return false;
+                }
+                break;
+            case GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT:
+            case GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT:
+            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT:
+            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT:
+                if (context->getExtensions().compressedTexturePVRTCsRGB)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
+                    return false;
+                }
+                else
+                {
+                    context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                    return false;
+                }
+                break;
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_COMPONENT16:
             case GL_DEPTH_COMPONENT32_OES:
@@ -1563,6 +1593,36 @@ bool ValidateES2TexImageParametersBase(Context *context,
                     return false;
                 }
                 break;
+            case GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
+            case GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
+            case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
+            case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
+                if (context->getExtensions().compressedTexturePVRTC)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
+                    return false;
+                }
+                else
+                {
+                    context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                    return false;
+                }
+                break;
+            case GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT:
+            case GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT:
+            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT:
+            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT:
+                if (context->getExtensions().compressedTexturePVRTCsRGB)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
+                    return false;
+                }
+                else
+                {
+                    context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                    return false;
+                }
+                break;
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_STENCIL_OES:
                 if (!context->getExtensions().depthTextureANGLE &&
@@ -1937,6 +1997,26 @@ bool ValidateES2TexStorageParameters(Context *context,
         case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
         case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
             if (!context->getExtensions().lossyETCDecode)
+            {
+                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                return false;
+            }
+            break;
+        case GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
+        case GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
+        case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
+        case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
+            if (!context->getExtensions().compressedTexturePVRTC)
+            {
+                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                return false;
+            }
+            break;
+        case GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT:
+        case GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT:
+        case GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT:
+        case GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT:
+            if (!context->getExtensions().compressedTexturePVRTCsRGB)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
