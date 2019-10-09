@@ -50,17 +50,17 @@ deps = {
   },
 
   '{angle_root}/build': {
-    'url': '{chromium_git}/chromium/src/build.git@af1bbc9483aed572f1ea1a32e43bb504c3edb357',
+    'url': '{chromium_git}/chromium/src/build.git@fd0d28db8039e2aaf9fa35e53e3af6dc9ead8055',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@74cfb57006f83cfe050817526db359d5c8a11628',
+    'url': '{chromium_git}/chromium/src/buildtools.git@cf454b247c611167388742c7a31ef138a6031172',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/testing': {
-    'url': '{chromium_git}/chromium/src/testing@78e8d947158ba72b0e457abc9ea3fb30c2252646',
+    'url': '{chromium_git}/chromium/src/testing@9d2d0dad367ac7e98e64cc6881044c482e1c7eb8',
     'condition': 'not build_with_chromium',
   },
 
@@ -95,7 +95,7 @@ deps = {
   },
 
   '{angle_root}/third_party/googletest/src': {
-    'url': '{chromium_git}/external/github.com/google/googletest.git@3f5b5b8f8493a03fa25f1e4a7eae7678514a431d',
+    'url': '{chromium_git}/external/github.com/google/googletest.git@cd17fa2abda2a2e4111cdabd62a87aea16835014',
     'condition': 'not build_with_chromium',
   },
 
@@ -183,7 +183,7 @@ deps = {
   },
 
   '{angle_root}/third_party/yasm': {
-    'url': '{chromium_git}/chromium/src/third_party/yasm@15439370afd9df5359a0ff12244c2ccb2111c787',
+    'url': '{chromium_git}/chromium/src/third_party/yasm@cc10bc0f1d96a4bae0e775f2ac2b6ac5b08078c6',
     'condition': 'not build_with_chromium',
   },
 
@@ -193,12 +193,12 @@ deps = {
   },
 
   '{angle_root}/third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@0044d0424c7f7d15436541ed1ecc89479b8bfda4',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@ddebad26cfadeb4ecdfe3da8beb396a85cf90c91',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@2fef805e5b05b26a8c87c47865590b5f43218611',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@6bc727d9d80f2c3a97587676bb38c5472afe7e60',
     'condition': 'not build_with_chromium',
   },
 
