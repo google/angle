@@ -179,18 +179,6 @@ class TextureVk : public TextureImpl
     }
 
   private:
-    struct TextureVkViews final : angle::NonCopyable
-    {
-        TextureVkViews();
-        ~TextureVkViews();
-
-        void release(ContextVk *contextVk);
-
-        vk::ImageView mDrawImageView;
-        vk::ImageView mReadImageView;
-        vk::ImageView mFetchImageView;
-    };
-
     // Transform an image index from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets
     gl::ImageIndex getNativeImageIndex(const gl::ImageIndex &inputImageIndex) const;
@@ -311,13 +299,6 @@ class TextureVk : public TextureImpl
                                  const bool sized,
                                  uint32_t levelCount,
                                  uint32_t layerCount);
-    angle::Result initImageViewImpl(ContextVk *contextVk,
-                                    const vk::Format &format,
-                                    uint32_t levelCount,
-                                    uint32_t layerCount,
-                                    TextureVkViews *views,
-                                    VkImageAspectFlags aspectFlags,
-                                    gl::SwizzleState mappedSwizzle);
     angle::Result initLayerRenderTargets(ContextVk *contextVk, GLuint layerCount);
     vk::ImageView *getLevelImageViewImpl(vk::ImageViewVector *imageViews, size_t level);
     vk::ImageView *getLayerLevelImageViewImpl(vk::LayerLevelImageViewVector *imageViews,
@@ -330,8 +311,6 @@ class TextureVk : public TextureImpl
                                              const vk::Format &format);
 
     void onStagingBufferChange() { onStateChange(angle::SubjectMessage::SubjectChanged); }
-
-    const TextureVkViews *getTextureViews() const;
 
     angle::Result changeLevels(ContextVk *contextVk, GLuint baseLevel, GLuint maxLevel);
 
@@ -350,10 +329,14 @@ class TextureVk : public TextureImpl
     vk::ImageHelper *mImage;
 
     // Read views.
-    TextureVkViews mDefaultViews;
-    TextureVkViews mStencilViews;
+    vk::ImageView mReadImageView;
+    vk::ImageView mFetchImageView;
+    vk::ImageView mStencilReadImageView;
+
     // Draw views.
+    vk::ImageView mDrawImageView;
     vk::LayerLevelImageViewVector mLayerLevelDrawImageViews;
+
     // Storage image views.
     vk::ImageViewVector mLevelStorageImageViews;
 

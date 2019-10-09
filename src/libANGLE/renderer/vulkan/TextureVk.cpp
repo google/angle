@@ -107,65 +107,6 @@ bool HasBothDepthAndStencilAspects(VkImageAspectFlags aspectFlags)
 }
 }  // anonymous namespace
 
-TextureVk::TextureVkViews::TextureVkViews() {}
-TextureVk::TextureVkViews::~TextureVkViews() {}
-
-void TextureVk::TextureVkViews::release(ContextVk *contextVk)
-{
-    contextVk->addGarbage(&mDrawImageView);
-    contextVk->addGarbage(&mReadImageView);
-    contextVk->addGarbage(&mFetchImageView);
-}
-
-angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
-                                                     const angle::Format &sourceFormat,
-                                                     GLuint layer,
-                                                     GLuint firstMipLevel,
-                                                     GLuint maxMipLevel,
-                                                     const size_t sourceWidth,
-                                                     const size_t sourceHeight,
-                                                     const size_t sourceRowPitch,
-                                                     uint8_t *sourceData)
-{
-    size_t previousLevelWidth    = sourceWidth;
-    size_t previousLevelHeight   = sourceHeight;
-    uint8_t *previousLevelData   = sourceData;
-    size_t previousLevelRowPitch = sourceRowPitch;
-
-    for (GLuint currentMipLevel = firstMipLevel; currentMipLevel <= maxMipLevel; currentMipLevel++)
-    {
-        // Compute next level width and height.
-        size_t mipWidth  = std::max<size_t>(1, previousLevelWidth >> 1);
-        size_t mipHeight = std::max<size_t>(1, previousLevelHeight >> 1);
-
-        // With the width and height of the next mip, we can allocate the next buffer we need.
-        uint8_t *destData   = nullptr;
-        size_t destRowPitch = mipWidth * sourceFormat.pixelBytes;
-
-        size_t mipAllocationSize = destRowPitch * mipHeight;
-        gl::Extents mipLevelExtents(static_cast<int>(mipWidth), static_cast<int>(mipHeight), 1);
-
-        ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
-            contextVk, mipAllocationSize,
-            gl::ImageIndex::MakeFromType(mState.getType(), currentMipLevel, layer), mipLevelExtents,
-            gl::Offset(), &destData));
-        onStagingBufferChange();
-
-        // Generate the mipmap into that new buffer
-        sourceFormat.mipGenerationFunction(previousLevelWidth, previousLevelHeight, 1,
-                                           previousLevelData, previousLevelRowPitch, 0, destData,
-                                           destRowPitch, 0);
-
-        // Swap for the next iteration
-        previousLevelWidth    = mipWidth;
-        previousLevelHeight   = mipHeight;
-        previousLevelData     = destData;
-        previousLevelRowPitch = destRowPitch;
-    }
-
-    return angle::Result::Continue;
-}
-
 // TextureVk implementation.
 TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
     : TextureImpl(state),
@@ -953,8 +894,7 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     mImage->initStagingBuffer(contextVk->getRenderer(), format, vk::kStagingBufferFlags,
                               mStagingBufferInitialSize);
 
-    mRenderTarget.init(mImage, &mDefaultViews.mDrawImageView, getNativeImageLevel(0),
-                       getNativeImageLayer(0));
+    mRenderTarget.init(mImage, &mDrawImageView, getNativeImageLevel(0), getNativeImageLayer(0));
 
     // Force re-creation of layered render targets next time they are needed
     mLayerRenderTargets.clear();
@@ -1522,33 +1462,25 @@ void TextureVk::releaseOwnershipOfImage(const gl::Context *context)
     releaseAndDeleteImage(contextVk);
 }
 
-const TextureVk::TextureVkViews *TextureVk::getTextureViews() const
-{
-    VkImageAspectFlags aspectFlags = mImage->getAspectFlags();
-    if (HasBothDepthAndStencilAspects(aspectFlags) && mState.isStencilMode())
-    {
-        return &mStencilViews;
-    }
-    return &mDefaultViews;
-}
-
 const vk::ImageView &TextureVk::getReadImageView() const
 {
     ASSERT(mImage->valid());
-    const TextureVkViews *activeView = getTextureViews();
 
-    return activeView->mReadImageView;
+    if (mState.isStencilMode() && mStencilReadImageView.valid())
+    {
+        return mStencilReadImageView;
+    }
+
+    return mReadImageView;
 }
 
 const vk::ImageView &TextureVk::getFetchImageView() const
 {
     ASSERT(mImage->valid());
-    const TextureVkViews *activeViews = getTextureViews();
-    if (activeViews->mFetchImageView.valid())
-    {
-        return activeViews->mFetchImageView;
-    }
-    return activeViews->mReadImageView;
+
+    // We don't currently support fetch for depth/stencil cube map textures.
+    ASSERT(!mStencilReadImageView.valid() || !mFetchImageView.valid());
+    return (mFetchImageView.valid() ? mFetchImageView : mReadImageView);
 }
 
 vk::ImageView *TextureVk::getLayerLevelImageViewImpl(vk::LayerLevelImageViewVector *imageViews,
@@ -1713,20 +1645,34 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result TextureVk::initImageViewImpl(ContextVk *contextVk,
-                                           const vk::Format &format,
-                                           uint32_t levelCount,
-                                           uint32_t layerCount,
-                                           TextureVkViews *view,
-                                           VkImageAspectFlags aspectFlags,
-                                           gl::SwizzleState mappedSwizzle)
+angle::Result TextureVk::initImageViews(ContextVk *contextVk,
+                                        const vk::Format &format,
+                                        const bool sized,
+                                        uint32_t levelCount,
+                                        uint32_t layerCount)
 {
     uint32_t baseLevel = getNativeImageLevel(0);
     uint32_t baseLayer = getNativeImageLayer(0);
 
-    ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), aspectFlags, mappedSwizzle,
-                                         &view->mReadImageView, baseLevel, levelCount, baseLayer,
-                                         layerCount));
+    gl::SwizzleState mappedSwizzle;
+    MapSwizzleState(contextVk, format, sized, mState.getSwizzleState(), &mappedSwizzle);
+
+    const VkImageAspectFlags aspectFlags = vk::GetFormatAspectFlags(format.angleFormat());
+    if (HasBothDepthAndStencilAspects(aspectFlags))
+    {
+        ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), VK_IMAGE_ASPECT_DEPTH_BIT,
+                                             mappedSwizzle, &mReadImageView, baseLevel, levelCount,
+                                             baseLayer, layerCount));
+        ANGLE_TRY(mImage->initLayerImageView(
+            contextVk, mState.getType(), VK_IMAGE_ASPECT_STENCIL_BIT, mappedSwizzle,
+            &mStencilReadImageView, baseLevel, levelCount, baseLayer, layerCount));
+    }
+    else
+    {
+        ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), aspectFlags,
+                                             mappedSwizzle, &mReadImageView, baseLevel, levelCount,
+                                             baseLayer, layerCount));
+    }
 
     if (mState.getType() == gl::TextureType::CubeMap ||
         mState.getType() == gl::TextureType::_2DArray ||
@@ -1735,40 +1681,16 @@ angle::Result TextureVk::initImageViewImpl(ContextVk *contextVk,
         gl::TextureType arrayType = vk::Get2DTextureType(layerCount, mImage->getSamples());
 
         ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, aspectFlags, mappedSwizzle,
-                                             &view->mFetchImageView, baseLevel, levelCount,
-                                             baseLayer, layerCount));
+                                             &mFetchImageView, baseLevel, levelCount, baseLayer,
+                                             layerCount));
     }
 
     if (!format.imageFormat().isBlock)
     {
         ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), aspectFlags,
-                                             gl::SwizzleState(), &view->mDrawImageView, baseLevel,
-                                             1, baseLayer, layerCount));
+                                             gl::SwizzleState(), &mDrawImageView, baseLevel, 1,
+                                             baseLayer, layerCount));
     }
-
-    return angle::Result::Continue;
-}
-
-angle::Result TextureVk::initImageViews(ContextVk *contextVk,
-                                        const vk::Format &format,
-                                        const bool sized,
-                                        uint32_t levelCount,
-                                        uint32_t layerCount)
-{
-    ASSERT(mImage != nullptr);
-
-    gl::SwizzleState mappedSwizzle;
-    MapSwizzleState(contextVk, format, sized, mState.getSwizzleState(), &mappedSwizzle);
-
-    VkImageAspectFlags aspectFlags = vk::GetFormatAspectFlags(format.angleFormat());
-    if (HasBothDepthAndStencilAspects(aspectFlags))
-    {
-        ANGLE_TRY(initImageViewImpl(contextVk, format, levelCount, layerCount, &mStencilViews,
-                                    VK_IMAGE_ASPECT_STENCIL_BIT, mappedSwizzle));
-        aspectFlags = VK_IMAGE_ASPECT_DEPTH_BIT;
-    }
-    ANGLE_TRY(initImageViewImpl(contextVk, format, levelCount, layerCount, &mDefaultViews,
-                                aspectFlags, mappedSwizzle));
 
     return angle::Result::Continue;
 }
@@ -1796,8 +1718,10 @@ void TextureVk::releaseImage(ContextVk *contextVk)
 
 void TextureVk::releaseImageViews(ContextVk *contextVk)
 {
-    mDefaultViews.release(contextVk);
-    mStencilViews.release(contextVk);
+    contextVk->addGarbage(&mReadImageView);
+    contextVk->addGarbage(&mFetchImageView);
+    contextVk->addGarbage(&mStencilReadImageView);
+    contextVk->addGarbage(&mDrawImageView);
 
     for (vk::ImageViewVector &layerViews : mLayerLevelDrawImageViews)
     {
@@ -1826,5 +1750,54 @@ uint32_t TextureVk::getLevelCount() const
 {
     // getMipmapMaxLevel will be 0 here if mipmaps are not used, so the levelCount is always +1.
     return mState.getMipmapMaxLevel() + 1;
+}
+
+angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
+                                                     const angle::Format &sourceFormat,
+                                                     GLuint layer,
+                                                     GLuint firstMipLevel,
+                                                     GLuint maxMipLevel,
+                                                     const size_t sourceWidth,
+                                                     const size_t sourceHeight,
+                                                     const size_t sourceRowPitch,
+                                                     uint8_t *sourceData)
+{
+    size_t previousLevelWidth    = sourceWidth;
+    size_t previousLevelHeight   = sourceHeight;
+    uint8_t *previousLevelData   = sourceData;
+    size_t previousLevelRowPitch = sourceRowPitch;
+
+    for (GLuint currentMipLevel = firstMipLevel; currentMipLevel <= maxMipLevel; currentMipLevel++)
+    {
+        // Compute next level width and height.
+        size_t mipWidth  = std::max<size_t>(1, previousLevelWidth >> 1);
+        size_t mipHeight = std::max<size_t>(1, previousLevelHeight >> 1);
+
+        // With the width and height of the next mip, we can allocate the next buffer we need.
+        uint8_t *destData   = nullptr;
+        size_t destRowPitch = mipWidth * sourceFormat.pixelBytes;
+
+        size_t mipAllocationSize = destRowPitch * mipHeight;
+        gl::Extents mipLevelExtents(static_cast<int>(mipWidth), static_cast<int>(mipHeight), 1);
+
+        ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
+            contextVk, mipAllocationSize,
+            gl::ImageIndex::MakeFromType(mState.getType(), currentMipLevel, layer), mipLevelExtents,
+            gl::Offset(), &destData));
+        onStagingBufferChange();
+
+        // Generate the mipmap into that new buffer
+        sourceFormat.mipGenerationFunction(previousLevelWidth, previousLevelHeight, 1,
+                                           previousLevelData, previousLevelRowPitch, 0, destData,
+                                           destRowPitch, 0);
+
+        // Swap for the next iteration
+        previousLevelWidth    = mipWidth;
+        previousLevelHeight   = mipHeight;
+        previousLevelData     = destData;
+        previousLevelRowPitch = destRowPitch;
+    }
+
+    return angle::Result::Continue;
 }
 }  // namespace rx
