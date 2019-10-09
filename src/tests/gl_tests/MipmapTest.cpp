@@ -666,10 +666,6 @@ TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 // already uploaded before. The test expects that mip to be usable.
 TEST_P(MipmapTest, DefineValidExtraLevelAndUseItLater)
 {
-    // TODO(cnorthrop): Enabled the group to cover texture base level, but this test
-    // needs some triage: http://anglebug.com/3950
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
 
     GLubyte *levels[] = {mLevelZeroBlueInitData.data(), mLevelOneGreenInitData.data(),

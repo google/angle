@@ -2635,7 +2635,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         // If the update level is not within the requested range, skip the update.
         const bool isUpdateLevelOutsideRange =
             updateMipLevel < (levelStart + mBaseLevel) ||
-            (updateMipLevel > (levelEnd + mBaseLevel) || updateMipLevel > mMaxLevel);
+            (updateMipLevel >= (levelEnd + mBaseLevel) || updateMipLevel > mMaxLevel);
 
         // If the update layers don't intersect the requested layers, skip the update.
         const bool areUpdateLayersOutsideRange =
