@@ -5,9 +5,11 @@
 
 // system_utils_unittest_helper.cpp: Helper to the SystemUtils.RunApp unittest
 
-#include "common/system_utils_unittest_helper.h"
-#include <string.h>
+#include "test_utils_unittest_helper.h"
+
 #include "common/system_utils.h"
+
+#include <string.h>
 
 int main(int argc, char **argv)
 {
