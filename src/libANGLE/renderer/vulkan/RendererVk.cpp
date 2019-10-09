@@ -618,7 +618,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 #else
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
 #endif
-    mEnabledICD             = scopedEnvironment.getEnabledICD();
+    mEnabledICD = scopedEnvironment.getEnabledICD();
 
     // Gather global layer properties.
     uint32_t instanceLayerCount = 0;
@@ -1311,7 +1311,7 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     // TODO(syoussefi): when the code path using the extension is implemented, this should be
     // conditioned to the extension not being present as well.  http://anglebug.com/3206
     ANGLE_FEATURE_CONDITION((&mFeatures), emulateTransformFeedback,
-                            mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics)
+                            mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE)
 
     ANGLE_FEATURE_CONDITION((&mFeatures), disableFifoPresentMode, IsLinux() && isIntel)
 
