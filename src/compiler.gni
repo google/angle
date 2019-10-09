@@ -310,6 +310,14 @@ if (is_android) {
     "src/compiler/translator/SymbolTable_autogen.cpp",
   ]
 }
+
+angle_translator_lib_metal_sources = [
+  "src/compiler/translator/OutputVulkanGLSLForMetal.mm",
+  "src/compiler/translator/OutputVulkanGLSLForMetal.h",
+  "src/compiler/translator/TranslatorMetal.cpp",
+  "src/compiler/translator/TranslatorMetal.h",
+]
+
 angle_preprocessor_sources = [
   "src/compiler/preprocessor/DiagnosticsBase.cpp",
   "src/compiler/preprocessor/DiagnosticsBase.h",

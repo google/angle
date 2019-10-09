@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 216
+#define ANGLE_SH_VERSION 217
 
 enum ShShaderSpec
 {
@@ -69,6 +69,10 @@ enum ShShaderOutput
 
     // Output specialized GLSL to be fed to glslang for Vulkan SPIR.
     SH_GLSL_VULKAN_OUTPUT = 0x8B4B,
+
+    // Output specialized GLSL to be fed to glslang for Vulkan SPIR to be cross compiled to Metal
+    // later.
+    SH_GLSL_METAL_OUTPUT = 0x8B4C,
 };
 
 // Compile options.

@@ -757,6 +757,10 @@ bool IsOutputVulkan(ShShaderOutput output)
 {
     return output == SH_GLSL_VULKAN_OUTPUT;
 }
+bool IsOutputMetal(ShShaderOutput output)
+{
+    return output == SH_GLSL_METAL_OUTPUT;
+}
 
 bool IsInShaderStorageBlock(TIntermTyped *node)
 {

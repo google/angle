@@ -2430,12 +2430,12 @@ void ConvertTextureEnvFromFixed(TextureEnvParameter pname, const GLfixed *input,
     {
         case TextureEnvParameter::RgbScale:
         case TextureEnvParameter::AlphaScale:
-            output[0] = FixedToFloat(input[0]);
+            output[0] = ConvertFixedToFloat(input[0]);
             break;
         case TextureEnvParameter::Color:
             for (int i = 0; i < 4; i++)
             {
-                output[i] = FixedToFloat(input[i]);
+                output[i] = ConvertFixedToFloat(input[i]);
             }
             break;
         default:
@@ -2482,12 +2482,12 @@ void ConvertTextureEnvToFixed(TextureEnvParameter pname, const GLfloat *input, G
     {
         case TextureEnvParameter::RgbScale:
         case TextureEnvParameter::AlphaScale:
-            output[0] = FloatToFixed(input[0]);
+            output[0] = ConvertFloatToFixed(input[0]);
             break;
         case TextureEnvParameter::Color:
             for (int i = 0; i < 4; i++)
             {
-                output[i] = FloatToFixed(input[i]);
+                output[i] = ConvertFloatToFixed(input[i]);
             }
             break;
         default:

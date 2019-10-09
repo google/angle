@@ -419,9 +419,18 @@ angle_static_library("translator") {
     defines += [ "ANGLE_ENABLE_HLSL" ]
   }
 
-  if (angle_enable_vulkan || use_fuzzing_engine) {
+  if (angle_enable_vulkan || use_fuzzing_engine || angle_enable_metal) {
+    # This translator is needed by metal backend also.
     sources += angle_translator_lib_vulkan_sources
+  }
+
+  if (angle_enable_vulkan || use_fuzzing_engine) {
     defines += [ "ANGLE_ENABLE_VULKAN" ]
+  }
+
+  if (angle_enable_metal) {
+    sources += angle_translator_lib_metal_sources
+    defines += [ "ANGLE_ENABLE_METAL" ]
   }
 
   public_configs += [ ":external_config" ]
@@ -524,6 +533,10 @@ config("angle_backend_config") {
     defines += [ "ANGLE_ENABLE_NULL" ]
   }
 
+  if (angle_enable_metal) {
+    configs = [ "src/libANGLE/renderer/metal:angle_metal_backend_config" ]
+  }
+
   if (angle_enable_vulkan) {
     configs = [ "src/libANGLE/renderer/vulkan:angle_vulkan_backend_config" ]
   }
@@ -590,6 +603,10 @@ angle_source_set("libANGLE_base") {
 
   if (angle_enable_vulkan) {
     public_deps += [ "src/libANGLE/renderer/vulkan:angle_vulkan_backend" ]
+  }
+
+  if (angle_enable_metal) {
+    public_deps += [ "src/libANGLE/renderer/metal:angle_metal_backend" ]
   }
 
   # Enable extra Chromium style warnings for libANGLE.
