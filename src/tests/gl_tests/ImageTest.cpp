@@ -510,8 +510,14 @@ TEST_P(ImageTest, ANGLEExtensionAvailability)
         EXPECT_TRUE(has2DTextureExt());
         EXPECT_TRUE(hasCubemapExt());
         EXPECT_TRUE(hasRenderbufferExt());
-        // TODO(geofflang): Support GL_OES_EGL_image_external_essl3. http://anglebug.com/2668
-        EXPECT_FALSE(hasExternalESSL3Ext());
+        if (getClientMajorVersion() >= 3)
+        {
+            EXPECT_TRUE(hasExternalESSL3Ext());
+        }
+        else
+        {
+            EXPECT_FALSE(hasExternalESSL3Ext());
+        }
     }
     else
     {
