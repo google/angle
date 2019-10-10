@@ -132,7 +132,9 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxArrayTextureLayers = limitsVk.maxImageArrayLayers;
     mNativeCaps.maxLODBias            = limitsVk.maxSamplerLodBias;
     mNativeCaps.maxCubeMapTextureSize = limitsVk.maxImageDimensionCube;
-    mNativeCaps.maxRenderbufferSize   = mNativeCaps.max2DTextureSize;
+    mNativeCaps.maxRenderbufferSize =
+        std::min({limitsVk.maxImageDimension2D, limitsVk.maxFramebufferWidth,
+                  limitsVk.maxFramebufferHeight});
     mNativeCaps.minAliasedPointSize   = std::max(1.0f, limitsVk.pointSizeRange[0]);
     mNativeCaps.maxAliasedPointSize   = limitsVk.pointSizeRange[1];
 
