@@ -31,7 +31,7 @@
 
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
 
-// Depth/stencil related failures.
+// Depth/stencil related failures due to Vulkan driver bugs.
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth24_stencil8 = FAIL
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth32f_stencil8 = FAIL
 

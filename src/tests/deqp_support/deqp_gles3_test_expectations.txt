@@ -529,28 +529,18 @@
 
 // General Vulkan failures
 
-// Limits:
-// Nvidia doesn't support the necessary compressed formats
-3676 NVIDIA VULKAN : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = FAIL
-// MAX_FRAGMENT_INPUT_COMPONENTS is 0
-3676 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
-
-// Formats:
+// Tests failing due to the "flat" qualifier in the shader:
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.basic.int.* = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.basic.uint.* = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.array.int* = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.array.uint* = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.random.* = FAIL
 
-// Depth/Stencil textures:
+// NVIDIA Depth/Stencil textures:
 3970 VULKAN NVIDIA : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
 3970 VULKAN NVIDIA : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
 3970 VULKAN NVIDIA : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
 3970 VULKAN NVIDIA : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth32f_stencil8 = FAIL
-
-// Shader support:
-3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
-3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
 
 // Polygon offset:
 3970 VULKAN NVIDIA : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
@@ -558,14 +548,13 @@
 
 // Flat shading:
 3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
-3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.basic_types.u* = FAIL
-3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.u* = FAIL
-3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.float_uvec2_vec3 = FAIL
 
 // Instanced rendering:
 2672 VULKAN : dEQP-GLES3.functional.draw.draw_arrays_instanced.line_loop.* = SKIP
 2672 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
 2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
+// - Primitive restart with line loops:
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.*.line_loop.*instanced = SKIP
 
 // Texture staging buffer needs non-color support
 3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2dshadow_vertex = SKIP
@@ -576,9 +565,6 @@
 3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.samplercubeshadow_fragment = SKIP
 
 // Misc unimplemented:
-
-// - Primitive restart with line loops:
-2672 VULKAN : dEQP-GLES3.functional.primitive_restart.*.line_loop.*instanced = SKIP
 
 // Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).  Passes on 418.12 on Linux.
 2976 VULKAN NVIDIA : dEQP-GLES3.functional.shaders.invariance.* = FAIL
