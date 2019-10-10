@@ -270,12 +270,6 @@ void GetObjectLabelBase(const std::string &objectLabel,
     }
 }
 
-template <typename CapT, typename MaxT>
-void LimitCap(CapT *cap, MaxT maximum)
-{
-    *cap = std::min(*cap, static_cast<CapT>(maximum));
-}
-
 // The rest default to false.
 constexpr angle::PackedEnumMap<PrimitiveMode, bool, angle::EnumSize<PrimitiveMode>() + 1>
     kValidBasicDrawModes = {{
@@ -3488,8 +3482,27 @@ void Context::initCaps()
         mState.mCaps.maxSmoothLineWidth            = 1.0f;
     }
 
+#if 0
+// This logging can generate a lot of spam in test suites that create many contexts
+#    define ANGLE_LOG_LIMITED_CAP(cap, limit)                                               \
+        INFO() << "Limiting " << #cap << " to implementation limit " << (limit) << " (was " \
+               << (cap) << ")."
+#else
+#    define ANGLE_LOG_LIMITED_CAP(cap, limit)
+#endif
+
+#define ANGLE_LIMIT_CAP(cap, limit)            \
+    do                                         \
+    {                                          \
+        if ((cap) > (limit))                   \
+        {                                      \
+            ANGLE_LOG_LIMITED_CAP(cap, limit); \
+            (cap) = (limit);                   \
+        }                                      \
+    } while (0)
+
     // Apply/Verify implementation limits
-    LimitCap(&mState.mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
 
     ASSERT(mState.mCaps.minAliasedPointSize >= 1.0f);
 
@@ -3499,66 +3512,77 @@ void Context::initCaps()
     }
     else
     {
-        LimitCap(&mState.mCaps.maxVertexAttribBindings, MAX_VERTEX_ATTRIB_BINDINGS);
+        ANGLE_LIMIT_CAP(mState.mCaps.maxVertexAttribBindings, MAX_VERTEX_ATTRIB_BINDINGS);
     }
 
-    LimitCap(&mState.mCaps.maxShaderUniformBlocks[ShaderType::Vertex],
-             IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
-    LimitCap(&mState.mCaps.maxShaderUniformBlocks[ShaderType::Geometry],
-             IMPLEMENTATION_MAX_GEOMETRY_SHADER_UNIFORM_BUFFERS);
-    LimitCap(&mState.mCaps.maxShaderUniformBlocks[ShaderType::Fragment],
-             IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS);
-    LimitCap(&mState.mCaps.maxShaderUniformBlocks[ShaderType::Compute],
-             IMPLEMENTATION_MAX_COMPUTE_SHADER_UNIFORM_BUFFERS);
-    LimitCap(&mState.mCaps.maxCombinedUniformBlocks,
-             IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
-    LimitCap(&mState.mCaps.maxUniformBufferBindings, IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS);
+    ANGLE_LIMIT_CAP(mState.mCaps.max2DTextureSize, IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxCubeMapTextureSize, IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
+    ANGLE_LIMIT_CAP(mState.mCaps.max3DTextureSize, IMPLEMENTATION_MAX_3D_TEXTURE_SIZE);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxArrayTextureLayers, IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxRectangleTextureSize, IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
 
-    LimitCap(&mState.mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
-    LimitCap(&mState.mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderUniformBlocks[ShaderType::Vertex],
+                    IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderUniformBlocks[ShaderType::Geometry],
+                    IMPLEMENTATION_MAX_GEOMETRY_SHADER_UNIFORM_BUFFERS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderUniformBlocks[ShaderType::Fragment],
+                    IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderUniformBlocks[ShaderType::Compute],
+                    IMPLEMENTATION_MAX_COMPUTE_SHADER_UNIFORM_BUFFERS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedUniformBlocks,
+                    IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxUniformBufferBindings,
+                    IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS);
 
-    LimitCap(&mState.mCaps.maxTransformFeedbackInterleavedComponents,
-             IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS);
-    LimitCap(&mState.mCaps.maxTransformFeedbackSeparateAttributes,
-             IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS);
-    LimitCap(&mState.mCaps.maxTransformFeedbackSeparateComponents,
-             IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxFragmentInputComponents,
+                    IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+
+    ANGLE_LIMIT_CAP(mState.mCaps.maxTransformFeedbackInterleavedComponents,
+                    IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxTransformFeedbackSeparateAttributes,
+                    IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxTransformFeedbackSeparateComponents,
+                    IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS);
 
     // Limit textures as well, so we can use fast bitsets with texture bindings.
-    LimitCap(&mState.mCaps.maxCombinedTextureImageUnits, IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedTextureImageUnits, IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
     for (ShaderType shaderType : AllShaderTypes())
     {
-        LimitCap(&mState.mCaps.maxShaderTextureImageUnits[shaderType],
-                 IMPLEMENTATION_MAX_SHADER_TEXTURES);
+        ANGLE_LIMIT_CAP(mState.mCaps.maxShaderTextureImageUnits[shaderType],
+                        IMPLEMENTATION_MAX_SHADER_TEXTURES);
     }
 
-    LimitCap(&mState.mCaps.maxImageUnits, IMPLEMENTATION_MAX_IMAGE_UNITS);
-    LimitCap(&mState.mCaps.maxCombinedImageUniforms, IMPLEMENTATION_MAX_IMAGE_UNITS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxImageUnits, IMPLEMENTATION_MAX_IMAGE_UNITS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedImageUniforms, IMPLEMENTATION_MAX_IMAGE_UNITS);
     for (ShaderType shaderType : AllShaderTypes())
     {
-        LimitCap(&mState.mCaps.maxShaderImageUniforms[shaderType], IMPLEMENTATION_MAX_IMAGE_UNITS);
+        ANGLE_LIMIT_CAP(mState.mCaps.maxShaderImageUniforms[shaderType],
+                        IMPLEMENTATION_MAX_IMAGE_UNITS);
     }
-
-    for (ShaderType shaderType : AllShaderTypes())
-    {
-        LimitCap(&mState.mCaps.maxShaderAtomicCounterBuffers[shaderType],
-                 IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS);
-    }
-    LimitCap(&mState.mCaps.maxCombinedAtomicCounterBuffers,
-             IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS);
 
     for (ShaderType shaderType : AllShaderTypes())
     {
-        LimitCap(&mState.mCaps.maxShaderStorageBlocks[shaderType],
-                 IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+        ANGLE_LIMIT_CAP(mState.mCaps.maxShaderAtomicCounterBuffers[shaderType],
+                        IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS);
     }
-    LimitCap(&mState.mCaps.maxShaderStorageBufferBindings,
-             IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
-    LimitCap(&mState.mCaps.maxCombinedShaderStorageBlocks,
-             IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedAtomicCounterBuffers,
+                    IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS);
 
-    mState.mCaps.maxSampleMaskWords =
-        std::min<GLuint>(mState.mCaps.maxSampleMaskWords, MAX_SAMPLE_MASK_WORDS);
+    for (ShaderType shaderType : AllShaderTypes())
+    {
+        ANGLE_LIMIT_CAP(mState.mCaps.maxShaderStorageBlocks[shaderType],
+                        IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+    }
+    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderStorageBufferBindings,
+                    IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedShaderStorageBlocks,
+                    IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+
+    ANGLE_LIMIT_CAP(mState.mCaps.maxSampleMaskWords, MAX_SAMPLE_MASK_WORDS);
+
+#undef ANGLE_LIMIT_CAP
+#undef ANGLE_LOG_CAP_LIMIT
 
     // WebGL compatibility
     mState.mExtensions.webglCompatibility = mWebGLContext;
