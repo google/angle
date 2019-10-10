@@ -1575,7 +1575,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     ANGLE_FEATURE_CONDITION(features, rgbDXT1TexturesSampleZeroAlpha, IsApple());
 
-    ANGLE_FEATURE_CONDITION(features, unfoldShortCircuits, IsApple());
+    ANGLE_FEATURE_CONDITION(
+        features, emulatePrimitiveRestartFixedIndex,
+        !functions->isAtLeastGL(gl::Version(4, 3)) && !functions->isAtLeastGLES(gl::Version(3, 0)));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
@@ -1741,6 +1743,22 @@ std::string GetBufferBindingString(gl::BufferBinding bufferBinding)
     std::ostringstream os;
     os << bufferBinding << "_BINDING";
     return os.str();
+}
+
+GLuint GetPrimitiveRestartIndexForIndexType(gl::DrawElementsType type)
+{
+    switch (type)
+    {
+        case gl::DrawElementsType::UnsignedByte:
+            return std::numeric_limits<GLubyte>::max();
+        case gl::DrawElementsType::UnsignedShort:
+            return std::numeric_limits<GLushort>::max();
+        case gl::DrawElementsType::UnsignedInt:
+            return std::numeric_limits<GLuint>::max();
+        default:
+            UNREACHABLE();
+            return 0;
+    }
 }
 
 }  // namespace nativegl

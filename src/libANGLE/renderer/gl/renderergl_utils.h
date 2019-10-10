@@ -108,6 +108,7 @@ bool UseTexImage3D(gl::TextureType textureType);
 GLenum GetTextureBindingQuery(gl::TextureType textureType);
 GLenum GetBufferBindingQuery(gl::BufferBinding bufferBinding);
 std::string GetBufferBindingString(gl::BufferBinding bufferBinding);
+GLuint GetPrimitiveRestartIndexForIndexType(gl::DrawElementsType type);
 }  // namespace nativegl
 
 bool CanMapBufferForRead(const FunctionsGL *functions);
