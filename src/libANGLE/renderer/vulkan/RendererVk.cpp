@@ -1485,6 +1485,14 @@ angle::Result RendererVk::getPipelineLayout(
                                                   pipelineLayoutOut);
 }
 
+angle::Result RendererVk::getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut)
+{
+    VkResult result = mPipelineCache.getCacheData(mDevice, pipelineCacheSizeOut, nullptr);
+    ANGLE_VK_TRY(displayVk, result);
+
+    return angle::Result::Continue;
+}
+
 angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
 {
     // TODO: Synchronize access to the pipeline/blob caches?
@@ -1502,33 +1510,41 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
 
     mPipelineCacheVkUpdateTimeout = kPipelineCacheVkUpdatePeriod;
 
-    // Get the size of the cache.
     size_t pipelineCacheSize = 0;
-    VkResult result          = mPipelineCache.getCacheData(mDevice, &pipelineCacheSize, nullptr);
-    if (result != VK_INCOMPLETE)
-    {
-        ANGLE_VK_TRY(displayVk, result);
-    }
+    ANGLE_TRY(getPipelineCacheSize(displayVk, &pipelineCacheSize));
 
     angle::MemoryBuffer *pipelineCacheData = nullptr;
     ANGLE_VK_CHECK_ALLOC(displayVk,
                          displayVk->getScratchBuffer(pipelineCacheSize, &pipelineCacheData));
 
     size_t originalPipelineCacheSize = pipelineCacheSize;
-    result = mPipelineCache.getCacheData(mDevice, &pipelineCacheSize, pipelineCacheData->data());
-    // Note: currently we don't accept incomplete as we don't expect it (the full size of cache
-    // was determined just above), so receiving it hints at an implementation bug we would want
-    // to know about early.
-    ASSERT(result != VK_INCOMPLETE);
+    VkResult result =
+        mPipelineCache.getCacheData(mDevice, &pipelineCacheSize, pipelineCacheData->data());
+    // We don't need all of the cache data, so just make sure we at least got the header
+    // Vulkan Spec 9.6. Pipeline Cache
+    // https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/chap9.html#pipelines-cache
+    // If pDataSize is less than what is necessary to store this header, nothing will be written to
+    // pData and zero will be written to pDataSize.
+    // Any data written to pData is valid and can be provided as the pInitialData member of the
+    // VkPipelineCacheCreateInfo structure passed to vkCreatePipelineCache.
+    if (ANGLE_UNLIKELY(result == VK_INCOMPLETE) || (pipelineCacheSize == 0))
+    {
+        size_t intermediatePipelineCacheSize = pipelineCacheSize;
+        ANGLE_TRY(getPipelineCacheSize(displayVk, &pipelineCacheSize));
+        ERR() << "Pipeline cache size changed: old = " << originalPipelineCacheSize
+              << ", intermediate = " << intermediatePipelineCacheSize
+              << ", current = " << pipelineCacheData;
+    }
+    // TODO(http://anglebug.com/3988) Ignore VK_INCOMPLETE to reduce test flakiness
     ANGLE_VK_TRY(displayVk, result);
 
     // If vkGetPipelineCacheData ends up writing fewer bytes than requested, zero out the rest of
     // the buffer to avoid leaking garbage memory.
-    ASSERT(pipelineCacheSize <= originalPipelineCacheSize);
-    if (pipelineCacheSize < originalPipelineCacheSize)
+    ASSERT(pipelineCacheSize <= pipelineCacheData->size());
+    if (pipelineCacheSize < pipelineCacheData->size())
     {
         memset(pipelineCacheData->data() + pipelineCacheSize, 0,
-               originalPipelineCacheSize - pipelineCacheSize);
+               pipelineCacheData->size() - pipelineCacheSize);
     }
 
     displayVk->getBlobCache()->putApplication(mPipelineCacheVkBlobKey, *pipelineCacheData);
