@@ -513,6 +513,17 @@ void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
     *physicalDeviceOut = physicalDevices[0];
     vkGetPhysicalDeviceProperties(*physicalDeviceOut, physicalDevicePropertiesOut);
 }
+
+bool ShouldUseValidationLayers(const egl::AttributeMap &attribs)
+{
+#if defined(ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT)
+    return ShouldUseDebugLayers(attribs);
+#else
+    EGLAttrib debugSetting =
+        attribs.get(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE, EGL_DONT_CARE);
+    return debugSetting == EGL_TRUE;
+#endif  // defined(ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT)
+}
 }  // namespace
 
 // RendererVk implementation.
@@ -609,7 +620,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 {
     mDisplay                         = display;
     const egl::AttributeMap &attribs = mDisplay->getAttributeMap();
-    ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseDebugLayers(attribs),
+    ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseValidationLayers(attribs),
                                                 ChooseICDFromAttribs(attribs));
 #if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_WIN64)
     // TODO: Re-enable validation layers on 32bit Windows
