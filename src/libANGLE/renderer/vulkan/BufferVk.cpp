@@ -221,9 +221,10 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
         if (mBuffer.isResourceInUse(contextVk))
         {
             ANGLE_TRY(contextVk->flushImpl(nullptr));
+
+            // Make sure the GPU is done with the buffer.
+            ANGLE_TRY(contextVk->finishToSerial(mBuffer.getLatestSerial()));
         }
-        // Make sure the GPU is done with the buffer.
-        ANGLE_TRY(contextVk->finishToSerial(mBuffer.getLatestSerial()));
 
         ASSERT(!mBuffer.isResourceInUse(contextVk));
     }
