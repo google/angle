@@ -227,9 +227,18 @@ static bool CheckInternalFormatRenderbufferRenderability(const FunctionsGL *func
     return supported;
 }
 
+static void LimitVersion(gl::Version *curVersion, const gl::Version &maxVersion)
+{
+    if (*curVersion >= maxVersion)
+    {
+        *curVersion = maxVersion;
+    }
+}
+
 static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
                                                  const angle::FeaturesGL &features,
-                                                 GLenum internalFormat)
+                                                 GLenum internalFormat,
+                                                 gl::Version *maxSupportedESVersion)
 {
     ASSERT(functions->getError() == GL_NO_ERROR);
 
@@ -327,6 +336,17 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
         }
     }
 
+    // GLES 3.0.5 section 4.4.2.2: "Implementations must support creation of renderbuffers in these
+    // required formats with up to the value of MAX_SAMPLES multisamples, with the exception of
+    // signed and unsigned integer formats."
+    const gl::InternalFormat &glFormatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
+    if (textureCaps.renderbuffer && !glFormatInfo.isInt() &&
+        glFormatInfo.isRequiredRenderbufferFormat(gl::Version(3, 0)) &&
+        textureCaps.getMaxSamples() < 4)
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
+    }
+
     ASSERT(functions->getError() == GL_NO_ERROR);
     return textureCaps;
 }
@@ -402,14 +422,6 @@ static GLint QueryQueryValue(const FunctionsGL *functions, GLenum target, GLenum
     return result;
 }
 
-static void LimitVersion(gl::Version *curVersion, const gl::Version &maxVersion)
-{
-    if (*curVersion >= maxVersion)
-    {
-        *curVersion = maxVersion;
-    }
-}
-
 void CapCombinedLimitToESShaders(GLuint *combinedLimit, gl::ShaderMap<GLuint> &perShaderLimit)
 {
     GLuint combinedESLimit = 0;
@@ -429,12 +441,15 @@ void GenerateCaps(const FunctionsGL *functions,
                   gl::Version *maxSupportedESVersion,
                   MultiviewImplementationTypeGL *multiviewImplementationType)
 {
+    // Start by assuming ES3.1 support and work down
+    *maxSupportedESVersion = gl::Version(3, 1);
+
     // Texture format support checks
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (GLenum internalFormat : allFormats)
     {
         gl::TextureCaps textureCaps =
-            GenerateTextureFormatCaps(functions, features, internalFormat);
+            GenerateTextureFormatCaps(functions, features, internalFormat, maxSupportedESVersion);
         textureCapsMap->insert(internalFormat, textureCaps);
 
         if (gl::GetSizedInternalFormatInfo(internalFormat).compressed)
@@ -442,9 +457,6 @@ void GenerateCaps(const FunctionsGL *functions,
             caps->compressedTextureFormats.push_back(internalFormat);
         }
     }
-
-    // Start by assuming ES3.1 support and work down
-    *maxSupportedESVersion = gl::Version(3, 1);
 
     // Table 6.28, implementation dependent values
     if (functions->isAtLeastGL(gl::Version(4, 3)) ||
