@@ -21,7 +21,7 @@ vars = {
   'checkout_src_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '43eb5958f7db40c57c94e21bea771589d2de9599',
+  'chromium_revision': '9325340209749c1ff4eb198a8f7176c0a16dea6d',
 
   # Current revision of dEQP.
   'deqp_revision': 'd3eef28e67ce6795ba3a2124aaa977819729d45f',
@@ -51,7 +51,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@fd0d28db8039e2aaf9fa35e53e3af6dc9ead8055',
+    'url': '{chromium_git}/chromium/src/build.git@592281c03c6bea25793f116bb442ec2dae991429',
     'condition': 'not build_with_chromium',
   },
 
@@ -61,7 +61,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@9d2d0dad367ac7e98e64cc6881044c482e1c7eb8',
+    'url': '{chromium_git}/chromium/src/testing@6752fa027a3f042ec12afc5cdae0fb093376aaf0',
     'condition': 'not build_with_chromium',
   },
 
@@ -76,7 +76,7 @@ deps = {
   },
 
   'third_party/fuchsia-sdk': {
-    'url': '{chromium_git}/chromium/src/third_party/fuchsia-sdk.git@5fd29151cf35c0813c33cc368a7c78389e3f5caa',
+    'url': '{chromium_git}/chromium/src/third_party/fuchsia-sdk.git@1785f0ac8e1fe81cb25e260acbe7de8f62fa3e44',
     'condition': 'checkout_fuchsia and not build_with_chromium',
   },
 
@@ -102,13 +102,13 @@ deps = {
   },
 
   'third_party/googletest/src': {
-    'url': '{chromium_git}/external/github.com/google/googletest.git@cd17fa2abda2a2e4111cdabd62a87aea16835014',
+    'url': '{chromium_git}/external/github.com/google/googletest.git@f2fb48c3b3d79a75a88a99fba6576b25d42ec528',
     'condition': 'not build_with_chromium',
   },
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@6dcdade8828297e306cabfdae80f3510f3f3eea2',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@9d3bf3e9680156c48041c8b90fece504e3539a61',
     'condition': 'not build_with_chromium',
   },
 
