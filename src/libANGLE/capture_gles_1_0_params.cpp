@@ -127,15 +127,6 @@ void CaptureGetMaterialxv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetPointerv_params(const Context *context,
-                               bool isCallValid,
-                               GLenum pname,
-                               void **params,
-                               ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
 void CaptureGetTexEnvfv_params(const Context *context,
                                bool isCallValid,
                                TextureEnvTarget targetPacked,

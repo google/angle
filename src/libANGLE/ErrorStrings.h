@@ -96,6 +96,7 @@ MSG kElementArrayNoBufferOrPointer = "No element array buffer and no pointer.";
 MSG kEnumNotSupported = "Enum is not currently supported.";
 MSG kEnumRequiresGLES30 = "Enum requires GLES 3.0";
 MSG kEnumRequiresGLES31 = "Enum requires GLES 3.1";
+MSG kES1or32Required = "OpenGL ES 1.x or 3.2 Required";
 MSG kES31Required = "OpenGL ES 3.1 Required";
 MSG kES3Required = "OpenGL ES 3.0 Required.";
 MSG kExceedsComputeWorkGroupCountX = "num_groups_x cannot be greater than MAX_COMPUTE_WORK_GROUP_COUNT[0]";

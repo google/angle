@@ -636,6 +636,8 @@ typedef void *GLeglContext;
 #include "gl2ext_explicit_context_autogen.inc"
 #include "../GLES3/gl3ext_explicit_context_autogen.inc"
 #include "../GLES3/gl31ext_explicit_context_autogen.inc"
+#include "../GLES3/gl32.h"
+#include "../GLES3/gl32ext_explicit_context_autogen.inc"
 #endif /* GL_ANGLE_explicit_context */
 
 #ifndef GL_ANGLE_multi_draw

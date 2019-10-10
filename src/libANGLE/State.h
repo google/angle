@@ -47,9 +47,12 @@ class SyncManager;
 class TextureManager;
 class VertexArray;
 
+static constexpr Version ES_1_0 = Version(1, 0);
+static constexpr Version ES_1_1 = Version(1, 1);
 static constexpr Version ES_2_0 = Version(2, 0);
 static constexpr Version ES_3_0 = Version(3, 0);
 static constexpr Version ES_3_1 = Version(3, 1);
+static constexpr Version ES_3_2 = Version(3, 2);
 
 using ContextID = uintptr_t;
 

@@ -325,8 +325,6 @@
     void queryCounter(QueryID idPacked, QueryType targetPacked);                                   \
     /* GL_EXT_draw_buffers */                                                                      \
     /* GL_EXT_geometry_shader */                                                                   \
-    void framebufferTexture(GLenum target, GLenum attachment, TextureID texturePacked,             \
-                            GLint level);                                                          \
     /* GL_EXT_instanced_arrays */                                                                  \
     /* GL_EXT_map_buffer_range */                                                                  \
     /* GL_EXT_memory_object */                                                                     \
@@ -363,13 +361,6 @@
                                          GLuint texture, GLint level, GLsizei samples);            \
     /* GL_EXT_occlusion_query_boolean */                                                           \
     /* GL_EXT_robustness */                                                                        \
-    GLenum getGraphicsResetStatus();                                                               \
-    void getnUniformfv(ShaderProgramID programPacked, GLint location, GLsizei bufSize,             \
-                       GLfloat *params);                                                           \
-    void getnUniformiv(ShaderProgramID programPacked, GLint location, GLsizei bufSize,             \
-                       GLint *params);                                                             \
-    void readnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,  \
-                     GLsizei bufSize, void *data);                                                 \
     /* GL_EXT_semaphore */                                                                         \
     void deleteSemaphores(GLsizei n, const SemaphoreID *semaphoresPacked);                         \
     void genSemaphores(GLsizei n, SemaphoreID *semaphoresPacked);                                  \
@@ -388,21 +379,6 @@
     /* GL_EXT_texture_storage */                                                                   \
     void texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width);        \
     /* GL_KHR_debug */                                                                             \
-    void debugMessageCallback(GLDEBUGPROCKHR callback, const void *userParam);                     \
-    void debugMessageControl(GLenum source, GLenum type, GLenum severity, GLsizei count,           \
-                             const GLuint *ids, GLboolean enabled);                                \
-    void debugMessageInsert(GLenum source, GLenum type, GLuint id, GLenum severity,                \
-                            GLsizei length, const GLchar *buf);                                    \
-    GLuint getDebugMessageLog(GLuint count, GLsizei bufSize, GLenum *sources, GLenum *types,       \
-                              GLuint *ids, GLenum *severities, GLsizei *lengths,                   \
-                              GLchar *messageLog);                                                 \
-    void getObjectLabel(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length,          \
-                        GLchar *label);                                                            \
-    void getObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label);      \
-    void objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label);         \
-    void objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label);                     \
-    void popDebugGroup();                                                                          \
-    void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message);          \
     /* GL_KHR_parallel_shader_compile */                                                           \
     void maxShaderCompilerThreads(GLuint count);                                                   \
     /* GL_NV_fence */                                                                              \
@@ -423,18 +399,7 @@
     void framebufferTexture3D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               TextureID texturePacked, GLint level, GLint zoffset);                \
     /* GL_OES_texture_border_clamp */                                                              \
-    void getSamplerParameterIiv(SamplerID samplerPacked, GLenum pname, GLint *params);             \
-    void getSamplerParameterIuiv(SamplerID samplerPacked, GLenum pname, GLuint *params);           \
-    void getTexParameterIiv(TextureType targetPacked, GLenum pname, GLint *params);                \
-    void getTexParameterIuiv(TextureType targetPacked, GLenum pname, GLuint *params);              \
-    void samplerParameterIiv(SamplerID samplerPacked, GLenum pname, const GLint *param);           \
-    void samplerParameterIuiv(SamplerID samplerPacked, GLenum pname, const GLuint *param);         \
-    void texParameterIiv(TextureType targetPacked, GLenum pname, const GLint *params);             \
-    void texParameterIuiv(TextureType targetPacked, GLenum pname, const GLuint *params);           \
     /* GL_OES_texture_storage_multisample_2d_array */                                              \
-    void texStorage3DMultisample(TextureType targetPacked, GLsizei samples, GLenum internalformat, \
-                                 GLsizei width, GLsizei height, GLsizei depth,                     \
-                                 GLboolean fixedsamplelocations);                                  \
     /* GL_OES_vertex_array_object */                                                               \
     /* GL_OVR_multiview */                                                                         \
     void framebufferTextureMultiview(GLenum target, GLenum attachment, TextureID texturePacked,    \

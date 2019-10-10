@@ -1936,7 +1936,7 @@ void Context::getInteger64vImpl(GLenum pname, GLint64 *params)
     }
 }
 
-void Context::getPointerv(GLenum pname, void **params) const
+void Context::getPointerv(GLenum pname, void **params)
 {
     mState.getPointerv(this, pname, params);
 }
@@ -2095,6 +2095,20 @@ void Context::getRenderbufferParameterivRobust(GLenum target,
                                                GLint *params)
 {
     getRenderbufferParameteriv(target, pname, params);
+}
+
+void Context::texBuffer(GLenum target, GLenum internalformat, BufferID buffer)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texBufferRange(GLenum target,
+                             GLenum internalformat,
+                             BufferID buffer,
+                             GLintptr offset,
+                             GLsizeiptr size)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::getTexParameterfv(TextureType target, GLenum pname, GLfloat *params)
@@ -2296,6 +2310,25 @@ void Context::drawElementsInstanced(PrimitiveMode mode,
     MarkShaderStorageBufferUsage(this);
 }
 
+void Context::drawElementsBaseVertex(GLenum mode,
+                                     GLsizei count,
+                                     GLenum type,
+                                     const void *indices,
+                                     GLint basevertex)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawElementsInstancedBaseVertex(GLenum mode,
+                                              GLsizei count,
+                                              GLenum type,
+                                              const void *indices,
+                                              GLsizei instancecount,
+                                              GLint basevertex)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::drawRangeElements(PrimitiveMode mode,
                                 GLuint start,
                                 GLuint end,
@@ -2313,6 +2346,17 @@ void Context::drawRangeElements(PrimitiveMode mode,
     ANGLE_CONTEXT_TRY(
         mImplementation->drawRangeElements(this, mode, start, end, count, type, indices));
     MarkShaderStorageBufferUsage(this);
+}
+
+void Context::drawRangeElementsBaseVertex(GLenum mode,
+                                          GLuint start,
+                                          GLuint end,
+                                          GLsizei count,
+                                          GLenum type,
+                                          const void *indices,
+                                          GLint basevertex)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::drawArraysIndirect(PrimitiveMode mode, const void *indirect)
@@ -3975,6 +4019,25 @@ void Context::copyTexSubImage3D(TextureTarget target,
     ANGLE_CONTEXT_TRY(texture->copySubImage(this, index, destOffset, sourceArea, framebuffer));
 }
 
+void Context::copyImageSubData(GLuint srcName,
+                               GLenum srcTarget,
+                               GLint srcLevel,
+                               GLint srcX,
+                               GLint srcY,
+                               GLint srcZ,
+                               GLuint dstName,
+                               GLenum dstTarget,
+                               GLint dstLevel,
+                               GLint dstX,
+                               GLint dstY,
+                               GLint dstZ,
+                               GLsizei srcWidth,
+                               GLsizei srcHeight,
+                               GLsizei srcDepth)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::framebufferTexture2D(GLenum target,
                                    GLenum attachment,
                                    TextureTarget textarget,
@@ -4723,6 +4786,11 @@ void Context::activeTexture(GLenum texture)
     mState.setActiveSampler(texture - GL_TEXTURE0);
 }
 
+void Context::blendBarrier()
+{
+    UNIMPLEMENTED();
+}
+
 void Context::blendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
     mState.setBlendColor(clamp01(red), clamp01(green), clamp01(blue), clamp01(alpha));
@@ -4733,9 +4801,19 @@ void Context::blendEquation(GLenum mode)
     mState.setBlendEquation(mode, mode);
 }
 
+void Context::blendEquationi(GLuint buf, GLenum mode)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
 {
     mState.setBlendEquation(modeRGB, modeAlpha);
+}
+
+void Context::blendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::blendFunc(GLenum sfactor, GLenum dfactor)
@@ -4743,9 +4821,23 @@ void Context::blendFunc(GLenum sfactor, GLenum dfactor)
     mState.setBlendFactors(sfactor, dfactor, sfactor, dfactor);
 }
 
+void Context::blendFunci(GLuint buf, GLenum src, GLenum dst)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::blendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
 {
     mState.setBlendFactors(srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+void Context::blendFuncSeparatei(GLuint buf,
+                                 GLenum srcRGB,
+                                 GLenum dstRGB,
+                                 GLenum srcAlpha,
+                                 GLenum dstAlpha)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::clearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
@@ -4768,6 +4860,11 @@ void Context::colorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolea
     mState.setColorMask(ConvertToBool(red), ConvertToBool(green), ConvertToBool(blue),
                         ConvertToBool(alpha));
     mStateCache.onColorMaskChange(this);
+}
+
+void Context::colorMaski(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::cullFace(CullFaceMode mode)
@@ -4796,6 +4893,11 @@ void Context::disable(GLenum cap)
     mStateCache.onContextCapChange(this);
 }
 
+void Context::disablei(GLenum target, GLuint index)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::disableVertexAttribArray(GLuint index)
 {
     mState.setEnableVertexAttribArray(index, false);
@@ -4806,6 +4908,11 @@ void Context::enable(GLenum cap)
 {
     mState.setEnableFeature(cap, true);
     mStateCache.onContextCapChange(this);
+}
+
+void Context::enablei(GLenum target, GLuint index)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::enableVertexAttribArray(GLuint index)
@@ -5254,6 +5361,18 @@ void Context::popDebugGroup()
 {
     mState.getDebug().popGroup();
     mImplementation->popDebugGroup();
+}
+
+void Context::primitiveBoundingBox(GLfloat minX,
+                                   GLfloat minY,
+                                   GLfloat minZ,
+                                   GLfloat minW,
+                                   GLfloat maxX,
+                                   GLfloat maxY,
+                                   GLfloat maxZ,
+                                   GLfloat maxW)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::bufferData(BufferBinding target, GLsizeiptr size, const void *data, BufferUsage usage)
@@ -6402,6 +6521,12 @@ GLboolean Context::isEnabled(GLenum cap)
     return mState.getEnableFeature(cap);
 }
 
+GLboolean Context::isEnabledi(GLenum target, GLuint index)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 GLboolean Context::isFramebuffer(FramebufferID framebuffer)
 {
     if (framebuffer.value == 0)
@@ -6528,6 +6653,11 @@ void Context::stencilMask(GLuint mask)
 void Context::stencilOp(GLenum fail, GLenum zfail, GLenum zpass)
 {
     stencilOpSeparate(GL_FRONT_AND_BACK, fail, zfail, zpass);
+}
+
+void Context::patchParameteri(GLenum pname, GLint value)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::uniform1f(GLint location, GLfloat x)
@@ -7178,6 +7308,11 @@ void Context::deleteSamplers(GLsizei count, const SamplerID *samplers)
 
         mState.mSamplerManager->deleteObject(this, sampler);
     }
+}
+
+void Context::minSampleShading(GLfloat value)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::getInternalformativ(GLenum target,

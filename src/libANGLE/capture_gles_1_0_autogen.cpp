@@ -443,23 +443,6 @@ CallCapture CaptureGetMaterialxv(const Context *context,
     return CallCapture(gl::EntryPoint::GetMaterialxv, std::move(paramBuffer));
 }
 
-CallCapture CaptureGetPointerv(const Context *context,
-                               bool isCallValid,
-                               GLenum pname,
-                               void **params)
-{
-    ParamBuffer paramBuffer;
-
-    paramBuffer.addEnumParam("pname", GLenumGroup::GetPointervPName, ParamType::TGLenum, pname);
-
-    ParamCapture paramsParam("params", ParamType::TvoidPointerPointer);
-    InitParamValue(ParamType::TvoidPointerPointer, params, &paramsParam.value);
-    CaptureGetPointerv_params(context, isCallValid, pname, params, &paramsParam);
-    paramBuffer.addParam(std::move(paramsParam));
-
-    return CallCapture(gl::EntryPoint::GetPointerv, std::move(paramBuffer));
-}
-
 CallCapture CaptureGetTexEnvfv(const Context *context,
                                bool isCallValid,
                                TextureEnvTarget targetPacked,

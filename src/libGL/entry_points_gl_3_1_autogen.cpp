@@ -20,6 +20,7 @@
 #include "libANGLE/validationES2.h"
 #include "libANGLE/validationES3.h"
 #include "libANGLE/validationES31.h"
+#include "libANGLE/validationES32.h"
 #include "libANGLE/validationESEXT.h"
 #include "libANGLE/validationGL31_autogen.h"
 #include "libGLESv2/global_state.h"

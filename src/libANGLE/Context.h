@@ -42,6 +42,7 @@
 #include "libANGLE/Context_gles_2_0_autogen.h"
 #include "libANGLE/Context_gles_3_0_autogen.h"
 #include "libANGLE/Context_gles_3_1_autogen.h"
+#include "libANGLE/Context_gles_3_2_autogen.h"
 #include "libANGLE/Context_gles_ext_autogen.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
@@ -404,7 +405,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void getFloatvImpl(GLenum pname, GLfloat *params);
     void getIntegervImpl(GLenum pname, GLint *params);
     void getInteger64vImpl(GLenum pname, GLint64 *params);
-    void getPointerv(GLenum pname, void **params) const;
 
     // Framebuffers are owned by the Context, so these methods do not pass through
     FramebufferID createFramebuffer();
@@ -438,6 +438,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     ANGLE_GLES_2_0_CONTEXT_API
     ANGLE_GLES_3_0_CONTEXT_API
     ANGLE_GLES_3_1_CONTEXT_API
+    ANGLE_GLES_3_2_CONTEXT_API
     ANGLE_GLES_EXT_CONTEXT_API
 
     // Consumes an error.

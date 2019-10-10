@@ -144,10 +144,6 @@ angle::CallCapture CaptureGetMaterialxv(const Context *context,
                                         GLenum face,
                                         MaterialParameter pnamePacked,
                                         GLfixed *params);
-angle::CallCapture CaptureGetPointerv(const Context *context,
-                                      bool isCallValid,
-                                      GLenum pname,
-                                      void **params);
 angle::CallCapture CaptureGetTexEnvfv(const Context *context,
                                       bool isCallValid,
                                       TextureEnvTarget targetPacked,
@@ -465,11 +461,6 @@ void CaptureGetMaterialxv_params(const Context *context,
                                  MaterialParameter pnamePacked,
                                  GLfixed *params,
                                  angle::ParamCapture *paramCapture);
-void CaptureGetPointerv_params(const Context *context,
-                               bool isCallValid,
-                               GLenum pname,
-                               void **params,
-                               angle::ParamCapture *paramCapture);
 void CaptureGetTexEnvfv_params(const Context *context,
                                bool isCallValid,
                                TextureEnvTarget targetPacked,

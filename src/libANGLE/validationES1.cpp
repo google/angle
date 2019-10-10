@@ -833,23 +833,6 @@ bool ValidateGetMaterialxv(Context *context, GLenum face, MaterialParameter pnam
     return ValidateMaterialQuery(context, face, pname);
 }
 
-bool ValidateGetPointerv(Context *context, GLenum pname, void **params)
-{
-    ANGLE_VALIDATE_IS_GLES1(context);
-    switch (pname)
-    {
-        case GL_VERTEX_ARRAY_POINTER:
-        case GL_NORMAL_ARRAY_POINTER:
-        case GL_COLOR_ARRAY_POINTER:
-        case GL_TEXTURE_COORD_ARRAY_POINTER:
-        case GL_POINT_SIZE_ARRAY_POINTER_OES:
-            return true;
-        default:
-            context->validationError(GL_INVALID_ENUM, kInvalidPointerQuery);
-            return false;
-    }
-}
-
 bool ValidateGetTexEnvfv(Context *context,
                          TextureEnvTarget target,
                          TextureEnvParameter pname,

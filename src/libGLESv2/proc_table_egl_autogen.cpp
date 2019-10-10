@@ -18,6 +18,7 @@
 #include "libGLESv2/entry_points_gles_2_0_autogen.h"
 #include "libGLESv2/entry_points_gles_3_0_autogen.h"
 #include "libGLESv2/entry_points_gles_3_1_autogen.h"
+#include "libGLESv2/entry_points_gles_3_2_autogen.h"
 #include "libGLESv2/entry_points_gles_ext_autogen.h"
 #include "platform/Platform.h"
 

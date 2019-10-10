@@ -558,25 +558,6 @@ void GL_APIENTRY GetMaterialxv(GLenum face, GLenum pname, GLfixed *params)
     }
 }
 
-void GL_APIENTRY GetPointerv(GLenum pname, void **params)
-{
-    Context *context = GetValidGlobalContext();
-    EVENT("glGetPointerv", "context = %d, GLenum pname = %s, void **params = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::GetPointervPName, pname), (uintptr_t)params);
-
-    if (context)
-    {
-        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetPointerv(context, pname, params));
-        if (isCallValid)
-        {
-            context->getPointerv(pname, params);
-        }
-        ANGLE_CAPTURE(GetPointerv, isCallValid, context, pname, params);
-    }
-}
-
 void GL_APIENTRY GetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
