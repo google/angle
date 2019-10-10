@@ -24,7 +24,6 @@
 .cipd
 .gclient
 .gclient_entries
-/angle-internal
 /src/tests/third_party/gles_conformance_tests
 /testing
 /third_party/cherry

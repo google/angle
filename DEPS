@@ -5,6 +5,7 @@
 vars = {
   'android_git': 'https://android.googlesource.com',
   'chromium_git': 'https://chromium.googlesource.com',
+  'chrome_internal_git': 'https://chrome-internal.googlesource.com',
   'swiftshader_git': 'https://swiftshader.googlesource.com',
 
   # This variable is set on the Chrome infra for compatiblity with gclient.
@@ -13,8 +14,9 @@ vars = {
   # This variable is overrided in Chromium's DEPS file.
   'build_with_chromium': False,
 
-  # By default, do not check out angle-internal. This can be overridden e.g. with custom_vars.
-  # We overload Chromium's 'src-internal' for infra simplicity.
+  # Only check out public sources by default. This can be overridden with custom_vars.
+  # We overload Chromium's 'src-internal' for simplicity.
+  # TOOD(ynovikov): Use checkout_angle_internal custom variable instead.
   'checkout_src_internal': False,
 
   # Current revision of dEQP.
@@ -44,11 +46,6 @@ vars = {
 
 deps = {
 
-  '{angle_root}/angle-internal': {
-    'url': 'https://chrome-internal.googlesource.com/angle/angle-internal.git@f682552d8131422e91f45661a7af83e885ff70ce',
-    'condition': 'checkout_src_internal',
-  },
-
   '{angle_root}/build': {
     'url': '{chromium_git}/chromium/src/build.git@fd0d28db8039e2aaf9fa35e53e3af6dc9ead8055',
     'condition': 'not build_with_chromium',
@@ -77,6 +74,12 @@ deps = {
   '{angle_root}/third_party/fuchsia-sdk': {
     'url': '{chromium_git}/chromium/src/third_party/fuchsia-sdk.git@5fd29151cf35c0813c33cc368a7c78389e3f5caa',
     'condition': 'checkout_fuchsia and not build_with_chromium',
+  },
+
+  # Closed-source OpenGL ES 1.1 Conformance tests.
+  '{angle_root}/third_party/gles1_conform': {
+    'url': '{chrome_internal_git}/angle/es-cts.git@dc9f502f709c9cd88d7f8d3974f1c77aa246958e',
+    'condition': 'checkout_src_internal',
   },
 
   # glmark2 is a GPL3-licensed OpenGL ES 2.0 benchmark. We use it for testing.
@@ -350,9 +353,6 @@ hooks = [
 ]
 
 recursedeps = [
-  # angle-internal has its own DEPS file to pull additional internal repos
-  '{angle_root}/angle-internal',
-
   # buildtools provides clang_format.
   '{angle_root}/buildtools',
 ]
