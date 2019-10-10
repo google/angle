@@ -2359,8 +2359,8 @@ angle::Result ImageHelper::stageSubresourceUpdateFromBuffer(ContextVk *contextVk
                                                             uint32_t mipLevel,
                                                             uint32_t baseArrayLayer,
                                                             uint32_t layerCount,
-                                                            const gl::Extents &glExtents,
-                                                            const gl::Offset &offset,
+                                                            const VkExtent3D &extent,
+                                                            const VkOffset3D &offset,
                                                             BufferHelper *bufferHelper,
                                                             VkDeviceSize stagingOffset)
 {
@@ -2369,17 +2369,20 @@ angle::Result ImageHelper::stageSubresourceUpdateFromBuffer(ContextVk *contextVk
 
     VkBufferImageCopy copy               = {};
     copy.bufferOffset                    = stagingOffset;
-    copy.bufferRowLength                 = glExtents.width;
-    copy.bufferImageHeight               = glExtents.height;
+    copy.bufferRowLength                 = extent.width;
+    copy.bufferImageHeight               = extent.height;
     copy.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     copy.imageSubresource.mipLevel       = mipLevel;
     copy.imageSubresource.baseArrayLayer = baseArrayLayer;
     copy.imageSubresource.layerCount     = layerCount;
+    copy.imageOffset.x                   = offset.x;
+    copy.imageOffset.y                   = offset.y;
+    copy.imageOffset.z                   = offset.z;
+    copy.imageExtent.width               = extent.width;
+    copy.imageExtent.height              = extent.height;
+    copy.imageExtent.depth               = extent.depth;
 
     ASSERT(getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT);
-
-    gl_vk::GetOffset(offset, &copy.imageOffset);
-    gl_vk::GetExtent(glExtents, &copy.imageExtent);
 
     mSubresourceUpdates.emplace_back(bufferHelper, copy);
 

@@ -791,8 +791,8 @@ class ImageHelper final : public CommandGraphResource
                                                    uint32_t mipLevel,
                                                    uint32_t baseArrayLayer,
                                                    uint32_t layerCount,
-                                                   const gl::Extents &glExtents,
-                                                   const gl::Offset &offset,
+                                                   const VkExtent3D &extent,
+                                                   const VkOffset3D &offset,
                                                    BufferHelper *stagingBuffer,
                                                    VkDeviceSize stagingOffset);
 

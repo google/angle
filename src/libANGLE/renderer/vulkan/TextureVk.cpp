@@ -1168,7 +1168,7 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk, GLuint baseLevel, GL
             // First we populate the staging buffer with current level data
             const gl::ImageDesc &desc =
                 mState.getImageDesc(gl::TextureTypeToTarget(mState.getType(), layer), level);
-            const gl::Extents &extents     = desc.size;
+            const gl::Extents &glExtents   = desc.size;
             const gl::InternalFormat &info = *desc.format.info;
 
             // We need to adjust the source Vulkan level to reflect the previous base level.
@@ -1176,26 +1176,27 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk, GLuint baseLevel, GL
             uint32_t srcLevelVK = baseLevelChanged ? level - previousBaseLevel : level;
             ASSERT(srcLevelVK <= mImage->getLevelCount());
 
-            // Adjust offset and depth based on our knowledge of image type here
-            gl::Box area(0, 0, 0, extents.width, extents.height, extents.depth);
-            if (gl::IsArrayTextureType(mState.getType()))
-            {
-                area.z     = 0;
-                area.depth = 1;
-            }
+            // Gather Vulkan dimensions based on our knowledge of image type here
+            VkOffset3D vkOffset = {0};
+            VkExtent3D vkExtent;
+            uint32_t layerCountDontCare;
+            gl_vk::GetExtentsAndLayerCount(mState.getType(), glExtents, &vkExtent,
+                                           &layerCountDontCare);
 
             // Now copy from the image to the staging buffer
             vk::BufferHelper *stagingBuffer  = nullptr;
             VkDeviceSize stagingBufferOffset = 0;
+            gl::Box area(vkOffset.x, vkOffset.y, vkOffset.z, vkExtent.width, vkExtent.height,
+                         vkExtent.depth);
             ANGLE_TRY(copyImageDataToBuffer(contextVk, srcLevelVK, 1, layer, area, &stagingBuffer,
                                             &stagingBufferOffset, nullptr));
 
             // Stage an update to the new image that we will populate with existing mip levels
             // We're providing the buffer handle and offset to use, since we *just* populated it
-            size_t bufferSize = extents.width * extents.height * extents.depth * info.pixelBytes;
+            size_t bufferSize = vkExtent.width * vkExtent.height * vkExtent.depth * info.pixelBytes;
             ANGLE_TRY(mImage->stageSubresourceUpdateFromBuffer(contextVk, bufferSize, level, layer,
-                                                               1, extents, gl::Offset(),
-                                                               stagingBuffer, stagingBufferOffset));
+                                                               1, vkExtent, vkOffset, stagingBuffer,
+                                                               stagingBufferOffset));
         }
     }
 

@@ -575,16 +575,6 @@
 3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.samplercubeshadow_vertex = SKIP
 3949 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.samplercubeshadow_fragment = SKIP
 
-// 2D array textureSize issuing validation error.
-3991 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.isampler2darray_fragment = SKIP
-3991 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.isampler2darray_vertex = SKIP
-3991 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2darray_fixed_fragment = SKIP
-3991 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2darray_fixed_vertex = SKIP
-3991 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2darray_float_fragment = SKIP
-3991 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.sampler2darray_float_vertex = SKIP
-3991 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.usampler2darray_fragment = SKIP
-3991 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.usampler2darray_vertex = SKIP
-
 // Misc unimplemented:
 
 // - Primitive restart with line loops:
