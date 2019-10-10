@@ -6,11 +6,12 @@
 
 // DeviceCGL.cpp: CGL implementation of egl::Device
 
-#include "libANGLE/renderer/gl/cgl/DeviceCGL.h"
+#if __has_include(<Cocoa/Cocoa.h>)
 
-#include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
+#    include "libANGLE/renderer/gl/cgl/DeviceCGL.h"
 
-#include <EGL/eglext.h>
+#    include <EGL/eglext.h>
+#    include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 
 namespace rx
 {
@@ -54,3 +55,5 @@ void DeviceCGL::generateExtensions(egl::DeviceExtensions *outExtensions) const
 }
 
 }  // namespace rx
+
+#endif  // __has_include(<Cocoa/Cocoa.h>)
