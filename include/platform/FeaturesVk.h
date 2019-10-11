@@ -35,6 +35,12 @@ struct FeaturesVk : FeatureSetBase
         "bresenham_line_rasterization", FeatureCategory::VulkanFeatures,
         "Enable Bresenham line rasterization via VK_EXT_line_rasterization extension", &members};
 
+    // If the VK_EXT_provoking_vertex extension is available, we'll use it to set
+    // the provoking vertex mode
+    Feature provokingVertex = {"provoking_vertex", FeatureCategory::VulkanFeatures,
+                               "Enable provoking vertex mode via VK_EXT_provoking_vertex extension",
+                               &members};
+
     // Flips the viewport to render upside-down. This has the effect to render the same way as
     // OpenGL. If this feature gets enabled, we enable the KHR_MAINTENANCE_1 extension to allow
     // negative viewports. We inverse rendering to the backbuffer by reversing the height of the

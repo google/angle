@@ -85,6 +85,7 @@ _vulkan_backend_sources = [
   "vk_cache_utils.h",
   "vk_caps_utils.cpp",
   "vk_caps_utils.h",
+  "vk_ext_provoking_vertex.h",
   "vk_format_table_autogen.cpp",
   "vk_format_utils.h",
   "vk_format_utils.cpp",

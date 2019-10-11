@@ -13,6 +13,7 @@
 #include <vulkan/vulkan.h>
 #include <memory>
 #include <mutex>
+#include "vk_ext_provoking_vertex.h"
 
 #include "common/PoolAlloc.h"
 #include "common/angleutils.h"
@@ -247,6 +248,7 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceSubgroupProperties mPhysicalDeviceSubgroupProperties;
     VkPhysicalDeviceFeatures mPhysicalDeviceFeatures;
     VkPhysicalDeviceLineRasterizationFeaturesEXT mLineRasterizationFeatures;
+    VkPhysicalDeviceProvokingVertexFeaturesEXT mProvokingVertexFeatures;
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
     std::mutex mQueueMutex;
     VkQueue mQueue;

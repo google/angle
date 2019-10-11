@@ -981,6 +981,26 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&createInfo),
                            &mLineRasterizationFeatures);
     }
+
+    mProvokingVertexFeatures = {};
+    mProvokingVertexFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_FEATURES_EXT;
+    ASSERT(mProvokingVertexFeatures.provokingVertexLast == VK_FALSE);
+    if (vkGetPhysicalDeviceFeatures2KHR &&
+        ExtensionFound(VK_EXT_PROVOKING_VERTEX_EXTENSION_NAME, deviceExtensionNames))
+    {
+        enabledDeviceExtensions.push_back(VK_EXT_PROVOKING_VERTEX_EXTENSION_NAME);
+        // Query line rasterization capabilities
+        VkPhysicalDeviceFeatures2KHR availableFeatures = {};
+        availableFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&availableFeatures),
+                           &mProvokingVertexFeatures);
+
+        vkGetPhysicalDeviceFeatures2KHR(mPhysicalDevice, &availableFeatures);
+        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&createInfo),
+                           &mProvokingVertexFeatures);
+    }
+
     initFeatures(deviceExtensionNames);
     OverrideFeaturesWithDisplayState(&mFeatures, displayVk->getState());
     mFeaturesInitialized = true;
@@ -1302,6 +1322,13 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
         // Use OpenGL line rasterization rules if extension not available by default.
         // TODO(jmadill): Fix Android support. http://anglebug.com/2830
         ANGLE_FEATURE_CONDITION((&mFeatures), basicGLLineRasterization, !IsAndroid());
+    }
+
+    if (mProvokingVertexFeatures.provokingVertexLast == VK_TRUE)
+    {
+        ASSERT(mProvokingVertexFeatures.sType ==
+               VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_FEATURES_EXT);
+        ANGLE_FEATURE_CONDITION((&mFeatures), provokingVertex, true);
     }
 
     // TODO(lucferron): Currently disabled on Intel only since many tests are failing and need

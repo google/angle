@@ -790,13 +790,27 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     rasterState.depthBiasClamp          = rasterAndMS.depthBiasClamp;
     rasterState.depthBiasSlopeFactor    = rasterAndMS.depthBiasSlopeFactor;
     rasterState.lineWidth               = rasterAndMS.lineWidth;
+    const void **pNextPtr               = &rasterState.pNext;
+
     VkPipelineRasterizationLineStateCreateInfoEXT rasterLineState = {};
     rasterLineState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT;
     // Always enable Bresenham line rasterization if available.
     if (contextVk->getFeatures().bresenhamLineRasterization.enabled)
     {
         rasterLineState.lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT;
-        rasterState.pNext                     = &rasterLineState;
+        *pNextPtr                             = &rasterLineState;
+        pNextPtr                              = &rasterLineState.pNext;
+    }
+
+    VkPipelineRasterizationProvokingVertexStateCreateInfoEXT provokingVertexState = {};
+    provokingVertexState.sType =
+        VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT;
+    // Always set provoking vertex mode to last if available.
+    if (contextVk->getFeatures().provokingVertex.enabled)
+    {
+        provokingVertexState.provokingVertexMode = VK_PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT;
+        *pNextPtr                                = &provokingVertexState;
+        pNextPtr                                 = &provokingVertexState.pNext;
     }
 
     // Multisample state.
