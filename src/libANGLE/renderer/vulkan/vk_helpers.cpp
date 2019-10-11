@@ -2371,18 +2371,16 @@ angle::Result ImageHelper::stageSubresourceUpdateFromBuffer(ContextVk *contextVk
     copy.bufferOffset                    = stagingOffset;
     copy.bufferRowLength                 = extent.width;
     copy.bufferImageHeight               = extent.height;
-    copy.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    copy.imageSubresource.aspectMask     = getAspectFlags();
     copy.imageSubresource.mipLevel       = mipLevel;
     copy.imageSubresource.baseArrayLayer = baseArrayLayer;
     copy.imageSubresource.layerCount     = layerCount;
-    copy.imageOffset.x                   = offset.x;
-    copy.imageOffset.y                   = offset.y;
-    copy.imageOffset.z                   = offset.z;
-    copy.imageExtent.width               = extent.width;
-    copy.imageExtent.height              = extent.height;
-    copy.imageExtent.depth               = extent.depth;
+    copy.imageOffset                     = offset;
+    copy.imageExtent                     = extent;
 
-    ASSERT(getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT);
+    ASSERT(getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT ||
+           getAspectFlags() == VK_IMAGE_ASPECT_DEPTH_BIT ||
+           getAspectFlags() == VK_IMAGE_ASPECT_STENCIL_BIT);
 
     mSubresourceUpdates.emplace_back(bufferHelper, copy);
 

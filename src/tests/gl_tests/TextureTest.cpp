@@ -2677,9 +2677,6 @@ TEST_P(ShadowSamplerPlusSampler3DTestES3, ShadowSamplerPlusSampler3DDraw)
 // samplerCubeShadow: TextureCube + SamplerComparisonState
 TEST_P(SamplerTypeMixTestES3, SamplerTypeMixDraw)
 {
-    // TODO(cnorthrop): Requires non-color staging buffer support. http://anglebug.com/3949
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     GLubyte texData[4];
@@ -2714,6 +2711,8 @@ TEST_P(SamplerTypeMixTestES3, SamplerTypeMixDraw)
     glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_DEPTH_COMPONENT32F, 1, 1);
     glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, 0, 0, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT,
                     depthTexData);
+
+    // http://anglebug.com/3949: TODO: Add a DS texture case
 
     EXPECT_GL_NO_ERROR();
 

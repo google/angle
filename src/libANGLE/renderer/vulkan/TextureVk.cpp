@@ -990,8 +990,14 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
 
+    //  http://anglebug.com/3949: Need to handle DS combined aspect, will require copying D & S
+    //   separately. See ImageHelper::stageSubresourceUpdate for DS copy buff->image example.
+    ASSERT(mImage->getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT ||
+           mImage->getAspectFlags() == VK_IMAGE_ASPECT_DEPTH_BIT ||
+           mImage->getAspectFlags() == VK_IMAGE_ASPECT_STENCIL_BIT);
+
     // Transition the image to readable layout
-    mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc, commandBuffer);
+    mImage->changeLayout(mImage->getAspectFlags(), vk::ImageLayout::TransferSrc, commandBuffer);
 
     // Allocate staging buffer data
     ANGLE_TRY(mImage->allocateStagingMemory(contextVk, sourceCopyAllocationSize, outDataPtr,
@@ -1007,7 +1013,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     region.imageOffset.x                   = sourceArea.x;
     region.imageOffset.y                   = sourceArea.y;
     region.imageOffset.z                   = sourceArea.z;
-    region.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.imageSubresource.aspectMask     = mImage->getAspectFlags();
     region.imageSubresource.baseArrayLayer = baseLayer;
     region.imageSubresource.layerCount     = layerCount;
     region.imageSubresource.mipLevel       = static_cast<uint32_t>(sourceLevel);
