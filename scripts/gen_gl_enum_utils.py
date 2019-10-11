@@ -280,6 +280,7 @@ if __name__ == '__main__':
     inputs = [
         'gl.xml',
         'gl_angle_ext.xml',
+        'registry_xml.py',
     ]
 
     gl_enum_utils_autogen_base_path = '../src/libANGLE/gl_enum_utils_autogen'
