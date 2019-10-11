@@ -46,6 +46,30 @@
       "revId": "0a4dc1ec450472d53c16bfa849580654ce7c7dc2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "398f4a84_60e86407",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-11T10:50:41Z",
+      "side": 1,
+      "message": "Right. Well I guess it worked out. :) Thanks for fixing.",
+      "parentUuid": "e3a35510_d7810171",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 67
+      },
+      "revId": "0a4dc1ec450472d53c16bfa849580654ce7c7dc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
