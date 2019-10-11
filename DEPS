@@ -20,6 +20,9 @@ vars = {
   # TOOD(ynovikov): Use checkout_angle_internal custom variable instead.
   'checkout_src_internal': False,
 
+  # Version of Chromium our Chromium-based DEPS are mirrored from.
+  'chromium_revision': '43eb5958f7db40c57c94e21bea771589d2de9599',
+
   # Current revision of dEQP.
   'deqp_revision': 'd3eef28e67ce6795ba3a2124aaa977819729d45f',
 
@@ -105,7 +108,7 @@ deps = {
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo@6dcdade8828297e306cabfdae80f3510f3f3eea2',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@6dcdade8828297e306cabfdae80f3510f3f3eea2',
     'condition': 'not build_with_chromium',
   },
 
@@ -120,7 +123,7 @@ deps = {
    },
 
   'third_party/jsoncpp/source': {
-    'url' : '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@645250b6690785be60ab6780ce4b58698d884d11',
+    'url' : '{chromium_git}/external/github.com/open-source-parsers/jsoncpp.git@645250b6690785be60ab6780ce4b58698d884d11',
     'condition': 'not build_with_chromium',
    },
 
