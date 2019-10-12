@@ -123,10 +123,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkDestroySemaphore-semaphore-parameter",
     // http://anglebug.com/3924
     "UNASSIGNED-Threading-Info",
-    // http://anglebug.com/3925
-    "VUID-vkDestroyDescriptorPool-descriptorPool-parameter",
-    "VUID-vkDestroyBuffer-buffer-parameter",
-    "VUID-vkDestroyImage-image-parameter",
 };
 
 // Suppress validation errors that are known
