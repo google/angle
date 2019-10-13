@@ -210,10 +210,10 @@ void RenderbufferVk::releaseAndDeleteImage(ContextVk *contextVk)
 
 void RenderbufferVk::releaseImage(ContextVk *contextVk)
 {
+    RendererVk *renderer = contextVk->getRenderer();
+
     if (mImage && mOwnsImage)
     {
-        RendererVk *renderer = contextVk->getRenderer();
-
         mImage->releaseImage(renderer);
         mImage->releaseStagingBuffer(renderer);
     }
@@ -222,7 +222,7 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
         mImage = nullptr;
     }
 
-    mImageViews.release(contextVk);
+    mImageViews.release(renderer);
 }
 
 }  // namespace rx

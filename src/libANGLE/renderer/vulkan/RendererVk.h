@@ -170,7 +170,7 @@ class RendererVk : angle::NonCopyable
         CollectGarbage(&sharedGarbage, garbageIn...);
         if (!sharedGarbage.empty())
         {
-            mSharedGarbage.emplace_back(std::move(*use), std::move(sharedGarbage));
+            collectGarbage(std::move(*use), std::move(sharedGarbage));
         }
         else
         {
@@ -179,6 +179,11 @@ class RendererVk : angle::NonCopyable
         }
         // Keep "use" valid.
         use->init();
+    }
+
+    void collectGarbage(vk::SharedResourceUse &&use, std::vector<vk::GarbageObject> &&sharedGarbage)
+    {
+        mSharedGarbage.emplace_back(std::move(use), std::move(sharedGarbage));
     }
 
     static constexpr size_t kMaxExtensionNames = 200;

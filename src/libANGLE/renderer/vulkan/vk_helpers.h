@@ -997,12 +997,20 @@ class ImageViewHelper : angle::NonCopyable
     ImageViewHelper(ImageViewHelper &&other);
     ~ImageViewHelper();
 
-    void release(ContextVk *contextVk);
+    void release(RendererVk *renderer);
     void destroy(VkDevice device);
 
     const ImageView &getReadImageView() const { return mReadImageView; }
     const ImageView &getFetchImageView() const { return mFetchImageView; }
     const ImageView &getStencilReadImageView() const { return mStencilReadImageView; }
+
+    // Used when initialized RenderTargets.
+    bool hasStencilReadImageView() const { return mStencilReadImageView.valid(); }
+
+    bool hasFetchImageView() const { return mFetchImageView.valid(); }
+
+    // Store reference to usage in graph.
+    void onGraphAccess(CommandGraph *commandGraph) const { commandGraph->onResourceUse(mUse); }
 
     // Creates views with multiple layers and levels.
     angle::Result initReadViews(ContextVk *contextVk,
@@ -1024,13 +1032,16 @@ class ImageViewHelper : angle::NonCopyable
                                         const ImageView **imageViewOut);
 
     // Creates a view with a single layer of the level.
-    angle::Result getLevelLayerDrawImageView(Context *context,
+    angle::Result getLevelLayerDrawImageView(ContextVk *contextVk,
                                              const ImageHelper &image,
                                              uint32_t level,
                                              uint32_t layer,
                                              const ImageView **imageViewOut);
 
   private:
+    // Lifetime.
+    SharedResourceUse mUse;
+
     // Read views.
     ImageView mReadImageView;
     ImageView mFetchImageView;

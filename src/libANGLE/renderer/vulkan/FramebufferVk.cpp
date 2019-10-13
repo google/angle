@@ -823,6 +823,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         {
             const vk::ImageView *readImageView = nullptr;
             ANGLE_TRY(readRenderTarget->getImageView(contextVk, &readImageView));
+            readRenderTarget->onImageViewGraphAccess(contextVk);
             ANGLE_TRY(utilsVk.colorBlitResolve(contextVk, this, &readRenderTarget->getImage(),
                                                readImageView, params));
         }
@@ -1578,10 +1579,12 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
 
 gl::Extents FramebufferVk::getReadImageExtents() const
 {
-    ASSERT(getColorReadRenderTarget()->getExtents().width == mState.getDimensions().width);
-    ASSERT(getColorReadRenderTarget()->getExtents().height == mState.getDimensions().height);
+    RenderTargetVk *readRenderTarget = mRenderTargetCache.getColorRead(mState);
 
-    return getColorReadRenderTarget()->getExtents();
+    ASSERT(readRenderTarget->getExtents().width == mState.getDimensions().width);
+    ASSERT(readRenderTarget->getExtents().height == mState.getDimensions().height);
+
+    return readRenderTarget->getExtents();
 }
 
 gl::Rectangle FramebufferVk::getCompleteRenderArea() const

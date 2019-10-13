@@ -1648,16 +1648,23 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
             VkDescriptorImageInfo &imageInfo = descriptorImageInfo[writeCount];
 
             // Use bound sampler object if one present, otherwise use texture's sampler
-            imageInfo.sampler = (samplerVk != nullptr) ? samplerVk->getSampler().getHandle()
-                                                       : textureVk->getSampler().getHandle();
-            imageInfo.imageView   = textureVk->getReadImageView().getHandle();
+            const vk::Sampler &sampler =
+                (samplerVk != nullptr) ? samplerVk->getSampler() : textureVk->getSampler();
+
+            imageInfo.sampler     = sampler.getHandle();
             imageInfo.imageLayout = image.getCurrentLayout();
 
             if (emulateSeamfulCubeMapSampling)
             {
                 // If emulating seamful cubemapping, use the fetch image view.  This is basically
                 // the same image view as read, except it's a 2DArray view for cube maps.
-                imageInfo.imageView = textureVk->getFetchImageView().getHandle();
+                imageInfo.imageView =
+                    textureVk->getFetchImageViewAndRecordUse(contextVk).getHandle();
+            }
+            else
+            {
+                imageInfo.imageView =
+                    textureVk->getReadImageViewAndRecordUse(contextVk).getHandle();
             }
 
             VkWriteDescriptorSet &writeInfo = writeDescriptorInfo[writeCount];

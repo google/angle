@@ -171,7 +171,11 @@ OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState,
                                        EGLint width,
                                        EGLint height)
     : SurfaceVk(surfaceState), mWidth(width), mHeight(height)
-{}
+{
+    mColorRenderTarget.init(&mColorAttachment.image, &mColorAttachment.imageViews, 0, 0);
+    mDepthStencilRenderTarget.init(&mDepthStencilAttachment.image,
+                                   &mDepthStencilAttachment.imageViews, 0, 0);
+}
 
 OffscreenSurfaceVk::~OffscreenSurfaceVk() {}
 
@@ -399,7 +403,12 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mCompositeAlpha(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR),
       mCurrentSwapHistoryIndex(0),
       mCurrentSwapchainImageIndex(0)
-{}
+{
+    // Initialize the color render target with the multisampled targets.  If not multisampled, the
+    // render target will be updated to refer to a swapchain image on every acquire.
+    mColorRenderTarget.init(&mColorImageMS, &mColorImageMSViews, 0, 0);
+    mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageViews, 0, 0);
+}
 
 WindowSurfaceVk::~WindowSurfaceVk()
 {
@@ -871,14 +880,14 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
     {
         mDepthStencilImage.releaseImage(renderer);
         mDepthStencilImage.releaseStagingBuffer(renderer);
-        mDepthStencilImageViews.release(contextVk);
+        mDepthStencilImageViews.release(renderer);
     }
 
     if (mColorImageMS.valid())
     {
         mColorImageMS.releaseImage(renderer);
         mColorImageMS.releaseStagingBuffer(renderer);
-        mColorImageMSViews.release(contextVk);
+        mColorImageMSViews.release(renderer);
         contextVk->addGarbage(&mFramebufferMS);
     }
 
@@ -888,7 +897,7 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
         swapchainImage.image.resetImageWeakReference();
         swapchainImage.image.destroy(contextVk->getDevice());
 
-        swapchainImage.imageViews.release(contextVk);
+        swapchainImage.imageViews.release(renderer);
         contextVk->addGarbage(&swapchainImage.framebuffer);
 
         // present history must have already been taken care of.

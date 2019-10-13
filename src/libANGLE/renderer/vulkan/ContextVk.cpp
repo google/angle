@@ -2959,6 +2959,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
             image.changeLayout(aspectFlags, textureLayout, srcLayoutChange);
         }
 
+        textureVk->onImageViewGraphAccess(&mCommandGraph);
         image.addReadDependency(this, recorder);
 
         mActiveTextures[textureUnit].texture = textureVk;
