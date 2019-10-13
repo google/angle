@@ -18,25 +18,25 @@
 namespace rx
 {
 RenderTargetVk::RenderTargetVk()
-    : mImage(nullptr), mImageView(nullptr), mLevelIndex(0), mLayerIndex(0)
+    : mImage(nullptr), mImageViews(nullptr), mLevelIndex(0), mLayerIndex(0)
 {}
 
 RenderTargetVk::~RenderTargetVk() {}
 
 RenderTargetVk::RenderTargetVk(RenderTargetVk &&other)
     : mImage(other.mImage),
-      mImageView(other.mImageView),
+      mImageViews(other.mImageViews),
       mLevelIndex(other.mLevelIndex),
       mLayerIndex(other.mLayerIndex)
 {}
 
 void RenderTargetVk::init(vk::ImageHelper *image,
-                          const vk::ImageView *imageView,
+                          vk::ImageViewHelper *imageViews,
                           uint32_t levelIndex,
                           uint32_t layerIndex)
 {
     mImage      = image;
-    mImageView  = imageView;
+    mImageViews = imageViews;
     mLevelIndex = levelIndex;
     mLayerIndex = layerIndex;
 }
@@ -44,7 +44,7 @@ void RenderTargetVk::init(vk::ImageHelper *image,
 void RenderTargetVk::reset()
 {
     mImage      = nullptr;
-    mImageView  = nullptr;
+    mImageViews = nullptr;
     mLevelIndex = 0;
     mLayerIndex = 0;
 }
@@ -97,15 +97,12 @@ const vk::ImageHelper &RenderTargetVk::getImage() const
     return *mImage;
 }
 
-const vk::ImageView *RenderTargetVk::getDrawImageView() const
+angle::Result RenderTargetVk::getImageView(ContextVk *contextVk,
+                                           const vk::ImageView **imageViewOut) const
 {
-    ASSERT(mImageView && mImageView->valid());
-    return mImageView;
-}
-
-const vk::ImageView *RenderTargetVk::getReadImageView() const
-{
-    return getDrawImageView();
+    ASSERT(mImage && mImage->valid() && mImageViews);
+    return mImageViews->getLevelLayerDrawImageView(contextVk, *mImage, mLevelIndex, mLayerIndex,
+                                                   imageViewOut);
 }
 
 const vk::Format &RenderTargetVk::getImageFormat() const
@@ -120,11 +117,11 @@ gl::Extents RenderTargetVk::getExtents() const
     return mImage->getLevelExtents2D(static_cast<uint32_t>(mLevelIndex));
 }
 
-void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, const vk::ImageView *imageView)
+void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageViewHelper *imageViews)
 {
-    ASSERT(image && image->valid() && imageView && imageView->valid());
-    mImage     = image;
-    mImageView = imageView;
+    ASSERT(image && image->valid() && imageViews);
+    mImage      = image;
+    mImageViews = imageViews;
 }
 
 vk::ImageHelper *RenderTargetVk::getImageForRead(ContextVk *contextVk,

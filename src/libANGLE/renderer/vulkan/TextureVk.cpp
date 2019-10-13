@@ -401,9 +401,12 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         // Layer count can only be 1 as the source is a framebuffer.
         ASSERT(offsetImageIndex.getLayerCount() == 1);
 
+        const vk::ImageView *readImageView = nullptr;
+        ANGLE_TRY(colorReadRT->getImageView(contextVk, &readImageView));
+
         return copySubImageImplWithDraw(contextVk, offsetImageIndex, modifiedDestOffset, destFormat,
                                         0, clippedSourceArea, isViewportFlipY, false, false, false,
-                                        &colorReadRT->getImage(), colorReadRT->getReadImageView());
+                                        &colorReadRT->getImage(), readImageView);
     }
 
     // Do a CPU readback that does the conversion, and then stage the change to the pixel buffer.
@@ -1314,10 +1317,8 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
 
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
-        const vk::ImageView *drawView;
-        ANGLE_TRY(getLevelLayerImageView(contextVk, levelIndex, layerIndex, &drawView));
         mRenderTargets[levelIndex][layerIndex].init(
-            mImage, drawView, getNativeImageLevel(levelIndex), getNativeImageLayer(layerIndex));
+            mImage, &mImageViews, getNativeImageLevel(levelIndex), getNativeImageLayer(layerIndex));
     }
     return angle::Result::Continue;
 }

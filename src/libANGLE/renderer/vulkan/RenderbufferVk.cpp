@@ -78,13 +78,10 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
 
-        const vk::ImageView *imageView = nullptr;
-        ANGLE_TRY(mImageViews.getLevelLayerDrawImageView(contextVk, *mImage, 0, 0, &imageView));
-
         // Clear the renderbuffer if it has emulated channels.
         mImage->stageClearIfEmulatedFormat(gl::ImageIndex::Make2D(0), vkFormat);
 
-        mRenderTarget.init(mImage, imageView, 0, 0);
+        mRenderTarget.init(mImage, &mImageViews, 0, 0);
     }
 
     return angle::Result::Continue;
@@ -172,11 +169,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
                                         imageVk->getImage()->getSamples());
     }
 
-    const vk::ImageView *imageView = nullptr;
-    ANGLE_TRY(mImageViews.getLevelLayerDrawImageView(contextVk, *mImage, imageVk->getImageLevel(),
-                                                     imageVk->getImageLayer(), &imageView));
-
-    mRenderTarget.init(mImage, imageView, imageVk->getImageLevel(), imageVk->getImageLayer());
+    mRenderTarget.init(mImage, &mImageViews, imageVk->getImageLevel(), imageVk->getImageLayer());
 
     return angle::Result::Continue;
 }

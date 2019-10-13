@@ -89,7 +89,6 @@ class OffscreenSurfaceVk : public SurfaceVk
 
         vk::ImageHelper image;
         vk::ImageViewHelper imageViews;
-        const vk::ImageView *drawView = nullptr;
     };
 
     angle::Result initializeImpl(DisplayVk *displayVk);
@@ -164,7 +163,6 @@ struct SwapchainImage : angle::NonCopyable
 
     vk::ImageHelper image;
     vk::ImageViewHelper imageViews;
-    const vk::ImageView *drawView = nullptr;
     vk::Framebuffer framebuffer;
 
     // A circular array of semaphores used for presenting this image.
@@ -213,7 +211,7 @@ class WindowSurfaceVk : public SurfaceVk
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
 
-    angle::Result getCurrentFramebuffer(vk::Context *context,
+    angle::Result getCurrentFramebuffer(ContextVk *context,
                                         const vk::RenderPass &compatibleRenderPass,
                                         vk::Framebuffer **framebufferOut);
 
