@@ -560,6 +560,8 @@ struct Extensions
 
     // GL_EXT_gpu_shader5
     bool gpuShader5EXT = false;
+    // WEBGL_video_texture
+    bool webglVideoTexture = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

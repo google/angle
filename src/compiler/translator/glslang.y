@@ -172,7 +172,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %token <lex> USAMPLER2D USAMPLER3D USAMPLERCUBE USAMPLER2DARRAY
 %token <lex> SAMPLER2DMS ISAMPLER2DMS USAMPLER2DMS
 %token <lex> SAMPLER2DMSARRAY ISAMPLER2DMSARRAY USAMPLER2DMSARRAY
-%token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW SAMPLERCUBESHADOW SAMPLER2DARRAYSHADOW
+%token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW SAMPLERCUBESHADOW SAMPLER2DARRAYSHADOW SAMPLERVIDEOWEBGL
 %token <lex> SAMPLEREXTERNAL2DY2YEXT
 %token <lex> IMAGE2D IIMAGE2D UIMAGE2D IMAGE3D IIMAGE3D UIMAGE3D IMAGE2DARRAY IIMAGE2DARRAY UIMAGE2DARRAY
 %token <lex> IMAGECUBE IIMAGECUBE UIMAGECUBE
@@ -1139,6 +1139,13 @@ type_specifier_nonarray
     }
     | SAMPLER2DARRAYSHADOW {
         $$.initialize(EbtSampler2DArrayShadow, @1);
+    }
+    | SAMPLERVIDEOWEBGL {
+        if (!context->checkCanUseExtension(@1, TExtension::WEBGL_video_texture))
+        {
+            context->error(@1, "unsupported type", "samplerVideoWEBGL");
+        }
+        $$.initialize(EbtSamplerVideoWEBGL, @1);
     }
     | SAMPLER_EXTERNAL_OES {
         constexpr std::array<TExtension, 3u> extensions{ { TExtension::NV_EGL_stream_consumer_external,

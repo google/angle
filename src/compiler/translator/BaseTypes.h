@@ -105,7 +105,8 @@ enum TBasicType
     EbtUSampler2DRect,
     EbtUSamplerBuffer,
     EbtUSamplerCubeArray,
-    EbtGuardSamplerEnd = EbtUSamplerCubeArray,  // non type: see implementation of IsSampler()
+    EbtSamplerVideoWEBGL,
+    EbtGuardSamplerEnd = EbtSamplerVideoWEBGL,  // non type: see implementation of IsSampler()
 
     // images
     EbtGuardImageBegin,
@@ -272,6 +273,7 @@ inline bool IsIntegerSampler(TBasicType type)
         case EbtSamplerCubeArrayShadow:
         case EbtSampler1DShadow:
         case EbtSampler2DRectShadow:
+        case EbtSamplerVideoWEBGL:
             return false;
         default:
             assert(!IsSampler(type));
@@ -434,6 +436,7 @@ inline bool IsSampler2D(TBasicType type)
         case EbtSampler2DMS:
         case EbtISampler2DMS:
         case EbtUSampler2DMS:
+        case EbtSamplerVideoWEBGL:
             return true;
         case EbtSampler2DArray:
         case EbtISampler2DArray:
@@ -519,6 +522,7 @@ inline bool IsSamplerCube(TBasicType type)
         case EbtUSampler2DRect:
         case EbtUSamplerBuffer:
         case EbtUSamplerCubeArray:
+        case EbtSamplerVideoWEBGL:
             return false;
         default:
             assert(!IsSampler(type));
@@ -574,6 +578,7 @@ inline bool IsSampler3D(TBasicType type)
         case EbtUSampler2DRect:
         case EbtUSamplerBuffer:
         case EbtUSamplerCubeArray:
+        case EbtSamplerVideoWEBGL:
             return false;
         default:
             assert(!IsSampler(type));
@@ -629,6 +634,7 @@ inline bool IsSamplerArray(TBasicType type)
         case EbtUSampler1D:
         case EbtUSampler2DRect:
         case EbtUSamplerBuffer:
+        case EbtSamplerVideoWEBGL:
             return false;
         default:
             assert(!IsSampler(type));
@@ -684,6 +690,7 @@ inline bool IsShadowSampler(TBasicType type)
         case EbtUSampler2DRect:
         case EbtUSamplerBuffer:
         case EbtUSamplerCubeArray:
+        case EbtSamplerVideoWEBGL:
             return false;
         default:
             assert(!IsSampler(type));

@@ -1107,3 +1107,10 @@ GROUP BEGIN ShaderInvocationGroup
     bool allInvocations(bool);
     bool allInvocationsEqual(bool);
 GROUP END ShaderInvocationGroup
+
+GROUP BEGIN WEBGLVideoTexture
+  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "op": "CallBuiltInFunction", "extension": "WEBGL_video_texture"}
+      vec4 textureVideoWEBGL(samplerVideoWEBGL, vec2);
+  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "op": "CallBuiltInFunction", "extension": "WEBGL_video_texture"}
+    vec4 texture(samplerVideoWEBGL, vec2);
+GROUP END WEBGLVideoTexture

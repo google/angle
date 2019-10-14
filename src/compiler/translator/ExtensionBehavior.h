@@ -39,7 +39,8 @@ enum class TExtension
     OVR_multiview,
     OVR_multiview2,
     ANGLE_multi_draw,
-    ANGLE_base_vertex_base_instance
+    ANGLE_base_vertex_base_instance,
+    WEBGL_video_texture,
 };
 
 enum TBehavior

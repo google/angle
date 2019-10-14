@@ -315,8 +315,7 @@ egl::Error Renderer9::initialize()
     if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DEVICELOST)
     {
         return egl::EglBadAlloc(D3D9_INIT_OUT_OF_MEMORY)
-               << "CreateDevice failed: device lost or out of memory (" << gl::FmtHR(result)
-               << ")";
+               << "CreateDevice failed: device lost or out of memory (" << gl::FmtHR(result) << ")";
     }
 
     if (FAILED(result))
@@ -1810,6 +1809,7 @@ void Renderer9::applyUniforms(ProgramD3D *programD3D)
             case GL_SAMPLER_2D:
             case GL_SAMPLER_CUBE:
             case GL_SAMPLER_EXTERNAL_OES:
+            case GL_SAMPLER_VIDEO_IMAGE_WEBGL:
                 break;
             case GL_BOOL:
             case GL_BOOL_VEC2:

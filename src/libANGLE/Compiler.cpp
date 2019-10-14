@@ -116,6 +116,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     // EXT_multisampled_render_to_texture
     mResources.EXT_multisampled_render_to_texture = extensions.multisampledRenderToTexture;
 
+    // WEBGL_video_texture
+    mResources.WEBGL_video_texture = extensions.webglVideoTexture;
+
     // GLSL ES 3.0 constants
     mResources.MaxVertexOutputVectors  = caps.maxVertexOutputComponents / 4;
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;

@@ -73,6 +73,7 @@ HLSLTextureGroup TextureGroup(const TBasicType type, TLayoutImageInternalFormat 
     switch (type)
     {
         case EbtSampler2D:
+        case EbtSamplerVideoWEBGL:
             return HLSL_TEXTURE_2D;
         case EbtSamplerCube:
             return HLSL_TEXTURE_CUBE;
@@ -973,6 +974,8 @@ TString TypeString(const TType &type)
             case EbtUSamplerCube:
                 return "samplerCUBE";
             case EbtSamplerExternalOES:
+                return "sampler2D";
+            case EbtSamplerVideoWEBGL:
                 return "sampler2D";
             case EbtAtomicCounter:
                 // Multiple atomic_uints will be implemented as a single RWByteAddressBuffer

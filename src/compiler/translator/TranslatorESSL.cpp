@@ -180,6 +180,12 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
                 ASSERT((compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0);
                 continue;
             }
+            else if (iter->first == TExtension::WEBGL_video_texture)
+            {
+                // Don't emit anything. This extension is emulated
+                // TODO(crbug.com/776222): support external image.
+                continue;
+            }
             else
             {
                 sink << "#extension " << GetExtensionNameString(iter->first) << " : "

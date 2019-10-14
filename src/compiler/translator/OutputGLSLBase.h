@@ -79,7 +79,11 @@ class TOutputGLSLBase : public TIntermTraverser
     // Same as hashName(), but without hashing "main".
     ImmutableString hashFunctionNameIfNeeded(const TFunction *func);
     // Used to translate function names for differences between ESSL and GLSL
-    virtual ImmutableString translateTextureFunction(const ImmutableString &name) { return name; }
+    virtual ImmutableString translateTextureFunction(const ImmutableString &name,
+                                                     const ShCompileOptions &option)
+    {
+        return name;
+    }
 
     void declareStruct(const TStructure *structure);
     virtual void writeQualifier(TQualifier qualifier, const TType &type, const TSymbol *symbol);

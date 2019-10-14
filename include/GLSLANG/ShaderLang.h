@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 219
+#define ANGLE_SH_VERSION 220
 
 enum ShShaderSpec
 {
@@ -296,6 +296,9 @@ const ShCompileOptions SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE = UINT64_C(1) << 
 // the other backends as well.
 const ShCompileOptions SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING = UINT64_C(1) << 44;
 
+// This flag controls how to translate WEBGL_video_texture sampling function.
+const ShCompileOptions SH_TAKE_VIDEO_TEXTURE_AS_EXTERNAL_OES = UINT64_C(1) << 45;
+
 // If requested, validates the AST after every transformation.  Useful for debugging.
 const ShCompileOptions SH_VALIDATE_AST = UINT64_C(1) << 46;
 
@@ -367,6 +370,7 @@ struct ShBuiltInResources
     int ANGLE_texture_multisample;
     int ANGLE_multi_draw;
     int ANGLE_base_vertex_base_instance;
+    int WEBGL_video_texture;
 
     // Set to 1 to enable replacing GL_EXT_draw_buffers #extension directives
     // with GL_NV_draw_buffers in ESSL output. This flag can be used to emulate

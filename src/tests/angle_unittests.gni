@@ -89,6 +89,7 @@ angle_unittests_sources = [
   "compiler_tests/RemoveUnreferencedVariables_test.cpp",
   "compiler_tests/RewriteDoWhile_test.cpp",
   "compiler_tests/SamplerMultisample_test.cpp",
+  "compiler_tests/SamplerVideoWEBGL_test.cpp",
   "compiler_tests/ScalarizeVecAndMatConstructorArgs_test.cpp",
   "compiler_tests/ShaderImage_test.cpp",
   "compiler_tests/ShaderValidation_test.cpp",

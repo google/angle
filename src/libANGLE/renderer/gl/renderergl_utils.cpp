@@ -1158,6 +1158,10 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->fragDepth = functions->standard == STANDARD_GL_DESKTOP ||
                             functions->hasGLESExtension("GL_EXT_frag_depth");
 
+    // Support video texture extension on non Android backends.
+    // TODO(crbug.com/776222): support Android and Apple devices.
+    extensions->webglVideoTexture = !IsAndroid() && !IsApple();
+
     if (functions->hasGLExtension("GL_ARB_shader_viewport_layer_array") ||
         functions->hasGLExtension("GL_NV_viewport_array2"))
     {
@@ -1710,7 +1714,7 @@ bool UseTexImage2D(gl::TextureType textureType)
     return textureType == gl::TextureType::_2D || textureType == gl::TextureType::CubeMap ||
            textureType == gl::TextureType::Rectangle ||
            textureType == gl::TextureType::_2DMultisample ||
-           textureType == gl::TextureType::External;
+           textureType == gl::TextureType::External || textureType == gl::TextureType::VideoImage;
 }
 
 bool UseTexImage3D(gl::TextureType textureType)
@@ -1743,6 +1747,16 @@ GLenum GetTextureBindingQuery(gl::TextureType textureType)
             UNREACHABLE();
             return 0;
     }
+}
+
+GLenum GetTextureBindingTarget(gl::TextureType textureType)
+{
+    return ToGLenum(GetNativeTextureType(textureType));
+}
+
+GLenum GetTextureBindingTarget(gl::TextureTarget textureTarget)
+{
+    return ToGLenum(GetNativeTextureTarget(textureTarget));
 }
 
 GLenum GetBufferBindingQuery(gl::BufferBinding bufferBinding)
@@ -1784,6 +1798,46 @@ std::string GetBufferBindingString(gl::BufferBinding bufferBinding)
     std::ostringstream os;
     os << bufferBinding << "_BINDING";
     return os.str();
+}
+
+gl::TextureType GetNativeTextureType(gl::TextureType type)
+{
+    // VideoImage texture type is a WebGL type. It doesn't have
+    // directly mapping type in native OpenGL/OpenGLES.
+    // Actually, it will be translated to different texture type
+    // (TEXTURE2D, TEXTURE_EXTERNAL_OES and TEXTURE_RECTANGLE)
+    // based on OS and other conditions.
+    // This will introduce problem that binding VideoImage may
+    // unbind native image implicitly. Please make sure state
+    // manager is aware of this implicit unbind behaviour.
+    if (type != gl::TextureType::VideoImage)
+    {
+        return type;
+    }
+
+    // TODO(http://anglebug.com/3889): need to figure out rectangle texture and
+    // external image when these backend are implemented.
+    return gl::TextureType::_2D;
+}
+
+gl::TextureTarget GetNativeTextureTarget(gl::TextureTarget target)
+{
+    // VideoImage texture type is a WebGL type. It doesn't have
+    // directly mapping type in native OpenGL/OpenGLES.
+    // Actually, it will be translated to different texture target
+    // (TEXTURE2D, TEXTURE_EXTERNAL_OES and TEXTURE_RECTANGLE)
+    // based on OS and other conditions.
+    // This will introduce problem that binding VideoImage may
+    // unbind native image implicitly. Please make sure state
+    // manager is aware of this implicit unbind behaviour.
+    if (target != gl::TextureTarget::VideoImage)
+    {
+        return target;
+    }
+
+    // TODO(http://anglebug.com/3889): need to figure out rectangle texture and
+    // external image when these backend are implemented.
+    return gl::TextureTarget::_2D;
 }
 
 }  // namespace nativegl

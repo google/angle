@@ -172,6 +172,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->ANGLE_texture_multisample                = 0;
     resources->ANGLE_multi_draw                         = 0;
     resources->ANGLE_base_vertex_base_instance          = 0;
+    resources->WEBGL_video_texture                      = 0;
 
     resources->NV_draw_buffers = 0;
 

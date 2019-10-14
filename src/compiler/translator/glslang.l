@@ -107,6 +107,7 @@ static int ES3_extension(TParseContext *context, TExtension extension, int token
 static int ES3_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
+static int WEBGL_video_texture_extension(TParseContext *context, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
 static int float_constant(yyscan_t yyscanner);
@@ -228,7 +229,7 @@ O           [0-7]
 "sampler2DMSArray"     { return ES3_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, SAMPLER2DMSARRAY); }
 "isampler2DMSArray"    { return ES3_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, ISAMPLER2DMSARRAY); }
 "usampler2DMSArray"    { return ES3_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, USAMPLER2DMSARRAY); }
-
+"samplerVideoWEBGL"    { return WEBGL_video_texture_extension(context, SAMPLERVIDEOWEBGL); }
 "struct"       { return STRUCT; }
 
 "layout"  { return ES3_keyword(context, LAYOUT); }
@@ -579,6 +580,22 @@ int ES3_1_keyword(TParseContext *context, int token)
     }
 
     // Otherwise can be used as an identifier/type name
+    yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
+    return check_type(yyscanner);
+}
+
+int WEBGL_video_texture_extension(TParseContext *context, int token)
+{
+    // Available with WEBGL_video_texture_extension
+    if (context->isExtensionEnabled(TExtension::WEBGL_video_texture))
+    {
+        return token;
+    }
+
+    // Otherwise can be used as an identifier/type name
+    struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
     yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
     return check_type(yyscanner);
 }

@@ -114,6 +114,8 @@ const char *getBasicString(TBasicType t)
             return "uimageCube";
         case EbtAtomicCounter:
             return "atomic_uint";
+        case EbtSamplerVideoWEBGL:
+            return "samplerVideoWEBGL";
         default:
             UNREACHABLE();
             return "unknown type";
