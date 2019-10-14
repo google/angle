@@ -20,12 +20,12 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/driver_utils.h"
+#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
-#include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
@@ -566,7 +566,7 @@ void RendererVk::onDestroy(vk::Context *context)
 
     mPipelineCache.destroy(mDevice);
 
-    GlslangWrapper::Release();
+    GlslangRelease();
 
     if (mDevice)
     {
@@ -885,7 +885,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // Store the physical device memory properties so we can find the right memory pools.
     mMemoryProperties.init(mPhysicalDevice);
 
-    GlslangWrapper::Initialize();
+    GlslangInitialize();
 
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);

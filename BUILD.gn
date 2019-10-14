@@ -582,6 +582,18 @@ angle_source_set("libANGLE_headers") {
   ]
 }
 
+angle_source_set("angle_glslang_wrapper") {
+  sources = [
+    "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+    "src/libANGLE/renderer/glslang_wrapper_utils.h",
+  ]
+  deps = [
+    ":libANGLE_headers",
+    "${angle_glslang_dir}:glslang_default_resource_limits_sources",
+    "${angle_glslang_dir}:glslang_sources",
+  ]
+}
+
 angle_source_set("libANGLE_base") {
   sources = libangle_sources
 

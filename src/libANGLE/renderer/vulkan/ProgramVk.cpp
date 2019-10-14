@@ -10,11 +10,13 @@
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 
 #include "common/debug.h"
+#include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/ProgramLinkedResources.h"
+#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
-#include "libANGLE/renderer/vulkan/GlslangWrapper.h"
+#include "libANGLE/renderer/vulkan/GlslangWrapperVk.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 
 namespace rx
@@ -271,7 +273,7 @@ void AddTextureDescriptorSetDesc(const gl::ProgramState &programState,
             // 2D arrays are split into multiple 1D arrays when generating
             // LinkedUniforms. Since they are flattened into one array, ignore the
             // nonzero elements and expand the array to the total array size.
-            if (vk::SamplerNameContainsNonZeroArrayElement(samplerUniform.name))
+            if (gl::SamplerNameContainsNonZeroArrayElement(samplerUniform.name))
             {
                 continue;
             }
@@ -369,7 +371,7 @@ angle::Result ProgramVk::ShaderInfo::initShaders(ContextVk *contextVk,
     ASSERT(!valid());
 
     gl::ShaderMap<std::vector<uint32_t>> shaderCodes;
-    ANGLE_TRY(GlslangWrapper::GetShaderCode(
+    ANGLE_TRY(GlslangWrapperVk::GetShaderCode(
         contextVk, contextVk->getCaps(), enableLineRasterEmulation, shaderSources, &shaderCodes));
 
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -564,8 +566,8 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     // assignment done in that function.
     linkResources(resources);
 
-    GlslangWrapper::GetShaderSource(contextVk->useOldRewriteStructSamplers(), mState, resources,
-                                    &mShaderSources);
+    GlslangWrapperVk::GetShaderSource(contextVk->useOldRewriteStructSamplers(), mState, resources,
+                                      &mShaderSources);
 
     reset(contextVk);
 
@@ -1616,7 +1618,7 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
 
         uint32_t uniformIndex = mState.getUniformIndexFromSamplerIndex(textureIndex);
         const gl::LinkedUniform &samplerUniform = mState.getUniforms()[uniformIndex];
-        std::string mappedSamplerName           = vk::GetMappedSamplerName(samplerUniform.name);
+        std::string mappedSamplerName           = GlslangGetMappedSamplerName(samplerUniform.name);
 
         if (useOldRewriteStructSamplers ||
             mappedSamplerNameToBindingIndex.emplace(mappedSamplerName, currentBindingIndex).second)

@@ -794,6 +794,27 @@ std::string StripLastArrayIndex(const std::string &name)
     return name;
 }
 
+bool SamplerNameContainsNonZeroArrayElement(const std::string &name)
+{
+    constexpr char kZERO_ELEMENT[] = "[0]";
+
+    size_t start = 0;
+    while (true)
+    {
+        start = name.find(kZERO_ELEMENT[0], start);
+        if (start == std::string::npos)
+        {
+            break;
+        }
+        if (name.compare(start, strlen(kZERO_ELEMENT), kZERO_ELEMENT) != 0)
+        {
+            return true;
+        }
+        start++;
+    }
+    return false;
+}
+
 const sh::ShaderVariable *FindShaderVarField(const sh::ShaderVariable &var,
                                              const std::string &fullName,
                                              GLuint *fieldIndexOut)
