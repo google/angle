@@ -1387,6 +1387,7 @@ void GenerateCaps(ID3D11Device *device,
                   ID3D11DeviceContext *deviceContext,
                   const Renderer11DeviceCaps &renderer11DeviceCaps,
                   const angle::FeaturesD3D &features,
+                  const char *description,
                   gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions,
@@ -1659,7 +1660,10 @@ void GenerateCaps(ID3D11Device *device,
     extensions->maxDualSourceDrawBuffers    = 1;
     extensions->texture3DOES                = true;
     extensions->baseVertexBaseInstance      = true;
-    extensions->multisampledRenderToTexture = true;
+    if (!strstr(description, "Adreno"))
+    {
+        extensions->multisampledRenderToTexture = true;
+    }
 
     // D3D11 cannot support reading depth texture as a luminance texture.
     // It treats it as a red-channel-only texture.
