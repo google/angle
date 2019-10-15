@@ -258,6 +258,33 @@ void HandlePrimitiveRestart(gl::DrawElementsType glIndexType,
             UNREACHABLE();
     }
 }
+
+bool HasBothDepthAndStencilAspects(VkImageAspectFlags aspectFlags)
+{
+    constexpr VkImageAspectFlags kDepthStencilAspects =
+        VK_IMAGE_ASPECT_STENCIL_BIT | VK_IMAGE_ASPECT_DEPTH_BIT;
+    return (aspectFlags & kDepthStencilAspects) == kDepthStencilAspects;
+}
+
+uint32_t GetImageLayerCountForView(const ImageHelper &image)
+{
+    // Depth > 1 means this is a 3D texture and depth is our layer count
+    return image.getExtents().depth > 1 ? image.getExtents().depth : image.getLayerCount();
+}
+
+ImageView *GetLevelImageView(ImageViewVector *imageViews, uint32_t level, uint32_t levelCount)
+{
+    // Lazily allocate the storage for image views. We allocate the full level count because we
+    // don't want to trigger any std::vecotr reallocations. Reallocations could invalidate our
+    // view pointers.
+    if (imageViews->empty())
+    {
+        imageViews->resize(levelCount);
+    }
+    ASSERT(imageViews->size() > level);
+
+    return &(*imageViews)[level];
+}
 }  // anonymous namespace
 
 // DynamicBuffer implementation.
@@ -1666,7 +1693,7 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
                                               uint32_t baseMipLevel,
                                               uint32_t levelCount,
                                               uint32_t baseArrayLayer,
-                                              uint32_t layerCount)
+                                              uint32_t layerCount) const
 {
     VkImageViewCreateInfo viewInfo = {};
     viewInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -2860,6 +2887,161 @@ angle::Result FramebufferHelper::init(ContextVk *contextVk,
 void FramebufferHelper::release(ContextVk *contextVk)
 {
     contextVk->addGarbage(&mFramebuffer);
+}
+
+// ImageViewHelper implementation.
+ImageViewHelper::ImageViewHelper() = default;
+
+ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
+{
+    std::swap(mReadImageView, other.mReadImageView);
+    std::swap(mFetchImageView, other.mFetchImageView);
+    std::swap(mStencilReadImageView, other.mStencilReadImageView);
+    std::swap(mLevelDrawImageViews, other.mLevelDrawImageViews);
+    std::swap(mLayerLevelDrawImageViews, other.mLayerLevelDrawImageViews);
+}
+
+ImageViewHelper::~ImageViewHelper() = default;
+
+void ImageViewHelper::release(ContextVk *contextVk)
+{
+    contextVk->addGarbage(&mReadImageView);
+    contextVk->addGarbage(&mFetchImageView);
+    contextVk->addGarbage(&mStencilReadImageView);
+
+    for (vk::ImageView &imageView : mLevelDrawImageViews)
+    {
+        contextVk->addGarbage(&imageView);
+    }
+    mLevelDrawImageViews.clear();
+
+    for (vk::ImageViewVector &layerViews : mLayerLevelDrawImageViews)
+    {
+        for (vk::ImageView &imageView : layerViews)
+        {
+            contextVk->addGarbage(&imageView);
+        }
+    }
+    mLayerLevelDrawImageViews.clear();
+}
+
+void ImageViewHelper::destroy(VkDevice device)
+{
+    mReadImageView.destroy(device);
+    mFetchImageView.destroy(device);
+    mStencilReadImageView.destroy(device);
+
+    for (vk::ImageView &imageView : mLevelDrawImageViews)
+    {
+        imageView.destroy(device);
+    }
+    mLevelDrawImageViews.clear();
+
+    for (vk::ImageViewVector &layerViews : mLayerLevelDrawImageViews)
+    {
+        for (vk::ImageView &imageView : layerViews)
+        {
+            imageView.destroy(device);
+        }
+    }
+    mLayerLevelDrawImageViews.clear();
+}
+
+angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
+                                             gl::TextureType viewType,
+                                             const ImageHelper &image,
+                                             const Format &format,
+                                             const gl::SwizzleState &swizzleState,
+                                             uint32_t baseLevel,
+                                             uint32_t levelCount,
+                                             uint32_t baseLayer,
+                                             uint32_t layerCount)
+{
+    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(format.angleFormat());
+    if (HasBothDepthAndStencilAspects(aspectFlags))
+    {
+        ANGLE_TRY(image.initLayerImageView(contextVk, viewType, VK_IMAGE_ASPECT_DEPTH_BIT,
+                                           swizzleState, &mReadImageView, baseLevel, levelCount,
+                                           baseLayer, layerCount));
+        ANGLE_TRY(image.initLayerImageView(contextVk, viewType, VK_IMAGE_ASPECT_STENCIL_BIT,
+                                           swizzleState, &mStencilReadImageView, baseLevel,
+                                           levelCount, baseLayer, layerCount));
+    }
+    else
+    {
+        ANGLE_TRY(image.initLayerImageView(contextVk, viewType, aspectFlags, swizzleState,
+                                           &mReadImageView, baseLevel, levelCount, baseLayer,
+                                           layerCount));
+    }
+
+    if (viewType == gl::TextureType::CubeMap || viewType == gl::TextureType::_2DArray ||
+        viewType == gl::TextureType::_2DMultisampleArray)
+    {
+        gl::TextureType arrayType = vk::Get2DTextureType(layerCount, image.getSamples());
+
+        // TODO(http://anglebug.com/4004): SwizzleState incorrect for CopyTextureCHROMIUM.
+        ANGLE_TRY(image.initLayerImageView(contextVk, arrayType, aspectFlags, swizzleState,
+                                           &mFetchImageView, baseLevel, levelCount, baseLayer,
+                                           layerCount));
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
+                                                     gl::TextureType viewType,
+                                                     const ImageHelper &image,
+                                                     uint32_t level,
+                                                     uint32_t layer,
+                                                     const ImageView **imageViewOut)
+{
+    // TODO(http://anglebug.com/4008): Possibly incorrect level count.
+    ImageView *imageView = GetLevelImageView(&mLevelDrawImageViews, level, 1);
+
+    *imageViewOut = imageView;
+    if (imageView->valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    // Create the view.  Note that storage images are not affected by swizzle parameters.
+    return image.initLayerImageView(contextVk, viewType, image.getAspectFlags(), gl::SwizzleState(),
+                                    imageView, level, 1, layer, image.getLayerCount());
+}
+
+angle::Result ImageViewHelper::getLevelLayerDrawImageView(Context *context,
+                                                          const ImageHelper &image,
+                                                          uint32_t level,
+                                                          uint32_t layer,
+                                                          const ImageView **imageViewOut)
+{
+    ASSERT(image.valid());
+    ASSERT(!image.getFormat().imageFormat().isBlock);
+
+    uint32_t layerCount = GetImageLayerCountForView(image);
+
+    // Lazily allocate the storage for image views
+    if (mLayerLevelDrawImageViews.empty())
+    {
+        mLayerLevelDrawImageViews.resize(layerCount);
+    }
+    ASSERT(mLayerLevelDrawImageViews.size() > layer);
+
+    ImageView *imageView =
+        GetLevelImageView(&mLayerLevelDrawImageViews[layer], level, image.getLevelCount());
+    *imageViewOut = imageView;
+
+    if (imageView->valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    // Lazily allocate the image view itself.
+    // Note that these views are specifically made to be used as color attachments, and therefore
+    // don't have swizzle.
+    gl::TextureType viewType = vk::Get2DTextureType(1, image.getSamples());
+    return image.initLayerImageView(context, viewType, image.getAspectFlags(), gl::SwizzleState(),
+                                    imageView, level, 1, layer, 1);
 }
 
 // FramebufferHelper implementation.

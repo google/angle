@@ -158,15 +158,11 @@ class TextureVk : public TextureImpl
     // A special view for cube maps as a 2D array, used with shaders that do texelFetch() and for
     // seamful cube map emulation.
     const vk::ImageView &getFetchImageView() const;
-    angle::Result getLayerLevelDrawImageView(vk::Context *context,
-                                             size_t layer,
-                                             size_t level,
-                                             const vk::ImageView **imageViewOut);
-    angle::Result getLayerLevelStorageImageView(ContextVk *contextVk,
-                                                bool allLayers,
-                                                size_t singleLayer,
-                                                size_t level,
-                                                const vk::ImageView **imageViewOut);
+    angle::Result getStorageImageView(ContextVk *contextVk,
+                                      bool allLayers,
+                                      size_t level,
+                                      size_t singleLayer,
+                                      const vk::ImageView **imageViewOut);
     const vk::Sampler &getSampler() const;
 
     angle::Result ensureImageInitialized(ContextVk *contextVk);
@@ -291,7 +287,6 @@ class TextureVk : public TextureImpl
                             const gl::Extents &extents,
                             const uint32_t levelCount);
     void releaseImage(ContextVk *contextVk);
-    void releaseImageViews(ContextVk *contextVk);
     void releaseStagingBuffer(ContextVk *contextVk);
     uint32_t getLevelCount() const;
     angle::Result initImageViews(ContextVk *contextVk,
@@ -300,10 +295,10 @@ class TextureVk : public TextureImpl
                                  uint32_t levelCount,
                                  uint32_t layerCount);
     angle::Result initRenderTargets(ContextVk *contextVk, GLuint layerCount, GLuint levelIndex);
-    vk::ImageView *getLevelImageViewImpl(vk::ImageViewVector *imageViews, size_t level);
-    vk::ImageView *getLayerLevelImageViewImpl(vk::LayerLevelImageViewVector *imageViews,
-                                              size_t layer,
-                                              size_t level);
+    angle::Result getLevelLayerImageView(vk::Context *context,
+                                         size_t level,
+                                         size_t layer,
+                                         const vk::ImageView **imageViewOut);
 
     angle::Result ensureImageInitializedImpl(ContextVk *contextVk,
                                              const gl::Extents &baseLevelExtents,
@@ -326,24 +321,23 @@ class TextureVk : public TextureImpl
     // mImage.
     uint32_t mImageLevelOffset;
 
+    // |mImage| wraps a VkImage and VkDeviceMemory that represents the gl::Texture. |mOwnsImage|
+    // indicates that |TextureVk| owns the image. Otherwise it is a weak pointer shared with another
+    // class.
     vk::ImageHelper *mImage;
 
-    // Read views.
-    vk::ImageView mReadImageView;
-    vk::ImageView mFetchImageView;
-    vk::ImageView mStencilReadImageView;
+    // |mImageViews| contains all the current views for the Texture. The views are always owned by
+    // the Texture and are not shared like |mImage|. They also have different lifetimes and can be
+    // reallocated independently of |mImage| on state changes.
+    vk::ImageViewHelper mImageViews;
 
-    // Draw views.
-    vk::LayerLevelImageViewVector mLayerLevelDrawImageViews;
-
-    // Storage image views.
-    vk::ImageViewVector mLevelStorageImageViews;
-
+    // |mSampler| contains the relevant Vulkan sampler states reprensenting the OpenGL Texture
+    // sampling states for the Texture.
     vk::Sampler mSampler;
 
     // Render targets stored as vector of vectors
     // Level is first dimension, layer is second
-    std::vector<vk::RenderTargetVector> mRenderTargets;
+    std::vector<RenderTargetVector> mRenderTargets;
 
     // The serial is used for cache indexing.
     Serial mSerial;

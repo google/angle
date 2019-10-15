@@ -592,14 +592,6 @@ class Recycler final : angle::NonCopyable
 
 bool SamplerNameContainsNonZeroArrayElement(const std::string &name);
 std::string GetMappedSamplerName(const std::string &originalName);
-
-// A vector of image views, such as one per level or one per layer.
-using ImageViewVector = std::vector<ImageView>;
-// A vector of vector of image views.  Primary index is layer, secondary index is level.
-using LayerLevelImageViewVector = std::vector<ImageViewVector>;
-// A vector of rendertargets
-using RenderTargetVector = std::vector<RenderTargetVk>;
-
 }  // namespace vk
 
 // List of function pointers for used extensions.

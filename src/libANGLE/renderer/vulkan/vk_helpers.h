@@ -693,7 +693,7 @@ class ImageHelper final : public CommandGraphResource
                                      uint32_t baseMipLevel,
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
-                                     uint32_t layerCount);
+                                     uint32_t layerCount) const;
     angle::Result initImageView(Context *context,
                                 gl::TextureType textureType,
                                 VkImageAspectFlags aspectMask,
@@ -970,6 +970,63 @@ class ImageHelper final : public CommandGraphResource
     // Staging buffer
     DynamicBuffer mStagingBuffer;
     std::vector<SubresourceUpdate> mSubresourceUpdates;
+};
+
+// A vector of image views, such as one per level or one per layer.
+using ImageViewVector = std::vector<ImageView>;
+
+// A vector of vector of image views.  Primary index is layer, secondary index is level.
+using LayerLevelImageViewVector = std::vector<ImageViewVector>;
+
+class ImageViewHelper : angle::NonCopyable
+{
+  public:
+    ImageViewHelper();
+    ImageViewHelper(ImageViewHelper &&other);
+    ~ImageViewHelper();
+
+    void release(ContextVk *contextVk);
+    void destroy(VkDevice device);
+
+    const ImageView &getReadImageView() const { return mReadImageView; }
+    const ImageView &getFetchImageView() const { return mFetchImageView; }
+    const ImageView &getStencilReadImageView() const { return mStencilReadImageView; }
+
+    // Creates views with multiple layers and levels.
+    angle::Result initReadViews(ContextVk *contextVk,
+                                gl::TextureType viewType,
+                                const ImageHelper &image,
+                                const Format &format,
+                                const gl::SwizzleState &swizzleState,
+                                uint32_t baseLevel,
+                                uint32_t levelCount,
+                                uint32_t baseLayer,
+                                uint32_t layerCount);
+
+    // Creates a view with all layers of the level.
+    angle::Result getLevelDrawImageView(ContextVk *contextVk,
+                                        gl::TextureType viewType,
+                                        const ImageHelper &image,
+                                        uint32_t level,
+                                        uint32_t layer,
+                                        const ImageView **imageViewOut);
+
+    // Creates a view with a single layer of the level.
+    angle::Result getLevelLayerDrawImageView(Context *context,
+                                             const ImageHelper &image,
+                                             uint32_t level,
+                                             uint32_t layer,
+                                             const ImageView **imageViewOut);
+
+  private:
+    // Read views.
+    ImageView mReadImageView;
+    ImageView mFetchImageView;
+    ImageView mStencilReadImageView;
+
+    // Draw views.
+    ImageViewVector mLevelDrawImageViews;
+    LayerLevelImageViewVector mLayerLevelDrawImageViews;
 };
 
 class FramebufferHelper : public CommandGraphResource

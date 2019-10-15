@@ -91,6 +91,9 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     uint32_t mLayerIndex;
 };
 
+// A vector of rendertargets
+using RenderTargetVector = std::vector<RenderTargetVk>;
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_RENDERTARGETVK_H_
