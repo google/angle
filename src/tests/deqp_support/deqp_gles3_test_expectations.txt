@@ -569,8 +569,6 @@
 2830 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.fbo.texture_2d.primitives.lines = FAIL
 2830 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.primitives.line* = FAIL
 2808 ANDROID VULKAN : dEQP-GLES3.functional.shaders.builtin_variable.fragcoord_w = FAIL
-3544 ANDROID VULKAN : dEQP-GLES3.functional.buffer.copy.basic.* = SKIP
-3544 ANDROID VULKAN : dEQP-GLES3.functional.buffer.copy.subrange.* = SKIP
 
 // Fixed in later driver versions.
 2727 VULKAN ANDROID : dEQP-GLES3.functional.shaders.builtin_variable.pointcoord = FAIL

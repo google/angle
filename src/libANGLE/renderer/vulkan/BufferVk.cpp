@@ -183,6 +183,9 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
     commandBuffer->copyBuffer(sourceBuffer->getBuffer().getBuffer(), mBuffer.getBuffer(), 1,
                               &copyRegion);
 
+    // The new destination buffer data may require a conversion for the next draw, so mark it dirty.
+    onDataChanged();
+
     return angle::Result::Continue;
 }
 
