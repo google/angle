@@ -244,9 +244,6 @@ group("angle_vulkan") {
 
 config("angle_vulkan_backend_config") {
   defines = [ "ANGLE_ENABLE_VULKAN" ]
-  if (use_x11) {
-    defines += [ "VK_USE_PLATFORM_XLIB_KHR" ]
-  }
   if (angle_enable_custom_vulkan_cmd_buffers) {
     defines += [ "ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS=1" ]
   }
