@@ -1287,7 +1287,7 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 
     // Use OpenGL line rasterization rules by default.
     // TODO(jmadill): Fix Android support. http://anglebug.com/2830
-    ANGLE_FEATURE_CONDITION((&mFeatures), basicGLLineRasterization, !IsAndroid())
+    ANGLE_FEATURE_CONDITION((&mFeatures), basicGLLineRasterization, !IsAndroid());
 
     // TODO(lucferron): Currently disabled on Intel only since many tests are failing and need
     // investigation. http://anglebug.com/2728
@@ -1295,28 +1295,28 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
         (&mFeatures), flipViewportY,
         !IsIntel(mPhysicalDeviceProperties.vendorID) &&
                 (mPhysicalDeviceProperties.apiVersion >= VK_MAKE_VERSION(1, 1, 0)) ||
-            ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionNames))
+            ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionNames));
 
     // http://anglebug.com/2838
-    ANGLE_FEATURE_CONDITION((&mFeatures), extraCopyBufferRegion, IsWindows() && isIntel)
+    ANGLE_FEATURE_CONDITION((&mFeatures), extraCopyBufferRegion, IsWindows() && isIntel);
 
     // http://anglebug.com/3055
-    ANGLE_FEATURE_CONDITION((&mFeatures), forceCPUPathForCubeMapCopy, IsWindows() && isIntel)
+    ANGLE_FEATURE_CONDITION((&mFeatures), forceCPUPathForCubeMapCopy, IsWindows() && isIntel);
 
     // Work around incorrect NVIDIA point size range clamping.
     // TODO(jmadill): Narrow driver range once fixed. http://anglebug.com/2970
-    ANGLE_FEATURE_CONDITION((&mFeatures), clampPointSize, isNvidia)
+    ANGLE_FEATURE_CONDITION((&mFeatures), clampPointSize, isNvidia);
 
     // Work around ineffective compute-graphics barriers on Nexus 5X.
     // TODO(syoussefi): Figure out which other vendors and driver versions are affected.
     // http://anglebug.com/3019
     ANGLE_FEATURE_CONDITION((&mFeatures), flushAfterVertexConversion,
                             IsAndroid() && IsNexus5X(mPhysicalDeviceProperties.vendorID,
-                                                     mPhysicalDeviceProperties.deviceID))
+                                                     mPhysicalDeviceProperties.deviceID));
 
     ANGLE_FEATURE_CONDITION(
         (&mFeatures), supportsIncrementalPresent,
-        ExtensionFound(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME, deviceExtensionNames))
+        ExtensionFound(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME, deviceExtensionNames));
 
 #if defined(ANGLE_PLATFORM_ANDROID)
     ANGLE_FEATURE_CONDITION(
@@ -1324,52 +1324,53 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
         IsAndroid() &&
             ExtensionFound(VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME,
                            deviceExtensionNames) &&
-            ExtensionFound(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME, deviceExtensionNames))
+            ExtensionFound(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME, deviceExtensionNames));
 #endif
 
     ANGLE_FEATURE_CONDITION(
         (&mFeatures), supportsExternalMemoryFd,
-        ExtensionFound(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME, deviceExtensionNames))
+        ExtensionFound(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
         (&mFeatures), supportsExternalSemaphoreFd,
-        ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME, deviceExtensionNames))
+        ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
         (&mFeatures), supportsShaderStencilExport,
-        ExtensionFound(VK_EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME, deviceExtensionNames))
+        ExtensionFound(VK_EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME, deviceExtensionNames));
 
     // TODO(syoussefi): when the code path using the extension is implemented, this should be
     // conditioned to the extension not being present as well.  http://anglebug.com/3206
     ANGLE_FEATURE_CONDITION((&mFeatures), emulateTransformFeedback,
-                            mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE)
+                            mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), disableFifoPresentMode, IsLinux() && isIntel)
+    ANGLE_FEATURE_CONDITION((&mFeatures), disableFifoPresentMode, IsLinux() && isIntel);
 
     ANGLE_FEATURE_CONDITION((&mFeatures), restartRenderPassAfterLoadOpClear,
-                            IsAndroid() && isQualcomm && vk::CommandBuffer::ExecutesInline())
+                            IsAndroid() && isQualcomm && vk::CommandBuffer::ExecutesInline());
 
     ANGLE_FEATURE_CONDITION((&mFeatures), bindEmptyForUnusedDescriptorSets,
-                            IsAndroid() && isQualcomm)
+                            IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), forceOldRewriteStructSamplers, IsAndroid() && isQualcomm)
+    ANGLE_FEATURE_CONDITION((&mFeatures), forceOldRewriteStructSamplers, IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), forceNonZeroScissor, IsWindows() && isIntel)
+    ANGLE_FEATURE_CONDITION((&mFeatures), forceNonZeroScissor, IsWindows() && isIntel);
 
     ANGLE_FEATURE_CONDITION((&mFeatures), perFrameWindowSizeQuery,
-                            isIntel || (IsWindows() && isAMD))
+                            isIntel || (IsWindows() && isAMD));
 
     // Disabled on AMD/windows due to buggy behavior.
-    ANGLE_FEATURE_CONDITION((&mFeatures), disallowSeamfulCubeMapEmulation, IsWindows() && isAMD)
+    ANGLE_FEATURE_CONDITION((&mFeatures), disallowSeamfulCubeMapEmulation, IsWindows() && isAMD);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), forceD16TexFilter, IsAndroid() && isQualcomm)
+    ANGLE_FEATURE_CONDITION((&mFeatures), forceD16TexFilter, IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), disableFlippingBlitWithCommand, IsAndroid() && isQualcomm)
+    ANGLE_FEATURE_CONDITION((&mFeatures), disableFlippingBlitWithCommand,
+                            IsAndroid() && isQualcomm);
 
     ANGLE_FEATURE_CONDITION(
         (&mFeatures), transientCommandBuffer,
         IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) ||
-            IsPixel1XL(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID))
+            IsPixel1XL(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);
