@@ -789,6 +789,14 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     rasterState.depthBiasClamp          = rasterAndMS.depthBiasClamp;
     rasterState.depthBiasSlopeFactor    = rasterAndMS.depthBiasSlopeFactor;
     rasterState.lineWidth               = rasterAndMS.lineWidth;
+    VkPipelineRasterizationLineStateCreateInfoEXT rasterLineState = {};
+    rasterLineState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT;
+    // Always enable Bresenham line rasterization if available.
+    if (contextVk->getFeatures().bresenhamLineRasterization.enabled)
+    {
+        rasterLineState.lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT;
+        rasterState.pNext                     = &rasterLineState;
+    }
 
     // Multisample state.
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;

@@ -961,6 +961,42 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     ExtensionNameList enabledDeviceExtensions;
     enabledDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
+    float zeroPriority                      = 0.0f;
+    VkDeviceQueueCreateInfo queueCreateInfo = {};
+    queueCreateInfo.sType                   = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queueCreateInfo.flags                   = 0;
+    queueCreateInfo.queueFamilyIndex        = queueFamilyIndex;
+    queueCreateInfo.queueCount              = 1;
+    queueCreateInfo.pQueuePriorities        = &zeroPriority;
+
+    // Setup device initialization struct
+    VkDeviceCreateInfo createInfo = {};
+
+    createInfo.sType                = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    createInfo.flags                = 0;
+    createInfo.queueCreateInfoCount = 1;
+    createInfo.pQueueCreateInfos    = &queueCreateInfo;
+    createInfo.enabledLayerCount    = static_cast<uint32_t>(enabledDeviceLayerNames.size());
+    createInfo.ppEnabledLayerNames  = enabledDeviceLayerNames.data();
+
+    mLineRasterizationFeatures = {};
+    mLineRasterizationFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT;
+    ASSERT(mLineRasterizationFeatures.bresenhamLines == VK_FALSE);
+    if (vkGetPhysicalDeviceFeatures2KHR &&
+        ExtensionFound(VK_EXT_LINE_RASTERIZATION_EXTENSION_NAME, deviceExtensionNames))
+    {
+        enabledDeviceExtensions.push_back(VK_EXT_LINE_RASTERIZATION_EXTENSION_NAME);
+        // Query line rasterization capabilities
+        VkPhysicalDeviceFeatures2KHR availableFeatures = {};
+        availableFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&availableFeatures),
+                           &mLineRasterizationFeatures);
+
+        vkGetPhysicalDeviceFeatures2KHR(mPhysicalDevice, &availableFeatures);
+        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&createInfo),
+                           &mLineRasterizationFeatures);
+    }
     initFeatures(deviceExtensionNames);
     OverrideFeaturesWithDisplayState(&mFeatures, displayVk->getState());
     mFeaturesInitialized = true;
@@ -1036,31 +1072,13 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 
     VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT divisorFeatures = {};
     divisorFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT;
-    divisorFeatures.vertexAttributeInstanceRateDivisor = true;
-
-    float zeroPriority                      = 0.0f;
-    VkDeviceQueueCreateInfo queueCreateInfo = {};
-    queueCreateInfo.sType                   = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    queueCreateInfo.flags                   = 0;
-    queueCreateInfo.queueFamilyIndex        = queueFamilyIndex;
-    queueCreateInfo.queueCount              = 1;
-    queueCreateInfo.pQueuePriorities        = &zeroPriority;
-
-    // Initialize the device
-    VkDeviceCreateInfo createInfo = {};
-
-    createInfo.sType                = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo.flags                = 0;
-    createInfo.queueCreateInfoCount = 1;
-    createInfo.pQueueCreateInfos    = &queueCreateInfo;
-    createInfo.enabledLayerCount    = static_cast<uint32_t>(enabledDeviceLayerNames.size());
-    createInfo.ppEnabledLayerNames  = enabledDeviceLayerNames.data();
-
     if (vkGetPhysicalDeviceProperties2KHR &&
         ExtensionFound(VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME, deviceExtensionNames))
     {
         enabledDeviceExtensions.push_back(VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME);
-        enabledFeatures.pNext = &divisorFeatures;
+        divisorFeatures.vertexAttributeInstanceRateDivisor = true;
+        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&enabledFeatures),
+                           &divisorFeatures);
 
         VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT divisorProperties = {};
         divisorProperties.sType =
@@ -1068,7 +1086,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 
         VkPhysicalDeviceProperties2 deviceProperties = {};
         deviceProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-        deviceProperties.pNext = &divisorProperties;
+        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&deviceProperties),
+                           &divisorProperties);
 
         vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
         // We only store 8 bit divisor in GraphicsPipelineDesc so capping value & we emulate if
@@ -1076,11 +1095,13 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         mMaxVertexAttribDivisor =
             std::min(divisorProperties.maxVertexAttribDivisor,
                      static_cast<uint32_t>(std::numeric_limits<uint8_t>::max()));
-
-        createInfo.pNext = &enabledFeatures;
+        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&createInfo),
+                           &enabledFeatures);
     }
-    else
+
+    if (createInfo.pNext == nullptr)
     {
+        // Enable all available features
         createInfo.pEnabledFeatures = &enabledFeatures.features;
     }
 
@@ -1088,7 +1109,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         VkPhysicalDeviceProperties2 deviceProperties = {};
         deviceProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-        deviceProperties.pNext = &mPhysicalDeviceSubgroupProperties;
+        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&deviceProperties),
+                           &mPhysicalDeviceSubgroupProperties);
 
         vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
     }
@@ -1285,9 +1307,18 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     bool isNvidia   = IsNvidia(mPhysicalDeviceProperties.vendorID);
     bool isQualcomm = IsQualcomm(mPhysicalDeviceProperties.vendorID);
 
-    // Use OpenGL line rasterization rules by default.
-    // TODO(jmadill): Fix Android support. http://anglebug.com/2830
-    ANGLE_FEATURE_CONDITION((&mFeatures), basicGLLineRasterization, !IsAndroid());
+    if (mLineRasterizationFeatures.bresenhamLines == VK_TRUE)
+    {
+        ASSERT(mLineRasterizationFeatures.sType ==
+               VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT);
+        ANGLE_FEATURE_CONDITION((&mFeatures), bresenhamLineRasterization, true);
+    }
+    else
+    {
+        // Use OpenGL line rasterization rules if extension not available by default.
+        // TODO(jmadill): Fix Android support. http://anglebug.com/2830
+        ANGLE_FEATURE_CONDITION((&mFeatures), basicGLLineRasterization, !IsAndroid());
+    }
 
     // TODO(lucferron): Currently disabled on Intel only since many tests are failing and need
     // investigation. http://anglebug.com/2728

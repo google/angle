@@ -260,6 +260,16 @@ namespace vk
 const char *gLoaderLayersPathEnv   = "VK_LAYER_PATH";
 const char *gLoaderICDFilenamesEnv = "VK_ICD_FILENAMES";
 
+void AppendToPNextChain(CommonStructHeader *chainStart, void *ptr)
+{
+    CommonStructHeader *localPtr = chainStart;
+    while (localPtr->pNext)
+    {
+        localPtr = static_cast<CommonStructHeader *>(localPtr->pNext);
+    }
+    localPtr->pNext = ptr;
+}
+
 VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format)
 {
     return (format.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
@@ -608,6 +618,7 @@ PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT = nullptr;
 
 // VK_KHR_get_physical_device_properties2
 PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR = nullptr;
+PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR     = nullptr;
 
 // VK_KHR_external_semaphore_fd
 PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR = nullptr;
@@ -642,6 +653,7 @@ void InitDebugReportEXTFunctions(VkInstance instance)
 void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance)
 {
     GET_FUNC(vkGetPhysicalDeviceProperties2KHR);
+    GET_FUNC(vkGetPhysicalDeviceFeatures2KHR);
 }
 
 #if defined(ANGLE_PLATFORM_FUCHSIA)

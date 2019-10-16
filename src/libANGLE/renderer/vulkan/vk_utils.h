@@ -101,6 +101,15 @@ namespace vk
 {
 struct Format;
 
+struct CommonStructHeader
+{
+    VkStructureType sType;
+    void *pNext;
+};
+
+// Append ptr to end of pNext chain beginning at chainStart->pNext
+void AppendToPNextChain(CommonStructHeader *chainStart, void *ptr);
+
 extern const char *gLoaderLayersPathEnv;
 extern const char *gLoaderICDFilenamesEnv;
 
@@ -608,6 +617,7 @@ extern PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
 
 // VK_KHR_get_physical_device_properties2
 extern PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
+extern PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
 
 // VK_KHR_external_semaphore_fd
 extern PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR;
