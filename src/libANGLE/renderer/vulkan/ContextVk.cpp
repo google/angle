@@ -269,7 +269,11 @@ angle::Result CommandQueue::checkCompletedCommands(vk::Context *context)
         ++finishedCount;
     }
 
-    mInFlightCommands.erase(mInFlightCommands.begin(), mInFlightCommands.begin() + finishedCount);
+    if (finishedCount > 0)
+    {
+        auto beginIter = mInFlightCommands.begin();
+        mInFlightCommands.erase(beginIter, beginIter + finishedCount);
+    }
 
     Serial lastCompleted = renderer->getLastCompletedQueueSerial();
 
