@@ -13,7 +13,7 @@
 //  NVIDIA AMD INTEL
 //  DEBUG RELEASE
 //  D3D9 D3D11 OPENGL GLES VULKAN
-//  NEXUS5X PIXEL2
+//  NEXUS5X PIXEL2ORXL
 //  QUADROP400
 //
 //
@@ -564,9 +564,9 @@
 2808 ANDROID VULKAN : dEQP-GLES3.functional.shaders.builtin_variable.fragcoord_w = FAIL
 
 // Pixel driver issues
-4024 PIXEL2 VULKAN : dEQP-GLES3.functional.draw.random.5 = SKIP
-4024 PIXEL2 VULKAN : dEQP-GLES3.functional.draw.random.49 = SKIP
-4024 PIXEL2 VULKAN : dEQP-GLES3.functional.draw.random.96 = FAIL
+4024 PIXEL2ORXL VULKAN : dEQP-GLES3.functional.draw.random.5 = SKIP
+4024 PIXEL2ORXL VULKAN : dEQP-GLES3.functional.draw.random.49 = SKIP
+4024 PIXEL2ORXL VULKAN : dEQP-GLES3.functional.draw.random.96 = FAIL
 
 // Fixed in later driver versions.
 2727 VULKAN ANDROID : dEQP-GLES3.functional.shaders.builtin_variable.pointcoord = FAIL

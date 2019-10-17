@@ -27,7 +27,8 @@ class GPUTestConfigTest : public ANGLETest
         EXPECT_EQ(IsLinux(), config.getConditions()[GPUTestConfig::kConditionLinux]);
         EXPECT_EQ(IsAndroid(), config.getConditions()[GPUTestConfig::kConditionAndroid]);
         EXPECT_EQ(IsNexus5X(), config.getConditions()[GPUTestConfig::kConditionNexus5X]);
-        EXPECT_EQ(IsPixel2(), config.getConditions()[GPUTestConfig::kConditionPixel2]);
+        EXPECT_EQ((IsPixel2() || IsPixel2XL()),
+                  config.getConditions()[GPUTestConfig::kConditionPixel2OrXL]);
         EXPECT_EQ(IsIntel(), config.getConditions()[GPUTestConfig::kConditionIntel]);
         EXPECT_EQ(IsAMD(), config.getConditions()[GPUTestConfig::kConditionAMD]);
         EXPECT_EQ(IsNVIDIA(), config.getConditions()[GPUTestConfig::kConditionNVIDIA]);

@@ -460,6 +460,12 @@ inline bool IsPixel2()
     return IsAndroidDevice("Pixel 2");
 }
 
+// Check whether the system is a Pixel 2XL device.
+inline bool IsPixel2XL()
+{
+    return IsAndroidDevice("Pixel 2 XL");
+}
+
 // Check whether the active GPU is a specific device based on the string device ID.
 inline bool IsDeviceIdGPU(const std::string &gpuDeviceId)
 {
@@ -549,26 +555,26 @@ GPUTestConfig::GPUTestConfig()
     mConditions[kConditionRelease]         = IsRelease();
     mConditions[kConditionDebug]           = IsDebug();
     // If no API provided, pass these conditions by default
-    mConditions[kConditionD3D9]      = true;
-    mConditions[kConditionD3D11]     = true;
-    mConditions[kConditionGLDesktop] = true;
-    mConditions[kConditionGLES]      = true;
-    mConditions[kConditionVulkan]    = true;
+    mConditions[kConditionD3D9]        = true;
+    mConditions[kConditionD3D11]       = true;
+    mConditions[kConditionGLDesktop]   = true;
+    mConditions[kConditionGLES]        = true;
+    mConditions[kConditionVulkan]      = true;
     mConditions[kConditionSwiftShader] = true;
 
     mConditions[kConditionNexus5X]          = IsNexus5X();
-    mConditions[kConditionPixel2]           = IsPixel2();
+    mConditions[kConditionPixel2OrXL]       = IsPixel2() || IsPixel2XL();
     mConditions[kConditionNVIDIAQuadroP400] = IsNVIDIAQuadroP400();
 }
 
 // If the constructor is passed an API, load those conditions as well
 GPUTestConfig::GPUTestConfig(const API &api) : GPUTestConfig()
 {
-    mConditions[kConditionD3D9]      = IsD3D9(api);
-    mConditions[kConditionD3D11]     = IsD3D11(api);
-    mConditions[kConditionGLDesktop] = IsGLDesktop(api);
-    mConditions[kConditionGLES]      = IsGLES(api);
-    mConditions[kConditionVulkan]    = IsVulkan(api);
+    mConditions[kConditionD3D9]        = IsD3D9(api);
+    mConditions[kConditionD3D11]       = IsD3D11(api);
+    mConditions[kConditionGLDesktop]   = IsGLDesktop(api);
+    mConditions[kConditionGLES]        = IsGLES(api);
+    mConditions[kConditionVulkan]      = IsVulkan(api);
     mConditions[kConditionSwiftShader] = IsSwiftShader(api);
 }
 

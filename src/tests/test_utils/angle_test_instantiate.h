@@ -32,6 +32,7 @@ bool IsNexus6P();
 bool IsNexus9();
 bool IsPixelXL();
 bool IsPixel2();
+bool IsPixel2XL();
 bool IsNVIDIAShield();
 
 // Desktop devices.

@@ -147,7 +147,7 @@ const TokenInfo kTokenData[kNumberOfTokens] = {
     {"vulkan", GPUTestConfig::kConditionVulkan},
     {"swiftshader", GPUTestConfig::kConditionSwiftShader},
     {"nexus5x", GPUTestConfig::kConditionNexus5X},
-    {"pixel2", GPUTestConfig::kConditionPixel2},
+    {"pixel2orxl", GPUTestConfig::kConditionPixel2OrXL},
     {"quadrop400", GPUTestConfig::kConditionNVIDIAQuadroP400},
     {"pass", GPUTestConfig::kConditionNone, GPUTestExpectationsParser::kGpuTestPass},
     {"fail", GPUTestConfig::kConditionNone, GPUTestExpectationsParser::kGpuTestFail},

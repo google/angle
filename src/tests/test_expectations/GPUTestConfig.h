@@ -60,7 +60,7 @@ struct GPUTestConfig
         kConditionGLES,
         kConditionVulkan,
         kConditionNexus5X,
-        kConditionPixel2,
+        kConditionPixel2OrXL,
         kConditionNVIDIAQuadroP400,
         kConditionSwiftShader,
 
