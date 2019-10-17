@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d5e9f340_e461af35",
+        "filename": "util/posix/test_utils_posix.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-17T19:55:43Z",
+      "side": 1,
+      "message": "Good catch. Forgot to implement it. Implemented in latest patch.",
+      "parentUuid": "c5d98b52_7dd12bda",
+      "range": {
+        "startLine": 208,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 21
+      },
+      "revId": "33b4d4700cd4cf66ea1ceeadf8f5a7b6085db76c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78d9e8cb_ad9cce14",
         "filename": "util/windows/test_utils_win.cpp",
         "patchSetId": 24
@@ -39,6 +63,24 @@
       "revId": "33b4d4700cd4cf66ea1ceeadf8f5a7b6085db76c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00cb5fc3_5b316104",
+        "filename": "util/windows/test_utils_win.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-17T19:55:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78d9e8cb_ad9cce14",
+      "revId": "33b4d4700cd4cf66ea1ceeadf8f5a7b6085db76c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "f14bd389_3d3874fd",
+        "filename": "util/windows/test_utils_win.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-17T19:55:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbfde817_927285e1",
+      "revId": "33b4d4700cd4cf66ea1ceeadf8f5a7b6085db76c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7f0b32b_dd235830",
         "filename": "util/windows/test_utils_win.cpp",
         "patchSetId": 24
@@ -73,6 +133,24 @@
       "revId": "33b4d4700cd4cf66ea1ceeadf8f5a7b6085db76c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "734183c1_fb9f2121",
+        "filename": "util/windows/test_utils_win.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-17T19:55:43Z",
+      "side": 1,
+      "message": "Done on constructor. I had some issues with unique_ptr and protecting the destructor so I just left it a dumb pointer.",
+      "parentUuid": "b7f0b32b_dd235830",
+      "revId": "33b4d4700cd4cf66ea1ceeadf8f5a7b6085db76c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
