@@ -469,8 +469,8 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     ANGLE_TRY(source->copyImageDataToBufferAndGetData(contextVk, sourceLevel, 1, sourceArea,
                                                       &sourceData));
 
-    const angle::Format &sourceTextureFormat = sourceVkFormat.imageFormat();
-    const angle::Format &destTextureFormat   = destVkFormat.imageFormat();
+    const angle::Format &sourceTextureFormat = sourceVkFormat.actualImageFormat();
+    const angle::Format &destTextureFormat   = destVkFormat.actualImageFormat();
     size_t destinationAllocationSize =
         sourceArea.width * sourceArea.height * destTextureFormat.pixelBytes;
 
@@ -491,13 +491,13 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     // Fix up the read/write functions for the sake of luminance/alpha that are emulated with
     // formats whose channels don't correspond to the original format (alpha is emulated with red,
     // and luminance/alpha is emulated with red/green).
-    if (sourceVkFormat.angleFormat().isLUMA())
+    if (sourceVkFormat.intendedFormat().isLUMA())
     {
-        pixelReadFunction = sourceVkFormat.angleFormat().pixelReadFunction;
+        pixelReadFunction = sourceVkFormat.intendedFormat().pixelReadFunction;
     }
-    if (destVkFormat.angleFormat().isLUMA())
+    if (destVkFormat.intendedFormat().isLUMA())
     {
-        pixelWriteFunction = destVkFormat.angleFormat().pixelWriteFunction;
+        pixelWriteFunction = destVkFormat.intendedFormat().pixelWriteFunction;
     }
 
     CopyImageCHROMIUM(sourceData, sourceDataRowPitch, sourceTextureFormat.pixelBytes, 0,
@@ -979,7 +979,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "TextureVk::copyImageDataToBuffer");
 
-    const angle::Format &imageFormat = getImage().getFormat().imageFormat();
+    const angle::Format &imageFormat = getImage().getFormat().actualImageFormat();
     size_t sourceCopyAllocationSize  = sourceArea.width * sourceArea.height * sourceArea.depth *
                                       imageFormat.pixelBytes * layerCount;
 
@@ -1033,7 +1033,7 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
     ANGLE_TRY(copyImageDataToBufferAndGetData(contextVk, mState.getEffectiveBaseLevel(),
                                               imageLayerCount, imageArea, &imageData));
 
-    const angle::Format &angleFormat = mImage->getFormat().imageFormat();
+    const angle::Format &angleFormat = mImage->getFormat().actualImageFormat();
     GLuint sourceRowPitch            = baseLevelExtents.width * angleFormat.pixelBytes;
     size_t baseLevelAllocationSize   = sourceRowPitch * baseLevelExtents.height;
 
@@ -1442,7 +1442,7 @@ angle::Result TextureVk::initializeContents(const gl::Context *context,
     const vk::Format &format =
         vk::GetImpl(context)->getRenderer()->getFormat(desc.format.info->sizedInternalFormat);
 
-    mImage->stageSubresourceRobustClear(imageIndex, format.angleFormat());
+    mImage->stageSubresourceRobustClear(imageIndex, format.intendedFormat());
 
     // Note that we cannot ensure the image is initialized because we might be calling subImage
     // on a non-complete cube map.
@@ -1571,7 +1571,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         for (uint32_t level = 0; level < levelCount; ++level)
         {
             gl::ImageIndex index = gl::ImageIndex::Make2DArrayRange(level, 0, layerCount);
-            mImage->stageSubresourceEmulatedClear(index, format.angleFormat());
+            mImage->stageSubresourceEmulatedClear(index, format.intendedFormat());
             onStagingBufferChange();
         }
     }

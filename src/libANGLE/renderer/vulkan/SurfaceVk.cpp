@@ -136,7 +136,7 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
 {
     RendererVk *renderer = displayVk->getRenderer();
 
-    const angle::Format &textureFormat = vkFormat.imageFormat();
+    const angle::Format &textureFormat = vkFormat.actualImageFormat();
     bool isDepthOrStencilFormat   = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
     const VkImageUsageFlags usage = isDepthOrStencilFormat ? kSurfaceVKDepthStencilImageUsageFlags
                                                            : kSurfaceVKColorImageUsageFlags;
@@ -293,14 +293,14 @@ angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
     if (mColorAttachment.image.valid())
     {
         mColorAttachment.image.stageSubresourceRobustClear(
-            imageIndex, mColorAttachment.image.getFormat().angleFormat());
+            imageIndex, mColorAttachment.image.getFormat().intendedFormat());
         ANGLE_TRY(mColorAttachment.image.flushAllStagedUpdates(contextVk));
     }
 
     if (mDepthStencilAttachment.image.valid())
     {
         mDepthStencilAttachment.image.stageSubresourceRobustClear(
-            imageIndex, mDepthStencilAttachment.image.getFormat().angleFormat());
+            imageIndex, mDepthStencilAttachment.image.getFormat().intendedFormat());
         ANGLE_TRY(mDepthStencilAttachment.image.flushAllStagedUpdates(contextVk));
     }
     return angle::Result::Continue;
@@ -1346,13 +1346,13 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
 
     vk::ImageHelper *image =
         isMultiSampled() ? &mColorImageMS : &mSwapchainImages[mCurrentSwapchainImageIndex].image;
-    image->stageSubresourceRobustClear(imageIndex, image->getFormat().angleFormat());
+    image->stageSubresourceRobustClear(imageIndex, image->getFormat().intendedFormat());
     ANGLE_TRY(image->flushAllStagedUpdates(contextVk));
 
     if (mDepthStencilImage.valid())
     {
         mDepthStencilImage.stageSubresourceRobustClear(
-            gl::ImageIndex::Make2D(0), mDepthStencilImage.getFormat().angleFormat());
+            gl::ImageIndex::Make2D(0), mDepthStencilImage.getFormat().intendedFormat());
         ANGLE_TRY(mDepthStencilImage.flushAllStagedUpdates(contextVk));
     }
 

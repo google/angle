@@ -699,7 +699,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         // Get the corresponding VkFormat for the attrib's format.
         angle::FormatID formatID         = static_cast<angle::FormatID>(packedAttrib.format);
         const vk::Format &format         = contextVk->getRenderer()->getFormat(formatID);
-        const angle::Format &angleFormat = format.angleFormat();
+        const angle::Format &angleFormat = format.intendedFormat();
         VkFormat vkFormat                = format.vkBufferFormat;
 
         gl::ComponentType attribType =

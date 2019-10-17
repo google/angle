@@ -63,7 +63,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
             mOwnsImage = true;
         }
 
-        const angle::Format &textureFormat = vkFormat.imageFormat();
+        const angle::Format &textureFormat = vkFormat.actualImageFormat();
         bool isDepthOrStencilFormat = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
         const VkImageUsageFlags usage =
             VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
@@ -104,7 +104,7 @@ angle::Result RenderbufferVk::setStorageMultisample(const gl::Context *context,
     // If the specific number of samples requested is not supported, the smallest number that's at
     // least that many needs to be selected.
     const RendererVk *renderer           = vk::GetImpl(context)->getRenderer();
-    const angle::Format &format          = renderer->getFormat(internalformat).imageFormat();
+    const angle::Format &format          = renderer->getFormat(internalformat).actualImageFormat();
     const VkPhysicalDeviceLimits &limits = renderer->getPhysicalDeviceProperties().limits;
 
     const uint32_t colorSampleCounts        = limits.framebufferColorSampleCounts;
@@ -147,7 +147,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     mOwnsImage       = false;
 
     const vk::Format &vkFormat = renderer->getFormat(image->getFormat().info->sizedInternalFormat);
-    const angle::Format &textureFormat = vkFormat.imageFormat();
+    const angle::Format &textureFormat = vkFormat.actualImageFormat();
 
     VkImageAspectFlags aspect = vk::GetFormatAspectFlags(textureFormat);
 
@@ -189,7 +189,8 @@ angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *conte
 angle::Result RenderbufferVk::initializeContents(const gl::Context *context,
                                                  const gl::ImageIndex &imageIndex)
 {
-    mImage->stageSubresourceRobustClear(imageIndex, mImage->getFormat().angleFormat());
+    // Note: stageSubresourceRobustClear only uses the intended format to count channels.
+    mImage->stageSubresourceRobustClear(imageIndex, mImage->getFormat().intendedFormat());
     return mImage->flushAllStagedUpdates(vk::GetImpl(context));
 }
 

@@ -1836,7 +1836,7 @@ angle::Result ImageHelper::init2DStaging(Context *context,
 
 VkImageAspectFlags ImageHelper::getAspectFlags() const
 {
-    return GetFormatAspectFlags(mFormat->imageFormat());
+    return GetFormatAspectFlags(mFormat->actualImageFormat());
 }
 
 VkImageLayout ImageHelper::getCurrentLayout() const
@@ -1999,12 +1999,13 @@ void ImageHelper::clear(const VkClearValue &value,
                         uint32_t layerCount,
                         vk::CommandBuffer *commandBuffer)
 {
-    const angle::Format &angleFormat = mFormat->angleFormat();
+    const angle::Format &angleFormat = mFormat->intendedFormat();
     bool isDepthStencil              = angleFormat.depthBits > 0 || angleFormat.stencilBits > 0;
 
     if (isDepthStencil)
     {
-        const VkImageAspectFlags aspect = vk::GetDepthStencilAspectFlags(mFormat->imageFormat());
+        const VkImageAspectFlags aspect =
+            vk::GetDepthStencilAspectFlags(mFormat->actualImageFormat());
         clearDepthStencil(aspect, aspect, value.depthStencil, mipLevel, 1, baseArrayLayer,
                           layerCount, commandBuffer);
     }
@@ -2193,7 +2194,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                         formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
                                                     index.usesTex3D(), &inputSkipBytes));
 
-    const angle::Format &storageFormat = vkFormat.imageFormat();
+    const angle::Format &storageFormat = vkFormat.actualImageFormat();
 
     size_t outputRowPitch;
     size_t outputDepthPitch;
@@ -2307,7 +2308,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                                   outputDepthPitch);
 
     VkBufferImageCopy copy         = {};
-    VkImageAspectFlags aspectFlags = GetFormatAspectFlags(vkFormat.imageFormat());
+    VkImageAspectFlags aspectFlags = GetFormatAspectFlags(vkFormat.actualImageFormat());
 
     copy.bufferOffset      = stagingOffset;
     copy.bufferRowLength   = bufferRowLength;
@@ -2485,7 +2486,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     RendererVk *renderer = contextVk->getRenderer();
 
     const vk::Format &vkFormat         = renderer->getFormat(formatInfo.sizedInternalFormat);
-    const angle::Format &storageFormat = vkFormat.imageFormat();
+    const angle::Format &storageFormat = vkFormat.actualImageFormat();
     LoadImageFunctionInfo loadFunction = vkFormat.textureLoadFunctions(formatInfo.type);
 
     size_t outputRowPitch   = storageFormat.pixelBytes * clippedRectangle.width;
@@ -2603,7 +2604,7 @@ void ImageHelper::stageClearIfEmulatedFormat(const gl::ImageIndex &index, const 
 {
     if (format.hasEmulatedImageChannels())
     {
-        stageSubresourceEmulatedClear(index, format.angleFormat());
+        stageSubresourceEmulatedClear(index, format.intendedFormat());
     }
 }
 
@@ -2658,7 +2659,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     ANGLE_TRY(mStagingBuffer.flush(contextVk));
 
     std::vector<SubresourceUpdate> updatesToKeep;
-    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(mFormat->imageFormat());
+    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(mFormat->actualImageFormat());
 
     // Upload levels and layers that don't conflict in parallel.  The (level, layer) pair is hashed
     // to `(level * mLayerCount + layer) % 64` and used to track whether that subresource is
@@ -2997,7 +2998,7 @@ angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
                                              uint32_t baseLayer,
                                              uint32_t layerCount)
 {
-    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(format.angleFormat());
+    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(format.intendedFormat());
     if (HasBothDepthAndStencilAspects(aspectFlags))
     {
         ANGLE_TRY(image.initLayerImageView(contextVk, viewType, VK_IMAGE_ASPECT_DEPTH_BIT,
@@ -3056,7 +3057,7 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(Context *context,
                                                           const ImageView **imageViewOut)
 {
     ASSERT(image.valid());
-    ASSERT(!image.getFormat().imageFormat().isBlock);
+    ASSERT(!image.getFormat().actualImageFormat().isBlock);
 
     uint32_t layerCount = GetImageLayerCountForView(image);
 

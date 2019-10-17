@@ -54,7 +54,7 @@ angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk,
                                           vk::CommandBuffer *commandBuffer)
 {
     ASSERT(commandBuffer->valid());
-    ASSERT(!mImage->getFormat().imageFormat().hasDepthOrStencilBits());
+    ASSERT(!mImage->getFormat().actualImageFormat().hasDepthOrStencilBits());
 
     // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
     mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
@@ -71,10 +71,10 @@ angle::Result RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk,
                                                  vk::CommandBuffer *commandBuffer)
 {
     ASSERT(commandBuffer->valid());
-    ASSERT(mImage->getFormat().imageFormat().hasDepthOrStencilBits());
+    ASSERT(mImage->getFormat().actualImageFormat().hasDepthOrStencilBits());
 
     // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
-    const angle::Format &format    = mImage->getFormat().imageFormat();
+    const angle::Format &format    = mImage->getFormat().actualImageFormat();
     VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
 
     mImage->changeLayout(aspectFlags, vk::ImageLayout::DepthStencilAttachment, commandBuffer);

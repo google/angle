@@ -51,7 +51,7 @@ const gl::InternalFormat &GetReadAttachmentInfo(const gl::Context *context,
                                                 RenderTargetVk *renderTarget)
 {
     GLenum implFormat =
-        renderTarget->getImageFormat().imageFormat().fboImplementationInternalFormat;
+        renderTarget->getImageFormat().actualImageFormat().fboImplementationInternalFormat;
     return gl::GetSizedInternalFormatInfo(implFormat);
 }
 
@@ -72,8 +72,8 @@ bool HasDstBlitFeature(RendererVk *renderer, RenderTargetVk *dstRenderTarget)
 bool areSrcAndDstColorChannelsBlitCompatible(RenderTargetVk *srcRenderTarget,
                                              RenderTargetVk *dstRenderTarget)
 {
-    const angle::Format &srcFormat = srcRenderTarget->getImageFormat().angleFormat();
-    const angle::Format &dstFormat = dstRenderTarget->getImageFormat().angleFormat();
+    const angle::Format &srcFormat = srcRenderTarget->getImageFormat().intendedFormat();
+    const angle::Format &dstFormat = dstRenderTarget->getImageFormat().intendedFormat();
 
     // Luminance/alpha formats are not renderable, so they can't have ended up in a framebuffer to
     // participate in a blit.
@@ -90,8 +90,8 @@ bool areSrcAndDstColorChannelsBlitCompatible(RenderTargetVk *srcRenderTarget,
 bool areSrcAndDstDepthStencilChannelsBlitCompatible(RenderTargetVk *srcRenderTarget,
                                                     RenderTargetVk *dstRenderTarget)
 {
-    const angle::Format &srcFormat = srcRenderTarget->getImageFormat().angleFormat();
-    const angle::Format &dstFormat = dstRenderTarget->getImageFormat().angleFormat();
+    const angle::Format &srcFormat = srcRenderTarget->getImageFormat().intendedFormat();
+    const angle::Format &dstFormat = dstRenderTarget->getImageFormat().intendedFormat();
 
     return (dstFormat.depthBits > 0 || srcFormat.depthBits == 0) &&
            (dstFormat.stencilBits > 0 || srcFormat.stencilBits == 0);
@@ -983,14 +983,13 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context, s
     RenderTargetVk *renderTarget = mRenderTargetCache.getColors()[colorIndexGL];
     if (renderTarget)
     {
-        const angle::Format &emulatedFormat = renderTarget->getImageFormat().imageFormat();
-        updateActiveColorMasks(colorIndexGL, emulatedFormat.redBits > 0,
-                               emulatedFormat.greenBits > 0, emulatedFormat.blueBits > 0,
-                               emulatedFormat.alphaBits > 0);
+        const angle::Format &actualFormat = renderTarget->getImageFormat().actualImageFormat();
+        updateActiveColorMasks(colorIndexGL, actualFormat.redBits > 0, actualFormat.greenBits > 0,
+                               actualFormat.blueBits > 0, actualFormat.alphaBits > 0);
 
-        const angle::Format &sourceFormat = renderTarget->getImageFormat().angleFormat();
-        mEmulatedAlphaAttachmentMask.set(
-            colorIndexGL, sourceFormat.alphaBits == 0 && emulatedFormat.alphaBits > 0);
+        const angle::Format &sourceFormat = renderTarget->getImageFormat().intendedFormat();
+        mEmulatedAlphaAttachmentMask.set(colorIndexGL,
+                                         sourceFormat.alphaBits == 0 && actualFormat.alphaBits > 0);
 
         contextVk->updateColorMask(context->getState().getBlendState());
     }
@@ -1168,7 +1167,7 @@ void FramebufferVk::updateRenderPassDesc()
             RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
             ASSERT(colorRenderTarget);
             mRenderPassDesc.packColorAttachment(
-                colorIndexGL, colorRenderTarget->getImage().getFormat().angleFormatID);
+                colorIndexGL, colorRenderTarget->getImage().getFormat().intendedFormatID);
         }
         else
         {
@@ -1180,7 +1179,7 @@ void FramebufferVk::updateRenderPassDesc()
     if (depthStencilRenderTarget)
     {
         mRenderPassDesc.packDepthStencilAttachment(
-            depthStencilRenderTarget->getImage().getFormat().angleFormatID);
+            depthStencilRenderTarget->getImage().getFormat().intendedFormatID);
     }
 }
 
@@ -1350,7 +1349,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
         const RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         ASSERT(colorRenderTarget);
 
-        params.colorFormat            = &colorRenderTarget->getImage().getFormat().imageFormat();
+        params.colorFormat = &colorRenderTarget->getImage().getFormat().actualImageFormat();
         params.colorAttachmentIndexGL = static_cast<uint32_t>(colorIndexGL);
         params.colorMaskFlags         = colorMaskFlags;
         if (mEmulatedAlphaAttachmentMask[colorIndexGL])
@@ -1458,7 +1457,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     vk::ImageHelper *srcImage = renderTarget->getImageForRead(
         contextVk, &mFramebuffer, vk::ImageLayout::TransferSrc, commandBuffer);
 
-    const angle::Format *readFormat = &srcImage->getFormat().imageFormat();
+    const angle::Format *readFormat = &srcImage->getFormat().actualImageFormat();
 
     if (copyAspectFlags != VK_IMAGE_ASPECT_COLOR_BIT)
     {
