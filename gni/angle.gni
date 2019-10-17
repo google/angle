@@ -178,6 +178,14 @@ set_defaults("angle_test") {
   if (build_with_chromium) {
     suppressed_configs -= [ "//build/config/compiler:default_include_dirs" ]
   }
+
+  if (is_android) {
+    if (build_with_chromium) {
+      use_native_activity = true
+    } else {
+      use_raw_android_executable = true
+    }
+  }
 }
 
 template("angle_executable") {
@@ -296,7 +304,9 @@ template("angle_test") {
 
     if (is_android) {
       configs += [ angle_root + ":build_id_config" ]
-      configs -= [ "//build/config/android:hide_all_but_jni" ]
+      if (build_with_chromium) {
+        configs -= [ "//build/config/android:hide_all_but_jni" ]
+      }
     }
 
     deps += _googletest_deps + [

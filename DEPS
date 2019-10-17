@@ -61,6 +61,11 @@ vars = {
 
   # Current revision of Khronos Vulkan-ValidationLayers.
   'vulkan_validation_revision': 'f8ea20adee82d262134fc3fa1a417a6e86fdff23',
+
+  # Three lines of non-changing comments so that
+  # the commit queue can handle CLs rolling catapult
+  # and whatever else without interference from each other.
+  'catapult_revision': '1b3fb455bf1849f1e6187e1eaeaef32b9f30d3c5',
 }
 
 deps = {
@@ -221,6 +226,16 @@ deps = {
 
   'tools/memory': {
     'url': '{chromium_git}/chromium/src/tools/memory@89552acb6e60f528fe3c98eac7b445d4c34183ee',
+    'condition': 'not build_with_chromium',
+  },
+
+  'third_party/catapult': {
+    'url': '{chromium_git}/catapult.git@{catapult_revision}',
+    'condition': 'not build_with_chromium',
+  },
+
+  'third_party/android_ndk': {
+    'url': '{chromium_git}/android_ndk.git@89e8db0cdf323af8bc24de875d7d2a43a66bf10e',
     'condition': 'not build_with_chromium',
   },
 }

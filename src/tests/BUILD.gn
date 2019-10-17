@@ -157,9 +157,6 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
       "${angle_root}:libGLESv2",
     ]
 
-    if (is_android) {
-      use_native_activity = true
-    }
     if (angle_enable_vulkan) {
       deps += [ "${angle_root}/src/libANGLE/renderer/vulkan:angle_vulkan" ]
     }
@@ -195,10 +192,6 @@ if (is_win || is_linux || is_mac || is_android) {
       "${angle_root}:preprocessor",
       "${angle_root}:translator",
     ]
-
-    if (is_android) {
-      use_native_activity = true
-    }
   }
 }
 
@@ -233,10 +226,6 @@ if (is_win || is_linux || is_android || is_mac) {
       "${angle_root}:libANGLE_config",
       "${angle_root}:library_name_config",
     ]
-
-    if (is_android) {
-      use_native_activity = true
-    }
   }
 }
 
@@ -269,10 +258,6 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
       "${angle_root}:libANGLE_config",
       "${angle_root}:library_name_config",
     ]
-
-    if (is_android) {
-      use_native_activity = true
-    }
 
     if (is_win || is_linux) {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_angle" ]
@@ -510,10 +495,6 @@ if (build_angle_gles1_conform_tests) {
       "${angle_root}:library_name_config",
       "${angle_root}:angle_backend_config",
     ]
-
-    if (is_android) {
-      use_native_activity = true
-    }
   }
 }
 
@@ -873,10 +854,6 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "deqp_support/deqp_${_api}_test_expectations.txt",
         "${invoker.mustpass_dir}/${invoker.mustpass_name}",
       ]
-
-      if (is_android) {
-        use_native_activity = true
-      }
     }
   }
 
