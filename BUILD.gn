@@ -105,6 +105,10 @@ config("internal_config") {
   if (angle_enable_trace) {
     defines += [ "ANGLE_ENABLE_DEBUG_TRACE=1" ]
   }
+
+  if (is_chromeos) {
+    defines += [ "ANGLE_PLATFORM_CHROMEOS" ]
+  }
 }
 
 config("extra_warnings") {
