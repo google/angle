@@ -22,11 +22,7 @@ namespace rx
 
 bool DisplayMtl::IsMetalAvailable()
 {
-    // We only support macos 10.13+ and iOS 11 for now. Since they are requirements for Metal 2.0.
-    if (@available(macOS 10.13, iOS 11, *))
-    {
-        return true;
-    }
+    UNIMPLEMENTED();
     return false;
 }
 
