@@ -343,6 +343,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         additionalOptions |= SH_UNFOLD_SHORT_CIRCUIT;
     }
 
+    if (features.removeDynamicIndexingOfSwizzledVector.enabled)
+    {
+        additionalOptions |= SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR;
+    }
+
     options |= additionalOptions;
 
     auto workerThreadPool = context->getWorkerThreadPool();

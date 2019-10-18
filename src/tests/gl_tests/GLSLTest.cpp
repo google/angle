@@ -7266,6 +7266,30 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that dynamic indexing of swizzled l-values should work.
+// A simple porting of sdk/tests/conformance2/glsl3/vector-dynamic-indexing-swizzled-lvalue.html
+TEST_P(GLSLTest_ES3, DynamicIndexingOfSwizzledLValuesShouldWork)
+{
+    // The shader first assigns v.x to v.z (1.0)
+    // Then v.y to v.y (2.0)
+    // Then v.z to v.x (1.0)
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+void main() {
+    vec3 v = vec3(1.0, 2.0, 3.0);
+    for (int i = 0; i < 3; i++) {
+        v.zyx[i] = v[i];
+    }
+    my_FragColor = distance(v, vec3(1.0, 2.0, 1.0)) < 0.01 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that multiple nested assignments are handled correctly.
 TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices_WriteSideEffect)
 {

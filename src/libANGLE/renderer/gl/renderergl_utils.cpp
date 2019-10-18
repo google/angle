@@ -1578,6 +1578,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(
         features, emulatePrimitiveRestartFixedIndex,
         !functions->isAtLeastGL(gl::Version(4, 3)) && !functions->isAtLeastGLES(gl::Version(3, 0)));
+
+    ANGLE_FEATURE_CONDITION(features, removeDynamicIndexingOfSwizzledVector,
+                            IsApple() || IsAndroid() || IsWindows());
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
