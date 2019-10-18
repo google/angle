@@ -4,26 +4,33 @@
 // found in the LICENSE file.
 //
 
-#include "util/shader_utils.h"
+#include "shader_utils.h"
 
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <vector>
 
-#include "util/test_utils.h"
-
 namespace
 {
-bool ReadEntireFile(const std::string &filePath, std::string *contentsOut)
+std::string ReadFileToString(const std::string &source)
 {
-    constexpr uint32_t kMaxBufferSize = 2000;
-    char buffer[kMaxBufferSize]       = {};
-    if (!angle::ReadEntireFileToString(filePath.c_str(), buffer, kMaxBufferSize) ||
-        strlen(buffer) == 0)
-        return false;
-    *contentsOut = buffer;
-    return true;
+    std::ifstream stream(source.c_str());
+    if (!stream)
+    {
+        std::cerr << "Failed to load shader file: " << source;
+        return "";
+    }
+
+    std::string result;
+
+    stream.seekg(0, std::ios::end);
+    result.reserve(static_cast<unsigned int>(stream.tellg()));
+    stream.seekg(0, std::ios::beg);
+
+    result.assign((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+
+    return result;
 }
 
 GLuint CompileProgramInternal(const char *vsSource,
@@ -117,10 +124,9 @@ GLuint CompileShader(GLenum type, const char *source)
 
 GLuint CompileShaderFromFile(GLenum type, const std::string &sourcePath)
 {
-    std::string source;
-    if (!ReadEntireFile(sourcePath, &source))
+    std::string source = ReadFileToString(sourcePath);
+    if (source.empty())
     {
-        std::cerr << "Error reading shader file: " << sourcePath << "\n";
         return 0;
     }
 
@@ -208,17 +214,10 @@ GLuint CompileProgramWithGS(const char *vsSource, const char *gsSource, const ch
 
 GLuint CompileProgramFromFiles(const std::string &vsPath, const std::string &fsPath)
 {
-    std::string vsSource;
-    if (!ReadEntireFile(vsPath, &vsSource))
+    std::string vsSource = ReadFileToString(vsPath);
+    std::string fsSource = ReadFileToString(fsPath);
+    if (vsSource.empty() || fsSource.empty())
     {
-        std::cerr << "Error reading shader: " << vsPath << "\n";
-        return 0;
-    }
-
-    std::string fsSource;
-    if (!ReadEntireFile(fsPath, &fsSource))
-    {
-        std::cerr << "Error reading shader: " << fsPath << "\n";
         return 0;
     }
 

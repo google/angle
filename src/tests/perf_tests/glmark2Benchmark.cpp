@@ -151,9 +151,10 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
         }
         args.push_back(nullptr);
 
-        ProcessHandle process(args, true, false);
-        ASSERT_TRUE(process && process->started());
-        ASSERT_TRUE(process->finish());
+        std::string output;
+        int exitCode;
+
+        bool success = RunApp(args, &output, nullptr, &exitCode);
 
         // Restore the current working directory for the next tests.
         if (cwd.valid())
@@ -161,11 +162,11 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
             SetCWD(cwd.value().c_str());
         }
 
-        ASSERT_EQ(EXIT_SUCCESS, process->getExitCode());
+        ASSERT_TRUE(success);
+        ASSERT_EQ(EXIT_SUCCESS, exitCode);
 
         if (!OneFrame())
         {
-            std::string output = process->getStdout();
             parseOutput(output, benchmarkName, completeRun);
         }
     }
