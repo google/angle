@@ -43,7 +43,7 @@ void PrintStackBacktrace()
     // No implementations yet.
 }
 
-void InitCrashHandler(CrashCallback *callback)
+void InitCrashHandler()
 {
     // No implementations yet.
 }
@@ -140,7 +140,7 @@ static constexpr int kSignals[] = {
     SIGABRT, SIGBUS, SIGFPE, SIGILL, SIGSEGV, SIGTRAP,
 };
 
-void InitCrashHandler(CrashCallback *callback)
+void InitCrashHandler()
 {
     for (int sig : kSignals)
     {

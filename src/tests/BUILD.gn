@@ -45,8 +45,8 @@ if (!build_with_chromium) {
   }
 }
 
-angle_executable("test_utils_unittest_helper") {
-  sources = test_utils_unittest_helper_sources
+angle_executable("angle_unittests_helper") {
+  sources = angle_unittests_helper_sources
 
   deps = [
     "${angle_root}:angle_common",
@@ -73,8 +73,9 @@ config("angle_test_expectations_config") {
 angle_static_library("angle_test_expectations") {
   public_configs += [ ":angle_test_expectations_config" ]
   public_deps = [
-    "$angle_root:angle_common",
-    "$angle_root:angle_gpu_info_util",
+    "${angle_root}:angle_common",
+    "${angle_root}:angle_gpu_info_util",
+    "${angle_root}:angle_util",
   ]
   sources = test_expectations_sources
   if (is_mac) {
@@ -94,17 +95,16 @@ angle_test("angle_unittests") {
 
   deps = [
     ":angle_test_expectations",
-    "$angle_root:angle_util_static",
-    "$angle_root:libANGLE",
-    "$angle_root:libfeature_support",
-    "$angle_root:preprocessor",
-    "$angle_root:translator",
+    "${angle_root}:libANGLE",
+    "${angle_root}:libfeature_support",
+    "${angle_root}:preprocessor",
+    "${angle_root}:translator",
   ]
   if (!is_android && !is_fuchsia) {
     # SystemUtils.RunApp, the only unittest using a helper binary, is not supported on these
     # platforms yet.
     data_deps = [
-      ":test_utils_unittest_helper",
+      ":angle_unittests_helper",
     ]
   }
 }

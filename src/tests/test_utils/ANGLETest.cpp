@@ -320,15 +320,15 @@ bool RunSeparateProcessesForEachConfig(int *argc, char *argv[])
         std::vector<const char *> childArgs = commonArgs;
         childArgs.push_back(configStr.c_str());
 
-        ProcessHandle process(childArgs, false, false);
-        if (!process->started() || !process->finish())
+        int exitCode = 0;
+        if (!RunApp(childArgs, nullptr, nullptr, &exitCode))
         {
             std::cerr << "Launching child config " << config << " failed.\n";
         }
-        else if (process->getExitCode() != 0)
+        else if (exitCode != 0)
         {
-            std::cerr << "Child config " << config << " failed with exit code "
-                      << process->getExitCode() << ".\n";
+            std::cerr << "Child config " << config << " failed with exit code " << exitCode
+                      << ".\n";
             success = false;
         }
     }
@@ -481,7 +481,7 @@ void ANGLETestBase::ANGLETestSetUp()
 {
     mSetUpCalled = true;
 
-    InitCrashHandler(nullptr);
+    InitCrashHandler();
 
     gDefaultPlatformMethods.overrideWorkaroundsD3D = TestPlatform_overrideWorkaroundsD3D;
     gDefaultPlatformMethods.overrideFeaturesVk     = TestPlatform_overrideFeaturesVk;
