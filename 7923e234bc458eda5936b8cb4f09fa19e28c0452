@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b64c70b_9a78051b",
+        "filename": "util/test_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2019-10-21T17:07:42Z",
+      "side": 1,
+      "message": "ANGLE_UTIL_EXPORT here expands to an export symbol if LIBANGLE_UTIL_IMPLEMENTATION is defined. However, test_utils.cc is in util_sources which is used in angle_util in https://cs.chromium.org/chromium/src/third_party/angle/BUILD.gn?q\u003dutil_sources\u0026sq\u003dpackage:chromium\u0026g\u003d0\u0026l\u003d1046 which only defines this if is_shared_library is true (...why is that target built twice in the same build, once shared, once not? nothing else does this afaik).\n\nIn https://cs.chromium.org/chromium/src/third_party/angle/src/tests/BUILD.gn?type\u003dcs\u0026q\u003dangle_util_static\u0026sq\u003dpackage:chromium\u0026g\u003d0\u0026l\u003d189 a few test targets directly depend on the angle_util_static library while others depend on :angle_util.\n\nSo from a distance, my guess what\u0027s happening is that the test binary statically links to the Process class, gets the non-exported vtable for process, and then the code it hands that object to uses the (correctly) exported vtable from the other version of the library, which confuses CFI.\n\nSo the root cause here I think is that bifurcating angle_util in a single build causes all kinds of ODR violations.\n\nI\u0027d only have a single angle_util target that\u0027s a component() and then make everything depend on that. That\u0027ll probably make your build simpler and make it impossible for issues like this to happen.",
+      "revId": "7923e234bc458eda5936b8cb4f09fa19e28c0452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
