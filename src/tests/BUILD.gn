@@ -593,6 +593,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     "//build/config/compiler:chromium_code",
     "//build/config/compiler:no_exceptions",
     "//build/config/compiler:no_rtti",
+    "${angle_root}:constructor_and_destructor_warnings",
     "${angle_root}:extra_warnings",
   ]
 

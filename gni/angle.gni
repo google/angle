@@ -115,6 +115,7 @@ declare_args() {
 angle_common_configs = [
   angle_root + ":angle_release_asserts_config",
   angle_root + ":better_linux_stack_traces",
+  angle_root + ":constructor_and_destructor_warnings",
   angle_root + ":extra_warnings",
   angle_root + ":internal_config",
 ]
@@ -281,6 +282,7 @@ template("angle_test") {
 
     configs += invoker.configs
     configs -= invoker.suppressed_configs
+    configs -= [ angle_root + ":constructor_and_destructor_warnings" ]
     configs -= [ angle_root + ":extra_warnings" ]
 
     if (is_linux && !is_component_build) {

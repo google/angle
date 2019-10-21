@@ -112,6 +112,15 @@ config("internal_config") {
   }
 }
 
+config("constructor_and_destructor_warnings") {
+  if (is_clang) {
+    cflags = [
+      "-Wexit-time-destructors",
+      "-Wglobal-constructors",
+    ]
+  }
+}
+
 config("extra_warnings") {
   cflags = []
 
@@ -128,10 +137,8 @@ config("extra_warnings") {
   }
   if (is_clang) {
     cflags += [
-      "-Wexit-time-destructors",
       "-Wextra-semi-stmt",
       "-Wfloat-conversion",
-      "-Wglobal-constructors",
       "-Wnon-virtual-dtor",
       "-Wunneeded-internal-declaration",
 
