@@ -78,7 +78,7 @@ class TextureStorage : public angle::Subject
 
     // RenderToTexture methods
     virtual angle::Result releaseMultisampledTexStorageForLevel(size_t level);
-    virtual angle::Result resolveAndReleaseTexture(const gl::Context *context);
+    virtual angle::Result resolveTexture(const gl::Context *context);
     virtual GLsizei getRenderToTextureSamples() const;
 
   protected:
@@ -101,7 +101,7 @@ inline angle::Result TextureStorage::releaseMultisampledTexStorageForLevel(size_
     return angle::Result::Continue;
 }
 
-inline angle::Result TextureStorage::resolveAndReleaseTexture(const gl::Context *context)
+inline angle::Result TextureStorage::resolveTexture(const gl::Context *context)
 {
     return angle::Result::Continue;
 }

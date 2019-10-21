@@ -306,7 +306,7 @@ class TextureStorage11_2D : public TextureStorage11
 
     angle::Result ensureTextureExists(const gl::Context *context, int mipLevels);
 
-    angle::Result resolveAndReleaseTexture(const gl::Context *context) override;
+    angle::Result resolveTexture(const gl::Context *context) override;
 
   private:
     angle::Result createSRVForSampler(const gl::Context *context,
@@ -549,7 +549,7 @@ class TextureStorage11_Cube : public TextureStorage11
 
     angle::Result ensureTextureExists(const gl::Context *context, int mipLevels);
 
-    angle::Result resolveAndReleaseTexture(const gl::Context *context) override;
+    angle::Result resolveTexture(const gl::Context *context) override;
 
   private:
     angle::Result createSRVForSampler(const gl::Context *context,
