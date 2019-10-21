@@ -1385,8 +1385,6 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 
     ANGLE_FEATURE_CONDITION((&mFeatures), forceOldRewriteStructSamplers, IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), forceNonZeroScissor, IsWindows() && isIntel);
-
     ANGLE_FEATURE_CONDITION((&mFeatures), perFrameWindowSizeQuery,
                             isIntel || (IsWindows() && isAMD));
 

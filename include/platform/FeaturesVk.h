@@ -149,14 +149,6 @@ struct FeaturesVk : FeatureSetBase
         "Gaps in bound descriptor set indices causes the post-gap sets to misbehave", &members,
         "http://anglebug.com/2727"};
 
-    // When the scissor is (0,0,0,0) on Windows Intel, the driver acts as if the scissor was
-    // disabled.  Work-around this by setting the scissor to just outside of the render area
-    // (e.g. (renderArea.x, renderArea.y, 1, 1)). http://anglebug.com/3407
-    Feature forceNonZeroScissor = {
-        "force_non_zero_scissor", FeatureCategory::VulkanWorkarounds,
-        "When the scissor is (0,0,0,0), the driver acts as if the scissor was disabled", &members,
-        "http://anglebug.com/3407"};
-
     // OES_depth_texture is a commonly expected feature on Android. However it
     // requires that D16_UNORM support texture filtering
     // (e.g. VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT) and some devices

@@ -2054,19 +2054,6 @@ void ContextVk::updateScissor(const gl::State &glState)
         scissoredArea.y = renderArea.height - scissoredArea.y - scissoredArea.height;
     }
 
-    if (getRenderer()->getFeatures().forceNonZeroScissor.enabled && scissoredArea.width == 0 &&
-        scissoredArea.height == 0)
-    {
-        // There is no overlap between the app-set viewport and clippedRect.  This code works
-        // around an Intel driver bug that causes the driver to treat a (0,0,0,0) scissor as if
-        // scissoring is disabled.  In this case, set the scissor to be just outside of the
-        // renderArea.  Remove this work-around when driver version 25.20.100.6519 has been
-        // deployed.  http://anglebug.com/3407
-        scissoredArea.x      = renderArea.x;
-        scissoredArea.y      = renderArea.y;
-        scissoredArea.width  = 1;
-        scissoredArea.height = 1;
-    }
     mGraphicsPipelineDesc->updateScissor(&mGraphicsPipelineTransition,
                                          gl_vk::GetRect(scissoredArea));
 
