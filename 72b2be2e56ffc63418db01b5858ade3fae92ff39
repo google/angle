@@ -46,6 +46,30 @@
       "revId": "72b2be2e56ffc63418db01b5858ade3fae92ff39",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "427097f3_983f7f9c",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-10-21T15:31:18Z",
+      "side": 1,
+      "message": "I\u0027m happy to change it to whatever we decide ... let\u0027s chat about it later today.",
+      "parentUuid": "001f67f1_d33dac76",
+      "range": {
+        "startLine": 577,
+        "startChar": 5,
+        "endLine": 577,
+        "endChar": 12
+      },
+      "revId": "72b2be2e56ffc63418db01b5858ade3fae92ff39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
