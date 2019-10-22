@@ -3104,7 +3104,23 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
                                     imageView, level, 1, layer, 1);
 }
 
-// FramebufferHelper implementation.
+// SamplerHelper implementation.
+SamplerHelper::SamplerHelper()
+{
+    mUse.init();
+}
+
+SamplerHelper::~SamplerHelper()
+{
+    mUse.release();
+}
+
+void SamplerHelper::release(RendererVk *renderer)
+{
+    renderer->collectGarbageAndReinit(&mUse, &mSampler);
+}
+
+// DispatchHelper implementation.
 DispatchHelper::DispatchHelper() : CommandGraphResource(CommandGraphResourceType::Dispatcher) {}
 
 DispatchHelper::~DispatchHelper() = default;

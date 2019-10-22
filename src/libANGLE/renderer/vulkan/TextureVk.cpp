@@ -117,7 +117,7 @@ void TextureVk::onDestroy(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
 
     releaseAndDeleteImage(contextVk);
-    contextVk->addGarbage(&mSampler);
+    mSampler.release(contextVk->getRenderer());
 }
 
 angle::Result TextureVk::setImage(const gl::Context *context,
@@ -1348,7 +1348,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     RendererVk *renderer = contextVk->getRenderer();
     if (mSampler.valid())
     {
-        contextVk->addGarbage(&mSampler);
+        mSampler.release(renderer);
     }
 
     if (dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
@@ -1363,7 +1363,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
             uint32_t layerCount =
                 mState.getType() == gl::TextureType::_2D ? 1 : mImage->getLayerCount();
 
-            mImageViews.release(contextVk->getRenderer());
+            mImageViews.release(renderer);
             const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
 
             ANGLE_TRY(initImageViews(contextVk, mImage->getFormat(),
@@ -1417,7 +1417,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         samplerInfo.maxLod     = 0.25f;
     }
 
-    ANGLE_VK_TRY(contextVk, mSampler.init(contextVk->getDevice(), samplerInfo));
+    ANGLE_VK_TRY(contextVk, mSampler.get().init(contextVk->getDevice(), samplerInfo));
 
     // Regenerate the serial on a sampler change.
     mSerial = contextVk->generateTextureSerial();
@@ -1513,12 +1513,6 @@ angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
     uint32_t nativeLayer = getNativeImageLayer(0);
     return mImageViews.getLevelDrawImageView(contextVk, mState.getType(), *mImage, nativeLevel,
                                              nativeLayer, imageViewOut);
-}
-
-const vk::Sampler &TextureVk::getSampler() const
-{
-    ASSERT(mSampler.valid());
-    return mSampler;
 }
 
 angle::Result TextureVk::initImage(ContextVk *contextVk,

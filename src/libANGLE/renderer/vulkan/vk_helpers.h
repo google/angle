@@ -1052,6 +1052,26 @@ class ImageViewHelper : angle::NonCopyable
     LayerLevelImageViewVector mLayerLevelDrawImageViews;
 };
 
+// The SamplerHelper allows a Sampler to be coupled with a resource lifetime.
+class SamplerHelper final : angle::NonCopyable
+{
+  public:
+    SamplerHelper();
+    ~SamplerHelper();
+
+    void release(RendererVk *renderer);
+
+    bool valid() const { return mSampler.valid(); }
+    Sampler &get() { return mSampler; }
+    const Sampler &get() const { return mSampler; }
+
+    void onGraphAccess(CommandGraph *commandGraph) { commandGraph->onResourceUse(mUse); }
+
+  private:
+    SharedResourceUse mUse;
+    Sampler mSampler;
+};
+
 class FramebufferHelper : public CommandGraphResource
 {
   public:

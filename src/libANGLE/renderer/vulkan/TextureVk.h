@@ -157,6 +157,11 @@ class TextureVk : public TextureImpl
         mImageViews.onGraphAccess(commandGraph);
     }
 
+    void onSamplerGraphAccess(vk::CommandGraph *commandGraph)
+    {
+        mSampler.onGraphAccess(commandGraph);
+    }
+
     void releaseOwnershipOfImage(const gl::Context *context);
 
     const vk::ImageView &getReadImageViewAndRecordUse(ContextVk *contextVk) const;
@@ -168,7 +173,12 @@ class TextureVk : public TextureImpl
                                       size_t level,
                                       size_t singleLayer,
                                       const vk::ImageView **imageViewOut);
-    const vk::Sampler &getSampler() const;
+
+    const vk::Sampler &getSampler() const
+    {
+        ASSERT(mSampler.valid());
+        return mSampler.get();
+    }
 
     angle::Result ensureImageInitialized(ContextVk *contextVk);
 
@@ -338,7 +348,7 @@ class TextureVk : public TextureImpl
 
     // |mSampler| contains the relevant Vulkan sampler states reprensenting the OpenGL Texture
     // sampling states for the Texture.
-    vk::Sampler mSampler;
+    vk::SamplerHelper mSampler;
 
     // Render targets stored as vector of vectors
     // Level is first dimension, layer is second

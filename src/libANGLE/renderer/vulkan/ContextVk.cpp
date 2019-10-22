@@ -2921,7 +2921,21 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
         }
 
         TextureVk *textureVk = vk::GetImpl(texture);
-        SamplerVk *samplerVk = (sampler != nullptr) ? vk::GetImpl(sampler) : nullptr;
+
+        SamplerVk *samplerVk;
+        Serial samplerSerial;
+        if (sampler == nullptr)
+        {
+            samplerVk     = nullptr;
+            samplerSerial = kZeroSerial;
+            textureVk->onSamplerGraphAccess(&mCommandGraph);
+        }
+        else
+        {
+            samplerVk     = vk::GetImpl(sampler);
+            samplerSerial = samplerVk->getSerial();
+            samplerVk->onSamplerGraphAccess(&mCommandGraph);
+        }
 
         vk::ImageHelper &image = textureVk->getImage();
 
@@ -2953,8 +2967,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
         mActiveTextures[textureUnit].sampler = samplerVk;
         // Cache serials from sampler and texture, but re-use texture if no sampler bound
         ASSERT(textureVk != nullptr);
-        mActiveTexturesDesc.update(textureUnit, textureVk->getSerial(),
-                                   (samplerVk != nullptr) ? samplerVk->getSerial() : kZeroSerial);
+        mActiveTexturesDesc.update(textureUnit, textureVk->getSerial(), samplerSerial);
     }
 
     return angle::Result::Continue;
