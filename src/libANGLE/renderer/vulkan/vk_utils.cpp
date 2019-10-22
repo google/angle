@@ -483,68 +483,69 @@ GarbageObject &GarbageObject::operator=(GarbageObject &&rhs)
 }
 
 // GarbageObject implementation
+// Using c-style casts here to avoid conditional compile for MSVC 32-bit
+//  which fails to compile with reinterpret_cast, requiring static_cast.
 void GarbageObject::destroy(VkDevice device)
 {
     switch (mHandleType)
     {
         case HandleType::Semaphore:
-            vkDestroySemaphore(device, reinterpret_cast<VkSemaphore>(mHandle), nullptr);
+            vkDestroySemaphore(device, (VkSemaphore)mHandle, nullptr);
             break;
         case HandleType::CommandBuffer:
             // Command buffers are pool allocated.
             UNREACHABLE();
             break;
         case HandleType::Event:
-            vkDestroyEvent(device, reinterpret_cast<VkEvent>(mHandle), nullptr);
+            vkDestroyEvent(device, (VkEvent)mHandle, nullptr);
             break;
         case HandleType::Fence:
-            vkDestroyFence(device, reinterpret_cast<VkFence>(mHandle), nullptr);
+            vkDestroyFence(device, (VkFence)mHandle, nullptr);
             break;
         case HandleType::DeviceMemory:
-            vkFreeMemory(device, reinterpret_cast<VkDeviceMemory>(mHandle), nullptr);
+            vkFreeMemory(device, (VkDeviceMemory)mHandle, nullptr);
             break;
         case HandleType::Buffer:
-            vkDestroyBuffer(device, reinterpret_cast<VkBuffer>(mHandle), nullptr);
+            vkDestroyBuffer(device, (VkBuffer)mHandle, nullptr);
             break;
         case HandleType::BufferView:
-            vkDestroyBufferView(device, reinterpret_cast<VkBufferView>(mHandle), nullptr);
+            vkDestroyBufferView(device, (VkBufferView)mHandle, nullptr);
             break;
         case HandleType::Image:
-            vkDestroyImage(device, reinterpret_cast<VkImage>(mHandle), nullptr);
+            vkDestroyImage(device, (VkImage)mHandle, nullptr);
             break;
         case HandleType::ImageView:
-            vkDestroyImageView(device, reinterpret_cast<VkImageView>(mHandle), nullptr);
+            vkDestroyImageView(device, (VkImageView)mHandle, nullptr);
             break;
         case HandleType::ShaderModule:
-            vkDestroyShaderModule(device, reinterpret_cast<VkShaderModule>(mHandle), nullptr);
+            vkDestroyShaderModule(device, (VkShaderModule)mHandle, nullptr);
             break;
         case HandleType::PipelineLayout:
-            vkDestroyPipelineLayout(device, reinterpret_cast<VkPipelineLayout>(mHandle), nullptr);
+            vkDestroyPipelineLayout(device, (VkPipelineLayout)mHandle, nullptr);
             break;
         case HandleType::RenderPass:
-            vkDestroyRenderPass(device, reinterpret_cast<VkRenderPass>(mHandle), nullptr);
+            vkDestroyRenderPass(device, (VkRenderPass)mHandle, nullptr);
             break;
         case HandleType::Pipeline:
-            vkDestroyPipeline(device, reinterpret_cast<VkPipeline>(mHandle), nullptr);
+            vkDestroyPipeline(device, (VkPipeline)mHandle, nullptr);
             break;
         case HandleType::DescriptorSetLayout:
-            vkDestroyDescriptorSetLayout(device, reinterpret_cast<VkDescriptorSetLayout>(mHandle),
-                                         nullptr);
+            vkDestroyDescriptorSetLayout(device, (VkDescriptorSetLayout)mHandle, nullptr);
             break;
         case HandleType::Sampler:
-            vkDestroySampler(device, reinterpret_cast<VkSampler>(mHandle), nullptr);
+            vkDestroySampler(device, (VkSampler)mHandle, nullptr);
             break;
         case HandleType::DescriptorPool:
-            vkDestroyDescriptorPool(device, reinterpret_cast<VkDescriptorPool>(mHandle), nullptr);
+            vkDestroyDescriptorPool(device, (VkDescriptorPool)mHandle, nullptr);
             break;
         case HandleType::Framebuffer:
-            vkDestroyFramebuffer(device, reinterpret_cast<VkFramebuffer>(mHandle), nullptr);
+            vkDestroyFramebuffer(device, (VkFramebuffer)mHandle, nullptr);
             break;
         case HandleType::CommandPool:
-            vkDestroyCommandPool(device, reinterpret_cast<VkCommandPool>(mHandle), nullptr);
+            vkDestroyCommandPool(device, (VkCommandPool)mHandle, nullptr);
             break;
         case HandleType::QueryPool:
-            vkDestroyQueryPool(device, reinterpret_cast<VkQueryPool>(mHandle), nullptr);
+            vkDestroyQueryPool(device, (VkQueryPool)mHandle, nullptr);
             break;
         default:
             UNREACHABLE();

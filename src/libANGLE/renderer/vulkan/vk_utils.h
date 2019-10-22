@@ -248,12 +248,14 @@ class GarbageObject
     template <typename DerivedT, typename HandleT>
     static GarbageObject Get(WrappedObject<DerivedT, HandleT> *object)
     {
+        // Using c-style cast here to avoid conditional compile for MSVC 32-bit
+        //  which fails to compile with reinterpret_cast, requiring static_cast.
         return GarbageObject(HandleTypeHelper<DerivedT>::kHandleType,
-                             reinterpret_cast<GarbageHandle>(object->release()));
+                             (GarbageHandle)(object->release()));
     }
 
   private:
-    VK_DEFINE_HANDLE(GarbageHandle)
+    VK_DEFINE_NON_DISPATCHABLE_HANDLE(GarbageHandle)
     GarbageObject(HandleType handleType, GarbageHandle handle);
 
     HandleType mHandleType;

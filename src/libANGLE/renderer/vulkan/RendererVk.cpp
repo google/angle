@@ -121,8 +121,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00428",
     // http://anglebug.com/3450
     "VUID-vkDestroySemaphore-semaphore-parameter",
-    // http://anglebug.com/3924
-    "UNASSIGNED-Threading-Info",
 };
 
 // Suppress validation errors that are known
@@ -618,14 +616,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     const egl::AttributeMap &attribs = mDisplay->getAttributeMap();
     ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseValidationLayers(attribs),
                                                 ChooseICDFromAttribs(attribs));
-#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_WIN64)
-    // TODO: Re-enable validation layers on 32bit Windows
-    // http://anglebug.com/3946, http://anglebug.com/3924
-    mEnableValidationLayers = false;
-#else
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
-#endif
-    mEnabledICD = scopedEnvironment.getEnabledICD();
+    mEnabledICD             = scopedEnvironment.getEnabledICD();
 
     // Gather global layer properties.
     uint32_t instanceLayerCount = 0;
@@ -766,16 +758,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         enabledInstanceExtensions.empty() ? nullptr : enabledInstanceExtensions.data();
     instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
     instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
-#if defined(ANGLE_PLATFORM_ANDROID) && !defined(ANGLE_IS_64_BIT_CPU)
-    // TODO: Re-enable validation layers on 32-bit Android
-    // http://anglebug.com/3924
-    VkValidationFeatureDisableEXT vkValFeaturesDisable = VK_VALIDATION_FEATURE_DISABLE_ALL_EXT;
-    VkValidationFeaturesEXT validationFeatures         = {};
-    validationFeatures.sType                           = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
-    validationFeatures.disabledValidationFeatureCount  = 1;
-    validationFeatures.pDisabledValidationFeatures     = &vkValFeaturesDisable;
-    instanceInfo.pNext                                 = &validationFeatures;
-#endif
     ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
 
     if (enableDebugUtils)
