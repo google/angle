@@ -3596,7 +3596,7 @@ void main() {
     FillTexture2D(tex0.get(), width, height, GLColor::black, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
     FillTexture2D(tex1.get(), width, height, 0x80, 0, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT,
                   GL_UNSIGNED_INT);
-    FillTexture2D(tex2.get(), width, height, 0x40, 0, GL_DEPTH_STENCIL, GL_DEPTH_STENCIL,
+    FillTexture2D(tex2.get(), width, height, 0x40, 0, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL,
                   GL_UNSIGNED_INT_24_8);
     ASSERT_GL_NO_ERROR();
 

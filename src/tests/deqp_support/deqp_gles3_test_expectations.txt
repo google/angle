@@ -574,11 +574,6 @@
 
 // Fails only with SwiftShader:
 
-3952 VULKAN SWIFTSHADER : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.depth_stencil_unsigned_int_24_8 = FAIL
-3952 VULKAN SWIFTSHADER : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_short = FAIL
-3952 VULKAN SWIFTSHADER : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
-3952 VULKAN SWIFTSHADER : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_stencil_unsigned_int_24_8 = FAIL
-
 4037 VULKAN SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.depth_stencil.*stencil8_scale = FAIL
 
 4013 VULKAN SWIFTSHADER : dEQP-GLES3.functional.fbo.invalidate.*.unbind_blit* = FAIL

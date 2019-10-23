@@ -4976,6 +4976,8 @@ TEST_P(Texture2DDepthTest, DepthTextureES2Compatibility)
 {
     ANGLE_SKIP_TEST_IF(IsD3D11());
     ANGLE_SKIP_TEST_IF(IsIntel() && IsD3D9());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_depth_texture") &&
+                       !IsGLExtensionEnabled("GL_OES_depth_texture"));
 
     // When the depth texture is specified with unsized internalformat implementations follow
     // OES_depth_texture behavior. Otherwise they follow GLES 3.0 behavior.
