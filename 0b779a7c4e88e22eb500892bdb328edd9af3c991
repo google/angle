@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4fa2d796_d1bfe34e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1748,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-23T03:36:36Z",
+      "side": 1,
+      "message": "drive-by:\n\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/common/utilities.cpp?q\u003dgetprimitiverestart\u0026sq\u003dpackage:chromium\u0026g\u003d0\u0026l\u003d596",
+      "range": {
+        "startLine": 1748,
+        "startChar": 7,
+        "endLine": 1748,
+        "endChar": 43
+      },
+      "revId": "0b779a7c4e88e22eb500892bdb328edd9af3c991",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
