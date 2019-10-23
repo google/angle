@@ -267,7 +267,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
     {
         StateManagerGL *stateManager = getStateManager();
 
-        GLuint primitiveRestartIndex = nativegl::GetPrimitiveRestartIndexForIndexType(type);
+        GLuint primitiveRestartIndex = gl::GetPrimitiveRestartIndex(type);
         stateManager->setPrimitiveRestartIndex(primitiveRestartIndex);
     }
 
