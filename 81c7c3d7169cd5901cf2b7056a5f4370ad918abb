@@ -16,6 +16,98 @@
       "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b498ab96_4f712684",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-10-24T22:52:38Z",
+      "side": 1,
+      "message": "Would change these to ASSERTs",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 17
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46b54dda_3e8ee959",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-10-24T22:52:38Z",
+      "side": 1,
+      "message": "We have a SplitStringAlongWhitespace utility you can use turn the extension strings into a vector of strings: https://cs.chromium.org/chromium/src/third_party/angle/src/common/string_utils.h?l\u003d40",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 21
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "831336ee_a8b5c8af",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-10-24T22:52:38Z",
+      "side": 1,
+      "message": "Same with these, might as well assert.",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 17
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8002232_da6a61a1",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-10-24T22:52:38Z",
+      "side": 1,
+      "message": "Maybe refactor these into a helper to query and then print?",
+      "range": {
+        "startLine": 180,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 92
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
