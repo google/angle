@@ -883,7 +883,7 @@ unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutA
                 strtoul(name.c_str() + open + 1, /*endptr*/ nullptr, /*radix*/ 10);
 
             // Check if resulting integer is out-of-range or conversion error.
-            if ((subscript <= static_cast<unsigned long>(UINT_MAX)) &&
+            if (angle::base::IsValueInRangeForNumericType<uint32_t>(subscript) &&
                 !(subscript == ULONG_MAX && errno == ERANGE) && !(errno != 0 && subscript == 0))
             {
                 *nameLengthWithoutArrayIndexOut = open;

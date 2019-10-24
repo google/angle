@@ -140,6 +140,7 @@ config("extra_warnings") {
       "-Wextra-semi-stmt",
       "-Wfloat-conversion",
       "-Wnon-virtual-dtor",
+      "-Wtautological-type-limit-compare",
       "-Wunneeded-internal-declaration",
 
       # The below warnings are used by WebKit. We enable them to make rolling
