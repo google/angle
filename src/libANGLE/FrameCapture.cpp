@@ -13,6 +13,7 @@
 #include <cstring>
 #include <string>
 
+#include "common/system_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/gl_enum_utils_autogen.h"
@@ -21,44 +22,45 @@
 #    error Frame capture must be enbled to include this file.
 #endif  // !ANGLE_CAPTURE_ENABLED
 
-#ifdef ANGLE_PLATFORM_ANDROID
-#    define ANGLE_CAPTURE_PATH ("/sdcard/Android/data/" + CurrentAPKName() + "/")
-
-std::string CurrentAPKName()
-{
-    static char sApplicationId[512] = {0};
-    if (!sApplicationId[0])
-    {
-        // Linux interface to get application id of the running process
-        FILE *cmdline = fopen("/proc/self/cmdline", "r");
-        if (cmdline)
-        {
-            fread(sApplicationId, 1, sizeof(sApplicationId), cmdline);
-            fclose(cmdline);
-
-            // Some package may have application id as <app_name>:<cmd_name>
-            char *colonSep = strchr(sApplicationId, ':');
-            if (colonSep)
-            {
-                *colonSep = '\0';
-            }
-        }
-        else
-        {
-            WARN() << "not able to lookup application id";
-        }
-    }
-    return std::string(sApplicationId);
-}
-
-#else
-#    define ANGLE_CAPTURE_PATH "./"
-#endif  // ANGLE_PLATFORM_ANDROID
-
 namespace angle
 {
 namespace
 {
+std::string GetDefaultOutDirectory()
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    std::string path = "/sdcard/Android/data/";
+
+    // Linux interface to get application id of the running process
+    FILE *cmdline = fopen("/proc/self/cmdline", "r");
+    if (cmdline)
+    {
+        fread(sApplicationId, 1, sizeof(sApplicationId), cmdline);
+        fclose(cmdline);
+
+        // Some package may have application id as <app_name>:<cmd_name>
+        char *colonSep = strchr(sApplicationId, ':');
+        if (colonSep)
+        {
+            *colonSep = '\0';
+        }
+    }
+    else
+    {
+        ERR() << "not able to lookup application id";
+    }
+    path += std::string(sApplicationId) + "/";
+    return path;
+#else
+    return std::string("./");
+#endif  // defined(ANGLE_PLATFORM_ANDROID)
+}
+
+constexpr char kEnabledVarName[]      = "ANGLE_CAPTURE_ENABLED";
+constexpr char kOutDirectoryVarName[] = "ANGLE_CAPTURE_OUT_DIR";
+constexpr char kFrameStartVarName[]   = "ANGLE_CAPTURE_FRAME_START";
+constexpr char kFrameEndVarName[]     = "ANGLE_CAPTURE_FRAME_END";
+
 std::string GetCaptureFileName(int contextId, uint32_t frameIndex, const char *suffix)
 {
     std::stringstream fnameStream;
@@ -67,9 +69,12 @@ std::string GetCaptureFileName(int contextId, uint32_t frameIndex, const char *s
     return fnameStream.str();
 }
 
-std::string GetCaptureFilePath(int contextId, uint32_t frameIndex, const char *suffix)
+std::string GetCaptureFilePath(const std::string &outDir,
+                               int contextId,
+                               uint32_t frameIndex,
+                               const char *suffix)
 {
-    return ANGLE_CAPTURE_PATH + GetCaptureFileName(contextId, frameIndex, suffix);
+    return outDir + GetCaptureFileName(contextId, frameIndex, suffix);
 }
 
 void WriteParamStaticVarName(const CallCapture &call,
@@ -366,7 +371,8 @@ bool AnyClientArray(const gl::AttribArray<size_t> &clientArraySizes)
     return false;
 }
 
-void WriteCppReplay(int contextId,
+void WriteCppReplay(const std::string &outDir,
+                    int contextId,
                     uint32_t frameIndex,
                     const std::vector<CallCapture> &calls,
                     const gl::AttribArray<size_t> &clientArraySizes,
@@ -468,7 +474,7 @@ void WriteCppReplay(int contextId,
 
     if (!binaryData.empty())
     {
-        std::string dataFilepath = GetCaptureFilePath(contextId, frameIndex, ".angledata");
+        std::string dataFilepath = GetCaptureFilePath(outDir, contextId, frameIndex, ".angledata");
 
         FILE *fp = fopen(dataFilepath.c_str(), "wb");
         if (!fp)
@@ -502,7 +508,7 @@ void WriteCppReplay(int contextId,
     std::string outString    = out.str();
     std::string headerString = header.str();
 
-    std::string cppFilePath = GetCaptureFilePath(contextId, frameIndex, ".cpp");
+    std::string cppFilePath = GetCaptureFilePath(outDir, contextId, frameIndex, ".cpp");
     FILE *fp                = fopen(cppFilePath.c_str(), "w");
     if (!fp)
     {
@@ -645,9 +651,38 @@ ReplayContext::ReplayContext(size_t readBufferSizebytes,
 }
 ReplayContext::~ReplayContext() {}
 
-FrameCapture::FrameCapture() : mFrameIndex(0), mReadBufferSize(0)
+FrameCapture::FrameCapture()
+    : mEnabled(true), mFrameIndex(0), mFrameStart(0), mFrameEnd(10), mReadBufferSize(0)
 {
     reset();
+
+    std::string enabledFromEnv = angle::GetEnvironmentVar(kEnabledVarName);
+    if (enabledFromEnv == "0")
+    {
+        mEnabled = false;
+    }
+
+    std::string pathFromEnv = angle::GetEnvironmentVar(kOutDirectoryVarName);
+    if (pathFromEnv.empty())
+    {
+        mOutDirectory = GetDefaultOutDirectory();
+    }
+    else
+    {
+        mOutDirectory = pathFromEnv;
+    }
+
+    std::string startFromEnv = angle::GetEnvironmentVar(kFrameStartVarName);
+    if (!startFromEnv.empty())
+    {
+        WARN() << "Capture frame start is not yet supported. Defaulting to 0.";
+    }
+
+    std::string endFromEnv = angle::GetEnvironmentVar(kFrameEndVarName);
+    if (!endFromEnv.empty())
+    {
+        mFrameEnd = atoi(endFromEnv.c_str());
+    }
 }
 
 FrameCapture::~FrameCapture() = default;
@@ -926,7 +961,8 @@ void FrameCapture::onEndFrame(const gl::Context *context)
 {
     if (!mCalls.empty())
     {
-        WriteCppReplay(context->id(), mFrameIndex, mCalls, mClientArraySizes, mReadBufferSize);
+        WriteCppReplay(mOutDirectory, context->id(), mFrameIndex, mCalls, mClientArraySizes,
+                       mReadBufferSize);
         reset();
         mFrameIndex++;
     }
@@ -944,7 +980,7 @@ int DataCounters::getAndIncrement(gl::EntryPoint entryPoint, const std::string &
 
 bool FrameCapture::enabled() const
 {
-    return mFrameIndex < 100;
+    return mEnabled && mFrameIndex >= mFrameStart && mFrameIndex <= mFrameEnd;
 }
 
 void FrameCapture::replay(gl::Context *context)

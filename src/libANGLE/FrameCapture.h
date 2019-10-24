@@ -187,9 +187,13 @@ class FrameCapture final : angle::NonCopyable
                                   const CallCapture &call,
                                   const ParamCapture &param);
 
+    bool mEnabled;
+    std::string mOutDirectory;
     std::vector<CallCapture> mCalls;
     gl::AttribArray<int> mClientVertexArrayMap;
     uint32_t mFrameIndex;
+    uint32_t mFrameStart;
+    uint32_t mFrameEnd;
     gl::AttribArray<size_t> mClientArraySizes;
     size_t mReadBufferSize;
 
