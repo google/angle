@@ -268,6 +268,27 @@ inline bool NamesMatching(const char *ref, const char *testName)
 
 }  // anonymous namespace
 
+const char *GetConditionName(uint32_t condition)
+{
+    if (condition == GPUTestConfig::kConditionNone)
+    {
+        return nullptr;
+    }
+
+    for (const TokenInfo &info : kTokenData)
+    {
+        if (info.condition == condition)
+        {
+            // kConditionNone is used to tag tokens that aren't conditions, but this case has been
+            // handled above.
+            ASSERT(info.condition != GPUTestConfig::kConditionNone);
+            return info.name;
+        }
+    }
+
+    return nullptr;
+}
+
 GPUTestExpectationsParser::GPUTestExpectationsParser()
 {
     // Some sanity check.
