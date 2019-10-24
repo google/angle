@@ -192,7 +192,7 @@ struct FeaturesVk : FeatureSetBase
         "Seamful cube map emulation misbehaves on some drivers, so it's disallowed", &members,
         "http://anglebug.com/3243"};
 
-    // Qualcomm shader compiler doesn't support sampler arrays as parameters, so
+    // Qualcomm and SwiftShader shader compiler doesn't support sampler arrays as parameters, so
     // revert to old RewriteStructSamplers behavior, which produces fewer.
     Feature forceOldRewriteStructSamplers = {
         "force_old_rewrite_struct_samplers", FeatureCategory::VulkanWorkarounds,
