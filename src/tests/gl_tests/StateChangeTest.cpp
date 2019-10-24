@@ -902,14 +902,30 @@ TEST_P(StateChangeTestES3, VertexArrayObjectAndDisabledAttributes)
         "{\n"
         "    colorOut = varyColor;\n"
         "}";
-    ANGLE_GL_PROGRAM(dualProgram, kDualVS, kDualFS);
-    GLint positionLocation = glGetAttribLocation(dualProgram, "position");
-    ASSERT_NE(-1, positionLocation);
-    GLint colorLocation = glGetAttribLocation(dualProgram, "color");
-    ASSERT_NE(-1, colorLocation);
 
-    GLint singlePositionLocation = glGetAttribLocation(singleProgram, "position");
-    ASSERT_NE(-1, singlePositionLocation);
+    ANGLE_GL_PROGRAM(dualProgram, kDualVS, kDualFS);
+
+    // Force consistent attribute locations
+    constexpr GLint positionLocation = 0;
+    constexpr GLint colorLocation    = 1;
+
+    glBindAttribLocation(singleProgram, positionLocation, "position");
+    glBindAttribLocation(dualProgram, positionLocation, "position");
+    glBindAttribLocation(dualProgram, colorLocation, "color");
+
+    {
+        glLinkProgram(singleProgram);
+        GLint linkStatus;
+        glGetProgramiv(singleProgram, GL_LINK_STATUS, &linkStatus);
+        ASSERT_NE(linkStatus, 0);
+    }
+
+    {
+        glLinkProgram(dualProgram);
+        GLint linkStatus;
+        glGetProgramiv(dualProgram, GL_LINK_STATUS, &linkStatus);
+        ASSERT_NE(linkStatus, 0);
+    }
 
     glUseProgram(singleProgram);
 
@@ -924,8 +940,8 @@ TEST_P(StateChangeTestES3, VertexArrayObjectAndDisabledAttributes)
     GLVertexArray vertexArray;
     glBindVertexArray(vertexArray);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glVertexAttribPointer(singlePositionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(singlePositionLocation);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
 
     // Should draw red.
     glDrawArrays(GL_TRIANGLES, 0, 6);
