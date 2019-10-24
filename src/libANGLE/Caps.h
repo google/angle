@@ -543,6 +543,9 @@ struct Extensions
     bool baseVertexBaseInstance = false;
 };
 
+// Pointer to a boolean memeber of the Extensions struct
+using ExtensionBool = bool Extensions::*;
+
 struct ExtensionInfo
 {
     // If this extension can be enabled or disabled  with glRequestExtension
@@ -551,7 +554,6 @@ struct ExtensionInfo
     bool Disablable  = false;
 
     // Pointer to a boolean member of the Extensions struct
-    typedef bool(Extensions::*ExtensionBool);
     ExtensionBool ExtensionsMember = nullptr;
 };
 

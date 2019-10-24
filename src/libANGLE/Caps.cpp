@@ -749,20 +749,20 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
 const ExtensionInfoMap &GetExtensionInfoMap()
 {
     auto buildExtensionInfoMap = []() {
-        auto enableableExtension = [](ExtensionInfo::ExtensionBool member) {
+        auto enableableExtension = [](ExtensionBool member) {
             ExtensionInfo info;
             info.Requestable      = true;
             info.ExtensionsMember = member;
             return info;
         };
 
-        auto enableableDisablableExtension = [&](ExtensionInfo::ExtensionBool member) {
+        auto enableableDisablableExtension = [&](ExtensionBool member) {
             ExtensionInfo info = enableableExtension(member);
             info.Disablable    = true;
             return info;
         };
 
-        auto esOnlyExtension = [](ExtensionInfo::ExtensionBool member) {
+        auto esOnlyExtension = [](ExtensionBool member) {
             ExtensionInfo info;
             info.ExtensionsMember = member;
             return info;

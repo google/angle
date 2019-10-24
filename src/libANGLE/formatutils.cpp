@@ -83,9 +83,6 @@ static bool RequireES(const Version &clientVersion, const Extensions &)
     return clientVersion >= Version(minCoreGLMajorVersion, minCoreGLMinorVersion);
 }
 
-// Pointer to a boolean memeber of the Extensions struct
-typedef bool(Extensions::*ExtensionBool);
-
 // Check support for a single extension
 template <ExtensionBool bool1>
 static bool RequireExt(const Version &, const Extensions &extensions)

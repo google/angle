@@ -141,6 +141,7 @@ config("extra_warnings") {
       "-Wfloat-conversion",
       "-Wmissing-field-initializers",
       "-Wnon-virtual-dtor",
+      "-Wredundant-parens",
       "-Wshadow-field",
       "-Wtautological-type-limit-compare",
       "-Wunneeded-internal-declaration",
