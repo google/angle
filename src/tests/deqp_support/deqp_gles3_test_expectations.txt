@@ -574,6 +574,10 @@
 // Fixed in later driver versions.
 2727 VULKAN ANDROID : dEQP-GLES3.functional.shaders.builtin_variable.pointcoord = FAIL
 
+//  New or broken formats in ES 3.0, may be it relates to VK_IMAGE_USAGE_STORAGE_BIT
+3816 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgba16* = FAIL
+3816 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgb16* = FAIL
+3816 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rg32* = FAIL
 
 // Fails only with SwiftShader:
 

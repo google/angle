@@ -2881,6 +2881,10 @@ void State::setImageUnit(const Context *context,
     mImageUnits[unit].format  = format;
     mDirtyBits.set(DIRTY_BIT_IMAGE_BINDINGS);
 
+    if (texture)
+    {
+        texture->onBindImageTexture();
+    }
     onImageStateChange(context, unit);
 }
 

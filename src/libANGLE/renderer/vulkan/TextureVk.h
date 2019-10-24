@@ -322,7 +322,8 @@ class TextureVk : public TextureImpl
                                                bool ignoreLayerCount,
                                                uint32_t currentLayer,
                                                uint32_t sourceLevel,
-                                               uint32_t stagingDstMipLevel);
+                                               uint32_t stagingDstMipLevel,
+                                               vk::BufferHelper **stagingBuffer);
     angle::Result initImageViews(ContextVk *contextVk,
                                  const vk::Format &format,
                                  const bool sized,
@@ -341,9 +342,20 @@ class TextureVk : public TextureImpl
 
     void onStagingBufferChange() { onStateChange(angle::SubjectMessage::SubjectChanged); }
 
-    angle::Result changeLevels(ContextVk *contextVk, GLuint baseLevel, GLuint maxLevel);
     const gl::InternalFormat &getImplementationSizedFormat(const gl::Context *context) const;
     const vk::Format &getBaseLevelFormat(RendererVk *renderer) const;
+    // Re-create the image.
+    angle::Result changeLevels(ContextVk *contextVk,
+                               GLuint previousBaseLevel,
+                               GLuint baseLevel,
+                               GLuint maxLevel,
+                               vk::BufferHelper **stagingBuffer);
+
+    // Update base and max levels, and re-create image if needed.
+    angle::Result updateBaseMaxLevels(ContextVk *contextVk,
+                                      GLuint baseLevel,
+                                      GLuint maxLevel,
+                                      vk::BufferHelper **stagingBuffer);
 
     bool mOwnsImage;
 
@@ -380,6 +392,9 @@ class TextureVk : public TextureImpl
 
     // Overridden in some tests.
     size_t mStagingBufferInitialSize;
+
+    // The created vkImage usage flag.
+    VkImageUsageFlags mImageUsageFlags;
 };
 
 }  // namespace rx

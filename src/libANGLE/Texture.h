@@ -190,6 +190,7 @@ class TextureState final : private angle::NonCopyable
 
     GLenum mDepthStencilTextureMode;
 
+    bool mBoundAsImageTexture;
     bool mImmutableFormat;
     GLuint mImmutableLevels;
 
@@ -412,6 +413,7 @@ class Texture final : public RefCountObject<TextureID>,
     angle::Result setEGLImageTarget(Context *context, TextureType type, egl::Image *imageTarget);
 
     angle::Result generateMipmap(Context *context);
+    void onBindImageTexture();
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;
@@ -492,6 +494,9 @@ class Texture final : public RefCountObject<TextureID>,
         DIRTY_BIT_BASE_LEVEL,
         DIRTY_BIT_MAX_LEVEL,
         DIRTY_BIT_DEPTH_STENCIL_TEXTURE_MODE,
+
+        // Image state
+        DIRTY_BIT_BOUND_AS_IMAGE,
 
         // Misc
         DIRTY_BIT_LABEL,
