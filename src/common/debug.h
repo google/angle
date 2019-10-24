@@ -368,4 +368,13 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #    define ANGLE_REENABLE_EXTRA_SEMI_WARNING
 #endif
 
+#if defined(__clang__)
+#    define ANGLE_DISABLE_SHADOWING_WARNING \
+        _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wshadow-field\"")
+#    define ANGLE_REENABLE_SHADOWING_WARNING _Pragma("clang diagnostic pop")
+#else
+#    define ANGLE_DISABLE_SHADOWING_WARNING
+#    define ANGLE_REENABLE_SHADOWING_WARNING
+#endif
+
 #endif  // COMMON_DEBUG_H_

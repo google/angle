@@ -140,6 +140,7 @@ config("extra_warnings") {
       "-Wextra-semi-stmt",
       "-Wfloat-conversion",
       "-Wnon-virtual-dtor",
+      "-Wshadow-field",
       "-Wtautological-type-limit-compare",
       "-Wunneeded-internal-declaration",
 

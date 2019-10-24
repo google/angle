@@ -10,6 +10,7 @@
 
 // glslang has issues with some specific warnings.
 ANGLE_DISABLE_EXTRA_SEMI_WARNING
+ANGLE_DISABLE_SHADOWING_WARNING
 
 // glslang's version of ShaderLang.h, not to be confused with ANGLE's.
 #include <glslang/Public/ShaderLang.h>
@@ -18,6 +19,7 @@ ANGLE_DISABLE_EXTRA_SEMI_WARNING
 #include <SPIRV/GlslangToSpv.h>
 #include <StandAlone/ResourceLimits.h>
 
+ANGLE_REENABLE_SHADOWING_WARNING
 ANGLE_REENABLE_EXTRA_SEMI_WARNING
 
 #include <array>
