@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "2a7966a1_d3a202dc",
+        "filename": "src/tests/angle_end2end_tests.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-24T22:53:29Z",
+      "side": 1,
+      "message": "you might be able to move your new test in here.",
+      "range": {
+        "startLine": 148,
+        "startChar": 13,
+        "endLine": 148,
+        "endChar": 31
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "270f5b09_9c9a08f1",
         "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
         "patchSetId": 1
@@ -13,6 +36,52 @@
       "writtenOn": "2019-10-24T19:37:27Z",
       "side": 1,
       "message": "Comment needs updating",
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25aa4e1b_b0fd5c72",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-24T22:53:29Z",
+      "side": 1,
+      "message": "is there any reason to use no fixture? Might as well use the common fixture.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 0
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2fe679d_a64b2e6b",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-24T22:53:29Z",
+      "side": 1,
+      "message": "nit: ANGLE doesn\u0027t use s_ prefixes for strings.",
+      "range": {
+        "startLine": 47,
+        "startChar": 16,
+        "endLine": 47,
+        "endChar": 25
+      },
       "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -65,6 +134,52 @@
     },
     {
       "key": {
+        "uuid": "aa0dbbac_2424e29f",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-24T22:53:29Z",
+      "side": 1,
+      "message": "is it necessary to turn formatting off?",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 23
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77ea48e8_c7e5b55c",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-24T22:53:29Z",
+      "side": 1,
+      "message": "same comments on naming.",
+      "range": {
+        "startLine": 110,
+        "startChar": 19,
+        "endLine": 110,
+        "endChar": 28
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "831336ee_a8b5c8af",
         "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
         "patchSetId": 1
@@ -88,6 +203,29 @@
     },
     {
       "key": {
+        "uuid": "fb5277d4_b4e4e6cd",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-24T22:53:29Z",
+      "side": 1,
+      "message": "same question. I think we should prefer weird formatting to turning it off.",
+      "range": {
+        "startLine": 172,
+        "startChar": 7,
+        "endLine": 172,
+        "endChar": 27
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b8002232_da6a61a1",
         "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
         "patchSetId": 1
@@ -104,6 +242,29 @@
         "startChar": 8,
         "endLine": 181,
         "endChar": 92
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f5724e3_d35012be",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-24T22:53:29Z",
+      "side": 1,
+      "message": "these bits need updating.",
+      "range": {
+        "startLine": 268,
+        "startChar": 12,
+        "endLine": 272,
+        "endChar": 41
       },
       "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
