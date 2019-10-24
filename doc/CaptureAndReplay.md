@@ -18,14 +18,10 @@ To build ANGLE with capture and replay enabled update your GN args:
 angle_with_capture_by_default = true
 ```
 
-Once built ANGLE will capture a frame's OpenGL calls to a CPP replay stored in the current working
-directory. The capture files will be named `angle_capture_context{id}_frame{n}.cpp`. Each OpenGL
-context has a unique Context ID to identify its proper replay files. ANGLE will write out large
-binary blobs such as Texture or Buffer data to `angle_capture_context{id}_frame{n}.angledata`.
-
-To run a CPP replay you must stitch together the source files into a GN target. The samples
-framework is well-suited for implementing a CPP replay example. Alternately you could adapt an ANGLE
-end-to-end test. The `angledata` files must be accessible to the replay.
+Once built ANGLE will capture the OpenGL ES calls to a CPP replay. By default the replay will be
+stored in the current working directory. The capture files will be named according to the pattern
+`angle_capture_context{id}_frame{n}.cpp`. ANGLE will additionally write out data binary blobs for
+Texture or Buffer contexts to `angle_capture_context{id}_frame{n}.angledata`.
 
 ## Controlling Frame Capture
 
@@ -39,3 +35,35 @@ Some simple environment variables control frame capture:
  * `ANGLE_CAPTURE_FRAME_END=<n>`:
    By default ANGLE will capture the first ten frames. This variable can override the default.
    Example: `ANGLE_CAPTURE_FRAME_END=4`
+
+A good way to test out the capture is to use environment variables in conjunction with the sample
+template. For example:
+
+```
+$ ANGLE_CAPTURE_FRAME_END=4 ANGLE_CAPTURE_OUT_DIR=samples/capture_replay out/Debug/simple_texture_2d
+```
+
+## Running a CPP replay
+
+To run a CPP replay you can use a template located in
+[samples/capture_and_replay](../samples/capture_and_replay). Update
+[samples/BUILD.gn](../samples/BUILD.gn) to enable the `capture_replay` sample to include your replay:
+
+```
+capture_replay("my_sample") {
+  sources = [
+    "capture_replay/angle_capture_context1_frame000.cpp",
+    "capture_replay/angle_capture_context1_frame001.cpp",
+    "capture_replay/angle_capture_context1_frame002.cpp",
+    "capture_replay/angle_capture_context1_frame003.cpp",
+    "capture_replay/angle_capture_context1_frame004.cpp",
+  ]
+}
+```
+
+Then build and run your replay sample:
+
+```
+$ autoninja -C out/Debug my_sample
+$ ANGLE_CAPTURE_ENABLED=0 out/Debug/my_sample
+```

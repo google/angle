@@ -162,6 +162,9 @@ class DataCounters final : angle::NonCopyable
     std::map<Counter, int> mData;
 };
 
+// Used by the CPP replay to filter out unnecessary code.
+using HasResourceTypeMap = angle::PackedEnumMap<ResourceIDType, bool, angle::kParamTypeCount>;
+
 class FrameCapture final : angle::NonCopyable
 {
   public:
@@ -187,6 +190,10 @@ class FrameCapture final : angle::NonCopyable
                                   const CallCapture &call,
                                   const ParamCapture &param);
 
+    static void ReplayCall(gl::Context *context,
+                           ReplayContext *replayContext,
+                           const CallCapture &call);
+
     bool mEnabled;
     std::string mOutDirectory;
     std::vector<CallCapture> mCalls;
@@ -196,10 +203,7 @@ class FrameCapture final : angle::NonCopyable
     uint32_t mFrameEnd;
     gl::AttribArray<size_t> mClientArraySizes;
     size_t mReadBufferSize;
-
-    static void ReplayCall(gl::Context *context,
-                           ReplayContext *replayContext,
-                           const CallCapture &call);
+    HasResourceTypeMap mHasResourceType;
 };
 
 template <typename CaptureFuncT, typename... ArgsT>

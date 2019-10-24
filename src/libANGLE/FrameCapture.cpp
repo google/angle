@@ -11,6 +11,7 @@
 
 #include <cerrno>
 #include <cstring>
+#include <fstream>
 #include <string>
 
 #include "common/system_utils.h"
@@ -61,11 +62,38 @@ constexpr char kOutDirectoryVarName[] = "ANGLE_CAPTURE_OUT_DIR";
 constexpr char kFrameStartVarName[]   = "ANGLE_CAPTURE_FRAME_START";
 constexpr char kFrameEndVarName[]     = "ANGLE_CAPTURE_FRAME_END";
 
+struct FmtCapturePrefix
+{
+    FmtCapturePrefix(int contextIdIn) : contextId(contextIdIn) {}
+    int contextId;
+};
+
+std::ostream &operator<<(std::ostream &os, const FmtCapturePrefix &fmt)
+{
+    os << "angle_capture_context" << fmt.contextId;
+    return os;
+}
+
+struct FmtReplayFunction
+{
+    FmtReplayFunction(int contextIdIn, uint32_t frameIndexIn)
+        : contextId(contextIdIn), frameIndex(frameIndexIn)
+    {}
+    int contextId;
+    uint32_t frameIndex;
+};
+
+std::ostream &operator<<(std::ostream &os, const FmtReplayFunction &fmt)
+{
+    os << "ReplayContext" << fmt.contextId << "Frame" << fmt.frameIndex << "()";
+    return os;
+}
+
 std::string GetCaptureFileName(int contextId, uint32_t frameIndex, const char *suffix)
 {
     std::stringstream fnameStream;
-    fnameStream << "angle_capture_context" << contextId << "_frame" << std::setfill('0')
-                << std::setw(3) << frameIndex << suffix;
+    fnameStream << FmtCapturePrefix(contextId) << "_frame" << std::setfill('0') << std::setw(3)
+                << frameIndex << suffix;
     return fnameStream.str();
 }
 
@@ -266,12 +294,11 @@ void WriteCppReplayForCall(const CallCapture &call,
 
         if (param.arrayClientPointerIndex != -1)
         {
-            callOut << "gClientArrays[" << param.arrayClientPointerIndex << "].data()";
+            callOut << "gClientArrays[" << param.arrayClientPointerIndex << "]";
         }
         else if (param.readBufferSizeBytes > 0)
         {
-            callOut << "reinterpret_cast<" << ParamTypeToString(param.type)
-                    << ">(gReadBuffer.data())";
+            callOut << "reinterpret_cast<" << ParamTypeToString(param.type) << ">(gReadBuffer)";
         }
         else if (param.data.empty())
         {
@@ -360,109 +387,72 @@ void WriteCppReplayForCall(const CallCapture &call,
     out << callOut.str();
 }
 
-bool AnyClientArray(const gl::AttribArray<size_t> &clientArraySizes)
+size_t MaxClientArraySize(const gl::AttribArray<size_t> &clientArraySizes)
 {
+    size_t found = 0;
     for (size_t size : clientArraySizes)
     {
-        if (size > 0)
-            return true;
+        if (size > found)
+            found = size;
     }
 
-    return false;
+    return found;
 }
+
+struct SaveFileHelper
+{
+    SaveFileHelper(const std::string &filePathIn, std::ios_base::openmode mode = std::ios::out)
+        : ofs(filePathIn, mode), filePath(filePathIn)
+    {
+        if (!ofs.is_open())
+        {
+            FATAL() << "Could not open " << filePathIn;
+        }
+    }
+
+    ~SaveFileHelper() { printf("Saved '%s'.\n", filePath.c_str()); }
+
+    template <typename T>
+    SaveFileHelper &operator<<(const T &value)
+    {
+        ofs << value;
+        if (ofs.bad())
+        {
+            FATAL() << "Error writing to " << filePath;
+        }
+        return *this;
+    }
+
+    std::ofstream ofs;
+    std::string filePath;
+};
 
 void WriteCppReplay(const std::string &outDir,
                     int contextId,
                     uint32_t frameIndex,
-                    const std::vector<CallCapture> &calls,
-                    const gl::AttribArray<size_t> &clientArraySizes,
-                    size_t readBufferSize)
+                    const std::vector<CallCapture> &calls)
 {
-    bool useClientArrays = AnyClientArray(clientArraySizes);
-
-    // Count resource IDs.
-    angle::PackedEnumMap<ResourceIDType, uint32_t, angle::kParamTypeCount> resourceIDCounts = {};
-    for (const CallCapture &call : calls)
-    {
-        for (const ParamCapture &param : call.params.getParamCaptures())
-        {
-            ResourceIDType idType = GetResourceIDTypeFromParamType(param.type);
-            if (idType != ResourceIDType::InvalidEnum)
-            {
-                resourceIDCounts[idType]++;
-            }
-        }
-    }
-
     DataCounters counters;
 
     std::stringstream out;
     std::stringstream header;
     std::vector<uint8_t> binaryData;
 
-    header << "#include \"util/gles_loader_autogen.h\"\n";
-    header << "\n";
-    header << "#include <cstdio>\n";
-    header << "#include <cstring>\n";
-    header << "#include <vector>\n";
-    header << "#include <unordered_map>\n";
+    header << "#include \"" << FmtCapturePrefix(contextId) << ".h\"\n";
+    header << "";
     header << "\n";
     header << "namespace\n";
     header << "{\n";
-    if (readBufferSize > 0)
-    {
-        header << "std::vector<uint8_t> gReadBuffer;\n";
-    }
-    if (useClientArrays)
-    {
-        header << "std::vector<uint8_t> gClientArrays[" << gl::MAX_VERTEX_ATTRIBS << "];\n";
-        header << "void UpdateClientArrayPointer(int arrayIndex, const void *data, GLuint64 size)"
-               << "\n";
-        header << "{\n";
-        header << "    memcpy(gClientArrays[arrayIndex].data(), data, size);\n";
-        header << "}\n";
-    }
 
-    header << "using ResourceMap = std::unordered_map<GLuint, GLuint>;\n";
-    header << "void UpdateResourceMap(ResourceMap *resourceMap, GLuint id, GLsizei "
-              "readBufferOffset)\n";
-    header << "{\n";
-    header << "    GLuint returnedID;\n";
-    header << "    memcpy(&returnedID, &gReadBuffer[readBufferOffset], sizeof(GLuint));\n";
-    header << "    (*resourceMap)[id] = returnedID;\n";
-    header << "}\n";
-    header << "\n";
-    header << "// Resource Maps\n";
-
-    for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
-    {
-        if (resourceIDCounts[resourceType] == 0)
-            continue;
-
-        const char *name = GetResourceIDTypeName(resourceType);
-        header << "ResourceMap g" << name << "Map;\n";
-        header << "void Update" << name << "ID(GLuint id, GLsizei readBufferOffset)\n";
-        header << "{\n";
-        header << "    UpdateResourceMap(&g" << name << "Map, id, readBufferOffset);\n";
-        header << "}\n";
-    }
-
-    out << "void ReplayFrame" << frameIndex << "()\n";
+    out << "void " << FmtReplayFunction(contextId, frameIndex) << "\n";
     out << "{\n";
-    out << "    LoadBinaryData();\n";
 
-    for (size_t arrayIndex = 0; arrayIndex < clientArraySizes.size(); ++arrayIndex)
+    if (!binaryData.empty())
     {
-        if (clientArraySizes[arrayIndex] > 0)
-        {
-            out << "    gClientArrays[" << arrayIndex << "].resize(" << clientArraySizes[arrayIndex]
-                << ");\n";
-        }
-    }
+        std::string binaryDataFileName = GetCaptureFileName(contextId, frameIndex, ".angledata");
 
-    if (readBufferSize > 0)
-    {
-        out << "    gReadBuffer.resize(" << readBufferSize << ");\n";
+        out << "    LoadBinaryData(\"" << binaryDataFileName << "\", "
+            << static_cast<int>(binaryData.size()) << ");\n";
     }
 
     for (const CallCapture &call : calls)
@@ -476,50 +466,184 @@ void WriteCppReplay(const std::string &outDir,
     {
         std::string dataFilepath = GetCaptureFilePath(outDir, contextId, frameIndex, ".angledata");
 
-        FILE *fp = fopen(dataFilepath.c_str(), "wb");
-        if (!fp)
-        {
-            FATAL() << "file " << dataFilepath << " can not be created!: " << strerror(errno);
-        }
-        fwrite(binaryData.data(), 1, binaryData.size(), fp);
-        fclose(fp);
-
-        std::string fname = GetCaptureFileName(contextId, frameIndex, ".angledata");
-        header << "std::vector<uint8_t> gBinaryData;\n";
-        header << "void LoadBinaryData()\n";
-        header << "{\n";
-        header << "    gBinaryData.resize(" << static_cast<int>(binaryData.size()) << ");\n";
-        header << "    FILE *fp = fopen(\"" << fname << "\", \"rb\");\n";
-        header << "    fread(gBinaryData.data(), 1, " << static_cast<int>(binaryData.size())
-               << ", fp);\n";
-        header << "    fclose(fp);\n";
-        header << "}\n";
-    }
-    else
-    {
-        header << "// No binary data.\n";
-        header << "void LoadBinaryData() {}\n";
+        SaveFileHelper saveData(dataFilepath, std::ios::binary);
+        saveData.ofs.write(reinterpret_cast<const char *>(binaryData.data()), binaryData.size());
     }
 
     out << "}\n";
 
     header << "}  // anonymous namespace\n";
 
-    std::string outString    = out.str();
-    std::string headerString = header.str();
-
-    std::string cppFilePath = GetCaptureFilePath(outDir, contextId, frameIndex, ".cpp");
-    FILE *fp                = fopen(cppFilePath.c_str(), "w");
-    if (!fp)
     {
-        FATAL() << "file " << cppFilePath << " can not be created!: " << strerror(errno);
-    }
-    fprintf(fp, "%s\n\n%s", headerString.c_str(), outString.c_str());
-    fclose(fp);
+        std::string outString    = out.str();
+        std::string headerString = header.str();
 
-    printf("Saved '%s'.\n", cppFilePath.c_str());
+        std::string cppFilePath = GetCaptureFilePath(outDir, contextId, frameIndex, ".cpp");
+
+        SaveFileHelper saveCpp(cppFilePath);
+        saveCpp << headerString << "\n\n" << outString;
+    }
 }
-}  // anonymous namespace
+
+void WriteCppReplayIndexFiles(const std::string &outDir,
+                              int contextId,
+                              uint32_t frameStart,
+                              uint32_t frameEnd,
+                              size_t readBufferSize,
+                              const gl::AttribArray<size_t> &clientArraySizes,
+                              const HasResourceTypeMap &hasResourceType)
+{
+    size_t maxClientArraySize = MaxClientArraySize(clientArraySizes);
+
+    std::stringstream header;
+    std::stringstream source;
+
+    header << "#pragma once\n";
+    header << "\n";
+    header << "#include \"util/gles_loader_autogen.h\"\n";
+    header << "\n";
+    header << "#include <cstdint>\n";
+    header << "#include <cstdio>\n";
+    header << "#include <cstring>\n";
+    header << "#include <unordered_map>\n";
+    header << "\n";
+    header << "// Replay functions\n";
+    header << "\n";
+    header << "constexpr uint32_t kReplayFrameStart = " << frameStart << ";\n";
+    header << "constexpr uint32_t kReplayFrameEnd = " << frameEnd << ";\n";
+    header << "\n";
+    header << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex);\n";
+    header << "\n";
+    for (uint32_t frameIndex = frameStart; frameIndex < frameEnd; ++frameIndex)
+    {
+        header << "void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
+    }
+    header << "\n";
+    header << "void LoadBinaryData(const char *fileName, size_t size);\n";
+    header << "\n";
+    header << "// Global state\n";
+    header << "\n";
+    header << "using ResourceMap = std::unordered_map<GLuint, GLuint>;\n";
+    header << "\n";
+    header << "extern uint8_t *gBinaryData;\n";
+
+    source << "#include \"" << FmtCapturePrefix(contextId) << ".h\"\n";
+    source << "\n";
+    source << "namespace\n";
+    source << "{\n";
+    source << "void UpdateResourceMap(ResourceMap *resourceMap, GLuint id, GLsizei "
+              "readBufferOffset)\n";
+    source << "{\n";
+    source << "    GLuint returnedID;\n";
+    source << "    memcpy(&returnedID, &gReadBuffer[readBufferOffset], sizeof(GLuint));\n";
+    source << "    (*resourceMap)[id] = returnedID;\n";
+    source << "}\n";
+    source << "}  // namespace\n";
+    source << "\n";
+    source << "uint8_t *gBinaryData = nullptr;\n";
+
+    if (readBufferSize > 0)
+    {
+        header << "extern uint8_t gReadBuffer[" << readBufferSize << "];\n";
+        source << "uint8_t gReadBuffer[" << readBufferSize << "];\n";
+    }
+    if (maxClientArraySize > 0)
+    {
+        header << "extern uint8_t gClientArrays[" << gl::MAX_VERTEX_ATTRIBS << "]["
+               << maxClientArraySize << "];\n";
+        source << "uint8_t gClientArrays[" << gl::MAX_VERTEX_ATTRIBS << "][" << maxClientArraySize
+               << "];\n";
+    }
+    for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
+    {
+        if (!hasResourceType[resourceType])
+            continue;
+
+        const char *name = GetResourceIDTypeName(resourceType);
+        header << "extern ResourceMap g" << name << "Map;\n";
+        source << "ResourceMap g" << name << "Map;\n";
+    }
+
+    header << "\n";
+
+    source << "\n";
+    source << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex)\n";
+    source << "{\n";
+    source << "    switch (frameIndex)\n";
+    source << "    {\n";
+    for (uint32_t frameIndex = frameStart; frameIndex < frameEnd; ++frameIndex)
+    {
+        source << "        case " << frameIndex << ":\n";
+        source << "            ReplayContext" << contextId << "Frame" << frameIndex << "();\n";
+        source << "            break;\n";
+    }
+    source << "        default:\n";
+    source << "            break;\n";
+    source << "    }\n";
+    source << "}\n";
+    source << "\n";
+    source << "void LoadBinaryData(const char *fileName, size_t size)\n";
+    source << "{\n";
+    source << "    if (gBinaryData != nullptr)\n";
+    source << "    {\n";
+    source << "        delete [] gBinaryData;\n";
+    source << "    }\n";
+    source << "    gBinaryData = new uint8_t[size];\n";
+    source << "    FILE *fp = fopen(fileName, \"rb\");\n";
+    source << "    fread(gBinaryData, 1, size, fp);\n";
+    source << "    fclose(fp);\n";
+    source << "}\n";
+
+    if (maxClientArraySize > 0)
+    {
+        header
+            << "void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size);\n";
+
+        source << "\n";
+        source << "void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size)"
+               << "\n";
+        source << "{\n";
+        source << "    memcpy(gClientArrays[arrayIndex], data, size);\n";
+        source << "}\n";
+    }
+
+    for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
+    {
+        if (!hasResourceType[resourceType])
+            continue;
+        const char *name = GetResourceIDTypeName(resourceType);
+        header << "void Update" << name << "ID(GLuint id, GLsizei readBufferOffset);\n";
+
+        source << "\n";
+        source << "void Update" << name << "ID(GLuint id, GLsizei readBufferOffset)\n";
+        source << "{\n";
+        source << "    UpdateResourceMap(&g" << name << "Map, id, readBufferOffset);\n";
+        source << "}\n";
+    }
+
+    {
+        std::string headerContents = header.str();
+
+        std::stringstream headerPathStream;
+        headerPathStream << outDir << FmtCapturePrefix(contextId) << ".h";
+        std::string headerPath = headerPathStream.str();
+
+        SaveFileHelper saveHeader(headerPath);
+        saveHeader << headerContents;
+    }
+
+    {
+        std::string sourceContents = source.str();
+
+        std::stringstream sourcePathStream;
+        sourcePathStream << outDir << FmtCapturePrefix(contextId) << ".cpp";
+        std::string sourcePath = sourcePathStream.str();
+
+        SaveFileHelper saveSource(sourcePath);
+        saveSource << sourceContents;
+    }
+}  // namespace
+}  // namespace
 
 ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
 
@@ -652,7 +776,14 @@ ReplayContext::ReplayContext(size_t readBufferSizebytes,
 ReplayContext::~ReplayContext() {}
 
 FrameCapture::FrameCapture()
-    : mEnabled(true), mFrameIndex(0), mFrameStart(0), mFrameEnd(10), mReadBufferSize(0)
+    : mEnabled(true),
+      mClientVertexArrayMap{},
+      mFrameIndex(0),
+      mFrameStart(0),
+      mFrameEnd(10),
+      mClientArraySizes{},
+      mReadBufferSize(0),
+      mHasResourceType{}
 {
     reset();
 
@@ -670,6 +801,12 @@ FrameCapture::FrameCapture()
     else
     {
         mOutDirectory = pathFromEnv;
+    }
+
+    // Ensure the capture path ends with a slash.
+    if (mOutDirectory.back() != '\\' && mOutDirectory.back() != '/')
+    {
+        mOutDirectory += '/';
     }
 
     std::string startFromEnv = angle::GetEnvironmentVar(kFrameStartVarName);
@@ -961,10 +1098,30 @@ void FrameCapture::onEndFrame(const gl::Context *context)
 {
     if (!mCalls.empty())
     {
-        WriteCppReplay(mOutDirectory, context->id(), mFrameIndex, mCalls, mClientArraySizes,
-                       mReadBufferSize);
+        WriteCppReplay(mOutDirectory, context->id(), mFrameIndex, mCalls);
+
+        // Count resource IDs.
+        for (const CallCapture &call : mCalls)
+        {
+            for (const ParamCapture &param : call.params.getParamCaptures())
+            {
+                ResourceIDType idType = GetResourceIDTypeFromParamType(param.type);
+                if (idType != ResourceIDType::InvalidEnum)
+                {
+                    mHasResourceType[idType] = true;
+                }
+            }
+        }
+
         reset();
         mFrameIndex++;
+
+        // Save the index files after the last frame.
+        if (mFrameIndex == mFrameEnd + 1)
+        {
+            WriteCppReplayIndexFiles(mOutDirectory, context->id(), mFrameStart, mFrameEnd,
+                                     mReadBufferSize, mClientArraySizes, mHasResourceType);
+        }
     }
 }
 
@@ -1022,8 +1179,10 @@ void FrameCapture::reset()
 {
     mCalls.clear();
     mClientVertexArrayMap.fill(-1);
-    mClientArraySizes.fill(0);
-    mReadBufferSize = 0;
+
+    // Do not reset replay-specific settings like the maximum read buffer size, client array sizes,
+    // or the 'has seen' type map. We could refine this into per-frame and per-capture maximums if
+    // necessary.
 }
 
 std::ostream &operator<<(std::ostream &os, const ParamCapture &capture)

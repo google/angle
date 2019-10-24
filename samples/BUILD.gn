@@ -55,13 +55,21 @@ template("angle_sample") {
   }
 
   angle_executable(target_name) {
+    forward_variables_from(invoker,
+                           [
+                             "sources",
+                             "cflags",
+                           ])
     deps = [
       ":sample_util",
     ]
     if (defined(invoker.data)) {
       deps += [ ":${target_name}_data" ]
     }
-    sources = invoker.sources
+
+    if (defined(invoker.suppressed_configs)) {
+      suppressed_configs += invoker.suppressed_configs
+    }
   }
 }
 
@@ -208,6 +216,31 @@ angle_sample("gles1_draw_texture") {
     "gles1/DrawTexture.cpp",
   ]
 }
+
+template("capture_replay") {
+  angle_sample(target_name) {
+    sources = invoker.sources + [
+                "capture_replay/CaptureReplay.cpp",
+                "capture_replay/angle_capture_context1.cpp",
+                "capture_replay/angle_capture_context1.h",
+              ]
+    suppressed_configs = [ "$angle_root:constructor_and_destructor_warnings" ]
+  }
+}
+
+# The capture_replay sample is set up to work with a single Context.
+# To use the capture replay sample fist move your capture sources into
+# the capture_replay folder. Uncomment and update this target:
+
+# capture_replay("my_sample") {
+#   sources = [
+#     "capture_replay/angle_capture_context1_frame000.cpp",
+#     "capture_replay/angle_capture_context1_frame001.cpp",
+#     "capture_replay/angle_capture_context1_frame002.cpp",
+#     "capture_replay/angle_capture_context1_frame003.cpp",
+#     "capture_replay/angle_capture_context1_frame004.cpp",
+#   ]
+# }
 
 group("all") {
   testonly = true
