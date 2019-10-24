@@ -273,7 +273,6 @@ angle_source_set("angle_system_utils") {
 
 angle_source_set("xxhash") {
   sources = xxhash_sources
-  configs -= [ "${angle_root}:extra_warnings" ]
 }
 
 if (angle_has_build) {
