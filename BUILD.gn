@@ -629,6 +629,14 @@ angle_source_set("libANGLE_base") {
     ":includes",
   ]
 
+  if (is_win) {
+    libs += [
+      "delayimp.lib",
+      "gdi32.lib",
+      "user32.lib",
+    ]
+  }
+
   if (angle_enable_vulkan) {
     public_deps += [ "src/libANGLE/renderer/vulkan:angle_vulkan_backend" ]
   }
