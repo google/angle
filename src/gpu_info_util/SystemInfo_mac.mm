@@ -156,8 +156,8 @@ bool GetPCIDevices(std::vector<GPUDeviceInfo> *devices)
 
 void SetActiveGPUIndex(SystemInfo *info)
 {
-    VendorID activeVendor;
-    DeviceID activeDevice;
+    VendorID activeVendor = 0;
+    DeviceID activeDevice = 0;
 
     uint64_t gpuID = GetGpuIDFromDisplayID(kCGDirectMainDisplay);
 

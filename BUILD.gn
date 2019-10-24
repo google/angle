@@ -137,6 +137,7 @@ config("extra_warnings") {
   }
   if (is_clang) {
     cflags += [
+      "-Wconditional-uninitialized",
       "-Wextra-semi-stmt",
       "-Wfloat-conversion",
       "-Winconsistent-missing-destructor-override",
