@@ -3162,4 +3162,27 @@ void CaptureGenVertexArraysOES_arraysPacked(const Context *context,
     UNIMPLEMENTED();
 }
 
+void CaptureGetTexImageANGLE_pixels(const Context *context,
+                                    bool isCallValid,
+                                    GLenum target,
+                                    GLint level,
+                                    GLenum format,
+                                    GLenum type,
+                                    void *pixels,
+                                    angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetRenderbufferImageANGLE_pixels(const Context *context,
+                                             bool isCallValid,
+                                             GLenum target,
+                                             GLint level,
+                                             GLenum format,
+                                             GLenum type,
+                                             void *pixels,
+                                             angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
 }  // namespace gl

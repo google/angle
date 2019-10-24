@@ -300,6 +300,54 @@ CallCapture CaptureRenderbufferStorageMultisampleANGLE(const Context *context,
     return CallCapture(gl::EntryPoint::RenderbufferStorageMultisampleANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureGetTexImageANGLE(const Context *context,
+                                    bool isCallValid,
+                                    GLenum target,
+                                    GLint level,
+                                    GLenum format,
+                                    GLenum type,
+                                    void *pixels)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLenumGroup::TextureTarget, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("level", ParamType::TGLint, level);
+    paramBuffer.addEnumParam("format", GLenumGroup::PixelFormat, ParamType::TGLenum, format);
+    paramBuffer.addEnumParam("type", GLenumGroup::PixelType, ParamType::TGLenum, type);
+
+    ParamCapture pixelsParam("pixels", ParamType::TvoidPointer);
+    InitParamValue(ParamType::TvoidPointer, pixels, &pixelsParam.value);
+    CaptureGetTexImageANGLE_pixels(context, isCallValid, target, level, format, type, pixels,
+                                   &pixelsParam);
+    paramBuffer.addParam(std::move(pixelsParam));
+
+    return CallCapture(gl::EntryPoint::GetTexImageANGLE, std::move(paramBuffer));
+}
+
+CallCapture CaptureGetRenderbufferImageANGLE(const Context *context,
+                                             bool isCallValid,
+                                             GLenum target,
+                                             GLint level,
+                                             GLenum format,
+                                             GLenum type,
+                                             void *pixels)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLenumGroup::RenderbufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("level", ParamType::TGLint, level);
+    paramBuffer.addEnumParam("format", GLenumGroup::PixelFormat, ParamType::TGLenum, format);
+    paramBuffer.addEnumParam("type", GLenumGroup::PixelType, ParamType::TGLenum, type);
+
+    ParamCapture pixelsParam("pixels", ParamType::TvoidPointer);
+    InitParamValue(ParamType::TvoidPointer, pixels, &pixelsParam.value);
+    CaptureGetRenderbufferImageANGLE_pixels(context, isCallValid, target, level, format, type,
+                                            pixels, &pixelsParam);
+    paramBuffer.addParam(std::move(pixelsParam));
+
+    return CallCapture(gl::EntryPoint::GetRenderbufferImageANGLE, std::move(paramBuffer));
+}
+
 CallCapture CaptureDrawArraysInstancedANGLE(const Context *context,
                                             bool isCallValid,
                                             PrimitiveMode modePacked,

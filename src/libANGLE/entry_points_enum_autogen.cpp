@@ -990,6 +990,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetQueryivEXT";
         case EntryPoint::GetQueryivRobustANGLE:
             return "glGetQueryivRobustANGLE";
+        case EntryPoint::GetRenderbufferImageANGLE:
+            return "glGetRenderbufferImageANGLE";
         case EntryPoint::GetRenderbufferParameteriv:
             return "glGetRenderbufferParameteriv";
         case EntryPoint::GetRenderbufferParameterivOES:
@@ -1058,6 +1060,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetTexGenxvOES";
         case EntryPoint::GetTexImage:
             return "glGetTexImage";
+        case EntryPoint::GetTexImageANGLE:
+            return "glGetTexImageANGLE";
         case EntryPoint::GetTexLevelParameterfv:
             return "glGetTexLevelParameterfv";
         case EntryPoint::GetTexLevelParameterfvANGLE:

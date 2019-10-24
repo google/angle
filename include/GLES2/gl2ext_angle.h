@@ -697,6 +697,16 @@ GL_APICALL void GL_APIENTRY glInvalidateTextureANGLE (GLenum target);
 #endif
 #endif /* GL_ANGLE_texture_external_update */
 
+#ifndef GL_ANGLE_get_image
+#define GL_ANGLE_get_image
+typedef void (GL_APIENTRYP PFNGLGETTEXIMAGEANGLEPROC) (GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
+typedef void (GL_APIENTRYP PFNGLGETRENDERBUFFERIMAGEANGLEPROC) (GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glGetTexImageANGLE (GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
+GL_APICALL void GL_APIENTRY glGetRenderbufferImageANGLE (GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
+#endif
+#endif /* GL_ANGLE_texture_external_update */
+
 // clang-format on
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_

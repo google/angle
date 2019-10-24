@@ -9198,6 +9198,20 @@ void Context::onPostSwap() const
     mFrameCapture->onEndFrame(this);
 }
 
+void Context::getTexImage(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getRenderbufferImage(GLenum target,
+                                   GLint level,
+                                   GLenum format,
+                                   GLenum type,
+                                   void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
 // ErrorSet implementation.
 ErrorSet::ErrorSet(Context *context) : mContext(context) {}
 

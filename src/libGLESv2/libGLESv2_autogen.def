@@ -476,6 +476,10 @@ EXPORTS
     ; GL_ANGLE_framebuffer_multisample
     glRenderbufferStorageMultisampleANGLE
 
+    ; GL_ANGLE_get_image
+    glGetRenderbufferImageANGLE
+    glGetTexImageANGLE
+
     ; GL_ANGLE_instanced_arrays
     glDrawArraysInstancedANGLE
     glDrawElementsInstancedANGLE
@@ -1132,6 +1136,7 @@ EXPORTS
     glGetQueryivContextANGLE
     glGetQueryivEXTContextANGLE
     glGetQueryivRobustANGLEContextANGLE
+    glGetRenderbufferImageANGLEContextANGLE
     glGetRenderbufferParameterivContextANGLE
     glGetRenderbufferParameterivOESContextANGLE
     glGetRenderbufferParameterivRobustANGLEContextANGLE
@@ -1160,6 +1165,7 @@ EXPORTS
     glGetTexGenfvOESContextANGLE
     glGetTexGenivOESContextANGLE
     glGetTexGenxvOESContextANGLE
+    glGetTexImageANGLEContextANGLE
     glGetTexLevelParameterfvContextANGLE
     glGetTexLevelParameterfvANGLEContextANGLE
     glGetTexLevelParameterfvRobustANGLEContextANGLE

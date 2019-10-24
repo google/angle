@@ -2828,6 +2828,19 @@ void GL_APIENTRY glRenderbufferStorageMultisampleANGLE(GLenum target,
     return gl::RenderbufferStorageMultisampleANGLE(target, samples, internalformat, width, height);
 }
 
+// GL_ANGLE_get_image
+void GL_APIENTRY
+glGetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
+{
+    return gl::GetTexImageANGLE(target, level, format, type, pixels);
+}
+
+void GL_APIENTRY
+glGetRenderbufferImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
+{
+    return gl::GetRenderbufferImageANGLE(target, level, format, type, pixels);
+}
+
 // GL_ANGLE_instanced_arrays
 void GL_APIENTRY glDrawArraysInstancedANGLE(GLenum mode,
                                             GLint first,
@@ -10604,6 +10617,26 @@ void GL_APIENTRY glTexImage2DExternalANGLEContextANGLE(GLeglContext ctx,
 void GL_APIENTRY glInvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target)
 {
     return gl::InvalidateTextureANGLEContextANGLE(ctx, target);
+}
+
+void GL_APIENTRY glGetTexImageANGLEContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLint level,
+                                                GLenum format,
+                                                GLenum type,
+                                                void *pixels)
+{
+    return gl::GetTexImageANGLEContextANGLE(ctx, target, level, format, type, pixels);
+}
+
+void GL_APIENTRY glGetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum target,
+                                                         GLint level,
+                                                         GLenum format,
+                                                         GLenum type,
+                                                         void *pixels)
+{
+    return gl::GetRenderbufferImageANGLEContextANGLE(ctx, target, level, format, type, pixels);
 }
 
 }  // extern "C"

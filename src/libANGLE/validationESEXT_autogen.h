@@ -101,6 +101,20 @@ bool ValidateRenderbufferStorageMultisampleANGLE(Context *context,
                                                  GLsizei width,
                                                  GLsizei height);
 
+// GL_ANGLE_get_image
+bool ValidateGetTexImageANGLE(Context *context,
+                              GLenum target,
+                              GLint level,
+                              GLenum format,
+                              GLenum type,
+                              void *pixels);
+bool ValidateGetRenderbufferImageANGLE(Context *context,
+                                       GLenum target,
+                                       GLint level,
+                                       GLenum format,
+                                       GLenum type,
+                                       void *pixels);
+
 // GL_ANGLE_instanced_arrays
 bool ValidateDrawArraysInstancedANGLE(Context *context,
                                       PrimitiveMode modePacked,

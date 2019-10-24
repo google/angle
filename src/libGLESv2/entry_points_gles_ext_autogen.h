@@ -100,6 +100,12 @@ ANGLE_EXPORT void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target,
                                                                   GLsizei width,
                                                                   GLsizei height);
 
+// GL_ANGLE_get_image
+ANGLE_EXPORT void GL_APIENTRY
+GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
+ANGLE_EXPORT void GL_APIENTRY
+GetRenderbufferImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
+
 // GL_ANGLE_instanced_arrays
 ANGLE_EXPORT void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
                                                        GLint first,
@@ -4175,6 +4181,18 @@ ANGLE_EXPORT void GL_APIENTRY TexImage2DExternalANGLEContextANGLE(GLeglContext c
                                                                   GLenum format,
                                                                   GLenum type);
 ANGLE_EXPORT void GL_APIENTRY InvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target);
+ANGLE_EXPORT void GL_APIENTRY GetTexImageANGLEContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLint level,
+                                                           GLenum format,
+                                                           GLenum type,
+                                                           void *pixels);
+ANGLE_EXPORT void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
+                                                                    GLenum target,
+                                                                    GLint level,
+                                                                    GLenum format,
+                                                                    GLenum type,
+                                                                    void *pixels);
 }  // namespace gl
 
 #endif  // LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_

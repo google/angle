@@ -720,6 +720,8 @@ ProcEntry g_procTable[] = {
     {"glGetQueryivEXTContextANGLE", P(gl::GetQueryivEXTContextANGLE)},
     {"glGetQueryivRobustANGLE", P(gl::GetQueryivRobustANGLE)},
     {"glGetQueryivRobustANGLEContextANGLE", P(gl::GetQueryivRobustANGLEContextANGLE)},
+    {"glGetRenderbufferImageANGLE", P(gl::GetRenderbufferImageANGLE)},
+    {"glGetRenderbufferImageANGLEContextANGLE", P(gl::GetRenderbufferImageANGLEContextANGLE)},
     {"glGetRenderbufferParameteriv", P(gl::GetRenderbufferParameteriv)},
     {"glGetRenderbufferParameterivContextANGLE", P(gl::GetRenderbufferParameterivContextANGLE)},
     {"glGetRenderbufferParameterivOES", P(gl::GetRenderbufferParameterivOES)},
@@ -779,6 +781,8 @@ ProcEntry g_procTable[] = {
     {"glGetTexGenivOESContextANGLE", P(gl::GetTexGenivOESContextANGLE)},
     {"glGetTexGenxvOES", P(gl::GetTexGenxvOES)},
     {"glGetTexGenxvOESContextANGLE", P(gl::GetTexGenxvOESContextANGLE)},
+    {"glGetTexImageANGLE", P(gl::GetTexImageANGLE)},
+    {"glGetTexImageANGLEContextANGLE", P(gl::GetTexImageANGLEContextANGLE)},
     {"glGetTexLevelParameterfv", P(gl::GetTexLevelParameterfv)},
     {"glGetTexLevelParameterfvANGLE", P(gl::GetTexLevelParameterfvANGLE)},
     {"glGetTexLevelParameterfvANGLEContextANGLE", P(gl::GetTexLevelParameterfvANGLEContextANGLE)},
@@ -1515,5 +1519,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1416;
+size_t g_numProcs = 1420;
 }  // namespace egl

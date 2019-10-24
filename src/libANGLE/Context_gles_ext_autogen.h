@@ -56,6 +56,10 @@
                           GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLint z,  \
                           GLint width, GLint height, GLint depth, GLboolean unpackFlipY,           \
                           GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);      \
+    /* GL_ANGLE_get_image */                                                                       \
+    void getTexImage(GLenum target, GLint level, GLenum format, GLenum type, void *pixels);        \
+    void getRenderbufferImage(GLenum target, GLint level, GLenum format, GLenum type,              \
+                              void *pixels);                                                       \
     /* GL_ANGLE_program_binary */                                                                  \
     /* GL_ANGLE_request_extension */                                                               \
     void requestExtension(const GLchar *name);                                                     \

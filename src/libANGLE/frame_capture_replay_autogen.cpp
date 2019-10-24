@@ -1502,6 +1502,14 @@ void FrameCapture::ReplayCall(gl::Context *context,
                                  replayContext->getReadBufferPointer<GLint *>(
                                      params.getParam("params", ParamType::TGLintPointer, 2)));
             break;
+        case gl::EntryPoint::GetTexImage:
+            context->getTexImage(params.getParam("target", ParamType::TGLenum, 0).value.GLenumVal,
+                                 params.getParam("level", ParamType::TGLint, 1).value.GLintVal,
+                                 params.getParam("format", ParamType::TGLenum, 2).value.GLenumVal,
+                                 params.getParam("type", ParamType::TGLenum, 3).value.GLenumVal,
+                                 replayContext->getReadBufferPointer<void *>(
+                                     params.getParam("pixels", ParamType::TvoidPointer, 4)));
+            break;
         case gl::EntryPoint::GetTexLevelParameterfv:
             context->getTexLevelParameterfv(
                 params.getParam("targetPacked", ParamType::TTextureTarget, 0)

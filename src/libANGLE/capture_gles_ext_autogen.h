@@ -114,6 +114,22 @@ angle::CallCapture CaptureRenderbufferStorageMultisampleANGLE(const Context *con
                                                               GLsizei width,
                                                               GLsizei height);
 
+// GL_ANGLE_get_image
+angle::CallCapture CaptureGetTexImageANGLE(const Context *context,
+                                           bool isCallValid,
+                                           GLenum target,
+                                           GLint level,
+                                           GLenum format,
+                                           GLenum type,
+                                           void *pixels);
+angle::CallCapture CaptureGetRenderbufferImageANGLE(const Context *context,
+                                                    bool isCallValid,
+                                                    GLenum target,
+                                                    GLint level,
+                                                    GLenum format,
+                                                    GLenum type,
+                                                    void *pixels);
+
 // GL_ANGLE_instanced_arrays
 angle::CallCapture CaptureDrawArraysInstancedANGLE(const Context *context,
                                                    bool isCallValid,
@@ -1884,6 +1900,22 @@ void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseInstances(
     const GLint *baseVertices,
     const GLuint *baseInstances,
     angle::ParamCapture *paramCapture);
+void CaptureGetTexImageANGLE_pixels(const Context *context,
+                                    bool isCallValid,
+                                    GLenum target,
+                                    GLint level,
+                                    GLenum format,
+                                    GLenum type,
+                                    void *pixels,
+                                    angle::ParamCapture *paramCapture);
+void CaptureGetRenderbufferImageANGLE_pixels(const Context *context,
+                                             bool isCallValid,
+                                             GLenum target,
+                                             GLint level,
+                                             GLenum format,
+                                             GLenum type,
+                                             void *pixels,
+                                             angle::ParamCapture *paramCapture);
 void CaptureDrawElementsInstancedANGLE_indices(const Context *context,
                                                bool isCallValid,
                                                PrimitiveMode modePacked,

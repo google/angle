@@ -415,6 +415,7 @@ libangle_sources = [
   "src/libANGLE/validationES3.cpp",
   "src/libANGLE/validationES31.cpp",
   "src/libANGLE/validationES32.cpp",
+  "src/libANGLE/validationESEXT.cpp",
   "src/libANGLE/validationGL1.cpp",
   "src/libANGLE/validationGL2.cpp",
   "src/libANGLE/validationGL3.cpp",

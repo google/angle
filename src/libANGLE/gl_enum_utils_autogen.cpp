@@ -176,7 +176,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_SCISSOR_BIT";
                 case 0x20000000:
                     return "GL_MULTISAMPLE_BIT";
-                case 0xffffffff:
+                case 0xffffffffL:
                     return "GL_ALL_ATTRIB_BITS";
                 default:
                     return kEnumUnknown;
@@ -543,7 +543,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_CLIENT_PIXEL_STORE_BIT";
                 case 0x2:
                     return "GL_CLIENT_VERTEX_ARRAY_BIT";
-                case 0xffffffff:
+                case 0xffffffffL:
                     return "GL_CLIENT_ALL_ATTRIB_BITS";
                 default:
                     return kEnumUnknown;
@@ -4598,7 +4598,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT";
                 case 0x8000:
                     return "GL_QUERY_BUFFER_BARRIER_BIT";
-                case 0xffffffff:
+                case 0xffffffffL:
                     return "GL_ALL_BARRIER_BITS";
                 default:
                     return kEnumUnknown;
@@ -6121,7 +6121,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TESS_EVALUATION_SHADER_BIT";
                 case 0x20:
                     return "GL_COMPUTE_SHADER_BIT";
-                case 0xffffffff:
+                case 0xffffffffL:
                     return "GL_ALL_SHADER_BITS";
                 default:
                     return kEnumUnknown;

@@ -1089,11 +1089,6 @@ void Context::getTexGendv(GLenum coord, GLenum pname, GLdouble *params)
     UNIMPLEMENTED();
 }
 
-void Context::getTexImage(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
-{
-    UNIMPLEMENTED();
-}
-
 void Context::indexMask(GLuint mask)
 {
     UNIMPLEMENTED();
