@@ -139,6 +139,7 @@ config("extra_warnings") {
     cflags += [
       "-Wextra-semi-stmt",
       "-Wfloat-conversion",
+      "-Winconsistent-missing-destructor-override",
       "-Wmissing-field-initializers",
       "-Wnon-virtual-dtor",
       "-Wredundant-parens",

@@ -39,7 +39,7 @@ class CustomStackWalker : public StackWalker
 {
   public:
     CustomStackWalker() {}
-    ~CustomStackWalker() {}
+    ~CustomStackWalker() override {}
 
     void OnCallstackEntry(CallstackEntryType eType, CallstackEntry &entry) override
     {

@@ -52,7 +52,7 @@ class OutputHLSL : public TIntermTraverser
                PerformanceDiagnostics *perfDiagnostics,
                const std::vector<InterfaceBlock> &shaderStorageBlocks);
 
-    ~OutputHLSL();
+    ~OutputHLSL() override;
 
     void output(TIntermNode *treeRoot, TInfoSinkBase &objSink);
 
