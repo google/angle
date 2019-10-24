@@ -296,7 +296,7 @@ VkDevice Context::getDevice() const
 }
 
 // MemoryProperties implementation.
-MemoryProperties::MemoryProperties() : mMemoryProperties{0} {}
+MemoryProperties::MemoryProperties() : mMemoryProperties{} {}
 
 void MemoryProperties::init(VkPhysicalDevice physicalDevice)
 {
@@ -307,7 +307,7 @@ void MemoryProperties::init(VkPhysicalDevice physicalDevice)
 
 void MemoryProperties::destroy()
 {
-    mMemoryProperties = {0};
+    mMemoryProperties = {};
 }
 
 angle::Result MemoryProperties::findCompatibleMemoryIndex(

@@ -203,7 +203,8 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
 {
     // Unpack the packed and split representation into the format required by Vulkan.
     gl::DrawBuffersVector<VkAttachmentReference> colorAttachmentRefs;
-    VkAttachmentReference depthStencilAttachmentRef = {VK_ATTACHMENT_UNUSED};
+    VkAttachmentReference depthStencilAttachmentRef = {VK_ATTACHMENT_UNUSED,
+                                                       VK_IMAGE_LAYOUT_UNDEFINED};
     gl::AttachmentArray<VkAttachmentDescription> attachmentDescs;
 
     uint32_t colorAttachmentCount = 0;

@@ -1375,7 +1375,7 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
         return egl::EglBadParameter() << "Texture's device does not match.";
     }
 
-    D3D11_TEXTURE2D_DESC desc = {0};
+    D3D11_TEXTURE2D_DESC desc = {};
     d3dTexture->GetDesc(&desc);
 
     if (width)
@@ -1497,7 +1497,7 @@ egl::Error Renderer11::validateShareHandle(const egl::Config *config,
                << "Failed to query ID3D11Texture2D object from share handle.";
     }
 
-    D3D11_TEXTURE2D_DESC desc = {0};
+    D3D11_TEXTURE2D_DESC desc = {};
     texture2D->GetDesc(&desc);
     SafeRelease(texture2D);
 
@@ -2131,7 +2131,7 @@ std::string Renderer11::getRendererDescription() const
 DeviceIdentifier Renderer11::getAdapterIdentifier() const
 {
     // Don't use the AdapterLuid here, since that doesn't persist across reboot.
-    DeviceIdentifier deviceIdentifier = {0};
+    DeviceIdentifier deviceIdentifier = {};
     deviceIdentifier.VendorId         = mAdapterDescription.VendorId;
     deviceIdentifier.DeviceId         = mAdapterDescription.DeviceId;
     deviceIdentifier.SubSysId         = mAdapterDescription.SubSysId;
@@ -2865,7 +2865,7 @@ angle::Result Renderer11::loadExecutable(d3d::Context *context,
 
                 for (const auto &streamOutVarying : streamOutVaryings)
                 {
-                    D3D11_SO_DECLARATION_ENTRY entry = {0};
+                    D3D11_SO_DECLARATION_ENTRY entry = {};
                     entry.Stream                     = 0;
                     entry.SemanticName               = streamOutVarying.semanticName.c_str();
                     entry.SemanticIndex              = streamOutVarying.semanticIndex;

@@ -1088,7 +1088,7 @@ angle::Result TextureVk::copyImageDataToStagingBuffer(ContextVk *contextVk,
     const gl::InternalFormat &baseLevelFormat = *desc.format.info;
 
     VkExtent3D updatedExtents;
-    VkOffset3D offset = {0};
+    VkOffset3D offset = {};
     uint32_t layerCount;
     gl_vk::GetExtentsAndLayerCount(mState.getType(), baseLevelExtents, &updatedExtents,
                                    &layerCount);

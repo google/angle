@@ -2926,8 +2926,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 }
 
 // ImageHelper::SubresourceUpdate implementation
-ImageHelper::SubresourceUpdate::SubresourceUpdate()
-    : updateSource(UpdateSource::Buffer), buffer{VK_NULL_HANDLE}
+ImageHelper::SubresourceUpdate::SubresourceUpdate() : updateSource(UpdateSource::Buffer), buffer{}
 {}
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(BufferHelper *bufferHelperIn,

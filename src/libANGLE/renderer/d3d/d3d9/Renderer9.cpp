@@ -404,7 +404,7 @@ egl::Error Renderer9::initializeDevice()
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
 {
-    D3DPRESENT_PARAMETERS presentParameters = {0};
+    D3DPRESENT_PARAMETERS presentParameters = {};
 
     // The default swap chain is never actually used. Surface will create a new swap chain with the
     // proper parameters.
@@ -2350,7 +2350,7 @@ std::string Renderer9::getRendererDescription() const
 
 DeviceIdentifier Renderer9::getAdapterIdentifier() const
 {
-    DeviceIdentifier deviceIdentifier = {0};
+    DeviceIdentifier deviceIdentifier = {};
     deviceIdentifier.VendorId         = static_cast<UINT>(mAdapterIdentifier.VendorId);
     deviceIdentifier.DeviceId         = static_cast<UINT>(mAdapterIdentifier.DeviceId);
     deviceIdentifier.SubSysId         = static_cast<UINT>(mAdapterIdentifier.SubSysId);

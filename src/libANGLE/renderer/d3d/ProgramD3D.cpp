@@ -947,7 +947,7 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
 
     reset();
 
-    DeviceIdentifier binaryDeviceIdentifier = {0};
+    DeviceIdentifier binaryDeviceIdentifier = {};
     stream->readBytes(reinterpret_cast<unsigned char *>(&binaryDeviceIdentifier),
                       sizeof(DeviceIdentifier));
 

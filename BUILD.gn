@@ -139,6 +139,7 @@ config("extra_warnings") {
     cflags += [
       "-Wextra-semi-stmt",
       "-Wfloat-conversion",
+      "-Wmissing-field-initializers",
       "-Wnon-virtual-dtor",
       "-Wshadow-field",
       "-Wtautological-type-limit-compare",

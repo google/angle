@@ -108,12 +108,28 @@ enum ErrorType
 
 struct TokenInfo
 {
+    constexpr TokenInfo()
+        : name(nullptr),
+          condition(GPUTestConfig::kConditionNone),
+          expectation(GPUTestExpectationsParser::kGpuTestPass)
+    {}
+
+    constexpr TokenInfo(const char *nameIn,
+                        GPUTestConfig::Condition conditionIn,
+                        GPUTestExpectationsParser::GPUTestExpectation expectationIn)
+        : name(nameIn), condition(conditionIn), expectation(expectationIn)
+    {}
+
+    constexpr TokenInfo(const char *nameIn, GPUTestConfig::Condition conditionIn)
+        : TokenInfo(nameIn, conditionIn, GPUTestExpectationsParser::kGpuTestPass)
+    {}
+
     const char *name;
     GPUTestConfig::Condition condition;
     GPUTestExpectationsParser::GPUTestExpectation expectation;
 };
 
-const TokenInfo kTokenData[kNumberOfTokens] = {
+constexpr TokenInfo kTokenData[kNumberOfTokens] = {
     {"xp", GPUTestConfig::kConditionWinXP},
     {"vista", GPUTestConfig::kConditionWinVista},
     {"win7", GPUTestConfig::kConditionWin7},
@@ -132,7 +148,7 @@ const TokenInfo kTokenData[kNumberOfTokens] = {
     {"mojave", GPUTestConfig::kConditionMacMojave},
     {"mac", GPUTestConfig::kConditionMac},
     {"linux", GPUTestConfig::kConditionLinux},
-    {"chromeos"},  // (https://anglebug.com/3363) ChromeOS not supported yet
+    {"chromeos", GPUTestConfig::kConditionNone},  // https://anglebug.com/3363 CrOS not supported
     {"android", GPUTestConfig::kConditionAndroid},
     {"nvidia", GPUTestConfig::kConditionNVIDIA},
     {"amd", GPUTestConfig::kConditionAMD},
@@ -154,11 +170,11 @@ const TokenInfo kTokenData[kNumberOfTokens] = {
     {"flaky", GPUTestConfig::kConditionNone, GPUTestExpectationsParser::kGpuTestFlaky},
     {"timeout", GPUTestConfig::kConditionNone, GPUTestExpectationsParser::kGpuTestTimeout},
     {"skip", GPUTestConfig::kConditionNone, GPUTestExpectationsParser::kGpuTestSkip},
-    {":"},  // kSeparatorColon
-    {"="},  // kSeparatorEqual
-    {},     // kNumberOfExactMatchTokens
-    {},     // kTokenComment
-    {},     // kTokenWord
+    {":", GPUTestConfig::kConditionNone},  // kSeparatorColon
+    {"=", GPUTestConfig::kConditionNone},  // kSeparatorEqual
+    {},                                    // kNumberOfExactMatchTokens
+    {},                                    // kTokenComment
+    {},                                    // kTokenWord
 };
 
 const char *kErrorMessage[kNumberOfErrors] = {

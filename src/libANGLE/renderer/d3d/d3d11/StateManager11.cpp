@@ -428,7 +428,7 @@ bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data,
         }
 
         const angle::ColorGeneric &borderColor(samplerState.getBorderColor());
-        constexpr int kBlack[4]          = {0};
+        constexpr int kBlack[4]          = {};
         const void *const intBorderColor = (borderColor.type == angle::ColorGeneric::Type::Float)
                                                ? kBlack
                                                : borderColor.colorI.data();
@@ -644,7 +644,7 @@ angle::Result ShaderConstants11::updateBuffer(const gl::Context *context,
     }
 
     // Previous buffer contents are discarded, so we need to refresh the whole buffer.
-    D3D11_MAPPED_SUBRESOURCE mapping = {0};
+    D3D11_MAPPED_SUBRESOURCE mapping = {};
     ANGLE_TRY(renderer->mapResource(context, driverConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD,
                                     0, &mapping));
 
@@ -3368,7 +3368,7 @@ angle::Result StateManager11::applyDriverUniformsForShader(const gl::Context *co
     {
         size_t requiredSize = mShaderConstants.getRequiredBufferSize(shaderType);
 
-        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        D3D11_BUFFER_DESC constantBufferDescription = {};
         d3d11::InitConstantBufferDesc(&constantBufferDescription, requiredSize);
         ANGLE_TRY(mRenderer->allocateResource(
             GetImplAs<Context11>(context), constantBufferDescription, &shaderDriverConstantBuffer));
@@ -3464,7 +3464,7 @@ angle::Result StateManager11::applyComputeUniforms(const gl::Context *context,
     {
         size_t requiredSize = mShaderConstants.getRequiredBufferSize(gl::ShaderType::Compute);
 
-        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        D3D11_BUFFER_DESC constantBufferDescription = {};
         d3d11::InitConstantBufferDesc(&constantBufferDescription, requiredSize);
         ANGLE_TRY(
             mRenderer->allocateResource(GetImplAs<Context11>(context), constantBufferDescription,

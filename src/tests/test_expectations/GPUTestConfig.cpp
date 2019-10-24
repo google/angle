@@ -36,7 +36,8 @@ inline bool OperatingSystemVersionNumbers(int32_t *majorVersion, int32_t *minorV
     if (sSavedMajorVersion == -1 || sSavedMinorVersion == -1)
     {
 #if defined(ANGLE_PLATFORM_WINDOWS)
-        OSVERSIONINFOEX version_info = {sizeof version_info};
+        OSVERSIONINFOEX version_info     = {};
+        version_info.dwOSVersionInfoSize = sizeof(version_info);
         ::GetVersionEx(reinterpret_cast<OSVERSIONINFO *>(&version_info));
         sSavedMajorVersion = version_info.dwMajorVersion;
         *majorVersion      = sSavedMajorVersion;
