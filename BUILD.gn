@@ -144,6 +144,7 @@ config("extra_warnings") {
       "-Wredundant-parens",
       "-Wshadow-field",
       "-Wtautological-type-limit-compare",
+      "-Wundefined-reinterpret-cast",
       "-Wunneeded-internal-declaration",
 
       # The below warnings are used by WebKit. We enable them to make rolling
