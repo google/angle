@@ -16,6 +16,24 @@
       "revId": "7923e234bc458eda5936b8cb4f09fa19e28c0452",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e31e29f_abbf53b9",
+        "filename": "util/test_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-25T15:40:20Z",
+      "side": 1,
+      "message": "I originally also thought we were importing both the static and shared flavors in one target. Seems to be not the case:\n\n$ gn desc out/Debug/ //src/tests:angle_unittests --tree | grep angle_util\n  //:angle_util_config\n  //:angle_util_loader_config\n    //:angle_util\n      //:angle_util_loader\n        //:angle_util_loader_headers\n      //:angle_util_loader_headers...\n\njmadill@jmadill4-w MINGW64 /c/src/angle (master)\n$ gn desc out/Debug/ //src/tests:angle_unittests --tree | grep static\n\nUnless I\u0027m doing something wrong with gn desc there no trace of the static flavors. I suspect something more subtle is going on with class exports and cfi. I wouldn\u0027t rule out a CFI bug. As I mentioned before the functions all export properly. The class seems to have an issue.\n\nThere\u0027s some pretty deep reasons we split into shared and static. It\u0027s possible we could rectify that somehow. I don\u0027t think the component design maps onto our use case. We had some problems with double-linking static data. ynovikov@ originally discovered that on Android. We also have a static/shared split to distinguish between black box and white box tests.",
+      "parentUuid": "7b64c70b_9a78051b",
+      "revId": "7923e234bc458eda5936b8cb4f09fa19e28c0452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
