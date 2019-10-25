@@ -34,13 +34,14 @@ std::string GetDefaultOutDirectory()
 
     // Linux interface to get application id of the running process
     FILE *cmdline = fopen("/proc/self/cmdline", "r");
+    char applicationId[512];
     if (cmdline)
     {
-        fread(sApplicationId, 1, sizeof(sApplicationId), cmdline);
+        fread(applicationId, 1, sizeof(applicationId), cmdline);
         fclose(cmdline);
 
         // Some package may have application id as <app_name>:<cmd_name>
-        char *colonSep = strchr(sApplicationId, ':');
+        char *colonSep = strchr(applicationId, ':');
         if (colonSep)
         {
             *colonSep = '\0';
@@ -50,7 +51,7 @@ std::string GetDefaultOutDirectory()
     {
         ERR() << "not able to lookup application id";
     }
-    path += std::string(sApplicationId) + "/";
+    path += std::string(applicationId) + "/";
     return path;
 #else
     return std::string("./");
