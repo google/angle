@@ -29,6 +29,10 @@ vars = {
   # Current revision of glslang, the Khronos SPIRV compiler.
   'glslang_revision': 'b131630e7c749a5dc19faa458024260c71fb170f',
 
+  # Current revision of googletest.
+  # Note: this dep cannot be auto-rolled b/c of nesting.
+  'googletest_revision': 'f2fb48c3b3d79a75a88a99fba6576b25d42ec528',
+
   # Current revision fo the SPIRV-Headers Vulkan support library.
   'spirv_headers_revision': '842ec90674627ed2ffef609e3cd79d1562eded01',
 
@@ -98,11 +102,6 @@ deps = {
 
   'third_party/googletest': {
     'url': '{chromium_git}/chromium/src/third_party/googletest@60616473f7d8414aeb7575b487beecc7369fd52f',
-    'condition': 'not build_with_chromium',
-  },
-
-  'third_party/googletest/src': {
-    'url': '{chromium_git}/external/github.com/google/googletest.git@f2fb48c3b3d79a75a88a99fba6576b25d42ec528',
     'condition': 'not build_with_chromium',
   },
 
@@ -359,4 +358,5 @@ hooks = [
 recursedeps = [
   # buildtools provides clang_format.
   'buildtools',
+  'third_party/googletest',
 ]
