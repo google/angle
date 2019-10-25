@@ -138,3 +138,44 @@
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.srgb8_alpha8 = FAIL
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgba = FAIL
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgba4 = FAIL
+
+
+// Fails only with SwiftShader:
+
+// These only fail on Android
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_dynamic_loop_write_static_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_dynamic_loop_write_static_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_dynamic_write_static_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_dynamic_write_static_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_static_loop_write_static_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_static_loop_write_static_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_static_write_dynamic_loop_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_static_write_dynamic_loop_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_static_write_dynamic_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_static_write_dynamic_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_static_write_static_loop_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat2x4_static_write_static_loop_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_dynamic_loop_write_static_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_dynamic_loop_write_static_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_dynamic_write_static_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_dynamic_write_static_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_static_loop_write_static_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_static_loop_write_static_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_static_write_dynamic_loop_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_static_write_dynamic_loop_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_static_write_dynamic_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_static_write_dynamic_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_static_write_static_loop_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat3x4_static_write_static_loop_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_dynamic_loop_write_static_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_dynamic_loop_write_static_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_dynamic_write_static_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_dynamic_write_static_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_loop_write_static_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_loop_write_static_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_dynamic_loop_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_dynamic_loop_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_dynamic_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_dynamic_read_vertex = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_static_loop_read_fragment = FAIL
+4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_static_loop_read_vertex = FAIL

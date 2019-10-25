@@ -574,6 +574,19 @@
 
 // Fails only with SwiftShader:
 
-4037 VULKAN SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.depth_stencil.*stencil8_scale = FAIL
+// These only fail for a 565 config
+4016 SWIFTSHADER : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.27 = FAIL
+4016 SWIFTSHADER : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.80 = FAIL
 
-4013 VULKAN SWIFTSHADER : dEQP-GLES3.functional.fbo.invalidate.*.unbind_blit* = FAIL
+// These only fail on Android
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_pointer.render.nested_structs_arrays.sampler2D_samplerCube_both = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_pointer.render.nested_structs_arrays.sampler2D_samplerCube_fragment = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_pointer.render.nested_structs_arrays.sampler2D_samplerCube_vertex = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_pointer.render.struct_in_array.sampler2D_samplerCube_both = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_pointer.render.struct_in_array.sampler2D_samplerCube_fragment = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_pointer.render.struct_in_array.sampler2D_samplerCube_vertex = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_value.render.nested_structs_arrays.sampler2D_samplerCube_both = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_value.render.nested_structs_arrays.sampler2D_samplerCube_fragment = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_value.render.nested_structs_arrays.sampler2D_samplerCube_vertex = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_value.render.struct_in_array.sampler2D_samplerCube_both = FAIL
+4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_value.render.struct_in_array.sampler2D_samplerCube_fragment = FAIL
