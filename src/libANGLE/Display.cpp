@@ -289,6 +289,11 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
             {
                 impl = rx::CreateVulkanGGPDisplay(state);
             }
+#    elif defined(ANGLE_PLATFORM_APPLE)
+            if (rx::IsVulkanMacDisplayAvailable())
+            {
+                impl = rx::CreateVulkanMacDisplay(state);
+            }
 #    else
 #        error Unsupported Vulkan platform.
 #    endif
@@ -1279,7 +1284,10 @@ static ClientExtensions GenerateClientExtensions()
 #endif
 
 #if defined(ANGLE_ENABLE_VULKAN)
-    extensions.platformANGLEVulkan                = true;
+    extensions.platformANGLEVulkan = true;
+#endif
+
+#if defined(ANGLE_ENABLE_SWIFTSHADER)
     extensions.platformANGLEDeviceTypeSwiftShader = true;
 #endif
 

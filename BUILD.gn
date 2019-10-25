@@ -449,6 +449,10 @@ angle_static_library("translator") {
     defines += [ "ANGLE_ENABLE_METAL" ]
   }
 
+  if (angle_enable_swiftshader) {
+    defines += [ "ANGLE_ENABLE_SWIFTSHADER" ]
+  }
+
   public_configs += [ ":external_config" ]
 
   deps = [
@@ -549,12 +553,14 @@ config("angle_backend_config") {
     defines += [ "ANGLE_ENABLE_NULL" ]
   }
 
+  configs = []
+
   if (angle_enable_metal) {
-    configs = [ "src/libANGLE/renderer/metal:angle_metal_backend_config" ]
+    configs += [ "src/libANGLE/renderer/metal:angle_metal_backend_config" ]
   }
 
   if (angle_enable_vulkan) {
-    configs = [ "src/libANGLE/renderer/vulkan:angle_vulkan_backend_config" ]
+    configs += [ "src/libANGLE/renderer/vulkan:angle_vulkan_backend_config" ]
   }
 }
 

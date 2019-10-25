@@ -97,7 +97,7 @@ ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc)
     }
 #endif
 
-#if (DE_OS == DE_OS_WIN32) || (DE_OS == DE_OS_UNIX)
+#if (DE_OS == DE_OS_WIN32) || (DE_OS == DE_OS_UNIX) || (DE_OS == DE_OS_OSX)
     {
         std::vector<eglw::EGLAttrib> swsAttribs = initAttribs(
             EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE);

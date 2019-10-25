@@ -15,11 +15,6 @@ declare_args() {
 
   # Enable Vulkan GPU trace event capability
   angle_enable_vulkan_gpu_trace_events = false
-
-  # Currently SwiftShader's Vulkan front-end doesn't build on Android.
-  # SwiftShader is not needed on Fuchsia because Vulkan is supported on all
-  # devices that run Fuchsia.
-  angle_swiftshader = !is_android && !is_fuchsia && !is_ggp
 }
 
 _vulkan_backend_sources = [
@@ -147,6 +142,15 @@ if (is_ggp) {
   ]
 }
 
+if (is_mac) {
+  _vulkan_backend_sources += [
+    "mac/DisplayVkMac.mm",
+    "mac/DisplayVkMac.h",
+    "mac/WindowSurfaceVkMac.mm",
+    "mac/WindowSurfaceVkMac.h",
+  ]
+}
+
 config("vulkan_config") {
   _sws_icd = "./libvk_swiftshader_icd.json"
   if (is_win) {
@@ -166,7 +170,7 @@ config("vulkan_config") {
   }
 }
 
-if (angle_swiftshader) {
+if (angle_enable_swiftshader) {
   copy("angle_swiftshader_icd_rename") {
     sources = [
       "$swiftshader_dir/src/Vulkan/vk_swiftshader_icd.json",
@@ -241,6 +245,9 @@ group("angle_vulkan_entry_points") {
 
 config("angle_vulkan_backend_config") {
   defines = [ "ANGLE_ENABLE_VULKAN" ]
+  if (angle_enable_swiftshader) {
+    defines += [ "ANGLE_ENABLE_SWIFTSHADER" ]
+  }
   if (angle_enable_custom_vulkan_cmd_buffers) {
     defines += [ "ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS=1" ]
   }
@@ -288,7 +295,7 @@ angle_source_set("angle_vulkan_backend") {
     }
   }
 
-  if (angle_swiftshader) {
+  if (angle_enable_swiftshader) {
     data_deps += [
       ":angle_swiftshader_icd",
       "$swiftshader_dir/src/Vulkan:swiftshader_libvulkan",

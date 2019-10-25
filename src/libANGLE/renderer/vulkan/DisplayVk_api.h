@@ -38,6 +38,11 @@ DisplayImpl *CreateVulkanFuchsiaDisplay(const egl::DisplayState &state);
 bool IsVulkanGGPDisplayAvailable();
 DisplayImpl *CreateVulkanGGPDisplay(const egl::DisplayState &state);
 #endif  // defined(ANGLE_PLATFORM_GGP)
+
+#if defined(ANGLE_PLATFORM_APPLE)
+bool IsVulkanMacDisplayAvailable();
+DisplayImpl *CreateVulkanMacDisplay(const egl::DisplayState &state);
+#endif  // defined(ANGLE_PLATFORM_APPLE)
 }  // namespace rx
 
 #endif /* LIBANGLE_RENDERER_VULKAN_DISPLAYVK_API_H_ */
