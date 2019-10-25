@@ -106,9 +106,6 @@
 // Flaky on Win7 D3D11 NVIDIA
 4070 WIN7 D3D11 NVIDIA : dEQP-GLES3.functional.rasterization.flatshading.triangles = FAIL
 
-// Failing everywhere
-2322 : dEQP-GLES3.functional.shaders.metamorphic.* = FAIL
-
 // Vertex attribute aliasing is not supported on D3D
 3467 D3D9 : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
 3467 D3D9 : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
@@ -520,6 +517,7 @@
 3308 NEXUS5X GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.lines.3 = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.triangles.8 = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.triangles.10 = FAIL
+2322 NEXUS5X GLES : dEQP-GLES3.functional.shaders.metamorphic.* = SKIP
 
 // Seems to fail on all desktop GL
 2960 OPENGL : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8 = FAIL

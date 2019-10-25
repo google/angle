@@ -117,6 +117,8 @@ generators = {
         'src/libANGLE/renderer/metal/gen_mtl_format_table.py',
     'Metal default shaders':
         'src/libANGLE/renderer/metal/shaders/gen_mtl_internal_shaders.py',
+    'GL CTS (dEQP) build files':
+        'scripts/gen_vk_gl_cts_build.py',
 }
 
 
