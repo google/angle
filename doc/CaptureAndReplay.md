@@ -46,7 +46,7 @@ $ ANGLE_CAPTURE_FRAME_END=4 ANGLE_CAPTURE_OUT_DIR=samples/capture_replay out/Deb
 ## Running a CPP replay
 
 To run a CPP replay you can use a template located in
-[samples/capture_and_replay](../samples/capture_and_replay). Update
+[samples/capture_replay](../samples/capture_replay). Update
 [samples/BUILD.gn](../samples/BUILD.gn) to enable the `capture_replay` sample to include your replay:
 
 ```
