@@ -727,7 +727,7 @@ egl::Error Renderer11::initializeD3DDevice()
 #if !defined(ANGLE_ENABLE_WINDOWS_UWP)
         PFN_D3D11_CREATE_DEVICE D3D11CreateDevice         = nullptr;
         PFN_D3D12_CREATE_DEVICE D3D12CreateDevice         = nullptr;
-        PFN_D3D11ON12_CREATE_DEVICE D3D11on12CreateDevice = nullptr;
+        PFN_D3D11ON12_CREATE_DEVICE D3D11On12CreateDevice = nullptr;
         {
             ANGLE_TRACE_EVENT0("gpu.angle", "Renderer11::initialize (Load DLLs)");
             mDxgiModule  = LoadLibrary(TEXT("dxgi.dll"));
@@ -758,9 +758,9 @@ egl::Error Renderer11::initializeD3DDevice()
                            << "Could not retrieve D3D12CreateDevice address.";
                 }
 
-                D3D11on12CreateDevice = reinterpret_cast<PFN_D3D11ON12_CREATE_DEVICE>(
+                D3D11On12CreateDevice = reinterpret_cast<PFN_D3D11ON12_CREATE_DEVICE>(
                     GetProcAddress(mD3d11Module, "D3D11On12CreateDevice"));
-                if (D3D11on12CreateDevice == nullptr)
+                if (D3D11On12CreateDevice == nullptr)
                 {
                     return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
                            << "Could not retrieve D3D11On12CreateDevice address.";
@@ -791,7 +791,7 @@ egl::Error Renderer11::initializeD3DDevice()
             ANGLE_TRACE_EVENT0("gpu.angle", "D3D11CreateDevice (Debug)");
             if (createD3D11on12Device)
             {
-                result = callD3D11On12CreateDevice(D3D12CreateDevice, D3D11on12CreateDevice, true);
+                result = callD3D11On12CreateDevice(D3D12CreateDevice, D3D11On12CreateDevice, true);
             }
             else
             {
@@ -808,7 +808,7 @@ egl::Error Renderer11::initializeD3DDevice()
                 if (createD3D11on12Device)
                 {
                     result =
-                        callD3D11On12CreateDevice(D3D12CreateDevice, D3D11on12CreateDevice, true);
+                        callD3D11On12CreateDevice(D3D12CreateDevice, D3D11On12CreateDevice, true);
                 }
                 else
                 {
@@ -827,7 +827,7 @@ egl::Error Renderer11::initializeD3DDevice()
             ANGLE_TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
             if (createD3D11on12Device)
             {
-                result = callD3D11On12CreateDevice(D3D12CreateDevice, D3D11on12CreateDevice, false);
+                result = callD3D11On12CreateDevice(D3D12CreateDevice, D3D11On12CreateDevice, false);
             }
             else
             {
@@ -844,7 +844,7 @@ egl::Error Renderer11::initializeD3DDevice()
                 if (createD3D11on12Device)
                 {
                     result =
-                        callD3D11On12CreateDevice(D3D12CreateDevice, D3D11on12CreateDevice, false);
+                        callD3D11On12CreateDevice(D3D12CreateDevice, D3D11On12CreateDevice, false);
                 }
                 else
                 {
