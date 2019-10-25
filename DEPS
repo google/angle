@@ -21,7 +21,7 @@ vars = {
   'checkout_src_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '9325340209749c1ff4eb198a8f7176c0a16dea6d',
+  'chromium_revision': '60074bf9e0d443e5ef8e2c78694ce71bf419de3f',
 
   # Current revision of dEQP.
   'deqp_revision': 'd3eef28e67ce6795ba3a2124aaa977819729d45f',
@@ -51,7 +51,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@592281c03c6bea25793f116bb442ec2dae991429',
+    'url': '{chromium_git}/chromium/src/build.git@a193dcc6972da816f06d8e3ea82ee9181e398b21',
     'condition': 'not build_with_chromium',
   },
 
@@ -61,7 +61,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@6752fa027a3f042ec12afc5cdae0fb093376aaf0',
+    'url': '{chromium_git}/chromium/src/testing@f712af4fd9133068c6d9244cd87fca28979695c0',
     'condition': 'not build_with_chromium',
   },
 
@@ -97,7 +97,7 @@ deps = {
   },
 
   'third_party/googletest': {
-    'url': '{chromium_git}/chromium/src/third_party/googletest@c721b68ddecc18bbc6b763b2fe8ab802c22f228a',
+    'url': '{chromium_git}/chromium/src/third_party/googletest@60616473f7d8414aeb7575b487beecc7369fd52f',
     'condition': 'not build_with_chromium',
   },
 
@@ -108,7 +108,7 @@ deps = {
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@9d3bf3e9680156c48041c8b90fece504e3539a61',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@bc13578529255ec75005ffc98aae151666122892',
     'condition': 'not build_with_chromium',
   },
 
@@ -118,7 +118,7 @@ deps = {
   },
 
   'third_party/jsoncpp': {
-    'url': '{chromium_git}/chromium/src/third_party/jsoncpp@48246a099549ab325c01f69f24a34fc72e5c42e4',
+    'url': '{chromium_git}/chromium/src/third_party/jsoncpp@571788934b5ee8643d53e5d054534abbe6006168',
     'condition': 'not build_with_chromium',
    },
 
@@ -200,12 +200,12 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@ddebad26cfadeb4ecdfe3da8beb396a85cf90c91',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@403ca5ad3a324530113a89a20fcabcea92242721',
     'condition': 'not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@6bc727d9d80f2c3a97587676bb38c5472afe7e60',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@662cbb8d60f813b110f637f38adf60d9b2c57418',
     'condition': 'not build_with_chromium',
   },
 
