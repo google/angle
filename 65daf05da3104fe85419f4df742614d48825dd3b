@@ -34,6 +34,24 @@
       "revId": "65daf05da3104fe85419f4df742614d48825dd3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9d3268e_40b9981b",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-10-25T20:36:02Z",
+      "side": 1,
+      "message": "Ah, right, I see. Maybe worth adding a helper ANGLE_GL_PROGRAM_WITH_PRELINK macro that exposes the pre-link callback at the macro level through GLProgram? Just a suggestion - may simplify other tests too.",
+      "parentUuid": "3b704dc5_fe0a38a1",
+      "revId": "65daf05da3104fe85419f4df742614d48825dd3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
