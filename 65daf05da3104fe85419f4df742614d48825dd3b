@@ -52,6 +52,24 @@
       "revId": "65daf05da3104fe85419f4df742614d48825dd3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e09e31c_b6cabee6",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-10-26T00:56:51Z",
+      "side": 1,
+      "message": "Sound good. Filed http://anglebug.com/4055",
+      "parentUuid": "f9d3268e_40b9981b",
+      "revId": "65daf05da3104fe85419f4df742614d48825dd3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
