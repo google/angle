@@ -360,25 +360,27 @@ GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *p
 
     if (context)
     {
+        TextureTarget targetPacked                    = FromGL<TextureTarget>(target);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetTexImageANGLE(context, target, level, format, type, pixels));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTexImageANGLE(context, targetPacked, level, format, type, pixels));
         if (isCallValid)
         {
-            context->getTexImage(target, level, format, type, pixels);
+            context->getTexImage(targetPacked, level, format, type, pixels);
         }
-        ANGLE_CAPTURE(GetTexImageANGLE, isCallValid, context, target, level, format, type, pixels);
+        ANGLE_CAPTURE(GetTexImageANGLE, isCallValid, context, targetPacked, level, format, type,
+                      pixels);
     }
 }
 
-void GL_APIENTRY
-GetRenderbufferImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
+void GL_APIENTRY GetRenderbufferImageANGLE(GLenum target, GLenum format, GLenum type, void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT("glGetRenderbufferImageANGLE",
-          "context = %d, GLenum target = %s, GLint level = %d, GLenum format = %s, GLenum type = "
-          "%s, void *pixels = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target), level,
+          "context = %d, GLenum target = %s, GLenum format = %s, GLenum type = %s, void *pixels = "
+          "0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target),
           GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
@@ -387,12 +389,12 @@ GetRenderbufferImageANGLE(GLenum target, GLint level, GLenum format, GLenum type
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetRenderbufferImageANGLE(context, target, level, format, type, pixels));
+             ValidateGetRenderbufferImageANGLE(context, target, format, type, pixels));
         if (isCallValid)
         {
-            context->getRenderbufferImage(target, level, format, type, pixels);
+            context->getRenderbufferImage(target, format, type, pixels);
         }
-        ANGLE_CAPTURE(GetRenderbufferImageANGLE, isCallValid, context, target, level, format, type,
+        ANGLE_CAPTURE(GetRenderbufferImageANGLE, isCallValid, context, target, format, type,
                       pixels);
     }
 }
@@ -26348,29 +26350,31 @@ void GL_APIENTRY GetTexImageANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        TextureTarget targetPacked                    = FromGL<TextureTarget>(target);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetTexImageANGLE(context, target, level, format, type, pixels));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTexImageANGLE(context, targetPacked, level, format, type, pixels));
         if (isCallValid)
         {
-            context->getTexImage(target, level, format, type, pixels);
+            context->getTexImage(targetPacked, level, format, type, pixels);
         }
-        ANGLE_CAPTURE(GetTexImageANGLE, isCallValid, context, target, level, format, type, pixels);
+        ANGLE_CAPTURE(GetTexImageANGLE, isCallValid, context, targetPacked, level, format, type,
+                      pixels);
     }
 }
 
 void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
                                                        GLenum target,
-                                                       GLint level,
                                                        GLenum format,
                                                        GLenum type,
                                                        void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT("glGetRenderbufferImageANGLE",
-          "context = %d, GLenum target = %s, GLint level = %d, GLenum format = %s, GLenum type = "
-          "%s, void *pixels = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target), level,
+          "context = %d, GLenum target = %s, GLenum format = %s, GLenum type = %s, void *pixels = "
+          "0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target),
           GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
@@ -26380,12 +26384,12 @@ void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetRenderbufferImageANGLE(context, target, level, format, type, pixels));
+             ValidateGetRenderbufferImageANGLE(context, target, format, type, pixels));
         if (isCallValid)
         {
-            context->getRenderbufferImage(target, level, format, type, pixels);
+            context->getRenderbufferImage(target, format, type, pixels);
         }
-        ANGLE_CAPTURE(GetRenderbufferImageANGLE, isCallValid, context, target, level, format, type,
+        ANGLE_CAPTURE(GetRenderbufferImageANGLE, isCallValid, context, target, format, type,
                       pixels);
     }
 }

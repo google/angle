@@ -103,8 +103,10 @@ ANGLE_EXPORT void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target,
 // GL_ANGLE_get_image
 ANGLE_EXPORT void GL_APIENTRY
 GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
-ANGLE_EXPORT void GL_APIENTRY
-GetRenderbufferImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
+ANGLE_EXPORT void GL_APIENTRY GetRenderbufferImageANGLE(GLenum target,
+                                                        GLenum format,
+                                                        GLenum type,
+                                                        void *pixels);
 
 // GL_ANGLE_instanced_arrays
 ANGLE_EXPORT void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
@@ -4189,7 +4191,6 @@ ANGLE_EXPORT void GL_APIENTRY GetTexImageANGLEContextANGLE(GLeglContext ctx,
                                                            void *pixels);
 ANGLE_EXPORT void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
                                                                     GLenum target,
-                                                                    GLint level,
                                                                     GLenum format,
                                                                     GLenum type,
                                                                     void *pixels);

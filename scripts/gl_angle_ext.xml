@@ -973,7 +973,6 @@
         <command>
             <proto>void <name>glGetRenderbufferImageANGLE</name></proto>
             <param group="RenderbufferTarget"><ptype>GLenum</ptype> <name>target</name></param>
-            <param group="CheckedInt32"><ptype>GLint</ptype> <name>level</name></param>
             <param group="PixelFormat"><ptype>GLenum</ptype> <name>format</name></param>
             <param group="PixelType"><ptype>GLenum</ptype> <name>type</name></param>
             <param len="COMPSIZE(target,level,format,type)">void *<name>pixels</name></param>

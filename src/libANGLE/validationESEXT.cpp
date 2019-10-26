@@ -12,7 +12,7 @@
 namespace gl
 {
 bool ValidateGetTexImageANGLE(Context *context,
-                              GLenum target,
+                              TextureTarget target,
                               GLint level,
                               GLenum format,
                               GLenum type,
@@ -22,7 +22,6 @@ bool ValidateGetTexImageANGLE(Context *context,
 }
 bool ValidateGetRenderbufferImageANGLE(Context *context,
                                        GLenum target,
-                                       GLint level,
                                        GLenum format,
                                        GLenum type,
                                        void *pixels)

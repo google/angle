@@ -103,14 +103,13 @@ bool ValidateRenderbufferStorageMultisampleANGLE(Context *context,
 
 // GL_ANGLE_get_image
 bool ValidateGetTexImageANGLE(Context *context,
-                              GLenum target,
+                              TextureTarget targetPacked,
                               GLint level,
                               GLenum format,
                               GLenum type,
                               void *pixels);
 bool ValidateGetRenderbufferImageANGLE(Context *context,
                                        GLenum target,
-                                       GLint level,
                                        GLenum format,
                                        GLenum type,
                                        void *pixels);

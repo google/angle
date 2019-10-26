@@ -2105,14 +2105,16 @@ void GL_APIENTRY GetTexImage(GLenum target, GLint level, GLenum format, GLenum t
 
     if (context)
     {
+        TextureTarget targetPacked                    = FromGL<TextureTarget>(target);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateGetTexImage(context, target, level, format, type, pixels));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTexImage(context, targetPacked, level, format, type, pixels));
         if (isCallValid)
         {
-            context->getTexImage(target, level, format, type, pixels);
+            context->getTexImage(targetPacked, level, format, type, pixels);
         }
-        ANGLE_CAPTURE(GetTexImage, isCallValid, context, target, level, format, type, pixels);
+        ANGLE_CAPTURE(GetTexImage, isCallValid, context, targetPacked, level, format, type, pixels);
     }
 }
 

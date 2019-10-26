@@ -86,8 +86,8 @@ Additions to the OpenGL ES Specification
     void GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type,
                           void *pixels);
 
-    void GetRenderbufferImageANGLE(GLenum target, GLint level, GLenum format,
-                                   GLenum type, void *pixels);
+    void GetRenderbufferImageANGLE(GLenum target, GLenum format, GLenum type,
+                                   void *pixels);
 
     For GetTexImageANGLE, <target> specifies the target to which the texture
     object is bound. target must be one of TEXTURE_2D, TEXTURE_3D,
@@ -172,7 +172,7 @@ Additions to the OpenGL ES Specification
     An INVALID_OPERATION error is generated if a pixel pack buffer object
     is bound and <pixels> is not evenly divisible by the number of basic machine
     units needed to store in memory the GL data type corresponding to type (see
-    table 8.2).
+    table 8.4).
 
 Dependencies on ARB_texture_rectangle
 

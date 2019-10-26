@@ -2835,10 +2835,12 @@ glGetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void 
     return gl::GetTexImageANGLE(target, level, format, type, pixels);
 }
 
-void GL_APIENTRY
-glGetRenderbufferImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
+void GL_APIENTRY glGetRenderbufferImageANGLE(GLenum target,
+                                             GLenum format,
+                                             GLenum type,
+                                             void *pixels)
 {
-    return gl::GetRenderbufferImageANGLE(target, level, format, type, pixels);
+    return gl::GetRenderbufferImageANGLE(target, format, type, pixels);
 }
 
 // GL_ANGLE_instanced_arrays
@@ -10631,12 +10633,11 @@ void GL_APIENTRY glGetTexImageANGLEContextANGLE(GLeglContext ctx,
 
 void GL_APIENTRY glGetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
                                                          GLenum target,
-                                                         GLint level,
                                                          GLenum format,
                                                          GLenum type,
                                                          void *pixels)
 {
-    return gl::GetRenderbufferImageANGLEContextANGLE(ctx, target, level, format, type, pixels);
+    return gl::GetRenderbufferImageANGLEContextANGLE(ctx, target, format, type, pixels);
 }
 
 }  // extern "C"
