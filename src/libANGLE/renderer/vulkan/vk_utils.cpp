@@ -563,43 +563,68 @@ PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR     = nullpt
 // VK_KHR_external_semaphore_fd
 PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR = nullptr;
 
+// VK_EXT_transform_feedback
+PFN_vkCmdBindTransformFeedbackBuffersEXT vkCmdBindTransformFeedbackBuffersEXT = nullptr;
+PFN_vkCmdBeginTransformFeedbackEXT vkCmdBeginTransformFeedbackEXT             = nullptr;
+PFN_vkCmdEndTransformFeedbackEXT vkCmdEndTransformFeedbackEXT                 = nullptr;
+PFN_vkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXT                       = nullptr;
+PFN_vkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXT                           = nullptr;
+PFN_vkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXT               = nullptr;
+
 #if defined(ANGLE_PLATFORM_FUCHSIA)
 // VK_FUCHSIA_imagepipe_surface
 PFN_vkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIA = nullptr;
 #endif
 
-#define GET_FUNC(vkName)                                                                   \
+#define GET_INSTANCE_FUNC(vkName)                                                          \
     do                                                                                     \
     {                                                                                      \
         vkName = reinterpret_cast<PFN_##vkName>(vkGetInstanceProcAddr(instance, #vkName)); \
         ASSERT(vkName);                                                                    \
     } while (0)
 
+#define GET_DEVICE_FUNC(vkName)                                                        \
+    do                                                                                 \
+    {                                                                                  \
+        vkName = reinterpret_cast<PFN_##vkName>(vkGetDeviceProcAddr(device, #vkName)); \
+        ASSERT(vkName);                                                                \
+    } while (0)
+
 void InitDebugUtilsEXTFunctions(VkInstance instance)
 {
-    GET_FUNC(vkCreateDebugUtilsMessengerEXT);
-    GET_FUNC(vkDestroyDebugUtilsMessengerEXT);
-    GET_FUNC(vkCmdBeginDebugUtilsLabelEXT);
-    GET_FUNC(vkCmdEndDebugUtilsLabelEXT);
-    GET_FUNC(vkCmdInsertDebugUtilsLabelEXT);
+    GET_INSTANCE_FUNC(vkCreateDebugUtilsMessengerEXT);
+    GET_INSTANCE_FUNC(vkDestroyDebugUtilsMessengerEXT);
+    GET_INSTANCE_FUNC(vkCmdBeginDebugUtilsLabelEXT);
+    GET_INSTANCE_FUNC(vkCmdEndDebugUtilsLabelEXT);
+    GET_INSTANCE_FUNC(vkCmdInsertDebugUtilsLabelEXT);
 }
 
 void InitDebugReportEXTFunctions(VkInstance instance)
 {
-    GET_FUNC(vkCreateDebugReportCallbackEXT);
-    GET_FUNC(vkDestroyDebugReportCallbackEXT);
+    GET_INSTANCE_FUNC(vkCreateDebugReportCallbackEXT);
+    GET_INSTANCE_FUNC(vkDestroyDebugReportCallbackEXT);
 }
 
 void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance)
 {
-    GET_FUNC(vkGetPhysicalDeviceProperties2KHR);
-    GET_FUNC(vkGetPhysicalDeviceFeatures2KHR);
+    GET_INSTANCE_FUNC(vkGetPhysicalDeviceProperties2KHR);
+    GET_INSTANCE_FUNC(vkGetPhysicalDeviceFeatures2KHR);
+}
+
+void InitTransformFeedbackEXTFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCmdBindTransformFeedbackBuffersEXT);
+    GET_DEVICE_FUNC(vkCmdBeginTransformFeedbackEXT);
+    GET_DEVICE_FUNC(vkCmdEndTransformFeedbackEXT);
+    GET_DEVICE_FUNC(vkCmdBeginQueryIndexedEXT);
+    GET_DEVICE_FUNC(vkCmdEndQueryIndexedEXT);
+    GET_DEVICE_FUNC(vkCmdDrawIndirectByteCountEXT);
 }
 
 #if defined(ANGLE_PLATFORM_FUCHSIA)
 void InitImagePipeSurfaceFUCHSIAFunctions(VkInstance instance)
 {
-    GET_FUNC(vkCreateImagePipeSurfaceFUCHSIA);
+    GET_INSTANCE_FUNC(vkCreateImagePipeSurfaceFUCHSIA);
 }
 #endif
 
@@ -609,8 +634,8 @@ PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferProper
 PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID = nullptr;
 void InitExternalMemoryHardwareBufferANDROIDFunctions(VkInstance instance)
 {
-    GET_FUNC(vkGetAndroidHardwareBufferPropertiesANDROID);
-    GET_FUNC(vkGetMemoryAndroidHardwareBufferANDROID);
+    GET_INSTANCE_FUNC(vkGetAndroidHardwareBufferPropertiesANDROID);
+    GET_INSTANCE_FUNC(vkGetMemoryAndroidHardwareBufferANDROID);
 }
 #endif
 
@@ -625,10 +650,11 @@ void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance)
 
 void InitExternalSemaphoreFdFunctions(VkInstance instance)
 {
-    GET_FUNC(vkImportSemaphoreFdKHR);
+    GET_INSTANCE_FUNC(vkImportSemaphoreFdKHR);
 }
 
-#undef GET_FUNC
+#undef GET_INSTANCE_FUNC
+#undef GET_DEVICE_FUNC
 
 namespace gl_vk
 {

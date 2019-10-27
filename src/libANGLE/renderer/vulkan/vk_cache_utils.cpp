@@ -813,6 +813,13 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         *pNextPtr                                = &provokingVertexState;
         pNextPtr                                 = &provokingVertexState.pNext;
     }
+    VkPipelineRasterizationStateStreamCreateInfoEXT rasterStreamState = {};
+    rasterStreamState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT;
+    if (contextVk->getFeatures().supportsTransformFeedbackExtension.enabled)
+    {
+        rasterStreamState.rasterizationStream = 0;
+        rasterState.pNext                     = &rasterLineState;
+    }
 
     // Multisample state.
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;

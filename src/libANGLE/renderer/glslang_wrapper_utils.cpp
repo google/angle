@@ -45,23 +45,25 @@ namespace rx
 {
 namespace
 {
-constexpr char kMarkerStart[]               = "@@ ";
-constexpr char kQualifierMarkerBegin[]      = "@@ QUALIFIER-";
-constexpr char kLayoutMarkerBegin[]         = "@@ LAYOUT-";
-constexpr char kXfbDeclMarkerBegin[]        = "@@ XFB-DECL";
-constexpr char kXfbOutMarkerBegin[]         = "@@ XFB-OUT";
-constexpr char kMarkerEnd[]                 = " @@";
-constexpr char kParamsBegin                 = '(';
-constexpr char kParamsEnd                   = ')';
-constexpr char kUniformQualifier[]          = "uniform";
-constexpr char kSSBOQualifier[]             = "buffer";
-constexpr char kUnusedBlockSubstitution[]   = "struct";
-constexpr char kUnusedUniformSubstitution[] = "// ";
-constexpr char kVersionDefine[]             = "#version 450 core\n";
-constexpr char kLineRasterDefine[]          = R"(#version 450 core
+constexpr char kMarkerStart[]                      = "@@ ";
+constexpr char kQualifierMarkerBegin[]             = "@@ QUALIFIER-";
+constexpr char kLayoutMarkerBegin[]                = "@@ LAYOUT-";
+constexpr char kXfbDeclMarkerBegin[]               = "@@ XFB-DECL";
+constexpr char kXfbOutMarkerBegin[]                = "@@ XFB-OUT";
+constexpr char kMarkerEnd[]                        = " @@";
+constexpr char kParamsBegin                        = '(';
+constexpr char kParamsEnd                          = ')';
+constexpr char kUniformQualifier[]                 = "uniform";
+constexpr char kSSBOQualifier[]                    = "buffer";
+constexpr char kUnusedBlockSubstitution[]          = "struct";
+constexpr char kUnusedUniformSubstitution[]        = "// ";
+constexpr char kVersionDefine[]                    = "#version 450 core\n";
+constexpr char kLineRasterDefine[]                 = R"(#version 450 core
 
 #define ANGLE_ENABLE_LINE_SEGMENT_RASTERIZATION
 )";
+constexpr uint32_t kANGLEPositionLocationOffset    = 1;
+constexpr uint32_t kXfbANGLEPositionLocationOffset = 2;
 
 template <size_t N>
 constexpr size_t ConstStrLen(const char (&)[N])
@@ -105,6 +107,24 @@ void GetBuiltInResourcesFromCaps(const gl::Caps &caps, TBuiltInResource *outBuil
     outBuiltInResources->maxVertexOutputComponents        = caps.maxVertexOutputComponents;
     outBuiltInResources->maxVertexUniformVectors          = caps.maxVertexUniformVectors;
 }
+
+// Information used for Xfb layout qualifier
+struct XFBBufferInfo
+{
+    GLuint index;
+    GLuint offset;
+    GLuint stride;
+};
+
+struct VaryingNameEquals
+{
+    VaryingNameEquals(const std::string &name_) : name(name_) {}
+    bool operator()(const gl::TransformFeedbackVarying &var) const { return var.name == name; }
+
+    std::string name;
+};
+
+using XfbBufferMap = std::map<std::string, XFBBufferInfo>;
 
 class IntermediateShaderSource final : angle::NonCopyable
 {
@@ -464,9 +484,9 @@ std::string GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVa
     return result.str();
 }
 
-void GenerateTransformFeedbackOutputs(const GlslangSourceOptions &options,
-                                      const gl::ProgramState &programState,
-                                      IntermediateShaderSource *vertexShader)
+void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &options,
+                                               const gl::ProgramState &programState,
+                                               IntermediateShaderSource *vertexShader)
 {
     const std::vector<gl::TransformFeedbackVarying> &varyings =
         programState.getLinkedTransformFeedbackVaryings();
@@ -511,6 +531,142 @@ void GenerateTransformFeedbackOutputs(const GlslangSourceOptions &options,
     xfbOut += "}\n";
 
     vertexShader->insertTransformFeedbackDeclaration(std::move(xfbDecl));
+    vertexShader->insertTransformFeedbackOutput(std::move(xfbOut));
+}
+
+// Calculates XFB layout quaifier arguments for each tranform feedback varyings, inserts
+// layout quailifier for built-in varyings here and gathers calculated arguments for non built-in
+// varyings for later use.
+void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programState,
+                                               IntermediateShaderSource *vertexShader,
+                                               XfbBufferMap *xfbBufferMap,
+                                               const gl::ProgramLinkedResources &resources)
+{
+    const std::vector<gl::TransformFeedbackVarying> &tfVaryings =
+        programState.getLinkedTransformFeedbackVaryings();
+    const std::vector<GLsizei> &varyingStrides = programState.getTransformFeedbackStrides();
+    const bool isInterleaved =
+        programState.getTransformFeedbackBufferMode() == GL_INTERLEAVED_ATTRIBS;
+
+    std::string xfbDecl;
+    bool hasBuiltInVaryings     = false;
+    bool replacePositionVarying = false;
+    uint32_t currentOffset      = 0;
+    uint32_t currentStride      = 0;
+    uint32_t bufferIndex        = 0;
+    std::string varyingType;
+    std::string xfbIndices;
+    std::string xfbOffsets;
+    std::string xfbStrides;
+    std::string replacedPositionLayout;
+
+    for (uint32_t varyingIndex = 0; varyingIndex < tfVaryings.size(); ++varyingIndex)
+    {
+        if (isInterleaved)
+        {
+            bufferIndex = 0;
+            if (varyingIndex > 0)
+            {
+                const gl::TransformFeedbackVarying &prev = tfVaryings[varyingIndex - 1];
+                currentOffset += prev.size() * gl::VariableExternalSize(prev.type);
+            }
+            currentStride = varyingStrides[0];
+        }
+        else
+        {
+            bufferIndex   = varyingIndex;
+            currentOffset = 0;
+            currentStride = varyingStrides[varyingIndex];
+        }
+
+        if (tfVaryings[varyingIndex].isBuiltIn())
+        {
+            xfbIndices  = Str(bufferIndex);
+            xfbOffsets  = Str(currentOffset);
+            xfbStrides  = Str(currentStride);
+            varyingType = gl::GetGLSLTypeString(tfVaryings[varyingIndex].type);
+
+            if (tfVaryings[varyingIndex].name.compare("gl_Position") == 0)
+            {
+                replacePositionVarying = true;
+
+                std::string xfbReplacedPositionLocation =
+                    Str(resources.varyingPacking.getMaxSemanticIndex() +
+                        kXfbANGLEPositionLocationOffset);
+
+                replacedPositionLayout = "layout(location = " + xfbReplacedPositionLocation +
+                                         ", xfb_buffer = " + xfbIndices +
+                                         ", xfb_offset = " + xfbOffsets +
+                                         ", xfb_stride = " + xfbStrides + ") out " + varyingType +
+                                         " xfbANGLEPosition;\n";
+            }
+            else
+            {
+                // Since built-in varyings are not in RegisterList, we can add layout qualifier
+                // here.
+                if (!hasBuiltInVaryings)
+                {
+                    hasBuiltInVaryings = true;
+
+                    xfbDecl += "out gl_PerVertex\n{\n";
+                    for (uint32_t index = 0; index < tfVaryings.size(); ++index)
+                    {
+                        // need to add gl_Position to gl_Pervertex because we declared layout for
+                        // replaced xfbANGLEPosition instead
+                        if (tfVaryings[index].name.compare("gl_Position") == 0)
+                        {
+                            xfbDecl += "vec4 gl_Position;\n";
+                            break;
+                        }
+                    }
+                }
+                xfbDecl += "layout(xfb_buffer = " + xfbIndices + ", xfb_offset = " + xfbOffsets +
+                           ", xfb_stride = " + xfbStrides + ") " + varyingType + " " +
+                           tfVaryings[varyingIndex].name + ";\n";
+            }
+        }
+        else
+        {
+            // Layout qualifier for non built-in varying will be written later, so we just save
+            // Xfb layout qualifier information into the xfbBufferMap.
+            XFBBufferInfo bufferInfo;
+            bufferInfo.index  = bufferIndex;
+            bufferInfo.offset = currentOffset;
+            bufferInfo.stride = currentStride;
+            xfbBufferMap->insert(make_pair(tfVaryings[varyingIndex].name, bufferInfo));
+        }
+    }
+
+    if (hasBuiltInVaryings)
+    {
+        // We should add non transform feedback built-in varyings to gl_PerVertex because once
+        // we declare gl_PerVertex, all built-in varyings used in shaders should be included
+        // in gl_PerVertex struct.
+        for (const sh::ShaderVariable &varying : resources.varyingPacking.getInputVaryings())
+        {
+            if (varying.isBuiltIn())
+            {
+                auto iter = std::find_if(tfVaryings.begin(), tfVaryings.end(),
+                                         VaryingNameEquals(varying.name));
+                if (iter == tfVaryings.end())
+                {
+                    xfbDecl += gl::GetGLSLTypeString(varying.type) + " " + varying.name + ";\n";
+                }
+            }
+        }
+        xfbDecl += "\n};\n";
+    }
+
+    xfbDecl += replacedPositionLayout;
+
+    vertexShader->insertTransformFeedbackDeclaration(std::move(xfbDecl));
+
+    std::string xfbOut;
+    if (replacePositionVarying)
+    {
+        xfbOut += "xfbANGLEPosition = gl_Position;\n";
+    }
+
     vertexShader->insertTransformFeedbackOutput(std::move(xfbOut));
 }
 
@@ -573,7 +729,8 @@ void AssignOutputLocations(const gl::ProgramState &programState,
 void AssignVaryingLocations(const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
                             IntermediateShaderSource *outStageSource,
-                            IntermediateShaderSource *inStageSource)
+                            IntermediateShaderSource *inStageSource,
+                            XfbBufferMap *xfbBufferMap)
 {
     // Assign varying locations.
     for (const gl::PackedVaryingRegister &varyingReg : resources.varyingPacking.getRegisterList())
@@ -621,7 +778,20 @@ void AssignVaryingLocations(const gl::ProgramState &programState,
                 continue;
         }
 
-        outStageSource->insertLayoutSpecifier(name, locationString);
+        XfbBufferMap::iterator iter;
+        iter = xfbBufferMap->find(name);
+        if (iter != xfbBufferMap->end())
+        {
+            XFBBufferInfo item = iter->second;
+            const std::string xfbSpecifier =
+                "xfb_buffer = " + Str(item.index) + ", xfb_offset = " + Str(item.offset) +
+                ", xfb_stride = " + Str(item.stride) + ", " + locationString;
+            outStageSource->insertLayoutSpecifier(name, xfbSpecifier);
+        }
+        else
+        {
+            outStageSource->insertLayoutSpecifier(name, locationString);
+        }
         inStageSource->insertLayoutSpecifier(name, locationString);
 
         const char *outQualifier = "out";
@@ -649,7 +819,8 @@ void AssignVaryingLocations(const gl::ProgramState &programState,
     // varying register after the packed varyings.
     constexpr char kVaryingName[] = "ANGLEPosition";
     std::stringstream layoutStream;
-    layoutStream << "location = " << (resources.varyingPacking.getMaxSemanticIndex() + 1);
+    layoutStream << "location = "
+                 << (resources.varyingPacking.getMaxSemanticIndex() + kANGLEPositionLocationOffset);
     const std::string layout = layoutStream.str();
 
     outStageSource->insertLayoutSpecifier(kVaryingName, layout);
@@ -1044,6 +1215,8 @@ std::string GlslangGetMappedSamplerName(const std::string &originalName)
 
 void GlslangGetShaderSource(const GlslangSourceOptions &options,
                             bool useOldRewriteStructSamplers,
+                            bool supportsTransformFeedbackExtension,
+                            bool emulateTransformFeedback,
                             const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
                             gl::ShaderMap<std::string> *shaderSourcesOut)
@@ -1062,35 +1235,7 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
     IntermediateShaderSource *vertexSource   = &intermediateSources[gl::ShaderType::Vertex];
     IntermediateShaderSource *fragmentSource = &intermediateSources[gl::ShaderType::Fragment];
     IntermediateShaderSource *geometrySource = &intermediateSources[gl::ShaderType::Geometry];
-
-    if (!geometrySource->empty())
-    {
-        AssignOutputLocations(programState, fragmentSource);
-        AssignVaryingLocations(programState, resources, geometrySource, fragmentSource);
-        if (!vertexSource->empty())
-        {
-            AssignAttributeLocations(programState, vertexSource);
-            AssignVaryingLocations(programState, resources, vertexSource, geometrySource);
-        }
-    }
-    else if (!vertexSource->empty())
-    {
-        AssignAttributeLocations(programState, vertexSource);
-        AssignOutputLocations(programState, fragmentSource);
-        AssignVaryingLocations(programState, resources, vertexSource, fragmentSource);
-    }
-    else if (!fragmentSource->empty())
-    {
-        AssignAttributeLocations(programState, fragmentSource);
-        AssignOutputLocations(programState, fragmentSource);
-        AssignVaryingLocations(programState, resources, vertexSource, fragmentSource);
-    }
-    AssignUniformBindings(options, &intermediateSources);
-    AssignTextureBindings(options, useOldRewriteStructSamplers, programState, &intermediateSources);
-    AssignNonTextureBindings(options, programState, &intermediateSources);
-
-    CleanupUnusedEntities(useOldRewriteStructSamplers, programState, resources,
-                          &intermediateSources);
+    XfbBufferMap xfbBufferMap;
 
     // Write transform feedback output code.
     if (!vertexSource->empty())
@@ -1102,9 +1247,50 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
         }
         else
         {
-            GenerateTransformFeedbackOutputs(options, programState, vertexSource);
+            if (supportsTransformFeedbackExtension)
+            {
+                GenerateTransformFeedbackExtensionOutputs(programState, vertexSource, &xfbBufferMap,
+                                                          resources);
+            }
+            else if (emulateTransformFeedback)
+            {
+                GenerateTransformFeedbackEmulationOutputs(options, programState, vertexSource);
+            }
         }
     }
+
+    if (!geometrySource->empty())
+    {
+        AssignOutputLocations(programState, fragmentSource);
+        AssignVaryingLocations(programState, resources, geometrySource, fragmentSource,
+                               &xfbBufferMap);
+        if (!vertexSource->empty())
+        {
+            AssignAttributeLocations(programState, vertexSource);
+            AssignVaryingLocations(programState, resources, vertexSource, geometrySource,
+                                   &xfbBufferMap);
+        }
+    }
+    else if (!vertexSource->empty())
+    {
+        AssignAttributeLocations(programState, vertexSource);
+        AssignOutputLocations(programState, fragmentSource);
+        AssignVaryingLocations(programState, resources, vertexSource, fragmentSource,
+                               &xfbBufferMap);
+    }
+    else if (!fragmentSource->empty())
+    {
+        AssignAttributeLocations(programState, fragmentSource);
+        AssignOutputLocations(programState, fragmentSource);
+        AssignVaryingLocations(programState, resources, vertexSource, fragmentSource,
+                               &xfbBufferMap);
+    }
+    AssignUniformBindings(options, &intermediateSources);
+    AssignTextureBindings(options, useOldRewriteStructSamplers, programState, &intermediateSources);
+    AssignNonTextureBindings(options, programState, &intermediateSources);
+
+    CleanupUnusedEntities(useOldRewriteStructSamplers, programState, resources,
+                          &intermediateSources);
 
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {

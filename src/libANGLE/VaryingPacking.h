@@ -182,6 +182,8 @@ class VaryingPacking final : angle::NonCopyable
         return mInactiveVaryingNames;
     }
 
+    const std::vector<sh::ShaderVariable> &getInputVaryings() const { return mInputVaryings; }
+
   private:
     bool packVarying(const PackedVarying &packedVarying);
     bool isFree(unsigned int registerRow,
@@ -194,6 +196,7 @@ class VaryingPacking final : angle::NonCopyable
 
     std::vector<Register> mRegisterMap;
     std::vector<PackedVaryingRegister> mRegisterList;
+    std::vector<sh::ShaderVariable> mInputVaryings;
     std::vector<PackedVarying> mPackedVaryings;
     std::vector<std::string> mInactiveVaryingNames;
 

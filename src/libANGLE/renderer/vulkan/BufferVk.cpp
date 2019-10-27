@@ -102,11 +102,16 @@ angle::Result BufferVk::setData(const gl::Context *context,
 
         // We could potentially use multiple backing buffers for different usages.
         // For now keep a single buffer with all relevant usage flags.
-        const VkImageUsageFlags usageFlags =
+        VkImageUsageFlags usageFlags =
             VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
             VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT |
             VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT |
             VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT;
+
+        if (contextVk->getFeatures().supportsTransformFeedbackExtension.enabled)
+        {
+            usageFlags |= VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT;
+        }
 
         VkBufferCreateInfo createInfo    = {};
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;

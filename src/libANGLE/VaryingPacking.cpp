@@ -284,11 +284,16 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
 {
     std::set<std::string> uniqueFullNames;
     mPackedVaryings.clear();
+    mInputVaryings.clear();
 
     for (const auto &ref : mergedVaryings)
     {
         const sh::ShaderVariable *input  = ref.second.frontShader;
         const sh::ShaderVariable *output = ref.second.backShader;
+        if (input)
+        {
+            mInputVaryings.emplace_back(*input);
+        }
 
         // Only pack statically used varyings that have a matched input or output, plus special
         // builtins. Note that we pack all statically used user-defined varyings even if they are

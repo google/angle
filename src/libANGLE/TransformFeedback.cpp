@@ -108,6 +108,11 @@ void TransformFeedback::onDestroy(const Context *context)
     {
         mState.mIndexedBuffers[i].set(context, nullptr, 0, 0);
     }
+
+    if (mImplementation)
+    {
+        mImplementation->onDestroy(context);
+    }
 }
 
 TransformFeedback::~TransformFeedback()

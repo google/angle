@@ -35,13 +35,15 @@ GlslangSourceOptions CreateSourceOptions()
 }  // namespace
 
 // static
-void GlslangWrapperVk::GetShaderSource(bool useOldRewriteStructSamplers,
+void GlslangWrapperVk::GetShaderSource(const angle::FeaturesVk &features,
                                        const gl::ProgramState &programState,
                                        const gl::ProgramLinkedResources &resources,
                                        gl::ShaderMap<std::string> *shaderSourcesOut)
 {
-    GlslangGetShaderSource(CreateSourceOptions(), useOldRewriteStructSamplers, programState,
-                           resources, shaderSourcesOut);
+    GlslangGetShaderSource(CreateSourceOptions(), features.forceOldRewriteStructSamplers.enabled,
+                           features.supportsTransformFeedbackExtension.enabled,
+                           features.emulateTransformFeedback.enabled, programState, resources,
+                           shaderSourcesOut);
 }
 
 // static

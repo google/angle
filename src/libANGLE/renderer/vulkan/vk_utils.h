@@ -625,10 +625,18 @@ extern PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
 // VK_KHR_external_semaphore_fd
 extern PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR;
 
+extern PFN_vkCmdBindTransformFeedbackBuffersEXT vkCmdBindTransformFeedbackBuffersEXT;
+extern PFN_vkCmdBeginTransformFeedbackEXT vkCmdBeginTransformFeedbackEXT;
+extern PFN_vkCmdEndTransformFeedbackEXT vkCmdEndTransformFeedbackEXT;
+extern PFN_vkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXT;
+extern PFN_vkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXT;
+extern PFN_vkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXT;
+
 // Lazily load entry points for each extension as necessary.
 void InitDebugUtilsEXTFunctions(VkInstance instance);
 void InitDebugReportEXTFunctions(VkInstance instance);
 void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance);
+void InitTransformFeedbackEXTFunctions(VkDevice device);
 
 #if defined(ANGLE_PLATFORM_FUCHSIA)
 // VK_FUCHSIA_imagepipe_surface

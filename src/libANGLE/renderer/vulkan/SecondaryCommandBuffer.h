@@ -34,6 +34,7 @@ enum class CommandID : uint16_t
     BindDescriptorSets,
     BindGraphicsPipeline,
     BindIndexBuffer,
+    BindTransformFeedbackBuffers,
     BindVertexBuffers,
     BlitImage,
     BufferBarrier,
@@ -101,6 +102,13 @@ struct BindIndexBufferParams
     VkIndexType indexType;
 };
 VERIFY_4_BYTE_ALIGNMENT(BindIndexBufferParams)
+
+struct BindTransformFeedbackBuffersParams
+{
+    // ANGLE always has firstBinding of 0 so not storing that currently
+    uint32_t bindingCount;
+};
+VERIFY_4_BYTE_ALIGNMENT(BindTransformFeedbackBuffersParams)
 
 struct BindVertexBuffersParams
 {
@@ -443,6 +451,11 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     void bindIndexBuffer(const Buffer &buffer, VkDeviceSize offset, VkIndexType indexType);
 
+    void bindTransformFeedbackBuffers(size_t bindingCount,
+                                      const VkBuffer *buffers,
+                                      const VkDeviceSize *offsets,
+                                      const VkDeviceSize *sizes);
+
     void bindVertexBuffers(uint32_t firstBinding,
                            uint32_t bindingCount,
                            const VkBuffer *buffers,
@@ -775,6 +788,26 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindIndexBuffer(const Buffer &buffer,
     paramStruct->buffer    = buffer.getHandle();
     paramStruct->offset    = offset;
     paramStruct->indexType = indexType;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::bindTransformFeedbackBuffers(size_t bindingCount,
+                                                                       const VkBuffer *buffers,
+                                                                       const VkDeviceSize *offsets,
+                                                                       const VkDeviceSize *sizes)
+{
+    uint8_t *writePtr;
+    size_t buffersSize = bindingCount * sizeof(VkBuffer);
+    size_t offsetsSize = bindingCount * sizeof(VkDeviceSize);
+    size_t sizesSize   = offsetsSize;
+    BindTransformFeedbackBuffersParams *paramStruct =
+        initCommand<BindTransformFeedbackBuffersParams>(CommandID::BindTransformFeedbackBuffers,
+                                                        buffersSize + offsetsSize + sizesSize,
+                                                        &writePtr);
+    // Copy params
+    paramStruct->bindingCount = static_cast<uint32_t>(bindingCount);
+    writePtr                  = storePointerParameter(writePtr, buffers, buffersSize);
+    writePtr                  = storePointerParameter(writePtr, offsets, offsetsSize);
+    storePointerParameter(writePtr, sizes, sizesSize);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::bindVertexBuffers(uint32_t firstBinding,
