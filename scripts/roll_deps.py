@@ -71,7 +71,8 @@ ANDROID_DEPS_END = r'=== ANDROID_DEPS Generated Code End ==='
 # Location of automically gathered android deps.
 ANDROID_DEPS_PATH = 'src/third_party/android_deps/'
 
-NOTIFY_EMAIL = 'angle-team@google.com'
+# TODO(jmadill): Update this with ANGLE wrangler. http://anglebug.com/4059
+NOTIFY_EMAIL = 'jmadill@chromium.org'
 
 sys.path.append(os.path.join(CHECKOUT_SRC_DIR, 'build'))
 import find_depot_tools
