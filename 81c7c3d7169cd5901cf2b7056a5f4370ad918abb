@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "3d2a4026_4b56eacb",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-10-28T21:54:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "270f5b09_9c9a08f1",
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25aa4e1b_b0fd5c72",
         "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
         "patchSetId": 1
@@ -53,6 +71,30 @@
       "writtenOn": "2019-10-24T22:53:29Z",
       "side": 1,
       "message": "is there any reason to use no fixture? Might as well use the common fixture.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 0
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf0d6756_cb1217ab",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-10-28T21:54:23Z",
+      "side": 1,
+      "message": "I am trying to catch up on gtest particulars.",
+      "parentUuid": "25aa4e1b_b0fd5c72",
       "range": {
         "startLine": 21,
         "startChar": 0,
@@ -85,6 +127,30 @@
       "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dee9b2c_ffbdc7f4",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-10-28T21:54:23Z",
+      "side": 1,
+      "message": "Initially I didn\u0027t think this was going to be shared with Google, so I didn\u0027t follow a number of guidelines.",
+      "parentUuid": "d2fe679d_a64b2e6b",
+      "range": {
+        "startLine": 47,
+        "startChar": 16,
+        "endLine": 47,
+        "endChar": 25
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +223,30 @@
     },
     {
       "key": {
+        "uuid": "42d8a069_b294ea6a",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-10-28T21:54:23Z",
+      "side": 1,
+      "message": "It just looked ugly.",
+      "parentUuid": "aa0dbbac_2424e29f",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 23
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "77ea48e8_c7e5b55c",
         "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
         "patchSetId": 1
@@ -177,6 +267,30 @@
       "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b38cab00_b3f7b71f",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-10-28T21:54:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77ea48e8_c7e5b55c",
+      "range": {
+        "startLine": 110,
+        "startChar": 19,
+        "endLine": 110,
+        "endChar": 28
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -226,6 +340,30 @@
     },
     {
       "key": {
+        "uuid": "dd58f78a_9038ef5f",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-10-28T21:54:23Z",
+      "side": 1,
+      "message": "If it results in something readable, I\u0027ll leave it on. If not and it frustrates me, then its off.",
+      "parentUuid": "fb5277d4_b4e4e6cd",
+      "range": {
+        "startLine": 172,
+        "startChar": 7,
+        "endLine": 172,
+        "endChar": 27
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b8002232_da6a61a1",
         "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
         "patchSetId": 1
@@ -237,6 +375,30 @@
       "writtenOn": "2019-10-24T22:52:38Z",
       "side": 1,
       "message": "Maybe refactor these into a helper to query and then print?",
+      "range": {
+        "startLine": 180,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 92
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2df252ca_b6fcf2bc",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-10-28T21:54:23Z",
+      "side": 1,
+      "message": "I did in initial drafts, but look like much of an advantage. Will look into again.",
+      "parentUuid": "b8002232_da6a61a1",
       "range": {
         "startLine": 180,
         "startChar": 8,
@@ -269,6 +431,30 @@
       "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dfc78d0_e19b6a47",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2019-10-28T21:54:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f5724e3_d35012be",
+      "range": {
+        "startLine": 268,
+        "startChar": 12,
+        "endLine": 272,
+        "endChar": 41
+      },
+      "revId": "81c7c3d7169cd5901cf2b7056a5f4370ad918abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
