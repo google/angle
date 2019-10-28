@@ -165,6 +165,8 @@ if (is_win || is_linux || is_mac || is_android) {
       "${angle_root}:translator",
     ]
 
+    deps += [ "${angle_root}:angle_gl_enum_utils" ]
+
     if (angle_enable_vulkan) {
       sources += angle_white_box_tests_vulkan_sources
       deps += [

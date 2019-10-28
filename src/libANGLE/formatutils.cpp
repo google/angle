@@ -25,9 +25,6 @@ GLenum GetSizedFormatInternal(GLenum format, GLenum type);
 
 namespace
 {
-using InternalFormatInfoMap =
-    std::unordered_map<GLenum, std::unordered_map<GLenum, InternalFormat>>;
-
 bool CheckedMathResult(const CheckedNumeric<GLuint> &value, GLuint *resultOut)
 {
     if (!value.IsValid())
@@ -1081,7 +1078,7 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     return map;
 }
 
-static const InternalFormatInfoMap &GetInternalFormatMap()
+const InternalFormatInfoMap &GetInternalFormatMap()
 {
     static const angle::base::NoDestructor<InternalFormatInfoMap> formatMap(
         BuildInternalFormatInfoMap());

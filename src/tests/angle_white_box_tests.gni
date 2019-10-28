@@ -12,6 +12,7 @@ angle_white_box_tests_sources = [
   "test_utils/ANGLETest.cpp",
   "test_utils/ANGLETest.h",
   "test_utils/gl_raii.h",
+  "gl_tests/FormatPrintTest.cpp",
 ]
 angle_white_box_tests_win_sources = [
   "egl_tests/EGLDirectCompositionTest.cpp",

@@ -761,12 +761,20 @@ angle_source_set("libANGLE") {
   ]
 
   # gl_enum_utils defaults included in with_capture build
+  deps = []
   if (angle_enable_trace || is_debug) {
-    sources += [
-      "src/libANGLE/gl_enum_utils.cpp",
-      "src/libANGLE/gl_enum_utils_autogen.cpp",
-    ]
+    deps += [ ":angle_gl_enum_utils" ]
   }
+}
+
+angle_source_set("angle_gl_enum_utils") {
+  public_deps = [
+    ":libANGLE_base",
+  ]
+  sources = [
+    "src/libANGLE/gl_enum_utils.cpp",
+    "src/libANGLE/gl_enum_utils_autogen.cpp",
+  ]
 }
 
 angle_source_set("libANGLE_with_capture") {

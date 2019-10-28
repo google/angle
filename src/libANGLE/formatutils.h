@@ -214,6 +214,10 @@ bool CompressedFormatRequiresWholeImage(GLenum internalFormat);
 typedef std::set<GLenum> FormatSet;
 const FormatSet &GetAllSizedInternalFormats();
 
+typedef std::unordered_map<GLenum, std::unordered_map<GLenum, InternalFormat>>
+    InternalFormatInfoMap;
+const InternalFormatInfoMap &GetInternalFormatMap();
+
 // From the ESSL 3.00.4 spec:
 // Vertex shader inputs can only be float, floating-point vectors, matrices, signed and unsigned
 // integers and integer vectors. Vertex shader inputs cannot be arrays or structures.
