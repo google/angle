@@ -218,7 +218,10 @@ void QueryTexLevelParameterBase(const Texture *texture,
 }
 
 template <bool isPureInteger, typename ParamType>
-void QueryTexParameterBase(const Texture *texture, GLenum pname, ParamType *params)
+void QueryTexParameterBase(const Context *context,
+                           const Texture *texture,
+                           GLenum pname,
+                           ParamType *params)
 {
     ASSERT(texture != nullptr);
 
@@ -308,6 +311,14 @@ void QueryTexParameterBase(const Texture *texture, GLenum pname, ParamType *para
             break;
         case GL_TEXTURE_NATIVE_ID_ANGLE:
             *params = CastFromStateValue<ParamType>(pname, texture->getNativeID());
+            break;
+        case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
+            *params = CastFromGLintStateValue<ParamType>(
+                pname, texture->getImplementationColorReadFormat(context));
+            break;
+        case GL_IMPLEMENTATION_COLOR_READ_TYPE:
+            *params = CastFromGLintStateValue<ParamType>(
+                pname, texture->getImplementationColorReadType(context));
             break;
         default:
             UNREACHABLE();
@@ -997,7 +1008,7 @@ bool IsTextureEnvEnumParameter(TextureEnvParameter pname)
     }
 }
 
-}  // anonymous namespace
+}  // namespace
 
 void QueryFramebufferAttachmentParameteriv(const Context *context,
                                            const Framebuffer *framebuffer,
@@ -1303,6 +1314,12 @@ void QueryRenderbufferiv(const Context *context,
         case GL_MEMORY_SIZE_ANGLE:
             *params = renderbuffer->getMemorySize();
             break;
+        case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
+            *params = static_cast<GLint>(renderbuffer->getImplementationColorReadFormat(context));
+            break;
+        case GL_IMPLEMENTATION_COLOR_READ_TYPE:
+            *params = static_cast<GLint>(renderbuffer->getImplementationColorReadType(context));
+            break;
         default:
             UNREACHABLE();
             break;
@@ -1367,24 +1384,36 @@ void QueryTexLevelParameteriv(const Texture *texture,
     QueryTexLevelParameterBase(texture, target, level, pname, params);
 }
 
-void QueryTexParameterfv(const Texture *texture, GLenum pname, GLfloat *params)
+void QueryTexParameterfv(const Context *context,
+                         const Texture *texture,
+                         GLenum pname,
+                         GLfloat *params)
 {
-    QueryTexParameterBase<false>(texture, pname, params);
+    QueryTexParameterBase<false>(context, texture, pname, params);
 }
 
-void QueryTexParameteriv(const Texture *texture, GLenum pname, GLint *params)
+void QueryTexParameteriv(const Context *context,
+                         const Texture *texture,
+                         GLenum pname,
+                         GLint *params)
 {
-    QueryTexParameterBase<false>(texture, pname, params);
+    QueryTexParameterBase<false>(context, texture, pname, params);
 }
 
-void QueryTexParameterIiv(const Texture *texture, GLenum pname, GLint *params)
+void QueryTexParameterIiv(const Context *context,
+                          const Texture *texture,
+                          GLenum pname,
+                          GLint *params)
 {
-    QueryTexParameterBase<true>(texture, pname, params);
+    QueryTexParameterBase<true>(context, texture, pname, params);
 }
 
-void QueryTexParameterIuiv(const Texture *texture, GLenum pname, GLuint *params)
+void QueryTexParameterIuiv(const Context *context,
+                           const Texture *texture,
+                           GLenum pname,
+                           GLuint *params)
 {
-    QueryTexParameterBase<true>(texture, pname, params);
+    QueryTexParameterBase<true>(context, texture, pname, params);
 }
 
 void QuerySamplerParameterfv(const Sampler *sampler, GLenum pname, GLfloat *params)

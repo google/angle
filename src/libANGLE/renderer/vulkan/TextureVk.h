@@ -198,6 +198,18 @@ class TextureVk : public TextureImpl
         mStagingBufferInitialSize = initialSizeForTesting;
     }
 
+    GLenum getColorReadFormat(const gl::Context *context) override;
+    GLenum getColorReadType(const gl::Context *context) override;
+
+    angle::Result getTexImage(const gl::Context *context,
+                              const gl::PixelPackState &packState,
+                              gl::Buffer *packBuffer,
+                              gl::TextureTarget target,
+                              GLint level,
+                              GLenum format,
+                              GLenum type,
+                              void *pixels) override;
+
   private:
     // Transform an image index from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets

@@ -2108,7 +2108,7 @@ void Context::texBufferRange(GLenum target,
 void Context::getTexParameterfv(TextureType target, GLenum pname, GLfloat *params)
 {
     const Texture *const texture = getTextureByType(target);
-    QueryTexParameterfv(texture, pname, params);
+    QueryTexParameterfv(this, texture, pname, params);
 }
 
 void Context::getTexParameterfvRobust(TextureType target,
@@ -2123,19 +2123,19 @@ void Context::getTexParameterfvRobust(TextureType target,
 void Context::getTexParameteriv(TextureType target, GLenum pname, GLint *params)
 {
     const Texture *const texture = getTextureByType(target);
-    QueryTexParameteriv(texture, pname, params);
+    QueryTexParameteriv(this, texture, pname, params);
 }
 
 void Context::getTexParameterIiv(TextureType target, GLenum pname, GLint *params)
 {
     const Texture *const texture = getTextureByType(target);
-    QueryTexParameterIiv(texture, pname, params);
+    QueryTexParameterIiv(this, texture, pname, params);
 }
 
 void Context::getTexParameterIuiv(TextureType target, GLenum pname, GLuint *params)
 {
     const Texture *const texture = getTextureByType(target);
-    QueryTexParameterIuiv(texture, pname, params);
+    QueryTexParameterIuiv(this, texture, pname, params);
 }
 
 void Context::getTexParameterivRobust(TextureType target,
@@ -9204,12 +9204,18 @@ void Context::getTexImage(TextureTarget target,
                           GLenum type,
                           void *pixels)
 {
-    UNIMPLEMENTED();
+    Texture *texture   = getTextureByTarget(target);
+    Buffer *packBuffer = mState.getTargetBuffer(BufferBinding::PixelPack);
+    ANGLE_CONTEXT_TRY(texture->getTexImage(this, mState.getPackState(), packBuffer, target, level,
+                                           format, type, pixels));
 }
 
 void Context::getRenderbufferImage(GLenum target, GLenum format, GLenum type, void *pixels)
 {
-    UNIMPLEMENTED();
+    Renderbuffer *renderbuffer = mState.getCurrentRenderbuffer();
+    Buffer *packBuffer         = mState.getTargetBuffer(BufferBinding::PixelPack);
+    ANGLE_CONTEXT_TRY(renderbuffer->getRenderbufferImage(this, mState.getPackState(), packBuffer,
+                                                         format, type, pixels));
 }
 
 // ErrorSet implementation.

@@ -126,6 +126,17 @@ bool ValidateBlitFramebufferParameters(Context *context,
                                        GLbitfield mask,
                                        GLenum filter);
 
+bool ValidatePixelPack(Context *context,
+                       GLenum format,
+                       GLenum type,
+                       GLint x,
+                       GLint y,
+                       GLsizei width,
+                       GLsizei height,
+                       GLsizei bufSize,
+                       GLsizei *length,
+                       void *pixels);
+
 bool ValidateReadPixelsBase(Context *context,
                             GLint x,
                             GLint y,

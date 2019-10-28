@@ -69,8 +69,8 @@ void RendererVk::ensureCapsInitialized() const
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinMax = true;
 
-    mNativeExtensions.eglImage         = true;
-    mNativeExtensions.eglImageExternal = true;
+    mNativeExtensions.eglImage              = true;
+    mNativeExtensions.eglImageExternal      = true;
     mNativeExtensions.eglImageExternalEssl3 = true;
 
     mNativeExtensions.memoryObject   = true;
@@ -126,6 +126,9 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.fboRenderMipmap = true;
 
+    // We support getting image data for Textures and Renderbuffers.
+    mNativeExtensions.getImageANGLE = true;
+
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex       = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize      = limitsVk.maxImageDimension3D;
@@ -136,8 +139,8 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxRenderbufferSize =
         std::min({limitsVk.maxImageDimension2D, limitsVk.maxFramebufferWidth,
                   limitsVk.maxFramebufferHeight});
-    mNativeCaps.minAliasedPointSize   = std::max(1.0f, limitsVk.pointSizeRange[0]);
-    mNativeCaps.maxAliasedPointSize   = limitsVk.pointSizeRange[1];
+    mNativeCaps.minAliasedPointSize = std::max(1.0f, limitsVk.pointSizeRange[0]);
+    mNativeCaps.maxAliasedPointSize = limitsVk.pointSizeRange[1];
 
     mNativeCaps.minAliasedLineWidth = 1.0f;
     mNativeCaps.maxAliasedLineWidth = 1.0f;
@@ -211,14 +214,14 @@ void RendererVk::ensureCapsInitialized() const
 
     // Uniforms are implemented using a uniform buffer, so the max number of uniforms we can
     // support is the max buffer range divided by the size of a single uniform (4X float).
-    mNativeCaps.maxVertexUniformVectors                              = maxUniformVectors;
-    mNativeCaps.maxFragmentUniformVectors                            = maxUniformVectors;
-    mNativeCaps.maxFragmentInputComponents                           = maxUniformComponents;
+    mNativeCaps.maxVertexUniformVectors    = maxUniformVectors;
+    mNativeCaps.maxFragmentUniformVectors  = maxUniformVectors;
+    mNativeCaps.maxFragmentInputComponents = maxUniformComponents;
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         mNativeCaps.maxShaderUniformComponents[shaderType] = maxUniformComponents;
     }
-    mNativeCaps.maxUniformLocations                                  = maxUniformVectors;
+    mNativeCaps.maxUniformLocations = maxUniformVectors;
 
     // Every stage has 1 reserved uniform buffer for the default uniforms, and 1 for the driver
     // uniforms.
@@ -235,7 +238,7 @@ void RendererVk::ensureCapsInitialized() const
     {
         mNativeCaps.maxShaderUniformBlocks[shaderType] = maxPerStageUniformBuffers;
     }
-    mNativeCaps.maxCombinedUniformBlocks                         = maxCombinedUniformBuffers;
+    mNativeCaps.maxCombinedUniformBlocks = maxCombinedUniformBuffers;
 
     mNativeCaps.maxUniformBufferBindings = maxCombinedUniformBuffers;
     mNativeCaps.maxUniformBlockSize      = maxUniformBlockSize;
@@ -252,7 +255,7 @@ void RendererVk::ensureCapsInitialized() const
     {
         mNativeCaps.maxShaderTextureImageUnits[shaderType] = maxPerStageTextures;
     }
-    mNativeCaps.maxCombinedTextureImageUnits                         = maxCombinedTextures;
+    mNativeCaps.maxCombinedTextureImageUnits = maxCombinedTextures;
 
     uint32_t maxPerStageStorageBuffers    = limitsVk.maxPerStageDescriptorStorageBuffers;
     uint32_t maxVertexStageStorageBuffers = maxPerStageStorageBuffers;

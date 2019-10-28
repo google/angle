@@ -137,6 +137,7 @@ MSG kFramebufferTextureLayerIncorrectTextureType = "Texture is not a three-dimen
 MSG kGenerateMipmapNotAllowed = "Texture format does not support mipmap generation.";
 MSG kGenerateMipmapZeroSize = "Cannot generate mipmaps for a zero-size texture in a WebGL context.";
 MSG kGeometryShaderExtensionNotEnabled = "GL_EXT_geometry_shader extension not enabled.";
+MSG kGetImageExtensionNotEnabled = "GL_ANGLE_get_image extension not enabled.";
 MSG kGLES1Only = "GLES1-only function.";
 MSG kImageSizeMustBeZero = "imageSize must be 0 if no texture data is provided.";
 MSG kImageSizeTooSmall = "imageSize is too small.";

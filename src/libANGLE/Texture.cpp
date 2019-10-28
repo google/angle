@@ -1886,4 +1886,26 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
     }
 }
 
+GLenum Texture::getImplementationColorReadFormat(const Context *context) const
+{
+    return mTexture->getColorReadFormat(context);
+}
+
+GLenum Texture::getImplementationColorReadType(const Context *context) const
+{
+    return mTexture->getColorReadType(context);
+}
+
+angle::Result Texture::getTexImage(const Context *context,
+                                   const PixelPackState &packState,
+                                   Buffer *packBuffer,
+                                   TextureTarget target,
+                                   GLint level,
+                                   GLenum format,
+                                   GLenum type,
+                                   void *pixels) const
+{
+    return mTexture->getTexImage(context, packState, packBuffer, target, level, format, type,
+                                 pixels);
+}
 }  // namespace gl

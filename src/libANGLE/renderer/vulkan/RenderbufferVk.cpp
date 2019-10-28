@@ -225,4 +225,26 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
     mImageViews.release(renderer);
 }
 
+GLenum RenderbufferVk::getColorReadFormat(const gl::Context *context)
+{
+    UNIMPLEMENTED();
+    return GL_NONE;
+}
+
+GLenum RenderbufferVk::getColorReadType(const gl::Context *context)
+{
+    UNIMPLEMENTED();
+    return GL_NONE;
+}
+
+angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
+                                                   const gl::PixelPackState &packState,
+                                                   gl::Buffer *packBuffer,
+                                                   GLenum format,
+                                                   GLenum type,
+                                                   void *pixels)
+{
+    UNIMPLEMENTED();
+    return angle::Result::Continue;
+}
 }  // namespace rx

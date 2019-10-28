@@ -1269,7 +1269,6 @@ angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk, ImageMipLe
     const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
     const gl::Extents &baseLevelExtents = baseLevelDesc.size;
     const uint32_t levelCount           = getMipLevelCount(mipLevels);
-
     const vk::Format &format =
         contextVk->getRenderer()->getFormat(baseLevelDesc.format.info->sizedInternalFormat);
 
@@ -1702,6 +1701,31 @@ angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
         previousLevelRowPitch = destRowPitch;
     }
 
+    return angle::Result::Continue;
+}
+
+GLenum TextureVk::getColorReadFormat(const gl::Context *context)
+{
+    UNIMPLEMENTED();
+    return GL_NONE;
+}
+
+GLenum TextureVk::getColorReadType(const gl::Context *context)
+{
+    UNIMPLEMENTED();
+    return GL_NONE;
+}
+
+angle::Result TextureVk::getTexImage(const gl::Context *context,
+                                     const gl::PixelPackState &packState,
+                                     gl::Buffer *packBuffer,
+                                     gl::TextureTarget target,
+                                     GLint level,
+                                     GLenum format,
+                                     GLenum type,
+                                     void *pixels)
+{
+    UNIMPLEMENTED();
     return angle::Result::Continue;
 }
 }  // namespace rx

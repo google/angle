@@ -541,6 +541,9 @@ struct Extensions
 
     // GL_ANGLE_base_vertex_base_instance
     bool baseVertexBaseInstance = false;
+
+    // GL_ANGLE_get_image
+    bool getImageANGLE = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

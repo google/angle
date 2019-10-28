@@ -423,6 +423,19 @@ class Texture final : public RefCountObject<TextureID>,
 
     bool isSamplerComplete(const Context *context, const Sampler *optionalSampler);
 
+    GLenum getImplementationColorReadFormat(const Context *context) const;
+    GLenum getImplementationColorReadType(const Context *context) const;
+
+    // We pass the pack buffer and state explicitly so they can be overridden during capture.
+    angle::Result getTexImage(const Context *context,
+                              const PixelPackState &packState,
+                              Buffer *packBuffer,
+                              TextureTarget target,
+                              GLint level,
+                              GLenum format,
+                              GLenum type,
+                              void *pixels) const;
+
     rx::TextureImpl *getImplementation() const { return mTexture; }
 
     // FramebufferAttachmentObject implementation

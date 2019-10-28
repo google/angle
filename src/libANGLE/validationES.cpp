@@ -5101,6 +5101,15 @@ bool ValidateGetRenderbufferParameterivBase(Context *context,
             }
             break;
 
+        case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
+        case GL_IMPLEMENTATION_COLOR_READ_TYPE:
+            if (!context->getExtensions().getImageANGLE)
+            {
+                context->validationError(GL_INVALID_ENUM, kGetImageExtensionNotEnabled);
+                return false;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;
@@ -5311,6 +5320,15 @@ bool ValidateGetTexParameterBase(Context *context,
             }
             break;
 
+        case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
+        case GL_IMPLEMENTATION_COLOR_READ_TYPE:
+            if (!context->getExtensions().getImageANGLE)
+            {
+                context->validationError(GL_INVALID_ENUM, kGetImageExtensionNotEnabled);
+                return false;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;
@@ -5413,6 +5431,82 @@ bool ValidateGetVertexAttribBase(Context *context,
         {
             *length = 1;
         }
+    }
+
+    return true;
+}
+
+bool ValidatePixelPack(Context *context,
+                       GLenum format,
+                       GLenum type,
+                       GLint x,
+                       GLint y,
+                       GLsizei width,
+                       GLsizei height,
+                       GLsizei bufSize,
+                       GLsizei *length,
+                       void *pixels)
+{
+    // Check for pixel pack buffer related API errors
+    Buffer *pixelPackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelPack);
+    if (pixelPackBuffer != nullptr && pixelPackBuffer->isMapped())
+    {
+        // ...the buffer object's data store is currently mapped.
+        context->validationError(GL_INVALID_OPERATION, kBufferMapped);
+        return false;
+    }
+    if (context->getExtensions().webglCompatibility && pixelPackBuffer != nullptr &&
+        pixelPackBuffer->isBoundForTransformFeedbackAndOtherUse())
+    {
+        context->validationError(GL_INVALID_OPERATION, kPixelPackBufferBoundForTransformFeedback);
+        return false;
+    }
+
+    // ..  the data would be packed to the buffer object such that the memory writes required
+    // would exceed the data store size.
+    const InternalFormat &formatInfo = GetInternalFormatInfo(format, type);
+    const Extents size(width, height, 1);
+    const auto &pack = context->getState().getPackState();
+
+    GLuint endByte = 0;
+    if (!formatInfo.computePackUnpackEndByte(type, size, pack, false, &endByte))
+    {
+        context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
+        return false;
+    }
+
+    if (bufSize >= 0)
+    {
+        if (pixelPackBuffer == nullptr && static_cast<size_t>(bufSize) < endByte)
+        {
+            context->validationError(GL_INVALID_OPERATION, kInsufficientBufferSize);
+            return false;
+        }
+    }
+
+    if (pixelPackBuffer != nullptr)
+    {
+        CheckedNumeric<size_t> checkedEndByte(endByte);
+        CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
+        checkedEndByte += checkedOffset;
+
+        if (checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelPackBuffer->getSize()))
+        {
+            // Overflow past the end of the buffer
+            context->validationError(GL_INVALID_OPERATION, kParamOverflow);
+            return false;
+        }
+    }
+
+    if (pixelPackBuffer == nullptr && length != nullptr)
+    {
+        if (endByte > static_cast<size_t>(std::numeric_limits<GLsizei>::max()))
+        {
+            context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
+            return false;
+        }
+
+        *length = static_cast<GLsizei>(endByte);
     }
 
     return true;
@@ -5532,66 +5626,9 @@ bool ValidateReadPixelsBase(Context *context,
         return false;
     }
 
-    // Check for pixel pack buffer related API errors
-    Buffer *pixelPackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelPack);
-    if (pixelPackBuffer != nullptr && pixelPackBuffer->isMapped())
+    if (!ValidatePixelPack(context, format, type, x, y, width, height, bufSize, length, pixels))
     {
-        // ...the buffer object's data store is currently mapped.
-        context->validationError(GL_INVALID_OPERATION, kBufferMapped);
         return false;
-    }
-    if (context->getExtensions().webglCompatibility && pixelPackBuffer != nullptr &&
-        pixelPackBuffer->isBoundForTransformFeedbackAndOtherUse())
-    {
-        context->validationError(GL_INVALID_OPERATION, kPixelPackBufferBoundForTransformFeedback);
-        return false;
-    }
-
-    // ..  the data would be packed to the buffer object such that the memory writes required
-    // would exceed the data store size.
-    const InternalFormat &formatInfo = GetInternalFormatInfo(format, type);
-    const Extents size(width, height, 1);
-    const auto &pack = context->getState().getPackState();
-
-    GLuint endByte = 0;
-    if (!formatInfo.computePackUnpackEndByte(type, size, pack, false, &endByte))
-    {
-        context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
-        return false;
-    }
-
-    if (bufSize >= 0)
-    {
-        if (pixelPackBuffer == nullptr && static_cast<size_t>(bufSize) < endByte)
-        {
-            context->validationError(GL_INVALID_OPERATION, kInsufficientBufferSize);
-            return false;
-        }
-    }
-
-    if (pixelPackBuffer != nullptr)
-    {
-        CheckedNumeric<size_t> checkedEndByte(endByte);
-        CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
-        checkedEndByte += checkedOffset;
-
-        if (checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelPackBuffer->getSize()))
-        {
-            // Overflow past the end of the buffer
-            context->validationError(GL_INVALID_OPERATION, kParamOverflow);
-            return false;
-        }
-    }
-
-    if (pixelPackBuffer == nullptr && length != nullptr)
-    {
-        if (endByte > static_cast<size_t>(std::numeric_limits<GLsizei>::max()))
-        {
-            context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
-            return false;
-        }
-
-        *length = static_cast<GLsizei>(endByte);
     }
 
     auto getClippedExtent = [](GLint start, GLsizei length, int bufferSize, GLsizei *outExtent) {
@@ -5719,6 +5756,7 @@ bool ValidateTexParameterBase(Context *context,
                 return false;
             }
             break;
+
         default:
             break;
     }
