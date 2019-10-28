@@ -256,6 +256,7 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
       "${angle_root}:angle_system_utils",
       "${angle_root}:angle_util",
       "${angle_root}:angle_util_loader_headers",
+      "${angle_spirv_tools_dir}:spvtools_val",
     ]
 
     data_deps = [
@@ -575,6 +576,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "-Wno-string-conversion",  # implicit conversion turns string literal into bool
         "-Wno-unused-local-typedef",
         "-Wno-unused-result",  # ignoring return value of function declared with 'nodiscard' attribute
+        "-Wno-unused-function",
       ]
     }
 
@@ -948,6 +950,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     public_deps = [
       ":angle_deqp_framework_egl",
       ":angle_deqp_glshared",
+      "${angle_glslang_dir}:glslang_sources",
+      "${angle_spirv_tools_dir}:spvtools_val",
     ]
     public_configs = [ ":angle_deqp_khr_common_config" ]
 

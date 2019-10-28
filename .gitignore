@@ -27,7 +27,6 @@
 /src/tests/third_party/gles_conformance_tests
 /testing
 /third_party/cherry
-/third_party/deqp/src
 /third_party/fuchsia-sdk
 /third_party/gles1_conform
 /third_party/glmark2/src
@@ -44,6 +43,7 @@
 /third_party/spirv-headers/src
 /third_party/spirv-tools/src
 /third_party/SwiftShader
+/third_party/VK-GL-CTS/src
 /third_party/vulkan-headers/src
 /third_party/vulkan-loader/src
 /third_party/vulkan-tools/src

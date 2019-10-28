@@ -58,9 +58,9 @@ std::string DrawElementsToGoogleTestName(const std::string &dEQPName)
 }
 
 const char *gCaseListSearchPaths[] = {
-    "/../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src",
-    "/../../third_party/deqp/src",
-    "/../../third_party/angle/third_party/deqp/src",
+    "/../../sdcard/chromium_tests_root/third_party/angle/third_party/VK-GL-CTS/src",
+    "/../../third_party/VK-GL-CTS/src",
+    "/../../third_party/angle/third_party/VK-GL-CTS/src",
 };
 
 const char *gTestExpectationsSearchPaths[] = {

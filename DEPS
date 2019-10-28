@@ -23,8 +23,8 @@ vars = {
   # Version of Chromium our Chromium-based DEPS are mirrored from.
   'chromium_revision': '5fe256ab5e5eb3d73d23ab52c69ba113145d921b',
 
-  # Current revision of dEQP.
-  'deqp_revision': 'd3eef28e67ce6795ba3a2124aaa977819729d45f',
+  # Current revision of VK-GL-CTS (a.k.a dEQP).
+  'vk_gl_cts_revision': '54ec6f2b1390bf33ea10424dca610f8bcbfefa06',
 
   # Current revision of glslang, the Khronos SPIRV compiler.
   'glslang_revision': 'b131630e7c749a5dc19faa458024260c71fb170f',
@@ -77,14 +77,14 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
-  # Cherry is a dEQP management GUI written in Go. We use it for viewing test results.
+  # Cherry is a dEQP/VK-GL-CTS management GUI written in Go. We use it for viewing test results.
   'third_party/cherry': {
     'url': '{android_git}/platform/external/cherry@4f8fb08d33ca5ff05a1c638f04c85bbb8d8b52cc',
     'condition': 'not build_with_chromium',
   },
 
-  'third_party/deqp/src': {
-    'url': '{chromium_git}/external/deqp@{deqp_revision}',
+  'third_party/VK-GL-CTS/src': {
+    'url': '{chromium_git}/external/github.com/KhronosGroup/VK-GL-CTS@{vk_gl_cts_revision}',
   },
 
   'third_party/fuchsia-sdk': {
