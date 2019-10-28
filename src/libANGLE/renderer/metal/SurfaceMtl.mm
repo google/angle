@@ -31,7 +31,6 @@ namespace rx
 
 namespace
 {
-constexpr angle::FormatID kDefaultFrameBufferColorFormatId   = angle::FormatID::B8G8R8A8_UNORM;
 constexpr angle::FormatID kDefaultFrameBufferDepthFormatId   = angle::FormatID::D32_FLOAT;
 constexpr angle::FormatID kDefaultFrameBufferStencilFormatId = angle::FormatID::S8_UINT;
 constexpr angle::FormatID kDefaultFrameBufferDepthStencilFormatId =
@@ -177,7 +176,14 @@ SurfaceMtl::SurfaceMtl(DisplayMtl *display,
     : SurfaceImpl(state), mLayer((__bridge CALayer *)(window))
 {
     // NOTE(hqle): Width and height attributes is ignored for now.
-    mColorFormat = display->getPixelFormat(kDefaultFrameBufferColorFormatId);
+
+    // https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf says that BGRA8Unorm is
+    // only supported if depth24Stencil8PixelFormatSupported capabilitiy is YES. Yet
+    // CAMetalLayer can be created with pixelFormat MTLPixelFormatBGRA8Unorm. So the mtl::Format
+    // used for SurfaceMtl is initialized a bit differently from normal TextureMtl's mtl::Format.
+    // It won't use format table, instead we initialize its values here to use BGRA8Unorm directly:
+    mColorFormat.intendedFormatId = mColorFormat.actualFormatId = angle::FormatID::B8G8R8A8_UNORM;
+    mColorFormat.metalFormat                                    = MTLPixelFormatBGRA8Unorm;
 
     int depthBits   = 0;
     int stencilBits = 0;
