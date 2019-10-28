@@ -891,6 +891,23 @@ class ImageHelper final : public CommandGraphResource
                                         VkDeviceSize *bufferOffsetOut,
                                         uint8_t **outDataPtr);
 
+    static angle::Result GetReadPixelsParams(ContextVk *contextVk,
+                                             GLenum format,
+                                             GLenum type,
+                                             const gl::Rectangle &area,
+                                             const gl::Rectangle &clippedArea,
+                                             PackPixelsParams *paramsOut,
+                                             GLuint *skipBytesOut);
+
+    angle::Result readPixels(ContextVk *contextVk,
+                             const gl::Rectangle &area,
+                             const PackPixelsParams &packPixelsParams,
+                             VkImageAspectFlagBits copyAspectFlags,
+                             uint32_t level,
+                             uint32_t layer,
+                             void *pixels,
+                             DynamicBuffer *stagingBuffer);
+
   private:
     void forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
                                    ImageLayout newLayout,
