@@ -427,21 +427,21 @@ class LineLoopHelper final : angle::NonCopyable
 
     angle::Result streamIndicesIndirect(ContextVk *contextVk,
                                         gl::DrawElementsType glIndexType,
-                                        vk::BufferHelper *indexBuffer,
-                                        vk::BufferHelper *indirectBuffer,
+                                        BufferHelper *indexBuffer,
+                                        BufferHelper *indirectBuffer,
                                         VkDeviceSize indirectBufferOffset,
-                                        vk::BufferHelper **indexBufferOut,
+                                        BufferHelper **indexBufferOut,
                                         VkDeviceSize *indexBufferOffsetOut,
-                                        vk::BufferHelper **indirectBufferOut,
+                                        BufferHelper **indirectBufferOut,
                                         VkDeviceSize *indirectBufferOffsetOut);
 
     angle::Result streamArrayIndirect(ContextVk *contextVk,
                                       size_t vertexCount,
-                                      vk::BufferHelper *arrayIndirectBuffer,
+                                      BufferHelper *arrayIndirectBuffer,
                                       VkDeviceSize arrayIndirectBufferOffset,
-                                      vk::BufferHelper **indexBufferOut,
+                                      BufferHelper **indexBufferOut,
                                       VkDeviceSize *indexBufferOffsetOut,
-                                      vk::BufferHelper **indexIndirectBufferOut,
+                                      BufferHelper **indexIndirectBufferOut,
                                       VkDeviceSize *indexIndirectBufferOffsetOut);
 
     void release(ContextVk *contextVk);
@@ -887,7 +887,7 @@ class ImageHelper final : public CommandGraphResource
                                         uint32_t layerCount,
                                         uint32_t baseLayer,
                                         const gl::Box &sourceArea,
-                                        vk::BufferHelper **bufferOut,
+                                        BufferHelper **bufferOut,
                                         VkDeviceSize *bufferOffsetOut,
                                         uint8_t **outDataPtr);
 
