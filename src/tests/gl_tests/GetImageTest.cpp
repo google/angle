@@ -37,29 +37,35 @@ class GetImageTestNoExtensions : public ANGLETest
     GetImageTestNoExtensions() { setExtensionsEnabled(false); }
 };
 
-GLTexture InitSimpleTexture()
+GLTexture InitTextureWithSize(uint32_t size, void *pixelData)
 {
-    std::vector<GLColor> pixelData(kSize * kSize, GLColor::red);
-
     // Create a simple texture.
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 pixelData.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
     return tex;
 }
 
-GLRenderbuffer InitSimpleRenderbuffer()
+GLTexture InitSimpleTexture()
+{
+    std::vector<GLColor> pixelData(kSize * kSize, GLColor::red);
+    return InitTextureWithSize(kSize, pixelData.data());
+}
+
+GLRenderbuffer InitRenderbufferWithSize(uint32_t size)
 {
     // Create a simple renderbuffer.
     GLRenderbuffer renderbuf;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, kSize, kSize);
-
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, size, size);
     return renderbuf;
+}
+
+GLRenderbuffer InitSimpleRenderbuffer()
+{
+    return InitRenderbufferWithSize(kSize);
 }
 
 // Test validation for the extension functions.
@@ -137,6 +143,71 @@ TEST_P(GetImageTest, NegativeAPI)
         glGetRenderbufferImageANGLE(GL_RENDERBUFFER, GL_RGBA, GL_UNSIGNED_BYTE, buffer.data());
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
+}
+
+// Simple test for GetTexImage
+TEST_P(GetImageTest, GetTexImage)
+{
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
+    constexpr uint32_t kSmallSize     = 2;
+    std::vector<GLColor> expectedData = {GLColor::red, GLColor::blue, GLColor::green,
+                                         GLColor::yellow};
+
+    glViewport(0, 0, kSmallSize, kSmallSize);
+
+    // Draw once with simple texture.
+    GLTexture tex = InitTextureWithSize(kSmallSize, expectedData.data());
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    // Pack pixels tightly.
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    // Verify GetImage.
+    std::vector<GLColor> actualData(kSmallSize * kSmallSize);
+    glGetTexImageANGLE(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, actualData.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectedData, actualData);
+}
+
+// Simple test for GetRenderbufferImage
+TEST_P(GetImageTest, GetRenderbufferImage)
+{
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
+    constexpr uint32_t kSmallSize     = 2;
+    std::vector<GLColor> expectedData = {GLColor::red, GLColor::blue, GLColor::green,
+                                         GLColor::yellow};
+
+    glViewport(0, 0, kSmallSize, kSmallSize);
+
+    // Set up a simple Framebuffer with a Renderbuffer.
+    GLRenderbuffer renderbuffer = InitRenderbufferWithSize(kSmallSize);
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw once with simple texture.
+    GLTexture tex = InitTextureWithSize(kSmallSize, expectedData.data());
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    // Pack pixels tightly.
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    // Verify GetImage.
+    std::vector<GLColor> actualData(kSmallSize * kSmallSize);
+    glGetRenderbufferImageANGLE(GL_RENDERBUFFER, GL_RGBA, GL_UNSIGNED_BYTE, actualData.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectedData, actualData);
 }
 
 // Verifies that the extension enums and entry points are invalid when the extension is disabled.

@@ -458,10 +458,14 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
         return angle::Result::Continue;
     }
 
+    const gl::State &glState = contextVk->getState();
+    gl::Buffer *packBuffer   = glState.getTargetBuffer(gl::BufferBinding::PixelPack);
+
     GLuint outputSkipBytes = 0;
     PackPixelsParams params;
-    ANGLE_TRY(vk::ImageHelper::GetReadPixelsParams(contextVk, format, type, area, clippedArea,
-                                                   &params, &outputSkipBytes));
+    ANGLE_TRY(vk::ImageHelper::GetReadPixelsParams(contextVk, glState.getPackState(), packBuffer,
+                                                   format, type, area, clippedArea, &params,
+                                                   &outputSkipBytes));
 
     if (contextVk->isViewportFlipEnabledForReadFBO())
     {

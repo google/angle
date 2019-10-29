@@ -1269,9 +1269,7 @@ angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk, ImageMipLe
     const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
     const gl::Extents &baseLevelExtents = baseLevelDesc.size;
     const uint32_t levelCount           = getMipLevelCount(mipLevels);
-    const vk::Format &format =
-        contextVk->getRenderer()->getFormat(baseLevelDesc.format.info->sizedInternalFormat);
-
+    const vk::Format &format            = getBaseLevelFormat(contextVk->getRenderer());
     return ensureImageInitializedImpl(contextVk, baseLevelExtents, levelCount, format);
 }
 
@@ -1704,16 +1702,34 @@ angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+const gl::InternalFormat &TextureVk::getImplementationSizedFormat(const gl::Context *context) const
+{
+    GLenum sizedFormat = GL_NONE;
+
+    if (mImage && mImage->valid())
+    {
+        sizedFormat = mImage->getFormat().actualImageFormat().glInternalFormat;
+    }
+    else
+    {
+        ContextVk *contextVk     = vk::GetImpl(context);
+        const vk::Format &format = getBaseLevelFormat(contextVk->getRenderer());
+        sizedFormat              = format.actualImageFormat().glInternalFormat;
+    }
+
+    return gl::GetSizedInternalFormatInfo(sizedFormat);
+}
+
 GLenum TextureVk::getColorReadFormat(const gl::Context *context)
 {
-    UNIMPLEMENTED();
-    return GL_NONE;
+    const gl::InternalFormat &sizedFormat = getImplementationSizedFormat(context);
+    return sizedFormat.format;
 }
 
 GLenum TextureVk::getColorReadType(const gl::Context *context)
 {
-    UNIMPLEMENTED();
-    return GL_NONE;
+    const gl::InternalFormat &sizedFormat = getImplementationSizedFormat(context);
+    return sizedFormat.type;
 }
 
 angle::Result TextureVk::getTexImage(const gl::Context *context,
@@ -1725,7 +1741,26 @@ angle::Result TextureVk::getTexImage(const gl::Context *context,
                                      GLenum type,
                                      void *pixels)
 {
+    ContextVk *contextVk = vk::GetImpl(context);
+    if (mImage && mImage->valid())
+    {
+        ANGLE_TRY(mImage->flushAllStagedUpdates(contextVk));
+
+        size_t layer =
+            gl::IsCubeMapFaceTarget(target) ? gl::CubeMapTextureTargetToFaceIndex(target) : 0;
+        return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, level,
+                                             static_cast<uint32_t>(layer), format, type, pixels);
+    }
+
+    // Incomplete or unused texture. Will require a staging texture.
+    // TODO(http://anglebug.com/4058): Incomplete texture readback.
     UNIMPLEMENTED();
     return angle::Result::Continue;
+}
+
+const vk::Format &TextureVk::getBaseLevelFormat(RendererVk *renderer) const
+{
+    const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+    return renderer->getFormat(baseLevelDesc.format.info->sizedInternalFormat);
 }
 }  // namespace rx

@@ -342,6 +342,8 @@ class TextureVk : public TextureImpl
     void onStagingBufferChange() { onStateChange(angle::SubjectMessage::SubjectChanged); }
 
     angle::Result changeLevels(ContextVk *contextVk, GLuint baseLevel, GLuint maxLevel);
+    const gl::InternalFormat &getImplementationSizedFormat(const gl::Context *context) const;
+    const vk::Format &getBaseLevelFormat(RendererVk *renderer) const;
 
     bool mOwnsImage;
 

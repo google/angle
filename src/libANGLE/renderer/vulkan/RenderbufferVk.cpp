@@ -225,16 +225,22 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
     mImageViews.release(renderer);
 }
 
+const gl::InternalFormat &RenderbufferVk::getImplementationSizedFormat() const
+{
+    GLenum internalFormat = mImage->getFormat().actualImageFormat().glInternalFormat;
+    return gl::GetSizedInternalFormatInfo(internalFormat);
+}
+
 GLenum RenderbufferVk::getColorReadFormat(const gl::Context *context)
 {
-    UNIMPLEMENTED();
-    return GL_NONE;
+    const gl::InternalFormat &sizedFormat = getImplementationSizedFormat();
+    return sizedFormat.format;
 }
 
 GLenum RenderbufferVk::getColorReadType(const gl::Context *context)
 {
-    UNIMPLEMENTED();
-    return GL_NONE;
+    const gl::InternalFormat &sizedFormat = getImplementationSizedFormat();
+    return sizedFormat.type;
 }
 
 angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
@@ -244,7 +250,13 @@ angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
                                                    GLenum type,
                                                    void *pixels)
 {
-    UNIMPLEMENTED();
-    return angle::Result::Continue;
+    // Storage not defined.
+    if (!mImage || !mImage->valid())
+        return angle::Result::Continue;
+
+    ContextVk *contextVk = vk::GetImpl(context);
+    ANGLE_TRY(mImage->flushAllStagedUpdates(contextVk));
+    return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, 0, 0, format, type,
+                                         pixels);
 }
 }  // namespace rx

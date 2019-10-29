@@ -892,12 +892,23 @@ class ImageHelper final : public CommandGraphResource
                                         uint8_t **outDataPtr);
 
     static angle::Result GetReadPixelsParams(ContextVk *contextVk,
+                                             const gl::PixelPackState &packState,
+                                             gl::Buffer *packBuffer,
                                              GLenum format,
                                              GLenum type,
                                              const gl::Rectangle &area,
                                              const gl::Rectangle &clippedArea,
                                              PackPixelsParams *paramsOut,
                                              GLuint *skipBytesOut);
+
+    angle::Result readPixelsForGetImage(ContextVk *contextVk,
+                                        const gl::PixelPackState &packState,
+                                        gl::Buffer *packBuffer,
+                                        uint32_t level,
+                                        uint32_t layer,
+                                        GLenum format,
+                                        GLenum type,
+                                        void *pixels);
 
     angle::Result readPixels(ContextVk *contextVk,
                              const gl::Rectangle &area,

@@ -68,6 +68,8 @@ class RenderbufferVk : public RenderbufferImpl
                                  size_t width,
                                  size_t height);
 
+    const gl::InternalFormat &getImplementationSizedFormat() const;
+
     bool mOwnsImage;
     vk::ImageHelper *mImage;
     vk::ImageViewHelper mImageViews;

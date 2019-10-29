@@ -2958,6 +2958,8 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 
 // static
 angle::Result ImageHelper::GetReadPixelsParams(ContextVk *contextVk,
+                                               const gl::PixelPackState &packState,
+                                               gl::Buffer *packBuffer,
                                                GLenum format,
                                                GLenum type,
                                                const gl::Rectangle &area,
@@ -2965,9 +2967,6 @@ angle::Result ImageHelper::GetReadPixelsParams(ContextVk *contextVk,
                                                PackPixelsParams *paramsOut,
                                                GLuint *skipBytesOut)
 {
-    const gl::State &glState            = contextVk->getState();
-    const gl::PixelPackState &packState = glState.getPackState();
-
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
 
     GLuint outputPitch = 0;
@@ -2983,8 +2982,46 @@ angle::Result ImageHelper::GetReadPixelsParams(ContextVk *contextVk,
     const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
 
     *paramsOut = PackPixelsParams(clippedArea, angleFormat, outputPitch, packState.reverseRowOrder,
-                                  glState.getTargetBuffer(gl::BufferBinding::PixelPack), 0);
+                                  packBuffer, 0);
     return angle::Result::Continue;
+}
+
+angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
+                                                 const gl::PixelPackState &packState,
+                                                 gl::Buffer *packBuffer,
+                                                 uint32_t level,
+                                                 uint32_t layer,
+                                                 GLenum format,
+                                                 GLenum type,
+                                                 void *pixels)
+{
+    const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
+
+    // Depth/stencil readback is not yet implemented.
+    // TODO(http://anglebug.com/4058): Depth/stencil readback.
+    if (angleFormat.depthBits > 0 || angleFormat.stencilBits > 0)
+    {
+        UNIMPLEMENTED();
+        return angle::Result::Continue;
+    }
+
+    PackPixelsParams params;
+    GLuint outputSkipBytes = 0;
+
+    uint32_t width  = std::max(1u, mExtents.width >> level);
+    uint32_t height = std::max(1u, mExtents.height >> level);
+    gl::Rectangle area(0, 0, width, height);
+
+    ANGLE_TRY(GetReadPixelsParams(contextVk, packState, packBuffer, format, type, area, area,
+                                  &params, &outputSkipBytes));
+
+    // Use a temporary staging buffer. Could be optimized.
+    vk::RendererScoped<vk::DynamicBuffer> stagingBuffer(contextVk->getRenderer());
+    stagingBuffer.get().init(contextVk->getRenderer(), VK_BUFFER_USAGE_TRANSFER_DST_BIT, 1,
+                             kStagingBufferSize, true);
+
+    return readPixels(contextVk, area, params, VK_IMAGE_ASPECT_COLOR_BIT, level, 0,
+                      static_cast<uint8_t *>(pixels) + outputSkipBytes, &stagingBuffer.get());
 }
 
 angle::Result ImageHelper::readPixels(ContextVk *contextVk,
@@ -3101,12 +3138,10 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     // created with the host coherent bit.
     ANGLE_TRY(stagingBuffer->invalidate(contextVk));
 
-    const gl::State &glState = contextVk->getState();
-    gl::Buffer *packBuffer   = glState.getTargetBuffer(gl::BufferBinding::PixelPack);
-    if (packBuffer != nullptr)
+    if (packPixelsParams.packBuffer)
     {
         // Must map the PBO in order to read its contents (and then unmap it later)
-        BufferVk *packBufferVk = GetImpl(packBuffer);
+        BufferVk *packBufferVk = GetImpl(packPixelsParams.packBuffer);
         void *mapPtr           = nullptr;
         ANGLE_TRY(packBufferVk->mapImpl(contextVk, &mapPtr));
         uint8_t *dest = static_cast<uint8_t *>(mapPtr) + reinterpret_cast<ptrdiff_t>(pixels);
