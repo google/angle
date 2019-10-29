@@ -352,6 +352,13 @@ Error ValidatePlatformType(const ClientExtensions &clientExtensions, EGLAttrib p
             }
             break;
 
+        case EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE:
+            if (!clientExtensions.platformANGLEMetal)
+            {
+                return EglBadAttribute() << "Metal platform is unsupported.";
+            }
+            break;
+
         default:
             return EglBadAttribute() << "Unknown platform type.";
     }

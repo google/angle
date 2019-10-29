@@ -11,6 +11,8 @@
 #define LIBANGLE_RENDERER_METAL_RENDERBUFFERMTL_H_
 
 #include "libANGLE/renderer/RenderbufferImpl.h"
+#include "libANGLE/renderer/metal/RenderTargetMtl.h"
+#include "libANGLE/renderer/metal/mtl_resources.h"
 
 namespace rx
 {
@@ -42,6 +44,19 @@ class RenderbufferMtl : public RenderbufferImpl
 
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
+
+  private:
+    angle::Result setStorageImpl(const gl::Context *context,
+                                 size_t samples,
+                                 GLenum internalformat,
+                                 size_t width,
+                                 size_t height);
+
+    void releaseTexture();
+
+    mtl::Format mFormat;
+    mtl::TextureRef mTexture;
+    RenderTargetMtl mRenderTarget;
 };
 
 }  // namespace rx

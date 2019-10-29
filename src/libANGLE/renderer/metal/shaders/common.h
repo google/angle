@@ -13,6 +13,12 @@
 #    include <metal_stdlib>
 #endif
 
+#define ANGLE_KERNEL_GUARD(IDX, MAX_COUNT) \
+    if (IDX >= MAX_COUNT)                  \
+    {                                      \
+        return;                            \
+    }
+
 using namespace metal;
 
 // Full screen quad's vertices

@@ -24,9 +24,17 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
                                                          gl::ShCompilerInstance *compilerInstance,
                                                          ShCompileOptions options)
 {
-    UNIMPLEMENTED();
+    ShCompileOptions compileOptions = SH_INITIALIZE_UNINITIALIZED_LOCALS;
 
-    return compileImpl(context, compilerInstance, mData.getSource(), options);
+    bool isWebGL = context->getExtensions().webglCompatibility;
+    if (isWebGL && mData.getShaderType() != gl::ShaderType::Compute)
+    {
+        compileOptions |= SH_INIT_OUTPUT_VARIABLES;
+    }
+
+    compileOptions |= SH_CLAMP_POINT_SIZE;
+
+    return compileImpl(context, compilerInstance, mData.getSource(), compileOptions | options);
 }
 
 std::string ShaderMtl::getDebugInfo() const

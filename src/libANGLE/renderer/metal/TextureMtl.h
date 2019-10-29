@@ -12,6 +12,9 @@
 
 #include "common/PackedEnums.h"
 #include "libANGLE/renderer/TextureImpl.h"
+#include "libANGLE/renderer/metal/RenderTargetMtl.h"
+#include "libANGLE/renderer/metal/mtl_command_buffer.h"
+#include "libANGLE/renderer/metal/mtl_resources.h"
 
 namespace rx
 {
@@ -136,6 +139,86 @@ class TextureMtl : public TextureImpl
 
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
+
+    void bindVertexShader(const gl::Context *context,
+                          mtl::RenderCommandEncoder *cmdEncoder,
+                          int textureSlotIndex,
+                          int samplerSlotIndex);
+    void bindFragmentShader(const gl::Context *context,
+                            mtl::RenderCommandEncoder *cmdEncoder,
+                            int textureSlotIndex,
+                            int samplerSlotIndex);
+
+    const mtl::Format &getFormat() const { return mFormat; }
+
+  private:
+    void releaseTexture();
+
+    // If levels = 0, this function will create full mipmaps texture.
+    angle::Result setStorageImpl(const gl::Context *context,
+                                 gl::TextureType type,
+                                 size_t levels,
+                                 const mtl::Format &mtlFormat,
+                                 const gl::Extents &size);
+
+    angle::Result redefineImage(const gl::Context *context,
+                                const gl::ImageIndex &index,
+                                const mtl::Format &mtlFormat,
+                                const gl::Extents &size);
+
+    angle::Result setImageImpl(const gl::Context *context,
+                               const gl::ImageIndex &index,
+                               const gl::InternalFormat &formatInfo,
+                               const gl::Extents &size,
+                               GLenum type,
+                               const gl::PixelUnpackState &unpack,
+                               const uint8_t *pixels);
+    angle::Result setSubImageImpl(const gl::Context *context,
+                                  const gl::ImageIndex &index,
+                                  const gl::Box &area,
+                                  const gl::InternalFormat &formatInfo,
+                                  GLenum type,
+                                  const gl::PixelUnpackState &unpack,
+                                  const uint8_t *pixels);
+
+    angle::Result copySubImageImpl(const gl::Context *context,
+                                   const gl::ImageIndex &index,
+                                   const gl::Offset &destOffset,
+                                   const gl::Rectangle &sourceArea,
+                                   const gl::InternalFormat &internalFormat,
+                                   gl::Framebuffer *source);
+    angle::Result copySubImageWithDraw(const gl::Context *context,
+                                       const gl::ImageIndex &index,
+                                       const gl::Offset &destOffset,
+                                       const gl::Rectangle &sourceArea,
+                                       const gl::InternalFormat &internalFormat,
+                                       gl::Framebuffer *source);
+    angle::Result copySubImageCPU(const gl::Context *context,
+                                  const gl::ImageIndex &index,
+                                  const gl::Offset &destOffset,
+                                  const gl::Rectangle &sourceArea,
+                                  const gl::InternalFormat &internalFormat,
+                                  gl::Framebuffer *source);
+
+    // Convert pixels to suported format before uploading to texture
+    angle::Result convertAndSetSubImage(const gl::Context *context,
+                                        const gl::ImageIndex &index,
+                                        const MTLRegion &mtlArea,
+                                        const gl::InternalFormat &internalFormat,
+                                        const angle::Format &pixelsFormat,
+                                        size_t pixelsRowPitch,
+                                        const uint8_t *pixels);
+
+    angle::Result generateMipmapCPU(const gl::Context *context);
+
+    mtl::Format mFormat;
+    mtl::TextureRef mTexture;
+    id<MTLSamplerState> mMetalSamplerState = nil;
+
+    std::vector<RenderTargetMtl> mLayeredRenderTargets;
+    std::vector<mtl::TextureRef> mLayeredTextureViews;
+
+    bool mIsPow2 = false;
 };
 
 }  // namespace rx

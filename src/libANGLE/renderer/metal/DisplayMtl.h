@@ -10,7 +10,15 @@
 #ifndef LIBANGLE_RENDERER_METAL_DISPLAYMTL_H_
 #define LIBANGLE_RENDERER_METAL_DISPLAYMTL_H_
 
+#include "common/PackedEnums.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/DisplayImpl.h"
+#include "libANGLE/renderer/metal/mtl_command_buffer.h"
+#include "libANGLE/renderer/metal/mtl_format_utils.h"
+#include "libANGLE/renderer/metal/mtl_render_utils.h"
+#include "libANGLE/renderer/metal/mtl_state_cache.h"
+#include "libANGLE/renderer/metal/mtl_utils.h"
+#include "platform/FeaturesMtl.h"
 
 namespace egl
 {
@@ -19,15 +27,11 @@ class Surface;
 
 namespace rx
 {
-
-class RendererMtl;
+class ContextMtl;
 
 class DisplayMtl : public DisplayImpl
 {
   public:
-    // Check whether minimum required Metal version is available on the host platform.
-    static bool IsMetalAvailable();
-
     DisplayMtl(const egl::DisplayState &state);
     ~DisplayMtl() override;
 
@@ -86,14 +90,72 @@ class DisplayMtl : public DisplayImpl
 
     egl::ConfigSet generateConfigs() override;
 
-    RendererMtl *getRenderer() { return mRenderer.get(); }
+    std::string getRendererDescription() const;
+    gl::Caps getNativeCaps() const;
+    const gl::TextureCapsMap &getNativeTextureCaps() const;
+    const gl::Extensions &getNativeExtensions() const;
+    const gl::Limitations &getNativeLimitations() const { return mNativeLimitations; }
+    const angle::FeaturesMtl &getFeatures() const { return mFeatures; }
+
+    id<MTLDevice> getMetalDevice() const { return mMetalDevice; }
+
+    mtl::CommandQueue &cmdQueue() { return mCmdQueue; }
+    const mtl::FormatTable &getFormatTable() const { return mFormatTable; }
+    mtl::RenderUtils &getUtils() { return mUtils; }
+    mtl::StateCache &getStateCache() { return mStateCache; }
+
+    id<MTLDepthStencilState> getDepthStencilState(const mtl::DepthStencilDesc &desc)
+    {
+        return mStateCache.getDepthStencilState(getMetalDevice(), desc);
+    }
+    id<MTLSamplerState> getSamplerState(const mtl::SamplerDesc &desc)
+    {
+        return mStateCache.getSamplerState(getMetalDevice(), desc);
+    }
+
+    const mtl::TextureRef &getNullTexture(const gl::Context *context, gl::TextureType type);
+
+    const mtl::Format &getPixelFormat(angle::FormatID angleFormatId) const
+    {
+        return mFormatTable.getPixelFormat(angleFormatId);
+    }
+
+    // See mtl::FormatTable::getVertexFormat()
+    const mtl::VertexFormat &getVertexFormat(angle::FormatID angleFormatId,
+                                             bool tightlyPacked) const
+    {
+        return mFormatTable.getVertexFormat(angleFormatId, tightlyPacked);
+    }
 
   protected:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
   private:
-    std::unique_ptr<RendererMtl> mRenderer;
+    angle::Result initializeImpl(egl::Display *display);
+    void ensureCapsInitialized() const;
+    void initializeCaps() const;
+    void initializeExtensions() const;
+    void initializeTextureCaps() const;
+    void initializeFeatures();
+
+    mtl::AutoObjCPtr<id<MTLDevice>> mMetalDevice = nil;
+
+    mtl::CommandQueue mCmdQueue;
+
+    mtl::FormatTable mFormatTable;
+    mtl::StateCache mStateCache;
+    mtl::RenderUtils mUtils;
+
+    angle::PackedEnumMap<gl::TextureType, mtl::TextureRef> mNullTextures;
+
+    mutable bool mCapsInitialized;
+    mutable gl::TextureCapsMap mNativeTextureCaps;
+    mutable gl::Extensions mNativeExtensions;
+    mutable gl::Caps mNativeCaps;
+    mutable gl::Limitations mNativeLimitations;
+
+    angle::FeaturesMtl mFeatures;
 };
 
 }  // namespace rx

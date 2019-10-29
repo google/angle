@@ -25,7 +25,9 @@ template_header_boilerplate = """// GENERATED FILE - DO NOT EDIT.
 def main():
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = ['master_source.metal']
+        inputs = [
+            'master_source.metal', 'blit.metal', 'clear.metal', 'gen_indices.metal', 'common.h'
+        ]
         outputs = ['compiled/mtl_default_shaders.inc', 'mtl_default_shaders_src_autogen.inc']
 
         if sys.argv[1] == 'inputs':
@@ -47,7 +49,7 @@ def main():
 
     print('Compiling ios version of default shaders ...')
     os.system(
-        'xcrun -sdk iphoneos metal master_source.metal -mios-version-min=8.0 -c -o compiled/default.ios.air'
+        'xcrun -sdk iphoneos metal master_source.metal -mios-version-min=11.0 -c -o compiled/default.ios.air'
     )
     os.system(
         'xcrun -sdk iphoneos metallib compiled/default.ios.air -o compiled/default.ios.metallib')
@@ -69,14 +71,15 @@ def main():
     os.system('echo "#include <TargetConditionals.h>\n\n" >> compiled/mtl_default_shaders.inc')
 
     # Mac version
-    os.system('echo "#if TARGET_OS_OSX\n" >> compiled/mtl_default_shaders.inc')
+    os.system(
+        'echo "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n" >> compiled/mtl_default_shaders.inc')
 
     os.system('echo "constexpr" >> compiled/mtl_default_shaders.inc')
     os.system('xxd -i compiled/default.metallib >> compiled/mtl_default_shaders.inc')
 
     # iOS simulator version
     os.system(
-        'echo "\n#elif TARGET_OS_SIMULATOR  // TARGET_OS_OSX\n" >> compiled/mtl_default_shaders.inc'
+        'echo "\n#elif TARGET_OS_SIMULATOR  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n" >> compiled/mtl_default_shaders.inc'
     )
 
     os.system(
@@ -90,7 +93,8 @@ def main():
 
     # iOS version
     os.system(
-        'echo "\n#elif TARGET_OS_IOS  // TARGET_OS_OSX\n" >> compiled/mtl_default_shaders.inc')
+        'echo "\n#elif TARGET_OS_IOS  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n" >> compiled/mtl_default_shaders.inc'
+    )
 
     os.system(
         'echo "#define compiled_default_metallib     compiled_default_ios_metallib" >> compiled/mtl_default_shaders.inc'
@@ -101,7 +105,9 @@ def main():
     os.system('echo "constexpr" >> compiled/mtl_default_shaders.inc')
     os.system('xxd -i compiled/default.ios.metallib >> compiled/mtl_default_shaders.inc')
 
-    os.system('echo "#endif  // TARGET_OS_OSX\n" >> compiled/mtl_default_shaders.inc')
+    os.system(
+        'echo "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n" >> compiled/mtl_default_shaders.inc'
+    )
 
     # Write full source string for debug purpose
     os.system("echo \"{0}\" > mtl_default_shaders_src_autogen.inc".format(boilerplate_code))

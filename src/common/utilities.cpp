@@ -629,6 +629,24 @@ bool IsTriangleMode(PrimitiveMode drawMode)
     return false;
 }
 
+bool IsPolygonMode(PrimitiveMode mode)
+{
+    switch (mode)
+    {
+        case PrimitiveMode::Points:
+        case PrimitiveMode::Lines:
+        case PrimitiveMode::LineStrip:
+        case PrimitiveMode::LineLoop:
+        case PrimitiveMode::LinesAdjacency:
+        case PrimitiveMode::LineStripAdjacency:
+            return false;
+        default:
+            break;
+    }
+
+    return true;
+}
+
 namespace priv
 {
 const angle::PackedEnumMap<PrimitiveMode, bool> gLineModes = {

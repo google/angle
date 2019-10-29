@@ -13,14 +13,20 @@
 #import <Metal/Metal.h>
 
 #include "libANGLE/renderer/FramebufferImpl.h"
+#include "libANGLE/renderer/metal/RenderTargetMtl.h"
+#include "libANGLE/renderer/metal/mtl_render_utils.h"
 
 namespace rx
 {
+class ContextMtl;
+class SurfaceMtl;
 
 class FramebufferMtl : public FramebufferImpl
 {
   public:
-    explicit FramebufferMtl(const gl::FramebufferState &state);
+    explicit FramebufferMtl(const gl::FramebufferState &state,
+                            bool flipY,
+                            bool alwaysDiscardDepthStencil);
     ~FramebufferMtl() override;
     void destroy(const gl::Context *context) override;
 
@@ -76,6 +82,67 @@ class FramebufferMtl : public FramebufferImpl
     angle::Result getSamplePosition(const gl::Context *context,
                                     size_t index,
                                     GLfloat *xy) const override;
+
+    RenderTargetMtl *getColorReadRenderTarget() const;
+
+    bool flipY() const { return mFlipY; }
+
+    gl::Rectangle getCompleteRenderArea() const;
+
+    const mtl::RenderPassDesc &getRenderPassDesc(ContextMtl *context);
+
+    // Call this to notify FramebufferMtl whenever its render pass has ended.
+    void onFinishedDrawingToFrameBuffer(const gl::Context *context,
+                                        mtl::RenderCommandEncoder *encoder);
+
+    angle::Result readPixelsImpl(const gl::Context *context,
+                                 const gl::Rectangle &area,
+                                 const PackPixelsParams &packPixelsParams,
+                                 RenderTargetMtl *renderTarget,
+                                 uint8_t *pixels);
+
+  private:
+    void reset();
+    angle::Result invalidateImpl(ContextMtl *contextMtl, size_t count, const GLenum *attachments);
+    angle::Result clearImpl(const gl::Context *context,
+                            gl::DrawBufferMask clearColorBuffers,
+                            mtl::ClearRectParams *clearOpts);
+
+    angle::Result clearWithLoadOp(const gl::Context *context,
+                                  gl::DrawBufferMask clearColorBuffers,
+                                  const mtl::ClearRectParams &clearOpts);
+
+    angle::Result clearWithDraw(const gl::Context *context,
+                                gl::DrawBufferMask clearColorBuffers,
+                                const mtl::ClearRectParams &clearOpts);
+
+    angle::Result prepareRenderPass(const gl::Context *context,
+                                    gl::DrawBufferMask drawColorBuffers,
+                                    mtl::RenderPassDesc *descOut);
+
+    void overrideClearColor(const mtl::TextureRef &texture,
+                            MTLClearColor clearColor,
+                            MTLClearColor *colorOut);
+
+    angle::Result updateColorRenderTarget(const gl::Context *context, size_t colorIndexGL);
+    angle::Result updateDepthRenderTarget(const gl::Context *context);
+    angle::Result updateStencilRenderTarget(const gl::Context *context);
+    angle::Result updateCachedRenderTarget(const gl::Context *context,
+                                           const gl::FramebufferAttachment *attachment,
+                                           RenderTargetMtl **cachedRenderTarget);
+
+    // NOTE: we cannot use RenderTargetCache here because it doesn't support separate
+    // depth & stencil attachments as of now. Separate depth & stencil could be useful to
+    // save spaces on iOS devices. See doc/PackedDepthStencilSupport.md.
+    std::array<RenderTargetMtl *, mtl::kMaxRenderTargets> mColorRenderTargets;
+    std::array<bool, mtl::kMaxRenderTargets> mDiscardColors;
+    RenderTargetMtl *mDepthRenderTarget   = nullptr;
+    bool mDiscardDepth                    = false;
+    RenderTargetMtl *mStencilRenderTarget = nullptr;
+    bool mDiscardStencil                  = false;
+    mtl::RenderPassDesc mRenderPassDesc;
+    const bool mAlwaysDiscardDepthStencil;
+    const bool mFlipY = false;
 };
 }  // namespace rx
 

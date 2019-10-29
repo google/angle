@@ -12,7 +12,7 @@
 
 #include "common/debug.h"
 #include "libANGLE/renderer/Format.h"
-#include "libANGLE/renderer/metal/RendererMtl.h"
+#include "libANGLE/renderer/metal/DisplayMtl.h"
 
 namespace rx
 {
@@ -22,11 +22,9 @@ namespace mtl
 namespace
 {
 
-bool OverrideTextureCaps(const RendererMtl *renderer,
-                         angle::FormatID formatId,
-                         gl::TextureCaps *caps)
+bool OverrideTextureCaps(const DisplayMtl *display, angle::FormatID formatId, gl::TextureCaps *caps)
 {
-    // TODO(hqle): Auto generate this.
+    // NOTE(hqle): Auto generate this.
     switch (formatId)
     {
         case angle::FormatID::R8G8_UNORM:
@@ -40,13 +38,13 @@ bool OverrideTextureCaps(const RendererMtl *renderer,
                 true;
             return true;
         default:
-            // TODO(hqle): Handle more cases
+            // NOTE(hqle): Handle more cases
             return false;
     }
 }
 
 void GenerateTextureCapsMap(const FormatTable &formatTable,
-                            const RendererMtl *renderer,
+                            const DisplayMtl *display,
                             gl::TextureCapsMap *capsMapOut,
                             std::vector<GLenum> *compressedFormatsOut)
 {
@@ -64,26 +62,30 @@ void GenerateTextureCapsMap(const FormatTable &formatTable,
     // Then using that json file to generate a table in C++ file.
     gl::Extensions tmpTextureExtensions;
 
-#if TARGET_OS_OSX
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
     // https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf
     // Requires depth24Stencil8PixelFormatSupported=YES for these extensions
     bool packedDepthStencil24Support =
-        renderer->getMetalDevice().depth24Stencil8PixelFormatSupported;
-    tmpTextureExtensions.packedDepthStencil         = true;  // We support this reguardless
-    tmpTextureExtensions.colorBufferHalfFloat       = packedDepthStencil24Support;
-    tmpTextureExtensions.colorBufferFloat           = packedDepthStencil24Support;
-    tmpTextureExtensions.colorBufferFloatRGB        = packedDepthStencil24Support;
-    tmpTextureExtensions.colorBufferFloatRGBA       = packedDepthStencil24Support;
-    tmpTextureExtensions.textureHalfFloat           = packedDepthStencil24Support;
-    tmpTextureExtensions.textureFloat               = packedDepthStencil24Support;
-    tmpTextureExtensions.textureHalfFloatLinear     = packedDepthStencil24Support;
-    tmpTextureExtensions.textureFloatLinear         = packedDepthStencil24Support;
-    tmpTextureExtensions.textureRG                  = packedDepthStencil24Support;
-    tmpTextureExtensions.textureFormatBGRA8888      = packedDepthStencil24Support;
-    tmpTextureExtensions.textureCompressionDXT1     = true;
-    tmpTextureExtensions.textureCompressionDXT3     = true;
-    tmpTextureExtensions.textureCompressionDXT5     = true;
-    tmpTextureExtensions.textureCompressionS3TCsRGB = true;
+        display->getMetalDevice().depth24Stencil8PixelFormatSupported;
+    tmpTextureExtensions.packedDepthStencil     = true;  // We support this reguardless
+    tmpTextureExtensions.colorBufferHalfFloat   = packedDepthStencil24Support;
+    tmpTextureExtensions.colorBufferFloat       = packedDepthStencil24Support;
+    tmpTextureExtensions.colorBufferFloatRGB    = packedDepthStencil24Support;
+    tmpTextureExtensions.colorBufferFloatRGBA   = packedDepthStencil24Support;
+    tmpTextureExtensions.textureHalfFloat       = packedDepthStencil24Support;
+    tmpTextureExtensions.textureFloat           = packedDepthStencil24Support;
+    tmpTextureExtensions.textureHalfFloatLinear = packedDepthStencil24Support;
+    tmpTextureExtensions.textureFloatLinear     = packedDepthStencil24Support;
+    tmpTextureExtensions.textureRG              = packedDepthStencil24Support;
+    tmpTextureExtensions.textureFormatBGRA8888  = packedDepthStencil24Support;
+
+    tmpTextureExtensions.textureCompressionDXT3 = true;
+    tmpTextureExtensions.textureCompressionDXT5 = true;
+
+    // We can only fully support DXT1 without alpha using texture swizzle support from MacOs 10.15
+    tmpTextureExtensions.textureCompressionDXT1 = display->getFeatures().hasTextureSwizzle.enabled;
+
+    tmpTextureExtensions.textureCompressionS3TCsRGB = tmpTextureExtensions.textureCompressionDXT1;
 #else
     tmpTextureExtensions.packedDepthStencil     = true;  // override to D32_FLOAT_S8X24_UINT
     tmpTextureExtensions.colorBufferHalfFloat   = true;
@@ -95,7 +97,7 @@ void GenerateTextureCapsMap(const FormatTable &formatTable,
     tmpTextureExtensions.textureFloat           = true;
     tmpTextureExtensions.textureRG              = true;
     tmpTextureExtensions.textureFormatBGRA8888  = true;
-    if ([renderer->getMetalDevice() supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily1_v1])
+    if ([display->getMetalDevice() supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily1_v1])
     {
         tmpTextureExtensions.compressedETC1RGB8Texture        = true;
         tmpTextureExtensions.compressedETC2RGB8Texture        = true;
@@ -132,14 +134,14 @@ void GenerateTextureCapsMap(const FormatTable &formatTable,
         const auto &clientVersion = kMaxSupportedGLVersion;
 
         // First let check whether we can determine programmatically.
-        if (!OverrideTextureCaps(renderer, mtlFormat.intendedFormatId, &textureCaps))
+        if (!OverrideTextureCaps(display, mtlFormat.intendedFormatId, &textureCaps))
         {
             // Let angle decide based on extensions we enabled above.
             textureCaps = gl::GenerateMinimumTextureCaps(internalFormatInfo.sizedInternalFormat,
                                                          clientVersion, tmpTextureExtensions);
         }
 
-        // TODO(hqle): Support MSAA.
+        // NOTE(hqle): Support MSAA.
         textureCaps.sampleCounts.clear();
         textureCaps.sampleCounts.insert(0);
         textureCaps.sampleCounts.insert(1);
@@ -147,7 +149,7 @@ void GenerateTextureCapsMap(const FormatTable &formatTable,
         if (textureCaps.filterable && mtlFormat.actualFormatId == angle::FormatID::D32_FLOAT)
         {
             // Only MacOS support filterable for D32_FLOAT texture
-#if !TARGET_OS_OSX
+#if !TARGET_OS_OSX || TARGET_OS_MACCATALYST
             textureCaps.filterable = false;
 #endif
         }
@@ -210,7 +212,7 @@ bool Format::FormatRenderable(MTLPixelFormat format)
         case MTLPixelFormatDepth32Float:
         case MTLPixelFormatStencil8:
         case MTLPixelFormatDepth32Float_Stencil8:
-#if TARGET_OS_OSX
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case MTLPixelFormatDepth16Unorm:
         case MTLPixelFormatDepth24Unorm_Stencil8:
 #else
@@ -221,7 +223,7 @@ bool Format::FormatRenderable(MTLPixelFormat format)
         case MTLPixelFormatABGR4Unorm:
         case MTLPixelFormatBGR5A1Unorm:
 #endif
-            // TODO(hqle): we may add more formats support here in future.
+            // NOTE(hqle): we may add more formats support here in future.
             return true;
         default:
             return false;
@@ -237,11 +239,11 @@ bool Format::FormatCPUReadable(MTLPixelFormat format)
         case MTLPixelFormatDepth32Float:
         case MTLPixelFormatStencil8:
         case MTLPixelFormatDepth32Float_Stencil8:
-#if TARGET_OS_OSX
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case MTLPixelFormatDepth16Unorm:
         case MTLPixelFormatDepth24Unorm_Stencil8:
 #endif
-            // TODO(hqle): we may add more formats support here in future.
+            // NOTE(hqle): we may add more formats support here in future.
             return false;
         default:
             return true;
@@ -254,13 +256,13 @@ const gl::InternalFormat &Format::intendedInternalFormat() const
 }
 
 // FormatTable implementation
-angle::Result FormatTable::initialize(const RendererMtl *renderer)
+angle::Result FormatTable::initialize(const DisplayMtl *display)
 {
     for (size_t i = 0; i < angle::kNumANGLEFormats; ++i)
     {
         const auto formatId = static_cast<angle::FormatID>(i);
 
-        mPixelFormatTable[i].init(renderer, formatId);
+        mPixelFormatTable[i].init(display, formatId);
         mVertexFormatTables[0][i].init(formatId, false);
         mVertexFormatTables[1][i].init(formatId, true);
     }
@@ -268,11 +270,11 @@ angle::Result FormatTable::initialize(const RendererMtl *renderer)
     return angle::Result::Continue;
 }
 
-void FormatTable::generateTextureCaps(const RendererMtl *renderer,
+void FormatTable::generateTextureCaps(const DisplayMtl *display,
                                       gl::TextureCapsMap *capsMapOut,
                                       std::vector<GLenum> *compressedFormatsOut) const
 {
-    GenerateTextureCapsMap(*this, renderer, capsMapOut, compressedFormatsOut);
+    GenerateTextureCapsMap(*this, display, capsMapOut, compressedFormatsOut);
 }
 
 const Format &FormatTable::getPixelFormat(angle::FormatID angleFormatId) const

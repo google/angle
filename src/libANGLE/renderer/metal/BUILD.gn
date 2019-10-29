@@ -17,6 +17,7 @@ _metal_backend_sources = [
   "ContextMtl.h",
   "ContextMtl.mm",
   "DisplayMtl.h",
+  "DisplayMtl_api.h",
   "DisplayMtl.mm",
   "FrameBufferMtl.h",
   "FrameBufferMtl.mm",
@@ -24,8 +25,8 @@ _metal_backend_sources = [
   "ProgramMtl.mm",
   "RenderBufferMtl.h",
   "RenderBufferMtl.mm",
-  "RendererMtl.h",
-  "RendererMtl.mm",
+  "RenderTargetMtl.h",
+  "RenderTargetMtl.mm",
   "ShaderMtl.h",
   "ShaderMtl.mm",
   "SurfaceMtl.h",
@@ -34,8 +35,27 @@ _metal_backend_sources = [
   "TextureMtl.mm",
   "VertexArrayMtl.h",
   "VertexArrayMtl.mm",
+  "mtl_buffer_pool.h",
+  "mtl_buffer_pool.mm",
+  "mtl_command_buffer.h",
+  "mtl_command_buffer.mm",
   "mtl_common.h",
   "mtl_common.mm",
+  "mtl_format_table_autogen.mm",
+  "mtl_format_utils.h",
+  "mtl_format_utils.mm",
+  "mtl_glslang_utils.h",
+  "mtl_glslang_utils.mm",
+  "mtl_render_utils.h",
+  "mtl_render_utils.mm",
+  "mtl_resources.h",
+  "mtl_resources.mm",
+  "mtl_state_cache.h",
+  "mtl_state_cache.mm",
+  "mtl_utils.h",
+  "mtl_utils.mm",
+  "shaders/mtl_default_shaders_src_autogen.inc",
+  "shaders/compiled/mtl_default_shaders.inc",
 ]
 
 config("angle_metal_backend_config") {
@@ -59,6 +79,7 @@ angle_source_set("angle_metal_backend") {
   libs = []
 
   public_deps = [
+    "${angle_root}:angle_glslang_wrapper",
     "${angle_root}:libANGLE_headers",
   ]
 

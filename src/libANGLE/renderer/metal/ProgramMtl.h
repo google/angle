@@ -12,10 +12,18 @@
 
 #import <Metal/Metal.h>
 
+#include <array>
+
+#include "common/Optional.h"
+#include "common/utilities.h"
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "libANGLE/renderer/metal/mtl_command_buffer.h"
+#include "libANGLE/renderer/metal/mtl_resources.h"
+#include "libANGLE/renderer/metal/mtl_state_cache.h"
 
 namespace rx
 {
+class ContextMtl;
 
 class ProgramMtl : public ProgramImpl
 {
@@ -95,6 +103,13 @@ class ProgramMtl : public ProgramImpl
                                  GLint components,
                                  const GLfloat *coeffs) override;
 
+    // Calls this before drawing, changedPipelineDesc is passed when vertex attributes desc and/or
+    // shader program changed.
+    angle::Result setupDraw(const gl::Context *glContext,
+                            mtl::RenderCommandEncoder *cmdEncoder,
+                            const Optional<mtl::RenderPipelineDesc> &changedPipelineDesc,
+                            bool forceTexturesSetting);
+
   private:
     template <int cols, int rows>
     void setUniformMatrixfv(GLint location,
@@ -106,6 +121,49 @@ class ProgramMtl : public ProgramImpl
 
     template <typename T>
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
+
+    angle::Result initDefaultUniformBlocks(const gl::Context *glContext);
+
+    angle::Result commitUniforms(ContextMtl *context, mtl::RenderCommandEncoder *cmdEncoder);
+    angle::Result updateTextures(const gl::Context *glContext,
+                                 mtl::RenderCommandEncoder *cmdEncoder,
+                                 bool forceUpdate);
+
+    void reset(ContextMtl *context);
+    void linkResources(const gl::ProgramLinkedResources &resources);
+    angle::Result linkImpl(const gl::Context *glContext, gl::InfoLog &infoLog);
+    angle::Result convertToMsl(const gl::Context *glContext,
+                               gl::ShaderType shaderType,
+                               gl::InfoLog &infoLog,
+                               std::vector<uint32_t> *sprivCode);
+
+    angle::Result createMslShader(const gl::Context *glContext,
+                                  gl::ShaderType shaderType,
+                                  gl::InfoLog &infoLog,
+                                  const std::string &translatedSource);
+
+    // State for the default uniform blocks.
+    struct DefaultUniformBlock final : private angle::NonCopyable
+    {
+        DefaultUniformBlock();
+        ~DefaultUniformBlock();
+
+        // Shadow copies of the shader uniform data.
+        angle::MemoryBuffer uniformData;
+
+        // Since the default blocks are laid out in std140, this tells us where to write on a call
+        // to a setUniform method. They are arranged in uniform location order.
+        std::vector<sh::BlockMemberInfo> uniformLayout;
+    };
+
+    gl::ShaderBitSet mDefaultUniformBlocksDirty;
+    gl::ShaderBitSet mSamplerBindingsDirty;
+    gl::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
+
+    // We keep the translated linked shader sources to use with shader draw call patching.
+    gl::ShaderMap<std::string> mShaderSource;
+
+    mtl::RenderPipelineCache mMetalRenderPipelineCache;
 };
 
 }  // namespace rx

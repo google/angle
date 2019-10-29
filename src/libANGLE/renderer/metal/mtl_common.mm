@@ -14,18 +14,23 @@
 #include <cstring>
 
 #include "libANGLE/angletypes.h"
-#include "libANGLE/renderer/metal/RendererMtl.h"
+#include "libANGLE/renderer/metal/DisplayMtl.h"
 
 namespace rx
 {
 namespace mtl
 {
 
-Context::Context(RendererMtl *rendererMtl) : mRendererMtl(rendererMtl) {}
+Context::Context(DisplayMtl *display) : mDisplay(display) {}
 
 id<MTLDevice> Context::getMetalDevice() const
 {
-    return mRendererMtl->getMetalDevice();
+    return mDisplay->getMetalDevice();
+}
+
+mtl::CommandQueue &Context::cmdQueue()
+{
+    return mDisplay->cmdQueue();
 }
 
 }  // namespace mtl

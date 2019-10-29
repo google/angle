@@ -14,7 +14,7 @@ struct BlitParams
     float2 srcTexCoords[4];
     int srcLevel;
     bool srcLuminance; // source texture is luminance texture
-    bool dstFlipY;
+    bool dstFlipViewportY;
     bool dstLuminance; // destination texture is luminance;
 };
 
@@ -31,9 +31,11 @@ vertex BlitVSOut blitVS(unsigned int vid [[ vertex_id ]],
     output.position = float4(gCorners[vid], 0.0, 1.0);
     output.texCoords = options.srcTexCoords[gTexcoordsIndices[vid]];
 
-    if (options.dstFlipY)
+    if (!options.dstFlipViewportY)
     {
-        output.position = -output.position;
+        // If viewport is not flipped, we have to flip Y in normalized device coordinates.
+        // Since NDC has Y is opposite direction of viewport coodrinates.
+        output.position.y = -output.position.y;
     }
 
     return output;
@@ -61,7 +63,7 @@ float4 blitOutput(float4 color, constant BlitParams &options)
 
     if (options.dstLuminance)
     {
-        ret.r = ret.g = ret.b = (color.r * 0.3) + (color.g * 0.59) + (color.b * 0.11);
+        ret.r = ret.g = ret.b = color.r;
     }
 
     return ret;
