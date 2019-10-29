@@ -14,24 +14,50 @@ namespace rx
 {
 namespace mtl
 {
-
-// static
-void GlslangUtils::GetShaderSource(const gl::ProgramState &programState,
-                                   const gl::ProgramLinkedResources &resources,
-                                   gl::ShaderMap<std::string> *shaderSourcesOut)
+namespace
 {
-    UNIMPLEMENTED();
+angle::Result HandleError(ErrorHandler *context, GlslangError)
+{
+    ANGLE_MTL_TRY(context, false);
+    return angle::Result::Stop;
 }
 
-// static
-angle::Result GlslangUtils::GetShaderCode(ErrorHandler *context,
-                                          const gl::Caps &glCaps,
-                                          bool enableLineRasterEmulation,
-                                          const gl::ShaderMap<std::string> &shaderSources,
-                                          gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
+GlslangSourceOptions CreateSourceOptions()
 {
-    UNIMPLEMENTED();
-    return angle::Result::Stop;
+    GlslangSourceOptions options;
+    // We don't actually use descriptor set for now, the actual binding will be done inside
+    // ProgramMtl using spirv-cross.
+    options.uniformsAndXfbDescriptorSetIndex = kDefaultUniformsBindingIndex;
+    options.textureDescriptorSetIndex        = 0;
+    options.driverUniformsDescriptorSetIndex = kDriverUniformsBindingIndex;
+    // NOTE(hqle): Unused for now, until we support ES 3.0
+    options.shaderResourceDescriptorSetIndex = -1;
+    options.xfbBindingIndexStart             = -1;
+
+    static_assert(kDefaultUniformsBindingIndex != 0, "kDefaultUniformsBindingIndex must not be 0");
+    static_assert(kDriverUniformsBindingIndex != 0, "kDriverUniformsBindingIndex must not be 0");
+
+    return options;
+}
+}  // namespace
+
+void GlslangGetShaderSource(const gl::ProgramState &programState,
+                            const gl::ProgramLinkedResources &resources,
+                            gl::ShaderMap<std::string> *shaderSourcesOut)
+{
+    rx::GlslangGetShaderSource(CreateSourceOptions(), false, programState, resources,
+                               shaderSourcesOut);
+}
+
+angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
+                                        const gl::Caps &glCaps,
+                                        bool enableLineRasterEmulation,
+                                        const gl::ShaderMap<std::string> &shaderSources,
+                                        gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
+{
+    return rx::GlslangGetShaderSpirvCode(
+        [context](GlslangError error) { return HandleError(context, error); }, glCaps,
+        enableLineRasterEmulation, shaderSources, shaderCodeOut);
 }
 }  // namespace mtl
 }  // namespace rx

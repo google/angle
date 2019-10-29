@@ -656,14 +656,13 @@ TranslatorVulkan::TranslatorVulkan(sh::GLenum type, ShShaderSpec spec)
     : TCompiler(type, spec, SH_GLSL_450_CORE_OUTPUT)
 {}
 
-bool TranslatorVulkan::translate(TIntermBlock *root,
-                                 ShCompileOptions compileOptions,
-                                 PerformanceDiagnostics * /*perfDiagnostics*/)
+bool TranslatorVulkan::translateImpl(TIntermBlock *root,
+                                     ShCompileOptions compileOptions,
+                                     PerformanceDiagnostics * /*perfDiagnostics*/,
+                                     const TVariable **driverUniformsOut,
+                                     TOutputVulkanGLSL *outputGLSL)
 {
     TInfoSinkBase &sink = getInfoSink().obj;
-    TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
-                                 getNameMap(), &getSymbolTable(), getShaderType(),
-                                 getShaderVersion(), getOutputType(), compileOptions);
 
     if (getShaderType() == GL_VERTEX_SHADER)
     {
@@ -727,7 +726,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
         defaultUniformCount -= removedUniformsCount;
 
         // We must declare the struct types before using them.
-        DeclareStructTypesTraverser structTypesTraverser(&outputGLSL);
+        DeclareStructTypesTraverser structTypesTraverser(outputGLSL);
         root->traverse(&structTypesTraverser);
         if (!structTypesTraverser.updateTree(this, root))
         {
@@ -939,6 +938,29 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
         return false;
     }
 
+    if (driverUniformsOut)
+    {
+        *driverUniformsOut = driverUniforms;
+    }
+
+    return true;
+}
+
+bool TranslatorVulkan::translate(TIntermBlock *root,
+                                 ShCompileOptions compileOptions,
+                                 PerformanceDiagnostics *perfDiagnostics)
+{
+
+    TInfoSinkBase &sink = getInfoSink().obj;
+    TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
+                                 getNameMap(), &getSymbolTable(), getShaderType(),
+                                 getShaderVersion(), getOutputType(), compileOptions);
+
+    if (!translateImpl(root, compileOptions, perfDiagnostics, nullptr, &outputGLSL))
+    {
+        return false;
+    }
+
     // Write translated shader.
     root->traverse(&outputGLSL);
 
@@ -949,6 +971,12 @@ bool TranslatorVulkan::shouldFlattenPragmaStdglInvariantAll()
 {
     // Not necessary.
     return false;
+}
+
+TIntermBinary *TranslatorVulkan::getDriverUniformNegViewportYScaleRef(
+    const TVariable *driverUniforms) const
+{
+    return CreateDriverUniformRef(driverUniforms, kNegViewportYScale);
 }
 
 }  // namespace sh

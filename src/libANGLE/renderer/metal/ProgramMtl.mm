@@ -13,6 +13,8 @@
 
 #include <sstream>
 
+#include <spirv_msl.hpp>
+
 #include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/ProgramLinkedResources.h"
@@ -30,6 +32,85 @@ namespace
 {
 
 #define SHADER_ENTRY_NAME @"main0"
+
+spv::ExecutionModel ShaderTypeToSpvExecutionModel(gl::ShaderType shaderType)
+{
+    switch (shaderType)
+    {
+        case gl::ShaderType::Vertex:
+            return spv::ExecutionModelVertex;
+        case gl::ShaderType::Fragment:
+            return spv::ExecutionModelFragment;
+        default:
+            UNREACHABLE();
+            return spv::ExecutionModelMax;
+    }
+}
+
+// Some GLSL variables need 2 binding points in metal. For example,
+// glsl sampler will be converted to 2 metal objects: texture and sampler.
+// Thus we need to set 2 binding points for one glsl sampler variable.
+using BindingField = uint32_t spirv_cross::MSLResourceBinding::*;
+template <BindingField bindingField1, BindingField bindingField2 = bindingField1>
+angle::Result BindResources(spirv_cross::CompilerMSL *compiler,
+                            const spirv_cross::SmallVector<spirv_cross::Resource> &resources,
+                            gl::ShaderType shaderType)
+{
+    auto &compilerMsl = *compiler;
+
+    for (const spirv_cross::Resource &resource : resources)
+    {
+        spirv_cross::MSLResourceBinding resBinding;
+        resBinding.stage = ShaderTypeToSpvExecutionModel(shaderType);
+
+        if (compilerMsl.has_decoration(resource.id, spv::DecorationDescriptorSet))
+        {
+            resBinding.desc_set =
+                compilerMsl.get_decoration(resource.id, spv::DecorationDescriptorSet);
+        }
+
+        if (!compilerMsl.has_decoration(resource.id, spv::DecorationBinding))
+        {
+            continue;
+        }
+
+        resBinding.binding = compilerMsl.get_decoration(resource.id, spv::DecorationBinding);
+
+        uint32_t bindingPoint;
+        // NOTE(hqle): We use separate discrete binding point for now, in future, we should use
+        // one argument buffer for each descriptor set.
+        switch (resBinding.desc_set)
+        {
+            case 0:
+                // Use resBinding.binding as binding point.
+                bindingPoint = resBinding.binding;
+                break;
+            case mtl::kDriverUniformsBindingIndex:
+                bindingPoint = mtl::kDriverUniformsBindingIndex;
+                break;
+            case mtl::kDefaultUniformsBindingIndex:
+                // NOTE(hqle): Properly handle transform feedbacks and UBO binding once ES 3.0 is
+                // implemented.
+                bindingPoint = mtl::kDefaultUniformsBindingIndex;
+                break;
+            default:
+                // We don't support this descriptor set.
+                continue;
+        }
+
+        // bindingField can be buffer or texture, which will be translated to [[buffer(d)]] or
+        // [[texture(d)]] or [[sampler(d)]]
+        resBinding.*bindingField1 = bindingPoint;
+        if (bindingField1 != bindingField2)
+        {
+            resBinding.*bindingField2 = bindingPoint;
+        }
+
+        compilerMsl.add_msl_resource_binding(resBinding);
+    }
+
+    return angle::Result::Continue;
+}
 
 void InitDefaultUniformBlock(const std::vector<sh::Uniform> &uniforms,
                              gl::Shader *shader,
@@ -214,7 +295,7 @@ std::unique_ptr<LinkEvent> ProgramMtl::link(const gl::Context *context,
     // assignment done in that function.
     linkResources(resources);
 
-    mtl::GlslangUtils::GetShaderSource(mState, resources, &mShaderSource);
+    mtl::GlslangGetShaderSource(mState, resources, &mShaderSource);
 
     // NOTE(hqle): Parallelize linking.
     return std::make_unique<LinkEventDone>(linkImpl(context, infoLog));
@@ -231,8 +312,8 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext, gl::InfoLog &in
 
     // Convert GLSL to spirv code
     gl::ShaderMap<std::vector<uint32_t>> shaderCodes;
-    ANGLE_TRY(mtl::GlslangUtils::GetShaderCode(contextMtl, contextMtl->getCaps(), false,
-                                               mShaderSource, &shaderCodes));
+    ANGLE_TRY(mtl::GlslangGetShaderSpirvCode(contextMtl, contextMtl->getCaps(), false,
+                                             mShaderSource, &shaderCodes));
 
     // Convert spirv code to MSL
     ANGLE_TRY(convertToMsl(glContext, gl::ShaderType::Vertex, infoLog,
@@ -339,9 +420,47 @@ angle::Result ProgramMtl::convertToMsl(const gl::Context *glContext,
                                        gl::InfoLog &infoLog,
                                        std::vector<uint32_t> *sprivCode)
 {
-    std::string translatedMsl = "TODO";
+    ContextMtl *contextMtl = mtl::GetImpl(glContext);
 
-    UNIMPLEMENTED();
+    spirv_cross::CompilerMSL compilerMsl(std::move(*sprivCode));
+
+    spirv_cross::CompilerMSL::Options compOpt;
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    compOpt.platform = spirv_cross::CompilerMSL::Options::macOS;
+#else
+    compOpt.platform = spirv_cross::CompilerMSL::Options::iOS;
+#endif
+
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.0, 12))
+    {
+        // Use Metal 2.1
+        compOpt.set_msl_version(2, 1);
+    }
+    else
+    {
+        // Always use at least Metal 2.0.
+        compOpt.set_msl_version(2);
+    }
+
+    compilerMsl.set_msl_options(compOpt);
+
+    // Tell spirv-cross to map default & driver uniform blocks & samplers as we want
+    spirv_cross::ShaderResources mslRes = compilerMsl.get_shader_resources();
+
+    ANGLE_TRY(BindResources<&spirv_cross::MSLResourceBinding::msl_buffer>(
+        &compilerMsl, mslRes.uniform_buffers, shaderType));
+
+    ANGLE_TRY((BindResources<&spirv_cross::MSLResourceBinding::msl_sampler,
+                             &spirv_cross::MSLResourceBinding::msl_texture>(
+        &compilerMsl, mslRes.sampled_images, shaderType)));
+
+    // NOTE(hqle): spirv-cross uses exceptions to report error, what should we do here
+    // in case of error?
+    std::string translatedMsl = compilerMsl.compile();
+    if (translatedMsl.size() == 0)
+    {
+        ANGLE_MTL_CHECK(contextMtl, false, GL_INVALID_OPERATION);
+    }
 
     // Create actual Metal shader
     ANGLE_TRY(createMslShader(glContext, shaderType, infoLog, translatedMsl));

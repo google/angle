@@ -18,19 +18,15 @@ namespace rx
 {
 namespace mtl
 {
-class GlslangUtils
-{
-  public:
-    static void GetShaderSource(const gl::ProgramState &programState,
-                                const gl::ProgramLinkedResources &resources,
-                                gl::ShaderMap<std::string> *shaderSourcesOut);
+void GlslangGetShaderSource(const gl::ProgramState &programState,
+                            const gl::ProgramLinkedResources &resources,
+                            gl::ShaderMap<std::string> *shaderSourcesOut);
 
-    static angle::Result GetShaderCode(ErrorHandler *context,
-                                       const gl::Caps &glCaps,
-                                       bool enableLineRasterEmulation,
-                                       const gl::ShaderMap<std::string> &shaderSources,
-                                       gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut);
-};
+angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
+                                        const gl::Caps &glCaps,
+                                        bool enableLineRasterEmulation,
+                                        const gl::ShaderMap<std::string> &shaderSources,
+                                        gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut);
 }  // namespace mtl
 }  // namespace rx
 

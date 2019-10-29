@@ -25,6 +25,12 @@ class TOutputVulkanGLSLForMetal : public TOutputVulkanGLSL
                               int shaderVersion,
                               ShShaderOutput output,
                               ShCompileOptions compileOptions);
+
+    static void RemoveInvariantForTest(bool remove);
+
+  protected:
+    bool visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node) override;
+    void writeVariableType(const TType &type, const TSymbol *symbol) override;
 };
 
 }  // namespace sh

@@ -41,6 +41,9 @@ vars = {
   # Note: this dep cannot be auto-rolled b/c of nesting.
   'patched_yasm_revision': '720b70524a4424b15fc57e82263568c8ba0496ad',
 
+  # Current revision of spirv-cross, the Khronos SPIRV cross compiler.
+  'spirv_cross_revision': 'd253f41e17e27285756d031d8ba43bf370264e1f',
+
   # Current revision fo the SPIRV-Headers Vulkan support library.
   'spirv_headers_revision': 'af64a9e826bf5bb5fcd2434dd71be1e41e922563',
 
@@ -158,6 +161,11 @@ deps = {
 
   'third_party/rapidjson/src': {
     'url': '{chromium_git}/external/github.com/Tencent/rapidjson@7484e06c589873e1ed80382d262087e4fa80fb63',
+  },
+
+  'third_party/spirv-cross/src': {
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Cross@{spirv_cross_revision}',
+    'condition': 'not build_with_chromium',
   },
 
   'third_party/spirv-headers/src': {

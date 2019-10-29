@@ -83,6 +83,10 @@ angle_source_set("angle_metal_backend") {
     "${angle_root}:libANGLE_headers",
   ]
 
+  deps = [
+    "${angle_spirv_cross_dir}/gn:spirv_cross_sources",
+  ]
+
   objc_flags = [
     "-Wno-nullability-completeness",
     "-Wno-unguarded-availability",
