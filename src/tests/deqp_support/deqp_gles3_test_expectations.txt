@@ -103,6 +103,9 @@
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.linear_nearest = FAIL
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.nearest_nearest = FAIL
 
+// Flaky on Win7 D3D11 NVIDIA
+4070 WIN7 D3D11 NVIDIA : dEQP-GLES3.functional.rasterization.flatshading.triangles = FAIL
+
 // Failing everywhere
 2322 : dEQP-GLES3.functional.shaders.metamorphic.* = FAIL
 
