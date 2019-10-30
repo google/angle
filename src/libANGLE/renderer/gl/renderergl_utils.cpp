@@ -1470,11 +1470,15 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, rgba4IsNotSupportedForColorRendering,
                             functions->standard == STANDARD_GL_DESKTOP && isIntel);
 
-    ANGLE_FEATURE_CONDITION(features, emulateAbsIntFunction, isIntel);
+    // Ported from gpu_driver_bug_list.json (#183)
+    ANGLE_FEATURE_CONDITION(features, emulateAbsIntFunction, IsApple() && isIntel);
 
     ANGLE_FEATURE_CONDITION(features, addAndTrueToLoopCondition, IsApple() && isIntel);
 
-    ANGLE_FEATURE_CONDITION(features, emulateIsnanFloat, isIntel);
+    // Ported from gpu_driver_bug_list.json (#191)
+    ANGLE_FEATURE_CONDITION(
+        features, emulateIsnanFloat,
+        isIntel && IsApple() && IsSkylake(device) && GetMacOSVersion() < OSVersion(10, 13, 2));
 
     ANGLE_FEATURE_CONDITION(features, doesSRGBClearsOnLinearFramebufferAttachments,
                             functions->standard == STANDARD_GL_DESKTOP && (isIntel || isAMD));
@@ -1485,8 +1489,14 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
         features, useUnusedBlocksWithStandardOrSharedLayout,
         (IsApple() && functions->standard == STANDARD_GL_DESKTOP) || (IsLinux() && isAMD));
 
-    ANGLE_FEATURE_CONDITION(features, doWhileGLSLCausesGPUHang, IsApple());
-    ANGLE_FEATURE_CONDITION(features, rewriteFloatUnaryMinusOperator, IsApple() && isIntel);
+    // Ported from gpu_driver_bug_list.json (#187)
+    ANGLE_FEATURE_CONDITION(features, doWhileGLSLCausesGPUHang,
+                            IsApple() && functions->standard == STANDARD_GL_DESKTOP &&
+                                GetMacOSVersion() < OSVersion(10, 11, 0));
+
+    // Ported from gpu_driver_bug_list.json (#211)
+    ANGLE_FEATURE_CONDITION(features, rewriteFloatUnaryMinusOperator,
+                            IsApple() && isIntel && GetMacOSVersion() < OSVersion(10, 12, 0));
 
     ANGLE_FEATURE_CONDITION(features, addBaseVertexToVertexID, IsApple() && isAMD);
 
@@ -1535,7 +1545,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     ANGLE_FEATURE_CONDITION(features, clampPointSize, IsAndroid() || isNvidia);
 
-    ANGLE_FEATURE_CONDITION(features, dontUseLoopsToInitializeVariables, IsAndroid() && !isNvidia);
+    // Ported from gpu_driver_bug_list.json (#246, #258)
+    ANGLE_FEATURE_CONDITION(features, dontUseLoopsToInitializeVariables,
+                            (IsAndroid() && !isNvidia) || (isIntel && IsApple()));
 
     ANGLE_FEATURE_CONDITION(features, disableBlendFuncExtended, isAMD || isIntel);
 
@@ -1584,6 +1596,13 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     ANGLE_FEATURE_CONDITION(features, removeDynamicIndexingOfSwizzledVector,
                             IsApple() || IsAndroid() || IsWindows());
+
+    // Ported from gpu_driver_bug_list.json (#89)
+    ANGLE_FEATURE_CONDITION(features, regenerateStructNames,
+                            IsApple() && functions->standard == STANDARD_GL_DESKTOP);
+
+    // Ported from gpu_driver_bug_list.json (#184)
+    ANGLE_FEATURE_CONDITION(features, preAddTexelFetchOffsets, IsApple() && isIntel);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
