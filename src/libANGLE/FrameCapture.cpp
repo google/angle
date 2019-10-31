@@ -16,7 +16,11 @@
 
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Framebuffer.h"
+#include "libANGLE/Shader.h"
 #include "libANGLE/VertexArray.h"
+#include "libANGLE/capture_gles_2_0_autogen.h"
+#include "libANGLE/capture_gles_3_0_autogen.h"
 #include "libANGLE/gl_enum_utils.h"
 
 #if !ANGLE_CAPTURE_ENABLED
@@ -268,6 +272,7 @@ void WriteBinaryParamReplay(DataCounters *counters,
         WriteParamStaticVarName(call, param, counter, out);
     }
 }
+
 void WriteCppReplayForCall(const CallCapture &call,
                            DataCounters *counters,
                            std::ostream &out,
@@ -428,16 +433,34 @@ struct SaveFileHelper
     std::string filePath;
 };
 
+void SaveBinaryData(const std::string &outDir,
+                    std::ostream &out,
+                    int contextId,
+                    uint32_t frameIndex,
+                    const char *suffix,
+                    const std::vector<uint8_t> &binaryData)
+{
+    std::string binaryDataFileName = GetCaptureFileName(contextId, frameIndex, suffix);
+
+    out << "    LoadBinaryData(\"" << binaryDataFileName << "\", "
+        << static_cast<int>(binaryData.size()) << ");\n";
+
+    std::string dataFilepath = GetCaptureFilePath(outDir, contextId, frameIndex, suffix);
+
+    SaveFileHelper saveData(dataFilepath, std::ios::binary);
+    saveData.ofs.write(reinterpret_cast<const char *>(binaryData.data()), binaryData.size());
+}
+
 void WriteCppReplay(const std::string &outDir,
                     int contextId,
                     uint32_t frameIndex,
-                    const std::vector<CallCapture> &calls)
+                    const std::vector<CallCapture> &frameCalls,
+                    const std::vector<CallCapture> &setupCalls)
 {
     DataCounters counters;
 
     std::stringstream out;
     std::stringstream header;
-    std::vector<uint8_t> binaryData;
 
     header << "#include \"" << FmtCapturePrefix(contextId) << ".h\"\n";
     header << "";
@@ -445,12 +468,39 @@ void WriteCppReplay(const std::string &outDir,
     header << "namespace\n";
     header << "{\n";
 
+    if (frameIndex == 0 || !setupCalls.empty())
+    {
+        out << "void SetupContext" << Str(contextId) << "Replay()\n";
+        out << "{\n";
+
+        std::stringstream setupCallStream;
+        std::vector<uint8_t> setupBinaryData;
+
+        for (const CallCapture &call : setupCalls)
+        {
+            setupCallStream << "    ";
+            WriteCppReplayForCall(call, &counters, setupCallStream, header, &setupBinaryData);
+            setupCallStream << ";\n";
+        }
+
+        if (!setupBinaryData.empty())
+        {
+            SaveBinaryData(outDir, out, contextId, frameIndex, ".setup.angledata", setupBinaryData);
+        }
+
+        out << setupCallStream.str();
+
+        out << "}\n";
+        out << "\n";
+    }
+
     out << "void " << FmtReplayFunction(contextId, frameIndex) << "\n";
     out << "{\n";
 
     std::stringstream callStream;
+    std::vector<uint8_t> binaryData;
 
-    for (const CallCapture &call : calls)
+    for (const CallCapture &call : frameCalls)
     {
         callStream << "    ";
         WriteCppReplayForCall(call, &counters, callStream, header, &binaryData);
@@ -459,21 +509,13 @@ void WriteCppReplay(const std::string &outDir,
 
     if (!binaryData.empty())
     {
-        std::string binaryDataFileName = GetCaptureFileName(contextId, frameIndex, ".angledata");
-
-        out << "    LoadBinaryData(\"" << binaryDataFileName << "\", "
-            << static_cast<int>(binaryData.size()) << ");\n";
-
-        std::string dataFilepath = GetCaptureFilePath(outDir, contextId, frameIndex, ".angledata");
-
-        SaveFileHelper saveData(dataFilepath, std::ios::binary);
-        saveData.ofs.write(reinterpret_cast<const char *>(binaryData.data()), binaryData.size());
+        SaveBinaryData(outDir, out, contextId, frameIndex, ".angledata", binaryData);
     }
 
     out << callStream.str();
     out << "}\n";
 
-    header << "}  // anonymous namespace\n";
+    header << "}  // namespace\n";
 
     {
         std::string outString    = out.str();
@@ -482,7 +524,7 @@ void WriteCppReplay(const std::string &outDir,
         std::string cppFilePath = GetCaptureFilePath(outDir, contextId, frameIndex, ".cpp");
 
         SaveFileHelper saveCpp(cppFilePath);
-        saveCpp << headerString << "\n\n" << outString;
+        saveCpp << headerString << "\n" << outString;
     }
 }
 
@@ -513,6 +555,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     header << "constexpr uint32_t kReplayFrameStart = " << frameStart << ";\n";
     header << "constexpr uint32_t kReplayFrameEnd = " << frameEnd << ";\n";
     header << "\n";
+    header << "void SetupContext" << contextId << "Replay();\n";
     header << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex);\n";
     header << "\n";
     for (uint32_t frameIndex = frameStart; frameIndex < frameEnd; ++frameIndex)
@@ -653,7 +696,643 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
         SaveFileHelper saveSource(sourcePath);
         saveSource << sourceContents;
     }
-}  // namespace
+}
+
+ProgramSources GetAttachedProgramSources(const gl::Program *program)
+{
+    ProgramSources sources;
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        const gl::Shader *shader = program->getAttachedShader(shaderType);
+        if (shader)
+        {
+            sources[shaderType] = shader->getSourceString();
+        }
+    }
+    return sources;
+}
+
+template <typename IDType>
+void CaptureUpdateResourceIDs(const gl::Context *context,
+                              const CallCapture &call,
+                              const ParamCapture &param,
+                              std::vector<CallCapture> *callsOut)
+{
+    GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+    ASSERT(param.data.size() == 1);
+    ResourceIDType resourceIDType = GetResourceIDTypeFromParamType(param.type);
+    ASSERT(resourceIDType != ResourceIDType::InvalidEnum);
+    const char *resourceName = GetResourceIDTypeName(resourceIDType);
+
+    std::stringstream updateFuncNameStr;
+    updateFuncNameStr << "Update" << resourceName << "ID";
+    std::string updateFuncName = updateFuncNameStr.str();
+
+    const IDType *returnedIDs = reinterpret_cast<const IDType *>(param.data[0].data());
+
+    for (GLsizei idIndex = 0; idIndex < n; ++idIndex)
+    {
+        IDType id                = returnedIDs[idIndex];
+        GLsizei readBufferOffset = idIndex * sizeof(gl::RenderbufferID);
+        ParamBuffer params;
+        params.addValueParam("id", ParamType::TGLuint, id.value);
+        params.addValueParam("readBufferOffset", ParamType::TGLsizei, readBufferOffset);
+        callsOut->emplace_back(updateFuncName, std::move(params));
+    }
+}
+
+void MaybeCaptureUpdateResourceIDs(const gl::Context *context, std::vector<CallCapture> *callsOut)
+{
+    const CallCapture &call = callsOut->back();
+
+    switch (call.entryPoint)
+    {
+        case gl::EntryPoint::GenBuffers:
+        {
+            const ParamCapture &buffers =
+                call.params.getParam("buffersPacked", ParamType::TBufferIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::BufferID>(context, call, buffers, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenFencesNV:
+        {
+            const ParamCapture &fences =
+                call.params.getParam("fencesPacked", ParamType::TFenceNVIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::FenceNVID>(context, call, fences, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenFramebuffers:
+        case gl::EntryPoint::GenFramebuffersOES:
+        {
+            const ParamCapture &framebuffers =
+                call.params.getParam("framebuffersPacked", ParamType::TFramebufferIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::FramebufferID>(context, call, framebuffers, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenPathsCHROMIUM:
+        {
+            // TODO(jmadill): Handle path IDs. http://anglebug.com/3662
+            break;
+        }
+
+        case gl::EntryPoint::GenProgramPipelines:
+        {
+            const ParamCapture &pipelines =
+                call.params.getParam("pipelinesPacked", ParamType::TProgramPipelineIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::ProgramPipelineID>(context, call, pipelines, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenQueries:
+        case gl::EntryPoint::GenQueriesEXT:
+        {
+            const ParamCapture &queries =
+                call.params.getParam("idsPacked", ParamType::TQueryIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::QueryID>(context, call, queries, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenRenderbuffers:
+        case gl::EntryPoint::GenRenderbuffersOES:
+        {
+            const ParamCapture &renderbuffers =
+                call.params.getParam("renderbuffersPacked", ParamType::TRenderbufferIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::RenderbufferID>(context, call, renderbuffers, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenSamplers:
+        {
+            const ParamCapture &samplers =
+                call.params.getParam("samplersPacked", ParamType::TSamplerIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::SamplerID>(context, call, samplers, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenSemaphoresEXT:
+        {
+            const ParamCapture &semaphores =
+                call.params.getParam("semaphoresPacked", ParamType::TSemaphoreIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::SemaphoreID>(context, call, semaphores, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenTextures:
+        {
+            const ParamCapture &textures =
+                call.params.getParam("texturesPacked", ParamType::TTextureIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::TextureID>(context, call, textures, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenTransformFeedbacks:
+        {
+            const ParamCapture &xfbs =
+                call.params.getParam("idsPacked", ParamType::TTransformFeedbackIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::TransformFeedbackID>(context, call, xfbs, callsOut);
+            break;
+        }
+
+        case gl::EntryPoint::GenVertexArrays:
+        case gl::EntryPoint::GenVertexArraysOES:
+        {
+            const ParamCapture &vertexArrays =
+                call.params.getParam("vetexArraysPacked", ParamType::TVertexArrayIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::VertexArrayID>(context, call, vertexArrays, callsOut);
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+void CaptureMidExecutionSetup(const gl::Context *context,
+                              std::vector<CallCapture> *setupCalls,
+                              const ShaderSourceMap &cachedShaderSources,
+                              const ProgramSourceMap &cachedProgramSources)
+{
+    const gl::State &glState = context->getState();
+
+    // Small helper function to make the code more readable.
+    auto cap = [setupCalls](CallCapture &&call) { setupCalls->emplace_back(std::move(call)); };
+
+    // Currently this code assumes we can use create-on-bind. It does not support 'Gen' usage.
+    // TODO(jmadill): Use handle mapping for captured objects. http://anglebug.com/3662
+
+    // Capture Buffer data.
+    const gl::BufferManager &buffers       = glState.getBufferManagerForCapture();
+    const gl::BoundBufferMap &boundBuffers = glState.getBoundBuffersForCapture();
+
+    gl::BufferID currentArrayBuffer = {0};
+
+    for (const auto &bufferIter : buffers)
+    {
+        gl::BufferID id    = {bufferIter.first};
+        gl::Buffer *buffer = bufferIter.second;
+
+        if (id.value == 0)
+        {
+            continue;
+        }
+
+        // glBufferData. Would possibly be better implemented using a getData impl method.
+        // Saving buffers that are mapped during a swap is not yet handled.
+        if (buffer->getSize() == 0)
+        {
+            continue;
+        }
+        ASSERT(!buffer->isMapped());
+        (void)buffer->mapRange(context, 0, static_cast<GLsizeiptr>(buffer->getSize()),
+                               GL_MAP_READ_BIT);
+
+        // Generate binding.
+        cap(CaptureGenBuffers(context, true, 1, &id));
+        MaybeCaptureUpdateResourceIDs(context, setupCalls);
+
+        // Always use the array buffer binding point to upload data to keep things simple.
+        cap(CaptureBindBuffer(context, true, gl::BufferBinding::Array, id));
+        cap(CaptureBufferData(context, true, gl::BufferBinding::Array,
+                              static_cast<GLsizeiptr>(buffer->getSize()), buffer->getMapPointer(),
+                              buffer->getUsage()));
+
+        currentArrayBuffer = id;
+
+        GLboolean dontCare;
+        (void)buffer->unmap(context, &dontCare);
+    }
+
+    // Capture Buffer bindings.
+    for (gl::BufferBinding binding : angle::AllEnums<gl::BufferBinding>())
+    {
+        gl::BufferID bufferID = boundBuffers[binding].id();
+
+        // Filter out redundant buffer binding commands. Note that the code in the previous section
+        // only binds to ARRAY_BUFFER. Therefore we only check the array binding against the binding
+        // we set earlier.
+        bool isArray = binding == gl::BufferBinding::Array;
+        if ((isArray && currentArrayBuffer != bufferID) || (!isArray && bufferID.value != 0))
+        {
+            cap(CaptureBindBuffer(context, true, binding, bufferID));
+        }
+    }
+
+    // Capture Texture setup and data.
+    const gl::TextureManager &textures         = glState.getTextureManagerForCapture();
+    const gl::TextureBindingMap &boundTextures = glState.getBoundTexturesForCapture();
+
+    gl::TextureTypeMap<gl::TextureID> currentTextureBindings;
+
+    for (const auto &textureIter : textures)
+    {
+        gl::TextureID id           = {textureIter.first};
+        const gl::Texture *texture = textureIter.second;
+
+        if (id.value == 0)
+        {
+            continue;
+        }
+
+        // Gen the Texture.
+        cap(CaptureGenTextures(context, true, 1, &id));
+        MaybeCaptureUpdateResourceIDs(context, setupCalls);
+        cap(CaptureBindTexture(context, true, texture->getType(), id));
+
+        currentTextureBindings[texture->getType()] = id;
+
+        // Capture sampler parameter states.
+        // TODO(jmadill): More sampler / texture states. http://anglebug.com/3662
+        gl::SamplerState defaultSamplerState =
+            gl::SamplerState::CreateDefaultForTarget(texture->getType());
+        const gl::SamplerState &textureSamplerState = texture->getSamplerState();
+
+        auto capTexParam = [cap, context, texture](GLenum pname, GLint param) {
+            cap(CaptureTexParameteri(context, true, texture->getType(), pname, param));
+        };
+
+        if (textureSamplerState.getMinFilter() != defaultSamplerState.getMinFilter())
+        {
+            capTexParam(GL_TEXTURE_MIN_FILTER, textureSamplerState.getMinFilter());
+        }
+
+        if (textureSamplerState.getMagFilter() != defaultSamplerState.getMagFilter())
+        {
+            capTexParam(GL_TEXTURE_MAG_FILTER, textureSamplerState.getMagFilter());
+        }
+
+        if (textureSamplerState.getWrapR() != defaultSamplerState.getWrapR())
+        {
+            capTexParam(GL_TEXTURE_WRAP_R, textureSamplerState.getWrapR());
+        }
+
+        if (textureSamplerState.getWrapS() != defaultSamplerState.getWrapS())
+        {
+            capTexParam(GL_TEXTURE_WRAP_S, textureSamplerState.getWrapS());
+        }
+
+        if (textureSamplerState.getWrapT() != defaultSamplerState.getWrapT())
+        {
+            capTexParam(GL_TEXTURE_WRAP_T, textureSamplerState.getWrapT());
+        }
+
+        // Iterate texture levels and layers.
+        gl::ImageIndexIterator imageIter = gl::ImageIndexIterator::MakeGeneric(
+            texture->getType(), 0, texture->getMipmapMaxLevel() + 1, gl::ImageIndex::kEntireLevel,
+            gl::ImageIndex::kEntireLevel);
+        while (imageIter.hasNext())
+        {
+            gl::ImageIndex index = imageIter.next();
+
+            const gl::ImageDesc &desc = texture->getTextureState().getImageDesc(index);
+
+            if (desc.size.empty())
+                continue;
+
+            const gl::InternalFormat &format = *desc.format.info;
+
+            // Assume 2D or Cube for now.
+            // TODO(jmadill): 3D and 2D array textures. http://anglebug.com/4048
+            ASSERT(index.getType() == gl::TextureType::_2D ||
+                   index.getType() == gl::TextureType::CubeMap);
+
+            angle::MemoryBuffer data;
+
+            // Use ANGLE_get_image to read back pixel data.
+            if (context->getExtensions().getImageANGLE)
+            {
+                GLenum internalFormat = format.internalFormat;
+                GLenum getFormat      = format.format;
+                GLenum getType        = format.type;
+                GLsizei pixelBytes    = format.pixelBytes;
+
+                if (format.compressed)
+                {
+                    // Determine if we're emulating the compressed format.
+                    GLenum readFormat = texture->getImplementationColorReadFormat(context);
+                    GLenum readType   = texture->getImplementationColorReadType(context);
+
+                    const gl::InternalFormat &nativeFormat =
+                        gl::GetInternalFormatInfo(readFormat, readType);
+
+                    if (!nativeFormat.compressed)
+                    {
+                        // Emulate with a non-compressed format.
+                        internalFormat = nativeFormat.internalFormat;
+                        getFormat      = readFormat;
+                        getType        = readType;
+                        pixelBytes     = nativeFormat.pixelBytes;
+                    }
+                    else
+                    {
+                        // Will need to add glGetCompressedTexImage support to ANGLE_get_image.
+                        // TODO(jmadill): add glGetCompressedTexImage. http://anglebug.com/3944
+                        UNIMPLEMENTED();
+                    }
+                }
+
+                uint32_t dataSize = pixelBytes * desc.size.width * desc.size.height;
+
+                bool result = data.resize(dataSize);
+                ASSERT(result);
+
+                gl::PixelPackState packState;
+                packState.alignment = 1;
+
+                (void)texture->getTexImage(context, packState, nullptr, index.getTarget(),
+                                           index.getLevelIndex(), getFormat, getType, data.data());
+
+                cap(CaptureTexImage2D(context, true, index.getTarget(), index.getLevelIndex(),
+                                      internalFormat, desc.size.width, desc.size.height, 0,
+                                      getFormat, getType, data.data()));
+            }
+            else
+            {
+                cap(CaptureTexImage2D(context, true, index.getTarget(), index.getLevelIndex(),
+                                      format.internalFormat, desc.size.width, desc.size.height, 0,
+                                      format.format, format.type, nullptr));
+            }
+        }
+    }
+
+    // Set Texture bindings.
+    size_t currentActiveTexture = 0;
+    for (gl::TextureType textureType : angle::AllEnums<gl::TextureType>())
+    {
+        const gl::TextureBindingVector &bindings = boundTextures[textureType];
+        for (size_t bindingIndex = 0; bindingIndex < bindings.size(); ++bindingIndex)
+        {
+            gl::TextureID textureID = bindings[bindingIndex].id();
+
+            if (textureID.value != 0)
+            {
+                if (currentActiveTexture != bindingIndex)
+                {
+                    cap(CaptureActiveTexture(context, true,
+                                             GL_TEXTURE0 + static_cast<GLenum>(bindingIndex)));
+                    currentActiveTexture = bindingIndex;
+                }
+
+                if (currentTextureBindings[textureType] != textureID)
+                {
+                    cap(CaptureBindTexture(context, true, textureType, textureID));
+                    currentTextureBindings[textureType] = textureID;
+                }
+            }
+        }
+    }
+
+    // Set active Texture.
+    size_t stateActiveTexture = glState.getActiveSampler();
+    if (currentActiveTexture != stateActiveTexture)
+    {
+        cap(CaptureActiveTexture(context, true,
+                                 GL_TEXTURE0 + static_cast<GLenum>(stateActiveTexture)));
+    }
+
+    // Capture Renderbuffers.
+    const gl::RenderbufferManager &renderbuffers = glState.getRenderbufferManagerForCapture();
+
+    gl::RenderbufferID currentRenderbuffer = {0};
+    for (const auto &renderbufIter : renderbuffers)
+    {
+        gl::RenderbufferID id                = {renderbufIter.first};
+        const gl::Renderbuffer *renderbuffer = renderbufIter.second;
+
+        // Generate renderbuffer id.
+        cap(CaptureGenRenderbuffers(context, true, 1, &id));
+        MaybeCaptureUpdateResourceIDs(context, setupCalls);
+        cap(CaptureBindRenderbuffer(context, true, GL_RENDERBUFFER, id));
+
+        currentRenderbuffer = id;
+
+        GLenum internalformat = renderbuffer->getFormat().info->internalFormat;
+
+        if (renderbuffer->getSamples() > 0)
+        {
+            // Note: We could also use extensions if available.
+            cap(CaptureRenderbufferStorageMultisample(
+                context, true, GL_RENDERBUFFER, renderbuffer->getSamples(), internalformat,
+                renderbuffer->getWidth(), renderbuffer->getHeight()));
+        }
+        else
+        {
+            cap(CaptureRenderbufferStorage(context, true, GL_RENDERBUFFER, internalformat,
+                                           renderbuffer->getWidth(), renderbuffer->getHeight()));
+        }
+
+        // TODO(jmadill): Capture renderbuffer contents. http://anglebug.com/3662
+    }
+
+    // Set Renderbuffer binding.
+    if (currentRenderbuffer != glState.getRenderbufferId())
+    {
+        cap(CaptureBindRenderbuffer(context, true, GL_RENDERBUFFER, glState.getRenderbufferId()));
+    }
+
+    // Capture Framebuffers.
+    const gl::FramebufferManager &framebuffers = glState.getFramebufferManagerForCapture();
+
+    gl::FramebufferID currentDrawFramebuffer = {0};
+    gl::FramebufferID currentReadFramebuffer = {0};
+
+    for (const auto &framebufferIter : framebuffers)
+    {
+        gl::FramebufferID id               = {framebufferIter.first};
+        const gl::Framebuffer *framebuffer = framebufferIter.second;
+
+        // The default Framebuffer exists (by default).
+        if (framebuffer->isDefault())
+            continue;
+
+        cap(CaptureGenFramebuffers(context, true, 1, &id));
+        MaybeCaptureUpdateResourceIDs(context, setupCalls);
+        cap(CaptureBindFramebuffer(context, true, GL_FRAMEBUFFER, id));
+        currentDrawFramebuffer = currentReadFramebuffer = id;
+
+        // Color Attachments.
+        for (const gl::FramebufferAttachment &colorAttachment : framebuffer->getColorAttachments())
+        {
+            if (!colorAttachment.isAttached())
+            {
+                continue;
+            }
+
+            GLuint resourceID = colorAttachment.getResource()->getId();
+
+            // TODO(jmadill): Layer attachments. http://anglebug.com/3662
+            if (colorAttachment.type() == GL_TEXTURE)
+            {
+                gl::ImageIndex index = colorAttachment.getTextureImageIndex();
+
+                cap(CaptureFramebufferTexture2D(context, true, GL_FRAMEBUFFER,
+                                                colorAttachment.getBinding(), index.getTarget(),
+                                                {resourceID}, index.getLevelIndex()));
+            }
+            else
+            {
+                ASSERT(colorAttachment.type() == GL_RENDERBUFFER);
+                cap(CaptureFramebufferRenderbuffer(context, true, GL_FRAMEBUFFER,
+                                                   colorAttachment.getBinding(), GL_RENDERBUFFER,
+                                                   {resourceID}));
+            }
+        }
+
+        // TODO(jmadill): Draw buffer states. http://anglebug.com/3662
+    }
+
+    // Capture framebuffer bindings.
+    gl::FramebufferID stateReadFramebuffer = glState.getReadFramebuffer()->id();
+    gl::FramebufferID stateDrawFramebuffer = glState.getDrawFramebuffer()->id();
+    if (stateDrawFramebuffer == stateReadFramebuffer)
+    {
+        if (currentDrawFramebuffer != stateDrawFramebuffer ||
+            currentReadFramebuffer != stateReadFramebuffer)
+        {
+            cap(CaptureBindFramebuffer(context, true, GL_FRAMEBUFFER, stateDrawFramebuffer));
+            currentDrawFramebuffer = currentReadFramebuffer = stateDrawFramebuffer;
+        }
+    }
+    else
+    {
+        if (currentDrawFramebuffer != stateDrawFramebuffer)
+        {
+            cap(CaptureBindFramebuffer(context, true, GL_DRAW_FRAMEBUFFER, currentDrawFramebuffer));
+            currentDrawFramebuffer = stateDrawFramebuffer;
+        }
+
+        if (currentReadFramebuffer != stateReadFramebuffer)
+        {
+            cap(CaptureBindFramebuffer(context, true, GL_READ_FRAMEBUFFER,
+                                       glState.getReadFramebuffer()->id()));
+            currentReadFramebuffer = stateReadFramebuffer;
+        }
+    }
+
+    // Capture Shaders and Programs.
+    const gl::ShaderProgramManager &shadersAndPrograms =
+        glState.getShaderProgramManagerForCapture();
+    const gl::ResourceMap<gl::Shader, gl::ShaderProgramID> &shaders =
+        shadersAndPrograms.getShadersForCapture();
+    const gl::ResourceMap<gl::Program, gl::ShaderProgramID> &programs =
+        shadersAndPrograms.getProgramsForCapture();
+
+    // Capture Program binary state. Use shader ID 1 as a temporary shader ID.
+    gl::ShaderProgramID tempShaderID = {1};
+    for (const auto &programIter : programs)
+    {
+        gl::ShaderProgramID id = {programIter.first};
+        gl::Program *program   = programIter.second;
+
+        // Get last compiled shader source.
+        const auto &foundSources = cachedProgramSources.find(id);
+        ASSERT(foundSources != cachedProgramSources.end());
+        const ProgramSources &linkedSources = foundSources->second;
+
+        // Unlinked programs don't have an executable. Thus they don't need to be linked.
+        if (!program->isLinked())
+        {
+            continue;
+        }
+
+        cap(CaptureCreateProgram(context, true, id.value));
+
+        // Compile with last linked sources.
+        for (gl::ShaderType shaderType : program->getState().getLinkedShaderStages())
+        {
+            const std::string &sourceString = linkedSources[shaderType];
+            const char *sourcePointer       = sourceString.c_str();
+
+            // Compile and attach the temporary shader. Then free it immediately.
+            cap(CaptureCreateShader(context, true, shaderType, tempShaderID.value));
+            cap(CaptureShaderSource(context, true, tempShaderID, 1, &sourcePointer, nullptr));
+            cap(CaptureCompileShader(context, true, tempShaderID));
+            cap(CaptureAttachShader(context, true, id, tempShaderID));
+            cap(CaptureDeleteShader(context, true, tempShaderID));
+        }
+
+        cap(CaptureLinkProgram(context, true, id));
+    }
+
+    // Handle shaders.
+    for (const auto &shaderIter : shaders)
+    {
+        gl::ShaderProgramID id = {shaderIter.first};
+        gl::Shader *shader     = shaderIter.second;
+        cap(CaptureCreateShader(context, true, shader->getType(), id.value));
+
+        std::string shaderSource  = shader->getSourceString();
+        const char *sourcePointer = shaderSource.empty() ? nullptr : shaderSource.c_str();
+
+        // This does not handle some more tricky situations like attaching shaders to a non-linked
+        // program. Or attaching uncompiled shaders. Or attaching and then deleting a shader.
+        // TODO(jmadill): Handle trickier program uses. http://anglebug.com/3662
+        if (shader->isCompiled())
+        {
+            const auto &foundSources = cachedShaderSources.find(id);
+            ASSERT(foundSources != cachedShaderSources.end());
+            const std::string &capturedSource = foundSources->second;
+
+            if (capturedSource != shaderSource)
+            {
+                ASSERT(!capturedSource.empty());
+                sourcePointer = capturedSource.c_str();
+            }
+
+            cap(CaptureShaderSource(context, true, id, 1, &sourcePointer, nullptr));
+            cap(CaptureCompileShader(context, true, id));
+        }
+
+        if (sourcePointer && (!shader->isCompiled() || sourcePointer != shaderSource.c_str()))
+        {
+            cap(CaptureShaderSource(context, true, id, 1, &sourcePointer, nullptr));
+        }
+    }
+
+    // For now we assume the installed program executable is the same as the current program.
+    // TODO(jmadill): Handle installed program executable. http://anglebug.com/3662
+    if (glState.getProgram())
+    {
+        cap(CaptureUseProgram(context, true, glState.getProgram()->id()));
+    }
+
+    // TODO(http://anglebug.com/3662): ES 3.x objects.
+
+    // Capture GL Context states.
+    // TODO(http://anglebug.com/3662): Complete state capture.
+    const gl::RasterizerState defaultRasterState;
+    const gl::RasterizerState &currentRasterState = glState.getRasterizerState();
+    if (currentRasterState.cullFace != defaultRasterState.cullFace)
+    {
+        if (currentRasterState.cullFace)
+        {
+            cap(CaptureEnable(context, true, GL_CULL_FACE));
+        }
+        else
+        {
+            cap(CaptureDisable(context, true, GL_CULL_FACE));
+        }
+    }
+
+    if (currentRasterState.cullMode != defaultRasterState.cullMode)
+    {
+        cap(CaptureCullFace(context, true, currentRasterState.cullMode));
+    }
+
+    if (currentRasterState.frontFace != defaultRasterState.frontFace)
+    {
+        cap(CaptureFrontFace(context, true, currentRasterState.frontFace));
+    }
+
+    const gl::ColorF &currentClearColor = glState.getColorClearValue();
+    if (currentClearColor != gl::ColorF())
+    {
+        cap(CaptureClearColor(context, true, currentClearColor.red, currentClearColor.green,
+                              currentClearColor.blue, currentClearColor.alpha));
+    }
+}
 }  // namespace
 
 ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
@@ -823,7 +1502,7 @@ FrameCapture::FrameCapture()
     std::string startFromEnv = angle::GetEnvironmentVar(kFrameStartVarName);
     if (!startFromEnv.empty())
     {
-        WARN() << "Capture frame start is not yet supported. Defaulting to 0.";
+        mFrameStart = atoi(startFromEnv.c_str());
     }
 
     std::string endFromEnv = angle::GetEnvironmentVar(kFrameEndVarName);
@@ -846,7 +1525,7 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, const Call
 
             if (call.params.hasClientArrayData())
             {
-                mClientVertexArrayMap[index] = static_cast<int>(mCalls.size());
+                mClientVertexArrayMap[index] = static_cast<int>(mFrameCalls.size());
             }
             else
             {
@@ -905,6 +1584,28 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, const Call
             break;
         }
 
+        case gl::EntryPoint::CompileShader:
+        {
+            // Refresh the cached shader sources.
+            gl::ShaderProgramID shaderID =
+                call.params.getParam("shaderPacked", ParamType::TShaderProgramID, 0)
+                    .value.ShaderProgramIDVal;
+            const gl::Shader *shader       = context->getShader(shaderID);
+            mCachedShaderSources[shaderID] = shader->getSourceString();
+            break;
+        }
+
+        case gl::EntryPoint::LinkProgram:
+        {
+            // Refresh the cached program sources.
+            gl::ShaderProgramID programID =
+                call.params.getParam("programPacked", ParamType::TShaderProgramID, 0)
+                    .value.ShaderProgramIDVal;
+            const gl::Program *program       = context->getProgramResolveLink(programID);
+            mCachedProgramSources[programID] = GetAttachedProgramSources(program);
+            break;
+        }
+
         default:
             break;
     }
@@ -916,144 +1617,10 @@ void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
     maybeCaptureClientData(context, call);
 
     mReadBufferSize = std::max(mReadBufferSize, call.params.getReadBufferSize());
-    mCalls.emplace_back(std::move(call));
+    mFrameCalls.emplace_back(std::move(call));
 
     // Process resource ID updates.
-    maybeUpdateResourceIDs(context, mCalls.back());
-}
-
-template <typename IDType>
-void FrameCapture::captureUpdateResourceIDs(const gl::Context *context,
-                                            const CallCapture &call,
-                                            const ParamCapture &param)
-{
-    GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
-    ASSERT(param.data.size() == 1);
-    const IDType *returnedIDs     = reinterpret_cast<const IDType *>(param.data[0].data());
-    ResourceIDType resourceIDType = GetResourceIDTypeFromParamType(param.type);
-    ASSERT(resourceIDType != ResourceIDType::InvalidEnum);
-    const char *resourceName = GetResourceIDTypeName(resourceIDType);
-
-    std::stringstream updateFuncNameStr;
-    updateFuncNameStr << "Update" << resourceName << "ID";
-    std::string updateFuncName = updateFuncNameStr.str();
-
-    for (GLsizei idIndex = 0; idIndex < n; ++idIndex)
-    {
-        IDType id                = returnedIDs[idIndex];
-        GLsizei readBufferOffset = idIndex * sizeof(gl::RenderbufferID);
-        ParamBuffer params;
-        params.addValueParam("id", ParamType::TGLuint, id.value);
-        params.addValueParam("readBufferOffset", ParamType::TGLsizei, readBufferOffset);
-        mCalls.emplace_back(updateFuncName, std::move(params));
-    }
-}
-
-void FrameCapture::maybeUpdateResourceIDs(const gl::Context *context, const CallCapture &call)
-{
-    switch (call.entryPoint)
-    {
-        case gl::EntryPoint::GenBuffers:
-        {
-            const ParamCapture &buffers =
-                call.params.getParam("buffersPacked", ParamType::TBufferIDPointer, 1);
-            captureUpdateResourceIDs<gl::BufferID>(context, call, buffers);
-            break;
-        }
-
-        case gl::EntryPoint::GenFencesNV:
-        {
-            const ParamCapture &fences =
-                call.params.getParam("fencesPacked", ParamType::TFenceNVIDPointer, 1);
-            captureUpdateResourceIDs<gl::FenceNVID>(context, call, fences);
-            break;
-        }
-
-        case gl::EntryPoint::GenFramebuffers:
-        case gl::EntryPoint::GenFramebuffersOES:
-        {
-            const ParamCapture &framebuffers =
-                call.params.getParam("framebuffersPacked", ParamType::TFramebufferIDPointer, 1);
-            captureUpdateResourceIDs<gl::FramebufferID>(context, call, framebuffers);
-            break;
-        }
-
-        case gl::EntryPoint::GenPathsCHROMIUM:
-        {
-            // TODO(jmadill): Handle path IDs. http://anglebug.com/3611
-            break;
-        }
-
-        case gl::EntryPoint::GenProgramPipelines:
-        {
-            const ParamCapture &pipelines =
-                call.params.getParam("pipelinesPacked", ParamType::TProgramPipelineIDPointer, 1);
-            captureUpdateResourceIDs<gl::ProgramPipelineID>(context, call, pipelines);
-            break;
-        }
-
-        case gl::EntryPoint::GenQueries:
-        case gl::EntryPoint::GenQueriesEXT:
-        {
-            const ParamCapture &queries =
-                call.params.getParam("idsPacked", ParamType::TQueryIDPointer, 1);
-            captureUpdateResourceIDs<gl::QueryID>(context, call, queries);
-            break;
-        }
-
-        case gl::EntryPoint::GenRenderbuffers:
-        case gl::EntryPoint::GenRenderbuffersOES:
-        {
-            const ParamCapture &renderbuffers =
-                call.params.getParam("renderbuffersPacked", ParamType::TRenderbufferIDPointer, 1);
-            captureUpdateResourceIDs<gl::RenderbufferID>(context, call, renderbuffers);
-            break;
-        }
-
-        case gl::EntryPoint::GenSamplers:
-        {
-            const ParamCapture &samplers =
-                call.params.getParam("samplersPacked", ParamType::TSamplerIDPointer, 1);
-            captureUpdateResourceIDs<gl::SamplerID>(context, call, samplers);
-            break;
-        }
-
-        case gl::EntryPoint::GenSemaphoresEXT:
-        {
-            const ParamCapture &semaphores =
-                call.params.getParam("semaphoresPacked", ParamType::TSemaphoreIDPointer, 1);
-            captureUpdateResourceIDs<gl::SemaphoreID>(context, call, semaphores);
-            break;
-        }
-
-        case gl::EntryPoint::GenTextures:
-        {
-            const ParamCapture &textures =
-                call.params.getParam("texturesPacked", ParamType::TTextureIDPointer, 1);
-            captureUpdateResourceIDs<gl::TextureID>(context, call, textures);
-            break;
-        }
-
-        case gl::EntryPoint::GenTransformFeedbacks:
-        {
-            const ParamCapture &xfbs =
-                call.params.getParam("idsPacked", ParamType::TTransformFeedbackIDPointer, 1);
-            captureUpdateResourceIDs<gl::TransformFeedbackID>(context, call, xfbs);
-            break;
-        }
-
-        case gl::EntryPoint::GenVertexArrays:
-        case gl::EntryPoint::GenVertexArraysOES:
-        {
-            const ParamCapture &vertexArrays =
-                call.params.getParam("vetexArraysPacked", ParamType::TVertexArrayIDPointer, 1);
-            captureUpdateResourceIDs<gl::VertexArrayID>(context, call, vertexArrays);
-            break;
-        }
-
-        default:
-            break;
-    }
+    MaybeCaptureUpdateResourceIDs(context, &mFrameCalls);
 }
 
 void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
@@ -1083,7 +1650,7 @@ void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
             // The last capture element doesn't take up the full stride.
             size_t bytesToCapture = (count - 1) * binding.getStride() + attrib.format->pixelBytes;
 
-            CallCapture &call   = mCalls[callIndex];
+            CallCapture &call   = mFrameCalls[callIndex];
             ParamCapture &param = call.params.getClientArrayPointerParameter();
             ASSERT(param.type == ParamType::TvoidConstPointer);
 
@@ -1097,7 +1664,7 @@ void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
 
             updateParamBuffer.addValueParam<GLuint64>("size", ParamType::TGLuint64, bytesToCapture);
 
-            mCalls.emplace_back("UpdateClientArrayPointer", std::move(updateParamBuffer));
+            mFrameCalls.emplace_back("UpdateClientArrayPointer", std::move(updateParamBuffer));
 
             mClientArraySizes[attribIndex] =
                 std::max(mClientArraySizes[attribIndex], bytesToCapture);
@@ -1107,32 +1674,41 @@ void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
 
 void FrameCapture::onEndFrame(const gl::Context *context)
 {
-    if (!mCalls.empty())
+    // Note that we currently capture before the start frame to collect shader and program sources.
+    if (!mFrameCalls.empty() && mFrameIndex >= mFrameStart)
     {
-        WriteCppReplay(mOutDirectory, context->id(), mFrameIndex, mCalls);
-
-        // Count resource IDs.
-        for (const CallCapture &call : mCalls)
-        {
-            for (const ParamCapture &param : call.params.getParamCaptures())
-            {
-                ResourceIDType idType = GetResourceIDTypeFromParamType(param.type);
-                if (idType != ResourceIDType::InvalidEnum)
-                {
-                    mHasResourceType[idType] = true;
-                }
-            }
-        }
-
-        reset();
-        mFrameIndex++;
+        WriteCppReplay(mOutDirectory, context->id(), mFrameIndex, mFrameCalls, mSetupCalls);
 
         // Save the index files after the last frame.
-        if (mFrameIndex == mFrameEnd + 1)
+        if (mFrameIndex == mFrameEnd)
         {
             WriteCppReplayIndexFiles(mOutDirectory, context->id(), mFrameStart, mFrameEnd,
                                      mReadBufferSize, mClientArraySizes, mHasResourceType);
         }
+    }
+
+    // Count resource IDs. This is also done on every frame. It could probably be done by checking
+    // the GL state instead of the calls.
+    for (const CallCapture &call : mFrameCalls)
+    {
+        for (const ParamCapture &param : call.params.getParamCaptures())
+        {
+            ResourceIDType idType = GetResourceIDTypeFromParamType(param.type);
+            if (idType != ResourceIDType::InvalidEnum)
+            {
+                mHasResourceType.set(idType);
+            }
+        }
+    }
+
+    reset();
+    mFrameIndex++;
+
+    if (enabled() && mFrameIndex == mFrameStart)
+    {
+        mSetupCalls.clear();
+        CaptureMidExecutionSetup(context, &mSetupCalls, mCachedShaderSources,
+                                 mCachedProgramSources);
     }
 }
 
@@ -1148,13 +1724,16 @@ int DataCounters::getAndIncrement(gl::EntryPoint entryPoint, const std::string &
 
 bool FrameCapture::enabled() const
 {
-    return mEnabled && mFrameIndex >= mFrameStart && mFrameIndex <= mFrameEnd;
+    // Currently we will always do a capture up until the last frame. In the future we could improve
+    // mid execution capture by only capturing between the start and end frames. The only necessary
+    // reason we need to capture before the start is for attached program and shader sources.
+    return mEnabled && mFrameIndex <= mFrameEnd;
 }
 
 void FrameCapture::replay(gl::Context *context)
 {
     ReplayContext replayContext(mReadBufferSize, mClientArraySizes);
-    for (const CallCapture &call : mCalls)
+    for (const CallCapture &call : mFrameCalls)
     {
         INFO() << "frame index: " << mFrameIndex << " " << call.name();
 
@@ -1188,7 +1767,8 @@ void FrameCapture::replay(gl::Context *context)
 
 void FrameCapture::reset()
 {
-    mCalls.clear();
+    mFrameCalls.clear();
+    mSetupCalls.clear();
     mClientVertexArrayMap.fill(-1);
 
     // Do not reset replay-specific settings like the maximum read buffer size, client array sizes,

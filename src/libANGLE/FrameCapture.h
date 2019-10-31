@@ -163,7 +163,14 @@ class DataCounters final : angle::NonCopyable
 };
 
 // Used by the CPP replay to filter out unnecessary code.
-using HasResourceTypeMap = angle::PackedEnumMap<ResourceIDType, bool, angle::kParamTypeCount>;
+using HasResourceTypeMap = angle::PackedEnumBitSet<ResourceIDType>;
+
+// A dictionary of sources indexed by shader type.
+using ProgramSources = gl::ShaderMap<std::string>;
+
+// Maps from IDs to sources.
+using ShaderSourceMap  = std::map<gl::ShaderProgramID, std::string>;
+using ProgramSourceMap = std::map<gl::ShaderProgramID, ProgramSources>;
 
 class FrameCapture final : angle::NonCopyable
 {
@@ -183,20 +190,17 @@ class FrameCapture final : angle::NonCopyable
 
     void reset();
     void maybeCaptureClientData(const gl::Context *context, const CallCapture &call);
-    void maybeUpdateResourceIDs(const gl::Context *context, const CallCapture &call);
-
-    template <typename IDType>
-    void captureUpdateResourceIDs(const gl::Context *context,
-                                  const CallCapture &call,
-                                  const ParamCapture &param);
 
     static void ReplayCall(gl::Context *context,
                            ReplayContext *replayContext,
                            const CallCapture &call);
 
+    std::vector<CallCapture> mSetupCalls;
+    std::vector<CallCapture> mFrameCalls;
+    std::vector<CallCapture> mTearDownCalls;
+
     bool mEnabled;
     std::string mOutDirectory;
-    std::vector<CallCapture> mCalls;
     gl::AttribArray<int> mClientVertexArrayMap;
     uint32_t mFrameIndex;
     uint32_t mFrameStart;
@@ -204,6 +208,10 @@ class FrameCapture final : angle::NonCopyable
     gl::AttribArray<size_t> mClientArraySizes;
     size_t mReadBufferSize;
     HasResourceTypeMap mHasResourceType;
+
+    // Cache most recently compiled and linked sources.
+    ShaderSourceMap mCachedShaderSources;
+    ProgramSourceMap mCachedProgramSources;
 };
 
 template <typename CaptureFuncT, typename... ArgsT>
