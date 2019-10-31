@@ -3020,7 +3020,7 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
     stagingBuffer.get().init(contextVk->getRenderer(), VK_BUFFER_USAGE_TRANSFER_DST_BIT, 1,
                              kStagingBufferSize, true);
 
-    return readPixels(contextVk, area, params, VK_IMAGE_ASPECT_COLOR_BIT, level, 0,
+    return readPixels(contextVk, area, params, VK_IMAGE_ASPECT_COLOR_BIT, level, layer,
                       static_cast<uint8_t *>(pixels) + outputSkipBytes, &stagingBuffer.get());
 }
 

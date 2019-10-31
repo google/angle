@@ -168,6 +168,11 @@ bool operator==(const GLColor32F &a, const GLColor32F &b);
 std::ostream &operator<<(std::ostream &ostream, const GLColor32F &color);
 GLColor32F ReadColor32F(GLint x, GLint y);
 
+constexpr std::array<GLenum, 6> kCubeFaces = {
+    {GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+     GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+     GL_TEXTURE_CUBE_MAP_NEGATIVE_Z}};
+
 }  // namespace angle
 
 #define EXPECT_PIXEL_EQ(x, y, r, g, b, a) \

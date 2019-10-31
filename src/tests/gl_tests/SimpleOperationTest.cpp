@@ -31,11 +31,6 @@ constexpr char kGreenFragmentShader[] =
     gl_FragColor = vec4(0, 1, 0, 1);
 })";
 
-constexpr std::array<GLenum, 6> kCubeFaces = {
-    {GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-     GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-     GL_TEXTURE_CUBE_MAP_NEGATIVE_Z}};
-
 class SimpleOperationTest : public ANGLETest
 {
   protected:

@@ -1742,20 +1742,18 @@ angle::Result TextureVk::getTexImage(const gl::Context *context,
                                      void *pixels)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    if (mImage && mImage->valid())
-    {
-        ANGLE_TRY(mImage->flushAllStagedUpdates(contextVk));
 
-        size_t layer =
-            gl::IsCubeMapFaceTarget(target) ? gl::CubeMapTextureTargetToFaceIndex(target) : 0;
-        return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, level,
-                                             static_cast<uint32_t>(layer), format, type, pixels);
+    // Assumes Texture is consistent.
+    // TODO(http://anglebug.com/4058): Handle incomplete textures.
+    if (!mImage || !mImage->valid())
+    {
+        ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
     }
 
-    // Incomplete or unused texture. Will require a staging texture.
-    // TODO(http://anglebug.com/4058): Incomplete texture readback.
-    UNIMPLEMENTED();
-    return angle::Result::Continue;
+    size_t layer =
+        gl::IsCubeMapFaceTarget(target) ? gl::CubeMapTextureTargetToFaceIndex(target) : 0;
+    return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, level,
+                                         static_cast<uint32_t>(layer), format, type, pixels);
 }
 
 const vk::Format &TextureVk::getBaseLevelFormat(RendererVk *renderer) const

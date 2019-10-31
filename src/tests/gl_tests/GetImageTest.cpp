@@ -16,6 +16,7 @@ namespace
 {
 constexpr uint32_t kSize        = 32;
 constexpr char kExtensionName[] = "GL_ANGLE_get_image";
+constexpr uint32_t kSmallSize   = 2;
 
 class GetImageTest : public ANGLETest
 {
@@ -174,13 +175,52 @@ TEST_P(GetImageTest, GetTexImage)
     EXPECT_EQ(expectedData, actualData);
 }
 
+// Simple cube map test for GetTexImage
+TEST_P(GetImageTest, CubeMap)
+{
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
+    const std::array<std::array<GLColor, kSmallSize * kSmallSize>, kCubeFaces.size()> expectedData =
+        {{
+            {GLColor::red, GLColor::red, GLColor::red, GLColor::red},
+            {GLColor::green, GLColor::green, GLColor::green, GLColor::green},
+            {GLColor::blue, GLColor::blue, GLColor::blue, GLColor::blue},
+            {GLColor::yellow, GLColor::yellow, GLColor::yellow, GLColor::yellow},
+            {GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan},
+            {GLColor::magenta, GLColor::magenta, GLColor::magenta, GLColor::magenta},
+        }};
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+
+    for (size_t faceIndex = 0; faceIndex < kCubeFaces.size(); ++faceIndex)
+    {
+        glTexImage2D(kCubeFaces[faceIndex], 0, GL_RGBA, kSmallSize, kSmallSize, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, expectedData[faceIndex].data());
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Pack pixels tightly.
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    // Verify GetImage.
+    std::array<GLColor, kSmallSize *kSmallSize> actualData = {};
+    for (size_t faceIndex = 0; faceIndex < kCubeFaces.size(); ++faceIndex)
+    {
+        glGetTexImageANGLE(kCubeFaces[faceIndex], 0, GL_RGBA, GL_UNSIGNED_BYTE, actualData.data());
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(expectedData[faceIndex], actualData);
+    }
+}
+
 // Simple test for GetRenderbufferImage
 TEST_P(GetImageTest, GetRenderbufferImage)
 {
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
 
-    constexpr uint32_t kSmallSize     = 2;
     std::vector<GLColor> expectedData = {GLColor::red, GLColor::blue, GLColor::green,
                                          GLColor::yellow};
 
