@@ -6058,11 +6058,11 @@ void Context::drawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
     }
 
 void Context::multiDrawArraysInstancedBaseInstance(PrimitiveMode mode,
-                                                   GLsizei drawcount,
+                                                   const GLint *firsts,
                                                    const GLsizei *counts,
                                                    const GLsizei *instanceCounts,
-                                                   const GLint *firsts,
-                                                   const GLuint *baseInstances)
+                                                   const GLuint *baseInstances,
+                                                   GLsizei drawcount)
 {
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     Program *programObject     = mState.getLinkedProgram(this);
@@ -6090,13 +6090,13 @@ void Context::multiDrawArraysInstancedBaseInstance(PrimitiveMode mode,
 }
 
 void Context::multiDrawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
-                                                               DrawElementsType type,
-                                                               GLsizei drawcount,
                                                                const GLsizei *counts,
-                                                               const GLsizei *instanceCounts,
+                                                               DrawElementsType type,
                                                                const GLvoid *const *indices,
+                                                               const GLsizei *instanceCounts,
                                                                const GLint *baseVertices,
-                                                               const GLuint *baseInstances)
+                                                               const GLuint *baseInstances,
+                                                               GLsizei drawcount)
 {
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     Program *programObject     = mState.getLinkedProgram(this);

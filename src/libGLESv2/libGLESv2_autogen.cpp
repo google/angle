@@ -2738,28 +2738,28 @@ void GL_APIENTRY glDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
 }
 
 void GL_APIENTRY glMultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
-                                                             GLsizei drawcount,
+                                                             const GLint *firsts,
                                                              const GLsizei *counts,
                                                              const GLsizei *instanceCounts,
-                                                             const GLint *firsts,
-                                                             const GLuint *baseInstances)
+                                                             const GLuint *baseInstances,
+                                                             GLsizei drawcount)
 {
-    return gl::MultiDrawArraysInstancedBaseInstanceANGLE(mode, drawcount, counts, instanceCounts,
-                                                         firsts, baseInstances);
+    return gl::MultiDrawArraysInstancedBaseInstanceANGLE(mode, firsts, counts, instanceCounts,
+                                                         baseInstances, drawcount);
 }
 
 void GL_APIENTRY
 glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
-                                                        GLenum type,
-                                                        GLsizei drawcount,
                                                         const GLsizei *counts,
-                                                        const GLsizei *instanceCounts,
+                                                        GLenum type,
                                                         const GLvoid *const *indices,
+                                                        const GLsizei *instanceCounts,
                                                         const GLint *baseVertices,
-                                                        const GLuint *baseInstances)
+                                                        const GLuint *baseInstances,
+                                                        GLsizei drawcount)
 {
     return gl::MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(
-        mode, type, drawcount, counts, instanceCounts, indices, baseVertices, baseInstances);
+        mode, counts, type, indices, instanceCounts, baseVertices, baseInstances, drawcount);
 }
 
 // GL_ANGLE_copy_texture_3d
@@ -10552,29 +10552,29 @@ glDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
 void GL_APIENTRY
 glMultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
                                                         GLenum mode,
-                                                        GLsizei drawcount,
+                                                        const GLint *firsts,
                                                         const GLsizei *counts,
                                                         const GLsizei *instanceCounts,
-                                                        const GLint *firsts,
-                                                        const GLuint *baseInstances)
+                                                        const GLuint *baseInstances,
+                                                        GLsizei drawcount)
 {
     return gl::MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(
-        ctx, mode, drawcount, counts, instanceCounts, firsts, baseInstances);
+        ctx, mode, firsts, counts, instanceCounts, baseInstances, drawcount);
 }
 
 void GL_APIENTRY
 glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
                                                                     GLenum mode,
-                                                                    GLenum type,
-                                                                    GLsizei drawcount,
                                                                     const GLsizei *counts,
-                                                                    const GLsizei *instanceCounts,
+                                                                    GLenum type,
                                                                     const GLvoid *const *indices,
+                                                                    const GLsizei *instanceCounts,
                                                                     const GLint *baseVertices,
-                                                                    const GLuint *baseInstances)
+                                                                    const GLuint *baseInstances,
+                                                                    GLsizei drawcount)
 {
     return gl::MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(
-        ctx, mode, type, drawcount, counts, instanceCounts, indices, baseVertices, baseInstances);
+        ctx, mode, counts, type, indices, instanceCounts, baseVertices, baseInstances, drawcount);
 }
 
 void GL_APIENTRY glGetMultisamplefvANGLEContextANGLE(GLeglContext ctx,

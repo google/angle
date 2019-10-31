@@ -37,20 +37,20 @@ DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                                                  GLuint baseInstance);
 ANGLE_EXPORT void GL_APIENTRY
 MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
-                                          GLsizei drawcount,
+                                          const GLint *firsts,
                                           const GLsizei *counts,
                                           const GLsizei *instanceCounts,
-                                          const GLint *firsts,
-                                          const GLuint *baseInstances);
+                                          const GLuint *baseInstances,
+                                          GLsizei drawcount);
 ANGLE_EXPORT void GL_APIENTRY
 MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
-                                                      GLenum type,
-                                                      GLsizei drawcount,
                                                       const GLsizei *counts,
-                                                      const GLsizei *instanceCounts,
+                                                      GLenum type,
                                                       const GLvoid *const *indices,
+                                                      const GLsizei *instanceCounts,
                                                       const GLint *baseVertices,
-                                                      const GLuint *baseInstances);
+                                                      const GLuint *baseInstances,
+                                                      GLsizei drawcount);
 
 // GL_ANGLE_copy_texture_3d
 ANGLE_EXPORT void GL_APIENTRY CopyTexture3DANGLE(GLuint sourceId,
@@ -4147,21 +4147,21 @@ DrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
 ANGLE_EXPORT void GL_APIENTRY
 MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
                                                       GLenum mode,
-                                                      GLsizei drawcount,
+                                                      const GLint *firsts,
                                                       const GLsizei *counts,
                                                       const GLsizei *instanceCounts,
-                                                      const GLint *firsts,
-                                                      const GLuint *baseInstances);
+                                                      const GLuint *baseInstances,
+                                                      GLsizei drawcount);
 ANGLE_EXPORT void GL_APIENTRY
 MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
                                                                   GLenum mode,
-                                                                  GLenum type,
-                                                                  GLsizei drawcount,
                                                                   const GLsizei *counts,
-                                                                  const GLsizei *instanceCounts,
+                                                                  GLenum type,
                                                                   const GLvoid *const *indices,
+                                                                  const GLsizei *instanceCounts,
                                                                   const GLint *baseVertices,
-                                                                  const GLuint *baseInstances);
+                                                                  const GLuint *baseInstances,
+                                                                  GLsizei drawcount);
 ANGLE_EXPORT void GL_APIENTRY GetMultisamplefvANGLEContextANGLE(GLeglContext ctx,
                                                                 GLenum pname,
                                                                 GLuint index,

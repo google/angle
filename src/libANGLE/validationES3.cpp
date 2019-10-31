@@ -3277,12 +3277,12 @@ bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(Context *context,
 }
 
 bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(Context *context,
-                                                       PrimitiveMode mode,
-                                                       GLsizei drawcount,
+                                                       PrimitiveMode modePacked,
+                                                       const GLint *firsts,
                                                        const GLsizei *counts,
                                                        const GLsizei *instanceCounts,
-                                                       const GLint *firsts,
-                                                       const GLuint *baseInstances)
+                                                       const GLuint *baseInstances,
+                                                       GLsizei drawcount)
 {
     if (!context->getExtensions().multiDraw)
     {
@@ -3295,7 +3295,7 @@ bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(Context *context,
     }
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
-        if (!ValidateDrawArraysInstancedBase(context, mode, firsts[drawID], counts[drawID],
+        if (!ValidateDrawArraysInstancedBase(context, modePacked, firsts[drawID], counts[drawID],
                                              instanceCounts[drawID]))
         {
             return false;
@@ -3305,14 +3305,14 @@ bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(Context *context,
 }
 
 bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(Context *context,
-                                                                   PrimitiveMode mode,
-                                                                   DrawElementsType type,
-                                                                   GLsizei drawcount,
+                                                                   PrimitiveMode modePacked,
                                                                    const GLsizei *counts,
-                                                                   const GLsizei *instanceCounts,
+                                                                   DrawElementsType typePacked,
                                                                    const GLvoid *const *indices,
+                                                                   const GLsizei *instanceCounts,
                                                                    const GLint *baseVertices,
-                                                                   const GLuint *baseInstances)
+                                                                   const GLuint *baseInstances,
+                                                                   GLsizei drawcount)
 {
     if (!context->getExtensions().multiDraw)
     {
@@ -3325,8 +3325,8 @@ bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(Context *cont
     }
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
-        if (!ValidateDrawElementsInstancedBase(context, mode, counts[drawID], type, indices[drawID],
-                                               instanceCounts[drawID]))
+        if (!ValidateDrawElementsInstancedBase(context, modePacked, counts[drawID], typePacked,
+                                               indices[drawID], instanceCounts[drawID]))
         {
             return false;
         }

@@ -283,12 +283,12 @@
         PrimitiveMode modePacked, GLsizei count, DrawElementsType typePacked,                      \
         const GLvoid *indices, GLsizei instanceCounts, GLint baseVertex, GLuint baseInstance);     \
     void multiDrawArraysInstancedBaseInstance(                                                     \
-        PrimitiveMode modePacked, GLsizei drawcount, const GLsizei *counts,                        \
-        const GLsizei *instanceCounts, const GLint *firsts, const GLuint *baseInstances);          \
+        PrimitiveMode modePacked, const GLint *firsts, const GLsizei *counts,                      \
+        const GLsizei *instanceCounts, const GLuint *baseInstances, GLsizei drawcount);            \
     void multiDrawElementsInstancedBaseVertexBaseInstance(                                         \
-        PrimitiveMode modePacked, DrawElementsType typePacked, GLsizei drawcount,                  \
-        const GLsizei *counts, const GLsizei *instanceCounts, const GLvoid *const *indices,        \
-        const GLint *baseVertices, const GLuint *baseInstances);                                   \
+        PrimitiveMode modePacked, const GLsizei *counts, DrawElementsType typePacked,              \
+        const GLvoid *const *indices, const GLsizei *instanceCounts, const GLint *baseVertices,    \
+        const GLuint *baseInstances, GLsizei drawcount);                                           \
     /* GL_ANGLE_framebuffer_blit */                                                                \
     /* GL_ANGLE_framebuffer_multisample */                                                         \
     /* GL_ANGLE_instanced_arrays */                                                                \

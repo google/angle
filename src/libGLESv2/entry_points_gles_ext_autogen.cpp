@@ -101,21 +101,20 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
 }
 
 void GL_APIENTRY MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
-                                                           GLsizei drawcount,
+                                                           const GLint *firsts,
                                                            const GLsizei *counts,
                                                            const GLsizei *instanceCounts,
-                                                           const GLint *firsts,
-                                                           const GLuint *baseInstances)
+                                                           const GLuint *baseInstances,
+                                                           GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT("glMultiDrawArraysInstancedBaseInstanceANGLE",
-          "context = %d, GLenum mode = %s, GLsizei drawcount = %d, const GLsizei *counts = "
-          "0x%016" PRIxPTR ", const GLsizei *instanceCounts = 0x%016" PRIxPTR
-          ", const GLint *firsts = 0x%016" PRIxPTR ", const GLuint *baseInstances = 0x%016" PRIxPTR
-          "",
-          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), drawcount,
-          (uintptr_t)counts, (uintptr_t)instanceCounts, (uintptr_t)firsts,
-          (uintptr_t)baseInstances);
+          "context = %d, GLenum mode = %s, const GLint *firsts = 0x%016" PRIxPTR
+          ", const GLsizei *counts = 0x%016" PRIxPTR
+          ", const GLsizei *instanceCounts = 0x%016" PRIxPTR
+          ", const GLuint *baseInstances = 0x%016" PRIxPTR ", GLsizei drawcount = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)firsts,
+          (uintptr_t)counts, (uintptr_t)instanceCounts, (uintptr_t)baseInstances, drawcount);
 
     if (context)
     {
@@ -124,38 +123,37 @@ void GL_APIENTRY MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
         bool isCallValid =
             (context->skipValidation() ||
              ValidateMultiDrawArraysInstancedBaseInstanceANGLE(
-                 context, modePacked, drawcount, counts, instanceCounts, firsts, baseInstances));
+                 context, modePacked, firsts, counts, instanceCounts, baseInstances, drawcount));
         if (isCallValid)
         {
-            context->multiDrawArraysInstancedBaseInstance(modePacked, drawcount, counts,
-                                                          instanceCounts, firsts, baseInstances);
+            context->multiDrawArraysInstancedBaseInstance(modePacked, firsts, counts,
+                                                          instanceCounts, baseInstances, drawcount);
         }
         ANGLE_CAPTURE(MultiDrawArraysInstancedBaseInstanceANGLE, isCallValid, context, modePacked,
-                      drawcount, counts, instanceCounts, firsts, baseInstances);
+                      firsts, counts, instanceCounts, baseInstances, drawcount);
     }
 }
 
 void GL_APIENTRY
 MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
-                                                      GLenum type,
-                                                      GLsizei drawcount,
                                                       const GLsizei *counts,
-                                                      const GLsizei *instanceCounts,
+                                                      GLenum type,
                                                       const GLvoid *const *indices,
+                                                      const GLsizei *instanceCounts,
                                                       const GLint *baseVertices,
-                                                      const GLuint *baseInstances)
+                                                      const GLuint *baseInstances,
+                                                      GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT("glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE",
-          "context = %d, GLenum mode = %s, GLenum type = %s, GLsizei drawcount = %d, const GLsizei "
-          "*counts = 0x%016" PRIxPTR ", const GLsizei *instanceCounts = 0x%016" PRIxPTR
-          ", const GLvoid *const*indices = 0x%016" PRIxPTR
+          "context = %d, GLenum mode = %s, const GLsizei *counts = 0x%016" PRIxPTR
+          ", GLenum type = %s, const GLvoid *const*indices = 0x%016" PRIxPTR
+          ", const GLsizei *instanceCounts = 0x%016" PRIxPTR
           ", const GLint *baseVertices = 0x%016" PRIxPTR
-          ", const GLuint *baseInstances = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode),
-          GLenumToString(GLenumGroup::DrawElementsType, type), drawcount, (uintptr_t)counts,
-          (uintptr_t)instanceCounts, (uintptr_t)indices, (uintptr_t)baseVertices,
-          (uintptr_t)baseInstances);
+          ", const GLuint *baseInstances = 0x%016" PRIxPTR ", GLsizei drawcount = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)counts,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices,
+          (uintptr_t)instanceCounts, (uintptr_t)baseVertices, (uintptr_t)baseInstances, drawcount);
 
     if (context)
     {
@@ -164,17 +162,17 @@ MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
                             ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(
-                                context, modePacked, typePacked, drawcount, counts, instanceCounts,
-                                indices, baseVertices, baseInstances));
+                                context, modePacked, counts, typePacked, indices, instanceCounts,
+                                baseVertices, baseInstances, drawcount));
         if (isCallValid)
         {
             context->multiDrawElementsInstancedBaseVertexBaseInstance(
-                modePacked, typePacked, drawcount, counts, instanceCounts, indices, baseVertices,
-                baseInstances);
+                modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+                baseInstances, drawcount);
         }
         ANGLE_CAPTURE(MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE, isCallValid, context,
-                      modePacked, typePacked, drawcount, counts, instanceCounts, indices,
-                      baseVertices, baseInstances);
+                      modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+                      baseInstances, drawcount);
     }
 }
 
@@ -26105,21 +26103,20 @@ DrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
 void GL_APIENTRY
 MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
                                                       GLenum mode,
-                                                      GLsizei drawcount,
+                                                      const GLint *firsts,
                                                       const GLsizei *counts,
                                                       const GLsizei *instanceCounts,
-                                                      const GLint *firsts,
-                                                      const GLuint *baseInstances)
+                                                      const GLuint *baseInstances,
+                                                      GLsizei drawcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT("glMultiDrawArraysInstancedBaseInstanceANGLE",
-          "context = %d, GLenum mode = %s, GLsizei drawcount = %d, const GLsizei *counts = "
-          "0x%016" PRIxPTR ", const GLsizei *instanceCounts = 0x%016" PRIxPTR
-          ", const GLint *firsts = 0x%016" PRIxPTR ", const GLuint *baseInstances = 0x%016" PRIxPTR
-          "",
-          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), drawcount,
-          (uintptr_t)counts, (uintptr_t)instanceCounts, (uintptr_t)firsts,
-          (uintptr_t)baseInstances);
+          "context = %d, GLenum mode = %s, const GLint *firsts = 0x%016" PRIxPTR
+          ", const GLsizei *counts = 0x%016" PRIxPTR
+          ", const GLsizei *instanceCounts = 0x%016" PRIxPTR
+          ", const GLuint *baseInstances = 0x%016" PRIxPTR ", GLsizei drawcount = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)firsts,
+          (uintptr_t)counts, (uintptr_t)instanceCounts, (uintptr_t)baseInstances, drawcount);
 
     if (context)
     {
@@ -26129,39 +26126,38 @@ MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
         bool isCallValid =
             (context->skipValidation() ||
              ValidateMultiDrawArraysInstancedBaseInstanceANGLE(
-                 context, modePacked, drawcount, counts, instanceCounts, firsts, baseInstances));
+                 context, modePacked, firsts, counts, instanceCounts, baseInstances, drawcount));
         if (isCallValid)
         {
-            context->multiDrawArraysInstancedBaseInstance(modePacked, drawcount, counts,
-                                                          instanceCounts, firsts, baseInstances);
+            context->multiDrawArraysInstancedBaseInstance(modePacked, firsts, counts,
+                                                          instanceCounts, baseInstances, drawcount);
         }
         ANGLE_CAPTURE(MultiDrawArraysInstancedBaseInstanceANGLE, isCallValid, context, modePacked,
-                      drawcount, counts, instanceCounts, firsts, baseInstances);
+                      firsts, counts, instanceCounts, baseInstances, drawcount);
     }
 }
 
 void GL_APIENTRY
 MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
                                                                   GLenum mode,
-                                                                  GLenum type,
-                                                                  GLsizei drawcount,
                                                                   const GLsizei *counts,
-                                                                  const GLsizei *instanceCounts,
+                                                                  GLenum type,
                                                                   const GLvoid *const *indices,
+                                                                  const GLsizei *instanceCounts,
                                                                   const GLint *baseVertices,
-                                                                  const GLuint *baseInstances)
+                                                                  const GLuint *baseInstances,
+                                                                  GLsizei drawcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT("glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE",
-          "context = %d, GLenum mode = %s, GLenum type = %s, GLsizei drawcount = %d, const GLsizei "
-          "*counts = 0x%016" PRIxPTR ", const GLsizei *instanceCounts = 0x%016" PRIxPTR
-          ", const GLvoid *const*indices = 0x%016" PRIxPTR
+          "context = %d, GLenum mode = %s, const GLsizei *counts = 0x%016" PRIxPTR
+          ", GLenum type = %s, const GLvoid *const*indices = 0x%016" PRIxPTR
+          ", const GLsizei *instanceCounts = 0x%016" PRIxPTR
           ", const GLint *baseVertices = 0x%016" PRIxPTR
-          ", const GLuint *baseInstances = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode),
-          GLenumToString(GLenumGroup::DrawElementsType, type), drawcount, (uintptr_t)counts,
-          (uintptr_t)instanceCounts, (uintptr_t)indices, (uintptr_t)baseVertices,
-          (uintptr_t)baseInstances);
+          ", const GLuint *baseInstances = 0x%016" PRIxPTR ", GLsizei drawcount = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)counts,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices,
+          (uintptr_t)instanceCounts, (uintptr_t)baseVertices, (uintptr_t)baseInstances, drawcount);
 
     if (context)
     {
@@ -26171,17 +26167,17 @@ MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext c
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
                             ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(
-                                context, modePacked, typePacked, drawcount, counts, instanceCounts,
-                                indices, baseVertices, baseInstances));
+                                context, modePacked, counts, typePacked, indices, instanceCounts,
+                                baseVertices, baseInstances, drawcount));
         if (isCallValid)
         {
             context->multiDrawElementsInstancedBaseVertexBaseInstance(
-                modePacked, typePacked, drawcount, counts, instanceCounts, indices, baseVertices,
-                baseInstances);
+                modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+                baseInstances, drawcount);
         }
         ANGLE_CAPTURE(MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE, isCallValid, context,
-                      modePacked, typePacked, drawcount, counts, instanceCounts, indices,
-                      baseVertices, baseInstances);
+                      modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+                      baseInstances, drawcount);
     }
 }
 

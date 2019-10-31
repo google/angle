@@ -74,44 +74,45 @@ CallCapture CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Contex
 CallCapture CaptureMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,
                                                              bool isCallValid,
                                                              PrimitiveMode modePacked,
-                                                             GLsizei drawcount,
+                                                             const GLint *firsts,
                                                              const GLsizei *counts,
                                                              const GLsizei *instanceCounts,
-                                                             const GLint *firsts,
-                                                             const GLuint *baseInstances)
+                                                             const GLuint *baseInstances,
+                                                             GLsizei drawcount)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("modePacked", ParamType::TPrimitiveMode, modePacked);
-    paramBuffer.addValueParam("drawcount", ParamType::TGLsizei, drawcount);
+
+    ParamCapture firstsParam("firsts", ParamType::TGLintConstPointer);
+    InitParamValue(ParamType::TGLintConstPointer, firsts, &firstsParam.value);
+    CaptureMultiDrawArraysInstancedBaseInstanceANGLE_firsts(context, isCallValid, modePacked,
+                                                            firsts, counts, instanceCounts,
+                                                            baseInstances, drawcount, &firstsParam);
+    paramBuffer.addParam(std::move(firstsParam));
 
     ParamCapture countsParam("counts", ParamType::TGLsizeiConstPointer);
     InitParamValue(ParamType::TGLsizeiConstPointer, counts, &countsParam.value);
     CaptureMultiDrawArraysInstancedBaseInstanceANGLE_counts(context, isCallValid, modePacked,
-                                                            drawcount, counts, instanceCounts,
-                                                            firsts, baseInstances, &countsParam);
+                                                            firsts, counts, instanceCounts,
+                                                            baseInstances, drawcount, &countsParam);
     paramBuffer.addParam(std::move(countsParam));
 
     ParamCapture instanceCountsParam("instanceCounts", ParamType::TGLsizeiConstPointer);
     InitParamValue(ParamType::TGLsizeiConstPointer, instanceCounts, &instanceCountsParam.value);
     CaptureMultiDrawArraysInstancedBaseInstanceANGLE_instanceCounts(
-        context, isCallValid, modePacked, drawcount, counts, instanceCounts, firsts, baseInstances,
+        context, isCallValid, modePacked, firsts, counts, instanceCounts, baseInstances, drawcount,
         &instanceCountsParam);
     paramBuffer.addParam(std::move(instanceCountsParam));
-
-    ParamCapture firstsParam("firsts", ParamType::TGLintConstPointer);
-    InitParamValue(ParamType::TGLintConstPointer, firsts, &firstsParam.value);
-    CaptureMultiDrawArraysInstancedBaseInstanceANGLE_firsts(context, isCallValid, modePacked,
-                                                            drawcount, counts, instanceCounts,
-                                                            firsts, baseInstances, &firstsParam);
-    paramBuffer.addParam(std::move(firstsParam));
 
     ParamCapture baseInstancesParam("baseInstances", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, baseInstances, &baseInstancesParam.value);
     CaptureMultiDrawArraysInstancedBaseInstanceANGLE_baseInstances(
-        context, isCallValid, modePacked, drawcount, counts, instanceCounts, firsts, baseInstances,
+        context, isCallValid, modePacked, firsts, counts, instanceCounts, baseInstances, drawcount,
         &baseInstancesParam);
     paramBuffer.addParam(std::move(baseInstancesParam));
+
+    paramBuffer.addValueParam("drawcount", ParamType::TGLsizei, drawcount);
 
     return CallCapture(gl::EntryPoint::MultiDrawArraysInstancedBaseInstanceANGLE,
                        std::move(paramBuffer));
@@ -121,54 +122,56 @@ CallCapture CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(
     const Context *context,
     bool isCallValid,
     PrimitiveMode modePacked,
-    DrawElementsType typePacked,
-    GLsizei drawcount,
     const GLsizei *counts,
-    const GLsizei *instanceCounts,
+    DrawElementsType typePacked,
     const GLvoid *const *indices,
+    const GLsizei *instanceCounts,
     const GLint *baseVertices,
-    const GLuint *baseInstances)
+    const GLuint *baseInstances,
+    GLsizei drawcount)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("modePacked", ParamType::TPrimitiveMode, modePacked);
-    paramBuffer.addValueParam("typePacked", ParamType::TDrawElementsType, typePacked);
-    paramBuffer.addValueParam("drawcount", ParamType::TGLsizei, drawcount);
 
     ParamCapture countsParam("counts", ParamType::TGLsizeiConstPointer);
     InitParamValue(ParamType::TGLsizeiConstPointer, counts, &countsParam.value);
     CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_counts(
-        context, isCallValid, modePacked, typePacked, drawcount, counts, instanceCounts, indices,
-        baseVertices, baseInstances, &countsParam);
+        context, isCallValid, modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+        baseInstances, drawcount, &countsParam);
     paramBuffer.addParam(std::move(countsParam));
 
-    ParamCapture instanceCountsParam("instanceCounts", ParamType::TGLsizeiConstPointer);
-    InitParamValue(ParamType::TGLsizeiConstPointer, instanceCounts, &instanceCountsParam.value);
-    CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_instanceCounts(
-        context, isCallValid, modePacked, typePacked, drawcount, counts, instanceCounts, indices,
-        baseVertices, baseInstances, &instanceCountsParam);
-    paramBuffer.addParam(std::move(instanceCountsParam));
+    paramBuffer.addValueParam("typePacked", ParamType::TDrawElementsType, typePacked);
 
     ParamCapture indicesParam("indices", ParamType::TGLvoidConstPointerPointer);
     InitParamValue(ParamType::TGLvoidConstPointerPointer, indices, &indicesParam.value);
     CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
-        context, isCallValid, modePacked, typePacked, drawcount, counts, instanceCounts, indices,
-        baseVertices, baseInstances, &indicesParam);
+        context, isCallValid, modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+        baseInstances, drawcount, &indicesParam);
     paramBuffer.addParam(std::move(indicesParam));
+
+    ParamCapture instanceCountsParam("instanceCounts", ParamType::TGLsizeiConstPointer);
+    InitParamValue(ParamType::TGLsizeiConstPointer, instanceCounts, &instanceCountsParam.value);
+    CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_instanceCounts(
+        context, isCallValid, modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+        baseInstances, drawcount, &instanceCountsParam);
+    paramBuffer.addParam(std::move(instanceCountsParam));
 
     ParamCapture baseVerticesParam("baseVertices", ParamType::TGLintConstPointer);
     InitParamValue(ParamType::TGLintConstPointer, baseVertices, &baseVerticesParam.value);
     CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseVertices(
-        context, isCallValid, modePacked, typePacked, drawcount, counts, instanceCounts, indices,
-        baseVertices, baseInstances, &baseVerticesParam);
+        context, isCallValid, modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+        baseInstances, drawcount, &baseVerticesParam);
     paramBuffer.addParam(std::move(baseVerticesParam));
 
     ParamCapture baseInstancesParam("baseInstances", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, baseInstances, &baseInstancesParam.value);
     CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseInstances(
-        context, isCallValid, modePacked, typePacked, drawcount, counts, instanceCounts, indices,
-        baseVertices, baseInstances, &baseInstancesParam);
+        context, isCallValid, modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+        baseInstances, drawcount, &baseInstancesParam);
     paramBuffer.addParam(std::move(baseInstancesParam));
+
+    paramBuffer.addValueParam("drawcount", ParamType::TGLsizei, drawcount);
 
     return CallCapture(gl::EntryPoint::MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE,
                        std::move(paramBuffer));
