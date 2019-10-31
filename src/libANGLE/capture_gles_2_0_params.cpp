@@ -368,7 +368,8 @@ void CaptureGetFramebufferAttachmentParameteriv_params(const Context *context,
                                                        GLint *params,
                                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // All ES 2.0 queries only return one value.
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetIntegerv_data(const Context *context,
