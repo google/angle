@@ -57,8 +57,9 @@ template("angle_sample") {
   angle_executable(target_name) {
     forward_variables_from(invoker,
                            [
-                             "sources",
                              "cflags",
+                             "defines",
+                             "sources",
                            ])
     deps = [
       ":sample_util",
@@ -224,6 +225,9 @@ template("capture_replay") {
                 "capture_replay/angle_capture_context1.cpp",
                 "capture_replay/angle_capture_context1.h",
               ]
+
+    _data_path = rebase_path("capture_replay", root_out_dir)
+    defines = [ "ANGLE_CAPTURE_REPLAY_SAMPLE_DATA_DIR=\"${_data_path}\"" ]
     suppressed_configs = [ "$angle_root:constructor_and_destructor_warnings" ]
   }
 }

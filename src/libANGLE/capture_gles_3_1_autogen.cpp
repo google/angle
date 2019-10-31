@@ -12,7 +12,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/FrameCapture.h"
-#include "libANGLE/gl_enum_utils_autogen.h"
+#include "libANGLE/gl_enum_utils.h"
 #include "libANGLE/validationES31.h"
 
 using namespace angle;

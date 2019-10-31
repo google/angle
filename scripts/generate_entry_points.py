@@ -298,7 +298,7 @@ template_capture_source = """// GENERATED FILE - DO NOT EDIT.
 
 #include "libANGLE/Context.h"
 #include "libANGLE/FrameCapture.h"
-#include "libANGLE/gl_enum_utils_autogen.h"
+#include "libANGLE/gl_enum_utils.h"
 #include "libANGLE/validation{annotation_no_dash}.h"
 
 using namespace angle;
@@ -447,7 +447,7 @@ template_sources_includes = """#include "libGLESv2/entry_points_{header_version}
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture_{header_version}_autogen.h"
-#include "libANGLE/gl_enum_utils_autogen.h"
+#include "libANGLE/gl_enum_utils.h"
 #include "libANGLE/validation{validation_header_version}.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
@@ -462,7 +462,7 @@ template_sources_includes_gl32 = """#include "libGL/entry_points_{}_autogen.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
-#include "libANGLE/gl_enum_utils_autogen.h"
+#include "libANGLE/gl_enum_utils.h"
 #include "libANGLE/validationEGL.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES1.h"

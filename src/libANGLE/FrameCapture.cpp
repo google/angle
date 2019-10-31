@@ -17,7 +17,7 @@
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/VertexArray.h"
-#include "libANGLE/gl_enum_utils_autogen.h"
+#include "libANGLE/gl_enum_utils.h"
 
 #if !ANGLE_CAPTURE_ENABLED
 #    error Frame capture must be enbled to include this file.
@@ -448,29 +448,29 @@ void WriteCppReplay(const std::string &outDir,
     out << "void " << FmtReplayFunction(contextId, frameIndex) << "\n";
     out << "{\n";
 
+    std::stringstream callStream;
+
+    for (const CallCapture &call : calls)
+    {
+        callStream << "    ";
+        WriteCppReplayForCall(call, &counters, callStream, header, &binaryData);
+        callStream << ";\n";
+    }
+
     if (!binaryData.empty())
     {
         std::string binaryDataFileName = GetCaptureFileName(contextId, frameIndex, ".angledata");
 
         out << "    LoadBinaryData(\"" << binaryDataFileName << "\", "
             << static_cast<int>(binaryData.size()) << ");\n";
-    }
 
-    for (const CallCapture &call : calls)
-    {
-        out << "    ";
-        WriteCppReplayForCall(call, &counters, out, header, &binaryData);
-        out << ";\n";
-    }
-
-    if (!binaryData.empty())
-    {
         std::string dataFilepath = GetCaptureFilePath(outDir, contextId, frameIndex, ".angledata");
 
         SaveFileHelper saveData(dataFilepath, std::ios::binary);
         saveData.ofs.write(reinterpret_cast<const char *>(binaryData.data()), binaryData.size());
     }
 
+    out << callStream.str();
     out << "}\n";
 
     header << "}  // anonymous namespace\n";
@@ -520,6 +520,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
         header << "void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
     }
     header << "\n";
+    header << "void SetBinaryDataDir(const char *dataDir);\n";
     header << "void LoadBinaryData(const char *fileName, size_t size);\n";
     header << "\n";
     header << "// Global state\n";
@@ -539,6 +540,8 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     source << "    memcpy(&returnedID, &gReadBuffer[readBufferOffset], sizeof(GLuint));\n";
     source << "    (*resourceMap)[id] = returnedID;\n";
     source << "}\n";
+    source << "\n";
+    source << "const char *gBinaryDataDir = \".\";\n";
     source << "}  // namespace\n";
     source << "\n";
     source << "uint8_t *gBinaryData = nullptr;\n";
@@ -583,6 +586,11 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     source << "    }\n";
     source << "}\n";
     source << "\n";
+    source << "void SetBinaryDataDir(const char *dataDir)\n";
+    source << "{\n";
+    source << "    gBinaryDataDir = dataDir;\n";
+    source << "}\n";
+    source << "\n";
     source << "void LoadBinaryData(const char *fileName, size_t size)\n";
     source << "{\n";
     source << "    if (gBinaryData != nullptr)\n";
@@ -590,7 +598,9 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     source << "        delete [] gBinaryData;\n";
     source << "    }\n";
     source << "    gBinaryData = new uint8_t[size];\n";
-    source << "    FILE *fp = fopen(fileName, \"rb\");\n";
+    source << "    char pathBuffer[1000] = {};\n";
+    source << "    sprintf(pathBuffer, \"%s/%s\", gBinaryDataDir, fileName);\n";
+    source << "    FILE *fp = fopen(pathBuffer, \"rb\");\n";
     source << "    fread(gBinaryData, 1, size, fp);\n";
     source << "    fclose(fp);\n";
     source << "}\n";

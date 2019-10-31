@@ -13,10 +13,20 @@ class CaptureReplaySample : public SampleApplication
 {
   public:
     CaptureReplaySample(int argc, char **argv)
-        : SampleApplication("CaptureReplaySample", argc, argv, 2, 0)
+        : SampleApplication("CaptureReplaySample", argc, argv, 3, 0)
     {}
 
-    bool initialize() override { return true; }
+    bool initialize() override
+    {
+        // Set CWD to executable directory.
+        std::string exeDir = angle::GetExecutableDirectory();
+        if (!angle::SetCWD(exeDir.c_str()))
+            return false;
+        SetBinaryDataDir(ANGLE_CAPTURE_REPLAY_SAMPLE_DATA_DIR);
+        SetupContext1Replay();
+        return true;
+    }
+
     void destroy() override {}
 
     void draw() override

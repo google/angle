@@ -14,7 +14,7 @@
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture_gles_1_0_autogen.h"
 #include "libANGLE/entry_points_utils.h"
-#include "libANGLE/gl_enum_utils_autogen.h"
+#include "libANGLE/gl_enum_utils.h"
 #include "libANGLE/validationES1.h"
 #include "libGLESv2/global_state.h"
 
