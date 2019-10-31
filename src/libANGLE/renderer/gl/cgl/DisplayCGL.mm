@@ -6,7 +6,9 @@
 
 // DisplayCGL.mm: CGL implementation of egl::Display
 
-#if __has_include(<Cocoa/Cocoa.h>)
+#include "common/platform.h"
+
+#ifdef ANGLE_PLATFORM_MACOS
 
 #    include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 
@@ -446,4 +448,4 @@ void DisplayCGL::populateFeatureList(angle::FeatureList *features)
 }
 }
 
-#endif  // __has_include(<Cocoa/Cocoa.h>)
+#endif  // ANGLE_PLATFORM_MACOS

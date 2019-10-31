@@ -6,7 +6,9 @@
 
 // WindowSurfaceCGL.cpp: CGL implementation of egl::Surface for windows
 
-#if __has_include(<Cocoa/Cocoa.h>)
+#include "common/platform.h"
+
+#ifdef ANGLE_PLATFORM_MACOS
 
 #    include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
 
@@ -337,4 +339,4 @@ FramebufferImpl *WindowSurfaceCGL::createDefaultFramebuffer(const gl::Context *c
 
 }  // namespace rx
 
-#endif  // __has_include(<Cocoa/Cocoa.h>)
+#endif  // ANGLE_PLATFORM_MACOS

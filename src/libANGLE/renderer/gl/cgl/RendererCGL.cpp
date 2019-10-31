@@ -8,7 +8,11 @@
 
 #include "libANGLE/renderer/gl/cgl/RendererCGL.h"
 
-#include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
+#include "common/platform.h"
+
+#ifdef ANGLE_PLATFORM_MACOS
+
+#    include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 
 namespace rx
 {
@@ -27,3 +31,5 @@ WorkerContext *RendererCGL::createWorkerContext(std::string *infoLog)
 }
 
 }  // namespace rx
+
+#endif  // ANGLE_PLATFORM_MACOS

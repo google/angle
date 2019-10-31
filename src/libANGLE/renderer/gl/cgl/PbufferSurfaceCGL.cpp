@@ -9,11 +9,15 @@
 
 #include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
 
-#include "common/debug.h"
-#include "libANGLE/renderer/gl/FunctionsGL.h"
-#include "libANGLE/renderer/gl/FramebufferGL.h"
-#include "libANGLE/renderer/gl/RendererGL.h"
-#include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "common/platform.h"
+
+#ifdef ANGLE_PLATFORM_MACOS
+
+#    include "common/debug.h"
+#    include "libANGLE/renderer/gl/FramebufferGL.h"
+#    include "libANGLE/renderer/gl/FunctionsGL.h"
+#    include "libANGLE/renderer/gl/RendererGL.h"
+#    include "libANGLE/renderer/gl/StateManagerGL.h"
 
 namespace rx
 {
@@ -29,8 +33,7 @@ PbufferSurfaceCGL::PbufferSurfaceCGL(const egl::SurfaceState &state,
       mStateManager(renderer->getStateManager()),
       mColorRenderbuffer(0),
       mDSRenderbuffer(0)
-{
-}
+{}
 
 PbufferSurfaceCGL::~PbufferSurfaceCGL()
 {
@@ -98,9 +101,7 @@ egl::Error PbufferSurfaceCGL::releaseTexImage(const gl::Context *context, EGLint
     return egl::NoError();
 }
 
-void PbufferSurfaceCGL::setSwapInterval(EGLint interval)
-{
-}
+void PbufferSurfaceCGL::setSwapInterval(EGLint interval) {}
 
 EGLint PbufferSurfaceCGL::getWidth() const
 {
@@ -141,3 +142,5 @@ FramebufferImpl *PbufferSurfaceCGL::createDefaultFramebuffer(const gl::Context *
 }
 
 }  // namespace rx
+
+#endif  // ANGLE_PLATFORM_MACOS
