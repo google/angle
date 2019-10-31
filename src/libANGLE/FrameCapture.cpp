@@ -1215,6 +1215,21 @@ void CaptureString(const GLchar *str, ParamCapture *paramCapture)
     CaptureMemory(str, strlen(str) + 1, paramCapture);
 }
 
+void CaptureGetParameter(const gl::Context *context,
+                         GLenum pname,
+                         size_t typeSize,
+                         ParamCapture *paramCapture)
+{
+    GLenum nativeType;
+    unsigned int numParams;
+    if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
+    {
+        numParams = 1;
+    }
+
+    paramCapture->readBufferSizeBytes = typeSize * numParams;
+}
+
 void CaptureGenHandlesImpl(GLsizei n, GLuint *handles, ParamCapture *paramCapture)
 {
     paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;

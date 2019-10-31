@@ -245,6 +245,13 @@ std::ostream &operator<<(std::ostream &os, const ParamCapture &capture);
 // Pointer capture helpers.
 void CaptureMemory(const void *source, size_t size, ParamCapture *paramCapture);
 void CaptureString(const GLchar *str, ParamCapture *paramCapture);
+
+// For GetIntegerv, GetFloatv, etc.
+void CaptureGetParameter(const gl::Context *context,
+                         GLenum pname,
+                         size_t typeSize,
+                         ParamCapture *paramCapture);
+
 void CaptureGenHandlesImpl(GLsizei n, GLuint *handles, ParamCapture *paramCapture);
 
 template <typename T>

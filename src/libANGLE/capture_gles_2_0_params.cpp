@@ -335,10 +335,7 @@ void CaptureGetBooleanv_data(const Context *context,
                              GLboolean *data,
                              ParamCapture *paramCapture)
 {
-    GLenum type;
-    unsigned int numParams;
-    context->getQueryParameterInfo(pname, &type, &numParams);
-    paramCapture->readBufferSizeBytes = sizeof(GLboolean) * numParams;
+    CaptureGetParameter(context, pname, sizeof(GLboolean), paramCapture);
 }
 
 void CaptureGetBufferParameteriv_params(const Context *context,
@@ -357,7 +354,7 @@ void CaptureGetFloatv_data(const Context *context,
                            GLfloat *data,
                            ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGetParameter(context, pname, sizeof(GLfloat), paramCapture);
 }
 
 void CaptureGetFramebufferAttachmentParameteriv_params(const Context *context,
@@ -378,10 +375,7 @@ void CaptureGetIntegerv_data(const Context *context,
                              GLint *data,
                              ParamCapture *paramCapture)
 {
-    GLenum type;
-    unsigned int numParams;
-    context->getQueryParameterInfo(pname, &type, &numParams);
-    paramCapture->readBufferSizeBytes = sizeof(GLint) * numParams;
+    CaptureGetParameter(context, pname, sizeof(GLint), paramCapture);
 }
 
 void CaptureGetProgramInfoLog_length(const Context *context,
