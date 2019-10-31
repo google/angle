@@ -349,7 +349,8 @@ void Shader::compile(const Context *context)
         options |= SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS;
     }
 
-    mCurrentMaxComputeWorkGroupInvocations = context->getCaps().maxComputeWorkGroupInvocations;
+    mCurrentMaxComputeWorkGroupInvocations =
+        static_cast<GLuint>(context->getCaps().maxComputeWorkGroupInvocations);
 
     ASSERT(mBoundCompiler.get());
     ShCompilerInstance compilerInstance = mBoundCompiler->getInstance(mState.mShaderType);

@@ -31,7 +31,7 @@ size_t GetMaximumMipLevel(const gl::Context *context, gl::TextureType type)
 {
     const gl::Caps &caps = context->getCaps();
 
-    size_t maxDimension = 0;
+    int maxDimension = 0;
     switch (type)
     {
         case gl::TextureType::_2D:
@@ -53,7 +53,7 @@ size_t GetMaximumMipLevel(const gl::Context *context, gl::TextureType type)
             UNREACHABLE();
     }
 
-    return gl::log2(static_cast<int>(maxDimension));
+    return gl::log2(maxDimension);
 }
 
 bool TextureHasNonZeroMipLevelsSpecified(const gl::Context *context, const gl::Texture *texture)

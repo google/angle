@@ -1279,7 +1279,7 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // into account, rather than the physical device maxPerStageDescriptorUniformBuffers limits.
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        if (mNativeCaps.maxShaderUniformBlocks[shaderType] <
+        if (static_cast<GLuint>(mNativeCaps.maxShaderUniformBlocks[shaderType]) <
             gl::limits::kMinimumShaderUniformBlocks)
         {
             maxVersion = std::max(maxVersion, gl::Version(2, 0));
@@ -1290,7 +1290,8 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // Table 6.31 MAX VERTEX OUTPUT COMPONENTS minimum value = 64
     // NOTE: We reserve some vertex output components for emulation, so use the mNativeCaps which
     // takes this into account, rather than the physical device maxVertexOutputComponents limits.
-    if (mNativeCaps.maxVertexOutputComponents < gl::limits::kMinimumVertexOutputComponents)
+    if (static_cast<GLuint>(mNativeCaps.maxVertexOutputComponents) <
+        gl::limits::kMinimumVertexOutputComponents)
     {
         maxVersion = std::max(maxVersion, gl::Version(2, 0));
     }

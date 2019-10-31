@@ -3213,14 +3213,14 @@ angle::Result Renderer9::applyTextures(const gl::Context *context, gl::ShaderTyp
     }
 
     // Set all the remaining textures to NULL
-    size_t samplerCount = (shaderType == gl::ShaderType::Fragment)
-                              ? caps.maxShaderTextureImageUnits[gl::ShaderType::Fragment]
-                              : caps.maxShaderTextureImageUnits[gl::ShaderType::Vertex];
+    int samplerCount = (shaderType == gl::ShaderType::Fragment)
+                           ? caps.maxShaderTextureImageUnits[gl::ShaderType::Fragment]
+                           : caps.maxShaderTextureImageUnits[gl::ShaderType::Vertex];
 
     // TODO(jmadill): faster way?
-    for (size_t samplerIndex = samplerRange.high(); samplerIndex < samplerCount; samplerIndex++)
+    for (int samplerIndex = samplerRange.high(); samplerIndex < samplerCount; samplerIndex++)
     {
-        ANGLE_TRY(setTexture(context, shaderType, static_cast<int>(samplerIndex), nullptr));
+        ANGLE_TRY(setTexture(context, shaderType, samplerIndex, nullptr));
     }
 
     return angle::Result::Continue;

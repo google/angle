@@ -532,7 +532,7 @@ ANGLE_INLINE bool ValidateVertexFormat(Context *context,
                                        VertexAttribTypeCase validation)
 {
     const Caps &caps = context->getCaps();
-    if (index >= caps.maxVertexAttributes)
+    if (index >= static_cast<GLuint>(caps.maxVertexAttributes))
     {
         context->validationError(GL_INVALID_VALUE, err::kIndexExceedsMaxVertexAttribute);
         return false;
@@ -964,7 +964,7 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(Context *context,
         // If we use an index greater than our maximum supported index range, return an error.
         // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should
         // always return an error if possible here.
-        if (static_cast<GLuint64>(indexRange.end) >= context->getCaps().maxElementIndex)
+        if (static_cast<GLint64>(indexRange.end) >= context->getCaps().maxElementIndex)
         {
             context->validationError(GL_INVALID_OPERATION, err::kExceedsMaxElement);
             return false;

@@ -1411,8 +1411,8 @@ void StateManager11::syncViewport(const gl::Context *context)
     float actualZFar             = gl::clamp01(glState.getFarPlane());
 
     const auto &caps         = context->getCaps();
-    int dxMaxViewportBoundsX = static_cast<int>(caps.maxViewportWidth);
-    int dxMaxViewportBoundsY = static_cast<int>(caps.maxViewportHeight);
+    int dxMaxViewportBoundsX = caps.maxViewportWidth;
+    int dxMaxViewportBoundsY = caps.maxViewportHeight;
     int dxMinViewportBoundsX = -dxMaxViewportBoundsX;
     int dxMinViewportBoundsY = -dxMaxViewportBoundsY;
 
@@ -1888,7 +1888,8 @@ angle::Result StateManager11::ensureInitialized(const gl::Context *context)
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        const GLuint maxShaderTextureImageUnits = caps.maxShaderTextureImageUnits[shaderType];
+        const GLuint maxShaderTextureImageUnits =
+            static_cast<GLuint>(caps.maxShaderTextureImageUnits[shaderType]);
 
         mCurShaderSRVs[shaderType].initialize(maxShaderTextureImageUnits);
         mForceSetShaderSamplerStates[shaderType].resize(maxShaderTextureImageUnits, true);
@@ -2591,8 +2592,7 @@ angle::Result StateManager11::setSamplerState(const gl::Context *context,
 
     auto *deviceContext = mRenderer->getDeviceContext();
 
-    ASSERT(static_cast<unsigned int>(index) <
-           mRenderer->getNativeCaps().maxShaderTextureImageUnits[type]);
+    ASSERT(index < mRenderer->getNativeCaps().maxShaderTextureImageUnits[type]);
 
     if (mForceSetShaderSamplerStates[type][index] ||
         memcmp(&samplerState, &mCurShaderSamplerStates[type][index], sizeof(gl::SamplerState)) != 0)
@@ -2665,15 +2665,13 @@ angle::Result StateManager11::setTextureForSampler(const gl::Context *context,
         textureImpl->resetDirty();
     }
 
-    ASSERT((type == gl::ShaderType::Fragment &&
-            static_cast<unsigned int>(index) <
-                mRenderer->getNativeCaps().maxShaderTextureImageUnits[gl::ShaderType::Fragment]) ||
-           (type == gl::ShaderType::Vertex &&
-            static_cast<unsigned int>(index) <
-                mRenderer->getNativeCaps().maxShaderTextureImageUnits[gl::ShaderType::Vertex]) ||
-           (type == gl::ShaderType::Compute &&
-            static_cast<unsigned int>(index) <
-                mRenderer->getNativeCaps().maxShaderTextureImageUnits[gl::ShaderType::Compute]));
+    ASSERT(
+        (type == gl::ShaderType::Fragment &&
+         index < mRenderer->getNativeCaps().maxShaderTextureImageUnits[gl::ShaderType::Fragment]) ||
+        (type == gl::ShaderType::Vertex &&
+         index < mRenderer->getNativeCaps().maxShaderTextureImageUnits[gl::ShaderType::Vertex]) ||
+        (type == gl::ShaderType::Compute &&
+         index < mRenderer->getNativeCaps().maxShaderTextureImageUnits[gl::ShaderType::Compute]));
 
     setShaderResourceInternal(type, index, textureSRV);
     return angle::Result::Continue;
@@ -2684,8 +2682,7 @@ angle::Result StateManager11::setImageState(const gl::Context *context,
                                             int index,
                                             const gl::ImageUnit &imageUnit)
 {
-    ASSERT(static_cast<unsigned int>(index) <
-           mRenderer->getNativeCaps().maxShaderImageUniforms[type]);
+    ASSERT(index < mRenderer->getNativeCaps().maxShaderImageUniforms[type]);
 
     mShaderConstants.onImageChange(type, index, imageUnit);
 
@@ -2836,7 +2833,7 @@ angle::Result StateManager11::setTextureForImage(const gl::Context *context,
         // If we get an invalid SRV here, something went wrong in the texture class and we're
         // unexpectedly missing the shader resource view.
         ASSERT(textureSRV->valid());
-        ASSERT((static_cast<unsigned int>(index) < mRenderer->getNativeCaps().maxImageUnits));
+        ASSERT((index < mRenderer->getNativeCaps().maxImageUnits));
         setShaderResourceInternal(type, index, textureSRV);
     }
     else
@@ -2846,7 +2843,7 @@ angle::Result StateManager11::setTextureForImage(const gl::Context *context,
         // If we get an invalid UAV here, something went wrong in the texture class and we're
         // unexpectedly missing the unordered access view.
         ASSERT(textureUAV->valid());
-        ASSERT((static_cast<unsigned int>(index) < mRenderer->getNativeCaps().maxImageUnits));
+        ASSERT((index < mRenderer->getNativeCaps().maxImageUnits));
         setUnorderedAccessViewInternal(type, index, textureUAV);
     }
 

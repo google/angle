@@ -89,7 +89,7 @@ bool CheckAttachmentCompleteness(const Context *context, const FramebufferAttach
         // than or equal to the value of MAX_FRAMEBUFFER_LAYERS_EXT.
         else
         {
-            if (static_cast<GLuint>(size.depth) >= context->getCaps().maxFramebufferLayers)
+            if (size.depth >= context->getCaps().maxFramebufferLayers)
             {
                 return false;
             }

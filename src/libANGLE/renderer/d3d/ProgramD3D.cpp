@@ -740,7 +740,7 @@ GLint ProgramD3D::getSamplerMapping(gl::ShaderType type,
 
     ASSERT(type != gl::ShaderType::InvalidEnum);
 
-    ASSERT(samplerIndex < caps.maxShaderTextureImageUnits[type]);
+    ASSERT(samplerIndex < static_cast<unsigned int>(caps.maxShaderTextureImageUnits[type]));
 
     const auto &samplers = mShaderSamplers[type];
     if (samplerIndex < samplers.size() && samplers[samplerIndex].active)
@@ -748,8 +748,7 @@ GLint ProgramD3D::getSamplerMapping(gl::ShaderType type,
         logicalTextureUnit = samplers[samplerIndex].logicalTextureUnit;
     }
 
-    if (logicalTextureUnit >= 0 &&
-        logicalTextureUnit < static_cast<GLint>(caps.maxCombinedTextureImageUnits))
+    if (logicalTextureUnit >= 0 && logicalTextureUnit < caps.maxCombinedTextureImageUnits)
     {
         return logicalTextureUnit;
     }
@@ -826,7 +825,7 @@ GLint ProgramD3D::getImageMapping(gl::ShaderType type,
                                   const gl::Caps &caps) const
 {
     GLint logicalImageUnit = -1;
-    ASSERT(imageIndex < caps.maxImageUnits);
+    ASSERT(imageIndex < static_cast<unsigned int>(caps.maxImageUnits));
     switch (type)
     {
         case gl::ShaderType::Compute:
@@ -845,7 +844,7 @@ GLint ProgramD3D::getImageMapping(gl::ShaderType type,
             UNREACHABLE();
     }
 
-    if (logicalImageUnit >= 0 && logicalImageUnit < static_cast<GLint>(caps.maxImageUnits))
+    if (logicalImageUnit >= 0 && logicalImageUnit < caps.maxImageUnits)
     {
         return logicalImageUnit;
     }
@@ -2244,7 +2243,8 @@ void ProgramD3D::updateUniformBufferCache(
 
             unsigned int registerIndex = uniformBlock.mShaderRegisterIndexes[shaderType] -
                                          reservedShaderRegisterIndexes[shaderType];
-            ASSERT(registerIndex < caps.maxShaderUniformBlocks[shaderType]);
+            ASSERT(registerIndex <
+                   static_cast<unsigned int>(caps.maxShaderUniformBlocks[shaderType]));
 
             std::vector<int> &shaderUBOcache = mShaderUBOCaches[shaderType];
             if (shaderUBOcache.size() <= registerIndex)

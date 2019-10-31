@@ -313,8 +313,8 @@ void State::initialize(Context *context)
     const Extensions &nativeExtensions = context->getImplementation()->getNativeExtensions();
     const Version &clientVersion       = context->getClientVersion();
 
-    mMaxDrawBuffers               = caps.maxDrawBuffers;
-    mMaxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
+    mMaxDrawBuffers               = static_cast<GLuint>(caps.maxDrawBuffers);
+    mMaxCombinedTextureImageUnits = static_cast<GLuint>(caps.maxCombinedTextureImageUnits);
 
     setColorClearValue(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -339,7 +339,7 @@ void State::initialize(Context *context)
     mSampleCoverageValue  = 1.0f;
     mSampleCoverageInvert = false;
 
-    mMaxSampleMaskWords = caps.maxSampleMaskWords;
+    mMaxSampleMaskWords = static_cast<GLuint>(caps.maxSampleMaskWords);
     mSampleMask         = false;
     mSampleMaskValues.fill(~GLbitfield(0));
 
@@ -399,8 +399,7 @@ void State::initialize(Context *context)
         mSamplerTextures[TextureType::External].resize(caps.maxCombinedTextureImageUnits);
     }
     mCompleteTextureBindings.reserve(caps.maxCombinedTextureImageUnits);
-    for (uint32_t textureIndex = 0; textureIndex < caps.maxCombinedTextureImageUnits;
-         ++textureIndex)
+    for (int32_t textureIndex = 0; textureIndex < caps.maxCombinedTextureImageUnits; ++textureIndex)
     {
         mCompleteTextureBindings.emplace_back(context, textureIndex);
     }

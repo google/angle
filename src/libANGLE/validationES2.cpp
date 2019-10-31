@@ -389,16 +389,16 @@ bool IsValidCopyTextureDestinationLevel(Context *context,
     switch (type)
     {
         case TextureType::_2D:
-            return static_cast<GLuint>(width) <= (caps.max2DTextureSize >> level) &&
-                   static_cast<GLuint>(height) <= (caps.max2DTextureSize >> level);
+            return width <= (caps.max2DTextureSize >> level) &&
+                   height <= (caps.max2DTextureSize >> level);
         case TextureType::Rectangle:
             ASSERT(level == 0);
-            return static_cast<GLuint>(width) <= (caps.max2DTextureSize >> level) &&
-                   static_cast<GLuint>(height) <= (caps.max2DTextureSize >> level);
+            return width <= (caps.max2DTextureSize >> level) &&
+                   height <= (caps.max2DTextureSize >> level);
 
         case TextureType::CubeMap:
-            return static_cast<GLuint>(width) <= (caps.maxCubeMapTextureSize >> level) &&
-                   static_cast<GLuint>(height) <= (caps.maxCubeMapTextureSize >> level);
+            return width <= (caps.maxCubeMapTextureSize >> level) &&
+                   height <= (caps.maxCubeMapTextureSize >> level);
         default:
             return true;
     }
@@ -1248,8 +1248,8 @@ bool ValidateES2TexImageParametersBase(Context *context,
     {
         case TextureType::_2D:
         case TextureType::External:
-            if (static_cast<GLuint>(width) > (caps.max2DTextureSize >> level) ||
-                static_cast<GLuint>(height) > (caps.max2DTextureSize >> level))
+            if (width > (caps.max2DTextureSize >> level) ||
+                height > (caps.max2DTextureSize >> level))
             {
                 context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
                 return false;
@@ -1258,8 +1258,7 @@ bool ValidateES2TexImageParametersBase(Context *context,
 
         case TextureType::Rectangle:
             ASSERT(level == 0);
-            if (static_cast<GLuint>(width) > caps.maxRectangleTextureSize ||
-                static_cast<GLuint>(height) > caps.maxRectangleTextureSize)
+            if (width > caps.maxRectangleTextureSize || height > caps.maxRectangleTextureSize)
             {
                 context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
                 return false;
@@ -1278,8 +1277,8 @@ bool ValidateES2TexImageParametersBase(Context *context,
                 return false;
             }
 
-            if (static_cast<GLuint>(width) > (caps.maxCubeMapTextureSize >> level) ||
-                static_cast<GLuint>(height) > (caps.maxCubeMapTextureSize >> level))
+            if (width > (caps.maxCubeMapTextureSize >> level) ||
+                height > (caps.maxCubeMapTextureSize >> level))
             {
                 context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
                 return false;
@@ -1952,8 +1951,7 @@ bool ValidateES2TexStorageParameters(Context *context,
     switch (target)
     {
         case TextureType::_2D:
-            if (static_cast<GLuint>(width) > caps.max2DTextureSize ||
-                static_cast<GLuint>(height) > caps.max2DTextureSize)
+            if (width > caps.max2DTextureSize || height > caps.max2DTextureSize)
             {
                 context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
                 return false;
@@ -1966,8 +1964,7 @@ bool ValidateES2TexStorageParameters(Context *context,
                 return false;
             }
 
-            if (static_cast<GLuint>(width) > caps.maxRectangleTextureSize ||
-                static_cast<GLuint>(height) > caps.maxRectangleTextureSize)
+            if (width > caps.maxRectangleTextureSize || height > caps.maxRectangleTextureSize)
             {
                 context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
                 return false;
@@ -1979,8 +1976,7 @@ bool ValidateES2TexStorageParameters(Context *context,
             }
             break;
         case TextureType::CubeMap:
-            if (static_cast<GLuint>(width) > caps.maxCubeMapTextureSize ||
-                static_cast<GLuint>(height) > caps.maxCubeMapTextureSize)
+            if (width > caps.maxCubeMapTextureSize || height > caps.maxCubeMapTextureSize)
             {
                 context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
                 return false;
@@ -3728,7 +3724,7 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
     }
 
     const Caps &caps = context->getCaps();
-    if (static_cast<size_t>(location) >=
+    if (static_cast<long>(location) >=
         (caps.maxVertexUniformVectors + caps.maxFragmentUniformVectors) * 4)
     {
         context->validationError(GL_INVALID_VALUE, kInvalidBindUniformLocation);
@@ -5041,7 +5037,8 @@ bool ValidateActiveTexture(Context *context, GLenum texture)
     }
 
     if (texture < GL_TEXTURE0 ||
-        texture > GL_TEXTURE0 + context->getCaps().maxCombinedTextureImageUnits - 1)
+        texture >
+            GL_TEXTURE0 + static_cast<GLuint>(context->getCaps().maxCombinedTextureImageUnits) - 1)
     {
         context->validationError(GL_INVALID_ENUM, kInvalidCombinedImageUnit);
         return false;
@@ -5336,7 +5333,7 @@ bool ValidateRenderbufferStorageMultisampleANGLE(Context *context,
     // ANGLE_framebuffer_multisample states that the value of samples must be less than or equal
     // to MAX_SAMPLES_ANGLE (Context::getCaps().maxSamples) otherwise GL_INVALID_VALUE is
     // generated.
-    if (static_cast<GLuint>(samples) > context->getCaps().maxSamples)
+    if (samples > context->getCaps().maxSamples)
     {
         context->validationError(GL_INVALID_VALUE, kSamplesOutOfRange);
         return false;
@@ -6631,7 +6628,7 @@ bool ValidateFramebufferTexture3DOES(Context *context,
                     context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
                     return false;
                 }
-                if (static_cast<size_t>(zoffset) >= caps.max3DTextureSize)
+                if (zoffset >= caps.max3DTextureSize)
                 {
                     context->validationError(GL_INVALID_VALUE, kInvalidZOffset);
                     return false;
@@ -7404,7 +7401,7 @@ bool ValidateFramebufferTexture2DMultisampleEXT(Context *context,
     // EXT_multisampled_render_to_texture states that the value of samples
     // must be less than or equal to MAX_SAMPLES_EXT (Context::getCaps().maxSamples)
     // otherwise GL_INVALID_VALUE is generated.
-    if (static_cast<GLuint>(samples) > context->getCaps().maxSamples)
+    if (samples > context->getCaps().maxSamples)
     {
         context->validationError(GL_INVALID_VALUE, kSamplesOutOfRange);
         return false;
@@ -7486,7 +7483,7 @@ bool ValidateRenderbufferStorageMultisampleEXT(Context *context,
     // EXT_multisampled_render_to_texture states that the value of samples
     // must be less than or equal to MAX_SAMPLES_EXT (Context::getCaps().maxSamples)
     // otherwise GL_INVALID_VALUE is generated.
-    if (static_cast<GLuint>(samples) > context->getCaps().maxSamples)
+    if (samples > context->getCaps().maxSamples)
     {
         context->validationError(GL_INVALID_VALUE, kSamplesOutOfRange);
         return false;

@@ -3630,6 +3630,39 @@ void main(void) {
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2 - 1, getWindowHeight() / 2 - 1, GLColor::green);
 }
 
+// Test that maxComputeWorkGroupCount is valid number.
+TEST_P(ComputeShaderTest, ValidateMaxComputeWorkGroupCount)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+void main()
+{
+})";
+
+    GLuint program = glCreateProgram();
+    GLuint cs      = CompileShader(GL_COMPUTE_SHADER, kCS);
+    EXPECT_NE(0u, cs);
+
+    glAttachShader(program, cs);
+    glDeleteShader(cs);
+
+    GLint x, y, z;
+    glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &x);
+    EXPECT_LE(65535, x);
+    EXPECT_GE(std::numeric_limits<GLint>::max(), x);
+
+    glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &y);
+    EXPECT_LE(65535, y);
+    EXPECT_GE(std::numeric_limits<GLint>::max(), y);
+
+    glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &z);
+    EXPECT_LE(65535, z);
+    EXPECT_GE(std::numeric_limits<GLint>::max(), z);
+
+    glDeleteProgram(program);
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES31(ComputeShaderTest);
 ANGLE_INSTANTIATE_TEST_ES3(ComputeShaderTestES3);
 ANGLE_INSTANTIATE_TEST_ES31(WebGL2ComputeTest);
