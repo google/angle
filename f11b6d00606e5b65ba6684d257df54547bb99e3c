@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a4ca67c_bdf248ba",
+        "filename": "src/common/apple_platform_utils.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-11-01T15:57:45Z",
+      "side": 1,
+      "message": "Good idea, will use this elsewhere!",
+      "revId": "f11b6d00606e5b65ba6684d257df54547bb99e3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b19b35c_90c09511",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-11-01T15:57:45Z",
+      "side": 1,
+      "message": "This is runtime because not all versions of Mac support metal right?\nIf so this means we will eventually need to do this for the Vulkan backend too to run via CAMetalLayer on top of swiftshader (in a different CL)",
+      "revId": "f11b6d00606e5b65ba6684d257df54547bb99e3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
