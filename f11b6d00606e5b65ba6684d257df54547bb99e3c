@@ -33,6 +33,24 @@
       "revId": "f11b6d00606e5b65ba6684d257df54547bb99e3c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f1f7183_54f13d87",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2019-11-01T16:55:10Z",
+      "side": 1,
+      "message": "Yes, though the intended implementation will be more specific. It will only choose macos 10.13+ even though Metal is available since macos 10.11. This is because the metal backend currently needs Metal 2.0 features such as array of samplers, invariant vertex output, normalized vertex attributes, etc.\nmacos 10.11 only has Metal 1.0. So if vulkan via swiftshader only needs metal 1.0, then this function should not be used.",
+      "parentUuid": "8b19b35c_90c09511",
+      "revId": "f11b6d00606e5b65ba6684d257df54547bb99e3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
