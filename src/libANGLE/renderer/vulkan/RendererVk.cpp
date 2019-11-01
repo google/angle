@@ -121,6 +121,9 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00428",
     // http://anglebug.com/3450
     "VUID-vkDestroySemaphore-semaphore-parameter",
+    // http://anglebug.com/4063
+    "VUID-VkDeviceCreateInfo-pNext-pNext",
+    "VUID-VkPipelineRasterizationStateCreateInfo-pNext-pNext",
 };
 
 // Suppress validation errors that are known
