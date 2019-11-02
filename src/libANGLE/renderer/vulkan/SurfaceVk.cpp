@@ -167,10 +167,10 @@ void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display)
     imageViews.destroy(device);
 }
 
-OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState,
-                                       EGLint width,
-                                       EGLint height)
-    : SurfaceVk(surfaceState), mWidth(width), mHeight(height)
+OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState)
+    : SurfaceVk(surfaceState),
+      mWidth(mState.attributes.getAsInt(EGL_WIDTH, 0)),
+      mHeight(mState.attributes.getAsInt(EGL_HEIGHT, 0))
 {
     mColorRenderTarget.init(&mColorAttachment.image, &mColorAttachment.imageViews, 0, 0);
     mDepthStencilRenderTarget.init(&mDepthStencilAttachment.image,
@@ -387,10 +387,7 @@ angle::Result SwapHistory::waitFence(ContextVk *contextVk)
 
 using namespace impl;
 
-WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
-                                 EGLNativeWindowType window,
-                                 EGLint width,
-                                 EGLint height)
+WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativeWindowType window)
     : SurfaceVk(surfaceState),
       mNativeWindowType(window),
       mSurface(VK_NULL_HANDLE),

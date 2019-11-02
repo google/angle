@@ -40,7 +40,7 @@ class SurfaceVk : public SurfaceImpl
 class OffscreenSurfaceVk : public SurfaceVk
 {
   public:
-    OffscreenSurfaceVk(const egl::SurfaceState &surfaceState, EGLint width, EGLint height);
+    OffscreenSurfaceVk(const egl::SurfaceState &surfaceState);
     ~OffscreenSurfaceVk() override;
 
     egl::Error initialize(const egl::Display *display) override;
@@ -175,10 +175,7 @@ struct SwapchainImage : angle::NonCopyable
 class WindowSurfaceVk : public SurfaceVk
 {
   public:
-    WindowSurfaceVk(const egl::SurfaceState &surfaceState,
-                    EGLNativeWindowType window,
-                    EGLint width,
-                    EGLint height);
+    WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativeWindowType window);
     ~WindowSurfaceVk() override;
 
     void destroy(const egl::Display *display) override;

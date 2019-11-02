@@ -42,11 +42,9 @@ bool DisplayVkAndroid::isValidNativeWindow(EGLNativeWindowType window) const
 }
 
 SurfaceImpl *DisplayVkAndroid::createWindowSurfaceVk(const egl::SurfaceState &state,
-                                                     EGLNativeWindowType window,
-                                                     EGLint width,
-                                                     EGLint height)
+                                                     EGLNativeWindowType window)
 {
-    return new WindowSurfaceVkAndroid(state, window, width, height);
+    return new WindowSurfaceVkAndroid(state, window);
 }
 
 egl::ConfigSet DisplayVkAndroid::generateConfigs()

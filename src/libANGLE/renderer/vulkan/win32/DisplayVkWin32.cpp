@@ -25,11 +25,9 @@ bool DisplayVkWin32::isValidNativeWindow(EGLNativeWindowType window) const
 }
 
 SurfaceImpl *DisplayVkWin32::createWindowSurfaceVk(const egl::SurfaceState &state,
-                                                   EGLNativeWindowType window,
-                                                   EGLint width,
-                                                   EGLint height)
+                                                   EGLNativeWindowType window)
 {
-    return new WindowSurfaceVkWin32(state, window, width, height);
+    return new WindowSurfaceVkWin32(state, window);
 }
 
 egl::ConfigSet DisplayVkWin32::generateConfigs()
