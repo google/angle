@@ -135,7 +135,7 @@ def dump_value_to_string_mapping(gl_enum_in_groups, exporting_enums):
 
         inner_code_block = "\n".join([
             template_enum_value_to_string_case.format(
-                value=hex(value),
+                value='0x%X' % value,
                 name='"%s"' % name,
             ) for name, value in exporting_string_value_pairs
         ])
@@ -180,7 +180,7 @@ def main(header_output_path, source_output_path):
     # Find relevant GLenums according to enabled APIs and extensions.
     exporting_enums = set()
     # export all the apis
-    xpath = "./feature/require/enum"
+    xpath = "./feature[@api='gles2']/require/enum"
     for enum_tag in xml.root.findall(xpath):
         enum_name = enum_tag.attrib['name']
         if enum_name not in exclude_gl_enums:

@@ -706,6 +706,8 @@ EXPORTS
     ; GL_EXT_semaphore_fd
     glImportSemaphoreFdEXT
 
+    ; GL_EXT_texture_filter_anisotropic
+
     ; GL_EXT_texture_storage
     glTexStorage1DEXT
     glTexStorage2DEXT

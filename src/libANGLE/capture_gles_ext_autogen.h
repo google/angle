@@ -1276,6 +1276,8 @@ angle::CallCapture CaptureImportSemaphoreFdEXT(const Context *context,
                                                HandleType handleTypePacked,
                                                GLint fd);
 
+// GL_EXT_texture_filter_anisotropic
+
 // GL_EXT_texture_storage
 angle::CallCapture CaptureTexStorage1DEXT(const Context *context,
                                           bool isCallValid,

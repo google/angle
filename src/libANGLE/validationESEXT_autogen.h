@@ -1019,6 +1019,8 @@ bool ValidateImportSemaphoreFdEXT(Context *context,
                                   HandleType handleTypePacked,
                                   GLint fd);
 
+// GL_EXT_texture_filter_anisotropic
+
 // GL_EXT_texture_storage
 bool ValidateTexStorage1DEXT(Context *context,
                              GLenum target,
