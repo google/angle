@@ -192,6 +192,11 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->surfacelessContext = true;
 
     outExtensions->noConfigContext = true;
+
+#if defined(ANGLE_PLATFORM_GGP)
+    outExtensions->ggpStreamDescriptor = true;
+    outExtensions->swapWithFrameToken  = true;
+#endif  // defined(ANGLE_PLATFORM_GGP)
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const

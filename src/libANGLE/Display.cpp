@@ -76,6 +76,8 @@
 #        include "libANGLE/renderer/vulkan/android/DisplayVkAndroid.h"
 #    elif defined(ANGLE_PLATFORM_FUCHSIA)
 #        include "libANGLE/renderer/vulkan/fuchsia/DisplayVkFuchsia.h"
+#    elif defined(ANGLE_PLATFORM_GGP)
+#        include "libANGLE/renderer/vulkan/ggp/DisplayVkGGP.h"
 #    else
 #        error Unsupported Vulkan platform.
 #    endif
@@ -294,6 +296,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
             impl = new rx::DisplayVkAndroid(state);
 #    elif defined(ANGLE_PLATFORM_FUCHSIA)
             impl = new rx::DisplayVkFuchsia(state);
+#    elif defined(ANGLE_PLATFORM_GGP)
+            impl = new rx::DisplayVkGGP(state);
 #    else
 #        error Unsupported Vulkan platform.
 #    endif

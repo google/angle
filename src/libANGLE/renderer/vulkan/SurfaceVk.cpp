@@ -391,7 +391,6 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
     : SurfaceVk(surfaceState),
       mNativeWindowType(window),
       mSurface(VK_NULL_HANDLE),
-      mInstance(VK_NULL_HANDLE),
       mSwapchain(VK_NULL_HANDLE),
       mSwapchainPresentMode(VK_PRESENT_MODE_FIFO_KHR),
       mDesiredSwapchainPresentMode(VK_PRESENT_MODE_FIFO_KHR),
@@ -954,20 +953,21 @@ egl::Error WindowSurfaceVk::swapWithDamage(const gl::Context *context,
                                            EGLint n_rects)
 {
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
-    angle::Result result = swapImpl(context, rects, n_rects);
+    angle::Result result = swapImpl(context, rects, n_rects, nullptr);
     return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
 }
 
 egl::Error WindowSurfaceVk::swap(const gl::Context *context)
 {
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
-    angle::Result result = swapImpl(context, nullptr, 0);
+    angle::Result result = swapImpl(context, nullptr, 0, nullptr);
     return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
 }
 
 angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                                        EGLint *rects,
                                        EGLint n_rects,
+                                       const void *pNextChain,
                                        bool *presentOutOfDate)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present");
@@ -1045,6 +1045,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     VkPresentInfoKHR presentInfo   = {};
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    presentInfo.pNext              = pNextChain;
     presentInfo.waitSemaphoreCount = 1;
     presentInfo.pWaitSemaphores    = presentSemaphore->ptr();
     presentInfo.swapchainCount     = 1;
@@ -1109,7 +1110,10 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context, EGLint *rects, EGLint n_rects)
+angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context,
+                                        EGLint *rects,
+                                        EGLint n_rects,
+                                        const void *pNextChain)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::swapImpl");
 
@@ -1120,7 +1124,7 @@ angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context, EGLint *rect
     // Save this now, since present() will increment the value.
     uint32_t currentSwapHistoryIndex = static_cast<uint32_t>(mCurrentSwapHistoryIndex);
 
-    ANGLE_TRY(present(contextVk, rects, n_rects, &presentOutOfDate));
+    ANGLE_TRY(present(contextVk, rects, n_rects, pNextChain, &presentOutOfDate));
 
     ANGLE_TRY(checkForOutOfDateSwapchain(contextVk, currentSwapHistoryIndex, presentOutOfDate));
 

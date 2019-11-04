@@ -944,6 +944,12 @@ struct DisplayExtensions
 
     // EGL_KHR_no_config_context
     bool noConfigContext = false;
+
+    // EGL_ANGLE_ggp_stream_descriptor
+    bool ggpStreamDescriptor = false;
+
+    // EGL_ANGLE_swap_with_frame_token
+    bool swapWithFrameToken = false;
 };
 
 struct DeviceExtensions

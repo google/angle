@@ -624,6 +624,15 @@ void InitExternalMemoryHardwareBufferANDROIDFunctions(VkInstance instance)
 }
 #endif
 
+#if defined(ANGLE_PLATFORM_GGP)
+PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP = nullptr;
+
+void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance)
+{
+    GET_FUNC(vkCreateStreamDescriptorSurfaceGGP);
+}
+#endif  // defined(ANGLE_PLATFORM_GGP)
+
 void InitExternalSemaphoreFdFunctions(VkInstance instance)
 {
     GET_FUNC(vkImportSemaphoreFdKHR);

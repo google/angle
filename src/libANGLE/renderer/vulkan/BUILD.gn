@@ -137,6 +137,15 @@ if (is_fuchsia) {
   ]
 }
 
+if (is_ggp) {
+  _vulkan_backend_sources += [
+    "ggp/DisplayVkGGP.cpp",
+    "ggp/DisplayVkGGP.h",
+    "ggp/WindowSurfaceVkGGP.cpp",
+    "ggp/WindowSurfaceVkGGP.h",
+  ]
+}
+
 config("vulkan_config") {
   _sws_icd = "./libvk_swiftshader_icd.json"
   if (is_win) {

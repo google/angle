@@ -215,9 +215,14 @@ class WindowSurfaceVk : public SurfaceVk
     vk::Semaphore getAcquireImageSemaphore();
 
   protected:
+    angle::Result swapImpl(const gl::Context *context,
+                           EGLint *rects,
+                           EGLint n_rects,
+                           const void *pNextChain);
+
     EGLNativeWindowType mNativeWindowType;
     VkSurfaceKHR mSurface;
-    VkInstance mInstance;
+    VkSurfaceCapabilitiesKHR mSurfaceCaps;
 
   private:
     virtual angle::Result createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)      = 0;
@@ -240,17 +245,15 @@ class WindowSurfaceVk : public SurfaceVk
     angle::Result present(ContextVk *contextVk,
                           EGLint *rects,
                           EGLint n_rects,
+                          const void *pNextChain,
                           bool *presentOutOfDate);
 
     angle::Result updateAndDrawOverlay(ContextVk *contextVk, impl::SwapchainImage *image) const;
-
-    angle::Result swapImpl(const gl::Context *context, EGLint *rects, EGLint n_rects);
 
     angle::Result newPresentSemaphore(vk::Context *context, vk::Semaphore *semaphoreOut);
 
     bool isMultiSampled() const;
 
-    VkSurfaceCapabilitiesKHR mSurfaceCaps;
     std::vector<VkPresentModeKHR> mPresentModes;
 
     VkSwapchainKHR mSwapchain;

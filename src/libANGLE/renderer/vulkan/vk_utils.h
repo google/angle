@@ -640,6 +640,12 @@ extern PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBuf
 void InitExternalMemoryHardwareBufferANDROIDFunctions(VkInstance instance);
 #endif
 
+#if defined(ANGLE_PLATFORM_GGP)
+// VK_GGP_stream_descriptor_surface
+extern PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP;
+void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance);
+#endif  // defined(ANGLE_PLATFORM_GGP)
+
 void InitExternalSemaphoreFdFunctions(VkInstance instance);
 
 namespace gl_vk

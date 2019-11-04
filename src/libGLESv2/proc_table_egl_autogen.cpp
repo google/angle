@@ -115,6 +115,7 @@ ProcEntry g_procTable[] = {
     {"eglSurfaceAttrib", P(EGL_SurfaceAttrib)},
     {"eglSwapBuffers", P(EGL_SwapBuffers)},
     {"eglSwapBuffersWithDamageKHR", P(EGL_SwapBuffersWithDamageKHR)},
+    {"eglSwapBuffersWithFrameTokenANGLE", P(EGL_SwapBuffersWithFrameTokenANGLE)},
     {"eglSwapInterval", P(EGL_SwapInterval)},
     {"eglTerminate", P(EGL_Terminate)},
     {"eglWaitClient", P(EGL_WaitClient)},
@@ -1519,5 +1520,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1420;
+size_t g_numProcs = 1421;
 }  // namespace egl

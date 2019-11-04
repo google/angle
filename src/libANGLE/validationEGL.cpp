@@ -1436,6 +1436,14 @@ Error ValidateCreateWindowSurface(Display *display,
                 }
                 break;
 
+            case EGL_GGP_STREAM_DESCRIPTOR_ANGLE:
+                if (!display->getExtensions().ggpStreamDescriptor)
+                {
+                    return EglBadAttribute() << "EGL_GGP_STREAM_DESCRIPTOR_ANGLE requires "
+                                                "EGL_ANGLE_ggp_stream_descriptor.";
+                }
+                break;
+
             default:
                 return EglBadAttribute();
         }
@@ -4073,4 +4081,19 @@ Error ValidateDupNativeFenceFDANDROID(const Display *display, const Sync *sync)
     return NoError();
 }
 
+Error ValidateSwapBuffersWithFrameTokenANGLE(const Display *display,
+                                             const Surface *surface,
+                                             EGLFrameTokenANGLE frametoken)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().swapWithFrameToken)
+    {
+        return EglBadDisplay() << "EGL_ANGLE_swap_buffers_with_frame_token is not available.";
+    }
+
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    return NoError();
+}
 }  // namespace egl

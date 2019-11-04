@@ -4,6 +4,10 @@
 
 import("//build_overrides/angle.gni")
 
+declare_args() {
+  is_ggp = false
+}
+
 if (angle_has_build) {
   import("//build/config/dcheck_always_on.gni")
   import("//build/config/sanitizers/sanitizers.gni")
