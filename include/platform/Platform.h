@@ -260,8 +260,8 @@ inline void DefaultCacheProgram(PlatformMethods *platform,
     OP(histogramBoolean, HistogramBoolean)                       \
     OP(overrideWorkaroundsD3D, OverrideWorkaroundsD3D)           \
     OP(overrideFeaturesVk, OverrideFeaturesVk)                   \
-    OP(overrideFeaturesMtl, OverrideFeaturesMtl)                 \
-    OP(cacheProgram, CacheProgram)
+    OP(cacheProgram, CacheProgram)                               \
+    OP(overrideFeaturesMtl, OverrideFeaturesMtl)
 
 #define ANGLE_PLATFORM_METHOD_DEF(Name, CapsName) CapsName##Func Name = Default##CapsName;
 
