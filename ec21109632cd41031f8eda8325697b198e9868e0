@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "987ef844_15fd9f1e",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-04T15:50:48Z",
+      "side": 1,
+      "message": "Try reinterpret_cast?",
+      "parentUuid": "64b60b1b_7075bf3a",
+      "range": {
+        "startLine": 54,
+        "startChar": 28,
+        "endLine": 54,
+        "endChar": 42
+      },
+      "revId": "ec21109632cd41031f8eda8325697b198e9868e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5e1d97ae_310021f6",
         "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
         "patchSetId": 2
