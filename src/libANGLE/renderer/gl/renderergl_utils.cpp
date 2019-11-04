@@ -1108,6 +1108,11 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->readFormatBGRA   = functions->isAtLeastGL(gl::Version(1, 2)) ||
                                  functions->hasGLExtension("GL_EXT_bgra") ||
                                  functions->hasGLESExtension("GL_EXT_read_format_bgra");
+    extensions->pixelBufferObject = functions->isAtLeastGL(gl::Version(2, 1)) ||
+                                    functions->isAtLeastGLES(gl::Version(3, 0)) ||
+                                    functions->hasGLExtension("GL_ARB_pixel_buffer_object") ||
+                                    functions->hasGLExtension("GL_EXT_pixel_buffer_object") ||
+                                    functions->hasGLESExtension("GL_NV_pixel_buffer_object");
     extensions->mapBuffer = functions->isAtLeastGL(gl::Version(1, 5)) ||
                             functions->isAtLeastGLES(gl::Version(3, 0)) ||
                             functions->hasGLESExtension("GL_OES_mapbuffer");

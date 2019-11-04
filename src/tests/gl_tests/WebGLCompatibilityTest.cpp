@@ -584,6 +584,17 @@ TEST_P(WebGLCompatibilityTest, EnablePixelBufferObjectExtensions)
         glRequestExtensionANGLE("GL_NV_pixel_buffer_object");
         EXPECT_GL_NO_ERROR();
 
+        // Create a framebuffer to read from
+        GLRenderbuffer renderbuffer;
+        glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, 1, 1);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  renderbuffer);
+        EXPECT_GL_NO_ERROR();
+
         glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
         EXPECT_GL_NO_ERROR();
 
