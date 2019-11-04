@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4baedd2e_ba4e4c8d",
+        "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-04T15:05:05Z",
+      "side": 1,
+      "message": "To clarify: Was suggesting moving this outside of the class. making it static would also be sufficient to fix the name.",
+      "parentUuid": "bb34cd0f_854d328e",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 5
+      },
+      "revId": "ec21109632cd41031f8eda8325697b198e9868e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ff9e23d7_dd31f19f",
         "filename": "src/tests/egl_tests/EGLPrintEGLinfoTest.cpp",
         "patchSetId": 2
