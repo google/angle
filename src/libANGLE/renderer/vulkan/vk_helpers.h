@@ -35,6 +35,8 @@ constexpr VkBufferUsageFlags kStagingBufferFlags =
     VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 constexpr size_t kStagingBufferSize = 1024 * 16;
 
+using StagingBufferOffsetArray = std::array<VkDeviceSize, 2>;
+
 struct TextureUnit final
 {
     TextureVk *texture;
@@ -731,6 +733,8 @@ class ImageHelper final : public CommandGraphResource
     bool valid() const { return mImage.valid(); }
 
     VkImageAspectFlags getAspectFlags() const;
+    // True if image contains both depth & stencil aspects
+    bool isCombinedDepthStencilFormat() const;
     void destroy(VkDevice device);
 
     void init2DWeakReference(VkImage handle,
@@ -806,7 +810,7 @@ class ImageHelper final : public CommandGraphResource
                                                    const VkExtent3D &extent,
                                                    const VkOffset3D &offset,
                                                    BufferHelper *stagingBuffer,
-                                                   VkDeviceSize stagingOffset);
+                                                   StagingBufferOffsetArray stagingOffsets);
 
     angle::Result stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
                                                         const gl::ImageIndex &index,
@@ -839,7 +843,7 @@ class ImageHelper final : public CommandGraphResource
                                         size_t sizeInBytes,
                                         uint8_t **ptrOut,
                                         BufferHelper **bufferOut,
-                                        VkDeviceSize *offsetOut,
+                                        StagingBufferOffsetArray *offsetOut,
                                         bool *newBufferAllocatedOut);
 
     // Flushes staged updates to a range of levels and layers from start to (but not including) end.
@@ -888,7 +892,8 @@ class ImageHelper final : public CommandGraphResource
                                         uint32_t baseLayer,
                                         const gl::Box &sourceArea,
                                         BufferHelper **bufferOut,
-                                        VkDeviceSize *bufferOffsetOut,
+                                        size_t *bufferSize,
+                                        StagingBufferOffsetArray *bufferOffsetsOut,
                                         uint8_t **outDataPtr);
 
     static angle::Result GetReadPixelsParams(ContextVk *contextVk,

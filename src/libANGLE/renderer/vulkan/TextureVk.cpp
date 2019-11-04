@@ -969,11 +969,13 @@ angle::Result TextureVk::copyImageDataToBufferAndGetData(ContextVk *contextVk,
 
     gl::Box area(0, 0, 0, sourceArea.width, sourceArea.height, 1);
 
-    vk::BufferHelper *copyBuffer  = nullptr;
-    VkDeviceSize sourceCopyOffset = 0;
+    vk::BufferHelper *copyBuffer                   = nullptr;
+    vk::StagingBufferOffsetArray sourceCopyOffsets = {0, 0};
+    size_t bufferSize                              = 0;
 
     ANGLE_TRY(mImage->copyImageDataToBuffer(contextVk, sourceLevel, layerCount, 0, area,
-                                            &copyBuffer, &sourceCopyOffset, outDataPtr));
+                                            &copyBuffer, &bufferSize, &sourceCopyOffsets,
+                                            outDataPtr));
 
     // Explicitly finish. If new use cases arise where we don't want to block we can change this.
     ANGLE_TRY(contextVk->finishImpl());
@@ -1106,8 +1108,7 @@ angle::Result TextureVk::copyImageDataToStagingBuffer(ContextVk *contextVk,
                                                       uint32_t stagingDstMipLevel,
                                                       vk::BufferHelper **stagingBuffer)
 {
-    const gl::Extents &baseLevelExtents       = desc.size;
-    const gl::InternalFormat &baseLevelFormat = *desc.format.info;
+    const gl::Extents &baseLevelExtents = desc.size;
 
     VkExtent3D updatedExtents;
     VkOffset3D offset = {};
@@ -1123,18 +1124,18 @@ angle::Result TextureVk::copyImageDataToStagingBuffer(ContextVk *contextVk,
     }
 
     // Copy from the base level image to the staging buffer
-    VkDeviceSize stagingBufferOffset = 0;
+    vk::StagingBufferOffsetArray stagingBufferOffsets = {0, 0};
+    size_t bufferSize                                 = 0;
     ANGLE_TRY(mImage->copyImageDataToBuffer(contextVk, sourceMipLevel, layerCount, currentLayer,
-                                            area, stagingBuffer, &stagingBufferOffset, nullptr));
+                                            area, stagingBuffer, &bufferSize, &stagingBufferOffsets,
+                                            nullptr));
 
     // Stage an update to the new image
-    size_t bufferSize = updatedExtents.width * updatedExtents.height * updatedExtents.depth *
-                        baseLevelFormat.pixelBytes;
 
     ASSERT(*stagingBuffer);
     ANGLE_TRY(mImage->stageSubresourceUpdateFromBuffer(
         contextVk, bufferSize, stagingDstMipLevel, currentLayer, layerCount, updatedExtents, offset,
-        *stagingBuffer, stagingBufferOffset));
+        *stagingBuffer, stagingBufferOffsets));
 
     // Set up write dependency, we are writing to this buffer from the old image.
     (*stagingBuffer)->onWrite(contextVk, mImage, 0, VK_ACCESS_TRANSFER_WRITE_BIT);
