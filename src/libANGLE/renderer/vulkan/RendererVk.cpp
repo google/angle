@@ -1761,15 +1761,9 @@ std::string RendererVk::getAndClearLastValidationMessage(uint32_t *countSinceLas
 
 uint64_t RendererVk::getMaxFenceWaitTimeNs() const
 {
-    // Wait a maximum of 10s.  If that times out, we declare it a failure.
-    constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
+    constexpr uint64_t kMaxFenceWaitTimeNs = 120'000'000'000llu;
 
-#if defined(NDEBUG)
     return kMaxFenceWaitTimeNs;
-#else
-    // More time in debug builds (e.g. SwiftShader debug needs more time)
-    return kMaxFenceWaitTimeNs * 100;
-#endif
 }
 
 void RendererVk::onCompletedSerial(Serial serial)
