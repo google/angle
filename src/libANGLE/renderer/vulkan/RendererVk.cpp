@@ -1556,12 +1556,20 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
 
     size_t pipelineCacheSize = 0;
     ANGLE_TRY(getPipelineCacheSize(displayVk, &pipelineCacheSize));
+    // Make sure we will receive enough data to hold the pipeline cache header
+    // Table 7. Layout for pipeline cache header version VK_PIPELINE_CACHE_HEADER_VERSION_ONE
+    const size_t kPipelineCacheHeaderSize = 16 + VK_UUID_SIZE;
+    if (pipelineCacheSize < kPipelineCacheHeaderSize)
+    {
+        // No pipeline cache data to read, so return
+        return angle::Result::Continue;
+    }
 
     angle::MemoryBuffer *pipelineCacheData = nullptr;
     ANGLE_VK_CHECK_ALLOC(displayVk,
                          displayVk->getScratchBuffer(pipelineCacheSize, &pipelineCacheData));
 
-    size_t originalPipelineCacheSize = pipelineCacheSize;
+    size_t oldPipelineCacheSize = pipelineCacheSize;
     VkResult result =
         mPipelineCache.getCacheData(mDevice, &pipelineCacheSize, pipelineCacheData->data());
     // We don't need all of the cache data, so just make sure we at least got the header
@@ -1571,16 +1579,20 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
     // pData and zero will be written to pDataSize.
     // Any data written to pData is valid and can be provided as the pInitialData member of the
     // VkPipelineCacheCreateInfo structure passed to vkCreatePipelineCache.
-    if (ANGLE_UNLIKELY(result == VK_INCOMPLETE) || (pipelineCacheSize == 0))
+    if (ANGLE_UNLIKELY(pipelineCacheSize < kPipelineCacheHeaderSize))
     {
-        size_t intermediatePipelineCacheSize = pipelineCacheSize;
-        ANGLE_TRY(getPipelineCacheSize(displayVk, &pipelineCacheSize));
-        ERR() << "Pipeline cache size changed: old = " << originalPipelineCacheSize
-              << ", intermediate = " << intermediatePipelineCacheSize
-              << ", current = " << pipelineCacheData;
+        WARN() << "Not enough pipeline cache data read.";
+        return angle::Result::Continue;
     }
-    // TODO(http://anglebug.com/3988) Ignore VK_INCOMPLETE to reduce test flakiness
-    ANGLE_VK_TRY(displayVk, result);
+    else if (ANGLE_UNLIKELY(result == VK_INCOMPLETE))
+    {
+        WARN() << "Received VK_INCOMPLETE: Old: " << oldPipelineCacheSize
+               << ", New: " << pipelineCacheSize;
+    }
+    else
+    {
+        ANGLE_VK_TRY(displayVk, result);
+    }
 
     // If vkGetPipelineCacheData ends up writing fewer bytes than requested, zero out the rest of
     // the buffer to avoid leaking garbage memory.
