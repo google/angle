@@ -124,6 +124,7 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/4063
     "VUID-VkDeviceCreateInfo-pNext-pNext",
     "VUID-VkPipelineRasterizationStateCreateInfo-pNext-pNext",
+    "VUID_Undefined",
 };
 
 // Suppress validation errors that are known
