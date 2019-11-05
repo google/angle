@@ -1106,8 +1106,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&createInfo),
                            &enabledFeatures);
     }
-
-    if (createInfo.pNext == nullptr)
+    else
     {
         // Enable all available features
         createInfo.pEnabledFeatures = &enabledFeatures.features;
