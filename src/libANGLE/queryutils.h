@@ -27,6 +27,7 @@ class Program;
 class Renderbuffer;
 class Sampler;
 class Shader;
+class State;
 class Texture;
 struct TextureCaps;
 struct UniformBlock;
@@ -238,6 +239,10 @@ void GetPointSize(GLES1State *state, GLfloat *sizeOut);
 
 unsigned int GetTexParameterCount(GLenum pname);
 
+bool GetQueryParameterInfo(const State &glState,
+                           GLenum pname,
+                           GLenum *type,
+                           unsigned int *numParams);
 }  // namespace gl
 
 namespace egl

@@ -224,7 +224,7 @@ void CaptureCallToFrameCapture(CaptureFuncT captureFunc,
     if (!frameCapture->enabled())
         return;
 
-    CallCapture call = captureFunc(context, isCallValid, captureParams...);
+    CallCapture call = captureFunc(context->getState(), isCallValid, captureParams...);
     frameCapture->captureCall(context, std::move(call));
 }
 
@@ -254,8 +254,10 @@ std::ostream &operator<<(std::ostream &os, const ParamCapture &capture);
 void CaptureMemory(const void *source, size_t size, ParamCapture *paramCapture);
 void CaptureString(const GLchar *str, ParamCapture *paramCapture);
 
+gl::Program *GetLinkedProgramForCapture(const gl::State &glState, gl::ShaderProgramID handle);
+
 // For GetIntegerv, GetFloatv, etc.
-void CaptureGetParameter(const gl::Context *context,
+void CaptureGetParameter(const gl::State &glState,
                          GLenum pname,
                          size_t typeSize,
                          ParamCapture *paramCapture);

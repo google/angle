@@ -732,7 +732,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     OverlayType mOverlay;
 };
-
 }  // namespace gl
 
 #endif  // LIBANGLE_CONTEXT_H_

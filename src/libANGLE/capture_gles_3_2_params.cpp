@@ -13,7 +13,7 @@ using namespace angle;
 namespace gl
 {
 
-void CaptureDebugMessageCallback_userParam(const Context *context,
+void CaptureDebugMessageCallback_userParam(const State &glState,
                                            bool isCallValid,
                                            GLDEBUGPROC callback,
                                            const void *userParam,
@@ -22,7 +22,7 @@ void CaptureDebugMessageCallback_userParam(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDebugMessageControl_ids(const Context *context,
+void CaptureDebugMessageControl_ids(const State &glState,
                                     bool isCallValid,
                                     GLenum source,
                                     GLenum type,
@@ -35,7 +35,7 @@ void CaptureDebugMessageControl_ids(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDebugMessageInsert_buf(const Context *context,
+void CaptureDebugMessageInsert_buf(const State &glState,
                                    bool isCallValid,
                                    GLenum source,
                                    GLenum type,
@@ -48,7 +48,7 @@ void CaptureDebugMessageInsert_buf(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDrawElementsBaseVertex_indices(const Context *context,
+void CaptureDrawElementsBaseVertex_indices(const State &glState,
                                            bool isCallValid,
                                            GLenum mode,
                                            GLsizei count,
@@ -60,7 +60,7 @@ void CaptureDrawElementsBaseVertex_indices(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDrawElementsInstancedBaseVertex_indices(const Context *context,
+void CaptureDrawElementsInstancedBaseVertex_indices(const State &glState,
                                                     bool isCallValid,
                                                     GLenum mode,
                                                     GLsizei count,
@@ -73,7 +73,7 @@ void CaptureDrawElementsInstancedBaseVertex_indices(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureDrawRangeElementsBaseVertex_indices(const Context *context,
+void CaptureDrawRangeElementsBaseVertex_indices(const State &glState,
                                                 bool isCallValid,
                                                 GLenum mode,
                                                 GLuint start,
@@ -87,7 +87,7 @@ void CaptureDrawRangeElementsBaseVertex_indices(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetDebugMessageLog_sources(const Context *context,
+void CaptureGetDebugMessageLog_sources(const State &glState,
                                        bool isCallValid,
                                        GLuint count,
                                        GLsizei bufSize,
@@ -102,7 +102,7 @@ void CaptureGetDebugMessageLog_sources(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetDebugMessageLog_types(const Context *context,
+void CaptureGetDebugMessageLog_types(const State &glState,
                                      bool isCallValid,
                                      GLuint count,
                                      GLsizei bufSize,
@@ -117,7 +117,7 @@ void CaptureGetDebugMessageLog_types(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetDebugMessageLog_ids(const Context *context,
+void CaptureGetDebugMessageLog_ids(const State &glState,
                                    bool isCallValid,
                                    GLuint count,
                                    GLsizei bufSize,
@@ -132,7 +132,7 @@ void CaptureGetDebugMessageLog_ids(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetDebugMessageLog_severities(const Context *context,
+void CaptureGetDebugMessageLog_severities(const State &glState,
                                           bool isCallValid,
                                           GLuint count,
                                           GLsizei bufSize,
@@ -147,7 +147,7 @@ void CaptureGetDebugMessageLog_severities(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetDebugMessageLog_lengths(const Context *context,
+void CaptureGetDebugMessageLog_lengths(const State &glState,
                                        bool isCallValid,
                                        GLuint count,
                                        GLsizei bufSize,
@@ -162,7 +162,7 @@ void CaptureGetDebugMessageLog_lengths(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetDebugMessageLog_messageLog(const Context *context,
+void CaptureGetDebugMessageLog_messageLog(const State &glState,
                                           bool isCallValid,
                                           GLuint count,
                                           GLsizei bufSize,
@@ -177,7 +177,7 @@ void CaptureGetDebugMessageLog_messageLog(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetObjectLabel_length(const Context *context,
+void CaptureGetObjectLabel_length(const State &glState,
                                   bool isCallValid,
                                   GLenum identifier,
                                   GLuint name,
@@ -189,7 +189,7 @@ void CaptureGetObjectLabel_length(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetObjectLabel_label(const Context *context,
+void CaptureGetObjectLabel_label(const State &glState,
                                  bool isCallValid,
                                  GLenum identifier,
                                  GLuint name,
@@ -201,7 +201,7 @@ void CaptureGetObjectLabel_label(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetObjectPtrLabel_ptr(const Context *context,
+void CaptureGetObjectPtrLabel_ptr(const State &glState,
                                   bool isCallValid,
                                   const void *ptr,
                                   GLsizei bufSize,
@@ -212,7 +212,7 @@ void CaptureGetObjectPtrLabel_ptr(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetObjectPtrLabel_length(const Context *context,
+void CaptureGetObjectPtrLabel_length(const State &glState,
                                      bool isCallValid,
                                      const void *ptr,
                                      GLsizei bufSize,
@@ -223,7 +223,7 @@ void CaptureGetObjectPtrLabel_length(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetObjectPtrLabel_label(const Context *context,
+void CaptureGetObjectPtrLabel_label(const State &glState,
                                     bool isCallValid,
                                     const void *ptr,
                                     GLsizei bufSize,
@@ -234,7 +234,7 @@ void CaptureGetObjectPtrLabel_label(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetPointerv_params(const Context *context,
+void CaptureGetPointerv_params(const State &glState,
                                bool isCallValid,
                                GLenum pname,
                                void **params,
@@ -243,7 +243,7 @@ void CaptureGetPointerv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetSamplerParameterIiv_params(const Context *context,
+void CaptureGetSamplerParameterIiv_params(const State &glState,
                                           bool isCallValid,
                                           SamplerID sampler,
                                           GLenum pname,
@@ -253,7 +253,7 @@ void CaptureGetSamplerParameterIiv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetSamplerParameterIuiv_params(const Context *context,
+void CaptureGetSamplerParameterIuiv_params(const State &glState,
                                            bool isCallValid,
                                            SamplerID sampler,
                                            GLenum pname,
@@ -263,7 +263,7 @@ void CaptureGetSamplerParameterIuiv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetTexParameterIiv_params(const Context *context,
+void CaptureGetTexParameterIiv_params(const State &glState,
                                       bool isCallValid,
                                       TextureType targetPacked,
                                       GLenum pname,
@@ -273,7 +273,7 @@ void CaptureGetTexParameterIiv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetTexParameterIuiv_params(const Context *context,
+void CaptureGetTexParameterIuiv_params(const State &glState,
                                        bool isCallValid,
                                        TextureType targetPacked,
                                        GLenum pname,
@@ -283,7 +283,7 @@ void CaptureGetTexParameterIuiv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetnUniformfv_params(const Context *context,
+void CaptureGetnUniformfv_params(const State &glState,
                                  bool isCallValid,
                                  ShaderProgramID program,
                                  GLint location,
@@ -294,7 +294,7 @@ void CaptureGetnUniformfv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetnUniformiv_params(const Context *context,
+void CaptureGetnUniformiv_params(const State &glState,
                                  bool isCallValid,
                                  ShaderProgramID program,
                                  GLint location,
@@ -305,7 +305,7 @@ void CaptureGetnUniformiv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureGetnUniformuiv_params(const Context *context,
+void CaptureGetnUniformuiv_params(const State &glState,
                                   bool isCallValid,
                                   ShaderProgramID program,
                                   GLint location,
@@ -316,7 +316,7 @@ void CaptureGetnUniformuiv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureObjectLabel_label(const Context *context,
+void CaptureObjectLabel_label(const State &glState,
                               bool isCallValid,
                               GLenum identifier,
                               GLuint name,
@@ -327,7 +327,7 @@ void CaptureObjectLabel_label(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureObjectPtrLabel_ptr(const Context *context,
+void CaptureObjectPtrLabel_ptr(const State &glState,
                                bool isCallValid,
                                const void *ptr,
                                GLsizei length,
@@ -337,7 +337,7 @@ void CaptureObjectPtrLabel_ptr(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureObjectPtrLabel_label(const Context *context,
+void CaptureObjectPtrLabel_label(const State &glState,
                                  bool isCallValid,
                                  const void *ptr,
                                  GLsizei length,
@@ -347,7 +347,7 @@ void CaptureObjectPtrLabel_label(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CapturePushDebugGroup_message(const Context *context,
+void CapturePushDebugGroup_message(const State &glState,
                                    bool isCallValid,
                                    GLenum source,
                                    GLuint id,
@@ -358,7 +358,7 @@ void CapturePushDebugGroup_message(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureReadnPixels_data(const Context *context,
+void CaptureReadnPixels_data(const State &glState,
                              bool isCallValid,
                              GLint x,
                              GLint y,
@@ -373,7 +373,7 @@ void CaptureReadnPixels_data(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureSamplerParameterIiv_param(const Context *context,
+void CaptureSamplerParameterIiv_param(const State &glState,
                                       bool isCallValid,
                                       SamplerID sampler,
                                       GLenum pname,
@@ -383,7 +383,7 @@ void CaptureSamplerParameterIiv_param(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureSamplerParameterIuiv_param(const Context *context,
+void CaptureSamplerParameterIuiv_param(const State &glState,
                                        bool isCallValid,
                                        SamplerID sampler,
                                        GLenum pname,
@@ -393,7 +393,7 @@ void CaptureSamplerParameterIuiv_param(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureTexParameterIiv_params(const Context *context,
+void CaptureTexParameterIiv_params(const State &glState,
                                    bool isCallValid,
                                    TextureType targetPacked,
                                    GLenum pname,
@@ -403,7 +403,7 @@ void CaptureTexParameterIiv_params(const Context *context,
     UNIMPLEMENTED();
 }
 
-void CaptureTexParameterIuiv_params(const Context *context,
+void CaptureTexParameterIuiv_params(const State &glState,
                                     bool isCallValid,
                                     TextureType targetPacked,
                                     GLenum pname,
