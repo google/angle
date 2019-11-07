@@ -1472,7 +1472,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     ANGLE_FEATURE_CONDITION(features, emulateAbsIntFunction, isIntel);
 
-    ANGLE_FEATURE_CONDITION(features, addAndTrueToLoopCondition, isIntel);
+    ANGLE_FEATURE_CONDITION(features, addAndTrueToLoopCondition, IsApple() && isIntel);
 
     ANGLE_FEATURE_CONDITION(features, emulateIsnanFloat, isIntel);
 
