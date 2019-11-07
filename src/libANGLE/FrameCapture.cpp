@@ -697,6 +697,18 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
         SaveFileHelper saveSource(sourcePath);
         saveSource << sourceContents;
     }
+
+    {
+        std::stringstream indexPathStream;
+        indexPathStream << outDir << FmtCapturePrefix(contextId) << "_files.txt";
+        std::string indexPath = indexPathStream.str();
+
+        SaveFileHelper saveIndex(indexPath);
+        for (uint32_t frameIndex = frameStart; frameIndex <= frameEnd; ++frameIndex)
+        {
+            saveIndex << GetCaptureFileName(contextId, frameIndex, ".cpp") << "\n";
+        }
+    }
 }
 
 ProgramSources GetAttachedProgramSources(const gl::Program *program)

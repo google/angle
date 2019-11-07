@@ -52,27 +52,19 @@ $ ANGLE_CAPTURE_FRAME_END=4 ANGLE_CAPTURE_OUT_DIR=samples/capture_replay out/Deb
 ## Running a CPP replay
 
 To run a CPP replay you can use a template located in
-[samples/capture_replay](../samples/capture_replay). Update
-[samples/BUILD.gn](../samples/BUILD.gn) to enable `capture_replay_sample`
-sample to include your replay frames:
+[samples/capture_replay](../samples/capture_replay). First run your capture and ensure all capture
+files are written to `samples/capture_replay`. You can conveniently use `ANGLE_CAPTURE_OUT_DIR`.
+Then enable the `capture_replay_sample` via `gn args`:
 
 ```
-angle_capture_replay_sample("capture_replay_sample") {
-  sources = [
-    "capture_replay/angle_capture_context1_frame000.cpp",
-    "capture_replay/angle_capture_context1_frame001.cpp",
-    "capture_replay/angle_capture_context1_frame002.cpp",
-    "capture_replay/angle_capture_context1_frame003.cpp",
-    "capture_replay/angle_capture_context1_frame004.cpp",
-  ]
-}
+angle_build_capture_replay_sample = true
 ```
 
-Then build and run your replay sample:
+See [samples/BUILD.gn](../samples/BUILD.gn) for details. Then build and run your replay sample:
 
 ```
-$ autoninja -C out/Debug capture_replay
-$ ANGLE_CAPTURE_ENABLED=0 out/Debug/capture_replay
+$ autoninja -C out/Debug capture_replay_sample
+$ ANGLE_CAPTURE_ENABLED=0 out/Debug/capture_replay_sample
 ```
 
-Note that we specify `ANGLE_CAPTURE_ENABLED=0` to prevent re-capturing your replay.
+Note that we specify `ANGLE_CAPTURE_ENABLED=0` to prevent re-capturing when running the replay.
