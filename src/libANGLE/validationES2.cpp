@@ -1429,6 +1429,14 @@ bool ValidateES2TexImageParametersBase(Context *context,
                             return false;
                         }
                         break;
+                    case GL_SHORT:
+                    case GL_UNSIGNED_SHORT:
+                        if (!context->getExtensions().textureNorm16)
+                        {
+                            context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                            return false;
+                        }
+                        break;
                     default:
                         context->validationError(GL_INVALID_OPERATION, kMismatchedTypeAndFormat);
                         return false;
@@ -1442,6 +1450,15 @@ bool ValidateES2TexImageParametersBase(Context *context,
                     case GL_UNSIGNED_INT_2_10_10_10_REV_EXT:
                     case GL_FLOAT:
                     case GL_HALF_FLOAT_OES:
+                        break;
+                    case GL_SHORT:
+                    case GL_UNSIGNED_SHORT:
+                        if (!context->getExtensions().textureNorm16)
+                        {
+                            context->validationError(GL_INVALID_OPERATION,
+                                                     kMismatchedTypeAndFormat);
+                            return false;
+                        }
                         break;
                     default:
                         context->validationError(GL_INVALID_OPERATION, kMismatchedTypeAndFormat);
@@ -1457,6 +1474,15 @@ bool ValidateES2TexImageParametersBase(Context *context,
                     case GL_FLOAT:
                     case GL_HALF_FLOAT_OES:
                     case GL_UNSIGNED_INT_2_10_10_10_REV_EXT:
+                        break;
+                    case GL_SHORT:
+                    case GL_UNSIGNED_SHORT:
+                        if (!context->getExtensions().textureNorm16)
+                        {
+                            context->validationError(GL_INVALID_OPERATION,
+                                                     kMismatchedTypeAndFormat);
+                            return false;
+                        }
                         break;
                     default:
                         context->validationError(GL_INVALID_OPERATION, kMismatchedTypeAndFormat);
@@ -1780,6 +1806,20 @@ bool ValidateES2TexImageParametersBase(Context *context,
 
                     break;
 
+                case GL_R16_EXT:
+                case GL_RG16_EXT:
+                case GL_RGB16_EXT:
+                case GL_RGBA16_EXT:
+                case GL_R16_SNORM_EXT:
+                case GL_RG16_SNORM_EXT:
+                case GL_RGB16_SNORM_EXT:
+                case GL_RGBA16_SNORM_EXT:
+                    if (!context->getExtensions().textureNorm16)
+                    {
+                        context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                        return false;
+                    }
+                    break;
                 default:
                     context->validationError(GL_INVALID_VALUE, kInvalidInternalFormat);
                     return false;
