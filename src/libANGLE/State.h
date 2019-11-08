@@ -356,6 +356,8 @@ class State : angle::NonCopyable
         }
     }
 
+    ANGLE_INLINE Buffer *getArrayBuffer() const { return getTargetBuffer(BufferBinding::Array); }
+
     angle::Result setIndexedBufferBinding(const Context *context,
                                           BufferBinding target,
                                           GLuint index,

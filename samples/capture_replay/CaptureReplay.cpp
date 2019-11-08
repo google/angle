@@ -24,6 +24,8 @@ class CaptureReplaySample : public SampleApplication
             return false;
         SetBinaryDataDir(ANGLE_CAPTURE_REPLAY_SAMPLE_DATA_DIR);
         SetupContext1Replay();
+
+        eglSwapInterval(getDisplay(), 1);
         return true;
     }
 
@@ -31,7 +33,10 @@ class CaptureReplaySample : public SampleApplication
 
     void draw() override
     {
-        ReplayContext1Frame(kReplayFrameStart + (mCurrentFrame % kReplayFrameEnd));
+        // Compute the current frame, looping from kReplayFrameStart to kReplayFrameEnd.
+        uint32_t frame =
+            kReplayFrameStart + (mCurrentFrame % (kReplayFrameEnd - kReplayFrameStart));
+        ReplayContext1Frame(frame);
         mCurrentFrame++;
     }
 
