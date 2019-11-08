@@ -99,7 +99,7 @@ MTLViewport GetViewportFlipY(const gl::Rectangle &rect,
     MTLViewport re;
 
     re.originX = rect.x;
-    re.originY = screenHeight - rect.y1();
+    re.originY = static_cast<double>(screenHeight) - rect.y1();
     re.width   = rect.width;
     re.height  = rect.height;
     re.znear   = znear;

@@ -95,6 +95,11 @@ class FramebufferMtl : public FramebufferImpl
     void onFinishedDrawingToFrameBuffer(const gl::Context *context,
                                         mtl::RenderCommandEncoder *encoder);
 
+    // The actual area will be adjusted based on framebuffer flipping property.
+    gl::Rectangle getReadPixelArea(const gl::Rectangle &glArea);
+
+    // NOTE: this method doesn't do the flipping of area. Caller must do it if needed before
+    // callling this. See getReadPixelsArea().
     angle::Result readPixelsImpl(const gl::Context *context,
                                  const gl::Rectangle &area,
                                  const PackPixelsParams &packPixelsParams,

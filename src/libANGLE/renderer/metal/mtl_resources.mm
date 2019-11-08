@@ -161,48 +161,54 @@ Texture::Texture(ContextMtl *context,
                  bool renderTargetOnly,
                  bool supportTextureView)
 {
-    id<MTLDevice> metalDevice = context->getMetalDevice();
-
-    if (mips > 1 && mips < desc.mipmapLevelCount)
+    ANGLE_MTL_OBJC_SCOPE
     {
-        desc.mipmapLevelCount = mips;
+        id<MTLDevice> metalDevice = context->getMetalDevice();
+
+        if (mips > 1 && mips < desc.mipmapLevelCount)
+        {
+            desc.mipmapLevelCount = mips;
+        }
+
+        // Every texture will support being rendered for now
+        desc.usage = 0;
+
+        if (Format::FormatRenderable(desc.pixelFormat))
+        {
+            desc.usage |= MTLTextureUsageRenderTarget;
+        }
+
+        if (!Format::FormatCPUReadable(desc.pixelFormat))
+        {
+            desc.resourceOptions = MTLResourceStorageModePrivate;
+        }
+
+        if (!renderTargetOnly)
+        {
+            desc.usage = desc.usage | MTLTextureUsageShaderRead;
+        }
+
+        if (supportTextureView)
+        {
+            desc.usage = desc.usage | MTLTextureUsagePixelFormatView;
+        }
+
+        set([[metalDevice newTextureWithDescriptor:desc] ANGLE_MTL_AUTORELEASE]);
     }
-
-    // Every texture will support being rendered for now
-    desc.usage = 0;
-
-    if (Format::FormatRenderable(desc.pixelFormat))
-    {
-        desc.usage |= MTLTextureUsageRenderTarget;
-    }
-
-    if (!Format::FormatCPUReadable(desc.pixelFormat))
-    {
-        desc.resourceOptions = MTLResourceStorageModePrivate;
-    }
-
-    if (!renderTargetOnly)
-    {
-        desc.usage = desc.usage | MTLTextureUsageShaderRead;
-    }
-
-    if (supportTextureView)
-    {
-        desc.usage = desc.usage | MTLTextureUsagePixelFormatView;
-    }
-
-    set([metalDevice newTextureWithDescriptor:desc]);
 }
 
 Texture::Texture(Texture *original, MTLTextureType type, NSRange mipmapLevelRange, uint32_t slice)
     : Resource(original)
 {
-    auto view = [original->get() newTextureViewWithPixelFormat:original->pixelFormat()
-                                                   textureType:type
-                                                        levels:mipmapLevelRange
-                                                        slices:NSMakeRange(slice, 1)];
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        auto view = [original->get() newTextureViewWithPixelFormat:original->pixelFormat()
+                                                       textureType:type
+                                                            levels:mipmapLevelRange
+                                                            slices:NSMakeRange(slice, 1)];
 
-    set(view);
+        set([view ANGLE_MTL_AUTORELEASE]);
+    }
 }
 
 void Texture::syncContent(ContextMtl *context)
@@ -380,7 +386,7 @@ angle::Result Buffer::reset(ContextMtl *context, size_t size, const uint8_t *dat
             newBuffer = [metalDevice newBufferWithLength:size options:options];
         }
 
-        set(newBuffer);
+        set([newBuffer ANGLE_MTL_AUTORELEASE]);
 
         return angle::Result::Continue;
     }

@@ -803,6 +803,7 @@ angle::Result TextureMtl::copySubImageWithDraw(const gl::Context *context,
     blitParams.dstColorMask = mTexture->getColorWritableMask();
 
     blitParams.src          = colorReadRT->getTexture();
+    blitParams.srcLevel     = static_cast<uint32_t>(colorReadRT->getLevelIndex());
     blitParams.srcRect      = clippedSourceArea;
     blitParams.srcYFlipped  = framebufferMtl->flipY();
     blitParams.dstLuminance = internalFormat.isLUMA();
@@ -827,7 +828,7 @@ angle::Result TextureMtl::copySubImageCPU(const gl::Context *context,
     angle::MemoryBuffer conversionRow;
     ANGLE_CHECK_GL_ALLOC(contextMtl, conversionRow.resize(dstRowPitch));
 
-    MTLRegion mtlDstRowArea  = MTLRegionMake2D(clippedSourceArea.x, 0, clippedSourceArea.width, 1);
+    MTLRegion mtlDstRowArea  = MTLRegionMake2D(modifiedDestOffset.x, 0, clippedSourceArea.width, 1);
     gl::Rectangle srcRowArea = gl::Rectangle(clippedSourceArea.x, 0, clippedSourceArea.width, 1);
 
     for (int r = 0; r < clippedSourceArea.height; ++r)
@@ -838,7 +839,8 @@ angle::Result TextureMtl::copySubImageCPU(const gl::Context *context,
         PackPixelsParams packParams(srcRowArea, dstFormat, dstRowPitch, false, nullptr, 0);
 
         // Read pixels from framebuffer to memory:
-        ANGLE_TRY(framebufferMtl->readPixelsImpl(context, srcRowArea, packParams,
+        gl::Rectangle flippedSrcRowArea = framebufferMtl->getReadPixelArea(srcRowArea);
+        ANGLE_TRY(framebufferMtl->readPixelsImpl(context, flippedSrcRowArea, packParams,
                                                  framebufferMtl->getColorReadRenderTarget(),
                                                  conversionRow.data()));
 

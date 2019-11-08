@@ -150,8 +150,8 @@ angle::Result ContextMtl::drawTriFanArraysWithBaseVertex(const gl::Context *cont
             context, {0, static_cast<uint32_t>(count), mTriFanArraysIndexBuffer, 0}));
     }
 
-    ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::Triangles, first, genIndicesCount, 1,
-                        gl::DrawElementsType::UnsignedInt, reinterpret_cast<const void *>(0)));
+    ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::TriangleFan, first, count, 1,
+                        gl::DrawElementsType::InvalidEnum, reinterpret_cast<const void *>(0)));
 
     // Draw with the zero starting index buffer, shift the vertex index using baseVertex instanced
     // draw:
@@ -173,9 +173,8 @@ angle::Result ContextMtl::drawTriFanArraysLegacy(const gl::Context *context,
         context, {static_cast<uint32_t>(first), static_cast<uint32_t>(count), genIdxBuffer,
                   genIdxBufferOffset}));
 
-    ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::Triangles, 0, genIndicesCount, 1,
-                        gl::DrawElementsType::UnsignedInt,
-                        reinterpret_cast<const void *>(genIdxBufferOffset)));
+    ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::TriangleFan, first, count, 1,
+                        gl::DrawElementsType::InvalidEnum, reinterpret_cast<const void *>(0)));
 
     mRenderEncoder.drawIndexed(MTLPrimitiveTypeTriangle, genIndicesCount, MTLIndexTypeUInt32,
                                genIdxBuffer, genIdxBufferOffset);
@@ -258,9 +257,7 @@ angle::Result ContextMtl::drawTriFanElements(const gl::Context *context,
 
         ANGLE_TRY(mTriFanIndexBuffer.commit(this));
 
-        ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::Triangles, 0, genIndicesCount, 1,
-                            gl::DrawElementsType::UnsignedInt,
-                            reinterpret_cast<const void *>(genIdxBufferOffset)));
+        ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::TriangleFan, 0, count, 1, type, indices));
 
         mRenderEncoder.drawIndexed(MTLPrimitiveTypeTriangle, genIndicesCount, MTLIndexTypeUInt32,
                                    genIdxBuffer, genIdxBufferOffset);

@@ -263,6 +263,9 @@ egl::Error SurfaceMtl::initialize(const egl::Display *display)
 
             [mLayer addSublayer:mMetalLayer.get()];
         }
+
+        // ensure drawableSize is set to correct value:
+        checkIfLayerResized();
     }
 
     return egl::NoError();

@@ -605,7 +605,7 @@ AutoObjCPtr<id<MTLComputePipelineState>> RenderUtils::getTriFanFromElemArrayGene
 
     IndexConvesionPipelineCacheKey key = {srcType, aligned};
 
-    auto &cache = mIndexConversionPipelineCaches[key];
+    auto &cache = mTriFanFromElemArrayGeneratorPipelineCaches[key];
 
     if (!cache)
     {
