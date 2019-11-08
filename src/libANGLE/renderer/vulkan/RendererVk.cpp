@@ -1305,7 +1305,7 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
 
 gl::Version RendererVk::getMaxConformantESVersion() const
 {
-    return std::min(getMaxSupportedESVersion(), gl::Version(2, 0));
+    return std::min(getMaxSupportedESVersion(), gl::Version(3, 0));
 }
 
 void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
