@@ -184,14 +184,6 @@ EGLAttrib GetDisplayTypeFromEnvironment()
     }
 #endif
 
-#if defined(ANGLE_ENABLE_METAL)
-    if (rx::IsMetalDisplayAvailable())
-    {
-        return EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE;
-    }
-    // else fallthrough to below
-#endif
-
 #if defined(ANGLE_ENABLE_D3D11)
     return EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
 #elif defined(ANGLE_ENABLE_D3D9)
@@ -205,11 +197,7 @@ EGLAttrib GetDisplayTypeFromEnvironment()
     return EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
 #    endif
 #elif defined(ANGLE_ENABLE_METAL)
-    // If we reach this point, it means rx::IsMetalDisplayAvailable() return false
-    // and ANGLE_ENABLE_OPENGL is not defined.
-    // Use default type as a fallback. Just to please the compiler.
-    // CreateDisplayFromAttribs() will fail regardless.
-    return EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
+    return EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE;
 #elif defined(ANGLE_ENABLE_VULKAN)
     return EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;
 #elif defined(ANGLE_ENABLE_NULL)
