@@ -504,6 +504,9 @@ struct ShBuiltInResources
     int MaxGeometryShaderStorageBlocks;
     int MaxGeometryShaderInvocations;
     int MaxGeometryImageUniforms;
+
+    // Subpixel bits used in rasterization.
+    int SubPixelBits;
 };
 
 //
