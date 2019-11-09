@@ -10,6 +10,8 @@
 #ifndef LIBANGLE_RENDERER_METAL_TEXTUREMTL_H_
 #define LIBANGLE_RENDERER_METAL_TEXTUREMTL_H_
 
+#include <map>
+
 #include "common/PackedEnums.h"
 #include "libANGLE/renderer/TextureImpl.h"
 #include "libANGLE/renderer/metal/RenderTargetMtl.h"
@@ -140,19 +142,30 @@ class TextureMtl : public TextureImpl
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
 
-    void bindVertexShader(const gl::Context *context,
-                          mtl::RenderCommandEncoder *cmdEncoder,
-                          int textureSlotIndex,
-                          int samplerSlotIndex);
-    void bindFragmentShader(const gl::Context *context,
-                            mtl::RenderCommandEncoder *cmdEncoder,
-                            int textureSlotIndex,
-                            int samplerSlotIndex);
+    // The texture's data is initially initialized and stored in an array
+    // of images through glTexImage*/glCopyTex* calls. During draw calls, the caller must make sure
+    // the actual texture is created by calling this method to transfer the stored images data
+    // to the actual texture.
+    angle::Result ensureTextureCreated(const gl::Context *context);
+
+    angle::Result bindVertexShader(const gl::Context *context,
+                                   mtl::RenderCommandEncoder *cmdEncoder,
+                                   int textureSlotIndex,
+                                   int samplerSlotIndex);
+    angle::Result bindFragmentShader(const gl::Context *context,
+                                     mtl::RenderCommandEncoder *cmdEncoder,
+                                     int textureSlotIndex,
+                                     int samplerSlotIndex);
 
     const mtl::Format &getFormat() const { return mFormat; }
 
   private:
-    void releaseTexture();
+    void releaseTexture(bool releaseImages);
+    // Ensure image at given index is created:
+    angle::Result ensureImageCreated(const gl::Context *context, const gl::ImageIndex &index);
+    angle::Result checkForEmulatedChannels(const gl::Context *context,
+                                           const mtl::Format &mtlFormat,
+                                           const mtl::TextureRef &texture);
 
     // If levels = 0, this function will create full mipmaps texture.
     angle::Result setStorageImpl(const gl::Context *context,
@@ -212,11 +225,16 @@ class TextureMtl : public TextureImpl
     angle::Result generateMipmapCPU(const gl::Context *context);
 
     mtl::Format mFormat;
-    mtl::TextureRef mTexture;
+    // The real texture used by Metal draw calls.
+    mtl::TextureRef mNativeTexture;
     id<MTLSamplerState> mMetalSamplerState = nil;
 
     std::vector<RenderTargetMtl> mLayeredRenderTargets;
     std::vector<mtl::TextureRef> mLayeredTextureViews;
+
+    // Stored images array defined by glTexImage/glCopy*.
+    // Once the images array is complete, they will be transferred to real texture object.
+    std::map<int, gl::TexLevelArray<mtl::TextureRef>> mTexImages;
 
     bool mIsPow2 = false;
 };

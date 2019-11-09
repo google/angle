@@ -300,6 +300,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     void updateVertexArray(const gl::Context *context);
 
     angle::Result updateDefaultAttribute(size_t attribIndex);
+    angle::Result handleDirtyActiveTextures(const gl::Context *context);
     angle::Result handleDirtyDefaultAttribs(const gl::Context *context);
     angle::Result handleDirtyDriverUniforms(const gl::Context *context);
     angle::Result handleDirtyDepthStencilState(const gl::Context *context);

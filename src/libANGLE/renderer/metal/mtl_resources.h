@@ -33,6 +33,7 @@ namespace mtl
 {
 
 class CommandQueue;
+class BlitCommandEncoder;
 class Resource;
 class Texture;
 class Buffer;
@@ -98,6 +99,7 @@ class Texture final : public Resource,
                                        uint32_t height,
                                        uint32_t mips /** use zero to create full mipmaps chain */,
                                        bool renderTargetOnly,
+                                       bool allowTextureView,
                                        TextureRef *refOut);
 
     static angle::Result MakeCubeTexture(ContextMtl *context,
@@ -105,6 +107,7 @@ class Texture final : public Resource,
                                          uint32_t size,
                                          uint32_t mips /** use zero to create full mipmaps chain */,
                                          bool renderTargetOnly,
+                                         bool allowTextureView,
                                          TextureRef *refOut);
 
     static TextureRef MakeFromMetal(id<MTLTexture> metalTexture);
@@ -123,8 +126,10 @@ class Texture final : public Resource,
                   uint32_t mipmapLevel,
                   uint8_t *dataOut);
 
-    // Create 2d view of a cube face
-    TextureRef createFaceView(uint32_t face);
+    // Create 2d view of a cube face which full range of mip levels.
+    TextureRef createCubeFaceView(uint32_t face);
+    // Create a view of one slice at a level.
+    TextureRef createSliceMipView(uint32_t slice, uint32_t level);
 
     MTLTextureType textureType() const;
     MTLPixelFormat pixelFormat() const;
@@ -138,11 +143,14 @@ class Texture final : public Resource,
     gl::Extents size(const gl::ImageIndex &index) const;
 
     // For render target
-    MTLColorWriteMask getColorWritableMask() const { return mColorWritableMask; }
-    void setColorWritableMask(MTLColorWriteMask mask) { mColorWritableMask = mask; }
+    MTLColorWriteMask getColorWritableMask() const { return *mColorWritableMask; }
+    void setColorWritableMask(MTLColorWriteMask mask) { *mColorWritableMask = mask; }
 
     // Change the wrapped metal object. Special case for swapchain image
     void set(id<MTLTexture> metalTexture);
+
+    // sync content between CPU and GPU
+    void syncContent(ContextMtl *context, mtl::BlitCommandEncoder *encoder);
 
   private:
     using ParentClass = WrappedObject<id<MTLTexture>>;
@@ -159,7 +167,8 @@ class Texture final : public Resource,
 
     void syncContent(ContextMtl *context);
 
-    MTLColorWriteMask mColorWritableMask = MTLColorWriteMaskAll;
+    // This property is shared between this object and its views:
+    std::shared_ptr<MTLColorWriteMask> mColorWritableMask;
 };
 
 class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>

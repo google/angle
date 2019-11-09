@@ -96,6 +96,7 @@ angle::Result Texture::Make2DTexture(ContextMtl *context,
                                      uint32_t height,
                                      uint32_t mips,
                                      bool renderTargetOnly,
+                                     bool allowTextureView,
                                      TextureRef *refOut)
 {
     ANGLE_MTL_OBJC_SCOPE
@@ -107,7 +108,7 @@ angle::Result Texture::Make2DTexture(ContextMtl *context,
                                                            mipmapped:mips == 0 || mips > 1];
 
         SetTextureSwizzle(context, format, desc);
-        refOut->reset(new Texture(context, desc, mips, renderTargetOnly, false));
+        refOut->reset(new Texture(context, desc, mips, renderTargetOnly, allowTextureView));
     }  // ANGLE_MTL_OBJC_SCOPE
 
     if (!refOut || !refOut->get())
@@ -124,6 +125,7 @@ angle::Result Texture::MakeCubeTexture(ContextMtl *context,
                                        uint32_t size,
                                        uint32_t mips,
                                        bool renderTargetOnly,
+                                       bool allowTextureView,
                                        TextureRef *refOut)
 {
     ANGLE_MTL_OBJC_SCOPE
@@ -133,7 +135,7 @@ angle::Result Texture::MakeCubeTexture(ContextMtl *context,
                                                                   size:size
                                                              mipmapped:mips == 0 || mips > 1];
         SetTextureSwizzle(context, format, desc);
-        refOut->reset(new Texture(context, desc, mips, renderTargetOnly, true));
+        refOut->reset(new Texture(context, desc, mips, renderTargetOnly, allowTextureView));
     }  // ANGLE_MTL_OBJC_SCOPE
 
     if (!refOut || !refOut->get())
@@ -151,6 +153,7 @@ TextureRef Texture::MakeFromMetal(id<MTLTexture> metalTexture)
 }
 
 Texture::Texture(id<MTLTexture> metalTexture)
+    : mColorWritableMask(std::make_shared<MTLColorWriteMask>(MTLColorWriteMaskAll))
 {
     set(metalTexture);
 }
@@ -160,6 +163,7 @@ Texture::Texture(ContextMtl *context,
                  uint32_t mips,
                  bool renderTargetOnly,
                  bool supportTextureView)
+    : mColorWritableMask(std::make_shared<MTLColorWriteMask>(MTLColorWriteMaskAll))
 {
     ANGLE_MTL_OBJC_SCOPE
     {
@@ -198,7 +202,8 @@ Texture::Texture(ContextMtl *context,
 }
 
 Texture::Texture(Texture *original, MTLTextureType type, NSRange mipmapLevelRange, uint32_t slice)
-    : Resource(original)
+    : Resource(original),
+      mColorWritableMask(original->mColorWritableMask)  // Share color write mask property
 {
     ANGLE_MTL_OBJC_SCOPE
     {
@@ -211,6 +216,16 @@ Texture::Texture(Texture *original, MTLTextureType type, NSRange mipmapLevelRang
     }
 }
 
+void Texture::syncContent(ContextMtl *context, mtl::BlitCommandEncoder *blitEncoder)
+{
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    if (blitEncoder)
+    {
+        blitEncoder->synchronizeResource(shared_from_this());
+    }
+#endif
+}
+
 void Texture::syncContent(ContextMtl *context)
 {
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
@@ -220,10 +235,8 @@ void Texture::syncContent(ContextMtl *context)
     if (this->isCPUReadMemDirty())
     {
         mtl::BlitCommandEncoder *blitEncoder = context->getBlitCommandEncoder();
-        if (blitEncoder)
-        {
-            blitEncoder->synchronizeResource(shared_from_this());
-        }
+        syncContent(context, blitEncoder);
+
         this->resetCPUReadMemDirty();
     }
 #endif
@@ -281,7 +294,7 @@ void Texture::getBytes(ContextMtl *context,
     [get() getBytes:dataOut bytesPerRow:bytesPerRow fromRegion:region mipmapLevel:mipmapLevel];
 }
 
-TextureRef Texture::createFaceView(uint32_t face)
+TextureRef Texture::createCubeFaceView(uint32_t face)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
@@ -291,6 +304,24 @@ TextureRef Texture::createFaceView(uint32_t face)
                 return TextureRef(
                     new Texture(this, MTLTextureType2D, NSMakeRange(0, mipmapLevels()), face));
             default:
+                UNREACHABLE();
+                return nullptr;
+        }
+    }
+}
+
+TextureRef Texture::createSliceMipView(uint32_t slice, uint32_t level)
+{
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        switch (textureType())
+        {
+            case MTLTextureTypeCube:
+            case MTLTextureType2D:
+                return TextureRef(
+                    new Texture(this, MTLTextureType2D, NSMakeRange(level, 1), slice));
+            default:
+                UNREACHABLE();
                 return nullptr;
         }
     }

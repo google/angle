@@ -281,6 +281,11 @@ FramebufferImpl *SurfaceMtl::createDefaultFramebuffer(const gl::Context *context
 
 egl::Error SurfaceMtl::makeCurrent(const gl::Context *context)
 {
+    angle::Result result = obtainNextDrawable(context);
+    if (result != angle::Result::Continue)
+    {
+        return egl::EglBadCurrentSurface();
+    }
     return egl::NoError();
 }
 
@@ -436,7 +441,7 @@ angle::Result SurfaceMtl::ensureDepthStencilSizeCorrect(const gl::Context *conte
     if (mDepthFormat.valid() && (!mDepthTexture || mDepthTexture->size() != size))
     {
         ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mDepthFormat, size.width, size.height, 1,
-                                              true, &mDepthTexture));
+                                              true, false, &mDepthTexture));
 
         mDepthRenderTarget.set(mDepthTexture, 0, 0, mDepthFormat);
         fboDirtyBits->set(gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT);
@@ -451,7 +456,7 @@ angle::Result SurfaceMtl::ensureDepthStencilSizeCorrect(const gl::Context *conte
         else
         {
             ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mStencilFormat, size.width,
-                                                  size.height, 1, true, &mStencilTexture));
+                                                  size.height, 1, true, false, &mStencilTexture));
         }
 
         mStencilRenderTarget.set(mStencilTexture, 0, 0, mStencilFormat);

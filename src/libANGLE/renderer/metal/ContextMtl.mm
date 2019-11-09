@@ -572,6 +572,8 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
                 break;
             case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
+                // NOTE(hqle): properly handle GLSL images.
+                invalidateCurrentTextures();
                 break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
                 // NOTE(hqle): MSAA feature.
@@ -1185,6 +1187,7 @@ void ContextMtl::updateDrawFrameBufferBinding(const gl::Context *context)
 void ContextMtl::onDrawFrameBufferChange(const gl::Context *context, FramebufferMtl *framebuffer)
 {
     const gl::State &glState = getState();
+    ASSERT(framebuffer == mtl::GetImpl(glState.getDrawFramebuffer()));
 
     mDirtyBits.set(DIRTY_BIT_DRAW_FRAMEBUFFER);
 
@@ -1251,11 +1254,18 @@ angle::Result ContextMtl::setupDraw(const gl::Context *context,
                                          &lineLoopLastSegmentIndexBuffer));
     }
 
-    // Must be called before the command buffer is started.
+    // Must be called before the render command encoder is started.
     if (context->getStateCache().hasAnyActiveClientAttrib())
     {
         ANGLE_TRY(mVertexArray->updateClientAttribs(context, firstVertex, vertexOrIndexCount,
                                                     instanceCount, indexTypeOrNone, indices));
+    }
+    // This must be called before render command encoder is started.
+    bool textureChanged = false;
+    if (mDirtyBits.test(DIRTY_BIT_TEXTURES))
+    {
+        textureChanged = true;
+        ANGLE_TRY(handleDirtyActiveTextures(context));
     }
 
     if (!mRenderEncoder.valid())
@@ -1277,19 +1287,18 @@ angle::Result ContextMtl::setupDraw(const gl::Context *context,
     Optional<mtl::RenderPipelineDesc> changedPipelineDesc;
     ANGLE_TRY(checkIfPipelineChanged(context, mode, &changedPipelineDesc));
 
-    bool textureChanged = false;
     for (size_t bit : mDirtyBits)
     {
         switch (bit)
         {
+            case DIRTY_BIT_TEXTURES:
+                // Already handled.
+                break;
             case DIRTY_BIT_DEFAULT_ATTRIBS:
                 ANGLE_TRY(handleDirtyDefaultAttribs(context));
                 break;
             case DIRTY_BIT_DRIVER_UNIFORMS:
                 ANGLE_TRY(handleDirtyDriverUniforms(context));
-                break;
-            case DIRTY_BIT_TEXTURES:
-                textureChanged = true;
                 break;
             case DIRTY_BIT_DEPTH_STENCIL_DESC:
                 ANGLE_TRY(handleDirtyDepthStencilState(context));
@@ -1312,16 +1321,25 @@ angle::Result ContextMtl::setupDraw(const gl::Context *context,
             case DIRTY_BIT_SCISSOR:
                 mRenderEncoder.setScissorRect(mScissorRect);
                 break;
+            case DIRTY_BIT_DRAW_FRAMEBUFFER:
+                // Already handled.
+                break;
             case DIRTY_BIT_CULL_MODE:
                 mRenderEncoder.setCullMode(mCullMode);
                 break;
             case DIRTY_BIT_WINDING:
                 mRenderEncoder.setFrontFacingWinding(mWinding);
                 break;
+            case DIRTY_BIT_RENDER_PIPELINE:
+                // Already handled. See checkIfPipelineChanged().
+                break;
+            default:
+                UNREACHABLE();
+                break;
         }
-
-        mDirtyBits.reset(bit);
     }
+
+    mDirtyBits.reset();
 
     ANGLE_TRY(mProgram->setupDraw(context, &mRenderEncoder, changedPipelineDesc, textureChanged));
 
@@ -1372,6 +1390,34 @@ angle::Result ContextMtl::genLineLoopLastSegment(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result ContextMtl::handleDirtyActiveTextures(const gl::Context *context)
+{
+    const gl::State &glState   = mState;
+    const gl::Program *program = glState.getProgram();
+
+    const gl::ActiveTexturePointerArray &textures = glState.getActiveTexturesCache();
+    const gl::ActiveTextureMask &activeTextures   = program->getActiveSamplersMask();
+
+    for (size_t textureUnit : activeTextures)
+    {
+        gl::Texture *texture = textures[textureUnit];
+
+        if (texture == nullptr)
+        {
+            continue;
+        }
+
+        TextureMtl *textureMtl = mtl::GetImpl(texture);
+
+        // Make sure texture's images update will be transferred to GPU.
+        ANGLE_TRY(textureMtl->ensureTextureCreated(context));
+
+        // The binding of this texture will be done by ProgramMtl.
+    }
+
+    return angle::Result::Continue;
+}
+
 angle::Result ContextMtl::handleDirtyDefaultAttribs(const gl::Context *context)
 {
     for (size_t attribIndex : mDirtyDefaultAttribsMask)
@@ -1384,7 +1430,6 @@ angle::Result ContextMtl::handleDirtyDefaultAttribs(const gl::Context *context)
     mRenderEncoder.setVertexData(mDefaultAttributes, mtl::kDefaultAttribsBindingIndex);
 
     mDirtyDefaultAttribsMask.reset();
-    mDirtyBits.reset(DIRTY_BIT_DEFAULT_ATTRIBS);
     return angle::Result::Continue;
 }
 
@@ -1414,7 +1459,6 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context)
     mRenderEncoder.setFragmentData(mDriverUniforms, mtl::kDriverUniformsBindingIndex);
     mRenderEncoder.setVertexData(mDriverUniforms, mtl::kDriverUniformsBindingIndex);
 
-    mDirtyBits.reset(DIRTY_BIT_DRIVER_UNIFORMS);
     return angle::Result::Continue;
 }
 
@@ -1441,7 +1485,6 @@ angle::Result ContextMtl::handleDirtyDepthStencilState(const gl::Context *contex
     // Apply depth stencil state
     mRenderEncoder.setDepthStencilState(getDisplay()->getDepthStencilState(dsDesc));
 
-    mDirtyBits.reset(DIRTY_BIT_DEPTH_STENCIL_DESC);
     return angle::Result::Continue;
 }
 
@@ -1459,7 +1502,6 @@ angle::Result ContextMtl::handleDirtyDepthBias(const gl::Context *context)
                                     0);
     }
 
-    mDirtyBits.reset(DIRTY_BIT_DEPTH_BIAS);
     return angle::Result::Continue;
 }
 

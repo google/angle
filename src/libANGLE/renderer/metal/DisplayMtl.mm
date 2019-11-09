@@ -355,6 +355,7 @@ const gl::Extensions &DisplayMtl::getNativeExtensions() const
 
 const mtl::TextureRef &DisplayMtl::getNullTexture(const gl::Context *context, gl::TextureType type)
 {
+    // TODO(hqle): Use rx::IncompleteTextureSet.
     ContextMtl *contextMtl = mtl::GetImpl(context);
     if (!mNullTextures[type])
     {
@@ -367,13 +368,13 @@ const mtl::TextureRef &DisplayMtl::getNullTexture(const gl::Context *context, gl
         switch (type)
         {
             case gl::TextureType::_2D:
-                (void)(mtl::Texture::Make2DTexture(contextMtl, rgbaFormat, 1, 1, 1, false,
+                (void)(mtl::Texture::Make2DTexture(contextMtl, rgbaFormat, 1, 1, 1, false, false,
                                                    &mNullTextures[type]));
                 mNullTextures[type]->replaceRegion(contextMtl, region, 0, 0, zeroPixel,
                                                    sizeof(zeroPixel));
                 break;
             case gl::TextureType::CubeMap:
-                (void)(mtl::Texture::MakeCubeTexture(contextMtl, rgbaFormat, 1, 1, false,
+                (void)(mtl::Texture::MakeCubeTexture(contextMtl, rgbaFormat, 1, 1, false, false,
                                                      &mNullTextures[type]));
                 for (int f = 0; f < 6; ++f)
                 {
