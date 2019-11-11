@@ -2222,10 +2222,6 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
-ANGLE_INSTANTIATE_TEST(ShaderStorageBufferTest31,
-                       ES31_OPENGL(),
-                       ES31_OPENGLES(),
-                       ES31_D3D11(),
-                       ES31_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES31(ShaderStorageBufferTest31);
 
 }  // namespace

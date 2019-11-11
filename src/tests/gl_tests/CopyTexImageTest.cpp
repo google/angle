@@ -809,9 +809,5 @@ ANGLE_INSTANTIATE_TEST(CopyTexImageTest,
                        ES2_VULKAN(),
                        ES3_VULKAN());
 
-ANGLE_INSTANTIATE_TEST(CopyTexImageTestES3,
-                       ES3_D3D11(),
-                       ES3_OPENGL(),
-                       ES3_OPENGLES(),
-                       ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES3(CopyTexImageTestES3);
 }  // namespace angle

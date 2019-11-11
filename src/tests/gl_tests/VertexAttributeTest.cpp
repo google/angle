@@ -2409,41 +2409,14 @@ void main()
 // tests should be run against.
 // D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels
 // 10_0+, so we should test them separately.
-ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES3_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES3_OPENGLES(),
-                       ES2_VULKAN(),
-                       ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(VertexAttributeTest);
 
-ANGLE_INSTANTIATE_TEST(VertexAttributeOORTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES2_VULKAN(),
-                       ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(VertexAttributeOORTest);
 
-ANGLE_INSTANTIATE_TEST(VertexAttributeTestES3,
-                       ES3_D3D11(),
-                       ES3_OPENGL(),
-                       ES3_OPENGLES(),
-                       ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES3(VertexAttributeTestES3);
 
-ANGLE_INSTANTIATE_TEST(VertexAttributeTestES31,
-                       ES31_D3D11(),
-                       ES31_OPENGL(),
-                       ES31_OPENGLES(),
-                       ES31_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES31(VertexAttributeTestES31);
 
-ANGLE_INSTANTIATE_TEST(VertexAttributeCachingTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES3_D3D11(),
-                       ES3_OPENGL(),
-                       ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(VertexAttributeCachingTest);
 
 }  // anonymous namespace

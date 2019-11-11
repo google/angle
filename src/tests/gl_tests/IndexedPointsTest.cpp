@@ -396,18 +396,6 @@ TEST_P(IndexedPointsTestUInt, VertexWithColorUnsignedIntOffset3)
 // http://anglebug.com/2646
 
 // TODO(geofflang): Figure out why this test fails on Intel OpenGL
-ANGLE_INSTANTIATE_TEST(IndexedPointsTestUByte,
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES2_VULKAN());
-ANGLE_INSTANTIATE_TEST(IndexedPointsTestUShort,
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES2_VULKAN());
-ANGLE_INSTANTIATE_TEST(IndexedPointsTestUInt,
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES2_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES2(IndexedPointsTestUByte);
+ANGLE_INSTANTIATE_TEST_ES2(IndexedPointsTestUShort);
+ANGLE_INSTANTIATE_TEST_ES2(IndexedPointsTestUInt);

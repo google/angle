@@ -2694,6 +2694,11 @@ TEST_P(WebGL2ComputeTest, sharedVariablesShouldBeZero)
     // http://anglebug.com/3869
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() &&
+                       ((getClientMajorVersion() == 3) && (getClientMinorVersion() >= 1)));
+
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 4, local_size_y = 4, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -3619,11 +3624,7 @@ void main(void) {
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2 - 1, getWindowHeight() / 2 - 1, GLColor::green);
 }
 
-ANGLE_INSTANTIATE_TEST(ComputeShaderTest,
-                       ES31_OPENGL(),
-                       ES31_OPENGLES(),
-                       ES31_D3D11(),
-                       ES31_VULKAN());
-ANGLE_INSTANTIATE_TEST(ComputeShaderTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN());
-ANGLE_INSTANTIATE_TEST(WebGL2ComputeTest, ES31_D3D11(), ES31_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES31(ComputeShaderTest);
+ANGLE_INSTANTIATE_TEST_ES3(ComputeShaderTestES3);
+ANGLE_INSTANTIATE_TEST_ES31(WebGL2ComputeTest);
 }  // namespace

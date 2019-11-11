@@ -491,6 +491,8 @@ TEST_P(StateChangeTestES3, CopyTexSubImage3DSync)
 // Ensure that BlitFramebuffer syncs framebuffer changes.
 TEST_P(StateChangeTestES3, BlitFramebufferSync)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsVulkan());
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
     // Init first texture to red
@@ -560,6 +562,8 @@ TEST_P(StateChangeTestES3, ReadBufferAndDrawBuffersSync)
 // Adapted partially from WebGL 2 test "renderbuffers/invalidate-framebuffer"
 TEST_P(StateChangeTestES3, IncompleteRenderbufferAttachmentInvalidateSync)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsVulkan());
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
     GLint samples = 0;
@@ -1022,6 +1026,8 @@ void main()
 // Tests that changing an active program invalidates the sampler metadata properly.
 TEST_P(StateChangeTestES3, SamplerMetadataUpdateOnSetProgram)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
     GLVertexArray vertexArray;
     glBindVertexArray(vertexArray);
 
@@ -1062,6 +1068,8 @@ TEST_P(StateChangeTestES3, SamplerMetadataUpdateOnSetProgram)
 // Tests that redefining Buffer storage syncs with the Transform Feedback object.
 TEST_P(StateChangeTestES3, RedefineTransformFeedbackBuffer)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsVulkan());
     // Create the most simple program possible - simple a passthrough for a float attribute.
     constexpr char kVertexShader[] = R"(#version 300 es
 in float valueIn;
@@ -2292,6 +2300,8 @@ void SimpleStateChangeTest::updateTextureBoundToFramebufferHelper(UpdateFunc upd
 // Tests that TexSubImage updates are flushed before rendering.
 TEST_P(SimpleStateChangeTest, TexSubImageOnTextureBoundToFrambuffer)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
     auto updateFunc = [](GLenum textureBinding, GLTexture *tex, GLint x, GLint y,
                          const GLColor &color) {
         glBindTexture(textureBinding, *tex);
@@ -2332,6 +2342,9 @@ TEST_P(SimpleStateChangeTest, CopyTexSubImageOnTextureBoundToFrambuffer)
 // target.
 TEST_P(SimpleStateChangeTestES3, ReadFramebufferDrawFramebufferDifferentAttachments)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
     GLRenderbuffer drawColorBuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, drawColorBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
@@ -4367,21 +4380,14 @@ TEST_P(SimpleStateChangeTestES3, RasterizerDiscardState)
 }
 }  // anonymous namespace
 
-ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
-ANGLE_INSTANTIATE_TEST(LineLoopStateChangeTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES2_VULKAN());
-ANGLE_INSTANTIATE_TEST(StateChangeRenderTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
-ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());
-ANGLE_INSTANTIATE_TEST(SimpleStateChangeTest, ES2_D3D11(), ES2_VULKAN(), ES2_OPENGL());
-ANGLE_INSTANTIATE_TEST(SimpleStateChangeTestES3, ES3_OPENGL(), ES3_D3D11(), ES3_VULKAN());
-ANGLE_INSTANTIATE_TEST(SimpleStateChangeTestES31, ES31_OPENGL(), ES31_D3D11(), ES31_VULKAN());
-ANGLE_INSTANTIATE_TEST(ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL(), ES3_VULKAN());
-ANGLE_INSTANTIATE_TEST(WebGL2ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL(), ES3_VULKAN());
-ANGLE_INSTANTIATE_TEST(ValidationStateChangeTestES31, ES31_OPENGL(), ES31_D3D11(), ES31_VULKAN());
-ANGLE_INSTANTIATE_TEST(WebGLComputeValidationStateChangeTest,
-                       ES31_D3D11(),
-                       ES31_OPENGL(),
-                       ES31_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
+ANGLE_INSTANTIATE_TEST_ES2(LineLoopStateChangeTest);
+ANGLE_INSTANTIATE_TEST_ES2(StateChangeRenderTest);
+ANGLE_INSTANTIATE_TEST_ES3(StateChangeTestES3);
+ANGLE_INSTANTIATE_TEST_ES2(SimpleStateChangeTest);
+ANGLE_INSTANTIATE_TEST_ES3(SimpleStateChangeTestES3);
+ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestES31);
+ANGLE_INSTANTIATE_TEST_ES3(ValidationStateChangeTest);
+ANGLE_INSTANTIATE_TEST_ES3(WebGL2ValidationStateChangeTest);
+ANGLE_INSTANTIATE_TEST_ES31(ValidationStateChangeTestES31);
+ANGLE_INSTANTIATE_TEST_ES31(WebGLComputeValidationStateChangeTest);

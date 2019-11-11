@@ -230,6 +230,8 @@ void CubeMapTextureTest::runSampleCoordinateTransformTest(const char *shader)
 // within each face.  See section 3.7.5 of GLES2.0 (Cube Map Texture Selection).
 TEST_P(CubeMapTextureTest, SampleCoordinateTransform)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D9());
     // Create a program that samples from 6x4 directions of the cubemap, draw and verify that the
     // colors match the right color from |faceColors|.
     constexpr char kFS[] = R"(precision mediump float;
@@ -274,6 +276,8 @@ TEST_P(CubeMapTextureTest, SampleCoordinateTransformGrad)
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());  // anglebug.com/3814
     ANGLE_SKIP_TEST_IF(IsD3D11());                  // anglebug.com/3856
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_texture_lod"));
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D9());
 
     constexpr char kFS[] = R"(#extension GL_EXT_shader_texture_lod : require
 precision mediump float;
@@ -315,11 +319,4 @@ void main()
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST(CubeMapTextureTest,
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES3_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES3_OPENGLES(),
-                       ES2_VULKAN(),
-                       ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(CubeMapTextureTest);

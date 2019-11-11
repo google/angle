@@ -1195,10 +1195,6 @@ void main() {
     glDeleteProgram(program);
 }
 
-ANGLE_INSTANTIATE_TEST(ProgramInterfaceTestES31,
-                       ES31_OPENGL(),
-                       ES31_OPENGLES(),
-                       ES31_D3D11(),
-                       ES31_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES31(ProgramInterfaceTestES31);
 
 }  // anonymous namespace
