@@ -46,6 +46,7 @@ struct MultisampledRenderToTextureInfo
 
     GLsizei samples;
     gl::ImageIndex index;
+    bool msTextureNeedsResolve;
     std::unique_ptr<TextureStorage11_2DMultisample> msTex;
 };
 

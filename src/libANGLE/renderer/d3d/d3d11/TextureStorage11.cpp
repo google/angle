@@ -69,7 +69,7 @@ bool TextureStorage11::ImageKey::operator<(const ImageKey &rhs) const
 
 MultisampledRenderToTextureInfo::MultisampledRenderToTextureInfo(const GLsizei samples,
                                                                  const gl::ImageIndex index)
-    : samples(samples), index(index)
+    : samples(samples), index(index), msTextureNeedsResolve(false)
 {}
 
 MultisampledRenderToTextureInfo::~MultisampledRenderToTextureInfo() {}
@@ -883,6 +883,7 @@ angle::Result TextureStorage11::resolveTextureHelper(const gl::Context *context,
         ANGLE_TRY(mMSTexInfo->msTex->getResource(context, &resource));
         deviceContext->ResolveSubresource(texture.get(), subresourceIndexSS, resource->get(),
                                           subresourceIndexMS, texture.getFormat());
+        mMSTexInfo->msTextureNeedsResolve = false;
     }
     return angle::Result::Continue;
 }
@@ -917,7 +918,11 @@ angle::Result TextureStorage11::getMultisampledRenderTarget(const gl::Context *c
     {
         RenderTargetD3D *rt;
         ANGLE_TRY(mMSTexInfo->msTex->getRenderTarget(context, index, samples, &rt));
-        *outRT = rt;
+        // By returning the multisampled render target to the caller, the render target
+        // is expected to be changed so we need to resolve to a single sampled texture
+        // next time resolveTexture is called.
+        mMSTexInfo->msTextureNeedsResolve = true;
+        *outRT                            = rt;
         return angle::Result::Continue;
     }
     else
@@ -953,7 +958,11 @@ angle::Result TextureStorage11::getMultisampledRenderTarget(const gl::Context *c
         mMSTexInfo->msTex = std::move(texMS);
         RenderTargetD3D *rt;
         ANGLE_TRY(mMSTexInfo->msTex->getRenderTarget(context, index, samples, &rt));
-        *outRT = rt;
+        // By returning the multisampled render target to the caller, the render target
+        // is expected to be changed so we need to resolve to a single sampled texture
+        // next time resolveTexture is called.
+        mMSTexInfo->msTextureNeedsResolve = true;
+        *outRT                            = rt;
         return angle::Result::Continue;
     }
 }
@@ -1554,7 +1563,7 @@ angle::Result TextureStorage11_2D::ensureDropStencilTexture(const gl::Context *c
 
 angle::Result TextureStorage11_2D::resolveTexture(const gl::Context *context)
 {
-    if (mMSTexInfo && mMSTexInfo->msTex)
+    if (mMSTexInfo && mMSTexInfo->msTex && mMSTexInfo->msTextureNeedsResolve)
     {
         ANGLE_TRY(resolveTextureHelper(context, mTexture));
         onStateChange(angle::SubjectMessage::ContentsChanged);
@@ -2661,7 +2670,7 @@ angle::Result TextureStorage11_Cube::ensureDropStencilTexture(const gl::Context 
 
 angle::Result TextureStorage11_Cube::resolveTexture(const gl::Context *context)
 {
-    if (mMSTexInfo && mMSTexInfo->msTex)
+    if (mMSTexInfo && mMSTexInfo->msTex && mMSTexInfo->msTextureNeedsResolve)
     {
         ANGLE_TRY(resolveTextureHelper(context, mTexture));
         onStateChange(angle::SubjectMessage::ContentsChanged);
