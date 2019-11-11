@@ -65,10 +65,7 @@ class CommandQueue final : angle::NonCopyable
 
     void clearAllGarbage(VkDevice device);
 
-    angle::Result finishToSerialOrTimeout(vk::Context *context,
-                                          Serial serial,
-                                          uint64_t timeout,
-                                          bool *outTimedOut);
+    angle::Result finishToSerial(vk::Context *context, Serial serial, uint64_t timeout);
 
     angle::Result submitFrame(vk::Context *context,
                               const VkSubmitInfo &submitInfo,
@@ -352,8 +349,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     // Wait for completion of batches until (at least) batch with given serial is finished.
     angle::Result finishToSerial(Serial serial);
-    // A variant of finishToSerial that can time out.  Timeout status returned in outTimedOut.
-    angle::Result finishToSerialOrTimeout(Serial serial, uint64_t timeout, bool *outTimedOut);
 
     angle::Result getCompatibleRenderPass(const vk::RenderPassDesc &desc,
                                           vk::RenderPass **renderPassOut);
