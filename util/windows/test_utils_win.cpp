@@ -8,17 +8,16 @@
 
 #include "util/test_utils.h"
 
+#include <aclapi.h>
 #include <stdarg.h>
+#include <versionhelpers.h>
 #include <windows.h>
 #include <array>
 #include <iostream>
 #include <vector>
 
-#include <aclapi.h>
-
-#include "common/angleutils.h"
-
 #include "anglebase/no_destructor.h"
+#include "common/angleutils.h"
 #include "util/windows/third_party/StackWalker/src/StackWalker.h"
 
 namespace angle
@@ -218,6 +217,12 @@ bool ReturnSuccessOnNotFound()
     return (error_code == ERROR_FILE_NOT_FOUND || error_code == ERROR_PATH_NOT_FOUND);
 }
 
+// Job objects seems to have problems on the Chromium CI and Windows 7.
+bool ShouldUseJobObjects()
+{
+    return (::IsWindows10OrGreater());
+}
+
 class WindowsProcess : public Process
 {
   public:
@@ -284,6 +289,28 @@ class WindowsProcess : public Process
             startInfo.dwFlags |= STARTF_USESTDHANDLES;
         }
 
+        if (ShouldUseJobObjects())
+        {
+            // Create job object. Job objects allow us to automatically force child processes to
+            // exit if the parent process is unexpectedly killed. This should prevent ghost
+            // processes from hanging around.
+            mJobHandle = ::CreateJobObjectA(nullptr, nullptr);
+            if (mJobHandle == NULL)
+            {
+                std::cerr << "Error creating job object: " << GetLastError() << "\n";
+                return;
+            }
+
+            JOBOBJECT_EXTENDED_LIMIT_INFORMATION limitInfo = {};
+            limitInfo.BasicLimitInformation.LimitFlags     = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+            if (::SetInformationJobObject(mJobHandle, JobObjectExtendedLimitInformation, &limitInfo,
+                                          sizeof(limitInfo)) == FALSE)
+            {
+                std::cerr << "Error setting job information: " << GetLastError() << "\n";
+                return;
+            }
+        }
+
         // Create the child process.
         if (::CreateProcessA(nullptr, commandLineString.data(), nullptr, nullptr,
                              TRUE,  // Handles are inherited.
@@ -291,6 +318,15 @@ class WindowsProcess : public Process
         {
             std::cerr << "CreateProcessA Error code: " << GetLastError() << "\n";
             return;
+        }
+
+        if (mJobHandle != nullptr)
+        {
+            if (::AssignProcessToJobObject(mJobHandle, mProcessInfo.hProcess) == FALSE)
+            {
+                std::cerr << "AssignProcessToJobObject failed: " << GetLastError() << "\n";
+                return;
+            }
         }
 
         // Close the write end of the pipes, so EOF can be generated when child exits.
@@ -310,6 +346,10 @@ class WindowsProcess : public Process
         if (mProcessInfo.hThread != INVALID_HANDLE_VALUE)
         {
             ::CloseHandle(mProcessInfo.hThread);
+        }
+        if (mJobHandle != nullptr)
+        {
+            ::CloseHandle(mJobHandle);
         }
     }
 
@@ -416,6 +456,7 @@ class WindowsProcess : public Process
     ScopedPipe mStdoutPipe;
     ScopedPipe mStderrPipe;
     PROCESS_INFORMATION mProcessInfo = {};
+    HANDLE mJobHandle                = nullptr;
 };
 }  // anonymous namespace
 
