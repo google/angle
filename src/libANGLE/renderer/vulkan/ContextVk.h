@@ -629,6 +629,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     angle::Result submitFrame(const VkSubmitInfo &submitInfo,
                               vk::PrimaryCommandBuffer &&commandBuffer);
     angle::Result flushCommandGraph(vk::PrimaryCommandBuffer *commandBatch);
+    void memoryBarrierImpl(GLbitfield barriers, VkPipelineStageFlags stageMask);
 
     angle::Result synchronizeCpuGpuTime();
     angle::Result traceGpuEventImpl(vk::PrimaryCommandBuffer *commandBuffer,

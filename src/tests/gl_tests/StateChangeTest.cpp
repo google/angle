@@ -3170,9 +3170,6 @@ TEST_P(SimpleStateChangeTestES31, UpdateImageTextureInUse)
 // Test that we can alternate between image textures between different dispatchs.
 TEST_P(SimpleStateChangeTestES31, DispatchImageTextureAThenTextureBThenTextureA)
 {
-    // Fails in the last EXPECT call.  http://anglebug.com/3879
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
-
     std::array<GLColor, 4> colorsTexA = {
         {GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan}};
 

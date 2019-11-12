@@ -2633,51 +2633,48 @@ angle::Result ContextVk::dispatchComputeIndirect(const gl::Context *context, GLi
 
 angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
-    // Note: most of the barriers specified here don't require us to issue a memory barrier, as
-    // the relevant resources already insert the appropriate barriers.  They do however require
-    // the resource writing nodes to finish so future buffer barriers are placed correctly, as
-    // well as resource dependencies not creating a graph loop.  This is done by inserting a
-    // command graph barrier that does nothing!
-
-    VkAccessFlags srcAccess = 0;
-    VkAccessFlags dstAccess = 0;
-
-    if ((barriers & GL_COMMAND_BARRIER_BIT) != 0)
-    {
-        srcAccess |= VK_ACCESS_SHADER_WRITE_BIT;
-        dstAccess |= VK_ACCESS_INDIRECT_COMMAND_READ_BIT;
-    }
-
-    if ((barriers & GL_SHADER_IMAGE_ACCESS_BARRIER_BIT) != 0)
-    {
-        srcAccess |= (VK_ACCESS_SHADER_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT);
-        dstAccess |= (VK_ACCESS_SHADER_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT);
-    }
-
-    if ((barriers & GL_FRAMEBUFFER_BARRIER_BIT) != 0)
-    {
-        srcAccess |=
-            (VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
-        dstAccess |=
-            (VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT |
-             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
-    }
-
-    mCommandGraph.memoryBarrier(srcAccess, dstAccess, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
+    memoryBarrierImpl(barriers, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
     return angle::Result::Continue;
 }
 
 angle::Result ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
 {
-    // There aren't any barrier bits here that aren't otherwise automatically handled.  We only
-    // need to make sure writer resources (framebuffers and the dispatcher) start a new node.
-    //
-    // Note: memoryBarrierByRegion is expected to affect only the fragment pipeline.  Specifying
-    // that here is currently unnecessary, but is a reminder of this fact in case we do need to
-    // especially handle some future barrier bit.
+    // Note: memoryBarrierByRegion is expected to affect only the fragment pipeline, but is
+    // otherwise similar to memoryBarrier.
 
-    mCommandGraph.memoryBarrier(0, 0, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+    memoryBarrierImpl(barriers, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
     return angle::Result::Continue;
+}
+
+void ContextVk::memoryBarrierImpl(GLbitfield barriers, VkPipelineStageFlags stageMask)
+{
+    // Note: most of the barriers specified here don't require us to issue a memory barrier, as
+    // the relevant resources already insert the appropriate barriers.  They do however require
+    // the resource writing nodes to finish so future buffer barriers are placed correctly, as
+    // well as resource dependencies not creating a graph loop.  This is done by inserting a
+    // command graph barrier that does nothing!
+    //
+    // The barriers that are necessary all have SHADER_WRITE as src access and the dst access is
+    // determined by the given bitfield.  Currently, all image-related barriers that require the
+    // image to change usage are handled through image layout transitions.  Most buffer-related
+    // barriers where the buffer usage changes are also handled automatically through dirty bits.
+    // The only barriers that are necessary are thus barriers in situations where the resource can
+    // be written to and read from without changing the bindings.
+
+    VkAccessFlags srcAccess = 0;
+    VkAccessFlags dstAccess = 0;
+
+    // Both IMAGE_ACCESS and STORAGE barrier flags translate to the same Vulkan dst access mask.
+    constexpr GLbitfield kShaderWriteBarriers =
+        GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT;
+
+    if ((barriers & kShaderWriteBarriers) != 0)
+    {
+        srcAccess |= VK_ACCESS_SHADER_WRITE_BIT;
+        dstAccess |= VK_ACCESS_SHADER_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT;
+    }
+
+    mCommandGraph.memoryBarrier(srcAccess, dstAccess, stageMask);
 }
 
 vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
