@@ -706,7 +706,7 @@ egl::Error DisplayWGL::makeCurrent(egl::Surface *drawSurface,
         ContextWGL *contextWGL = GetImplAs<ContextWGL>(context);
         newContext             = contextWGL->getContext();
     }
-    else
+    else if (!mUseDXGISwapChains)
     {
         newContext = 0;
     }
