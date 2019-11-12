@@ -1589,6 +1589,62 @@ TEST_P(CopyTextureTestDest, AlphaCopyWithRGB)
     EXPECT_PIXEL_COLOR_EQ(0, 0, expectedPixels);
 }
 
+// Bug where TEXTURE_SWIZZLE_RGBA was not reset after the Luminance workaround. (crbug.com/1022080)
+TEST_P(CopyTextureTestES3, LuminanceWorkaroundTextureSwizzleBug)
+{
+
+    {
+        GLColor pixels(50u, 20u, 100u, 150u);
+
+        // Hit BlitGL::copySubImageToLUMAWorkaroundTexture by copying an ALPHA texture
+        GLTexture srcTexture;
+        glBindTexture(GL_TEXTURE_2D, srcTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels);
+
+        GLFramebuffer srcFBO;
+        glBindFramebuffer(GL_FRAMEBUFFER, srcFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcTexture, 0);
+
+        GLTexture dstTexture;
+        glBindTexture(GL_TEXTURE_2D, dstTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, 1, 1, 0, GL_ALPHA, GL_UNSIGNED_BYTE, nullptr);
+
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    {
+        // This time hit BlitGL::blitColorBufferWithShader by copying an SRGB texture
+        GLColor pixels(100u, 200u, 50u, 210u);
+
+        GLTexture srcTexture;
+        glBindTexture(GL_TEXTURE_2D, srcTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA_EXT, 1, 1, 0, GL_SRGB_ALPHA_EXT,
+                     GL_UNSIGNED_BYTE, &pixels);
+
+        GLFramebuffer srcFBO;
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFBO);
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcTexture,
+                               0);
+
+        GLTexture dstTexture;
+        glBindTexture(GL_TEXTURE_2D, dstTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA_EXT, 1, 1, 0, GL_SRGB_ALPHA_EXT,
+                     GL_UNSIGNED_BYTE, nullptr);
+
+        GLFramebuffer dstFBO;
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFBO);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTexture,
+                               0);
+
+        glBlitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+        // The previous workaround should not affect this copy
+        glBindFramebuffer(GL_FRAMEBUFFER, dstFBO);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, pixels);
+    }
+}
+
 // Test to ensure that CopyTexture will fail with a non-zero level and NPOT texture in WebGL
 TEST_P(CopyTextureTestWebGL, NPOT)
 {
