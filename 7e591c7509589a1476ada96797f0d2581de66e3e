@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5cbe4807_97eb852d",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-12T20:44:02Z",
+      "side": 1,
+      "message": "This, and the variant with NULL, or ES3_AND_ES31 are pretty rare. The ES2_AND_ES3 case makes sense because every now and then there\u0027s a behavior change between the two. I suggest removing these two macros and do something like:\n\nANGLE_INSTANTIATE_TEST_ES2_AND_ES3(RobustBufferAccessBehaviorTest);\nANGLE_INSTANTIATE_TEST_ES31(RobustBufferAccessBehaviorTest);\n\ninstead of:\n\nANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31(RobustBufferAccessBehaviorTest);\n\nMy reasoning is that there are very few tests that need to be tested both on ES3 and ES31 for example.",
+      "revId": "7e591c7509589a1476ada96797f0d2581de66e3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
