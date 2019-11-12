@@ -617,8 +617,8 @@
 // Shader support:
 3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_* = SKIP
 
-// SSBO and Image qualifiers:
-3602 VULKAN : dEQP-GLES31.functional.synchronization.in_invocation.ssbo_alias_overwrite = FAIL
+// SSBO synchronization:
+4097 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.synchronization.in_invocation.ssbo_alias_overwrite = FAIL
 
 // Block name matching failure:
 3459 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.mismatch_with_and_without_instance_name = FAIL
