@@ -16,6 +16,24 @@
       "revId": "7e591c7509589a1476ada96797f0d2581de66e3e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b13a99c_745aad60",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-11-12T23:40:50Z",
+      "side": 1,
+      "message": "Yes, this was what I initially attempted to do. However, I found that anytime the same test name was using in more than one macro, it led to compilation errors due to redefinitions of tests down the GTEST instantiation tree.\n\nJamie and I have some comments on this from earlier in the review back in \"Nov 08 8:56 AM\".\n\nI\u0027ve ultimately gone the route of creating a couple of lesser-used macros in order to stick to only ever having one macro instantiate the variations of each test name.",
+      "parentUuid": "5cbe4807_97eb852d",
+      "revId": "7e591c7509589a1476ada96797f0d2581de66e3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
