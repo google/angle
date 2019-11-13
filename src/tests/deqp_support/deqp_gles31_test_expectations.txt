@@ -553,8 +553,9 @@
 1442 : dEQP-GLES31.functional.state_query.program_pipeline.* = FAIL
 1442 : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.atomic_counter_dispatch_100_calls_1k_invocations = FAIL
 1442 : dEQP-GLES31.functional.separate_shader.* = FAIL
-1442 : dEQP-GLES31.functional.debug.object_labels.program_pipeline = FAIL
+2324 : dEQP-GLES31.functional.debug.object_labels.program_pipeline = FAIL
 
+// The following passes with Vulkan (with warning), but fails otherwise.  We'll keep the file simple by expecting it to fail.
 2324 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
 2324 : dEQP-GLES31.functional.debug.negative_coverage.log.compute.program_not_active = FAIL
 2324 : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.program_not_active = FAIL
@@ -581,9 +582,9 @@
 
 // Vulkan Android failures
 
-// Debug:
-3520 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterf = FAIL
-3520 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterfv = FAIL
+// Debug failures that occur on Android:
+3590 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterf = FAIL
+3590 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterfv = FAIL
 
 // Passing on recent drivers:
 3726 VULKAN ANDROID : dEQP-GLES31.functional.ssbo.layout.* = FAIL
