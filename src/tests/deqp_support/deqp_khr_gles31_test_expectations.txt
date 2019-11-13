@@ -91,6 +91,7 @@
 3443 VULKAN : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matR* = SKIP
 3443 VULKAN : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matR* = SKIP
 3443 VULKAN : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matR* = SKIP
+3443 SWIFTSHADER : KHR-GLES31.core.shader_storage_buffer_object.advanced-switchBuffers-vs = SKIP
 
 // Bug with GL_SHADER_STORAGE_BUFFER_START
 3520 VULKAN : KHR-GLES31.core.shader_storage_buffer_object.basic-binding = FAIL
@@ -140,3 +141,10 @@
 
 // Crashes on Android
 3520 VULKAN ANDROID : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength* = SKIP
+
+// OpenGL ES 3.1 conformance failures
+4107 SWIFTSHADER : KHR-GLES31.core.shader_storage_buffer_object.advanced-switchBuffers-vs = FAIL
+
+4106 SWIFTSHADER : KHR-GLES31.core.layout_binding.sampler*_layout_binding_texture_* = FAIL
+
+4108 SWIFTSHADER : KHR-GLES31.core.shader_image_size.*-nonMS-* = SKIP
