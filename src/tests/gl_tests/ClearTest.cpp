@@ -622,6 +622,8 @@ TEST_P(ClearTest, MaskedClearThenDrawWithUniform)
 // clears to the correct values.
 TEST_P(ClearTestES3, ClearMultipleAttachmentsFollowedBySpecificOne)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
     constexpr uint32_t kSize            = 16;
     constexpr uint32_t kAttachmentCount = 5;
     std::vector<unsigned char> pixelData(kSize * kSize * 4, 255);

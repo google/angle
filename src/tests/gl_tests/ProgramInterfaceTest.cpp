@@ -122,6 +122,8 @@ TEST_P(ProgramInterfaceTestES31, GetResourceName)
 // Tests glGetProgramResourceLocation.
 TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
     constexpr char kVS[] =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -181,6 +183,8 @@ TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
 // Tests glGetProgramResource.
 TEST_P(ProgramInterfaceTestES31, GetResource)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
     constexpr char kVS[] =
         "#version 310 es\n"
         "precision highp float;\n"

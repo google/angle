@@ -320,7 +320,7 @@ TEST_P(CopyCompressedTextureTest, Immutable)
         return;
     }
     // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+    ANGLE_SKIP_TEST_IF((IsAndroid() && IsVulkan()) || isSwiftshader());
 
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

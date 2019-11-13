@@ -57,6 +57,8 @@ class VulkanExternalImageTest : public ANGLETest
 // glImportMemoryFdEXT must be able to import a valid opaque fd.
 TEST_P(VulkanExternalImageTest, ShouldImportMemoryOpaqueFd)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
 
     VulkanExternalHelper helper;
@@ -93,6 +95,8 @@ TEST_P(VulkanExternalImageTest, ShouldImportMemoryOpaqueFd)
 // glImportSemaphoreFdEXT must be able to import a valid opaque fd.
 TEST_P(VulkanExternalImageTest, ShouldImportSemaphoreOpaqueFd)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
 
     VulkanExternalHelper helper;
@@ -122,6 +126,8 @@ TEST_P(VulkanExternalImageTest, ShouldImportSemaphoreOpaqueFd)
 // Test creating and clearing a simple RGBA8 texture in a opaque fd.
 TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdRGBA8)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
 
     VulkanExternalHelper helper;

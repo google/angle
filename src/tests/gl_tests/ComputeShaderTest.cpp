@@ -872,6 +872,8 @@ void main()
 // Test that texelFetch works well in compute shader.
 TEST_P(ComputeShaderTest, TexelFetchFunction)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=16, local_size_y=16) in;
 precision highp usampler2D;
@@ -940,6 +942,8 @@ void main()
 // Test that texture function works well in compute shader.
 TEST_P(ComputeShaderTest, TextureFunction)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=16, local_size_y=16) in;
 precision highp usampler2D;
@@ -2813,6 +2817,8 @@ void main()
 // Test storage buffer bound is unchanged, shader writes it, buffer content should be updated.
 TEST_P(ComputeShaderTest, StorageBufferBoundUnchanged)
 {
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=16, local_size_y=16) in;
 precision highp usampler2D;

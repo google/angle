@@ -174,12 +174,16 @@ PlatformParameters ES31_NULL();
 
 PlatformParameters ES1_VULKAN();
 PlatformParameters ES1_VULKAN_NULL();
+PlatformParameters ES1_VULKAN_SWIFTSHADER();
 PlatformParameters ES2_VULKAN();
 PlatformParameters ES2_VULKAN_NULL();
+PlatformParameters ES2_VULKAN_SWIFTSHADER();
 PlatformParameters ES3_VULKAN();
 PlatformParameters ES3_VULKAN_NULL();
+PlatformParameters ES3_VULKAN_SWIFTSHADER();
 PlatformParameters ES31_VULKAN();
 PlatformParameters ES31_VULKAN_NULL();
+PlatformParameters ES31_VULKAN_SWIFTSHADER();
 
 PlatformParameters ES2_WGL();
 PlatformParameters ES3_WGL();

@@ -990,6 +990,8 @@ TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
     // Occlusion query reports fragments outside the render area are still rendered
     ANGLE_SKIP_TEST_IF(IsAndroid() || (IsWindows() && (IsIntel() || IsAMD())));
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
 
     constexpr char kVS1[] = R"(#version 310 es
 in layout(location = 0) highp vec2 a_position;
