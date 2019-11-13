@@ -157,21 +157,25 @@ bool ValidReadPixelsFormatEnum(Context *context, GLenum format)
 }
 
 bool ValidReadPixelsFormatType(Context *context,
-                               GLenum framebufferComponentType,
+                               const gl::InternalFormat *info,
                                GLenum format,
                                GLenum type)
 {
-    switch (framebufferComponentType)
+    switch (info->componentType)
     {
         case GL_UNSIGNED_NORMALIZED:
             // TODO(geofflang): Don't accept BGRA here.  Some chrome internals appear to try to use
             // ReadPixels with BGRA even if the extension is not present
-            return (format == GL_RGBA && type == GL_UNSIGNED_BYTE) ||
+            return (format == GL_RGBA && type == GL_UNSIGNED_BYTE && info->pixelBytes >= 1) ||
+                   (context->getExtensions().textureNorm16 && format == GL_RGBA &&
+                    type == GL_UNSIGNED_SHORT && info->pixelBytes >= 2) ||
                    (context->getExtensions().readFormatBGRA && format == GL_BGRA_EXT &&
                     type == GL_UNSIGNED_BYTE);
 
         case GL_SIGNED_NORMALIZED:
-            return (format == GL_RGBA && type == GL_UNSIGNED_BYTE);
+            return (format == GL_RGBA && type == GL_BYTE && info->pixelBytes >= 1) ||
+                   (context->getExtensions().textureNorm16 && format == GL_RGBA &&
+                    type == GL_UNSIGNED_SHORT && info->pixelBytes >= 2);
 
         case GL_INT:
             return (format == GL_RGBA_INTEGER && type == GL_INT);
@@ -5617,10 +5621,8 @@ bool ValidateReadPixelsBase(Context *context,
     GLenum currentType = GL_NONE;
     ANGLE_VALIDATION_TRY(readFramebuffer->getImplementationColorReadType(context, &currentType));
 
-    GLenum currentComponentType = readBuffer->getFormat().info->componentType;
-
     bool validFormatTypeCombination =
-        ValidReadPixelsFormatType(context, currentComponentType, format, type);
+        ValidReadPixelsFormatType(context, readBuffer->getFormat().info, format, type);
 
     if (!(currentFormat == format && currentType == type) && !validFormatTypeCombination)
     {

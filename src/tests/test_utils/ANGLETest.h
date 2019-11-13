@@ -123,6 +123,15 @@ struct GLColor
     static const GLColor magenta;
 };
 
+struct GLColor16UI
+{
+    constexpr GLColor16UI() : GLColor16UI(0, 0, 0, 0) {}
+    constexpr GLColor16UI(GLushort r, GLushort g, GLushort b, GLushort a) : R(r), G(g), B(b), A(a)
+    {}
+
+    GLushort R, G, B, A;
+};
+
 struct GLColor32F
 {
     constexpr GLColor32F() : GLColor32F(0.0f, 0.0f, 0.0f, 0.0f) {}
@@ -250,6 +259,12 @@ constexpr std::array<GLenum, 6> kCubeFaces = {
 
 #define EXPECT_PIXEL_8UI(x, y, r, g, b, a) \
     EXPECT_PIXEL_EQ_HELPER(x, y, r, g, b, a, GLubyte, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE)
+
+#define EXPECT_PIXEL_16UI(x, y, r, g, b, a) \
+    EXPECT_PIXEL_EQ_HELPER(x, y, r, g, b, a, GLushort, GL_RGBA, GL_UNSIGNED_SHORT)
+
+#define EXPECT_PIXEL_16UI_COLOR(x, y, color) \
+    EXPECT_PIXEL_16UI(x, y, color.R, color.G, color.B, color.A)
 
 #define EXPECT_PIXEL_RGB_EQUAL(x, y, r, g, b) \
     EXPECT_PIXEL_RGB_EQ_HELPER(x, y, r, g, b, GLubyte, GL_RGBA, GL_UNSIGNED_BYTE)
