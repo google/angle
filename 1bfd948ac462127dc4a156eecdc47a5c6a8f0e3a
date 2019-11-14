@@ -168,6 +168,30 @@
     },
     {
       "key": {
+        "uuid": "7200a4b2_cb3a3a6b",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 13
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-11-14T23:36:45Z",
+      "side": 1,
+      "message": "We have crbug.com/1016797 to chase this with.   Looking at #8 in there, \"deps\" and \"data_deps\" behave the same, where pushing all of the files is slow:\nhttps://bugs.chromium.org/p/chromium/issues/detail?id\u003d1016797#c8",
+      "parentUuid": "aac8eb5f_12801ae3",
+      "range": {
+        "startLine": 909,
+        "startChar": 0,
+        "endLine": 912,
+        "endChar": 9
+      },
+      "revId": "1bfd948ac462127dc4a156eecdc47a5c6a8f0e3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2f3a437_e9488e17",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 13
