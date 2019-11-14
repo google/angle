@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "aac8eb5f_12801ae3",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 13
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-14T23:28:13Z",
+      "side": 1,
+      "message": "Originally we were using this approach because it allowed us to use \"deps\" instead of \"data_deps\" and we thought that would be faster. If that\u0027s not the case (deps is just as slow as data_deps with copy rules) we should probably file a Chromium bug. It\u0027s really a bug with the test tools and we can\u0027t work around it.\n\nIs it still slow with just \"deps\"?",
+      "parentUuid": "213facad_f3fc14ec",
+      "range": {
+        "startLine": 909,
+        "startChar": 0,
+        "endLine": 912,
+        "endChar": 9
+      },
+      "revId": "1bfd948ac462127dc4a156eecdc47a5c6a8f0e3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2f3a437_e9488e17",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 13
