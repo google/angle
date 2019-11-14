@@ -1245,8 +1245,8 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
 
-    // getSyncValues requires direct composition.
-    outExtensions->getSyncValues = outExtensions->directComposition;
+    // syncControlCHROMIUM requires direct composition.
+    outExtensions->syncControlCHROMIUM = outExtensions->directComposition;
 
     // D3D11 can be used without a swap chain
     outExtensions->surfacelessContext = true;

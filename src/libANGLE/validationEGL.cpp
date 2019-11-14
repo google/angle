@@ -3025,44 +3025,28 @@ Error ValidateStreamPostD3DTextureANGLE(const Display *display,
 }
 
 Error ValidateGetSyncValuesCHROMIUM(const Display *display,
-                                    const Surface *surface,
+                                    const Surface *eglSurface,
                                     const EGLuint64KHR *ust,
                                     const EGLuint64KHR *msc,
                                     const EGLuint64KHR *sbc)
 {
     ANGLE_TRY(ValidateDisplay(display));
+    ANGLE_TRY(ValidateSurface(display, eglSurface));
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
-    if (!displayExtensions.getSyncValues)
+    if (!displayExtensions.syncControlCHROMIUM)
     {
-        return EglBadAccess() << "getSyncValues extension not active";
-    }
-
-    if (display->isDeviceLost())
-    {
-        return EglContextLost() << "Context is lost.";
-    }
-
-    if (surface == EGL_NO_SURFACE)
-    {
-        return EglBadSurface() << "getSyncValues surface cannot be EGL_NO_SURFACE";
-    }
-
-    if (!surface->directComposition())
-    {
-        return EglBadSurface() << "getSyncValues surface requires Direct Composition to be enabled";
+        return EglBadAccess() << "syncControlCHROMIUM extension not active";
     }
 
     if (ust == nullptr)
     {
         return EglBadParameter() << "ust is null";
     }
-
     if (msc == nullptr)
     {
         return EglBadParameter() << "msc is null";
     }
-
     if (sbc == nullptr)
     {
         return EglBadParameter() << "sbc is null";
