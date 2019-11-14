@@ -80,18 +80,15 @@
 3520 VULKAN : KHR-GLES31.core.internalformat.texture2d.* = FAIL
 
 // Crashes in libnvidia-glvkspirv.so, fixed in newer drivers
-3561 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matC* = SKIP
-3561 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matC* = SKIP
-3561 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matC* = SKIP
-3561 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-struct* = SKIP
-3561 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-struct* = SKIP
-3561 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-struct* = SKIP
-
-// Bug in RewriteRowMajorMatrices with row major SSBO matrix arrays with no size
-3443 VULKAN : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matR* = SKIP
-3443 VULKAN : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matR* = SKIP
-3443 VULKAN : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matR* = SKIP
-3443 SWIFTSHADER : KHR-GLES31.core.shader_storage_buffer_object.advanced-switchBuffers-vs = SKIP
+3561 VULKAN NVIDIA LINUX : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matC* = SKIP
+3561 VULKAN NVIDIA LINUX : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matC* = SKIP
+3561 VULKAN NVIDIA LINUX : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matC* = SKIP
+3561 VULKAN NVIDIA LINUX : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-struct* = SKIP
+3561 VULKAN NVIDIA LINUX : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-struct* = SKIP
+3561 VULKAN NVIDIA LINUX : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-struct* = SKIP
+3561 VULKAN NVIDIA LINUX : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matR* = SKIP
+3561 VULKAN NVIDIA LINUX : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matR* = SKIP
+3561 VULKAN NVIDIA LINUX : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matR* = SKIP
 
 // Bug with GL_SHADER_STORAGE_BUFFER_START
 3520 VULKAN : KHR-GLES31.core.shader_storage_buffer_object.basic-binding = FAIL
