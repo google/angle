@@ -552,8 +552,9 @@
 1442 : dEQP-GLES31.functional.state_query.program.program_separable_get_programiv = FAIL
 1442 : dEQP-GLES31.functional.state_query.program_pipeline.* = FAIL
 1442 : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.atomic_counter_dispatch_100_calls_1k_invocations = FAIL
-1442 : dEQP-GLES31.functional.separate_shader.* = FAIL
 2324 : dEQP-GLES31.functional.debug.object_labels.program_pipeline = FAIL
+
+3570 : dEQP-GLES31.functional.separate_shader.* = FAIL
 
 // The following passes with Vulkan (with warning), but fails otherwise.  We'll keep the file simple by expecting it to fail.
 2324 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
@@ -612,8 +613,8 @@
 3520 VULKAN : dEQP-GLES31.functional.state_query.integer.max_uniform_locations* = FAIL
 
 // Front-end query bugs:
-3520 VULKAN : dEQP-GLES31.functional.program_interface_query.program_input.resource_list.compute.empty = FAIL
-3520 VULKAN : dEQP-GLES31.functional.program_interface_query.shader_storage_block.buffer_data_size.* = FAIL
+3596 VULKAN : dEQP-GLES31.functional.program_interface_query.program_input.resource_list.compute.empty = FAIL
+3596 VULKAN : dEQP-GLES31.functional.program_interface_query.shader_storage_block.buffer_data_size.* = FAIL
 
 // Shader support:
 3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_* = SKIP
