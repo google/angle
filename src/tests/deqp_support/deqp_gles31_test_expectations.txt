@@ -547,7 +547,7 @@
 1442 D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
 
 // OpenGL/D3D11/Vulkan Failing Tests
-1442 : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL
+4110 : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL
 1442 : dEQP-GLES31.functional.state_query.integer.program_pipeline_binding_* = FAIL
 1442 : dEQP-GLES31.functional.state_query.program.program_separable_get_programiv = FAIL
 1442 : dEQP-GLES31.functional.state_query.program_pipeline.* = FAIL
