@@ -433,7 +433,9 @@ void Shader::resolveCompile()
     {
         case ShaderType::Compute:
         {
-            mState.mLocalSize = sh::GetComputeShaderLocalGroupSize(compilerHandle);
+            mState.mAllAttributes    = GetShaderVariables(sh::GetAttributes(compilerHandle));
+            mState.mActiveAttributes = GetActiveShaderVariables(&mState.mAllAttributes);
+            mState.mLocalSize        = sh::GetComputeShaderLocalGroupSize(compilerHandle);
             if (mState.mLocalSize.isDeclared())
             {
                 angle::CheckedNumeric<uint32_t> checked_local_size_product(mState.mLocalSize[0]);

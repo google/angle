@@ -168,6 +168,13 @@ class CollectVariablesTraverser : public TIntermTraverser
     // Shader uniforms
     bool mDepthRangeAdded;
 
+    // Compute Shader builtins
+    bool mNumWorkGroupsAdded;
+    bool mWorkGroupIDAdded;
+    bool mLocalInvocationIDAdded;
+    bool mGlobalInvocationIDAdded;
+    bool mLocalInvocationIndexAdded;
+
     // Vertex Shader builtins
     bool mInstanceIDAdded;
     bool mVertexIDAdded;
@@ -230,6 +237,11 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mShaderStorageBlocks(shaderStorageBlocks),
       mInBlocks(inBlocks),
       mDepthRangeAdded(false),
+      mNumWorkGroupsAdded(false),
+      mWorkGroupIDAdded(false),
+      mLocalInvocationIDAdded(false),
+      mGlobalInvocationIDAdded(false),
+      mLocalInvocationIndexAdded(false),
       mInstanceIDAdded(false),
       mVertexIDAdded(false),
       mPointSizeAdded(false),
@@ -477,6 +489,21 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 return;
             case EvqPointCoord:
                 recordBuiltInVaryingUsed(symbol->variable(), &mPointCoordAdded, mInputVaryings);
+                return;
+            case EvqNumWorkGroups:
+                recordBuiltInAttributeUsed(symbol->variable(), &mNumWorkGroupsAdded);
+                return;
+            case EvqWorkGroupID:
+                recordBuiltInAttributeUsed(symbol->variable(), &mWorkGroupIDAdded);
+                return;
+            case EvqLocalInvocationID:
+                recordBuiltInAttributeUsed(symbol->variable(), &mLocalInvocationIDAdded);
+                return;
+            case EvqGlobalInvocationID:
+                recordBuiltInAttributeUsed(symbol->variable(), &mGlobalInvocationIDAdded);
+                return;
+            case EvqLocalInvocationIndex:
+                recordBuiltInAttributeUsed(symbol->variable(), &mLocalInvocationIndexAdded);
                 return;
             case EvqInstanceID:
                 // Whenever the SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW option is set,

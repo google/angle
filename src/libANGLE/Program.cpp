@@ -1768,21 +1768,39 @@ void ProgramState::updateProgramInterfaceInputs()
     ASSERT(shader);
 
     // Copy over each input varying, since the Shader could go away
-    for (const sh::ShaderVariable &varying : shader->getInputVaryings())
+    if (shader->getType() == ShaderType::Compute)
     {
-        if (varying.isStruct())
+        for (const sh::ShaderVariable &attribute : shader->getAllAttributes())
         {
-            for (const sh::ShaderVariable &field : varying.fields)
-            {
-                sh::ShaderVariable fieldVarying = sh::ShaderVariable(field);
-                fieldVarying.location           = varying.location;
-                fieldVarying.name               = varying.name + "." + field.name;
-                mProgramInputs.emplace_back(fieldVarying);
-            }
+            // Compute Shaders have the following built-in input variables.
+            //
+            // in uvec3 gl_NumWorkGroups;
+            // in uvec3 gl_WorkGroupID;
+            // in uvec3 gl_LocalInvocationID;
+            // in uvec3 gl_GlobalInvocationID;
+            // in uint  gl_LocalInvocationIndex;
+            // They are all vecs or uints, so no special handling is required.
+            mProgramInputs.emplace_back(attribute);
         }
-        else
+    }
+    else if (shader->getType() == ShaderType::Fragment)
+    {
+        for (const sh::ShaderVariable &varying : shader->getInputVaryings())
         {
-            mProgramInputs.emplace_back(varying);
+            if (varying.isStruct())
+            {
+                for (const sh::ShaderVariable &field : varying.fields)
+                {
+                    sh::ShaderVariable fieldVarying = sh::ShaderVariable(field);
+                    fieldVarying.location           = varying.location;
+                    fieldVarying.name               = varying.name + "." + field.name;
+                    mProgramInputs.emplace_back(fieldVarying);
+                }
+            }
+            else
+            {
+                mProgramInputs.emplace_back(varying);
+            }
         }
     }
 }
