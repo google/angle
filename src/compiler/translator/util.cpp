@@ -702,6 +702,7 @@ bool IsBuiltinFragmentInputVariable(TQualifier qualifier)
         case EvqFragCoord:
         case EvqPointCoord:
         case EvqFrontFacing:
+        case EvqHelperInvocation:
             return true;
         default:
             break;

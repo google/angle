@@ -15,6 +15,7 @@
 //  D3D9 D3D11 OPENGL GLES VULKAN
 //  NEXUS5X PIXEL2ORXL
 //  QUADROP400
+//  SWIFTSHADER
 //
 //
 // TEST_NAME can be a specific test name, or have a '*' in the end, which
@@ -547,7 +548,6 @@
 1442 D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
 
 // OpenGL/D3D11/Vulkan Failing Tests
-4110 : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL
 1442 : dEQP-GLES31.functional.state_query.integer.program_pipeline_binding_* = FAIL
 1442 : dEQP-GLES31.functional.state_query.program.program_separable_get_programiv = FAIL
 1442 : dEQP-GLES31.functional.state_query.program_pipeline.* = FAIL
@@ -582,6 +582,23 @@
 1729 D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = SKIP
 
 // Vulkan Android failures
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.lines_8_samples_fwidth = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.points_8_samples_dfdy = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.triangles_max_samples_dfdx = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.wide_lines_max_samples_dfdy = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.lines_8_samples = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.triangles_max_samples = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.value.lines_8_samples = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.value.points_8_samples = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.value.triangles_max_samples = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.derivate.triangles_8_samples_dfdy = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.derivate.lines_8_samples_dfdx = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.derivate.lines_8_samples_fwidth = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.derivate.wide_lines_8_samples_dfdy = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.derivate.points_8_samples_dfdx = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.derivate.points_8_samples_fwidth = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.derivate.wide_points_8_samples_dfdy = FAIL
+4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.derivate.triangles_max_samples_dfdx = FAIL
 
 // Debug failures that occur on Android:
 3590 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterf = FAIL

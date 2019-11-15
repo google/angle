@@ -545,6 +545,9 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         case EvqFrontFacing:
             message = "can't modify gl_FrontFacing";
             break;
+        case EvqHelperInvocation:
+            message = "can't modify gl_HelperInvocation";
+            break;
         case EvqPointCoord:
             message = "can't modify gl_PointCoord";
             break;

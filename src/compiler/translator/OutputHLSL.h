@@ -194,6 +194,7 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesFragCoord;
     bool mUsesPointCoord;
     bool mUsesFrontFacing;
+    bool mUsesHelperInvocation;
     bool mUsesPointSize;
     bool mUsesInstanceID;
     bool mHasMultiviewExtensionEnabled;
