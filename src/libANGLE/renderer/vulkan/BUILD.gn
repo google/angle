@@ -19,7 +19,7 @@ declare_args() {
   # Currently SwiftShader's Vulkan front-end doesn't build on Android.
   # SwiftShader is not needed on Fuchsia because Vulkan is supported on all
   # devices that run Fuchsia.
-  angle_swiftshader = !is_android && !is_fuchsia
+  angle_swiftshader = !is_android && !is_fuchsia && !is_ggp
 }
 
 _vulkan_backend_sources = [
@@ -119,7 +119,7 @@ if (is_win) {
   ]
 }
 
-if (is_linux) {
+if (angle_use_x11) {
   _vulkan_backend_sources += [
     "xcb/DisplayVkXcb.cpp",
     "xcb/DisplayVkXcb.h",
