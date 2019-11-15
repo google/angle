@@ -68,8 +68,9 @@ bool TextureStorage11::ImageKey::operator<(const ImageKey &rhs) const
 }
 
 MultisampledRenderToTextureInfo::MultisampledRenderToTextureInfo(const GLsizei samples,
-                                                                 const gl::ImageIndex index)
-    : samples(samples), index(index), msTextureNeedsResolve(false)
+                                                                 const gl::ImageIndex &indexSS,
+                                                                 const gl::ImageIndex &indexMS)
+    : samples(samples), indexSS(indexSS), indexMS(indexMS), msTextureNeedsResolve(false)
 {}
 
 MultisampledRenderToTextureInfo::~MultisampledRenderToTextureInfo() {}
@@ -870,27 +871,22 @@ angle::Result TextureStorage11::initDropStencilTexture(const gl::Context *contex
 angle::Result TextureStorage11::resolveTextureHelper(const gl::Context *context,
                                                      const TextureHelper11 &texture)
 {
-    if (mMSTexInfo)
-    {
-        gl::ImageIndex indexSS = gl::ImageIndex::Make2D(mMSTexInfo->index.getLevelIndex());
-        UINT subresourceIndexSS;
-        ANGLE_TRY(getSubresourceIndex(context, indexSS, &subresourceIndexSS));
-        // For MS texture level must = 0, layer is the entire level -> 0
-        // and miplevels must = 1. D3D11CalcSubresource(level, layer, miplevels);
-        UINT subresourceIndexMS            = D3D11CalcSubresource(0, 0, 1);
-        ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-        const TextureHelper11 *resource    = nullptr;
-        ANGLE_TRY(mMSTexInfo->msTex->getResource(context, &resource));
-        deviceContext->ResolveSubresource(texture.get(), subresourceIndexSS, resource->get(),
-                                          subresourceIndexMS, texture.getFormat());
-        mMSTexInfo->msTextureNeedsResolve = false;
-    }
+    UINT subresourceIndexSS;
+    ANGLE_TRY(getSubresourceIndex(context, mMSTexInfo->indexSS, &subresourceIndexSS));
+    UINT subresourceIndexMS;
+    ANGLE_TRY(getSubresourceIndex(context, mMSTexInfo->indexMS, &subresourceIndexMS));
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+    const TextureHelper11 *resource    = nullptr;
+    ANGLE_TRY(mMSTexInfo->msTex->getResource(context, &resource));
+    deviceContext->ResolveSubresource(texture.get(), subresourceIndexSS, resource->get(),
+                                      subresourceIndexMS, texture.getFormat());
+    mMSTexInfo->msTextureNeedsResolve = false;
     return angle::Result::Continue;
 }
 
 angle::Result TextureStorage11::releaseMultisampledTexStorageForLevel(size_t level)
 {
-    if (mMSTexInfo && mMSTexInfo->index.getLevelIndex() == static_cast<int>(level))
+    if (mMSTexInfo && mMSTexInfo->indexSS.getLevelIndex() == static_cast<int>(level))
     {
         mMSTexInfo->msTex.reset();
         onStateChange(angle::SubjectMessage::ContentsChanged);
@@ -913,24 +909,12 @@ angle::Result TextureStorage11::getMultisampledRenderTarget(const gl::Context *c
                                                             RenderTargetD3D **outRT)
 {
     const int level = index.getLevelIndex();
-    if (mMSTexInfo && level == mMSTexInfo->index.getLevelIndex() &&
-        samples == mMSTexInfo->samples && mMSTexInfo->msTex)
-    {
-        RenderTargetD3D *rt;
-        ANGLE_TRY(mMSTexInfo->msTex->getRenderTarget(context, index, samples, &rt));
-        // By returning the multisampled render target to the caller, the render target
-        // is expected to be changed so we need to resolve to a single sampled texture
-        // next time resolveTexture is called.
-        mMSTexInfo->msTextureNeedsResolve = true;
-        *outRT                            = rt;
-        return angle::Result::Continue;
-    }
-    else
+    if (!mMSTexInfo || level != mMSTexInfo->indexSS.getLevelIndex() ||
+        samples != mMSTexInfo->samples || !mMSTexInfo->msTex)
     {
         // if mMSTexInfo already exists, then we want to resolve and release it
         // since the mMSTexInfo must be for a different sample count or level
         ANGLE_TRY(resolveTexture(context));
-        ASSERT(!mMSTexInfo);
 
         // Now we can create a new object for the correct sample and level
         GLsizei width         = getLevelWidth(level);
@@ -942,8 +926,8 @@ angle::Result TextureStorage11::getMultisampledRenderTarget(const gl::Context *c
 
         // make sure multisample object has the blitted information.
         gl::Rectangle area(0, 0, width, height);
-        gl::ImageIndex indexSS            = gl::ImageIndex::Make2D(level);
         RenderTargetD3D *readRenderTarget = nullptr;
+        // use incoming index here since the index will correspond to the single sampled texture
         ANGLE_TRY(getRenderTarget(context, index, 0, &readRenderTarget));
         gl::ImageIndex indexMS            = gl::ImageIndex::Make2DMultisample();
         RenderTargetD3D *drawRenderTarget = nullptr;
@@ -954,17 +938,17 @@ angle::Result TextureStorage11::getMultisampledRenderTarget(const gl::Context *c
         ANGLE_TRY(mRenderer->blitRenderbufferRect(context, area, area, readRenderTarget,
                                                   drawRenderTarget, GL_NEAREST, nullptr, true,
                                                   false, false));
-        mMSTexInfo        = std::make_unique<MultisampledRenderToTextureInfo>(samples, indexSS);
+        mMSTexInfo = std::make_unique<MultisampledRenderToTextureInfo>(samples, index, indexMS);
         mMSTexInfo->msTex = std::move(texMS);
-        RenderTargetD3D *rt;
-        ANGLE_TRY(mMSTexInfo->msTex->getRenderTarget(context, index, samples, &rt));
-        // By returning the multisampled render target to the caller, the render target
-        // is expected to be changed so we need to resolve to a single sampled texture
-        // next time resolveTexture is called.
-        mMSTexInfo->msTextureNeedsResolve = true;
-        *outRT                            = rt;
-        return angle::Result::Continue;
     }
+    RenderTargetD3D *rt;
+    ANGLE_TRY(mMSTexInfo->msTex->getRenderTarget(context, mMSTexInfo->indexMS, samples, &rt));
+    // By returning the multisampled render target to the caller, the render target
+    // is expected to be changed so we need to resolve to a single sampled texture
+    // next time resolveTexture is called.
+    mMSTexInfo->msTextureNeedsResolve = true;
+    *outRT                            = rt;
+    return angle::Result::Continue;
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swapchain)
