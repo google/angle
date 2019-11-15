@@ -26,6 +26,8 @@
 .gclient_entries
 /src/tests/third_party/gles_conformance_tests
 /testing
+/third_party/android_ndk
+/third_party/catapult
 /third_party/cherry
 /third_party/fuchsia-sdk
 /third_party/gles1_conform
