@@ -4037,7 +4037,8 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 TEST_P(Texture2DNorm16TestES3, TextureNorm16Test)
 {
     // TODO(crbug.com/angleproject/4089) Fails on Nexus5X Adreno
-    ANGLE_SKIP_TEST_IF(IsNexus5X());
+    // TODO(crbug.com/1024387) Fails on Nexus6P
+    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
     // TODO(crbug.com/angleproject/4089) Fails on Win Intel OpenGL driver
     ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL());
 
