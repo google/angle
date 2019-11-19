@@ -991,6 +991,11 @@ void ANGLETestBase::draw3DTexturedQuad(GLfloat positionAttribZ,
     }
 }
 
+bool ANGLETestBase::platformSupportsMultithreading() const
+{
+    return (IsOpenGLES() && IsAndroid()) || IsVulkan();
+}
+
 void ANGLETestBase::checkD3D11SDKLayersMessages()
 {
 #if defined(ANGLE_PLATFORM_WINDOWS)

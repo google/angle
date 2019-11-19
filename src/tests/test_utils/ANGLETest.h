@@ -476,6 +476,8 @@ class ANGLETestBase
                mCurrentParams->getDeviceType() == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
     }
 
+    bool platformSupportsMultithreading() const;
+
   private:
     void checkD3D11SDKLayersMessages();
 

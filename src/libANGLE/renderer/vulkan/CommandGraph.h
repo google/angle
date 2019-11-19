@@ -339,7 +339,7 @@ class SharedResourceUse final : angle::NonCopyable
         return mUse->serial;
     }
 
-    // The base counter value for an live resource is "1". Any value greater than one indicates
+    // The base counter value for a live resource is "1". Any value greater than one indicates
     // the resource is in use by a vk::CommandGraph.
     ANGLE_INLINE bool isCurrentlyInGraph() const
     {
