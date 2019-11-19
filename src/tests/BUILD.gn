@@ -773,12 +773,18 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ":angle_deqp_glshared",
       "${angle_root}:angle_common",
       "${angle_root}:angle_util",
+    ]
+
+    data_deps = [
       "${angle_root}:libEGL",
       "${angle_root}:libGLESv2",
     ]
 
     configs += [ "${angle_root}:library_name_config" ]
-    public_configs += [ ":angle_deqp_libtester_config" ]
+    public_configs += [
+      ":angle_deqp_libtester_config",
+      "${angle_root}:libANGLE_config",
+    ]
     sources = deqp_libtester_sources
     if (is_android) {
       sources += deqp_libtester_sources_android
