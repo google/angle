@@ -6153,6 +6153,7 @@ void main()
                 static_cast<GLfloat>(getWindowHeight()));
 
     // Draw to backbuffer.
+    glClear(GL_COLOR_BUFFER_BIT);
     glDrawArrays(GL_POINTS, 0, 1);
     ASSERT_GL_NO_ERROR();
 
@@ -6172,6 +6173,7 @@ void main()
     ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     // Draw to user FBO.
+    glClear(GL_COLOR_BUFFER_BIT);
     glDrawArrays(GL_POINTS, 0, 1);
     ASSERT_GL_NO_ERROR();
 

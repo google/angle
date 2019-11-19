@@ -270,7 +270,7 @@ egl::ConfigSet DisplayMtl::generateConfigs()
     config.bindToTextureRGB  = EGL_FALSE;
     config.bindToTextureRGBA = EGL_FALSE;
 
-    config.surfaceType = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
+    config.surfaceType = EGL_WINDOW_BIT;
 
     config.minSwapInterval = 1;
     config.maxSwapInterval = 1;

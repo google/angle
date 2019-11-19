@@ -314,8 +314,16 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
             return false;
         }
 
-        // Currently we only support the OpenGL back-end on OSX.
-        return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
+        if (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE && IsIntel(vendorID))
+        {
+            // TODO(hqle): Intel metal tests seem to have problems. Disable for now.
+            // http://anglebug.com/4133
+            return false;
+        }
+
+        // Currently we only support the OpenGL & Metal back-end on OSX.
+        return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE ||
+                param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE);
     }
 
     if (IsFuchsia())
@@ -453,6 +461,13 @@ bool IsPlatformAvailable(const PlatformParameters &param)
 
         case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
 #if !defined(ANGLE_ENABLE_VULKAN)
+            return false;
+#else
+            break;
+#endif
+
+        case EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE:
+#if !defined(ANGLE_ENABLE_METAL)
             return false;
 #else
             break;

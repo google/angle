@@ -428,6 +428,9 @@ TEST_P(CopyTexImageTest, CopyTexSubImageFromCubeMap)
 // Calling CopyTexSubImage to a non-cube-complete texture.
 TEST_P(CopyTexImageTest, CopyTexSubImageToNonCubeCompleteDestination)
 {
+    // TODO(hqle): Find what wrong with NVIDIA GPU. http://anglebug.com/4137
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsMetal());
+
     constexpr GLsizei kCubeMapFaceCount = 6;
 
     // The framebuffer will be a 1x6 image with 6 different colors.  Each glCopyTexSubImage2D will
@@ -804,6 +807,7 @@ ANGLE_INSTANTIATE_TEST(CopyTexImageTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_D3D11_PRESENT_PATH_FAST(),
+                       ES2_METAL(),
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES2_VULKAN(),
