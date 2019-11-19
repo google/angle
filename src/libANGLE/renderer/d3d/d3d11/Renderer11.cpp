@@ -3840,7 +3840,10 @@ void Renderer11::generateCaps(gl::Caps *outCaps,
 
 void Renderer11::initializeFeatures(angle::FeaturesD3D *features) const
 {
-    d3d11::InitializeFeatures(mRenderer11DeviceCaps, mAdapterDescription, features);
+    if (!mDisplay->getState().featuresAllDisabled)
+    {
+        d3d11::InitializeFeatures(mRenderer11DeviceCaps, mAdapterDescription, features);
+    }
     OverrideFeaturesWithDisplayState(features, mDisplay->getState());
 }
 

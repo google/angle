@@ -68,7 +68,11 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
         mCapsInitialized = false;
 
         GlslangInitialize();
-        initializeFeatures();
+
+        if (!mState.featuresAllDisabled)
+        {
+            initializeFeatures();
+        }
 
         ANGLE_TRY(mFormatTable.initialize(this));
 

@@ -1006,7 +1006,10 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
                            &mProvokingVertexFeatures);
     }
 
-    initFeatures(deviceExtensionNames);
+    if (!displayVk->getState().featuresAllDisabled)
+    {
+        initFeatures(deviceExtensionNames);
+    }
     OverrideFeaturesWithDisplayState(&mFeatures, displayVk->getState());
     mFeaturesInitialized = true;
 
