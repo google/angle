@@ -96,7 +96,7 @@ bool HasSystemVendorID(VendorID vendorID)
 {
     SystemInfo *systemInfo = GetTestSystemInfo();
     // Unfortunately sometimes GPU info collection can fail.
-    if (systemInfo->activeGPUIndex < 0 || systemInfo->gpus.empty())
+    if (systemInfo->gpus.empty())
     {
         return false;
     }

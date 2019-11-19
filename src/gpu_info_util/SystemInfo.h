@@ -59,8 +59,9 @@ struct SystemInfo
     std::vector<GPUDeviceInfo> gpus;
 
     // Index of the GPU expected to be used for 3D graphics. Based on a best-guess heuristic on
-    // some platforms. On windows, this is accurate.
-    int activeGPUIndex = -1;
+    // some platforms. On Windows, this is accurate. Note `gpus` must be checked for empty before
+    // indexing.
+    int activeGPUIndex = 0;
 
     bool isOptimus       = false;
     bool isAMDSwitchable = false;
