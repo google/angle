@@ -264,6 +264,7 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
         mVertexArrayDirty = false;
 
         const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
+        const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
 
         mtl::VertexDesc &desc = *vertexDescOut;
 
@@ -278,7 +279,8 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
 
         for (uint32_t v = 0; v < mtl::kMaxVertexAttribs; ++v)
         {
-            const auto &attrib = attribs[v];
+            const auto &attrib               = attribs[v];
+            const gl::VertexBinding &binding = bindings[attrib.bindingIndex];
 
             desc.attributes[v].offset = mCurrentArrayBufferOffsets[v];
             desc.attributes[v].format = mCurrentArrayBufferFormats[v];
@@ -296,9 +298,17 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
                 desc.attributes[v].bufferIndex = bufferIdx;
 
                 ASSERT(bufferIdx < mtl::kMaxVertexAttribs);
-                desc.layouts[bufferIdx].stepFunction = MTLVertexStepFunctionPerVertex;
-                desc.layouts[bufferIdx].stepRate     = 1;
-                desc.layouts[bufferIdx].stride       = mCurrentArrayBufferStrides[v];
+                if (binding.getDivisor() == 0)
+                {
+                    desc.layouts[bufferIdx].stepFunction = MTLVertexStepFunctionPerVertex;
+                    desc.layouts[bufferIdx].stepRate     = 1;
+                }
+                else
+                {
+                    desc.layouts[bufferIdx].stepFunction = MTLVertexStepFunctionPerInstance;
+                    desc.layouts[bufferIdx].stepRate     = binding.getDivisor();
+                }
+                desc.layouts[bufferIdx].stride = mCurrentArrayBufferStrides[v];
 
                 cmdEncoder->setVertexBuffer(mCurrentArrayBuffers[v]->getCurrentBuffer(glContext), 0,
                                             bufferIdx);
@@ -351,32 +361,35 @@ angle::Result VertexArrayMtl::updateClientAttribs(const gl::Context *context,
         const uint8_t *src = static_cast<const uint8_t *>(attrib.pointer);
         ASSERT(src);
 
-        if (binding.getDivisor() > 0)
+        GLint startElement;
+        size_t elementCount;
+        if (binding.getDivisor() == 0)
         {
-            ANGLE_UNUSED_VARIABLE(instanceCount);
-            // NOTE(hqle): support ES 3.0.
-            // instanced attrib
-            UNREACHABLE();
+            // Per vertex attribute
+            startElement = startVertex;
+            elementCount = vertexCount;
         }
         else
         {
-            // Allocate space for startVertex + vertexCount so indexing will work.  If we don't
-            // start at zero all the indices will be off.
-            // Only vertexCount vertices will be used by the upcoming draw so that is all we copy.
-            size_t bytesToAllocate = (startVertex + vertexCount) * stride;
-            src += startVertex * binding.getStride();
-            size_t destOffset = startVertex * stride;
-
-            ANGLE_TRY(StreamVertexData(contextMtl, &mDynamicVertexData, src, bytesToAllocate,
-                                       destOffset, vertexCount, binding.getStride(),
-                                       vertexFormat.vertexLoadFunction,
-                                       &mConvertedArrayBufferHolders[attribIndex],
-                                       &mCurrentArrayBufferOffsets[attribIndex]));
-
-            mCurrentArrayBuffers[attribIndex]       = &mConvertedArrayBufferHolders[attribIndex];
-            mCurrentArrayBufferFormats[attribIndex] = vertexFormat.metalFormat;
-            mCurrentArrayBufferStrides[attribIndex] = stride;
+            // Per instance attribute
+            startElement = 0;
+            elementCount = UnsignedCeilDivide(instanceCount, binding.getDivisor());
         }
+        // Allocate space for startElement + elementCount so indexing will work.  If we don't
+        // start at zero all the indices will be off.
+        // Only elementCount vertices will be used by the upcoming draw so that is all we copy.
+        size_t bytesToAllocate = (startElement + elementCount) * stride;
+        src += startElement * binding.getStride();
+        size_t destOffset = startElement * stride;
+
+        ANGLE_TRY(StreamVertexData(
+            contextMtl, &mDynamicVertexData, src, bytesToAllocate, destOffset, elementCount,
+            binding.getStride(), vertexFormat.vertexLoadFunction,
+            &mConvertedArrayBufferHolders[attribIndex], &mCurrentArrayBufferOffsets[attribIndex]));
+
+        mCurrentArrayBuffers[attribIndex]       = &mConvertedArrayBufferHolders[attribIndex];
+        mCurrentArrayBufferFormats[attribIndex] = vertexFormat.metalFormat;
+        mCurrentArrayBufferStrides[attribIndex] = stride;
     }
 
     mVertexArrayDirty = true;

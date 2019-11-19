@@ -276,15 +276,36 @@ class ContextMtl : public ContextImpl, public mtl::Context
                                          const void *indices,
                                          mtl::BufferRef *lastSegmentIndexBufferOut);
 
-    angle::Result drawTriFanArrays(const gl::Context *context, GLint first, GLsizei count);
+    angle::Result drawTriFanArrays(const gl::Context *context,
+                                   GLint first,
+                                   GLsizei count,
+                                   GLsizei instances);
     angle::Result drawTriFanArraysWithBaseVertex(const gl::Context *context,
                                                  GLint first,
-                                                 GLsizei count);
-    angle::Result drawTriFanArraysLegacy(const gl::Context *context, GLint first, GLsizei count);
+                                                 GLsizei count,
+                                                 GLsizei instances);
+    angle::Result drawTriFanArraysLegacy(const gl::Context *context,
+                                         GLint first,
+                                         GLsizei count,
+                                         GLsizei instances);
     angle::Result drawTriFanElements(const gl::Context *context,
                                      GLsizei count,
                                      gl::DrawElementsType type,
-                                     const void *indices);
+                                     const void *indices,
+                                     GLsizei instances);
+
+    angle::Result drawArraysImpl(const gl::Context *context,
+                                 gl::PrimitiveMode mode,
+                                 GLint first,
+                                 GLsizei count,
+                                 GLsizei instanceCount);
+
+    angle::Result drawElementsImpl(const gl::Context *context,
+                                   gl::PrimitiveMode mode,
+                                   GLsizei count,
+                                   gl::DrawElementsType type,
+                                   const void *indices,
+                                   GLsizei instanceCount);
 
     void updateViewport(FramebufferMtl *framebufferMtl,
                         const gl::Rectangle &viewport,

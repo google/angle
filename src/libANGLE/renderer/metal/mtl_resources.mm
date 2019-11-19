@@ -407,6 +407,9 @@ angle::Result Buffer::reset(ContextMtl *context, size_t size, const uint8_t *dat
         id<MTLDevice> metalDevice = context->getMetalDevice();
 
         options = 0;
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+        options |= MTLResourceStorageModeManaged;
+#endif
 
         if (data)
         {
@@ -439,7 +442,12 @@ uint8_t *Buffer::map(ContextMtl *context)
     return reinterpret_cast<uint8_t *>([get() contents]);
 }
 
-void Buffer::unmap(ContextMtl *context) {}
+void Buffer::unmap(ContextMtl *context)
+{
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    [get() didModifyRange:NSMakeRange(0, size())];
+#endif
+}
 
 size_t Buffer::size() const
 {

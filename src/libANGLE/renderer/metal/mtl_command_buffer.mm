@@ -673,6 +673,20 @@ RenderCommandEncoder &RenderCommandEncoder::draw(MTLPrimitiveType primitiveType,
 
     return *this;
 }
+
+RenderCommandEncoder &RenderCommandEncoder::drawInstanced(MTLPrimitiveType primitiveType,
+                                                          uint32_t vertexStart,
+                                                          uint32_t vertexCount,
+                                                          uint32_t instances)
+{
+    [get() drawPrimitives:primitiveType
+              vertexStart:vertexStart
+              vertexCount:vertexCount
+            instanceCount:instances];
+
+    return *this;
+}
+
 RenderCommandEncoder &RenderCommandEncoder::drawIndexed(MTLPrimitiveType primitiveType,
                                                         uint32_t indexCount,
                                                         MTLIndexType indexType,
@@ -694,12 +708,12 @@ RenderCommandEncoder &RenderCommandEncoder::drawIndexed(MTLPrimitiveType primiti
     return *this;
 }
 
-RenderCommandEncoder &RenderCommandEncoder::drawIndexedBaseVertex(MTLPrimitiveType primitiveType,
-                                                                  uint32_t indexCount,
-                                                                  MTLIndexType indexType,
-                                                                  const BufferRef &indexBuffer,
-                                                                  size_t bufferOffset,
-                                                                  uint32_t baseVertex)
+RenderCommandEncoder &RenderCommandEncoder::drawIndexedInstanced(MTLPrimitiveType primitiveType,
+                                                                 uint32_t indexCount,
+                                                                 MTLIndexType indexType,
+                                                                 const BufferRef &indexBuffer,
+                                                                 size_t bufferOffset,
+                                                                 uint32_t instances)
 {
     if (!indexBuffer)
     {
@@ -712,7 +726,32 @@ RenderCommandEncoder &RenderCommandEncoder::drawIndexedBaseVertex(MTLPrimitiveTy
                        indexType:indexType
                      indexBuffer:indexBuffer->get()
                indexBufferOffset:bufferOffset
-                   instanceCount:1
+                   instanceCount:instances];
+
+    return *this;
+}
+
+RenderCommandEncoder &RenderCommandEncoder::drawIndexedInstancedBaseVertex(
+    MTLPrimitiveType primitiveType,
+    uint32_t indexCount,
+    MTLIndexType indexType,
+    const BufferRef &indexBuffer,
+    size_t bufferOffset,
+    uint32_t instances,
+    uint32_t baseVertex)
+{
+    if (!indexBuffer)
+    {
+        return *this;
+    }
+
+    cmdBuffer().setReadDependency(indexBuffer);
+    [get() drawIndexedPrimitives:primitiveType
+                      indexCount:indexCount
+                       indexType:indexType
+                     indexBuffer:indexBuffer->get()
+               indexBufferOffset:bufferOffset
+                   instanceCount:instances
                       baseVertex:baseVertex
                     baseInstance:0];
 

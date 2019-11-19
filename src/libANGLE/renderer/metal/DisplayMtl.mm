@@ -572,9 +572,8 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.semaphore   = false;
     mNativeExtensions.semaphoreFd = false;
 
-    // TODO: Enable this always and emulate instanced draws if any divisor exceeds the maximum
-    // supported.  http://anglebug.com/2672
-    mNativeExtensions.instancedArraysANGLE = false;
+    mNativeExtensions.instancedArraysANGLE = mFeatures.hasBaseVertexInstancedDraw.enabled;
+    mNativeExtensions.instancedArraysEXT   = mNativeExtensions.instancedArraysANGLE;
 
     mNativeExtensions.robustBufferAccessBehavior = false;
 
