@@ -323,6 +323,10 @@ class Context : public ErrorHandler
 
 #define ANGLE_MTL_TRY(context, test) ANGLE_MTL_CHECK(context, test, GL_INVALID_OPERATION)
 
+#define ANGLE_MTL_UNREACHABLE(context) \
+    UNREACHABLE();                     \
+    ANGLE_MTL_TRY(context, false)
+
 }  // namespace mtl
 }  // namespace rx
 

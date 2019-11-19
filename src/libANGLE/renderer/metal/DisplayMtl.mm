@@ -614,11 +614,15 @@ void DisplayMtl::initializeFeatures()
 {
     // default values:
     mFeatures.hasBaseVertexInstancedDraw.enabled        = true;
+    mFeatures.hasDepthTextureFiltering.enabled          = false;
     mFeatures.hasNonUniformDispatch.enabled             = true;
     mFeatures.hasTextureSwizzle.enabled                 = false;
     mFeatures.allowSeparatedDepthStencilBuffers.enabled = false;
 
+
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    mFeatures.hasDepthTextureFiltering.enabled = true;
+
     // Texture swizzle is only supported if macos sdk 10.15 is present
 #    if defined(__MAC_10_15)
     if (ANGLE_APPLE_AVAILABLE_XC(10.15, 13.0))

@@ -274,6 +274,17 @@ class BlitCommandEncoder final : public CommandEncoder
 
     BlitCommandEncoder &restart();
 
+    BlitCommandEncoder &copyBufferToTexture(const BufferRef &src,
+                                            size_t srcOffset,
+                                            size_t srcBytesPerRow,
+                                            size_t srcBytesPerImage,
+                                            MTLSize srcSize,
+                                            const TextureRef &dst,
+                                            uint32_t dstSlice,
+                                            uint32_t dstLevel,
+                                            MTLOrigin dstOrigin,
+                                            MTLBlitOption blitOption);
+
     BlitCommandEncoder &copyTexture(const TextureRef &dst,
                                     uint32_t dstSlice,
                                     uint32_t dstLevel,

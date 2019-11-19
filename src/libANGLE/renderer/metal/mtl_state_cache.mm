@@ -245,6 +245,20 @@ DepthStencilDesc::DepthStencilDesc()
 {
     memset(this, 0, sizeof(*this));
 }
+DepthStencilDesc::DepthStencilDesc(const DepthStencilDesc &src)
+{
+    memcpy(this, &src, sizeof(*this));
+}
+DepthStencilDesc::DepthStencilDesc(DepthStencilDesc &&src)
+{
+    memcpy(this, &src, sizeof(*this));
+}
+
+DepthStencilDesc &DepthStencilDesc::operator=(const DepthStencilDesc &src)
+{
+    memcpy(this, &src, sizeof(*this));
+    return *this;
+}
 
 bool DepthStencilDesc::operator==(const DepthStencilDesc &rhs) const
 {
@@ -388,6 +402,14 @@ SamplerDesc::SamplerDesc()
 {
     memset(this, 0, sizeof(*this));
 }
+SamplerDesc::SamplerDesc(const SamplerDesc &src)
+{
+    memcpy(this, &src, sizeof(*this));
+}
+SamplerDesc::SamplerDesc(SamplerDesc &&src)
+{
+    memcpy(this, &src, sizeof(*this));
+}
 
 SamplerDesc::SamplerDesc(const gl::SamplerState &glState) : SamplerDesc()
 {
@@ -400,6 +422,12 @@ SamplerDesc::SamplerDesc(const gl::SamplerState &glState) : SamplerDesc()
     mipFilter = GetMipmapFilter(glState.getMinFilter());
 
     maxAnisotropy = static_cast<uint32_t>(glState.getMaxAnisotropy());
+}
+
+SamplerDesc &SamplerDesc::operator=(const SamplerDesc &src)
+{
+    memcpy(this, &src, sizeof(*this));
+    return *this;
 }
 
 void SamplerDesc::reset()
@@ -570,12 +598,28 @@ RenderPipelineDesc::RenderPipelineDesc()
     rasterizationEnabled = true;
 }
 
+RenderPipelineDesc::RenderPipelineDesc(const RenderPipelineDesc &src)
+{
+    memcpy(this, &src, sizeof(*this));
+}
+
+RenderPipelineDesc::RenderPipelineDesc(RenderPipelineDesc &&src)
+{
+    memcpy(this, &src, sizeof(*this));
+}
+
+RenderPipelineDesc &RenderPipelineDesc::operator=(const RenderPipelineDesc &src)
+{
+    memcpy(this, &src, sizeof(*this));
+    return *this;
+}
+
 bool RenderPipelineDesc::operator==(const RenderPipelineDesc &rhs) const
 {
-    return ANGLE_PROP_EQ(*this, rhs, vertexDescriptor) &&
-           ANGLE_PROP_EQ(*this, rhs, outputDescriptor) &&
-
-           ANGLE_PROP_EQ(*this, rhs, inputPrimitiveTopology);
+    // NOTE(hqle): Use a faster way to compare, i.e take into account
+    // the number of active vertex attributes & render targets.
+    // If that way is used, hash() method must be changed also.
+    return memcmp(this, &rhs, sizeof(*this)) == 0;
 }
 
 size_t RenderPipelineDesc::hash() const
