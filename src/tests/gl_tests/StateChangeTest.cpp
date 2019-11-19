@@ -1465,6 +1465,8 @@ void SimpleStateChangeTest::simpleDrawWithColor(const GLColor &color)
 // frame.
 TEST_P(SimpleStateChangeTest, DrawArraysThenDrawElements)
 {
+    // http://anglebug.com/4121
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGLES());
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     glUseProgram(program);
 
@@ -2798,6 +2800,8 @@ TEST_P(SimpleStateChangeTest, ChangeFramebufferSizeBetweenTwoDraws)
 // Tries to relink a program in use and use it again to draw something else.
 TEST_P(SimpleStateChangeTest, RelinkProgram)
 {
+    // http://anglebug.com/4121
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGLES());
     const GLuint program = glCreateProgram();
 
     GLuint vs     = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());

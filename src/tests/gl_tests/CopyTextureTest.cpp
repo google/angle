@@ -1564,6 +1564,8 @@ TEST_P(CopyTextureTestDest, AlphaUnmultiply)
 // are set to 0.
 TEST_P(CopyTextureTestDest, AlphaCopyWithRGB)
 {
+    // http://anglebug.com/4121
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGLES());
     ANGLE_SKIP_TEST_IF(!checkExtensions());
 
     GLColor originalPixels(50u, 100u, 150u, 155u);
