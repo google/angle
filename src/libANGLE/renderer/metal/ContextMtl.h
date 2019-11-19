@@ -233,7 +233,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     uint32_t getClearStencilValue() const;
     // Return front facing stencil write mask
     uint32_t getStencilMask() const;
-    bool isDepthWriteEnabled() const;
+    bool getDepthMask() const;
 
     const mtl::Format &getPixelFormat(angle::FormatID angleFormatId) const;
     // See mtl::FormatTable::getVertexFormat()

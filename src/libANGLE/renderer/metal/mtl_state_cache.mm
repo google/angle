@@ -270,16 +270,18 @@ void DepthStencilDesc::updateDepthTestEnabled(const gl::DepthStencilState &dsSta
     if (!dsState.depthTest)
     {
         depthCompareFunction = MTLCompareFunctionAlways;
+        depthWriteEnabled    = false;
     }
     else
     {
         updateDepthCompareFunc(dsState);
+        updateDepthWriteEnabled(dsState);
     }
 }
 
 void DepthStencilDesc::updateDepthWriteEnabled(const gl::DepthStencilState &dsState)
 {
-    depthWriteEnabled = dsState.depthMask;
+    depthWriteEnabled = dsState.depthTest && dsState.depthMask;
 }
 
 void DepthStencilDesc::updateDepthCompareFunc(const gl::DepthStencilState &dsState)
