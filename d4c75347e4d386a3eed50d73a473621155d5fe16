@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d5b1fb7_70c67b49",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp",
+        "patchSetId": 5
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-19T19:46:14Z",
+      "side": 1,
+      "message": "The CL description says its for RGB16F to RGBA16F conversion. Shouldn\u0027t the HalfFloatToHalfFloat case also set alpha to 1 somewhere?",
+      "revId": "d4c75347e4d386a3eed50d73a473621155d5fe16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
