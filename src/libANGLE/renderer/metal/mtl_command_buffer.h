@@ -236,6 +236,8 @@ class RenderCommandEncoder final : public CommandEncoder
 
     RenderCommandEncoder &setDepthStencilStoreAction(MTLStoreAction depthStoreAction,
                                                      MTLStoreAction stencilStoreAction);
+    RenderCommandEncoder &setDepthStoreAction(MTLStoreAction action);
+    RenderCommandEncoder &setStencilStoreAction(MTLStoreAction action);
 
     const RenderPassDesc &renderPassDesc() const { return mRenderPassDesc; }
 

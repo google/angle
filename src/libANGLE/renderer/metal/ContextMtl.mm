@@ -663,7 +663,7 @@ ProgramImpl *ContextMtl::createProgram(const gl::ProgramState &state)
 // Framebuffer creation
 FramebufferImpl *ContextMtl::createFramebuffer(const gl::FramebufferState &state)
 {
-    return new FramebufferMtl(state, false, false);
+    return new FramebufferMtl(state, false);
 }
 
 // Texture creation
@@ -937,9 +937,16 @@ void ContextMtl::present(const gl::Context *context, id<CAMetalDrawable> present
 {
     ensureCommandBufferValid();
 
-    if (hasStartedRenderPass(mDrawFramebuffer))
+    // Always discard default FBO's depth stencil buffers at the end of the frame:
+    if (mDrawFramebufferIsDefault && hasStartedRenderPass(mDrawFramebuffer))
     {
-        mDrawFramebuffer->onFinishedDrawingToFrameBuffer(context, &mRenderEncoder);
+        constexpr GLenum dsAttachments[] = {GL_DEPTH, GL_STENCIL};
+        (void)mDrawFramebuffer->invalidate(context, 2, dsAttachments);
+
+        endEncoding(false);
+
+        // Reset discard flag by notify framebuffer that a new render pass has started.
+        mDrawFramebuffer->onStartedDrawingToFrameBuffer(context);
     }
 
     endEncoding(false);
@@ -1172,14 +1179,10 @@ void ContextMtl::updateDrawFrameBufferBinding(const gl::Context *context)
 {
     const gl::State &glState = getState();
 
-    auto oldFrameBuffer = mDrawFramebuffer;
+    mDrawFramebuffer          = mtl::GetImpl(glState.getDrawFramebuffer());
+    mDrawFramebufferIsDefault = mDrawFramebuffer->getState().isDefault();
 
-    mDrawFramebuffer = mtl::GetImpl(glState.getDrawFramebuffer());
-
-    if (oldFrameBuffer && hasStartedRenderPass(oldFrameBuffer->getRenderPassDesc(this)))
-    {
-        oldFrameBuffer->onFinishedDrawingToFrameBuffer(context, &mRenderEncoder);
-    }
+    mDrawFramebuffer->onStartedDrawingToFrameBuffer(context);
 
     onDrawFrameBufferChange(context, mDrawFramebuffer);
 }

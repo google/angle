@@ -753,6 +753,22 @@ RenderCommandEncoder &RenderCommandEncoder::setDepthStencilStoreAction(
     return *this;
 }
 
+RenderCommandEncoder &RenderCommandEncoder::setDepthStoreAction(MTLStoreAction action)
+{
+    // We only store the options, will defer the actual setting until the encoder finishes
+    mRenderPassDesc.depthAttachment.storeAction = action;
+
+    return *this;
+}
+
+RenderCommandEncoder &RenderCommandEncoder::setStencilStoreAction(MTLStoreAction action)
+{
+    // We only store the options, will defer the actual setting until the encoder finishes
+    mRenderPassDesc.stencilAttachment.storeAction = action;
+
+    return *this;
+}
+
 // BlitCommandEncoder
 BlitCommandEncoder::BlitCommandEncoder(CommandBuffer *cmdBuffer) : CommandEncoder(cmdBuffer, BLIT)
 {}

@@ -274,7 +274,7 @@ egl::Error SurfaceMtl::initialize(const egl::Display *display)
 FramebufferImpl *SurfaceMtl::createDefaultFramebuffer(const gl::Context *context,
                                                       const gl::FramebufferState &state)
 {
-    auto fbo = new FramebufferMtl(state, /* flipY */ true, /* alwaysDiscard */ true);
+    auto fbo = new FramebufferMtl(state, /* flipY */ true);
 
     return fbo;
 }

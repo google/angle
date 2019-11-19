@@ -24,9 +24,7 @@ class SurfaceMtl;
 class FramebufferMtl : public FramebufferImpl
 {
   public:
-    explicit FramebufferMtl(const gl::FramebufferState &state,
-                            bool flipY,
-                            bool alwaysDiscardDepthStencil);
+    explicit FramebufferMtl(const gl::FramebufferState &state, bool flipY);
     ~FramebufferMtl() override;
     void destroy(const gl::Context *context) override;
 
@@ -91,9 +89,8 @@ class FramebufferMtl : public FramebufferImpl
 
     const mtl::RenderPassDesc &getRenderPassDesc(ContextMtl *context);
 
-    // Call this to notify FramebufferMtl whenever its render pass has ended.
-    void onFinishedDrawingToFrameBuffer(const gl::Context *context,
-                                        mtl::RenderCommandEncoder *encoder);
+    // Call this to notify FramebufferMtl whenever its render pass has started.
+    void onStartedDrawingToFrameBuffer(const gl::Context *context);
 
     // The actual area will be adjusted based on framebuffer flipping property.
     gl::Rectangle getReadPixelArea(const gl::Rectangle &glArea);
@@ -140,13 +137,9 @@ class FramebufferMtl : public FramebufferImpl
     // depth & stencil attachments as of now. Separate depth & stencil could be useful to
     // save spaces on iOS devices. See doc/PackedDepthStencilSupport.md.
     std::array<RenderTargetMtl *, mtl::kMaxRenderTargets> mColorRenderTargets;
-    std::array<bool, mtl::kMaxRenderTargets> mDiscardColors;
     RenderTargetMtl *mDepthRenderTarget   = nullptr;
-    bool mDiscardDepth                    = false;
     RenderTargetMtl *mStencilRenderTarget = nullptr;
-    bool mDiscardStencil                  = false;
     mtl::RenderPassDesc mRenderPassDesc;
-    const bool mAlwaysDiscardDepthStencil;
     const bool mFlipY = false;
 };
 }  // namespace rx
