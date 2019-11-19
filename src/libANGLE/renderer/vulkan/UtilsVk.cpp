@@ -194,7 +194,8 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
     }
     else if (srcIsHalfFloat && destIsHalfFloat)
     {
-        flags |= ConvertVertex_comp::kHalfFloatToHalfFloat;
+        // Note that HalfFloat conversion uses the same shader as Uint.
+        flags |= ConvertVertex_comp::kUintToUint;
     }
     else if (srcIsSint && destIsSint)
     {
