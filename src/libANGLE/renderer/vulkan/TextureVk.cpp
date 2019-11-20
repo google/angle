@@ -1163,24 +1163,22 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
 
         // Redefine the images with mipmaps.
         // Copy image to the staging buffer and stage an update to the new one.
-        vk::BufferHelper *stagingBuffer = nullptr;
-        ANGLE_TRY(copyImageDataToStagingBuffer(contextVk, baseLevelDesc, false,
-                                               getNativeImageLayer(0), 0, mImage->getBaseLevel(),
-                                               &stagingBuffer));
+        ANGLE_TRY(copyAndStageImageSubresource(contextVk, baseLevelDesc, false,
+                                               getNativeImageLayer(0), 0, mImage->getBaseLevel()));
+
+        // Create a new node for the image and add a global memory barrier for the staging buffer.
+        // It's written to and staged to be read from when ensureImageInitialized() is called.
+        mImage->finishCurrentCommands(contextVk);
+        mImage->addGlobalMemoryBarrier(VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
+                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
         onStagingBufferChange();
         // Release the origin image and recreate it with new mipmap counts.
         releaseImage(contextVk);
 
+        mImage->onResourceRecreated(contextVk->getCommandGraph());
+
         ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::FullMipChain));
-        // Set up read dependency, we are now reading from this buffer to the new image.
-        if (stagingBuffer)
-        {
-            stagingBuffer->onRead(contextVk, mImage, VK_ACCESS_TRANSFER_READ_BIT);
-            // Different parts of the buffer might be read from or write to.
-            stagingBuffer->onSelfReadWrite(contextVk, VK_ACCESS_TRANSFER_READ_BIT,
-                                           VK_ACCESS_TRANSFER_WRITE_BIT);
-        }
     }
     // Check if the image supports blit. If it does, we can do the mipmap generation on the gpu
     // only.
@@ -1197,13 +1195,12 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result TextureVk::copyImageDataToStagingBuffer(ContextVk *contextVk,
+angle::Result TextureVk::copyAndStageImageSubresource(ContextVk *contextVk,
                                                       const gl::ImageDesc &desc,
                                                       bool ignoreLayerCount,
                                                       uint32_t currentLayer,
                                                       uint32_t sourceMipLevel,
-                                                      uint32_t stagingDstMipLevel,
-                                                      vk::BufferHelper **stagingBuffer)
+                                                      uint32_t stagingDstMipLevel)
 {
     const gl::Extents &baseLevelExtents = desc.size;
 
@@ -1221,21 +1218,18 @@ angle::Result TextureVk::copyImageDataToStagingBuffer(ContextVk *contextVk,
     }
 
     // Copy from the base level image to the staging buffer
+    vk::BufferHelper *stagingBuffer                   = nullptr;
     vk::StagingBufferOffsetArray stagingBufferOffsets = {0, 0};
     size_t bufferSize                                 = 0;
     ANGLE_TRY(mImage->copyImageDataToBuffer(contextVk, sourceMipLevel, layerCount, currentLayer,
-                                            area, stagingBuffer, &bufferSize, &stagingBufferOffsets,
-                                            nullptr));
+                                            area, &stagingBuffer, &bufferSize,
+                                            &stagingBufferOffsets, nullptr));
 
     // Stage an update to the new image
-
-    ASSERT(*stagingBuffer);
+    ASSERT(stagingBuffer);
     ANGLE_TRY(mImage->stageSubresourceUpdateFromBuffer(
         contextVk, bufferSize, stagingDstMipLevel, currentLayer, layerCount, updatedExtents, offset,
-        *stagingBuffer, stagingBufferOffsets));
-
-    // Set up write dependency, we are writing to this buffer from the old image.
-    (*stagingBuffer)->onWrite(contextVk, mImage, 0, VK_ACCESS_TRANSFER_WRITE_BIT);
+        stagingBuffer, stagingBufferOffsets));
 
     return angle::Result::Continue;
 }
@@ -1247,8 +1241,7 @@ angle::Result TextureVk::setBaseLevel(const gl::Context *context, GLuint baseLev
 
 angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
                                              GLuint baseLevel,
-                                             GLuint maxLevel,
-                                             vk::BufferHelper **stagingBuffer)
+                                             GLuint maxLevel)
 {
     if (!mImage)
     {
@@ -1277,14 +1270,13 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    return changeLevels(contextVk, previousBaseLevel, baseLevel, maxLevel, stagingBuffer);
+    return changeLevels(contextVk, previousBaseLevel, baseLevel, maxLevel);
 }
 
 angle::Result TextureVk::changeLevels(ContextVk *contextVk,
                                       GLuint previousBaseLevel,
                                       GLuint baseLevel,
-                                      GLuint maxLevel,
-                                      vk::BufferHelper **stagingBuffer)
+                                      GLuint maxLevel)
 {
     // Recreate the image to reflect new base or max levels.
     // First, flush any pending updates so we have good data in the existing vkImage
@@ -1336,16 +1328,24 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk,
             uint32_t srcLevelVK = baseLevelChanged ? level - previousBaseLevel : level;
             ASSERT(srcLevelVK <= mImage->getLevelCount());
 
-            ANGLE_TRY(copyImageDataToStagingBuffer(contextVk, desc, true, layer, srcLevelVK, level,
-                                                   stagingBuffer));
+            ANGLE_TRY(
+                copyAndStageImageSubresource(contextVk, desc, true, layer, srcLevelVK, level));
         }
     }
+
+    // Create a new node for the image and add a global memory barrier for the staging buffers.
+    // They are written to and staged to be read from when ensureImageInitialized() is called.
+    mImage->finishCurrentCommands(contextVk);
+    mImage->addGlobalMemoryBarrier(VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
+                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
     // Inform the front end that we've updated the staging buffer
     onStagingBufferChange();
     // Now that we've staged all the updates, release the current image so that it will be
     // recreated with the correct number of mip levels, base level, and max level.
     releaseImage(contextVk);
+
+    mImage->onResourceRecreated(contextVk->getCommandGraph());
 
     return angle::Result::Continue;
 }
@@ -1463,7 +1463,6 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    vk::BufferHelper *stagingBuffer = nullptr;
     // Create a new image if the storage state is enabled for the first time.
     if (dirtyBits.test(gl::Texture::DIRTY_BIT_BOUND_AS_IMAGE))
     {
@@ -1472,8 +1471,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         {
             mImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
             ANGLE_TRY(changeLevels(contextVk, mImage->getBaseLevel(),
-                                   mState.getEffectiveBaseLevel(), mState.getEffectiveMaxLevel(),
-                                   &stagingBuffer));
+                                   mState.getEffectiveBaseLevel(), mState.getEffectiveMaxLevel()));
         }
     }
 
@@ -1482,19 +1480,11 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         dirtyBits.test(gl::Texture::DIRTY_BIT_BASE_LEVEL))
     {
         ANGLE_TRY(updateBaseMaxLevels(contextVk, mState.getEffectiveBaseLevel(),
-                                      mState.getEffectiveMaxLevel(), &stagingBuffer));
+                                      mState.getEffectiveMaxLevel()));
     }
 
     // Initialize the image storage and flush the pixel buffer.
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
-
-    if (stagingBuffer)
-    {
-        stagingBuffer->onRead(contextVk, mImage, VK_ACCESS_TRANSFER_READ_BIT);
-        // Different parts of the buffer might be read from or write to.
-        stagingBuffer->onSelfReadWrite(contextVk, VK_ACCESS_TRANSFER_READ_BIT,
-                                       VK_ACCESS_TRANSFER_WRITE_BIT);
-    }
 
     if (dirtyBits.none() && mSampler.valid())
     {

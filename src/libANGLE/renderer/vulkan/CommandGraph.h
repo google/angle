@@ -397,6 +397,14 @@ class CommandGraphResource : angle::NonCopyable
     void onGraphAccess(CommandGraph *commandGraph);
     void updateCurrentAccessNodes();
 
+    // If a resource is recreated, as in released and reinitialized, the next access to the
+    // resource will not create an edge from its last node and will create a new independent node.
+    // This is because mUse is reset and the graph believes it's an entirely new resource.  In very
+    // particular cases, such as recreating an image with full mipchain or adding STORAGE_IMAGE flag
+    // to its uses, this function is used to preserve the link between the previous and new
+    // nodes allocated for this resource.
+    void onResourceRecreated(CommandGraph *commandGraph);
+
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
     // Will append to an existing command buffer/graph node if possible.
@@ -610,6 +618,12 @@ ANGLE_INLINE void CommandGraphResource::updateCurrentAccessNodes()
         mCurrentWritingNode = nullptr;
         mCurrentReadingNodes.clear();
     }
+}
+
+ANGLE_INLINE void CommandGraphResource::onResourceRecreated(CommandGraph *commandGraph)
+{
+    // Store reference to usage in graph.
+    commandGraph->onResourceUse(mUse);
 }
 
 ANGLE_INLINE void CommandGraphResource::onGraphAccess(CommandGraph *commandGraph)

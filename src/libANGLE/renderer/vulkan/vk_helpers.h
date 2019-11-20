@@ -506,7 +506,7 @@ class BufferHelper final : public CommandGraphResource
         reader->onWriteAccess(contextVk, 0, writeAccessType);
     }
     // Helper for setting a barrier when different parts of the same buffer is being read from and
-    // written to.
+    // written to in the same command.
     void onSelfReadWrite(ContextVk *contextVk,
                          VkAccessFlags readAccessType,
                          VkAccessFlags writeAccessType)
