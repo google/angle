@@ -179,6 +179,10 @@ if (is_win || is_linux || is_mac || is_android) {
       sources += angle_white_box_tests_vulkan_sources
     }
 
+    if (is_mac) {
+      sources += angle_white_box_tests_mac_sources
+    }
+
     configs += [
       "${angle_root}:libANGLE_config",
       "${angle_root}:library_name_config",
@@ -488,6 +492,12 @@ if (build_angle_gles1_conform_tests) {
       "test_utils/angle_test_instantiate.h",
       "test_utils/gl_raii.h",
     ]
+    if (is_mac) {
+      sources += [
+        "test_utils/angle_test_instantiate_apple.h",
+        "test_utils/angle_test_instantiate_apple.mm",
+      ]
+    }
     main = "angle_end2end_tests_main"
 
     configs += [

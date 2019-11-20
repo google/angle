@@ -524,6 +524,12 @@ inline bool IsSwiftShader(const GPUTestConfig::API &api)
     return (api == GPUTestConfig::kAPISwiftShader);
 }
 
+// Check whether the backend API has been set to Metal in the constructor
+inline bool IsMetal(const GPUTestConfig::API &api)
+{
+    return (api == GPUTestConfig::kAPIMetal);
+}
+
 }  // anonymous namespace
 
 // Load all conditions in the constructor since this data will not change during a test set.
@@ -562,6 +568,7 @@ GPUTestConfig::GPUTestConfig()
     mConditions[kConditionGLES]        = true;
     mConditions[kConditionVulkan]      = true;
     mConditions[kConditionSwiftShader] = true;
+    mConditions[kConditionMetal]       = true;
 
     mConditions[kConditionNexus5X]          = IsNexus5X();
     mConditions[kConditionPixel2OrXL]       = IsPixel2() || IsPixel2XL();
@@ -577,6 +584,7 @@ GPUTestConfig::GPUTestConfig(const API &api) : GPUTestConfig()
     mConditions[kConditionGLES]        = IsGLES(api);
     mConditions[kConditionVulkan]      = IsVulkan(api);
     mConditions[kConditionSwiftShader] = IsSwiftShader(api);
+    mConditions[kConditionMetal]       = IsMetal(api);
 }
 
 // Return a const reference to the list of all pre-calculated conditions.
