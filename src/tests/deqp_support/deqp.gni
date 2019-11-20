@@ -910,7 +910,11 @@ deqp_khr_common_sources = [
   "$deqp_path/external/openglcts/modules/common/glcSampleVariablesTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcSeparableProgramsTransformFeedbackTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcSeparableProgramsTransformFeedbackTests.hpp",
-  "$deqp_path/external/openglcts/modules/common/glcShaderConstExprTests.cpp",
+
+  # Override to work around a dEQP bug: https://gitlab.khronos.org/Tracker/vk-gl-cts/issues/1859
+  # "$deqp_path/external/openglcts/modules/common/glcShaderConstExprTests.cpp",
+  "deqp_support/glcShaderConstExprTests_override.cpp",
+
   "$deqp_path/external/openglcts/modules/common/glcShaderConstExprTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcShaderGroupVoteTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcShaderGroupVoteTests.hpp",
@@ -924,7 +928,11 @@ deqp_khr_common_sources = [
   "$deqp_path/external/openglcts/modules/common/glcShaderLibraryCase.hpp",
   "$deqp_path/external/openglcts/modules/common/glcShaderLoopTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcShaderLoopTests.hpp",
-  "$deqp_path/external/openglcts/modules/common/glcShaderMacroTests.cpp",
+
+  # Override to work around a dEQP bug: https://gitlab.khronos.org/Tracker/vk-gl-cts/issues/1859
+  # "$deqp_path/external/openglcts/modules/common/glcShaderMacroTests.cpp",
+  "deqp_support/glcShaderMacroTests_override.cpp",
+
   "$deqp_path/external/openglcts/modules/common/glcShaderMacroTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcShaderMultisampleInterpolationTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcShaderMultisampleInterpolationTests.hpp",

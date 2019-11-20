@@ -68,13 +68,6 @@
 3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation.usubBorrow.* = SKIP
 3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation.umulExtended.* = SKIP
 3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation.imulExtended.* = SKIP
-/// Crash due to missing unsupported check in dEQP
-3571 VULKAN : KHR-GLES31.core.shader_macros*_geometry = SKIP
-3571 VULKAN : KHR-GLES31.core.shader_macros*_tess_control = SKIP
-3571 VULKAN : KHR-GLES31.core.shader_macros*_tess_eval = SKIP
-3571 VULKAN : KHR-GLES31.core.constant_expressions.*geometry = SKIP
-3571 VULKAN : KHR-GLES31.core.constant_expressions.*tess_control = SKIP
-3571 VULKAN : KHR-GLES31.core.constant_expressions.*tess_eval = SKIP
 
 3520 VULKAN : KHR-GLES31.core.vertex_attrib_binding* = SKIP
 3520 VULKAN : KHR-GLES31.core.internalformat.texture2d.* = FAIL
