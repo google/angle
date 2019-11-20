@@ -140,7 +140,13 @@ if (angle_has_build && is_clang) {
 
   # Disabled to enable better stack traces.
   if (angle_better_stack_traces) {
-    angle_remove_configs += [ "//build/config/gcc:symbol_visibility_hidden" ]
+    # This line causes in-class-inline-functions in glslang to be weak symbols.  The KHR dEQP tests
+    # link against glslang as well as libGLESv2.so, resulting in angle_deqp_khr_gles*_tests to link
+    # those weak symbols.  Due to glslang's usage of a global variable in InitializeDll.cpp, a bug
+    # is created where ANGLE sometimes calls into its own copy of glslang and sometimes the KHR
+    # dEQP's version, with the two copies of the global variable being inconsistent.
+    # Commented out until the underlying issue is resolved.  http://anglebug.com/4123
+    # angle_remove_configs += [ "//build/config/gcc:symbol_visibility_hidden" ]
   }
 }
 
