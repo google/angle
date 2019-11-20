@@ -22,6 +22,30 @@
       "revId": "7d7c3f98041e25567f4de290d8278a641e0872bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da561472_9afc614d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-20T03:56:11Z",
+      "side": 1,
+      "message": "Shortest I can make it is this (details found in the bug). The test does this:\n\n1. Context 1: Read Texture 1 and draw into Framebuffer 1\n2. Context 2: Read Texture 1 and draw into Framebuffer 2\n3. Context 1: Delete Framebuffer 1\n4. Context 1: Flush\n5. Context 2: Modify Texture 1\n\nIssue is Texture 1\u0027s mCurrentReadingNodes contains one node from each context\u0027s command graph, one of which is deleted at step 4. At step 5, a dependency is added from both nodes (one already deleted) to a new node, causing use-after-free.",
+      "parentUuid": "c0e25d21_8637bffa",
+      "range": {
+        "startLine": 7,
+        "startChar": 34,
+        "endLine": 7,
+        "endChar": 41
+      },
+      "revId": "7d7c3f98041e25567f4de290d8278a641e0872bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
