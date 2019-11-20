@@ -633,8 +633,10 @@ angle_source_set("libANGLE_base") {
   ]
 
   if (is_win) {
+    if (angle_enable_d3d9) {
+      libs += [ "delayimp.lib" ]
+    }
     libs += [
-      "delayimp.lib",
       "gdi32.lib",
       "user32.lib",
     ]
