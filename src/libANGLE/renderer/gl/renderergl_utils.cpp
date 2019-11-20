@@ -1547,7 +1547,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // Ported from gpu_driver_bug_list.json (#246, #258)
     ANGLE_FEATURE_CONDITION(features, dontUseLoopsToInitializeVariables,
-                            (IsAndroid() && !isNvidia) || (isIntel && IsApple()));
+                            (IsAndroid() && isQualcomm) || (isIntel && IsApple()));
 
     ANGLE_FEATURE_CONDITION(features, disableBlendFuncExtended, isAMD || isIntel);
 
