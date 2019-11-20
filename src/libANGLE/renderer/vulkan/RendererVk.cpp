@@ -979,12 +979,10 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         // Query line rasterization capabilities
         VkPhysicalDeviceFeatures2KHR availableFeatures = {};
         availableFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&availableFeatures),
-                           &mLineRasterizationFeatures);
+        vk::AppendToPNextChain(&availableFeatures, &mLineRasterizationFeatures);
 
         vkGetPhysicalDeviceFeatures2KHR(mPhysicalDevice, &availableFeatures);
-        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&createInfo),
-                           &mLineRasterizationFeatures);
+        vk::AppendToPNextChain(&createInfo, &mLineRasterizationFeatures);
     }
 
     mProvokingVertexFeatures = {};
@@ -998,12 +996,10 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         // Query line rasterization capabilities
         VkPhysicalDeviceFeatures2KHR availableFeatures = {};
         availableFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&availableFeatures),
-                           &mProvokingVertexFeatures);
+        vk::AppendToPNextChain(&availableFeatures, &mProvokingVertexFeatures);
 
         vkGetPhysicalDeviceFeatures2KHR(mPhysicalDevice, &availableFeatures);
-        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&createInfo),
-                           &mProvokingVertexFeatures);
+        vk::AppendToPNextChain(&createInfo, &mProvokingVertexFeatures);
     }
 
     if (!displayVk->getState().featuresAllDisabled)
@@ -1089,8 +1085,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         enabledDeviceExtensions.push_back(VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME);
         divisorFeatures.vertexAttributeInstanceRateDivisor = true;
-        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&enabledFeatures),
-                           &divisorFeatures);
+        vk::AppendToPNextChain(&enabledFeatures, &divisorFeatures);
 
         VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT divisorProperties = {};
         divisorProperties.sType =
@@ -1098,8 +1093,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 
         VkPhysicalDeviceProperties2 deviceProperties = {};
         deviceProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&deviceProperties),
-                           &divisorProperties);
+        vk::AppendToPNextChain(&deviceProperties, &divisorProperties);
 
         vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
         // We only store 8 bit divisor in GraphicsPipelineDesc so capping value & we emulate if
@@ -1107,8 +1101,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         mMaxVertexAttribDivisor =
             std::min(divisorProperties.maxVertexAttribDivisor,
                      static_cast<uint32_t>(std::numeric_limits<uint8_t>::max()));
-        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&createInfo),
-                           &enabledFeatures);
+        vk::AppendToPNextChain(&createInfo, &enabledFeatures);
     }
     else
     {
@@ -1120,8 +1113,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         VkPhysicalDeviceProperties2 deviceProperties = {};
         deviceProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-        AppendToPNextChain(reinterpret_cast<vk::CommonStructHeader *>(&deviceProperties),
-                           &mPhysicalDeviceSubgroupProperties);
+        vk::AppendToPNextChain(&deviceProperties, &mPhysicalDeviceSubgroupProperties);
 
         vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
     }
