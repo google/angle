@@ -219,6 +219,17 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
+  'tools/clang/dsymutil': {
+    'packages': [
+      {
+        'package': 'chromium/llvm-build-tools/dsymutil',
+        'version': 'M56jPzDv1620Rnm__jTMYS62Zi8rxHVq7yw0qeBFEgkC',
+      }
+    ],
+    'condition': 'checkout_mac and not build_with_chromium',
+    'dep_type': 'cipd',
+  },
+
   'tools/md_browser': {
     'url': '{chromium_git}/chromium/src/tools/md_browser@0bfd826f8566a99923e64a782908faca72bc457c',
     'condition': 'not build_with_chromium',
