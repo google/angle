@@ -71,7 +71,6 @@ enum Token
     kConfigGLES,
     kConfigVulkan,
     kConfigSwiftShader,
-    kConfigMetal,
     // Android devices
     kConfigNexus5X,
     kConfigPixel2,
@@ -163,7 +162,6 @@ constexpr TokenInfo kTokenData[kNumberOfTokens] = {
     {"gles", GPUTestConfig::kConditionGLES},
     {"vulkan", GPUTestConfig::kConditionVulkan},
     {"swiftshader", GPUTestConfig::kConditionSwiftShader},
-    {"metal", GPUTestConfig::kConditionMetal},
     {"nexus5x", GPUTestConfig::kConditionNexus5X},
     {"pixel2orxl", GPUTestConfig::kConditionPixel2OrXL},
     {"quadrop400", GPUTestConfig::kConditionNVIDIAQuadroP400},
@@ -434,7 +432,6 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig &config,
             case kConfigGLES:
             case kConfigVulkan:
             case kConfigSwiftShader:
-            case kConfigMetal:
             case kConfigNexus5X:
             case kConfigPixel2:
             case kConfigNVIDIAQuadroP400:

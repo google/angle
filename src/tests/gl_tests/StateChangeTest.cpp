@@ -2250,8 +2250,6 @@ TEST_P(SimpleStateChangeTest, UpdateTextureInUse)
 
 void SimpleStateChangeTest::updateTextureBoundToFramebufferHelper(UpdateFunc updateFunc)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
-
     std::vector<GLColor> red(4, GLColor::red);
     std::vector<GLColor> green(4, GLColor::green);
 
@@ -2318,8 +2316,6 @@ TEST_P(SimpleStateChangeTest, TexSubImageOnTextureBoundToFrambuffer)
 // Tests that CopyTexSubImage updates are flushed before rendering.
 TEST_P(SimpleStateChangeTest, CopyTexSubImageOnTextureBoundToFrambuffer)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
-
     GLTexture copySource;
     glBindTexture(GL_TEXTURE_2D, copySource);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);

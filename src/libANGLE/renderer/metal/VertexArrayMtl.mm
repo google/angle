@@ -142,10 +142,6 @@ VertexArrayMtl::VertexArrayMtl(const gl::VertexArrayState &state, ContextMtl *co
       // buffer for every conversion.
       mDynamicVertexData(true)
 {
-    for (BufferHolderMtl *&buffer : mCurrentArrayBuffers)
-    {
-        buffer = nullptr;
-    }
     for (size_t &offset : mCurrentArrayBufferOffsets)
     {
         offset = 0;

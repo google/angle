@@ -1280,13 +1280,6 @@ bool IsVulkan()
     return (rendererString.find("Vulkan") != std::string::npos);
 }
 
-bool IsMetal()
-{
-    const char *renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
-    std::string rendererString(renderer);
-    return (rendererString.find("Metal") != std::string::npos);
-}
-
 bool IsDebug()
 {
 #if !defined(NDEBUG)

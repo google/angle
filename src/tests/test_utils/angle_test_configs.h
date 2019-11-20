@@ -181,10 +181,6 @@ PlatformParameters ES3_VULKAN_NULL();
 PlatformParameters ES31_VULKAN();
 PlatformParameters ES31_VULKAN_NULL();
 
-PlatformParameters ES1_METAL();
-PlatformParameters ES2_METAL();
-PlatformParameters ES3_METAL();
-
 PlatformParameters ES2_WGL();
 PlatformParameters ES3_WGL();
 
