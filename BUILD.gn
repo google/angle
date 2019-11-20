@@ -1136,7 +1136,6 @@ foreach(is_shared_library,
       sources += util_fuchsia_sources
       public_deps += [
         "$angle_root/src/common/fuchsia_egl",
-        "src/libANGLE/renderer/vulkan:angle_vulkan",
         "//third_party/fuchsia-sdk/sdk:async_loop_cpp",
         "//third_party/fuchsia-sdk/sdk:async_loop_default",
         "//third_party/fuchsia-sdk/sdk:fdio",
