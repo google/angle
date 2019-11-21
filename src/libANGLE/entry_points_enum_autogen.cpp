@@ -512,6 +512,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDrawElements";
         case EntryPoint::DrawElementsBaseVertex:
             return "glDrawElementsBaseVertex";
+        case EntryPoint::DrawElementsBaseVertexEXT:
+            return "glDrawElementsBaseVertexEXT";
+        case EntryPoint::DrawElementsBaseVertexOES:
+            return "glDrawElementsBaseVertexOES";
         case EntryPoint::DrawElementsIndirect:
             return "glDrawElementsIndirect";
         case EntryPoint::DrawElementsInstanced:
@@ -526,6 +530,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDrawElementsInstancedBaseVertexBaseInstance";
         case EntryPoint::DrawElementsInstancedBaseVertexBaseInstanceANGLE:
             return "glDrawElementsInstancedBaseVertexBaseInstanceANGLE";
+        case EntryPoint::DrawElementsInstancedBaseVertexEXT:
+            return "glDrawElementsInstancedBaseVertexEXT";
+        case EntryPoint::DrawElementsInstancedBaseVertexOES:
+            return "glDrawElementsInstancedBaseVertexOES";
         case EntryPoint::DrawElementsInstancedEXT:
             return "glDrawElementsInstancedEXT";
         case EntryPoint::DrawPixels:
@@ -534,6 +542,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDrawRangeElements";
         case EntryPoint::DrawRangeElementsBaseVertex:
             return "glDrawRangeElementsBaseVertex";
+        case EntryPoint::DrawRangeElementsBaseVertexEXT:
+            return "glDrawRangeElementsBaseVertexEXT";
+        case EntryPoint::DrawRangeElementsBaseVertexOES:
+            return "glDrawRangeElementsBaseVertexOES";
         case EntryPoint::DrawTexfOES:
             return "glDrawTexfOES";
         case EntryPoint::DrawTexfvOES:
@@ -1466,6 +1478,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMultiDrawElementsANGLE";
         case EntryPoint::MultiDrawElementsBaseVertex:
             return "glMultiDrawElementsBaseVertex";
+        case EntryPoint::MultiDrawElementsBaseVertexEXT:
+            return "glMultiDrawElementsBaseVertexEXT";
         case EntryPoint::MultiDrawElementsIndirect:
             return "glMultiDrawElementsIndirect";
         case EntryPoint::MultiDrawElementsIndirectCount:

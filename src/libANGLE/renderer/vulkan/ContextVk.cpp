@@ -1606,7 +1606,7 @@ angle::Result ContextVk::drawArrays(const gl::Context *context,
         uint32_t numIndices;
         ANGLE_TRY(setupLineLoopDraw(context, mode, first, count, gl::DrawElementsType::InvalidEnum,
                                     nullptr, &commandBuffer, &numIndices));
-        vk::LineLoopHelper::Draw(numIndices, commandBuffer);
+        vk::LineLoopHelper::Draw(numIndices, 0, commandBuffer);
     }
     else
     {
@@ -1683,12 +1683,36 @@ angle::Result ContextVk::drawElements(const gl::Context *context,
         uint32_t indexCount;
         ANGLE_TRY(
             setupLineLoopDraw(context, mode, 0, count, type, indices, &commandBuffer, &indexCount));
-        vk::LineLoopHelper::Draw(indexCount, commandBuffer);
+        vk::LineLoopHelper::Draw(indexCount, 0, commandBuffer);
     }
     else
     {
         ANGLE_TRY(setupIndexedDraw(context, mode, count, 1, type, indices, &commandBuffer));
         commandBuffer->drawIndexed(count);
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::drawElementsBaseVertex(const gl::Context *context,
+                                                gl::PrimitiveMode mode,
+                                                GLsizei count,
+                                                gl::DrawElementsType type,
+                                                const void *indices,
+                                                GLint baseVertex)
+{
+    vk::CommandBuffer *commandBuffer = nullptr;
+    if (mode == gl::PrimitiveMode::LineLoop)
+    {
+        uint32_t indexCount;
+        ANGLE_TRY(
+            setupLineLoopDraw(context, mode, 0, count, type, indices, &commandBuffer, &indexCount));
+        vk::LineLoopHelper::Draw(indexCount, baseVertex, commandBuffer);
+    }
+    else
+    {
+        ANGLE_TRY(setupIndexedDraw(context, mode, count, 1, type, indices, &commandBuffer));
+        commandBuffer->drawIndexedBaseVertex(count, baseVertex);
     }
 
     return angle::Result::Continue;
@@ -1716,6 +1740,32 @@ angle::Result ContextVk::drawElementsInstanced(const gl::Context *context,
     }
 
     commandBuffer->drawIndexedInstanced(count, instances);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::drawElementsInstancedBaseVertex(const gl::Context *context,
+                                                         gl::PrimitiveMode mode,
+                                                         GLsizei count,
+                                                         gl::DrawElementsType type,
+                                                         const void *indices,
+                                                         GLsizei instances,
+                                                         GLint baseVertex)
+{
+    vk::CommandBuffer *commandBuffer = nullptr;
+
+    if (mode == gl::PrimitiveMode::LineLoop)
+    {
+        uint32_t indexCount;
+        ANGLE_TRY(
+            setupLineLoopDraw(context, mode, 0, count, type, indices, &commandBuffer, &indexCount));
+        count = indexCount;
+    }
+    else
+    {
+        ANGLE_TRY(setupIndexedDraw(context, mode, count, instances, type, indices, &commandBuffer));
+    }
+
+    commandBuffer->drawIndexedInstancedBaseVertex(count, instances, baseVertex);
     return angle::Result::Continue;
 }
 
@@ -1755,6 +1805,18 @@ angle::Result ContextVk::drawRangeElements(const gl::Context *context,
                                            const void *indices)
 {
     return drawElements(context, mode, count, type, indices);
+}
+
+angle::Result ContextVk::drawRangeElementsBaseVertex(const gl::Context *context,
+                                                     gl::PrimitiveMode mode,
+                                                     GLuint start,
+                                                     GLuint end,
+                                                     GLsizei count,
+                                                     gl::DrawElementsType type,
+                                                     const void *indices,
+                                                     GLint baseVertex)
+{
+    return drawElementsBaseVertex(context, mode, count, type, indices, baseVertex);
 }
 
 VkDevice ContextVk::getDevice() const

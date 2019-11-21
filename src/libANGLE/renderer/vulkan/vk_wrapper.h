@@ -271,7 +271,11 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                      int32_t vertexOffset,
                      uint32_t firstInstance);
     void drawIndexed(uint32_t indexCount);
+    void drawIndexedBaseVertex(uint32_t indexCount, uint32_t vertexOffset);
     void drawIndexedInstanced(uint32_t indexCount, uint32_t instanceCount);
+    void drawIndexedInstancedBaseVertex(uint32_t indexCount,
+                                        uint32_t instanceCount,
+                                        uint32_t vertexOffset);
     void drawIndexedInstancedBaseVertexBaseInstance(uint32_t indexCount,
                                                     uint32_t instanceCount,
                                                     uint32_t firstIndex,
@@ -958,10 +962,24 @@ ANGLE_INLINE void CommandBuffer::drawIndexed(uint32_t indexCount)
     vkCmdDrawIndexed(mHandle, indexCount, 1, 0, 0, 0);
 }
 
+ANGLE_INLINE void CommandBuffer::drawIndexedBaseVertex(uint32_t indexCount, uint32_t vertexOffset)
+{
+    ASSERT(valid());
+    vkCmdDrawIndexed(mHandle, indexCount, 1, 0, vertexOffset, 0);
+}
+
 ANGLE_INLINE void CommandBuffer::drawIndexedInstanced(uint32_t indexCount, uint32_t instanceCount)
 {
     ASSERT(valid());
     vkCmdDrawIndexed(mHandle, indexCount, instanceCount, 0, 0, 0);
+}
+
+ANGLE_INLINE void CommandBuffer::drawIndexedInstancedBaseVertex(uint32_t indexCount,
+                                                                uint32_t instanceCount,
+                                                                uint32_t vertexOffset)
+{
+    ASSERT(valid());
+    vkCmdDrawIndexed(mHandle, indexCount, instanceCount, 0, vertexOffset, 0);
 }
 
 ANGLE_INLINE void CommandBuffer::drawIndexedInstancedBaseVertexBaseInstance(uint32_t indexCount,

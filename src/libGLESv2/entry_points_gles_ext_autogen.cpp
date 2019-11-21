@@ -4149,6 +4149,137 @@ void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs)
     }
 }
 
+// GL_EXT_draw_elements_base_vertex
+void GL_APIENTRY DrawElementsBaseVertexEXT(GLenum mode,
+                                           GLsizei count,
+                                           GLenum type,
+                                           const void *indices,
+                                           GLint basevertex)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glDrawElementsBaseVertexEXT",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
+    if (context)
+    {
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateDrawElementsBaseVertexEXT(context, modePacked, count,
+                                                              typePacked, indices, basevertex));
+        if (isCallValid)
+        {
+            context->drawElementsBaseVertex(modePacked, count, typePacked, indices, basevertex);
+        }
+        ANGLE_CAPTURE(DrawElementsBaseVertexEXT, isCallValid, context, modePacked, count,
+                      typePacked, indices, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawElementsInstancedBaseVertexEXT(GLenum mode,
+                                                    GLsizei count,
+                                                    GLenum type,
+                                                    const void *indices,
+                                                    GLsizei instancecount,
+                                                    GLint basevertex)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glDrawElementsInstancedBaseVertexEXT",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLsizei instancecount = %d, GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount,
+          basevertex);
+
+    if (context)
+    {
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateDrawElementsInstancedBaseVertexEXT(
+                                                             context, modePacked, count, typePacked,
+                                                             indices, instancecount, basevertex));
+        if (isCallValid)
+        {
+            context->drawElementsInstancedBaseVertex(modePacked, count, typePacked, indices,
+                                                     instancecount, basevertex);
+        }
+        ANGLE_CAPTURE(DrawElementsInstancedBaseVertexEXT, isCallValid, context, modePacked, count,
+                      typePacked, indices, instancecount, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawRangeElementsBaseVertexEXT(GLenum mode,
+                                                GLuint start,
+                                                GLuint end,
+                                                GLsizei count,
+                                                GLenum type,
+                                                const void *indices,
+                                                GLint basevertex)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glDrawRangeElementsBaseVertexEXT",
+          "context = %d, GLenum mode = %s, GLuint start = %u, GLuint end = %u, GLsizei count = %d, "
+          "GLenum type = %s, const void *indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
+    if (context)
+    {
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateDrawRangeElementsBaseVertexEXT(
+                                                             context, modePacked, start, end, count,
+                                                             typePacked, indices, basevertex));
+        if (isCallValid)
+        {
+            context->drawRangeElementsBaseVertex(modePacked, start, end, count, typePacked, indices,
+                                                 basevertex);
+        }
+        ANGLE_CAPTURE(DrawRangeElementsBaseVertexEXT, isCallValid, context, modePacked, start, end,
+                      count, typePacked, indices, basevertex);
+    }
+}
+
+void GL_APIENTRY MultiDrawElementsBaseVertexEXT(GLenum mode,
+                                                const GLsizei *count,
+                                                GLenum type,
+                                                const void *const *indices,
+                                                GLsizei primcount,
+                                                const GLint *basevertex)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glMultiDrawElementsBaseVertexEXT",
+          "context = %d, GLenum mode = %s, const GLsizei *count = 0x%016" PRIxPTR
+          ", GLenum type = %s, const void *const*indices = 0x%016" PRIxPTR
+          ", GLsizei primcount = %d, const GLint *basevertex = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, primcount,
+          (uintptr_t)basevertex);
+
+    if (context)
+    {
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateMultiDrawElementsBaseVertexEXT(
+                                                             context, modePacked, count, typePacked,
+                                                             indices, primcount, basevertex));
+        if (isCallValid)
+        {
+            context->multiDrawElementsBaseVertex(modePacked, count, typePacked, indices, primcount,
+                                                 basevertex);
+        }
+        ANGLE_CAPTURE(MultiDrawElementsBaseVertexEXT, isCallValid, context, modePacked, count,
+                      typePacked, indices, primcount, basevertex);
+    }
+}
+
 // GL_EXT_geometry_shader
 void GL_APIENTRY FramebufferTextureEXT(GLenum target,
                                        GLenum attachment,
@@ -5671,6 +5802,105 @@ void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
         ANGLE_CAPTURE(EGLImageTargetTexture2DOES, isCallValid, context, targetPacked, image);
     }
 }
+
+// GL_OES_draw_elements_base_vertex
+void GL_APIENTRY DrawElementsBaseVertexOES(GLenum mode,
+                                           GLsizei count,
+                                           GLenum type,
+                                           const void *indices,
+                                           GLint basevertex)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glDrawElementsBaseVertexOES",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
+    if (context)
+    {
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateDrawElementsBaseVertexOES(context, modePacked, count,
+                                                              typePacked, indices, basevertex));
+        if (isCallValid)
+        {
+            context->drawElementsBaseVertex(modePacked, count, typePacked, indices, basevertex);
+        }
+        ANGLE_CAPTURE(DrawElementsBaseVertexOES, isCallValid, context, modePacked, count,
+                      typePacked, indices, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawElementsInstancedBaseVertexOES(GLenum mode,
+                                                    GLsizei count,
+                                                    GLenum type,
+                                                    const void *indices,
+                                                    GLsizei instancecount,
+                                                    GLint basevertex)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glDrawElementsInstancedBaseVertexOES",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLsizei instancecount = %d, GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount,
+          basevertex);
+
+    if (context)
+    {
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateDrawElementsInstancedBaseVertexOES(
+                                                             context, modePacked, count, typePacked,
+                                                             indices, instancecount, basevertex));
+        if (isCallValid)
+        {
+            context->drawElementsInstancedBaseVertex(modePacked, count, typePacked, indices,
+                                                     instancecount, basevertex);
+        }
+        ANGLE_CAPTURE(DrawElementsInstancedBaseVertexOES, isCallValid, context, modePacked, count,
+                      typePacked, indices, instancecount, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawRangeElementsBaseVertexOES(GLenum mode,
+                                                GLuint start,
+                                                GLuint end,
+                                                GLsizei count,
+                                                GLenum type,
+                                                const void *indices,
+                                                GLint basevertex)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glDrawRangeElementsBaseVertexOES",
+          "context = %d, GLenum mode = %s, GLuint start = %u, GLuint end = %u, GLsizei count = %d, "
+          "GLenum type = %s, const void *indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
+    if (context)
+    {
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateDrawRangeElementsBaseVertexOES(
+                                                             context, modePacked, start, end, count,
+                                                             typePacked, indices, basevertex));
+        if (isCallValid)
+        {
+            context->drawRangeElementsBaseVertex(modePacked, start, end, count, typePacked, indices,
+                                                 basevertex);
+        }
+        ANGLE_CAPTURE(DrawRangeElementsBaseVertexOES, isCallValid, context, modePacked, start, end,
+                      count, typePacked, indices, basevertex);
+    }
+}
+
+// MultiDrawElementsBaseVertexEXT is already defined.
 
 // GL_OES_draw_texture
 void GL_APIENTRY DrawTexfOES(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height)
@@ -10501,16 +10731,82 @@ void GL_APIENTRY DrawElementsBaseVertexContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDrawElementsBaseVertex(context, mode, count, type, indices, basevertex));
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateDrawElementsBaseVertex(context, modePacked, count, typePacked,
+                                                           indices, basevertex));
         if (isCallValid)
         {
-            context->drawElementsBaseVertex(mode, count, type, indices, basevertex);
+            context->drawElementsBaseVertex(modePacked, count, typePacked, indices, basevertex);
         }
-        ANGLE_CAPTURE(DrawElementsBaseVertex, isCallValid, context, mode, count, type, indices,
-                      basevertex);
+        ANGLE_CAPTURE(DrawElementsBaseVertex, isCallValid, context, modePacked, count, typePacked,
+                      indices, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
+                                                       GLenum mode,
+                                                       GLsizei count,
+                                                       GLenum type,
+                                                       const void *indices,
+                                                       GLint basevertex)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glDrawElementsBaseVertexEXT",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateDrawElementsBaseVertexEXT(context, modePacked, count,
+                                                              typePacked, indices, basevertex));
+        if (isCallValid)
+        {
+            context->drawElementsBaseVertex(modePacked, count, typePacked, indices, basevertex);
+        }
+        ANGLE_CAPTURE(DrawElementsBaseVertexEXT, isCallValid, context, modePacked, count,
+                      typePacked, indices, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawElementsBaseVertexOESContextANGLE(GLeglContext ctx,
+                                                       GLenum mode,
+                                                       GLsizei count,
+                                                       GLenum type,
+                                                       const void *indices,
+                                                       GLint basevertex)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glDrawElementsBaseVertexOES",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                              = (context->skipValidation() ||
+                            ValidateDrawElementsBaseVertexOES(context, modePacked, count,
+                                                              typePacked, indices, basevertex));
+        if (isCallValid)
+        {
+            context->drawElementsBaseVertex(modePacked, count, typePacked, indices, basevertex);
+        }
+        ANGLE_CAPTURE(DrawElementsBaseVertexOES, isCallValid, context, modePacked, count,
+                      typePacked, indices, basevertex);
     }
 }
 
@@ -10626,17 +10922,89 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateDrawElementsInstancedBaseVertex(
-                                context, mode, count, type, indices, instancecount, basevertex));
+        bool isCallValid = (context->skipValidation() || ValidateDrawElementsInstancedBaseVertex(
+                                                             context, modePacked, count, typePacked,
+                                                             indices, instancecount, basevertex));
         if (isCallValid)
         {
-            context->drawElementsInstancedBaseVertex(mode, count, type, indices, instancecount,
-                                                     basevertex);
+            context->drawElementsInstancedBaseVertex(modePacked, count, typePacked, indices,
+                                                     instancecount, basevertex);
         }
-        ANGLE_CAPTURE(DrawElementsInstancedBaseVertex, isCallValid, context, mode, count, type,
-                      indices, instancecount, basevertex);
+        ANGLE_CAPTURE(DrawElementsInstancedBaseVertex, isCallValid, context, modePacked, count,
+                      typePacked, indices, instancecount, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawElementsInstancedBaseVertexEXTContextANGLE(GLeglContext ctx,
+                                                                GLenum mode,
+                                                                GLsizei count,
+                                                                GLenum type,
+                                                                const void *indices,
+                                                                GLsizei instancecount,
+                                                                GLint basevertex)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glDrawElementsInstancedBaseVertexEXT",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLsizei instancecount = %d, GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount,
+          basevertex);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateDrawElementsInstancedBaseVertexEXT(
+                                                             context, modePacked, count, typePacked,
+                                                             indices, instancecount, basevertex));
+        if (isCallValid)
+        {
+            context->drawElementsInstancedBaseVertex(modePacked, count, typePacked, indices,
+                                                     instancecount, basevertex);
+        }
+        ANGLE_CAPTURE(DrawElementsInstancedBaseVertexEXT, isCallValid, context, modePacked, count,
+                      typePacked, indices, instancecount, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawElementsInstancedBaseVertexOESContextANGLE(GLeglContext ctx,
+                                                                GLenum mode,
+                                                                GLsizei count,
+                                                                GLenum type,
+                                                                const void *indices,
+                                                                GLsizei instancecount,
+                                                                GLint basevertex)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glDrawElementsInstancedBaseVertexOES",
+          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
+          "*indices = 0x%016" PRIxPTR ", GLsizei instancecount = %d, GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount,
+          basevertex);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateDrawElementsInstancedBaseVertexOES(
+                                                             context, modePacked, count, typePacked,
+                                                             indices, instancecount, basevertex));
+        if (isCallValid)
+        {
+            context->drawElementsInstancedBaseVertex(modePacked, count, typePacked, indices,
+                                                     instancecount, basevertex);
+        }
+        ANGLE_CAPTURE(DrawElementsInstancedBaseVertexOES, isCallValid, context, modePacked, count,
+                      typePacked, indices, instancecount, basevertex);
     }
 }
 
@@ -10724,17 +11092,89 @@ void GL_APIENTRY DrawRangeElementsBaseVertexContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                              = (context->skipValidation() ||
-                            ValidateDrawRangeElementsBaseVertex(context, mode, start, end, count,
-                                                                type, indices, basevertex));
+        bool isCallValid = (context->skipValidation() || ValidateDrawRangeElementsBaseVertex(
+                                                             context, modePacked, start, end, count,
+                                                             typePacked, indices, basevertex));
         if (isCallValid)
         {
-            context->drawRangeElementsBaseVertex(mode, start, end, count, type, indices,
+            context->drawRangeElementsBaseVertex(modePacked, start, end, count, typePacked, indices,
                                                  basevertex);
         }
-        ANGLE_CAPTURE(DrawRangeElementsBaseVertex, isCallValid, context, mode, start, end, count,
-                      type, indices, basevertex);
+        ANGLE_CAPTURE(DrawRangeElementsBaseVertex, isCallValid, context, modePacked, start, end,
+                      count, typePacked, indices, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawRangeElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
+                                                            GLenum mode,
+                                                            GLuint start,
+                                                            GLuint end,
+                                                            GLsizei count,
+                                                            GLenum type,
+                                                            const void *indices,
+                                                            GLint basevertex)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glDrawRangeElementsBaseVertexEXT",
+          "context = %d, GLenum mode = %s, GLuint start = %u, GLuint end = %u, GLsizei count = %d, "
+          "GLenum type = %s, const void *indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateDrawRangeElementsBaseVertexEXT(
+                                                             context, modePacked, start, end, count,
+                                                             typePacked, indices, basevertex));
+        if (isCallValid)
+        {
+            context->drawRangeElementsBaseVertex(modePacked, start, end, count, typePacked, indices,
+                                                 basevertex);
+        }
+        ANGLE_CAPTURE(DrawRangeElementsBaseVertexEXT, isCallValid, context, modePacked, start, end,
+                      count, typePacked, indices, basevertex);
+    }
+}
+
+void GL_APIENTRY DrawRangeElementsBaseVertexOESContextANGLE(GLeglContext ctx,
+                                                            GLenum mode,
+                                                            GLuint start,
+                                                            GLuint end,
+                                                            GLsizei count,
+                                                            GLenum type,
+                                                            const void *indices,
+                                                            GLint basevertex)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glDrawRangeElementsBaseVertexOES",
+          "context = %d, GLenum mode = %s, GLuint start = %u, GLuint end = %u, GLsizei count = %d, "
+          "GLenum type = %s, const void *indices = 0x%016" PRIxPTR ", GLint basevertex = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateDrawRangeElementsBaseVertexOES(
+                                                             context, modePacked, start, end, count,
+                                                             typePacked, indices, basevertex));
+        if (isCallValid)
+        {
+            context->drawRangeElementsBaseVertex(modePacked, start, end, count, typePacked, indices,
+                                                 basevertex);
+        }
+        ANGLE_CAPTURE(DrawRangeElementsBaseVertexOES, isCallValid, context, modePacked, start, end,
+                      count, typePacked, indices, basevertex);
     }
 }
 
@@ -16857,6 +17297,42 @@ void GL_APIENTRY MultMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
             context->multMatrixx(m);
         }
         ANGLE_CAPTURE(MultMatrixx, isCallValid, context, m);
+    }
+}
+
+void GL_APIENTRY MultiDrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
+                                                            GLenum mode,
+                                                            const GLsizei *count,
+                                                            GLenum type,
+                                                            const void *const *indices,
+                                                            GLsizei primcount,
+                                                            const GLint *basevertex)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glMultiDrawElementsBaseVertexEXT",
+          "context = %d, GLenum mode = %s, const GLsizei *count = 0x%016" PRIxPTR
+          ", GLenum type = %s, const void *const*indices = 0x%016" PRIxPTR
+          ", GLsizei primcount = %d, const GLint *basevertex = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)count,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, primcount,
+          (uintptr_t)basevertex);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
+        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateMultiDrawElementsBaseVertexEXT(
+                                                             context, modePacked, count, typePacked,
+                                                             indices, primcount, basevertex));
+        if (isCallValid)
+        {
+            context->multiDrawElementsBaseVertex(modePacked, count, typePacked, indices, primcount,
+                                                 basevertex);
+        }
+        ANGLE_CAPTURE(MultiDrawElementsBaseVertexEXT, isCallValid, context, modePacked, count,
+                      typePacked, indices, primcount, basevertex);
     }
 }
 

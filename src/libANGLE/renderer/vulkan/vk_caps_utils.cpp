@@ -72,6 +72,10 @@ void RendererVk::ensureCapsInitialized() const
     // Enable ANGLE_base_vertex_base_instance
     mNativeExtensions.baseVertexBaseInstance = true;
 
+    // Enable OES/EXT_draw_elements_base_vertex
+    mNativeExtensions.drawElementsBaseVertexOES = true;
+    mNativeExtensions.drawElementsBaseVertexEXT = true;
+
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinMax = true;
 

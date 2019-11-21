@@ -199,6 +199,17 @@ angle::Result Context9::drawElements(const gl::Context *context,
     return mRenderer->genericDrawElements(context, mode, count, type, indices, 0);
 }
 
+angle::Result Context9::drawElementsBaseVertex(const gl::Context *context,
+                                               gl::PrimitiveMode mode,
+                                               GLsizei count,
+                                               gl::DrawElementsType type,
+                                               const void *indices,
+                                               GLint baseVertex)
+{
+    ANGLE_HR_UNREACHABLE(this);
+    return angle::Result::Continue;
+}
+
 angle::Result Context9::drawElementsInstanced(const gl::Context *context,
                                               gl::PrimitiveMode mode,
                                               GLsizei count,
@@ -207,6 +218,18 @@ angle::Result Context9::drawElementsInstanced(const gl::Context *context,
                                               GLsizei instances)
 {
     return mRenderer->genericDrawElements(context, mode, count, type, indices, instances);
+}
+
+angle::Result Context9::drawElementsInstancedBaseVertex(const gl::Context *context,
+                                                        gl::PrimitiveMode mode,
+                                                        GLsizei count,
+                                                        gl::DrawElementsType type,
+                                                        const void *indices,
+                                                        GLsizei instances,
+                                                        GLint baseVertex)
+{
+    ANGLE_HR_UNREACHABLE(this);
+    return angle::Result::Continue;
 }
 
 angle::Result Context9::drawElementsInstancedBaseVertexBaseInstance(const gl::Context *context,
@@ -231,6 +254,19 @@ angle::Result Context9::drawRangeElements(const gl::Context *context,
                                           const void *indices)
 {
     return mRenderer->genericDrawElements(context, mode, count, type, indices, 0);
+}
+
+angle::Result Context9::drawRangeElementsBaseVertex(const gl::Context *context,
+                                                    gl::PrimitiveMode mode,
+                                                    GLuint start,
+                                                    GLuint end,
+                                                    GLsizei count,
+                                                    gl::DrawElementsType type,
+                                                    const void *indices,
+                                                    GLint baseVertex)
+{
+    ANGLE_HR_UNREACHABLE(this);
+    return angle::Result::Continue;
 }
 
 angle::Result Context9::drawArraysIndirect(const gl::Context *context,

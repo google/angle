@@ -1421,6 +1421,16 @@ void GenerateCaps(const FunctionsGL *functions,
         functions->hasGLESExtension("GL_OES_draw_elements_base_vertex") ||
         functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex");
 
+    // OES_draw_elements_base_vertex
+    extensions->drawElementsBaseVertexOES =
+        functions->isAtLeastGL(gl::Version(3, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
+        functions->hasGLESExtension("GL_OES_draw_elements_base_vertex");
+
+    // EXT_draw_elements_base_vertex
+    extensions->drawElementsBaseVertexEXT =
+        functions->isAtLeastGL(gl::Version(3, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
+        functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex");
+
     // ANGLE_compressed_texture_etc
     // Expose this extension only when we support the formats or we're running on top of a native
     // ES driver.

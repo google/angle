@@ -449,7 +449,7 @@ class LineLoopHelper final : angle::NonCopyable
     void release(ContextVk *contextVk);
     void destroy(VkDevice device);
 
-    static void Draw(uint32_t count, CommandBuffer *commandBuffer);
+    static void Draw(uint32_t count, uint32_t baseVertex, CommandBuffer *commandBuffer);
 
   private:
     DynamicBuffer mDynamicIndexBuffer;

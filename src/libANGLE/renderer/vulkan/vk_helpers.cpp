@@ -1388,10 +1388,10 @@ void LineLoopHelper::destroy(VkDevice device)
 }
 
 // static
-void LineLoopHelper::Draw(uint32_t count, CommandBuffer *commandBuffer)
+void LineLoopHelper::Draw(uint32_t count, uint32_t baseVertex, CommandBuffer *commandBuffer)
 {
     // Our first index is always 0 because that's how we set it up in createIndexBuffer*.
-    commandBuffer->drawIndexed(count);
+    commandBuffer->drawIndexedBaseVertex(count, baseVertex);
 }
 
 // BufferHelper implementation.

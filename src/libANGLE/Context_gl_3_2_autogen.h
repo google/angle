@@ -11,9 +11,6 @@
 #define ANGLE_CONTEXT_GL_3_2_AUTOGEN_H_
 
 #define ANGLE_GL_3_2_CONTEXT_API                                                               \
-    void multiDrawElementsBaseVertex(GLenum mode, const GLsizei *count, GLenum type,           \
-                                     const void *const *indices, GLsizei drawcount,            \
-                                     const GLint *basevertex);                                 \
     void texImage2DMultisample(GLenum target, GLsizei samples, GLenum internalformat,          \
                                GLsizei width, GLsizei height, GLboolean fixedsamplelocations); \
     void texImage3DMultisample(GLenum target, GLsizei samples, GLenum internalformat,          \

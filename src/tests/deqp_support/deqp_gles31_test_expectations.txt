@@ -649,6 +649,9 @@
 3683 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.stencil_texturing.format.* = FAIL
 3683 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.stencil_texturing.misc.compare_mode_effect = FAIL
 
+// Instanced lines with base vertex:
+4166 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_base_vertex.draw_elements_instanced_base_vertex.lines.instanced_attributes = FAIL
+
 // Need to support non-color when staging image updates
 4080 ANDROID VULKAN : dEQP-GLES31.functional.stencil_texturing.misc.base_level = SKIP
 

@@ -47,7 +47,9 @@ enum class CommandID : uint16_t
     DispatchIndirect,
     Draw,
     DrawIndexed,
+    DrawIndexedBaseVertex,
     DrawIndexedInstanced,
+    DrawIndexedInstancedBaseVertex,
     DrawIndexedInstancedBaseVertexBaseInstance,
     DrawInstanced,
     DrawInstancedBaseInstance,
@@ -215,12 +217,27 @@ struct DrawIndexedParams
 };
 VERIFY_4_BYTE_ALIGNMENT(DrawIndexedParams)
 
+struct DrawIndexedBaseVertexParams
+{
+    uint32_t indexCount;
+    uint32_t vertexOffset;
+};
+VERIFY_4_BYTE_ALIGNMENT(DrawIndexedBaseVertexParams)
+
 struct DrawIndexedInstancedParams
 {
     uint32_t indexCount;
     uint32_t instanceCount;
 };
 VERIFY_4_BYTE_ALIGNMENT(DrawIndexedInstancedParams)
+
+struct DrawIndexedInstancedBaseVertexParams
+{
+    uint32_t indexCount;
+    uint32_t instanceCount;
+    uint32_t vertexOffset;
+};
+VERIFY_4_BYTE_ALIGNMENT(DrawIndexedInstancedBaseVertexParams)
 
 struct DrawIndexedInstancedBaseVertexBaseInstanceParams
 {
@@ -478,8 +495,12 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void draw(uint32_t vertexCount, uint32_t firstVertex);
 
     void drawIndexed(uint32_t indexCount);
+    void drawIndexedBaseVertex(uint32_t indexCount, uint32_t vertexOffset);
 
     void drawIndexedInstanced(uint32_t indexCount, uint32_t instanceCount);
+    void drawIndexedInstancedBaseVertex(uint32_t indexCount,
+                                        uint32_t instanceCount,
+                                        uint32_t vertexOffset);
     void drawIndexedInstancedBaseVertexBaseInstance(uint32_t indexCount,
                                                     uint32_t instanceCount,
                                                     uint32_t firstIndex,
@@ -920,6 +941,15 @@ ANGLE_INLINE void SecondaryCommandBuffer::drawIndexed(uint32_t indexCount)
     paramStruct->indexCount        = indexCount;
 }
 
+ANGLE_INLINE void SecondaryCommandBuffer::drawIndexedBaseVertex(uint32_t indexCount,
+                                                                uint32_t vertexOffset)
+{
+    DrawIndexedBaseVertexParams *paramStruct =
+        initCommand<DrawIndexedBaseVertexParams>(CommandID::DrawIndexedBaseVertex);
+    paramStruct->indexCount   = indexCount;
+    paramStruct->vertexOffset = vertexOffset;
+}
+
 ANGLE_INLINE void SecondaryCommandBuffer::drawIndexedInstanced(uint32_t indexCount,
                                                                uint32_t instanceCount)
 {
@@ -928,6 +958,19 @@ ANGLE_INLINE void SecondaryCommandBuffer::drawIndexedInstanced(uint32_t indexCou
     paramStruct->indexCount    = indexCount;
     paramStruct->instanceCount = instanceCount;
 }
+
+ANGLE_INLINE void SecondaryCommandBuffer::drawIndexedInstancedBaseVertex(uint32_t indexCount,
+                                                                         uint32_t instanceCount,
+                                                                         uint32_t vertexOffset)
+{
+    DrawIndexedInstancedBaseVertexParams *paramStruct =
+        initCommand<DrawIndexedInstancedBaseVertexParams>(
+            CommandID::DrawIndexedInstancedBaseVertex);
+    paramStruct->indexCount    = indexCount;
+    paramStruct->instanceCount = instanceCount;
+    paramStruct->vertexOffset  = vertexOffset;
+}
+
 ANGLE_INLINE void SecondaryCommandBuffer::drawIndexedInstancedBaseVertexBaseInstance(
     uint32_t indexCount,
     uint32_t instanceCount,

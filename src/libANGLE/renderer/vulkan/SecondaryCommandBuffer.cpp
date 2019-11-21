@@ -180,11 +180,26 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                     vkCmdDrawIndexed(cmdBuffer, params->indexCount, 1, 0, 0, 0);
                     break;
                 }
+                case CommandID::DrawIndexedBaseVertex:
+                {
+                    const DrawIndexedBaseVertexParams *params =
+                        getParamPtr<DrawIndexedBaseVertexParams>(currentCommand);
+                    vkCmdDrawIndexed(cmdBuffer, params->indexCount, 1, 0, params->vertexOffset, 0);
+                    break;
+                }
                 case CommandID::DrawIndexedInstanced:
                 {
                     const DrawIndexedInstancedParams *params =
                         getParamPtr<DrawIndexedInstancedParams>(currentCommand);
                     vkCmdDrawIndexed(cmdBuffer, params->indexCount, params->instanceCount, 0, 0, 0);
+                    break;
+                }
+                case CommandID::DrawIndexedInstancedBaseVertex:
+                {
+                    const DrawIndexedInstancedBaseVertexParams *params =
+                        getParamPtr<DrawIndexedInstancedBaseVertexParams>(currentCommand);
+                    vkCmdDrawIndexed(cmdBuffer, params->indexCount, params->instanceCount, 0,
+                                     params->vertexOffset, 0);
                     break;
                 }
                 case CommandID::DrawIndexedInstancedBaseVertexBaseInstance:
@@ -444,8 +459,14 @@ std::string SecondaryCommandBuffer::dumpCommands(const char *separator) const
                 case CommandID::DrawIndexed:
                     result += "DrawIndexed";
                     break;
+                case CommandID::DrawIndexedBaseVertex:
+                    result += "DrawIndexedBaseVertex";
+                    break;
                 case CommandID::DrawIndexedInstanced:
                     result += "DrawIndexedInstanced";
+                    break;
+                case CommandID::DrawIndexedInstancedBaseVertex:
+                    result += "DrawIndexedInstancedBaseVertex";
                     break;
                 case CommandID::DrawInstanced:
                     result += "DrawInstanced";

@@ -66,24 +66,24 @@ bool ValidateDebugMessageInsert(Context *context,
                                 const GLchar *buf);
 bool ValidateDisablei(Context *context, GLenum target, GLuint index);
 bool ValidateDrawElementsBaseVertex(Context *context,
-                                    GLenum mode,
+                                    PrimitiveMode modePacked,
                                     GLsizei count,
-                                    GLenum type,
+                                    DrawElementsType typePacked,
                                     const void *indices,
                                     GLint basevertex);
 bool ValidateDrawElementsInstancedBaseVertex(Context *context,
-                                             GLenum mode,
+                                             PrimitiveMode modePacked,
                                              GLsizei count,
-                                             GLenum type,
+                                             DrawElementsType typePacked,
                                              const void *indices,
                                              GLsizei instancecount,
                                              GLint basevertex);
 bool ValidateDrawRangeElementsBaseVertex(Context *context,
-                                         GLenum mode,
+                                         PrimitiveMode modePacked,
                                          GLuint start,
                                          GLuint end,
                                          GLsizei count,
-                                         GLenum type,
+                                         DrawElementsType typePacked,
                                          const void *indices,
                                          GLint basevertex);
 bool ValidateEnablei(Context *context, GLenum target, GLuint index);

@@ -2299,23 +2299,41 @@ void Context::drawElementsInstanced(PrimitiveMode mode,
     MarkShaderStorageBufferUsage(this);
 }
 
-void Context::drawElementsBaseVertex(GLenum mode,
+void Context::drawElementsBaseVertex(PrimitiveMode mode,
                                      GLsizei count,
-                                     GLenum type,
+                                     DrawElementsType type,
                                      const void *indices,
                                      GLint basevertex)
 {
-    UNIMPLEMENTED();
+    // No-op if count draws no primitives for given mode
+    if (noopDraw(mode, count))
+    {
+        return;
+    }
+
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(
+        mImplementation->drawElementsBaseVertex(this, mode, count, type, indices, basevertex));
+    MarkShaderStorageBufferUsage(this);
 }
 
-void Context::drawElementsInstancedBaseVertex(GLenum mode,
+void Context::drawElementsInstancedBaseVertex(PrimitiveMode mode,
                                               GLsizei count,
-                                              GLenum type,
+                                              DrawElementsType type,
                                               const void *indices,
                                               GLsizei instancecount,
                                               GLint basevertex)
 {
-    UNIMPLEMENTED();
+    // No-op if count draws no primitives for given mode
+    if (noopDrawInstanced(mode, count, instancecount))
+    {
+        return;
+    }
+
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstancedBaseVertex(
+        this, mode, count, type, indices, instancecount, basevertex));
+    MarkShaderStorageBufferUsage(this);
 }
 
 void Context::drawRangeElements(PrimitiveMode mode,
@@ -2337,15 +2355,24 @@ void Context::drawRangeElements(PrimitiveMode mode,
     MarkShaderStorageBufferUsage(this);
 }
 
-void Context::drawRangeElementsBaseVertex(GLenum mode,
+void Context::drawRangeElementsBaseVertex(PrimitiveMode mode,
                                           GLuint start,
                                           GLuint end,
                                           GLsizei count,
-                                          GLenum type,
+                                          DrawElementsType type,
                                           const void *indices,
                                           GLint basevertex)
 {
-    UNIMPLEMENTED();
+    // No-op if count draws no primitives for given mode
+    if (noopDraw(mode, count))
+    {
+        return;
+    }
+
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(mImplementation->drawRangeElementsBaseVertex(this, mode, start, end, count,
+                                                                   type, indices, basevertex));
+    MarkShaderStorageBufferUsage(this);
 }
 
 void Context::drawArraysIndirect(PrimitiveMode mode, const void *indirect)
