@@ -14,6 +14,8 @@
 #include <fstream>
 #include <string>
 
+#include "sys/stat.h"
+
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
@@ -33,6 +35,76 @@ namespace angle
 {
 namespace
 {
+
+constexpr char kEnabledVarName[]      = "ANGLE_CAPTURE_ENABLED";
+constexpr char kOutDirectoryVarName[] = "ANGLE_CAPTURE_OUT_DIR";
+constexpr char kFrameStartVarName[]   = "ANGLE_CAPTURE_FRAME_START";
+constexpr char kFrameEndVarName[]     = "ANGLE_CAPTURE_FRAME_END";
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+
+constexpr char kAndroidCaptureEnabled[] = "debug.angle.capture.enabled";
+constexpr char kAndroidOutDir[]         = "debug.angle.capture.out_dir";
+constexpr char kAndroidFrameStart[]     = "debug.angle.capture.frame_start";
+constexpr char kAndroidFrameEnd[]       = "debug.angle.capture.frame_end";
+
+constexpr int kStreamSize = 64;
+
+constexpr char kAndroidOutputSubdir[] = "/angle_capture/";
+
+// Call out to 'getprop' on a shell and return a string if the value was set
+std::string AndroidGetEnvFromProp(const char *key)
+{
+    std::string command("getprop ");
+    command += key;
+
+    // Run the command and open a I/O stream to read results
+    char stream[kStreamSize] = {};
+    FILE *pipe               = popen(command.c_str(), "r");
+    if (pipe != nullptr)
+    {
+        fgets(stream, kStreamSize, pipe);
+        pclose(pipe);
+    }
+
+    // Right strip white space
+    std::string result(stream);
+    result.erase(result.find_last_not_of(" \n\r\t") + 1);
+    return result;
+}
+
+void PrimeAndroidEnvironmentVariables()
+{
+    std::string enabled = AndroidGetEnvFromProp(kAndroidCaptureEnabled);
+    if (!enabled.empty())
+    {
+        INFO() << "Frame capture read " << enabled << " from " << kAndroidCaptureEnabled;
+        setenv(kEnabledVarName, enabled.c_str(), 1);
+    }
+
+    std::string outDir = AndroidGetEnvFromProp(kAndroidOutDir);
+    if (!outDir.empty())
+    {
+        INFO() << "Frame capture read " << outDir << " from " << kAndroidOutDir;
+        setenv(kOutDirectoryVarName, outDir.c_str(), 1);
+    }
+
+    std::string frameStart = AndroidGetEnvFromProp(kAndroidFrameStart);
+    if (!frameStart.empty())
+    {
+        INFO() << "Frame capture read " << frameStart << " from " << kAndroidFrameStart;
+        setenv(kFrameStartVarName, frameStart.c_str(), 1);
+    }
+
+    std::string frameEnd = AndroidGetEnvFromProp(kAndroidFrameEnd);
+    if (!frameEnd.empty())
+    {
+        INFO() << "Frame capture read " << frameEnd << " from " << kAndroidFrameEnd;
+        setenv(kFrameEndVarName, frameEnd.c_str(), 1);
+    }
+}
+#endif
+
 std::string GetDefaultOutDirectory()
 {
 #if defined(ANGLE_PLATFORM_ANDROID)
@@ -57,17 +129,22 @@ std::string GetDefaultOutDirectory()
     {
         ERR() << "not able to lookup application id";
     }
-    path += std::string(applicationId) + "/";
+
+    path += std::string(applicationId) + kAndroidOutputSubdir;
+
+    // Check for existance of output path
+    struct stat dir_stat;
+    if (stat(path.c_str(), &dir_stat) == -1)
+    {
+        ERR() << "Output directory '" << path
+              << "' does not exist.  Create it over adb using mkdir.";
+    }
+
     return path;
 #else
     return std::string("./");
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 }
-
-constexpr char kEnabledVarName[]      = "ANGLE_CAPTURE_ENABLED";
-constexpr char kOutDirectoryVarName[] = "ANGLE_CAPTURE_OUT_DIR";
-constexpr char kFrameStartVarName[]   = "ANGLE_CAPTURE_FRAME_START";
-constexpr char kFrameEndVarName[]     = "ANGLE_CAPTURE_FRAME_END";
 
 struct FmtCapturePrefix
 {
@@ -1750,6 +1827,10 @@ FrameCapture::FrameCapture()
       mHasResourceType{}
 {
     reset();
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+    PrimeAndroidEnvironmentVariables();
+#endif
 
     std::string enabledFromEnv = angle::GetEnvironmentVar(kEnabledVarName);
     if (enabledFromEnv == "0")

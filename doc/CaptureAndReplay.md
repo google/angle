@@ -68,3 +68,66 @@ $ ANGLE_CAPTURE_ENABLED=0 out/Debug/capture_replay_sample
 ```
 
 Note that we specify `ANGLE_CAPTURE_ENABLED=0` to prevent re-capturing when running the replay.
+
+## Capturing an Android application
+
+In order to capture on Android, the following additional steps must be taken. These steps
+presume you've built and installed the ANGLE APK with capture enabled, and selected ANGLE
+as the GLES driver for your application.
+
+1. Create the output directory
+
+    Determine your package name:
+    ```
+    export PACKAGE_NAME com.android.gl2jni
+    ```
+    Then create an output directory that it can write to:
+    ```
+    $ adb shell mkdir -p /sdcard/Android/data/$PACKAGE_NAME/angle_capture
+    ```
+
+2. Set properties to use for environment variable
+
+    On Android, it is difficult to set an environment variable before starting native code.
+    To work around this, ANGLE will read debug system properties before starting the capture
+    and use them to prime environment variables used by the capture code.
+
+    Note: Mid-execution capture doesn't work for Android just yet, so frame_start must be
+    zero, which is the default. This it is sufficient to only set the end frame.
+    ```
+    $ adb shell setprop debug.angle.capture.frame_end 200
+    ```
+
+    There are other properties that can be set that match 1:1 with the env vars, but
+    they are not required for capture:
+    ```
+    # Optional
+    $ adb shell setprop debug.angle.capture.enabled 0
+    $ adb shell setprop debug.angle.capture.out_dir foo
+    $ adb shell setprop debug.angle.capture.frame_start 0
+    ```
+
+3.  Run the application, then pull the files to the capture_replay directory
+    ```
+    $ cd samples/capture_replay
+    $ adb pull /sdcard/Android/data/$PACKAGE_NAME/angle_capture replay_files
+    $ cp replay_files/* .
+    ```
+
+4. Update your GN args to specifiy which context will be replayed.
+
+    By default Context ID 1 will be replayed. On Android, Context ID 2 is more typical, some apps
+    we've run go as high as ID 6.
+    Note: this solution is temporary until EGL capture is in place.
+    ```
+    angle_capture_replay_sample_context_id = 2
+    ```
+
+5. Replay the capture on desktop
+
+    Until we have samples building for Android, the replay sample must be run on desktop.
+    We will also be plumbing replay files into perf and correctness tests which will run on Android.
+    ```
+    $ autoninja -C out/Release capture_replay_sample
+    $ out/Release/capture_replay_sample
+    ```
