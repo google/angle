@@ -92,8 +92,6 @@
 4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-bindingUpdate = FAIL
 4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-largeStrideAndOffsetsNewAndLegacyAPI = FAIL
 
-// Draw indirect:
-3564 VULKAN : KHR-GLES31.core.draw_indirect.* = SKIP
 
 // Explicit uniform locations: triggers ASSERT.
 4132 : KHR-GLES31.core.explicit_uniform_location.* = SKIP
@@ -118,6 +116,11 @@
 4124 VULKAN : KHR-GLES31.core.layout_binding.image2D_layout_binding_imageLoad_ComputeShader = SKIP
 4124 VULKAN : KHR-GLES31.core.layout_binding.image2D_layout_binding_imageLoad_FragmentShader = SKIP
 4124 VULKAN : KHR-GLES31.core.layout_binding.image2D_layout_binding_imageLoad_VertexShader = SKIP
+
+
+// Fails on Pixel2 and Pixel2 XL
+4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-elements = FAIL
+4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-arrays = FAIL
 
 // Passing on recent drivers:
 3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.* = FAIL
