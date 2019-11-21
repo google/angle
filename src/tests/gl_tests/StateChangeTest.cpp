@@ -4450,6 +4450,76 @@ TEST_P(SimpleStateChangeTest, FboLateCullFaceBackCWState)
     drawToFboWithCulling(GL_CW, false);
 }
 
+// Test that vertex attribute translation is still kept after binding it to another buffer then
+// binding back to the previous buffer.
+TEST_P(SimpleStateChangeTest, RebindTranslatedAttribute)
+{
+    constexpr char kVS[] = R"(attribute vec4 a_position;
+attribute float a_attrib;
+varying float v_attrib;
+void main()
+{
+    v_attrib = a_attrib;
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying float v_attrib;
+void main()
+{
+    gl_FragColor = vec4(v_attrib, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glBindAttribLocation(program, 0, "a_position");
+    glBindAttribLocation(program, 1, "a_attrib");
+    glLinkProgram(program);
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+
+    // Set up color data so red is drawn
+    std::vector<GLushort> data(1000, 0xffff);
+
+    GLBuffer redBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, redBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLushort) * data.size(), data.data(), GL_STATIC_DRAW);
+    // Use offset not multiple of 4 GLushorts, this could force vertex translation in Metal backend.
+    glVertexAttribPointer(1, 4, GL_UNSIGNED_SHORT, GL_TRUE, 0,
+                          reinterpret_cast<const void *>(sizeof(GLushort) * 97));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glEnableVertexAttribArray(1);
+
+    drawQuad(program, "a_position", 0.5f);
+    // Verify red was drawn
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    // Verify that green was drawn
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Bind black color buffer to the same attribute with zero offset
+    std::vector<GLfloat> black(6, 0.0f);
+    GLBuffer blackBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, blackBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * black.size(), black.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 0, 0);
+
+    drawQuad(program, "a_position", 0.5f);
+    // Verify black was drawn
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Rebind the old buffer & offset
+    glBindBuffer(GL_ARRAY_BUFFER, redBuffer);
+    // Use offset not multiple of 4 GLushorts
+    glVertexAttribPointer(1, 4, GL_UNSIGNED_SHORT, GL_TRUE, 0,
+                          reinterpret_cast<const void *>(sizeof(GLushort) * 97));
+
+    drawQuad(program, "a_position", 0.5f);
+    // Verify red was drawn
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Validates GL_RASTERIZER_DISCARD state is tracked correctly
 TEST_P(SimpleStateChangeTestES3, RasterizerDiscardState)
 {

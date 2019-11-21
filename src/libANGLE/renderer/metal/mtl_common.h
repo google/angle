@@ -103,13 +103,12 @@ constexpr uint32_t kMaxShaderSamplers    = 16;
 constexpr size_t kDefaultUniformsMaxSize = 4 * 1024;
 constexpr uint32_t kMaxViewports         = 1;
 
-constexpr uint32_t kVertexAttribBufferOffsetAlignment = 4;
 constexpr uint32_t kVertexAttribBufferStrideAlignment = 4;
 // Alignment requirement for offset passed to setVertex|FragmentBuffer
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-constexpr uint32_t kBufferSettingOffsetAlignment = 256;
+constexpr uint32_t kUniformBufferSettingOffsetMinAlignment = 256;
 #else
-constexpr uint32_t kBufferSettingOffsetAlignment = 4;
+constexpr uint32_t kUniformBufferSettingOffsetMinAlignment = 4;
 #endif
 constexpr uint32_t kIndexBufferOffsetAlignment = 4;
 

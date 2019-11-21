@@ -108,7 +108,7 @@ angle::Result ContextMtl::initialize()
     mBlendDesc.reset();
     mDepthStencilDesc.reset();
 
-    mTriFanIndexBuffer.initialize(this, 0, mtl::kBufferSettingOffsetAlignment,
+    mTriFanIndexBuffer.initialize(this, 0, mtl::kIndexBufferOffsetAlignment,
                                   kMaxTriFanLineLoopBuffersPerFrame);
     mLineLoopIndexBuffer.initialize(this, 0, 2 * sizeof(uint32_t),
                                     kMaxTriFanLineLoopBuffersPerFrame);
