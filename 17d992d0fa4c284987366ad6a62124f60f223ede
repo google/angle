@@ -638,6 +638,30 @@
     },
     {
       "key": {
+        "uuid": "22ef0a5b_c0bc7966",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-22T14:37:46Z",
+      "side": 1,
+      "message": "It definitely is not a problem to release a BufferHelper in onDestroy if there are handles in the command graph. I\u0027m not sure why it was failing in your prior CL. Maybe you can restore the code to how it was when you had the end2end_test failure and we can debug it.",
+      "parentUuid": "2051a9ef_357bed53",
+      "range": {
+        "startLine": 797,
+        "startChar": 4,
+        "endLine": 797,
+        "endChar": 80
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd3ddbbb_0af43b40",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapperVk.h",
         "patchSetId": 19
