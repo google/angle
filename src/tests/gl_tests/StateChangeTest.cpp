@@ -1364,6 +1364,9 @@ class SimpleStateChangeTestES3 : public SimpleStateChangeTest
 {};
 
 class SimpleStateChangeTestES31 : public SimpleStateChangeTest
+{};
+
+class SimpleStateChangeTestComputeES31 : public SimpleStateChangeTest
 {
   protected:
     void testSetUp() override
@@ -3067,8 +3070,97 @@ void main()
     EXPECT_EQ(s0LinearColors, s1LinearColors);
 }
 
+// Tests that rendering works as expected with multiple VAOs.
+TEST_P(SimpleStateChangeTestES31, MultipleVertexArrayObjectRendering)
+{
+    constexpr char kVertexShader[] = R"(attribute vec4 a_position;
+attribute vec4 a_color;
+varying vec4 v_color;
+void main()
+{
+    gl_Position = a_position;
+    v_color = a_color;
+})";
+
+    constexpr char kFragmentShader[] = R"(precision mediump float;
+varying vec4 v_color;
+void main()
+{
+    gl_FragColor = v_color;
+})";
+
+    ANGLE_GL_PROGRAM(mProgram, kVertexShader, kFragmentShader);
+    GLint positionLoc = glGetAttribLocation(mProgram, "a_position");
+    ASSERT_NE(-1, positionLoc);
+    GLint colorLoc = glGetAttribLocation(mProgram, "a_color");
+    ASSERT_NE(-1, colorLoc);
+
+    GLVertexArray VAOS[2];
+    GLBuffer positionBuffer;
+    GLBuffer colorBuffer;
+    const auto quadVertices = GetQuadVertices();
+
+    glBindVertexArray(VAOS[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVertices.size() * sizeof(Vector3), quadVertices.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_BYTE, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    std::vector<GLColor32F> blueColor(6, kFloatBlue);
+    glBufferData(GL_ARRAY_BUFFER, blueColor.size() * sizeof(GLColor32F), blueColor.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(colorLoc);
+    glVertexAttribPointer(colorLoc, 4, GL_BYTE, GL_FALSE, 0, 0);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(VAOS[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVertices.size() * sizeof(Vector3), quadVertices.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    std::vector<GLColor32F> greenColor(6, kFloatGreen);
+    glBufferData(GL_ARRAY_BUFFER, greenColor.size() * sizeof(GLColor32F), greenColor.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(colorLoc);
+    glVertexAttribPointer(colorLoc, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glUseProgram(mProgram);
+    ASSERT_GL_NO_ERROR();
+
+    glBindVertexArray(VAOS[1]);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // This drawing should not affect the next drawing.
+    glBindVertexArray(VAOS[0]);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindVertexArray(VAOS[1]);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, getWindowHeight() / 2, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, 0, GLColor::green);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests that deleting an in-flight image texture does not immediately delete the resource.
-TEST_P(SimpleStateChangeTestES31, DeleteImageTextureInUse)
+TEST_P(SimpleStateChangeTestComputeES31, DeleteImageTextureInUse)
 {
     std::array<GLColor, 4> colors = {
         {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
@@ -3095,7 +3187,7 @@ TEST_P(SimpleStateChangeTestES31, DeleteImageTextureInUse)
 }
 
 // Tests that bind the same image texture all the time between different dispatch calls.
-TEST_P(SimpleStateChangeTestES31, RebindImageTextureDispatchAgain)
+TEST_P(SimpleStateChangeTestComputeES31, RebindImageTextureDispatchAgain)
 {
     std::array<GLColor, 4> colors = {{GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan}};
     GLTexture texRead;
@@ -3118,7 +3210,7 @@ TEST_P(SimpleStateChangeTestES31, RebindImageTextureDispatchAgain)
 
 // Tests that we can dispatch with an image texture, modify the image texture with a texSubImage,
 // and then dispatch again correctly.
-TEST_P(SimpleStateChangeTestES31, DispatchWithImageTextureTexSubImageThenDispatchAgain)
+TEST_P(SimpleStateChangeTestComputeES31, DispatchWithImageTextureTexSubImageThenDispatchAgain)
 {
     std::array<GLColor, 4> colors    = {{GLColor::red, GLColor::red, GLColor::red, GLColor::red}};
     std::array<GLColor, 4> subColors = {
@@ -3155,7 +3247,7 @@ TEST_P(SimpleStateChangeTestES31, DispatchWithImageTextureTexSubImageThenDispatc
 }
 
 // Test updating an image texture's contents while in use by GL works as expected.
-TEST_P(SimpleStateChangeTestES31, UpdateImageTextureInUse)
+TEST_P(SimpleStateChangeTestComputeES31, UpdateImageTextureInUse)
 {
     std::array<GLColor, 4> rgby = {{GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
 
@@ -3191,7 +3283,7 @@ TEST_P(SimpleStateChangeTestES31, UpdateImageTextureInUse)
 }
 
 // Test that we can alternate between image textures between different dispatchs.
-TEST_P(SimpleStateChangeTestES31, DispatchImageTextureAThenTextureBThenTextureA)
+TEST_P(SimpleStateChangeTestComputeES31, DispatchImageTextureAThenTextureBThenTextureA)
 {
     std::array<GLColor, 4> colorsTexA = {
         {GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan}};
@@ -4397,6 +4489,7 @@ ANGLE_INSTANTIATE_TEST_ES3(StateChangeTestES3);
 ANGLE_INSTANTIATE_TEST_ES2(SimpleStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES3(SimpleStateChangeTestES3);
 ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestES31);
+ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestComputeES31);
 ANGLE_INSTANTIATE_TEST_ES3(ValidationStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2ValidationStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES31(ValidationStateChangeTestES31);

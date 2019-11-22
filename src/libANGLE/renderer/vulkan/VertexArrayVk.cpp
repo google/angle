@@ -539,6 +539,23 @@ ANGLE_INLINE void VertexArrayVk::setDefaultPackedInput(ContextVk *contextVk, siz
     contextVk->onVertexAttributeChange(attribIndex, 0, 0, format, 0);
 }
 
+void VertexArrayVk::updateActiveAttribInfo(ContextVk *contextVk)
+{
+    const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
+    const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
+
+    // Update pipeline cache with current active attribute info
+    for (size_t attribIndex : mState.getEnabledAttributesMask())
+    {
+        const gl::VertexAttribute &attrib = attribs[attribIndex];
+        const gl::VertexBinding &binding  = bindings[attribs[attribIndex].bindingIndex];
+
+        contextVk->onVertexAttributeChange(attribIndex, mCurrentArrayBufferStrides[attribIndex],
+                                           binding.getDivisor(), attrib.format->id,
+                                           attrib.relativeOffset);
+    }
+}
+
 angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                                              const gl::VertexAttribute &attrib,
                                              const gl::VertexBinding &binding,
@@ -638,6 +655,8 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         {
             contextVk->onVertexAttributeChange(attribIndex, stride, binding.getDivisor(),
                                                attrib.format->id, attrib.relativeOffset);
+            // Cache the stride of the attribute
+            mCurrentArrayBufferStrides[attribIndex] = stride;
         }
 
         if (anyVertexBufferConvertedOnGpu &&
@@ -654,6 +673,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         mCurrentArrayBuffers[attribIndex]       = &mTheNullBuffer;
         mCurrentArrayBufferHandles[attribIndex] = mTheNullBuffer.getBuffer().getHandle();
         mCurrentArrayBufferOffsets[attribIndex] = 0;
+        mCurrentArrayBufferStrides[attribIndex] = 0;
 
         setDefaultPackedInput(contextVk, attribIndex);
     }
