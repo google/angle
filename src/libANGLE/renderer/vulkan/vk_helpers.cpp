@@ -2974,24 +2974,6 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     const VkImageAspectFlags aspectFlags = getAspectFlags();
     changeLayout(aspectFlags, ImageLayout::TransferSrc, commandBuffer);
 
-    VkImageMemoryBarrier barrier            = {};
-    barrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    barrier.image                           = mImage.getHandle();
-    barrier.srcQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-    barrier.dstQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-    barrier.subresourceRange.aspectMask     = aspectFlags;
-    barrier.subresourceRange.baseArrayLayer = baseLayer;
-    barrier.subresourceRange.layerCount     = layerCount;
-    barrier.subresourceRange.levelCount     = 1;
-    barrier.subresourceRange.baseMipLevel   = static_cast<uint32_t>(sourceLevel);
-    barrier.oldLayout                       = getCurrentLayout();
-    barrier.newLayout                       = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-    barrier.srcAccessMask                   = VK_ACCESS_TRANSFER_WRITE_BIT;
-    barrier.dstAccessMask                   = VK_ACCESS_TRANSFER_READ_BIT;
-
-    commandBuffer->imageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                &barrier);
-
     // Allocate staging buffer data
     ANGLE_TRY(allocateStagingMemory(contextVk, *bufferSize, outDataPtr, bufferOut, bufferOffsetsOut,
                                     nullptr));
@@ -3048,11 +3030,6 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 
     commandBuffer->copyImageToBuffer(mImage, getCurrentLayout(),
                                      (*bufferOut)->getBuffer().getHandle(), 1, regions);
-
-    barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-    barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-    commandBuffer->imageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                &barrier);
 
     return angle::Result::Continue;
 }
