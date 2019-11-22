@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4c74eebb_021eabea",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "the function has moved as you guided.",
+      "parentUuid": "76bec6d4_f3273140",
+      "range": {
+        "startLine": 123,
+        "startChar": 16,
+        "endLine": 123,
+        "endChar": 36
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "528b735b_2a3d682e",
         "filename": "include/platform/FeaturesVk.h",
         "patchSetId": 19
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ac577f6b_1c3c7424",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "528b735b_2a3d682e",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 36
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9864ec18_adbfeb56",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 19
@@ -68,6 +116,30 @@
       "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fffcaa5_db1e7d85",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9864ec18_adbfeb56",
+      "range": {
+        "startLine": 343,
+        "startChar": 0,
+        "endLine": 390,
+        "endChar": 0
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -118,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "f7db017e_37938f77",
+        "filename": "src/libANGLE/TransformFeedback.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "keep this until we use counter buffer  map.",
+      "parentUuid": "7b9ec86e_e8dad6db",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 28
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ceb42ca4_40add44c",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 19
@@ -138,6 +234,30 @@
       "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac8d17b9_049f3690",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ceb42ca4_40add44c",
+      "range": {
+        "startLine": 113,
+        "startChar": 7,
+        "endLine": 113,
+        "endChar": 20
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -164,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "93de7708_61589592",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd03b60a_725f043b",
+      "range": {
+        "startLine": 530,
+        "startChar": 5,
+        "endLine": 530,
+        "endChar": 46
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb21fe68_af47ea57",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 19
@@ -184,6 +328,30 @@
       "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a677a789_4b75ff33",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb21fe68_af47ea57",
+      "range": {
+        "startLine": 535,
+        "startChar": 53,
+        "endLine": 535,
+        "endChar": 62
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -210,6 +378,30 @@
     },
     {
       "key": {
+        "uuid": "7ca3dbc6_2ba1295b",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eca8e9c6_560fc3c8",
+      "range": {
+        "startLine": 558,
+        "startChar": 29,
+        "endLine": 561,
+        "endChar": 37
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0cd3c004_57ee139a",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 19
@@ -230,6 +422,30 @@
       "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38fa52cf_f884cc67",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0cd3c004_57ee139a",
+      "range": {
+        "startLine": 631,
+        "startChar": 8,
+        "endLine": 631,
+        "endChar": 81
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -256,6 +472,30 @@
     },
     {
       "key": {
+        "uuid": "8fb7d991_a5f9899e",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7774447e_74be8ab6",
+      "range": {
+        "startLine": 636,
+        "startChar": 0,
+        "endLine": 644,
+        "endChar": 17
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f5bf112_2fd37899",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 19
@@ -267,6 +507,30 @@
       "writtenOn": "2019-11-21T17:36:18Z",
       "side": 1,
       "message": "nit: these objects are designed to be stored by-value. I\u0027d recommend using that approach.\n\nwe also already have gl::TransformFeedbackBuffersArray in angletypes.h. You can make this type simply TransformFeedbackBuffersArray\u003cvk::BufferHelper\u003e.",
+      "range": {
+        "startLine": 433,
+        "startChar": 19,
+        "endLine": 433,
+        "endChar": 37
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b477d52d_3b02b3d8",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "modified to form of TransformFeedbackBuffersArray. keep BufferHelper as a pointer until we use counterMap.",
+      "parentUuid": "5f5bf112_2fd37899",
       "range": {
         "startLine": 433,
         "startChar": 19,
@@ -350,6 +614,30 @@
     },
     {
       "key": {
+        "uuid": "2051a9ef_357bed53",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "I made TrasnformFeedbackVk own BufferHelper in my first design. It failed in a end2end test, so I move BufferHelper to ContextVk. When it was in TransformFeedbackVk, TransformFeedbackVk::onDestroy function was called immediate after glDeleteTransformFeedbacks API. So, BufferHelper had released while buffer handles were in command graph in some case. I don\u0027t know much about resource handling in ANGLE, it also should have problems because it release BufferHelper in onDestroy in same situation. If it is okay, is it due to refCount?",
+      "parentUuid": "2fd795d2_0b9a7adf",
+      "range": {
+        "startLine": 797,
+        "startChar": 4,
+        "endLine": 797,
+        "endChar": 80
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd3ddbbb_0af43b40",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapperVk.h",
         "patchSetId": 19
@@ -364,6 +652,24 @@
       "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a416c8a_7d009a6b",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapperVk.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd3ddbbb_0af43b40",
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -390,6 +696,30 @@
     },
     {
       "key": {
+        "uuid": "d165bd48_05689530",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapperVk.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5165035e_eea3776f",
+      "range": {
+        "startLine": 27,
+        "startChar": 37,
+        "endLine": 27,
+        "endChar": 64
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ba7b6f0_bb183ad2",
         "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
         "patchSetId": 19
@@ -410,6 +740,30 @@
       "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbfc281c_41da5157",
+        "filename": "src/libANGLE/renderer/vulkan/TransformFeedbackVk.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2019-11-22T13:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ba7b6f0_bb183ad2",
+      "range": {
+        "startLine": 270,
+        "startChar": 4,
+        "endLine": 271,
+        "endChar": 5
+      },
+      "revId": "17d992d0fa4c284987366ad6a62124f60f223ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
