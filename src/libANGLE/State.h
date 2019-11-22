@@ -75,7 +75,8 @@ class State : angle::NonCopyable
           bool bindGeneratesResource,
           bool clientArraysEnabled,
           bool robustResourceInit,
-          bool programBinaryCacheEnabled);
+          bool programBinaryCacheEnabled,
+          EGLenum contextPriority);
     ~State();
 
     int id() const { return mID; }
@@ -86,6 +87,7 @@ class State : angle::NonCopyable
     // Getters
     ContextID getContextID() const { return mContext; }
     EGLenum getClientType() const { return mClientType; }
+    EGLenum getContextPriority() const { return mContextPriority; }
     GLint getClientMajorVersion() const { return mClientVersion.major; }
     GLint getClientMinorVersion() const { return mClientVersion.minor; }
     const Version &getClientVersion() const { return mClientVersion; }
@@ -769,6 +771,7 @@ class State : angle::NonCopyable
     int mID;
 
     EGLenum mClientType;
+    EGLenum mContextPriority;
     Version mClientVersion;
     ContextID mContext;
 

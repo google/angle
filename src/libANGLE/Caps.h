@@ -982,6 +982,9 @@ struct DisplayExtensions
     // EGL_KHR_no_config_context
     bool noConfigContext = false;
 
+    // EGL_IMG_context_priority
+    bool contextPriority = false;
+
     // EGL_ANGLE_ggp_stream_descriptor
     bool ggpStreamDescriptor = false;
 

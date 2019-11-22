@@ -263,9 +263,11 @@ State::State(ContextID contextIn,
              bool bindGeneratesResource,
              bool clientArraysEnabled,
              bool robustResourceInit,
-             bool programBinaryCacheEnabled)
+             bool programBinaryCacheEnabled,
+             EGLenum contextPriority)
     : mID(gIDCounter++),
       mClientType(clientType),
+      mContextPriority(contextPriority),
       mClientVersion(clientVersion),
       mContext(contextIn),
       mBufferManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mBufferManager)),

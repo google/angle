@@ -128,6 +128,7 @@ supported_egl_extensions = [
     "EGL_EXT_pixel_format_float",
     "EGL_EXT_platform_base",
     "EGL_EXT_platform_device",
+    "EGL_IMG_context_priority",
     "EGL_KHR_debug",
     "EGL_KHR_fence_sync",
     "EGL_KHR_gl_colorspace",

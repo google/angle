@@ -68,6 +68,7 @@ class CommandQueue final : angle::NonCopyable
     angle::Result finishToSerial(vk::Context *context, Serial serial, uint64_t timeout);
 
     angle::Result submitFrame(vk::Context *context,
+                              egl::ContextPriority priority,
                               const VkSubmitInfo &submitInfo,
                               const vk::Shared<vk::Fence> &sharedFence,
                               vk::GarbageList *currentGarbage,
@@ -361,6 +362,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     angle::Result memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
     VkDevice getDevice() const;
+    egl::ContextPriority getPriority() const { return mContextPriority; }
 
     ANGLE_INLINE const angle::FeaturesVk &getFeatures() const { return mRenderer->getFeatures(); }
     ANGLE_INLINE bool commandGraphEnabled() const { return getFeatures().commandGraph.enabled; }
@@ -538,6 +540,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
         }
         return mRenderPassCommands;
     }
+
+    egl::ContextPriority getContextPriority() const override { return mContextPriority; }
 
   private:
     // Dirty bits.
@@ -937,6 +941,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     // List of all resources currently being used by this ContextVk's recorded commands.
     vk::ResourceUseList mResourceUseList;
+
+    egl::ContextPriority mContextPriority;
 };
 }  // namespace rx
 

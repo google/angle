@@ -234,6 +234,12 @@ bool GetRobustResourceInit(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE);
 }
 
+EGLenum GetContextPriority(const egl::AttributeMap &attribs)
+{
+    return static_cast<EGLenum>(
+        attribs.getAsInt(EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_MEDIUM_IMG));
+}
+
 std::string GetObjectLabelFromPointer(GLsizei length, const GLchar *label)
 {
     std::string labelName;
@@ -312,7 +318,8 @@ Context::Context(egl::Display *display,
              GetBindGeneratesResource(attribs),
              GetClientArraysEnabled(attribs),
              GetRobustResourceInit(attribs),
-             memoryProgramCache != nullptr),
+             memoryProgramCache != nullptr,
+             GetContextPriority(attribs)),
       mShared(shareContext != nullptr),
       mSkipValidation(GetNoError(attribs)),
       mDisplayTextureShareGroup(shareTextures != nullptr),
@@ -997,6 +1004,11 @@ Buffer *Context::getBuffer(BufferID handle) const
 Renderbuffer *Context::getRenderbuffer(RenderbufferID handle) const
 {
     return mState.mRenderbufferManager->getRenderbuffer(handle);
+}
+
+EGLenum Context::getContextPriority() const
+{
+    return egl::ToEGLenum(mImplementation->getContextPriority());
 }
 
 Sync *Context::getSync(GLsync handle) const

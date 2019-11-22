@@ -1318,6 +1318,26 @@ Error ValidateCreateContext(Display *display,
                 }
                 break;
 
+            case EGL_CONTEXT_PRIORITY_LEVEL_IMG:
+                if (!display->getExtensions().contextPriority)
+                {
+                    return EglBadAttribute() << "Attribute EGL_CONTEXT_PRIORITY_LEVEL_IMG requires "
+                                                "extension EGL_IMG_context_priority.";
+                }
+                switch (value)
+                {
+                    case EGL_CONTEXT_PRIORITY_LOW_IMG:
+                    case EGL_CONTEXT_PRIORITY_MEDIUM_IMG:
+                    case EGL_CONTEXT_PRIORITY_HIGH_IMG:
+                        break;
+                    default:
+                        return EglBadAttribute() << "Attribute EGL_CONTEXT_PRIORITY_LEVEL_IMG "
+                                                    "must be one of: EGL_CONTEXT_PRIORITY_LOW_IMG, "
+                                                    "EGL_CONTEXT_PRIORITY_MEDIUM_IMG, or "
+                                                    "EGL_CONTEXT_PRIORITY_HIGH_IMG.";
+                }
+                break;
+
             default:
                 return EglBadAttribute() << "Unknown attribute.";
         }

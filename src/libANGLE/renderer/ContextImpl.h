@@ -232,6 +232,8 @@ class ContextImpl : public GLImplFactory
                      const char *function,
                      unsigned int line);
 
+    virtual egl::ContextPriority getContextPriority() const;
+
   protected:
     const gl::State &mState;
     gl::MemoryProgramCache *mMemoryProgramCache;

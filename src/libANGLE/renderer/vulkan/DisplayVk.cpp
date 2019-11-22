@@ -197,6 +197,8 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 #if defined(ANGLE_PLATFORM_ANDROID)
     outExtensions->framebufferTargetANDROID = true;
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
+
+    outExtensions->contextPriority = true;
     outExtensions->noConfigContext = true;
 
 #if defined(ANGLE_PLATFORM_GGP)

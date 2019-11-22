@@ -421,8 +421,8 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     VkDevice device      = renderer->getDevice();
     VkInstance instance  = renderer->getInstance();
 
-    // We might not need to flush the pipe here.
-    (void)renderer->queueWaitIdle(displayVk);
+    // flush the pipe.
+    (void)renderer->deviceWaitIdle(displayVk);
 
     destroySwapChainImages(displayVk);
 
@@ -649,7 +649,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk,
         static constexpr size_t kMaxOldSwapchains = 5;
         if (mOldSwapchains.size() > kMaxOldSwapchains)
         {
-            ANGLE_TRY(contextVk->getRenderer()->queueWaitIdle(contextVk));
+            ANGLE_TRY(contextVk->getRenderer()->queueWaitIdle(contextVk, contextVk->getPriority()));
             for (SwapchainCleanupData &oldSwapchain : mOldSwapchains)
             {
                 oldSwapchain.destroy(contextVk->getDevice(), &mPresentSemaphoreRecycler);
@@ -1144,7 +1144,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     mCurrentSwapHistoryIndex =
         mCurrentSwapHistoryIndex == mSwapHistory.size() ? 0 : mCurrentSwapHistoryIndex;
 
-    VkResult result = contextVk->getRenderer()->queuePresent(presentInfo);
+    VkResult result = contextVk->getRenderer()->queuePresent(contextVk->getPriority(), presentInfo);
 
     // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
     // continuing.
