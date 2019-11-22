@@ -1203,6 +1203,9 @@ TEST_P(VertexAttributeOORTest, ANGLEDrawArraysOutOfBoundsCases)
 // Verify that using a different start vertex doesn't mess up the draw.
 TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
 {
+    // anglebug.com/4163
+    ANGLE_SKIP_TEST_IF(IsD3D11() && IsNVIDIA() && IsWindows7());
+
     // TODO(jmadill): Diagnose this failure.
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
