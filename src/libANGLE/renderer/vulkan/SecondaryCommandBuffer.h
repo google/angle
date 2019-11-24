@@ -36,6 +36,7 @@ enum class CommandID : uint16_t
     BindIndexBuffer,
     BindVertexBuffers,
     BlitImage,
+    BufferBarrier,
     ClearAttachments,
     ClearColorImage,
     ClearDepthStencilImage,
@@ -312,6 +313,14 @@ struct ExecutionBarrierParams
 };
 VERIFY_4_BYTE_ALIGNMENT(ExecutionBarrierParams)
 
+struct BufferBarrierParams
+{
+    VkPipelineStageFlags srcStageMask;
+    VkPipelineStageFlags dstStageMask;
+    VkBufferMemoryBarrier bufferMemoryBarrier;
+};
+VERIFY_4_BYTE_ALIGNMENT(BufferBarrierParams)
+
 struct ImageBarrierParams
 {
     VkPipelineStageFlags srcStageMask;
@@ -446,6 +455,10 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                    uint32_t regionCount,
                    const VkImageBlit *regions,
                    VkFilter filter);
+
+    void bufferBarrier(VkPipelineStageFlags srcStageMask,
+                       VkPipelineStageFlags dstStageMask,
+                       const VkBufferMemoryBarrier *bufferMemoryBarrier);
 
     void clearAttachments(uint32_t attachmentCount,
                           const VkClearAttachment *attachments,
@@ -798,6 +811,17 @@ ANGLE_INLINE void SecondaryCommandBuffer::blitImage(const Image &srcImage,
     paramStruct->dstImage        = dstImage.getHandle();
     paramStruct->filter          = filter;
     paramStruct->region          = regions[0];
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::bufferBarrier(
+    VkPipelineStageFlags srcStageMask,
+    VkPipelineStageFlags dstStageMask,
+    const VkBufferMemoryBarrier *bufferMemoryBarrier)
+{
+    BufferBarrierParams *paramStruct = initCommand<BufferBarrierParams>(CommandID::BufferBarrier);
+    paramStruct->srcStageMask        = srcStageMask;
+    paramStruct->dstStageMask        = dstStageMask;
+    paramStruct->bufferMemoryBarrier = *bufferMemoryBarrier;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::clearAttachments(uint32_t attachmentCount,

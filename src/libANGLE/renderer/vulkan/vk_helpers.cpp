@@ -100,6 +100,32 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
         },
     },
     {
+        ImageLayout::ExternalShadersReadOnly,
+        {
+            VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+            // Transition to: all reads must happen after barrier.
+            VK_ACCESS_SHADER_READ_BIT,
+            // Transition from: RAR and WAR don't need memory barrier.
+            0,
+            false,
+        },
+    },
+    {
+        ImageLayout::ExternalShadersWrite,
+        {
+            VK_IMAGE_LAYOUT_GENERAL,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+            // Transition to: all reads and writes must happen after barrier.
+            VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
+            // Transition from: all writes must finish before barrier.
+            VK_ACCESS_SHADER_WRITE_BIT,
+            true,
+        },
+    },
+    {
         ImageLayout::TransferSrc,
         {
             VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
@@ -1401,6 +1427,7 @@ BufferHelper::BufferHelper()
       mSize(0),
       mMappedMemory(nullptr),
       mViewFormat(nullptr),
+      mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mCurrentWriteAccess(0),
       mCurrentReadAccess(0)
 {}
@@ -1421,8 +1448,10 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
 
     mSize = createInfo.size;
     ANGLE_VK_TRY(contextVk, mBuffer.init(contextVk->getDevice(), createInfo));
-    return AllocateBufferMemory(contextVk, memoryPropertyFlags, &mMemoryPropertyFlags, nullptr,
-                                &mBuffer, &mDeviceMemory);
+    ANGLE_TRY(AllocateBufferMemory(contextVk, memoryPropertyFlags, &mMemoryPropertyFlags, nullptr,
+                                   &mBuffer, &mDeviceMemory));
+    mCurrentQueueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
+    return angle::Result::Continue;
 }
 
 void BufferHelper::destroy(VkDevice device)
@@ -1579,6 +1608,24 @@ angle::Result BufferHelper::invalidate(ContextVk *contextVk, VkDeviceSize offset
         ANGLE_VK_TRY(contextVk, vkInvalidateMappedMemoryRanges(contextVk->getDevice(), 1, &range));
     }
     return angle::Result::Continue;
+}
+
+void BufferHelper::changeQueue(uint32_t newQueueFamilyIndex, CommandBuffer *commandBuffer)
+{
+    VkBufferMemoryBarrier bufferMemoryBarrier = {};
+    bufferMemoryBarrier.sType                 = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    bufferMemoryBarrier.srcAccessMask         = 0;
+    bufferMemoryBarrier.dstAccessMask         = 0;
+    bufferMemoryBarrier.srcQueueFamilyIndex   = mCurrentQueueFamilyIndex;
+    bufferMemoryBarrier.dstQueueFamilyIndex   = newQueueFamilyIndex;
+    bufferMemoryBarrier.buffer                = mBuffer.getHandle();
+    bufferMemoryBarrier.offset                = 0;
+    bufferMemoryBarrier.size                  = VK_WHOLE_SIZE;
+
+    commandBuffer->bufferBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, &bufferMemoryBarrier);
+
+    mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
 
 // ImageHelper implementation.
@@ -1926,6 +1973,15 @@ void ImageHelper::changeLayoutAndQueue(VkImageAspectFlags aspectMask,
 {
     ASSERT(isQueueChangeNeccesary(newQueueFamilyIndex));
     forceChangeLayoutAndQueue(aspectMask, newLayout, newQueueFamilyIndex, commandBuffer);
+}
+
+void ImageHelper::onExternalLayoutChange(ImageLayout newLayout)
+{
+    mCurrentLayout = newLayout;
+
+    // The image must have already been owned by EXTERNAL.  If this is not the case, it's an
+    // application bug, so ASSERT might eventually need to change to a warning.
+    ASSERT(mCurrentQueueFamilyIndex == VK_QUEUE_FAMILY_EXTERNAL);
 }
 
 uint32_t ImageHelper::getBaseLevel()

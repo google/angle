@@ -382,6 +382,9 @@ class CommandGraphResource : angle::NonCopyable
 
     // Returns true if the resource is in use by the renderer.
     bool isResourceInUse(ContextVk *contextVk) const;
+    // Returns true if the resource has commands in the graph.  This is used to know if a flush
+    // should be performed, e.g. if we need to wait for the GPU to finish with the resource.
+    bool isCurrentlyInGraph() const { return mUse.isCurrentlyInGraph(); }
 
     // queries, to know if the queue they are submitted on has finished execution.
     Serial getLatestSerial() const { return mUse.getSerial(); }
@@ -532,6 +535,8 @@ class CommandGraph final : angle::NonCopyable
     void popDebugMarker();
     // Host-visible buffer write availability operation:
     void makeHostVisibleBufferWriteAvailable();
+    // External memory synchronization:
+    void syncExternalMemory();
 
     void onResourceUse(const SharedResourceUse &resourceUse);
     void releaseResourceUses();

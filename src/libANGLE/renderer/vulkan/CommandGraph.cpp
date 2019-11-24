@@ -1104,6 +1104,14 @@ void CommandGraph::makeHostVisibleBufferWriteAvailable()
                         CommandGraphResourceType::HostAvailabilityOperation, 0);
 }
 
+void CommandGraph::syncExternalMemory()
+{
+    // Add an all-inclusive memory barrier.
+    memoryBarrier(VK_ACCESS_MEMORY_WRITE_BIT,
+                  VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT,
+                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
+}
+
 // Dumps the command graph into a dot file that works with graphviz.
 void CommandGraph::dumpGraphDotFile(std::ostream &out) const
 {
