@@ -2,6 +2,63 @@
   "comments": [
     {
       "key": {
+        "uuid": "7711291e_f17e89d3",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1356,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-24T06:07:32Z",
+      "side": 1,
+      "message": "See RenderbufferVk::setStorageMultisample that attempts to do something similar. You can probably change that code to something similar to this.\n\nAlso, either move that to the frontend too, or move this to the backend for consistency.",
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73136f92_9048246d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-24T06:07:32Z",
+      "side": 1,
+      "message": "Since we are assuming standard positions with no regard to whether that\u0027s actually correct, should we instead take _some_ positions for 32 instead? Whatever we take (some nvidia or other spec for example), it would surely be closer to reality than this.",
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a74a19be_2db595f6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1253,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-24T06:07:32Z",
+      "side": 1,
+      "message": "ES3.1",
+      "range": {
+        "startLine": 1253,
+        "startChar": 53,
+        "endLine": 1253,
+        "endChar": 56
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "95488f7e_e3dfdfad",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 9
@@ -13,6 +70,30 @@
       "writtenOn": "2019-11-22T23:36:33Z",
       "side": 1,
       "message": "Should this be min?  Otherwise, don\u0027t think you\u0027re lowering it.",
+      "range": {
+        "startLine": 1256,
+        "startChar": 26,
+        "endLine": 1256,
+        "endChar": 29
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48bd7e6d_eb6b8cbe",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1256,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-24T06:07:32Z",
+      "side": 1,
+      "message": "Looks like this bug is there in all the cases below that limit to ES2 :-O\n\nProbably started with 0c2c923ec621af0b5fff937a1528660350e6506e and propagated through copy-paste\n\nHonestly, given that we check support in order, these could just be changed to `maxVersion \u003d gl::Version(3, 0)`\n\nOr we can reverse the order and `return gl::Version(X, 0)` starting from the lowest version and void checking all features when it\u0027s for example already determined we can\u0027t support higher than 2.0.",
+      "parentUuid": "95488f7e_e3dfdfad",
       "range": {
         "startLine": 1256,
         "startChar": 26,
@@ -48,6 +129,30 @@
     },
     {
       "key": {
+        "uuid": "f45379c3_a7212d0f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-24T06:07:32Z",
+      "side": 1,
+      "message": "This is called by the front-end. It\u0027s moved from below.",
+      "parentUuid": "d312f7a6_3122c1cf",
+      "range": {
+        "startLine": 767,
+        "startChar": 52,
+        "endLine": 767,
+        "endChar": 72
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1b5d9644_2b78dcef",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 9
@@ -64,6 +169,29 @@
         "startChar": 54,
         "endLine": 915,
         "endChar": 61
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc52fd6d_1912cefc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-24T06:07:32Z",
+      "side": 1,
+      "message": "Should this be changed to 1?",
+      "range": {
+        "startLine": 1588,
+        "startChar": 15,
+        "endLine": 1588,
+        "endChar": 16
       },
       "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
