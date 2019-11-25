@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fb666c16_41bd6916",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1356,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-25T21:24:40Z",
+      "side": 1,
+      "message": "This needs to be done in the front-end for textures because \"samples\" is stored below (line 1364) for use in the future.\n\nI\u0027ll clone this approach for the renderbuffer code too.  I\u0027m not seeing where they store the number of samples used.",
+      "parentUuid": "7711291e_f17e89d3",
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73136f92_9048246d",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 9
@@ -74,6 +92,30 @@
       "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70b7923a_07bc0876",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1253,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-25T21:24:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a74a19be_2db595f6",
+      "range": {
+        "startLine": 1253,
+        "startChar": 53,
+        "endLine": 1253,
+        "endChar": 56
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -169,6 +211,30 @@
       "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9b662f5_4b1c0196",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1256,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-25T21:24:40Z",
+      "side": 1,
+      "message": "Okay.  I\u0027ll fix what this CL deals with in this CL.  For the rest of the work, I filed https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d4168",
+      "parentUuid": "879eb43e_b86f6ba0",
+      "range": {
+        "startLine": 1256,
+        "startChar": 26,
+        "endLine": 1256,
+        "endChar": 29
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -358,6 +424,30 @@
       "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32af0a85_e237029c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-25T21:24:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc52fd6d_1912cefc",
+      "range": {
+        "startLine": 1588,
+        "startChar": 15,
+        "endLine": 1588,
+        "endChar": 16
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
