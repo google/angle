@@ -180,8 +180,10 @@
 // Debug (test bug):
 3590 SWIFTSHADER : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.framebuffer_texture2d = FAIL
 
-// Front-end query bugs:
-3596 VULKAN : dEQP-GLES31.functional.program_interface_query.shader_storage_block.buffer_data_size.* = FAIL
+// GLSL length() method returning number of bytes in an array instead of number of items
+4098 SWIFTSHADER : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_multiple_groups = FAIL
+4098 SWIFTSHADER : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_single_invocation = FAIL
+
 
 // Not failing in last official run, but failed recently:
 4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL
