@@ -148,6 +148,30 @@
     },
     {
       "key": {
+        "uuid": "879eb43e_b86f6ba0",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1256,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-25T17:24:11Z",
+      "side": 1,
+      "message": "Another CL would be best.",
+      "parentUuid": "a08df8d0_5d2a84bc",
+      "range": {
+        "startLine": 1256,
+        "startChar": 26,
+        "endLine": 1256,
+        "endChar": 29
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d312f7a6_3122c1cf",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 9
@@ -207,6 +231,30 @@
       "side": 1,
       "message": "Same thing with the \"levels\" and \"size\" parameter from TextureVk::setStorage(). that I started from.  I haven\u0027t looked to see if the other back-ends use these parameters.  I\u0027m fine with eliminating them if that\u0027s what\u0027s desired.  Should I?",
       "parentUuid": "f45379c3_a7212d0f",
+      "range": {
+        "startLine": 767,
+        "startChar": 52,
+        "endLine": 767,
+        "endChar": 72
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76155399_309ab582",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-25T17:24:11Z",
+      "side": 1,
+      "message": "You can check, it\u0027s likely that another backend (probably d3d) uses it.",
+      "parentUuid": "5c86d984_a47f775a",
       "range": {
         "startLine": 767,
         "startChar": 52,
