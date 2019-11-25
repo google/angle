@@ -222,11 +222,14 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
     {
         // If there are pending commands for the buffer, flush them.
-        if (mBuffer.isResourceInUse(contextVk))
+        if (mBuffer.isCurrentlyInGraph())
         {
             ANGLE_TRY(contextVk->flushImpl(nullptr));
+        }
 
-            // Make sure the GPU is done with the buffer.
+        // Make sure the GPU is done with the buffer.
+        if (contextVk->isSerialInUse(mBuffer.getLatestSerial()))
+        {
             ANGLE_TRY(contextVk->finishToSerial(mBuffer.getLatestSerial()));
         }
 

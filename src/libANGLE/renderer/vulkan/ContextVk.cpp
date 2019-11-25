@@ -416,6 +416,15 @@ angle::Result CommandQueue::finishToSerial(vk::Context *context, Serial serial, 
 
     // Find the first batch with serial equal to or bigger than given serial (note that
     // the batch serials are unique, otherwise upper-bound would have been necessary).
+    //
+    // Note: we don't check for the exact serial, because it may belong to another context.  For
+    // example, imagine the following submissions:
+    //
+    // - Context 1: Serial 1, Serial 3, Serial 5
+    // - Context 2: Serial 2, Serial 4, Serial 6
+    //
+    // And imagine none of the submissions have finished yet.  Now if Context 2 asks for
+    // finishToSerial(3), it will have no choice but to finish until Serial 4 instead.
     size_t batchIndex = mInFlightCommands.size() - 1;
     for (size_t i = 0; i < mInFlightCommands.size(); ++i)
     {
