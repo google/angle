@@ -167,6 +167,8 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     outExtensions->noConfigContext = mEGL->hasExtension("EGL_KHR_no_config_context");
 
+    outExtensions->framebufferTargetANDROID = mEGL->hasExtension("EGL_ANDROID_framebuffer_target");
+
     DisplayGL::generateExtensions(outExtensions);
 }
 

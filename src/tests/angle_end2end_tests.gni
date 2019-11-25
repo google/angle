@@ -135,6 +135,7 @@ angle_end2end_tests_sources = [
   "gl_tests/WebGLFramebufferTest.cpp",
   "gl_tests/WebGLReadOutsideFramebufferTest.cpp",
   "gl_tests/WEBGLVideoTextureTest.cpp",
+  "egl_tests/EGLAndroidFrameBufferTargetTest.cpp",
   "egl_tests/EGLBackwardsCompatibleContextTest.cpp",
   "egl_tests/EGLBlobCacheTest.cpp",
   "egl_tests/EGLChooseConfigTest.cpp",

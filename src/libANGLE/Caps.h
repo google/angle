@@ -990,6 +990,9 @@ struct DisplayExtensions
 
     // EGL_EXT_gl_colorspace_display_p3_passthrough
     bool glColorspaceDisplayP3Passthrough = false;
+
+    // EGL_ANDROID_framebuffer_target
+    bool framebufferTargetANDROID = false;
 };
 
 struct DeviceExtensions

@@ -218,6 +218,13 @@ Error ValidateConfigAttribute(const Display *display, EGLAttrib attribute)
             }
             break;
 
+        case EGL_FRAMEBUFFER_TARGET_ANDROID:
+            if (!display->getExtensions().framebufferTargetANDROID)
+            {
+                return EglBadAttribute() << "EGL_ANDROID_framebuffer_target is not enabled.";
+            }
+            break;
+
         default:
             return EglBadAttribute() << "Unknown attribute.";
     }
