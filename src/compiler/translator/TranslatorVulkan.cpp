@@ -351,8 +351,9 @@ const TVariable *AddGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbolTa
     depthRangeParamsFields->push_back(new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1),
                                                  ImmutableString("diff"), TSourceLoc(),
                                                  SymbolType::AngleInternal));
+    // This additional field might be used by subclass such as TranslatorMetal.
     depthRangeParamsFields->push_back(new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1),
-                                                 ImmutableString("dummyPacker"), TSourceLoc(),
+                                                 ImmutableString("reserved"), TSourceLoc(),
                                                  SymbolType::AngleInternal));
     TStructure *emulatedDepthRangeParams = new TStructure(
         symbolTable, kEmulatedDepthRangeParams, depthRangeParamsFields, SymbolType::AngleInternal);
@@ -938,6 +939,10 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         }
 
         // Append depth range translation to main.
+        if (!transformDepthBeforeCorrection(root, driverUniforms))
+        {
+            return false;
+        }
         if (!AppendVertexShaderDepthCorrectionToMain(this, root, &getSymbolTable()))
         {
             return false;
@@ -999,6 +1004,14 @@ TIntermBinary *TranslatorVulkan::getDriverUniformNegViewportYScaleRef(
     const TVariable *driverUniforms) const
 {
     return CreateDriverUniformRef(driverUniforms, kNegViewportYScale);
+}
+
+TIntermBinary *TranslatorVulkan::getDriverUniformDepthRangeReservedFieldRef(
+    const TVariable *driverUniforms) const
+{
+    TIntermBinary *depthRange = CreateDriverUniformRef(driverUniforms, kDepthRange);
+
+    return new TIntermBinary(EOpIndexDirectStruct, depthRange, CreateIndexNode(3));
 }
 
 }  // namespace sh

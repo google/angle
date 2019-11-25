@@ -385,7 +385,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
         int32_t xfbBufferOffsets[4];
         uint32_t acbBufferOffsets[4];
 
-        // We'll use x, y, z for near / far / diff respectively.
+        // We'll use x, y, z, w for near / far / diff / zscale respectively.
         float depthRange[4];
     };
 
