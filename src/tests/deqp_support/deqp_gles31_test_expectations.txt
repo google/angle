@@ -644,6 +644,7 @@
 
 // Debug:
 3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.*exceed_shared_memory_size_limit = FAIL
+3590 SWIFTSHADER : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.framebuffer_texture2d = FAIL
 
 // Stencil textures (some missing support for base level):
 3683 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.stencil_texturing.format.* = FAIL
