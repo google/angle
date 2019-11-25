@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "299b5783_3eb3239d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-25T17:03:04Z",
+      "side": 1,
+      "message": "I like that idea.  Unfortunately, NVIDIA only supports 8 samples with Vulkan (Intel supports 16).  I\u0027ll do some looking.",
+      "parentUuid": "73136f92_9048246d",
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a74a19be_2db595f6",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 9
@@ -106,6 +124,30 @@
     },
     {
       "key": {
+        "uuid": "a08df8d0_5d2a84bc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1256,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-25T17:03:04Z",
+      "side": 1,
+      "message": "Yes, I copied-pasted-edited other lines.  I\u0027m happy to fix it all.  Should it be in this CL, or another?\n\n\u003e Or we can reverse the order and `return gl::Version(X, 0)` starting from the lowest version and void checking all features when it\u0027s for example already determined we can\u0027t support higher than 2.0.\n\nI like this approach.",
+      "parentUuid": "48bd7e6d_eb6b8cbe",
+      "range": {
+        "startLine": 1256,
+        "startChar": 26,
+        "endLine": 1256,
+        "endChar": 29
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d312f7a6_3122c1cf",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 9
@@ -153,6 +195,30 @@
     },
     {
       "key": {
+        "uuid": "5c86d984_a47f775a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-25T17:03:04Z",
+      "side": 1,
+      "message": "Same thing with the \"levels\" and \"size\" parameter from TextureVk::setStorage(). that I started from.  I haven\u0027t looked to see if the other back-ends use these parameters.  I\u0027m fine with eliminating them if that\u0027s what\u0027s desired.  Should I?",
+      "parentUuid": "f45379c3_a7212d0f",
+      "range": {
+        "startLine": 767,
+        "startChar": 52,
+        "endLine": 767,
+        "endChar": 72
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1b5d9644_2b78dcef",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 9
@@ -173,6 +239,30 @@
       "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0101e96_2a4cf866",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-25T17:03:04Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1b5d9644_2b78dcef",
+      "range": {
+        "startLine": 915,
+        "startChar": 54,
+        "endLine": 915,
+        "endChar": 61
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
