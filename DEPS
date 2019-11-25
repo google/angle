@@ -385,6 +385,34 @@ hooks = [
                 '-s', 'tools/glslang/glslang_validator.exe.sha1',
     ],
   },
+
+  # Download flex/bison binaries for Linux.
+  {
+    'name': 'linux_flex_bison',
+    'pattern': '.',
+    'condition': 'checkout_linux and not build_with_chromium',
+    'action': [ 'download_from_google_storage',
+                '--no_resume',
+                '--platform=linux*',
+                '--no_auth',
+                '--bucket', 'angle-flex-bison',
+                '-d', 'tools/flex-bison/linux/',
+    ],
+  },
+
+  # Download flex/bison binaries for Windows.
+  {
+    'name': 'win_flex_bison',
+    'pattern': '.',
+    'condition': 'checkout_win and not build_with_chromium',
+    'action': [ 'download_from_google_storage',
+                '--no_resume',
+                '--platform=win32*',
+                '--no_auth',
+                '--bucket', 'angle-flex-bison',
+                '-d', 'tools/flex-bison/windows/',
+    ],
+  },
 ]
 
 recursedeps = [

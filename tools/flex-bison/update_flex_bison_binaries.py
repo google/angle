@@ -54,7 +54,7 @@ def main():
     print('')
     print('Update flex and bison binaries for %s.' % platform.system())
     print('')
-    print('This binary was updated using %s.' % os.path.basename(__file__))
+    print('These binaries were updated using %s.' % os.path.basename(__file__))
     print('Please see instructions in tools/flex-bison/README.md.')
     print('')
     print('flex is at version TODO.')

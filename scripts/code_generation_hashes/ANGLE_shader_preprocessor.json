@@ -1,0 +1,28 @@
+{
+  "src/compiler/preprocessor/generate_parser.py":
+    "cc871de99688a35bfe32ef501f965d5a",
+  "src/compiler/preprocessor/preprocessor.l":
+    "143dec2269b9a49a9588391bb57580ec",
+  "src/compiler/preprocessor/preprocessor.y":
+    "a3a7dcbf9fd1cf1721ab635cea0189b2",
+  "src/compiler/preprocessor/preprocessor_lex_autogen.cpp":
+    "5e2dd7b0f74393db96ca6d9b0adeae0b",
+  "src/compiler/preprocessor/preprocessor_tab_autogen.cpp":
+    "1faa877557cf67e564cabc547aa3f3c0",
+  "tools/flex-bison/linux/bison.sha1":
+    "efa86001f00e7bcfdbe899dd15fc88e0",
+  "tools/flex-bison/linux/flex.sha1":
+    "3e73ddbd801cf3e8ed759c49572c8bf2",
+  "tools/flex-bison/windows/bison.exe.sha1":
+    "ad6345f2fbf1112bae67f0d54a92e574",
+  "tools/flex-bison/windows/flex.exe.sha1":
+    "45668fa0dafd4a7e68c2b0480e50e650",
+  "tools/flex-bison/windows/m4.exe.sha1":
+    "0e0332c889b12576458bc481f34d6142",
+  "tools/flex-bison/windows/msys-2.0.dll.sha1":
+    "59854139bd445e5193812e2b910dc7b5",
+  "tools/flex-bison/windows/msys-iconv-2.dll.sha1":
+    "5da154b537d340991bb4cd06eca6d523",
+  "tools/flex-bison/windows/msys-intl-8.dll.sha1":
+    "3b5cd216061b9dff4d2ae3956bc344a8"
+}
