@@ -53,10 +53,10 @@ def _CheckCodeGeneration(input_api, output_api):
         def __init__(self, message):
             super(output_api.PresubmitError, self).__init__(
                 message,
-                long_text='Please run scripts/run_code_generation.py to refresh generated hashes.\n'
-                '\n'
-                'If that fails, ensure your ANGLE repositiory is synced to tip-of-tree\n'
+                long_text='Please ensure your ANGLE repositiory is synced to tip-of-tree\n'
                 'and all ANGLE DEPS are fully up-to-date by running gclient sync.\n'
+                '\n'
+                'If that fails, run scripts/run_code_generation.py to refresh generated hashes.\n'
                 '\n'
                 'If you are building ANGLE inside Chromium you must bootstrap ANGLE\n'
                 'before gclient sync. See the DevSetup documentation for more details.\n')
