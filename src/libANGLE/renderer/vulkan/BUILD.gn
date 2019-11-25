@@ -151,76 +151,6 @@ if (is_mac) {
   ]
 }
 
-config("vulkan_config") {
-  _sws_icd = "./libvk_swiftshader_icd.json"
-  if (is_win) {
-    _sws_icd = ".\\\\libvk_swiftshader_icd.json"
-  }
-
-  defines = [
-    "ANGLE_VK_LAYERS_DIR=\"$angle_data_dir\"",
-    "ANGLE_VK_MOCK_ICD_JSON=\"$angle_data_dir/VkICD_mock_icd.json\"",
-    "ANGLE_VK_SWIFTSHADER_ICD_JSON=\"${_sws_icd}\"",
-  ]
-  if (is_android) {
-    libs = [ "vulkan" ]
-  }
-  if (angle_enable_vulkan_validation_layers) {
-    defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]
-  }
-}
-
-if (angle_enable_swiftshader) {
-  copy("angle_swiftshader_icd_rename") {
-    sources = [
-      "$swiftshader_dir/src/Vulkan/vk_swiftshader_icd.json",
-    ]
-    outputs = [
-      "$root_gen_dir/angle/libvk_swiftshader_icd.json",
-    ]
-  }
-
-  action("angle_swiftshader_icd") {
-    deps = [
-      ":angle_swiftshader_icd_rename",
-      "$angle_root/third_party/vulkan-headers/src:vulkan_headers",
-    ]
-    script = "$angle_root/scripts/generate_vulkan_layers_json.py"
-    sources = [
-      "$angle_root/third_party/vulkan-headers/src/include/vulkan/vulkan_core.h",
-    ]
-
-    # Must be listed after vulkan_core.h. git cl format sorts them if they
-    # are in one list. So split up the sources manually.
-    sources += [ "$root_gen_dir/angle/libvk_swiftshader_icd.json" ]
-
-    outputs = [
-      "$root_out_dir/libvk_swiftshader_icd.json",
-    ]
-    data = outputs
-
-    _raw_sws_in = rebase_path("$root_gen_dir/angle", root_build_dir)
-    _raw_sws_out = rebase_path("$root_out_dir", root_build_dir)
-
-    _sws_output = ""
-    if (is_win) {
-      _sws_output += ".\\vk_swiftshader.dll"
-    } else if (is_mac) {
-      _sws_output += "./libvk_swiftshader.dylib"
-    } else {
-      _sws_output += "./libvk_swiftshader.so"
-    }
-
-    args = [
-             "--icd",
-             "--replacement",
-             _sws_output,
-             _raw_sws_in,
-             _raw_sws_out,
-           ] + rebase_path(sources, root_build_dir)
-  }
-}
-
 config("angle_vulkan_lib_android") {
   if (is_android) {
     libs = [ "vulkan" ]
@@ -272,8 +202,16 @@ angle_source_set("angle_vulkan_backend") {
   ]
   public_configs = [ ":angle_vulkan_backend_config" ]
 
-  configs += [ ":vulkan_config" ]
   data_deps = []
+
+  defines = [
+    "ANGLE_VK_LAYERS_DIR=\"$angle_data_dir\"",
+    "ANGLE_VK_MOCK_ICD_JSON=\"$angle_data_dir/VkICD_mock_icd.json\"",
+  ]
+
+  if (is_android) {
+    libs += [ "vulkan" ]
+  }
 
   # Include generated shaders.
   import("vk_internal_shaders_autogen.gni")
@@ -285,6 +223,7 @@ angle_source_set("angle_vulkan_backend") {
   }
 
   if (angle_enable_vulkan_validation_layers) {
+    defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]
     if (is_fuchsia) {
       data_deps += [ "//third_party/fuchsia-sdk:vulkan_validation" ]
     } else {
@@ -296,8 +235,16 @@ angle_source_set("angle_vulkan_backend") {
   }
 
   if (angle_enable_swiftshader) {
+    import("$swiftshader_dir/src/Vulkan/vulkan.gni")
+    _sws_icd = "./$swiftshader_icd_file_name"
+    if (is_win) {
+      _sws_icd = ".\\\\$swiftshader_icd_file_name"
+    }
+
+    defines += [ "ANGLE_VK_SWIFTSHADER_ICD_JSON=\"${_sws_icd}\"" ]
+
     data_deps += [
-      ":angle_swiftshader_icd",
+      "$swiftshader_dir/src/Vulkan:icd_file",
       "$swiftshader_dir/src/Vulkan:swiftshader_libvulkan",
     ]
   }
