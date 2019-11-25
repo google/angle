@@ -470,6 +470,12 @@ class ANGLETestBase
         return mCurrentParams->getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;
     }
 
+    bool isVulkanSwiftshaderRenderer() const
+    {
+        return mCurrentParams->getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
+               mCurrentParams->getDeviceType() == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
+    }
+
   private:
     void checkD3D11SDKLayersMessages();
 

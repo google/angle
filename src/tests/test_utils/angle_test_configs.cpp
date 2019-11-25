@@ -39,6 +39,11 @@ EGLint PlatformParameters::getRenderer() const
     return eglParameters.renderer;
 }
 
+EGLint PlatformParameters::getDeviceType() const
+{
+    return eglParameters.deviceType;
+}
+
 void PlatformParameters::initDefaultParameters()
 {
 #if defined(ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT)
