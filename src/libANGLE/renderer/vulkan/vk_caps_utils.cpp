@@ -199,17 +199,12 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.fragmentLowpInt.setTwosComplementInt(32);
 
     // Compute shader limits.
-    // Clamp the maxComputeWorkGroupCount[] to 1,000,000.
-    // It's a workaround for http://anglebug.com/4120 and http://anglebug.com/4066
-    mNativeCaps.maxComputeWorkGroupCount[0] =
-        std::min(LimitToInt(limitsVk.maxComputeWorkGroupCount[0]), 1000000);
-    mNativeCaps.maxComputeWorkGroupCount[1] =
-        std::min(LimitToInt(limitsVk.maxComputeWorkGroupCount[1]), 1000000);
-    mNativeCaps.maxComputeWorkGroupCount[2] =
-        std::min(LimitToInt(limitsVk.maxComputeWorkGroupCount[2]), 1000000);
-    mNativeCaps.maxComputeWorkGroupSize[0] = LimitToInt(limitsVk.maxComputeWorkGroupSize[0]);
-    mNativeCaps.maxComputeWorkGroupSize[1] = LimitToInt(limitsVk.maxComputeWorkGroupSize[1]);
-    mNativeCaps.maxComputeWorkGroupSize[2] = LimitToInt(limitsVk.maxComputeWorkGroupSize[2]);
+    mNativeCaps.maxComputeWorkGroupCount[0] = LimitToInt(limitsVk.maxComputeWorkGroupCount[0]);
+    mNativeCaps.maxComputeWorkGroupCount[1] = LimitToInt(limitsVk.maxComputeWorkGroupCount[1]);
+    mNativeCaps.maxComputeWorkGroupCount[2] = LimitToInt(limitsVk.maxComputeWorkGroupCount[2]);
+    mNativeCaps.maxComputeWorkGroupSize[0]  = LimitToInt(limitsVk.maxComputeWorkGroupSize[0]);
+    mNativeCaps.maxComputeWorkGroupSize[1]  = LimitToInt(limitsVk.maxComputeWorkGroupSize[1]);
+    mNativeCaps.maxComputeWorkGroupSize[2]  = LimitToInt(limitsVk.maxComputeWorkGroupSize[2]);
     mNativeCaps.maxComputeWorkGroupInvocations =
         LimitToInt(limitsVk.maxComputeWorkGroupInvocations);
     mNativeCaps.maxComputeSharedMemorySize = LimitToInt(limitsVk.maxComputeSharedMemorySize);
