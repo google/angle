@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "8440e341_dfb67f7b",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1356,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-26T21:24:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb666c16_41bd6916",
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73136f92_9048246d",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 9
@@ -69,6 +87,24 @@
       "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "973e7a00_52634a8f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-26T21:24:08Z",
+      "side": 1,
+      "message": "In looking, I never found anything beyond 16 samples (except for a regular grid pattern).  The Vulkan standard sample locations are just the D3D locations translated to Vulkan\u0027s lingo.  I\u0027m inclined to leave it as-is for now.  Please let me know if you disagree.",
+      "parentUuid": "299b5783_3eb3239d",
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -354,6 +390,30 @@
       "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3450c9f_648a4a0c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-26T21:24:08Z",
+      "side": 1,
+      "message": "The OpenGL back-end uses \"fixedSampleLocations\" (passes it on to a GL call:-).\n\nUnfortunately, core Vulkan doesn\u0027t have a corallary--the spec says:\n\nFurthermore, the relative locations of sample points\nmay: be identical for each pixel in the framebuffer, or they may: differ.  There is a VK_EXT_sample_locations extension.  According to vulkan.gpuinfo.org, it\u0027s not supported very broadly (43% on Windows, 26% on Linux, and 1% on Android).\n\nI think the bottom line is that the parameter will stay, and not be used by the Vulkan back-end.",
+      "parentUuid": "6f42293c_0ce47017",
+      "range": {
+        "startLine": 767,
+        "startChar": 52,
+        "endLine": 767,
+        "endChar": 72
+      },
+      "revId": "09c1fefa21266f713e39efd1fe8ccae006bf4d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
