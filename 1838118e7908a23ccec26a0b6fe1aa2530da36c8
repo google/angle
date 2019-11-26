@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0fc567b_def1405b",
+        "filename": "BUILD.gn",
+        "patchSetId": 21
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-26T13:02:02Z",
+      "side": 1,
+      "message": "working on fixing this here: http://crrev.com/c/1936707",
+      "range": {
+        "startLine": 247,
+        "startChar": 4,
+        "endLine": 247,
+        "endChar": 27
+      },
+      "revId": "1838118e7908a23ccec26a0b6fe1aa2530da36c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "589cfd62_60f34eab",
+        "filename": "src/third_party/volk/BUILD.gn",
+        "patchSetId": 21
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-26T13:02:02Z",
+      "side": 1,
+      "message": "see other comment in BUILD.gn",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 5,
+        "endChar": 6
+      },
+      "revId": "1838118e7908a23ccec26a0b6fe1aa2530da36c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "daeb2a1b_d8137673",
+        "filename": "src/third_party/volk/volk.c",
+        "patchSetId": 21
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-26T13:02:02Z",
+      "side": 1,
+      "message": "This file is not currently built during Windows execution. You can add a line that tries to load libvulkan.dll before falling back to vulkan-1.dll if you like.",
+      "range": {
+        "startLine": 44,
+        "startChar": 32,
+        "endLine": 44,
+        "endChar": 44
+      },
+      "revId": "1838118e7908a23ccec26a0b6fe1aa2530da36c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eaa4f4d9_fc44b9a9",
+        "filename": "src/third_party/volk/volk.c",
+        "patchSetId": 21
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-26T13:02:02Z",
+      "side": 1,
+      "message": "We should also double check that we really load ANGLE\u0027s custom loader. And don\u0027t end up using the system loader by default.",
+      "range": {
+        "startLine": 61,
+        "startChar": 24,
+        "endLine": 61,
+        "endChar": 33
+      },
+      "revId": "1838118e7908a23ccec26a0b6fe1aa2530da36c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
