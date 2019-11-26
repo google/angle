@@ -50,8 +50,8 @@ static const IOSurfaceFormatInfo kIOSurfaceFormats[] = {
     {GL_RED,      GL_UNSIGNED_BYTE,  1, GL_RED,  GL_RED,  GL_UNSIGNED_BYTE           },
     {GL_R16UI,    GL_UNSIGNED_SHORT, 2, GL_RED,  GL_RED,  GL_UNSIGNED_SHORT          },
     {GL_RG,       GL_UNSIGNED_BYTE,  2, GL_RG,   GL_RG,   GL_UNSIGNED_BYTE           },
-    {GL_RGB,      GL_UNSIGNED_BYTE,  4, GL_BGRA, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV},
-    {GL_BGRA_EXT, GL_UNSIGNED_BYTE,  4, GL_BGRA, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV},
+    {GL_RGB,      GL_UNSIGNED_BYTE,  4, GL_RGBA, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV},
+    {GL_BGRA_EXT, GL_UNSIGNED_BYTE,  4, GL_RGBA, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV},
     {GL_RGBA,     GL_HALF_FLOAT,     8, GL_RGBA, GL_RGBA, GL_HALF_FLOAT              },
 };
 // clang-format on
@@ -159,9 +159,9 @@ egl::Error IOSurfaceSurfaceCGL::bindTexImage(const gl::Context *context,
     stateManager->bindTexture(gl::TextureType::Rectangle, textureID);
 
     const auto &format = kIOSurfaceFormats[mFormatIndex];
-    CGLError error = CGLTexImageIOSurface2D(mCGLContext, GL_TEXTURE_RECTANGLE, format.nativeFormat,
-                                            mWidth, mHeight, format.nativeInternalFormat,
-                                            format.nativeType, mIOSurface, mPlane);
+    CGLError error     = CGLTexImageIOSurface2D(
+        mCGLContext, GL_TEXTURE_RECTANGLE, format.nativeInternalFormat, mWidth, mHeight,
+        format.nativeFormat, format.nativeType, mIOSurface, mPlane);
 
     if (error != kCGLNoError)
     {
@@ -288,9 +288,9 @@ FramebufferImpl *IOSurfaceSurfaceCGL::createDefaultFramebuffer(const gl::Context
     functions->genTextures(1, &texture);
     const auto &format = kIOSurfaceFormats[mFormatIndex];
     stateManager->bindTexture(gl::TextureType::Rectangle, texture);
-    CGLError error = CGLTexImageIOSurface2D(mCGLContext, GL_TEXTURE_RECTANGLE, format.nativeFormat,
-                                            mWidth, mHeight, format.nativeInternalFormat,
-                                            format.nativeType, mIOSurface, mPlane);
+    CGLError error = CGLTexImageIOSurface2D(
+        mCGLContext, GL_TEXTURE_RECTANGLE, format.nativeInternalFormat, mWidth, mHeight,
+        format.nativeFormat, format.nativeType, mIOSurface, mPlane);
     if (error != kCGLNoError)
     {
         ERR() << "CGLTexImageIOSurface2D failed: " << CGLErrorString(error);
