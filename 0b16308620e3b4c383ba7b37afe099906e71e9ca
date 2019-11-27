@@ -22,6 +22,30 @@
       "revId": "0b16308620e3b4c383ba7b37afe099906e71e9ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c202e418_924e14e1",
+        "filename": "src/libANGLE/renderer/vulkan/SemaphoreVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1001794
+      },
+      "writtenOn": "2019-11-27T20:47:20Z",
+      "side": 1,
+      "message": "Ah, nevermind, the case where we pass the semaphore from glSignalSemaphoreEXT directly to glWaitSemaphoreEXT is not racy.",
+      "parentUuid": "d098a98b_96f8ee41",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 13
+      },
+      "revId": "0b16308620e3b4c383ba7b37afe099906e71e9ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
