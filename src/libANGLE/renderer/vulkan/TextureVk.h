@@ -27,9 +27,6 @@ enum class ImageMipLevels
     InvalidEnum = 2,
 };
 
-// vkCmdCopyBufferToImage buffer offset multiple
-constexpr VkDeviceSize kBufferOffsetMultiple = 4;
-
 class TextureVk : public TextureImpl
 {
   public:
@@ -151,22 +148,6 @@ class TextureVk : public TextureImpl
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
 
-    ANGLE_INLINE bool isFastUnpackPossible(const vk::Format &vkFormat, size_t offset)
-    {
-        // Conditions to determine if fast unpacking is possible
-        // 1. Image must be well defined to unpack directly to it
-        //    TODO(http://anglebug.com/3777) Create and stage a temp image instead
-        // 2. Can't perform a fast copy for emulated formats
-        // 3. vkCmdCopyBufferToImage requires byte offset to be a multiple of 4
-        if (mImage->valid() && (vkFormat.intendedFormatID == vkFormat.actualImageFormatID) &&
-            ((offset & (kBufferOffsetMultiple - 1)) == 0))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     const vk::ImageHelper &getImage() const
     {
         ASSERT(mImage && mImage->valid());
@@ -266,7 +247,6 @@ class TextureVk : public TextureImpl
                                   const gl::InternalFormat &formatInfo,
                                   GLenum type,
                                   const gl::PixelUnpackState &unpack,
-                                  gl::Buffer *unpackBuffer,
                                   const uint8_t *pixels,
                                   const vk::Format &vkFormat);
 
@@ -275,14 +255,6 @@ class TextureVk : public TextureImpl
                                                   uint32_t layerCount,
                                                   const gl::Rectangle &sourceArea,
                                                   uint8_t **outDataPtr);
-
-    angle::Result copyBufferDataToImage(ContextVk *contextVk,
-                                        vk::BufferHelper *srcBuffer,
-                                        const gl::ImageIndex index,
-                                        uint32_t rowLength,
-                                        uint32_t imageHeight,
-                                        const gl::Box &sourceArea,
-                                        size_t offset);
 
     angle::Result generateMipmapsWithCPU(const gl::Context *context);
 
