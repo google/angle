@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 218
+#define ANGLE_SH_VERSION 219
 
 enum ShShaderSpec
 {
@@ -693,6 +693,7 @@ GLenum GetGeometryShaderInputPrimitiveType(const ShHandle handle);
 GLenum GetGeometryShaderOutputPrimitiveType(const ShHandle handle);
 int GetGeometryShaderInvocations(const ShHandle handle);
 int GetGeometryShaderMaxVertices(const ShHandle handle);
+unsigned int GetShaderSharedMemorySize(const ShHandle handle);
 
 //
 // Helper function to identify specs that are based on the WebGL spec.
