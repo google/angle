@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "35e13596_b05b6d1b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-27T16:01:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa02c1c5_f5170914",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 7
+      },
+      "revId": "9966da794543e1f081f543ad1f5c19e471e43175",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8ff99d8_2cd14893",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 15
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "70f7442a_4ddf4d8f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1351,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-27T16:01:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8ff99d8_2cd14893",
+      "range": {
+        "startLine": 1351,
+        "startChar": 4,
+        "endLine": 1351,
+        "endChar": 5
+      },
+      "revId": "9966da794543e1f081f543ad1f5c19e471e43175",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2cca576a_adbf83fa",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 15
@@ -68,6 +116,30 @@
       "revId": "9966da794543e1f081f543ad1f5c19e471e43175",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65f61e6c_38cc8000",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1353,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-27T16:01:06Z",
+      "side": 1,
+      "message": "Done\n\nBTW, the compiler didn\u0027t like it until I changed sampleCount to an int (so you know why I changed it to be different than the D3D11 code) ...\n\n1\u003e../../src/libANGLE/renderer/vulkan/FramebufferVk.cpp(1354,61): error : implicit conversion loses integer precision: \u0027size_t\u0027 (aka \u0027unsigned long long\u0027) to \u0027int\u0027 [-Werror,-Wshorten-64-to-32]\n1\u003e        size_t indexKey \u003d static_cast\u003csize_t\u003e(ceil(gl::log2(sampleCount)));\n1\u003e                                                   ~~       ^~~~~~~~~~~\n1\u003e1 error generated.",
+      "parentUuid": "2cca576a_adbf83fa",
+      "range": {
+        "startLine": 1353,
+        "startChar": 47,
+        "endLine": 1353,
+        "endChar": 51
+      },
+      "revId": "9966da794543e1f081f543ad1f5c19e471e43175",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
