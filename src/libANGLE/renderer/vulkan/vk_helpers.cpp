@@ -2208,31 +2208,19 @@ void ImageHelper::removeStagedUpdates(ContextVk *contextVk, const gl::ImageIndex
     }
 }
 
-angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
-                                                  const gl::ImageIndex &index,
-                                                  const gl::Extents &glExtents,
-                                                  const gl::Offset &offset,
-                                                  const gl::InternalFormat &formatInfo,
-                                                  const gl::PixelUnpackState &unpack,
-                                                  GLenum type,
-                                                  const uint8_t *pixels,
-                                                  const Format &vkFormat)
+angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
+                                                      const gl::ImageIndex &index,
+                                                      const gl::Extents &glExtents,
+                                                      const gl::Offset &offset,
+                                                      const gl::InternalFormat &formatInfo,
+                                                      const gl::PixelUnpackState &unpack,
+                                                      GLenum type,
+                                                      const uint8_t *pixels,
+                                                      const Format &vkFormat,
+                                                      const GLuint inputRowPitch,
+                                                      const GLuint inputDepthPitch,
+                                                      const GLuint inputSkipBytes)
 {
-    GLuint inputRowPitch = 0;
-    ANGLE_VK_CHECK_MATH(contextVk,
-                        formatInfo.computeRowPitch(type, glExtents.width, unpack.alignment,
-                                                   unpack.rowLength, &inputRowPitch));
-
-    GLuint inputDepthPitch = 0;
-    ANGLE_VK_CHECK_MATH(
-        contextVk, formatInfo.computeDepthPitch(glExtents.height, unpack.imageHeight, inputRowPitch,
-                                                &inputDepthPitch));
-
-    GLuint inputSkipBytes = 0;
-    ANGLE_VK_CHECK_MATH(contextVk,
-                        formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
-                                                    index.usesTex3D(), &inputSkipBytes));
-
     const angle::Format &storageFormat = vkFormat.actualImageFormat();
 
     size_t outputRowPitch;
@@ -2425,6 +2413,54 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
         copy.imageSubresource.aspectMask = aspectFlags;
         mSubresourceUpdates.emplace_back(mStagingBuffer.getCurrentBuffer(), copy);
     }
+
+    return angle::Result::Continue;
+}
+
+angle::Result ImageHelper::CalculateBufferInfo(ContextVk *contextVk,
+                                               const gl::Extents &glExtents,
+                                               const gl::InternalFormat &formatInfo,
+                                               const gl::PixelUnpackState &unpack,
+                                               GLenum type,
+                                               bool is3D,
+                                               GLuint *inputRowPitch,
+                                               GLuint *inputDepthPitch,
+                                               GLuint *inputSkipBytes)
+{
+    ANGLE_VK_CHECK_MATH(contextVk,
+                        formatInfo.computeRowPitch(type, glExtents.width, unpack.alignment,
+                                                   unpack.rowLength, inputRowPitch));
+
+    ANGLE_VK_CHECK_MATH(contextVk,
+                        formatInfo.computeDepthPitch(glExtents.height, unpack.imageHeight,
+                                                     *inputRowPitch, inputDepthPitch));
+
+    ANGLE_VK_CHECK_MATH(
+        contextVk, formatInfo.computeSkipBytes(type, *inputRowPitch, *inputDepthPitch, unpack, is3D,
+                                               inputSkipBytes));
+
+    return angle::Result::Continue;
+}
+
+angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
+                                                  const gl::ImageIndex &index,
+                                                  const gl::Extents &glExtents,
+                                                  const gl::Offset &offset,
+                                                  const gl::InternalFormat &formatInfo,
+                                                  const gl::PixelUnpackState &unpack,
+                                                  GLenum type,
+                                                  const uint8_t *pixels,
+                                                  const Format &vkFormat)
+{
+    GLuint inputRowPitch   = 0;
+    GLuint inputDepthPitch = 0;
+    GLuint inputSkipBytes  = 0;
+    ANGLE_TRY(CalculateBufferInfo(contextVk, glExtents, formatInfo, unpack, type, index.usesTex3D(),
+                                  &inputRowPitch, &inputDepthPitch, &inputSkipBytes));
+
+    ANGLE_TRY(stageSubresourceUpdateImpl(contextVk, index, glExtents, offset, formatInfo, unpack,
+                                         type, pixels, vkFormat, inputRowPitch, inputDepthPitch,
+                                         inputSkipBytes));
 
     return angle::Result::Continue;
 }
