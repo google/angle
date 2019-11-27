@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5592ed9_cda67f54",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-27T17:47:59Z",
+      "side": 1,
+      "message": "possible to omit this new overload?",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 31
+      },
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
