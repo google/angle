@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa02c1c5_f5170914",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-27T13:27:13Z",
+      "side": 1,
+      "message": "nit: static is redundant since you\u0027re already in an anonymous namespace block. you can omit it.",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 7
+      },
+      "revId": "9966da794543e1f081f543ad1f5c19e471e43175",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8ff99d8_2cd14893",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1351,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-27T13:27:13Z",
+      "side": 1,
+      "message": "should use be using an else for the other sample counts?",
+      "range": {
+        "startLine": 1351,
+        "startChar": 4,
+        "endLine": 1351,
+        "endChar": 5
+      },
+      "revId": "9966da794543e1f081f543ad1f5c19e471e43175",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cca576a_adbf83fa",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1353,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-27T13:27:13Z",
+      "side": 1,
+      "message": "nit: use gl::log2. ::log2 works in floats/doubles. see https://en.cppreference.com/w/cpp/numeric/math/log2",
+      "range": {
+        "startLine": 1353,
+        "startChar": 47,
+        "endLine": 1353,
+        "endChar": 51
+      },
+      "revId": "9966da794543e1f081f543ad1f5c19e471e43175",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
