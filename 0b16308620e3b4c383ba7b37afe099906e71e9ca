@@ -70,6 +70,30 @@
       "revId": "0b16308620e3b4c383ba7b37afe099906e71e9ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e076bde_e9146621",
+        "filename": "src/libANGLE/renderer/vulkan/SemaphoreVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-27T21:19:26Z",
+      "side": 1,
+      "message": "My thought was if the caller does:\n\n- GL call to draw using Image\n- glWaitSemaphoreEXT(barrier on image)\n\nBut now that I say it, it\u0027s obvious that that shouldn\u0027t happen, so yes, I can turn this into an ASSERT-that-should-really-be-a-warning.",
+      "parentUuid": "f99514fa_09a77bf1",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 13
+      },
+      "revId": "0b16308620e3b4c383ba7b37afe099906e71e9ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
