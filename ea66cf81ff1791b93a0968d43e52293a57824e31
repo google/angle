@@ -22,6 +22,30 @@
       "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fc00cd4_8ab0fc66",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-27T19:35:08Z",
+      "side": 1,
+      "message": "No.  I tried taking it out, and it caused 79 tests to fail.  They all seem to get the same validation error about trying to do multisample with an image that only has 1 sample.",
+      "parentUuid": "a5592ed9_cda67f54",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 31
+      },
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
