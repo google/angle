@@ -46,6 +46,30 @@
       "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "202e9b76_79151fda",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-11-27T19:37:56Z",
+      "side": 1,
+      "message": "Let\u0027s figure out how to fix that.",
+      "parentUuid": "3fc00cd4_8ab0fc66",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 31
+      },
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
