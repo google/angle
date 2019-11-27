@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc7b3011_edca76f8",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 4129,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-11-27T17:44:58Z",
+      "side": 1,
+      "message": "Per Jamie\u0027s input on the design document, this change wasn\u0027t necessary.  It was helpful during my early prototyping, but not needed now.",
+      "range": {
+        "startLine": 4127,
+        "startChar": 0,
+        "endLine": 4129,
+        "endChar": 62
+      },
+      "revId": "012fdc716b45f3313327cb6d20dd84d06add2588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
