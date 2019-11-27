@@ -1135,7 +1135,7 @@ foreach(is_shared_library,
     if (is_fuchsia) {
       sources += util_fuchsia_sources
       public_deps += [
-        "$angle_root/src/common/fuchsia_egl",
+        "src/common/fuchsia_egl",
         "//third_party/fuchsia-sdk/sdk:async_loop_cpp",
         "//third_party/fuchsia-sdk/sdk:async_loop_default",
         "//third_party/fuchsia-sdk/sdk:fdio",

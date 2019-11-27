@@ -68,19 +68,7 @@
 #endif  // defined(ANGLE_ENABLE_NULL)
 
 #if defined(ANGLE_ENABLE_VULKAN)
-#    if defined(ANGLE_PLATFORM_WINDOWS)
-#        include "libANGLE/renderer/vulkan/win32/DisplayVkWin32.h"
-#    elif defined(ANGLE_PLATFORM_LINUX)
-#        include "libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h"
-#    elif defined(ANGLE_PLATFORM_ANDROID)
-#        include "libANGLE/renderer/vulkan/android/DisplayVkAndroid.h"
-#    elif defined(ANGLE_PLATFORM_FUCHSIA)
-#        include "libANGLE/renderer/vulkan/fuchsia/DisplayVkFuchsia.h"
-#    elif defined(ANGLE_PLATFORM_GGP)
-#        include "libANGLE/renderer/vulkan/ggp/DisplayVkGGP.h"
-#    else
-#        error Unsupported Vulkan platform.
-#    endif
+#    include "libANGLE/renderer/vulkan/DisplayVk_api.h"
 #endif  // defined(ANGLE_ENABLE_VULKAN)
 
 #if defined(ANGLE_ENABLE_METAL)
@@ -277,15 +265,30 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
         case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
 #if defined(ANGLE_ENABLE_VULKAN)
 #    if defined(ANGLE_PLATFORM_WINDOWS)
-            impl = new rx::DisplayVkWin32(state);
+            if (rx::IsVulkanWin32DisplayAvailable())
+            {
+                impl = rx::CreateVulkanWin32Display(state);
+            }
 #    elif defined(ANGLE_PLATFORM_LINUX)
-            impl = new rx::DisplayVkXcb(state);
+            if (rx::IsVulkanXcbDisplayAvailable())
+            {
+                impl = rx::CreateVulkanXcbDisplay(state);
+            }
 #    elif defined(ANGLE_PLATFORM_ANDROID)
-            impl = new rx::DisplayVkAndroid(state);
+            if (rx::IsVulkanAndroidDisplayAvailable())
+            {
+                impl = rx::CreateVulkanAndroidDisplay(state);
+            }
 #    elif defined(ANGLE_PLATFORM_FUCHSIA)
-            impl = new rx::DisplayVkFuchsia(state);
+            if (rx::IsVulkanFuchsiaDisplayAvailable())
+            {
+                impl = rx::CreateVulkanFuchsiaDisplay(state);
+            }
 #    elif defined(ANGLE_PLATFORM_GGP)
-            impl = new rx::DisplayVkGGP(state);
+            if (rx::IsVulkanGGPDisplayAvailable())
+            {
+                impl = rx::CreateVulkanGGPDisplay(state);
+            }
 #    else
 #        error Unsupported Vulkan platform.
 #    endif

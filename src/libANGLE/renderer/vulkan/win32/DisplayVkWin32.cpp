@@ -167,4 +167,13 @@ const char *DisplayVkWin32::getWSIExtension() const
     return VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
 }
 
+bool IsVulkanWin32DisplayAvailable()
+{
+    return true;
+}
+
+DisplayImpl *CreateVulkanWin32Display(const egl::DisplayState &state)
+{
+    return new DisplayVkWin32(state);
+}
 }  // namespace rx

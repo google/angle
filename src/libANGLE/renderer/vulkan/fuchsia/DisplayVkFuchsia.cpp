@@ -52,4 +52,13 @@ const char *DisplayVkFuchsia::getWSILayer() const
     return "VK_LAYER_FUCHSIA_imagepipe_swapchain";
 }
 
+bool IsVulkanFuchsiaDisplayAvailable()
+{
+    return true;
+}
+
+DisplayImpl *CreateVulkanFuchsiaDisplay(const egl::DisplayState &state)
+{
+    return new DisplayVkFuchsia(state);
+}
 }  // namespace rx
