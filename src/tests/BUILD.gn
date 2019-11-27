@@ -566,10 +566,11 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       # TODO(jmadill): Remove this once we fix dEQP.
       cflags_c = [ "-Wno-unused-local-typedef" ]
       cflags_cc = [
+        "-Wno-sizeof-array-div",  # https://gitlab.khronos.org/Tracker/vk-gl-cts/issues/2127
         "-Wno-string-conversion",  # implicit conversion turns string literal into bool
+        "-Wno-unused-function",
         "-Wno-unused-local-typedef",
         "-Wno-unused-result",  # ignoring return value of function declared with 'nodiscard' attribute
-        "-Wno-unused-function",
       ]
     }
 
