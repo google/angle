@@ -461,7 +461,7 @@ GLenum FramebufferGL::getImplementationColorReadFormat(const gl::Context *contex
 {
     const auto *readAttachment = mState.getReadAttachment();
     const Format &format       = readAttachment->getFormat();
-    return format.info->getReadPixelsFormat();
+    return format.info->getReadPixelsFormat(context->getExtensions());
 }
 
 GLenum FramebufferGL::getImplementationColorReadType(const gl::Context *context) const

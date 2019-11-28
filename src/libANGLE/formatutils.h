@@ -117,7 +117,7 @@ struct InternalFormat
                                                    GLuint *resultOut) const;
 
     bool isLUMA() const;
-    GLenum getReadPixelsFormat() const;
+    GLenum getReadPixelsFormat(const Extensions &extensions) const;
     GLenum getReadPixelsType(const Version &version) const;
 
     // Support upload a portion of image?

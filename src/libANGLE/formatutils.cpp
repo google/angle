@@ -360,9 +360,26 @@ bool InternalFormat::isLUMA() const
             (luminanceBits + alphaBits) > 0);
 }
 
-GLenum InternalFormat::getReadPixelsFormat() const
+GLenum InternalFormat::getReadPixelsFormat(const Extensions &extensions) const
 {
-    return format;
+    switch (format)
+    {
+        case GL_BGRA_EXT:
+            // BGRA textures may be enabled but calling glReadPixels with BGRA is disallowed without
+            // GL_EXT_texture_format_BGRA8888.  Read as RGBA instead.
+            if (!extensions.readFormatBGRA)
+            {
+                return GL_RGBA;
+            }
+            else
+            {
+                return GL_BGRA_EXT;
+            }
+            break;
+
+        default:
+            return format;
+    }
 }
 
 GLenum InternalFormat::getReadPixelsType(const Version &version) const
