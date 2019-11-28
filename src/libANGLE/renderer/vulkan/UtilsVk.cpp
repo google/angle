@@ -774,7 +774,7 @@ angle::Result UtilsVk::clearBuffer(ContextVk *contextVk,
     ANGLE_TRY(dest->recordCommands(contextVk, &commandBuffer));
 
     // Tell dest it's being written to.
-    dest->onSelfReadWrite(contextVk, 0, VK_ACCESS_SHADER_WRITE_BIT);
+    dest->onSelfReadWrite(contextVk, VK_ACCESS_SHADER_WRITE_BIT);
 
     const vk::Format &destFormat = dest->getViewFormat();
 

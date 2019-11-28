@@ -485,13 +485,10 @@ class BufferHelper final : public CommandGraphResource
         addReadDependency(contextVk, reader);
         onReadAccess(reader, readAccessType);
     }
-    void onWrite(ContextVk *contextVk,
-                 CommandGraphResource *writer,
-                 VkAccessFlags readAccessType,
-                 VkAccessFlags writeAccessType)
+    void onWrite(ContextVk *contextVk, CommandGraphResource *writer, VkAccessFlags writeAccessType)
     {
         addWriteDependency(contextVk, writer);
-        onWriteAccess(contextVk, readAccessType, writeAccessType);
+        onWriteAccess(contextVk, writeAccessType);
     }
     // Helper for setting a graph dependency between two buffers.  This is a specialized function as
     // both buffers may incur a memory barrier.  Using |onRead| followed by |onWrite| between the
@@ -503,19 +500,17 @@ class BufferHelper final : public CommandGraphResource
     {
         addReadDependency(contextVk, reader);
         onReadAccess(reader, readAccessType);
-        reader->onWriteAccess(contextVk, 0, writeAccessType);
+        reader->onWriteAccess(contextVk, writeAccessType);
     }
     // Helper for setting a barrier when different parts of the same buffer is being read from and
     // written to in the same command.
-    void onSelfReadWrite(ContextVk *contextVk,
-                         VkAccessFlags readAccessType,
-                         VkAccessFlags writeAccessType)
+    void onSelfReadWrite(ContextVk *contextVk, VkAccessFlags writeAccessType)
     {
         if (mCurrentReadAccess || mCurrentWriteAccess)
         {
             finishCurrentCommands(contextVk);
         }
-        onWriteAccess(contextVk, readAccessType, writeAccessType);
+        onWriteAccess(contextVk, writeAccessType);
     }
     // Set write access mask when the buffer is modified externally, e.g. by host.  There is no
     // graph resource to create a dependency to.
@@ -586,13 +581,10 @@ class BufferHelper final : public CommandGraphResource
                                            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
         }
     }
-    bool needsOnWriteBarrier(VkAccessFlags readAccessType,
-                             VkAccessFlags writeAccessType,
+    bool needsOnWriteBarrier(VkAccessFlags writeAccessType,
                              VkAccessFlags *barrierSrcOut,
                              VkAccessFlags *barrierDstOut);
-    void onWriteAccess(ContextVk *contextVk,
-                       VkAccessFlags readAccessType,
-                       VkAccessFlags writeAccessType);
+    void onWriteAccess(ContextVk *contextVk, VkAccessFlags writeAccessType);
 
     // Vulkan objects.
     Buffer mBuffer;

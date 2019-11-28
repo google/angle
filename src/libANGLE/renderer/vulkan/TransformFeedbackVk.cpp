@@ -129,7 +129,7 @@ void TransformFeedbackVk::addFramebufferDependency(ContextVk *contextVk,
         ASSERT(buffer != nullptr);
 
         vk::BufferHelper &bufferHelper = vk::GetImpl(buffer)->getBuffer();
-        bufferHelper.onWrite(contextVk, framebuffer, 0, VK_ACCESS_SHADER_WRITE_BIT);
+        bufferHelper.onWrite(contextVk, framebuffer, VK_ACCESS_SHADER_WRITE_BIT);
     }
 }
 

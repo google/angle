@@ -1473,8 +1473,7 @@ void BufferHelper::release(RendererVk *renderer)
     renderer->collectGarbageAndReinit(&mUse, &mBuffer, &mBufferView, &mDeviceMemory);
 }
 
-bool BufferHelper::needsOnWriteBarrier(VkAccessFlags readAccessType,
-                                       VkAccessFlags writeAccessType,
+bool BufferHelper::needsOnWriteBarrier(VkAccessFlags writeAccessType,
                                        VkAccessFlags *barrierSrcOut,
                                        VkAccessFlags *barrierDstOut)
 {
@@ -1483,20 +1482,18 @@ bool BufferHelper::needsOnWriteBarrier(VkAccessFlags readAccessType,
     // Note: mCurrentReadAccess is not part of barrier src flags as "anything-after-read" is
     // satisified by execution barriers alone.
     *barrierSrcOut = mCurrentWriteAccess;
-    *barrierDstOut = readAccessType | writeAccessType;
+    *barrierDstOut = writeAccessType;
 
     mCurrentWriteAccess = writeAccessType;
-    mCurrentReadAccess  = readAccessType;
+    mCurrentReadAccess  = 0;
 
     return needsBarrier;
 }
 
-void BufferHelper::onWriteAccess(ContextVk *contextVk,
-                                 VkAccessFlags readAccessType,
-                                 VkAccessFlags writeAccessType)
+void BufferHelper::onWriteAccess(ContextVk *contextVk, VkAccessFlags writeAccessType)
 {
     VkAccessFlags barrierSrc, barrierDst;
-    if (needsOnWriteBarrier(readAccessType, writeAccessType, &barrierSrc, &barrierDst))
+    if (needsOnWriteBarrier(writeAccessType, &barrierSrc, &barrierDst))
     {
         addGlobalMemoryBarrier(barrierSrc, barrierDst, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
     }

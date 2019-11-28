@@ -162,8 +162,9 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
     // Handle self-dependency especially.
     if (sourceBuffer->mBuffer.getBuffer().getHandle() == mBuffer.getBuffer().getHandle())
     {
-        mBuffer.onSelfReadWrite(contextVk, VK_ACCESS_TRANSFER_READ_BIT,
-                                VK_ACCESS_TRANSFER_WRITE_BIT);
+        // We set the TRANSFER_READ_BIT to be conservative.
+        mBuffer.onSelfReadWrite(contextVk,
+                                VK_ACCESS_TRANSFER_READ_BIT | VK_ACCESS_TRANSFER_WRITE_BIT);
 
         ANGLE_TRY(mBuffer.recordCommands(contextVk, &commandBuffer));
     }
