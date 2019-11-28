@@ -3142,6 +3142,10 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysSampler)
 // Test that structs containing arrays of samplers work as expected.
 TEST_P(GLSLTest_ES31, StructArraySampler)
 {
+    // ASAN error on vulkan backend; ASAN tests only enabled on Mac Swangle
+    // (http://crbug.com/1029378)
+    ANGLE_SKIP_TEST_IF(IsOSX() && isSwiftshader());
+
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision mediump float;\n"
