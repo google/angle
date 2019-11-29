@@ -795,7 +795,8 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     VkPipelineRasterizationLineStateCreateInfoEXT rasterLineState = {};
     rasterLineState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT;
     // Always enable Bresenham line rasterization if available.
-    if (contextVk->getFeatures().bresenhamLineRasterization.enabled)
+    if (rasterAndMS.bits.rasterizationSamples <= 1 &&
+        contextVk->getFeatures().bresenhamLineRasterization.enabled)
     {
         rasterLineState.lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT;
         *pNextPtr                             = &rasterLineState;
