@@ -990,8 +990,6 @@ TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
     // Occlusion query reports fragments outside the render area are still rendered
     ANGLE_SKIP_TEST_IF(IsAndroid() || (IsWindows() && (IsIntel() || IsAMD())));
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
 
     constexpr char kVS1[] = R"(#version 310 es
 in layout(location = 0) highp vec2 a_position;
@@ -1002,7 +1000,7 @@ void main()
 
     constexpr char kFS1[] = R"(#version 310 es
 uniform layout(location = 0) highp ivec2 u_expectedSize;
-out layout(location = 5) mediump vec4 f_color;
+out layout(location = 3) mediump vec4 f_color;
 void main()
 {
     if (ivec2(gl_FragCoord.xy) != u_expectedSize) discard;
@@ -1076,18 +1074,18 @@ void main()
     glBindTexture(GL_TEXTURE_2D, mTexture.get());
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
 
-    const GLenum bufs[] = {GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_COLOR_ATTACHMENT5};
+    const GLenum bufs[] = {GL_NONE, GL_NONE, GL_NONE, GL_COLOR_ATTACHMENT3};
 
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, mTexture.get(),
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, mTexture.get(),
                            0);
     EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-    glDrawBuffers(6, bufs);
+    glDrawBuffers(4, bufs);
 
     validateSamplePass(query, passedCount, width, height);
 
     // If fbo's attachment has been removed, the rendering size should be the same as framebuffer
     // default size.
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, 0, 0, 0);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, 0, 0, 0);
     EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     validateSamplePass(query, passedCount, defaultWidth, defaultHeight);
