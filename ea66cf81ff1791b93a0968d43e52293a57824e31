@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "be09b9ec_178537f3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-29T15:47:51Z",
+      "side": 1,
+      "message": "The minimum values for these limits seem to be VK_SAMPLE_COUNT_1_BIT | VK_SAMPLE_COUNT_4_BIT according to the spec, so this `if` is unnecessary. Please double check.",
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a5592ed9_cda67f54",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 17
@@ -61,6 +78,30 @@
       "side": 1,
       "message": "Let\u0027s figure out how to fix that.",
       "parentUuid": "3fc00cd4_8ab0fc66",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 31
+      },
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "988e8864_3a42d8cc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-11-29T15:47:51Z",
+      "side": 1,
+      "message": "I agree with Jamie. This value is set in `init()` among many other properties, it doesn\u0027t make sense for it to be special-cased (and duplicated) here.\n\nBased on your comment, it sounds like the issue is `TextureVk::initImage()` that\u0027s using `mImage-\u003egetSamples()` to `init()` the image. You should probably instead retrieve the number of samples from the frontend\u0027s TextureState, in which case you don\u0027t need to pass `samples` to `new vk::ImageHelper()` in `TextureVk::ensureImageAllocated()`",
+      "parentUuid": "202e9b76_79151fda",
       "range": {
         "startLine": 663,
         "startChar": 4,
