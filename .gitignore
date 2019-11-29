@@ -24,6 +24,7 @@
 .cipd
 .gclient
 .gclient_entries
+.git_cl_description_backup
 /src/tests/third_party/gles_conformance_tests
 /testing
 /third_party/android_ndk
