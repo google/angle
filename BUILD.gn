@@ -805,6 +805,16 @@ config("shared_library_public_config") {
       "@executable_path/",
     ]
   }
+
+  if (angle_is_winuwp) {
+    ldflags = [
+      "/APPCONTAINER",
+
+      # Disable warning about invalid subsystem number.
+      # A default appropriate subsystem is selected automatically.
+      "/IGNORE:4010",
+    ]
+  }
 }
 
 config("library_name_config") {
