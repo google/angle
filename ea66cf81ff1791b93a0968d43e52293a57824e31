@@ -249,6 +249,30 @@
       "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88ec3c8b_9386472a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-12-02T22:19:35Z",
+      "side": 1,
+      "message": "I had to leave the office early (at a remote location) ... I haven\u0027t debugged to where the texture is created.  It seems like a bug to me to be able to get into this scenario.\n\nJust checking ... should the default value for all textures for all back-ends be 1 sample?",
+      "parentUuid": "cf8deedc_f47c9509",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 31
+      },
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
