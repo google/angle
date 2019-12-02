@@ -139,15 +139,15 @@ angle_unittests_hlsl_sources = [
   "../tests/compiler_tests/UnrollFlatten_test.cpp",
 ]
 
-test_utils_unittest_helper_sources = [
-  "../../util/test_utils_unittest_helper.cpp",
-  "../../util/test_utils_unittest_helper.h",
-]
-
 if (is_android) {
   angle_unittests_sources +=
       [ "../tests/compiler_tests/ImmutableString_test_ESSL_autogen.cpp" ]
 } else {
   angle_unittests_sources +=
       [ "../tests/compiler_tests/ImmutableString_test_autogen.cpp" ]
+}
+
+if (!is_android && !is_fuchsia) {
+  angle_unittests_sources +=
+      [ "../tests/test_utils/runner/TestSuite_unittest.cpp" ]
 }
