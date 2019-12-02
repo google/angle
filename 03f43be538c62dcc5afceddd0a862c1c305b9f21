@@ -52,6 +52,24 @@
       "revId": "03f43be538c62dcc5afceddd0a862c1c305b9f21",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fdb8754_3850426c",
+        "filename": "src/libANGLE/Renderbuffer.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-12-02T20:44:40Z",
+      "side": 1,
+      "message": "I will back-out the changes to Renderbuffer*.cpp\n\nIt was to make the front-end texture and renderbuffer code more similar.",
+      "parentUuid": "1b56dd99_6a86f16c",
+      "revId": "03f43be538c62dcc5afceddd0a862c1c305b9f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
