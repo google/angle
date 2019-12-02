@@ -201,6 +201,30 @@
       "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dae78a45_863c96e2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-12-02T21:06:38Z",
+      "side": 1,
+      "message": "The reason for the new test failures is that TextureVk::initImage() now queries the number of samples from the front-end; and the front-end sometimes constructs the ImageDesc struct with 0 samples.  There are 3 ImageDesc constructors, 2 of which set the number of samples to 0.\n\nFrom a design point-of-view, it seems like there\u0027s danger in having struct/class members that are sometimes initialized (or initialized to reasonable values) and sometimes not.\n\nWhat direction do you want me to go in now?",
+      "parentUuid": "f4972bbe_f220e0c9",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 31
+      },
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
