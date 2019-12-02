@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1c64cd7_9cbb27bb",
+        "filename": "src/libANGLE/Renderbuffer.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-12-02T19:28:12Z",
+      "side": 1,
+      "message": "I tried this again (that Shabi requested), but the following test fails on the NVIDIA driver:\n\n    dEQP.GLES3/functional_fbo_completeness_samples_rbo1_rbo2_rbo0\n\nIt is currently failing on the Linux bots.  It previously failed on the NVIDIA Windows bots too.  It does not fail for my Windows workstation (NVIDIA) nor laptop (Intel).\n\nI\u0027m inclined to leave this change out, since it\u0027s nice to have, but not essential for this CL.  Thoughts?",
+      "revId": "03f43be538c62dcc5afceddd0a862c1c305b9f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

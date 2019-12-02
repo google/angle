@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6d389ff2_aad61093",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-12-02T19:28:12Z",
+      "side": 1,
+      "message": "Great point, the check is unnecessary.",
+      "parentUuid": "be09b9ec_178537f3",
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5592ed9_cda67f54",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 17
@@ -102,6 +120,30 @@
       "side": 1,
       "message": "I agree with Jamie. This value is set in `init()` among many other properties, it doesn\u0027t make sense for it to be special-cased (and duplicated) here.\n\nBased on your comment, it sounds like the issue is `TextureVk::initImage()` that\u0027s using `mImage-\u003egetSamples()` to `init()` the image. You should probably instead retrieve the number of samples from the frontend\u0027s TextureState, in which case you don\u0027t need to pass `samples` to `new vk::ImageHelper()` in `TextureVk::ensureImageAllocated()`",
       "parentUuid": "202e9b76_79151fda",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 31
+      },
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6167848_dc177978",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-12-02T19:28:12Z",
+      "side": 1,
+      "message": "I made the suggested change, but it doesn\u0027t make sense to me.  I\u0027d like to understand this. \n Here\u0027s what I\u0027m seeing/reading ...\n\nThe ImageHelper class has an mSamples member and a getSamples() method.  ImageHelper::getSamples() is called by a number of classes, including the TextureVk and RenderbufferVk classes.  However, the TextureVk class should not populate ImageHelper::mSamples when it creates an ImageHelper for a multisample texture, nor call ImageHelper::getSamples() (at least not in TextureVk::initImage()).  Instead, TextureVk::initImage() should query the number of samples from the front-end TextureState and pass that number down to ImageHelper::init() method.\n\nIs that correct?\n\nIf so, should ImageHelper::mSamples be removed, and other callers of ImageHelper::getSamples() be replaced with queries to the front-end (as part of a different CL)?",
+      "parentUuid": "988e8864_3a42d8cc",
       "range": {
         "startLine": 663,
         "startChar": 4,
