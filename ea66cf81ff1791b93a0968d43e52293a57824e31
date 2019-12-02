@@ -225,6 +225,30 @@
       "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf8deedc_f47c9509",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-02T21:22:09Z",
+      "side": 1,
+      "message": "\u003e the front-end sometimes constructs the ImageDesc struct with 0 samples\n\nIs that a bug? Or is it a result of the ImageDesc being updated *after* the Impl call instead of before the Impl call. If we create a Texture or Renderbuffer as multisampled and record a zero samples ImageDesc after the init call that seems like a bug.",
+      "parentUuid": "dae78a45_863c96e2",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 31
+      },
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
