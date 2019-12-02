@@ -62,12 +62,11 @@ struct ImageMemoryBarrierData
     // needs a READ bit, as WAR hazards don't need memory barriers (just execution barriers).
     VkAccessFlags srcAccessMask;
 
-    // If access is read-only, the execution barrier can be skipped altogether if retransitioning to
+    // If access is read-only, the memory barrier can be skipped altogether if retransitioning to
     // the same layout.  This is because read-after-read does not need an execution or memory
     // barrier.
     //
-    // Otherwise, same-layout transitions only require an execution barrier (and not a memory
-    // barrier).
+    // Otherwise, some same-layout transitions require a memory barrier.
     bool sameLayoutTransitionRequiresBarrier;
 };
 
@@ -220,8 +219,8 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
         ImageLayout::DepthStencilAttachment,
         {
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
-            VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+            VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+            VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
             // Transition to: all reads and writes must happen after barrier.
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             // Transition from: all writes must finish before barrier.
@@ -1944,10 +1943,9 @@ bool ImageHelper::isLayoutChangeNecessary(ImageLayout newLayout) const
 {
     const ImageMemoryBarrierData &layoutData = kImageMemoryBarrierData[mCurrentLayout];
 
-    // If transitioning to the same layout, we rarely need a barrier.  RAR (read-after-read)
-    // doesn't need a barrier, and WAW (write-after-write) is guaranteed to not require a barrier
-    // for color attachment and depth/stencil attachment writes.  Transfer dst and shader writes
-    // are basically the only cases where an execution barrier is still necessary.
+    // If transitioning to the same layout, we don't need a barrier if the layout is read-only as
+    // RAR (read-after-read) doesn't need a barrier.  WAW (write-after-write) does require a memory
+    // barrier though.
     bool sameLayoutAndNoNeedForBarrier =
         mCurrentLayout == newLayout && !layoutData.sameLayoutTransitionRequiresBarrier;
 
@@ -2000,25 +1998,6 @@ void ImageHelper::forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
                                             uint32_t newQueueFamilyIndex,
                                             CommandBuffer *commandBuffer)
 {
-    // If transitioning to the same layout (and there is no queue transfer), an execution barrier
-    // suffices.
-    //
-    // TODO(syoussefi): AMD driver on windows has a bug where an execution barrier is not sufficient
-    // between transfer dst operations (even if the transfer is not to the same subresource!).  A
-    // workaround may be necessary.  http://anglebug.com/3554
-    if (mCurrentLayout == newLayout && mCurrentQueueFamilyIndex == newQueueFamilyIndex &&
-        mCurrentLayout != ImageLayout::TransferDst)
-    {
-        const ImageMemoryBarrierData &transition = kImageMemoryBarrierData[mCurrentLayout];
-
-        // In this case, the image is going to be used in the same way, so the src and dst stage
-        // masks must be necessarily equal.
-        ASSERT(transition.srcStageMask == transition.dstStageMask);
-
-        commandBuffer->executionBarrier(transition.dstStageMask);
-        return;
-    }
-
     const ImageMemoryBarrierData &transitionFrom = kImageMemoryBarrierData[mCurrentLayout];
     const ImageMemoryBarrierData &transitionTo   = kImageMemoryBarrierData[newLayout];
 
