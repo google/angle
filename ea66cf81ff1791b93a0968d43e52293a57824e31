@@ -273,6 +273,30 @@
       "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fea620e4_be004e2e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-02T23:25:24Z",
+      "side": 1,
+      "message": "Ah.. maybe this is the problem. In GL the minimum is zero. zero means not multisampled, 1 means a multisampled texture with 1 sample. In Vulkan there is no such distinction. 1 is single-sampled. 2+ is multisampled.",
+      "parentUuid": "88ec3c8b_9386472a",
+      "range": {
+        "startLine": 663,
+        "startChar": 4,
+        "endLine": 663,
+        "endChar": 31
+      },
+      "revId": "ea66cf81ff1791b93a0968d43e52293a57824e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
