@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "584e6512_6802fd84",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-02T16:47:35Z",
+      "side": 1,
+      "message": "Hi Xinyi:\n\nI was suggesting you change the description in the first line of the message to reflect that you were adding a test and not making a correctness fix.\n\nI didn\u0027t see that change reflected in the commit message.",
+      "parentUuid": "0e351c5a_7f6af611",
+      "range": {
+        "startLine": 7,
+        "startChar": 8,
+        "endLine": 7,
+        "endChar": 62
+      },
+      "revId": "354e7f26eeec08601beb7eff695c3ab33fbe8e9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d633299_f90b7462",
         "filename": "src/tests/gl_tests/MipmapTest.cpp",
         "patchSetId": 1
