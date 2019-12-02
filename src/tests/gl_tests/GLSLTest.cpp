@@ -7104,9 +7104,6 @@ void main()
 // Test that side effects when transforming read operations are preserved.
 TEST_P(GLSLTest_ES3, MixedRowAndColumnMajorMatrices_ReadSideEffect)
 {
-    // http://anglebug.com/3831
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGL());
-
     // Fails on Mac on Intel and AMD: http://anglebug.com/3842
     ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL() && (IsIntel() || IsAMD()));
 
@@ -7119,13 +7116,13 @@ out vec4 outColor;
 
 struct S
 {
-    mat2x3 m2[2];
+    mat2x3 m2[3];
 };
 
 layout(std140, column_major) uniform Ubo
 {
     mat4 m1;
-    layout(row_major) S s[3];
+    layout(row_major) S s[2];
 } ubo;
 
 #define EXPECT(result, expression, value) if ((expression) != value) { result = false; }
