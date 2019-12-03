@@ -1226,16 +1226,27 @@ using namespace sh;
 static yy_size_t string_input(char* buf, yy_size_t max_size, yyscan_t yyscanner);
 static int check_type(yyscan_t yyscanner);
 static int reserved_word(yyscan_t yyscanner);
+// Tests if an extension is enabled.  If the extension is promoted to core, this function returns true.
+static bool is_extension_enabled_or_is_core(TParseContext *context,
+        int extension_version, TExtension extension, int promotion_version);
+// Helpers to determine if a symbol is reserved, keyword in extension or core, or identifier.
+// Formatted as:
+//
+//    [V1_reserved_][V2_extension_][V3_keyword]
+//
+// which means in version V1, the symbol is reserved, and remains reserved until V3.  From versions
+// V2 until V3, it's a keyword if the extension is enabled.  From version V3 on, it's a keyword in
+// the spec itself.  Prior to V1, the symbol can be used as identifier.
 static int ES2_reserved_ES3_keyword(TParseContext *context, int token);
 static int ES2_keyword_ES3_reserved(TParseContext *context, int token);
-static int ES2_ident_ES3_keyword(TParseContext *context, int token);
-static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
-static int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
-static int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token);
-static int ES2_extension_ES3_keyword_else_reserved(TParseContext *context, TExtension extension, int token);
-static int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token);
-static int ES2_ident_ES3_reserved_ES3_1_extension_keyword(TParseContext *context, TExtension extension, int token);
-static int ES3_extension_and_ES3_1_keyword_ES3_reserved_else_ident(TParseContext *context, TExtension extension, int token);
+static int ES3_keyword(TParseContext *context, int token);
+static int ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
+static int ES2_reserved_ES3_1_keyword(TParseContext *context, int token);
+static int ES3_1_keyword(TParseContext *context, int token);
+static int ES2_reserved_ES2_extension_ES3_keyword(TParseContext *context, TExtension extension, int token);
+static int ES3_extension(TParseContext *context, TExtension extension, int token);
+static int ES3_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
+static int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context, TExtension extension, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
 static int float_constant(yyscan_t yyscanner);
@@ -1743,7 +1754,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-{ return ES2_and_ES3_ident_ES3_1_keyword(context, BUFFER); }
+{ return ES3_1_keyword(context, BUFFER); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
@@ -1783,7 +1794,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, CASE); }
+{ return ES3_keyword(context, CASE); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
@@ -1791,7 +1802,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, CENTROID); }
+{ return ES3_keyword(context, CENTROID); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
@@ -1799,7 +1810,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, SMOOTH); }
+{ return ES3_keyword(context, SMOOTH); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
@@ -1815,7 +1826,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-{ return ES2_and_ES3_ident_ES3_1_keyword(context, SHARED); }
+{ return ES3_1_keyword(context, SHARED); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
@@ -1827,7 +1838,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, UINT_TYPE); }
+{ return ES3_keyword(context, UINT_TYPE); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
@@ -1867,39 +1878,39 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, MATRIX2); }
+{ return ES3_keyword(context, MATRIX2); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, MATRIX3); }
+{ return ES3_keyword(context, MATRIX3); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, MATRIX4); }
+{ return ES3_keyword(context, MATRIX4); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, MATRIX2x3); }
+{ return ES3_keyword(context, MATRIX2x3); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, MATRIX3x2); }
+{ return ES3_keyword(context, MATRIX3x2); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, MATRIX2x4); }
+{ return ES3_keyword(context, MATRIX2x4); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, MATRIX4x2); }
+{ return ES3_keyword(context, MATRIX4x2); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, MATRIX3x4); }
+{ return ES3_keyword(context, MATRIX3x4); }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, MATRIX4x3); }
+{ return ES3_keyword(context, MATRIX4x3); }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
@@ -1939,15 +1950,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, UVEC2); }
+{ return ES3_keyword(context, UVEC2); }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, UVEC3); }
+{ return ES3_keyword(context, UVEC3); }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, UVEC4); }
+{ return ES3_keyword(context, UVEC4); }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
@@ -1963,7 +1974,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-{ return ES2_extension_ES3_keyword_else_reserved(context, TExtension::OES_texture_3D, SAMPLER3D); }
+{ return ES2_reserved_ES2_extension_ES3_keyword(context, TExtension::OES_texture_3D, SAMPLER3D); }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
@@ -1975,51 +1986,51 @@ YY_RULE_SETUP
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, SAMPLER2DARRAY); }
+{ return ES3_keyword(context, SAMPLER2DARRAY); }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-{ return ES3_extension_and_ES3_1_keyword_ES3_reserved_else_ident(context, TExtension::ANGLE_texture_multisample, SAMPLER2DMS); }
+{ return ES3_reserved_ES3_extension_ES3_1_keyword(context, TExtension::ANGLE_texture_multisample, SAMPLER2DMS); }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, ISAMPLER2D); }
+{ return ES3_keyword(context, ISAMPLER2D); }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, ISAMPLER3D); }
+{ return ES3_keyword(context, ISAMPLER3D); }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, ISAMPLERCUBE); }
+{ return ES3_keyword(context, ISAMPLERCUBE); }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, ISAMPLER2DARRAY); }
+{ return ES3_keyword(context, ISAMPLER2DARRAY); }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-{ return ES3_extension_and_ES3_1_keyword_ES3_reserved_else_ident(context, TExtension::ANGLE_texture_multisample, ISAMPLER2DMS); }
+{ return ES3_reserved_ES3_extension_ES3_1_keyword(context, TExtension::ANGLE_texture_multisample, ISAMPLER2DMS); }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, USAMPLER2D); }
+{ return ES3_keyword(context, USAMPLER2D); }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, USAMPLER3D); }
+{ return ES3_keyword(context, USAMPLER3D); }
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, USAMPLERCUBE); }
+{ return ES3_keyword(context, USAMPLERCUBE); }
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, USAMPLER2DARRAY); }
+{ return ES3_keyword(context, USAMPLER2DARRAY); }
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-{ return ES3_extension_and_ES3_1_keyword_ES3_reserved_else_ident(context, TExtension::ANGLE_texture_multisample, USAMPLER2DMS); }
+{ return ES3_reserved_ES3_extension_ES3_1_keyword(context, TExtension::ANGLE_texture_multisample, USAMPLER2DMS); }
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
@@ -2027,27 +2038,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, SAMPLERCUBESHADOW); }
+{ return ES3_keyword(context, SAMPLERCUBESHADOW); }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
+{ return ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-{ return ES3_extension_keyword_else_ident(context, TExtension::EXT_YUV_target, SAMPLEREXTERNAL2DY2YEXT); }
+{ return ES3_extension(context, TExtension::EXT_YUV_target, SAMPLEREXTERNAL2DY2YEXT); }
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, SAMPLER2DMSARRAY); }
+{ return ES3_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, SAMPLER2DMSARRAY); }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, ISAMPLER2DMSARRAY); }
+{ return ES3_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, ISAMPLER2DMSARRAY); }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, USAMPLER2DMSARRAY); }
+{ return ES3_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, USAMPLER2DMSARRAY); }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
@@ -2055,11 +2066,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, LAYOUT); }
+{ return ES3_keyword(context, LAYOUT); }
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-{ return ES3_extension_keyword_else_ident(context, TExtension::EXT_YUV_target, YUVCSCSTANDARDEXT); }
+{ return ES3_extension(context, TExtension::EXT_YUV_target, YUVCSCSTANDARDEXT); }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
@@ -2075,75 +2086,75 @@ YY_RULE_SETUP
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE2D); }
+{ return ES3_reserved_ES3_1_keyword(context, IMAGE2D); }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE2D); }
+{ return ES3_reserved_ES3_1_keyword(context, IIMAGE2D); }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE2D); }
+{ return ES3_reserved_ES3_1_keyword(context, UIMAGE2D); }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE2DARRAY); }
+{ return ES3_reserved_ES3_1_keyword(context, IMAGE2DARRAY); }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE2DARRAY); }
+{ return ES3_reserved_ES3_1_keyword(context, IIMAGE2DARRAY); }
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE2DARRAY); }
+{ return ES3_reserved_ES3_1_keyword(context, UIMAGE2DARRAY); }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE3D); }
+{ return ES3_reserved_ES3_1_keyword(context, IMAGE3D); }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE3D); }
+{ return ES3_reserved_ES3_1_keyword(context, UIMAGE3D); }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE3D); }
+{ return ES3_reserved_ES3_1_keyword(context, IIMAGE3D); }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGECUBE); }
+{ return ES3_reserved_ES3_1_keyword(context, IIMAGECUBE); }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGECUBE); }
+{ return ES3_reserved_ES3_1_keyword(context, UIMAGECUBE); }
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGECUBE); }
+{ return ES3_reserved_ES3_1_keyword(context, IMAGECUBE); }
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, READONLY); }
+{ return ES3_reserved_ES3_1_keyword(context, READONLY); }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, WRITEONLY); }
+{ return ES3_reserved_ES3_1_keyword(context, WRITEONLY); }
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, COHERENT); }
+{ return ES3_reserved_ES3_1_keyword(context, COHERENT); }
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, RESTRICT); }
+{ return ES3_reserved_ES3_1_keyword(context, RESTRICT); }
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-{ return ES2_and_ES3_reserved_ES3_1_keyword(context, VOLATILE); }
+{ return ES2_reserved_ES3_1_keyword(context, VOLATILE); }
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, ATOMICUINT); }
+{ return ES3_reserved_ES3_1_keyword(context, ATOMICUINT); }
 	YY_BREAK
 /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
 case 110:
@@ -3839,6 +3850,18 @@ int reserved_word(yyscan_t yyscanner) {
     return 0;
 }
 
+static bool is_extension_enabled_or_is_core(TParseContext *context,
+        int extension_version, TExtension extension, int promotion_version)
+{
+    int version = context->getShaderVersion();
+
+    // If version is at least promotion_version, symbol is definitely keyword.  Otherwise it's a
+    // keyword if version is at least extension_version (where the extension was introduced) and
+    // the extension is enabled.
+    return version >= promotion_version ||
+        (version >= extension_version && context->isExtensionEnabled(extension));
+}
+
 int ES2_reserved_ES3_keyword(TParseContext *context, int token)
 {
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
@@ -3863,7 +3886,7 @@ int ES2_keyword_ES3_reserved(TParseContext *context, int token)
     return token;
 }
 
-int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token)
+int ES3_reserved_ES3_1_keyword(TParseContext *context, int token)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
@@ -3881,7 +3904,7 @@ int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token)
     return token;
 }
 
-int ES2_ident_ES3_keyword(TParseContext *context, int token)
+int ES3_keyword(TParseContext *context, int token)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
@@ -3896,7 +3919,7 @@ int ES2_ident_ES3_keyword(TParseContext *context, int token)
     return token;
 }
 
-int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token)
+int ES2_reserved_ES3_1_keyword(TParseContext *context, int token)
 {
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
 
@@ -3908,56 +3931,59 @@ int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token)
     return token;
 }
 
-int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token)
+int ES3_1_keyword(TParseContext *context, int token)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
 
-    // not a reserved word in GLSL ES 1.00 and GLSL ES 3.00, so could be used as an identifier/type name
-    if (context->getShaderVersion() < 310)
-    {
-        yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
-        return check_type(yyscanner);
-    }
-
-    return token;
-}
-
-int ES2_extension_ES3_keyword_else_reserved(TParseContext *context, TExtension extension, int token)
-{
-    yyscan_t yyscanner = (yyscan_t) context->getScanner();
-
-    // Available with extension or ES 3.00 and above, reserved otherwise
-    if (context->isExtensionEnabled(extension) || context->getShaderVersion() >= 300)
+    // A keyword in GLSL ES 3.10.
+    if (context->getShaderVersion() >= 310)
     {
         return token;
     }
 
+    // Otherwise can be used as an identifier/type name
+    yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
+    return check_type(yyscanner);
+}
+
+int ES2_reserved_ES2_extension_ES3_keyword(TParseContext *context, TExtension extension, int token)
+{
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    // A keyword in GLSL ES 3.00 or GLSL ES 1.00 with enabled extension.
+    if (is_extension_enabled_or_is_core(context, 100, extension, 300))
+    {
+        return token;
+    }
+
+    // Reserved otherwise.
     return reserved_word(yyscanner);
 }
 
-int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token)
+int ES3_extension(TParseContext *context, TExtension extension, int token)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
 
-    // a reserved word in GLSL ES 3.00 with enabled extension, otherwise could be used as an identifier/type name
+    // a keyword word in GLSL ES 3.00 with enabled extension.
     if (context->getShaderVersion() >= 300 && context->isExtensionEnabled(extension))
     {
         return token;
     }
 
+    // Otherwise can be used as an identifier/type name
     yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
     return check_type(yyscanner);
 }
 
-int ES2_ident_ES3_reserved_ES3_1_extension_keyword(TParseContext *context, TExtension extension, int token)
+int ES3_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
 
     // a keyword in GLSL ES 3.10 with enabled extension
-    if (context->getShaderVersion() >= 310 && context->isExtensionEnabled(extension))
+    if (is_extension_enabled_or_is_core(context, 310, extension, 320))
     {
         return token;
     }
@@ -3972,13 +3998,13 @@ int ES2_ident_ES3_reserved_ES3_1_extension_keyword(TParseContext *context, TExte
     return check_type(yyscanner);
 }
 
-int ES3_extension_and_ES3_1_keyword_ES3_reserved_else_ident(TParseContext *context, TExtension extension, int token)
+int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context, TExtension extension, int token)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
 
     // A keyword in GLSL ES 3.00 with enabled extension or in GLSL ES 3.10
-    if (context->getShaderVersion() >= 310 || (context->getShaderVersion() == 300 && context->isExtensionEnabled(extension)))
+    if (is_extension_enabled_or_is_core(context, 300, extension, 310))
     {
         return token;
     }
