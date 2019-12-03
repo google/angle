@@ -35,8 +35,7 @@ std::string GetEnvironmentVar(const char *variableName)
 
 const char *GetPathSeparatorForEnvironmentVar()
 {
-    // Not supported for UWP
-    return "";
+    return ";";
 }
 
 const char *GetSharedLibraryExtension()
@@ -44,9 +43,14 @@ const char *GetSharedLibraryExtension()
     return "dll";
 }
 
-const char *GetPathSeparator()
+const char *GetExecutableExtension()
 {
-    return ";";
+    return ".exe";
+}
+
+char GetPathSeparator()
+{
+    return '\\';
 }
 
 double GetCurrentTime()
