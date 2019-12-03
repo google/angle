@@ -778,6 +778,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_type_2_10_10_10_REV"] = enableableExtension(&Extensions::textureFormat2101010REV);
         map["GL_EXT_read_format_bgra"] = enableableExtension(&Extensions::readFormatBGRA);
         map["GL_NV_pixel_buffer_object"] = enableableExtension(&Extensions::pixelBufferObject);
+        map["GL_ARB_sync"] = enableableExtension(&Extensions::glSync);
         map["GL_OES_mapbuffer"] = enableableExtension(&Extensions::mapBuffer);
         map["GL_EXT_map_buffer_range"] = enableableExtension(&Extensions::mapBufferRange);
         map["GL_EXT_color_buffer_half_float"] = enableableExtension(&Extensions::colorBufferHalfFloat);

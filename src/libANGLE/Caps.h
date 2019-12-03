@@ -145,6 +145,9 @@ struct Extensions
     // GL_NV_pixel_buffer_object
     bool pixelBufferObject = false;
 
+    // GL_ARB_sync
+    bool glSync = false;
+
     // GL_OES_mapbuffer and GL_EXT_map_buffer_range
     bool mapBuffer      = false;
     bool mapBufferRange = false;
