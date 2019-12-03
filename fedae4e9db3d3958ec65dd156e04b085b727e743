@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "bbf8f825_31251e8e",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1274,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-12-03T09:13:46Z",
+      "side": 1,
+      "message": "Add \u0027case EvqPrecise: return \"precise\";\u0027\nThen in https://chromium-review.googlesource.com/c/angle/angle/+/1939851/5/src/compiler/translator/OutputGLSLBase.cpp#386, you can remove the if block since the following writeQualifier will call mapQualifierToString -\u003e sh::getQualifierString",
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cab4974c_977e3f22",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 5
@@ -48,6 +65,29 @@
     },
     {
       "key": {
+        "uuid": "fdef13d1_c275e5ce",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1799,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-12-03T09:13:46Z",
+      "side": 1,
+      "message": "Maybe this checking is not necessary since there is no any restriction for precise qualifier.",
+      "range": {
+        "startLine": 1799,
+        "startChar": 20,
+        "endLine": 1799,
+        "endChar": 49
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "70a6ec26_9d010552",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 5
@@ -87,6 +127,29 @@
         "startChar": 8,
         "endLine": 590,
         "endChar": 37
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e70411f_3da44aca",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-12-03T09:13:46Z",
+      "side": 1,
+      "message": "3.20",
+      "range": {
+        "startLine": 679,
+        "startChar": 11,
+        "endLine": 679,
+        "endChar": 15
       },
       "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
