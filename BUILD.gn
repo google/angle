@@ -31,18 +31,19 @@ declare_args() {
 
   # Don't build extra (test, samples etc) for Windows UWP. We don't have
   # infrastructure (e.g. windowing helper functions) in place to run them.
-  angle_build_all = !angle_is_winuwp && angle_has_build
+  angle_build_all = !build_with_chromium && !angle_is_winuwp && angle_has_build
 }
 
-if (!build_with_chromium && angle_build_all) {
+if (angle_build_all) {
   group("all") {
     testonly = true
     deps = [
+      ":angle",
       ":angle_shader_translator",
       ":translator_fuzzer",
       ":xxhash_fuzzer",
-      "//samples:all",
-      "//src/tests:all",
+      "$angle_root/samples:angle_samples",
+      "$angle_root/src/tests:angle_tests",
     ]
   }
 }
@@ -1181,7 +1182,6 @@ foreach(is_shared_library,
 
 # Convenience targets for some of the samples so they can be built
 # with Chromium's toolchain.
-
 angle_executable("angle_shader_translator") {
   testonly = true
 
@@ -1302,9 +1302,9 @@ if (build_with_chromium && !is_component_build && is_android &&
   }
 }
 
-# Note: libGLESv1_CM is not presently included because most Chrome users don't care about it.
 group("angle") {
   data_deps = [
+    ":libGLESv1_CM",
     ":libGLESv2",
     ":libEGL",
   ]
