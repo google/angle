@@ -4731,7 +4731,7 @@ TStorageQualifierWrapper *TParseContext::parseOutQualifier(const TSourceLoc &loc
         case GL_COMPUTE_SHADER:
         {
             error(loc, "storage qualifier isn't supported in compute shaders", "out");
-            return new TStorageQualifierWrapper(EvqLast, loc);
+            return new TStorageQualifierWrapper(EvqOut, loc);
         }
         case GL_GEOMETRY_SHADER_EXT:
         {
