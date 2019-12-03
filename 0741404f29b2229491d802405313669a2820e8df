@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81861b8b_f5064971",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 22
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-03T21:40:19Z",
+      "side": 1,
+      "message": "nit: can you include some design notes?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 0
+      },
+      "revId": "0741404f29b2229491d802405313669a2820e8df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e45a5287_3ff757c3",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-03T21:40:19Z",
+      "side": 1,
+      "message": "can you make this a split change? we can land it very quickly.",
+      "range": {
+        "startLine": 405,
+        "startChar": 5,
+        "endLine": 405,
+        "endChar": 22
+      },
+      "revId": "0741404f29b2229491d802405313669a2820e8df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e7daac8_9b9ebe9d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1635,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-03T21:40:19Z",
+      "side": 1,
+      "message": "nice fix!",
+      "range": {
+        "startLine": 1635,
+        "startChar": 15,
+        "endLine": 1635,
+        "endChar": 16
+      },
+      "revId": "0741404f29b2229491d802405313669a2820e8df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
