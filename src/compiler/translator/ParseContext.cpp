@@ -2645,7 +2645,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayInitDeclaration(
     return declaration;
 }
 
-TIntermInvariantDeclaration *TParseContext::parseInvariantDeclaration(
+TIntermGlobalQualifierDeclaration *TParseContext::parseGlobalQualifierDeclaration(
     const TTypeQualifierBuilder &typeQualifierBuilder,
     const TSourceLoc &identifierLoc,
     const ImmutableString &identifier,
@@ -2698,7 +2698,7 @@ TIntermInvariantDeclaration *TParseContext::parseInvariantDeclaration(
     TIntermSymbol *intermSymbol = new TIntermSymbol(variable);
     intermSymbol->setLine(identifierLoc);
 
-    return new TIntermInvariantDeclaration(intermSymbol, identifierLoc);
+    return new TIntermGlobalQualifierDeclaration(intermSymbol, identifierLoc);
 }
 
 void TParseContext::parseDeclarator(TPublicType &publicType,

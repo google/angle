@@ -350,19 +350,20 @@ bool TIntermUnary::replaceChildNode(TIntermNode *original, TIntermNode *replacem
     return false;
 }
 
-size_t TIntermInvariantDeclaration::getChildCount() const
+size_t TIntermGlobalQualifierDeclaration::getChildCount() const
 {
     return 1;
 }
 
-TIntermNode *TIntermInvariantDeclaration::getChildNode(size_t index) const
+TIntermNode *TIntermGlobalQualifierDeclaration::getChildNode(size_t index) const
 {
     ASSERT(mSymbol);
     ASSERT(index == 0);
     return mSymbol;
 }
 
-bool TIntermInvariantDeclaration::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
+bool TIntermGlobalQualifierDeclaration::replaceChildNode(TIntermNode *original,
+                                                         TIntermNode *replacement)
 {
     REPLACE_IF_IS(mSymbol, TIntermSymbol, original, replacement);
     return false;
@@ -1332,17 +1333,18 @@ TIntermBinary *TIntermBinary::CreateComma(TIntermTyped *left,
     return node;
 }
 
-TIntermInvariantDeclaration::TIntermInvariantDeclaration(TIntermSymbol *symbol,
-                                                         const TSourceLoc &line)
+TIntermGlobalQualifierDeclaration::TIntermGlobalQualifierDeclaration(TIntermSymbol *symbol,
+                                                                     const TSourceLoc &line)
     : TIntermNode(), mSymbol(symbol)
 {
     ASSERT(symbol);
     setLine(line);
 }
 
-TIntermInvariantDeclaration::TIntermInvariantDeclaration(const TIntermInvariantDeclaration &node)
-    : TIntermInvariantDeclaration(static_cast<TIntermSymbol *>(node.mSymbol->deepCopy()),
-                                  node.mLine)
+TIntermGlobalQualifierDeclaration::TIntermGlobalQualifierDeclaration(
+    const TIntermGlobalQualifierDeclaration &node)
+    : TIntermGlobalQualifierDeclaration(static_cast<TIntermSymbol *>(node.mSymbol->deepCopy()),
+                                        node.mLine)
 {}
 
 TIntermTernary::TIntermTernary(TIntermTyped *cond,

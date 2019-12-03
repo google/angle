@@ -952,7 +952,8 @@ bool TOutputGLSLBase::visitFunctionDefinition(Visit visit, TIntermFunctionDefini
     return false;
 }
 
-bool TOutputGLSLBase::visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node)
+bool TOutputGLSLBase::visitGlobalQualifierDeclaration(Visit visit,
+                                                      TIntermGlobalQualifierDeclaration *node)
 {
     TInfoSinkBase &out = objSink();
     ASSERT(visit == PreVisit);

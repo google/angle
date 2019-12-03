@@ -624,7 +624,7 @@ declaration
     }
     | type_qualifier IDENTIFIER SEMICOLON // e.g. to qualify an existing variable as invariant
     {
-        $$ = context->parseInvariantDeclaration(*$1, @2, ImmutableString($2.string), $2.symbol);
+        $$ = context->parseGlobalQualifierDeclaration(*$1, @2, ImmutableString($2.string), $2.symbol);
     }
     ;
 

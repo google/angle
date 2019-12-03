@@ -87,8 +87,9 @@ void TOutputVulkanGLSLForMetal::writeVariableType(const TType &type, const TSymb
     TOutputVulkanGLSL::writeVariableType(overrideType, symbol);
 }
 
-bool TOutputVulkanGLSLForMetal::visitInvariantDeclaration(Visit visit,
-                                                          TIntermInvariantDeclaration *node)
+bool TOutputVulkanGLSLForMetal::visitGlobalQualifierDeclaration(
+    Visit visit,
+    TIntermGlobalQualifierDeclaration *node)
 {
     TInfoSinkBase &out = objSink();
     ASSERT(visit == PreVisit);

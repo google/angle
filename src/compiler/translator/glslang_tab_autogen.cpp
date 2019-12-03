@@ -3259,7 +3259,7 @@ yyreduce:
   case 96:
 
     {
-        (yyval.interm.intermNode) = context->parseInvariantDeclaration(*(yyvsp[-2].interm.typeQualifierBuilder), (yylsp[-1]), ImmutableString((yyvsp[-1].lex).string), (yyvsp[-1].lex).symbol);
+        (yyval.interm.intermNode) = context->parseGlobalQualifierDeclaration(*(yyvsp[-2].interm.typeQualifierBuilder), (yylsp[-1]), ImmutableString((yyvsp[-1].lex).string), (yyvsp[-1].lex).symbol);
     }
 
     break;

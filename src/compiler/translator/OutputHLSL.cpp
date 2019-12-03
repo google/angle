@@ -2087,7 +2087,7 @@ bool OutputHLSL::visitBlock(Visit visit, TIntermBlock *node)
             statement->getAsFunctionDefinition() == nullptr &&
             (statement->getAsDeclarationNode() == nullptr ||
              IsDeclarationWrittenOut(statement->getAsDeclarationNode())) &&
-            statement->getAsInvariantDeclarationNode() == nullptr)
+            statement->getAsGlobalQualifierDeclarationNode() == nullptr)
         {
             out << ";\n";
         }
@@ -2266,7 +2266,8 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
     return false;
 }
 
-bool OutputHLSL::visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node)
+bool OutputHLSL::visitGlobalQualifierDeclaration(Visit visit,
+                                                 TIntermGlobalQualifierDeclaration *node)
 {
     // Do not do any translation
     return false;

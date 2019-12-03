@@ -38,7 +38,7 @@ class TDiagnostics;
 class TIntermTraverser;
 class TIntermAggregate;
 class TIntermBlock;
-class TIntermInvariantDeclaration;
+class TIntermGlobalQualifierDeclaration;
 class TIntermDeclaration;
 class TIntermFunctionPrototype;
 class TIntermFunctionDefinition;
@@ -90,7 +90,10 @@ class TIntermNode : angle::NonCopyable
     virtual TIntermAggregate *getAsAggregate() { return nullptr; }
     virtual TIntermBlock *getAsBlock() { return nullptr; }
     virtual TIntermFunctionPrototype *getAsFunctionPrototypeNode() { return nullptr; }
-    virtual TIntermInvariantDeclaration *getAsInvariantDeclarationNode() { return nullptr; }
+    virtual TIntermGlobalQualifierDeclaration *getAsGlobalQualifierDeclarationNode()
+    {
+        return nullptr;
+    }
     virtual TIntermDeclaration *getAsDeclarationNode() { return nullptr; }
     virtual TIntermSwizzle *getAsSwizzleNode() { return nullptr; }
     virtual TIntermBinary *getAsBinaryNode() { return nullptr; }
@@ -801,12 +804,15 @@ class TIntermDeclaration : public TIntermNode, public TIntermAggregateBase
 };
 
 // Specialized declarations for attributing invariance.
-class TIntermInvariantDeclaration : public TIntermNode
+class TIntermGlobalQualifierDeclaration : public TIntermNode
 {
   public:
-    TIntermInvariantDeclaration(TIntermSymbol *symbol, const TSourceLoc &line);
+    TIntermGlobalQualifierDeclaration(TIntermSymbol *symbol, const TSourceLoc &line);
 
-    virtual TIntermInvariantDeclaration *getAsInvariantDeclarationNode() override { return this; }
+    virtual TIntermGlobalQualifierDeclaration *getAsGlobalQualifierDeclarationNode() override
+    {
+        return this;
+    }
     bool visit(Visit visit, TIntermTraverser *it) final;
 
     TIntermSymbol *getSymbol() { return mSymbol; }
@@ -815,15 +821,15 @@ class TIntermInvariantDeclaration : public TIntermNode
     TIntermNode *getChildNode(size_t index) const final;
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
 
-    TIntermInvariantDeclaration *deepCopy() const override
+    TIntermGlobalQualifierDeclaration *deepCopy() const override
     {
-        return new TIntermInvariantDeclaration(*this);
+        return new TIntermGlobalQualifierDeclaration(*this);
     }
 
   private:
     TIntermSymbol *mSymbol;
 
-    TIntermInvariantDeclaration(const TIntermInvariantDeclaration &);
+    TIntermGlobalQualifierDeclaration(const TIntermGlobalQualifierDeclaration &);
 };
 
 // For ternary operators like a ? b : c.

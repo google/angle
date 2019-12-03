@@ -99,7 +99,7 @@ bool TVersionGLSL::visitDeclaration(Visit, TIntermDeclaration *node)
     return true;
 }
 
-bool TVersionGLSL::visitInvariantDeclaration(Visit, TIntermInvariantDeclaration *node)
+bool TVersionGLSL::visitGlobalQualifierDeclaration(Visit, TIntermGlobalQualifierDeclaration *node)
 {
     ensureVersionIsAtLeast(GLSL_VERSION_120);
     return true;

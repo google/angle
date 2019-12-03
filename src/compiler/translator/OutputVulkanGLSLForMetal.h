@@ -29,7 +29,8 @@ class TOutputVulkanGLSLForMetal : public TOutputVulkanGLSL
     static void RemoveInvariantForTest(bool remove);
 
   protected:
-    bool visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node) override;
+    bool visitGlobalQualifierDeclaration(Visit visit,
+                                         TIntermGlobalQualifierDeclaration *node) override;
     void writeVariableType(const TType &type, const TSymbol *symbol) override;
 };
 
