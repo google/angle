@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "27c8b32f_83c4ccd8",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1274,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-03T19:10:53Z",
+      "side": 1,
+      "message": "I added it here, but I don\u0027t think I can remove the `if` there, for the same reason I can\u0027t remove the `if` for invariant there. The thing is you can have both invariant/precise qualifier as well as other qualifiers, and we don\u0027t store a list of `TQualifiers`. That\u0027s why `invariant` was made a bool in `TType` and why I have to do the same for `precise`.",
+      "parentUuid": "bbf8f825_31251e8e",
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cab4974c_977e3f22",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 5
@@ -39,6 +57,30 @@
       "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77f7cfbe_0cdbc96a",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-03T19:10:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cab4974c_977e3f22",
+      "range": {
+        "startLine": 807,
+        "startChar": 6,
+        "endLine": 807,
+        "endChar": 40
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "f5362cf2_c7880897",
+        "filename": "src/compiler/translator/OutputVulkanGLSLForMetal.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-03T19:10:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48b2fecb_8f9f2392",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 65
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fdef13d1_c275e5ce",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -85,6 +151,30 @@
       "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb4a28b0_68409dd4",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1799,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-03T19:10:53Z",
+      "side": 1,
+      "message": "Done, I removed it. CanBePrecise is unconditionally returning true.",
+      "parentUuid": "fdef13d1_c275e5ce",
+      "range": {
+        "startLine": 1799,
+        "startChar": 20,
+        "endLine": 1799,
+        "endChar": 49
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "857addb4_8023b545",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 5
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-03T19:10:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70a6ec26_9d010552",
+      "range": {
+        "startLine": 142,
+        "startChar": 24,
+        "endLine": 142,
+        "endChar": 37
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "560b21ae_34895347",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 5
@@ -131,6 +245,30 @@
       "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e527049_8bf8992d",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 5
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-03T19:10:53Z",
+      "side": 1,
+      "message": "\"An extension that\u0027s promoted in a later spec version\". The parameters say \"for which version the extension was written for, ..., in which version was it promoted\".\n\nRenamed.",
+      "parentUuid": "560b21ae_34895347",
+      "range": {
+        "startLine": 590,
+        "startChar": 8,
+        "endLine": 590,
+        "endChar": 37
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "30729683_fe71ccec",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-03T19:10:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e70411f_3da44aca",
+      "range": {
+        "startLine": 679,
+        "startChar": 11,
+        "endLine": 679,
+        "endChar": 15
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32120f15_25edeac8",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 5
@@ -180,6 +342,30 @@
     },
     {
       "key": {
+        "uuid": "8d9b29d1_4379470c",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-03T19:10:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32120f15_25edeac8",
+      "range": {
+        "startLine": 682,
+        "startChar": 10,
+        "endLine": 682,
+        "endChar": 23
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08dea507_5b9513ab",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 5
@@ -200,6 +386,30 @@
       "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22efaa19_4fb80768",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-03T19:10:53Z",
+      "side": 1,
+      "message": "Note that this change is not implementing all of this extension. Nevertheless, I went ahead and added a check for the necessary features.\n\nThe TODO wasn\u0027t going to land, I meant to look back at it before submission (which then I obviously forgot)",
+      "parentUuid": "08dea507_5b9513ab",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 41
+      },
+      "revId": "fedae4e9db3d3958ec65dd156e04b085b727e743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
