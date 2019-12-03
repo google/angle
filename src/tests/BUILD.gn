@@ -13,17 +13,43 @@ declare_args() {
   build_angle_gles1_conform_tests = false
 }
 
-angle_test("test_utils_unittest_helper") {
-  standalone_harness = true
-  sources = [
-    "../../util/test_utils_unittest_helper.cpp",
-    "../../util/test_utils_unittest_helper.h",
-    "test_utils/runner/TestSuite_unittest.cpp",
-  ]
+if (!build_with_chromium) {
+  group("all") {
+    testonly = true
+    deps = [
+      "//src/tests:angle_end2end_tests",
+      "//src/tests:angle_perftests",
+      "//src/tests:angle_unittests",
+    ]
+    if (!is_fuchsia) {
+      deps += [
+        "//src/tests:angle_white_box_perftests",
+        "//src/tests:angle_white_box_tests",
+      ]
+    }
+    if (build_angle_deqp_tests && !is_fuchsia) {
+      deps += [
+        "//src/tests:angle_deqp_egl_no_gtest",
+        "//src/tests:angle_deqp_egl_tests",
+        "//src/tests:angle_deqp_gles2_no_gtest",
+        "//src/tests:angle_deqp_gles2_tests",
+        "//src/tests:angle_deqp_gles31_no_gtest",
+        "//src/tests:angle_deqp_gles31_tests",
+        "//src/tests:angle_deqp_gles3_no_gtest",
+        "//src/tests:angle_deqp_gles3_tests",
+      ]
+    }
+    if (build_angle_gles1_conform_tests) {
+      deps += [ "//src/tests:angle_gles1_conformance_tests" ]
+    }
+  }
+}
+
+angle_executable("test_utils_unittest_helper") {
+  sources = test_utils_unittest_helper_sources
 
   deps = [
-    "$angle_root:angle_common",
-    "$angle_root:angle_util",
+    "${angle_root}:angle_common",
   ]
 }
 
@@ -977,37 +1003,5 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   angle_deqp_khr_gtest("khr_gles31") {
     defines = [ "ANGLE_DEQP_KHR_GLES31_TESTS" ]
     mustpass_name = "gles31-khr-master.txt"
-  }
-}
-
-if (!build_with_chromium) {
-  group("all") {
-    testonly = true
-    deps = [
-      ":angle_end2end_tests",
-      ":angle_perftests",
-      ":angle_unittests",
-    ]
-    if (!is_fuchsia) {
-      deps += [
-        ":angle_white_box_perftests",
-        ":angle_white_box_tests",
-      ]
-    }
-    if (build_angle_deqp_tests && !is_fuchsia) {
-      deps += [
-        ":angle_deqp_egl_no_gtest",
-        ":angle_deqp_egl_tests",
-        ":angle_deqp_gles2_no_gtest",
-        ":angle_deqp_gles2_tests",
-        ":angle_deqp_gles31_no_gtest",
-        ":angle_deqp_gles31_tests",
-        ":angle_deqp_gles3_no_gtest",
-        ":angle_deqp_gles3_tests",
-      ]
-    }
-    if (build_angle_gles1_conform_tests) {
-      deps += [ ":angle_gles1_conformance_tests" ]
-    }
   }
 }
