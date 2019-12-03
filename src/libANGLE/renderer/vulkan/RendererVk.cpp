@@ -1226,6 +1226,12 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // Current highest supported version
     gl::Version maxVersion = gl::Version(3, 1);
 
+    // Limit to ES3.1 if there are any blockers for 3.2.
+    if (!vk::CanSupportGPUShader5EXT(mPhysicalDeviceFeatures))
+    {
+        maxVersion = std::min(maxVersion, gl::Version(3, 1));
+    }
+
     // Limit to ES3.0 if there are any blockers for 3.1.
 
     // ES3.1 requires at least one atomic counter buffer and four storage buffers in compute.

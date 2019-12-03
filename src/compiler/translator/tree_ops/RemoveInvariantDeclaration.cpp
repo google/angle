@@ -25,9 +25,12 @@ class RemoveInvariantDeclarationTraverser : public TIntermTraverser
     bool visitGlobalQualifierDeclaration(Visit visit,
                                          TIntermGlobalQualifierDeclaration *node) override
     {
-        TIntermSequence emptyReplacement;
-        mMultiReplacements.push_back(
-            NodeReplaceWithMultipleEntry(getParentNode()->getAsBlock(), node, emptyReplacement));
+        if (node->isInvariant())
+        {
+            TIntermSequence emptyReplacement;
+            mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(getParentNode()->getAsBlock(),
+                                                                      node, emptyReplacement));
+        }
         return false;
     }
 };

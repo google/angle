@@ -117,6 +117,7 @@ class TType
           precision(p),
           qualifier(q),
           invariant(false),
+          precise(false),
           memoryQualifier(TMemoryQualifier::Create()),
           layoutQualifier(TLayoutQualifier::Create()),
           primarySize(ps),
@@ -133,6 +134,7 @@ class TType
           precision(t.precision),
           qualifier(t.qualifier),
           invariant(t.invariant),
+          precise(t.precise),
           memoryQualifier(t.memoryQualifier),
           layoutQualifier(t.layoutQualifier),
           primarySize(t.primarySize),
@@ -154,8 +156,10 @@ class TType
     void setQualifier(TQualifier q) { qualifier = q; }
 
     bool isInvariant() const { return invariant; }
-
     void setInvariant(bool i) { invariant = i; }
+
+    bool isPrecise() const { return precise; }
+    void setPrecise(bool i) { precise = i; }
 
     TMemoryQualifier getMemoryQualifier() const { return memoryQualifier; }
     void setMemoryQualifier(const TMemoryQualifier &mq) { memoryQualifier = mq; }
@@ -342,6 +346,7 @@ class TType
     TPrecision precision;
     TQualifier qualifier;
     bool invariant;
+    bool precise;
     TMemoryQualifier memoryQualifier;
     TLayoutQualifier layoutQualifier;
     unsigned char primarySize;    // size of vector or cols matrix
@@ -454,6 +459,7 @@ struct TPublicType
     TMemoryQualifier memoryQualifier;
     TQualifier qualifier;
     bool invariant;
+    bool precise;
     TPrecision precision;
 
     // Either nullptr or empty in case the type is not an array. The last element is the outermost

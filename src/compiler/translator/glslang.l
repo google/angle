@@ -108,6 +108,7 @@ static int ES2_reserved_ES2_extension_ES3_keyword(TParseContext *context, TExten
 static int ES3_extension(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context, TExtension extension, int token);
+static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
 static int float_constant(yyscan_t yyscanner);
@@ -257,6 +258,8 @@ O           [0-7]
 "restrict" { return ES3_reserved_ES3_1_keyword(context, RESTRICT); }
 "volatile" { return ES2_reserved_ES3_1_keyword(context, VOLATILE); }
 "atomic_uint" { return ES3_reserved_ES3_1_keyword(context, ATOMICUINT); }
+
+"precise" { return ES3_1_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::EXT_gpu_shader5, PRECISE); }
 
     /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
 "resource"          |
@@ -645,6 +648,27 @@ int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context, TExtension 
     }
 
     if(context->getShaderVersion() == 300)
+    {
+        return reserved_word(yyscanner);
+    }
+
+    yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
+    return check_type(yyscanner);
+}
+
+static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token)
+{
+    struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    // A keyword in GLSL ES 3.20 or GLSL ES 3.10 with enabled extension.
+    if (is_extension_enabled_or_is_core(context, 310, extension, 320))
+    {
+        return token;
+    }
+
+    // A reserved word in GLSL ES 3.10
+    if (context->getShaderVersion() == 310)
     {
         return reserved_word(yyscanner);
     }

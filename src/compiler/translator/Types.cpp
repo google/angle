@@ -126,6 +126,7 @@ TType::TType()
       precision(EbpUndefined),
       qualifier(EvqGlobal),
       invariant(false),
+      precise(false),
       memoryQualifier(TMemoryQualifier::Create()),
       layoutQualifier(TLayoutQualifier::Create()),
       primarySize(0),
@@ -142,6 +143,7 @@ TType::TType(TBasicType t, unsigned char ps, unsigned char ss)
       precision(EbpUndefined),
       qualifier(EvqGlobal),
       invariant(false),
+      precise(false),
       memoryQualifier(TMemoryQualifier::Create()),
       layoutQualifier(TLayoutQualifier::Create()),
       primarySize(ps),
@@ -158,6 +160,7 @@ TType::TType(TBasicType t, TPrecision p, TQualifier q, unsigned char ps, unsigne
       precision(p),
       qualifier(q),
       invariant(false),
+      precise(false),
       memoryQualifier(TMemoryQualifier::Create()),
       layoutQualifier(TLayoutQualifier::Create()),
       primarySize(ps),
@@ -174,6 +177,7 @@ TType::TType(const TPublicType &p)
       precision(p.precision),
       qualifier(p.qualifier),
       invariant(p.invariant),
+      precise(p.precise),
       memoryQualifier(p.memoryQualifier),
       layoutQualifier(p.layoutQualifier),
       primarySize(p.getPrimarySize()),
@@ -202,6 +206,7 @@ TType::TType(const TStructure *userDef, bool isStructSpecifier)
       precision(EbpUndefined),
       qualifier(EvqTemporary),
       invariant(false),
+      precise(false),
       memoryQualifier(TMemoryQualifier::Create()),
       layoutQualifier(TLayoutQualifier::Create()),
       primarySize(1),
@@ -220,6 +225,7 @@ TType::TType(const TInterfaceBlock *interfaceBlockIn,
       precision(EbpUndefined),
       qualifier(qualifierIn),
       invariant(false),
+      precise(false),
       memoryQualifier(TMemoryQualifier::Create()),
       layoutQualifier(layoutQualifierIn),
       primarySize(1),
@@ -236,6 +242,7 @@ TType::TType(const TType &t)
       precision(t.precision),
       qualifier(t.qualifier),
       invariant(t.invariant),
+      precise(t.precise),
       memoryQualifier(t.memoryQualifier),
       layoutQualifier(t.layoutQualifier),
       primarySize(t.primarySize),
@@ -253,6 +260,7 @@ TType &TType::operator=(const TType &t)
     precision          = t.precision;
     qualifier          = t.qualifier;
     invariant          = t.invariant;
+    precise            = t.precise;
     memoryQualifier    = t.memoryQualifier;
     layoutQualifier    = t.layoutQualifier;
     primarySize        = t.primarySize;
@@ -926,6 +934,7 @@ void TPublicType::initialize(const TTypeSpecifierNonArray &typeSpecifier, TQuali
     memoryQualifier       = TMemoryQualifier::Create();
     qualifier             = q;
     invariant             = false;
+    precise               = false;
     precision             = EbpUndefined;
     arraySizes            = nullptr;
 }
@@ -939,6 +948,7 @@ void TPublicType::initializeBasicType(TBasicType basicType)
     memoryQualifier                     = TMemoryQualifier::Create();
     qualifier                           = EvqTemporary;
     invariant                           = false;
+    precise                             = false;
     precision                           = EbpUndefined;
     arraySizes                          = nullptr;
 }

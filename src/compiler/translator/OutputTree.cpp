@@ -363,7 +363,14 @@ bool TOutputTraverser::visitGlobalQualifierDeclaration(Visit visit,
                                                        TIntermGlobalQualifierDeclaration *node)
 {
     OutputTreeText(mOut, node, getCurrentIndentDepth());
-    mOut << "Invariant Declaration:\n";
+    if (node->isPrecise())
+    {
+        mOut << "Precise Declaration:\n";
+    }
+    else
+    {
+        mOut << "Invariant Declaration:\n";
+    }
     return true;
 }
 

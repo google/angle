@@ -139,6 +139,8 @@ void RendererVk::ensureCapsInitialized() const
     // We support getting image data for Textures and Renderbuffers.
     mNativeExtensions.getImageANGLE = true;
 
+    mNativeExtensions.gpuShader5EXT = vk::CanSupportGPUShader5EXT(mPhysicalDeviceFeatures);
+
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize = LimitToInt(limitsVk.maxImageDimension3D);
@@ -475,6 +477,25 @@ void RendererVk::ensureCapsInitialized() const
             LimitToInt(limitsVk.maxGeometryShaderInvocations);
     }
 }
+
+namespace vk
+{
+
+bool CanSupportGPUShader5EXT(const VkPhysicalDeviceFeatures &features)
+{
+    // We use the following Vulkan features to implement EXT_gpu_shader5:
+    // - shaderImageGatherExtended: textureGatherOffset family of functions
+    // - shaderSampledImageArrayDynamicIndexing and shaderUniformBufferArrayDynamicIndexing:
+    //   dynamically uniform indices for samplers and uniform buffers.
+    // - shaderStorageBufferArrayDynamicIndexing: While EXT_gpu_shader5 doesn't require dynamically
+    //   uniform indices on storage buffers, we need it as we emulate atomic counter buffers with
+    //   storage buffers (and atomic counter buffers *can* be indexed in that way).
+    return features.shaderImageGatherExtended && features.shaderSampledImageArrayDynamicIndexing &&
+           features.shaderUniformBufferArrayDynamicIndexing &&
+           features.shaderStorageBufferArrayDynamicIndexing;
+}
+
+}  // namespace vk
 
 namespace egl_vk
 {

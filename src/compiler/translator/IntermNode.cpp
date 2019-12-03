@@ -1334,8 +1334,9 @@ TIntermBinary *TIntermBinary::CreateComma(TIntermTyped *left,
 }
 
 TIntermGlobalQualifierDeclaration::TIntermGlobalQualifierDeclaration(TIntermSymbol *symbol,
+                                                                     bool isPrecise,
                                                                      const TSourceLoc &line)
-    : TIntermNode(), mSymbol(symbol)
+    : TIntermNode(), mSymbol(symbol), mIsPrecise(isPrecise)
 {
     ASSERT(symbol);
     setLine(line);
@@ -1344,6 +1345,7 @@ TIntermGlobalQualifierDeclaration::TIntermGlobalQualifierDeclaration(TIntermSymb
 TIntermGlobalQualifierDeclaration::TIntermGlobalQualifierDeclaration(
     const TIntermGlobalQualifierDeclaration &node)
     : TIntermGlobalQualifierDeclaration(static_cast<TIntermSymbol *>(node.mSymbol->deepCopy()),
+                                        node.mIsPrecise,
                                         node.mLine)
 {}
 

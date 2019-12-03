@@ -807,7 +807,9 @@ class TIntermDeclaration : public TIntermNode, public TIntermAggregateBase
 class TIntermGlobalQualifierDeclaration : public TIntermNode
 {
   public:
-    TIntermGlobalQualifierDeclaration(TIntermSymbol *symbol, const TSourceLoc &line);
+    TIntermGlobalQualifierDeclaration(TIntermSymbol *symbol,
+                                      bool isPrecise,
+                                      const TSourceLoc &line);
 
     virtual TIntermGlobalQualifierDeclaration *getAsGlobalQualifierDeclarationNode() override
     {
@@ -816,6 +818,8 @@ class TIntermGlobalQualifierDeclaration : public TIntermNode
     bool visit(Visit visit, TIntermTraverser *it) final;
 
     TIntermSymbol *getSymbol() { return mSymbol; }
+    bool isInvariant() const { return !mIsPrecise; }
+    bool isPrecise() const { return mIsPrecise; }
 
     size_t getChildCount() const final;
     TIntermNode *getChildNode(size_t index) const final;
@@ -828,6 +832,8 @@ class TIntermGlobalQualifierDeclaration : public TIntermNode
 
   private:
     TIntermSymbol *mSymbol;
+    // Either |precise| or |invariant|, determined based on this flag.
+    bool mIsPrecise;
 
     TIntermGlobalQualifierDeclaration(const TIntermGlobalQualifierDeclaration &);
 };

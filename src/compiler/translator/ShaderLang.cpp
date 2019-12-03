@@ -166,6 +166,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->OVR_multiview2                           = 0;
     resources->EXT_YUV_target                           = 0;
     resources->EXT_geometry_shader                      = 0;
+    resources->EXT_gpu_shader5                          = 0;
     resources->OES_texture_storage_multisample_2d_array = 0;
     resources->OES_texture_3D                           = 0;
     resources->ANGLE_texture_multisample                = 0;

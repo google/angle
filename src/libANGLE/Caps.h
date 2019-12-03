@@ -557,6 +557,9 @@ struct Extensions
     {
         return (drawElementsBaseVertexOES || drawElementsBaseVertexEXT);
     }
+
+    // GL_EXT_gpu_shader5
+    bool gpuShader5EXT = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

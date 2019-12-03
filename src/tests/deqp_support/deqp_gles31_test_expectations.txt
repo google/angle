@@ -618,6 +618,9 @@
 2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_expression_vertex = FAIL
 2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_expression_fragment = FAIL
 2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_expression_compute = FAIL
+2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.*uniform_vertex = FAIL
+2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.*uniform_fragment = FAIL
+2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.*uniform_compute = FAIL
 
 // General Vulkan failures
 
@@ -692,3 +695,22 @@
 
 4105 SWIFTSHADER : dEQP-GLES31.functional.stencil_texturing.format.depth24_stencil8_cube = FAIL
 4105 SWIFTSHADER : dEQP-GLES31.functional.stencil_texturing.format.depth32f_stencil8_cube = FAIL
+
+// OpenGL ES 3.2 / 3.2 extensions
+
+// EXT_gpu_shader5: Note: this extension is not yet fully implemented, so should be disabled in the
+// Vulkan backend for the ES 3.1 conformance run.
+3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.fma.*vertex = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.fma.*fragment = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.fma.*compute = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.fma*vertex* = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.fma*fragment* = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.fma*compute* = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.sampler.*uniform.*vertex* = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.sampler.*uniform.*fragment* = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.sampler.*uniform.*compute* = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.ubo.*uniform_vertex = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.ubo.*uniform_fragment = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.ubo.*uniform_compute = FAIL
+3569 VULKAN : dEQP-GLES31.functional.texture.gather.offset_dynamic.* = FAIL
+3569 VULKAN : dEQP-GLES31.functional.texture.gather.offsets.* = FAIL

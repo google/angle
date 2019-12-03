@@ -361,6 +361,7 @@ struct ShBuiltInResources
     int EXT_multisampled_render_to_texture;
     int EXT_YUV_target;
     int EXT_geometry_shader;
+    int EXT_gpu_shader5;
     int OES_texture_storage_multisample_2d_array;
     int OES_texture_3D;
     int ANGLE_texture_multisample;

@@ -7449,6 +7449,53 @@ void main()
     EXPECT_TRUE(VerifyBuffer(ssbo, data, size));
 }
 
+// Test that the precise keyword is not reserved before ES3.1.
+TEST_P(GLSLTest_ES3, PreciseNotReserved)
+{
+    // Skip in ES3.1+ as the precise keyword is reserved/core.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() > 3 ||
+                       (getClientMajorVersion() == 3 && getClientMinorVersion() >= 1));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+in float precise;
+out vec4 my_FragColor;
+void main() { my_FragColor = vec4(precise, 0, 0, 1.0); })";
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_position;
+out float precise;
+void main() { precise = a_position.x; gl_Position = a_position; })";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_NE(0u, program);
+}
+
+// Test that the precise keyword is reserved on ES3.0 without GL_EXT_gpu_shader5.
+TEST_P(GLSLTest_ES31, PreciseReservedWithoutExtension)
+{
+    // Skip if EXT_gpu_shader5 is enabled.
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_gpu_shader5"));
+    // Skip in ES3.2+ as the precise keyword is core.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() > 3 ||
+                       (getClientMajorVersion() == 3 && getClientMinorVersion() >= 2));
+
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+in float v_varying;
+out vec4 my_FragColor;
+void main() { my_FragColor = vec4(v_varying, 0, 0, 1.0); })";
+
+    constexpr char kVS[] = R"(#version 310 es
+in vec4 a_position;
+precise out float v_varying;
+void main() { v_varying = a_position.x; gl_Position = a_position; })";
+
+    // Should fail, as precise is a reserved keyword when the extension is not enabled.
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

@@ -111,6 +111,12 @@ void TOutputGLSLBase::writeInvariantQualifier(const TType &type)
     }
 }
 
+void TOutputGLSLBase::writePreciseQualifier(const TType &type)
+{
+    TInfoSinkBase &out = objSink();
+    out << "precise ";
+}
+
 void TOutputGLSLBase::writeFloat(TInfoSinkBase &out, float f)
 {
     if ((gl::isInf(f) || gl::isNaN(f)) && mShaderVersion >= 300)
@@ -376,6 +382,10 @@ void TOutputGLSLBase::writeVariableType(const TType &type, const TSymbol *symbol
     if (type.isInvariant())
     {
         writeInvariantQualifier(type);
+    }
+    if (type.isPrecise())
+    {
+        writePreciseQualifier(type);
     }
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
@@ -958,7 +968,7 @@ bool TOutputGLSLBase::visitGlobalQualifierDeclaration(Visit visit,
     TInfoSinkBase &out = objSink();
     ASSERT(visit == PreVisit);
     const TIntermSymbol *symbol = node->getSymbol();
-    out << "invariant " << hashName(&symbol->variable());
+    out << (node->isPrecise() ? "precise " : "invariant ") << hashName(&symbol->variable());
     return false;
 }
 

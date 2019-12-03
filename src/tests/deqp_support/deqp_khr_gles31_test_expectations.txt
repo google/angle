@@ -146,3 +146,9 @@
 4106 SWIFTSHADER : KHR-GLES31.core.layout_binding.sampler*_layout_binding_texture_* = FAIL
 
 4108 SWIFTSHADER : KHR-GLES31.core.shader_image_size.*-nonMS-* = SKIP
+
+// OpenGL ES 3.2 / 3.2 extensions
+
+// EXT_gpu_shader5: Note: this extension is not yet fully implemented, so should be disabled in the
+// Vulkan backend for the ES 3.1 conformance run.
+3569 VULKAN : KHR-GLES31.core.arrays_of_arrays.ExpressionsDynamicIndexing2 = FAIL

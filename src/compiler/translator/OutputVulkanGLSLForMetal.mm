@@ -94,6 +94,10 @@ bool TOutputVulkanGLSLForMetal::visitGlobalQualifierDeclaration(
     TInfoSinkBase &out = objSink();
     ASSERT(visit == PreVisit);
     const TIntermSymbol *symbol = node->getSymbol();
+
+    // No support for the |precise| keyword from EXT_gpu_shader5 (or ES3.2).
+    ASSERT(node->isInvariant());
+
     if (!ShoudRemoveInvariant(symbol->getType()))
     {
         out << "invariant ";

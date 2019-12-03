@@ -361,8 +361,8 @@ bool CollectVariablesTraverser::visitGlobalQualifierDeclaration(
     Visit visit,
     TIntermGlobalQualifierDeclaration *node)
 {
-    // We should not mark variables as active just based on an invariant declaration, so we don't
-    // traverse the symbols declared invariant.
+    // We should not mark variables as active just based on an invariant/precise declaration, so we
+    // don't traverse the symbols declared invariant.
     return false;
 }
 

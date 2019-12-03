@@ -900,6 +900,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_get_image"] = enableableExtension(&Extensions::getImageANGLE);
         map["GL_OES_draw_elements_base_vertex"] = enableableExtension(&Extensions::drawElementsBaseVertexOES);
         map["GL_EXT_draw_elements_base_vertex"] = enableableExtension(&Extensions::drawElementsBaseVertexEXT);
+        map["GL_EXT_gpu_shader5"] = enableableExtension(&Extensions::gpuShader5EXT);
         // GLES1 extensinos
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArray);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMap);
