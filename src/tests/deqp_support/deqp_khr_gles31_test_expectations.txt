@@ -40,7 +40,18 @@
 3605 VULKAN : KHR-GLES31.core.texture_gather.* = FAIL
 
 // Dispatch indirect:
-3601 VULKAN : KHR-GLES31.core.compute_shader* = SKIP
+3570 VULKAN : KHR-GLES31.core.compute_shader.build-separable = SKIP
+3570 VULKAN : KHR-GLES31.core.compute_shader.sso-compute-pipeline = SKIP
+3570 VULKAN : KHR-GLES31.core.compute_shader.sso-case2 = SKIP
+3570 VULKAN : KHR-GLES31.core.compute_shader.sso-case3 = SKIP
+4188 VULKAN : KHR-GLES31.core.compute_shader.resource-image = FAIL
+4189 VULKAN : KHR-GLES31.core.compute_shader.shared-struct = SKIP
+4190 VULKAN : KHR-GLES31.core.compute_shader.pipeline-compute-chain = SKIP
+4191 VULKAN : KHR-GLES31.core.compute_shader.resources-max = FAIL
+4192 VULKAN : KHR-GLES31.core.compute_shader.pipeline-post-xfb = FAIL
+4187 VULKAN : KHR-GLES31.core.compute_shader.glsl-compile-time-errors = SKIP
+4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL
+4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
 
 // Multisampled textures:
 3565 VULKAN : KHR-GLES31.core.texture_storage_multisample.* = SKIP
