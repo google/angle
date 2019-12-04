@@ -44,6 +44,7 @@ TEST_P(EGLChooseConfigTest, Defaults)
                                     defaultConfigs.size(), &defaultConfigCount));
     ASSERT_EGL_SUCCESS();
     ASSERT_LE(defaultConfigCount, allConfigCount);
+    defaultConfigs.resize(defaultConfigCount);
 
     // Check that the default configs all have the default attribute values we care about:
     for (EGLConfig config : defaultConfigs)
