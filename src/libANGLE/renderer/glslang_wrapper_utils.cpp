@@ -863,26 +863,25 @@ void AssignTextureBindings(const GlslangSourceOptions &options,
 void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
                            const gl::ProgramState &programState,
                            const gl::ProgramLinkedResources &resources,
-                           gl::ShaderType shaderType,
                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
-    gl::Shader *shader               = programState.getAttachedShader(shaderType);
-    IntermediateShaderSource &source = (*shaderSources)[shaderType];
-    if (!source.empty())
+    IntermediateShaderSource &vertexSource = (*shaderSources)[gl::ShaderType::Vertex];
+    if (!vertexSource.empty())
     {
-        ASSERT(shader != nullptr);
+        gl::Shader *glVertexShader = programState.getAttachedShader(gl::ShaderType::Vertex);
+        ASSERT(glVertexShader != nullptr);
 
         // The attributes in the programState could have been filled with active attributes only
         // depending on the shader version. If there is inactive attributes left, we have to remove
         // their @@ QUALIFIER and @@ LAYOUT markers.
-        for (const sh::ShaderVariable &attribute : shader->getAllAttributes())
+        for (const sh::ShaderVariable &attribute : glVertexShader->getAllAttributes())
         {
             if (attribute.active)
             {
                 continue;
             }
 
-            source.eraseLayoutAndQualifierSpecifiers(attribute.name, "");
+            vertexSource.eraseLayoutAndQualifierSpecifiers(attribute.name, "");
         }
     }
 
@@ -1090,11 +1089,8 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
     AssignTextureBindings(options, useOldRewriteStructSamplers, programState, &intermediateSources);
     AssignNonTextureBindings(options, programState, &intermediateSources);
 
-    for (const auto shaderType : gl::kAllGraphicsShaderTypes)
-    {
-        CleanupUnusedEntities(useOldRewriteStructSamplers, programState, resources, shaderType,
-                              &intermediateSources);
-    }
+    CleanupUnusedEntities(useOldRewriteStructSamplers, programState, resources,
+                          &intermediateSources);
 
     // Write transform feedback output code.
     if (!vertexSource->empty())
