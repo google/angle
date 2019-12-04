@@ -46,9 +46,9 @@
 3570 VULKAN : KHR-GLES31.core.compute_shader.sso-case3 = SKIP
 4188 VULKAN : KHR-GLES31.core.compute_shader.resource-image = FAIL
 4189 VULKAN : KHR-GLES31.core.compute_shader.shared-struct = SKIP
-4190 VULKAN : KHR-GLES31.core.compute_shader.pipeline-compute-chain = SKIP
 4191 VULKAN : KHR-GLES31.core.compute_shader.resources-max = FAIL
 4192 VULKAN : KHR-GLES31.core.compute_shader.pipeline-post-xfb = FAIL
+3726 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.pipeline-compute-chain = FAIL
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
 

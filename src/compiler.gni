@@ -158,6 +158,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/RemoveInvariantDeclaration.h",
   "src/compiler/translator/tree_ops/RemovePow.cpp",
   "src/compiler/translator/tree_ops/RemovePow.h",
+  "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
+  "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.h",
   "src/compiler/translator/tree_ops/RemoveUnreferencedVariables.cpp",
   "src/compiler/translator/tree_ops/RemoveUnreferencedVariables.h",
   "src/compiler/translator/tree_ops/RewriteAtomicCounters.cpp",

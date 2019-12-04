@@ -2982,6 +2982,62 @@ void main() {
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
+// Test that inactive images don't cause any errors.
+TEST_P(GLSLTest_ES31, InactiveImages)
+{
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba32ui) uniform highp readonly uimage2D image1;
+layout(rgba32ui) uniform highp readonly uimage2D image2[4];
+void main()
+{
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+
+    glUseProgram(program.get());
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the images are indeed inactive.
+    GLuint index = glGetProgramResourceIndex(program, GL_UNIFORM, "image1");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_INVALID_INDEX, index);
+
+    index = glGetProgramResourceIndex(program, GL_UNIFORM, "image2");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_INVALID_INDEX, index);
+}
+
+// Test that inactive atomic counters don't cause any errors.
+TEST_P(GLSLTest_ES31, InactiveAtomicCounters)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(binding = 0, offset = 0) uniform atomic_uint ac1;
+layout(binding = 0, offset = 4) uniform atomic_uint ac2[5];
+void main()
+{
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+
+    glUseProgram(program.get());
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the atomic counters are indeed inactive.
+    GLuint index = glGetProgramResourceIndex(program, GL_UNIFORM, "ac1");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_INVALID_INDEX, index);
+
+    index = glGetProgramResourceIndex(program, GL_UNIFORM, "ac2");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_INVALID_INDEX, index);
+}
+
 // Test that array indices for arrays of arrays of basic types work as expected.
 TEST_P(GLSLTest_ES31, ArraysOfArraysBasicType)
 {
