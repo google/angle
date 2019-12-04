@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26b5e564_30c1a26a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-04T16:53:50Z",
+      "side": 1,
+      "message": "nit: should probably live in vk_caps_utils as it is caps-related.",
+      "range": {
+        "startLine": 546,
+        "startChar": 5,
+        "endLine": 546,
+        "endChar": 28
+      },
+      "revId": "616876ffd2518b58cb6eaf4f033cd34555680ebb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1263b5e_8d3b9a18",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 7452,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-04T16:53:50Z",
+      "side": 1,
+      "message": "nit: comments before new tests.",
+      "range": {
+        "startLine": 7452,
+        "startChar": 0,
+        "endLine": 7452,
+        "endChar": 6
+      },
+      "revId": "616876ffd2518b58cb6eaf4f033cd34555680ebb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
