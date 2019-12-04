@@ -889,13 +889,26 @@ TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountMix)
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
+    // Lookup the supported number of sample counts (rely on fact that ANGLE uses the same set of
+    // sample counts for textures and renderbuffers)
+    GLint numSampleCounts = 0;
+    std::vector<GLint> sampleCounts;
+    GLsizei queryBufferSize = 1;
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE, GL_RGBA8, GL_NUM_SAMPLE_COUNTS,
+                          queryBufferSize, &numSampleCounts);
+    ANGLE_SKIP_TEST_IF((numSampleCounts < 2));
+    sampleCounts.resize(numSampleCounts);
+    queryBufferSize = numSampleCounts;
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE, GL_RGBA8, GL_SAMPLES, queryBufferSize,
+                          sampleCounts.data());
+
     GLTexture mTexture;
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexture.get());
-    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 1, GL_RGBA8, 1, 1, true);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, sampleCounts[0], GL_RGBA8, 1, 1, true);
 
     GLRenderbuffer mRenderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer.get());
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_RGBA8, 1, 1);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, sampleCounts[1], GL_RGBA8, 1, 1);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
                            mTexture.get(), 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER,
@@ -915,11 +928,23 @@ TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountTex)
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
+    // Lookup the supported number of sample counts
+    GLint numSampleCounts = 0;
+    std::vector<GLint> sampleCounts;
+    GLsizei queryBufferSize = 1;
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE, GL_RGBA8, GL_NUM_SAMPLE_COUNTS,
+                          queryBufferSize, &numSampleCounts);
+    ANGLE_SKIP_TEST_IF((numSampleCounts < 2));
+    sampleCounts.resize(numSampleCounts);
+    queryBufferSize = numSampleCounts;
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE, GL_RGBA8, GL_SAMPLES, queryBufferSize,
+                          sampleCounts.data());
+
     GLTexture mTextures[2];
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTextures[0].get());
-    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 1, GL_RGBA8, 1, 1, true);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, sampleCounts[0], GL_RGBA8, 1, 1, true);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTextures[1].get());
-    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 2, GL_RGBA8, 1, 1, true);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, sampleCounts[1], GL_RGBA8, 1, 1, true);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
                            mTextures[0].get(), 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE,

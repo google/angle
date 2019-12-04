@@ -38,20 +38,6 @@ namespace d3d11_gl
 {
 namespace
 {
-// Standard D3D sample positions from
-// https://msdn.microsoft.com/en-us/library/windows/desktop/ff476218.aspx
-using SamplePositionsArray                                            = std::array<float, 32>;
-static constexpr std::array<SamplePositionsArray, 5> kSamplePositions = {
-    {{{0.5f, 0.5f}},
-     {{0.75f, 0.75f, 0.25f, 0.25f}},
-     {{0.375f, 0.125f, 0.875f, 0.375f, 0.125f, 0.625f, 0.625f, 0.875f}},
-     {{0.5625f, 0.3125f, 0.4375f, 0.6875f, 0.8125f, 0.5625f, 0.3125f, 0.1875f, 0.1875f, 0.8125f,
-       0.0625f, 0.4375f, 0.6875f, 0.9375f, 0.9375f, 0.0625f}},
-     {{0.5625f, 0.5625f, 0.4375f, 0.3125f, 0.3125f, 0.625f,  0.75f,   0.4375f,
-       0.1875f, 0.375f,  0.625f,  0.8125f, 0.8125f, 0.6875f, 0.6875f, 0.1875f,
-       0.375f,  0.875f,  0.5f,    0.0625f, 0.25f,   0.125f,  0.125f,  0.75f,
-       0.0f,    0.5f,    0.9375f, 0.25f,   0.875f,  0.9375f, 0.0625f, 0.0f}}}};
-
 // TODO(xinghua.cao@intel.com): Get a more accurate limit.
 static D3D_FEATURE_LEVEL kMinimumFeatureLevelForES31 = D3D_FEATURE_LEVEL_11_0;
 
@@ -1696,16 +1682,6 @@ void GenerateCaps(ID3D11Device *device,
     // if the Client Version >= 3, since devices affected by this issue don't support ES3+.
     limitations->attributeZeroRequiresZeroDivisorInEXT = true;
 #endif
-}
-
-void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy)
-{
-    size_t indexKey = static_cast<size_t>(ceil(log2(sampleCount)));
-    ASSERT(indexKey < kSamplePositions.size() &&
-           (2 * index + 1) < kSamplePositions[indexKey].size());
-
-    xy[0] = kSamplePositions[indexKey][2 * index];
-    xy[1] = kSamplePositions[indexKey][2 * index + 1];
 }
 
 }  // namespace d3d11_gl

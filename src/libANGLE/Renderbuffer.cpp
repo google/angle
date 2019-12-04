@@ -114,6 +114,14 @@ angle::Result Renderbuffer::setStorageMultisample(const Context *context,
                                                   size_t height)
 {
     ANGLE_TRY(orphanImages(context));
+    // TODO (ianelliott): Ensure that the following spec language is correctly implemented:
+    //
+    //   the resulting value for RENDERBUFFER_SAMPLES is guaranteed to be greater than or equal to
+    //   samples and no more than the next larger sample count supported by the implementation.
+    //
+    // For example, if 2, 4, and 8 samples are supported, and if 5 samples are requested, ANGLE
+    // should use 8 samples, and return 8 when GL_RENDERBUFFER_SAMPLES is queried.
+    // http://anglebug.com/4196
     ANGLE_TRY(
         mImplementation->setStorageMultisample(context, samples, internalformat, width, height));
 

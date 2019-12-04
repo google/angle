@@ -1351,6 +1351,10 @@ angle::Result Texture::setStorageMultisample(Context *context,
     ANGLE_TRY(releaseTexImageInternal(context));
     ANGLE_TRY(orphanImages(context));
 
+    // Potentially adjust "samples" to a supported value
+    const TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
+    samples                       = formatCaps.getNearestSamples(samples);
+
     ANGLE_TRY(mTexture->setStorageMultisample(context, type, samples, internalFormat, size,
                                               fixedSampleLocations));
 

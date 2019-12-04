@@ -401,6 +401,8 @@ void CopyLineLoopIndicesWithRestart(GLsizei indexCount, const uint8_t *srcPtr, u
         *(outIndices++) = inIndices[loopStartIndex];
     }
 }
+
+void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy);
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_RENDERER_UTILS_H_
