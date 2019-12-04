@@ -7304,6 +7304,105 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test shader with all resources (default uniform, UBO, SSBO, image, sampler and atomic counter) to
+// make sure they are all linked ok.  The front-end sorts these resources and traverses the list of
+// "uniforms" to find the range for each resource.  A bug there was causing some resource ranges to
+// be empty in the presence of other resources.
+TEST_P(GLSLTest_ES31, MixOfAllResources)
+{
+    constexpr char kComputeShader[] = R"(#version 310 es
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(binding = 1, std430) buffer Output {
+  uint ubo_value;
+  uint default_value;
+  uint sampler_value;
+  uint ac_value;
+  uint image_value;
+} outbuf;
+uniform Input {
+  uint input_value;
+} inbuf;
+uniform uint default_uniform;
+uniform sampler2D smplr;
+layout(binding=0) uniform atomic_uint ac;
+layout(r32ui) uniform highp readonly uimage2D image;
+
+void main(void)
+{
+  outbuf.ubo_value = inbuf.input_value;
+  outbuf.default_value = default_uniform;
+  outbuf.sampler_value = uint(texture(smplr, vec2(0.5, 0.5)).x * 255.0);
+  outbuf.ac_value = atomicCounterIncrement(ac);
+  outbuf.image_value = imageLoad(image, ivec2(0, 0)).x;
+}
+)";
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    unsigned int inputData = 89u;
+    GLBuffer inputBuffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, inputBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(inputData), &inputData, GL_STATIC_DRAW);
+    GLuint inputBufferIndex = glGetUniformBlockIndex(program.get(), "Input");
+    ASSERT_NE(inputBufferIndex, GL_INVALID_INDEX);
+    glUniformBlockBinding(program.get(), inputBufferIndex, 0);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, inputBuffer);
+
+    unsigned int outputInitData[5] = {0x12345678u, 0x09ABCDEFu, 0x56789ABCu, 0x0DEF1234u,
+                                      0x13579BDFu};
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(outputInitData), outputInitData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    unsigned int uniformData = 456u;
+    GLint uniformLocation    = glGetUniformLocation(program, "default_uniform");
+    ASSERT_NE(uniformLocation, -1);
+    glUniform1ui(uniformLocation, uniformData);
+
+    unsigned int acData = 2u;
+    GLBuffer atomicCounterBuffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(acData), &acData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    unsigned int imageData = 33u;
+    GLTexture image;
+    glBindTexture(GL_TEXTURE_2D, image);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, &imageData);
+    glBindImageTexture(0, image, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    GLColor textureData(127, 18, 189, 211);
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &textureData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // read back
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData), GL_MAP_READ_BIT));
+    EXPECT_EQ(ptr[0], inputData);
+    EXPECT_EQ(ptr[1], uniformData);
+    EXPECT_EQ(ptr[2], textureData.R);
+    EXPECT_EQ(ptr[3], acData);
+    EXPECT_EQ(ptr[4], imageData);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 // Test that multiple nested assignments are handled correctly.
 TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices_WriteSideEffect)
 {

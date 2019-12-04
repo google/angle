@@ -3527,21 +3527,29 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
 {
     ASSERT(combinedImageUniforms);
 
+    // Iterate over mUniforms from the back, and find the range of atomic counters, images and
+    // samplers in that order.
+    auto highIter = mState.mUniforms.rbegin();
+    auto lowIter  = highIter;
+
     unsigned int high = static_cast<unsigned int>(mState.mUniforms.size());
     unsigned int low  = high;
 
-    for (auto counterIter = mState.mUniforms.rbegin();
-         counterIter != mState.mUniforms.rend() && counterIter->isAtomicCounter(); ++counterIter)
+    // Note that uniform block uniforms are not yet appended to this list.
+    ASSERT(mState.mUniforms.size() == 0 || highIter->isAtomicCounter() || highIter->isImage() ||
+           highIter->isSampler() || highIter->isInDefaultBlock());
+
+    for (; lowIter != mState.mUniforms.rend() && lowIter->isAtomicCounter(); ++lowIter)
     {
         --low;
     }
 
     mState.mAtomicCounterUniformRange = RangeUI(low, high);
 
-    high = low;
+    highIter = lowIter;
+    high     = low;
 
-    for (auto imageIter = mState.mUniforms.rbegin();
-         imageIter != mState.mUniforms.rend() && imageIter->isImage(); ++imageIter)
+    for (; lowIter != mState.mUniforms.rend() && lowIter->isImage(); ++lowIter)
     {
         --low;
     }
@@ -3571,10 +3579,10 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
         *combinedImageUniforms += imageUniform.activeShaderCount() * arraySize;
     }
 
-    high = low;
+    highIter = lowIter;
+    high     = low;
 
-    for (auto samplerIter = mState.mUniforms.rbegin() + mState.mImageUniformRange.length();
-         samplerIter != mState.mUniforms.rend() && samplerIter->isSampler(); ++samplerIter)
+    for (; lowIter != mState.mUniforms.rend() && lowIter->isSampler(); ++lowIter)
     {
         --low;
     }
