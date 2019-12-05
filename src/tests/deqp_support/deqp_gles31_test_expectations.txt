@@ -627,9 +627,6 @@
 // Front-end query bugs:
 3596 VULKAN : dEQP-GLES31.functional.program_interface_query.shader_storage_block.buffer_data_size.* = FAIL
 
-// Shader support:
-3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_* = SKIP
-
 // SSBO synchronization:
 4097 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.synchronization.in_invocation.ssbo_alias_overwrite = FAIL
 
@@ -655,9 +652,32 @@
 // Need to support non-color when staging image updates
 4080 ANDROID VULKAN : dEQP-GLES31.functional.stencil_texturing.misc.base_level = SKIP
 
-// Multisampled textures:
-3565 VULKAN : dEQP-GLES31.functional.texture.multisample.* = SKIP
-3565 VULKAN : dEQP-GLES31.functional.state_query.texture*multisample.* = SKIP
+//// Multisampled textures:
+// The following tests pass, but fail because of Vulkan validation-layer errors, which are the result
+// of a Vulkan spec statement that 1-sample textures can't be used with multisample shaders.
+// Issue 4197 tracks the external dependencies (Vulkan spec and validation-layer changes).
+4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.sample_position = FAIL
+4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.sample_mask* = FAIL
+4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.use_texture_*_2d = FAIL
+// The following test fails with the Intel Windows Vulkan driver (which appears to have swapped
+// the standard positions for 2 samples):
+4198 INTEL VULKAN : dEQP-GLES31.functional.texture.multisample.samples_2.sample_position = FAIL
+// TODO: Investigate why these are failing:
+3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_10.use_texture_depth_2d = FAIL
+3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_12.use_texture_depth_2d = FAIL
+3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_13.use_texture_depth_2d = FAIL
+3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_16.use_texture_depth_2d = FAIL
+// TODO: Investigate why these are failing/crashing:
+3565 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_1.sample_mask_and*alpha_to_coverage = SKIP
+3565 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_3.sample_position = FAIL
+3565 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_4.sample_position = FAIL
+
+// Multisampled shader support:
+// The following tests pass, but fail because of Vulkan validation-layer errors, which are likely
+// a bug in the validation layers:
+3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_2d = FAIL
+3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_int_2d = FAIL
+3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_uint_2d = FAIL
 
 // Vulkan creates the image view with the same format as the texture.
 3885 VULKAN : dEQP-GLES31.functional.image_load_store.*.format_reinterpret.* = FAIL
@@ -685,13 +705,6 @@
 4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_getfloat = FAIL
 4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_getinteger = FAIL
 4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_getinteger64 = FAIL
-
-4103 SWIFTSHADER : dEQP-GLES31.functional.state_query.texture_level.texture_2d_multisample.* = FAIL
-
-4104 SWIFTSHADER : dEQP-GLES31.functional.state_query.texture.texture_2d_multisample.texture_immutable_format_float = FAIL
-4104 SWIFTSHADER : dEQP-GLES31.functional.state_query.texture.texture_2d_multisample.texture_immutable_format_integer = FAIL
-4104 SWIFTSHADER : dEQP-GLES31.functional.state_query.texture.texture_2d_multisample.texture_immutable_levels_float = FAIL
-4104 SWIFTSHADER : dEQP-GLES31.functional.state_query.texture.texture_2d_multisample.texture_immutable_levels_integer = FAIL
 
 4105 SWIFTSHADER : dEQP-GLES31.functional.stencil_texturing.format.depth24_stencil8_cube = FAIL
 4105 SWIFTSHADER : dEQP-GLES31.functional.stencil_texturing.format.depth32f_stencil8_cube = FAIL
