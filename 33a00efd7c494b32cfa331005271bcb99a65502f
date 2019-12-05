@@ -46,6 +46,29 @@
       "revId": "33a00efd7c494b32cfa331005271bcb99a65502f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb9c7068_0a3862ac",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-12-05T20:56:35Z",
+      "side": 1,
+      "message": "You\u0027re multiplying twice here, I think this is causing the test to fail on a bunch of bots:\n\nhttps://ci.chromium.org/p/chromium/builders/ci/Win10%20FYI%20x64%20dEQP%20Release%20%28NVIDIA%29\nhttps://ci.chromium.org/p/chromium/builders/ci/Win7%20FYI%20x64%20dEQP%20Release%20%28NVIDIA%29\n\nI\u0027m going to revert to get the bots green and we can re-land with the fix.",
+      "range": {
+        "startLine": 193,
+        "startChar": 26,
+        "endLine": 193,
+        "endChar": 56
+      },
+      "revId": "33a00efd7c494b32cfa331005271bcb99a65502f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
