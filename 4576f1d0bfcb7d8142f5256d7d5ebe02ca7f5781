@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8ba1c77_2833cdeb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 27
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-05T22:19:56Z",
+      "side": 1,
+      "message": "fyi Ian, this doc is behind a firewall. Probably should keep links to private docs out of the git history.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 0
+      },
+      "revId": "4576f1d0bfcb7d8142f5256d7d5ebe02ca7f5781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
