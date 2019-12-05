@@ -22,6 +22,30 @@
       "revId": "33a00efd7c494b32cfa331005271bcb99a65502f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8ad0aa6_cccc4b4b",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-12-05T14:46:56Z",
+      "side": 1,
+      "message": "The 3.1 spec is much less specific:\nThere is a limit to the total size of all variables declared as shared in a single\nprogram object. This limit, expressed in units of basic machine units, may be\nqueried as the value of MAX_COMPUTE_SHARED_MEMORY_SIZE.\n\nSo I think we are okay for 3.1, for 3.2 things are probably more complicated so\nI\u0027ve logged issue: https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d4203\nto track this request in our 3.2 work.",
+      "parentUuid": "9fc02199_a704d90d",
+      "range": {
+        "startLine": 492,
+        "startChar": 0,
+        "endLine": 498,
+        "endChar": 25
+      },
+      "revId": "33a00efd7c494b32cfa331005271bcb99a65502f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
