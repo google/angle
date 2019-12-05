@@ -38,11 +38,11 @@ namespace rx
 VendorID GetVendorID(const FunctionsGL *functions)
 {
     std::string nativeVendorString(reinterpret_cast<const char *>(functions->getString(GL_VENDOR)));
-    if (nativeVendorString.find("Intel") != std::string::npos)
-    {
-        return VENDOR_ID_INTEL;
-    }
-    else if (nativeVendorString.find("NVIDIA") != std::string::npos)
+    // Concatenate GL_RENDERER to the string being checked because some vendors put their names in
+    // GL_RENDERER
+    nativeVendorString +=
+        " " + std::string(reinterpret_cast<const char *>(functions->getString(GL_RENDERER)));
+    if (nativeVendorString.find("NVIDIA") != std::string::npos)
     {
         return VENDOR_ID_NVIDIA;
     }
@@ -54,6 +54,10 @@ VendorID GetVendorID(const FunctionsGL *functions)
     else if (nativeVendorString.find("Qualcomm") != std::string::npos)
     {
         return VENDOR_ID_QUALCOMM;
+    }
+    else if (nativeVendorString.find("Intel") != std::string::npos)
+    {
+        return VENDOR_ID_INTEL;
     }
     else
     {
