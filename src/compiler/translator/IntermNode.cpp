@@ -152,6 +152,7 @@ bool CanFoldAggregateBuiltInOp(TOperator op)
         case EOpMix:
         case EOpStep:
         case EOpSmoothstep:
+        case EOpFma:
         case EOpLdexp:
         case EOpMulMatrixComponentWise:
         case EOpOuterProduct:
@@ -3614,6 +3615,22 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                     float t = gl::clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
                     resultArray[i].setFConst(t * t * (3.0f - 2.0f * t));
                 }
+            }
+            break;
+        }
+
+        case EOpFma:
+        {
+            ASSERT(basicType == EbtFloat);
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                float a = unionArrays[0][i].getFConst();
+                float b = unionArrays[1][i].getFConst();
+                float c = unionArrays[2][i].getFConst();
+
+                // Returns a * b + c.
+                resultArray[i].setFConst(a * b + c);
             }
             break;
         }

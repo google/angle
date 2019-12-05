@@ -710,12 +710,6 @@
 
 // EXT_gpu_shader5: Note: this extension is not yet fully implemented, so should be disabled in the
 // Vulkan backend for the ES 3.1 conformance run.
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.fma.*vertex = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.fma.*fragment = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.fma.*compute = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.fma*vertex* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.fma*fragment* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.fma*compute* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.sampler.*uniform.*vertex* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.sampler.*uniform.*fragment* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.sampler.*uniform.*compute* = FAIL

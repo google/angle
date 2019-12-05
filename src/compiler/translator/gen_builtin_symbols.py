@@ -528,7 +528,9 @@ def get_basic_mangled_name(basic):
     return '1' + chr(ord('a') + index - 78)
 
 
-essl_levels = ['ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS']
+essl_levels = [
+    'ESSL3_2_BUILTINS', 'ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS'
+]
 
 glsl_levels = [
     'GLSL4_6_BUILTINS', 'GLSL4_5_BUILTINS', 'GLSL4_4_BUILTINS', 'GLSL4_3_BUILTINS',
@@ -541,6 +543,8 @@ glsl_levels = [
 def get_essl_shader_version_for_level(level):
     if level == None:
         return '-1'
+    elif level == 'ESSL3_2_BUILTINS':
+        return '320'
     elif level == 'ESSL3_1_BUILTINS':
         return '310'
     elif level == 'ESSL3_BUILTINS':

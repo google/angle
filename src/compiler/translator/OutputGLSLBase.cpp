@@ -1035,6 +1035,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpMix:
         case EOpStep:
         case EOpSmoothstep:
+        case EOpFma:
         case EOpFrexp:
         case EOpLdexp:
         case EOpDistance:

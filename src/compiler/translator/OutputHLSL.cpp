@@ -2493,6 +2493,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpSmoothstep:
             outputTriplet(out, visit, "smoothstep(", ", ", ")");
             break;
+        case EOpFma:
+            outputTriplet(out, visit, "mad(", ", ", ")");
+            break;
         case EOpFrexp:
         case EOpLdexp:
             ASSERT(node->getUseEmulatedFunction());
