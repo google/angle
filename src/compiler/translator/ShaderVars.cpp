@@ -190,7 +190,7 @@ unsigned int ShaderVariable::getExternalSize() const
         // Have a structure, need to compute the structure size.
         for (const auto &field : fields)
         {
-            memorySize += field.getArraySizeProduct() * field.getExternalSize();
+            memorySize += field.getExternalSize();
         }
     }
     else
