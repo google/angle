@@ -114,9 +114,7 @@ TEST_P(RenderbufferMultisampleTest, OddSampleCount)
             glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_SAMPLES,
                                          &renderbufferSamples);
             ASSERT_GL_NO_ERROR();
-            // TODO (ianelliott): Uncomment the following line once the implementation is fixed.
-            // http://anglebug.com/4196
-            // EXPECT_EQ(renderbufferSamples, sampleCounts[i-1]);
+            EXPECT_EQ(renderbufferSamples, sampleCounts[i - 1]);
             break;
         }
     }

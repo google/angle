@@ -803,6 +803,7 @@ void OverrideFeaturesWithDisplayState(angle::FeatureSetBase *features,
 
 void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy)
 {
+    ASSERT(gl::isPow2(sampleCount));
     if (sampleCount > 16)
     {
         // Vulkan (and D3D11) doesn't have standard sample positions for 32 and 64 samples (and no

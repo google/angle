@@ -527,6 +527,7 @@
 
 // Fails on Windows + Linux.
 2222 OPENGL NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo2_rbo2_rbo0 = FAIL
+2222 OPENGL NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo1_rbo2_rbo0 = FAIL
 
 // General Vulkan failures
 
