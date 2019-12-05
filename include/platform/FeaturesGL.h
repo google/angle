@@ -386,6 +386,14 @@ struct FeaturesGL : FeatureSetBase
         "All Mac drivers do not handle struct scopes correctly. This workaround overwrites a struct"
         "name with a unique prefix.",
         &members, "http://crbug.com/403957"};
+
+    // Quite some OpenGL ES drivers don't implement readPixels for RGBA/UNSIGNED_SHORT from
+    // EXT_texture_norm16 correctly
+    Feature readPixelsUsingImplementationColorReadFormatForNorm16 = {
+        "read_pixels_using_implementation_color_read_format", FeatureCategory::OpenGLWorkarounds,
+        "Quite some OpenGL ES drivers don't implement readPixels for RGBA/UNSIGNED_SHORT from "
+        "EXT_texture_norm16 correctly",
+        &members, "http://anglebug.com/4214"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
