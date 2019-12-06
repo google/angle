@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "6ddb15a5_422aab4d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-06T16:43:45Z",
+      "side": 1,
+      "message": "In this case stylistic. It general using classes *can* change the generated code. In this case I don\u0027t think it would.",
+      "parentUuid": "541e2644_07e93539",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 2
+      },
+      "revId": "10302b422f4a9725897a9d01fe5085e7f709fdea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b11492f3_695ecef6",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 24
