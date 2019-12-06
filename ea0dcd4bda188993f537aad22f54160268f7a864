@@ -22,6 +22,30 @@
       "revId": "ea0dcd4bda188993f537aad22f54160268f7a864",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86d445f6_4e4b4ccd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1369468
+      },
+      "writtenOn": "2019-12-06T15:09:28Z",
+      "side": 1,
+      "message": "https://chromium-review.googlesource.com/c/angle/angle/+/1954568",
+      "parentUuid": "949a5df3_92a5bac6",
+      "range": {
+        "startLine": 797,
+        "startChar": 3,
+        "endLine": 797,
+        "endChar": 63
+      },
+      "revId": "ea0dcd4bda188993f537aad22f54160268f7a864",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
