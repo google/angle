@@ -166,13 +166,4 @@ void BreakDebugger()
     __debugbreak();
 }
 
-const char *GetExecutableExtension()
-{
-    return ".exe";
-}
-
-char GetPathSeparator()
-{
-    return '\\';
-}
 }  // namespace angle
