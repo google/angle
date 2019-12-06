@@ -24,8 +24,6 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab_autogen.cpp AND glslang_tab_auto
 // glslang.y:
 //   Parser for the OpenGL shading language.
 
-// clang-format off
-
 // Ignore errors in auto-generated code.
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wunused-function"

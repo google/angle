@@ -90,6 +90,10 @@ def run_flex(basename):
 
         patched = output.replace(patch_in, patch_out)
 
+    # Remove all tab characters from output. WebKit does not allow any tab characters in source
+    # files.
+    patched = patched.replace('\t', '    ')
+
     with open(output_source, 'w') as flex_output_patched:
         flex_output_patched.write(patched)
 
@@ -134,6 +138,10 @@ def generate_parser(basename, generate_header):
         if sys.argv[1] == 'inputs':
             inputs = get_tool_file_sha1s()
             inputs += get_input_files(basename)
+            current_file = __file__
+            if current_file.endswith('.pyc'):
+                current_file = current_file[:-1]
+            inputs += [current_file]
             print(','.join(inputs))
         if sys.argv[1] == 'outputs':
             print(','.join(get_output_files(basename, generate_header)))

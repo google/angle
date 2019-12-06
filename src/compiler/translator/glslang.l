@@ -24,8 +24,6 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex_autogen.cpp).
 // glslang.l:
 //   Lexer for the OpenGL shading language.
 
-// clang-format off
-
 // Ignore errors in auto-generated code.
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wswitch-enum"
@@ -251,7 +249,7 @@ O           [0-7]
 "iimage3D" { return ES3_reserved_ES3_1_keyword(context, IIMAGE3D); }
 "iimageCube" { return ES3_reserved_ES3_1_keyword(context, IIMAGECUBE); }
 "uimageCube" { return ES3_reserved_ES3_1_keyword(context, UIMAGECUBE); }
-"imageCube"	{ return ES3_reserved_ES3_1_keyword(context, IMAGECUBE); }
+"imageCube" { return ES3_reserved_ES3_1_keyword(context, IMAGECUBE); }
 "readonly" { return ES3_reserved_ES3_1_keyword(context, READONLY); }
 "writeonly" { return ES3_reserved_ES3_1_keyword(context, WRITEONLY); }
 "coherent" { return ES3_reserved_ES3_1_keyword(context, COHERENT); }

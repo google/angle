@@ -22,8 +22,6 @@ WHICH GENERATES THE GLSL ES preprocessor expression parser.
 // preprocessor.y:
 //   Parser for the OpenGL shading language preprocessor.
 
-// clang-format off
-
 #if defined(__GNUC__)
 // Triggered by the auto-generated pplval variable.
 #if !defined(__clang__) && ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7))
