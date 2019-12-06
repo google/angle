@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "0eb5b1d4_e077b864",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2019-12-06T00:20:51Z",
+      "side": 1,
+      "message": "The problem of the ES 3.1 SPEC is that it does not define how to compute the total size of the shared variables. For example, on some GPUs two vec3 variables may actually consume 8 bytes rather than 6 bytes. The ES 3.2 rule is compatible to ES 3.1 ones, but the method in ES 3.1 is not compatible to the one in ES 3.2, so I think here we should always follow the ES 3.2 SPEC so that we won\u0027t need to worry the algorithm does not follow ES 3.2 and meet issues on ES 3.2 drivers.",
+      "parentUuid": "e8ad0aa6_cccc4b4b",
+      "range": {
+        "startLine": 492,
+        "startChar": 0,
+        "endLine": 498,
+        "endChar": 25
+      },
+      "revId": "33a00efd7c494b32cfa331005271bcb99a65502f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb9c7068_0a3862ac",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 13
