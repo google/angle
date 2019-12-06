@@ -826,7 +826,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     VkPipelineRasterizationLineStateCreateInfoEXT rasterLineState = {};
     rasterLineState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT;
-    // Always enable Bresenham line rasterization if available.
+    // Enable Bresenham line rasterization if available and not multisampling.
     if (rasterAndMS.bits.rasterizationSamples <= 1 &&
         contextVk->getFeatures().bresenhamLineRasterization.enabled)
     {
