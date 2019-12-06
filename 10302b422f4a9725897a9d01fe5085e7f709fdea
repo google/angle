@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b0a4506_4eb5cca9",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-06T15:28:34Z",
+      "side": 1,
+      "message": "I don\u0027t understand why you need rebind buffer. Can you just use validBufferCount \u003d\u003d 0?",
+      "range": {
+        "startLine": 216,
+        "startChar": 8,
+        "endLine": 216,
+        "endChar": 75
+      },
+      "revId": "10302b422f4a9725897a9d01fe5085e7f709fdea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f55ac0a8_fdf91d5d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-06T15:28:34Z",
+      "side": 1,
+      "message": "Does this need to be a struct? Can you just store these inline as normal member variables?",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 2
+      },
+      "revId": "10302b422f4a9725897a9d01fe5085e7f709fdea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b11492f3_695ecef6",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-06T15:28:34Z",
+      "side": 1,
+      "message": "Can you check validBufferCount \u003d\u003d 0 for the case where mHas is false?",
+      "range": {
+        "startLine": 219,
+        "startChar": 7,
+        "endLine": 219,
+        "endChar": 65
+      },
+      "revId": "10302b422f4a9725897a9d01fe5085e7f709fdea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ed76e40_f1ec4f1f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-06T15:28:34Z",
+      "side": 1,
+      "message": "Can you confirm that if we restart the RendrerPass because of a Framebuffer change that we also correctly store the XFB info? I was thinking you would put this setInfo function in FramebufferVk::beginRenderPass.",
+      "range": {
+        "startLine": 1247,
+        "startChar": 17,
+        "endLine": 1247,
+        "endChar": 47
+      },
+      "revId": "10302b422f4a9725897a9d01fe5085e7f709fdea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
