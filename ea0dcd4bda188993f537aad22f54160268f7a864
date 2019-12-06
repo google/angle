@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "949a5df3_92a5bac6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-06T14:29:00Z",
+      "side": 1,
+      "message": "Antonio: just noticed this comment is out of date. Could you make a quick CL to update it?",
+      "range": {
+        "startLine": 797,
+        "startChar": 3,
+        "endLine": 797,
+        "endChar": 63
+      },
+      "revId": "ea0dcd4bda188993f537aad22f54160268f7a864",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
