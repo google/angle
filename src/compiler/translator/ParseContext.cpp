@@ -3994,6 +3994,11 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
 
     TIntermConstantUnion *indexConstantUnion = indexExpression->getAsConstantUnion();
 
+    // ES3.2 or ES3.1's EXT_gpu_shader5 allow dynamically uniform expressions to be used as indices
+    // of opaque types (samplers and atomic counters) as well as UBOs, but not SSBOs and images.
+    bool allowUniformIndices =
+        mShaderVersion >= 320 || isExtensionEnabled(TExtension::EXT_gpu_shader5);
+
     // ANGLE should be able to fold any constant expressions resulting in an integer - but to be
     // safe we don't treat "EvqConst" that's evaluated according to the spec as being sufficient
     // for constness. Some interpretations of the spec have allowed constant expressions with side
@@ -4008,10 +4013,18 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                 case EvqPerVertexIn:
                     break;
                 case EvqUniform:
+                    if (!allowUniformIndices)
+                    {
+                        error(location,
+                              "array indexes for uniform block arrays must be constant integral "
+                              "expressions",
+                              "[");
+                    }
+                    break;
                 case EvqBuffer:
                     error(location,
-                          "array indexes for uniform block arrays and shader storage block arrays "
-                          "must be constant integral expressions",
+                          "array indexes for shader storage block arrays must be constant integral "
+                          "expressions",
                           "[");
                     break;
                 default:
@@ -4040,12 +4053,14 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                 case 310:
                     elementType = baseExpression->getType();
                     elementType.toArrayElementType();
-                    if (elementType.isSampler())
+                    if (elementType.isSampler() && !allowUniformIndices)
                     {
                         error(location,
                               "array index for samplers must be constant integral expressions",
                               "[");
                     }
+                    break;
+                case 320:
                     break;
                 default:
                     UNREACHABLE();
