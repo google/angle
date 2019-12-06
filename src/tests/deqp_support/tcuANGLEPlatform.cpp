@@ -106,6 +106,16 @@ ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc)
     }
 #endif
 
+#if (DE_OS == DE_OS_OSX)
+    {
+        std::vector<eglw::EGLAttrib> mtlAttribs = initAttribs(EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE);
+
+        auto *mtlFactory = new ANGLENativeDisplayFactory("angle-metal", "ANGLE Metal Display",
+                                                         mtlAttribs, &mEvents);
+        m_nativeDisplayFactoryRegistry.registerFactory(mtlFactory);
+    }
+#endif
+
     {
         std::vector<eglw::EGLAttrib> nullAttribs = initAttribs(EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE);
 
