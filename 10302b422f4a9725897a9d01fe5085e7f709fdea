@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "31e92ba7_d0d10b31",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-06T16:08:20Z",
+      "side": 1,
+      "message": "Minor preference for no encapsulation mostly because it would be consistent with how the rest of the members in CommandGraphNode are stored. It\u0027s a pretty flat class.",
+      "parentUuid": "3115cccf_bc3c4df7",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 2
+      },
+      "revId": "10302b422f4a9725897a9d01fe5085e7f709fdea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b11492f3_695ecef6",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 24
