@@ -659,9 +659,6 @@
 4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.sample_position = FAIL
 4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.sample_mask* = FAIL
 4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.use_texture_*_2d = FAIL
-// The following test fails with the Intel Windows Vulkan driver (which appears to have swapped
-// the standard positions for 2 samples):
-4198 INTEL VULKAN : dEQP-GLES31.functional.texture.multisample.samples_2.sample_position = FAIL
 // TODO: Investigate why these are failing:
 3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_10.use_texture_depth_2d = FAIL
 3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_12.use_texture_depth_2d = FAIL
