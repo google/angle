@@ -681,9 +681,6 @@
 // Cannot create 2D (array) view of 3D texture.
 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
 
-// Inactive SSBOs with flexible array member (about 20% of these tests are affected):
-3714 VULKAN : dEQP-GLES31.functional.ssbo.layout.random.* = FAIL
-
 // OpenGL ES 3.1 conformance failures
 4098 SWIFTSHADER : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_multiple_groups = FAIL
 4098 SWIFTSHADER : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_single_invocation = FAIL

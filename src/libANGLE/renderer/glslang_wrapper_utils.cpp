@@ -55,7 +55,6 @@ constexpr char kParamsBegin                        = '(';
 constexpr char kParamsEnd                          = ')';
 constexpr char kUniformQualifier[]                 = "uniform";
 constexpr char kSSBOQualifier[]                    = "buffer";
-constexpr char kUnusedBlockSubstitution[]          = "struct";
 constexpr char kUnusedUniformSubstitution[]        = "// ";
 constexpr char kVersionDefine[]                    = "#version 450 core\n";
 constexpr char kLineRasterDefine[]                 = R"(#version 450 core
@@ -865,7 +864,7 @@ void AssignResourceBinding(gl::ShaderBitSet activeShaders,
                 shaderSource.insertLayoutSpecifier(name, bindingString);
                 shaderSource.insertQualifierSpecifier(name, qualifier);
             }
-            else
+            else if (unusedSubstitution)
             {
                 shaderSource.eraseLayoutAndQualifierSpecifiers(name, unusedSubstitution);
             }
@@ -891,7 +890,7 @@ uint32_t AssignInterfaceBlockBindings(const GlslangSourceOptions &options,
                 resourcesDescriptorSet + ", binding = " + Str(bindingIndex++);
 
             AssignResourceBinding(block.activeShaders(), block.name, bindingString, qualifier,
-                                  kUnusedBlockSubstitution, shaderSources);
+                                  nullptr, shaderSources);
         }
     }
 
@@ -950,7 +949,7 @@ uint32_t AssignImageBindings(const GlslangSourceOptions &options,
         }
 
         AssignResourceBinding(imageUniform.activeShaders(), name, bindingString, kUniformQualifier,
-                              kUnusedUniformSubstitution, shaderSources);
+                              nullptr, shaderSources);
     }
 
     return bindingIndex;
@@ -1049,20 +1048,15 @@ void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
         }
     }
 
-    // Remove all the markers for unused interface blocks, and replace them with |struct|.
-    for (const std::string &unusedInterfaceBlock : resources.unusedInterfaceBlocks)
-    {
-        for (IntermediateShaderSource &shaderSource : *shaderSources)
-        {
-            shaderSource.eraseLayoutAndQualifierSpecifiers(unusedInterfaceBlock,
-                                                           kUnusedBlockSubstitution);
-        }
-    }
-
-    // Comment out unused uniforms.  This relies on the fact that the shader compiler outputs
-    // uniforms to a single line.
+    // Comment out unused default uniforms.  This relies on the fact that the shader compiler
+    // outputs uniforms to a single line.
     for (const gl::UnusedUniform &unusedUniform : resources.unusedUniforms)
     {
+        if (unusedUniform.isImage || unusedUniform.isAtomicCounter)
+        {
+            continue;
+        }
+
         std::string uniformName = unusedUniform.isSampler
                                       ? useOldRewriteStructSamplers
                                             ? GetMappedSamplerNameOld(unusedUniform.name)
