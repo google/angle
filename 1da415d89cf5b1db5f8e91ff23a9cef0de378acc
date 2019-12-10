@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96ba1800_a2b26d6d",
+        "filename": "BUILD.gn",
+        "patchSetId": 39
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-10T22:33:47Z",
+      "side": 1,
+      "message": "can we try to fix that using the volk config? I think I made a CL earlier that should make this unnecessary.",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 248,
+        "endChar": 27
+      },
+      "revId": "1da415d89cf5b1db5f8e91ff23a9cef0de378acc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
