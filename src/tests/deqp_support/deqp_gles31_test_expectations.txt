@@ -659,22 +659,20 @@
 4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.sample_position = FAIL
 4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.sample_mask* = FAIL
 4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.use_texture_*_2d = FAIL
+4197 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_2d = FAIL
+4197 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_int_2d = FAIL
+4197 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_uint_2d = FAIL
 // TODO: Investigate why these are failing:
 3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_10.use_texture_depth_2d = FAIL
 3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_12.use_texture_depth_2d = FAIL
 3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_13.use_texture_depth_2d = FAIL
 3565 LINUX VULKAN : dEQP-GLES31.functional.texture.multisample.samples_16.use_texture_depth_2d = FAIL
-// TODO: Investigate why these are failing/crashing:
-3565 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_1.sample_mask_and*alpha_to_coverage = SKIP
-3565 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_3.sample_position = FAIL
-3565 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_4.sample_position = FAIL
-
-// Multisampled shader support:
-// The following tests pass, but fail because of Vulkan validation-layer errors, which are likely
-// a bug in the validation layers:
-3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_2d = FAIL
-3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_int_2d = FAIL
-3565 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_uint_2d = FAIL
+// The following tests cause an assert within SwiftShader because a sample count of 1 is used with alpha:
+4212 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_1.sample_mask_and*alpha_to_coverage = SKIP
+// The following are failing because of pixel/sub-pixel rendering differences than what is expected:
+4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_2.sample_position = FAIL
+4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_3.sample_position = FAIL
+4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_4.sample_position = FAIL
 
 // Vulkan creates the image view with the same format as the texture.
 3885 VULKAN : dEQP-GLES31.functional.image_load_store.*.format_reinterpret.* = FAIL
