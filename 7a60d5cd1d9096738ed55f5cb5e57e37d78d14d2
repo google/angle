@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36e7030e_8fde3c6f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 4732,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-10T17:13:49Z",
+      "side": 1,
+      "message": "Do you know why `getQualifierString` is being called on it? I\u0027m not sure which is better, this or changing `getQualifierString` to output something like \"**** invalid ****\".\n\nI\u0027m fine with this change to be clear.",
+      "revId": "7a60d5cd1d9096738ed55f5cb5e57e37d78d14d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
