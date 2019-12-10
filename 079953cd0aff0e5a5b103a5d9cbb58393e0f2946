@@ -118,6 +118,30 @@
       "revId": "079953cd0aff0e5a5b103a5d9cbb58393e0f2946",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ddce7b7c_f0872e29",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1001604
+      },
+      "writtenOn": "2019-12-10T15:51:30Z",
+      "side": 1,
+      "message": "Looks like this didn\u0027t actually work. This line still needs to check that systemInfo.gpus was zero sized. See https://chromium-review.googlesource.com/c/angle/angle/+/1959488.",
+      "parentUuid": "0ed452ec_cc69b27f",
+      "range": {
+        "startLine": 259,
+        "startChar": 0,
+        "endLine": 261,
+        "endChar": 71
+      },
+      "revId": "079953cd0aff0e5a5b103a5d9cbb58393e0f2946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
