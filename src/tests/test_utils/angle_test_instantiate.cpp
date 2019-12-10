@@ -260,7 +260,8 @@ bool IsNVIDIA()
 
 bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters &param)
 {
-    VendorID vendorID = systemInfo.gpus[systemInfo.activeGPUIndex].vendorId;
+    VendorID vendorID =
+        systemInfo.gpus.empty() ? 0 : systemInfo.gpus[systemInfo.activeGPUIndex].vendorId;
 
     // We support the default and null back-ends on every platform.
     if (param.driver == GLESDriverType::AngleEGL)
