@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "66d7767f_6ea9c876",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-10T19:15:44Z",
+      "side": 1,
+      "message": "If I understand correctly, \"rebindBuffers\" means this is the second time (or later) that we\u0027re recording transform feedback and we are appending to the transform feedback buffers using the counter buffers? If so can you change the places we call \"rebindBuffer\" to \"appendToBuffer\"?\n\nI get that setting no counter buffers means we start at offset zero. Can we always set the counter buffers and start at offset 0?",
+      "parentUuid": "12f792e5_b136d151",
+      "range": {
+        "startLine": 216,
+        "startChar": 8,
+        "endLine": 216,
+        "endChar": 75
+      },
+      "revId": "10302b422f4a9725897a9d01fe5085e7f709fdea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f55ac0a8_fdf91d5d",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 24

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ff97f1f_4fbaa7d6",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 26
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-10T19:15:44Z",
+      "side": 1,
+      "message": "Can you please move this state to CommandGraphNode and initialize it in CommandGraphResource::beginRenderPass ?",
+      "range": {
+        "startLine": 285,
+        "startChar": 0,
+        "endLine": 289,
+        "endChar": 41
+      },
+      "revId": "5872fc2e61e8ef68355ae9943110416197497c3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
