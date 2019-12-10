@@ -689,7 +689,12 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
     }
     if (storageBlockCount > 0 || atomicCounterBufferCount > 0)
     {
-        const uint32_t storageBufferDescCount = storageBlockCount + atomicCounterBufferCount;
+        // Note that we always use an array of IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS storage
+        // buffers for emulating atomic counters, so if there are any atomic counter buffers, we
+        // need to allocate IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS descriptors.
+        const uint32_t atomicCounterStorageBufferCount =
+            atomicCounterBufferCount > 0 ? gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS : 0;
+        const uint32_t storageBufferDescCount = storageBlockCount + atomicCounterStorageBufferCount;
         resourceSetSize.emplace_back(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, storageBufferDescCount);
     }
     if (imageCount > 0)
