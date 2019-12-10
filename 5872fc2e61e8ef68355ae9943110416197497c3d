@@ -22,6 +22,30 @@
       "revId": "5872fc2e61e8ef68355ae9943110416197497c3d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3601342b_72db17c9",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 26
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-12-10T19:20:58Z",
+      "side": 1,
+      "message": "Sorry, missed that this is in CommandGraphNode, thanks. You should be able to initialize it in beginRenderPass instead of using the dirty bits. I\u0027m fine if you want to look at that in a follow-up.",
+      "parentUuid": "1ff97f1f_4fbaa7d6",
+      "range": {
+        "startLine": 285,
+        "startChar": 0,
+        "endLine": 289,
+        "endChar": 41
+      },
+      "revId": "5872fc2e61e8ef68355ae9943110416197497c3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
