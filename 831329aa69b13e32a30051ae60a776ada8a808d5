@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ef274cf_c5f6c876",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-10T22:14:19Z",
+      "side": 1,
+      "message": "Perhaps consider a more descriptive name like rearrangeExtTextureNorm16Result.",
+      "range": {
+        "startLine": 1282,
+        "startChar": 21,
+        "endLine": 1282,
+        "endChar": 36
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74275f21_bcc47914",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1311,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-10T22:14:19Z",
+      "side": 1,
+      "message": "Should this be plural (originalFormatPixelBytes) for clarity?\n\nAlso, what about an ASSERT that originalFormatPixelBytes \u003e pixelBytes?",
+      "range": {
+        "startLine": 1311,
+        "startChar": 11,
+        "endLine": 1311,
+        "endChar": 34
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb02c0be_b81a5282",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1317,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-10T22:14:19Z",
+      "side": 1,
+      "message": "Consider \"outputRowStart\" and \"inputRowStart\" or similar, for clarity.",
+      "range": {
+        "startLine": 1317,
+        "startChar": 13,
+        "endLine": 1317,
+        "endChar": 23
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f9fa95e_e3a4abc3",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-10T22:14:19Z",
+      "side": 1,
+      "message": "How about adding ASSERT(originalFormatPixelBytes \u003c alphaChannelBytes) and ASSERT(alphaChannelBytes !\u003d 0)?",
+      "range": {
+        "startLine": 1319,
+        "startChar": 31,
+        "endLine": 1319,
+        "endChar": 47
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04d310fd_17f7b882",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1330,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-10T22:14:19Z",
+      "side": 1,
+      "message": "Code like this is very tricky to get right. Have you verified that all combinations of pixel pack parameters GL_PACK_ROW_LENGTH, GL_PACK_SKIP_ROWS, GL_PACK_SKIP_PIXELS and GL_PACK_ALIGNMENT will work? It looks to me like more tests need to be added.",
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33ef13c8_ecf9a6ee",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1339,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-10T22:14:19Z",
+      "side": 1,
+      "message": "Is it guaranteed in *all* cases (even for the first pixel) that the input and output are non-overlapping? I don\u0027t think so. memcpy is undefined for overlapping regions.\n\nIf they might overlap, then either this code should be changed to use memmove, or specialize this code for the UNSIGNED_SHORT type, and use temporary variables to read and write the input and output, instead of using memset / memmove.",
+      "range": {
+        "startLine": 1339,
+        "startChar": 26,
+        "endLine": 1339,
+        "endChar": 36
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf02d5ca_080b61cf",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-10T22:14:19Z",
+      "side": 1,
+      "message": "It\u0027s not obvious to me that rearrangePixels will only be called if originalFormat\u003d\u003dGL_RGBA, format\u003d\u003dGL_RED_EXT or GL_RG_EXT, and type\u003d\u003dGL_UNSIGNED_SHORT - these are all conditions ASSERTed in rearrangePixels, above.\n\nCan this and the other similar if-tests below be changed to more obviously trigger the above code path only when desired?",
+      "range": {
+        "startLine": 1382,
+        "startChar": 15,
+        "endLine": 1382,
+        "endChar": 30
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4ad1f53_b2448f08",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4157,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-10T22:14:19Z",
+      "side": 1,
+      "message": "Could you please add more tests which set non-standard values for GL_PACK_ROW_LENGTH, GL_PACK_SKIP_ROWS, GL_PACK_SKIP_PIXELS and GL_PACK_ALIGNMENT, and verify that the read-back results are as expected?",
+      "range": {
+        "startLine": 4157,
+        "startChar": 9,
+        "endLine": 4157,
+        "endChar": 36
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
