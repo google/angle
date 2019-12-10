@@ -2387,14 +2387,22 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         {
             switch (value)
             {
+                case 0x1802:
+                    return "GL_STENCIL";
                 case 0x1902:
                     return "GL_DEPTH_COMPONENT";
                 case 0x1903:
                     return "GL_RED";
+                case 0x1906:
+                    return "GL_ALPHA";
                 case 0x1907:
                     return "GL_RGB";
                 case 0x1908:
                     return "GL_RGBA";
+                case 0x1909:
+                    return "GL_LUMINANCE";
+                case 0x190A:
+                    return "GL_LUMINANCE_ALPHA";
                 case 0x8051:
                     return "GL_RGB8";
                 case 0x8052:
@@ -2929,10 +2937,16 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNSIGNED_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                case 0x140B:
+                    return "GL_HALF_FLOAT";
                 case 0x8033:
                     return "GL_UNSIGNED_SHORT_4_4_4_4";
                 case 0x8034:
                     return "GL_UNSIGNED_SHORT_5_5_5_1";
+                case 0x8368:
+                    return "GL_UNSIGNED_INT_2_10_10_10_REV";
+                case 0x8C3B:
+                    return "GL_UNSIGNED_INT_10F_11F_11F_REV";
                 default:
                     return kUnknownGLenumString;
             }
