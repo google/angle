@@ -16,6 +16,24 @@
       "revId": "7a60d5cd1d9096738ed55f5cb5e57e37d78d14d2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ec6804a_9e1d3fe5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 4732,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-12-10T17:30:00Z",
+      "side": 1,
+      "message": "We are here because we detected an error in the shader and are trying to print a useful error message. This change matches with what the program did.",
+      "parentUuid": "36e7030e_8fde3c6f",
+      "revId": "7a60d5cd1d9096738ed55f5cb5e57e37d78d14d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
