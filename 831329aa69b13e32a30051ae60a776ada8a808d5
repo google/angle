@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "12c73869_9c2975ff",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-11T16:38:34Z",
+      "side": 1,
+      "message": "nit: use a temp variable",
+      "range": {
+        "startLine": 502,
+        "startChar": 8,
+        "endLine": 502,
+        "endChar": 87
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0ef274cf_c5f6c876",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -18,6 +41,29 @@
         "startChar": 21,
         "endLine": 1282,
         "endChar": 36
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4435f54c_4fbafbb2",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1294,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-11T16:38:34Z",
+      "side": 1,
+      "message": "I\u0027m having some trouble following the logic here. From the description, it sounds like the issue is where the image is R16 or RG16, but readPixels is trying to read RGBA/SHORT, right?\n\nDoesn\u0027t it follow then that `originalFormat` is RED or RG and that `format` is RGBA?",
+      "range": {
+        "startLine": 1293,
+        "startChar": 0,
+        "endLine": 1294,
+        "endChar": 56
       },
       "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -48,6 +94,23 @@
     },
     {
       "key": {
+        "uuid": "610da1b5_2792099e",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1316,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-11T16:38:34Z",
+      "side": 1,
+      "message": "I\u0027d add a comment here about why you are going from the back to front.",
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bb02c0be_b81a5282",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -59,6 +122,30 @@
       "writtenOn": "2019-12-10T22:14:19Z",
       "side": 1,
       "message": "Consider \"outputRowStart\" and \"inputRowStart\" or similar, for clarity.",
+      "range": {
+        "startLine": 1317,
+        "startChar": 13,
+        "endLine": 1317,
+        "endChar": 23
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "490aa7a4_5dcbe7dc",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1317,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-11T16:38:34Z",
+      "side": 1,
+      "message": "Or pixelsRowStart and originalPixelsRowStart to correspond to the other variables. Up to you.",
+      "parentUuid": "bb02c0be_b81a5282",
       "range": {
         "startLine": 1317,
         "startChar": 13,
@@ -88,6 +175,23 @@
         "endLine": 1319,
         "endChar": 47
       },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45825b7d_8d1a9b09",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1321,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-11T16:38:34Z",
+      "side": 1,
+      "message": "The x and y loop parameters are not actually used, can you change the loops to not go backwards?\n\nfor (GLint y \u003d 0; y \u003c area.height; ++y)\n    for (GLint x \u003d 0; x \u003c area.width; ++x)",
       "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -134,6 +238,30 @@
     },
     {
       "key": {
+        "uuid": "7f1cd5ad_3b509e8d",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1339,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-11T16:38:34Z",
+      "side": 1,
+      "message": "Since this is a workaround, and especially on the readpixels path, I wouldn\u0027t worry about performance too much and just read the pixels into a temporary buffer altogether, then do the conversion to the user buffer and avoid any possible mistakes.",
+      "parentUuid": "33ef13c8_ecf9a6ee",
+      "range": {
+        "startLine": 1339,
+        "startChar": 26,
+        "endLine": 1339,
+        "endChar": 36
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf02d5ca_080b61cf",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -157,6 +285,23 @@
     },
     {
       "key": {
+        "uuid": "29f1de5a_676b02a6",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-11T16:38:34Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be conditioned to format being one of the two problematic ones? Or is readAttachmentFormat !\u003d format only in those cases? In that case, you can ASSERT.",
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e4ad1f53_b2448f08",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 5
@@ -173,6 +318,46 @@
         "startChar": 9,
         "endLine": 4157,
         "endChar": 36
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d5e0a85_aaa9fcd1",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4210,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-11T16:38:34Z",
+      "side": 1,
+      "message": "I\u0027d just go over all pixels.",
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29995202_cbdacd56",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4252,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-11T16:38:34Z",
+      "side": 1,
+      "message": "Please use `http://anglebug.com/NNNN`. You can also update the comment above it.",
+      "range": {
+        "startLine": 4252,
+        "startChar": 8,
+        "endLine": 4252,
+        "endChar": 30
       },
       "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
