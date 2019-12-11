@@ -369,7 +369,9 @@
     void framebufferTexture2DMultisample(GLenum target, GLenum attachment, GLenum textarget,       \
                                          GLuint texture, GLint level, GLsizei samples);            \
     /* GL_EXT_occlusion_query_boolean */                                                           \
+    /* GL_EXT_read_format_bgra */                                                                  \
     /* GL_EXT_robustness */                                                                        \
+    /* GL_EXT_sRGB */                                                                              \
     /* GL_EXT_semaphore */                                                                         \
     void deleteSemaphores(GLsizei n, const SemaphoreID *semaphoresPacked);                         \
     void genSemaphores(GLsizei n, SemaphoreID *semaphoresPacked);                                  \
@@ -385,7 +387,12 @@
                        const TextureID *texturesPacked, const GLenum *srcLayouts);                 \
     /* GL_EXT_semaphore_fd */                                                                      \
     void importSemaphoreFd(SemaphoreID semaphorePacked, HandleType handleTypePacked, GLint fd);    \
+    /* GL_EXT_texture_compression_bptc */                                                          \
+    /* GL_EXT_texture_compression_dxt1 */                                                          \
+    /* GL_EXT_texture_compression_s3tc */                                                          \
+    /* GL_EXT_texture_compression_s3tc_srgb */                                                     \
     /* GL_EXT_texture_filter_anisotropic */                                                        \
+    /* GL_EXT_texture_format_BGRA8888 */                                                           \
     /* GL_EXT_texture_storage */                                                                   \
     void texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width);        \
     /* GL_KHR_debug */                                                                             \
@@ -402,6 +409,8 @@
     /* GL_OES_EGL_image */                                                                         \
     void eGLImageTargetRenderbufferStorage(GLenum target, GLeglImageOES image);                    \
     void eGLImageTargetTexture2D(TextureType targetPacked, GLeglImageOES image);                   \
+    /* GL_OES_compressed_ETC1_RGB8_texture */                                                      \
+    /* GL_OES_depth32 */                                                                           \
     /* GL_OES_draw_elements_base_vertex */                                                         \
     /* GL_OES_get_program_binary */                                                                \
     /* GL_OES_mapbuffer */                                                                         \
@@ -410,6 +419,7 @@
     void framebufferTexture3D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               TextureID texturePacked, GLint level, GLint zoffset);                \
     /* GL_OES_texture_border_clamp */                                                              \
+    /* GL_OES_texture_half_float */                                                                \
     /* GL_OES_texture_storage_multisample_2d_array */                                              \
     /* GL_OES_vertex_array_object */                                                               \
     /* GL_OVR_multiview */                                                                         \

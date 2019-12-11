@@ -4888,6 +4888,8 @@ void GL_APIENTRY RenderbufferStorageMultisampleEXT(GLenum target,
 
 // IsQueryEXT is already defined.
 
+// GL_EXT_read_format_bgra
+
 // GL_EXT_robustness
 GLenum GL_APIENTRY GetGraphicsResetStatusEXT()
 {
@@ -4996,6 +4998,8 @@ void GL_APIENTRY ReadnPixelsEXT(GLint x,
                       bufSize, data);
     }
 }
+
+// GL_EXT_sRGB
 
 // GL_EXT_semaphore
 void GL_APIENTRY DeleteSemaphoresEXT(GLsizei n, const GLuint *semaphores)
@@ -5221,7 +5225,17 @@ void GL_APIENTRY ImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLint
     }
 }
 
+// GL_EXT_texture_compression_bptc
+
+// GL_EXT_texture_compression_dxt1
+
+// GL_EXT_texture_compression_s3tc
+
+// GL_EXT_texture_compression_s3tc_srgb
+
 // GL_EXT_texture_filter_anisotropic
+
+// GL_EXT_texture_format_BGRA8888
 
 // GL_EXT_texture_storage
 void GL_APIENTRY TexStorage1DEXT(GLenum target,
@@ -5802,6 +5816,10 @@ void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
         ANGLE_CAPTURE(EGLImageTargetTexture2DOES, isCallValid, context, targetPacked, image);
     }
 }
+
+// GL_OES_compressed_ETC1_RGB8_texture
+
+// GL_OES_depth32
 
 // GL_OES_draw_elements_base_vertex
 void GL_APIENTRY DrawElementsBaseVertexOES(GLenum mode,
@@ -7319,6 +7337,8 @@ void GL_APIENTRY TexGenxvOES(GLenum coord, GLenum pname, const GLfixed *params)
         ANGLE_CAPTURE(TexGenxvOES, isCallValid, context, coord, pname, params);
     }
 }
+
+// GL_OES_texture_half_float
 
 // GL_OES_texture_storage_multisample_2d_array
 void GL_APIENTRY TexStorage3DMultisampleOES(GLenum target,

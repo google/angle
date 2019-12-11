@@ -4209,6 +4209,8 @@ void GL_APIENTRY glRenderbufferStorageMultisampleEXT(GLenum target,
 
 // GL_EXT_occlusion_query_boolean
 
+// GL_EXT_read_format_bgra
+
 // GL_EXT_robustness
 GLenum GL_APIENTRY glGetGraphicsResetStatusEXT()
 {
@@ -4239,6 +4241,8 @@ void GL_APIENTRY glReadnPixelsEXT(GLint x,
 {
     return gl::ReadnPixelsEXT(x, y, width, height, format, type, bufSize, data);
 }
+
+// GL_EXT_sRGB
 
 // GL_EXT_semaphore
 void GL_APIENTRY glDeleteSemaphoresEXT(GLsizei n, const GLuint *semaphores)
@@ -4296,7 +4300,17 @@ void GL_APIENTRY glImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLi
     return gl::ImportSemaphoreFdEXT(semaphore, handleType, fd);
 }
 
+// GL_EXT_texture_compression_bptc
+
+// GL_EXT_texture_compression_dxt1
+
+// GL_EXT_texture_compression_s3tc
+
+// GL_EXT_texture_compression_s3tc_srgb
+
 // GL_EXT_texture_filter_anisotropic
+
+// GL_EXT_texture_format_BGRA8888
 
 // GL_EXT_texture_storage
 void GL_APIENTRY glTexStorage1DEXT(GLenum target,
@@ -4462,6 +4476,10 @@ void GL_APIENTRY glEGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image
 {
     return gl::EGLImageTargetTexture2DOES(target, image);
 }
+
+// GL_OES_compressed_ETC1_RGB8_texture
+
+// GL_OES_depth32
 
 // GL_OES_draw_elements_base_vertex
 void GL_APIENTRY glDrawElementsBaseVertexOES(GLenum mode,
@@ -4866,6 +4884,8 @@ void GL_APIENTRY glTexGenxvOES(GLenum coord, GLenum pname, const GLfixed *params
 {
     return gl::TexGenxvOES(coord, pname, params);
 }
+
+// GL_OES_texture_half_float
 
 // GL_OES_texture_storage_multisample_2d_array
 void GL_APIENTRY glTexStorage3DMultisampleOES(GLenum target,

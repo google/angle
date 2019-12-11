@@ -994,6 +994,8 @@ bool ValidateRenderbufferStorageMultisampleEXT(Context *context,
 
 // GL_EXT_occlusion_query_boolean
 
+// GL_EXT_read_format_bgra
+
 // GL_EXT_robustness
 bool ValidateGetGraphicsResetStatusEXT(Context *context);
 bool ValidateGetnUniformfvEXT(Context *context,
@@ -1015,6 +1017,8 @@ bool ValidateReadnPixelsEXT(Context *context,
                             GLenum type,
                             GLsizei bufSize,
                             void *data);
+
+// GL_EXT_sRGB
 
 // GL_EXT_semaphore
 bool ValidateDeleteSemaphoresEXT(Context *context, GLsizei n, const SemaphoreID *semaphoresPacked);
@@ -1049,7 +1053,17 @@ bool ValidateImportSemaphoreFdEXT(Context *context,
                                   HandleType handleTypePacked,
                                   GLint fd);
 
+// GL_EXT_texture_compression_bptc
+
+// GL_EXT_texture_compression_dxt1
+
+// GL_EXT_texture_compression_s3tc
+
+// GL_EXT_texture_compression_s3tc_srgb
+
 // GL_EXT_texture_filter_anisotropic
+
+// GL_EXT_texture_format_BGRA8888
 
 // GL_EXT_texture_storage
 bool ValidateTexStorage1DEXT(Context *context,
@@ -1145,6 +1159,10 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
 bool ValidateEGLImageTargetTexture2DOES(Context *context,
                                         TextureType targetPacked,
                                         GLeglImageOES image);
+
+// GL_OES_compressed_ETC1_RGB8_texture
+
+// GL_OES_depth32
 
 // GL_OES_draw_elements_base_vertex
 bool ValidateDrawElementsBaseVertexOES(Context *context,
@@ -1389,6 +1407,8 @@ bool ValidateTexGeniOES(Context *context, GLenum coord, GLenum pname, GLint para
 bool ValidateTexGenivOES(Context *context, GLenum coord, GLenum pname, const GLint *params);
 bool ValidateTexGenxOES(Context *context, GLenum coord, GLenum pname, GLfixed param);
 bool ValidateTexGenxvOES(Context *context, GLenum coord, GLenum pname, const GLfixed *params);
+
+// GL_OES_texture_half_float
 
 // GL_OES_texture_storage_multisample_2d_array
 bool ValidateTexStorage3DMultisampleOES(Context *context,
