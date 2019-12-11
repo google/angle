@@ -1016,6 +1016,41 @@ inline bool IsStorageBuffer(TQualifier qualifier)
     return qualifier == EvqBuffer;
 }
 
+inline bool IsShaderIn(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqVertexIn:
+        case EvqGeometryIn:
+        case EvqFragmentIn:
+        case EvqAttribute:
+        case EvqVaryingIn:
+        case EvqSmoothIn:
+        case EvqFlatIn:
+        case EvqCentroidIn:
+            return true;
+        default:
+            return false;
+    }
+}
+
+inline bool IsShaderOut(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqVertexOut:
+        case EvqGeometryOut:
+        case EvqFragmentOut:
+        case EvqVaryingOut:
+        case EvqSmoothOut:
+        case EvqFlatOut:
+        case EvqCentroidOut:
+            return true;
+        default:
+            return false;
+    }
+}
+
 enum TLayoutImageInternalFormat
 {
     EiifUnspecified,

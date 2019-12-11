@@ -85,13 +85,13 @@ class TOutputGLSLBase : public TIntermTraverser
     virtual void writeQualifier(TQualifier qualifier, const TType &type, const TSymbol *symbol);
     bool structDeclared(const TStructure *structure) const;
 
+    const char *mapQualifierToString(TQualifier qualifier);
+
   private:
     void declareInterfaceBlockLayout(const TInterfaceBlock *interfaceBlock);
     void declareInterfaceBlock(const TInterfaceBlock *interfaceBlock);
 
     void writeBuiltInFunctionTriplet(Visit visit, TOperator op, bool useEmulatedFunction);
-
-    const char *mapQualifierToString(TQualifier qualifier);
 
     TInfoSinkBase &mObjSink;
     bool mDeclaringVariable;

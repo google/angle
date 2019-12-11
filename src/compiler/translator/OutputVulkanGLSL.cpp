@@ -164,8 +164,20 @@ void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier,
         name = type.getInterfaceBlock()->name();
     }
 
+    // The in/out qualifiers are calculated here so glslang wrapper doesn't need to guess them.
+    // The rest of the qualifiers are left to glslang wrapper to substitute as it emulates some
+    // with others.
+    const char *inOutQualifier = "";
+    if (IsShaderIn(qualifier) || IsShaderOut(qualifier))
+    {
+        inOutQualifier = mapQualifierToString(qualifier);
+    }
+    std::string memoryQualifiers = getMemoryQualifiers(type);
+    const char *separator = strcmp(inOutQualifier, "") == 0 || memoryQualifiers.empty() ? "" : " ";
+
     TInfoSinkBase &out = objSink();
-    out << "@@ QUALIFIER-" << name.data() << "(" << getMemoryQualifiers(type) << ") @@ ";
+    out << "@@ QUALIFIER-" << name.data() << "(" << inOutQualifier << separator << memoryQualifiers
+        << ") @@ ";
 }
 
 void TOutputVulkanGLSL::writeVariableType(const TType &type, const TSymbol *symbol)
