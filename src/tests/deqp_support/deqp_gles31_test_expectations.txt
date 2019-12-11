@@ -577,11 +577,18 @@
 1729 D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = SKIP
 
 // Vulkan Android failures
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.lines_8_samples_dfdx = FAIL
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.lines_8_samples_fwidth = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.points_8_samples_dfdx = FAIL
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.points_8_samples_dfdy = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.points_8_samples_fwidth = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.triangles_8_samples_dfdy = FAIL
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.triangles_max_samples_dfdx = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.wide_lines_8_samples_dfdy = FAIL
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.wide_lines_max_samples_dfdy = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.wide_points_8_samples_dfdy = FAIL
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.lines_8_samples = FAIL
+4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.points_8_samples = FAIL
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.triangles_max_samples = FAIL
 4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.value.lines_8_samples = FAIL
 4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.value.points_8_samples = FAIL
