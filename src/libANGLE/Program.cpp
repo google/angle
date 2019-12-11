@@ -1487,8 +1487,9 @@ angle::Result Program::link(const Context *context)
             &mState.mShaderStorageBlocks, &mState.mBufferVariables, &mState.mAtomicCounterBuffers));
 
         GLuint combinedImageUniforms = 0u;
-        if (!linkUniforms(context->getCaps(), mInfoLog, mUniformLocationBindings,
-                          &combinedImageUniforms, &resources->unusedUniforms))
+        if (!linkUniforms(context->getCaps(), context->getClientVersion(), mInfoLog,
+                          mUniformLocationBindings, &combinedImageUniforms,
+                          &resources->unusedUniforms))
         {
             return angle::Result::Continue;
         }
@@ -1551,8 +1552,9 @@ angle::Result Program::link(const Context *context)
         }
 
         GLuint combinedImageUniforms = 0u;
-        if (!linkUniforms(context->getCaps(), mInfoLog, mUniformLocationBindings,
-                          &combinedImageUniforms, &resources->unusedUniforms))
+        if (!linkUniforms(context->getCaps(), context->getClientVersion(), mInfoLog,
+                          mUniformLocationBindings, &combinedImageUniforms,
+                          &resources->unusedUniforms))
         {
             return angle::Result::Continue;
         }
@@ -1856,6 +1858,7 @@ void Program::unlink()
     mState.mUniforms.clear();
     mState.mUniformLocations.clear();
     mState.mUniformBlocks.clear();
+    mState.mShaderStorageBlocks.clear();
     mState.mActiveUniformBlockBindings.reset();
     mState.mAtomicCounterBuffers.clear();
     mState.mOutputVariables.clear();
@@ -3500,6 +3503,7 @@ bool Program::linkValidateFragmentInputBindings(gl::InfoLog &infoLog) const
 }
 
 bool Program::linkUniforms(const Caps &caps,
+                           const Version &version,
                            InfoLog &infoLog,
                            const ProgramAliasedBindings &uniformLocationBindings,
                            GLuint *combinedImageUniformsCount,
@@ -3518,6 +3522,17 @@ bool Program::linkUniforms(const Caps &caps,
     if (!linkAtomicCounterBuffers())
     {
         return false;
+    }
+
+    if (version >= Version(3, 1))
+    {
+        GLint locationSize = static_cast<GLint>(mState.getUniformLocations().size());
+
+        if (locationSize > caps.maxUniformLocations)
+        {
+            infoLog << "Exceeded maximum uniform location size";
+            return false;
+        }
     }
 
     return true;

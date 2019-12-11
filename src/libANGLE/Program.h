@@ -992,6 +992,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkVaryings(InfoLog &infoLog) const;
 
     bool linkUniforms(const Caps &caps,
+                      const Version &version,
                       InfoLog &infoLog,
                       const ProgramAliasedBindings &uniformLocationBindings,
                       GLuint *combinedImageUniformsCount,
