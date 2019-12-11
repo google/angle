@@ -4044,27 +4044,27 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         }
         else if (baseExpression->isArray())
         {
-            TType elementType;
-            switch (mShaderVersion)
+            TBasicType elementType = baseExpression->getType().getBasicType();
+
+            // Note: In Section 12.30 of the ESSL 3.00 spec on p143-144:
+            //
+            //   Indexing of arrays of samplers by constant-index-expressions is
+            //   supported in GLSL ES 1.00. A constant-index-expression is an
+            //   expression formed from constant-expressions and certain loop indices,
+            //   defined for a subset of loop constructs. Should this functionality be
+            //   included in GLSL ES 3.00?
+            //
+            //   RESOLUTION: No. Arrays of samplers may only be indexed by constant-
+            //   integral-expressions.
+            if (IsSampler(elementType) && !allowUniformIndices && mShaderVersion > 100)
             {
-                case 100:
-                    break;
-                case 300:
-                case 310:
-                    elementType = baseExpression->getType();
-                    elementType.toArrayElementType();
-                    if (elementType.isSampler() && !allowUniformIndices)
-                    {
-                        error(location,
-                              "array index for samplers must be constant integral expressions",
-                              "[");
-                    }
-                    break;
-                case 320:
-                    break;
-                default:
-                    UNREACHABLE();
-                    break;
+                error(location, "array index for samplers must be constant integral expressions",
+                      "[");
+            }
+            else if (IsImage(elementType))
+            {
+                error(location,
+                      "array indexes for image arrays must be constant integral expressions", "[");
             }
         }
     }
