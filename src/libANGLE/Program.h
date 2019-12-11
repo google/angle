@@ -569,6 +569,8 @@ struct ProgramVaryingRef
 
     const sh::ShaderVariable *frontShader = nullptr;
     const sh::ShaderVariable *backShader  = nullptr;
+    ShaderType frontShaderStage           = ShaderType::InvalidEnum;
+    ShaderType backShaderStage            = ShaderType::InvalidEnum;
 };
 
 using ProgramMergedVaryings = std::map<std::string, ProgramVaryingRef>;

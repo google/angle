@@ -803,7 +803,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Caps &caps,
 
         // Don't reference VS-only transform feedback varyings in the PS. Note that we're relying on
         // that the active flag is set according to usage in the fragment shader.
-        if (packedVarying.vertexOnly || !varying.active)
+        if (packedVarying.vertexOnly() || !varying.active)
             continue;
 
         pixelPrologue << "    ";

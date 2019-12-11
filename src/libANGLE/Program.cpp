@@ -4339,13 +4339,18 @@ ProgramMergedVaryings Program::getMergedVaryings() const
     {
         if (shader)
         {
+            ShaderType shaderType = shader->getType();
             for (const sh::ShaderVariable &varying : shader->getOutputVaryings())
             {
-                merged[varying.name].frontShader = &varying;
+                ProgramVaryingRef *ref = &merged[varying.name];
+                ref->frontShader       = &varying;
+                ref->frontShaderStage  = shaderType;
             }
             for (const sh::ShaderVariable &varying : shader->getInputVaryings())
             {
-                merged[varying.name].backShader = &varying;
+                ProgramVaryingRef *ref = &merged[varying.name];
+                ref->backShader        = &varying;
+                ref->backShaderStage   = shaderType;
             }
         }
     }
