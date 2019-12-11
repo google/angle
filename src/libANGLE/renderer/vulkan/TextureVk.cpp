@@ -809,18 +809,6 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
     ANGLE_TRY(initImageViews(contextVk, format, glFormat.info->sized, static_cast<uint32_t>(levels),
                              mImage->getLayerCount()));
 
-    // TODO(spang): This needs to be reworked when semaphores are added.
-    // http://anglebug.com/3289
-    uint32_t rendererQueueFamilyIndex = renderer->getQueueFamilyIndex();
-    if (mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
-    {
-        vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-        mImage->changeLayoutAndQueue(VK_IMAGE_ASPECT_COLOR_BIT,
-                                     vk::ImageLayout::AllGraphicsShadersReadOnly,
-                                     rendererQueueFamilyIndex, commandBuffer);
-    }
-
     return angle::Result::Continue;
 }
 
