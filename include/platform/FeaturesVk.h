@@ -229,6 +229,12 @@ struct FeaturesVk : FeatureSetBase
         "Use ANGLE's Vulkan deferred command graph.",
         &members,
     };
+
+    // Whether the VkDevice supports the VK_EXT_external_memory_host extension, on which the
+    // ANGLE_iosurface_client_buffer extension can be layered.
+    Feature supportsExternalMemoryHost = {
+        "supports_external_memory_host", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_external_memory_host extension", &members};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

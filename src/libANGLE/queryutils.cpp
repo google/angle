@@ -3654,6 +3654,9 @@ void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value)
         case EGL_SURFACE_TYPE:
             *value = config->surfaceType;
             break;
+        case EGL_BIND_TO_TEXTURE_TARGET_ANGLE:
+            *value = config->bindToTextureTarget;
+            break;
         case EGL_TRANSPARENT_TYPE:
             *value = config->transparentType;
             break;

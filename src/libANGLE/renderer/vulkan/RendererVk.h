@@ -145,6 +145,11 @@ class RendererVk : angle::NonCopyable
     uint32_t getMaxVertexAttribDivisor() const { return mMaxVertexAttribDivisor; }
     VkDeviceSize getMaxVertexAttribStride() const { return mMaxVertexAttribStride; }
 
+    VkDeviceSize getMinImportedHostPointerAlignment() const
+    {
+        return mMinImportedHostPointerAlignment;
+    }
+
     bool isMockICDEnabled() const { return mEnabledICD == vk::ICD::Mock; }
 
     // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
@@ -264,6 +269,7 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT mVertexAttributeDivisorProperties;
     VkPhysicalDeviceTransformFeedbackFeaturesEXT mTransformFeedbackFeatures;
     VkPhysicalDeviceSubgroupProperties mPhysicalDeviceSubgroupProperties;
+    VkPhysicalDeviceExternalMemoryHostPropertiesEXT mPhysicalDeviceExternalMemoryHostProperties;
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
     std::mutex mQueueMutex;
     angle::PackedEnumMap<egl::ContextPriority, VkQueue> mQueues;
@@ -271,6 +277,7 @@ class RendererVk : angle::NonCopyable
     uint32_t mCurrentQueueFamilyIndex;
     uint32_t mMaxVertexAttribDivisor;
     VkDeviceSize mMaxVertexAttribStride;
+    VkDeviceSize mMinImportedHostPointerAlignment;
     VkDevice mDevice;
     AtomicSerialFactory mQueueSerialFactory;
     AtomicSerialFactory mShaderSerialFactory;
