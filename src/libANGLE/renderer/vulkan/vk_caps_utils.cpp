@@ -484,7 +484,8 @@ namespace vk
 bool CanSupportGPUShader5EXT(const VkPhysicalDeviceFeatures &features)
 {
     // We use the following Vulkan features to implement EXT_gpu_shader5:
-    // - shaderImageGatherExtended: textureGatherOffset family of functions
+    // - shaderImageGatherExtended: textureGatherOffset with non-constant offset and
+    //   textureGatherOffsets family of functions.
     // - shaderSampledImageArrayDynamicIndexing and shaderUniformBufferArrayDynamicIndexing:
     //   dynamically uniform indices for samplers and uniform buffers.
     // - shaderStorageBufferArrayDynamicIndexing: While EXT_gpu_shader5 doesn't require dynamically

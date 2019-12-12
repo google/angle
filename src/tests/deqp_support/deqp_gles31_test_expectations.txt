@@ -709,5 +709,4 @@
 
 // EXT_gpu_shader5: Note: this extension is not yet fully implemented, so should be disabled in the
 // Vulkan backend for the ES 3.1 conformance run.
-3569 VULKAN : dEQP-GLES31.functional.texture.gather.offset_dynamic.* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.texture.gather.offsets.* = FAIL

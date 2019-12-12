@@ -5644,7 +5644,8 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
     const TFunction *func = functionCall->getFunction();
     if (BuiltInGroup::isTextureGather(func))
     {
-        bool isTextureGatherOffset = BuiltInGroup::isTextureGatherOffset(func);
+        bool isTextureGatherOffsetOrOffsets =
+            BuiltInGroup::isTextureGatherOffset(func) || BuiltInGroup::isTextureGatherOffsets(func);
         TIntermNode *componentNode = nullptr;
         TIntermSequence *arguments = functionCall->getSequence();
         ASSERT(arguments->size() >= 2u && arguments->size() <= 4u);
@@ -5658,8 +5659,8 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                if ((!isTextureGatherOffset && arguments->size() == 3u) ||
-                    (isTextureGatherOffset && arguments->size() == 4u))
+                if ((!isTextureGatherOffsetOrOffsets && arguments->size() == 3u) ||
+                    (isTextureGatherOffsetOrOffsets && arguments->size() == 4u))
                 {
                     componentNode = arguments->back();
                 }
@@ -5667,7 +5668,7 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
             case EbtSamplerCube:
             case EbtISamplerCube:
             case EbtUSamplerCube:
-                ASSERT(!isTextureGatherOffset);
+                ASSERT(!isTextureGatherOffsetOrOffsets);
                 if (arguments->size() == 3u)
                 {
                     componentNode = arguments->back();
@@ -5703,77 +5704,77 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
     }
 }
 
-void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
+void TParseContext::checkTextureOffset(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
-    const TFunction *func                  = functionCall->getFunction();
-    TIntermNode *offset                    = nullptr;
-    TIntermSequence *arguments             = functionCall->getSequence();
-    bool useTextureGatherOffsetConstraints = false;
-    if (BuiltInGroup::isTextureOffsetNoBias(func))
+    const TFunction *func      = functionCall->getFunction();
+    TIntermNode *offset        = nullptr;
+    TIntermSequence *arguments = functionCall->getSequence();
+
+    if (BuiltInGroup::isTextureOffsetNoBias(func) ||
+        BuiltInGroup::isTextureGatherOffsetNoComp(func) ||
+        BuiltInGroup::isTextureGatherOffsetsNoComp(func))
     {
         offset = arguments->back();
     }
-    else if (BuiltInGroup::isTextureOffsetBias(func))
+    else if (BuiltInGroup::isTextureOffsetBias(func) ||
+             BuiltInGroup::isTextureGatherOffsetComp(func) ||
+             BuiltInGroup::isTextureGatherOffsetsComp(func))
     {
-        // A bias parameter follows the offset parameter.
+        // A bias or comp parameter follows the offset parameter.
         ASSERT(arguments->size() >= 3);
         offset = (*arguments)[2];
     }
-    else if (BuiltInGroup::isTextureGatherOffset(func))
+
+    // If not one of the above built-ins, there's nothing to do here.
+    if (offset == nullptr)
     {
-        ASSERT(arguments->size() >= 3u);
-        const TIntermTyped *sampler = arguments->front()->getAsTyped();
-        ASSERT(sampler != nullptr);
-        switch (sampler->getBasicType())
-        {
-            case EbtSampler2D:
-            case EbtISampler2D:
-            case EbtUSampler2D:
-            case EbtSampler2DArray:
-            case EbtISampler2DArray:
-            case EbtUSampler2DArray:
-                offset = (*arguments)[2];
-                break;
-            case EbtSampler2DShadow:
-            case EbtSampler2DArrayShadow:
-                offset = (*arguments)[3];
-                break;
-            default:
-                UNREACHABLE();
-                break;
-        }
-        useTextureGatherOffsetConstraints = true;
+        return;
     }
-    if (offset != nullptr)
+
+    // ES3.2 or ES3.1's EXT_gpu_shader5 allow non-const offsets to be passed to textureGatherOffset.
+    bool textureGatherOffsetMustBeConst =
+        mShaderVersion <= 310 && !isExtensionEnabled(TExtension::EXT_gpu_shader5);
+
+    TIntermConstantUnion *offsetConstantUnion = offset->getAsConstantUnion();
+    bool isOffsetConst =
+        offset->getAsTyped()->getQualifier() == EvqConst && offsetConstantUnion != nullptr;
+
+    bool isTextureGatherOffset = BuiltInGroup::isTextureGatherOffset(func);
+    bool offsetMustBeConst     = !isTextureGatherOffset || textureGatherOffsetMustBeConst;
+
+    if (!isOffsetConst && offsetMustBeConst)
     {
-        TIntermConstantUnion *offsetConstantUnion = offset->getAsConstantUnion();
-        if (offset->getAsTyped()->getQualifier() != EvqConst || !offsetConstantUnion)
+        error(functionCall->getLine(), "Texture offset must be a constant expression",
+              func->name());
+        return;
+    }
+
+    // We cannot verify non-constant offsets to textureGatherOffset.
+    if (offsetConstantUnion == nullptr)
+    {
+        return;
+    }
+
+    bool isTextureGatherOffsets            = BuiltInGroup::isTextureGatherOffsets(func);
+    bool useTextureGatherOffsetConstraints = isTextureGatherOffset || isTextureGatherOffsets;
+
+    ASSERT(offsetConstantUnion->getBasicType() == EbtInt);
+    size_t size                  = offsetConstantUnion->getType().getObjectSize();
+    const TConstantUnion *values = offsetConstantUnion->getConstantValue();
+    int minOffsetValue =
+        useTextureGatherOffsetConstraints ? mMinProgramTextureGatherOffset : mMinProgramTexelOffset;
+    int maxOffsetValue =
+        useTextureGatherOffsetConstraints ? mMaxProgramTextureGatherOffset : mMaxProgramTexelOffset;
+    for (size_t i = 0u; i < size; ++i)
+    {
+        int offsetValue = values[i].getIConst();
+        if (offsetValue > maxOffsetValue || offsetValue < minOffsetValue)
         {
-            error(functionCall->getLine(), "Texture offset must be a constant expression",
-                  func->name());
-        }
-        else
-        {
-            ASSERT(offsetConstantUnion->getBasicType() == EbtInt);
-            size_t size                  = offsetConstantUnion->getType().getObjectSize();
-            const TConstantUnion *values = offsetConstantUnion->getConstantValue();
-            int minOffsetValue = useTextureGatherOffsetConstraints ? mMinProgramTextureGatherOffset
-                                                                   : mMinProgramTexelOffset;
-            int maxOffsetValue = useTextureGatherOffsetConstraints ? mMaxProgramTextureGatherOffset
-                                                                   : mMaxProgramTexelOffset;
-            for (size_t i = 0u; i < size; ++i)
-            {
-                int offsetValue = values[i].getIConst();
-                if (offsetValue > maxOffsetValue || offsetValue < minOffsetValue)
-                {
-                    std::stringstream tokenStream = sh::InitializeStream<std::stringstream>();
-                    tokenStream << offsetValue;
-                    std::string token = tokenStream.str();
-                    error(offset->getLine(), "Texture offset value out of valid range",
-                          token.c_str());
-                }
-            }
+            std::stringstream tokenStream = sh::InitializeStream<std::stringstream>();
+            tokenStream << offsetValue;
+            std::string token = tokenStream.str();
+            error(offset->getLine(), "Texture offset value out of valid range", token.c_str());
         }
     }
 }
@@ -6037,7 +6038,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
             TIntermAggregate *callNode =
                 TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, &fnCall->arguments());
             callNode->setLine(loc);
-            checkTextureOffsetConst(callNode);
+            checkTextureOffset(callNode);
             checkTextureGather(callNode);
             checkImageMemoryAccessForBuiltinFunctions(callNode);
             functionCallRValueLValueErrorCheck(fnCandidate, callNode);
