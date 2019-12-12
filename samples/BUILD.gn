@@ -17,6 +17,7 @@ config("sample_util_config") {
 }
 
 angle_static_library("sample_util") {
+  testonly = true
   sources = [
     "sample_util/SampleApplication.cpp",
     "sample_util/SampleApplication.h",
@@ -53,6 +54,7 @@ template("angle_sample") {
   }
 
   angle_executable(target_name) {
+    testonly = true
     forward_variables_from(invoker,
                            [
                              "cflags",

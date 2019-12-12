@@ -1041,6 +1041,7 @@ config("angle_util_loader_config") {
 }
 
 angle_source_set("angle_util_loader_headers") {
+  testonly = true
   sources = [
     "util/egl_loader_autogen.h",
     "util/gles_loader_autogen.h",
@@ -1057,6 +1058,7 @@ angle_source_set("angle_util_loader_headers") {
 }
 
 angle_source_set("angle_util_loader") {
+  testonly = true
   defines = [ "LIBANGLE_UTIL_IMPLEMENTATION" ]
 
   sources = [
@@ -1102,6 +1104,7 @@ foreach(is_shared_library,
   }
 
   target(library_type, library_name) {
+    testonly = true
     sources = util_sources
     deps = [
       ":angle_common",

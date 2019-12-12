@@ -591,6 +591,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
   template("angle_deqp_source_set") {
     angle_source_set(target_name) {
+      testonly = true
       forward_variables_from(invoker, "*")
       suppressed_configs += deqp_undefine_configs
 
@@ -808,6 +809,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
                                "data_deps",
                              ])
 
+      testonly = true
+
       deps += [
         ":angle_deqp_libtester",
         "$angle_root:angle_util",
@@ -826,6 +829,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
     if (!build_with_chromium) {
       angle_executable("angle_deqp_${_api}_no_gtest") {
+        testonly = true
         sources = [
           "deqp_support/angle_deqp_tests_main.cpp",
         ]
