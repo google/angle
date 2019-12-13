@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "47763acd_6cc1ae3d",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12c73869_9c2975ff",
+      "range": {
+        "startLine": 502,
+        "startChar": 8,
+        "endLine": 502,
+        "endChar": 87
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ef274cf_c5f6c876",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ba15d19_4a4412e6",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ef274cf_c5f6c876",
+      "range": {
+        "startLine": 1282,
+        "startChar": 21,
+        "endLine": 1282,
+        "endChar": 36
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f3fa0c02_952e05d7",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1294,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Changed `originalFormat` to `originalReadFormat` to clear potential confusion here.\n`originalReadFormat` stands for the read format user passed into glReadPixels so it could be GL_RGBA. The workaround chose to use GL_RED/GL_RG which is `format` here.",
+      "parentUuid": "4435f54c_4fbafbb2",
+      "range": {
+        "startLine": 1293,
+        "startChar": 0,
+        "endLine": 1294,
+        "endChar": 56
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74275f21_bcc47914",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "571fd5a1_84b36e27",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1311,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74275f21_bcc47914",
+      "range": {
+        "startLine": 1311,
+        "startChar": 11,
+        "endLine": 1311,
+        "endChar": 34
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "610da1b5_2792099e",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -108,6 +204,24 @@
       "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96858f1c_847ed1bb",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1316,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "The reason is I was sharing the pixels array for both format. Unnecessary trick for glReadPixels path as suggested later. Already changed to front to back order anyway.",
+      "parentUuid": "610da1b5_2792099e",
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -158,6 +272,30 @@
     },
     {
       "key": {
+        "uuid": "ae1eb89c_09c13c71",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1317,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "490aa7a4_5dcbe7dc",
+      "range": {
+        "startLine": 1317,
+        "startChar": 13,
+        "endLine": 1317,
+        "endChar": 23
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f9fa95e_e3a4abc3",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -181,6 +319,30 @@
     },
     {
       "key": {
+        "uuid": "2ffedfda_1adb24e6",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f9fa95e_e3a4abc3",
+      "range": {
+        "startLine": 1319,
+        "startChar": 31,
+        "endLine": 1319,
+        "endChar": 47
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45825b7d_8d1a9b09",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -198,6 +360,24 @@
     },
     {
       "key": {
+        "uuid": "47f8845a_a5eadcdc",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1321,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45825b7d_8d1a9b09",
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04d310fd_17f7b882",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -212,6 +392,24 @@
       "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4773a3a5_9160b819",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1330,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Test against different pixel pack mode settings added.",
+      "parentUuid": "04d310fd_17f7b882",
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -286,6 +484,30 @@
     },
     {
       "key": {
+        "uuid": "7187508e_5a4eeeda",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1339,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ce6ea43_58f50b6d",
+      "range": {
+        "startLine": 1339,
+        "startChar": 26,
+        "endLine": 1339,
+        "endChar": 36
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf02d5ca_080b61cf",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -309,6 +531,30 @@
     },
     {
       "key": {
+        "uuid": "d4f90a09_4f8a2c5d",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "More restrictions added as suggestion to clear any confusion.",
+      "parentUuid": "cf02d5ca_080b61cf",
+      "range": {
+        "startLine": 1382,
+        "startChar": 15,
+        "endLine": 1382,
+        "endChar": 30
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29f1de5a_676b02a6",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 5
@@ -323,6 +569,24 @@
       "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22bc78b1_75096fd5",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29f1de5a_676b02a6",
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -349,6 +613,30 @@
     },
     {
       "key": {
+        "uuid": "c3304220_eeca8833",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4157,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4ad1f53_b2448f08",
+      "range": {
+        "startLine": 4157,
+        "startChar": 9,
+        "endLine": 4157,
+        "endChar": 36
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d5e0a85_aaa9fcd1",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 5
@@ -363,6 +651,24 @@
       "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23fa119e_97f316fa",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4210,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "This is test against different \u003cwidth, height\u003e combinations. Each pixel is checked in testReadPixelsRGBAWithRange. This part is restructured anyway.",
+      "parentUuid": "0d5e0a85_aaa9fcd1",
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -386,6 +692,30 @@
       "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57791ab4_e66d361d",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4252,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T02:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29995202_cbdacd56",
+      "range": {
+        "startLine": 4252,
+        "startChar": 8,
+        "endLine": 4252,
+        "endChar": 30
+      },
+      "revId": "831329aa69b13e32a30051ae60a776ada8a808d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
