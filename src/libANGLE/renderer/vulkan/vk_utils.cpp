@@ -644,7 +644,7 @@ PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP = null
 
 void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance)
 {
-    GET_FUNC(vkCreateStreamDescriptorSurfaceGGP);
+    GET_INSTANCE_FUNC(vkCreateStreamDescriptorSurfaceGGP);
 }
 #endif  // defined(ANGLE_PLATFORM_GGP)
 
