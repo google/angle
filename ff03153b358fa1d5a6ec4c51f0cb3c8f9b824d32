@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cc5e87f_4ae271ec",
+        "filename": "include/platform/FeaturesGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-13T19:17:21Z",
+      "side": 1,
+      "message": "I would put Norm16 somewhere in the name. Out of context, it looks like this flag is being applied to every format/type combination.",
+      "range": {
+        "startLine": 392,
+        "startChar": 12,
+        "endLine": 392,
+        "endChar": 56
+      },
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "648bfcd1_0f57c67a",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-13T19:17:21Z",
+      "side": 1,
+      "message": "typo.\n\nAlso, CamelCase, remove `static` and move to the anonymous namespace at the top of the file.",
+      "range": {
+        "startLine": 1282,
+        "startChar": 46,
+        "endLine": 1282,
+        "endChar": 52
+      },
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcc51a77_3d3c2519",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-13T19:17:21Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it be much simpler to use GLushort pointers, and then simply do something like this?\n\n    dst[0] \u003d src[0];\n    dst[1] \u003d format \u003d\u003d GL_RG ? src[1] : 0;\n    dst[2] \u003d 0;\n    dst[3] \u003d 0xFFFF;",
+      "range": {
+        "startLine": 1342,
+        "startChar": 0,
+        "endLine": 1350,
+        "endChar": 41
+      },
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ffbbac6_c1708f9c",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4195,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-13T19:17:21Z",
+      "side": 1,
+      "message": "If you do `EXPECT_EQ(color.R, curPixel[0]) \u003c\u003c some \u003c\u003c info;` it would go a long way to tell which combination of parameters ended up failing, if that ever happens.",
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d9be57e_fd336bf4",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4299,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-13T19:17:21Z",
+      "side": 1,
+      "message": "I love that these tests are becoming so much more extensive. Would you mind splitting the test (as in the TEST_P declarations) into many, perhaps even one for each testNorm16Texture call? That would:\n\n- Make it easier to spot which format/type is the problem if there\u0027s a failure\n- Allow sharding to split the testing and do them in parallel.",
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
