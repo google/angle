@@ -1156,14 +1156,14 @@ foreach(is_shared_library,
       sources += util_fuchsia_sources
       public_deps += [
         "src/common/fuchsia_egl",
-        "//third_party/fuchsia-sdk/sdk:async_loop_cpp",
-        "//third_party/fuchsia-sdk/sdk:async_loop_default",
+        "//third_party/fuchsia-sdk/sdk:async-loop-cpp",
+        "//third_party/fuchsia-sdk/sdk:async-loop-default",
         "//third_party/fuchsia-sdk/sdk:fdio",
-        "//third_party/fuchsia-sdk/sdk:images",
+        "//third_party/fuchsia-sdk/sdk:fuchsia-images",
+        "//third_party/fuchsia-sdk/sdk:fuchsia-ui-policy",
+        "//third_party/fuchsia-sdk/sdk:fuchsia-ui-scenic",
+        "//third_party/fuchsia-sdk/sdk:fuchsia-ui-views",
         "//third_party/fuchsia-sdk/sdk:scenic_cpp",
-        "//third_party/fuchsia-sdk/sdk:ui_policy",
-        "//third_party/fuchsia-sdk/sdk:ui_scenic",
-        "//third_party/fuchsia-sdk/sdk:ui_views",
       ]
     } else if (use_ozone) {
       sources += util_ozone_sources
