@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "26e4a7d2_1ea32f79",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-13T18:16:40Z",
+      "side": 1,
+      "message": "Well strcmp would stop on the first difference, so it should at most check one character. In other words, `strlen(str) \u003d\u003d 0` is O(n) but `strcmp(str, \"\") \u003d\u003d 0` is O(1)\n\nIn this particular case, we ended up with many cases of `QUALIFIER-name( )` which meant glslang wrapper\u0027s IntermediateShaderSource::Token::args would always be a non-empty string. That meant an extra memory allocation for that string on every qualifier and some extra string concats based on that as well.\n\nI\u0027m not saying it\u0027s a big cost, but this single extra space is not exactly just some extra space ;)",
+      "parentUuid": "2bc62912_9e625ae5",
+      "range": {
+        "startLine": 176,
+        "startChar": 35,
+        "endLine": 176,
+        "endChar": 60
+      },
+      "revId": "9ab01f1cef8d7964f8917301adcad067d1178cce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a784cb07_bfdcfa14",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 4
@@ -120,6 +144,24 @@
       "side": 1,
       "message": "Cool, thanks for looking into that.\n\nThe obvious next question is: can the second loop be removed, since presumably getActiveAttributes() already only contains active attributes?   Or, should the distinction between getAllAttributes() and getActiveAttributes() be removed and we only need getAllAttributes(), since we will clean up mProgramInputs for shaderVersion \u003e\u003d 300 later anyway.\n\nThat\u0027s probably a question for another time though.",
       "parentUuid": "47d495d1_c443603e",
+      "revId": "9ab01f1cef8d7964f8917301adcad067d1178cce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37ce3dde_a61604c8",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-13T18:16:40Z",
+      "side": 1,
+      "message": "Took a quick look, in ES3 we get all attributes, assign locations (and check for aliasing etc) and then prune it. The loop can\u0027t be removed as is then. Probably if we use `getAllAttributes()` in ES 2 as well, we would generate errors if inactive attributes are aliased but that shouldn\u0027t happen per spec (my guess).",
+      "parentUuid": "1f3ce923_914ae905",
       "revId": "9ab01f1cef8d7964f8917301adcad067d1178cce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
