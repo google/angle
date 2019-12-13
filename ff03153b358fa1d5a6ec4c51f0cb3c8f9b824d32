@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b3b48f9a_79ac3242",
+        "filename": "include/platform/FeaturesGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T21:38:42Z",
+      "side": 1,
+      "message": "Done. For the second part I now puts detecting logic of comparing format \u003d\u003d GL_RGBA, type \u003d\u003d GL_UNSIGNED_SHORT, attachmentReadFormat \u003d\u003d GL_RED || GL_RG at each if-statement referencing this flag. Hopefully that\u0027s what you intend.",
+      "parentUuid": "9cc5e87f_4ae271ec",
+      "range": {
+        "startLine": 392,
+        "startChar": 12,
+        "endLine": 392,
+        "endChar": 56
+      },
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "648bfcd1_0f57c67a",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 8
@@ -45,6 +69,30 @@
       "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "505d0dcc_bb5f313f",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T21:38:42Z",
+      "side": 1,
+      "message": "Done. I assume it\u0027s the EXT that also needs be Ext.",
+      "parentUuid": "648bfcd1_0f57c67a",
+      "range": {
+        "startLine": 1282,
+        "startChar": 46,
+        "endLine": 1282,
+        "endChar": 52
+      },
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b2691854_64dfc870",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T21:38:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcc51a77_3d3c2519",
+      "range": {
+        "startLine": 1342,
+        "startChar": 0,
+        "endLine": 1350,
+        "endChar": 41
+      },
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ffbbac6_c1708f9c",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 8
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "2acb2b52_13c18955",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4195,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T21:38:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ffbbac6_c1708f9c",
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d9be57e_fd336bf4",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 8
@@ -102,6 +192,24 @@
       "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e1ae5f4_5a23e686",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4299,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-13T21:38:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d9be57e_fd336bf4",
+      "revId": "ff03153b358fa1d5a6ec4c51f0cb3c8f9b824d32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
