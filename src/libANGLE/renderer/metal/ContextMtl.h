@@ -421,6 +421,9 @@ class ContextMtl : public ContextImpl, public mtl::Context
     mtl::DepthStencilDesc mDepthStencilDesc;
     mtl::BlendDesc mBlendDesc;
     MTLClearColor mClearColor;
+    uint32_t mClearStencil    = 0;
+    uint32_t mStencilRefFront = 0;
+    uint32_t mStencilRefBack  = 0;
     MTLViewport mViewport;
     MTLScissorRect mScissorRect;
     MTLWinding mWinding;

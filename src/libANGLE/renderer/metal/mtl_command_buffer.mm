@@ -512,6 +512,9 @@ RenderCommandEncoder &RenderCommandEncoder::setDepthBias(float depthBias,
 }
 RenderCommandEncoder &RenderCommandEncoder::setStencilRefVals(uint32_t frontRef, uint32_t backRef)
 {
+    // Metal has some bugs when reference values are larger than 0xff
+    ASSERT(frontRef == (frontRef & kStencilMaskAll));
+    ASSERT(backRef == (backRef & kStencilMaskAll));
     [get() setStencilFrontReferenceValue:frontRef backReferenceValue:backRef];
 
     return *this;
