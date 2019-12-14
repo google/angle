@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8ced5ef4_746eaa44",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-14T03:43:07Z",
+      "side": 1,
+      "message": "Not the EXT actually, but the R!\n\n(Personally I prefer Ext, but ANGLE is doing UPPERCASE acronyms)",
+      "range": {
+        "startLine": 235,
+        "startChar": 14,
+        "endLine": 235,
+        "endChar": 15
+      },
+      "revId": "3c4b95607c46ebbda6dd58ba72501481c7fe524f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cebd444b_2491a645",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 11
@@ -36,6 +59,24 @@
       "writtenOn": "2019-12-14T00:39:43Z",
       "side": 1,
       "message": "This memcpy is a little problematic. If the user used the GL_PACK_ROW_LENGTH / GL_PACK_SKIP_ROWS / GL_PACK_SKIP_PIXELS parameters to read back a sub-rectangle of the framebuffer, they would expect the data that wasn\u0027t read back to be untouched.\n\nThe way this workaround is currently structured, it will overwrite all of the data before the first pixel read back from the driver, and can also overwrite other data at the beginning and end of rows in the middle of the image.\n\nThe safest way to express this workaround would be to first read back into a temporary buffer, and then copy from that temporary buffer into the user\u0027s buffer, row by row, not touching any pixels the user didn\u0027t intend to touch.\n\nOne way to structure this would be to write a class like \"ScopedExtTextureNorm16ReadbackWorkaround\" and pass in its constructor all of the information needed in this function. So at call sites below like readPixelsRowByRow and readPixelsAllAtOnce:\n\n  ScopedExtTextureNorm16ReadbackWorkaround workaround(context, area, originalReadFormat, ...);\n  GLubyte* readBackPixels \u003d workaround.pixels();  // This would return either an internally-allocated temporary buffer, or the user\u0027s original pixels, depending on whether the workaround is actually needed\n  // Rest of body of readPixelsRowByRow or readPixelsAllAtOnce\n  return workaround.maybeDoWorkaround(); // either does the workaround, or skips it and returns angle::Result::Continue\n\nThen the destructor of the class would clean up the temporary buffer, if necessary (or just use unique_ptr in the class like you currently do and it\u0027ll happen automatically).\n\nThese are just a couple of ideas for structuring the workaround. Let\u0027s discuss more offline if you like. I think it\u0027s important to get these cases right and expand out the tests because we don\u0027t want to have to revisit this code later.",
+      "revId": "3c4b95607c46ebbda6dd58ba72501481c7fe524f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc364599_cb122b81",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-14T03:43:07Z",
+      "side": 1,
+      "message": "Looking at it again, yes, this also seems more efficient. Effectively, instead of reading into the user buffer, then rearrange into temp and then copy back to user buffer, you can just read into temp, then rearrange into user buffer.",
+      "parentUuid": "a6594dcc_edc14c14",
       "revId": "3c4b95607c46ebbda6dd58ba72501481c7fe524f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -157,6 +198,29 @@
     },
     {
       "key": {
+        "uuid": "5342996b_2a767d9f",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4294,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-14T03:43:07Z",
+      "side": 1,
+      "message": "Can be moved inside testNorm16Texture.",
+      "range": {
+        "startLine": 4292,
+        "startChar": 0,
+        "endLine": 4294,
+        "endChar": 71
+      },
+      "revId": "3c4b95607c46ebbda6dd58ba72501481c7fe524f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30b13f81_fec4d673",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 11
@@ -173,6 +237,52 @@
         "startChar": 9,
         "endLine": 4324,
         "endChar": 33
+      },
+      "revId": "3c4b95607c46ebbda6dd58ba72501481c7fe524f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa3f719a_d7d029c6",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4324,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-14T03:43:07Z",
+      "side": 1,
+      "message": "You can do ANGLE_SKIP_TEST_IF instead. Same with the tests below.",
+      "range": {
+        "startLine": 4324,
+        "startChar": 4,
+        "endLine": 4324,
+        "endChar": 36
+      },
+      "revId": "3c4b95607c46ebbda6dd58ba72501481c7fe524f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "347ff7c1_02f0175c",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4389,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-14T03:43:07Z",
+      "side": 1,
+      "message": "testNorm16Render as ken pointed out.",
+      "range": {
+        "startLine": 4389,
+        "startChar": 4,
+        "endLine": 4389,
+        "endChar": 21
       },
       "revId": "3c4b95607c46ebbda6dd58ba72501481c7fe524f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
