@@ -13,11 +13,18 @@ declare_args() {
   build_angle_gles1_conform_tests = false
 }
 
-angle_executable("test_utils_unittest_helper") {
-  sources = test_utils_unittest_helper_sources
+angle_test("test_utils_unittest_helper") {
+  standalone_harness = true
+
+  sources = [
+    "../../util/test_utils_unittest_helper.cpp",
+    "../../util/test_utils_unittest_helper.h",
+    "test_utils/angle_test_instantiate.h",
+    "test_utils/runner/TestSuite_unittest.cpp",
+  ]
 
   deps = [
-    "${angle_root}:angle_common",
+    "$angle_root:angle_common",
   ]
 }
 

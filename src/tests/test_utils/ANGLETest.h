@@ -625,14 +625,4 @@ bool IsGLExtensionRequestable(const std::string &extName);
 
 extern angle::PlatformMethods gDefaultPlatformMethods;
 
-#define ANGLE_SKIP_TEST_IF(COND)                                  \
-    do                                                            \
-    {                                                             \
-        if (COND)                                                 \
-        {                                                         \
-            std::cout << "Test skipped: " #COND "." << std::endl; \
-            return;                                               \
-        }                                                         \
-    } while (0)
-
 #endif  // ANGLE_TESTS_ANGLE_TEST_H_

@@ -189,11 +189,14 @@ set_defaults("angle_test") {
   public_deps = []
   sources = []
   data = []
+  defines = []
   main = ""
   suppressed_configs = angle_remove_configs
 
-  # TODO(jmadill): Migrate to standalone harness. http://anglebug.com/3162
-  if (build_with_chromium) {
+  # By default use the Chromium harness in Chromium. Can be overriden in a target.
+  standalone_harness = !build_with_chromium
+
+  if (!standalone_harness) {
     suppressed_configs -= [ "//build/config/compiler:default_include_dirs" ]
   }
 
@@ -286,18 +289,6 @@ template("angle_static_library") {
 }
 
 template("angle_test") {
-  _googletest_deps = [
-    "//testing/gmock",
-    "//testing/gtest",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest",
-  ]
-
-  # TODO(jmadill): Migrate to standalone harness. http://anglebug.com/3162
-  if (build_with_chromium) {
-    _googletest_deps += [ "//base/test:test_support" ]
-  }
-
   test(target_name) {
     forward_variables_from(invoker,
                            "*",
@@ -311,9 +302,10 @@ template("angle_test") {
     forward_variables_from(invoker, [ "visibility" ])
 
     configs += invoker.configs
-    configs -= invoker.suppressed_configs
-    configs -= [ angle_root + ":constructor_and_destructor_warnings" ]
-    configs -= [ angle_root + ":extra_warnings" ]
+    configs -= invoker.suppressed_configs + [
+                 "$angle_root:constructor_and_destructor_warnings",
+                 "$angle_root:extra_warnings",
+               ]
 
     if (is_linux && !is_component_build) {
       # Set rpath to find shared libs in a non-component build.
@@ -321,22 +313,40 @@ template("angle_test") {
     }
 
     if (is_android) {
-      configs += [ angle_root + ":build_id_config" ]
-      if (build_with_chromium) {
-        configs -= [ "//build/config/android:hide_all_but_jni" ]
-      }
+      configs += [ "$angle_root:build_id_config" ]
     }
 
-    deps += _googletest_deps + [
-              "$angle_root:angle_common",
-              "$angle_root:includes",
-              "$angle_root/util:angle_test_utils",
-            ]
+    deps += [
+      "$angle_root:angle_common",
+      "$angle_root:includes",
+      "$angle_root/third_party/rapidjson:rapidjson",
+      "$angle_root/util:angle_test_utils",
+      "//testing/gmock",
+      "//testing/gtest",
+      "//third_party/googletest:gmock",
+      "//third_party/googletest:gtest",
+    ]
 
-    if (build_with_chromium) {
-      sources += [ "//gpu/${invoker.main}.cc" ]
+    sources += [
+      "$angle_root/src/tests/test_utils/runner/TestSuite.cpp",
+      "$angle_root/src/tests/test_utils/runner/TestSuite.h",
+    ]
+
+    # To use the Chromium test infrastructure we must currently use the //base test launcher.
+    # Eventually we could switch to using standalone testing. See http://crbug.com/837741
+    if (standalone_harness) {
+      if (invoker.main != "") {
+        sources += [ "${invoker.main}.cpp" ]
+      }
     } else {
-      sources += [ "${invoker.main}.cpp" ]
+      if (invoker.main != "") {
+        sources += [ "//gpu/${invoker.main}.cc" ]
+      }
+      deps += [ "//base/test:test_support" ]
+
+      if (is_android) {
+        configs -= [ "//build/config/android:hide_all_but_jni" ]
+      }
     }
   }
 }
