@@ -11,13 +11,11 @@
 #include <windows.h>
 #include <array>
 
-#include "util/random_utils.h"
-
 namespace angle
 {
 void SetLowPriorityProcess()
 {
-    SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
+    ::SetPriorityClass(::GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
 }
 
 bool StabilizeCPUForBenchmarking()

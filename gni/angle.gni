@@ -330,6 +330,7 @@ template("angle_test") {
     deps += _googletest_deps + [
               "$angle_root:angle_common",
               "$angle_root:includes",
+              "$angle_root/util:angle_test_utils",
             ]
 
     if (build_with_chromium) {

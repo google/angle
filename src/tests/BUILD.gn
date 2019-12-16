@@ -814,6 +814,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       deps += [
         ":angle_deqp_libtester",
         "$angle_root:angle_util",
+        "$angle_root/util:angle_test_utils",
       ]
 
       suppressed_configs += deqp_undefine_configs

@@ -249,25 +249,6 @@ config("angle_common_config") {
   }
 }
 
-if (is_win && !angle_is_winuwp) {
-  angle_source_set("angle_stack_walker") {
-    sources = [
-      "util/windows/third_party/StackWalker/src/StackWalker.cpp",
-      "util/windows/third_party/StackWalker/src/StackWalker.h",
-    ]
-
-    if (is_clang) {
-      cflags_cc = [
-        "-Wno-c++98-compat-extra-semi",
-        "-Wno-missing-declarations",
-        "-Wno-switch",
-      ]
-    } else {
-      cflags_cc = [ "/wd4740" ]
-    }
-  }
-}
-
 angle_source_set("angle_system_utils") {
   sources = angle_system_utils_sources
 }
@@ -1109,17 +1090,16 @@ foreach(is_shared_library,
     deps = [
       ":angle_common",
       ":angle_util_loader_headers",
+      "util:angle_test_utils",
     ]
     public_deps = []
     libs = []
 
     if (is_win && !angle_is_winuwp) {
       sources += util_win_sources
-      deps += [ ":angle_stack_walker" ]
     }
 
     if (is_linux) {
-      sources += util_linux_sources
       libs += [
         "rt",
         "dl",

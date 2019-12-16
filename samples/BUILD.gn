@@ -16,7 +16,7 @@ config("sample_util_config") {
   include_dirs = [ "sample_util" ]
 }
 
-angle_static_library("sample_util") {
+angle_source_set("sample_util") {
   testonly = true
   sources = [
     "sample_util/SampleApplication.cpp",
@@ -35,6 +35,7 @@ angle_static_library("sample_util") {
     "../:angle_common",
     "../:angle_util",
     "../:angle_util_loader_headers",
+    "../util:angle_test_utils",
   ]
   configs += [ "../:library_name_config" ]
   public_configs = [

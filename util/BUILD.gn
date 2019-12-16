@@ -1,0 +1,56 @@
+# Copyright 2019 The ANGLE Project Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../gni/angle.gni")
+
+if (is_win && !angle_is_winuwp) {
+  angle_source_set("angle_stack_walker") {
+    sources = [
+      "windows/third_party/StackWalker/src/StackWalker.cpp",
+      "windows/third_party/StackWalker/src/StackWalker.h",
+    ]
+
+    if (is_clang) {
+      cflags_cc = [
+        "-Wno-c++98-compat-extra-semi",
+        "-Wno-missing-declarations",
+        "-Wno-switch",
+      ]
+    } else {
+      cflags_cc = [ "/wd4740" ]
+    }
+  }
+}
+
+config("angle_test_util_config") {
+  include_dirs = [ ".." ]
+}
+
+angle_source_set("angle_test_utils") {
+  public_configs = [ ":angle_test_util_config" ]
+  deps = [
+    "$angle_root:angle_common",
+  ]
+  sources = [
+    "Timer.cpp",
+    "Timer.h",
+    "test_utils.cpp",
+    "test_utils.h",
+  ]
+
+  if (is_win) {
+    sources += [
+      "windows/test_utils_win.cpp",
+      "windows/win32/test_utils_win32.cpp",
+    ]
+    if (!angle_is_winuwp) {
+      deps += [ ":angle_stack_walker" ]
+    }
+  } else {
+    sources += [
+      "posix/crash_handler_posix.cpp",
+      "posix/test_utils_posix.cpp",
+    ]
+  }
+}
