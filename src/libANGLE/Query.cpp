@@ -14,7 +14,7 @@
 namespace gl
 {
 Query::Query(rx::GLImplFactory *factory, QueryType type, QueryID id)
-    : RefCountObject(id), mQuery(factory->createQuery(type)), mLabel()
+    : RefCountObject(factory->generateSerial(), id), mQuery(factory->createQuery(type)), mLabel()
 {}
 
 Query::~Query()

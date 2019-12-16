@@ -1232,7 +1232,8 @@ ShaderType ProgramState::getLastAttachedShaderStageType() const
 }
 
 Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, ShaderProgramID handle)
-    : mProgram(factory->createProgram(mState)),
+    : mSerial(factory->generateSerial()),
+      mProgram(factory->createProgram(mState)),
       mValidated(false),
       mLinked(false),
       mLinkResolved(true),

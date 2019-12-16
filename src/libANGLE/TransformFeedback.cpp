@@ -87,7 +87,7 @@ GLsizeiptr TransformFeedbackState::getPrimitivesDrawn() const
 TransformFeedback::TransformFeedback(rx::GLImplFactory *implFactory,
                                      TransformFeedbackID id,
                                      const Caps &caps)
-    : RefCountObject(id),
+    : RefCountObject(implFactory->generateSerial(), id),
       mState(caps.maxTransformFeedbackSeparateAttributes),
       mImplementation(implFactory->createTransformFeedback(mState))
 {

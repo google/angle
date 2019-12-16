@@ -971,6 +971,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     // Writes a program's binary to the output memory buffer.
     void serialize(const Context *context, angle::MemoryBuffer *binaryOut) const;
 
+    rx::Serial serial() const { return mSerial; }
+
   private:
     struct LinkingState;
 
@@ -1078,6 +1080,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void postResolveLink(const gl::Context *context);
 
+    rx::Serial mSerial;
     ProgramState mState;
     rx::ProgramImpl *mProgram;
 

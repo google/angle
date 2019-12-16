@@ -639,7 +639,7 @@ void TextureState::clearImageDescs()
 }
 
 Texture::Texture(rx::GLImplFactory *factory, TextureID id, TextureType type)
-    : RefCountObject(id),
+    : RefCountObject(factory->generateSerial(), id),
       mState(type),
       mTexture(factory->createTexture(mState)),
       mImplObserver(this, rx::kTextureImageImplObserverMessageIndex),

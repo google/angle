@@ -392,6 +392,8 @@ class Framebuffer final : public angle::ObserverInterface,
 
     static const FramebufferID kDefaultDrawFramebufferHandle;
 
+    rx::Serial serial() const { return mSerial; }
+
   private:
     bool detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);
     bool detachMatchingAttachment(const Context *context,
@@ -457,6 +459,7 @@ class Framebuffer final : public angle::ObserverInterface,
         mFloat32ColorAttachmentBits.set(index, format->type == GL_FLOAT);
     }
 
+    rx::Serial mSerial;
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;
 
