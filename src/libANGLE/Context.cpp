@@ -1355,7 +1355,7 @@ Query *Context::getQuery(QueryID handle, bool create, QueryType type)
     if (!query && create)
     {
         ASSERT(type != QueryType::InvalidEnum);
-        query = new Query(mImplementation->createQuery(type), handle);
+        query = new Query(mImplementation.get(), type, handle);
         query->addRef();
         mQueryMap.assign(handle, query);
     }
