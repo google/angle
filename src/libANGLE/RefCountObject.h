@@ -203,8 +203,16 @@ class OffsetBindingPointer : public BindingPointer<ObjectType>
     void assign(ObjectType *object, GLintptr offset, GLsizeiptr size)
     {
         assign(object);
-        mOffset = offset;
-        mSize   = size;
+        if (object)
+        {
+            mOffset = offset;
+            mSize   = size;
+        }
+        else
+        {
+            mOffset = 0;
+            mSize   = 0;
+        }
     }
 
   private:

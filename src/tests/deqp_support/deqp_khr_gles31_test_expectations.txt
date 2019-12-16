@@ -86,9 +86,6 @@
 4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matR* = SKIP
 4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matR* = SKIP
 
-// Bug with binding the zero buffer and glBindBufferRange:
-4147 : KHR-GLES31.core.shader_storage_buffer_object.basic-binding = FAIL
-
 // Error with detecting some atomic counter buffer uses:
 4150 : KHR-GLES31.core.shader_storage_buffer_object.basic-atomic-case3-cs = FAIL
 4150 : KHR-GLES31.core.shader_storage_buffer_object.basic-atomic-case3-vsfs = FAIL
