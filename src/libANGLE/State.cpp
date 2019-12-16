@@ -2915,7 +2915,11 @@ void State::onImageStateChange(const Context *context, size_t unit)
     if (mProgram)
     {
         const ImageUnit &image = mImageUnits[unit];
-        ASSERT(image.texture.get());
+
+        // Have nothing to do here if no texture bound
+        if (!image.texture.get())
+            return;
+
         if (image.texture->hasAnyDirtyBit())
         {
             mDirtyImages.set(unit);

@@ -55,10 +55,6 @@
 // Multisampled textures:
 3565 VULKAN : KHR-GLES31.core.texture_storage_multisample.* = SKIP
 
-// 2D array and 3D textures for compute shaders:
-3810 VULKAN : KHR-GLES31.core.layout_binding.sampler2DArray_layout_binding_texture_ComputeShader = SKIP
-3810 VULKAN : KHR-GLES31.core.layout_binding.sampler3D_layout_binding_texture_ComputeShader = SKIP
-
 // Program Pipeline Objects:
 3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-draw-calls2 = FAIL
 3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-dispatches = FAIL
@@ -117,16 +113,6 @@
 
 // Blend equations:
 3586 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
-
-// Storage image front-end crash when unbinding images (given texture 0)
-4124 VULKAN : KHR-GLES31.core.layout_binding.sampler2D_layout_binding_texture_ComputeShader = SKIP
-4124 VULKAN : KHR-GLES31.core.layout_binding.block_layout_binding_block_ComputeShader = SKIP
-4124 VULKAN : KHR-GLES31.core.layout_binding.buffer_layout_binding_atomicAdd_ComputeShader = SKIP
-4124 VULKAN : KHR-GLES31.core.layout_binding.atomic_uint_layout_binding_atomic_ComputeShader = SKIP
-4124 VULKAN : KHR-GLES31.core.layout_binding.image2D_layout_binding_imageLoad_ComputeShader = SKIP
-4124 VULKAN : KHR-GLES31.core.layout_binding.image2D_layout_binding_imageLoad_FragmentShader = SKIP
-4124 VULKAN : KHR-GLES31.core.layout_binding.image2D_layout_binding_imageLoad_VertexShader = SKIP
-
 
 // Fails on Pixel2 and Pixel2 XL
 4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-elements = FAIL
