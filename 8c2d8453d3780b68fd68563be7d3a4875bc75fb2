@@ -16,6 +16,24 @@
       "revId": "8c2d8453d3780b68fd68563be7d3a4875bc75fb2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c679640_5143072c",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-16T19:28:08Z",
+      "side": 1,
+      "message": "You are reviewing PS19, most of the change here was reverted in PS23.\n\nThat said, it\u0027s because we need to pull out sampler definitions from structs, regardless of whether they are active because otherwise we produce invalid Vulkan-GLSL",
+      "parentUuid": "2c0f2b7e_c1cf7449",
+      "revId": "8c2d8453d3780b68fd68563be7d3a4875bc75fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

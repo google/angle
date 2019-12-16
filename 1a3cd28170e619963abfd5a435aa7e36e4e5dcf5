@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "63eafe9f_4a4c3a77",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveVariables.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-16T19:28:08Z",
+      "side": 1,
+      "message": "Good question. I think it does, because I do have an array in the test I added.\n\n---\n\nChecked: Looks like [0] is not added to the names here.",
+      "parentUuid": "576ff93d_689c8cbb",
+      "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44600a97_4b7ec06f",
         "filename": "src/compiler/translator/tree_ops/RemoveInactiveVariables.h",
         "patchSetId": 23
@@ -39,6 +57,30 @@
       "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b98a368a_4e0f98af",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveVariables.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-16T19:28:08Z",
+      "side": 1,
+      "message": "Technically if we pass the output type it could infer the backend, though it would look quite strange (for the interface to show it\u0027s taking the output type, even though the transformation is agnostic of output type). Luckily, doing this for the GL backend would fail quite loudly on any shader that has inactive interface variables.",
+      "parentUuid": "44600a97_4b7ec06f",
+      "range": {
+        "startLine": 11,
+        "startChar": 4,
+        "endLine": 11,
+        "endChar": 39
+      },
+      "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "4b0dfa49_264ccffd",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveVariables.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-16T19:28:08Z",
+      "side": 1,
+      "message": "You are right, I changed it to `RemoveInactiveInterfaceVariables` (it originally meant to do all, but that got hairy fast)",
+      "parentUuid": "6c9e6d76_21c19ee5",
+      "range": {
+        "startLine": 29,
+        "startChar": 22,
+        "endLine": 29,
+        "endChar": 45
+      },
+      "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bd499d3_e9da1f72",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 23
@@ -79,6 +145,24 @@
       "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b033b0a_dd475da8",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2993,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-16T19:28:08Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "8bd499d3_e9da1f72",
+      "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
