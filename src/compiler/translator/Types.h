@@ -122,7 +122,7 @@ class TType
           layoutQualifier(TLayoutQualifier::Create()),
           primarySize(ps),
           secondarySize(ss),
-          mArraySizes(nullptr),
+          mArraySizesStorage(nullptr),
           mInterfaceBlock(nullptr),
           mStructure(nullptr),
           mIsStructSpecifier(false),
@@ -140,11 +140,14 @@ class TType
           primarySize(t.primarySize),
           secondarySize(t.secondarySize),
           mArraySizes(t.mArraySizes),
+          mArraySizesStorage(t.mArraySizesStorage),
           mInterfaceBlock(t.mInterfaceBlock),
           mStructure(t.mStructure),
           mIsStructSpecifier(t.mIsStructSpecifier),
           mMangledName(t.mMangledName)
-    {}
+    {
+        t.mArraySizesStorage = nullptr;
+    }
 
     constexpr TBasicType getBasicType() const { return type; }
     void setBasicType(TBasicType t);
@@ -190,28 +193,28 @@ class TType
 
     bool isMatrix() const { return primarySize > 1 && secondarySize > 1; }
     bool isNonSquareMatrix() const { return isMatrix() && primarySize != secondarySize; }
-    bool isArray() const { return mArraySizes != nullptr && !mArraySizes->empty(); }
-    bool isArrayOfArrays() const { return isArray() && mArraySizes->size() > 1u; }
-    size_t getNumArraySizes() const { return isArray() ? mArraySizes->size() : 0; }
-    const TVector<unsigned int> *getArraySizes() const { return mArraySizes; }
+    bool isArray() const { return !mArraySizes.empty(); }
+    bool isArrayOfArrays() const { return mArraySizes.size() > 1u; }
+    size_t getNumArraySizes() const { return mArraySizes.size(); }
+    const TSpan<const unsigned int> &getArraySizes() const { return mArraySizes; }
     unsigned int getArraySizeProduct() const;
     bool isUnsizedArray() const;
     unsigned int getOutermostArraySize() const
     {
         ASSERT(isArray());
-        return mArraySizes->back();
+        return mArraySizes.back();
     }
     void makeArray(unsigned int s);
 
     // sizes contain new outermost array sizes.
-    void makeArrays(const TVector<unsigned int> &sizes);
+    void makeArrays(const TSpan<const unsigned int> &sizes);
     // Here, the array dimension value 0 corresponds to the innermost array.
     void setArraySize(size_t arrayDimension, unsigned int s);
 
     // Will set unsized array sizes according to newArraySizes. In case there are more
     // unsized arrays than there are sizes in newArraySizes, defaults to setting any
     // remaining array sizes to 1.
-    void sizeUnsizedArrays(const TVector<unsigned int> *newArraySizes);
+    void sizeUnsizedArrays(const TSpan<const unsigned int> &newArraySizes);
 
     // Will size the outermost array according to arraySize.
     void sizeOutermostUnsizedArray(unsigned int arraySize);
@@ -258,7 +261,7 @@ class TType
         size_t numArraySizesL = getNumArraySizes();
         size_t numArraySizesR = right.getNumArraySizes();
         bool arraySizesEqual  = numArraySizesL == numArraySizesR &&
-                               (numArraySizesL == 0 || *mArraySizes == *right.mArraySizes);
+                               (numArraySizesL == 0 || mArraySizes == right.mArraySizes);
         return type == right.type && primarySize == right.primarySize &&
                secondarySize == right.secondarySize && arraySizesEqual &&
                mStructure == right.mStructure;
@@ -279,8 +282,8 @@ class TType
             return numArraySizesL < numArraySizesR;
         for (size_t i = 0; i < numArraySizesL; ++i)
         {
-            if ((*mArraySizes)[i] != (*right.mArraySizes)[i])
-                return (*mArraySizes)[i] < (*right.mArraySizes)[i];
+            if (mArraySizes[i] != right.mArraySizes[i])
+                return mArraySizes[i] < right.mArraySizes[i];
         }
         if (mStructure != right.mStructure)
             return mStructure < right.mStructure;
@@ -342,12 +345,14 @@ class TType
   private:
     void invalidateMangledName();
     const char *buildMangledName() const;
+    void onArrayDimensionsChange(const TSpan<const unsigned int> &sizes);
 
     TBasicType type;
     TPrecision precision;
     TQualifier qualifier;
     bool invariant;
     bool precise;
+
     TMemoryQualifier memoryQualifier;
     TLayoutQualifier layoutQualifier;
     unsigned char primarySize;    // size of vector or cols matrix
@@ -355,7 +360,12 @@ class TType
 
     // Used to make an array type. Outermost array size is stored at the end of the vector. Having 0
     // in this vector means an unsized array.
-    TVector<unsigned int> *mArraySizes;
+    TSpan<const unsigned int> mArraySizes;
+    // Storage for mArraySizes, if any.  This is usually the case, except for constexpr TTypes which
+    // only have a valid mArraySizes (with mArraySizesStorage being nullptr).  Therefore, all
+    // modifications to array sizes happen on the storage (and if dimensions change, mArraySizes is
+    // also updated) and all reads are from mArraySizes.
+    TVector<unsigned int> *mArraySizesStorage;
 
     // This is set only in the following two cases:
     // 1) Represents an interface block.

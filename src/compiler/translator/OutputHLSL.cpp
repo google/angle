@@ -43,7 +43,7 @@ TString ArrayHelperFunctionName(const char *prefix, const TType &type)
     fnName << prefix << "_";
     if (type.isArray())
     {
-        for (unsigned int arraySize : *type.getArraySizes())
+        for (unsigned int arraySize : type.getArraySizes())
         {
             fnName << arraySize << "_";
         }

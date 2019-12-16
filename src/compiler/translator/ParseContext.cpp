@@ -1961,8 +1961,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
         // will default to setting array sizes to 1. We have not checked yet whether the initializer
         // actually is an array or not. Having a non-array initializer for an unsized array will
         // result in an error later, so we don't generate an error message here.
-        auto *arraySizes = initializer->getType().getArraySizes();
-        type->sizeUnsizedArrays(arraySizes);
+        type->sizeUnsizedArrays(initializer->getType().getArraySizes());
     }
 
     const TQualifier qualifier = type->getQualifier();
@@ -3531,7 +3530,7 @@ void TParseContext::checkIsNotUnsizedArray(const TSourceLoc &line,
     if (arrayType->isUnsizedArray())
     {
         error(line, errorMessage, token);
-        arrayType->sizeUnsizedArrays(nullptr);
+        arrayType->sizeUnsizedArrays(TSpan<const unsigned int>());
     }
 }
 
@@ -3623,7 +3622,7 @@ TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSour
     {
         if (!checkUnsizedArrayConstructorArgumentDimensionality(arguments, type, line))
         {
-            type.sizeUnsizedArrays(nullptr);
+            type.sizeUnsizedArrays(TSpan<const unsigned int>());
             return CreateZeroNode(type);
         }
         TIntermTyped *firstElement = arguments.at(0)->getAsTyped();
@@ -3634,9 +3633,9 @@ TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSour
         }
         for (size_t i = 0; i < firstElement->getType().getNumArraySizes(); ++i)
         {
-            if ((*type.getArraySizes())[i] == 0u)
+            if (type.getArraySizes()[i] == 0u)
             {
-                type.setArraySize(i, (*firstElement->getType().getArraySizes())[i]);
+                type.setArraySize(i, firstElement->getType().getArraySizes()[i]);
             }
         }
         ASSERT(!type.isUnsizedArray());
@@ -5227,7 +5226,7 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
                 return false;
         }
         // At this point, size of implicitly sized arrays should be resolved.
-        if (*left->getType().getArraySizes() != *right->getType().getArraySizes())
+        if (left->getType().getArraySizes() != right->getType().getArraySizes())
         {
             error(loc, "array size mismatch", GetOperatorString(op));
             return false;

@@ -653,9 +653,10 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
             variableOut->fields.push_back(fieldVariable);
         }
     }
-    if (auto *arraySizes = type.getArraySizes())
+    const TSpan<const unsigned int> &arraySizes = type.getArraySizes();
+    if (!arraySizes.empty())
     {
-        variableOut->arraySizes.assign(arraySizes->begin(), arraySizes->end());
+        variableOut->arraySizes.assign(arraySizes.begin(), arraySizes.end());
     }
 }
 
