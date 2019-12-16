@@ -8,6 +8,7 @@ for more details on the presubmit API built into depot_tools.
 """
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -28,7 +29,7 @@ _PRIMARY_EXPORT_TARGETS = [
 
 
 def _CheckChangeHasBugField(input_api, output_api):
-    """Requires that the changelist have a Bug: field."""
+    """Requires that the changelist have a Bug: field from a known project."""
     bugs = input_api.change.BugsFromDescription()
     if not bugs:
         return [
@@ -36,13 +37,36 @@ def _CheckChangeHasBugField(input_api, output_api):
                                       '"Bug: angleproject:[bug number]"\n'
                                       'directly above the Change-Id tag.')
         ]
-    elif not all([' ' not in bug for bug in bugs]):
-        return [
-            output_api.PresubmitError(
-                'Check bug tag formatting. Ensure there are no spaces after the colon.')
-        ]
-    else:
+
+    # The bug must be in the form of "project:number".  None is also accepted, which is used by
+    # rollers as well as in very minor changes.
+    if len(bugs) == 1 and bugs[0] == 'None':
         return []
+
+    projects = ['angleproject', 'chromium', 'dawn', 'fuchsia', 'skia', 'swiftshader']
+    bug_regex = re.compile(r"([a-z]+):(\d+)")
+    errors = []
+    extra_help = None
+
+    for bug in bugs:
+        if bug == 'None':
+            errors.append(
+                output_api.PresubmitError('Invalid bug tag "None" in presence of other bug tags.'))
+            continue
+
+        match = re.match(bug_regex, bug)
+        if match == None or bug != match.group(0) or match.group(1) not in projects:
+            errors.append(output_api.PresubmitError('Incorrect bug tag "' + bug + '".'))
+            if not extra_help:
+                extra_help = output_api.PresubmitError('Acceptable format is:\n\n'
+                                                       '    Bug: project:bugnumber\n\n'
+                                                       'Acceptable projects are:\n\n    ' +
+                                                       '\n    '.join(projects))
+
+    if extra_help:
+        errors.append(extra_help)
+
+    return errors
 
 
 def _CheckCodeGeneration(input_api, output_api):
