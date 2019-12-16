@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c0f2b7e_c1cf7449",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-12-16T03:43:56Z",
+      "side": 1,
+      "message": "Why does this still need to be incremented even if the uniform is not active?",
+      "revId": "8c2d8453d3780b68fd68563be7d3a4875bc75fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

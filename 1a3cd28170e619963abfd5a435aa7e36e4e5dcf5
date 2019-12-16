@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "576ff93d_689c8cbb",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveVariables.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-12-16T03:43:56Z",
+      "side": 1,
+      "message": "Does this handle arrays with and without the subscript notation (\"[0]\")?",
+      "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44600a97_4b7ec06f",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveVariables.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-12-16T03:43:56Z",
+      "side": 1,
+      "message": "Can this class enforce this requirement itself?   Or does it need more information than it has to do that?   We have the output type (ESSL, HLSL, GLSL), but I\u0027m not sure about the backend API.",
+      "range": {
+        "startLine": 11,
+        "startChar": 4,
+        "endLine": 11,
+        "endChar": 39
+      },
+      "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c9e6d76_21c19ee5",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveVariables.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-12-16T03:43:56Z",
+      "side": 1,
+      "message": "This name makes it sound like *all* inactive variables are being removed, which would include things like unused local variables.   However, the file header indicates it\u0027s just removing inactive shader interface variables.   Can the name of this class be updated to something like \"RemoveInactiveShaderInterfaceVariables\" or \"RemoveInactiveInterfaceVariables\"?",
+      "range": {
+        "startLine": 29,
+        "startChar": 22,
+        "endLine": 29,
+        "endChar": 45
+      },
+      "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8bd499d3_e9da1f72",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2993,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-12-16T03:43:56Z",
+      "side": 1,
+      "message": "Since these should be removed, can you query the program to see if they exist?",
+      "revId": "1a3cd28170e619963abfd5a435aa7e36e4e5dcf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
