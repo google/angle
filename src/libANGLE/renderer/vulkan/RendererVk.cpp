@@ -374,6 +374,7 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
                 ERR() << "Error setting environment for Mock/Null Driver.";
             }
         }
+#    if defined(ANGLE_VK_SWIFTSHADER_ICD_JSON)
         else if (icd == vk::ICD::SwiftShader)
         {
             if (!setICDEnvironment(ANGLE_VK_SWIFTSHADER_ICD_JSON))
@@ -381,6 +382,7 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
                 ERR() << "Error setting environment for SwiftShader.";
             }
         }
+#    endif  // defined(ANGLE_VK_SWIFTSHADER_ICD_JSON)
         if (mEnableValidationLayers || icd != vk::ICD::Default)
         {
             const auto &cwd = angle::GetCWD();
