@@ -170,7 +170,9 @@ group("angle_vulkan_entry_points") {
       "//third_party/fuchsia-sdk/sdk:vulkan",
     ]
   } else if (!is_android) {
-    public_deps += [ "$angle_root/third_party/vulkan-loader/src:libvulkan" ]
+    data_deps = [
+      "$angle_root/third_party/vulkan-loader/src:libvulkan",
+    ]
   }
 }
 
@@ -219,8 +221,10 @@ angle_source_set("angle_vulkan_backend") {
   sources += angle_vulkan_internal_shaders
 
   if (!is_android && !is_fuchsia) {
-    deps += [ "$angle_root/third_party/vulkan-loader/src:libvulkan" ]
-    data_deps += [ "$angle_root/third_party/vulkan-tools/src:VkICD_mock_icd" ]
+    data_deps += [
+      "$angle_root/third_party/vulkan-loader/src:libvulkan",
+      "$angle_root/third_party/vulkan-tools/src:VkICD_mock_icd",
+    ]
   }
 
   if (angle_enable_vulkan_validation_layers) {
