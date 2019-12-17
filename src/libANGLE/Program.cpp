@@ -3655,7 +3655,7 @@ bool Program::linkAtomicCounterBuffers()
     return true;
 }
 
-// Assigns locations to all attributes from the bindings and program locations.
+// Assigns locations to all attributes (except built-ins) from the bindings and program locations.
 bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
 {
     const Caps &caps               = context->getCaps();
@@ -3791,21 +3791,23 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
         ASSERT(attribute.location != -1);
         unsigned int regs = static_cast<unsigned int>(VariableRegisterCount(attribute.type));
 
+        unsigned int location = static_cast<unsigned int>(attribute.location);
         for (unsigned int r = 0; r < regs; r++)
         {
-            unsigned int location = static_cast<unsigned int>(attribute.location) + r;
-            mState.mActiveAttribLocationsMask.set(location);
-            mState.mMaxActiveAttribLocation =
-                std::max(mState.mMaxActiveAttribLocation, location + 1);
-
-            // gl_VertexID and gl_InstanceID are active attributes but don't have a bound attribute.
+            // Built-in active program inputs don't have a bound attribute.
             if (!attribute.isBuiltIn())
             {
+                mState.mActiveAttribLocationsMask.set(location);
+                mState.mMaxActiveAttribLocation =
+                    std::max(mState.mMaxActiveAttribLocation, location + 1);
+
                 ComponentType componentType =
                     GLenumToComponentType(VariableComponentType(attribute.type));
 
                 SetComponentTypeMask(componentType, location, &mState.mAttributesTypeMask);
                 mState.mAttributesMask.set(location);
+
+                location++;
             }
         }
     }
