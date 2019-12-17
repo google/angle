@@ -690,17 +690,12 @@
 4100 SWIFTSHADER : dEQP-GLES31.functional.draw_indirect.random.30 = FAIL
 4100 SWIFTSHADER : dEQP-GLES31.functional.draw_indirect.random.39 = FAIL
 
-4101 SWIFTSHADER : dEQP-GLES31.functional.multisample.default_framebuffer.sample_position = FAIL
-
 4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_height_getfloat = FAIL
 4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_height_getinteger = FAIL
 4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_height_getinteger64 = FAIL
 4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_getfloat = FAIL
 4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_getinteger = FAIL
 4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_getinteger64 = FAIL
-
-4105 SWIFTSHADER : dEQP-GLES31.functional.stencil_texturing.format.depth24_stencil8_cube = FAIL
-4105 SWIFTSHADER : dEQP-GLES31.functional.stencil_texturing.format.depth32f_stencil8_cube = FAIL
 
 // OpenGL ES 3.2 / 3.1 extensions
 
