@@ -22,6 +22,30 @@
       "revId": "0d6dc5c5a65450ed702b53635cfe759d3318adb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71265f36_c61f3523",
+        "filename": "src/libANGLE/renderer/vulkan/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-12-17T22:56:09Z",
+      "side": 1,
+      "message": "Good thought as I changed this one by itself first, still saw crash, then changed other one.\nHowever, just tried rolling this back to public_deps and TSAN gpu_unittests crashing again so seems that they both have to be changed and will keep this as it is.",
+      "parentUuid": "d4627993_b7005428",
+      "range": {
+        "startLine": 173,
+        "startChar": 0,
+        "endLine": 175,
+        "endChar": 5
+      },
+      "revId": "0d6dc5c5a65450ed702b53635cfe759d3318adb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
