@@ -737,7 +737,7 @@ void Context::genFencesNV(GLsizei n, FenceNVID *fences)
     for (int i = 0; i < n; i++)
     {
         GLuint handle = mFenceNVHandleAllocator.allocate();
-        mFenceNVMap.assign({handle}, new FenceNV(mImplementation->createFenceNV()));
+        mFenceNVMap.assign({handle}, new FenceNV(mImplementation.get()));
         fences[i] = {handle};
     }
 }
