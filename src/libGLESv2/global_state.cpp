@@ -14,6 +14,8 @@
 #include "common/tls.h"
 #include "libGLESv2/resource.h"
 
+#include <atomic>
+
 namespace gl
 {
 // In single-threaded cases we can avoid a TLS lookup for the current Context.

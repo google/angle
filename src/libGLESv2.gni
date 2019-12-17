@@ -304,6 +304,7 @@ libangle_headers = [
   "src/libANGLE/renderer/copyvertex.inc.h",
   "src/libANGLE/renderer/load_functions_table.h",
   "src/libANGLE/renderer/renderer_utils.h",
+  "src/libANGLE/renderer/serial_utils.h",
   "src/libANGLE/validationEGL.h",
   "src/libANGLE/validationES.h",
   "src/libANGLE/validationES1.h",

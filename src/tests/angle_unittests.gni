@@ -44,6 +44,7 @@ angle_unittests_sources = [
   "../libANGLE/renderer/ImageImpl_mock.h",
   "../libANGLE/renderer/TextureImpl_mock.h",
   "../libANGLE/renderer/TransformFeedbackImpl_mock.h",
+  "../libANGLE/renderer/serial_utils_unittest.cpp",
   "angle_unittests_utils.h",
   "compiler_tests/API_test.cpp",
   "compiler_tests/AppendixALimitations_test.cpp",
