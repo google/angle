@@ -685,18 +685,6 @@
 4098 SWIFTSHADER : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_multiple_groups = FAIL
 4098 SWIFTSHADER : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_single_invocation = FAIL
 
-4099 SWIFTSHADER : dEQP-GLES31.functional.draw_indirect.draw_elements_indirect.base_vertex.index_neg_* = FAIL
-
-4100 SWIFTSHADER : dEQP-GLES31.functional.draw_indirect.random.30 = FAIL
-4100 SWIFTSHADER : dEQP-GLES31.functional.draw_indirect.random.39 = FAIL
-
-4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_height_getfloat = FAIL
-4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_height_getinteger = FAIL
-4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_height_getinteger64 = FAIL
-4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_getfloat = FAIL
-4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_getinteger = FAIL
-4102 SWIFTSHADER : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_getinteger64 = FAIL
-
 // OpenGL ES 3.2 / 3.1 extensions
 
 // EXT_gpu_shader5: Note: this extension is not yet fully implemented, so should be disabled in the
