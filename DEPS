@@ -78,6 +78,12 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
+  # Closed-source ANGLE capture files and tests
+  'src/tests/internal_capture_tests': {
+    'url': '{chrome_internal_git}/angle/angle-captures.git@e2fa6fa80de07f784da7214e933c8565ebfc34da',
+    'condition': 'checkout_angle_internal',
+  },
+
   'testing': {
     'url': '{chromium_git}/chromium/src/testing@c1b508625d47f26cfc04eab47747a792a5ee765b',
     'condition': 'not build_with_chromium',
