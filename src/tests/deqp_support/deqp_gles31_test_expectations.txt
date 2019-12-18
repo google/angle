@@ -525,6 +525,13 @@
 // Failing with dEQP roll
 3447 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_per_block_buffers.22 = FAIL
 3447 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_per_block_buffers.41 = FAIL
+4234 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.program_not_active = FAIL
+4234 OPENGL : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.program_not_active = FAIL
+4234 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.compute.program_not_active = FAIL
+4234 OPENGL : dEQP-GLES31.functional.debug.negative_coverage.log.compute.program_not_active = FAIL
+4234 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.renderbuffer_storage_multisample = FAIL
+4234 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
+4234 OPENGL : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
 
 // OPENGL Failing Tests
 1665 WIN NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.negative.command_offset_not_in_buffer_unsigned32_wrap = FAIL
@@ -553,13 +560,6 @@
 3570 : dEQP-GLES31.functional.state_query.program_pipeline.* = FAIL
 3570 : dEQP-GLES31.functional.debug.object_labels.program_pipeline = FAIL
 3570 : dEQP-GLES31.functional.separate_shader.* = FAIL
-
-// The following passes with Vulkan (with warning), but fails otherwise.  We'll keep the file simple by expecting it to fail.
-2324 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
-2324 : dEQP-GLES31.functional.debug.negative_coverage.log.compute.program_not_active = FAIL
-2324 : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.program_not_active = FAIL
-2324 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.draw_range_elements = FAIL
-2324 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 
 // These tests are failing because of compile errors with SSBOs in compute shaders.
 
