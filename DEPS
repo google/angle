@@ -16,9 +16,7 @@ vars = {
   'build_with_chromium': False,
 
   # Only check out public sources by default. This can be overridden with custom_vars.
-  # We overload Chromium's 'src-internal' for simplicity.
-  # TOOD(ynovikov): Use checkout_angle_internal custom variable instead.
-  'checkout_src_internal': False,
+  'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
   'chromium_revision': 'e1633af636fa3bc0bf93ccaf5ccc1c9691439703',
@@ -103,7 +101,7 @@ deps = {
   # Closed-source OpenGL ES 1.1 Conformance tests.
   'third_party/gles1_conform': {
     'url': '{chrome_internal_git}/angle/es-cts.git@dc9f502f709c9cd88d7f8d3974f1c77aa246958e',
-    'condition': 'checkout_src_internal',
+    'condition': 'checkout_angle_internal',
   },
 
   # glmark2 is a GPL3-licensed OpenGL ES 2.0 benchmark. We use it for testing.
