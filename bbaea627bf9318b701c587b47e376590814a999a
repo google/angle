@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "16874c3b_d8e7f26e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-19T17:00:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53fa38a9_e61e11ea",
+      "range": {
+        "startLine": 17,
+        "startChar": 5,
+        "endLine": 17,
+        "endChar": 12
+      },
+      "revId": "bbaea627bf9318b701c587b47e376590814a999a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6fd6ac35_b39d931a",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 15
@@ -45,6 +69,30 @@
       "revId": "bbaea627bf9318b701c587b47e376590814a999a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "952ec5f1_89fda29d",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-19T17:00:02Z",
+      "side": 1,
+      "message": "Remove.\nDuring development it\u0027s easy to encounter a memory stomp as the length of array is likely to be allocated after the array memory.\nAfter finishing the development. It\u0027s not actually needed.\nI think alignment issue has been well investigated here.",
+      "parentUuid": "6fd6ac35_b39d931a",
+      "range": {
+        "startLine": 277,
+        "startChar": 15,
+        "endLine": 277,
+        "endChar": 49
+      },
+      "revId": "bbaea627bf9318b701c587b47e376590814a999a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e7854a07_fd97524f",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 4186,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-19T17:00:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ec58257_1091bb1e",
+      "range": {
+        "startLine": 4186,
+        "startChar": 8,
+        "endLine": 4186,
+        "endChar": 13
+      },
+      "revId": "bbaea627bf9318b701c587b47e376590814a999a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ace8f15e_00ecfb90",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 15
@@ -91,6 +163,30 @@
       "revId": "bbaea627bf9318b701c587b47e376590814a999a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7344545_d0012a05",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 4187,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-19T17:00:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ace8f15e_00ecfb90",
+      "range": {
+        "startLine": 4187,
+        "startChar": 53,
+        "endLine": 4187,
+        "endChar": 59
+      },
+      "revId": "bbaea627bf9318b701c587b47e376590814a999a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
