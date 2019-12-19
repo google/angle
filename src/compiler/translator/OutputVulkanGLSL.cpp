@@ -180,7 +180,9 @@ void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier,
         << ") @@ ";
 }
 
-void TOutputVulkanGLSL::writeVariableType(const TType &type, const TSymbol *symbol)
+void TOutputVulkanGLSL::writeVariableType(const TType &type,
+                                          const TSymbol *symbol,
+                                          bool isFunctionArgument)
 {
     TType overrideType(type);
 
@@ -190,7 +192,7 @@ void TOutputVulkanGLSL::writeVariableType(const TType &type, const TSymbol *symb
         overrideType.setBasicType(EbtSampler2D);
     }
 
-    TOutputGLSL::writeVariableType(overrideType, symbol);
+    TOutputGLSL::writeVariableType(overrideType, symbol, isFunctionArgument);
 }
 
 void TOutputVulkanGLSL::writeStructType(const TStructure *structure)

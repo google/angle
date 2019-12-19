@@ -31,7 +31,9 @@ class TOutputVulkanGLSLForMetal : public TOutputVulkanGLSL
   protected:
     bool visitGlobalQualifierDeclaration(Visit visit,
                                          TIntermGlobalQualifierDeclaration *node) override;
-    void writeVariableType(const TType &type, const TSymbol *symbol) override;
+    void writeVariableType(const TType &type,
+                           const TSymbol *symbol,
+                           bool isFunctionArgument) override;
 };
 
 }  // namespace sh

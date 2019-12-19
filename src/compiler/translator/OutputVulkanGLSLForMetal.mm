@@ -74,7 +74,9 @@ TOutputVulkanGLSLForMetal::TOutputVulkanGLSLForMetal(TInfoSinkBase &objSink,
                         compileOptions)
 {}
 
-void TOutputVulkanGLSLForMetal::writeVariableType(const TType &type, const TSymbol *symbol)
+void TOutputVulkanGLSLForMetal::writeVariableType(const TType &type,
+                                                  const TSymbol *symbol,
+                                                  bool isFunctionArgument)
 {
     TType overrideType(type);
 
@@ -84,7 +86,7 @@ void TOutputVulkanGLSLForMetal::writeVariableType(const TType &type, const TSymb
         overrideType.setInvariant(false);
     }
 
-    TOutputVulkanGLSL::writeVariableType(overrideType, symbol);
+    TOutputVulkanGLSL::writeVariableType(overrideType, symbol, isFunctionArgument);
 }
 
 bool TOutputVulkanGLSLForMetal::visitGlobalQualifierDeclaration(

@@ -212,7 +212,8 @@ std::string TOutputGLSLBase::getCommonLayoutQualifiers(TIntermTyped *variable)
     return out.str();
 }
 
-// Outputs what comes after in/out/uniform/buffer storage qualifier.
+// Outputs memory qualifiers applied to images, buffers and its fields, as well as image function
+// arguments.
 std::string TOutputGLSLBase::getMemoryQualifiers(const TType &type)
 {
     std::ostringstream out;
@@ -220,31 +221,26 @@ std::string TOutputGLSLBase::getMemoryQualifiers(const TType &type)
     const TMemoryQualifier &memoryQualifier = type.getMemoryQualifier();
     if (memoryQualifier.readonly)
     {
-        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "readonly ";
     }
 
     if (memoryQualifier.writeonly)
     {
-        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "writeonly ";
     }
 
     if (memoryQualifier.coherent)
     {
-        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "coherent ";
     }
 
     if (memoryQualifier.restrictQualifier)
     {
-        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "restrict ";
     }
 
     if (memoryQualifier.volatileQualifier)
     {
-        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "volatile ";
     }
 
@@ -375,7 +371,9 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
     return sh::getQualifierString(qualifier);
 }
 
-void TOutputGLSLBase::writeVariableType(const TType &type, const TSymbol *symbol)
+void TOutputGLSLBase::writeVariableType(const TType &type,
+                                        const TSymbol *symbol,
+                                        bool isFunctionArgument)
 {
     TQualifier qualifier = type.getQualifier();
     TInfoSinkBase &out   = objSink();
@@ -390,6 +388,12 @@ void TOutputGLSLBase::writeVariableType(const TType &type, const TSymbol *symbol
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
         writeQualifier(qualifier, type, symbol);
+    }
+    if (isFunctionArgument)
+    {
+        // Function arguments are the only place (other than image/SSBO/field declaration) where
+        // memory qualifiers can appear.
+        out << getMemoryQualifiers(type);
     }
 
     // Declare the struct if we have not done so already.
@@ -420,7 +424,7 @@ void TOutputGLSLBase::writeFunctionParameters(const TFunction *func)
     {
         const TVariable *param = func->getParam(i);
         const TType &type      = param->getType();
-        writeVariableType(type, param);
+        writeVariableType(type, param, true);
 
         if (param->symbolType() != SymbolType::Empty)
             out << " " << hashName(param);
@@ -977,7 +981,7 @@ void TOutputGLSLBase::visitFunctionPrototype(TIntermFunctionPrototype *node)
     TInfoSinkBase &out = objSink();
 
     const TType &type = node->getType();
-    writeVariableType(type, node->getFunction());
+    writeVariableType(type, node->getFunction(), false);
     if (type.isArray())
         out << ArrayString(type);
 
@@ -1088,7 +1092,8 @@ bool TOutputGLSLBase::visitDeclaration(Visit visit, TIntermDeclaration *node)
         TIntermTyped *variable          = sequence.front()->getAsTyped();
         writeLayoutQualifier(variable);
         TIntermSymbol *symbolNode = variable->getAsSymbolNode();
-        writeVariableType(variable->getType(), symbolNode ? &symbolNode->variable() : nullptr);
+        writeVariableType(variable->getType(), symbolNode ? &symbolNode->variable() : nullptr,
+                          false);
         if (variable->getAsSymbolNode() == nullptr ||
             variable->getAsSymbolNode()->variable().symbolType() != SymbolType::Empty)
         {
@@ -1361,6 +1366,7 @@ void TOutputGLSLBase::declareInterfaceBlock(const TInterfaceBlock *interfaceBloc
     for (const TField *field : fields)
     {
         writeFieldLayoutQualifier(field);
+        out << getMemoryQualifiers(*field->type());
 
         if (writeVariablePrecision(field->type()->getPrecision()))
             out << " ";

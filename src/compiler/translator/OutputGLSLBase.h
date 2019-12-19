@@ -46,7 +46,9 @@ class TOutputGLSLBase : public TIntermTraverser
     virtual void writeFieldLayoutQualifier(const TField *field);
     void writeInvariantQualifier(const TType &type);
     void writePreciseQualifier(const TType &type);
-    virtual void writeVariableType(const TType &type, const TSymbol *symbol);
+    virtual void writeVariableType(const TType &type,
+                                   const TSymbol *symbol,
+                                   bool isFunctionArgument);
     virtual bool writeVariablePrecision(TPrecision precision) = 0;
     void writeFunctionParameters(const TFunction *func);
     const TConstantUnion *writeConstantUnion(const TType &type, const TConstantUnion *pConstUnion);
