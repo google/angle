@@ -903,15 +903,15 @@ GROUP BEGIN TextureGather {"queryFunction": true}
         DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "op": "CallBuiltInFunction"}
           gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
           gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
-          gvec4 textureGatherOffsets(gsampler2DRect, vec2, ivec2[4]);
           vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
+          vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
         DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "essl_extension": "EXT_gpu_shader5", "suffix": "Ext"}
           gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
           gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
-          gvec4 textureGatherOffsets(gsampler2DRect, vec2, ivec2[4]);
           vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
-        DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "op": "CallBuiltInFunction"}
           vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
+        DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "op": "CallBuiltInFunction"}
+          gvec4 textureGatherOffsets(gsampler2DRect, vec2, ivec2[4]);
           vec4 textureGatherOffsets(sampler2DRectShadow, vec2, float, ivec2[4]);
       GROUP END NoComp
       GROUP BEGIN Comp {"queryFunction": true}
