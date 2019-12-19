@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8704b877_94f09f09",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-19T23:45:25Z",
+      "side": 1,
+      "message": "This must be enforced at some higher level in ANGLE, and its behavior defined in ANGLE\u0027s implementation. Sorry I didn\u0027t make this clear earlier. ANGLE is intended to be the centralized place in Chromium for this validation code. Asserts are disabled in debug builds and it would not be acceptable for this code to be entered in production if the driver behaves strangely.\n\nPlease figure out where in ANGLE\u0027s ReadPixels implementation it would be appropriate to enforce the invariant that if the PACK_ROW_LENGTH is less than the width passed to ReadPixels, that it\u0027s temporarily set to 0, and reset to the user\u0027s previously set value at the end of the ReadPixels call. Perhaps this should all be done in ANGLE\u0027s GL backend, since this workaround is specific to that backend; not sure, so please give it some thought.",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 10
+      },
+      "revId": "90eddf1e0e106918203b05bd02f596d8521d4060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97a371ed_200fa3f5",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 4309,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-19T23:45:25Z",
+      "side": 1,
+      "message": "This case should be treated as GL_PACK_ROW_LENGTH being set to 0, and tested as such here. It\u0027s crucial that ANGLE define this behavior.",
+      "range": {
+        "startLine": 4309,
+        "startChar": 45,
+        "endLine": 4309,
+        "endChar": 46
+      },
+      "revId": "90eddf1e0e106918203b05bd02f596d8521d4060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
