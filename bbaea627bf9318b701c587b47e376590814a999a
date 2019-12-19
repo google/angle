@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53fa38a9_e61e11ea",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-19T15:34:15Z",
+      "side": 1,
+      "message": "Note: we require chromium:1000354 now",
+      "range": {
+        "startLine": 17,
+        "startChar": 5,
+        "endLine": 17,
+        "endChar": 12
+      },
+      "revId": "bbaea627bf9318b701c587b47e376590814a999a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fd6ac35_b39d931a",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-19T15:34:15Z",
+      "side": 1,
+      "message": "Can you clarify this? If overflow is possible, \"slightly larger\" doesn\u0027t make it safe. If we can\u0027t overflow, there\u0027s no point to it.\n\nIs this related to alignment for example so we can expect a bounded \"overflow\"? That could use a more detailed comment and probably the use of RoundUpPow2",
+      "range": {
+        "startLine": 277,
+        "startChar": 15,
+        "endLine": 277,
+        "endChar": 49
+      },
+      "revId": "bbaea627bf9318b701c587b47e376590814a999a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ec58257_1091bb1e",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 4186,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-19T15:34:15Z",
+      "side": 1,
+      "message": "constexpr ... kDirtyValue",
+      "range": {
+        "startLine": 4186,
+        "startChar": 8,
+        "endLine": 4186,
+        "endChar": 13
+      },
+      "revId": "bbaea627bf9318b701c587b47e376590814a999a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ace8f15e_00ecfb90",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 4187,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-19T15:34:15Z",
+      "side": 1,
+      "message": "Also use kDirtyValue",
+      "range": {
+        "startLine": 4187,
+        "startChar": 53,
+        "endLine": 4187,
+        "endChar": 59
+      },
+      "revId": "bbaea627bf9318b701c587b47e376590814a999a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
