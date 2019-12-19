@@ -656,6 +656,20 @@ void GetExtentsAndLayerCount(gl::TextureType textureType,
 
 namespace vk_gl
 {
+// The Vulkan back-end will not support a sample count of 1, because of a Vulkan specification
+// restriction:
+//
+//   If the image was created with VkImageCreateInfo::samples equal to VK_SAMPLE_COUNT_1_BIT, the
+//   instruction must: have MS = 0.
+//
+// This restriction was tracked in http://anglebug.com/4196 and Khronos-private Vulkan
+// specification issue https://gitlab.khronos.org/vulkan/vulkan/issues/1925.
+//
+// In addition, the Vulkan back-end will not support sample counts of 32 or 64, since there are no
+// standard sample locations for those sample counts.
+constexpr unsigned int kSupportedSampleCounts = (VK_SAMPLE_COUNT_2_BIT | VK_SAMPLE_COUNT_4_BIT |
+                                                 VK_SAMPLE_COUNT_8_BIT | VK_SAMPLE_COUNT_16_BIT);
+
 // Find set bits in sampleCounts and add the corresponding sample count to the set.
 void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *outSet);
 // Return the maximum sample count with a bit set in |sampleCounts|.

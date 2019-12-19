@@ -656,21 +656,8 @@
 // Need to support non-color when staging image updates
 4080 ANDROID VULKAN : dEQP-GLES31.functional.stencil_texturing.misc.base_level = SKIP
 
-//// Multisampled textures:
-// The following tests pass, but fail because of Vulkan validation-layer errors, which are the result
-// of a Vulkan spec statement that 1-sample textures can't be used with multisample shaders.
-// Issue 4197 tracks the external dependencies (Vulkan spec and validation-layer changes).
-4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.sample_position = FAIL
-4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.sample_mask* = FAIL
-4197 VULKAN : dEQP-GLES31.functional.texture.multisample.samples_1.use_texture_*_2d = FAIL
-4197 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_2d = FAIL
-4197 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_int_2d = FAIL
-4197 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_uint_2d = FAIL
-
-// The following tests cause an assert within SwiftShader because a sample count of 1 is used with alpha:
-4212 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_1.sample_mask_and*alpha_to_coverage = SKIP
-
 // The following are failing because of pixel/sub-pixel rendering differences than what is expected:
+4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_1.sample_position = FAIL
 4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_2.sample_position = FAIL
 4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_3.sample_position = FAIL
 4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_4.sample_position = FAIL

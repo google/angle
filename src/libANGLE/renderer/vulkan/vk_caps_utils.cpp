@@ -160,15 +160,21 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeCaps.maxDrawBuffers =
         std::min(limitsVk.maxColorAttachments, limitsVk.maxFragmentOutputAttachments);
-    mNativeCaps.maxFramebufferWidth    = LimitToInt(limitsVk.maxFramebufferWidth);
-    mNativeCaps.maxFramebufferHeight   = LimitToInt(limitsVk.maxFramebufferHeight);
-    mNativeCaps.maxColorAttachments    = LimitToInt(limitsVk.maxColorAttachments);
-    mNativeCaps.maxViewportWidth       = LimitToInt(limitsVk.maxViewportDimensions[0]);
-    mNativeCaps.maxViewportHeight      = LimitToInt(limitsVk.maxViewportDimensions[1]);
-    mNativeCaps.maxSampleMaskWords     = LimitToInt(limitsVk.maxSampleMaskWords);
-    mNativeCaps.maxColorTextureSamples = limitsVk.sampledImageColorSampleCounts;
-    mNativeCaps.maxDepthTextureSamples = limitsVk.sampledImageDepthSampleCounts;
-    mNativeCaps.maxIntegerSamples      = limitsVk.sampledImageIntegerSampleCounts;
+    mNativeCaps.maxFramebufferWidth  = LimitToInt(limitsVk.maxFramebufferWidth);
+    mNativeCaps.maxFramebufferHeight = LimitToInt(limitsVk.maxFramebufferHeight);
+    mNativeCaps.maxColorAttachments  = LimitToInt(limitsVk.maxColorAttachments);
+    mNativeCaps.maxViewportWidth     = LimitToInt(limitsVk.maxViewportDimensions[0]);
+    mNativeCaps.maxViewportHeight    = LimitToInt(limitsVk.maxViewportDimensions[1]);
+    mNativeCaps.maxSampleMaskWords   = LimitToInt(limitsVk.maxSampleMaskWords);
+    mNativeCaps.maxColorTextureSamples =
+        limitsVk.sampledImageColorSampleCounts & vk_gl::kSupportedSampleCounts;
+    mNativeCaps.maxDepthTextureSamples =
+        limitsVk.sampledImageDepthSampleCounts & vk_gl::kSupportedSampleCounts;
+    // TODO (ianelliott): Should mask this with vk_gl::kSupportedSampleCounts, but it causes
+    // end2end test failures with SwiftShader because SwiftShader returns a sample count of 1 in
+    // sampledImageIntegerSampleCounts.
+    // See: http://anglebug.com/4197
+    mNativeCaps.maxIntegerSamples = limitsVk.sampledImageIntegerSampleCounts;
 
     mNativeCaps.maxVertexAttributes     = LimitToInt(limitsVk.maxVertexInputAttributes);
     mNativeCaps.maxVertexAttribBindings = LimitToInt(limitsVk.maxVertexInputBindings);
@@ -440,9 +446,9 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.minProgramTexelOffset = limitsVk.minTexelOffset;
     mNativeCaps.maxProgramTexelOffset = LimitToInt(limitsVk.maxTexelOffset);
 
-    const uint32_t sampleCounts = limitsVk.framebufferColorSampleCounts &
-                                  limitsVk.framebufferDepthSampleCounts &
-                                  limitsVk.framebufferStencilSampleCounts;
+    const uint32_t sampleCounts =
+        limitsVk.framebufferColorSampleCounts & limitsVk.framebufferDepthSampleCounts &
+        limitsVk.framebufferStencilSampleCounts & vk_gl::kSupportedSampleCounts;
 
     mNativeCaps.maxSamples            = LimitToInt(vk_gl::GetMaxSampleCount(sampleCounts));
     mNativeCaps.maxFramebufferSamples = mNativeCaps.maxSamples;
@@ -603,10 +609,12 @@ egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
 
     const VkPhysicalDeviceLimits &limits =
         display->getRenderer()->getPhysicalDeviceProperties().limits;
-    const uint32_t depthStencilSampleCountsLimit =
-        limits.framebufferDepthSampleCounts & limits.framebufferStencilSampleCounts;
+    const uint32_t depthStencilSampleCountsLimit = limits.framebufferDepthSampleCounts &
+                                                   limits.framebufferStencilSampleCounts &
+                                                   vk_gl::kSupportedSampleCounts;
 
-    vk_gl::AddSampleCounts(limits.framebufferColorSampleCounts, &colorSampleCounts);
+    vk_gl::AddSampleCounts(limits.framebufferColorSampleCounts & vk_gl::kSupportedSampleCounts,
+                           &colorSampleCounts);
     vk_gl::AddSampleCounts(depthStencilSampleCountsLimit, &depthStencilSampleCounts);
 
     // Always support 0 samples
