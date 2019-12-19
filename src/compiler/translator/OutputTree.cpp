@@ -385,7 +385,7 @@ void TOutputTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node)
     {
         const TVariable *param = node->getFunction()->getParam(i);
         OutputTreeText(mOut, node, getCurrentIndentDepth() + 1);
-        mOut << "parameter: " << param->name() << " (" << param->getType() << ")";
+        mOut << "parameter: " << param->name() << " (" << param->getType() << ")\n";
     }
 }
 
@@ -405,7 +405,7 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
     switch (node->getOp())
     {
         case EOpCallFunctionInAST:
-            OutputFunction(mOut, "Call an user-defined function", node->getFunction());
+            OutputFunction(mOut, "Call a user-defined function", node->getFunction());
             break;
         case EOpCallInternalRawFunction:
             OutputFunction(mOut, "Call an internal function with raw implementation",
