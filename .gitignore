@@ -21,6 +21,7 @@
 *.vsp
 *~
 .*.sw*
+.sw*
 .cipd
 .gclient
 .gclient_entries
