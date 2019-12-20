@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "b36588f6_5967aba5",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2019-12-20T18:50:11Z",
+      "side": 1,
+      "message": "I\u0027m seeing packState.rowLength \u003c clippedArea.width (which seems to be possibly smaller than area.width) https://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/libANGLE/renderer/gl/FramebufferGL.cpp;l\u003d508?q\u003dframebuffergl\u0026ss\u003dchromium\u0026originalUrl\u003dhttps:%2F%2Fcs.chromium.org%2F\n\nI think you are still allowed to pass in packState.rowLength \u003c area.width. Given that GL_PACK_ROW_LENGTH corresponds to GL_UNPACK_ROW_LENGTH. My original interpretation was when packState.rowLength \u003c area.width, the driver will read back the first n\u003dpackState.rowLength pixels from each row.\n\nThat wasn\u0027t necessarily true. The experiment result shows that the opengl driver would return n\u003darea.width pixels for first row and packState.rowLength for subsequent rows.\n\nI don\u0027t find this behavior declared in spec (yet).\n\nThis affects how we gonna rearrange the pixels in the workaround. It also doesn\u0027t seem to have a practical meaning to do this (contrast to setting packState.rowLength \u003e area.width to readback a subrectangle into a subregion of the client image buffer)\n\nGiven this what I\u0027m doing now just set packState.rowLength to 0 when it\u0027s smaller than area.width. A quick glance at the ReadPixels tests in angle shows there aren\u0027t many test cases against these pack row length settings. Current latest patch did this in opengl impl and seems fine with bots result. I\u0027m gonna bump this up to the global validation layer for every backend.",
+      "parentUuid": "7431ea96_7a474f9a",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 10
+      },
+      "revId": "90eddf1e0e106918203b05bd02f596d8521d4060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97a371ed_200fa3f5",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 16
