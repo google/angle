@@ -1471,6 +1471,10 @@ void GenerateCaps(const FunctionsGL *functions,
                                  functions->hasGLESExtension("GL_EXT_memory_object_fd");
     extensions->semaphoreFd = functions->hasGLExtension("GL_EXT_semaphore_fd") ||
                               functions->hasGLESExtension("GL_EXT_semaphore_fd");
+    extensions->gpuShader5EXT = functions->isAtLeastGL(gl::Version(4, 0)) ||
+                                functions->isAtLeastGLES(gl::Version(3, 2)) ||
+                                functions->hasGLExtension("GL_ARB_gpu_shader5") ||
+                                functions->hasGLESExtension("GL_EXT_gpu_shader5");
 }
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)
