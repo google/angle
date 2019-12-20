@@ -1493,7 +1493,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             *params = mState.mCaps.maxVaryingVectors;
             break;
         case GL_MAX_VARYING_COMPONENTS:
-            *params = mState.mCaps.maxVertexOutputComponents;
+            *params = mState.mCaps.maxVaryingVectors * 4;
             break;
         case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:
             *params = mState.mCaps.maxCombinedTextureImageUnits;
