@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "3a71c408_615f5189",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2019-12-20T23:37:58Z",
+      "side": 1,
+      "message": "My apologies, the behavior is well defined by the GLES spec. Shrek and I just discussed this offline at length. ReadPixels reads back _width_ pixel groups each scanline, and then increments the destination pointer by _GL_PACK_ROW_LENGTH_ pixel groups. This effectively reads back a rectangle that\u0027s _GL_PACK_ROW_LENGTH_ x _height_, with the last row being _width_ long. The behavior I was proposing above was wrong.\n\nLet\u0027s test the driver-defined behavior in the tests and make sure the workaround works as expected.",
+      "parentUuid": "b36588f6_5967aba5",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 10
+      },
+      "revId": "90eddf1e0e106918203b05bd02f596d8521d4060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97a371ed_200fa3f5",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 16
