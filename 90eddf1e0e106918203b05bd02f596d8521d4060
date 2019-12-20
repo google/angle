@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7431ea96_7a474f9a",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-12-20T15:27:15Z",
+      "side": 1,
+      "message": "If the behavior is truly undefined by spec, then the validation (like ValidateReadPixels) should detect it and generate an error. That\u0027s assuming we are allowed to err on undefined behavior. If GL requires that undefined behavior doesn\u0027t generate error, then the front end should detect this case and set area.width \u003d pack.rowLength or something.",
+      "parentUuid": "8704b877_94f09f09",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 10
+      },
+      "revId": "90eddf1e0e106918203b05bd02f596d8521d4060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97a371ed_200fa3f5",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 16
