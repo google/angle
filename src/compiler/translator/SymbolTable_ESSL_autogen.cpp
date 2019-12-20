@@ -830,41 +830,41 @@ constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2DArrayShadow1_F
 constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2DArrayShadow1_Float3_Float1;
 constexpr const TSymbolUniqueId BuiltInId::textureGather_SamplerCubeShadow1_Float3;
 constexpr const TSymbolUniqueId BuiltInId::textureGather_SamplerCubeShadow1_Float3_Float1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_Sampler2D1_Float2_Int4x2_Int1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_ISampler2D1_Float2_Int4x2_Int1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_USampler2D1_Float2_Int4x2_Int1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_Sampler2DArray1_Float3_Int4x2_Int1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_ISampler2DArray1_Float3_Int4x2_Int1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_USampler2DArray1_Float3_Int4x2_Int1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_Sampler2D1_Float2_Int4x2_Int1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_ISampler2D1_Float2_Int4x2_Int1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_USampler2D1_Float2_Int4x2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_Sampler2D1_Float2_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_ISampler2D1_Float2_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_USampler2D1_Float2_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_Sampler2DArray1_Float3_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_ISampler2DArray1_Float3_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_USampler2DArray1_Float3_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_USampler2D1_Float2_4xInt2_Int1;
 constexpr const TSymbolUniqueId
-    BuiltInId::textureGatherOffsetsExt_Sampler2DArray1_Float3_Int4x2_Int1;
+    BuiltInId::textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2_Int1;
 constexpr const TSymbolUniqueId
-    BuiltInId::textureGatherOffsetsExt_ISampler2DArray1_Float3_Int4x2_Int1;
+    BuiltInId::textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2_Int1;
 constexpr const TSymbolUniqueId
-    BuiltInId::textureGatherOffsetsExt_USampler2DArray1_Float3_Int4x2_Int1;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_Sampler2D1_Float2_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_ISampler2D1_Float2_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_USampler2D1_Float2_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_Sampler2DArray1_Float3_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_ISampler2DArray1_Float3_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_USampler2DArray1_Float3_Int4x2;
+    BuiltInId::textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_Sampler2D1_Float2_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_ISampler2D1_Float2_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_USampler2D1_Float2_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_Sampler2DArray1_Float3_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_ISampler2DArray1_Float3_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_USampler2DArray1_Float3_4xInt2;
 constexpr const TSymbolUniqueId
-    BuiltInId::textureGatherOffsets_Sampler2DShadow1_Float2_Float1_Int4x2;
+    BuiltInId::textureGatherOffsets_Sampler2DShadow1_Float2_Float1_4xInt2;
 constexpr const TSymbolUniqueId
-    BuiltInId::textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_Sampler2D1_Float2_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_ISampler2D1_Float2_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_USampler2D1_Float2_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_Sampler2DArray1_Float3_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_ISampler2DArray1_Float3_Int4x2;
-constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_USampler2DArray1_Float3_Int4x2;
+    BuiltInId::textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_USampler2D1_Float2_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2;
 constexpr const TSymbolUniqueId
-    BuiltInId::textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_Int4x2;
+    BuiltInId::textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_4xInt2;
 constexpr const TSymbolUniqueId
-    BuiltInId::textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_Int4x2;
+    BuiltInId::textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_4xInt2;
 constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_Sampler2D1_Float2_Int2_Int1;
 constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_ISampler2D1_Float2_Int2_Int1;
 constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_USampler2D1_Float2_Int2_Int1;
@@ -1314,6 +1314,8 @@ constexpr const ImmutableString yuv_2_rgb("yuv_2_rgb");
 namespace BuiltInVariable
 {
 
+constexpr const unsigned int kArraySize4[1] = {4};
+
 constexpr const TVariable kangle_BaseInstance(
     BuiltInId::angle_BaseInstance,
     BuiltInName::angle_BaseInstance,
@@ -1751,6 +1753,12 @@ constexpr const TVariable kpt10D(BuiltInId::pt10D,
                                  SymbolType::BuiltIn,
                                  TExtension::UNDEFINED,
                                  StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable kpt10Dx4(
+    BuiltInId::pt10Dx4,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::GetArray<EbtInt, EbpUndefined, EvqGlobal, 2, 1, kArraySize4, 1>());
 constexpr const TVariable kpt10E(BuiltInId::pt10E,
                                  BuiltInName::_empty,
                                  SymbolType::BuiltIn,
@@ -1816,11 +1824,6 @@ constexpr const TVariable kpt70B(BuiltInId::pt70B,
                                  SymbolType::BuiltIn,
                                  TExtension::UNDEFINED,
                                  StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>());
-constexpr const TVariable kpt70D(BuiltInId::pt70D,
-                                 BuiltInName::_empty,
-                                 SymbolType::BuiltIn,
-                                 TExtension::UNDEFINED,
-                                 StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 2>());
 constexpr const TVariable kpt90B(BuiltInId::pt90B,
                                  BuiltInName::_empty,
                                  SymbolType::BuiltIn,
@@ -2142,15 +2145,16 @@ constexpr const TVariable *p00I10B00D[3]    = {&BuiltInVariable::kpt00I, &BuiltI
 constexpr const TVariable *p00I10B10B10B10D[5] = {
     &BuiltInVariable::kpt00I, &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10B,
     &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00I10B10D00B[4] = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt10B,
+constexpr const TVariable *p00I10B10D00B[4]   = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt10B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00B};
-constexpr const TVariable *p00I10B10D00D[4] = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt10B,
+constexpr const TVariable *p00I10B10D00D[4]   = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt10B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00I10B70D00D[4] = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt10B,
-                                               &BuiltInVariable::kpt70D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00I10D00D10D[4] = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt10D,
+constexpr const TVariable *p00I10B10Dx400D[4] = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt10B,
+                                                 &BuiltInVariable::kpt10Dx4,
+                                                 &BuiltInVariable::kpt00D};
+constexpr const TVariable *p00I10D00D10D[4]   = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt10D,
                                                &BuiltInVariable::kpt00D, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00I20B00B10D[4] = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00I20B00B10D[4]   = {&BuiltInVariable::kpt00I, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt00B, &BuiltInVariable::kpt10D};
 constexpr const TVariable *p00I20B10B10B10D[5] = {
     &BuiltInVariable::kpt00I, &BuiltInVariable::kpt20B, &BuiltInVariable::kpt10B,
@@ -2196,13 +2200,14 @@ constexpr const TVariable *p00L20B00D[3]    = {&BuiltInVariable::kpt00L, &BuiltI
 constexpr const TVariable *p00L20B10B10B10D[5] = {
     &BuiltInVariable::kpt00L, &BuiltInVariable::kpt20B, &BuiltInVariable::kpt10B,
     &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00L20B10D00B[4] = {&BuiltInVariable::kpt00L, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00L20B10D00B[4]   = {&BuiltInVariable::kpt00L, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00B};
-constexpr const TVariable *p00L20B10D00D[4] = {&BuiltInVariable::kpt00L, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00L20B10D00D[4]   = {&BuiltInVariable::kpt00L, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00L20B70D00D[4] = {&BuiltInVariable::kpt00L, &BuiltInVariable::kpt20B,
-                                               &BuiltInVariable::kpt70D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00L20D00D10D[4] = {&BuiltInVariable::kpt00L, &BuiltInVariable::kpt20D,
+constexpr const TVariable *p00L20B10Dx400D[4] = {&BuiltInVariable::kpt00L, &BuiltInVariable::kpt20B,
+                                                 &BuiltInVariable::kpt10Dx4,
+                                                 &BuiltInVariable::kpt00D};
+constexpr const TVariable *p00L20D00D10D[4]   = {&BuiltInVariable::kpt00L, &BuiltInVariable::kpt20D,
                                                &BuiltInVariable::kpt00D, &BuiltInVariable::kpt10D};
 constexpr const TVariable *p00M00D[2]       = {&BuiltInVariable::kpt00M, &BuiltInVariable::kpt00D};
 constexpr const TVariable *p00M10B00B[3]    = {&BuiltInVariable::kpt00M, &BuiltInVariable::kpt10B,
@@ -2237,15 +2242,16 @@ constexpr const TVariable *p00R10B00D[3]    = {&BuiltInVariable::kpt00R, &BuiltI
 constexpr const TVariable *p00R10B10B10B10D[5] = {
     &BuiltInVariable::kpt00R, &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10B,
     &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00R10B10D00B[4] = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt10B,
+constexpr const TVariable *p00R10B10D00B[4]   = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt10B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00B};
-constexpr const TVariable *p00R10B10D00D[4] = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt10B,
+constexpr const TVariable *p00R10B10D00D[4]   = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt10B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00R10B70D00D[4] = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt10B,
-                                               &BuiltInVariable::kpt70D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00R10D00D10D[4] = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt10D,
+constexpr const TVariable *p00R10B10Dx400D[4] = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt10B,
+                                                 &BuiltInVariable::kpt10Dx4,
+                                                 &BuiltInVariable::kpt00D};
+constexpr const TVariable *p00R10D00D10D[4]   = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt10D,
                                                &BuiltInVariable::kpt00D, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00R20B00B10D[4] = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00R20B00B10D[4]   = {&BuiltInVariable::kpt00R, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt00B, &BuiltInVariable::kpt10D};
 constexpr const TVariable *p00R20B10B10B10D[5] = {
     &BuiltInVariable::kpt00R, &BuiltInVariable::kpt20B, &BuiltInVariable::kpt10B,
@@ -2291,17 +2297,18 @@ constexpr const TVariable *p00U20B00D[3]    = {&BuiltInVariable::kpt00U, &BuiltI
 constexpr const TVariable *p00U20B10B10B10D[5] = {
     &BuiltInVariable::kpt00U, &BuiltInVariable::kpt20B, &BuiltInVariable::kpt10B,
     &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00U20B10D00B[4] = {&BuiltInVariable::kpt00U, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00U20B10D00B[4]   = {&BuiltInVariable::kpt00U, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00B};
-constexpr const TVariable *p00U20B10D00D[4] = {&BuiltInVariable::kpt00U, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00U20B10D00D[4]   = {&BuiltInVariable::kpt00U, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00U20B70D00D[4] = {&BuiltInVariable::kpt00U, &BuiltInVariable::kpt20B,
-                                               &BuiltInVariable::kpt70D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00U20D00D10D[4] = {&BuiltInVariable::kpt00U, &BuiltInVariable::kpt20D,
+constexpr const TVariable *p00U20B10Dx400D[4] = {&BuiltInVariable::kpt00U, &BuiltInVariable::kpt20B,
+                                                 &BuiltInVariable::kpt10Dx4,
+                                                 &BuiltInVariable::kpt00D};
+constexpr const TVariable *p00U20D00D10D[4]   = {&BuiltInVariable::kpt00U, &BuiltInVariable::kpt20D,
                                                &BuiltInVariable::kpt00D, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00V10D00D[3]    = {&BuiltInVariable::kpt00V, &BuiltInVariable::kpt10D,
+constexpr const TVariable *p00V10D00D[3]      = {&BuiltInVariable::kpt00V, &BuiltInVariable::kpt10D,
                                             &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00W20D00D[3]    = {&BuiltInVariable::kpt00W, &BuiltInVariable::kpt20D,
+constexpr const TVariable *p00W20D00D[3]      = {&BuiltInVariable::kpt00W, &BuiltInVariable::kpt20D,
                                             &BuiltInVariable::kpt00D};
 constexpr const TVariable *p00X00D[2]       = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt00D};
 constexpr const TVariable *p00X10B00B10D[4] = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt10B,
@@ -2311,15 +2318,16 @@ constexpr const TVariable *p00X10B00D[3]    = {&BuiltInVariable::kpt00X, &BuiltI
 constexpr const TVariable *p00X10B10B10B10D[5] = {
     &BuiltInVariable::kpt00X, &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10B,
     &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00X10B10D00B[4] = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt10B,
+constexpr const TVariable *p00X10B10D00B[4]   = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt10B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00B};
-constexpr const TVariable *p00X10B10D00D[4] = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt10B,
+constexpr const TVariable *p00X10B10D00D[4]   = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt10B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00X10B70D00D[4] = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt10B,
-                                               &BuiltInVariable::kpt70D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00X10D00D10D[4] = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt10D,
+constexpr const TVariable *p00X10B10Dx400D[4] = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt10B,
+                                                 &BuiltInVariable::kpt10Dx4,
+                                                 &BuiltInVariable::kpt00D};
+constexpr const TVariable *p00X10D00D10D[4]   = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt10D,
                                                &BuiltInVariable::kpt00D, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00X20B00B10D[4] = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00X20B00B10D[4]   = {&BuiltInVariable::kpt00X, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt00B, &BuiltInVariable::kpt10D};
 constexpr const TVariable *p00X20B10B10B10D[5] = {
     &BuiltInVariable::kpt00X, &BuiltInVariable::kpt20B, &BuiltInVariable::kpt10B,
@@ -2365,24 +2373,24 @@ constexpr const TVariable *p00a20B00D[3]    = {&BuiltInVariable::kpt00a, &BuiltI
 constexpr const TVariable *p00a20B10B10B10D[5] = {
     &BuiltInVariable::kpt00a, &BuiltInVariable::kpt20B, &BuiltInVariable::kpt10B,
     &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00a20B10D00B[4] = {&BuiltInVariable::kpt00a, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00a20B10D00B[4]   = {&BuiltInVariable::kpt00a, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00B};
-constexpr const TVariable *p00a20B10D00D[4] = {&BuiltInVariable::kpt00a, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00a20B10D00D[4]   = {&BuiltInVariable::kpt00a, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00a20B70D00D[4] = {&BuiltInVariable::kpt00a, &BuiltInVariable::kpt20B,
-                                               &BuiltInVariable::kpt70D, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00a20D00D10D[4] = {&BuiltInVariable::kpt00a, &BuiltInVariable::kpt20D,
+constexpr const TVariable *p00a20B10Dx400D[4] = {&BuiltInVariable::kpt00a, &BuiltInVariable::kpt20B,
+                                                 &BuiltInVariable::kpt10Dx4,
+                                                 &BuiltInVariable::kpt00D};
+constexpr const TVariable *p00a20D00D10D[4]   = {&BuiltInVariable::kpt00a, &BuiltInVariable::kpt20D,
                                                &BuiltInVariable::kpt00D, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00b10D00D[3]    = {&BuiltInVariable::kpt00b, &BuiltInVariable::kpt10D,
+constexpr const TVariable *p00b10D00D[3]      = {&BuiltInVariable::kpt00b, &BuiltInVariable::kpt10D,
                                             &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00c20D00D[3]    = {&BuiltInVariable::kpt00c, &BuiltInVariable::kpt20D,
+constexpr const TVariable *p00c20D00D[3]      = {&BuiltInVariable::kpt00c, &BuiltInVariable::kpt20D,
                                             &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00d00D[2]       = {&BuiltInVariable::kpt00d, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00d10B00B10D[4] = {&BuiltInVariable::kpt00d, &BuiltInVariable::kpt10B,
-                                               &BuiltInVariable::kpt00B, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00d10B00B70D[4] = {&BuiltInVariable::kpt00d, &BuiltInVariable::kpt10B,
-                                               &BuiltInVariable::kpt00B, &BuiltInVariable::kpt70D};
-constexpr const TVariable *p00d20B00B10D[4] = {&BuiltInVariable::kpt00d, &BuiltInVariable::kpt20B,
+constexpr const TVariable *p00d00D[2] = {&BuiltInVariable::kpt00d, &BuiltInVariable::kpt00D};
+constexpr const TVariable *p00d10B00B10Dx4[4] = {&BuiltInVariable::kpt00d, &BuiltInVariable::kpt10B,
+                                                 &BuiltInVariable::kpt00B,
+                                                 &BuiltInVariable::kpt10Dx4};
+constexpr const TVariable *p00d20B00B10D[4]   = {&BuiltInVariable::kpt00d, &BuiltInVariable::kpt20B,
                                                &BuiltInVariable::kpt00B, &BuiltInVariable::kpt10D};
 constexpr const TVariable *p00d20B10B10B10D[5] = {
     &BuiltInVariable::kpt00d, &BuiltInVariable::kpt20B, &BuiltInVariable::kpt10B,
@@ -2404,10 +2412,9 @@ constexpr const TVariable *p00e30B00B[3]    = {&BuiltInVariable::kpt00e, &BuiltI
 constexpr const TVariable *p00e30B20B20B[4] = {&BuiltInVariable::kpt00e, &BuiltInVariable::kpt30B,
                                                &BuiltInVariable::kpt20B, &BuiltInVariable::kpt20B};
 constexpr const TVariable *p00f00D[2]       = {&BuiltInVariable::kpt00f, &BuiltInVariable::kpt00D};
-constexpr const TVariable *p00f20B00B10D[4] = {&BuiltInVariable::kpt00f, &BuiltInVariable::kpt20B,
-                                               &BuiltInVariable::kpt00B, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00f20B00B70D[4] = {&BuiltInVariable::kpt00f, &BuiltInVariable::kpt20B,
-                                               &BuiltInVariable::kpt00B, &BuiltInVariable::kpt70D};
+constexpr const TVariable *p00f20B00B10Dx4[4] = {&BuiltInVariable::kpt00f, &BuiltInVariable::kpt20B,
+                                                 &BuiltInVariable::kpt00B,
+                                                 &BuiltInVariable::kpt10Dx4};
 constexpr const TVariable *p00f30B10B10B10D[5] = {
     &BuiltInVariable::kpt00f, &BuiltInVariable::kpt30B, &BuiltInVariable::kpt10B,
     &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10D};
@@ -3328,7 +3335,7 @@ constexpr const TFunction abs_20D(BuiltInId::abs_Int3,
 constexpr const TFunction abs_30D(BuiltInId::abs_Int4,
                                   BuiltInName::abs,
                                   TExtension::UNDEFINED,
-                                  BuiltInParameters::p30D00D00D,
+                                  BuiltInParameters::p30D30D_o_30D_o_30D,
                                   1,
                                   StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                   EOpAbs,
@@ -3392,7 +3399,7 @@ constexpr const TFunction sign_20D(BuiltInId::sign_Int3,
 constexpr const TFunction sign_30D(BuiltInId::sign_Int4,
                                    BuiltInName::sign,
                                    TExtension::UNDEFINED,
-                                   BuiltInParameters::p30D00D00D,
+                                   BuiltInParameters::p30D30D_o_30D_o_30D,
                                    1,
                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpSign,
@@ -3728,7 +3735,7 @@ constexpr const TFunction min_20D20D(BuiltInId::min_Int3_Int3,
 constexpr const TFunction min_30D30D(BuiltInId::min_Int4_Int4,
                                      BuiltInName::min,
                                      TExtension::UNDEFINED,
-                                     BuiltInParameters::p30D30D30D,
+                                     BuiltInParameters::p30D30D_o_30D_o_30D,
                                      2,
                                      StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMin,
@@ -3896,7 +3903,7 @@ constexpr const TFunction max_20D20D(BuiltInId::max_Int3_Int3,
 constexpr const TFunction max_30D30D(BuiltInId::max_Int4_Int4,
                                      BuiltInName::max,
                                      TExtension::UNDEFINED,
-                                     BuiltInParameters::p30D30D30D,
+                                     BuiltInParameters::p30D30D_o_30D_o_30D,
                                      2,
                                      StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMax,
@@ -4562,7 +4569,7 @@ constexpr const TFunction intBitsToFloat_30D(
     BuiltInId::intBitsToFloat_Int4,
     BuiltInName::intBitsToFloat,
     TExtension::UNDEFINED,
-    BuiltInParameters::p30D00D00D,
+    BuiltInParameters::p30D30D_o_30D_o_30D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpIntBitsToFloat,
@@ -5397,7 +5404,7 @@ constexpr const TFunction lessThan_20D20D(BuiltInId::lessThan_Int3_Int3,
 constexpr const TFunction lessThan_30D30D(BuiltInId::lessThan_Int4_Int4,
                                           BuiltInName::lessThan,
                                           TExtension::UNDEFINED,
-                                          BuiltInParameters::p30D30D30D,
+                                          BuiltInParameters::p30D30D_o_30D_o_30D,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                           EOpLessThanComponentWise,
@@ -5475,7 +5482,7 @@ constexpr const TFunction lessThanEqual_30D30D(
     BuiltInId::lessThanEqual_Int4_Int4,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
-    BuiltInParameters::p30D30D30D,
+    BuiltInParameters::p30D30D_o_30D_o_30D,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpLessThanEqualComponentWise,
@@ -5556,7 +5563,7 @@ constexpr const TFunction greaterThan_30D30D(
     BuiltInId::greaterThan_Int4_Int4,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
-    BuiltInParameters::p30D30D30D,
+    BuiltInParameters::p30D30D_o_30D_o_30D,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpGreaterThanComponentWise,
@@ -5637,7 +5644,7 @@ constexpr const TFunction greaterThanEqual_30D30D(
     BuiltInId::greaterThanEqual_Int4_Int4,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
-    BuiltInParameters::p30D30D30D,
+    BuiltInParameters::p30D30D_o_30D_o_30D,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpGreaterThanEqualComponentWise,
@@ -5712,7 +5719,7 @@ constexpr const TFunction equal_20D20D(BuiltInId::equal_Int3_Int3,
 constexpr const TFunction equal_30D30D(BuiltInId::equal_Int4_Int4,
                                        BuiltInName::equal,
                                        TExtension::UNDEFINED,
-                                       BuiltInParameters::p30D30D30D,
+                                       BuiltInParameters::p30D30D_o_30D_o_30D,
                                        2,
                                        StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                        EOpEqualComponentWise,
@@ -5808,7 +5815,7 @@ constexpr const TFunction notEqual_20D20D(BuiltInId::notEqual_Int3_Int3,
 constexpr const TFunction notEqual_30D30D(BuiltInId::notEqual_Int4_Int4,
                                           BuiltInName::notEqual,
                                           TExtension::UNDEFINED,
-                                          BuiltInParameters::p30D30D30D,
+                                          BuiltInParameters::p30D30D_o_30D_o_30D,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                           EOpNotEqualComponentWise,
@@ -6108,7 +6115,7 @@ constexpr const TFunction bitfieldReverse_30D(
     BuiltInId::bitfieldReverse_Int4,
     BuiltInName::bitfieldReverse,
     TExtension::UNDEFINED,
-    BuiltInParameters::p30D00D00D,
+    BuiltInParameters::p30D30D_o_30D_o_30D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpBitfieldReverse,
@@ -6176,7 +6183,7 @@ constexpr const TFunction bitCount_20D(BuiltInId::bitCount_Int3,
 constexpr const TFunction bitCount_30D(BuiltInId::bitCount_Int4,
                                        BuiltInName::bitCount,
                                        TExtension::UNDEFINED,
-                                       BuiltInParameters::p30D00D00D,
+                                       BuiltInParameters::p30D30D_o_30D_o_30D,
                                        1,
                                        StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                        EOpBitCount,
@@ -6240,7 +6247,7 @@ constexpr const TFunction findLSB_20D(BuiltInId::findLSB_Int3,
 constexpr const TFunction findLSB_30D(BuiltInId::findLSB_Int4,
                                       BuiltInName::findLSB,
                                       TExtension::UNDEFINED,
-                                      BuiltInParameters::p30D00D00D,
+                                      BuiltInParameters::p30D30D_o_30D_o_30D,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpFindLSB,
@@ -6304,7 +6311,7 @@ constexpr const TFunction findMSB_20D(BuiltInId::findMSB_Int3,
 constexpr const TFunction findMSB_30D(BuiltInId::findMSB_Int4,
                                       BuiltInName::findMSB,
                                       TExtension::UNDEFINED,
-                                      BuiltInParameters::p30D00D00D,
+                                      BuiltInParameters::p30D30D_o_30D_o_30D,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpFindMSB,
@@ -6914,7 +6921,7 @@ constexpr const TFunction texture_00R10B(BuiltInId::texture_ISampler2D1_Float2,
 constexpr const TFunction texture_00X10B(BuiltInId::texture_USampler2D1_Float2,
                                          BuiltInName::texture,
                                          TExtension::UNDEFINED,
-                                         BuiltInParameters::p00X10B10B10B10D,
+                                         BuiltInParameters::p00X10B10Dx400D,
                                          2,
                                          StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpCallBuiltInFunction,
@@ -6930,7 +6937,7 @@ constexpr const TFunction texture_00J20B(BuiltInId::texture_Sampler3D1_Float3,
 constexpr const TFunction texture_00S20B(BuiltInId::texture_ISampler3D1_Float3,
                                          BuiltInName::texture,
                                          TExtension::UNDEFINED,
-                                         BuiltInParameters::p00S20B20D00B,
+                                         BuiltInParameters::p00S20B00B20D,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpCallBuiltInFunction,
@@ -6954,7 +6961,7 @@ constexpr const TFunction texture_00K20B(BuiltInId::texture_SamplerCube1_Float3,
 constexpr const TFunction texture_00T20B(BuiltInId::texture_ISamplerCube1_Float3,
                                          BuiltInName::texture,
                                          TExtension::UNDEFINED,
-                                         BuiltInParameters::p00T20B00D,
+                                         BuiltInParameters::p00T20B00B,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpCallBuiltInFunction,
@@ -6978,7 +6985,7 @@ constexpr const TFunction texture_00L20B(BuiltInId::texture_Sampler2DArray1_Floa
 constexpr const TFunction texture_00U20B(BuiltInId::texture_ISampler2DArray1_Float3,
                                          BuiltInName::texture,
                                          TExtension::UNDEFINED,
-                                         BuiltInParameters::p00U20B70D00D,
+                                         BuiltInParameters::p00U20B10D00D,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpCallBuiltInFunction,
@@ -6986,7 +6993,7 @@ constexpr const TFunction texture_00U20B(BuiltInId::texture_ISampler2DArray1_Flo
 constexpr const TFunction texture_00a20B(BuiltInId::texture_USampler2DArray1_Float3,
                                          BuiltInName::texture,
                                          TExtension::UNDEFINED,
-                                         BuiltInParameters::p00a20B10B10B10D,
+                                         BuiltInParameters::p00a20B10Dx400D,
                                          2,
                                          StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpCallBuiltInFunction,
@@ -8195,7 +8202,7 @@ constexpr const TFunction textureOffset_00R10B10D(
     BuiltInId::textureOffset_ISampler2D1_Float2_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00R10B10D00B,
+    BuiltInParameters::p00R10B10Dx400D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -8204,7 +8211,7 @@ constexpr const TFunction textureOffset_00X10B10D(
     BuiltInId::textureOffset_USampler2D1_Float2_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00X10B10D00B,
+    BuiltInParameters::p00X10B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -8267,7 +8274,7 @@ constexpr const TFunction textureOffset_00a20B10D(
     BuiltInId::textureOffset_USampler2DArray1_Float3_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00a20B10D00D,
+    BuiltInParameters::p00a20B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9120,7 +9127,7 @@ constexpr const TFunction textureGather_00X10B(
     BuiltInId::textureGather_USampler2D1_Float2,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00X10B10B10B10D,
+    BuiltInParameters::p00X10B10Dx400D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9165,7 +9172,7 @@ constexpr const TFunction textureGather_00U20B(
     BuiltInId::textureGather_ISampler2DArray1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00U20B70D00D,
+    BuiltInParameters::p00U20B10D00D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9174,7 +9181,7 @@ constexpr const TFunction textureGather_00a20B(
     BuiltInId::textureGather_USampler2DArray1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00a20B10B10B10D,
+    BuiltInParameters::p00a20B10Dx400D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9219,7 +9226,7 @@ constexpr const TFunction textureGather_00T20B(
     BuiltInId::textureGather_ISamplerCube1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00T20B00D,
+    BuiltInParameters::p00T20B00B,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9264,7 +9271,7 @@ constexpr const TFunction textureGather_00d10B(
     BuiltInId::textureGather_Sampler2DShadow1_Float2,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00d10B00B10D,
+    BuiltInParameters::p00d10B00B10Dx4,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9273,7 +9280,7 @@ constexpr const TFunction textureGather_00d10B00B(
     BuiltInId::textureGather_Sampler2DShadow1_Float2_Float1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00d10B00B10D,
+    BuiltInParameters::p00d10B00B10Dx4,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9282,7 +9289,7 @@ constexpr const TFunction textureGather_00f20B(
     BuiltInId::textureGather_Sampler2DArrayShadow1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00f20B00B10D,
+    BuiltInParameters::p00f20B00B10Dx4,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9291,7 +9298,7 @@ constexpr const TFunction textureGather_00f20B00B(
     BuiltInId::textureGather_Sampler2DArrayShadow1_Float3_Float1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00f20B00B10D,
+    BuiltInParameters::p00f20B00B10Dx4,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9314,254 +9321,254 @@ constexpr const TFunction textureGather_00e20B00B(
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00I10B70D00D(
-    BuiltInId::textureGatherOffsets_Sampler2D1_Float2_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsets_00I10B10Dx400D(
+    BuiltInId::textureGatherOffsets_Sampler2D1_Float2_4xInt2_Int1,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00I10B70D00D,
+    BuiltInParameters::p00I10B10Dx400D,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00R10B70D00D(
-    BuiltInId::textureGatherOffsets_ISampler2D1_Float2_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsets_00R10B10Dx400D(
+    BuiltInId::textureGatherOffsets_ISampler2D1_Float2_4xInt2_Int1,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00R10B70D00D,
+    BuiltInParameters::p00R10B10Dx400D,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00X10B70D00D(
-    BuiltInId::textureGatherOffsets_USampler2D1_Float2_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsets_00X10B10Dx400D(
+    BuiltInId::textureGatherOffsets_USampler2D1_Float2_4xInt2_Int1,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00X10B70D00D,
+    BuiltInParameters::p00X10B10Dx400D,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00L20B70D00D(
-    BuiltInId::textureGatherOffsets_Sampler2DArray1_Float3_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsets_00L20B10Dx400D(
+    BuiltInId::textureGatherOffsets_Sampler2DArray1_Float3_4xInt2_Int1,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00L20B70D00D,
+    BuiltInParameters::p00L20B10Dx400D,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00U20B70D00D(
-    BuiltInId::textureGatherOffsets_ISampler2DArray1_Float3_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsets_00U20B10Dx400D(
+    BuiltInId::textureGatherOffsets_ISampler2DArray1_Float3_4xInt2_Int1,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00U20B70D00D,
+    BuiltInParameters::p00U20B10Dx400D,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00a20B70D00D(
-    BuiltInId::textureGatherOffsets_USampler2DArray1_Float3_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsets_00a20B10Dx400D(
+    BuiltInId::textureGatherOffsets_USampler2DArray1_Float3_4xInt2_Int1,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00a20B70D00D,
+    BuiltInParameters::p00a20B10Dx400D,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00I10B70D00D(
-    BuiltInId::textureGatherOffsetsExt_Sampler2D1_Float2_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsetsExt_00I10B10Dx400D(
+    BuiltInId::textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2_Int1,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00I10B70D00D,
+    BuiltInParameters::p00I10B10Dx400D,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00R10B70D00D(
-    BuiltInId::textureGatherOffsetsExt_ISampler2D1_Float2_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsetsExt_00R10B10Dx400D(
+    BuiltInId::textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2_Int1,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00R10B70D00D,
+    BuiltInParameters::p00R10B10Dx400D,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00X10B70D00D(
-    BuiltInId::textureGatherOffsetsExt_USampler2D1_Float2_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsetsExt_00X10B10Dx400D(
+    BuiltInId::textureGatherOffsetsExt_USampler2D1_Float2_4xInt2_Int1,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00X10B70D00D,
+    BuiltInParameters::p00X10B10Dx400D,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00L20B70D00D(
-    BuiltInId::textureGatherOffsetsExt_Sampler2DArray1_Float3_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsetsExt_00L20B10Dx400D(
+    BuiltInId::textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2_Int1,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00L20B70D00D,
+    BuiltInParameters::p00L20B10Dx400D,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00U20B70D00D(
-    BuiltInId::textureGatherOffsetsExt_ISampler2DArray1_Float3_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsetsExt_00U20B10Dx400D(
+    BuiltInId::textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2_Int1,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00U20B70D00D,
+    BuiltInParameters::p00U20B10Dx400D,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00a20B70D00D(
-    BuiltInId::textureGatherOffsetsExt_USampler2DArray1_Float3_Int4x2_Int1,
+constexpr const TFunction textureGatherOffsetsExt_00a20B10Dx400D(
+    BuiltInId::textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2_Int1,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00a20B70D00D,
+    BuiltInParameters::p00a20B10Dx400D,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00I10B70D(
-    BuiltInId::textureGatherOffsets_Sampler2D1_Float2_Int4x2,
+constexpr const TFunction textureGatherOffsets_00I10B10Dx4(
+    BuiltInId::textureGatherOffsets_Sampler2D1_Float2_4xInt2,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00I10B70D00D,
+    BuiltInParameters::p00I10B10Dx400D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00R10B70D(
-    BuiltInId::textureGatherOffsets_ISampler2D1_Float2_Int4x2,
+constexpr const TFunction textureGatherOffsets_00R10B10Dx4(
+    BuiltInId::textureGatherOffsets_ISampler2D1_Float2_4xInt2,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00R10B70D00D,
+    BuiltInParameters::p00R10B10Dx400D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00X10B70D(
-    BuiltInId::textureGatherOffsets_USampler2D1_Float2_Int4x2,
+constexpr const TFunction textureGatherOffsets_00X10B10Dx4(
+    BuiltInId::textureGatherOffsets_USampler2D1_Float2_4xInt2,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00X10B70D00D,
+    BuiltInParameters::p00X10B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00L20B70D(
-    BuiltInId::textureGatherOffsets_Sampler2DArray1_Float3_Int4x2,
+constexpr const TFunction textureGatherOffsets_00L20B10Dx4(
+    BuiltInId::textureGatherOffsets_Sampler2DArray1_Float3_4xInt2,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00L20B70D00D,
+    BuiltInParameters::p00L20B10Dx400D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00U20B70D(
-    BuiltInId::textureGatherOffsets_ISampler2DArray1_Float3_Int4x2,
+constexpr const TFunction textureGatherOffsets_00U20B10Dx4(
+    BuiltInId::textureGatherOffsets_ISampler2DArray1_Float3_4xInt2,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00U20B70D00D,
+    BuiltInParameters::p00U20B10Dx400D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00a20B70D(
-    BuiltInId::textureGatherOffsets_USampler2DArray1_Float3_Int4x2,
+constexpr const TFunction textureGatherOffsets_00a20B10Dx4(
+    BuiltInId::textureGatherOffsets_USampler2DArray1_Float3_4xInt2,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00a20B70D00D,
+    BuiltInParameters::p00a20B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00d10B00B70D(
-    BuiltInId::textureGatherOffsets_Sampler2DShadow1_Float2_Float1_Int4x2,
+constexpr const TFunction textureGatherOffsets_00d10B00B10Dx4(
+    BuiltInId::textureGatherOffsets_Sampler2DShadow1_Float2_Float1_4xInt2,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00d10B00B70D,
+    BuiltInParameters::p00d10B00B10Dx4,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsets_00f20B00B70D(
-    BuiltInId::textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_Int4x2,
+constexpr const TFunction textureGatherOffsets_00f20B00B10Dx4(
+    BuiltInId::textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_4xInt2,
     BuiltInName::textureGatherOffsets,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00f20B00B70D,
+    BuiltInParameters::p00f20B00B10Dx4,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00I10B70D(
-    BuiltInId::textureGatherOffsetsExt_Sampler2D1_Float2_Int4x2,
+constexpr const TFunction textureGatherOffsetsExt_00I10B10Dx4(
+    BuiltInId::textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00I10B70D00D,
+    BuiltInParameters::p00I10B10Dx400D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00R10B70D(
-    BuiltInId::textureGatherOffsetsExt_ISampler2D1_Float2_Int4x2,
+constexpr const TFunction textureGatherOffsetsExt_00R10B10Dx4(
+    BuiltInId::textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00R10B70D00D,
+    BuiltInParameters::p00R10B10Dx400D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00X10B70D(
-    BuiltInId::textureGatherOffsetsExt_USampler2D1_Float2_Int4x2,
+constexpr const TFunction textureGatherOffsetsExt_00X10B10Dx4(
+    BuiltInId::textureGatherOffsetsExt_USampler2D1_Float2_4xInt2,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00X10B70D00D,
+    BuiltInParameters::p00X10B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00L20B70D(
-    BuiltInId::textureGatherOffsetsExt_Sampler2DArray1_Float3_Int4x2,
+constexpr const TFunction textureGatherOffsetsExt_00L20B10Dx4(
+    BuiltInId::textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00L20B70D00D,
+    BuiltInParameters::p00L20B10Dx400D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00U20B70D(
-    BuiltInId::textureGatherOffsetsExt_ISampler2DArray1_Float3_Int4x2,
+constexpr const TFunction textureGatherOffsetsExt_00U20B10Dx4(
+    BuiltInId::textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00U20B70D00D,
+    BuiltInParameters::p00U20B10Dx400D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00a20B70D(
-    BuiltInId::textureGatherOffsetsExt_USampler2DArray1_Float3_Int4x2,
+constexpr const TFunction textureGatherOffsetsExt_00a20B10Dx4(
+    BuiltInId::textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00a20B70D00D,
+    BuiltInParameters::p00a20B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00d10B00B70D(
-    BuiltInId::textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_Int4x2,
+constexpr const TFunction textureGatherOffsetsExt_00d10B00B10Dx4(
+    BuiltInId::textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_4xInt2,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00d10B00B70D,
+    BuiltInParameters::p00d10B00B10Dx4,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
-constexpr const TFunction textureGatherOffsetsExt_00f20B00B70D(
-    BuiltInId::textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_Int4x2,
+constexpr const TFunction textureGatherOffsetsExt_00f20B00B10Dx4(
+    BuiltInId::textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_4xInt2,
     BuiltInName::textureGatherOffsetsExt,
     TExtension::EXT_gpu_shader5,
-    BuiltInParameters::p00f20B00B70D,
+    BuiltInParameters::p00f20B00B10Dx4,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9633,7 +9640,7 @@ constexpr const TFunction textureGatherOffset_00R10B10D(
     BuiltInId::textureGatherOffset_ISampler2D1_Float2_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00R10B10D00B,
+    BuiltInParameters::p00R10B10Dx400D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9642,7 +9649,7 @@ constexpr const TFunction textureGatherOffset_00X10B10D(
     BuiltInId::textureGatherOffset_USampler2D1_Float2_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00X10B10D00B,
+    BuiltInParameters::p00X10B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9669,7 +9676,7 @@ constexpr const TFunction textureGatherOffset_00a20B10D(
     BuiltInId::textureGatherOffset_USampler2DArray1_Float3_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00a20B10D00D,
+    BuiltInParameters::p00a20B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9678,7 +9685,7 @@ constexpr const TFunction textureGatherOffset_00d10B00B10D(
     BuiltInId::textureGatherOffset_Sampler2DShadow1_Float2_Float1_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00d10B00B10D,
+    BuiltInParameters::p00d10B00B10Dx4,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9687,7 +9694,7 @@ constexpr const TFunction textureGatherOffset_00f20B00B10D(
     BuiltInId::textureGatherOffset_Sampler2DArrayShadow1_Float3_Float1_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
-    BuiltInParameters::p00f20B00B10D,
+    BuiltInParameters::p00f20B00B10Dx4,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -10402,6 +10409,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&dFdx_30B),
     Rule::Get<Spec::GLSL, 0, Shader::FRAGMENT, 0>(&dFdx_30B),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, EXT_INDEX(OES_standard_derivatives)>(&dFdxExt_30B),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00U20B10Dx400D),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00U20B10Dx400D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00U20B10Dx400D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&clamp_00E00E00E),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&clamp_00E00E00E),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&transpose_50B),
@@ -10432,7 +10443,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&atanh_10B),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&mix_20B20B00B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&mix_20B20B00B),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageLoad_01C20D),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&clamp_10B10B10B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&clamp_10B10B10B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureGrad_00I10B10B10B),
@@ -10451,6 +10461,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&imulExtended_30D30D30D30D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureSize_00K00D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureSize_00K00D),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00X10B10Dx400D),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00X10B10Dx400D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00X10B10Dx400D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageStore_01B10D30E),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&transpose_70B),
     Rule::Get<Spec::GLSL, 120, Shader::ALL, 0>(&transpose_70B),
@@ -10484,14 +10498,7 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texelFetch_00a20D00D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&min_20D00D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&min_20D00D),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00I10B70D00D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00I10B70D00D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00I10B70D00D),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00X10B70D00D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00X10B70D00D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00X10B70D00D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageLoad_01F20D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&uintBitsToFloat_00E),
     Rule::Get<Spec::GLSL, 330, Shader::ALL, 0>(&uintBitsToFloat_00E),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&lessThanEqual_20B20B),
@@ -10507,14 +10514,16 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 330, Shader::ALL, 0>(&floatBitsToUint_20B),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&bitfieldInsert_20D20D00D00D),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&bitfieldInsert_20D20D00D00D),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00U20B70D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00U20B70D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00U20B70D),
+    Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&TableBase::m_gl_MaxVertexTextureImageUnits),
+    Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&TableBase::m_gl_MaxVertexTextureImageUnits),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&texture_00Z20B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00Z20B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&min_10D10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&min_10D10D),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00U20B10Dx4),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00U20B10Dx4),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00U20B10Dx4),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&degrees_20B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&degrees_20B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&tanh_00B),
@@ -10551,6 +10560,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageLoad_01A10D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&intBitsToFloat_30D),
     Rule::Get<Spec::GLSL, 330, Shader::ALL, 0>(&intBitsToFloat_30D),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00X10B10Dx4),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00X10B10Dx4),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00X10B10Dx4),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureProj_00I20B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProj_00I20B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&texelFetch_00I10D00D),
@@ -10574,10 +10587,8 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 330, Shader::ALL, 0>(&intBitsToFloat_00D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureGradOffset_00J20B20B20B20D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureGradOffset_00J20B20B20B20D),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00f20B00B70D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00f20B00B70D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00f20B00B70D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&memoryBarrierAtomicCounter_),
+    Rule::Get<Spec::GLSL, 430, Shader::ALL, 0>(&memoryBarrierAtomicCounter_),
     Rule::Get<Spec::ESSL, 100, Shader::ALL, EXT_INDEX(EXT_shader_texture_lod)>(
         &texture2DGradEXT_00I10B10B10B),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&bitfieldInsert_00E00E00D00D),
@@ -10634,12 +10645,9 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&atanh_00B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureGradOffset_00X10B10B10B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureGradOffset_00X10B10B10B10D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageStore_01K20D30E),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&TableBase::m_gl_DepthRange),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&TableBase::m_gl_DepthRange),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00I10B70D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00I10B70D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00I10B70D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imulExtended_10D10D10D10D),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&imulExtended_10D10D10D10D),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&atan_20B),
@@ -10650,8 +10658,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&TableBase::m_gl_MaxVertexOutputVectors),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&texture_00T20B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00T20B),
-    Rule::Get<Spec::ESSL, 310, Shader::GEOMETRY_EXT, EXT_INDEX(EXT_geometry_shader)>(
-        &TableBase::m_gl_PerVertex),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&log2_10B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&log2_10B),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&min_10B10B),
@@ -10695,6 +10701,8 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 120, Shader::ALL, 0>(&transpose_F0B),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&textureOffset_00Y20B20D00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureOffset_00Y20B20D00B),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&atomicCounterDecrement_00G),
+    Rule::Get<Spec::GLSL, 420, Shader::ALL, 0>(&atomicCounterDecrement_00G),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureGradOffset_00S20B20B20B20D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureGradOffset_00S20B20B20B20D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&atomicXor_00E00E),
@@ -10766,10 +10774,8 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texelFetchOffset_00R10D00D10D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&isinf_30B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&isinf_30B),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00U20B70D00D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00U20B70D00D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00U20B70D00D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&textureGatherOffset_00a20B10D00D),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffset_00a20B10D00D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&textureGatherOffset_00I10B10D),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffset_00I10B10D),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&textureOffset_00L20B10D00B),
@@ -10784,8 +10790,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&lessThanEqual_30E30E),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&textureOffset_00J20B20D00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureOffset_00J20B20D00B),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&textureGatherOffset_00a20B10D00D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffset_00a20B10D00D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&min_10E00E),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&min_10E00E),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&log_30B),
@@ -10936,10 +10940,12 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_MaxGeometryOutputVertices),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&texture_00J20B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00J20B),
-    Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&TableBase::m_gl_MaxVertexTextureImageUnits),
-    Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&TableBase::m_gl_MaxVertexTextureImageUnits),
     Rule::Get<Spec::ESSL, 0, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_PointCoord),
     Rule::Get<Spec::GLSL, 0, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_PointCoord),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00a20B10Dx4),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00a20B10Dx4),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00a20B10Dx4),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&dFdx_20B),
     Rule::Get<Spec::GLSL, 0, Shader::FRAGMENT, 0>(&dFdx_20B),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, EXT_INDEX(OES_standard_derivatives)>(&dFdxExt_20B),
@@ -10999,10 +11005,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProjLodOffset_00R20B00B10D),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&log_20B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&log_20B),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00R10B70D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00R10B70D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00R10B70D),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&asin_30B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&asin_30B),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&textureGather_00f20B),
@@ -11031,6 +11033,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 330, Shader::ALL, 0>(&floatBitsToInt_30B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureProj_00J30B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProj_00J30B),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00d10B00B10Dx4),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00d10B00B10Dx4),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00d10B00B10Dx4),
     Rule::Get<Spec::ESSL, 310, Shader::GEOMETRY_EXT, EXT_INDEX(EXT_geometry_shader)>(
         &BuiltInVariable::kgl_InvocationID),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&max_30E00E),
@@ -11159,10 +11165,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&fma_10B10B10B),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&fma_10B10B10B),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(&fmaExt_10B10B10B),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00a20B70D00D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00a20B70D00D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00a20B70D00D),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&reflect_30B30B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&reflect_30B30B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&outerProduct_30B20B),
@@ -11171,7 +11173,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00U20B00B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&texture_00S20B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00S20B),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageLoad_01F20D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&outerProduct_20B10B),
     Rule::Get<Spec::GLSL, 120, Shader::ALL, 0>(&outerProduct_20B10B),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&umulExtended_10E10E10E10E),
@@ -11262,6 +11263,8 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&textureProj_00Y30B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProj_00Y30B00B),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, EXT_INDEX(OES_texture_3D)>(&texture3D_00J20B),
+    Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, EXT_INDEX(EXT_blend_func_extended)>(
+        &TableBase::m_gl_SecondaryFragDataEXT),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&transpose_D0B),
     Rule::Get<Spec::GLSL, 120, Shader::ALL, 0>(&transpose_D0B),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&log2_30B),
@@ -11310,8 +11313,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProjLodOffset_00J30B00B20D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&frexp_30B30D),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&frexp_30B30D),
-    Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, EXT_INDEX(EXT_blend_func_extended)>(
-        &TableBase::m_gl_SecondaryFragDataEXT),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00L20B10Dx400D),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00L20B10Dx400D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00L20B10Dx400D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&min_30E30E),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&min_30E30E),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageLoad_01B10D),
@@ -11321,10 +11326,6 @@ constexpr SymbolRule kRules[] = {
         &textureCubeGradEXT_00K20B20B20B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&texture_00I10B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00I10B),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00d10B00B70D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00d10B00B70D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00d10B00B70D),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&min_00B00B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&min_00B00B),
     Rule::Get<Spec::ESSL, 300, Shader::VERTEX, 0>(&BuiltInVariable::kgl_InstanceID),
@@ -11355,6 +11356,10 @@ constexpr SymbolRule kRules[] = {
         &textureSizeExt_00P),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureGradOffset_00d20B10B10B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureGradOffset_00d20B10B10B10D),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00R10B10Dx4),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00R10B10Dx4),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00R10B10Dx4),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureProjLodOffset_00R30B00B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProjLodOffset_00R30B00B10D),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&atan_00B),
@@ -11402,6 +11407,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageLoad_01G20D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&bitfieldExtract_00E00D00D),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&bitfieldExtract_00E00D00D),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00a20B10Dx400D),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00a20B10Dx400D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00a20B10Dx400D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&atomicCompSwap_00D00D00D),
     Rule::Get<Spec::GLSL, 430, Shader::ALL, 0>(&atomicCompSwap_00D00D00D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&trunc_30B),
@@ -11411,10 +11420,8 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&length_00B),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&any_20F),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&any_20F),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00L20B70D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00L20B70D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00L20B70D),
+    Rule::Get<Spec::ESSL, 310, Shader::GEOMETRY_EXT, EXT_INDEX(EXT_geometry_shader)>(
+        &TableBase::m_gl_PerVertex),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&textureProj_00X30B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProj_00X30B00B),
     Rule::Get<Spec::ESSL, 310, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_HelperInvocation),
@@ -11465,6 +11472,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureOffset_00a20B10D00B),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&textureGather_00X10B),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGather_00X10B),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00L20B10Dx4),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00L20B10Dx4),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00L20B10Dx4),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&pow_30B30B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&pow_30B30B),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&textureGather_00a20B),
@@ -11491,7 +11502,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&uaddCarry_00E00E00E),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&sin_20B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&sin_20B),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageLoad_01K20D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_texture_storage_multisample_2d_array)>(
         &textureSizeExt_00Q),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&round_20B),
@@ -11503,6 +11513,10 @@ constexpr SymbolRule kRules[] = {
         &textureSizeExt_00W),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureProjLod_00X20B00B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProjLod_00X20B00B),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00I10B10Dx4),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00I10B10Dx4),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00I10B10Dx4),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&TableBase::m_gl_MaxCombinedAtomicCounterBuffers),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&TableBase::m_gl_MaxCombinedAtomicCounterBuffers),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&isnan_00B),
@@ -11642,7 +11656,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&max_30B00B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&min_20D20D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&min_20D20D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageStore_01K20D30E),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00f20B00B10Dx4),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00f20B00B10Dx4),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00f20B00B10Dx4),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&step_10B10B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&step_10B10B),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, EXT_INDEX(EXT_blend_func_extended)>(
@@ -11700,8 +11717,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageSize_01A),
     Rule::Get<Spec::ESSL, 100, Shader::VERTEX, 0>(&texture2DLod_00I10B00B),
     Rule::Get<Spec::GLSL, 0, Shader::VERTEX, 0>(&texture2DLod_00I10B00B),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&memoryBarrierAtomicCounter_),
-    Rule::Get<Spec::GLSL, 430, Shader::ALL, 0>(&memoryBarrierAtomicCounter_),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&texelFetch_00b10D00D),
     Rule::Get<Spec::GLSL, 150, Shader::ALL, 0>(&texelFetch_00b10D00D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ANGLE_texture_multisample)>(
@@ -11837,10 +11852,7 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&all_20F),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&isinf_10B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&isinf_10B),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00a20B70D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00a20B70D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00a20B70D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageLoad_01C20D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageSize_01J),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageSize_01K),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageSize_01H),
@@ -12001,10 +12013,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&sinh_10B),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&atan_30B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&atan_30B),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00R10B70D00D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00R10B70D00D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00R10B70D00D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureGradOffset_00L20B10B10B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureGradOffset_00L20B10B10B10D),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&ceil_10B),
@@ -12013,8 +12021,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureSize_00S00D),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&greaterThanEqual_10B10B),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&greaterThanEqual_10B10B),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&atomicCounterDecrement_00G),
-    Rule::Get<Spec::GLSL, 420, Shader::ALL, 0>(&atomicCounterDecrement_00G),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00I10B10Dx400D),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00I10B10Dx400D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00I10B10Dx400D),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, 0>(&textureCube_00K20B00B),
     Rule::Get<Spec::GLSL, 0, Shader::FRAGMENT, 0>(&textureCube_00K20B00B),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&dot_20B20B),
@@ -12126,10 +12136,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProjOffset_00d30B10D00B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&round_10B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&round_10B),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00X10B70D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00X10B70D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00X10B70D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureProjOffset_00d30B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProjOffset_00d30B10D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&notEqual_10E10E),
@@ -12203,10 +12209,7 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProj_00I20B00B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&greaterThan_10E10E),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&greaterThan_10E10E),
-    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00L20B70D00D),
-    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00L20B70D00D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00L20B70D00D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&imageLoad_01K20D),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&textureProjOffset_00R30B10D00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProjOffset_00R30B10D00B),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&dFdy_00B),
@@ -12266,6 +12269,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&floor_00B),
     Rule::Get<Spec::ESSL, 0, Shader::VERTEX, EXT_INDEX(ANGLE_multi_draw)>(
         &BuiltInVariable::kgl_DrawID),
+    Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&textureGatherOffsets_00R10B10Dx400D),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00R10B10Dx400D),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00R10B10Dx400D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&atomicOr_00D00D),
     Rule::Get<Spec::GLSL, 430, Shader::ALL, 0>(&atomicOr_00D00D),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, EXT_INDEX(OES_texture_3D)>(
@@ -12290,6 +12297,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "gl_Layer",
                                          "textureOffset(00d20B10D",
                                          "dFdx(30B",
+                                         "textureGatherOffsets(00U20B10Dx400D",
                                          "clamp(00E00E00E",
                                          "transpose(50B",
                                          "ldexp(00B00D",
@@ -12305,7 +12313,6 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "acosh(20B",
                                          "atanh(10B",
                                          "mix(20B20B00B",
-                                         "imageLoad(01C20D",
                                          "clamp(10B10B10B",
                                          "textureGrad(00I10B10B10B",
                                          "textureGatherOffset(00L20B10D00D",
@@ -12315,6 +12322,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "uintBitsToFloat(30E",
                                          "imulExtended(30D30D30D30D",
                                          "textureSize(00K00D",
+                                         "textureGatherOffsets(00X10B10Dx400D",
                                          "imageStore(01B10D30E",
                                          "transpose(70B",
                                          "textureProjOffset(00S30B20D00B",
@@ -12332,8 +12340,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "texelFetchOffset(00Y20D00D20D",
                                          "texelFetch(00a20D00D",
                                          "min(20D00D",
-                                         "textureGatherOffsets(00I10B70D00D",
-                                         "textureGatherOffsets(00X10B70D00D",
+                                         "imageLoad(01F20D",
                                          "uintBitsToFloat(00E",
                                          "lessThanEqual(20B20B",
                                          "texelFetch(00N10D00D",
@@ -12342,9 +12349,10 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "gl_MaxGeometryTextureImageUnits",
                                          "floatBitsToUint(20B",
                                          "bitfieldInsert(20D20D00D00D",
-                                         "textureGatherOffsets(00U20B70D",
+                                         "gl_MaxVertexTextureImageUnits",
                                          "texture(00Z20B",
                                          "min(10D10D",
+                                         "textureGatherOffsets(00U20B10Dx4",
                                          "degrees(20B",
                                          "tanh(00B",
                                          "textureProjOffset(00J30B20D00B",
@@ -12364,6 +12372,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "textureProjGradOffset(00R20B10B10B10D",
                                          "imageLoad(01A10D",
                                          "intBitsToFloat(30D",
+                                         "textureGatherOffsets(00X10B10Dx4",
                                          "textureProj(00I20B",
                                          "texelFetch(00I10D00D",
                                          "imageStore(01I20D30B",
@@ -12376,7 +12385,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "transpose(E0B",
                                          "intBitsToFloat(00D",
                                          "textureGradOffset(00J20B20B20B20D",
-                                         "textureGatherOffsets(00f20B00B70D",
+                                         "memoryBarrierAtomicCounter(",
                                          "texture2DGradEXT(00I10B10B10B",
                                          "bitfieldInsert(00E00E00D00D",
                                          "atomicXor(00D00D",
@@ -12406,14 +12415,13 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "sign(20D",
                                          "atanh(00B",
                                          "textureGradOffset(00X10B10B10B10D",
+                                         "imageStore(01K20D30E",
                                          "gl_DepthRange",
-                                         "textureGatherOffsets(00I10B70D",
                                          "imulExtended(10D10D10D10D",
                                          "atan(20B",
                                          "texture(00M10B",
                                          "gl_MaxVertexOutputVectors",
                                          "texture(00T20B",
-                                         "gl_PerVertex",
                                          "log2(10B",
                                          "min(10B10B",
                                          "gl_MaxImageUnits",
@@ -12435,6 +12443,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "texture(00O10B",
                                          "transpose(F0B",
                                          "textureOffset(00Y20B20D00B",
+                                         "atomicCounterDecrement(00G",
                                          "textureGradOffset(00S20B20B20B20D",
                                          "atomicXor(00E00E",
                                          "textureProjOffset(00R20B10D",
@@ -12471,7 +12480,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "gl_PrimitiveIDIn",
                                          "texelFetchOffset(00R10D00D10D",
                                          "isinf(30B",
-                                         "textureGatherOffsets(00U20B70D00D",
+                                         "textureGatherOffset(00a20B10D00D",
                                          "textureGatherOffset(00I10B10D",
                                          "textureOffset(00L20B10D00B",
                                          "textureLodOffset(00X10B00B10D",
@@ -12479,7 +12488,6 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "textureOffset(00L20B10D",
                                          "lessThanEqual(30E30E",
                                          "textureOffset(00J20B20D00B",
-                                         "textureGatherOffset(00a20B10D00D",
                                          "min(10E00E",
                                          "log(30B",
                                          "imageStore(01J20D30D",
@@ -12557,8 +12565,8 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "imageStore(01A10D30D",
                                          "gl_MaxGeometryOutputVertices",
                                          "texture(00J20B",
-                                         "gl_MaxVertexTextureImageUnits",
                                          "gl_PointCoord",
+                                         "textureGatherOffsets(00a20B10Dx4",
                                          "dFdx(20B",
                                          "imageStore(01F20D30B",
                                          "textureProj(00X20B",
@@ -12589,7 +12597,6 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "bitCount(30E",
                                          "textureProjLodOffset(00R20B00B10D",
                                          "log(20B",
-                                         "textureGatherOffsets(00R10B70D",
                                          "asin(30B",
                                          "textureGather(00f20B",
                                          "modf(30B30B",
@@ -12603,6 +12610,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "outerProduct(30B10B",
                                          "floatBitsToInt(30B",
                                          "textureProj(00J30B",
+                                         "textureGatherOffsets(00d10B00B10Dx4",
                                          "gl_InvocationID",
                                          "max(30E00E",
                                          "exp2(20B",
@@ -12668,12 +12676,10 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "textureProjLodOffset(00S30B00B20D",
                                          "sinh(20B",
                                          "fma(10B10B10B",
-                                         "textureGatherOffsets(00a20B70D00D",
                                          "reflect(30B30B",
                                          "outerProduct(30B20B",
                                          "texture(00U20B00B",
                                          "texture(00S20B",
-                                         "imageLoad(01F20D",
                                          "outerProduct(20B10B",
                                          "umulExtended(10E10E10E10E",
                                          "texture(00Z20B00B",
@@ -12720,6 +12726,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "mix(10B10B10B",
                                          "textureProj(00Y30B00B",
                                          "texture3D(00J20B",
+                                         "gl_SecondaryFragDataEXT",
                                          "transpose(D0B",
                                          "log2(30B",
                                          "textureGrad(00J20B20B20B",
@@ -12744,13 +12751,12 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "usubBorrow(00E00E00E",
                                          "textureProjLodOffset(00J30B00B20D",
                                          "frexp(30B30D",
-                                         "gl_SecondaryFragDataEXT",
+                                         "textureGatherOffsets(00L20B10Dx400D",
                                          "min(30E30E",
                                          "imageLoad(01B10D",
                                          "texture2DProj(00I30B00B",
                                          "textureCubeGradEXT(00K20B20B20B",
                                          "texture(00I10B",
-                                         "textureGatherOffsets(00d10B00B70D",
                                          "min(00B00B",
                                          "gl_InstanceID",
                                          "texelFetch(00c20D00D",
@@ -12765,6 +12771,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "textureProjLod(00R30B00B",
                                          "textureSize(00P",
                                          "textureGradOffset(00d20B10B10B10D",
+                                         "textureGatherOffsets(00R10B10Dx4",
                                          "textureProjLodOffset(00R30B00B10D",
                                          "atan(00B",
                                          "atomicExchange(00D00D",
@@ -12790,12 +12797,13 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "notEqual(10B10B",
                                          "imageLoad(01G20D",
                                          "bitfieldExtract(00E00D00D",
+                                         "textureGatherOffsets(00a20B10Dx400D",
                                          "atomicCompSwap(00D00D00D",
                                          "trunc(30B",
                                          "matrixCompMult(E0BE0B",
                                          "length(00B",
                                          "any(20F",
-                                         "textureGatherOffsets(00L20B70D",
+                                         "gl_PerVertex",
                                          "textureProj(00X30B00B",
                                          "gl_HelperInvocation",
                                          "textureGather(00L20B",
@@ -12821,6 +12829,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "max(10D10D",
                                          "textureOffset(00a20B10D00B",
                                          "textureGather(00X10B",
+                                         "textureGatherOffsets(00L20B10Dx4",
                                          "pow(30B30B",
                                          "textureGather(00a20B",
                                          "smoothstep(10B10B10B",
@@ -12835,13 +12844,13 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "greaterThanEqual(20B20B",
                                          "uaddCarry(00E00E00E",
                                          "sin(20B",
-                                         "imageLoad(01K20D",
                                          "textureSize(00Q",
                                          "round(20B",
                                          "matrixCompMult(90B90B",
                                          "textureProjLod(00d30B00B",
                                          "textureSize(00W",
                                          "textureProjLod(00X20B00B",
+                                         "textureGatherOffsets(00I10B10Dx4",
                                          "gl_MaxCombinedAtomicCounterBuffers",
                                          "isnan(00B",
                                          "umulExtended(30E30E30E30E",
@@ -12912,7 +12921,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "ldexp(30B30D",
                                          "max(30B00B",
                                          "min(20D20D",
-                                         "imageStore(01K20D30E",
+                                         "textureGatherOffsets(00f20B00B10Dx4",
                                          "step(10B10B",
                                          "gl_MaxDualSourceDrawBuffersEXT",
                                          "step(30B30B",
@@ -12943,7 +12952,6 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "sinh(00B",
                                          "imageSize(01A",
                                          "texture2DLod(00I10B00B",
-                                         "memoryBarrierAtomicCounter(",
                                          "texelFetch(00b10D00D",
                                          "fma(20B20B20B",
                                          "gl_MaxAtomicCounterBufferSize",
@@ -13011,7 +13019,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "clamp(20D00D00D",
                                          "all(20F",
                                          "isinf(10B",
-                                         "textureGatherOffsets(00a20B70D",
+                                         "imageLoad(01C20D",
                                          "imageSize(01J",
                                          "imageSize(01K",
                                          "imageSize(01H",
@@ -13095,12 +13103,11 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "fma(30B30B30B",
                                          "sinh(10B",
                                          "atan(30B",
-                                         "textureGatherOffsets(00R10B70D00D",
                                          "textureGradOffset(00L20B10B10B10D",
                                          "ceil(10B",
                                          "textureSize(00S00D",
                                          "greaterThanEqual(10B10B",
-                                         "atomicCounterDecrement(00G",
+                                         "textureGatherOffsets(00I10B10Dx400D",
                                          "textureCube(00K20B00B",
                                          "dot(20B20B",
                                          "transpose(90B",
@@ -13159,7 +13166,6 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "EmitVertex(",
                                          "textureProjOffset(00d30B10D00B",
                                          "round(10B",
-                                         "textureGatherOffsets(00X10B70D",
                                          "textureProjOffset(00d30B10D",
                                          "notEqual(10E10E",
                                          "textureProj(00R30B",
@@ -13196,7 +13202,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "textureProj(00R20B",
                                          "textureProj(00I20B00B",
                                          "greaterThan(10E10E",
-                                         "textureGatherOffsets(00L20B70D00D",
+                                         "imageLoad(01K20D",
                                          "textureProjOffset(00R30B10D00B",
                                          "dFdy(00B",
                                          "min(30D00D",
@@ -13226,6 +13232,7 @@ constexpr const char *kMangledNames[] = {"textureProj(00R30B00B",
                                          "textureProjGrad(00X30B10B10B",
                                          "floor(00B",
                                          "gl_DrawID",
+                                         "textureGatherOffsets(00R10B10Dx400D",
                                          "atomicOr(00D00D",
                                          "texture3DLod(00J20B00B"};
 
@@ -13249,50 +13256,50 @@ constexpr uint16_t kMangledOffsets[] = {
     26,    // gl_Layer
     28,    // textureOffset_00d20B10D
     30,    // dFdx_30B
-    33,    // clamp_00E00E00E
-    35,    // transpose_50B
-    37,    // ldexp_00B00D
-    39,    // textureGather_00K20B00D
-    41,    // lessThanEqual_30B30B
-    43,    // greaterThanEqual_20D20D
-    45,    // min_20E20E
-    47,    // asin_20B
-    49,    // outerProduct_20B30B
-    51,    // bitfieldInsert_00D00D00D00D
-    53,    // textureProjGrad_00Y30B20B20B
-    55,    // roundEven_30B
-    57,    // acosh_20B
-    59,    // atanh_10B
-    61,    // mix_20B20B00B
-    63,    // imageLoad_01C20D
-    64,    // clamp_10B10B10B
-    66,    // textureGrad_00I10B10B10B
-    68,    // textureGatherOffset_00L20B10D00D
-    70,    // bitCount_00D
-    72,    // step_00B20B
-    74,    // lessThan_30E30E
-    76,    // uintBitsToFloat_30E
-    78,    // imulExtended_30D30D30D30D
-    80,    // textureSize_00K00D
-    82,    // imageStore_01B10D30E
-    83,    // transpose_70B
-    85,    // textureProjOffset_00S30B20D00B
-    87,    // textureProjLod_00X30B00B
-    89,    // textureSize_00Y00D
-    91,    // gl_MinProgramTexelOffset
-    93,    // texture_00d20B
-    95,    // textureProj_00J30B00B
-    97,    // atan_10B10B
-    99,    // max_20B00B
-    101,   // clamp_30B30B30B
-    103,   // EndPrimitive_
-    104,   // textureLod_00Y20B00B
-    106,   // textureLodOffset_00a20B00B10D
-    108,   // texelFetchOffset_00Y20D00D20D
-    110,   // texelFetch_00a20D00D
-    112,   // min_20D00D
-    114,   // textureGatherOffsets_00I10B70D00D
-    117,   // textureGatherOffsets_00X10B70D00D
+    33,    // textureGatherOffsets_00U20B10Dx400D
+    36,    // clamp_00E00E00E
+    38,    // transpose_50B
+    40,    // ldexp_00B00D
+    42,    // textureGather_00K20B00D
+    44,    // lessThanEqual_30B30B
+    46,    // greaterThanEqual_20D20D
+    48,    // min_20E20E
+    50,    // asin_20B
+    52,    // outerProduct_20B30B
+    54,    // bitfieldInsert_00D00D00D00D
+    56,    // textureProjGrad_00Y30B20B20B
+    58,    // roundEven_30B
+    60,    // acosh_20B
+    62,    // atanh_10B
+    64,    // mix_20B20B00B
+    66,    // clamp_10B10B10B
+    68,    // textureGrad_00I10B10B10B
+    70,    // textureGatherOffset_00L20B10D00D
+    72,    // bitCount_00D
+    74,    // step_00B20B
+    76,    // lessThan_30E30E
+    78,    // uintBitsToFloat_30E
+    80,    // imulExtended_30D30D30D30D
+    82,    // textureSize_00K00D
+    84,    // textureGatherOffsets_00X10B10Dx400D
+    87,    // imageStore_01B10D30E
+    88,    // transpose_70B
+    90,    // textureProjOffset_00S30B20D00B
+    92,    // textureProjLod_00X30B00B
+    94,    // textureSize_00Y00D
+    96,    // gl_MinProgramTexelOffset
+    98,    // texture_00d20B
+    100,   // textureProj_00J30B00B
+    102,   // atan_10B10B
+    104,   // max_20B00B
+    106,   // clamp_30B30B30B
+    108,   // EndPrimitive_
+    109,   // textureLod_00Y20B00B
+    111,   // textureLodOffset_00a20B00B10D
+    113,   // texelFetchOffset_00Y20D00D20D
+    115,   // texelFetch_00a20D00D
+    117,   // min_20D00D
+    119,   // imageLoad_01F20D
     120,   // uintBitsToFloat_00E
     122,   // lessThanEqual_20B20B
     124,   // texelFetch_00N10D00D
@@ -13301,144 +13308,145 @@ constexpr uint16_t kMangledOffsets[] = {
     128,   // gl_MaxGeometryTextureImageUnits
     129,   // floatBitsToUint_20B
     131,   // bitfieldInsert_20D20D00D00D
-    133,   // textureGatherOffsets_00U20B70D
-    136,   // texture_00Z20B
-    138,   // min_10D10D
-    140,   // degrees_20B
-    142,   // tanh_00B
-    144,   // textureProjOffset_00J30B20D00B
-    146,   // all_30F
-    148,   // abs_20D
-    150,   // abs_20B
-    152,   // inversesqrt_00B
-    154,   // matrixCompMult_D0BD0B
-    155,   // lessThanEqual_10B10B
-    157,   // bitfieldReverse_20D
-    159,   // bitfieldReverse_20E
-    161,   // textureProjGrad_00S30B20B20B
-    163,   // equal_10D10D
-    165,   // max_30D00D
-    167,   // groupMemoryBarrier_
-    169,   // mix_00B00B00F
-    171,   // textureProjGradOffset_00R20B10B10B10D
-    173,   // imageLoad_01A10D
-    174,   // intBitsToFloat_30D
-    176,   // textureProj_00I20B
-    178,   // texelFetch_00I10D00D
-    180,   // imageStore_01I20D30B
-    181,   // min_30B30B
-    183,   // gl_MaxVertexAtomicCounterBuffers
-    185,   // textureLodOffset_00S20B00B20D
-    187,   // textureGatherOffset_00R10B10D
-    189,   // acos_00B
-    191,   // fract_10B
-    193,   // transpose_E0B
-    195,   // intBitsToFloat_00D
-    197,   // textureGradOffset_00J20B20B20B20D
-    199,   // textureGatherOffsets_00f20B00B70D
-    202,   // texture2DGradEXT_00I10B10B10B
-    203,   // bitfieldInsert_00E00E00D00D
-    205,   // atomicXor_00D00D
-    207,   // greaterThan_20B20B
-    209,   // textureLodOffset_00I10B00B10D
-    211,   // texelFetch_00Y20D00D
-    213,   // texture2DProjGradEXT_00I30B10B10B
-    214,   // textureGrad_00d20B10B10B
-    216,   // textureProjOffset_00R30B10D
-    218,   // textureOffset_00U20B10D
-    220,   // atan_10B
-    222,   // modf_10B10B
-    224,   // min_30B00B
-    226,   // determinant_50B
-    227,   // lessThan_20B20B
-    229,   // atomicAnd_00D00D
-    231,   // gl_FragColor
-    233,   // exp_10B
-    235,   // textureProjOffset_00I20B10D00B
-    237,   // step_00B10B
-    239,   // bitCount_30D
-    241,   // textureProjLod_00I20B00B
-    243,   // unpackUnorm2x16_00E
-    245,   // rgb_2_yuv_20B00H
-    246,   // sqrt_20B
-    248,   // sign_20B
-    250,   // sign_20D
-    252,   // atanh_00B
-    254,   // textureGradOffset_00X10B10B10B10D
-    256,   // gl_DepthRange
-    258,   // textureGatherOffsets_00I10B70D
-    261,   // imulExtended_10D10D10D10D
-    263,   // atan_20B
-    265,   // texture_00M10B
-    266,   // gl_MaxVertexOutputVectors
-    268,   // texture_00T20B
-    270,   // gl_PerVertex
-    271,   // log2_10B
-    273,   // min_10B10B
-    275,   // gl_MaxImageUnits
-    277,   // pow_10B10B
-    279,   // findLSB_20E
-    281,   // findLSB_20D
-    283,   // texture_00Y20B
-    285,   // packUnorm4x8_30B
-    287,   // texture_00X10B00B
-    289,   // frexp_00B00D
-    291,   // texture2D_00I10B
-    293,   // not_10F
-    295,   // texelFetch_00P10D00D
-    298,   // lessThan_10E10E
-    300,   // ceil_20B
-    302,   // textureLodOffset_00R10B00B10D
-    304,   // clamp_10D10D10D
-    306,   // texelFetch_00M10D00D
-    307,   // texture_00O10B
-    308,   // transpose_F0B
-    310,   // textureOffset_00Y20B20D00B
-    312,   // textureGradOffset_00S20B20B20B20D
-    314,   // atomicXor_00E00E
-    316,   // textureProjOffset_00R20B10D
-    318,   // gl_FragCoord
-    320,   // clamp_30E30E30E
-    322,   // textureProj_00N30B00B
-    323,   // textureSize_00R00D
-    325,   // gl_MaxFragmentImageUniforms
-    327,   // normalize_00B
-    329,   // textureOffset_00I10B10D
-    331,   // atomicExchange_00E00E
-    333,   // textureProj_00I30B00B
-    335,   // acosh_10B
-    337,   // gl_MaxCombinedShaderOutputResources
-    339,   // atomicOr_00E00E
-    341,   // min_20B00B
-    343,   // textureProj_00M30B00B
-    344,   // atomicMax_00D00D
-    346,   // textureProj_00M20B
-    347,   // texture_00I10B00B
-    349,   // reflect_00B00B
-    351,   // mod_20B00B
-    353,   // lessThan_20D20D
-    355,   // reflect_10B10B
-    357,   // floatBitsToUint_10B
-    359,   // textureLod_00J20B00B
-    361,   // sqrt_10B
-    363,   // textureProjLod_00S30B00B
-    365,   // clamp_20E20E20E
-    367,   // atomicAnd_00E00E
-    369,   // max_20D00D
-    371,   // textureSize_00I00D
-    373,   // gl_MaxComputeAtomicCounterBuffers
-    375,   // gl_PrimitiveIDIn
-    376,   // texelFetchOffset_00R10D00D10D
-    378,   // isinf_30B
-    380,   // textureGatherOffsets_00U20B70D00D
-    383,   // textureGatherOffset_00I10B10D
-    385,   // textureOffset_00L20B10D00B
-    387,   // textureLodOffset_00X10B00B10D
-    389,   // texture_00T20B00B
-    391,   // textureOffset_00L20B10D
-    393,   // lessThanEqual_30E30E
-    395,   // textureOffset_00J20B20D00B
-    397,   // textureGatherOffset_00a20B10D00D
+    133,   // gl_MaxVertexTextureImageUnits
+    135,   // texture_00Z20B
+    137,   // min_10D10D
+    139,   // textureGatherOffsets_00U20B10Dx4
+    142,   // degrees_20B
+    144,   // tanh_00B
+    146,   // textureProjOffset_00J30B20D00B
+    148,   // all_30F
+    150,   // abs_20D
+    152,   // abs_20B
+    154,   // inversesqrt_00B
+    156,   // matrixCompMult_D0BD0B
+    157,   // lessThanEqual_10B10B
+    159,   // bitfieldReverse_20D
+    161,   // bitfieldReverse_20E
+    163,   // textureProjGrad_00S30B20B20B
+    165,   // equal_10D10D
+    167,   // max_30D00D
+    169,   // groupMemoryBarrier_
+    171,   // mix_00B00B00F
+    173,   // textureProjGradOffset_00R20B10B10B10D
+    175,   // imageLoad_01A10D
+    176,   // intBitsToFloat_30D
+    178,   // textureGatherOffsets_00X10B10Dx4
+    181,   // textureProj_00I20B
+    183,   // texelFetch_00I10D00D
+    185,   // imageStore_01I20D30B
+    186,   // min_30B30B
+    188,   // gl_MaxVertexAtomicCounterBuffers
+    190,   // textureLodOffset_00S20B00B20D
+    192,   // textureGatherOffset_00R10B10D
+    194,   // acos_00B
+    196,   // fract_10B
+    198,   // transpose_E0B
+    200,   // intBitsToFloat_00D
+    202,   // textureGradOffset_00J20B20B20B20D
+    204,   // memoryBarrierAtomicCounter_
+    206,   // texture2DGradEXT_00I10B10B10B
+    207,   // bitfieldInsert_00E00E00D00D
+    209,   // atomicXor_00D00D
+    211,   // greaterThan_20B20B
+    213,   // textureLodOffset_00I10B00B10D
+    215,   // texelFetch_00Y20D00D
+    217,   // texture2DProjGradEXT_00I30B10B10B
+    218,   // textureGrad_00d20B10B10B
+    220,   // textureProjOffset_00R30B10D
+    222,   // textureOffset_00U20B10D
+    224,   // atan_10B
+    226,   // modf_10B10B
+    228,   // min_30B00B
+    230,   // determinant_50B
+    231,   // lessThan_20B20B
+    233,   // atomicAnd_00D00D
+    235,   // gl_FragColor
+    237,   // exp_10B
+    239,   // textureProjOffset_00I20B10D00B
+    241,   // step_00B10B
+    243,   // bitCount_30D
+    245,   // textureProjLod_00I20B00B
+    247,   // unpackUnorm2x16_00E
+    249,   // rgb_2_yuv_20B00H
+    250,   // sqrt_20B
+    252,   // sign_20B
+    254,   // sign_20D
+    256,   // atanh_00B
+    258,   // textureGradOffset_00X10B10B10B10D
+    260,   // imageStore_01K20D30E
+    261,   // gl_DepthRange
+    263,   // imulExtended_10D10D10D10D
+    265,   // atan_20B
+    267,   // texture_00M10B
+    268,   // gl_MaxVertexOutputVectors
+    270,   // texture_00T20B
+    272,   // log2_10B
+    274,   // min_10B10B
+    276,   // gl_MaxImageUnits
+    278,   // pow_10B10B
+    280,   // findLSB_20E
+    282,   // findLSB_20D
+    284,   // texture_00Y20B
+    286,   // packUnorm4x8_30B
+    288,   // texture_00X10B00B
+    290,   // frexp_00B00D
+    292,   // texture2D_00I10B
+    294,   // not_10F
+    296,   // texelFetch_00P10D00D
+    299,   // lessThan_10E10E
+    301,   // ceil_20B
+    303,   // textureLodOffset_00R10B00B10D
+    305,   // clamp_10D10D10D
+    307,   // texelFetch_00M10D00D
+    308,   // texture_00O10B
+    309,   // transpose_F0B
+    311,   // textureOffset_00Y20B20D00B
+    313,   // atomicCounterDecrement_00G
+    315,   // textureGradOffset_00S20B20B20B20D
+    317,   // atomicXor_00E00E
+    319,   // textureProjOffset_00R20B10D
+    321,   // gl_FragCoord
+    323,   // clamp_30E30E30E
+    325,   // textureProj_00N30B00B
+    326,   // textureSize_00R00D
+    328,   // gl_MaxFragmentImageUniforms
+    330,   // normalize_00B
+    332,   // textureOffset_00I10B10D
+    334,   // atomicExchange_00E00E
+    336,   // textureProj_00I30B00B
+    338,   // acosh_10B
+    340,   // gl_MaxCombinedShaderOutputResources
+    342,   // atomicOr_00E00E
+    344,   // min_20B00B
+    346,   // textureProj_00M30B00B
+    347,   // atomicMax_00D00D
+    349,   // textureProj_00M20B
+    350,   // texture_00I10B00B
+    352,   // reflect_00B00B
+    354,   // mod_20B00B
+    356,   // lessThan_20D20D
+    358,   // reflect_10B10B
+    360,   // floatBitsToUint_10B
+    362,   // textureLod_00J20B00B
+    364,   // sqrt_10B
+    366,   // textureProjLod_00S30B00B
+    368,   // clamp_20E20E20E
+    370,   // atomicAnd_00E00E
+    372,   // max_20D00D
+    374,   // textureSize_00I00D
+    376,   // gl_MaxComputeAtomicCounterBuffers
+    378,   // gl_PrimitiveIDIn
+    379,   // texelFetchOffset_00R10D00D10D
+    381,   // isinf_30B
+    383,   // textureGatherOffset_00a20B10D00D
+    385,   // textureGatherOffset_00I10B10D
+    387,   // textureOffset_00L20B10D00B
+    389,   // textureLodOffset_00X10B00B10D
+    391,   // texture_00T20B00B
+    393,   // textureOffset_00L20B10D
+    395,   // lessThanEqual_30E30E
+    397,   // textureOffset_00J20B20D00B
     399,   // min_10E00E
     401,   // log_30B
     403,   // imageStore_01J20D30D
@@ -13516,214 +13524,213 @@ constexpr uint16_t kMangledOffsets[] = {
     539,   // imageStore_01A10D30D
     540,   // gl_MaxGeometryOutputVertices
     541,   // texture_00J20B
-    543,   // gl_MaxVertexTextureImageUnits
-    545,   // gl_PointCoord
-    547,   // dFdx_20B
-    550,   // imageStore_01F20D30B
-    551,   // textureProj_00X20B
-    553,   // max_10E10E
-    555,   // max_30B30B
-    557,   // clamp_10E10E10E
-    559,   // texelFetchOffset_00S20D00D20D
-    561,   // texture_00N10B
-    562,   // texture_00L20B
-    564,   // barrier_
-    566,   // gl_MaxGeometryUniformComponents
-    567,   // greaterThanEqual_20E20E
-    569,   // lessThan_10D10D
-    571,   // texelFetchOffset_00a20D00D10D
-    573,   // textureProjGradOffset_00X20B10B10B10D
-    575,   // texture2DProj_00I20B
-    577,   // texture3DProjLod_00J30B00B
-    578,   // not_20F
-    580,   // Empty
-    580,   // findMSB_20D
-    582,   // findMSB_20E
-    584,   // texelFetchOffset_00I10D00D10D
-    586,   // textureGather_00I10B00D
-    588,   // texelFetch_00V10D00D
-    591,   // outerProduct_20B20B
-    593,   // atan_30B30B
-    595,   // unpackSnorm4x8_00E
-    597,   // bitCount_30E
-    599,   // textureProjLodOffset_00R20B00B10D
-    601,   // log_20B
-    603,   // textureGatherOffsets_00R10B70D
-    606,   // asin_30B
-    608,   // textureGather_00f20B
-    609,   // modf_30B30B
-    611,   // texture_00y10B
-    613,   // isnan_20B
-    615,   // max_00B00B
-    617,   // roundEven_20B
-    619,   // fwidth_00B
-    622,   // textureProjGrad_00J30B20B20B
-    624,   // dFdy_10B
-    627,   // outerProduct_30B10B
-    629,   // floatBitsToInt_30B
-    631,   // textureProj_00J30B
-    633,   // gl_InvocationID
-    634,   // max_30E00E
-    636,   // exp2_20B
-    638,   // textureLod_00d20B00B
-    640,   // radians_10B
-    642,   // texelFetch_00U20D00D
-    644,   // gl_MaxComputeWorkGroupSize
-    646,   // gl_BaseVertex
-    647,   // max_00D00D
-    649,   // gl_LastFragData
-    651,   // ceil_30B
-    653,   // atomicMin_00E00E
-    655,   // gl_MaxCombinedTextureImageUnits
-    657,   // bitCount_10E
-    659,   // texture_00S20B00B
-    661,   // textureGather_00e20B00B
-    663,   // gl_DepthRangeParameters
-    665,   // distance_10B10B
-    667,   // reflect_20B20B
-    669,   // mod_10B00B
-    671,   // uintBitsToFloat_10E
-    673,   // textureGrad_00Z20B20B20B
-    675,   // equal_10F10F
-    677,   // cosh_00B
-    679,   // bitfieldReverse_00D
-    681,   // bitfieldReverse_00E
-    683,   // max_20E20E
-    685,   // matrixCompMult_70B70B
-    686,   // bitfieldExtract_30E00D00D
-    688,   // textureLod_00I10B00B
-    690,   // greaterThanEqual_10D10D
-    692,   // imageSize_01F
-    693,   // texture_00e30B00B
-    695,   // textureLodOffset_00Y20B00B20D
-    697,   // log2_00B
-    699,   // gl_LastFragColor
-    700,   // abs_10D
-    702,   // abs_10B
-    704,   // acos_30B
-    706,   // tanh_10B
-    708,   // degrees_30B
-    710,   // imageStore_01E20D30E
-    711,   // dFdx_10B
-    714,   // textureProjOffset_00I30B10D
-    716,   // bitfieldReverse_30E
-    718,   // bitfieldReverse_30D
-    720,   // inversesqrt_30B
-    722,   // gl_LocalInvocationID
-    724,   // Empty
-    724,   // clamp_00B00B00B
-    726,   // textureGather_00d10B
-    727,   // frexp_20B20D
-    729,   // intBitsToFloat_20D
-    731,   // fract_00B
-    733,   // gl_FragDepth
-    735,   // min_30E00E
-    737,   // exp_20B
-    739,   // equal_20B20B
-    741,   // textureProjLodOffset_00X20B00B10D
-    743,   // acosh_00B
-    745,   // log_10B
-    747,   // textureVideoWEBGL_00y10B
-    749,   // textureProjLodOffset_00S30B00B20D
-    751,   // sinh_20B
-    753,   // fma_10B10B10B
-    756,   // textureGatherOffsets_00a20B70D00D
-    759,   // reflect_30B30B
-    761,   // outerProduct_30B20B
-    763,   // texture_00U20B00B
-    765,   // texture_00S20B
-    767,   // imageLoad_01F20D
-    768,   // outerProduct_20B10B
-    770,   // umulExtended_10E10E10E10E
-    772,   // texture_00Z20B00B
-    774,   // textureGradOffset_00a20B10B10B10D
-    776,   // notEqual_20F20F
-    778,   // mod_30B30B
-    780,   // bitfieldExtract_10D00D00D
-    782,   // sign_30B
-    784,   // sign_30D
-    786,   // pow_00B00B
-    788,   // mod_00B00B
-    790,   // texture_00Y20B00B
-    792,   // notEqual_30B30B
-    794,   // roundEven_10B
-    796,   // texture2DProjLodEXT_00I30B00B
-    797,   // atanh_30B
-    799,   // dFdy_20B
-    802,   // textureProj_00Y30B
-    804,   // bitCount_20D
-    806,   // step_00B00B
-    808,   // texelFetch_00L20D00D
-    810,   // memoryBarrierBuffer_
-    812,   // isinf_00B
-    814,   // imageSize_00z
-    815,   // distance_20B20B
-    817,   // textureGrad_00U20B10B10B
-    819,   // uaddCarry_30E30E30E
-    821,   // mod_30B00B
-    823,   // texture_00K20B00B
-    825,   // gl_MaxCombinedImageUniforms
-    827,   // yuv_2_rgb_20B00H
-    828,   // textureGather_00f20B00B
-    830,   // greaterThan_20E20E
-    832,   // textureGrad_00a20B10B10B
-    834,   // textureOffset_00U20B10D00B
-    836,   // intBitsToFloat_10D
-    838,   // texture_00J20B00B
-    840,   // refract_20B20B00B
-    842,   // textureProjLod_00I30B00B
-    844,   // refract_00B00B00B
-    846,   // findLSB_10D
-    848,   // findLSB_10E
-    850,   // mix_10B10B10F
-    852,   // mix_10B10B10B
-    854,   // textureProj_00Y30B00B
-    856,   // texture3D_00J20B
-    857,   // transpose_D0B
-    859,   // log2_30B
-    861,   // textureGrad_00J20B20B20B
-    863,   // textureProjGrad_00d30B10B10B
-    865,   // fract_30B
-    867,   // gl_LocalInvocationIndex
-    869,   // textureSize_00J00D
-    871,   // textureGatherOffset_00I10B10D00D
-    873,   // textureGather_00X10B00D
-    875,   // texelFetchOffset_00U20D00D10D
-    877,   // textureProjLodOffset_00Y30B00B20D
-    879,   // textureSize_00e00D
-    881,   // notEqual_20E20E
-    883,   // textureLodOffset_00d20B00B10D
-    885,   // inverse_A0B
-    887,   // textureProjGrad_00X20B10B10B
-    889,   // max_30E30E
-    891,   // isnan_30B
-    893,   // imulExtended_00D00D00D00D
-    895,   // gl_in
-    896,   // atan_20B20B
-    898,   // usubBorrow_00E00E00E
-    900,   // textureProjLodOffset_00J30B00B20D
-    902,   // frexp_30B30D
-    904,   // gl_SecondaryFragDataEXT
+    543,   // gl_PointCoord
+    545,   // textureGatherOffsets_00a20B10Dx4
+    548,   // dFdx_20B
+    551,   // imageStore_01F20D30B
+    552,   // textureProj_00X20B
+    554,   // max_10E10E
+    556,   // max_30B30B
+    558,   // clamp_10E10E10E
+    560,   // texelFetchOffset_00S20D00D20D
+    562,   // texture_00N10B
+    563,   // texture_00L20B
+    565,   // barrier_
+    567,   // gl_MaxGeometryUniformComponents
+    568,   // greaterThanEqual_20E20E
+    570,   // lessThan_10D10D
+    572,   // texelFetchOffset_00a20D00D10D
+    574,   // textureProjGradOffset_00X20B10B10B10D
+    576,   // texture2DProj_00I20B
+    578,   // texture3DProjLod_00J30B00B
+    579,   // not_20F
+    581,   // Empty
+    581,   // findMSB_20D
+    583,   // findMSB_20E
+    585,   // texelFetchOffset_00I10D00D10D
+    587,   // textureGather_00I10B00D
+    589,   // texelFetch_00V10D00D
+    592,   // outerProduct_20B20B
+    594,   // atan_30B30B
+    596,   // unpackSnorm4x8_00E
+    598,   // bitCount_30E
+    600,   // textureProjLodOffset_00R20B00B10D
+    602,   // log_20B
+    604,   // asin_30B
+    606,   // textureGather_00f20B
+    607,   // modf_30B30B
+    609,   // texture_00y10B
+    611,   // isnan_20B
+    613,   // max_00B00B
+    615,   // roundEven_20B
+    617,   // fwidth_00B
+    620,   // textureProjGrad_00J30B20B20B
+    622,   // dFdy_10B
+    625,   // outerProduct_30B10B
+    627,   // floatBitsToInt_30B
+    629,   // textureProj_00J30B
+    631,   // textureGatherOffsets_00d10B00B10Dx4
+    634,   // gl_InvocationID
+    635,   // max_30E00E
+    637,   // exp2_20B
+    639,   // textureLod_00d20B00B
+    641,   // radians_10B
+    643,   // texelFetch_00U20D00D
+    645,   // gl_MaxComputeWorkGroupSize
+    647,   // gl_BaseVertex
+    648,   // max_00D00D
+    650,   // gl_LastFragData
+    652,   // ceil_30B
+    654,   // atomicMin_00E00E
+    656,   // gl_MaxCombinedTextureImageUnits
+    658,   // bitCount_10E
+    660,   // texture_00S20B00B
+    662,   // textureGather_00e20B00B
+    664,   // gl_DepthRangeParameters
+    666,   // distance_10B10B
+    668,   // reflect_20B20B
+    670,   // mod_10B00B
+    672,   // uintBitsToFloat_10E
+    674,   // textureGrad_00Z20B20B20B
+    676,   // equal_10F10F
+    678,   // cosh_00B
+    680,   // bitfieldReverse_00D
+    682,   // bitfieldReverse_00E
+    684,   // max_20E20E
+    686,   // matrixCompMult_70B70B
+    687,   // bitfieldExtract_30E00D00D
+    689,   // textureLod_00I10B00B
+    691,   // greaterThanEqual_10D10D
+    693,   // imageSize_01F
+    694,   // texture_00e30B00B
+    696,   // textureLodOffset_00Y20B00B20D
+    698,   // log2_00B
+    700,   // gl_LastFragColor
+    701,   // abs_10D
+    703,   // abs_10B
+    705,   // acos_30B
+    707,   // tanh_10B
+    709,   // degrees_30B
+    711,   // imageStore_01E20D30E
+    712,   // dFdx_10B
+    715,   // textureProjOffset_00I30B10D
+    717,   // bitfieldReverse_30E
+    719,   // bitfieldReverse_30D
+    721,   // inversesqrt_30B
+    723,   // gl_LocalInvocationID
+    725,   // Empty
+    725,   // clamp_00B00B00B
+    727,   // textureGather_00d10B
+    728,   // frexp_20B20D
+    730,   // intBitsToFloat_20D
+    732,   // fract_00B
+    734,   // gl_FragDepth
+    736,   // min_30E00E
+    738,   // exp_20B
+    740,   // equal_20B20B
+    742,   // textureProjLodOffset_00X20B00B10D
+    744,   // acosh_00B
+    746,   // log_10B
+    748,   // textureVideoWEBGL_00y10B
+    750,   // textureProjLodOffset_00S30B00B20D
+    752,   // sinh_20B
+    754,   // fma_10B10B10B
+    757,   // reflect_30B30B
+    759,   // outerProduct_30B20B
+    761,   // texture_00U20B00B
+    763,   // texture_00S20B
+    765,   // outerProduct_20B10B
+    767,   // umulExtended_10E10E10E10E
+    769,   // texture_00Z20B00B
+    771,   // textureGradOffset_00a20B10B10B10D
+    773,   // notEqual_20F20F
+    775,   // mod_30B30B
+    777,   // bitfieldExtract_10D00D00D
+    779,   // sign_30B
+    781,   // sign_30D
+    783,   // pow_00B00B
+    785,   // mod_00B00B
+    787,   // texture_00Y20B00B
+    789,   // notEqual_30B30B
+    791,   // roundEven_10B
+    793,   // texture2DProjLodEXT_00I30B00B
+    794,   // atanh_30B
+    796,   // dFdy_20B
+    799,   // textureProj_00Y30B
+    801,   // bitCount_20D
+    803,   // step_00B00B
+    805,   // texelFetch_00L20D00D
+    807,   // memoryBarrierBuffer_
+    809,   // isinf_00B
+    811,   // imageSize_00z
+    812,   // distance_20B20B
+    814,   // textureGrad_00U20B10B10B
+    816,   // uaddCarry_30E30E30E
+    818,   // mod_30B00B
+    820,   // texture_00K20B00B
+    822,   // gl_MaxCombinedImageUniforms
+    824,   // yuv_2_rgb_20B00H
+    825,   // textureGather_00f20B00B
+    827,   // greaterThan_20E20E
+    829,   // textureGrad_00a20B10B10B
+    831,   // textureOffset_00U20B10D00B
+    833,   // intBitsToFloat_10D
+    835,   // texture_00J20B00B
+    837,   // refract_20B20B00B
+    839,   // textureProjLod_00I30B00B
+    841,   // refract_00B00B00B
+    843,   // findLSB_10D
+    845,   // findLSB_10E
+    847,   // mix_10B10B10F
+    849,   // mix_10B10B10B
+    851,   // textureProj_00Y30B00B
+    853,   // texture3D_00J20B
+    854,   // gl_SecondaryFragDataEXT
+    855,   // transpose_D0B
+    857,   // log2_30B
+    859,   // textureGrad_00J20B20B20B
+    861,   // textureProjGrad_00d30B10B10B
+    863,   // fract_30B
+    865,   // gl_LocalInvocationIndex
+    867,   // textureSize_00J00D
+    869,   // textureGatherOffset_00I10B10D00D
+    871,   // textureGather_00X10B00D
+    873,   // texelFetchOffset_00U20D00D10D
+    875,   // textureProjLodOffset_00Y30B00B20D
+    877,   // textureSize_00e00D
+    879,   // notEqual_20E20E
+    881,   // textureLodOffset_00d20B00B10D
+    883,   // inverse_A0B
+    885,   // textureProjGrad_00X20B10B10B
+    887,   // max_30E30E
+    889,   // isnan_30B
+    891,   // imulExtended_00D00D00D00D
+    893,   // gl_in
+    894,   // atan_20B20B
+    896,   // usubBorrow_00E00E00E
+    898,   // textureProjLodOffset_00J30B00B20D
+    900,   // frexp_30B30D
+    902,   // textureGatherOffsets_00L20B10Dx400D
     905,   // min_30E30E
     907,   // imageLoad_01B10D
     908,   // texture2DProj_00I30B00B
     910,   // textureCubeGradEXT_00K20B20B20B
     911,   // texture_00I10B
-    913,   // textureGatherOffsets_00d10B00B70D
-    916,   // min_00B00B
-    918,   // gl_InstanceID
-    920,   // texelFetch_00c20D00D
-    921,   // gl_MaxVertexImageUniforms
-    923,   // sqrt_00B
-    925,   // normalize_20B
-    927,   // gl_MaxFragmentAtomicCounterBuffers
-    929,   // gl_WorkGroupID
-    931,   // degrees_00B
-    933,   // inverse_F0B
-    935,   // min_20E00E
-    937,   // textureProjLod_00R30B00B
-    939,   // textureSize_00P
-    942,   // textureGradOffset_00d20B10B10B10D
+    913,   // min_00B00B
+    915,   // gl_InstanceID
+    917,   // texelFetch_00c20D00D
+    918,   // gl_MaxVertexImageUniforms
+    920,   // sqrt_00B
+    922,   // normalize_20B
+    924,   // gl_MaxFragmentAtomicCounterBuffers
+    926,   // gl_WorkGroupID
+    928,   // degrees_00B
+    930,   // inverse_F0B
+    932,   // min_20E00E
+    934,   // textureProjLod_00R30B00B
+    936,   // textureSize_00P
+    939,   // textureGradOffset_00d20B10B10B10D
+    941,   // textureGatherOffsets_00R10B10Dx4
     944,   // textureProjLodOffset_00R30B00B10D
     946,   // atan_00B
     948,   // atomicExchange_00D00D
@@ -13749,442 +13756,442 @@ constexpr uint16_t kMangledOffsets[] = {
     985,   // notEqual_10B10B
     987,   // imageLoad_01G20D
     988,   // bitfieldExtract_00E00D00D
-    990,   // atomicCompSwap_00D00D00D
-    992,   // trunc_30B
-    994,   // matrixCompMult_E0BE0B
-    995,   // length_00B
-    997,   // any_20F
-    999,   // textureGatherOffsets_00L20B70D
-    1002,  // textureProj_00X30B00B
-    1004,  // gl_HelperInvocation
-    1006,  // textureGather_00L20B
-    1008,  // gl_ViewID_OVR
-    1009,  // floor_10B
-    1011,  // sin_10B
-    1013,  // textureSize_00N00D
-    1014,  // texelFetchOffset_00J20D00D20D
-    1016,  // tan_00B
-    1018,  // mod_20B20B
-    1020,  // imageLoad_01J20D
-    1021,  // gl_WorkGroupSize
-    1023,  // asinh_30B
-    1025,  // outerProduct_10B30B
-    1027,  // textureCube_00K20B
-    1029,  // textureSize_00c
-    1030,  // textureSize_00b
-    1033,  // cos_00B
-    1035,  // min_20B20B
-    1037,  // textureGradOffset_00f30B10B10B10D
-    1039,  // max_20D20D
-    1041,  // textureProj_00I30B
-    1043,  // max_10D10D
-    1045,  // textureOffset_00a20B10D00B
-    1047,  // textureGather_00X10B
-    1049,  // pow_30B30B
-    1051,  // textureGather_00a20B
-    1053,  // smoothstep_10B10B10B
-    1055,  // textureProj_00O30B
-    1056,  // textureGatherOffset_00d10B00B10D
-    1058,  // refract_30B30B00B
-    1060,  // bitfieldInsert_20E20E00D00D
-    1062,  // floor_20B
-    1064,  // equal_20E20E
-    1066,  // mix_00B00B00B
-    1068,  // imageSize_01B
-    1069,  // greaterThanEqual_20B20B
-    1071,  // uaddCarry_00E00E00E
-    1073,  // sin_20B
-    1075,  // imageLoad_01K20D
-    1076,  // textureSize_00Q
-    1077,  // round_20B
-    1079,  // matrixCompMult_90B90B
-    1080,  // textureProjLod_00d30B00B
-    1082,  // textureSize_00W
-    1083,  // textureProjLod_00X20B00B
-    1085,  // gl_MaxCombinedAtomicCounterBuffers
-    1087,  // isnan_00B
-    1089,  // umulExtended_30E30E30E30E
-    1091,  // faceforward_30B30B30B
-    1093,  // textureGradOffset_00Y20B20B20B20D
-    1095,  // clamp_30E00E00E
-    1097,  // asin_00B
-    1099,  // ceil_00B
-    1101,  // texture3D_00J20B00B
-    1102,  // distance_00B00B
-    1104,  // texture_00a20B
-    1106,  // textureGatherOffset_00a20B10D
-    1108,  // textureGrad_00f30B10B10B
-    1110,  // texture2DProj_00I30B
-    1112,  // modf_20B20B
-    1114,  // textureGradOffset_00I10B10B10B10D
-    1116,  // notEqual_30E30E
-    1118,  // textureGather_00I10B
-    1120,  // lessThanEqual_10E10E
-    1122,  // inversesqrt_20B
-    1124,  // textureLodOffset_00J20B00B20D
-    1126,  // min_30D30D
-    1128,  // textureOffset_00R10B10D00B
-    1130,  // textureGrad_00e30B20B20B
-    1132,  // atomicAdd_00E00E
-    1134,  // gl_MaxGeometryInputComponents
-    1135,  // findMSB_30E
-    1137,  // findMSB_30D
-    1139,  // textureGrad_00X10B10B10B
-    1141,  // length_30B
-    1143,  // greaterThanEqual_30E30E
-    1145,  // fwidth_30B
-    1148,  // textureGrad_00K20B20B20B
-    1150,  // mix_20B20B20F
-    1152,  // texelFetch_00S20D00D
-    1154,  // textureGradOffset_00U20B10B10B10D
-    1156,  // mix_20B20B20B
-    1158,  // floatBitsToInt_10B
-    1160,  // max_10B00B
-    1162,  // textureGatherOffset_00L20B10D
-    1164,  // textureLod_00a20B00B
-    1166,  // any_10F
-    1168,  // textureProjGradOffset_00d30B10B10B10D
-    1170,  // textureProj_00N30B
-    1171,  // gl_MaxProgramTexelOffset
-    1173,  // exp2_30B
-    1175,  // texelFetchOffset_00L20D00D10D
-    1177,  // equal_30D30D
-    1179,  // texture3DProj_00J30B00B
-    1180,  // imageStore_01D20D30D
-    1181,  // packSnorm2x16_10B
-    1183,  // floatBitsToUint_30B
-    1185,  // lessThanEqual_30D30D
-    1187,  // gl_MaxGeometryImageUniforms
-    1188,  // asinh_00B
-    1190,  // textureOffset_00R10B10D
-    1192,  // greaterThanEqual_10E10E
-    1194,  // textureProjGradOffset_00I30B10B10B10D
-    1196,  // textureGather_00Z20B
-    1198,  // textureOffset_00X10B10D
-    1200,  // cosh_30B
-    1202,  // textureOffset_00d20B10D00B
-    1204,  // texture_00R10B
-    1206,  // textureOffset_00S20B20D00B
-    1208,  // usubBorrow_30E30E30E
-    1210,  // radians_00B
-    1212,  // textureProjOffset_00R20B10D00B
-    1214,  // ldexp_30B30D
-    1216,  // max_30B00B
-    1218,  // min_20D20D
-    1220,  // imageStore_01K20D30E
-    1221,  // step_10B10B
-    1223,  // gl_MaxDualSourceDrawBuffersEXT
-    1224,  // step_30B30B
-    1226,  // bitfieldReverse_10E
-    1228,  // bitfieldReverse_10D
-    1230,  // texture3DProj_00J30B
-    1231,  // gl_FragDepthEXT
-    1232,  // matrixCompMult_B0BB0B
-    1233,  // lessThan_30B30B
-    1235,  // cross_20B20B
-    1237,  // all_10F
-    1239,  // clamp_20B00B00B
-    1241,  // tanh_20B
-    1243,  // dFdx_00B
-    1246,  // matrixCompMult_F0BF0B
-    1248,  // textureProjOffset_00Y30B20D
-    1250,  // abs_00D
-    1252,  // abs_00B
-    1254,  // textureLod_00R10B00B
-    1256,  // step_20B20B
-    1258,  // gl_MaxFragmentAtomicCounters
-    1260,  // textureLodOffset_00U20B00B10D
-    1262,  // textureProj_00R20B00B
-    1264,  // faceforward_20B20B20B
-    1266,  // imageSize_01E
-    1267,  // acos_20B
-    1269,  // texelFetch_00X10D00D
-    1271,  // sinh_00B
-    1273,  // imageSize_01A
-    1274,  // texture2DLod_00I10B00B
-    1276,  // memoryBarrierAtomicCounter_
-    1278,  // texelFetch_00b10D00D
-    1281,  // fma_20B20B20B
-    1284,  // gl_MaxAtomicCounterBufferSize
-    1286,  // max_20B20B
-    1288,  // textureGatherOffset_00f20B00B10D
-    1290,  // outerProduct_30B30B
-    1292,  // lessThanEqual_20E20E
-    1294,  // textureLod_00X10B00B
-    1296,  // exp_30B
-    1298,  // memoryBarrier_
-    1300,  // imageSize_01D
-    1301,  // step_00B30B
-    1303,  // bitCount_10D
-    1305,  // equal_30E30E
-    1307,  // sign_00B
-    1309,  // log_00B
-    1311,  // textureLod_00Z20B00B
-    1313,  // sign_00D
-    1315,  // textureOffset_00Y20B20D
-    1317,  // transpose_60B
-    1319,  // findMSB_00D
-    1321,  // gl_MaxGeometryTotalOutputComponents
-    1322,  // acosh_30B
-    1324,  // findMSB_00E
-    1326,  // bitfieldExtract_20E00D00D
-    1328,  // uintBitsToFloat_20E
-    1330,  // unpackUnorm4x8_00E
-    1332,  // texture2DProj_00M20B
-    1333,  // texelFetchOffset_00X10D00D10D
-    1335,  // mod_10B10B
-    1337,  // texture_00d20B00B
-    1339,  // notEqual_10D10D
-    1341,  // texture2DProj_00M30B
-    1342,  // textureSize_00V
-    1345,  // packUnorm2x16_10B
-    1347,  // faceforward_00B00B00B
-    1349,  // umulExtended_20E20E20E20E
-    1351,  // textureOffset_00X10B10D00B
-    1353,  // cos_30B
-    1355,  // findLSB_30D
-    1357,  // findLSB_30E
-    1359,  // bitCount_20E
-    1361,  // gl_NumWorkGroups
-    1363,  // equal_20D20D
-    1365,  // textureProjOffset_00Y30B20D00B
-    1367,  // textureGatherOffset_00U20B10D
-    1369,  // faceforward_10B10B10B
-    1371,  // textureSize_00L00D
-    1373,  // gl_MaxComputeUniformComponents
-    1375,  // textureGather_00R10B00D
-    1377,  // imageStore_01H20D30E
-    1378,  // textureSize_00Z00D
-    1380,  // textureGather_00U20B
-    1382,  // bitfieldExtract_30D00D00D
-    1384,  // min_10D00D
-    1386,  // texelFetch_00Q20D00D
-    1387,  // max_20E00E
-    1389,  // textureProj_00S30B
-    1391,  // roundEven_00B
-    1393,  // texture2DLodEXT_00I10B00B
-    1394,  // dFdy_30B
-    1397,  // atanh_20B
-    1399,  // clamp_10E00E00E
-    1401,  // imageStore_01C20D30B
-    1402,  // clamp_20D00D00D
-    1404,  // all_20F
-    1406,  // isinf_10B
-    1408,  // textureGatherOffsets_00a20B70D
-    1411,  // imageSize_01J
-    1412,  // imageSize_01K
-    1413,  // imageSize_01H
-    1414,  // imageSize_01I
-    1415,  // packHalf2x16_10B
-    1417,  // texture2DProj_00I20B00B
-    1419,  // findLSB_00E
-    1421,  // findLSB_00D
-    1423,  // textureProjOffset_00X30B10D
-    1425,  // imageSize_01C
-    1426,  // greaterThanEqual_30B30B
-    1428,  // textureSize_00U00D
-    1430,  // textureGradOffset_00R10B10B10B10D
-    1432,  // imageSize_01G
-    1433,  // equal_30F30F
-    1435,  // bitfieldExtract_00D00D00D
-    1437,  // texture2DProjLodEXT_00I20B00B
-    1438,  // notEqual_30F30F
-    1440,  // gl_FrontFacing
-    1442,  // gl_SecondaryFragColorEXT
-    1443,  // inversesqrt_10B
-    1445,  // gl_MaxComputeWorkGroupCount
-    1447,  // acos_10B
-    1449,  // abs_30D
-    1451,  // gl_MaxFragmentUniformVectors
-    1453,  // fract_20B
-    1455,  // abs_30B
-    1457,  // lessThan_10B10B
-    1459,  // textureGatherOffset_00X10B10D
-    1461,  // bitfieldInsert_10E10E00D00D
-    1463,  // packSnorm4x8_30B
-    1465,  // mix_10B10B00B
-    1467,  // imageLoad_01E20D
-    1468,  // clamp_30D30D30D
-    1470,  // textureGather_00U20B00D
-    1472,  // textureSize_00f00D
-    1474,  // textureProj_00N20B00B
-    1475,  // gl_FragData
-    1477,  // textureProj_00d30B00B
-    1479,  // clamp_20E00E00E
-    1481,  // texture_00X10B
-    1483,  // textureProj_00d30B
-    1485,  // mix_30B30B30F
-    1487,  // determinant_F0B
-    1488,  // transpose_A0B
-    1490,  // pow_20B20B
-    1492,  // texture2DProjGradEXT_00I20B10B10B
-    1493,  // gl_LastFragColorARM
-    1494,  // textureGather_00Z20B00D
-    1496,  // textureGather_00R10B
-    1498,  // lessThanEqual_20D20D
-    1500,  // textureLod_00S20B00B
-    1502,  // textureProjLod_00Y30B00B
-    1504,  // cosh_10B
-    1506,  // sqrt_30B
-    1508,  // gl_VertexID
-    1510,  // sign_10D
-    1512,  // textureProj_00M30B
-    1513,  // exp_00B
-    1515,  // min_00E00E
-    1517,  // max_30D30D
-    1519,  // umulExtended_00E00E00E00E
-    1521,  // gl_MaxVertexAttribs
-    1523,  // gl_BaseInstance
-    1524,  // transpose_B0B
-    1526,  // fwidth_20B
-    1529,  // Empty
-    1529,  // smoothstep_00B00B30B
-    1531,  // floatBitsToInt_20B
-    1533,  // textureSize_00M00D
-    1534,  // log2_20B
-    1536,  // ldexp_10B10D
-    1538,  // min_10B00B
-    1540,  // mix_30B30B00B
-    1542,  // angle_BaseInstance
-    1543,  // degrees_10B
-    1545,  // gl_MaxTextureImageUnits
-    1547,  // gl_Position
-    1550,  // texture_00K20B
-    1552,  // atomicCompSwap_00E00E00E
-    1554,  // fma_30B30B30B
-    1557,  // sinh_10B
-    1559,  // atan_30B
-    1561,  // textureGatherOffsets_00R10B70D00D
-    1564,  // textureGradOffset_00L20B10B10B10D
-    1566,  // ceil_10B
-    1568,  // textureSize_00S00D
-    1570,  // greaterThanEqual_10B10B
-    1572,  // atomicCounterDecrement_00G
-    1574,  // textureCube_00K20B00B
-    1576,  // dot_20B20B
-    1578,  // transpose_90B
-    1580,  // not_30F
-    1582,  // textureProjLodOffset_00I20B00B10D
-    1584,  // notEqual_10F10F
-    1586,  // textureProjGrad_00R20B10B10B
-    1588,  // texture_00f30B
-    1590,  // smoothstep_00B00B00B
-    1592,  // textureProjLodOffset_00d30B00B10D
-    1594,  // texelFetch_00R10D00D
-    1596,  // cosh_20B
-    1598,  // textureProjLodOffset_00I30B00B10D
-    1600,  // normalize_30B
-    1602,  // smoothstep_30B30B30B
-    1604,  // bitfieldInsert_10D10D00D00D
-    1606,  // clamp_20B20B20B
-    1608,  // textureGrad_00L20B10B10B
-    1610,  // textureGrad_00R10B10B10B
-    1612,  // textureProjGrad_00I20B10B10B
-    1614,  // textureGather_00e20B
-    1615,  // texture2D_00M10B
-    1616,  // min_00D00D
-    1618,  // outerProduct_10B10B
-    1620,  // lessThanEqual_10D10D
-    1622,  // trunc_20B
-    1624,  // gl_MaxVaryingVectors
-    1626,  // textureProjOffset_00I30B10D00B
-    1628,  // textureSize_00d00D
-    1630,  // sin_00B
-    1632,  // gl_MaxVertexUniformVectors
-    1634,  // textureCubeLodEXT_00K20B00B
-    1635,  // textureGather_00T20B00D
-    1637,  // textureProj_00N20B
-    1638,  // uaddCarry_10E10E10E
-    1640,  // tan_10B
-    1642,  // textureLodOffset_00L20B00B10D
-    1644,  // atomicCounterIncrement_00G
-    1646,  // ldexp_20B20D
-    1648,  // greaterThanEqual_30D30D
-    1650,  // notEqual_20B20B
-    1652,  // imageLoad_01D20D
-    1653,  // textureProjLodOffset_00X30B00B10D
-    1655,  // isinf_20B
-    1657,  // cos_10B
-    1659,  // mix_30B30B30B
-    1661,  // texture_00e30B
-    1663,  // textureSize_00T00D
-    1665,  // textureGatherOffset_00X10B10D00D
-    1667,  // equal_10E10E
-    1669,  // min_10E10E
-    1671,  // textureProjGradOffset_00Y30B20B20B20D
-    1673,  // textureGrad_00T20B20B20B
-    1675,  // memoryBarrierImage_
-    1677,  // textureProjOffset_00J30B20D
-    1679,  // EmitVertex_
-    1680,  // textureProjOffset_00d30B10D00B
-    1682,  // round_10B
-    1684,  // textureGatherOffsets_00X10B70D
-    1687,  // textureProjOffset_00d30B10D
-    1689,  // notEqual_10E10E
-    1691,  // textureProj_00R30B
-    1693,  // matrixCompMult_50B50B
-    1695,  // equal_20F20F
-    1697,  // gl_MaxFragmentInputVectors
-    1699,  // equal_30B30B
-    1701,  // textureLod_00U20B00B
-    1703,  // usubBorrow_10E10E10E
-    1705,  // equal_10B10B
-    1707,  // fma_00B00B00B
-    1710,  // textureProjGradOffset_00I20B10B10B10D
-    1712,  // texture2DProjLod_00I30B00B
-    1714,  // isnan_10B
-    1716,  // uaddCarry_20E20E20E
-    1718,  // max_10B10B
-    1720,  // atomicMax_00E00E
-    1722,  // gl_PointSize
-    1724,  // atomicMin_00D00D
-    1726,  // textureSize_00X00D
-    1728,  // greaterThan_10B10B
-    1730,  // asin_10B
-    1732,  // textureGather_00d10B00B
-    1734,  // trunc_10B
-    1736,  // gl_MaxComputeAtomicCounters
-    1738,  // textureProj_00X30B
-    1740,  // gl_MaxVertexAtomicCounters
-    1742,  // length_20B
-    1744,  // bitfieldInsert_30E30E00D00D
-    1746,  // textureOffset_00S20B20D
-    1748,  // textureProjOffset_00X20B10D
-    1750,  // clamp_30D00D00D
-    1752,  // clamp_10B00B00B
-    1754,  // textureProj_00R20B
-    1756,  // textureProj_00I20B00B
-    1758,  // greaterThan_10E10E
-    1760,  // textureGatherOffsets_00L20B70D00D
-    1763,  // textureProjOffset_00R30B10D00B
-    1765,  // dFdy_00B
-    1768,  // min_30D00D
-    1770,  // floatBitsToInt_00B
-    1772,  // sign_10B
-    1774,  // max_00E00E
-    1776,  // texture_00a20B00B
-    1778,  // texture_00M10B00B
-    1779,  // smoothstep_20B20B20B
-    1781,  // textureCubeLod_00K20B00B
-    1783,  // textureOffset_00J20B20D
-    1785,  // texelFetch_00J20D00D
-    1787,  // textureProj_00M20B00B
-    1788,  // floatBitsToUint_00B
-    1790,  // textureProjGradOffset_00R30B10B10B10D
-    1792,  // textureLod_00K20B00B
-    1794,  // textureProjOffset_00X30B10D00B
-    1796,  // cos_20B
-    1798,  // exp2_00B
-    1800,  // radians_30B
-    1802,  // texture2DRectProj_00O20B
-    1803,  // tan_20B
-    1805,  // textureGather_00T20B
-    1807,  // textureGather_00a20B00D
-    1809,  // textureProjGradOffset_00J30B20B20B20D
-    1811,  // asinh_10B
-    1813,  // textureProjGrad_00X30B10B10B
-    1815,  // floor_00B
-    1817,  // gl_DrawID
+    990,   // textureGatherOffsets_00a20B10Dx400D
+    993,   // atomicCompSwap_00D00D00D
+    995,   // trunc_30B
+    997,   // matrixCompMult_E0BE0B
+    998,   // length_00B
+    1000,  // any_20F
+    1002,  // gl_PerVertex
+    1003,  // textureProj_00X30B00B
+    1005,  // gl_HelperInvocation
+    1007,  // textureGather_00L20B
+    1009,  // gl_ViewID_OVR
+    1010,  // floor_10B
+    1012,  // sin_10B
+    1014,  // textureSize_00N00D
+    1015,  // texelFetchOffset_00J20D00D20D
+    1017,  // tan_00B
+    1019,  // mod_20B20B
+    1021,  // imageLoad_01J20D
+    1022,  // gl_WorkGroupSize
+    1024,  // asinh_30B
+    1026,  // outerProduct_10B30B
+    1028,  // textureCube_00K20B
+    1030,  // textureSize_00c
+    1031,  // textureSize_00b
+    1034,  // cos_00B
+    1036,  // min_20B20B
+    1038,  // textureGradOffset_00f30B10B10B10D
+    1040,  // max_20D20D
+    1042,  // textureProj_00I30B
+    1044,  // max_10D10D
+    1046,  // textureOffset_00a20B10D00B
+    1048,  // textureGather_00X10B
+    1050,  // textureGatherOffsets_00L20B10Dx4
+    1053,  // pow_30B30B
+    1055,  // textureGather_00a20B
+    1057,  // smoothstep_10B10B10B
+    1059,  // textureProj_00O30B
+    1060,  // textureGatherOffset_00d10B00B10D
+    1062,  // refract_30B30B00B
+    1064,  // bitfieldInsert_20E20E00D00D
+    1066,  // floor_20B
+    1068,  // equal_20E20E
+    1070,  // mix_00B00B00B
+    1072,  // imageSize_01B
+    1073,  // greaterThanEqual_20B20B
+    1075,  // uaddCarry_00E00E00E
+    1077,  // sin_20B
+    1079,  // textureSize_00Q
+    1080,  // round_20B
+    1082,  // matrixCompMult_90B90B
+    1083,  // textureProjLod_00d30B00B
+    1085,  // textureSize_00W
+    1086,  // textureProjLod_00X20B00B
+    1088,  // textureGatherOffsets_00I10B10Dx4
+    1091,  // gl_MaxCombinedAtomicCounterBuffers
+    1093,  // isnan_00B
+    1095,  // umulExtended_30E30E30E30E
+    1097,  // faceforward_30B30B30B
+    1099,  // textureGradOffset_00Y20B20B20B20D
+    1101,  // clamp_30E00E00E
+    1103,  // asin_00B
+    1105,  // ceil_00B
+    1107,  // texture3D_00J20B00B
+    1108,  // distance_00B00B
+    1110,  // texture_00a20B
+    1112,  // textureGatherOffset_00a20B10D
+    1114,  // textureGrad_00f30B10B10B
+    1116,  // texture2DProj_00I30B
+    1118,  // modf_20B20B
+    1120,  // textureGradOffset_00I10B10B10B10D
+    1122,  // notEqual_30E30E
+    1124,  // textureGather_00I10B
+    1126,  // lessThanEqual_10E10E
+    1128,  // inversesqrt_20B
+    1130,  // textureLodOffset_00J20B00B20D
+    1132,  // min_30D30D
+    1134,  // textureOffset_00R10B10D00B
+    1136,  // textureGrad_00e30B20B20B
+    1138,  // atomicAdd_00E00E
+    1140,  // gl_MaxGeometryInputComponents
+    1141,  // findMSB_30E
+    1143,  // findMSB_30D
+    1145,  // textureGrad_00X10B10B10B
+    1147,  // length_30B
+    1149,  // greaterThanEqual_30E30E
+    1151,  // fwidth_30B
+    1154,  // textureGrad_00K20B20B20B
+    1156,  // mix_20B20B20F
+    1158,  // texelFetch_00S20D00D
+    1160,  // textureGradOffset_00U20B10B10B10D
+    1162,  // mix_20B20B20B
+    1164,  // floatBitsToInt_10B
+    1166,  // max_10B00B
+    1168,  // textureGatherOffset_00L20B10D
+    1170,  // textureLod_00a20B00B
+    1172,  // any_10F
+    1174,  // textureProjGradOffset_00d30B10B10B10D
+    1176,  // textureProj_00N30B
+    1177,  // gl_MaxProgramTexelOffset
+    1179,  // exp2_30B
+    1181,  // texelFetchOffset_00L20D00D10D
+    1183,  // equal_30D30D
+    1185,  // texture3DProj_00J30B00B
+    1186,  // imageStore_01D20D30D
+    1187,  // packSnorm2x16_10B
+    1189,  // floatBitsToUint_30B
+    1191,  // lessThanEqual_30D30D
+    1193,  // gl_MaxGeometryImageUniforms
+    1194,  // asinh_00B
+    1196,  // textureOffset_00R10B10D
+    1198,  // greaterThanEqual_10E10E
+    1200,  // textureProjGradOffset_00I30B10B10B10D
+    1202,  // textureGather_00Z20B
+    1204,  // textureOffset_00X10B10D
+    1206,  // cosh_30B
+    1208,  // textureOffset_00d20B10D00B
+    1210,  // texture_00R10B
+    1212,  // textureOffset_00S20B20D00B
+    1214,  // usubBorrow_30E30E30E
+    1216,  // radians_00B
+    1218,  // textureProjOffset_00R20B10D00B
+    1220,  // ldexp_30B30D
+    1222,  // max_30B00B
+    1224,  // min_20D20D
+    1226,  // textureGatherOffsets_00f20B00B10Dx4
+    1229,  // step_10B10B
+    1231,  // gl_MaxDualSourceDrawBuffersEXT
+    1232,  // step_30B30B
+    1234,  // bitfieldReverse_10E
+    1236,  // bitfieldReverse_10D
+    1238,  // texture3DProj_00J30B
+    1239,  // gl_FragDepthEXT
+    1240,  // matrixCompMult_B0BB0B
+    1241,  // lessThan_30B30B
+    1243,  // cross_20B20B
+    1245,  // all_10F
+    1247,  // clamp_20B00B00B
+    1249,  // tanh_20B
+    1251,  // dFdx_00B
+    1254,  // matrixCompMult_F0BF0B
+    1256,  // textureProjOffset_00Y30B20D
+    1258,  // abs_00D
+    1260,  // abs_00B
+    1262,  // textureLod_00R10B00B
+    1264,  // step_20B20B
+    1266,  // gl_MaxFragmentAtomicCounters
+    1268,  // textureLodOffset_00U20B00B10D
+    1270,  // textureProj_00R20B00B
+    1272,  // faceforward_20B20B20B
+    1274,  // imageSize_01E
+    1275,  // acos_20B
+    1277,  // texelFetch_00X10D00D
+    1279,  // sinh_00B
+    1281,  // imageSize_01A
+    1282,  // texture2DLod_00I10B00B
+    1284,  // texelFetch_00b10D00D
+    1287,  // fma_20B20B20B
+    1290,  // gl_MaxAtomicCounterBufferSize
+    1292,  // max_20B20B
+    1294,  // textureGatherOffset_00f20B00B10D
+    1296,  // outerProduct_30B30B
+    1298,  // lessThanEqual_20E20E
+    1300,  // textureLod_00X10B00B
+    1302,  // exp_30B
+    1304,  // memoryBarrier_
+    1306,  // imageSize_01D
+    1307,  // step_00B30B
+    1309,  // bitCount_10D
+    1311,  // equal_30E30E
+    1313,  // sign_00B
+    1315,  // log_00B
+    1317,  // textureLod_00Z20B00B
+    1319,  // sign_00D
+    1321,  // textureOffset_00Y20B20D
+    1323,  // transpose_60B
+    1325,  // findMSB_00D
+    1327,  // gl_MaxGeometryTotalOutputComponents
+    1328,  // acosh_30B
+    1330,  // findMSB_00E
+    1332,  // bitfieldExtract_20E00D00D
+    1334,  // uintBitsToFloat_20E
+    1336,  // unpackUnorm4x8_00E
+    1338,  // texture2DProj_00M20B
+    1339,  // texelFetchOffset_00X10D00D10D
+    1341,  // mod_10B10B
+    1343,  // texture_00d20B00B
+    1345,  // notEqual_10D10D
+    1347,  // texture2DProj_00M30B
+    1348,  // textureSize_00V
+    1351,  // packUnorm2x16_10B
+    1353,  // faceforward_00B00B00B
+    1355,  // umulExtended_20E20E20E20E
+    1357,  // textureOffset_00X10B10D00B
+    1359,  // cos_30B
+    1361,  // findLSB_30D
+    1363,  // findLSB_30E
+    1365,  // bitCount_20E
+    1367,  // gl_NumWorkGroups
+    1369,  // equal_20D20D
+    1371,  // textureProjOffset_00Y30B20D00B
+    1373,  // textureGatherOffset_00U20B10D
+    1375,  // faceforward_10B10B10B
+    1377,  // textureSize_00L00D
+    1379,  // gl_MaxComputeUniformComponents
+    1381,  // textureGather_00R10B00D
+    1383,  // imageStore_01H20D30E
+    1384,  // textureSize_00Z00D
+    1386,  // textureGather_00U20B
+    1388,  // bitfieldExtract_30D00D00D
+    1390,  // min_10D00D
+    1392,  // texelFetch_00Q20D00D
+    1393,  // max_20E00E
+    1395,  // textureProj_00S30B
+    1397,  // roundEven_00B
+    1399,  // texture2DLodEXT_00I10B00B
+    1400,  // dFdy_30B
+    1403,  // atanh_20B
+    1405,  // clamp_10E00E00E
+    1407,  // imageStore_01C20D30B
+    1408,  // clamp_20D00D00D
+    1410,  // all_20F
+    1412,  // isinf_10B
+    1414,  // imageLoad_01C20D
+    1415,  // imageSize_01J
+    1416,  // imageSize_01K
+    1417,  // imageSize_01H
+    1418,  // imageSize_01I
+    1419,  // packHalf2x16_10B
+    1421,  // texture2DProj_00I20B00B
+    1423,  // findLSB_00E
+    1425,  // findLSB_00D
+    1427,  // textureProjOffset_00X30B10D
+    1429,  // imageSize_01C
+    1430,  // greaterThanEqual_30B30B
+    1432,  // textureSize_00U00D
+    1434,  // textureGradOffset_00R10B10B10B10D
+    1436,  // imageSize_01G
+    1437,  // equal_30F30F
+    1439,  // bitfieldExtract_00D00D00D
+    1441,  // texture2DProjLodEXT_00I20B00B
+    1442,  // notEqual_30F30F
+    1444,  // gl_FrontFacing
+    1446,  // gl_SecondaryFragColorEXT
+    1447,  // inversesqrt_10B
+    1449,  // gl_MaxComputeWorkGroupCount
+    1451,  // acos_10B
+    1453,  // abs_30D
+    1455,  // gl_MaxFragmentUniformVectors
+    1457,  // fract_20B
+    1459,  // abs_30B
+    1461,  // lessThan_10B10B
+    1463,  // textureGatherOffset_00X10B10D
+    1465,  // bitfieldInsert_10E10E00D00D
+    1467,  // packSnorm4x8_30B
+    1469,  // mix_10B10B00B
+    1471,  // imageLoad_01E20D
+    1472,  // clamp_30D30D30D
+    1474,  // textureGather_00U20B00D
+    1476,  // textureSize_00f00D
+    1478,  // textureProj_00N20B00B
+    1479,  // gl_FragData
+    1481,  // textureProj_00d30B00B
+    1483,  // clamp_20E00E00E
+    1485,  // texture_00X10B
+    1487,  // textureProj_00d30B
+    1489,  // mix_30B30B30F
+    1491,  // determinant_F0B
+    1492,  // transpose_A0B
+    1494,  // pow_20B20B
+    1496,  // texture2DProjGradEXT_00I20B10B10B
+    1497,  // gl_LastFragColorARM
+    1498,  // textureGather_00Z20B00D
+    1500,  // textureGather_00R10B
+    1502,  // lessThanEqual_20D20D
+    1504,  // textureLod_00S20B00B
+    1506,  // textureProjLod_00Y30B00B
+    1508,  // cosh_10B
+    1510,  // sqrt_30B
+    1512,  // gl_VertexID
+    1514,  // sign_10D
+    1516,  // textureProj_00M30B
+    1517,  // exp_00B
+    1519,  // min_00E00E
+    1521,  // max_30D30D
+    1523,  // umulExtended_00E00E00E00E
+    1525,  // gl_MaxVertexAttribs
+    1527,  // gl_BaseInstance
+    1528,  // transpose_B0B
+    1530,  // fwidth_20B
+    1533,  // Empty
+    1533,  // smoothstep_00B00B30B
+    1535,  // floatBitsToInt_20B
+    1537,  // textureSize_00M00D
+    1538,  // log2_20B
+    1540,  // ldexp_10B10D
+    1542,  // min_10B00B
+    1544,  // mix_30B30B00B
+    1546,  // angle_BaseInstance
+    1547,  // degrees_10B
+    1549,  // gl_MaxTextureImageUnits
+    1551,  // gl_Position
+    1554,  // texture_00K20B
+    1556,  // atomicCompSwap_00E00E00E
+    1558,  // fma_30B30B30B
+    1561,  // sinh_10B
+    1563,  // atan_30B
+    1565,  // textureGradOffset_00L20B10B10B10D
+    1567,  // ceil_10B
+    1569,  // textureSize_00S00D
+    1571,  // greaterThanEqual_10B10B
+    1573,  // textureGatherOffsets_00I10B10Dx400D
+    1576,  // textureCube_00K20B00B
+    1578,  // dot_20B20B
+    1580,  // transpose_90B
+    1582,  // not_30F
+    1584,  // textureProjLodOffset_00I20B00B10D
+    1586,  // notEqual_10F10F
+    1588,  // textureProjGrad_00R20B10B10B
+    1590,  // texture_00f30B
+    1592,  // smoothstep_00B00B00B
+    1594,  // textureProjLodOffset_00d30B00B10D
+    1596,  // texelFetch_00R10D00D
+    1598,  // cosh_20B
+    1600,  // textureProjLodOffset_00I30B00B10D
+    1602,  // normalize_30B
+    1604,  // smoothstep_30B30B30B
+    1606,  // bitfieldInsert_10D10D00D00D
+    1608,  // clamp_20B20B20B
+    1610,  // textureGrad_00L20B10B10B
+    1612,  // textureGrad_00R10B10B10B
+    1614,  // textureProjGrad_00I20B10B10B
+    1616,  // textureGather_00e20B
+    1617,  // texture2D_00M10B
+    1618,  // min_00D00D
+    1620,  // outerProduct_10B10B
+    1622,  // lessThanEqual_10D10D
+    1624,  // trunc_20B
+    1626,  // gl_MaxVaryingVectors
+    1628,  // textureProjOffset_00I30B10D00B
+    1630,  // textureSize_00d00D
+    1632,  // sin_00B
+    1634,  // gl_MaxVertexUniformVectors
+    1636,  // textureCubeLodEXT_00K20B00B
+    1637,  // textureGather_00T20B00D
+    1639,  // textureProj_00N20B
+    1640,  // uaddCarry_10E10E10E
+    1642,  // tan_10B
+    1644,  // textureLodOffset_00L20B00B10D
+    1646,  // atomicCounterIncrement_00G
+    1648,  // ldexp_20B20D
+    1650,  // greaterThanEqual_30D30D
+    1652,  // notEqual_20B20B
+    1654,  // imageLoad_01D20D
+    1655,  // textureProjLodOffset_00X30B00B10D
+    1657,  // isinf_20B
+    1659,  // cos_10B
+    1661,  // mix_30B30B30B
+    1663,  // texture_00e30B
+    1665,  // textureSize_00T00D
+    1667,  // textureGatherOffset_00X10B10D00D
+    1669,  // equal_10E10E
+    1671,  // min_10E10E
+    1673,  // textureProjGradOffset_00Y30B20B20B20D
+    1675,  // textureGrad_00T20B20B20B
+    1677,  // memoryBarrierImage_
+    1679,  // textureProjOffset_00J30B20D
+    1681,  // EmitVertex_
+    1682,  // textureProjOffset_00d30B10D00B
+    1684,  // round_10B
+    1686,  // textureProjOffset_00d30B10D
+    1688,  // notEqual_10E10E
+    1690,  // textureProj_00R30B
+    1692,  // matrixCompMult_50B50B
+    1694,  // equal_20F20F
+    1696,  // gl_MaxFragmentInputVectors
+    1698,  // equal_30B30B
+    1700,  // textureLod_00U20B00B
+    1702,  // usubBorrow_10E10E10E
+    1704,  // equal_10B10B
+    1706,  // fma_00B00B00B
+    1709,  // textureProjGradOffset_00I20B10B10B10D
+    1711,  // texture2DProjLod_00I30B00B
+    1713,  // isnan_10B
+    1715,  // uaddCarry_20E20E20E
+    1717,  // max_10B10B
+    1719,  // atomicMax_00E00E
+    1721,  // gl_PointSize
+    1723,  // atomicMin_00D00D
+    1725,  // textureSize_00X00D
+    1727,  // greaterThan_10B10B
+    1729,  // asin_10B
+    1731,  // textureGather_00d10B00B
+    1733,  // trunc_10B
+    1735,  // gl_MaxComputeAtomicCounters
+    1737,  // textureProj_00X30B
+    1739,  // gl_MaxVertexAtomicCounters
+    1741,  // length_20B
+    1743,  // bitfieldInsert_30E30E00D00D
+    1745,  // textureOffset_00S20B20D
+    1747,  // textureProjOffset_00X20B10D
+    1749,  // clamp_30D00D00D
+    1751,  // clamp_10B00B00B
+    1753,  // textureProj_00R20B
+    1755,  // textureProj_00I20B00B
+    1757,  // greaterThan_10E10E
+    1759,  // imageLoad_01K20D
+    1760,  // textureProjOffset_00R30B10D00B
+    1762,  // dFdy_00B
+    1765,  // min_30D00D
+    1767,  // floatBitsToInt_00B
+    1769,  // sign_10B
+    1771,  // max_00E00E
+    1773,  // texture_00a20B00B
+    1775,  // texture_00M10B00B
+    1776,  // smoothstep_20B20B20B
+    1778,  // textureCubeLod_00K20B00B
+    1780,  // textureOffset_00J20B20D
+    1782,  // texelFetch_00J20D00D
+    1784,  // textureProj_00M20B00B
+    1785,  // floatBitsToUint_00B
+    1787,  // textureProjGradOffset_00R30B10B10B10D
+    1789,  // textureLod_00K20B00B
+    1791,  // textureProjOffset_00X30B10D00B
+    1793,  // cos_20B
+    1795,  // exp2_00B
+    1797,  // radians_30B
+    1799,  // texture2DRectProj_00O20B
+    1800,  // tan_20B
+    1802,  // textureGather_00T20B
+    1804,  // textureGather_00a20B00D
+    1806,  // textureProjGradOffset_00J30B20B20B20D
+    1808,  // asinh_10B
+    1810,  // textureProjGrad_00X30B10B10B
+    1812,  // floor_00B
+    1814,  // gl_DrawID
+    1815,  // textureGatherOffsets_00R10B10Dx400D
     1818,  // atomicOr_00D00D
     1820,  // texture3DLod_00J20B00B
 };

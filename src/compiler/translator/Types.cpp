@@ -130,7 +130,7 @@ TType::TType(TBasicType t, unsigned char ps, unsigned char ss)
 {}
 
 TType::TType(TBasicType t, TPrecision p, TQualifier q, unsigned char ps, unsigned char ss)
-    : TType(t, p, q, ps, ss, nullptr)
+    : TType(t, p, q, ps, ss, TSpan<const unsigned int>(), nullptr)
 {}
 
 TType::TType(const TPublicType &p)
@@ -442,9 +442,8 @@ const char *TType::buildMangledName() const
     {
         char buf[20];
         snprintf(buf, sizeof(buf), "%d", arraySize);
-        mangledName += '[';
+        mangledName += 'x';
         mangledName += buf;
-        mangledName += ']';
     }
 
     // Copy string contents into a pool-allocated buffer, so we never need to call delete.
@@ -630,12 +629,6 @@ void TType::makeArrays(const TSpan<const unsigned int> &sizes)
     onArrayDimensionsChange(*mArraySizesStorage);
 }
 
-void TType::onArrayDimensionsChange(const TSpan<const unsigned int> &sizes)
-{
-    mArraySizes = sizes;
-    invalidateMangledName();
-}
-
 void TType::setArraySize(size_t arrayDimension, unsigned int s)
 {
     ASSERT(isArray() && mArraySizesStorage != nullptr);
@@ -689,11 +682,6 @@ const char *TType::getMangledName() const
 void TType::realize()
 {
     getMangledName();
-}
-
-void TType::invalidateMangledName()
-{
-    mMangledName = nullptr;
 }
 
 void TType::createSamplerSymbols(const ImmutableString &namePrefix,

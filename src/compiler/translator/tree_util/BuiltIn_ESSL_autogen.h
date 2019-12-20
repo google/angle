@@ -1135,63 +1135,63 @@ class BuiltInId
         TSymbolUniqueId(3171);
     static constexpr const TSymbolUniqueId textureGather_SamplerCubeShadow1_Float3_Float1 =
         TSymbolUniqueId(3172);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2D1_Float2_Int4x2_Int1 =
+    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2D1_Float2_4xInt2_Int1 =
         TSymbolUniqueId(3173);
-    static constexpr const TSymbolUniqueId pt70D = TSymbolUniqueId(3174);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2D1_Float2_Int4x2_Int1 =
+    static constexpr const TSymbolUniqueId pt10Dx4 = TSymbolUniqueId(3174);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2D1_Float2_4xInt2_Int1 =
         TSymbolUniqueId(3175);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2D1_Float2_Int4x2_Int1 =
+    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2D1_Float2_4xInt2_Int1 =
         TSymbolUniqueId(3176);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2DArray1_Float3_Int4x2_Int1 =
+    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2DArray1_Float3_4xInt2_Int1 =
         TSymbolUniqueId(3177);
     static constexpr const TSymbolUniqueId
-        textureGatherOffsets_ISampler2DArray1_Float3_Int4x2_Int1 = TSymbolUniqueId(3178);
+        textureGatherOffsets_ISampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3178);
     static constexpr const TSymbolUniqueId
-        textureGatherOffsets_USampler2DArray1_Float3_Int4x2_Int1 = TSymbolUniqueId(3179);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2D1_Float2_Int4x2_Int1 =
+        textureGatherOffsets_USampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3179);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2_Int1 =
         TSymbolUniqueId(3180);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2D1_Float2_Int4x2_Int1 =
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2_Int1 =
         TSymbolUniqueId(3181);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2D1_Float2_Int4x2_Int1 =
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2D1_Float2_4xInt2_Int1 =
         TSymbolUniqueId(3182);
     static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_Sampler2DArray1_Float3_Int4x2_Int1 = TSymbolUniqueId(3183);
+        textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3183);
     static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_ISampler2DArray1_Float3_Int4x2_Int1 = TSymbolUniqueId(3184);
+        textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3184);
     static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_USampler2DArray1_Float3_Int4x2_Int1 = TSymbolUniqueId(3185);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2D1_Float2_Int4x2 =
+        textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3185);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2D1_Float2_4xInt2 =
         TSymbolUniqueId(3186);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2D1_Float2_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2D1_Float2_4xInt2 =
         TSymbolUniqueId(3187);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2D1_Float2_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2D1_Float2_4xInt2 =
         TSymbolUniqueId(3188);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2DArray1_Float3_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2DArray1_Float3_4xInt2 =
         TSymbolUniqueId(3189);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2DArray1_Float3_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2DArray1_Float3_4xInt2 =
         TSymbolUniqueId(3190);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2DArray1_Float3_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2DArray1_Float3_4xInt2 =
         TSymbolUniqueId(3191);
     static constexpr const TSymbolUniqueId
-        textureGatherOffsets_Sampler2DShadow1_Float2_Float1_Int4x2 = TSymbolUniqueId(3192);
+        textureGatherOffsets_Sampler2DShadow1_Float2_Float1_4xInt2 = TSymbolUniqueId(3192);
     static constexpr const TSymbolUniqueId
-        textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_Int4x2 = TSymbolUniqueId(3193);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2D1_Float2_Int4x2 =
+        textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_4xInt2 = TSymbolUniqueId(3193);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2 =
         TSymbolUniqueId(3194);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2D1_Float2_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2 =
         TSymbolUniqueId(3195);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2D1_Float2_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2D1_Float2_4xInt2 =
         TSymbolUniqueId(3196);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2DArray1_Float3_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2 =
         TSymbolUniqueId(3197);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2DArray1_Float3_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2 =
         TSymbolUniqueId(3198);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2DArray1_Float3_Int4x2 =
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2 =
         TSymbolUniqueId(3199);
     static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_Int4x2 = TSymbolUniqueId(3200);
+        textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_4xInt2 = TSymbolUniqueId(3200);
     static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_Int4x2 = TSymbolUniqueId(3201);
+        textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_4xInt2 = TSymbolUniqueId(3201);
     static constexpr const TSymbolUniqueId textureGatherOffset_Sampler2D1_Float2_Int2_Int1 =
         TSymbolUniqueId(3202);
     static constexpr const TSymbolUniqueId textureGatherOffset_ISampler2D1_Float2_Int2_Int1 =

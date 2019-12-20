@@ -112,6 +112,7 @@ class TType
                     TQualifier q,
                     unsigned char ps,
                     unsigned char ss,
+                    const TSpan<const unsigned int> arraySizes,
                     const char *mangledName)
         : type(t),
           precision(p),
@@ -122,6 +123,7 @@ class TType
           layoutQualifier(TLayoutQualifier::Create()),
           primarySize(ps),
           secondarySize(ss),
+          mArraySizes(arraySizes),
           mArraySizesStorage(nullptr),
           mInterfaceBlock(nullptr),
           mStructure(nullptr),
@@ -343,9 +345,13 @@ class TType
     bool isSamplerVideoWEBGL() const { return type == EbtSamplerVideoWEBGL; }
 
   private:
-    void invalidateMangledName();
+    constexpr void invalidateMangledName() { mMangledName = nullptr; }
     const char *buildMangledName() const;
-    void onArrayDimensionsChange(const TSpan<const unsigned int> &sizes);
+    constexpr void onArrayDimensionsChange(const TSpan<const unsigned int> &sizes)
+    {
+        mArraySizes = sizes;
+        invalidateMangledName();
+    }
 
     TBasicType type;
     TPrecision precision;
