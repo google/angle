@@ -29,6 +29,9 @@
 // fails on Nexus5X with GLES backend (hangs)
 //  91531 NEXUS5X GLES : conformance_more_* = SKIP
 
+// Globally disable Metal testing for now
+4235 METAL : dEQP-EGL.* = SKIP
+
 // Only Vulkan supports multithreading
 3916 OPENGL : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
 3916 OPENGL : dEQP-EGL.functional.multithread.* = SKIP
