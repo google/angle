@@ -673,7 +673,3 @@
 4098 SWIFTSHADER : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_single_invocation = FAIL
 
 // OpenGL ES 3.2 / 3.1 extensions
-
-// EXT_gpu_shader5: Note: this extension is not yet fully implemented, so should be disabled in the
-// Vulkan backend for the ES 3.1 conformance run.
-3569 VULKAN : dEQP-GLES31.functional.texture.gather.offsets.* = FAIL

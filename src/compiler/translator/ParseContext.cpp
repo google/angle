@@ -5731,49 +5731,99 @@ void TParseContext::checkTextureOffset(TIntermAggregate *functionCall)
         return;
     }
 
-    // ES3.2 or ES3.1's EXT_gpu_shader5 allow non-const offsets to be passed to textureGatherOffset.
-    bool textureGatherOffsetMustBeConst =
-        mShaderVersion <= 310 && !isExtensionEnabled(TExtension::EXT_gpu_shader5);
-
-    TIntermConstantUnion *offsetConstantUnion = offset->getAsConstantUnion();
-    bool isOffsetConst =
-        offset->getAsTyped()->getQualifier() == EvqConst && offsetConstantUnion != nullptr;
-
-    bool isTextureGatherOffset = BuiltInGroup::isTextureGatherOffset(func);
-    bool offsetMustBeConst     = !isTextureGatherOffset || textureGatherOffsetMustBeConst;
-
-    if (!isOffsetConst && offsetMustBeConst)
-    {
-        error(functionCall->getLine(), "Texture offset must be a constant expression",
-              func->name());
-        return;
-    }
-
-    // We cannot verify non-constant offsets to textureGatherOffset.
-    if (offsetConstantUnion == nullptr)
-    {
-        return;
-    }
-
+    bool isTextureGatherOffset             = BuiltInGroup::isTextureGatherOffset(func);
     bool isTextureGatherOffsets            = BuiltInGroup::isTextureGatherOffsets(func);
     bool useTextureGatherOffsetConstraints = isTextureGatherOffset || isTextureGatherOffsets;
 
-    ASSERT(offsetConstantUnion->getBasicType() == EbtInt);
-    size_t size                  = offsetConstantUnion->getType().getObjectSize();
-    const TConstantUnion *values = offsetConstantUnion->getConstantValue();
     int minOffsetValue =
         useTextureGatherOffsetConstraints ? mMinProgramTextureGatherOffset : mMinProgramTexelOffset;
     int maxOffsetValue =
         useTextureGatherOffsetConstraints ? mMaxProgramTextureGatherOffset : mMaxProgramTexelOffset;
+
+    if (isTextureGatherOffsets)
+    {
+        // If textureGatherOffsets, the offsets parameter is an array, which is expected as an
+        // aggregate constructor node.
+        TIntermAggregate *offsetAggregate = offset->getAsAggregate();
+        const TConstantUnion *offsetValues =
+            offsetAggregate ? offsetAggregate->getConstantValue() : nullptr;
+
+        if (offsetValues == nullptr)
+        {
+            error(functionCall->getLine(), "Texture offsets must be a constant expression",
+                  func->name());
+            return;
+        }
+
+        constexpr unsigned int kOffsetsCount = 4;
+        const TType &offsetAggregateType     = offsetAggregate->getType();
+        if (offsetAggregateType.getNumArraySizes() != 1 ||
+            offsetAggregateType.getArraySizes()[0] != kOffsetsCount)
+        {
+            error(functionCall->getLine(), "Texture offsets must be an array of 4 elements",
+                  func->name());
+            return;
+        }
+
+        TIntermNode *firstOffset = offsetAggregate->getSequence()->front();
+        size_t size              = firstOffset->getAsTyped()->getType().getObjectSize();
+        for (unsigned int i = 0; i < kOffsetsCount; ++i)
+        {
+            checkSingleTextureOffset(offset->getLine(), &offsetValues[i * size], size,
+                                     minOffsetValue, maxOffsetValue);
+        }
+    }
+    else
+    {
+        // If textureOffset or textureGatherOffset, the offset is expected to be found as a constant
+        // union.
+        TIntermConstantUnion *offsetConstantUnion = offset->getAsConstantUnion();
+
+        // ES3.2 or ES3.1's EXT_gpu_shader5 allow non-const offsets to be passed to
+        // textureGatherOffset.
+        bool textureGatherOffsetMustBeConst =
+            mShaderVersion <= 310 && !isExtensionEnabled(TExtension::EXT_gpu_shader5);
+
+        bool isOffsetConst =
+            offset->getAsTyped()->getQualifier() == EvqConst && offsetConstantUnion != nullptr;
+        bool offsetMustBeConst = !isTextureGatherOffset || textureGatherOffsetMustBeConst;
+
+        if (!isOffsetConst && offsetMustBeConst)
+        {
+            error(functionCall->getLine(), "Texture offset must be a constant expression",
+                  func->name());
+            return;
+        }
+
+        // We cannot verify non-constant offsets to textureGatherOffset.
+        if (offsetConstantUnion == nullptr)
+        {
+            ASSERT(!offsetMustBeConst);
+            return;
+        }
+
+        size_t size                  = offsetConstantUnion->getType().getObjectSize();
+        const TConstantUnion *values = offsetConstantUnion->getConstantValue();
+        checkSingleTextureOffset(offset->getLine(), values, size, minOffsetValue, maxOffsetValue);
+    }
+}
+
+void TParseContext::checkSingleTextureOffset(const TSourceLoc &line,
+                                             const TConstantUnion *values,
+                                             size_t size,
+                                             int minOffsetValue,
+                                             int maxOffsetValue)
+{
     for (size_t i = 0u; i < size; ++i)
     {
+        ASSERT(values[i].getType() == EbtInt);
         int offsetValue = values[i].getIConst();
         if (offsetValue > maxOffsetValue || offsetValue < minOffsetValue)
         {
             std::stringstream tokenStream = sh::InitializeStream<std::stringstream>();
             tokenStream << offsetValue;
             std::string token = tokenStream.str();
-            error(offset->getLine(), "Texture offset value out of valid range", token.c_str());
+            error(line, "Texture offset value out of valid range", token.c_str());
         }
     }
 }
