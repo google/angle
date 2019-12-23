@@ -483,7 +483,8 @@ ICDFilterFunc GetFilterForICD(vk::ICD preferredICD)
             return [](const VkPhysicalDeviceProperties &deviceProperties) {
                 return ((deviceProperties.vendorID == VENDOR_ID_GOOGLE) &&
                         (deviceProperties.deviceID == kSwiftShaderDeviceID) &&
-                        (strcmp(deviceProperties.deviceName, kSwiftShaderDeviceName) == 0));
+                        (strncmp(deviceProperties.deviceName, kSwiftShaderDeviceName,
+                                 strlen(kSwiftShaderDeviceName)) == 0));
             };
         default:
             return [](const VkPhysicalDeviceProperties &deviceProperties) { return true; };
