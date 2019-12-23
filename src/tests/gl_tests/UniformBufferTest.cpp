@@ -1636,6 +1636,9 @@ TEST_P(UniformBufferTest, LargeArrayOfStructs)
 // member.
 TEST_P(UniformBufferTest, UniformBlockWithOneLargeStructArray)
 {
+    // TODO(crbug.com/1037644): Re-enable this test on this config.
+    ANGLE_SKIP_TEST_IF(IsWindows7() && IsNVIDIA() && IsD3D11());
+
     GLint64 maxUniformBlockSize;
     glGetInteger64v(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
     std::ostringstream stream;
@@ -1748,6 +1751,9 @@ TEST_P(UniformBufferTest, UniformBlockWithOneLargeStructArray)
 // a mat4 member and a float member.
 TEST_P(UniformBufferTest, UniformBlockWithOneLargeMixStructArray)
 {
+    // TODO(crbug.com/1037644): Re-enable this test on this config.
+    ANGLE_SKIP_TEST_IF(IsWindows7() && IsNVIDIA() && IsD3D11());
+
     GLint64 maxUniformBlockSize;
     glGetInteger64v(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
     std::ostringstream stream;
@@ -1878,6 +1884,9 @@ TEST_P(UniformBufferTest, UniformBlockWithOneLargeMixStructArray)
 // struct array member in the same program, and they share a uniform buffer.
 TEST_P(UniformBufferTest, UniformBlocksInSameProgramShareUniformBuffer)
 {
+    // TODO(crbug.com/1037644): Re-enable this test on this config.
+    ANGLE_SKIP_TEST_IF(IsWindows7() && IsNVIDIA() && IsD3D11());
+
     GLint64 maxUniformBlockSize;
     glGetInteger64v(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
     std::ostringstream stream;
@@ -2007,6 +2016,9 @@ TEST_P(UniformBufferTest, UniformBlocksInSameProgramShareUniformBuffer)
 // struct array member in the different programs, and they share a uniform buffer.
 TEST_P(UniformBufferTest, UniformBlocksInDiffProgramShareUniformBuffer)
 {
+    // TODO(crbug.com/1037644): Re-enable this test on this config.
+    ANGLE_SKIP_TEST_IF(IsWindows7() && IsNVIDIA() && IsD3D11());
+
     GLint64 maxUniformBlockSize;
     glGetInteger64v(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
     std::ostringstream stream1;
