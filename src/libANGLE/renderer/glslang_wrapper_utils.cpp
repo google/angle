@@ -524,7 +524,7 @@ void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &optio
     vertexShader->insertTransformFeedbackOutput(std::move(xfbOut));
 }
 
-// Calculates XFB layout quaifier arguments for each tranform feedback varyings, inserts
+// Calculates XFB layout qualifier arguments for each tranform feedback varying, inserts
 // layout quailifier for built-in varyings here and gathers calculated arguments for non built-in
 // varyings for later use.
 void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programState,
@@ -984,7 +984,6 @@ void AssignNonTextureBindings(const GlslangSourceOptions &options,
 }
 
 void AssignTextureBindings(const GlslangSourceOptions &options,
-                           bool useOldRewriteStructSamplers,
                            const gl::ProgramState &programState,
                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
@@ -998,7 +997,7 @@ void AssignTextureBindings(const GlslangSourceOptions &options,
     {
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
 
-        if (!useOldRewriteStructSamplers &&
+        if (!options.useOldRewriteStructSamplers &&
             gl::SamplerNameContainsNonZeroArrayElement(samplerUniform.name))
         {
             continue;
@@ -1008,7 +1007,7 @@ void AssignTextureBindings(const GlslangSourceOptions &options,
             texturesDescriptorSet + ", binding = " + Str(bindingIndex++);
 
         // Samplers in structs are extracted and renamed.
-        const std::string samplerName = useOldRewriteStructSamplers
+        const std::string samplerName = options.useOldRewriteStructSamplers
                                             ? GetMappedSamplerNameOld(samplerUniform.name)
                                             : GlslangGetMappedSamplerName(samplerUniform.name);
 
@@ -1195,9 +1194,6 @@ std::string GlslangGetMappedSamplerName(const std::string &originalName)
 }
 
 void GlslangGetShaderSource(const GlslangSourceOptions &options,
-                            bool useOldRewriteStructSamplers,
-                            bool supportsTransformFeedbackExtension,
-                            bool emulateTransformFeedback,
                             const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
                             gl::ShaderMap<std::string> *shaderSourcesOut)
@@ -1229,12 +1225,12 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
         }
         else
         {
-            if (supportsTransformFeedbackExtension)
+            if (options.supportsTransformFeedbackExtension)
             {
                 GenerateTransformFeedbackExtensionOutputs(programState, vertexSource, &xfbBufferMap,
                                                           resources);
             }
-            else if (emulateTransformFeedback)
+            else if (options.emulateTransformFeedback)
             {
                 GenerateTransformFeedbackEmulationOutputs(options, programState, vertexSource);
             }
@@ -1260,10 +1256,10 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
     }
 
     AssignUniformBindings(options, &intermediateSources);
-    AssignTextureBindings(options, useOldRewriteStructSamplers, programState, &intermediateSources);
+    AssignTextureBindings(options, programState, &intermediateSources);
     AssignNonTextureBindings(options, programState, &intermediateSources);
 
-    CleanupUnusedEntities(useOldRewriteStructSamplers, programState, resources,
+    CleanupUnusedEntities(options.useOldRewriteStructSamplers, programState, resources,
                           &intermediateSources);
 
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
