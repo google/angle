@@ -84,6 +84,53 @@
     },
     {
       "key": {
+        "uuid": "7af401f1_d4a4c137",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-12-23T18:55:50Z",
+      "side": 1,
+      "message": "Those extension expect the application to ensure that the render target formats meet their needs.\nFor example, when using Display P3 colorspace, the content needs to have the sRGB transfer function applied when storing into the display buffer. The application can cause that to happen by setting the render target format to sRGB (thus using the built-in capability) OR use a linear format (e.g. GL_RGBA8) and apply the transfer function in the shader.\nWith this override, the application will be unable to use shader-based transfer function even when they did not specify an sRGB render target.",
+      "parentUuid": "a2a2f400_cd4aef99",
+      "range": {
+        "startLine": 76,
+        "startChar": 18,
+        "endLine": 76,
+        "endChar": 42
+      },
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f47c90a6_36b93ddf",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-12-23T18:55:50Z",
+      "side": 1,
+      "message": "Forgot, also have EGL_GL_COLORSPACE_DISPLAY_P3_PASSTHROUGH_EXT\nhttps://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_gl_colorspace_display_p3_passthrough.txt",
+      "range": {
+        "startLine": 83,
+        "startChar": 13,
+        "endLine": 83,
+        "endChar": 52
+      },
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5e37a01a_2f4d3e97",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 8

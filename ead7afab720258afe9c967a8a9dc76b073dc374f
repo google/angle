@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c0c469e_e58d59db",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-12-23T18:55:50Z",
+      "side": 1,
+      "message": "This will need to change to the desired colorspace.",
+      "range": {
+        "startLine": 744,
+        "startChar": 45,
+        "endLine": 744,
+        "endChar": 77
+      },
+      "revId": "ead7afab720258afe9c967a8a9dc76b073dc374f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
