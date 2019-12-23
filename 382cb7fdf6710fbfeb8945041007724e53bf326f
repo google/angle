@@ -108,6 +108,30 @@
     },
     {
       "key": {
+        "uuid": "f6b876c3_2b327aac",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-12-23T19:04:04Z",
+      "side": 1,
+      "message": "1. there is no way for an app to set rendertarget format outside of config\n2. we might need the override for only sRGB case and leave the others untouched?\n3. deqp test will not pass if this override is not applied when sRGB is requested",
+      "parentUuid": "7af401f1_d4a4c137",
+      "range": {
+        "startLine": 76,
+        "startChar": 18,
+        "endLine": 76,
+        "endChar": 42
+      },
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f47c90a6_36b93ddf",
         "filename": "src/libANGLE/formatutils.h",
         "patchSetId": 8
@@ -119,6 +143,30 @@
       "writtenOn": "2019-12-23T18:55:50Z",
       "side": 1,
       "message": "Forgot, also have EGL_GL_COLORSPACE_DISPLAY_P3_PASSTHROUGH_EXT\nhttps://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_gl_colorspace_display_p3_passthrough.txt",
+      "range": {
+        "startLine": 83,
+        "startChar": 13,
+        "endLine": 83,
+        "endChar": 52
+      },
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90ed75a4_8f98706c",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-12-23T19:04:04Z",
+      "side": 1,
+      "message": "was not part of the anglebug, we can either have a separate bug for that or amend the existing bug",
+      "parentUuid": "f47c90a6_36b93ddf",
       "range": {
         "startLine": 83,
         "startChar": 13,

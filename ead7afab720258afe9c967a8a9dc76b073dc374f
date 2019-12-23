@@ -22,6 +22,30 @@
       "revId": "ead7afab720258afe9c967a8a9dc76b073dc374f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8612af25_8d1e79be",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-12-23T19:04:04Z",
+      "side": 1,
+      "message": "it was default set to non-linear, was under the assumption that OS will always want a non-linear colorspace\n\nwhen we are actually in non-linear space this should be fine, right?",
+      "parentUuid": "2c0c469e_e58d59db",
+      "range": {
+        "startLine": 744,
+        "startChar": 45,
+        "endLine": 744,
+        "endChar": 77
+      },
+      "revId": "ead7afab720258afe9c967a8a9dc76b073dc374f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
