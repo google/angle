@@ -55,6 +55,9 @@ struct GraphicsDriverUniforms
     float viewportYScale;
     float negViewportYScale;
     uint32_t xfbActiveUnpaused;
+    uint32_t xfbVerticesPerDraw;
+    // NOTE: Explicit padding. Fill in with useful data when needed in the future.
+    std::array<int32_t, 3> padding;
 
     std::array<int32_t, 4> xfbBufferOffsets;
 
@@ -514,6 +517,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mLastIndexBufferOffset(0),
       mCurrentDrawElementsType(gl::DrawElementsType::InvalidEnum),
       mXfbBaseVertex(0),
+      mXfbVertexCountPerInstance(0),
       mClearColorMask(kAllColorChannelsMask),
       mFlipYForCurrentSurface(false),
       mIsAnyHostVisibleBufferWritten(false),
@@ -813,7 +817,8 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     if (mState.isTransformFeedbackActiveUnpaused())
     {
         ASSERT(firstVertexOrInvalid != -1);
-        mXfbBaseVertex = firstVertexOrInvalid;
+        mXfbBaseVertex             = firstVertexOrInvalid;
+        mXfbVertexCountPerInstance = vertexOrIndexCount;
         invalidateGraphicsDriverUniforms();
     }
 
@@ -2923,6 +2928,8 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
         scaleY,
         -scaleY,
         xfbActiveUnpaused,
+        mXfbVertexCountPerInstance,
+        {},
         {},
         {},
         {depthRangeNear, depthRangeFar, depthRangeDiff, 0.0f}};

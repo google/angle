@@ -444,8 +444,11 @@ std::string GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVa
             for (int row = 0; row < info.rowCount; ++row)
             {
                 result << "xfbOut" << bufferIndex << "[ANGLEUniforms.xfbBufferOffsets["
-                       << bufferIndex << "] + gl_VertexIndex * " << stride << " + " << offset
-                       << "] = " << info.glslAsFloat << "(" << varying.mappedName;
+                       << bufferIndex
+                       << "] + (gl_VertexIndex + gl_InstanceIndex * "
+                          "ANGLEUniforms.xfbVerticesPerDraw) * "
+                       << stride << " + " << offset << "] = " << info.glslAsFloat << "("
+                       << varying.mappedName;
 
                 if (varying.isArray())
                 {

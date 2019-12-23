@@ -73,11 +73,6 @@
 3569 : KHR-GLES31.core.shader_bitfield_operation.umulExtended.* = SKIP
 3569 : KHR-GLES31.core.shader_bitfield_operation.imulExtended.* = SKIP
 
-// Trigger Vulkan validation errors:
-4145 VULKAN : KHR-GLES31.core.vertex_attrib_binding.basic-input-case9 = FAIL
-4145 VULKAN : KHR-GLES31.core.vertex_attrib_binding.basic-input-case11 = FAIL
-4145 VULKAN : KHR-GLES31.core.vertex_attrib_binding.basic-inputI-case2 = FAIL
-
 // Crashes in libnvidia-glvkspirv.so, fixed in newer drivers
 4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matC* = SKIP
 4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matC* = SKIP
