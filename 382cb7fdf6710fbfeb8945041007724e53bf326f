@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6d46004c_9f6bc014",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-12-23T17:07:03Z",
+      "side": 1,
+      "message": "see my comment in the other file",
+      "parentUuid": "1e29c3c5_754c615f",
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "64be1a61_b7d25ff7",
         "filename": "src/libANGLE/formatutils.h",
         "patchSetId": 8
@@ -30,6 +48,30 @@
       "writtenOn": "2019-12-23T16:51:23Z",
       "side": 1,
       "message": "I don\u0027t think you should need this.\nThe colorspace extensions are written such that the application is responsible for using the appropriate rendertarget format to enable sRGB or not.",
+      "range": {
+        "startLine": 76,
+        "startChar": 18,
+        "endLine": 76,
+        "endChar": 42
+      },
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2a2f400_cd4aef99",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-12-23T17:07:03Z",
+      "side": 1,
+      "message": "the problem is that EGL configs and colorspaces are not bound together and even if the app renders it in the correct color space, all render target formats that flows within GLES state will continue to have incorrect colorspace if not overriden",
+      "parentUuid": "64be1a61_b7d25ff7",
       "range": {
         "startLine": 76,
         "startChar": 18,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "759001e1_4cb19fb3",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-12-23T17:07:03Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "5e37a01a_2f4d3e97",
+      "range": {
+        "startLine": 328,
+        "startChar": 84,
+        "endLine": 328,
+        "endChar": 95
+      },
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0c414ef2_44b18af2",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 8
@@ -76,6 +142,24 @@
       "writtenOn": "2019-12-23T16:51:23Z",
       "side": 1,
       "message": "nit: blank line after this?",
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc0901ca_3fc8f94f",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1454,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-12-23T17:07:03Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "0c414ef2_44b18af2",
       "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
