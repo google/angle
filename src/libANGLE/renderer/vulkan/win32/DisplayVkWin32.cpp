@@ -134,7 +134,7 @@ egl::Error DisplayVkWin32::initialize(egl::Display *display)
 
 egl::ConfigSet DisplayVkWin32::generateConfigs()
 {
-    constexpr GLenum kColorFormats[] = {GL_RGB565, GL_BGRA8_EXT, GL_BGRX8_ANGLEX};
+    constexpr GLenum kColorFormats[] = {GL_RGB565, GL_BGRA8_EXT, GL_BGRX8_ANGLEX, GL_RGB10_A2_EXT};
     return egl_vk::GenerateConfigs(kColorFormats, egl_vk::kConfigDepthStencilFormats, this);
 }
 

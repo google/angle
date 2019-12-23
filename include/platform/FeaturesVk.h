@@ -212,6 +212,13 @@ struct FeaturesVk : FeatureSetBase
         "Some shader compilers don't support sampler arrays as parameters, so revert to old "
         "RewriteStructSamplers behavior, which produces fewer.",
         &members, "http://anglebug.com/2703"};
+
+    // Whether the VkDevice supports the VK_EXT_swapchain_colorspace extension
+    // http://anglebug.com/2514
+    Feature supportsSwapchainColorspace = {
+        "supports_swapchain_colorspace", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_swapchain_colorspace extension", &members,
+        "http://anglebug.com/2514"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

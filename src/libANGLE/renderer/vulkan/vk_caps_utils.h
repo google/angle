@@ -51,6 +51,23 @@ egl::ConfigSet GenerateConfigs(const GLenum (&colorFormats)[ColorFormatCount],
     return GenerateConfigs(colorFormats, ColorFormatCount, depthStencilFormats,
                            DepthStencilFormatCount, display);
 }
+
+static ANGLE_INLINE EGLenum GetConfigCaveat(GLenum format)
+{
+    // Default EGL config sorting rule will result in rgb10a2 having higher precedence than rgb8
+    // By marking `rgb10a2` as a slow config we switch the order. This ensures that we dont
+    // return rgb10a2 at the top of the config list
+
+    switch (format)
+    {
+        // For now we only mark rgb10a2 as a slow config
+        case GL_RGB10_A2_EXT:
+            return EGL_SLOW_CONFIG;
+        default:
+            return EGL_NONE;
+    }
+}
+
 }  // namespace egl_vk
 
 namespace vk
