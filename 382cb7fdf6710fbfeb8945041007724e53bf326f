@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "94e5399e_7f136a39",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-12-23T21:19:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d46004c_9f6bc014",
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64be1a61_b7d25ff7",
         "filename": "src/libANGLE/formatutils.h",
         "patchSetId": 8
@@ -167,6 +185,30 @@
       "side": 1,
       "message": "was not part of the anglebug, we can either have a separate bug for that or amend the existing bug",
       "parentUuid": "f47c90a6_36b93ddf",
+      "range": {
+        "startLine": 83,
+        "startChar": 13,
+        "endLine": 83,
+        "endChar": 52
+      },
+      "revId": "382cb7fdf6710fbfeb8945041007724e53bf326f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e9c4b32_eb06b170",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-12-23T21:19:51Z",
+      "side": 1,
+      "message": "I\u0027ll leave that to you.",
+      "parentUuid": "90ed75a4_8f98706c",
       "range": {
         "startLine": 83,
         "startChar": 13,
