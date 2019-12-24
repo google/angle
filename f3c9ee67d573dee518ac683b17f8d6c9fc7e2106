@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "132bb2b5_196e2def",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-12-24T01:27:16Z",
+      "side": 1,
+      "message": "Nice clarification. Thanks.",
+      "parentUuid": "289f1241_2c6c6c2d",
+      "revId": "f3c9ee67d573dee518ac683b17f8d6c9fc7e2106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2914166a_765c79f5",
         "filename": "src/compiler/translator/Types.cpp",
         "patchSetId": 5
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "This is intentional, and we often do this when the assignment is less trivial (like with move assignment: https://cs.chromium.org/search/?q\u003d%22*this+%3D+%22+file:libANGLE\u0026sq\u003dpackage:chromium\u0026type\u003dcs)\n\nIn particular, this is in preparation of the next change, that makes the copy assignment have special-handling of array sizes, and I think it\u0027s less error-prone if we don\u0027t duplicate that.",
       "parentUuid": "2914166a_765c79f5",
+      "revId": "f3c9ee67d573dee518ac683b17f8d6c9fc7e2106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5b72a9f_4b2297e4",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-12-24T01:27:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fd34f069_18bfe9e8",
       "revId": "f3c9ee67d573dee518ac683b17f8d6c9fc7e2106",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
