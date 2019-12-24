@@ -1470,8 +1470,8 @@ TEST_P(SimpleStateChangeTest, DrawArraysThenDrawElements)
 {
     // http://anglebug.com/4121
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGLES());
-    // httpL//anglebug.com/4177
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOSX() && IsMetal());
+    // http://anglebug.com/4177
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsMetal());
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     glUseProgram(program);
 
