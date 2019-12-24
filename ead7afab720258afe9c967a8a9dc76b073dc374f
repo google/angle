@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f0d66cd4_5a846427",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-12-24T00:03:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8905df54_2fd5adec",
+      "range": {
+        "startLine": 88,
+        "startChar": 13,
+        "endLine": 88,
+        "endChar": 40
+      },
+      "revId": "ead7afab720258afe9c967a8a9dc76b073dc374f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2c0c469e_e58d59db",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 9
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "Right, we are only dealing with sRGB color spaces right now. Eventually we\u0027ll want to support HDR-like color spaces and we\u0027ll need to put the actual color space here.",
       "parentUuid": "8612af25_8d1e79be",
+      "range": {
+        "startLine": 744,
+        "startChar": 45,
+        "endLine": 744,
+        "endChar": 77
+      },
+      "revId": "ead7afab720258afe9c967a8a9dc76b073dc374f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a43d524_0b1aa763",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2019-12-24T00:03:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7647419_783ba303",
       "range": {
         "startLine": 744,
         "startChar": 45,
