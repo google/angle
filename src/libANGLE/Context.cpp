@@ -2777,7 +2777,16 @@ void Context::markContextLost(GraphicsResetStatus status)
         mResetStatus       = status;
         mContextLostForced = true;
     }
+    setContextLost();
+}
+
+void Context::setContextLost()
+{
     mContextLost = true;
+
+    // Stop skipping validation, since many implementation entrypoint assume they can't
+    // be called when lost, or with null object arguments, etc.
+    mSkipValidation = false;
 }
 
 GLenum Context::getGraphicsResetStatus()
@@ -2786,9 +2795,9 @@ GLenum Context::getGraphicsResetStatus()
     // as it will allow us to skip all the calls.
     if (mResetStrategy == GL_NO_RESET_NOTIFICATION_EXT)
     {
-        if (!mContextLost && mImplementation->getResetStatus() != GraphicsResetStatus::NoError)
+        if (!isContextLost() && mImplementation->getResetStatus() != GraphicsResetStatus::NoError)
         {
-            mContextLost = true;
+            setContextLost();
         }
 
         // EXT_robustness, section 2.6: If the reset notification behavior is
@@ -2800,14 +2809,14 @@ GLenum Context::getGraphicsResetStatus()
     // The GL_EXT_robustness spec says that if a reset is encountered, a reset
     // status should be returned at least once, and GL_NO_ERROR should be returned
     // once the device has finished resetting.
-    if (!mContextLost)
+    if (!isContextLost())
     {
         ASSERT(mResetStatus == GraphicsResetStatus::NoError);
         mResetStatus = mImplementation->getResetStatus();
 
         if (mResetStatus != GraphicsResetStatus::NoError)
         {
-            mContextLost = true;
+            setContextLost();
         }
     }
     else if (!mContextLostForced && mResetStatus != GraphicsResetStatus::NoError)
@@ -5717,7 +5726,7 @@ void Context::framebufferTexture2DMultisample(GLenum target,
 void Context::getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
 {
     const Sync *syncObject = nullptr;
-    if (!mContextLost)
+    if (!isContextLost())
     {
         syncObject = getSync(sync);
     }
@@ -6430,7 +6439,7 @@ void Context::getIntegervRobust(GLenum pname, GLsizei bufSize, GLsizei *length, 
 void Context::getProgramiv(ShaderProgramID program, GLenum pname, GLint *params)
 {
     Program *programObject = nullptr;
-    if (!mContextLost)
+    if (!isContextLost())
     {
         // Don't resolve link if checking the link completion status.
         programObject = (pname == GL_COMPLETION_STATUS_KHR ? getProgramNoResolveLink(program)
@@ -6485,7 +6494,7 @@ void Context::getProgramPipelineInfoLog(ProgramPipelineID pipeline,
 void Context::getShaderiv(ShaderProgramID shader, GLenum pname, GLint *params)
 {
     Shader *shaderObject = nullptr;
-    if (!mContextLost)
+    if (!isContextLost())
     {
         shaderObject = getShader(shader);
         ASSERT(shaderObject);
