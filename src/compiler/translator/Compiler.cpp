@@ -1475,6 +1475,7 @@ void EmitWorkGroupSizeGLSL(const TCompiler &compiler, TInfoSinkBase &sink)
 
 void EmitMultiviewGLSL(const TCompiler &compiler,
                        const ShCompileOptions &compileOptions,
+                       const TExtension extension,
                        const TBehavior behavior,
                        TInfoSinkBase &sink)
 {
@@ -1499,7 +1500,12 @@ void EmitMultiviewGLSL(const TCompiler &compiler,
     }
     else
     {
-        sink << "#extension GL_OVR_multiview2 : " << GetBehaviorString(behavior) << "\n";
+        sink << "#extension GL_OVR_multiview";
+        if (extension == TExtension::OVR_multiview2)
+        {
+            sink << "2";
+        }
+        sink << " : " << GetBehaviorString(behavior) << "\n";
 
         const auto &numViews = compiler.getNumViews();
         if (isVertexShader && numViews != -1)

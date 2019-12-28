@@ -150,7 +150,12 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
             }
             else if (isMultiview)
             {
-                EmitMultiviewGLSL(*this, compileOptions, iter->second, sink);
+                // Only either OVR_multiview OR OVR_multiview2 should be emitted.
+                if ((iter->first != TExtension::OVR_multiview) ||
+                    !IsExtensionEnabled(extBehavior, TExtension::OVR_multiview2))
+                {
+                    EmitMultiviewGLSL(*this, compileOptions, iter->first, iter->second, sink);
+                }
             }
             else if (iter->first == TExtension::EXT_geometry_shader)
             {
