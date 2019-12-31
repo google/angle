@@ -212,6 +212,8 @@ const char *VulkanResultString(VkResult result)
                    "layout, or is incompatible in a way that prevents sharing an image.";
         case VK_ERROR_VALIDATION_FAILED_EXT:
             return "The validation layers detected invalid API usage.";
+        case VK_ERROR_INVALID_SHADER_NV:
+            return "Invalid Vulkan shader was generated.";
         default:
             return "Unknown vulkan error code.";
     }
