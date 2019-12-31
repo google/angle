@@ -1280,22 +1280,16 @@ angle::Result GlslangGetShaderSpirvCode(GlslangErrorCallback callback,
 
         gl::ShaderMap<std::string> patchedSources = shaderSources;
 
-        // #defines must come after the #version directive.
-        ANGLE_GLSLANG_CHECK(callback,
-                            angle::ReplaceSubstring(&patchedSources[gl::ShaderType::Vertex],
-                                                    kVersionDefine, kLineRasterDefine),
-                            GlslangError::InvalidShader);
-        ANGLE_GLSLANG_CHECK(callback,
-                            angle::ReplaceSubstring(&patchedSources[gl::ShaderType::Fragment],
-                                                    kVersionDefine, kLineRasterDefine),
-                            GlslangError::InvalidShader);
-
-        if (!shaderSources[gl::ShaderType::Geometry].empty())
+        for (const gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
         {
-            ANGLE_GLSLANG_CHECK(callback,
-                                angle::ReplaceSubstring(&patchedSources[gl::ShaderType::Geometry],
-                                                        kVersionDefine, kLineRasterDefine),
-                                GlslangError::InvalidShader);
+            if (!shaderSources[shaderType].empty())
+            {
+                // #defines must come after the #version directive.
+                ANGLE_GLSLANG_CHECK(callback,
+                                    angle::ReplaceSubstring(&patchedSources[shaderType],
+                                                            kVersionDefine, kLineRasterDefine),
+                                    GlslangError::InvalidShader);
+            }
         }
 
         return GetShaderSpirvCode(callback, glCaps, patchedSources, shaderCodeOut);
