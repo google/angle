@@ -315,7 +315,7 @@ const ShCompileOptions SH_ADD_BASE_VERTEX_TO_VERTEX_ID = UINT64_C(1) << 48;
 const ShCompileOptions SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR = UINT64_C(1) << 49;
 
 // This flag works a driver bug that fails to allocate ShaderResourceView for StructuredBuffer
-// on old Windows system with AMD driver.
+// on Windows 7 and earlier.
 const ShCompileOptions SH_DONT_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UINT64_C(1) << 50;
 
 // Defines alternate strategies for implementing array index clamping.

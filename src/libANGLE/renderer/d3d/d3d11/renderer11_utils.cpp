@@ -2445,11 +2445,10 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
     // Never clear for robust resource init.  This matches Chrome's texture clearning behaviour.
     ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, false);
 
-    // Don't translate uniform block to StructuredBuffer on old Windows system with AMD driver.
-    // This is targeted to work around a bug in AMD D3D driver that fails to allocate
-    // ShaderResourceView for StructuredBuffer.
+    // Don't translate uniform block to StructuredBuffer on Windows 7 and earlier. This is targeted
+    // to work around a bug that fails to allocate ShaderResourceView for StructuredBuffer.
     ANGLE_FEATURE_CONDITION(features, dontTranslateUniformBlockToStructuredBuffer,
-                            isAMD && !IsWindows10OrGreater());
+                            !IsWindows10OrGreater());
 
     // Call platform hooks for testing overrides.
     auto *platform = ANGLEPlatformCurrent();
