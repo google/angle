@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15a2fee8_4b1ceadd",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-01-02T17:49:59Z",
+      "side": 1,
+      "message": "nit: could call this a kSwiftShaderDevicePrefix or something to clarify it\u0027s a prefix.",
+      "range": {
+        "startLine": 487,
+        "startChar": 40,
+        "endLine": 487,
+        "endChar": 62
+      },
+      "revId": "e2fc92ca28ef8fce75070b72148c29065edfe36b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
