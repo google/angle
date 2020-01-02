@@ -814,7 +814,7 @@ class ImageHelper final : public Resource
                                          const VkImageType imageType);
 
     // Stage a clear operation to a clear value based on WebGL requirements.
-    void stageSubresourceRobustClear(const gl::ImageIndex &index, const angle::Format &format);
+    void stageSubresourceRobustClear(const gl::ImageIndex &index, const Format &format);
 
     // Stage a clear operation to a clear value that initializes emulated channels to the desired
     // values.

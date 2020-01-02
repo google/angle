@@ -528,9 +528,6 @@ TEST_P(RobustResourceInitTest, ReadingUninitializedTexture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
-    // http://anglebug.com/4255
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLTexture tex;
     setupTexture(&tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -546,9 +543,6 @@ TEST_P(RobustResourceInitTest, ReuploadingClearsTexture)
 
     // crbug.com/826576
     ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
-
-    // http://anglebug.com/4255
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     // Put some data into the texture
     std::array<GLColor, kWidth * kHeight> data;
@@ -574,11 +568,7 @@ TEST_P(RobustResourceInitTest, TexImageThenSubImage)
     // http://anglebug.com/2407, but only fails on Nexus devices
     ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
-    // http://anglebug.com/4255
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Put some data into the texture
-
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -602,9 +592,6 @@ TEST_P(RobustResourceInitTest, TexImageThenSubImage)
 TEST_P(RobustResourceInitTestES3, ReadingUninitialized3DTexture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
-
-    // http://anglebug.com/4255
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     GLTexture tex;
     setup3DTexture(&tex);
@@ -768,9 +755,6 @@ TEST_P(RobustResourceInitTest, UninitializedPartsOfCopied2DTexturesAreBlack)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
-    // http://anglebug.com/4255
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLTexture tex;
     setupTexture(&tex);
     GLFramebuffer fbo;
@@ -804,9 +788,6 @@ TEST_P(RobustResourceInitTestES3, ReadingOutOfBoundsCopiedTextureWithUnpackBuffe
     // GL_ALPHA texture can't be read with glReadPixels, for convenience this test uses
     // glCopyTextureCHROMIUM to copy GL_ALPHA into GL_RGBA
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
-
-    // http://anglebug.com/4255
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -857,9 +838,6 @@ TEST_P(RobustResourceInitTestES3, ReadingOutOfBoundsCopiedTextureWithUnpackBuffe
 TEST_P(RobustResourceInitTest, ReadingOutOfBoundsCopiedTexture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
-
-    // http://anglebug.com/4255
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     GLTexture tex;
     setupTexture(&tex);
@@ -945,9 +923,6 @@ TEST_P(RobustResourceInitTest, Texture)
 
     // Flaky failure on Linux / NV / Vulkan when run in a sequence. http://anglebug.com/3416
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsNVIDIA() && IsLinux());
-
-    // http://anglebug.com/4255
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -1634,9 +1609,6 @@ TEST_P(RobustResourceInitTestES3, CopyTexSubImage3D)
 TEST_P(RobustResourceInitTestES3, Texture2DArray)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
-
-    // http://anglebug.com/4255
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr int kSize   = 1024;
     constexpr int kLayers = 8;

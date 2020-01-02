@@ -160,7 +160,7 @@ angle::Result RenderbufferVk::initializeContents(const gl::Context *context,
                                                  const gl::ImageIndex &imageIndex)
 {
     // Note: stageSubresourceRobustClear only uses the intended format to count channels.
-    mImage->stageSubresourceRobustClear(imageIndex, mImage->getFormat().intendedFormat());
+    mImage->stageSubresourceRobustClear(imageIndex, mImage->getFormat());
     return mImage->flushAllStagedUpdates(vk::GetImpl(context));
 }
 

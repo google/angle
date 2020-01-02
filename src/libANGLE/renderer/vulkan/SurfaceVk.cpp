@@ -357,15 +357,15 @@ angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
 
     if (mColorAttachment.image.valid())
     {
-        mColorAttachment.image.stageSubresourceRobustClear(
-            imageIndex, mColorAttachment.image.getFormat().intendedFormat());
+        mColorAttachment.image.stageSubresourceRobustClear(imageIndex,
+                                                           mColorAttachment.image.getFormat());
         ANGLE_TRY(mColorAttachment.image.flushAllStagedUpdates(contextVk));
     }
 
     if (mDepthStencilAttachment.image.valid())
     {
         mDepthStencilAttachment.image.stageSubresourceRobustClear(
-            imageIndex, mDepthStencilAttachment.image.getFormat().intendedFormat());
+            imageIndex, mDepthStencilAttachment.image.getFormat());
         ANGLE_TRY(mDepthStencilAttachment.image.flushAllStagedUpdates(contextVk));
     }
     return angle::Result::Continue;
@@ -1503,13 +1503,13 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
 
     vk::ImageHelper *image =
         isMultiSampled() ? &mColorImageMS : &mSwapchainImages[mCurrentSwapchainImageIndex].image;
-    image->stageSubresourceRobustClear(imageIndex, image->getFormat().intendedFormat());
+    image->stageSubresourceRobustClear(imageIndex, image->getFormat());
     ANGLE_TRY(image->flushAllStagedUpdates(contextVk));
 
     if (mDepthStencilImage.valid())
     {
-        mDepthStencilImage.stageSubresourceRobustClear(
-            gl::ImageIndex::Make2D(0), mDepthStencilImage.getFormat().intendedFormat());
+        mDepthStencilImage.stageSubresourceRobustClear(gl::ImageIndex::Make2D(0),
+                                                       mDepthStencilImage.getFormat());
         ANGLE_TRY(mDepthStencilImage.flushAllStagedUpdates(contextVk));
     }
 
