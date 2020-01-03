@@ -382,6 +382,39 @@ void main (void)
     EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, GLColor::black, kPixelTolerance);
 }
 
+// Tests that drawing with transform feedback paused, then lines without transform feedback works
+// without Vulkan validation errors.
+TEST_P(StateChangeTestES3, DrawPausedXfbThenNonXfbLines)
+{
+    // glTransformFeedbackVaryings for program2 returns GL_INVALID_OPERATION on both Linux and
+    // windows.  http://anglebug.com/4265
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL());
+
+    std::vector<std::string> tfVaryings = {"gl_Position"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program1, essl1_shaders::vs::Simple(),
+                                        essl1_shaders::fs::Blue(), tfVaryings, GL_SEPARATE_ATTRIBS);
+
+    GLBuffer xfbBuffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 6 * sizeof(float[4]), nullptr, GL_STATIC_DRAW);
+
+    GLTransformFeedback xfb;
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, xfb);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, xfbBuffer);
+
+    glUseProgram(program1);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    glPauseTransformFeedback();
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    ANGLE_GL_PROGRAM(program2, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    glUseProgram(program2);
+    glDrawArrays(GL_LINES, 0, 6);
+    glEndTransformFeedback();
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests that vertex attribute value is preserved across context switches.
 TEST_P(StateChangeTest, MultiContextVertexAttribute)
 {

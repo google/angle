@@ -1724,9 +1724,10 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
     // Find the maximum non-null descriptor set.  This is used in conjunction with a driver
     // workaround to bind empty descriptor sets only for gaps in between 0 and max and avoid
     // binding unnecessary empty descriptor sets for the sets beyond max.
-    size_t descriptorSetRange = 0;
-    for (size_t descriptorSetIndex = 0; descriptorSetIndex < mDescriptorSets.size();
-         ++descriptorSetIndex)
+    const size_t descriptorSetStart = kUniformsAndXfbDescriptorSetIndex;
+    size_t descriptorSetRange       = 0;
+    for (size_t descriptorSetIndex = descriptorSetStart;
+         descriptorSetIndex < mDescriptorSets.size(); ++descriptorSetIndex)
     {
         if (mDescriptorSets[descriptorSetIndex] != VK_NULL_HANDLE)
         {
@@ -1737,7 +1738,7 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
     const VkPipelineBindPoint pipelineBindPoint =
         mState.isCompute() ? VK_PIPELINE_BIND_POINT_COMPUTE : VK_PIPELINE_BIND_POINT_GRAPHICS;
 
-    for (uint32_t descriptorSetIndex = 0; descriptorSetIndex < descriptorSetRange;
+    for (uint32_t descriptorSetIndex = descriptorSetStart; descriptorSetIndex < descriptorSetRange;
          ++descriptorSetIndex)
     {
         VkDescriptorSet descSet = mDescriptorSets[descriptorSetIndex];
