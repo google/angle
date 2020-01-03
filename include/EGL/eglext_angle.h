@@ -65,6 +65,12 @@
 #define EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE 0x320F
 #endif /* EGL_ANGLE_platform_angle_d3d */
 
+#ifndef EGL_ANGLE_platform_angle_d3d_luid
+#define EGL_ANGLE_platform_angle_d3d_luid 1
+#define EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE 0x34A0
+#define EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE 0x34A1
+#endif /* EGL_ANGLE_platform_angle_d3d_luid */
+
 #ifndef EGL_ANGLE_platform_angle_d3d11on12
 #define EGL_ANGLE_platform_angle_d3d11on12 1
 #define EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE 0x3488

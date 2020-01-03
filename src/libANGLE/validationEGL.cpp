@@ -467,6 +467,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
         bool enableAutoTrimSpecified = false;
         bool enableD3D11on12         = false;
         bool presentPathSpecified    = false;
+        bool luidSpecified           = false;
 
         Optional<EGLAttrib> majorVersion;
         Optional<EGLAttrib> minorVersion;
@@ -631,6 +632,10 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                     }
                     break;
 
+                case EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE:
+                case EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE:
+                    luidSpecified = true;
+                    break;
                 default:
                     break;
             }
@@ -678,6 +683,25 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
         {
             return EglBadAttribute() << "EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE requires a "
                                         "device type of EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.";
+        }
+
+        if (luidSpecified)
+        {
+            if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+            {
+                return EglBadAttribute() << "EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE and "
+                                            "EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE "
+                                            "require a platform type of "
+                                            "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.";
+            }
+
+            if (attribMap.get(EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 0) == 0 &&
+                attribMap.get(EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE, 0) == 0)
+            {
+                return EglBadAttribute() << "If either EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE "
+                                            "and/or EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE are "
+                                            "specified, at least one must non-zero.";
+            }
         }
 
         if (deviceType.valid())

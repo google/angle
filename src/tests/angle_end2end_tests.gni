@@ -172,6 +172,7 @@ angle_end2end_tests_mac_sources = [
 ]
 angle_end2end_tests_win_sources = [
   "egl_tests/EGLDeviceTest.cpp",
+  "egl_tests/EGLDisplayLuidTest.cpp",
   "egl_tests/EGLPresentPathD3D11Test.cpp",
   "egl_tests/EGLStreamTest.cpp",
   "egl_tests/EGLSyncControlTest.cpp",
