@@ -16,6 +16,24 @@
       "revId": "c7929fba5befee990052c7764b142f715be034e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eba3172b_e614fdb8",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-01-03T23:34:32Z",
+      "side": 1,
+      "message": "Thanks for catching this. Downgraded this to OS_LOG_TYPE_ERROR and left a comment.",
+      "parentUuid": "df3c3623_da5c0845",
+      "revId": "c7929fba5befee990052c7764b142f715be034e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
