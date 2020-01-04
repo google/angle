@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 221
+#define ANGLE_SH_VERSION 222
 
 enum ShShaderSpec
 {
@@ -317,6 +317,11 @@ const ShCompileOptions SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR = UINT64_C(
 // This flag works a driver bug that fails to allocate ShaderResourceView for StructuredBuffer
 // on Windows 7 and earlier.
 const ShCompileOptions SH_DONT_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UINT64_C(1) << 50;
+
+// This flag indicates whether Bresenham line raster emulation code should be generated.  This
+// emulation is necessary if the backend uses a differnet algorithm to draw lines.  Currently only
+// implemented for the Vulkan backend.
+const ShCompileOptions SH_ADD_BRESENHAM_LINE_RASTER_EMULATION = UINT64_C(1) << 51;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy

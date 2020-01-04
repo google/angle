@@ -870,10 +870,13 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             }
         }
 
-        if (!AddBresenhamEmulationFS(this, sink, root, &getSymbolTable(), driverUniforms,
-                                     usesFragCoord))
+        if (compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION)
         {
-            return false;
+            if (!AddBresenhamEmulationFS(this, sink, root, &getSymbolTable(), driverUniforms,
+                                         usesFragCoord))
+            {
+                return false;
+            }
         }
 
         bool hasGLFragColor = false;
@@ -936,9 +939,12 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
     }
     else if (getShaderType() == GL_VERTEX_SHADER)
     {
-        if (!AddBresenhamEmulationVS(this, root, &getSymbolTable(), driverUniforms))
+        if (compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION)
         {
-            return false;
+            if (!AddBresenhamEmulationVS(this, root, &getSymbolTable(), driverUniforms))
+            {
+                return false;
+            }
         }
 
         // Add a macro to declare transform feedback buffers.
