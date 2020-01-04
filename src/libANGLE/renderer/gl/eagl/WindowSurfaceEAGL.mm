@@ -1,30 +1,31 @@
 //
-// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Copyright 2020 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
-// WindowSurfaceCGL.cpp: CGL implementation of egl::Surface for windows
+// WindowSurfaceEAGL.cpp: EAGL implementation of egl::Surface
 
-#include "common/platform.h"
+#import "common/platform.h"
 
-#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+#if defined(ANGLE_PLATFORM_IOS) && !defined(ANGLE_PLATFORM_MACCATALYST)
 
-#    include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
+#    import "libANGLE/renderer/gl/eagl/WindowSurfaceEAGL.h"
 
-#    import <Cocoa/Cocoa.h>
-#    include <OpenGL/OpenGL.h>
+#    import "common/debug.h"
+#    import "libANGLE/Context.h"
+#    import "libANGLE/renderer/gl/FramebufferGL.h"
+#    import "libANGLE/renderer/gl/RendererGL.h"
+#    import "libANGLE/renderer/gl/StateManagerGL.h"
+#    import "libANGLE/renderer/gl/eagl/DisplayEAGL.h"
+
+#    import <OpenGLES/EAGL.h>
 #    import <QuartzCore/QuartzCore.h>
 
-#    include "common/debug.h"
-#    include "libANGLE/Context.h"
-#    include "libANGLE/renderer/gl/FramebufferGL.h"
-#    include "libANGLE/renderer/gl/RendererGL.h"
-#    include "libANGLE/renderer/gl/StateManagerGL.h"
-#    include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
+// TODO(anglebug.com/4275): It's not clear why this needs to be an EAGLLayer.
 
-@interface WebSwapLayer : CAOpenGLLayer {
-    CGLContextObj mDisplayContext;
+@interface WebSwapLayer : CAEAGLLayer {
+    EAGLContextObj mDisplayContext;
 
     bool initialized;
     rx::SharedSwapState *mSwapState;
@@ -33,20 +34,19 @@
     GLuint mReadFramebuffer;
 }
 - (id)initWithSharedState:(rx::SharedSwapState *)swapState
-              withContext:(CGLContextObj)displayContext
+              withContext:(EAGLContextObj)displayContext
             withFunctions:(const rx::FunctionsGL *)functions;
 @end
 
 @implementation WebSwapLayer
 - (id)initWithSharedState:(rx::SharedSwapState *)swapState
-              withContext:(CGLContextObj)displayContext
+              withContext:(EAGLContextObj)displayContext
             withFunctions:(const rx::FunctionsGL *)functions
 {
     self = [super init];
     if (self != nil)
     {
-        self.asynchronous = YES;
-        mDisplayContext   = displayContext;
+        mDisplayContext = displayContext;
 
         initialized = false;
         mSwapState  = swapState;
@@ -58,53 +58,19 @@
     return self;
 }
 
-- (CGLPixelFormatObj)copyCGLPixelFormatForDisplayMask:(uint32_t)mask
+- (void)display
 {
-    CGLPixelFormatAttribute attribs[] = {
-        kCGLPFADisplayMask, static_cast<CGLPixelFormatAttribute>(mask), kCGLPFAOpenGLProfile,
-        static_cast<CGLPixelFormatAttribute>(kCGLOGLPVersion_3_2_Core),
-        static_cast<CGLPixelFormatAttribute>(0)};
-
-    CGLPixelFormatObj pixelFormat = nullptr;
-    GLint numFormats              = 0;
-    CGLChoosePixelFormat(attribs, &pixelFormat, &numFormats);
-
-    return pixelFormat;
-}
-
-- (CGLContextObj)copyCGLContextForPixelFormat:(CGLPixelFormatObj)pixelFormat
-{
-    CGLContextObj context = nullptr;
-    CGLCreateContext(pixelFormat, mDisplayContext, &context);
-    return context;
-}
-
-- (BOOL)canDrawInCGLContext:(CGLContextObj)glContext
-                pixelFormat:(CGLPixelFormatObj)pixelFormat
-               forLayerTime:(CFTimeInterval)timeInterval
-                displayTime:(const CVTimeStamp *)timeStamp
-{
-    BOOL result = NO;
-
     pthread_mutex_lock(&mSwapState->mutex);
     {
         if (mSwapState->lastRendered->swapId > mSwapState->beingPresented->swapId)
         {
             std::swap(mSwapState->lastRendered, mSwapState->beingPresented);
-            result = YES;
         }
     }
     pthread_mutex_unlock(&mSwapState->mutex);
 
-    return result;
-}
+    [EAGLContext setCurrentContext:mDisplayContext];
 
-- (void)drawInCGLContext:(CGLContextObj)glContext
-             pixelFormat:(CGLPixelFormatObj)pixelFormat
-            forLayerTime:(CFTimeInterval)timeInterval
-             displayTime:(const CVTimeStamp *)timeStamp
-{
-    CGLSetCurrentContext(glContext);
     if (!initialized)
     {
         initialized = true;
@@ -113,11 +79,13 @@
     }
 
     const auto &texture = *mSwapState->beingPresented;
+
     if ([self frame].size.width != texture.width || [self frame].size.height != texture.height)
     {
         [self setFrame:CGRectMake(0, 0, texture.width, texture.height)];
 
-        // Without this, the OSX compositor / window system doesn't see the resize.
+        // TODO(anglebug.com/4275): If this continues to remain an EAGLLayer, then this is
+        // where we'd probably want to create the renderbuffer storage.
         [self setNeedsDisplay];
     }
 
@@ -135,21 +103,19 @@
     mFunctions->blitFramebuffer(0, 0, texture.width, texture.height, 0, 0, texture.width,
                                 texture.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-    // Call the super method to flush the context
-    [super drawInCGLContext:glContext
-                pixelFormat:pixelFormat
-               forLayerTime:timeInterval
-                displayTime:timeStamp];
+    mFunctions->bindRenderbuffer(GL_RENDERBUFFER, texture.texture);
+    [mDisplayContext presentRenderbuffer:GL_RENDERBUFFER];
+    [EAGLContext setCurrentContext:nil];
 }
 @end
 
 namespace rx
 {
 
-WindowSurfaceCGL::WindowSurfaceCGL(const egl::SurfaceState &state,
-                                   RendererGL *renderer,
-                                   EGLNativeWindowType layer,
-                                   CGLContextObj context)
+WindowSurfaceEAGL::WindowSurfaceEAGL(const egl::SurfaceState &state,
+                                     RendererGL *renderer,
+                                     EGLNativeWindowType layer,
+                                     EAGLContextObj context)
     : SurfaceGL(state),
       mSwapLayer(nil),
       mCurrentSwapId(0),
@@ -162,7 +128,7 @@ WindowSurfaceCGL::WindowSurfaceCGL(const egl::SurfaceState &state,
     pthread_mutex_init(&mSwapState.mutex, nullptr);
 }
 
-WindowSurfaceCGL::~WindowSurfaceCGL()
+WindowSurfaceEAGL::~WindowSurfaceEAGL()
 {
     pthread_mutex_destroy(&mSwapState.mutex);
 
@@ -175,7 +141,6 @@ WindowSurfaceCGL::~WindowSurfaceCGL()
     if (mSwapLayer != nil)
     {
         [mSwapLayer removeFromSuperlayer];
-        [mSwapLayer release];
         mSwapLayer = nil;
     }
 
@@ -189,7 +154,7 @@ WindowSurfaceCGL::~WindowSurfaceCGL()
     }
 }
 
-egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
+egl::Error WindowSurfaceEAGL::initialize(const egl::Display *display)
 {
     unsigned width  = getWidth();
     unsigned height = getHeight();
@@ -220,12 +185,12 @@ egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::makeCurrent(const gl::Context *context)
+egl::Error WindowSurfaceEAGL::makeCurrent(const gl::Context *context)
 {
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::swap(const gl::Context *context)
+egl::Error WindowSurfaceEAGL::swap(const gl::Context *context)
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
@@ -264,64 +229,64 @@ egl::Error WindowSurfaceCGL::swap(const gl::Context *context)
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::postSubBuffer(const gl::Context *context,
-                                           EGLint x,
-                                           EGLint y,
-                                           EGLint width,
-                                           EGLint height)
+egl::Error WindowSurfaceEAGL::postSubBuffer(const gl::Context *context,
+                                            EGLint x,
+                                            EGLint y,
+                                            EGLint width,
+                                            EGLint height)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::querySurfacePointerANGLE(EGLint attribute, void **value)
+egl::Error WindowSurfaceEAGL::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::bindTexImage(const gl::Context *context,
-                                          gl::Texture *texture,
-                                          EGLint buffer)
+egl::Error WindowSurfaceEAGL::bindTexImage(const gl::Context *context,
+                                           gl::Texture *texture,
+                                           EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::releaseTexImage(const gl::Context *context, EGLint buffer)
+egl::Error WindowSurfaceEAGL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-void WindowSurfaceCGL::setSwapInterval(EGLint interval)
+void WindowSurfaceEAGL::setSwapInterval(EGLint interval)
 {
     // TODO(cwallez) investigate implementing swap intervals other than 0
 }
 
-EGLint WindowSurfaceCGL::getWidth() const
+EGLint WindowSurfaceEAGL::getWidth() const
 {
     return (EGLint)CGRectGetWidth([mLayer frame]);
 }
 
-EGLint WindowSurfaceCGL::getHeight() const
+EGLint WindowSurfaceEAGL::getHeight() const
 {
     return (EGLint)CGRectGetHeight([mLayer frame]);
 }
 
-EGLint WindowSurfaceCGL::isPostSubBufferSupported() const
+EGLint WindowSurfaceEAGL::isPostSubBufferSupported() const
 {
     UNIMPLEMENTED();
     return EGL_FALSE;
 }
 
-EGLint WindowSurfaceCGL::getSwapBehavior() const
+EGLint WindowSurfaceEAGL::getSwapBehavior() const
 {
     return EGL_BUFFER_DESTROYED;
 }
 
-FramebufferImpl *WindowSurfaceCGL::createDefaultFramebuffer(const gl::Context *context,
-                                                            const gl::FramebufferState &state)
+FramebufferImpl *WindowSurfaceEAGL::createDefaultFramebuffer(const gl::Context *context,
+                                                             const gl::FramebufferState &state)
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
@@ -339,4 +304,4 @@ FramebufferImpl *WindowSurfaceCGL::createDefaultFramebuffer(const gl::Context *c
 
 }  // namespace rx
 
-#endif  // defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+#endif  // defined(ANGLE_PLATFORM_IOS)

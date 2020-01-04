@@ -1,15 +1,17 @@
 //
-// Copyright 2015 The ANGLE Project Authors. All rights reserved.
+// Copyright 2020 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
-// PBufferSurfaceCGL.cpp: an implementation of egl::Surface for PBuffers for the CLG backend,
+// PBufferSurfaceEAGL.cpp: an implementation of egl::Surface for PBuffers for the EAGL backend,
 //                      currently implemented using renderbuffers
 
-#include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
+#import "common/platform.h"
 
-#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+#if defined(ANGLE_PLATFORM_IOS) && !defined(ANGLE_PLATFORM_MACCATALYST)
+
+#    include "libANGLE/renderer/gl/eagl/PbufferSurfaceEAGL.h"
 
 #    include "common/debug.h"
 #    include "libANGLE/renderer/gl/FramebufferGL.h"
@@ -20,10 +22,10 @@
 namespace rx
 {
 
-PbufferSurfaceCGL::PbufferSurfaceCGL(const egl::SurfaceState &state,
-                                     RendererGL *renderer,
-                                     EGLint width,
-                                     EGLint height)
+PbufferSurfaceEAGL::PbufferSurfaceEAGL(const egl::SurfaceState &state,
+                                       RendererGL *renderer,
+                                       EGLint width,
+                                       EGLint height)
     : SurfaceGL(state),
       mWidth(width),
       mHeight(height),
@@ -33,7 +35,7 @@ PbufferSurfaceCGL::PbufferSurfaceCGL(const egl::SurfaceState &state,
       mDSRenderbuffer(0)
 {}
 
-PbufferSurfaceCGL::~PbufferSurfaceCGL()
+PbufferSurfaceEAGL::~PbufferSurfaceEAGL()
 {
     if (mColorRenderbuffer != 0)
     {
@@ -47,7 +49,7 @@ PbufferSurfaceCGL::~PbufferSurfaceCGL()
     }
 }
 
-egl::Error PbufferSurfaceCGL::initialize(const egl::Display *display)
+egl::Error PbufferSurfaceEAGL::initialize(const egl::Display *display)
 {
     mFunctions->genRenderbuffers(1, &mColorRenderbuffer);
     mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mColorRenderbuffer);
@@ -60,70 +62,71 @@ egl::Error PbufferSurfaceCGL::initialize(const egl::Display *display)
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceCGL::makeCurrent(const gl::Context *context)
+egl::Error PbufferSurfaceEAGL::makeCurrent(const gl::Context *context)
 {
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceCGL::swap(const gl::Context *context)
+egl::Error PbufferSurfaceEAGL::swap(const gl::Context *context)
 {
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceCGL::postSubBuffer(const gl::Context *context,
-                                            EGLint x,
-                                            EGLint y,
-                                            EGLint width,
-                                            EGLint height)
+egl::Error PbufferSurfaceEAGL::postSubBuffer(const gl::Context *context,
+                                             EGLint x,
+                                             EGLint y,
+                                             EGLint width,
+                                             EGLint height)
 {
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceCGL::querySurfacePointerANGLE(EGLint attribute, void **value)
-{
-    UNIMPLEMENTED();
-    return egl::NoError();
-}
-
-egl::Error PbufferSurfaceCGL::bindTexImage(const gl::Context *context,
-                                           gl::Texture *texture,
-                                           EGLint buffer)
+egl::Error PbufferSurfaceEAGL::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNIMPLEMENTED();
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceCGL::releaseTexImage(const gl::Context *context, EGLint buffer)
+egl::Error PbufferSurfaceEAGL::bindTexImage(const gl::Context *context,
+                                            gl::Texture *texture,
+                                            EGLint buffer)
+{
+    ERR() << "PbufferSurfaceEAGL::bindTexImage";
+    UNIMPLEMENTED();
+    return egl::NoError();
+}
+
+egl::Error PbufferSurfaceEAGL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::NoError();
 }
 
-void PbufferSurfaceCGL::setSwapInterval(EGLint interval) {}
+void PbufferSurfaceEAGL::setSwapInterval(EGLint interval) {}
 
-EGLint PbufferSurfaceCGL::getWidth() const
+EGLint PbufferSurfaceEAGL::getWidth() const
 {
     return mWidth;
 }
 
-EGLint PbufferSurfaceCGL::getHeight() const
+EGLint PbufferSurfaceEAGL::getHeight() const
 {
     return mHeight;
 }
 
-EGLint PbufferSurfaceCGL::isPostSubBufferSupported() const
+EGLint PbufferSurfaceEAGL::isPostSubBufferSupported() const
 {
     UNIMPLEMENTED();
     return EGL_FALSE;
 }
 
-EGLint PbufferSurfaceCGL::getSwapBehavior() const
+EGLint PbufferSurfaceEAGL::getSwapBehavior() const
 {
     return EGL_BUFFER_PRESERVED;
 }
 
-FramebufferImpl *PbufferSurfaceCGL::createDefaultFramebuffer(const gl::Context *context,
-                                                             const gl::FramebufferState &state)
+FramebufferImpl *PbufferSurfaceEAGL::createDefaultFramebuffer(const gl::Context *context,
+                                                              const gl::FramebufferState &state)
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
@@ -141,4 +144,4 @@ FramebufferImpl *PbufferSurfaceCGL::createDefaultFramebuffer(const gl::Context *
 
 }  // namespace rx
 
-#endif  // defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+#endif  // defined(ANGLE_PLATFORM_IOS)

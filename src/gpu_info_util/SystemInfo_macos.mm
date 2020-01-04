@@ -4,11 +4,11 @@
 // found in the LICENSE file.
 //
 
-// SystemInfo_mac.mm: implementation of the Mac-specific parts of SystemInfo.h
+// SystemInfo_macos.mm: implementation of the macOS-specific parts of SystemInfo.h
 
 #include "common/platform.h"
 
-#ifdef ANGLE_PLATFORM_MACOS
+#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
 
 #    include "gpu_info_util/SystemInfo_internal.h"
 
@@ -244,4 +244,4 @@ bool GetSystemInfo(SystemInfo *info)
 
 }  // namespace angle
 
-#endif  // ANGLE_PLATFORM_MACOS
+#endif  // defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)

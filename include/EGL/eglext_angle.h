@@ -274,6 +274,11 @@ EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffersWithFrameTokenANGLE(EGLDisplay dpy, 
 #endif
 #endif /* EGL_ANGLE_swap_with_frame_token */
 
+#ifndef EGL_ANGLE_device_eagl
+#define EGL_ANGLE_device_eagl 1
+#define EGL_EAGL_CONTEXT_ANGLE 0x348C
+#endif
+
 // clang-format on
 
 #endif  // INCLUDE_EGL_EGLEXT_ANGLE_

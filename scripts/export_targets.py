@@ -185,6 +185,7 @@ IGNORED_INCLUDES = {
     b'libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h',
     b'libANGLE/renderer/gl/glx/DisplayGLX.h',
     b'libANGLE/renderer/gl/cgl/DisplayCGL.h',
+    b'libANGLE/renderer/gl/eagl/DisplayEAGL.h',
     b'libANGLE/renderer/gl/egl/ozone/DisplayOzone.h',
     b'libANGLE/renderer/gl/egl/android/DisplayAndroid.h',
     b'libANGLE/renderer/gl/wgl/DisplayWGL.h',
