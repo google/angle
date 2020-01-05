@@ -151,6 +151,7 @@ TextureGL::~TextureGL()
 
 void TextureGL::onDestroy(const gl::Context *context)
 {
+    GetImplAs<ContextGL>(context)->flushIfNecessaryBeforeDeleteTextures();
     StateManagerGL *stateManager = GetStateManagerGL(context);
     stateManager->deleteTexture(mTextureID);
     mTextureID = 0;
@@ -734,6 +735,11 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
         setLevelInfo(context, target, level, 1, levelInfo);
     }
 
+    if (features.flushBeforeDeleteTextureIfCopiedTo.enabled)
+    {
+        contextGL->setNeedsFlushBeforeDeleteTextures();
+    }
+
     return angle::Result::Continue;
 }
 
@@ -745,6 +751,7 @@ angle::Result TextureGL::copySubImage(const gl::Context *context,
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     gl::TextureTarget target                 = index.getTarget();
     size_t level                             = static_cast<size_t>(index.getLevelIndex());
@@ -790,6 +797,12 @@ angle::Result TextureGL::copySubImage(const gl::Context *context,
                                       clippedOffset.y, clippedOffset.z, clippedArea.x,
                                       clippedArea.y, clippedArea.width, clippedArea.height));
         }
+    }
+
+    if (features.flushBeforeDeleteTextureIfCopiedTo.enabled)
+    {
+        ContextGL *contextGL = GetImplAs<ContextGL>(context);
+        contextGL->setNeedsFlushBeforeDeleteTextures();
     }
 
     return angle::Result::Continue;
@@ -852,12 +865,21 @@ angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
                                               bool unpackUnmultiplyAlpha,
                                               const gl::Texture *source)
 {
-    const FunctionsGL *functions = GetFunctionsGL(context);
-    BlitGL *blitter              = GetBlitGL(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+    BlitGL *blitter                   = GetBlitGL(context);
 
     TextureGL *sourceGL = GetImplAs<TextureGL>(source);
     const gl::ImageDesc &sourceImageDesc =
         sourceGL->mState.getImageDesc(NonCubeTextureTypeToTarget(source->getType()), sourceLevel);
+
+    if (features.flushBeforeDeleteTextureIfCopiedTo.enabled)
+    {
+        // Conservatively indicate that this workaround is necessary. Not clear
+        // if it is on this code path, but added for symmetry.
+        ContextGL *contextGL = GetImplAs<ContextGL>(context);
+        contextGL->setNeedsFlushBeforeDeleteTextures();
+    }
 
     // Check is this is a simple copySubTexture that can be done with a copyTexSubImage
     ASSERT(sourceGL->getType() == gl::TextureType::_2D ||

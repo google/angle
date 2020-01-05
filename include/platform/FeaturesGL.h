@@ -394,6 +394,16 @@ struct FeaturesGL : FeatureSetBase
         "Quite some OpenGL ES drivers don't implement readPixels for RGBA/UNSIGNED_SHORT from "
         "EXT_texture_norm16 correctly",
         &members, "http://anglebug.com/4214"};
+
+    // Bugs exist in some Intel drivers where dependencies are incorrectly
+    // tracked for textures which are copy destinations (via CopyTexImage2D, for
+    // example). Flush before DeleteTexture if these entry points have been
+    // called recently.
+    Feature flushBeforeDeleteTextureIfCopiedTo = {
+        "flush_before_delete_texture_if_copied_to", FeatureCategory::OpenGLWorkarounds,
+        "Some drivers track CopyTex{Sub}Image texture dependencies incorrectly. Flush"
+        " before glDeleteTextures in this case",
+        &members, "http://anglebug.com/4267"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

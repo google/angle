@@ -284,6 +284,7 @@ RendererGL::~RendererGL()
 angle::Result RendererGL::flush()
 {
     mFunctions->flush();
+    mNeedsFlushBeforeDeleteTextures = false;
     return angle::Result::Continue;
 }
 
@@ -295,6 +296,7 @@ angle::Result RendererGL::finish()
     }
 
     mFunctions->finish();
+    mNeedsFlushBeforeDeleteTextures = false;
 
     if (mFeatures.finishDoesNotCauseQueriesToBeAvailable.enabled && mUseDebugOutput)
     {
@@ -679,6 +681,19 @@ void RendererGL::setMaxShaderCompilerThreads(GLuint count)
     if (hasNativeParallelCompile())
     {
         SetMaxShaderCompilerThreads(mFunctions.get(), count);
+    }
+}
+
+void RendererGL::setNeedsFlushBeforeDeleteTextures()
+{
+    mNeedsFlushBeforeDeleteTextures = true;
+}
+
+void RendererGL::flushIfNecessaryBeforeDeleteTextures()
+{
+    if (mNeedsFlushBeforeDeleteTextures)
+    {
+        (void) flush();
     }
 }
 
