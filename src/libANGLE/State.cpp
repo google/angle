@@ -109,6 +109,26 @@ TextureManager *AllocateOrGetSharedTextureManager(const State *shareContextState
     }
 }
 
+// TODO(https://anglebug.com/3889): Remove this helper function after blink and chromium part
+// refactory done.
+bool IsTextureCompatibleWithSampler(TextureType texture, TextureType sampler)
+{
+    if (sampler == texture)
+    {
+        return true;
+    }
+
+    if (sampler == TextureType::VideoImage)
+    {
+        if (texture == TextureType::VideoImage || texture == TextureType::_2D)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 int gIDCounter = 1;
 }  // namespace
 
@@ -1151,7 +1171,7 @@ void State::setSamplerTexture(const Context *context, TextureType type, Texture 
     mSamplerTextures[type][mActiveSampler].set(context, texture);
 
     if (mProgram && mProgram->getActiveSamplersMask()[mActiveSampler] &&
-        mProgram->getActiveSamplerTypes()[mActiveSampler] == type)
+        IsTextureCompatibleWithSampler(type, mProgram->getActiveSamplerTypes()[mActiveSampler]))
     {
         updateActiveTexture(context, mActiveSampler, texture);
     }
@@ -2627,6 +2647,28 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
 }
 
+// TODO(https://anglebug.com/3889): Remove this helper function after blink and chromium part
+// refactory done.
+Texture *State::getTextureForActiveSampler(TextureType type, size_t index)
+{
+    if (type != TextureType::VideoImage)
+    {
+        return mSamplerTextures[type][index].get();
+    }
+
+    ASSERT(type == TextureType::VideoImage);
+
+    Texture *candidateTexture = mSamplerTextures[type][index].get();
+    if (candidateTexture->getWidth(TextureTarget::VideoImage, 0) == 0 ||
+        candidateTexture->getHeight(TextureTarget::VideoImage, 0) == 0 ||
+        candidateTexture->getDepth(TextureTarget::VideoImage, 0) == 0)
+    {
+        return mSamplerTextures[TextureType::_2D][index].get();
+    }
+
+    return mSamplerTextures[type][index].get();
+}
+
 angle::Result State::syncTexturesInit(const Context *context)
 {
     ASSERT(mRobustResourceInit);
@@ -2835,7 +2877,7 @@ angle::Result State::onProgramExecutableChange(const Context *context, Program *
         if (type == TextureType::InvalidEnum)
             continue;
 
-        Texture *texture = mSamplerTextures[type][textureIndex].get();
+        Texture *texture = getTextureForActiveSampler(type, textureIndex);
         updateActiveTexture(context, textureIndex, texture);
     }
 
@@ -2903,7 +2945,7 @@ void State::onActiveTextureChange(const Context *context, size_t textureUnit)
         TextureType type = mProgram->getActiveSamplerTypes()[textureUnit];
         if (type != TextureType::InvalidEnum)
         {
-            Texture *activeTexture = mSamplerTextures[type][textureUnit].get();
+            Texture *activeTexture = getTextureForActiveSampler(type, textureUnit);
             updateActiveTexture(context, textureUnit, activeTexture);
         }
     }
@@ -2916,7 +2958,7 @@ void State::onActiveTextureStateChange(const Context *context, size_t textureUni
         TextureType type = mProgram->getActiveSamplerTypes()[textureUnit];
         if (type != TextureType::InvalidEnum)
         {
-            Texture *activeTexture = mSamplerTextures[type][textureUnit].get();
+            Texture *activeTexture = getTextureForActiveSampler(type, textureUnit);
             const Sampler *sampler = mSamplers[textureUnit].get();
             updateActiveTextureState(context, textureUnit, sampler, activeTexture);
         }

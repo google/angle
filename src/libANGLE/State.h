@@ -722,6 +722,7 @@ class State : angle::NonCopyable
                                   size_t textureIndex,
                                   const Sampler *sampler,
                                   Texture *texture);
+    Texture *getTextureForActiveSampler(TextureType type, size_t index);
 
     // Functions to synchronize dirty states
     angle::Result syncTexturesInit(const Context *context);
