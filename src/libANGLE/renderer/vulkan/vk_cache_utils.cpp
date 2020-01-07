@@ -990,6 +990,11 @@ void GraphicsPipelineDesc::updateRasterizerDiscardEnabled(
     transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
 }
 
+uint32_t GraphicsPipelineDesc::getRasterizationSamples() const
+{
+    return mRasterizationAndMultisampleStateInfo.bits.rasterizationSamples;
+}
+
 void GraphicsPipelineDesc::setRasterizationSamples(uint32_t rasterizationSamples)
 {
     mRasterizationAndMultisampleStateInfo.bits.rasterizationSamples = rasterizationSamples;

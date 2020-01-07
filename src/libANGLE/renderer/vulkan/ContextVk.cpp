@@ -2734,6 +2734,12 @@ void ContextVk::onDrawFramebufferChange(FramebufferVk *framebufferVk)
 
     // Ensure that the RenderPass description is updated.
     invalidateCurrentGraphicsPipeline();
+    if (mGraphicsPipelineDesc->getRasterizationSamples() !=
+        static_cast<uint32_t>(framebufferVk->getSamples()))
+    {
+        mGraphicsPipelineDesc->updateRasterizationSamples(&mGraphicsPipelineTransition,
+                                                          framebufferVk->getSamples());
+    }
     mGraphicsPipelineDesc->updateRenderPassDesc(&mGraphicsPipelineTransition, renderPassDesc);
 }
 
