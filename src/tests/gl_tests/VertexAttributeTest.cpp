@@ -1218,6 +1218,9 @@ TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
     // TODO(cnorthrop): Test this again on more recent drivers. http://anglebug.com/3951
     ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsVulkan());
 
+    // TODO(https://anglebug.com/4269): Test is flaky on OpenGL and Metal on Mac NVIDIA.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
+
     initBasicProgram();
     glUseProgram(mProgram);
 
