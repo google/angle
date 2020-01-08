@@ -526,6 +526,11 @@ bool ShouldUseValidationLayers(const egl::AttributeMap &attribs)
     return debugSetting == EGL_TRUE;
 #endif  // defined(ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT)
 }
+
+gl::Version LimitVersionTo(const gl::Version &current, const gl::Version &lower)
+{
+    return std::min(current, lower);
+}
 }  // namespace
 
 // RendererVk implementation.
@@ -1242,10 +1247,18 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // Current highest supported version
     gl::Version maxVersion = gl::Version(3, 1);
 
+    // Early out without downgrading ES version if mock ICD enabled.
+    // Mock ICD doesn't expose sufficient capabilities yet.
+    // https://github.com/KhronosGroup/Vulkan-Tools/issues/84
+    if (isMockICDEnabled())
+    {
+        return maxVersion;
+    }
+
     // Limit to ES3.1 if there are any blockers for 3.2.
     if (!vk::CanSupportGPUShader5EXT(mPhysicalDeviceFeatures))
     {
-        maxVersion = std::min(maxVersion, gl::Version(3, 1));
+        maxVersion = LimitVersionTo(maxVersion, {3, 1});
     }
 
     // Limit to ES3.0 if there are any blockers for 3.1.
@@ -1259,14 +1272,14 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     if (mPhysicalDeviceProperties.limits.maxPerStageDescriptorStorageBuffers <
         kMinimumStorageBuffersForES31)
     {
-        maxVersion = std::min(maxVersion, gl::Version(3, 0));
+        maxVersion = LimitVersionTo(maxVersion, {3, 0});
     }
 
     // ES3.1 requires at least a maximum offset of at least 2047.
     // If the Vulkan implementation can't support that, we cannot support 3.1.
     if (mPhysicalDeviceProperties.limits.maxVertexInputAttributeOffset < 2047)
     {
-        maxVersion = std::min(maxVersion, gl::Version(3, 0));
+        maxVersion = LimitVersionTo(maxVersion, {3, 0});
     }
 
     // Limit to ES2.0 if there are any blockers for 3.0.
@@ -1277,13 +1290,13 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // locations).  If the Vulkan implementation can't support that, we cannot support 3.0/3.1.
     if (mPhysicalDeviceProperties.limits.standardSampleLocations != VK_TRUE)
     {
-        maxVersion = std::min(maxVersion, gl::Version(2, 0));
+        maxVersion = LimitVersionTo(maxVersion, {2, 0});
     }
 
     // If the command buffer doesn't support queries, we can't support ES3.
     if (!vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures))
     {
-        maxVersion = std::max(maxVersion, gl::Version(2, 0));
+        maxVersion = LimitVersionTo(maxVersion, {2, 0});
     }
 
     // If independentBlend is not supported, we can't have a mix of has-alpha and emulated-alpha
@@ -1291,7 +1304,7 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // targets.
     if (!mPhysicalDeviceFeatures.independentBlend)
     {
-        maxVersion = std::max(maxVersion, gl::Version(2, 0));
+        maxVersion = LimitVersionTo(maxVersion, {2, 0});
     }
 
     // If the Vulkan transform feedback extension is not present, we use an emulation path that
@@ -1300,31 +1313,31 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     if (!mFeatures.supportsTransformFeedbackExtension.enabled &&
         !mFeatures.emulateTransformFeedback.enabled)
     {
-        maxVersion = std::min(maxVersion, gl::Version(2, 0));
+        maxVersion = LimitVersionTo(maxVersion, {2, 0});
     }
 
     // Limit to GLES 2.0 if maxPerStageDescriptorUniformBuffers is too low.
     // Table 6.31 MAX_VERTEX_UNIFORM_BLOCKS minimum value = 12
     // Table 6.32 MAX_FRAGMENT_UNIFORM_BLOCKS minimum value = 12
-    // NOTE: We reserve some uniform buffers for emulation, so use the mNativeCaps which takes this
+    // NOTE: We reserve some uniform buffers for emulation, so use the NativeCaps which takes this
     // into account, rather than the physical device maxPerStageDescriptorUniformBuffers limits.
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        if (static_cast<GLuint>(mNativeCaps.maxShaderUniformBlocks[shaderType]) <
+        if (static_cast<GLuint>(getNativeCaps().maxShaderUniformBlocks[shaderType]) <
             gl::limits::kMinimumShaderUniformBlocks)
         {
-            maxVersion = std::max(maxVersion, gl::Version(2, 0));
+            maxVersion = LimitVersionTo(maxVersion, {2, 0});
         }
     }
 
     // Limit to GLES 2.0 if maxVertexOutputComponents is too low.
     // Table 6.31 MAX VERTEX OUTPUT COMPONENTS minimum value = 64
-    // NOTE: We reserve some vertex output components for emulation, so use the mNativeCaps which
+    // NOTE: We reserve some vertex output components for emulation, so use the NativeCaps which
     // takes this into account, rather than the physical device maxVertexOutputComponents limits.
-    if (static_cast<GLuint>(mNativeCaps.maxVertexOutputComponents) <
+    if (static_cast<GLuint>(getNativeCaps().maxVertexOutputComponents) <
         gl::limits::kMinimumVertexOutputComponents)
     {
-        maxVersion = std::max(maxVersion, gl::Version(2, 0));
+        maxVersion = LimitVersionTo(maxVersion, {2, 0});
     }
 
     return maxVersion;
@@ -1332,7 +1345,7 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
 
 gl::Version RendererVk::getMaxConformantESVersion() const
 {
-    return std::min(getMaxSupportedESVersion(), gl::Version(3, 0));
+    return LimitVersionTo(getMaxSupportedESVersion(), {3, 0});
 }
 
 void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
