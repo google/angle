@@ -123,6 +123,8 @@ void GetDualGPUInfo(SystemInfo *info);
 
 // Dumps the system info to stdout.
 void PrintSystemInfo(const SystemInfo &info);
+
+VersionInfo ParseNvidiaDriverVersion(uint32_t version);
 }  // namespace angle
 
 #endif  // GPU_INFO_UTIL_SYSTEM_INFO_H_

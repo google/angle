@@ -195,6 +195,7 @@ angle_source_set("angle_vulkan_backend") {
   libs = []
   deps = [
     ":angle_vulkan_entry_points",
+    "$angle_root:angle_gpu_info_util",
     "$angle_root:angle_image_util",
     "$angle_root/third_party/vulkan-headers/src:vulkan_headers",
     "$angle_spirv_tools_dir:spvtools_val",

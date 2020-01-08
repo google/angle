@@ -320,4 +320,14 @@ void PrintSystemInfo(const SystemInfo &info)
     }
     std::cout << std::endl;
 }
+
+VersionInfo ParseNvidiaDriverVersion(uint32_t version)
+{
+    return {
+        version >> 22,         // major
+        version >> 14 & 0xff,  // minor
+        version >> 6 & 0xff,   // subMinor
+        version & 0x3f         // patch
+    };
+}
 }  // namespace angle
