@@ -674,10 +674,15 @@ angle::Result ContextVk::initialize()
                                                           vk::kDefaultOcclusionQueryPoolSize));
     ANGLE_TRY(mQueryPools[gl::QueryType::AnySamplesConservative].init(
         this, VK_QUERY_TYPE_OCCLUSION, vk::kDefaultOcclusionQueryPoolSize));
-    ANGLE_TRY(mQueryPools[gl::QueryType::Timestamp].init(this, VK_QUERY_TYPE_TIMESTAMP,
-                                                         vk::kDefaultTimestampQueryPoolSize));
-    ANGLE_TRY(mQueryPools[gl::QueryType::TimeElapsed].init(this, VK_QUERY_TYPE_TIMESTAMP,
-                                                           vk::kDefaultTimestampQueryPoolSize));
+
+    // Only initialize the timestamp query pools if the extension is available.
+    if (mRenderer->getQueueFamilyProperties().timestampValidBits > 0)
+    {
+        ANGLE_TRY(mQueryPools[gl::QueryType::Timestamp].init(this, VK_QUERY_TYPE_TIMESTAMP,
+                                                             vk::kDefaultTimestampQueryPoolSize));
+        ANGLE_TRY(mQueryPools[gl::QueryType::TimeElapsed].init(this, VK_QUERY_TYPE_TIMESTAMP,
+                                                               vk::kDefaultTimestampQueryPoolSize));
+    }
 
     // Init driver uniforms and get the descriptor set layouts.
     constexpr angle::PackedEnumMap<PipelineType, VkShaderStageFlags> kPipelineStages = {
@@ -731,6 +736,8 @@ angle::Result ContextVk::initialize()
 
     if (mGpuEventsEnabled)
     {
+        // GPU events should only be available if timestamp queries are available.
+        ASSERT(mRenderer->getQueueFamilyProperties().timestampValidBits > 0);
         // Calculate the difference between CPU and GPU clocks for GPU event reporting.
         ANGLE_TRY(mGpuEventQueryPool.init(this, VK_QUERY_TYPE_TIMESTAMP,
                                           vk::kDefaultTimestampQueryPoolSize));
@@ -2522,6 +2529,9 @@ GLint ContextVk::getGPUDisjoint()
 
 GLint64 ContextVk::getTimestamp()
 {
+    // This function should only be called if timestamp queries are available.
+    ASSERT(mRenderer->getQueueFamilyProperties().timestampValidBits > 0);
+
     uint64_t timestamp = 0;
 
     (void)getTimestamp(&timestamp);
@@ -2847,6 +2857,10 @@ vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
     ASSERT(queryType == gl::QueryType::AnySamples ||
            queryType == gl::QueryType::AnySamplesConservative ||
            queryType == gl::QueryType::Timestamp || queryType == gl::QueryType::TimeElapsed);
+
+    // Assert that timestamp extension is available if needed.
+    ASSERT(queryType != gl::QueryType::Timestamp && queryType != gl::QueryType::TimeElapsed ||
+           mRenderer->getQueueFamilyProperties().timestampValidBits > 0);
     ASSERT(mQueryPools[queryType].isValid());
     return &mQueryPools[queryType];
 }

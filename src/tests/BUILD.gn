@@ -479,6 +479,8 @@ if (build_angle_gles1_conform_tests) {
       "test_utils/angle_test_configs.h",
       "test_utils/angle_test_instantiate.cpp",
       "test_utils/angle_test_instantiate.h",
+      "test_utils/angle_test_platform.cpp",
+      "test_utils/angle_test_platform.h",
       "test_utils/gl_raii.h",
     ]
     if (is_mac) {
