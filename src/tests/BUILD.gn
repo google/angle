@@ -11,6 +11,7 @@ declare_args() {
   # Don't build dEQP by default.
   build_angle_deqp_tests = false
   build_angle_gles1_conform_tests = false
+  build_angle_trace_perf_tests = false
 }
 
 angle_test("test_utils_unittest_helper") {
@@ -260,6 +261,13 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     }
     if (is_linux) {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_glx" ]
+    }
+
+    if (build_angle_trace_perf_tests) {
+      import("perf_tests/restricted_traces/angle_trace_perf_tests.gni")
+      sources += angle_trace_perf_sources
+      defines += angle_trace_perf_defines
+      data += angle_trace_perf_data
     }
   }
 }

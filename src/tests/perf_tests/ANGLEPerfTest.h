@@ -131,6 +131,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     bool popEvent(Event *event);
 
     OSWindow *getWindow();
+    GLWindowBase *getGLWindow();
 
     std::vector<TraceEvent> &getTraceEventBuffer();
 

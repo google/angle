@@ -639,6 +639,11 @@ OSWindow *ANGLERenderTest::getWindow()
     return mOSWindow;
 }
 
+GLWindowBase *ANGLERenderTest::getGLWindow()
+{
+    return mGLWindow;
+}
+
 bool ANGLERenderTest::areExtensionPrerequisitesFulfilled() const
 {
     for (const char *extension : mExtensionPrerequisites)
