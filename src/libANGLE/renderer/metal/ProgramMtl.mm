@@ -312,8 +312,8 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext, gl::InfoLog &in
 
     // Convert GLSL to spirv code
     gl::ShaderMap<std::vector<uint32_t>> shaderCodes;
-    ANGLE_TRY(mtl::GlslangGetShaderSpirvCode(contextMtl, contextMtl->getCaps(), false,
-                                             mShaderSource, &shaderCodes));
+    ANGLE_TRY(mtl::GlslangGetShaderSpirvCode(contextMtl, contextMtl->getCaps(), mShaderSource,
+                                             &shaderCodes));
 
     // Convert spirv code to MSL
     ANGLE_TRY(convertToMsl(glContext, gl::ShaderType::Vertex, infoLog,

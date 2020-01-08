@@ -56,11 +56,6 @@ constexpr char kParamsEnd                          = ')';
 constexpr char kUniformQualifier[]                 = "uniform";
 constexpr char kSSBOQualifier[]                    = "buffer";
 constexpr char kUnusedUniformSubstitution[]        = "// ";
-constexpr char kVersionDefine[]                    = "#version 450 core\n";
-constexpr char kLineRasterDefine[]                 = R"(#version 450 core
-
-#define ANGLE_ENABLE_LINE_SEGMENT_RASTERIZATION
-)";
 constexpr uint32_t kANGLEPositionLocationOffset    = 1;
 constexpr uint32_t kXfbANGLEPositionLocationOffset = 2;
 
@@ -1082,7 +1077,7 @@ constexpr gl::ShaderMap<EShLanguage> kShLanguageMap = {
 angle::Result GetShaderSpirvCode(GlslangErrorCallback callback,
                                  const gl::Caps &glCaps,
                                  const gl::ShaderMap<std::string> &shaderSources,
-                                 gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
+                                 gl::ShaderMap<SpirvBlob> *spirvBlobsOut)
 {
     // Enable SPIR-V and Vulkan rules when parsing GLSL
     EShMessages messages = static_cast<EShMessages>(EShMsgSpvRules | EShMsgVulkanRules);
@@ -1144,7 +1139,7 @@ angle::Result GetShaderSpirvCode(GlslangErrorCallback callback,
         }
 
         glslang::TIntermediate *intermediate = program.getIntermediate(kShLanguageMap[shaderType]);
-        glslang::GlslangToSpv(*intermediate, (*shaderCodeOut)[shaderType]);
+        glslang::GlslangToSpv(*intermediate, (*spirvBlobsOut)[shaderType]);
     }
 
     return angle::Result::Continue;
@@ -1270,33 +1265,9 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
 
 angle::Result GlslangGetShaderSpirvCode(GlslangErrorCallback callback,
                                         const gl::Caps &glCaps,
-                                        bool enableLineRasterEmulation,
                                         const gl::ShaderMap<std::string> &shaderSources,
-                                        gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
+                                        gl::ShaderMap<SpirvBlob> *spirvBlobsOut)
 {
-    if (enableLineRasterEmulation)
-    {
-        ASSERT(shaderSources[gl::ShaderType::Compute].empty());
-
-        gl::ShaderMap<std::string> patchedSources = shaderSources;
-
-        for (const gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
-        {
-            if (!shaderSources[shaderType].empty())
-            {
-                // #defines must come after the #version directive.
-                ANGLE_GLSLANG_CHECK(callback,
-                                    angle::ReplaceSubstring(&patchedSources[shaderType],
-                                                            kVersionDefine, kLineRasterDefine),
-                                    GlslangError::InvalidShader);
-            }
-        }
-
-        return GetShaderSpirvCode(callback, glCaps, patchedSources, shaderCodeOut);
-    }
-    else
-    {
-        return GetShaderSpirvCode(callback, glCaps, shaderSources, shaderCodeOut);
-    }
+    return GetShaderSpirvCode(callback, glCaps, shaderSources, spirvBlobsOut);
 }
 }  // namespace rx

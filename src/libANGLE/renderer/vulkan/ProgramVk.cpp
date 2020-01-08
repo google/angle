@@ -366,56 +366,99 @@ ProgramVk::ShaderInfo::~ShaderInfo() = default;
 
 angle::Result ProgramVk::ShaderInfo::initShaders(ContextVk *contextVk,
                                                  const gl::ShaderMap<std::string> &shaderSources,
-                                                 bool enableLineRasterEmulation)
+                                                 gl::ShaderMap<SpirvBlob> *spirvBlobsOut)
 {
     ASSERT(!valid());
 
-    gl::ShaderMap<std::vector<uint32_t>> shaderCodes;
-    ANGLE_TRY(GlslangWrapperVk::GetShaderCode(
-        contextVk, contextVk->getCaps(), enableLineRasterEmulation, shaderSources, &shaderCodes));
+    ANGLE_TRY(GlslangWrapperVk::GetShaderCode(contextVk, contextVk->getCaps(), shaderSources,
+                                              spirvBlobsOut));
+
+    mIsInitialized = true;
+    return angle::Result::Continue;
+}
+
+void ProgramVk::ShaderInfo::release(ContextVk *contextVk)
+{
+    for (SpirvBlob &spirvBlob : mSpirvBlobs)
+    {
+        spirvBlob.clear();
+    }
+    mIsInitialized = false;
+}
+
+// ProgramVk::ProgramInfo implementation.
+ProgramVk::ProgramInfo::ProgramInfo() {}
+
+ProgramVk::ProgramInfo::~ProgramInfo() = default;
+
+angle::Result ProgramVk::ProgramInfo::initProgram(ContextVk *contextVk,
+                                                  const ShaderInfo &shaderInfo,
+                                                  bool enableLineRasterEmulation)
+{
+    const gl::ShaderMap<SpirvBlob> &spirvBlobs = shaderInfo.getSpirvBlobs();
 
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        if (!shaderSources[shaderType].empty())
+        const SpirvBlob &spirvBlob = spirvBlobs[shaderType];
+
+        if (!spirvBlob.empty())
         {
             ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
-                                              shaderCodes[shaderType].data(),
-                                              shaderCodes[shaderType].size() * sizeof(uint32_t)));
+                                              spirvBlob.data(),
+                                              spirvBlob.size() * sizeof(uint32_t)));
 
             mProgramHelper.setShader(shaderType, &mShaders[shaderType]);
         }
     }
 
-    return angle::Result::Continue;
-}
-
-angle::Result ProgramVk::loadShaderSource(ContextVk *contextVk, gl::BinaryInputStream *stream)
-{
-    // Read in shader sources for all shader types
-    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    if (enableLineRasterEmulation)
     {
-        mShaderSources[shaderType] = stream->readString();
+        mProgramHelper.enableSpecializationConstant(
+            sh::vk::SpecializationConstantId::LineRasterEmulation);
     }
 
     return angle::Result::Continue;
 }
 
-void ProgramVk::saveShaderSource(gl::BinaryOutputStream *stream)
-{
-    // Write out shader sources for all shader types
-    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        stream->writeString(mShaderSources[shaderType]);
-    }
-}
-
-void ProgramVk::ShaderInfo::release(ContextVk *contextVk)
+void ProgramVk::ProgramInfo::release(ContextVk *contextVk)
 {
     mProgramHelper.release(contextVk);
 
     for (vk::RefCounted<vk::ShaderAndSerial> &shader : mShaders)
     {
         shader.get().destroy(contextVk->getDevice());
+    }
+}
+
+angle::Result ProgramVk::loadSpirvBlob(ContextVk *contextVk, gl::BinaryInputStream *stream)
+{
+    // Read in shader codes for all shader types
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        // Read the shader source
+        mShaderSources[shaderType] = stream->readString();
+
+        SpirvBlob *spirvBlob = &mShaderInfo.getSpirvBlobs()[shaderType];
+
+        // Read the SPIR-V
+        stream->readIntVector<uint32_t>(spirvBlob);
+    }
+
+    return angle::Result::Continue;
+}
+
+void ProgramVk::saveSpirvBlob(gl::BinaryOutputStream *stream)
+{
+    // Write out shader codes for all shader types
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        // Write the shader source
+        stream->writeString(mShaderSources[shaderType]);
+
+        const SpirvBlob &spirvBlob = mShaderInfo.getSpirvBlobs()[shaderType];
+
+        // Write the SPIR-V
+        stream->writeIntVector(spirvBlob);
     }
 }
 
@@ -455,8 +498,9 @@ void ProgramVk::reset(ContextVk *contextVk)
         uniformBlock.storage.release(renderer);
     }
 
-    mDefaultShaderInfo.release(contextVk);
-    mLineRasterShaderInfo.release(contextVk);
+    mShaderInfo.release(contextVk);
+    mDefaultProgramInfo.release(contextVk);
+    mLineRasterProgramInfo.release(contextVk);
 
     mEmptyBuffer.release(renderer);
 
@@ -485,7 +529,7 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
     gl::ShaderMap<size_t> requiredBufferSize;
     requiredBufferSize.fill(0);
 
-    angle::Result status = loadShaderSource(contextVk, stream);
+    angle::Result status = loadSpirvBlob(contextVk, stream);
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);
@@ -525,7 +569,7 @@ void ProgramVk::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 {
     // (geofflang): Look into saving shader modules in ShaderInfo objects (keep in mind that we
     // compile shaders lazily)
-    saveShaderSource(stream);
+    saveSpirvBlob(stream);
 
     // Serializes the uniformLayout data of mDefaultUniformBlocks
     for (gl::ShaderType shaderType : gl::AllShaderTypes())

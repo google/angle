@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 222
+#define ANGLE_SH_VERSION 223
 
 enum ShShaderSpec
 {
@@ -732,6 +732,20 @@ inline bool IsDesktopGLSpec(ShShaderSpec spec)
 {
     return spec == SH_GL_CORE_SPEC || spec == SH_GL_COMPATIBILITY_SPEC;
 }
+
+namespace vk
+{
+
+// Specialization constant ids
+enum class SpecializationConstantId : uint32_t
+{
+    LineRasterEmulation = 0,
+
+    InvalidEnum = 1,
+    EnumCount   = 1,
+};
+
+}  // namespace vk
 }  // namespace sh
 
 #endif  // GLSLANG_SHADERLANG_H_

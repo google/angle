@@ -39,6 +39,8 @@ struct GlslangSourceOptions
     bool emulateTransformFeedback           = false;
 };
 
+using SpirvBlob = std::vector<uint32_t>;
+
 using GlslangErrorCallback = std::function<angle::Result(GlslangError)>;
 
 void GlslangInitialize();
@@ -56,9 +58,8 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
 
 angle::Result GlslangGetShaderSpirvCode(GlslangErrorCallback callback,
                                         const gl::Caps &glCaps,
-                                        bool enableLineRasterEmulation,
                                         const gl::ShaderMap<std::string> &shaderSources,
-                                        gl::ShaderMap<std::vector<uint32_t>> *shaderCodesOut);
+                                        gl::ShaderMap<SpirvBlob> *spirvBlobsOut);
 
 }  // namespace rx
 

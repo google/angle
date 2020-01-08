@@ -1196,6 +1196,7 @@ class ShaderProgramHelper : angle::NonCopyable
     ShaderAndSerial &getShader(gl::ShaderType shaderType) { return mShaders[shaderType].get(); }
 
     void setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader);
+    void enableSpecializationConstant(sh::vk::SpecializationConstantId id);
 
     // For getting a Pipeline and from the pipeline cache.
     ANGLE_INLINE angle::Result getGraphicsPipeline(
@@ -1227,7 +1228,7 @@ class ShaderProgramHelper : angle::NonCopyable
         return mGraphicsPipelines.getPipeline(
             contextVk, pipelineCache, *compatibleRenderPass, pipelineLayout,
             activeAttribLocationsMask, programAttribsTypeMask, vertexShader, fragmentShader,
-            geometryShader, pipelineDesc, descPtrOut, pipelineOut);
+            geometryShader, mSpecializationConstants, pipelineDesc, descPtrOut, pipelineOut);
     }
 
     angle::Result getComputePipeline(Context *context,
@@ -1240,6 +1241,9 @@ class ShaderProgramHelper : angle::NonCopyable
 
     // We should probably use PipelineHelper here so we can remove PipelineAndSerial.
     PipelineAndSerial mComputePipeline;
+
+    // Specialization constants, currently only used by the graphics queue.
+    vk::SpecializationConstantBitSet mSpecializationConstants;
 };
 }  // namespace vk
 }  // namespace rx

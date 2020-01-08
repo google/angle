@@ -51,12 +51,11 @@ void GlslangWrapperVk::GetShaderSource(const angle::FeaturesVk &features,
 // static
 angle::Result GlslangWrapperVk::GetShaderCode(vk::Context *context,
                                               const gl::Caps &glCaps,
-                                              bool enableLineRasterEmulation,
                                               const gl::ShaderMap<std::string> &shaderSources,
                                               gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
     return GlslangGetShaderSpirvCode(
         [context](GlslangError error) { return ErrorHandler(context, error); }, glCaps,
-        enableLineRasterEmulation, shaderSources, shaderCodeOut);
+        shaderSources, shaderCodeOut);
 }
 }  // namespace rx

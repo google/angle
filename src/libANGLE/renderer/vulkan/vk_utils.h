@@ -13,6 +13,7 @@
 #include <atomic>
 #include <limits>
 
+#include "GLSLANG/ShaderLang.h"
 #include "common/FixedVector.h"
 #include "common/Optional.h"
 #include "common/PackedEnums.h"
@@ -604,6 +605,13 @@ class Recycler final : angle::NonCopyable
   private:
     std::vector<T> mObjectFreeList;
 };
+
+using SpecializationConstantBitSet =
+    angle::PackedEnumBitSet<sh::vk::SpecializationConstantId, uint32_t>;
+static_assert(sizeof(SpecializationConstantBitSet) == sizeof(uint32_t), "Unexpected size");
+
+template <typename T>
+using SpecializationConstantMap = angle::PackedEnumMap<sh::vk::SpecializationConstantId, T>;
 
 }  // namespace vk
 

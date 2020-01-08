@@ -50,13 +50,12 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
 
 angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
                                         const gl::Caps &glCaps,
-                                        bool enableLineRasterEmulation,
                                         const gl::ShaderMap<std::string> &shaderSources,
                                         gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
     return rx::GlslangGetShaderSpirvCode(
         [context](GlslangError error) { return HandleError(context, error); }, glCaps,
-        enableLineRasterEmulation, shaderSources, shaderCodeOut);
+        shaderSources, shaderCodeOut);
 }
 }  // namespace mtl
 }  // namespace rx

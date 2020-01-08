@@ -24,7 +24,6 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
 
 angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
                                         const gl::Caps &glCaps,
-                                        bool enableLineRasterEmulation,
                                         const gl::ShaderMap<std::string> &shaderSources,
                                         gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut);
 }  // namespace mtl
