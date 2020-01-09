@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "f63dee1b_68772c08",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4589,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-01-09T21:34:49Z",
+      "side": 1,
+      "message": "Do you want this whole expression cast to a float?  Otherwise, you\u0027re just casting the incremented index.  Maybe cast kProgramCount is being implicitly converted, but better to cast it as well.",
+      "range": {
+        "startLine": 4589,
+        "startChar": 51,
+        "endLine": 4589,
+        "endChar": 73
+      },
+      "revId": "2306bdb71b47f45e8620cb569462cf9b175370d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d44af8d_58043fbe",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4601,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-01-09T21:34:49Z",
+      "side": 1,
+      "message": "Could you add a comment to each draw describing the expected results?  I\u0027m guessing you can\u0027t check the result without screwing up the conditions of the test.",
+      "revId": "2306bdb71b47f45e8620cb569462cf9b175370d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3e551ab7_f485d103",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 2
