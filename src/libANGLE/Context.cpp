@@ -3559,6 +3559,8 @@ void Context::initCaps()
 
     // Apply/Verify implementation limits
     ANGLE_LIMIT_CAP(mState.mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxVertexAttribStride,
+                    static_cast<GLint>(limits::kMaxVertexAttribStride));
 
     ASSERT(mState.mCaps.minAliasedPointSize >= 1.0f);
 

@@ -549,6 +549,7 @@ RendererVk::RendererVk()
       mQueue(VK_NULL_HANDLE),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mMaxVertexAttribDivisor(1),
+      mMaxVertexAttribStride(0),
       mDevice(VK_NULL_HANDLE),
       mLastCompletedQueueSerial(mQueueSerialFactory.generate()),
       mCurrentQueueSerial(mQueueSerialFactory.generate()),
@@ -1459,6 +1460,14 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 
     // Disabled on AMD/windows due to buggy behavior.
     ANGLE_FEATURE_CONDITION((&mFeatures), disallowSeamfulCubeMapEmulation, IsWindows() && isAMD);
+
+    // Round up buffer sizes in the presence of robustBufferAccess to emulate GLES behavior when
+    // vertex attributes are fetched from beyond the last multiple of the stride.  Currently, only
+    // AMD is known to refuse reading these attributes.
+    ANGLE_FEATURE_CONDITION((&mFeatures), roundUpBuffersToMaxVertexAttribStride,
+                            isAMD && mPhysicalDeviceFeatures.robustBufferAccess);
+    mMaxVertexAttribStride = std::min(static_cast<uint32_t>(gl::limits::kMaxVertexAttribStride),
+                                      mPhysicalDeviceProperties.limits.maxVertexInputBindingStride);
 
     ANGLE_FEATURE_CONDITION((&mFeatures), forceD16TexFilter, IsAndroid() && isQualcomm);
 

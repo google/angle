@@ -1434,9 +1434,11 @@ BufferHelper::BufferHelper()
 BufferHelper::~BufferHelper() = default;
 
 angle::Result BufferHelper::init(ContextVk *contextVk,
-                                 const VkBufferCreateInfo &createInfo,
+                                 const VkBufferCreateInfo &requestedCreateInfo,
                                  VkMemoryPropertyFlags memoryPropertyFlags)
 {
+    RendererVk *rendererVk = contextVk->getRenderer();
+
     // TODO: Remove with anglebug.com/2162: Vulkan: Implement device memory sub-allocation
     // Check if we have too many resources allocated already and need to free some before allocating
     // more and (possibly) exceeding the device's limits.
@@ -1445,8 +1447,21 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
         ANGLE_TRY(contextVk->flushImpl(nullptr));
     }
 
-    mSize = createInfo.size;
-    ANGLE_VK_TRY(contextVk, mBuffer.init(contextVk->getDevice(), createInfo));
+    mSize = requestedCreateInfo.size;
+
+    VkBufferCreateInfo modifiedCreateInfo;
+    const VkBufferCreateInfo *createInfo = &requestedCreateInfo;
+
+    if (rendererVk->getFeatures().roundUpBuffersToMaxVertexAttribStride.enabled)
+    {
+        const VkDeviceSize maxVertexAttribStride = rendererVk->getMaxVertexAttribStride();
+        ASSERT(maxVertexAttribStride);
+        modifiedCreateInfo      = requestedCreateInfo;
+        modifiedCreateInfo.size = roundUp(modifiedCreateInfo.size, maxVertexAttribStride);
+        createInfo              = &modifiedCreateInfo;
+    }
+
+    ANGLE_VK_TRY(contextVk, mBuffer.init(contextVk->getDevice(), *createInfo));
     ANGLE_TRY(AllocateBufferMemory(contextVk, memoryPropertyFlags, &mMemoryPropertyFlags, nullptr,
                                    &mBuffer, &mDeviceMemory));
     mCurrentQueueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
