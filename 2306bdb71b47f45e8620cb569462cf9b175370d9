@@ -16,6 +16,24 @@
       "revId": "2306bdb71b47f45e8620cb569462cf9b175370d9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b381dd10_3c38dd13",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4612,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-01-09T20:53:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3e551ab7_f485d103",
+      "revId": "2306bdb71b47f45e8620cb569462cf9b175370d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
