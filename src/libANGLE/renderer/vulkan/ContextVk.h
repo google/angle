@@ -585,6 +585,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
         mCurrentComputePipeline = nullptr;
     }
 
+    void invalidateCurrentDefaultUniforms();
     void invalidateCurrentTextures();
     void invalidateCurrentShaderResources();
     void invalidateGraphicsDriverUniforms();

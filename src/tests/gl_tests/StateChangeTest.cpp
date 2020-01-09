@@ -4553,6 +4553,67 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that switching between programs that only contain default uniforms is correct.
+TEST_P(SimpleStateChangeTest, TwoProgramsWithOnlyDefaultUniforms)
+{
+    constexpr char kVS[] = R"(attribute vec4 a_position;
+varying float v_attrib;
+uniform float u_value;
+void main()
+{
+    v_attrib = u_value;
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying float v_attrib;
+void main()
+{
+    gl_FragColor = vec4(v_attrib, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program1, kVS, kFS);
+    ANGLE_GL_PROGRAM(program2, kVS, kFS);
+
+    // Don't use drawQuad so there's no state changes between the draw calls other than the program
+    // binding.
+
+    constexpr size_t kProgramCount = 2;
+    GLuint programs[kProgramCount] = {program1, program2};
+    for (size_t i = 0; i < kProgramCount; ++i)
+    {
+        glUseProgram(programs[i]);
+        GLint uniformLoc = glGetUniformLocation(programs[i], "u_value");
+        ASSERT_NE(uniformLoc, -1);
+
+        glUniform1f(uniformLoc, static_cast<float>(i + 1) / static_cast<float>(kProgramCount));
+
+        // Ensure position is at location 0 in both programs.
+        GLint positionLocation = glGetAttribLocation(programs[i], "a_position");
+        ASSERT_EQ(positionLocation, 0);
+    }
+    ASSERT_GL_NO_ERROR();
+
+    std::array<Vector3, 6> quadVertices = GetQuadVertices();
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+    glEnableVertexAttribArray(0);
+
+    // Draw once with each so their uniforms are updated.
+    // The first draw will clear the screen to 255, 0, 0, 255
+    glUseProgram(program2);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    // The second draw will clear the screen to 127, 0, 0, 255
+    glUseProgram(program1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Draw with the previous program again, to make sure its default uniforms are bound again.
+    glUseProgram(program2);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Verify red was drawn
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Validates GL_RASTERIZER_DISCARD state is tracked correctly
 TEST_P(SimpleStateChangeTestES3, RasterizerDiscardState)
 {

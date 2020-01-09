@@ -2445,6 +2445,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
+                invalidateCurrentDefaultUniforms();
                 invalidateCurrentTextures();
                 invalidateCurrentShaderResources();
                 if (glState.getProgram()->isCompute())
@@ -2697,6 +2698,16 @@ SemaphoreImpl *ContextVk::createSemaphore()
 OverlayImpl *ContextVk::createOverlay(const gl::OverlayState &state)
 {
     return new OverlayVk(state);
+}
+
+void ContextVk::invalidateCurrentDefaultUniforms()
+{
+    ASSERT(mProgram);
+    if (mProgram->hasDefaultUniforms())
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+        mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+    }
 }
 
 void ContextVk::invalidateCurrentTextures()
