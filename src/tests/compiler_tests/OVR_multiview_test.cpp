@@ -94,7 +94,7 @@ class OVRMultiviewVertexShaderTest : public ShaderCompileTreeTest
 
   protected:
     ::GLenum getShaderType() const override { return GL_VERTEX_SHADER; }
-    ShShaderSpec getShaderSpec() const override { return SH_WEBGL3_SPEC; }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
     void initResources(ShBuiltInResources *resources) override
     {
         resources->OVR_multiview = 1;
@@ -109,7 +109,7 @@ class OVRMultiviewFragmentShaderTest : public ShaderCompileTreeTest
 
   protected:
     ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
-    ShShaderSpec getShaderSpec() const override { return SH_WEBGL3_SPEC; }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
     void initResources(ShBuiltInResources *resources) override
     {
         resources->OVR_multiview = 1;

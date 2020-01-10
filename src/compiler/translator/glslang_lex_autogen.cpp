@@ -3519,6 +3519,12 @@ int glslang_scan(size_t count,
     for (TExtensionBehavior::const_iterator iter = extBehavior.begin(); iter != extBehavior.end();
          ++iter)
     {
+        // OVR_multiview should not be defined for WebGL spec'ed shaders.
+        if (sh::IsWebGLBasedSpec(context->getShaderSpec()) &&
+            iter->first == TExtension::OVR_multiview)
+        {
+            continue;
+        }
         preprocessor->predefineMacro(GetExtensionNameString(iter->first), 1);
     }
     if (context->getFragmentPrecisionHigh())

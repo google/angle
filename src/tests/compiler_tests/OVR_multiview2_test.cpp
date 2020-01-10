@@ -582,6 +582,25 @@ TEST_F(OVRMultiview2FragmentShaderTest, ViewIDDeclaredAsFlatInput)
     VariableOccursNTimes(mASTRoot, ImmutableString("ViewID_OVR"), EvqFlatIn, 1u);
 }
 
+// Test that GL_OVR_multiview is not defined by the preprocessor for WebGL spec shader;
+// Test that GL_OVR_multiview2 is defined by the preprocessor for WebGL spec shader.
+TEST_F(OVRMultiview2FragmentShaderTest, PreprocessorOutput)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "#ifdef GL_OVR_multiview\n"
+        "    #error legacy GL_OVR_multiview support must be forbidden\n"
+        "#endif\n"
+        "#ifndef GL_OVR_multiview2\n"
+        "    #error GL_OVR_multiview2 support must be enabled\n"
+        "#endif\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+    compileAssumeSuccess(shaderString);
+}
+
 // Test that ViewID_OVR is declared as a flat output variable in an ESSL 1.00 vertex shader.
 TEST_F(OVRMultiview2VertexShaderTest, ViewIDDeclaredAsFlatOutput)
 {
@@ -593,6 +612,25 @@ TEST_F(OVRMultiview2VertexShaderTest, ViewIDDeclaredAsFlatOutput)
     mExtraCompileOptions |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;
     compileAssumeSuccess(shaderString);
     VariableOccursNTimes(mASTRoot, ImmutableString("ViewID_OVR"), EvqFlatOut, 2u);
+}
+
+// Test that GL_OVR_multiview is not defined by the preprocessor for WebGL spec shader;
+// Test that GL_OVR_multiview2 is defined by the preprocessor for WebGL spec shader.
+TEST_F(OVRMultiview2VertexShaderTest, PreprocessorOutput)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "#ifdef GL_OVR_multiview\n"
+        "    #error legacy GL_OVR_multiview support must be forbidden\n"
+        "#endif\n"
+        "#ifndef GL_OVR_multiview2\n"
+        "    #error GL_OVR_multiview2 support must be enabled\n"
+        "#endif\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+    compileAssumeSuccess(shaderString);
 }
 
 // The test checks that the GL_NV_viewport_array2 extension is emitted in a vertex shader if the
