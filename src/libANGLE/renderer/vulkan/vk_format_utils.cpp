@@ -72,20 +72,26 @@ using SupportTest = bool (*)(RendererVk *renderer, VkFormat vkFormat);
 template <class FormatInitInfo>
 int FindSupportedFormat(RendererVk *renderer,
                         const FormatInitInfo *info,
+                        size_t skip,
                         int numInfo,
                         SupportTest hasSupport)
 {
     ASSERT(numInfo > 0);
     const int last = numInfo - 1;
 
-    for (int i = 0; i < last; ++i)
+    for (int i = static_cast<int>(skip); i < last; ++i)
     {
         ASSERT(info[i].format != angle::FormatID::NONE);
         if (hasSupport(renderer, info[i].vkFormat))
             return i;
     }
 
-    // List must contain a supported item.  We failed on all the others so the last one must be it.
+    if (skip > 0 && !hasSupport(renderer, info[last].vkFormat))
+    {
+        // We couldn't find a valid fallback, try again without skip
+        return FindSupportedFormat(renderer, info, 0, numInfo, hasSupport);
+    }
+
     ASSERT(info[last].format != angle::FormatID::NONE);
     ASSERT(hasSupport(renderer, info[last].vkFormat));
     return last;
@@ -132,9 +138,7 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
         // Compressed textures also need to perform this check.
         testFunction = HasNonRenderableTextureFormatSupport;
     }
-    int i = FindSupportedFormat(renderer, info + skip, static_cast<uint32_t>(numInfo - skip),
-                                testFunction);
-    i += skip;
+    int i = FindSupportedFormat(renderer, info, skip, static_cast<uint32_t>(numInfo), testFunction);
 
     actualImageFormatID      = info[i].format;
     vkImageFormat            = info[i].vkFormat;
@@ -144,9 +148,8 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
 void Format::initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo *info, int numInfo)
 {
     size_t skip = renderer->getFeatures().forceFallbackFormat.enabled ? 1 : 0;
-    int i       = FindSupportedFormat(renderer, info + skip, static_cast<uint32_t>(numInfo - skip),
+    int i       = FindSupportedFormat(renderer, info, skip, static_cast<uint32_t>(numInfo),
                                 HasFullBufferFormatSupport);
-    i += skip;
 
     actualBufferFormatID         = info[i].format;
     vkBufferFormat               = info[i].vkFormat;
