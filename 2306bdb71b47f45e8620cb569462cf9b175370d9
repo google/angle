@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a8d8682d_0cc961f1",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4589,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-01-11T03:59:12Z",
+      "side": 1,
+      "message": "kProgramCount is necessarily implicitly converted. If I cast the whole expression, the integer division is done first, which defeats the whole purpose.\n\nIt\u0027s quite a common pattern to cast one side to float and have the other be implicit. int is promoted to float, but float is never demoted to int, so as long as you see a float, it\u0027s pretty clear the whole expression will end up as float.\n\nThat said, I cast it anyway.",
+      "parentUuid": "f63dee1b_68772c08",
+      "range": {
+        "startLine": 4589,
+        "startChar": 51,
+        "endLine": 4589,
+        "endChar": 73
+      },
+      "revId": "2306bdb71b47f45e8620cb569462cf9b175370d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d44af8d_58043fbe",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 2
@@ -39,6 +63,24 @@
       "revId": "2306bdb71b47f45e8620cb569462cf9b175370d9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18f152e2_f86f7be6",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4601,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-01-11T03:59:12Z",
+      "side": 1,
+      "message": "Done. Yes, you are right, I can do very few things between the draw calls, and a flush + CPU readback is not one of them!",
+      "parentUuid": "3d44af8d_58043fbe",
+      "revId": "2306bdb71b47f45e8620cb569462cf9b175370d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
