@@ -1045,20 +1045,18 @@ void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
         }
     }
 
-    // Comment out unused default uniforms.  This relies on the fact that the shader compiler
-    // outputs uniforms to a single line.
+    // Comment out inactive samplers.  This relies on the fact that the shader compiler outputs
+    // uniforms to a single line.
     for (const gl::UnusedUniform &unusedUniform : resources.unusedUniforms)
     {
-        if (unusedUniform.isImage || unusedUniform.isAtomicCounter)
+        if (!unusedUniform.isSampler)
         {
             continue;
         }
 
-        std::string uniformName = unusedUniform.isSampler
-                                      ? useOldRewriteStructSamplers
-                                            ? GetMappedSamplerNameOld(unusedUniform.name)
-                                            : GlslangGetMappedSamplerName(unusedUniform.name)
-                                      : unusedUniform.name;
+        std::string uniformName = useOldRewriteStructSamplers
+                                      ? GetMappedSamplerNameOld(unusedUniform.name)
+                                      : GlslangGetMappedSamplerName(unusedUniform.name);
 
         for (IntermediateShaderSource &shaderSource : *shaderSources)
         {

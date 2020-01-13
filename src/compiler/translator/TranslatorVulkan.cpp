@@ -712,7 +712,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
     int atomicCounterCount            = 0;
     for (const auto &uniform : getUniforms())
     {
-        if (!uniform.isBuiltIn() && uniform.staticUse && !gl::IsOpaqueType(uniform.type))
+        if (!uniform.isBuiltIn() && uniform.active && !gl::IsOpaqueType(uniform.type))
         {
             ++defaultUniformCount;
         }

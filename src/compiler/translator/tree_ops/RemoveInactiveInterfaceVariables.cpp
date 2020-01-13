@@ -41,7 +41,7 @@ RemoveInactiveInterfaceVariablesTraverser::RemoveInactiveInterfaceVariablesTrave
 {}
 
 template <typename Variable>
-bool isVariableActive(const std::vector<Variable> &mVars, const ImmutableString &name)
+bool IsVariableActive(const std::vector<Variable> &mVars, const ImmutableString &name)
 {
     for (const Variable &var : mVars)
     {
@@ -71,7 +71,7 @@ bool RemoveInactiveInterfaceVariablesTraverser::visitDeclaration(Visit visit,
 
     const TType &type = declarator->getType();
 
-    // Only remove opaque uniform and interface block declarations.
+    // Only remove uniform and interface block declarations.
     //
     // Note: Don't remove varyings.  Imagine a situation where the VS doesn't write to a varying
     // but the FS reads from it.  This is allowed, though the value of the varying is undefined.
@@ -81,11 +81,11 @@ bool RemoveInactiveInterfaceVariablesTraverser::visitDeclaration(Visit visit,
 
     if (type.isInterfaceBlock())
     {
-        removeDeclaration = !isVariableActive(mInterfaceBlocks, type.getInterfaceBlock()->name());
+        removeDeclaration = !IsVariableActive(mInterfaceBlocks, type.getInterfaceBlock()->name());
     }
-    else if (type.getQualifier() == EvqUniform && IsOpaqueType(type.getBasicType()))
+    else if (type.getQualifier() == EvqUniform)
     {
-        removeDeclaration = !isVariableActive(mUniforms, asSymbol->getName());
+        removeDeclaration = !IsVariableActive(mUniforms, asSymbol->getName());
     }
 
     if (removeDeclaration)
