@@ -214,7 +214,7 @@ namespace
 {
 // The following WaitForDebugger code is based on SwiftShader. See:
 // https://cs.chromium.org/chromium/src/third_party/swiftshader/src/Vulkan/main.cpp
-#    if defined(ANGLE_ENABLE_ASSERTS)
+#    if defined(ANGLE_ENABLE_ASSERTS) && !defined(ANGLE_ENABLE_WINDOWS_UWP)
 INT_PTR CALLBACK DebuggerWaitDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     RECT rect;
@@ -259,7 +259,7 @@ void WaitForDebugger(HINSTANCE instance)
 }
 #    else
 void WaitForDebugger(HINSTANCE instance) {}
-#    endif  // defined(ANGLE_ENABLE_ASSERTS)
+#    endif  // defined(ANGLE_ENABLE_ASSERTS) && !defined(ANGLE_ENABLE_WINDOWS_UWP)
 }  // namespace
 
 extern "C" BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID)

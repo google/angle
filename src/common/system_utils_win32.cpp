@@ -3,59 +3,62 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
-// system_utils_winuwp.cpp: Implementation of OS-specific functions for Windows UWP
+// system_utils_win32.cpp: Implementation of OS-specific functions for Windows.
 
 #include "system_utils.h"
 
-#include <stdarg.h>
 #include <windows.h>
 #include <array>
-#include <codecvt>
-#include <locale>
-#include <string>
 
 namespace angle
 {
+bool UnsetEnvironmentVar(const char *variableName)
+{
+    return (SetEnvironmentVariableA(variableName, nullptr) == TRUE);
+}
 
 bool SetEnvironmentVar(const char *variableName, const char *value)
 {
-    // Not supported for UWP
-    return false;
+    return (SetEnvironmentVariableA(variableName, value) == TRUE);
 }
 
 std::string GetEnvironmentVar(const char *variableName)
 {
-    // Not supported for UWP
-    return "";
+    std::array<char, MAX_PATH> oldValue;
+    DWORD result =
+        GetEnvironmentVariableA(variableName, oldValue.data(), static_cast<DWORD>(oldValue.size()));
+    if (result == 0)
+    {
+        return std::string();
+    }
+    else
+    {
+        return std::string(oldValue.data());
+    }
 }
 
-class UwpLibrary : public Library
+class Win32Library : public Library
 {
   public:
-    UwpLibrary(const char *libraryName, SearchType searchType)
+    Win32Library(const char *libraryName, SearchType searchType)
     {
         char buffer[MAX_PATH];
         int ret = snprintf(buffer, MAX_PATH, "%s.%s", libraryName, GetSharedLibraryExtension());
-
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-        std::wstring wideBuffer = converter.from_bytes(buffer);
-
         if (ret > 0 && ret < MAX_PATH)
         {
             switch (searchType)
             {
                 case SearchType::ApplicationDir:
-                    mModule = LoadPackagedLibrary(wideBuffer.c_str(), 0);
+                    mModule = LoadLibraryA(buffer);
                     break;
                 case SearchType::SystemDir:
-                    // Not supported in UWP
+                    mModule = LoadLibraryExA(buffer, nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
                     break;
             }
         }
     }
 
-    ~UwpLibrary() override
+    ~Win32Library() override
     {
         if (mModule)
         {
@@ -81,6 +84,6 @@ class UwpLibrary : public Library
 
 Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
 {
-    return new UwpLibrary(libraryName, searchType);
+    return new Win32Library(libraryName, searchType);
 }
 }  // namespace angle
