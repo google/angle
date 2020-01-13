@@ -53,10 +53,8 @@
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
 
 // Multisampled textures:
-3565 VULKAN : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.verify_sample_masking_for_non_integer_color_renderable_internalformats = FAIL
-3565 SWIFTSHADER : KHR-GLES31.core.texture_storage_multisample.APIDependencies.fbo_with_renderbuffer_and_multisample_texture_attachments_with_different_number_of_samples = FAIL
 // --gtest_filter=dEQP.KHR_GLES31/core_texture_storage_multisample_FunctionalTests_verify_sample_masking_for_non_integer_color_renderable_internalformats* --use-angle=swiftshader
-3565 SWIFTSHADER : KHR-GLES31.core.texture_storage_multisample.APIDependencies.no_error_generated_for_valid_renderbuffer_storage_multisample_calls = FAIL
+4259 SWIFTSHADER : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.verify_sample_masking_for_non_integer_color_renderable_internalformats = FAIL
 
 // Program Pipeline Objects:
 3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-draw-calls2 = FAIL
