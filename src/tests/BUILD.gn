@@ -69,13 +69,13 @@ angle_test("angle_unittests") {
 
   deps = [
     ":angle_test_expectations",
-    "$angle_root:angle_util_static",
     "$angle_root:libANGLE",
     "$angle_root:libEGL_static",
     "$angle_root:libGLESv2_static",
     "$angle_root:libfeature_support",
     "$angle_root:preprocessor",
     "$angle_root:translator",
+    "$angle_root/util:angle_util_static",
   ]
   if (!is_android && !is_fuchsia) {
     # SystemUtils.RunApp, the only unittest using a helper binary, is not supported on these
@@ -117,16 +117,16 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
 
     deps = [
       ":angle_test_expectations",
-      "${angle_root}:angle_gpu_info_util",
-      "${angle_root}:angle_image_util",
-      "${angle_root}:angle_util",
-      "${angle_root}:angle_util_loader_headers",
+      "$angle_root:angle_gpu_info_util",
+      "$angle_root:angle_image_util",
+      "$angle_root/util:angle_util",
+      "$angle_root/util:angle_util_loader_headers",
     ]
 
     data_deps = [
-      "${angle_root}:libEGL",
-      "${angle_root}:libGLESv1_CM",
-      "${angle_root}:libGLESv2",
+      "$angle_root:libEGL",
+      "$angle_root:libGLESv1_CM",
+      "$angle_root:libGLESv2",
     ]
 
     if (angle_enable_vulkan) {
@@ -164,12 +164,12 @@ if (is_win || is_linux || is_mac || is_android) {
     ]
 
     deps = [
-      "${angle_root}:angle_util_static",
-      "${angle_root}:libANGLE",
-      "${angle_root}:libEGL_static",
-      "${angle_root}:libGLESv2_static",
-      "${angle_root}:preprocessor",
-      "${angle_root}:translator",
+      "$angle_root:libANGLE",
+      "$angle_root:libEGL_static",
+      "$angle_root:libGLESv2_static",
+      "$angle_root:preprocessor",
+      "$angle_root:translator",
+      "$angle_root/util:angle_util_static",
     ]
 
     deps += [ "${angle_root}:angle_gl_enum_utils" ]
@@ -193,11 +193,11 @@ if (is_win || is_linux || is_android || is_mac) {
     main = "angle_perftests_main"
 
     deps = [
-      "${angle_jsoncpp_dir}:jsoncpp",
-      "${angle_root}:angle_util_static",
-      "${angle_root}:libANGLE",
-      "${angle_root}:libEGL_static",
-      "${angle_root}:libGLESv2_static",
+      "$angle_jsoncpp_dir:jsoncpp",
+      "$angle_root:libANGLE",
+      "$angle_root:libEGL_static",
+      "$angle_root:libGLESv2_static",
+      "$angle_root/util:angle_util_static",
     ]
 
     if (is_win) {
@@ -232,13 +232,13 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     main = "angle_perftests_main"
 
     deps = [
-      "${angle_jsoncpp_dir}:jsoncpp",
-      "${angle_root}:angle_common",
-      "${angle_root}:angle_gpu_info_util",
-      "${angle_root}:angle_system_utils",
-      "${angle_root}:angle_util",
-      "${angle_root}:angle_util_loader_headers",
-      "${angle_spirv_tools_dir}:spvtools_val",
+      "$angle_jsoncpp_dir:jsoncpp",
+      "$angle_root:angle_common",
+      "$angle_root:angle_gpu_info_util",
+      "$angle_root:angle_system_utils",
+      "$angle_root/util:angle_util",
+      "$angle_root/util:angle_util_loader_headers",
+      "$angle_spirv_tools_dir:spvtools_val",
     ]
 
     data_deps = [
@@ -321,8 +321,8 @@ if (build_angle_gles1_conform_tests) {
     ]
 
     public_configs = [
+      "$angle_root/util:angle_util_config",
       "$angle_root:angle_static",
-      "$angle_root:angle_util_config",
       "$angle_root:gl_prototypes",
     ]
 
@@ -330,12 +330,12 @@ if (build_angle_gles1_conform_tests) {
 
     public_deps = [
       "$angle_root:angle_common",
-      "$angle_root:angle_util_static",
       "$angle_root:libEGL_static",
       "$angle_root:libGLESv1_CM_static",
       "$angle_root:libGLESv2_static",
       "$angle_root:preprocessor",
       "$angle_root:translator",
+      "$angle_root/util:angle_util_static",
     ]
 
     sources = [
@@ -774,8 +774,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ":angle_deqp_framework_common",
       ":angle_deqp_framework_egl",
       ":angle_deqp_glshared",
-      "${angle_root}:angle_common",
-      "${angle_root}:angle_util",
+      "$angle_root:angle_common",
+      "$angle_root/util:angle_util",
     ]
 
     data_deps = [
@@ -824,8 +824,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
       deps += [
         ":angle_deqp_libtester",
-        "$angle_root:angle_util",
         "$angle_root/util:angle_test_utils",
+        "$angle_root/util:angle_util",
       ]
 
       suppressed_configs += deqp_undefine_configs
@@ -855,8 +855,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       deps = [
         ":${shared_library_name}",
         ":angle_test_expectations",
-        "${angle_root}:angle_common",
-        "${angle_root}:angle_util",
+        "$angle_root:angle_common",
+        "$angle_root/util:angle_util",
       ]
 
       # Must be included outside of the source set for the define

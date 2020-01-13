@@ -33,9 +33,9 @@ angle_source_set("sample_util") {
   ]
   public_deps = [
     "../:angle_common",
-    "../:angle_util",
-    "../:angle_util_loader_headers",
     "../util:angle_test_utils",
+    "../util:angle_util",
+    "../util:angle_util_loader_headers",
   ]
   configs += [ "../:library_name_config" ]
   public_configs = [
