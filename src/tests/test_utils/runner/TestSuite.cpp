@@ -311,10 +311,16 @@ class TestEventListener : public testing::EmptyTestEventListener
     TestResults *mTestResults;
 };
 
+bool IsTestDisabled(const testing::TestInfo &testInfo)
+{
+    return ::strstr(testInfo.name(), "DISABLED_") == testInfo.name();
+}
+
 using TestIdentifierFilter = std::function<bool(const TestIdentifier &id)>;
 
 std::vector<TestIdentifier> FilterTests(std::map<TestIdentifier, FileLine> *fileLinesOut,
-                                        TestIdentifierFilter filter)
+                                        TestIdentifierFilter filter,
+                                        bool alsoRunDisabledTests)
 {
     std::vector<TestIdentifier> tests;
 
@@ -326,7 +332,7 @@ std::vector<TestIdentifier> FilterTests(std::map<TestIdentifier, FileLine> *file
         {
             const testing::TestInfo &testInfo = *testSuite.GetTestInfo(testIndex);
             TestIdentifier id                 = GetTestIdentifier(testInfo);
-            if (filter(id))
+            if (filter(id) && (!IsTestDisabled(testInfo) || alsoRunDisabledTests))
             {
                 tests.emplace_back(id);
 
@@ -341,26 +347,29 @@ std::vector<TestIdentifier> FilterTests(std::map<TestIdentifier, FileLine> *file
     return tests;
 }
 
-std::vector<TestIdentifier> GetFilteredTests(std::map<TestIdentifier, FileLine> *fileLinesOut)
+std::vector<TestIdentifier> GetFilteredTests(std::map<TestIdentifier, FileLine> *fileLinesOut,
+                                             bool alsoRunDisabledTests)
 {
     TestIdentifierFilter gtestIDFilter = [](const TestIdentifier &id) {
         return testing::internal::UnitTestOptions::FilterMatchesTest(id.testSuiteName, id.testName);
     };
 
-    return FilterTests(fileLinesOut, gtestIDFilter);
+    return FilterTests(fileLinesOut, gtestIDFilter, alsoRunDisabledTests);
 }
 
-std::vector<TestIdentifier> GetCompiledInTests(std::map<TestIdentifier, FileLine> *fileLinesOut)
+std::vector<TestIdentifier> GetCompiledInTests(std::map<TestIdentifier, FileLine> *fileLinesOut,
+                                               bool alsoRunDisabledTests)
 {
     TestIdentifierFilter passthroughFilter = [](const TestIdentifier &id) { return true; };
-    return FilterTests(fileLinesOut, passthroughFilter);
+    return FilterTests(fileLinesOut, passthroughFilter, alsoRunDisabledTests);
 }
 
 std::vector<TestIdentifier> GetShardTests(int shardIndex,
                                           int shardCount,
-                                          std::map<TestIdentifier, FileLine> *fileLinesOut)
+                                          std::map<TestIdentifier, FileLine> *fileLinesOut,
+                                          bool alsoRunDisabledTests)
 {
-    std::vector<TestIdentifier> allTests = GetCompiledInTests(fileLinesOut);
+    std::vector<TestIdentifier> allTests = GetCompiledInTests(fileLinesOut, alsoRunDisabledTests);
     std::vector<TestIdentifier> shardTests;
 
     for (int testIndex = shardIndex; testIndex < static_cast<int>(allTests.size());
@@ -645,7 +654,8 @@ TestSuite::TestSuite(int *argc, char **argv)
       mTestTimeout(kDefaultTestTimeout),
       mBatchTimeout(60)
 {
-    bool hasFilter = false;
+    bool hasFilter            = false;
+    bool alsoRunDisabledTests = false;
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
     testing::GTEST_FLAG(catch_exceptions) = false;
@@ -678,6 +688,12 @@ TestSuite::TestSuite(int *argc, char **argv)
         }
         else
         {
+            // Don't include disabled tests in test lists unless the user asks for them.
+            if (strcmp("--gtest_also_run_disabled_tests", argv[argIndex]) == 0)
+            {
+                alsoRunDisabledTests = true;
+            }
+
             mGoogleTestCommandLineArgs.push_back(argv[argIndex]);
         }
         ++argIndex;
@@ -742,7 +758,7 @@ TestSuite::TestSuite(int *argc, char **argv)
             exit(1);
         }
 
-        mTestQueue    = GetShardTests(mShardIndex, mShardCount, &mTestFileLines);
+        mTestQueue = GetShardTests(mShardIndex, mShardCount, &mTestFileLines, alsoRunDisabledTests);
         mFilterString = GetTestFilter(mTestQueue);
 
         // Note that we only add a filter string if we previously deleted a shader index/count
@@ -754,7 +770,7 @@ TestSuite::TestSuite(int *argc, char **argv)
 
     if (mShardCount <= 0)
     {
-        mTestQueue = GetFilteredTests(&mTestFileLines);
+        mTestQueue = GetFilteredTests(&mTestFileLines, alsoRunDisabledTests);
     }
 
     mTotalResultCount = mTestQueue.size();
@@ -778,7 +794,7 @@ TestSuite::TestSuite(int *argc, char **argv)
         listeners.Append(
             new TestEventListener(mResultsFile, mTestSuiteName.c_str(), &mTestResults));
 
-        std::vector<TestIdentifier> testList = GetFilteredTests(nullptr);
+        std::vector<TestIdentifier> testList = GetFilteredTests(nullptr, alsoRunDisabledTests);
 
         for (const TestIdentifier &id : testList)
         {

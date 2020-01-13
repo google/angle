@@ -23,6 +23,13 @@ following additional command-line arguments:
  * `--results-directory` specifies a directory to write test results to
  * `--filter-file` allows passing a larget `gtest_filter` via a file
 
+As well as the custom command-line arguments we support a few standard GoogleTest arguments:
+
+ * `gtest_filter` works as it normally does with GoogleTest
+ * `gtest_also_run_disabled_tests` works as it normally does as well
+
+Other GoogleTest arguments are not supported although they may work.
+
 ## Implementation Notes
 
  * The test harness only requires `angle_common` and `angle_util`.
