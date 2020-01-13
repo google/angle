@@ -21,6 +21,5 @@ int main(int argc, char **argv)
 {
     angle::InitTestHarness(&argc, argv);
     angle::TestSuite testSuite(&argc, argv);
-    int rt = RUN_ALL_TESTS();
-    return rt;
+    return testSuite.run();
 }

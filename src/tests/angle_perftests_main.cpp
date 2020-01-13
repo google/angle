@@ -17,6 +17,5 @@ int main(int argc, char **argv)
 {
     angle::TestSuite testSuite(&argc, argv);
     ANGLEProcessPerfTestArgs(&argc, argv);
-    int rt = RUN_ALL_TESTS();
-    return rt;
+    return testSuite.run();
 }
