@@ -730,7 +730,9 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
 
     // Remove declarations of inactive shader interface variables so glslang wrapper doesn't need to
     // replace them.  Note: this is done before extracting samplers from structs, as removing such
-    // inactive samplers is not yet supported.
+    // inactive samplers is not yet supported.  Note also that currently, CollectVariables marks
+    // every field of an active uniform that's of struct type as active, i.e. no extracted sampler
+    // is inactive.
     if (!RemoveInactiveInterfaceVariables(this, root, getUniforms(), getInterfaceBlocks()))
     {
         return false;

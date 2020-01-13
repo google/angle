@@ -845,22 +845,14 @@ void AssignUniformBindings(const GlslangSourceOptions &options,
 void AssignResourceBinding(gl::ShaderBitSet activeShaders,
                            const std::string &name,
                            const std::string &bindingString,
-                           bool eraseLayoutIfInactive,
                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         IntermediateShaderSource &shaderSource = (*shaderSources)[shaderType];
-        if (!shaderSource.empty())
+        if (activeShaders[shaderType] && !shaderSource.empty())
         {
-            if (activeShaders[shaderType])
-            {
-                shaderSource.insertLayoutSpecifier(name, bindingString);
-            }
-            else if (eraseLayoutIfInactive)
-            {
-                shaderSource.eraseLayoutAndQualifierSpecifiers(name, kInactiveVariableSubstitution);
-            }
+            shaderSource.insertLayoutSpecifier(name, bindingString);
         }
     }
 }
@@ -881,8 +873,7 @@ uint32_t AssignInterfaceBlockBindings(const GlslangSourceOptions &options,
             const std::string bindingString =
                 resourcesDescriptorSet + ", binding = " + Str(bindingIndex++);
 
-            AssignResourceBinding(block.activeShaders(), block.name, bindingString, false,
-                                  shaderSources);
+            AssignResourceBinding(block.activeShaders(), block.name, bindingString, shaderSources);
         }
     }
 
@@ -938,8 +929,7 @@ uint32_t AssignImageBindings(const GlslangSourceOptions &options,
             name = name.substr(0, name.find('['));
         }
 
-        AssignResourceBinding(imageUniform.activeShaders(), name, bindingString, false,
-                              shaderSources);
+        AssignResourceBinding(imageUniform.activeShaders(), name, bindingString, shaderSources);
     }
 
     return bindingIndex;
@@ -998,7 +988,7 @@ void AssignTextureBindings(const GlslangSourceOptions &options,
                                             ? GetMappedSamplerNameOld(samplerUniform.name)
                                             : GlslangGetMappedSamplerName(samplerUniform.name);
 
-        AssignResourceBinding(samplerUniform.activeShaders(), samplerName, bindingString, true,
+        AssignResourceBinding(samplerUniform.activeShaders(), samplerName, bindingString,
                               shaderSources);
     }
 }
@@ -1035,26 +1025,6 @@ void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
         for (IntermediateShaderSource &shaderSource : *shaderSources)
         {
             shaderSource.eraseLayoutAndQualifierSpecifiers(varyingName, "");
-        }
-    }
-
-    // Comment out inactive samplers.  This relies on the fact that the shader compiler outputs
-    // uniforms to a single line.
-    for (const gl::UnusedUniform &unusedUniform : resources.unusedUniforms)
-    {
-        if (!unusedUniform.isSampler)
-        {
-            continue;
-        }
-
-        std::string uniformName = useOldRewriteStructSamplers
-                                      ? GetMappedSamplerNameOld(unusedUniform.name)
-                                      : GlslangGetMappedSamplerName(unusedUniform.name);
-
-        for (IntermediateShaderSource &shaderSource : *shaderSources)
-        {
-            shaderSource.eraseLayoutAndQualifierSpecifiers(uniformName,
-                                                           kInactiveVariableSubstitution);
         }
     }
 }
