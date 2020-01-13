@@ -136,8 +136,11 @@ void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier,
                                        const TType &type,
                                        const TSymbol *symbol)
 {
-    if (qualifier != EvqUniform && qualifier != EvqBuffer && qualifier != EvqAttribute &&
-        qualifier != EvqVertexIn && !sh::IsVarying(qualifier))
+    // Only varyings need to output qualifiers through a @@ QUALIFIER macro.  Glslang wrapper may
+    // decide to remove them if they are inactive and turn them into global variables.  This is only
+    // necessary for varyings because they are the only shader interface variables that could be
+    // referenced in the shader source and still be inactive.
+    if (!sh::IsVarying(qualifier))
     {
         TOutputGLSLBase::writeQualifier(qualifier, type, symbol);
         return;
@@ -150,27 +153,12 @@ void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier,
 
     ImmutableString name = symbol->name();
 
-    // For interface blocks, use the block name instead.  When the qualifier is being replaced in
-    // the backend, that would be the name that's available.
-    if (type.isInterfaceBlock())
-    {
-        name = type.getInterfaceBlock()->name();
-    }
-
     // The in/out qualifiers are calculated here so glslang wrapper doesn't need to guess them.
-    // The rest of the qualifiers are left to glslang wrapper to substitute as it emulates some
-    // with others.
-    const char *inOutQualifier = "";
-    if (IsShaderIn(qualifier) || IsShaderOut(qualifier))
-    {
-        inOutQualifier = mapQualifierToString(qualifier);
-    }
-    std::string memoryQualifiers = getMemoryQualifiers(type);
-    const char *separator = strcmp(inOutQualifier, "") == 0 || memoryQualifiers.empty() ? "" : " ";
+    ASSERT(IsShaderIn(qualifier) || IsShaderOut(qualifier));
+    const char *inOutQualifier = mapQualifierToString(qualifier);
 
     TInfoSinkBase &out = objSink();
-    out << "@@ QUALIFIER-" << name.data() << "(" << inOutQualifier << separator << memoryQualifiers
-        << ") @@ ";
+    out << "@@ QUALIFIER-" << name.data() << "(" << inOutQualifier << ") @@ ";
 }
 
 void TOutputVulkanGLSL::writeVariableType(const TType &type,

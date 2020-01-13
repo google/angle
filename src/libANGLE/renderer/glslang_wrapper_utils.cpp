@@ -53,9 +53,7 @@ constexpr char kXfbOutMarkerBegin[]                = "@@ XFB-OUT";
 constexpr char kMarkerEnd[]                        = " @@";
 constexpr char kParamsBegin                        = '(';
 constexpr char kParamsEnd                          = ')';
-constexpr char kUniformQualifier[]                 = "uniform";
-constexpr char kSSBOQualifier[]                    = "buffer";
-constexpr char kUnusedUniformSubstitution[]        = "// ";
+constexpr char kInactiveVariableSubstitution[]     = "// ";
 constexpr uint32_t kANGLEPositionLocationOffset    = 1;
 constexpr uint32_t kXfbANGLEPositionLocationOffset = 2;
 
@@ -372,7 +370,7 @@ void IntermediateShaderSource::eraseLayoutAndQualifierSpecifiers(const std::stri
             continue;
         }
 
-        block.text = block.type == TokenType::Layout ? "" : replacement;
+        block.text = block.type == TokenType::Layout ? replacement : "";
         block.type = TokenType::Text;
     }
 }
@@ -668,7 +666,6 @@ void AssignAttributeLocations(const gl::ProgramState &programState,
 
         std::string locationString = "location = " + Str(attribute.location);
         shaderSource->insertLayoutSpecifier(attribute.name, locationString);
-        shaderSource->insertQualifierSpecifier(attribute.name, "");
     }
 }
 
@@ -832,7 +829,7 @@ void AssignUniformBindings(const GlslangSourceOptions &options,
         }
     }
 
-    // Substitute layout and qualifier strings for the driver uniforms block.
+    // Substitute layout string for the driver uniforms block.
     const std::string driverBlockLayoutString =
         "set = " + Str(options.driverUniformsDescriptorSetIndex) + ", binding = 0";
     constexpr char kDriverBlockName[] = "ANGLEUniformBlock";
@@ -840,16 +837,15 @@ void AssignUniformBindings(const GlslangSourceOptions &options,
     for (IntermediateShaderSource &shaderSource : *shaderSources)
     {
         shaderSource.insertLayoutSpecifier(kDriverBlockName, driverBlockLayoutString);
-        shaderSource.insertQualifierSpecifier(kDriverBlockName, kUniformQualifier);
     }
 }
 
-// Helper to go through shader stages and substitute layout and qualifier macros.
+// Helper to go through shader stages and substitute layout macro.  The translator must have already
+// output the qualifiers.
 void AssignResourceBinding(gl::ShaderBitSet activeShaders,
                            const std::string &name,
                            const std::string &bindingString,
-                           const char *qualifier,
-                           const char *unusedSubstitution,
+                           bool eraseLayoutIfInactive,
                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -860,11 +856,10 @@ void AssignResourceBinding(gl::ShaderBitSet activeShaders,
             if (activeShaders[shaderType])
             {
                 shaderSource.insertLayoutSpecifier(name, bindingString);
-                shaderSource.insertQualifierSpecifier(name, qualifier);
             }
-            else if (unusedSubstitution)
+            else if (eraseLayoutIfInactive)
             {
-                shaderSource.eraseLayoutAndQualifierSpecifiers(name, unusedSubstitution);
+                shaderSource.eraseLayoutAndQualifierSpecifiers(name, kInactiveVariableSubstitution);
             }
         }
     }
@@ -872,7 +867,6 @@ void AssignResourceBinding(gl::ShaderBitSet activeShaders,
 
 uint32_t AssignInterfaceBlockBindings(const GlslangSourceOptions &options,
                                       const std::vector<gl::InterfaceBlock> &blocks,
-                                      const char *qualifier,
                                       uint32_t bindingStart,
                                       gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
@@ -887,8 +881,8 @@ uint32_t AssignInterfaceBlockBindings(const GlslangSourceOptions &options,
             const std::string bindingString =
                 resourcesDescriptorSet + ", binding = " + Str(bindingIndex++);
 
-            AssignResourceBinding(block.activeShaders(), block.name, bindingString, qualifier,
-                                  nullptr, shaderSources);
+            AssignResourceBinding(block.activeShaders(), block.name, bindingString, false,
+                                  shaderSources);
         }
     }
 
@@ -897,7 +891,6 @@ uint32_t AssignInterfaceBlockBindings(const GlslangSourceOptions &options,
 
 uint32_t AssignAtomicCounterBufferBindings(const GlslangSourceOptions &options,
                                            const std::vector<gl::AtomicCounterBuffer> &buffers,
-                                           const char *qualifier,
                                            uint32_t bindingStart,
                                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
@@ -917,7 +910,6 @@ uint32_t AssignAtomicCounterBufferBindings(const GlslangSourceOptions &options,
         {
             // All atomic counter buffers are placed under one binding shared between all stages.
             shaderSource.insertLayoutSpecifier(kAtomicCounterBlockName, bindingString);
-            shaderSource.insertQualifierSpecifier(kAtomicCounterBlockName, qualifier);
         }
     }
 
@@ -946,8 +938,8 @@ uint32_t AssignImageBindings(const GlslangSourceOptions &options,
             name = name.substr(0, name.find('['));
         }
 
-        AssignResourceBinding(imageUniform.activeShaders(), name, bindingString, kUniformQualifier,
-                              nullptr, shaderSources);
+        AssignResourceBinding(imageUniform.activeShaders(), name, bindingString, false,
+                              shaderSources);
     }
 
     return bindingIndex;
@@ -960,17 +952,17 @@ void AssignNonTextureBindings(const GlslangSourceOptions &options,
     uint32_t bindingStart = 0;
 
     const std::vector<gl::InterfaceBlock> &uniformBlocks = programState.getUniformBlocks();
-    bindingStart = AssignInterfaceBlockBindings(options, uniformBlocks, kUniformQualifier,
-                                                bindingStart, shaderSources);
+    bindingStart =
+        AssignInterfaceBlockBindings(options, uniformBlocks, bindingStart, shaderSources);
 
     const std::vector<gl::InterfaceBlock> &storageBlocks = programState.getShaderStorageBlocks();
-    bindingStart = AssignInterfaceBlockBindings(options, storageBlocks, kSSBOQualifier,
-                                                bindingStart, shaderSources);
+    bindingStart =
+        AssignInterfaceBlockBindings(options, storageBlocks, bindingStart, shaderSources);
 
     const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers =
         programState.getAtomicCounterBuffers();
-    bindingStart = AssignAtomicCounterBufferBindings(options, atomicCounterBuffers, kSSBOQualifier,
-                                                     bindingStart, shaderSources);
+    bindingStart = AssignAtomicCounterBufferBindings(options, atomicCounterBuffers, bindingStart,
+                                                     shaderSources);
 
     const std::vector<gl::LinkedUniform> &uniforms = programState.getUniforms();
     const gl::RangeUI &imageUniformRange           = programState.getImageUniformRange();
@@ -1006,8 +998,8 @@ void AssignTextureBindings(const GlslangSourceOptions &options,
                                             ? GetMappedSamplerNameOld(samplerUniform.name)
                                             : GlslangGetMappedSamplerName(samplerUniform.name);
 
-        AssignResourceBinding(samplerUniform.activeShaders(), samplerName, bindingString,
-                              kUniformQualifier, kUnusedUniformSubstitution, shaderSources);
+        AssignResourceBinding(samplerUniform.activeShaders(), samplerName, bindingString, true,
+                              shaderSources);
     }
 }
 
@@ -1032,7 +1024,8 @@ void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
                 continue;
             }
 
-            vertexSource.eraseLayoutAndQualifierSpecifiers(attribute.name, "");
+            vertexSource.eraseLayoutAndQualifierSpecifiers(attribute.name,
+                                                           kInactiveVariableSubstitution);
         }
     }
 
@@ -1060,7 +1053,8 @@ void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
 
         for (IntermediateShaderSource &shaderSource : *shaderSources)
         {
-            shaderSource.eraseLayoutAndQualifierSpecifiers(uniformName, kUnusedUniformSubstitution);
+            shaderSource.eraseLayoutAndQualifierSpecifiers(uniformName,
+                                                           kInactiveVariableSubstitution);
         }
     }
 }
