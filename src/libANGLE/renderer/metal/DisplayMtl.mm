@@ -543,7 +543,7 @@ void DisplayMtl::initializeExtensions() const
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // NOTE(hqle): Support full mapBufferRange extension.
-    mNativeExtensions.mapBuffer              = true;
+    mNativeExtensions.mapBufferOES           = true;
     mNativeExtensions.mapBufferRange         = false;
     mNativeExtensions.textureStorage         = true;
     mNativeExtensions.drawBuffers            = false;
@@ -554,17 +554,17 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.copyCompressedTexture  = false;
     mNativeExtensions.debugMarker            = false;
     mNativeExtensions.robustness             = true;
-    mNativeExtensions.textureBorderClamp     = false;  // not implemented yet
+    mNativeExtensions.textureBorderClampOES  = false;  // not implemented yet
     mNativeExtensions.translatedShaderSource = true;
     mNativeExtensions.discardFramebuffer     = true;
 
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinMax = true;
 
-    mNativeExtensions.eglImage         = false;
-    mNativeExtensions.eglImageExternal = false;
+    mNativeExtensions.eglImageOES         = false;
+    mNativeExtensions.eglImageExternalOES = false;
     // NOTE(hqle): Support GL_OES_EGL_image_external_essl3.
-    mNativeExtensions.eglImageExternalEssl3 = false;
+    mNativeExtensions.eglImageExternalEssl3OES = false;
 
     mNativeExtensions.memoryObject   = false;
     mNativeExtensions.memoryObjectFd = false;
@@ -577,7 +577,7 @@ void DisplayMtl::initializeExtensions() const
 
     mNativeExtensions.robustBufferAccessBehavior = false;
 
-    mNativeExtensions.eglSync = false;
+    mNativeExtensions.eglSyncOES = false;
 
     // NOTE(hqle): support occlusion query
     mNativeExtensions.occlusionQueryBoolean = false;
@@ -590,13 +590,13 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.maxTextureAnisotropy     = 16;
 
     // NOTE(hqle): Support true NPOT textures.
-    mNativeExtensions.textureNPOT = false;
+    mNativeExtensions.textureNPOTOES = false;
 
     mNativeExtensions.texture3DOES = false;
 
-    mNativeExtensions.standardDerivatives = true;
+    mNativeExtensions.standardDerivativesOES = true;
 
-    mNativeExtensions.elementIndexUint = true;
+    mNativeExtensions.elementIndexUintOES = true;
 }
 
 void DisplayMtl::initializeTextureCaps() const
@@ -618,7 +618,6 @@ void DisplayMtl::initializeFeatures()
     mFeatures.hasNonUniformDispatch.enabled             = true;
     mFeatures.hasTextureSwizzle.enabled                 = false;
     mFeatures.allowSeparatedDepthStencilBuffers.enabled = false;
-
 
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
     mFeatures.hasDepthTextureFiltering.enabled = true;

@@ -1568,22 +1568,22 @@ void GenerateCaps(ID3D11Device *device,
 
     // Explicitly disable GL_OES_compressed_ETC1_RGB8_texture because it's emulated and never
     // becomes core. WebGL doesn't want to expose it unless there is native support.
-    extensions->compressedETC1RGB8Texture = false;
+    extensions->compressedETC1RGB8TextureOES = false;
 
-    extensions->elementIndexUint            = true;
-    extensions->getProgramBinary            = true;
-    extensions->rgb8rgba8                   = true;
+    extensions->elementIndexUintOES         = true;
+    extensions->getProgramBinaryOES         = true;
+    extensions->rgb8rgba8OES                = true;
     extensions->readFormatBGRA              = true;
-    extensions->pixelBufferObject           = true;
-    extensions->mapBuffer                   = true;
+    extensions->pixelBufferObjectNV         = true;
+    extensions->mapBufferOES                = true;
     extensions->mapBufferRange              = true;
-    extensions->textureNPOT                 = GetNPOTTextureSupport(featureLevel);
+    extensions->textureNPOTOES              = GetNPOTTextureSupport(featureLevel);
     extensions->drawBuffers                 = GetMaximumSimultaneousRenderTargets(featureLevel) > 1;
     extensions->textureStorage              = true;
     extensions->textureFilterAnisotropic    = true;
     extensions->maxTextureAnisotropy        = GetMaximumAnisotropy(featureLevel);
     extensions->occlusionQueryBoolean       = GetOcclusionQuerySupport(featureLevel);
-    extensions->fence                       = GetEventQuerySupport(featureLevel);
+    extensions->fenceNV                     = GetEventQuerySupport(featureLevel);
     extensions->disjointTimerQuery          = true;
     extensions->queryCounterBitsTimeElapsed = 64;
     extensions->queryCounterBitsTimestamp =
@@ -1601,7 +1601,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->instancedArraysANGLE   = GetInstancingSupport(featureLevel);
     extensions->instancedArraysEXT     = GetInstancingSupport(featureLevel);
     extensions->packReverseRowOrder    = true;
-    extensions->standardDerivatives    = GetDerivativeInstructionSupport(featureLevel);
+    extensions->standardDerivativesOES = GetDerivativeInstructionSupport(featureLevel);
     extensions->shaderTextureLOD       = GetShaderTextureLODSupport(featureLevel);
     extensions->fragDepth              = true;
     extensions->multiview              = IsMultiviewSupported(featureLevel);
@@ -1615,24 +1615,24 @@ void GenerateCaps(ID3D11Device *device,
     }
     extensions->textureUsage       = true;  // This could be false since it has no effect in D3D11
     extensions->discardFramebuffer = true;
-    extensions->translatedShaderSource           = true;
-    extensions->fboRenderMipmap                  = true;
-    extensions->debugMarker                      = true;
-    extensions->eglImage                         = true;
-    extensions->eglImageExternal                 = true;
-    extensions->eglImageExternalEssl3            = true;
-    extensions->eglStreamConsumerExternal        = true;
-    extensions->unpackSubimage                   = true;
-    extensions->packSubimage                     = true;
-    extensions->lossyETCDecode                   = true;
-    extensions->syncQuery                        = GetEventQuerySupport(featureLevel);
-    extensions->copyTexture                      = true;
-    extensions->copyCompressedTexture            = true;
-    extensions->textureStorageMultisample2DArray = true;
+    extensions->translatedShaderSource              = true;
+    extensions->fboRenderMipmapOES                  = true;
+    extensions->debugMarker                         = true;
+    extensions->eglImageOES                         = true;
+    extensions->eglImageExternalOES                 = true;
+    extensions->eglImageExternalEssl3OES            = true;
+    extensions->eglStreamConsumerExternalNV         = true;
+    extensions->unpackSubimage                      = true;
+    extensions->packSubimage                        = true;
+    extensions->lossyETCDecode                      = true;
+    extensions->syncQuery                           = GetEventQuerySupport(featureLevel);
+    extensions->copyTexture                         = true;
+    extensions->copyCompressedTexture               = true;
+    extensions->textureStorageMultisample2DArrayOES = true;
     extensions->multiviewMultisample     = ((extensions->multiview || extensions->multiview2) &&
-                                        extensions->textureStorageMultisample2DArray);
+                                        extensions->textureStorageMultisample2DArrayOES);
     extensions->copyTexture3d            = true;
-    extensions->textureBorderClamp       = true;
+    extensions->textureBorderClampOES    = true;
     extensions->textureMultisample       = true;
     extensions->provokingVertex          = true;
     extensions->blendFuncExtended        = true;

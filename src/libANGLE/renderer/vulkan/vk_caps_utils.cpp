@@ -53,7 +53,7 @@ void RendererVk::ensureCapsInitialized() const
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.
-    mNativeExtensions.mapBuffer              = true;
+    mNativeExtensions.mapBufferOES           = true;
     mNativeExtensions.mapBufferRange         = true;
     mNativeExtensions.textureStorage         = true;
     mNativeExtensions.drawBuffers            = true;
@@ -64,7 +64,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.copyCompressedTexture  = true;
     mNativeExtensions.debugMarker            = true;
     mNativeExtensions.robustness             = true;
-    mNativeExtensions.textureBorderClamp     = false;  // not implemented yet
+    mNativeExtensions.textureBorderClampOES  = false;  // not implemented yet
     mNativeExtensions.translatedShaderSource = true;
     mNativeExtensions.discardFramebuffer     = true;
 
@@ -81,9 +81,9 @@ void RendererVk::ensureCapsInitialized() const
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinMax = true;
 
-    mNativeExtensions.eglImage              = true;
-    mNativeExtensions.eglImageExternal      = true;
-    mNativeExtensions.eglImageExternalEssl3 = true;
+    mNativeExtensions.eglImageOES              = true;
+    mNativeExtensions.eglImageExternalOES      = true;
+    mNativeExtensions.eglImageExternalEssl3OES = true;
 
     mNativeExtensions.memoryObject   = true;
     mNativeExtensions.memoryObjectFd = getFeatures().supportsExternalMemoryFd.enabled;
@@ -91,7 +91,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.semaphore   = true;
     mNativeExtensions.semaphoreFd = getFeatures().supportsExternalSemaphoreFd.enabled;
 
-    mNativeExtensions.vertexHalfFloat = true;
+    mNativeExtensions.vertexHalfFloatOES = true;
 
     // Enabled in HW if VK_EXT_vertex_attribute_divisor available, otherwise emulated
     mNativeExtensions.instancedArraysANGLE = true;
@@ -101,9 +101,9 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.robustBufferAccessBehavior =
         (mPhysicalDeviceFeatures.robustBufferAccess == VK_TRUE);
 
-    mNativeExtensions.eglSync = true;
+    mNativeExtensions.eglSyncOES = true;
 
-    mNativeExtensions.vertexAttribType1010102 = true;
+    mNativeExtensions.vertexAttribType1010102OES = true;
 
     // We use secondary command buffers almost everywhere and they require a feature to be
     // able to execute in the presence of queries.  As a result, we won't support queries
@@ -126,17 +126,17 @@ void RendererVk::ensureCapsInitialized() const
         mNativeExtensions.textureFilterAnisotropic ? limitsVk.maxSamplerAnisotropy : 0.0f;
 
     // Vulkan natively supports non power-of-two textures
-    mNativeExtensions.textureNPOT = true;
+    mNativeExtensions.textureNPOTOES = true;
 
     mNativeExtensions.texture3DOES = true;
 
     // Vulkan natively supports standard derivatives
-    mNativeExtensions.standardDerivatives = true;
+    mNativeExtensions.standardDerivativesOES = true;
 
     // Vulkan natively supports 32-bit indices, entry in kIndexTypeMap
-    mNativeExtensions.elementIndexUint = true;
+    mNativeExtensions.elementIndexUintOES = true;
 
-    mNativeExtensions.fboRenderMipmap = true;
+    mNativeExtensions.fboRenderMipmapOES = true;
 
     // We support getting image data for Textures and Renderbuffers.
     mNativeExtensions.getImageANGLE = true;
@@ -455,11 +455,11 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.subPixelBits = limitsVk.subPixelPrecisionBits;
 
     // Enable Program Binary extension.
-    mNativeExtensions.getProgramBinary = true;
+    mNativeExtensions.getProgramBinaryOES = true;
     mNativeCaps.programBinaryFormats.push_back(GL_PROGRAM_BINARY_ANGLE);
 
     // Enable GL_NV_pixel_buffer_object extension.
-    mNativeExtensions.pixelBufferObject = true;
+    mNativeExtensions.pixelBufferObjectNV = true;
 
     // Geometry shader is optional.
     if (mPhysicalDeviceFeatures.geometryShader)

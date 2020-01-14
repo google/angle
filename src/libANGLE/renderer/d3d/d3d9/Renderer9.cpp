@@ -1480,7 +1480,7 @@ angle::Result Renderer9::drawLineLoop(const gl::Context *context,
     unsigned int startIndex = 0;
     Context9 *context9      = GetImplAs<Context9>(context);
 
-    if (getNativeExtensions().elementIndexUint)
+    if (getNativeExtensions().elementIndexUintOES)
     {
         if (!mLineLoopIB)
         {
@@ -1692,7 +1692,7 @@ angle::Result Renderer9::getCountingIB(const gl::Context *context,
             ANGLE_TRY(mCountingIB->unmapBuffer(context));
         }
     }
-    else if (getNativeExtensions().elementIndexUint)
+    else if (getNativeExtensions().elementIndexUintOES)
     {
         const unsigned int spaceNeeded = static_cast<unsigned int>(count) * sizeof(unsigned int);
 

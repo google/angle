@@ -75,15 +75,15 @@ void GenerateTextureCapsMap(const FormatTable &formatTable,
     // Requires depth24Stencil8PixelFormatSupported=YES for these extensions
     bool packedDepthStencil24Support =
         display->getMetalDevice().depth24Stencil8PixelFormatSupported;
-    tmpTextureExtensions.packedDepthStencil     = true;  // We support this reguardless
+    tmpTextureExtensions.packedDepthStencilOES  = true;  // We support this reguardless
     tmpTextureExtensions.colorBufferHalfFloat   = packedDepthStencil24Support;
     tmpTextureExtensions.colorBufferFloat       = packedDepthStencil24Support;
     tmpTextureExtensions.colorBufferFloatRGB    = packedDepthStencil24Support;
     tmpTextureExtensions.colorBufferFloatRGBA   = packedDepthStencil24Support;
     tmpTextureExtensions.textureHalfFloat       = packedDepthStencil24Support;
-    tmpTextureExtensions.textureFloat           = packedDepthStencil24Support;
+    tmpTextureExtensions.textureFloatOES        = packedDepthStencil24Support;
     tmpTextureExtensions.textureHalfFloatLinear = packedDepthStencil24Support;
-    tmpTextureExtensions.textureFloatLinear     = packedDepthStencil24Support;
+    tmpTextureExtensions.textureFloatLinearOES  = packedDepthStencil24Support;
     tmpTextureExtensions.textureRG              = packedDepthStencil24Support;
     tmpTextureExtensions.textureFormatBGRA8888  = packedDepthStencil24Support;
 
@@ -95,14 +95,14 @@ void GenerateTextureCapsMap(const FormatTable &formatTable,
 
     tmpTextureExtensions.textureCompressionS3TCsRGB = tmpTextureExtensions.textureCompressionDXT1;
 #else
-    tmpTextureExtensions.packedDepthStencil     = true;  // override to D32_FLOAT_S8X24_UINT
+    tmpTextureExtensions.packedDepthStencilOES  = true;  // override to D32_FLOAT_S8X24_UINT
     tmpTextureExtensions.colorBufferHalfFloat   = true;
     tmpTextureExtensions.colorBufferFloat       = true;
     tmpTextureExtensions.colorBufferFloatRGB    = true;
     tmpTextureExtensions.colorBufferFloatRGBA   = true;
     tmpTextureExtensions.textureHalfFloat       = true;
     tmpTextureExtensions.textureHalfFloatLinear = true;
-    tmpTextureExtensions.textureFloat           = true;
+    tmpTextureExtensions.textureFloatOES        = true;
     tmpTextureExtensions.textureRG              = true;
     tmpTextureExtensions.textureFormatBGRA8888  = true;
     if ([display->getMetalDevice() supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily1_v1])
@@ -121,9 +121,9 @@ void GenerateTextureCapsMap(const FormatTable &formatTable,
     }
 #endif
     tmpTextureExtensions.sRGB              = true;
-    tmpTextureExtensions.depth32           = true;
+    tmpTextureExtensions.depth32OES        = true;
     tmpTextureExtensions.depth24OES        = true;
-    tmpTextureExtensions.rgb8rgba8         = true;
+    tmpTextureExtensions.rgb8rgba8OES      = true;
     tmpTextureExtensions.textureStorage    = true;
     tmpTextureExtensions.depthTextureOES   = true;
     tmpTextureExtensions.depthTextureANGLE = true;

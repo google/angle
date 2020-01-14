@@ -2494,7 +2494,7 @@ Error ValidateCreateSyncBase(const Display *display,
 
     ANGLE_TRY(ValidateContext(currentDisplay, currentContext));
 
-    if (!currentContext->getExtensions().eglSync)
+    if (!currentContext->getExtensions().eglSyncOES)
     {
         return EglBadMatch() << "EGL_SYNC_FENCE_KHR cannot be used without "
                                 "GL_OES_EGL_sync support.";
@@ -2595,7 +2595,7 @@ Error ValidateWaitSync(const Display *display,
         return EglBadMatch() << "No context is current.";
     }
 
-    if (!context->getExtensions().eglSync)
+    if (!context->getExtensions().eglSyncOES)
     {
         return EglBadMatch() << "Server-side waits cannot be performed without "
                                 "GL_OES_EGL_sync support.";
@@ -2731,7 +2731,7 @@ Error ValidateStreamConsumerGLTextureExternalKHR(const Display *display,
         return EglBadAccess() << "Stream consumer extension not active";
     }
 
-    if (!context->getExtensions().eglStreamConsumerExternal)
+    if (!context->getExtensions().eglStreamConsumerExternalNV)
     {
         return EglBadAccess() << "EGL stream consumer external GL extension not enabled";
     }
@@ -2863,7 +2863,7 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
     // Although technically not a requirement in spec, the context needs to be checked for support
     // for external textures or future logic will cause assertations. This extension is also
     // effectively useless without external textures.
-    if (!context->getExtensions().eglStreamConsumerExternal)
+    if (!context->getExtensions().eglStreamConsumerExternalNV)
     {
         return EglBadAccess() << "EGL stream consumer external GL extension not enabled";
     }

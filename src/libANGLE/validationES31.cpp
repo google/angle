@@ -1875,7 +1875,7 @@ bool ValidateTexStorage3DMultisampleOES(Context *context,
                                         GLsizei depth,
                                         GLboolean fixedsamplelocations)
 {
-    if (!context->getExtensions().textureStorageMultisample2DArray)
+    if (!context->getExtensions().textureStorageMultisample2DArrayOES)
     {
         context->validationError(GL_INVALID_ENUM, kMultisampleArrayExtensionRequired);
         return false;
