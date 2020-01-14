@@ -71,6 +71,7 @@ TextureCaps GenerateMinimumTextureCaps(GLenum sizedInternalFormat,
     caps.filterable        = internalFormatInfo.filterSupport(clientVersion, extensions);
     caps.textureAttachment = internalFormatInfo.textureAttachmentSupport(clientVersion, extensions);
     caps.renderbuffer      = internalFormatInfo.renderbufferSupport(clientVersion, extensions);
+    caps.blendable         = internalFormatInfo.blendSupport(clientVersion, extensions);
 
     caps.sampleCounts.insert(0);
     if (internalFormatInfo.isRequiredRenderbufferFormat(clientVersion))

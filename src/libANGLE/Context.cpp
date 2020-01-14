@@ -3681,6 +3681,8 @@ void Context::updateCaps()
         formatCaps.renderbuffer =
             formatCaps.renderbuffer &&
             formatInfo.renderbufferSupport(getClientVersion(), mState.mExtensions);
+        formatCaps.blendable =
+            formatCaps.blendable && formatInfo.blendSupport(getClientVersion(), mState.mExtensions);
 
         // OpenGL ES does not support multisampling with non-rendererable formats
         // OpenGL ES 3.0 or prior does not support multisampling with integer formats

@@ -224,6 +224,7 @@ struct InternalFormat
     SupportCheckFunction filterSupport;
     SupportCheckFunction textureAttachmentSupport;  // glFramebufferTexture2D
     SupportCheckFunction renderbufferSupport;       // glFramebufferRenderbuffer
+    SupportCheckFunction blendSupport;
 };
 
 // A "Format" wraps an InternalFormat struct, querying it from either a sized internal format or
