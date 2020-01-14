@@ -5292,6 +5292,83 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test calling array length() with a "this" expression having side effects inside an if condition.
+// This is an issue if the the side effect can be short circuited.
+TEST_P(GLSLTest_ES3, ArrayLengthOnShortCircuitedExpressionWithSideEffectsInIfCondition)
+{
+    // Bug in the shader translator.  http://anglebug.com/3829
+    ANGLE_SKIP_TEST_IF(true);
+
+    // "a" shouldn't get modified by this shader.
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+uniform int u_zero;
+int a;
+int[2] doubleA()
+{
+    a *= 2;
+    return int[2](a, a);
+}
+void main()
+{
+    a = u_zero + 1;
+    if (u_zero != 0 && doubleA().length() == 2)
+    {
+        ++a;
+    }
+    if (a == 1)
+    {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        my_FragColor = vec4(1, 0, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test calling array length() with a "this" expression having side effects in a statement where the
+// side effect can be short circuited.
+TEST_P(GLSLTest_ES3, ArrayLengthOnShortCircuitedExpressionWithSideEffectsInStatement)
+{
+    // Bug in the shader translator.  http://anglebug.com/3829
+    ANGLE_SKIP_TEST_IF(true);
+
+    // "a" shouldn't get modified by this shader.
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+uniform int u_zero;
+int a;
+int[2] doubleA()
+{
+    a *= 2;
+    return int[2](a, a);
+}
+void main()
+{
+    a = u_zero + 1;
+    bool test = u_zero != 0 && doubleA().length() == 2;
+    if (a == 1)
+    {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        my_FragColor = vec4(1, 0, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that statements inside switch() get translated to correct HLSL.
 TEST_P(GLSLTest_ES3, DifferentStatementsInsideSwitch)
 {
