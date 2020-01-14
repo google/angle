@@ -255,6 +255,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
         textureCaps.texturable && MeetsRequirements(functions, formatInfo.filter);
     textureCaps.textureAttachment = MeetsRequirements(functions, formatInfo.textureAttachment);
     textureCaps.renderbuffer      = MeetsRequirements(functions, formatInfo.renderbuffer);
+    textureCaps.blendable         = textureCaps.renderbuffer || textureCaps.textureAttachment;
 
     // Do extra renderability validation for some formats.
     // We require GL_RGBA16F is renderable to expose EXT_color_buffer_half_float but we can't know

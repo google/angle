@@ -635,11 +635,21 @@ static bool DetermineColorBufferFloatRGBASupport(const TextureCapsMap &textureCa
 // Check for GL_EXT_color_buffer_float
 static bool DetermineColorBufferFloatSupport(const TextureCapsMap &textureCaps)
 {
-    constexpr GLenum requiredFormats[] = {
-        GL_R16F, GL_RG16F, GL_RGBA16F, GL_R32F, GL_RG32F, GL_RGBA32F, GL_R11F_G11F_B10F,
+    constexpr GLenum nonBlendableFormats[] = {
+        GL_R32F,
+        GL_RG32F,
+        GL_RGBA32F,
     };
 
-    return GetFormatSupport(textureCaps, requiredFormats, true, false, true, true, false);
+    constexpr GLenum blendableFormats[] = {
+        GL_R16F,
+        GL_RG16F,
+        GL_RGBA16F,
+        GL_R11F_G11F_B10F,
+    };
+
+    return GetFormatSupport(textureCaps, nonBlendableFormats, true, false, true, true, false) &&
+           GetFormatSupport(textureCaps, blendableFormats, true, false, true, true, true);
 }
 
 // Check for GL_EXT_texture_norm16

@@ -110,6 +110,7 @@ gl::TextureCaps GenerateTextureFormatCaps(gl::Version maxClientVersion,
         (support.query(formatInfo.rtvFormat, D3D11_FORMAT_SUPPORT_RENDER_TARGET)) ||
         (support.query(formatInfo.dsvFormat, D3D11_FORMAT_SUPPORT_DEPTH_STENCIL));
     textureCaps.renderbuffer = textureCaps.textureAttachment;
+    textureCaps.blendable    = textureCaps.renderbuffer;
 
     DXGI_FORMAT renderFormat = DXGI_FORMAT_UNKNOWN;
     if (formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN)

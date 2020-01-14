@@ -459,6 +459,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat,
                                         D3DRTYPE_TEXTURE, d3dFormatInfo.renderFormat));
         }
         textureCaps.renderbuffer = textureCaps.textureAttachment;
+        textureCaps.blendable    = textureCaps.renderbuffer;
 
         textureCaps.sampleCounts.insert(1);
         for (unsigned int i = D3DMULTISAMPLE_2_SAMPLES; i <= D3DMULTISAMPLE_16_SAMPLES; i++)
