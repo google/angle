@@ -41,6 +41,9 @@ struct TextureCaps
     // Support for being used as a renderbuffer format, i.e. glFramebufferRenderbuffer
     bool renderbuffer = false;
 
+    // Support for blend modes while being used as a framebuffer attachment
+    bool blendable = false;
+
     // Set of supported sample counts, only guaranteed to be valid in ES3.
     SupportedSampleSet sampleCounts;
 
