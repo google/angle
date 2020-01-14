@@ -698,4 +698,28 @@ unsigned int GetShaderSharedMemorySize(const ShHandle handle)
     return sharedMemorySize;
 }
 
+// Can't prefix with just _ because then we might introduce a double underscore, which is not safe
+// in GLSL (ESSL 3.00.6 section 3.8: All identifiers containing a double underscore are reserved for
+// use by the underlying implementation). u is short for user-defined.
+const char kUserDefinedNamePrefix[] = "_u";
+
+namespace vk
+{
+// Interface block name containing the aggregate default uniforms
+const char kDefaultUniformsNameVS[]  = "defaultUniformsVS";
+const char kDefaultUniformsNameTCS[] = "defaultUniformsTCS";
+const char kDefaultUniformsNameTES[] = "defaultUniformsTES";
+const char kDefaultUniformsNameGS[]  = "defaultUniformsGS";
+const char kDefaultUniformsNameFS[]  = "defaultUniformsFS";
+const char kDefaultUniformsNameCS[]  = "defaultUniformsCS";
+
+// Interface block and variable name containing driver uniforms
+const char kDriverUniformsBlockName[] = "ANGLEUniformBlock";
+const char kDriverUniformsVarName[]   = "ANGLEUniforms";
+
+// Interface block array variable name used for atomic counter emulation
+const char kAtomicCountersVarName[] = "atomicCounters";
+
+}  // namespace vk
+
 }  // namespace sh

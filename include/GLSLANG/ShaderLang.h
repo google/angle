@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 223
+#define ANGLE_SH_VERSION 224
 
 enum ShShaderSpec
 {
@@ -733,6 +733,11 @@ inline bool IsDesktopGLSpec(ShShaderSpec spec)
     return spec == SH_GL_CORE_SPEC || spec == SH_GL_COMPATIBILITY_SPEC;
 }
 
+// Can't prefix with just _ because then we might introduce a double underscore, which is not safe
+// in GLSL (ESSL 3.00.6 section 3.8: All identifiers containing a double underscore are reserved for
+// use by the underlying implementation). u is short for user-defined.
+extern const char kUserDefinedNamePrefix[];
+
 namespace vk
 {
 
@@ -744,6 +749,21 @@ enum class SpecializationConstantId : uint32_t
     InvalidEnum = 1,
     EnumCount   = 1,
 };
+
+// Interface block name containing the aggregate default uniforms
+extern const char kDefaultUniformsNameVS[];
+extern const char kDefaultUniformsNameTCS[];
+extern const char kDefaultUniformsNameTES[];
+extern const char kDefaultUniformsNameGS[];
+extern const char kDefaultUniformsNameFS[];
+extern const char kDefaultUniformsNameCS[];
+
+// Interface block and variable name containing driver uniforms
+extern const char kDriverUniformsBlockName[];
+extern const char kDriverUniformsVarName[];
+
+// Interface block array variable name used for atomic counter emulation
+extern const char kAtomicCountersVarName[];
 
 }  // namespace vk
 }  // namespace sh

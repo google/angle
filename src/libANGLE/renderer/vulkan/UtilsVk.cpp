@@ -108,9 +108,7 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
     // is not added to the build configuration file (to reduce binary size).  If necessary, add
     // IsBigEndian to ConvertVertex.comp.json and select the appropriate flag based on the
     // endian-ness test here.
-    uint32_t endiannessTest                       = 0;
-    *reinterpret_cast<uint8_t *>(&endiannessTest) = 1;
-    ASSERT(endiannessTest == 1);
+    ASSERT(IsLittleEndian());
 
     uint32_t flags = 0;
 

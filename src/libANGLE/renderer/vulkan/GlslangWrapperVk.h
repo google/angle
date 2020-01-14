@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_VULKAN_GLSLANG_WRAPPER_H_
 
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace angle
@@ -27,11 +28,13 @@ class GlslangWrapperVk
     static void GetShaderSource(const angle::FeaturesVk &features,
                                 const gl::ProgramState &programState,
                                 const gl::ProgramLinkedResources &resources,
-                                gl::ShaderMap<std::string> *shaderSourcesOut);
+                                gl::ShaderMap<std::string> *shaderSourcesOut,
+                                ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
     static angle::Result GetShaderCode(vk::Context *context,
                                        const gl::Caps &glCaps,
                                        const gl::ShaderMap<std::string> &shaderSources,
+                                       const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                        gl::ShaderMap<std::vector<uint32_t>> *shaderCodesOut);
 };
 }  // namespace rx

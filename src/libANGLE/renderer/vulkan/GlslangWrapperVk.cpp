@@ -8,7 +8,6 @@
 
 #include "libANGLE/renderer/vulkan/GlslangWrapperVk.h"
 
-#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
@@ -42,20 +41,22 @@ GlslangSourceOptions CreateSourceOptions(const angle::FeaturesVk &features)
 void GlslangWrapperVk::GetShaderSource(const angle::FeaturesVk &features,
                                        const gl::ProgramState &programState,
                                        const gl::ProgramLinkedResources &resources,
-                                       gl::ShaderMap<std::string> *shaderSourcesOut)
+                                       gl::ShaderMap<std::string> *shaderSourcesOut,
+                                       ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    GlslangGetShaderSource(CreateSourceOptions(features), programState, resources,
-                           shaderSourcesOut);
+    GlslangGetShaderSource(CreateSourceOptions(features), programState, resources, shaderSourcesOut,
+                           variableInfoMapOut);
 }
 
 // static
 angle::Result GlslangWrapperVk::GetShaderCode(vk::Context *context,
                                               const gl::Caps &glCaps,
                                               const gl::ShaderMap<std::string> &shaderSources,
+                                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                               gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
     return GlslangGetShaderSpirvCode(
         [context](GlslangError error) { return ErrorHandler(context, error); }, glCaps,
-        shaderSources, shaderCodeOut);
+        shaderSources, variableInfoMap, shaderCodeOut);
 }
 }  // namespace rx

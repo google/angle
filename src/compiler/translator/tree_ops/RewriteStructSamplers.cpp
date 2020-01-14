@@ -360,7 +360,8 @@ class Traverser final : public TIntermTraverser, public ArrayTraverser
             ASSERT(asSymbol);
             const TVariable &variable = asSymbol->variable();
             ASSERT(variable.symbolType() != SymbolType::Empty);
-            extractSampler(variable.name(), variable.getType(), newSequence, 0);
+            extractSampler(variable.name(), variable.symbolType(), variable.getType(), newSequence,
+                           0);
             mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), decl, *newSequence);
         }
 
@@ -652,7 +653,7 @@ class Traverser final : public TIntermTraverser, public ArrayTraverser
 
             if (fieldType.isSampler())
             {
-                extractSampler(newPrefix, fieldType, newSequence, 0);
+                extractSampler(newPrefix, SymbolType::AngleInternal, fieldType, newSequence, 0);
             }
             else
             {
@@ -676,6 +677,7 @@ class Traverser final : public TIntermTraverser, public ArrayTraverser
 
     // Extracts a sampler from a struct. Declares the new extracted sampler.
     void extractSampler(const ImmutableString &newName,
+                        SymbolType symbolType,
                         const TType &fieldType,
                         TIntermSequence *newSequence,
                         size_t arrayLevel)
@@ -692,16 +694,27 @@ class Traverser final : public TIntermTraverser, public ArrayTraverser
             newType->makeArray(static_cast<unsigned int>(mCumulativeArraySizeStack.back()));
         }
         newType->setQualifier(EvqUniform);
-        TVariable *newVariable =
-            new TVariable(mSymbolTable, newName, newType, SymbolType::AngleInternal);
-        TIntermSymbol *newRef = new TIntermSymbol(newVariable);
+        TVariable *newVariable = new TVariable(mSymbolTable, newName, newType, symbolType);
+        TIntermSymbol *newRef  = new TIntermSymbol(newVariable);
 
         TIntermDeclaration *samplerDecl = new TIntermDeclaration;
         samplerDecl->appendDeclarator(newRef);
 
         newSequence->push_back(samplerDecl);
 
-        mSymbolTable->declareInternal(newVariable);
+        // TODO(syoussefi): Use a SymbolType::Empty name instead of generating a name as currently
+        // done.  There is no guarantee that these generated names cannot clash.  Create a mapping
+        // from the previous name to the name assigned to the SymbolType::Empty variable so
+        // ShaderVariable::mappedName can be updated post-transformation.
+        // http://anglebug.com/4301
+        if (symbolType == SymbolType::AngleInternal)
+        {
+            mSymbolTable->declareInternal(newVariable);
+        }
+        else
+        {
+            mSymbolTable->declare(newVariable);
+        }
 
         GenerateArrayStrides(mArraySizeStack, &mVariableExtraData.arrayStrideMap[newVariable]);
 

@@ -35,20 +35,21 @@ TOutputVulkanGLSL::TOutputVulkanGLSL(TInfoSinkBase &objSink,
                   shaderType,
                   shaderVersion,
                   output,
-                  compileOptions)
+                  compileOptions),
+      mNextUnusedBinding(0)
 {}
 
-// TODO(jmadill): This is not complete.
 void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 {
     const TType &type = variable->getType();
 
-    bool needsCustomLayout =
-        type.getQualifier() == EvqAttribute || type.getQualifier() == EvqFragmentOut ||
-        type.getQualifier() == EvqVertexIn || IsVarying(type.getQualifier()) ||
+    bool needsCustomLayout = type.getQualifier() == EvqAttribute ||
+                             type.getQualifier() == EvqFragmentOut ||
+                             type.getQualifier() == EvqVertexIn || IsVarying(type.getQualifier());
+    bool needsSetBinding =
         IsSampler(type.getBasicType()) || type.isInterfaceBlock() || IsImage(type.getBasicType());
 
-    if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout)
+    if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout && !needsSetBinding)
     {
         return;
     }
@@ -96,6 +97,7 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
         matrixPacking = getMatrixPackingString(layoutQualifier.matrixPacking);
     }
 
+    const char *separator = "";
     if (needsCustomLayout)
     {
         out << "@@ LAYOUT-" << name << "(";
@@ -103,13 +105,20 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     else
     {
         out << "layout(";
+
+        // If the resource declaration requires set & binding layout qualifiers, specify arbitrary
+        // ones.
+        if (needsSetBinding)
+        {
+            out << "set=0, binding=" << nextUnusedBinding();
+            separator = ", ";
+        }
     }
 
     // Output the list of qualifiers already known at this stage, i.e. everything other than
     // `location` and `set`/`binding`.
     std::string otherQualifiers = getCommonLayoutQualifiers(variable);
 
-    const char *separator = "";
     if (blockStorage)
     {
         out << separator << blockStorage;

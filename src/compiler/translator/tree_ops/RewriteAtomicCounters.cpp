@@ -22,7 +22,6 @@ namespace
 {
 constexpr ImmutableString kAtomicCounterTypeName  = ImmutableString("ANGLE_atomic_uint");
 constexpr ImmutableString kAtomicCounterBlockName = ImmutableString("ANGLEAtomicCounters");
-constexpr ImmutableString kAtomicCounterVarName   = ImmutableString("atomicCounters");
 constexpr ImmutableString kAtomicCounterFieldName = ImmutableString("counters");
 
 // DeclareAtomicCountersBuffer adds a storage buffer array that's used with atomic counters.
@@ -48,7 +47,7 @@ const TVariable *DeclareAtomicCountersBuffers(TIntermBlock *root, TSymbolTable *
     // Define a storage block "ANGLEAtomicCounters" with instance name "atomicCounters".
     return DeclareInterfaceBlock(root, symbolTable, fieldList, EvqBuffer, coherentMemory,
                                  kMaxAtomicCounterBuffers, kAtomicCounterBlockName,
-                                 kAtomicCounterVarName);
+                                 ImmutableString(vk::kAtomicCountersVarName));
 }
 
 TIntermConstantUnion *CreateUIntConstant(uint32_t value)
