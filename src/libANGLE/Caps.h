@@ -131,6 +131,15 @@ struct Extensions
     // GL_OES_packed_depth_stencil
     bool packedDepthStencil = false;
 
+    // GL_NV_read_depth
+    bool readDepthNV = false;
+
+    // GL_NV_read_stencil
+    bool readStencilNV = false;
+
+    // GL_NV_depth_buffer_float2
+    bool depthBufferFloat2NV = false;
+
     // GL_OES_get_program_binary
     bool getProgramBinary = false;
 
@@ -263,6 +272,9 @@ struct Extensions
 
     // OES_depth_texture
     bool depthTextureOES = false;
+
+    // GL_OES_depth_texture_cube_map
+    bool depthTextureCubeMapOES = false;
 
     // GL_OES_depth24
     // Allows DEPTH_COMPONENT24_OES as a valid Renderbuffer format.
