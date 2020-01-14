@@ -164,6 +164,7 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
 
 angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "FramebufferVk::clear");
     ContextVk *contextVk = vk::GetImpl(context);
 
     bool clearColor   = IsMaskFlagSet(mask, static_cast<GLbitfield>(GL_COLOR_BUFFER_BIT));

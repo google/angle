@@ -347,6 +347,7 @@ angle::Result CommandQueue::init(vk::Context *context)
 
 angle::Result CommandQueue::checkCompletedCommands(vk::Context *context)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::checkCompletedCommands");
     RendererVk *renderer = context->getRenderer();
     VkDevice device      = renderer->getDevice();
 
@@ -1863,6 +1864,7 @@ void ContextVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuT
 
 void ContextVk::clearAllGarbage()
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::clearAllGarbage");
     for (vk::GarbageObject &garbage : mCurrentGarbage)
     {
         garbage.destroy(mRenderer);

@@ -593,6 +593,7 @@ GarbageObject &GarbageObject::operator=(GarbageObject &&rhs)
 //  which fails to compile with reinterpret_cast, requiring static_cast.
 void GarbageObject::destroy(RendererVk *renderer)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "GarbageObject::destroy");
     VkDevice device = renderer->getDevice();
     switch (mHandleType)
     {
