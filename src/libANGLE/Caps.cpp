@@ -262,7 +262,13 @@ static bool DetermineBGRA8TextureSupport(const TextureCapsMap &textureCaps)
 // Checks for GL_EXT_read_format_bgra support
 static bool DetermineBGRAReadFormatSupport(const TextureCapsMap &textureCaps)
 {
-    return false;
+    constexpr GLenum requiredFormats[] = {
+        GL_BGRA8_EXT,
+        // TODO(http://anglebug.com/4302): GL_EXT_read_format_bgra specifies 2 more types, which are
+        // currently ignored. The equivalent formats would be: GL_BGRA4_ANGLEX, GL_BGR5_A1_ANGLEX
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, false, true, true, false);
 }
 
 // Checks for GL_OES_color_buffer_half_float support
