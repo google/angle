@@ -2703,7 +2703,7 @@ angle::Result Renderer11::createRenderTarget(const gl::Context *context,
         desc.ArraySize          = 1;
         desc.Format             = formatInfo.texFormat;
         desc.SampleDesc.Count   = (supportedSamples == 0) ? 1 : supportedSamples;
-        desc.SampleDesc.Quality = (supportedSamples == 0) ? 0 : D3D11_STANDARD_MULTISAMPLE_PATTERN;
+        desc.SampleDesc.Quality = getSampleDescQuality(supportedSamples);
         desc.Usage              = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags     = 0;
         desc.MiscFlags          = 0;
@@ -4035,6 +4035,19 @@ angle::Result Renderer11::getSamplerState(const gl::Context *context,
                                           ID3D11SamplerState **outSamplerState)
 {
     return mStateCache.getSamplerState(context, this, samplerState, outSamplerState);
+}
+
+UINT Renderer11::getSampleDescQuality(GLuint supportedSamples) const
+{
+    // Per the documentation on
+    // https://docs.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_standard_multisample_quality_levels
+    // applications can only request the standard multisample pattern on
+    // feature levels 10_1 and above.
+    if (supportedSamples > 0 && mDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_10_1)
+    {
+        return D3D11_STANDARD_MULTISAMPLE_PATTERN;
+    }
+    return 0;
 }
 
 angle::Result Renderer11::clearRenderTarget(const gl::Context *context,
