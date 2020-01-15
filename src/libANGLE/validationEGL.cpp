@@ -303,6 +303,19 @@ Error ValidateConfigAttributeValue(const Display *display, EGLAttrib attribute, 
             }
             break;
 
+        case EGL_COLOR_COMPONENT_TYPE_EXT:
+            switch (value)
+            {
+                case EGL_COLOR_COMPONENT_TYPE_FIXED_EXT:
+                case EGL_COLOR_COMPONENT_TYPE_FLOAT_EXT:
+                case EGL_DONT_CARE:
+                    break;
+                default:
+                    return EglBadAttribute()
+                           << "EGL_COLOR_COMPONENT_TYPE_EXT invalid attribute: " << value;
+            }
+            break;
+
         default:
             break;
     }

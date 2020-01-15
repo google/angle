@@ -125,6 +125,7 @@ supported_egl_extensions = [
     "EGL_CHROMIUM_get_sync_values",
     "EGL_EXT_create_context_robustness",
     "EGL_EXT_device_query",
+    "EGL_EXT_pixel_format_float",
     "EGL_EXT_platform_base",
     "EGL_EXT_platform_device",
     "EGL_KHR_debug",
