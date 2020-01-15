@@ -72,14 +72,12 @@ def run_flex(basename):
     # can vary based on flex version, and the string substitution will find the correct place
     # automatically.
 
-    patch_in = """
-		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			yyg->yy_n_chars, num_to_read );"""
+    patch_in = """\n\t\tYY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),\n\t\t\tyyg->yy_n_chars, num_to_read );"""
     patch_out = """
-		yy_size_t ret = 0;
-		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			ret, num_to_read );
-		yyg->yy_n_chars = static_cast<int>(ret);"""
+        yy_size_t ret = 0;
+        YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
+            ret, num_to_read );
+        yyg->yy_n_chars = static_cast<int>(ret);"""
 
     with open(output_source, 'r') as flex_output:
         output = flex_output.read()
