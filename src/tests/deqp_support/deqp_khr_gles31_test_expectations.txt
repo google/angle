@@ -31,37 +31,21 @@
 
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
 
-// Android Vulkan expectations
 
-// General Vulkan expectations
-
-// Limits:
-// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.
-3605 VULKAN : KHR-GLES31.core.texture_gather.* = FAIL
+////
+//// Failures blocking an official GLES 3.1 conformance run on SwiftShader
+////
 
 // Dispatch indirect:
 3570 VULKAN : KHR-GLES31.core.compute_shader.build-separable = SKIP
 3570 VULKAN : KHR-GLES31.core.compute_shader.sso-compute-pipeline = SKIP
 3570 VULKAN : KHR-GLES31.core.compute_shader.sso-case2 = SKIP
 3570 VULKAN : KHR-GLES31.core.compute_shader.sso-case3 = SKIP
-4188 VULKAN : KHR-GLES31.core.compute_shader.resource-image = FAIL
-4189 VULKAN : KHR-GLES31.core.compute_shader.shared-struct = SKIP
-4191 VULKAN : KHR-GLES31.core.compute_shader.resources-max = FAIL
-4192 VULKAN : KHR-GLES31.core.compute_shader.pipeline-post-xfb = FAIL
-3726 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.pipeline-compute-chain = FAIL
-4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL
-4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
-
-// Multisampled textures:
-// --gtest_filter=dEQP.KHR_GLES31/core_texture_storage_multisample_FunctionalTests_verify_sample_masking_for_non_integer_color_renderable_internalformats* --use-angle=swiftshader
-4259 SWIFTSHADER : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.verify_sample_masking_for_non_integer_color_renderable_internalformats = FAIL
-
 // Program Pipeline Objects:
 3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-draw-calls2 = FAIL
 3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-dispatches = FAIL
 3570 VULKAN : KHR-GLES31.core.vertex_attrib_binding.basic-usage = FAIL
 3570 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-sso-simple = FAIL
-
 // Separate shader objects:
 3570 VULKAN : KHR-GLES31.core.sepshaderobjs* = FAIL
 
@@ -71,53 +55,8 @@
 3596 : KHR-GLES31.core.shader_bitfield_operation.usubBorrow.* = SKIP
 3596 : KHR-GLES31.core.shader_bitfield_operation.umulExtended.* = SKIP
 3596 : KHR-GLES31.core.shader_bitfield_operation.imulExtended.* = SKIP
-
-// Crashes in libnvidia-glvkspirv.so, fixed in newer drivers
-4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matC* = SKIP
-4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matC* = SKIP
-4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matC* = SKIP
-4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-struct* = SKIP
-4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-struct* = SKIP
-4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-struct* = SKIP
-4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matR* = SKIP
-4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matR* = SKIP
-4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matR* = SKIP
-
-// Error with detecting some atomic counter buffer uses:
-4150 : KHR-GLES31.core.shader_storage_buffer_object.basic-atomic-case3-cs = FAIL
-4150 : KHR-GLES31.core.shader_storage_buffer_object.basic-atomic-case3-vsfs = FAIL
-
-// Unimplemented glValidateCreateShaderProgramv:
-4146 : KHR-GLES31.core.shader_storage_buffer_object.basic-syntaxSSO = FAIL
-4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-bindingUpdate = FAIL
-4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-largeStrideAndOffsetsNewAndLegacyAPI = FAIL
-
-// Explicit uniform locations:
-4219 VULKAN PIXEL2ORXL : KHR-GLES31.core.explicit_uniform_location.uniform-loc-mix-with-implicit-max = FAIL
-4219 VULKAN PIXEL2ORXL : KHR-GLES31.core.explicit_uniform_location.uniform-loc-mix-with-implicit-max-array = FAIL
-
 // Program interface query.
 3596 VULKAN : KHR-GLES31.core.program_interface_query.* = FAIL
-
-// Framebuffer without attachments:
-3579 VULKAN : KHR-GLES31.core.framebuffer_no_attachments.api = FAIL
-
-// Arrays-of-arrays as vertex inputs:
-4148 : KHR-GLES31.core.arrays_of_arrays.InteractionInterfaceArrays2 = FAIL
-
-// Blend equations:
-3586 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
-
-// Fails on Pixel2 and Pixel2 XL
-4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-elements = FAIL
-4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-arrays = FAIL
-
-// Passing on recent drivers:
-3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.* = FAIL
-3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.advanced-usage-* = SKIP
-
-// Crashes on Android
-3520 VULKAN ANDROID : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength* = SKIP
 
 // Image related failures
 
@@ -136,4 +75,78 @@
 // Shader support:
 4300 : KHR-GLES31.core.shader_integer_mix.* = FAIL
 
-// OpenGL ES 3.2 / 3.1 extensions
+// Unimplemented glValidateCreateShaderProgramv:
+4146 : KHR-GLES31.core.shader_storage_buffer_object.basic-syntaxSSO = FAIL
+4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-bindingUpdate = FAIL
+4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-largeStrideAndOffsetsNewAndLegacyAPI = FAIL
+
+// Error with detecting some atomic counter buffer uses:
+4150 : KHR-GLES31.core.shader_storage_buffer_object.basic-atomic-case3-cs = FAIL
+4150 : KHR-GLES31.core.shader_storage_buffer_object.basic-atomic-case3-vsfs = FAIL
+
+// Multisampled textures:
+// --gtest_filter=dEQP.KHR_GLES31/core_texture_storage_multisample_FunctionalTests_verify_sample_masking_for_non_integer_color_renderable_internalformats* --use-angle=swiftshader
+4259 SWIFTSHADER : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.verify_sample_masking_for_non_integer_color_renderable_internalformats = FAIL
+
+
+////
+//// General Vulkan expectations
+////
+
+// Framebuffer without attachments:
+3579 VULKAN : KHR-GLES31.core.framebuffer_no_attachments.api = FAIL
+
+// Blend equations:
+3586 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
+
+// Limits:
+// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.
+3605 VULKAN : KHR-GLES31.core.texture_gather.* = FAIL
+
+// Dispatch indirect:
+4188 VULKAN : KHR-GLES31.core.compute_shader.resource-image = FAIL
+4189 VULKAN : KHR-GLES31.core.compute_shader.shared-struct = SKIP
+4191 VULKAN : KHR-GLES31.core.compute_shader.resources-max = FAIL
+4192 VULKAN : KHR-GLES31.core.compute_shader.pipeline-post-xfb = FAIL
+3726 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.pipeline-compute-chain = FAIL
+4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL
+4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
+
+// Arrays-of-arrays as vertex inputs:
+4148 : KHR-GLES31.core.arrays_of_arrays.InteractionInterfaceArrays2 = FAIL
+
+
+////
+//// Desktop Vulkan expectations
+////
+
+// Crashes in libnvidia-glvkspirv.so, fixed in newer drivers
+4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matC* = SKIP
+4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matC* = SKIP
+4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matC* = SKIP
+4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-struct* = SKIP
+4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-struct* = SKIP
+4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-struct* = SKIP
+4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-cs-*-matR* = SKIP
+4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matR* = SKIP
+4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matR* = SKIP
+
+
+////
+//// Android (i.e. Pixel*) Vulkan expectations
+////
+
+// Crashes on Android
+3520 VULKAN ANDROID : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength* = SKIP
+
+// Passing on recent drivers:
+3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.* = FAIL
+3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.advanced-usage-* = SKIP
+
+// Explicit uniform locations:
+4219 VULKAN PIXEL2ORXL : KHR-GLES31.core.explicit_uniform_location.uniform-loc-mix-with-implicit-max = FAIL
+4219 VULKAN PIXEL2ORXL : KHR-GLES31.core.explicit_uniform_location.uniform-loc-mix-with-implicit-max-array = FAIL
+
+// Fails on Pixel2 and Pixel2 XL
+4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-elements = FAIL
+4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-arrays = FAIL
