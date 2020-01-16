@@ -642,7 +642,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     mCommandQueue.destroy(device);
 
-    mCommandGraph.releaseResourceUses();
+    mCommandGraph.getResourceUseList().releaseResourceUses();
 
     mUtils.destroy(device);
 
@@ -803,7 +803,8 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
 
         gl::Rectangle scissoredRenderArea = mDrawFramebuffer->getScissoredRenderArea(this);
-        if (!mDrawFramebuffer->appendToStartedRenderPass(&mCommandGraph, scissoredRenderArea,
+        if (!mDrawFramebuffer->appendToStartedRenderPass(&mCommandGraph.getResourceUseList(),
+                                                         scissoredRenderArea,
                                                          &mRenderPassCommandBuffer))
         {
             ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, scissoredRenderArea,
@@ -3127,13 +3128,13 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
         {
             samplerVk     = nullptr;
             samplerSerial = kZeroSerial;
-            textureVk->onSamplerGraphAccess(&mCommandGraph);
+            textureVk->onSamplerGraphAccess(&mCommandGraph.getResourceUseList());
         }
         else
         {
             samplerVk     = vk::GetImpl(sampler);
             samplerSerial = samplerVk->getSerial();
-            samplerVk->onSamplerGraphAccess(&mCommandGraph);
+            samplerVk->onSamplerGraphAccess(&mCommandGraph.getResourceUseList());
         }
 
         vk::ImageHelper &image = textureVk->getImage();
@@ -3159,7 +3160,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
             image.changeLayout(aspectFlags, textureLayout, srcLayoutChange);
         }
 
-        textureVk->onImageViewGraphAccess(&mCommandGraph);
+        textureVk->onImageViewGraphAccess(&mCommandGraph.getResourceUseList());
         image.addReadDependency(this, recorder);
 
         mActiveTextures[textureUnit].texture = textureVk;

@@ -387,6 +387,33 @@ class SharedGarbage
 
 using SharedGarbageList = std::vector<SharedGarbage>;
 
+// Mixin to abstract away the resource use tracking.
+class ResourceUseList final : angle::NonCopyable
+{
+  public:
+    ResourceUseList();
+    virtual ~ResourceUseList();
+
+    void add(const SharedResourceUse &resourceUse);
+
+    void releaseResourceUses();
+    void releaseResourceUsesAndUpdateSerials(Serial serial);
+
+  private:
+    std::vector<SharedResourceUse> mResourceUses;
+};
+
+// ResourceUser inlines.
+ANGLE_INLINE void ResourceUseList::add(const SharedResourceUse &resourceUse)
+{
+    // Disabled the assert because of difficulties with ImageView references.
+    // TODO(jmadill): Clean up with graph redesign. http://anglebug.com/4029
+    // ASSERT(!empty());
+    SharedResourceUse newUse;
+    newUse.set(resourceUse);
+    mResourceUses.emplace_back(std::move(newUse));
+}
+
 // This is a helper class for back-end objects used in Vk command buffers. It records a serial
 // at command recording times indicating an order in the queue. We use Fences to detect when
 // commands finish, and then release any unreferenced and deleted resources based on the stored
@@ -415,7 +442,7 @@ class CommandGraphResource : angle::NonCopyable
 
     // Updates the in-use serial tracked for this resource. Will clear dependencies if the resource
     // was not used in this set of command nodes.
-    void onGraphAccess(CommandGraph *commandGraph);
+    void onGraphAccess(ResourceUseList *resourceUseList);
     void updateCurrentAccessNodes();
 
     // If a resource is recreated, as in released and reinitialized, the next access to the
@@ -424,7 +451,7 @@ class CommandGraphResource : angle::NonCopyable
     // particular cases, such as recreating an image with full mipchain or adding STORAGE_IMAGE flag
     // to its uses, this function is used to preserve the link between the previous and new
     // nodes allocated for this resource.
-    void onResourceRecreated(CommandGraph *commandGraph);
+    void onResourceRecreated(ResourceUseList *resourceUseList);
 
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
@@ -446,7 +473,7 @@ class CommandGraphResource : angle::NonCopyable
 
     // Checks if we're in a RenderPass that encompasses renderArea, returning true if so. Updates
     // serial internally. Returns the started command buffer in commandBufferOut.
-    bool appendToStartedRenderPass(CommandGraph *graph,
+    bool appendToStartedRenderPass(ResourceUseList *resourceUseList,
                                    const gl::Rectangle &renderArea,
                                    CommandBuffer **commandBufferOut);
 
@@ -561,8 +588,7 @@ class CommandGraph final : angle::NonCopyable
     // External memory synchronization:
     void syncExternalMemory();
 
-    void onResourceUse(const SharedResourceUse &resourceUse);
-    void releaseResourceUses();
+    ResourceUseList &getResourceUseList() { return mResourceUseList; }
 
   private:
     CommandGraphNode *allocateBarrierNode(CommandGraphNodeFunction function,
@@ -574,11 +600,12 @@ class CommandGraph final : angle::NonCopyable
 
     void dumpGraphDotFile(std::ostream &out) const;
     void updateOverlay(ContextVk *contextVk) const;
-    void releaseResourceUsesAndUpdateSerials(Serial serial);
 
     std::vector<CommandGraphNode *> mNodes;
     bool mEnableGraphDiagnostics;
     angle::PoolAllocator *mPoolAllocator;
+
+    ResourceUseList mResourceUseList;
 
     // A set of nodes (eventually) exist that act as barriers to guarantee submission order.  For
     // example, a glMemoryBarrier() calls would lead to such a barrier or beginning and ending a
@@ -628,8 +655,6 @@ class CommandGraph final : angle::NonCopyable
     // issued.
     static constexpr size_t kInvalidNodeIndex = std::numeric_limits<std::size_t>::max();
     size_t mLastBarrierIndex;
-
-    std::vector<SharedResourceUse> mResourceUses;
 };
 
 // CommandGraphResource inlines.
@@ -648,21 +673,21 @@ ANGLE_INLINE void CommandGraphResource::updateCurrentAccessNodes()
     }
 }
 
-ANGLE_INLINE void CommandGraphResource::onResourceRecreated(CommandGraph *commandGraph)
+ANGLE_INLINE void CommandGraphResource::onResourceRecreated(ResourceUseList *resourceUseList)
 {
-    // Store reference to usage in graph.
-    commandGraph->onResourceUse(mUse);
+    // Store reference in resource list.
+    resourceUseList->add(mUse);
 }
 
-ANGLE_INLINE void CommandGraphResource::onGraphAccess(CommandGraph *commandGraph)
+ANGLE_INLINE void CommandGraphResource::onGraphAccess(ResourceUseList *resourceUseList)
 {
     updateCurrentAccessNodes();
 
-    // Store reference to usage in graph.
-    commandGraph->onResourceUse(mUse);
+    // Store reference in resource list.
+    resourceUseList->add(mUse);
 }
 
-ANGLE_INLINE bool CommandGraphResource::appendToStartedRenderPass(CommandGraph *graph,
+ANGLE_INLINE bool CommandGraphResource::appendToStartedRenderPass(ResourceUseList *resourceUseList,
                                                                   const gl::Rectangle &renderArea,
                                                                   CommandBuffer **commandBufferOut)
 {
@@ -670,8 +695,8 @@ ANGLE_INLINE bool CommandGraphResource::appendToStartedRenderPass(CommandGraph *
 
     if (hasStartedRenderPass())
     {
-        // Store reference to usage in graph.
-        graph->onResourceUse(mUse);
+        // Store reference in resource list.
+        resourceUseList->add(mUse);
 
         if (mCurrentWritingNode->getRenderPassRenderArea().encloses(renderArea))
         {
@@ -764,17 +789,6 @@ ANGLE_INLINE bool CommandGraphResource::hasChildlessWritingNode() const
     ASSERT(mCurrentWritingNode == nullptr ||
            mCurrentWritingNode->getFunction() == CommandGraphNodeFunction::Generic);
     return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
-}
-
-// CommandGraph inlines.
-ANGLE_INLINE void CommandGraph::onResourceUse(const SharedResourceUse &resourceUse)
-{
-    // Disabled the assert because of difficulties with ImageView references.
-    // TODO(jmadill): Clean up with graph redesign. http://anglebug.com/4029
-    // ASSERT(!empty());
-    SharedResourceUse newUse;
-    newUse.set(resourceUse);
-    mResourceUses.emplace_back(std::move(newUse));
 }
 }  // namespace vk
 }  // namespace rx

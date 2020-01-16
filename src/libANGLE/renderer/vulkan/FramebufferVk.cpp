@@ -162,7 +162,7 @@ angle::Result FramebufferVk::invalidate(const gl::Context *context,
                                         const GLenum *attachments)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    mFramebuffer.onGraphAccess(contextVk->getCommandGraph());
+    mFramebuffer.onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
 
     if (mFramebuffer.valid() && mFramebuffer.hasStartedRenderPass())
     {
@@ -178,7 +178,7 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
                                            const gl::Rectangle &area)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    mFramebuffer.onGraphAccess(contextVk->getCommandGraph());
+    mFramebuffer.onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
 
     // RenderPass' storeOp cannot be made conditional to a specific region, so we only apply this
     // hint if the requested area encompasses the render area.

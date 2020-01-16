@@ -326,7 +326,7 @@ angle::Result CommandGraphResource::recordCommands(ContextVk *contextVk,
     }
 
     // Store reference to usage in graph.
-    contextVk->getCommandGraph()->onResourceUse(mUse);
+    contextVk->getCommandGraph()->getResourceUseList().add(mUse);
 
     return angle::Result::Continue;
 }
@@ -366,7 +366,7 @@ void CommandGraphResource::addWriteDependency(ContextVk *contextVk,
 void CommandGraphResource::addReadDependency(ContextVk *contextVk,
                                              CommandGraphResource *readingResource)
 {
-    onGraphAccess(contextVk->getCommandGraph());
+    onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
 
     CommandGraphNode *readingNode = readingResource->mCurrentWritingNode;
     ASSERT(readingNode);
@@ -396,7 +396,7 @@ void CommandGraphResource::startNewCommands(ContextVk *contextVk)
 
 void CommandGraphResource::onWriteImpl(ContextVk *contextVk, CommandGraphNode *writingNode)
 {
-    onGraphAccess(contextVk->getCommandGraph());
+    onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
 
     // Make sure any open reads and writes finish before we execute 'writingNode'.
     if (!mCurrentReadingNodes.empty())
@@ -940,7 +940,6 @@ CommandGraph::CommandGraph(bool enableGraphDiagnostics, angle::PoolAllocator *po
 CommandGraph::~CommandGraph()
 {
     ASSERT(empty());
-    ASSERT(mResourceUses.empty());
 }
 
 CommandGraphNode *CommandGraph::allocateNode(CommandGraphNodeFunction function)
@@ -1008,7 +1007,7 @@ angle::Result CommandGraph::submitCommands(ContextVk *context,
         dumpGraphDotFile(std::cout);
     }
 
-    releaseResourceUsesAndUpdateSerials(serial);
+    mResourceUseList.releaseResourceUsesAndUpdateSerials(serial);
 
     std::vector<CommandGraphNode *> nodeStack;
 
@@ -1342,7 +1341,15 @@ void CommandGraph::addDependenciesToNextBarrier(size_t begin,
     }
 }
 
-void CommandGraph::releaseResourceUses()
+// ResourceUseList implementation.
+ResourceUseList::ResourceUseList() = default;
+
+ResourceUseList::~ResourceUseList()
+{
+    ASSERT(mResourceUses.empty());
+}
+
+void ResourceUseList::releaseResourceUses()
 {
     for (SharedResourceUse &use : mResourceUses)
     {
@@ -1352,7 +1359,7 @@ void CommandGraph::releaseResourceUses()
     mResourceUses.clear();
 }
 
-void CommandGraph::releaseResourceUsesAndUpdateSerials(Serial serial)
+void ResourceUseList::releaseResourceUsesAndUpdateSerials(Serial serial)
 {
     for (SharedResourceUse &use : mResourceUses)
     {
