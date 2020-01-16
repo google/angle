@@ -1248,7 +1248,7 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
         }
         else
         {
-            mEmptyBuffer.onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
+            mEmptyBuffer.onGraphAccess(&contextVk->getResourceUseList());
             bufferInfo.buffer = mEmptyBuffer.getBuffer().getHandle();
             mDescriptorBuffersCache.emplace_back(&mEmptyBuffer);
         }
@@ -1416,7 +1416,7 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
     }
 
     // Bind the empty buffer to every array slot that's unused.
-    mEmptyBuffer.onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
+    mEmptyBuffer.onGraphAccess(&contextVk->getResourceUseList());
     for (size_t binding : ~writtenBindings)
     {
         VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[binding];
@@ -1779,7 +1779,7 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
 
     for (vk::BufferHelper *buffer : mDescriptorBuffersCache)
     {
-        buffer->onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
+        buffer->onGraphAccess(&contextVk->getResourceUseList());
     }
 
     return angle::Result::Continue;

@@ -2904,7 +2904,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
             BufferHelper *currentBuffer = bufferUpdate.bufferHelper;
             ASSERT(currentBuffer && currentBuffer->valid());
-            currentBuffer->onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
+            currentBuffer->onGraphAccess(&contextVk->getResourceUseList());
 
             commandBuffer->copyBufferToImage(currentBuffer->getBuffer().getHandle(), mImage,
                                              getCurrentLayout(), 1, &update.buffer.copyRegion);
@@ -3204,7 +3204,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
         ANGLE_TRY(resolvedImage.get().init2DStaging(
             contextVk, renderer->getMemoryProperties(), gl::Extents(area.width, area.height, 1),
             *mFormat, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT, 1));
-        resolvedImage.get().onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
+        resolvedImage.get().onGraphAccess(&contextVk->getResourceUseList());
 
         // Note: resolve only works on color images (not depth/stencil).
         //
@@ -3483,7 +3483,7 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
                                                      uint32_t layer,
                                                      const ImageView **imageViewOut)
 {
-    onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
+    onGraphAccess(&contextVk->getResourceUseList());
 
     // TODO(http://anglebug.com/4008): Possibly incorrect level count.
     ImageView *imageView = GetLevelImageView(&mLevelDrawImageViews, level, 1);
@@ -3508,7 +3508,7 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
     ASSERT(image.valid());
     ASSERT(!image.getFormat().actualImageFormat().isBlock);
 
-    onGraphAccess(&contextVk->getCommandGraph()->getResourceUseList());
+    onGraphAccess(&contextVk->getResourceUseList());
 
     uint32_t layerCount = GetImageLayerCountForView(image);
 

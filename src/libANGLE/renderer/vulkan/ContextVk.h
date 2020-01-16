@@ -422,6 +422,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     const gl::OverlayType *getOverlay() const { return mState.getOverlay(); }
 
+    vk::ResourceUseList &getResourceUseList() { return mResourceUseList; }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -809,6 +811,9 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     SerialFactory mTextureSerialFactory;
 
     gl::State::DirtyBits mPipelineDirtyBitsMask;
+
+    // List of all resources currently being used by this ContextVk's recorded commands.
+    vk::ResourceUseList mResourceUseList;
 };
 }  // namespace rx
 

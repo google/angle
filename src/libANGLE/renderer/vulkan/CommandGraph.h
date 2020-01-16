@@ -588,8 +588,6 @@ class CommandGraph final : angle::NonCopyable
     // External memory synchronization:
     void syncExternalMemory();
 
-    ResourceUseList &getResourceUseList() { return mResourceUseList; }
-
   private:
     CommandGraphNode *allocateBarrierNode(CommandGraphNodeFunction function,
                                           CommandGraphResourceType resourceType,
@@ -604,8 +602,6 @@ class CommandGraph final : angle::NonCopyable
     std::vector<CommandGraphNode *> mNodes;
     bool mEnableGraphDiagnostics;
     angle::PoolAllocator *mPoolAllocator;
-
-    ResourceUseList mResourceUseList;
 
     // A set of nodes (eventually) exist that act as barriers to guarantee submission order.  For
     // example, a glMemoryBarrier() calls would lead to such a barrier or beginning and ending a
