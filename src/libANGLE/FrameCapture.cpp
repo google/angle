@@ -1070,7 +1070,8 @@ bool IsDefaultCurrentValue(const gl::VertexAttribCurrentValueData &currentValue)
 void CaptureMidExecutionSetup(const gl::Context *context,
                               std::vector<CallCapture> *setupCalls,
                               const ShaderSourceMap &cachedShaderSources,
-                              const ProgramSourceMap &cachedProgramSources)
+                              const ProgramSourceMap &cachedProgramSources,
+                              const TextureLevelDataMap &cachedTextureLevelData)
 {
     const gl::State &apiState = context->getState();
     gl::State replayState(0, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
@@ -1282,61 +1283,62 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             ASSERT(index.getType() == gl::TextureType::_2D ||
                    index.getType() == gl::TextureType::CubeMap);
 
-            angle::MemoryBuffer data;
-
-            // Use ANGLE_get_image to read back pixel data.
-            if (context->getExtensions().getImageANGLE)
+            if (format.compressed)
             {
-                GLenum internalFormat = format.internalFormat;
-                GLenum getFormat      = format.format;
-                GLenum getType        = format.type;
-                GLsizei pixelBytes    = format.pixelBytes;
+                // For compressed images, we've tracked a copy of the incoming data, so we can
+                // use that rather than try to read data back that may have been converted.
 
-                if (format.compressed)
-                {
-                    // Determine if we're emulating the compressed format.
-                    GLenum readFormat = texture->getImplementationColorReadFormat(context);
-                    GLenum readType   = texture->getImplementationColorReadType(context);
+                // Look up the data for the requested texture
+                const auto &foundTextureLevels = cachedTextureLevelData.find(texture->id());
+                ASSERT(foundTextureLevels != cachedTextureLevelData.end());
 
-                    const gl::InternalFormat &nativeFormat =
-                        gl::GetInternalFormatInfo(readFormat, readType);
+                // For that texture, look up the data for the given level
+                GLint level                   = index.getLevelIndex();
+                const auto &foundTextureLevel = foundTextureLevels->second.find(level);
+                ASSERT(foundTextureLevel != foundTextureLevels->second.end());
+                const std::vector<uint8_t> &capturedTextureLevel = foundTextureLevel->second;
 
-                    if (!nativeFormat.compressed)
-                    {
-                        // Emulate with a non-compressed format.
-                        internalFormat = nativeFormat.internalFormat;
-                        getFormat      = readFormat;
-                        getType        = readType;
-                        pixelBytes     = nativeFormat.pixelBytes;
-                    }
-                    else
-                    {
-                        // Will need to add glGetCompressedTexImage support to ANGLE_get_image.
-                        // TODO(jmadill): add glGetCompressedTexImage. http://anglebug.com/3944
-                        UNIMPLEMENTED();
-                    }
-                }
-
-                uint32_t dataSize = pixelBytes * desc.size.width * desc.size.height;
-
-                bool result = data.resize(dataSize);
-                ASSERT(result);
-
-                gl::PixelPackState packState;
-                packState.alignment = 1;
-
-                (void)texture->getTexImage(context, packState, nullptr, index.getTarget(),
-                                           index.getLevelIndex(), getFormat, getType, data.data());
-
-                cap(CaptureTexImage2D(replayState, true, index.getTarget(), index.getLevelIndex(),
-                                      internalFormat, desc.size.width, desc.size.height, 0,
-                                      getFormat, getType, data.data()));
+                // Use the shadow copy of the data to populate the call
+                cap(CaptureCompressedTexImage2D(
+                    replayState, true, index.getTarget(), index.getLevelIndex(),
+                    format.internalFormat, desc.size.width, desc.size.height, 0,
+                    static_cast<GLuint>(capturedTextureLevel.size()), capturedTextureLevel.data()));
             }
             else
             {
-                cap(CaptureTexImage2D(replayState, true, index.getTarget(), index.getLevelIndex(),
-                                      format.internalFormat, desc.size.width, desc.size.height, 0,
-                                      format.format, format.type, nullptr));
+                // Use ANGLE_get_image to read back pixel data.
+                if (context->getExtensions().getImageANGLE)
+                {
+                    GLenum getFormat   = format.format;
+                    GLenum getType     = format.type;
+                    GLsizei pixelBytes = format.pixelBytes;
+
+                    angle::MemoryBuffer data;
+
+                    uint32_t dataSize = pixelBytes * desc.size.width * desc.size.height;
+
+                    bool result = data.resize(dataSize);
+                    ASSERT(result);
+
+                    gl::PixelPackState packState;
+                    packState.alignment = 1;
+
+                    (void)texture->getTexImage(context, packState, nullptr, index.getTarget(),
+                                               index.getLevelIndex(), getFormat, getType,
+                                               data.data());
+
+                    cap(CaptureTexImage2D(replayState, true, index.getTarget(),
+                                          index.getLevelIndex(), format.internalFormat,
+                                          desc.size.width, desc.size.height, 0, getFormat, getType,
+                                          data.data()));
+                }
+                else
+                {
+                    cap(CaptureTexImage2D(replayState, true, index.getTarget(),
+                                          index.getLevelIndex(), format.internalFormat,
+                                          desc.size.width, desc.size.height, 0, format.format,
+                                          format.type, nullptr));
+                }
             }
         }
     }
@@ -2106,6 +2108,98 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, const Call
             break;
         }
 
+        case gl::EntryPoint::CompressedTexImage2D:
+        {
+            // For compressed textures, track a shadow copy of the data
+            // for use during mid-execution capture, rather than reading it back
+            // with ANGLE_get_image
+
+            if (context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack))
+            {
+                // If using pixel unpack buffer, there is no need to back up the data here.
+                // It will be captured as just another buffer.
+                return;
+            }
+
+            const uint8_t *data = static_cast<const uint8_t *>(
+                call.params.getParam("data", ParamType::TvoidConstPointer, 7)
+                    .value.voidConstPointerVal);
+            if (!data)
+            {
+                // If no pointer was provided and no buffer was bound, there is no data to capture
+                return;
+            }
+
+            // Look up the texture type
+            gl::TextureTarget targetPacked =
+                call.params.getParam("targetPacked", ParamType::TTextureTarget, 0)
+                    .value.TextureTargetVal;
+            gl::TextureType textureType = gl::TextureTargetToType(targetPacked);
+            ASSERT(textureType == gl::TextureType::_2D || textureType == gl::TextureType::CubeMap);
+
+            // Create a copy of the incoming data
+            GLsizei imageSize =
+                call.params.getParam("imageSize", ParamType::TGLsizei, 6).value.GLsizeiVal;
+            std::vector<uint8_t> compressedData;
+            compressedData.assign(data, data + imageSize);
+
+            // Look up the currently bound texture
+            gl::Texture *texture = context->getState().getTargetTexture(textureType);
+
+            // Record the data, indexed by textureID and level
+            GLint level = call.params.getParam("level", ParamType::TGLint, 1).value.GLintVal;
+            const auto &foundTextureLevels = mCachedTextureLevelData.find(texture->id());
+            if (foundTextureLevels != mCachedTextureLevelData.end())
+            {
+                // If we've already got a map to track this texture's levels, use it
+                foundTextureLevels->second[level] = std::move(compressedData);
+            }
+            else
+            {
+                // If this is a new texture, create a map for its levels
+                TextureLevels textureLevels;
+                textureLevels[level] = std::move(compressedData);
+
+                // Then add it into our data map
+                mCachedTextureLevelData[texture->id()] = std::move(textureLevels);
+            }
+            break;
+        }
+
+        case gl::EntryPoint::CompressedTexSubImage2D:
+        {
+            UNIMPLEMENTED();
+            break;
+        }
+
+        case gl::EntryPoint::DeleteTextures:
+        {
+            // Free any TextureLevelDataMap entries being tracked for this texture
+            // This is to cover the scenario where a texture has been created, its
+            // levels cached, then texture deleted and recreated, receiving the same ID
+
+            // Look up how many textures are being deleted
+            GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+
+            // Look up the pointer to list of textures
+            const gl::TextureID *textureIDs =
+                call.params.getParam("texturesPacked", ParamType::TTextureIDConstPointer, 1)
+                    .value.TextureIDConstPointerVal;
+
+            // For each texture listed for deletion
+            for (int32_t i = 0; i < n; ++i)
+            {
+                // Look it up in the cache, and delete it if found
+                const auto &foundTextureLevels = mCachedTextureLevelData.find(textureIDs[i]);
+                if (foundTextureLevels != mCachedTextureLevelData.end())
+                {
+                    // Delete all texture levels at once
+                    mCachedTextureLevelData.erase(foundTextureLevels);
+                }
+            }
+            break;
+        }
+
         default:
             break;
     }
@@ -2209,8 +2303,8 @@ void FrameCapture::onEndFrame(const gl::Context *context)
     if (enabled() && mFrameIndex == mFrameStart)
     {
         mSetupCalls.clear();
-        CaptureMidExecutionSetup(context, &mSetupCalls, mCachedShaderSources,
-                                 mCachedProgramSources);
+        CaptureMidExecutionSetup(context, &mSetupCalls, mCachedShaderSources, mCachedProgramSources,
+                                 mCachedTextureLevelData);
     }
 }
 
