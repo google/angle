@@ -117,6 +117,7 @@ void AddToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
 
 extern const char *gLoaderLayersPathEnv;
 extern const char *gLoaderICDFilenamesEnv;
+extern const char *gANGLEPreferredDevice;
 
 enum class ICD
 {

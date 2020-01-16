@@ -488,7 +488,12 @@ ICDFilterFunc GetFilterForICD(vk::ICD preferredICD)
                                  strlen(kSwiftShaderDeviceName)) == 0));
             };
         default:
-            return [](const VkPhysicalDeviceProperties &deviceProperties) { return true; };
+            const std::string anglePreferredDevice =
+                angle::GetEnvironmentVar(vk::gANGLEPreferredDevice);
+            return [anglePreferredDevice](const VkPhysicalDeviceProperties &deviceProperties) {
+                return (anglePreferredDevice.empty() ||
+                        anglePreferredDevice == deviceProperties.deviceName);
+            };
     }
 }
 
