@@ -58,15 +58,17 @@ bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
 // Implementation of PackedVarying
 PackedVarying::PackedVarying(const sh::ShaderVariable &varyingIn,
                              sh::InterpolationType interpolationIn)
-    : PackedVarying(varyingIn, interpolationIn, "", false)
+    : PackedVarying(varyingIn, interpolationIn, "", "", false)
 {}
 PackedVarying::PackedVarying(const sh::ShaderVariable &varyingIn,
                              sh::InterpolationType interpolationIn,
                              const std::string &parentStructNameIn,
+                             const std::string &parentStructMappedNameIn,
                              GLuint fieldIndexIn)
     : varying(&varyingIn),
       interpolation(interpolationIn),
       parentStructName(parentStructNameIn),
+      parentStructMappedName(parentStructMappedNameIn),
       arrayIndex(GL_INVALID_INDEX),
       fieldIndex(fieldIndexIn)
 {}
@@ -84,6 +86,7 @@ PackedVarying &PackedVarying::operator=(PackedVarying &&other)
     std::swap(shaderStages, other.shaderStages);
     std::swap(interpolation, other.interpolation);
     std::swap(parentStructName, other.parentStructName);
+    std::swap(parentStructMappedName, other.parentStructMappedName);
     std::swap(arrayIndex, other.arrayIndex);
     std::swap(fieldIndex, other.fieldIndex);
 
@@ -364,10 +367,11 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
 
                         ASSERT(!field.isStruct() && !field.isArray());
                         mPackedVaryings.emplace_back(field, interpolation, varying->name,
-                                                     fieldIndex);
+                                                     varying->mappedName, fieldIndex);
                         mPackedVaryings.back().shaderStages = shaderStages;
                         uniqueFullNames.insert(mPackedVaryings.back().fullName());
                     }
+                    uniqueFullNames.insert(varying->name);
                 }
                 else
                 {
@@ -382,7 +386,7 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         // If the varying is not used in the input, we know it is inactive.
         if (!input)
         {
-            mInactiveVaryingNames.push_back(ref.first);
+            mInactiveVaryingMappedNames.push_back(output->mappedName);
             continue;
         }
 
@@ -410,11 +414,12 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
                 {
                     ASSERT(!field->isStruct() && !field->isArray());
                     mPackedVaryings.emplace_back(*field, input->interpolation, input->name,
-                                                 fieldIndex);
+                                                 input->mappedName, fieldIndex);
                     mPackedVaryings.back().shaderStages.set(ShaderType::Vertex);
                     mPackedVaryings.back().arrayIndex = GL_INVALID_INDEX;
                     uniqueFullNames.insert(tfVarying);
                 }
+                uniqueFullNames.insert(input->name);
             }
             // Array as a whole and array element conflict has already been checked in
             // linkValidateTransformFeedback.
@@ -439,7 +444,7 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
 
         if (uniqueFullNames.count(ref.first) == 0)
         {
-            mInactiveVaryingNames.push_back(ref.first);
+            mInactiveVaryingMappedNames.push_back(input->mappedName);
         }
     }
 

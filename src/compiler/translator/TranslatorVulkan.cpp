@@ -443,10 +443,11 @@ TVariable *AddANGLEPositionVaryingDeclaration(TIntermBlock *root,
                                               TSymbolTable *symbolTable,
                                               TQualifier qualifier)
 {
-    // Define a driver varying vec2 "ANGLEPosition".
-    TType *varyingType               = new TType(EbtFloat, EbpMedium, qualifier, 2);
-    TVariable *varyingVar            = new TVariable(symbolTable, ImmutableString("ANGLEPosition"),
-                                          varyingType, SymbolType::AngleInternal);
+    // Define a vec2 driver varying to hold the line rasterization emulation position.
+    TType *varyingType = new TType(EbtFloat, EbpMedium, qualifier, 2);
+    TVariable *varyingVar =
+        new TVariable(symbolTable, ImmutableString(vk::kLineRasterEmulationPosition), varyingType,
+                      SymbolType::AngleInternal);
     TIntermSymbol *varyingDeclarator = new TIntermSymbol(varyingVar);
     TIntermDeclaration *varyingDecl  = new TIntermDeclaration;
     varyingDecl->appendDeclarator(varyingDeclarator);

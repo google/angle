@@ -455,6 +455,7 @@ angle::Result ProgramVk::loadSpirvBlob(ContextVk *contextVk, gl::BinaryInputStre
 
         info.descriptorSet = stream->readInt<uint32_t>();
         info.binding       = stream->readInt<uint32_t>();
+        info.activeStages  = gl::ShaderBitSet(static_cast<uint8_t>(stream->readInt<uint32_t>()));
         info.xfbBuffer     = stream->readInt<uint32_t>();
         info.xfbOffset     = stream->readInt<uint32_t>();
         info.xfbStride     = stream->readInt<uint32_t>();
@@ -491,6 +492,7 @@ void ProgramVk::saveSpirvBlob(gl::BinaryOutputStream *stream)
         stream->writeString(nameInfo.first);
         stream->writeIntOrNegOne(nameInfo.second.descriptorSet);
         stream->writeIntOrNegOne(nameInfo.second.binding);
+        stream->writeIntOrNegOne(nameInfo.second.activeStages.bits());
         stream->writeIntOrNegOne(nameInfo.second.xfbBuffer);
         stream->writeIntOrNegOne(nameInfo.second.xfbOffset);
         stream->writeIntOrNegOne(nameInfo.second.xfbStride);

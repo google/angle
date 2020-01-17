@@ -46,15 +46,13 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 {
     const TType &type = variable->getType();
 
-    bool needsCustomLayout = IsVarying(type.getQualifier());
     bool needsSetBinding =
         IsSampler(type.getBasicType()) || type.isInterfaceBlock() || IsImage(type.getBasicType());
     bool needsLocation = type.getQualifier() == EvqAttribute ||
                          type.getQualifier() == EvqVertexIn ||
-                         type.getQualifier() == EvqFragmentOut;
+                         type.getQualifier() == EvqFragmentOut || IsVarying(type.getQualifier());
 
-    if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout && !needsSetBinding &&
-        !needsLocation)
+    if (!NeedsToWriteLayoutQualifier(type) && !needsSetBinding && !needsLocation)
     {
         return;
     }
@@ -103,33 +101,25 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     }
 
     const char *separator = "";
-    if (needsCustomLayout)
+    out << "layout(";
+
+    // If the resource declaration requires set & binding layout qualifiers, specify arbitrary
+    // ones.
+    if (needsSetBinding)
     {
-        out << "@@ LAYOUT-" << name << "(";
+        out << "set=0, binding=" << nextUnusedBinding();
+        separator = ", ";
     }
-    else
+
+    if (needsLocation)
     {
-        out << "layout(";
+        const unsigned int locationCount = CalculateVaryingLocationCount(symbol, getShaderType());
+        uint32_t location                = IsShaderIn(type.getQualifier())
+                                ? nextUnusedInputLocation(locationCount)
+                                : nextUnusedOutputLocation(locationCount);
 
-        // If the resource declaration requires set & binding layout qualifiers, specify arbitrary
-        // ones.
-        if (needsSetBinding)
-        {
-            out << "set=0, binding=" << nextUnusedBinding();
-            separator = ", ";
-        }
-
-        if (needsLocation)
-        {
-            const unsigned int locationCount =
-                CalculateVaryingLocationCount(symbol, getShaderType());
-            uint32_t location = IsShaderIn(type.getQualifier())
-                                    ? nextUnusedInputLocation(locationCount)
-                                    : nextUnusedOutputLocation(locationCount);
-
-            out << "location=" << location;
-            separator = ", ";
-        }
+        out << "location=" << location;
+        separator = ", ";
     }
 
     // Output the list of qualifiers already known at this stage, i.e. everything other than
@@ -152,39 +142,6 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     }
 
     out << ") ";
-    if (needsCustomLayout)
-    {
-        out << "@@";
-    }
-}
-
-void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier,
-                                       const TType &type,
-                                       const TSymbol *symbol)
-{
-    // Only varyings need to output qualifiers through a @@ QUALIFIER macro.  Glslang wrapper may
-    // decide to remove them if they are inactive and turn them into global variables.  This is only
-    // necessary for varyings because they are the only shader interface variables that could be
-    // referenced in the shader source and still be inactive.
-    if (!sh::IsVarying(qualifier))
-    {
-        TOutputGLSLBase::writeQualifier(qualifier, type, symbol);
-        return;
-    }
-
-    if (symbol == nullptr)
-    {
-        return;
-    }
-
-    ImmutableString name = symbol->name();
-
-    // The in/out qualifiers are calculated here so glslang wrapper doesn't need to guess them.
-    ASSERT(IsShaderIn(qualifier) || IsShaderOut(qualifier));
-    const char *inOutQualifier = mapQualifierToString(qualifier);
-
-    TInfoSinkBase &out = objSink();
-    out << "@@ QUALIFIER-" << name.data() << "(" << inOutQualifier << ") @@ ";
 }
 
 void TOutputVulkanGLSL::writeVariableType(const TType &type,

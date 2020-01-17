@@ -88,7 +88,7 @@ class TOutputGLSLBase : public TIntermTraverser
     }
 
     void declareStruct(const TStructure *structure);
-    virtual void writeQualifier(TQualifier qualifier, const TType &type, const TSymbol *symbol);
+    void writeQualifier(TQualifier qualifier, const TType &type, const TSymbol *symbol);
     bool structDeclared(const TStructure *structure) const;
 
     const char *mapQualifierToString(TQualifier qualifier);

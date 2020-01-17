@@ -765,6 +765,9 @@ extern const char kDriverUniformsVarName[];
 // Interface block array variable name used for atomic counter emulation
 extern const char kAtomicCountersVarName[];
 
+// Line raster emulation varying
+extern const char kLineRasterEmulationPosition[];
+
 }  // namespace vk
 }  // namespace sh
 

@@ -38,6 +38,7 @@ struct GlslangSourceOptions
     bool useOldRewriteStructSamplers        = false;
     bool supportsTransformFeedbackExtension = false;
     bool emulateTransformFeedback           = false;
+    bool emulateBresenhamLines              = false;
 };
 
 using SpirvBlob = std::vector<uint32_t>;
@@ -59,10 +60,11 @@ struct ShaderInterfaceVariableInfo
     // Used for vertex attributes, fragment shader outputs and varyings.  There could be different
     // variables that share the same name, such as a vertex attribute and a fragment output.  They
     // will share this object since they have the same name, but will find possibly different
-    // locations in their respective slots.  This is also used to indicate in which stages a varying
-    // is active, as the rest would contain kInvalid.
+    // locations in their respective slots.
     gl::ShaderMap<uint32_t> location;
     gl::ShaderMap<uint32_t> component;
+    // The stages this shader interface variable is active.
+    gl::ShaderBitSet activeStages;
     // Used for transform feedback extension to decorate vertex shader output.
     uint32_t xfbBuffer = kInvalid;
     uint32_t xfbOffset = kInvalid;

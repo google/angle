@@ -4712,6 +4712,36 @@ TEST_P(GLSLTest_ES3, ComplexVaryingStructsUsedInFragmentShader)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that an inactive varying array that doesn't get used in the fragment shader works.
+TEST_P(GLSLTest_ES3, InactiveVaryingArrayUnusedInFragmentShader)
+{
+    constexpr char kVS[] =
+        "#version 300 es\n"
+        "in vec4 inputAttribute;\n"
+        "out vec4 varArray[4];\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = inputAttribute;\n"
+        "    varArray[0] = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "    varArray[1] = vec4(0.0, 1.0, 0.0, 1.0);\n"
+        "    varArray[2] = vec4(0.0, 0.0, 1.0, 1.0);\n"
+        "    varArray[3] = vec4(1.0, 1.0, 0.0, 1.0);\n"
+        "}\n";
+
+    constexpr char kFS[] =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "    col = vec4(0.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+}
+
 // Test that an inactive varying struct that doesn't get used in the fragment shader works.
 TEST_P(GLSLTest_ES3, InactiveVaryingStructUnusedInFragmentShader)
 {

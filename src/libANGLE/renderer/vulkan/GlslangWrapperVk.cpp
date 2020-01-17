@@ -33,6 +33,7 @@ GlslangSourceOptions CreateSourceOptions(const angle::FeaturesVk &features)
     options.supportsTransformFeedbackExtension =
         features.supportsTransformFeedbackExtension.enabled;
     options.emulateTransformFeedback = features.emulateTransformFeedback.enabled;
+    options.emulateBresenhamLines    = features.basicGLLineRasterization.enabled;
     return options;
 }
 }  // namespace

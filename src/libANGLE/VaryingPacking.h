@@ -33,6 +33,7 @@ struct PackedVarying : angle::NonCopyable
     PackedVarying(const sh::ShaderVariable &varyingIn,
                   sh::InterpolationType interpolationIn,
                   const std::string &parentStructNameIn,
+                  const std::string &parentStructMappedNameIn,
                   GLuint fieldIndexIn);
     PackedVarying(PackedVarying &&other);
     ~PackedVarying();
@@ -76,6 +77,7 @@ struct PackedVarying : angle::NonCopyable
 
     // Struct name
     std::string parentStructName;
+    std::string parentStructMappedName;
 
     GLuint arrayIndex;
 
@@ -180,9 +182,9 @@ class VaryingPacking final : angle::NonCopyable
         return static_cast<unsigned int>(mRegisterList.size());
     }
 
-    const std::vector<std::string> &getInactiveVaryingNames() const
+    const std::vector<std::string> &getInactiveVaryingMappedNames() const
     {
-        return mInactiveVaryingNames;
+        return mInactiveVaryingMappedNames;
     }
 
     const std::vector<sh::ShaderVariable> &getInputVaryings() const { return mInputVaryings; }
@@ -201,7 +203,7 @@ class VaryingPacking final : angle::NonCopyable
     std::vector<PackedVaryingRegister> mRegisterList;
     std::vector<sh::ShaderVariable> mInputVaryings;
     std::vector<PackedVarying> mPackedVaryings;
-    std::vector<std::string> mInactiveVaryingNames;
+    std::vector<std::string> mInactiveVaryingMappedNames;
 
     PackMode mPackMode;
 };
