@@ -464,7 +464,8 @@ angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
 
         // The front of the free list should be the oldest. Thus if it is in use the rest of the
         // free list should be in use as well.
-        if (mBufferFreeList.empty() || mBufferFreeList.front()->isResourceInUse(contextVk))
+        if (mBufferFreeList.empty() ||
+            mBufferFreeList.front()->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
         {
             ANGLE_TRY(allocateNewBuffer(contextVk));
         }

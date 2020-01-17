@@ -100,7 +100,7 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
 
             // If there were GL commands using this buffer prior to this call, that's a
             // synchronization error on behalf of the program.
-            ASSERT(!bufferHelper.isCurrentlyInGraph());
+            ASSERT(!bufferHelper.isInUseByANGLE());
 
             vk::CommandBuffer *queueChange;
             ANGLE_TRY(bufferHelper.recordCommands(contextVk, &queueChange));
@@ -123,7 +123,7 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
 
             // If there were GL commands using this image prior to this call, that's a
             // synchronization error on behalf of the program.
-            ASSERT(!image.isCurrentlyInGraph());
+            ASSERT(!image.isInUseByANGLE());
 
             // Inform the image that the layout has been externally changed.
             image.onExternalLayoutChange(layout);

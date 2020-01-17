@@ -351,18 +351,29 @@ class SharedResourceUse final : angle::NonCopyable
         mUse->counter++;
     }
 
+    // The base counter value for a live resource is "1". Any value greater than one indicates
+    // the resource is in use by a vk::CommandGraph.
+    ANGLE_INLINE bool hasRecordedCommands() const
+    {
+        ASSERT(valid());
+        return mUse->counter > 1;
+    }
+
+    ANGLE_INLINE bool hasRunningCommands(Serial lastCompletedSerial) const
+    {
+        ASSERT(valid());
+        return mUse->serial > lastCompletedSerial;
+    }
+
+    ANGLE_INLINE bool isCurrentlyInUse(Serial lastCompletedSerial) const
+    {
+        return hasRecordedCommands() || hasRunningCommands(lastCompletedSerial);
+    }
+
     ANGLE_INLINE Serial getSerial() const
     {
         ASSERT(valid());
         return mUse->serial;
-    }
-
-    // The base counter value for a live resource is "1". Any value greater than one indicates
-    // the resource is in use by a vk::CommandGraph.
-    ANGLE_INLINE bool isCurrentlyInGraph() const
-    {
-        ASSERT(valid());
-        return mUse->counter > 1;
     }
 
   private:
@@ -425,14 +436,24 @@ class CommandGraphResource : angle::NonCopyable
   public:
     virtual ~CommandGraphResource();
 
-    // Returns true if the resource is in use by the renderer.
-    bool isResourceInUse(ContextVk *contextVk) const;
     // Returns true if the resource has commands in the graph.  This is used to know if a flush
     // should be performed, e.g. if we need to wait for the GPU to finish with the resource.
-    bool isCurrentlyInGraph() const { return mUse.isCurrentlyInGraph(); }
+    bool isInUseByANGLE() const { return mUse.hasRecordedCommands(); }
 
-    // queries, to know if the queue they are submitted on has finished execution.
-    Serial getLatestSerial() const { return mUse.getSerial(); }
+    // Determine if the driver has finished execution with this resource.
+    bool isInUseByDriver(Serial lastCompletedSerial) const
+    {
+        return mUse.hasRunningCommands(lastCompletedSerial);
+    }
+
+    // Returns true if the resource is in use by ANGLE or the driver.
+    bool isCurrentlyInUse(Serial lastCompletedSerial) const
+    {
+        return mUse.isCurrentlyInUse(lastCompletedSerial);
+    }
+
+    // Ensures the driver is caught up to this resource and it is only in use by ANGLE.
+    angle::Result finishDriverUse(ContextVk *contextVk);
 
     // Sets up dependency relations. 'this' resource is the resource being written to.
     void addWriteDependency(ContextVk *contextVk, CommandGraphResource *writingResource);
@@ -662,7 +683,7 @@ ANGLE_INLINE bool CommandGraphResource::hasStartedRenderPass() const
 ANGLE_INLINE void CommandGraphResource::updateCurrentAccessNodes()
 {
     // Clear dependencies if this is a new access.
-    if (!mUse.isCurrentlyInGraph())
+    if (!mUse.hasRecordedCommands())
     {
         mCurrentWritingNode = nullptr;
         mCurrentReadingNodes.clear();
