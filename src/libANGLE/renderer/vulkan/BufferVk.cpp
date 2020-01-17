@@ -379,7 +379,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         VkBufferCopy copyRegion = {stagingBufferOffset, offset, size};
         ANGLE_TRY(mBuffer.copyFromBuffer(contextVk, mStagingBuffer.getCurrentBuffer()->getBuffer(),
                                          VK_ACCESS_HOST_WRITE_BIT, copyRegion));
-        mStagingBuffer.getCurrentBuffer()->onGraphAccess(&contextVk->getResourceUseList());
+        mStagingBuffer.getCurrentBuffer()->onResourceAccess(&contextVk->getResourceUseList());
     }
     else
     {

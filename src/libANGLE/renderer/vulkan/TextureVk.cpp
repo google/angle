@@ -447,7 +447,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
 
         const vk::ImageView *readImageView = nullptr;
         ANGLE_TRY(colorReadRT->getImageView(contextVk, &readImageView));
-        colorReadRT->onImageViewGraphAccess(contextVk);
+        colorReadRT->onImageViewAccess(contextVk);
 
         return copySubImageImplWithDraw(contextVk, offsetImageIndex, modifiedDestOffset, destFormat,
                                         0, clippedSourceArea, isViewportFlipY, false, false, false,
@@ -1597,7 +1597,7 @@ const vk::ImageView &TextureVk::getReadImageViewAndRecordUse(ContextVk *contextV
 {
     ASSERT(mImage->valid());
 
-    mImageViews.onGraphAccess(&contextVk->getResourceUseList());
+    mImageViews.onResourceAccess(&contextVk->getResourceUseList());
 
     if (mState.isStencilMode() && mImageViews.hasStencilReadImageView())
     {
@@ -1611,7 +1611,7 @@ const vk::ImageView &TextureVk::getFetchImageViewAndRecordUse(ContextVk *context
 {
     ASSERT(mImage->valid());
 
-    mImageViews.onGraphAccess(&contextVk->getResourceUseList());
+    mImageViews.onResourceAccess(&contextVk->getResourceUseList());
 
     // We don't currently support fetch for depth/stencil cube map textures.
     ASSERT(!mImageViews.hasStencilReadImageView() || !mImageViews.hasFetchImageView());

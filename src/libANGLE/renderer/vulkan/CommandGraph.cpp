@@ -366,7 +366,7 @@ void CommandGraphResource::addWriteDependency(ContextVk *contextVk,
 void CommandGraphResource::addReadDependency(ContextVk *contextVk,
                                              CommandGraphResource *readingResource)
 {
-    onGraphAccess(&contextVk->getResourceUseList());
+    onResourceAccess(&contextVk->getResourceUseList());
 
     CommandGraphNode *readingNode = readingResource->mCurrentWritingNode;
     ASSERT(readingNode);
@@ -396,7 +396,7 @@ void CommandGraphResource::startNewCommands(ContextVk *contextVk)
 
 void CommandGraphResource::onWriteImpl(ContextVk *contextVk, CommandGraphNode *writingNode)
 {
-    onGraphAccess(&contextVk->getResourceUseList());
+    onResourceAccess(&contextVk->getResourceUseList());
 
     // Make sure any open reads and writes finish before we execute 'writingNode'.
     if (!mCurrentReadingNodes.empty())

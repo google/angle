@@ -463,7 +463,7 @@ class CommandGraphResource : angle::NonCopyable
 
     // Updates the in-use serial tracked for this resource. Will clear dependencies if the resource
     // was not used in this set of command nodes.
-    void onGraphAccess(ResourceUseList *resourceUseList);
+    void onResourceAccess(ResourceUseList *resourceUseList);
     void updateCurrentAccessNodes();
 
     // If a resource is recreated, as in released and reinitialized, the next access to the
@@ -696,7 +696,7 @@ ANGLE_INLINE void CommandGraphResource::onResourceRecreated(ResourceUseList *res
     resourceUseList->add(mUse);
 }
 
-ANGLE_INLINE void CommandGraphResource::onGraphAccess(ResourceUseList *resourceUseList)
+ANGLE_INLINE void CommandGraphResource::onResourceAccess(ResourceUseList *resourceUseList)
 {
     updateCurrentAccessNodes();
 
