@@ -12,6 +12,7 @@
 #include "compiler/translator/OutputGLSL.h"
 #include "compiler/translator/VersionGLSL.h"
 #include "compiler/translator/tree_ops/EmulatePrecision.h"
+#include "compiler/translator/tree_ops/RewriteRowMajorMatrices.h"
 #include "compiler/translator/tree_ops/RewriteTexelFetchOffset.h"
 #include "compiler/translator/tree_ops/RewriteUnaryMinusOperatorFloat.h"
 
@@ -104,6 +105,14 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
     if ((compileOptions & SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR) != 0)
     {
         if (!sh::RewriteUnaryMinusOperatorFloat(this, root))
+        {
+            return false;
+        }
+    }
+
+    if ((compileOptions & SH_REWRITE_ROW_MAJOR_MATRICES) != 0 && getShaderVersion() >= 300)
+    {
+        if (!RewriteRowMajorMatrices(this, root, &getSymbolTable()))
         {
             return false;
         }

@@ -1176,7 +1176,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifier)
 {
     // AMD OpenGL driver doesn't seem to apply the row-major qualifier right.
     // http://anglebug.com/2273
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && !IsOSX());
 
     constexpr char kFS[] =
         R"(#version 300 es
@@ -1224,7 +1224,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberRowMajorQualifier)
 {
     // AMD OpenGL driver doesn't seem to apply the row-major qualifier right.
     // http://anglebug.com/2273
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && !IsOSX());
 
     constexpr char kFS[] =
         R"(#version 300 es
@@ -1318,7 +1318,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifierOnStruct)
 {
     // AMD OpenGL driver doesn't seem to apply the row-major qualifier right.
     // http://anglebug.com/2273
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && !IsOSX());
 
     constexpr char kFS[] =
         R"(#version 300 es
@@ -2149,6 +2149,62 @@ TEST_P(UniformBufferTest, UniformBlocksInDiffProgramShareUniformBuffer)
             EXPECT_PIXEL_COLOR_EQ(positionToTest[i][0], positionToTest[i][1], GLColor::blue);
         }
     }
+}
+
+// Test a uniform block where an array of row-major matrices is dynamically indexed.
+TEST_P(UniformBufferTest, Std140UniformBlockWithDynamicallyIndexedRowMajorArray)
+{
+    // http://anglebug.com/3837
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
+
+    constexpr char kFS[] =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        uniform int u_zero;
+
+        layout(std140, row_major) uniform matrixBuffer {
+            mat4 u_mats[1];
+        };
+
+        void main() {
+            float f = u_mats[u_zero + 0][2][1];
+            my_FragColor = vec4(1.0 - f, f, 0.0, 1.0);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "matrixBuffer");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kElementsPerMatrix = 16;  // Each mat2 row gets padded into a vec4.
+    const GLsizei kBytesPerElement   = 4;
+    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+    // Write out this initializer to make it clearer what the matrix contains.
+    float matrixData[kElementsPerMatrix] = {
+        // clang-format off
+        0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f,
+        // clang-format on
+    };
+    for (int ii = 0; ii < kElementsPerMatrix; ++ii)
+    {
+        vAsFloat[ii] = matrixData[ii];
+    }
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    GLint indexLoc = glGetUniformLocation(program, "u_zero");
+    glUseProgram(program);
+    glUniform1i(indexLoc, 0);
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 255, 0, 255), 5);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

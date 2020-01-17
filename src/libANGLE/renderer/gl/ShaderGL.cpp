@@ -363,6 +363,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         additionalOptions |= SH_REGENERATE_STRUCT_NAMES;
     }
 
+    if (features.rewriteRowMajorMatrices.enabled)
+    {
+        additionalOptions |= SH_REWRITE_ROW_MAJOR_MATRICES;
+    }
+
     options |= additionalOptions;
 
     auto workerThreadPool = context->getWorkerThreadPool();

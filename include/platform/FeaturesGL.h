@@ -404,6 +404,13 @@ struct FeaturesGL : FeatureSetBase
         "Some drivers track CopyTex{Sub}Image texture dependencies incorrectly. Flush"
         " before glDeleteTextures in this case",
         &members, "http://anglebug.com/4267"};
+
+    // Rewrite row-major matrices as column-major as a driver bug workaround if
+    // necessary.
+    Feature rewriteRowMajorMatrices = {
+        "rewrite_row_major_matrices", FeatureCategory::OpenGLWorkarounds,
+        "Rewrite row major matrices in shaders as column major as a driver bug workaround",
+        &members, "http://anglebug.com/2273"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
