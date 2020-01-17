@@ -64,7 +64,6 @@
 4311 : KHR-GLES31.core.shader_image_load_store.basic-api-texParam = FAIL
 4314 : KHR-GLES31.core.shader_image_load_store.basic-glsl-earlyFragTests = FAIL
 4316 : KHR-GLES31.core.shader_image_load_store.negative-linkErrors = FAIL
-4309 VULKAN : KHR-GLES31.core.shader_image_load_store.basic-api-get = FAIL
 4312 VULKAN : KHR-GLES31.core.shader_image_load_store.basic-glsl-misc-fs = SKIP
 4312 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-sync-imageAccess = SKIP
 4312 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-allMips-fs = SKIP
