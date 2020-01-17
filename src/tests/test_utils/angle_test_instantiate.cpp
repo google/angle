@@ -258,6 +258,15 @@ bool IsNVIDIA()
     return HasSystemVendorID(kVendorID_NVIDIA);
 }
 
+bool IsARM64()
+{
+#if defined(_M_ARM64)
+    return true;
+#else
+    return false;
+#endif
+}
+
 bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters &param)
 {
     VendorID vendorID =
@@ -282,7 +291,13 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
                     case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
                     case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
                     case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
+                        return true;
                     case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
+                        if (IsARM64())
+                        {
+                            return param.getDeviceType() ==
+                                   EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
+                        }
                         return true;
                     case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
                         // ES 3.1+ back-end is not supported properly.
