@@ -28,8 +28,10 @@ namespace rx
 
 GLint LimitToInt(const uint32_t physicalDeviceValue)
 {
+    // Limit to INT_MAX / 2 instead of INT_MAX.  If the limit is queried as float, the imprecision
+    // in floating point can cause the value to exceed INT_MAX.  This trips dEQP up.
     return std::min(physicalDeviceValue,
-                    static_cast<uint32_t>(std::numeric_limits<int32_t>::max()));
+                    static_cast<uint32_t>(std::numeric_limits<int32_t>::max() / 2));
 }
 
 void RendererVk::ensureCapsInitialized() const
