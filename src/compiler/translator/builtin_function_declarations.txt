@@ -169,7 +169,7 @@ GROUP BEGIN Common
     genType mix(genType, genType, genBType);
   DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "op": "auto"}
     genDType mix(genDType, genDType, genBType);
-  DEFAULT METADATA {"glsl_level": "GLSL4_5_BUILTINS", "op": "auto"}
+  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_5_BUILTINS", "op": "auto"}
     genIType mix(genIType, genIType, genBType);
     genUType mix(genUType, genUType, genBType);
     genBType mix(genBType, genBType, genBType);
