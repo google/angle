@@ -53,7 +53,6 @@ constexpr char kXfbOutMarkerBegin[]                = "@@ XFB-OUT";
 constexpr char kMarkerEnd[]                        = " @@";
 constexpr char kParamsBegin                        = '(';
 constexpr char kParamsEnd                          = ')';
-constexpr char kInactiveVariableSubstitution[]     = "// ";
 constexpr uint32_t kANGLEPositionLocationOffset    = 1;
 constexpr uint32_t kXfbANGLEPositionLocationOffset = 2;
 
@@ -998,27 +997,6 @@ void CleanupUnusedEntities(bool useOldRewriteStructSamplers,
                            const gl::ProgramLinkedResources &resources,
                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
-    IntermediateShaderSource &vertexSource = (*shaderSources)[gl::ShaderType::Vertex];
-    if (!vertexSource.empty())
-    {
-        gl::Shader *glVertexShader = programState.getAttachedShader(gl::ShaderType::Vertex);
-        ASSERT(glVertexShader != nullptr);
-
-        // The attributes in the programState could have been filled with active attributes only
-        // depending on the shader version. If there is inactive attributes left, we have to remove
-        // their @@ QUALIFIER and @@ LAYOUT markers.
-        for (const sh::ShaderVariable &attribute : glVertexShader->getAllAttributes())
-        {
-            if (attribute.active)
-            {
-                continue;
-            }
-
-            vertexSource.eraseLayoutAndQualifierSpecifiers(attribute.name,
-                                                           kInactiveVariableSubstitution);
-        }
-    }
-
     // Remove all the markers for unused varyings.
     for (const std::string &varyingName : resources.varyingPacking.getInactiveVaryingNames())
     {

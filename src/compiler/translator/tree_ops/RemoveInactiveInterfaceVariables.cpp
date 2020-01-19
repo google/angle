@@ -24,20 +24,30 @@ class RemoveInactiveInterfaceVariablesTraverser : public TIntermTraverser
 {
   public:
     RemoveInactiveInterfaceVariablesTraverser(
+        const std::vector<sh::ShaderVariable> &attributes,
+        const std::vector<sh::ShaderVariable> &inputVaryings,
         const std::vector<sh::ShaderVariable> &uniforms,
         const std::vector<sh::InterfaceBlock> &interfaceBlocks);
 
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
 
   private:
+    const std::vector<sh::ShaderVariable> &mAttributes;
+    const std::vector<sh::ShaderVariable> &mInputVaryings;
     const std::vector<sh::ShaderVariable> &mUniforms;
     const std::vector<sh::InterfaceBlock> &mInterfaceBlocks;
 };
 
 RemoveInactiveInterfaceVariablesTraverser::RemoveInactiveInterfaceVariablesTraverser(
+    const std::vector<sh::ShaderVariable> &attributes,
+    const std::vector<sh::ShaderVariable> &inputVaryings,
     const std::vector<sh::ShaderVariable> &uniforms,
     const std::vector<sh::InterfaceBlock> &interfaceBlocks)
-    : TIntermTraverser(true, false, false), mUniforms(uniforms), mInterfaceBlocks(interfaceBlocks)
+    : TIntermTraverser(true, false, false),
+      mAttributes(attributes),
+      mInputVaryings(inputVaryings),
+      mUniforms(uniforms),
+      mInterfaceBlocks(interfaceBlocks)
 {}
 
 template <typename Variable>
@@ -71,21 +81,31 @@ bool RemoveInactiveInterfaceVariablesTraverser::visitDeclaration(Visit visit,
 
     const TType &type = declarator->getType();
 
-    // Only remove uniform and interface block declarations.
+    // Remove all shader interface variables except outputs, i.e. uniforms, interface blocks and
+    // inputs.
     //
-    // Note: Don't remove varyings.  Imagine a situation where the VS doesn't write to a varying
-    // but the FS reads from it.  This is allowed, though the value of the varying is undefined.
-    // If the varying is removed here, the situation is changed to VS not declaring the varying,
-    // but the FS reading from it, which is not allowed.
-    bool removeDeclaration = false;
+    // Imagine a situation where the VS doesn't write to a varying but the FS reads from it.  This
+    // is allowed, though the value of the varying is undefined.  If the varying is removed here,
+    // the situation is changed to VS not declaring the varying, but the FS reading from it, which
+    // is not allowed.  That's why inactive shader outputs are not removed.
+    bool removeDeclaration     = false;
+    const TQualifier qualifier = type.getQualifier();
 
     if (type.isInterfaceBlock())
     {
         removeDeclaration = !IsVariableActive(mInterfaceBlocks, type.getInterfaceBlock()->name());
     }
-    else if (type.getQualifier() == EvqUniform)
+    else if (qualifier == EvqUniform)
     {
         removeDeclaration = !IsVariableActive(mUniforms, asSymbol->getName());
+    }
+    else if (qualifier == EvqAttribute || qualifier == EvqVertexIn)
+    {
+        removeDeclaration = !IsVariableActive(mAttributes, asSymbol->getName());
+    }
+    else if (IsShaderIn(qualifier))
+    {
+        removeDeclaration = !IsVariableActive(mInputVaryings, asSymbol->getName());
     }
 
     if (removeDeclaration)
@@ -101,10 +121,13 @@ bool RemoveInactiveInterfaceVariablesTraverser::visitDeclaration(Visit visit,
 
 bool RemoveInactiveInterfaceVariables(TCompiler *compiler,
                                       TIntermBlock *root,
+                                      const std::vector<sh::ShaderVariable> &attributes,
+                                      const std::vector<sh::ShaderVariable> &inputVaryings,
                                       const std::vector<sh::ShaderVariable> &uniforms,
                                       const std::vector<sh::InterfaceBlock> &interfaceBlocks)
 {
-    RemoveInactiveInterfaceVariablesTraverser traverser(uniforms, interfaceBlocks);
+    RemoveInactiveInterfaceVariablesTraverser traverser(attributes, inputVaryings, uniforms,
+                                                        interfaceBlocks);
     root->traverse(&traverser);
     return traverser.updateTree(compiler, root);
 }
