@@ -1479,6 +1479,8 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
         IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) ||
             IsPixel1XL(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
 
+    ANGLE_FEATURE_CONDITION((&mFeatures), commandGraph, true);
+
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);
 }

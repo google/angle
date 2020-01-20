@@ -58,6 +58,7 @@ struct EGLPlatformParameters
     EGLint presentPath                      = EGL_DONT_CARE;
     EGLint debugLayersEnabled               = EGL_DONT_CARE;
     EGLint contextVirtualization            = EGL_DONT_CARE;
+    EGLint commandGraphFeature              = EGL_DONT_CARE;
     angle::PlatformMethods *platformMethods = nullptr;
 };
 

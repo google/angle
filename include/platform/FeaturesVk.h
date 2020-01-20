@@ -238,6 +238,14 @@ struct FeaturesVk : FeatureSetBase
         "supports_swapchain_colorspace", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_EXT_swapchain_colorspace extension", &members,
         "http://anglebug.com/2514"};
+
+    // Whether to use ANGLE's deferred command graph. http://anglebug.com/4029
+    Feature commandGraph = {
+        "command_graph",
+        FeatureCategory::VulkanFeatures,
+        "Use ANGLE's Vulkan deferred command graph.",
+        &members,
+    };
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
