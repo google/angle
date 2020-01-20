@@ -13,6 +13,7 @@
 
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Symbol.h"
+#include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/util.h"
 
 namespace sh
@@ -36,20 +37,22 @@ TOutputVulkanGLSL::TOutputVulkanGLSL(TInfoSinkBase &objSink,
                   shaderVersion,
                   output,
                   compileOptions),
-      mNextUnusedBinding(0)
+      mNextUnusedBinding(0),
+      mNextUnusedInputLocation(0)
 {}
 
 void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 {
     const TType &type = variable->getType();
 
-    bool needsCustomLayout = type.getQualifier() == EvqAttribute ||
-                             type.getQualifier() == EvqFragmentOut ||
-                             type.getQualifier() == EvqVertexIn || IsVarying(type.getQualifier());
+    bool needsCustomLayout =
+        type.getQualifier() == EvqFragmentOut || IsVarying(type.getQualifier());
     bool needsSetBinding =
         IsSampler(type.getBasicType()) || type.isInterfaceBlock() || IsImage(type.getBasicType());
+    bool needsLocation = type.getQualifier() == EvqAttribute || type.getQualifier() == EvqVertexIn;
 
-    if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout && !needsSetBinding)
+    if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout && !needsSetBinding &&
+        !needsLocation)
     {
         return;
     }
@@ -111,6 +114,15 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
         if (needsSetBinding)
         {
             out << "set=0, binding=" << nextUnusedBinding();
+            separator = ", ";
+        }
+
+        if (needsLocation)
+        {
+            const unsigned int locationCount =
+                CalculateVaryingLocationCount(symbol, getShaderType());
+
+            out << "location=" << nextUnusedInputLocation(locationCount);
             separator = ", ";
         }
     }

@@ -93,6 +93,8 @@ class TOutputGLSLBase : public TIntermTraverser
 
     const char *mapQualifierToString(TQualifier qualifier);
 
+    sh::GLenum getShaderType() { return mShaderType; }
+
   private:
     void declareInterfaceBlockLayout(const TInterfaceBlock *interfaceBlock);
     void declareInterfaceBlock(const TInterfaceBlock *interfaceBlock);

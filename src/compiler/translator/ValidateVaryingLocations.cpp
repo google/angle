@@ -25,13 +25,13 @@ void error(const TIntermSymbol &symbol, const char *reason, TDiagnostics *diagno
     diagnostics->error(symbol.getLine(), reason, symbol.getName().data());
 }
 
-int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
+unsigned int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
 {
     const auto &varyingType = varying->getType();
     if (varyingType.getStruct() != nullptr)
     {
         ASSERT(!varyingType.isArray());
-        int totalLocation = 0;
+        unsigned int totalLocation = 0;
         for (const auto *field : varyingType.getStruct()->fields())
         {
             const auto *fieldType = field->type();
@@ -56,11 +56,11 @@ int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
     }
     else if (varyingType.isMatrix())
     {
-        return varyingType.getNominalSize() * static_cast<int>(varyingType.getArraySizeProduct());
+        return varyingType.getNominalSize() * varyingType.getArraySizeProduct();
     }
     else
     {
-        return static_cast<int>(varyingType.getArraySizeProduct());
+        return varyingType.getArraySizeProduct();
     }
 }
 
@@ -171,6 +171,11 @@ void ValidateVaryingLocationsTraverser::validate(TDiagnostics *diagnostics)
 }
 
 }  // anonymous namespace
+
+unsigned int CalculateVaryingLocationCount(TIntermSymbol *varying, GLenum shaderType)
+{
+    return GetLocationCount(varying, shaderType == GL_GEOMETRY_SHADER_EXT);
+}
 
 bool ValidateVaryingLocations(TIntermBlock *root, TDiagnostics *diagnostics, GLenum shaderType)
 {

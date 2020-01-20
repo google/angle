@@ -517,6 +517,20 @@ ShaderInterfaceVariableInfo *AddResourceInfo(ShaderInterfaceVariableInfoMap *inf
     return info;
 }
 
+// Add location information for an in/out variable.
+ShaderInterfaceVariableInfo *AddLocationInfo(ShaderInterfaceVariableInfoMap *infoMap,
+                                             const std::string &varName,
+                                             uint32_t location,
+                                             uint32_t component,
+                                             gl::ShaderBitSet activeStages)
+{
+    ShaderInterfaceVariableInfo *info = AddShaderInterfaceVariable(infoMap, varName);
+    info->location                    = location;
+    info->component                   = component;
+    info->activeStages                = activeStages;
+    return info;
+}
+
 std::string GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVarying &varying,
                                                    const gl::UniformTypeInfo &info,
                                                    size_t strideBytes,
@@ -763,18 +777,18 @@ void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programSt
 }
 
 void AssignAttributeLocations(const gl::ProgramState &programState,
-                              IntermediateShaderSource *shaderSource)
+                              ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    ASSERT(!shaderSource->empty());
+    gl::ShaderBitSet vertexOnly;
+    vertexOnly.set(gl::ShaderType::Vertex);
 
-    // Parse attribute locations and replace them in the vertex shader.
-    // See corresponding code in OutputVulkanGLSL.cpp.
+    // Assign attribute locations for the vertex shader.
     for (const sh::ShaderVariable &attribute : programState.getProgramInputs())
     {
         ASSERT(attribute.active);
 
-        std::string locationString = "location = " + Str(attribute.location);
-        shaderSource->insertLayoutSpecifier(attribute.name, locationString);
+        AddLocationInfo(variableInfoMapOut, attribute.mappedName, attribute.location,
+                        ShaderInterfaceVariableInfo::kInvalid, vertexOnly);
     }
 }
 
@@ -1638,7 +1652,7 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
     // Assign attributes to the vertex shader, if any.
     if (!vertexSource->empty())
     {
-        AssignAttributeLocations(programState, vertexSource);
+        AssignAttributeLocations(programState, variableInfoMapOut);
     }
 
     if (computeSource->empty())
