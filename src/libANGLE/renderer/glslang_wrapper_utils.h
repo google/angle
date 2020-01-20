@@ -49,16 +49,20 @@ using GlslangErrorCallback = std::function<angle::Result(GlslangError)>;
 // attributes require a location.
 struct ShaderInterfaceVariableInfo
 {
+    ShaderInterfaceVariableInfo();
+
     static constexpr uint32_t kInvalid = std::numeric_limits<uint32_t>::max();
 
     // Used for interface blocks and opaque uniforms.
     uint32_t descriptorSet = kInvalid;
     uint32_t binding       = kInvalid;
-    // Used for vertex attributes, fragment shader outputs and varyings.
-    uint32_t location  = kInvalid;
-    uint32_t component = kInvalid;
-    // Used for varyings.
-    gl::ShaderBitSet activeStages;
+    // Used for vertex attributes, fragment shader outputs and varyings.  There could be different
+    // variables that share the same name, such as a vertex attribute and a fragment output.  They
+    // will share this object since they have the same name, but will find possibly different
+    // locations in their respective slots.  This is also used to indicate in which stages a varying
+    // is active, as the rest would contain kInvalid.
+    gl::ShaderMap<uint32_t> location;
+    gl::ShaderMap<uint32_t> component;
     // Used for transform feedback extension to decorate vertex shader output.
     uint32_t xfbBuffer = kInvalid;
     uint32_t xfbOffset = kInvalid;

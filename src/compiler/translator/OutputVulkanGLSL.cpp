@@ -38,18 +38,20 @@ TOutputVulkanGLSL::TOutputVulkanGLSL(TInfoSinkBase &objSink,
                   output,
                   compileOptions),
       mNextUnusedBinding(0),
-      mNextUnusedInputLocation(0)
+      mNextUnusedInputLocation(0),
+      mNextUnusedOutputLocation(0)
 {}
 
 void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 {
     const TType &type = variable->getType();
 
-    bool needsCustomLayout =
-        type.getQualifier() == EvqFragmentOut || IsVarying(type.getQualifier());
+    bool needsCustomLayout = IsVarying(type.getQualifier());
     bool needsSetBinding =
         IsSampler(type.getBasicType()) || type.isInterfaceBlock() || IsImage(type.getBasicType());
-    bool needsLocation = type.getQualifier() == EvqAttribute || type.getQualifier() == EvqVertexIn;
+    bool needsLocation = type.getQualifier() == EvqAttribute ||
+                         type.getQualifier() == EvqVertexIn ||
+                         type.getQualifier() == EvqFragmentOut;
 
     if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout && !needsSetBinding &&
         !needsLocation)
@@ -121,8 +123,11 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
         {
             const unsigned int locationCount =
                 CalculateVaryingLocationCount(symbol, getShaderType());
+            uint32_t location = IsShaderIn(type.getQualifier())
+                                    ? nextUnusedInputLocation(locationCount)
+                                    : nextUnusedOutputLocation(locationCount);
 
-            out << "location=" << nextUnusedInputLocation(locationCount);
+            out << "location=" << location;
             separator = ", ";
         }
     }

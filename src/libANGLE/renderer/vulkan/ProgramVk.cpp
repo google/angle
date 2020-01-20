@@ -440,29 +440,31 @@ angle::Result ProgramVk::loadSpirvBlob(ContextVk *contextVk, gl::BinaryInputStre
         // Read the shader source
         mShaderSources[shaderType] = stream->readString();
 
-        // Read the expected bindings
-        size_t infoCount = stream->readInt<size_t>();
-        for (size_t i = 0; i < infoCount; ++i)
-        {
-            std::string varName = stream->readString();
-            ShaderInterfaceVariableInfo info;
-
-            info.descriptorSet = stream->readInt<uint32_t>();
-            info.binding       = stream->readInt<uint32_t>();
-            info.location      = stream->readInt<uint32_t>();
-            info.component     = stream->readInt<uint32_t>();
-            info.activeStages = gl::ShaderBitSet(static_cast<uint8_t>(stream->readInt<uint32_t>()));
-            info.xfbBuffer    = stream->readInt<uint32_t>();
-            info.xfbOffset    = stream->readInt<uint32_t>();
-            info.xfbStride    = stream->readInt<uint32_t>();
-
-            mVariableInfoMap[varName] = info;
-        }
-
         SpirvBlob *spirvBlob = &mShaderInfo.getSpirvBlobs()[shaderType];
 
         // Read the SPIR-V
         stream->readIntVector<uint32_t>(spirvBlob);
+    }
+
+    // Read the expected bindings
+    size_t infoCount = stream->readInt<size_t>();
+    for (size_t i = 0; i < infoCount; ++i)
+    {
+        std::string varName = stream->readString();
+        ShaderInterfaceVariableInfo info;
+
+        info.descriptorSet = stream->readInt<uint32_t>();
+        info.binding       = stream->readInt<uint32_t>();
+        info.xfbBuffer     = stream->readInt<uint32_t>();
+        info.xfbOffset     = stream->readInt<uint32_t>();
+        info.xfbStride     = stream->readInt<uint32_t>();
+        for (gl::ShaderType shaderType : gl::AllShaderTypes())
+        {
+            info.location[shaderType]  = stream->readInt<uint32_t>();
+            info.component[shaderType] = stream->readInt<uint32_t>();
+        }
+
+        mVariableInfoMap[varName] = info;
     }
 
     return angle::Result::Continue;
@@ -476,25 +478,27 @@ void ProgramVk::saveSpirvBlob(gl::BinaryOutputStream *stream)
         // Write the shader source
         stream->writeString(mShaderSources[shaderType]);
 
-        // Write the expected bindings
-        stream->writeInt(mVariableInfoMap.size());
-        for (const auto &nameInfo : mVariableInfoMap)
-        {
-            stream->writeString(nameInfo.first);
-            stream->writeIntOrNegOne(nameInfo.second.descriptorSet);
-            stream->writeIntOrNegOne(nameInfo.second.binding);
-            stream->writeIntOrNegOne(nameInfo.second.location);
-            stream->writeIntOrNegOne(nameInfo.second.component);
-            stream->writeIntOrNegOne(nameInfo.second.activeStages.bits());
-            stream->writeIntOrNegOne(nameInfo.second.xfbBuffer);
-            stream->writeIntOrNegOne(nameInfo.second.xfbOffset);
-            stream->writeIntOrNegOne(nameInfo.second.xfbStride);
-        }
-
         const SpirvBlob &spirvBlob = mShaderInfo.getSpirvBlobs()[shaderType];
 
         // Write the SPIR-V
         stream->writeIntVector(spirvBlob);
+    }
+
+    // Write the expected bindings
+    stream->writeInt(mVariableInfoMap.size());
+    for (const auto &nameInfo : mVariableInfoMap)
+    {
+        stream->writeString(nameInfo.first);
+        stream->writeIntOrNegOne(nameInfo.second.descriptorSet);
+        stream->writeIntOrNegOne(nameInfo.second.binding);
+        stream->writeIntOrNegOne(nameInfo.second.xfbBuffer);
+        stream->writeIntOrNegOne(nameInfo.second.xfbOffset);
+        stream->writeIntOrNegOne(nameInfo.second.xfbStride);
+        for (gl::ShaderType shaderType : gl::AllShaderTypes())
+        {
+            stream->writeIntOrNegOne(nameInfo.second.location[shaderType]);
+            stream->writeIntOrNegOne(nameInfo.second.component[shaderType]);
+        }
     }
 }
 

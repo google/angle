@@ -520,14 +520,21 @@ ShaderInterfaceVariableInfo *AddResourceInfo(ShaderInterfaceVariableInfoMap *inf
 // Add location information for an in/out variable.
 ShaderInterfaceVariableInfo *AddLocationInfo(ShaderInterfaceVariableInfoMap *infoMap,
                                              const std::string &varName,
+                                             gl::ShaderType shaderType,
                                              uint32_t location,
-                                             uint32_t component,
-                                             gl::ShaderBitSet activeStages)
+                                             uint32_t component)
 {
-    ShaderInterfaceVariableInfo *info = AddShaderInterfaceVariable(infoMap, varName);
-    info->location                    = location;
-    info->component                   = component;
-    info->activeStages                = activeStages;
+    // The info map for this name may or may not exist already.  This function merges the
+    // location/component information.
+    ShaderInterfaceVariableInfo *info = &(*infoMap)[varName];
+
+    ASSERT(info->descriptorSet == ShaderInterfaceVariableInfo::kInvalid);
+    ASSERT(info->binding == ShaderInterfaceVariableInfo::kInvalid);
+    ASSERT(info->location[shaderType] == ShaderInterfaceVariableInfo::kInvalid);
+    ASSERT(info->component[shaderType] == ShaderInterfaceVariableInfo::kInvalid);
+
+    info->location[shaderType]  = location;
+    info->component[shaderType] = component;
     return info;
 }
 
@@ -779,24 +786,20 @@ void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programSt
 void AssignAttributeLocations(const gl::ProgramState &programState,
                               ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    gl::ShaderBitSet vertexOnly;
-    vertexOnly.set(gl::ShaderType::Vertex);
-
     // Assign attribute locations for the vertex shader.
     for (const sh::ShaderVariable &attribute : programState.getProgramInputs())
     {
         ASSERT(attribute.active);
 
-        AddLocationInfo(variableInfoMapOut, attribute.mappedName, attribute.location,
-                        ShaderInterfaceVariableInfo::kInvalid, vertexOnly);
+        AddLocationInfo(variableInfoMapOut, attribute.mappedName, gl::ShaderType::Vertex,
+                        attribute.location, ShaderInterfaceVariableInfo::kInvalid);
     }
 }
 
 void AssignOutputLocations(const gl::ProgramState &programState,
-                           IntermediateShaderSource *fragmentSource)
+                           ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    // Parse output locations and replace them in the fragment shader.
-    // See corresponding code in OutputVulkanGLSL.cpp.
+    // Assign output locations for the fragment shader.
     // TODO(syoussefi): Add support for EXT_blend_func_extended.  http://anglebug.com/3385
     const auto &outputLocations                      = programState.getOutputLocations();
     const auto &outputVariables                      = programState.getOutputVariables();
@@ -808,23 +811,22 @@ void AssignOutputLocations(const gl::ProgramState &programState,
         {
             const sh::ShaderVariable &outputVar = outputVariables[outputLocation.index];
 
-            std::string name = outputVar.name;
-            std::string locationString;
+            uint32_t location = 0;
             if (outputVar.location != -1)
             {
-                locationString = "location = " + Str(outputVar.location);
+                location = outputVar.location;
             }
-            else if (std::find(implicitOutputs.begin(), implicitOutputs.end(), name) ==
+            else if (std::find(implicitOutputs.begin(), implicitOutputs.end(), outputVar.name) ==
                      implicitOutputs.end())
             {
                 // If there is only one output, it is allowed not to have a location qualifier, in
                 // which case it defaults to 0.  GLSL ES 3.00 spec, section 4.3.8.2.
                 ASSERT(CountExplicitOutputs(outputVariables.begin(), outputVariables.end(),
                                             implicitOutputs.begin(), implicitOutputs.end()) == 1);
-                locationString = "location = 0";
             }
 
-            fragmentSource->insertLayoutSpecifier(name, locationString);
+            AddLocationInfo(variableInfoMapOut, outputVar.mappedName, gl::ShaderType::Fragment,
+                            location, ShaderInterfaceVariableInfo::kInvalid);
         }
     }
 }
@@ -1493,16 +1495,10 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction, size_t wor
     switch (decoration)
     {
         case spv::DecorationLocation:
-            if (info->activeStages[mShaderType])
-            {
-                newDecorationValue = info->location;
-            }
+            newDecorationValue = info->location[mShaderType];
             break;
         case spv::DecorationComponent:
-            if (info->activeStages[mShaderType])
-            {
-                newDecorationValue = info->component;
-            }
+            newDecorationValue = info->component[mShaderType];
             break;
         case spv::DecorationBinding:
             newDecorationValue = info->binding;
@@ -1547,6 +1543,14 @@ size_t SpirvTransformer::getCurrentOutputOffset() const
     return mSpirvBlobOut->size();
 }
 }  // anonymous namespace
+
+const uint32_t ShaderInterfaceVariableInfo::kInvalid;
+
+ShaderInterfaceVariableInfo::ShaderInterfaceVariableInfo()
+{
+    location.fill(kInvalid);
+    component.fill(kInvalid);
+}
 
 void GlslangInitialize()
 {
@@ -1646,7 +1650,7 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
     // Assign outputs to the fragment shader, if any.
     if (!fragmentSource->empty())
     {
-        AssignOutputLocations(programState, fragmentSource);
+        AssignOutputLocations(programState, variableInfoMapOut);
     }
 
     // Assign attributes to the vertex shader, if any.

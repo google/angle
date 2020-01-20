@@ -36,6 +36,12 @@ class TOutputVulkanGLSL : public TOutputGLSL
         mNextUnusedInputLocation += consumedCount;
         return nextUnused;
     }
+    uint32_t nextUnusedOutputLocation(uint32_t consumedCount)
+    {
+        uint32_t nextUnused = mNextUnusedOutputLocation;
+        mNextUnusedOutputLocation += consumedCount;
+        return nextUnused;
+    }
 
   protected:
     void writeLayoutQualifier(TIntermTyped *variable) override;
@@ -51,6 +57,7 @@ class TOutputVulkanGLSL : public TOutputGLSL
     // Glslang wrapper modifies set, binding and location decorations in SPIR-V directly.
     uint32_t mNextUnusedBinding;
     uint32_t mNextUnusedInputLocation;
+    uint32_t mNextUnusedOutputLocation;
 };
 
 }  // namespace sh
