@@ -1232,7 +1232,6 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
             bindingImageUnit.layer   = 0;
             bindingImageUnit.access  = GL_READ_ONLY;
             bindingImageUnit.format  = GL_R32UI;
-            break;
         }
     }
 

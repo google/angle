@@ -60,7 +60,6 @@
 
 // Image related failures
 
-4310 : KHR-GLES31.core.shader_image_load_store.basic-api-bind = FAIL
 4311 : KHR-GLES31.core.shader_image_load_store.basic-api-texParam = FAIL
 4314 : KHR-GLES31.core.shader_image_load_store.basic-glsl-earlyFragTests = FAIL
 4316 : KHR-GLES31.core.shader_image_load_store.negative-linkErrors = FAIL
