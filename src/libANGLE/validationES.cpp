@@ -5290,6 +5290,7 @@ bool ValidateGetTexParameterBase(Context *context,
             break;
 
         case GL_DEPTH_STENCIL_TEXTURE_MODE:
+        case GL_IMAGE_FORMAT_COMPATIBILITY_TYPE:
             if (context->getClientVersion() < Version(3, 1))
             {
                 context->validationError(GL_INVALID_ENUM, kEnumRequiresGLES31);

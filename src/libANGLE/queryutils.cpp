@@ -320,6 +320,9 @@ void QueryTexParameterBase(const Context *context,
             *params = CastFromGLintStateValue<ParamType>(
                 pname, texture->getImplementationColorReadType(context));
             break;
+        case GL_IMAGE_FORMAT_COMPATIBILITY_TYPE:
+            *params = GL_IMAGE_FORMAT_COMPATIBILITY_BY_SIZE;
+            break;
         default:
             UNREACHABLE();
             break;
