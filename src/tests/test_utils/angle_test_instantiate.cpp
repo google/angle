@@ -246,6 +246,11 @@ bool IsAMD()
     return HasSystemVendorID(kVendorID_AMD);
 }
 
+bool IsARM()
+{
+    return HasSystemVendorID(kVendorID_ARM);
+}
+
 bool IsNVIDIA()
 {
 #if defined(ANGLE_PLATFORM_ANDROID)
@@ -362,6 +367,11 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
         {
             return false;
         }
+
+        // ES 3 configs do not work properly on Fuchsia ARM.
+        // TODO(anglebug.com/4352): Investigate missing features.
+        if (param.majorVersion > 2 && IsARM())
+            return false;
 
         // Currently we only support the Vulkan back-end on Fuchsia.
         return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);

@@ -37,10 +37,11 @@ bool IsPixel2();
 bool IsPixel2XL();
 bool IsNVIDIAShield();
 
-// Desktop devices.
+// GPU vendors.
 bool IsIntel();
 bool IsAMD();
 bool IsNVIDIA();
+bool IsARM();
 
 inline bool IsASan()
 {
