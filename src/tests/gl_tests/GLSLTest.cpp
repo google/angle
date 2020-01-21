@@ -6801,7 +6801,10 @@ uint32_t FillBuffer(const std::pair<uint32_t, uint32_t> matrixDims[],
 
         uint32_t arraySize              = isColMajor ? cols : rows;
         uint32_t arrayElementComponents = isColMajor ? rows : cols;
-        uint32_t stride                 = isStd430 ? RoundUpPow2(arrayElementComponents, 2) : 4;
+        // Note: stride is generally 4 with std140, except for scalar and gvec2 types (which
+        // MixedRowAndColumnMajorMatrices* tests don't use).  With std430, small matrices can have
+        // a stride of 2 between rows/columns.
+        uint32_t stride = isStd430 ? RoundUpPow2(arrayElementComponents, 2) : 4;
 
         offset = RoundUpPow2(offset, stride);
 
@@ -7139,6 +7142,7 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
     EXPECT_TRUE(VerifyBuffer(ssboStd140ColMajorOut, dataStd140ColMajor, sizeStd140ColMajor));
