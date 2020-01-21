@@ -51,15 +51,9 @@ namespace rx
 {
 namespace
 {
-constexpr char kMarkerStart[]          = "@@ ";
-constexpr char kQualifierMarkerBegin[] = "@@ QUALIFIER-";
-constexpr char kLayoutMarkerBegin[]    = "@@ LAYOUT-";
-constexpr char kXfbDeclMarkerBegin[]   = "@@ XFB-DECL";
-constexpr char kXfbOutMarkerBegin[]    = "@@ XFB-OUT";
-constexpr char kMarkerEnd[]            = " @@";
-constexpr char kParamsBegin            = '(';
-constexpr char kParamsEnd              = ')';
-constexpr char kXfbBuiltInPrefix[]     = "xfbANGLE";
+constexpr char kXfbDeclMarker[]    = "@@ XFB-DECL @@";
+constexpr char kXfbOutMarker[]     = "@@ XFB-OUT @@;";
+constexpr char kXfbBuiltInPrefix[] = "xfbANGLE";
 
 constexpr gl::ShaderMap<const char *> kDefaultUniformNames = {
     {gl::ShaderType::Vertex, sh::vk::kDefaultUniformsNameVS},
@@ -109,285 +103,6 @@ void GetBuiltInResourcesFromCaps(const gl::Caps &caps, TBuiltInResource *outBuil
     outBuiltInResources->maxVertexAttribs                 = caps.maxVertexAttributes;
     outBuiltInResources->maxVertexOutputComponents        = caps.maxVertexOutputComponents;
     outBuiltInResources->maxVertexUniformVectors          = caps.maxVertexUniformVectors;
-}
-
-struct VaryingNameEquals
-{
-    VaryingNameEquals(const std::string &name_) : name(name_) {}
-    bool operator()(const gl::TransformFeedbackVarying &var) const { return var.name == name; }
-
-    std::string name;
-};
-
-class IntermediateShaderSource final : angle::NonCopyable
-{
-  public:
-    void init(const std::string &source);
-    bool empty() const { return mTokens.empty(); }
-
-    // Find @@ LAYOUT-name(extra, args) @@ and replace it with:
-    //
-    //     layout(specifier, extra, args)
-    //
-    // or if |specifier| is empty:
-    //
-    //     layout(extra, args)
-    //
-    void insertLayoutSpecifier(const std::string &name, const std::string &specifier);
-
-    // Find @@ QUALIFIER-name(other qualifiers) @@ and replace it with:
-    //
-    //      specifier other qualifiers
-    //
-    // or if |specifier| is empty, with nothing.
-    //
-    void insertQualifierSpecifier(const std::string &name, const std::string &specifier);
-
-    // Replace @@ XFB-DECL @@ with |decl|.
-    void insertTransformFeedbackDeclaration(const std::string &&decl);
-
-    // Replace @@ XFB-OUT @@ with |output| code block.
-    void insertTransformFeedbackOutput(const std::string &&output);
-
-    // Remove @@ LAYOUT-name(*) @@ and @@ QUALIFIER-name(*) @@ altogether, optionally replacing them
-    // with something to make sure the shader still compiles.
-    void eraseLayoutAndQualifierSpecifiers(const std::string &name, const std::string &replacement);
-
-    // Get the transformed shader source as one string.
-    std::string getShaderSource();
-
-  private:
-    enum class TokenType
-    {
-        // A piece of shader source code.
-        Text,
-        // Block corresponding to @@ QUALIFIER-abc(other qualifiers) @@
-        Qualifier,
-        // Block corresponding to @@ LAYOUT-abc(extra, args) @@
-        Layout,
-        // Block corresponding to @@ XFB-DECL @@
-        TransformFeedbackDeclaration,
-        // Block corresponding to @@ XFB-OUT @@
-        TransformFeedbackOutput,
-    };
-
-    struct Token
-    {
-        TokenType type;
-        // |text| contains some shader code if Text, or the id of macro ("abc" in examples above)
-        // being replaced if Qualifier or Layout.
-        std::string text;
-        // If Qualifier or Layout, this contains extra parameters passed in parentheses, if any.
-        std::string args;
-    };
-
-    void addTextBlock(std::string &&text);
-    void addLayoutBlock(std::string &&name, std::string &&args);
-    void addQualifierBlock(std::string &&name, std::string &&args);
-    void addTransformFeedbackDeclarationBlock();
-    void addTransformFeedbackOutputBlock();
-
-    void replaceSingleMacro(TokenType type, const std::string &&text);
-
-    std::vector<Token> mTokens;
-};
-
-void IntermediateShaderSource::addTextBlock(std::string &&text)
-{
-    if (!text.empty())
-    {
-        Token token = {TokenType::Text, std::move(text), ""};
-        mTokens.emplace_back(std::move(token));
-    }
-}
-
-void IntermediateShaderSource::addLayoutBlock(std::string &&name, std::string &&args)
-{
-    ASSERT(!name.empty());
-    Token token = {TokenType::Layout, std::move(name), std::move(args)};
-    mTokens.emplace_back(std::move(token));
-}
-
-void IntermediateShaderSource::addQualifierBlock(std::string &&name, std::string &&args)
-{
-    ASSERT(!name.empty());
-    Token token = {TokenType::Qualifier, std::move(name), std::move(args)};
-    mTokens.emplace_back(std::move(token));
-}
-
-void IntermediateShaderSource::addTransformFeedbackDeclarationBlock()
-{
-    Token token = {TokenType::TransformFeedbackDeclaration, "", ""};
-    mTokens.emplace_back(std::move(token));
-}
-
-void IntermediateShaderSource::addTransformFeedbackOutputBlock()
-{
-    Token token = {TokenType::TransformFeedbackOutput, "", ""};
-    mTokens.emplace_back(std::move(token));
-}
-
-size_t ExtractNameAndArgs(const std::string &source,
-                          size_t cur,
-                          std::string *nameOut,
-                          std::string *argsOut)
-{
-    *nameOut = angle::GetPrefix(source, cur, kParamsBegin);
-
-    // There should always be an extra args list (even if empty, for simplicity).
-    size_t readCount = nameOut->length() + 1;
-    *argsOut         = angle::GetPrefix(source, cur + readCount, kParamsEnd);
-    readCount += argsOut->length() + 1;
-
-    return readCount;
-}
-
-void IntermediateShaderSource::init(const std::string &source)
-{
-    size_t cur = 0;
-
-    // Split the source into Text, Layout and Qualifier blocks for efficient macro expansion.
-    while (cur < source.length())
-    {
-        // Create a Text block for the code up to the first marker.
-        std::string text = angle::GetPrefix(source, cur, kMarkerStart);
-        cur += text.length();
-
-        addTextBlock(std::move(text));
-
-        if (cur >= source.length())
-        {
-            break;
-        }
-
-        if (source.compare(cur, ConstStrLen(kQualifierMarkerBegin), kQualifierMarkerBegin) == 0)
-        {
-            cur += ConstStrLen(kQualifierMarkerBegin);
-
-            // Get the id and arguments of the macro and add a qualifier block.
-            std::string name, args;
-            cur += ExtractNameAndArgs(source, cur, &name, &args);
-            addQualifierBlock(std::move(name), std::move(args));
-        }
-        else if (source.compare(cur, ConstStrLen(kLayoutMarkerBegin), kLayoutMarkerBegin) == 0)
-        {
-            cur += ConstStrLen(kLayoutMarkerBegin);
-
-            // Get the id and arguments of the macro and add a layout block.
-            std::string name, args;
-            cur += ExtractNameAndArgs(source, cur, &name, &args);
-            addLayoutBlock(std::move(name), std::move(args));
-        }
-        else if (source.compare(cur, ConstStrLen(kXfbDeclMarkerBegin), kXfbDeclMarkerBegin) == 0)
-        {
-            cur += ConstStrLen(kXfbDeclMarkerBegin);
-            addTransformFeedbackDeclarationBlock();
-        }
-        else if (source.compare(cur, ConstStrLen(kXfbOutMarkerBegin), kXfbOutMarkerBegin) == 0)
-        {
-            cur += ConstStrLen(kXfbOutMarkerBegin);
-            addTransformFeedbackOutputBlock();
-        }
-        else
-        {
-            // If reached here, @@ was met in the shader source itself which would have been a
-            // compile error.
-            UNREACHABLE();
-        }
-
-        // There should always be a closing marker at this point.
-        ASSERT(source.compare(cur, ConstStrLen(kMarkerEnd), kMarkerEnd) == 0);
-
-        // Continue from after the closing of this macro.
-        cur += ConstStrLen(kMarkerEnd);
-    }
-}
-
-void IntermediateShaderSource::insertLayoutSpecifier(const std::string &name,
-                                                     const std::string &specifier)
-{
-    for (Token &block : mTokens)
-    {
-        if (block.type == TokenType::Layout && block.text == name)
-        {
-            ASSERT(!specifier.empty());
-            const char *separator = block.args.empty() ? "" : ", ";
-
-            block.type = TokenType::Text;
-            block.text = "layout(" + block.args + separator + specifier + ")";
-            break;
-        }
-    }
-}
-
-void IntermediateShaderSource::insertQualifierSpecifier(const std::string &name,
-                                                        const std::string &specifier)
-{
-    for (Token &block : mTokens)
-    {
-        if (block.type == TokenType::Qualifier && block.text == name)
-        {
-            block.type = TokenType::Text;
-            block.text = specifier;
-            if (!block.args.empty())
-            {
-                block.text += " " + block.args;
-            }
-            break;
-        }
-    }
-}
-
-void IntermediateShaderSource::replaceSingleMacro(TokenType type, const std::string &&text)
-{
-    for (Token &block : mTokens)
-    {
-        if (block.type == type)
-        {
-            block.type = TokenType::Text;
-            block.text = std::move(text);
-            break;
-        }
-    }
-}
-
-void IntermediateShaderSource::insertTransformFeedbackDeclaration(const std::string &&decl)
-{
-    replaceSingleMacro(TokenType::TransformFeedbackDeclaration, std::move(decl));
-}
-
-void IntermediateShaderSource::insertTransformFeedbackOutput(const std::string &&output)
-{
-    replaceSingleMacro(TokenType::TransformFeedbackOutput, std::move(output));
-}
-
-void IntermediateShaderSource::eraseLayoutAndQualifierSpecifiers(const std::string &name,
-                                                                 const std::string &replacement)
-{
-    for (Token &block : mTokens)
-    {
-        if (block.type == TokenType::Text || block.text != name)
-        {
-            continue;
-        }
-
-        block.text = block.type == TokenType::Layout ? replacement : "";
-        block.type = TokenType::Text;
-    }
-}
-
-std::string IntermediateShaderSource::getShaderSource()
-{
-    std::string shaderSource;
-
-    for (Token &block : mTokens)
-    {
-        // All blocks should have been replaced.
-        ASSERT(block.type == TokenType::Text);
-        shaderSource += block.text;
-    }
-
-    return shaderSource;
 }
 
 // Test if there are non-zero indices in the uniform name, returning false in that case.  This
@@ -562,6 +277,37 @@ ShaderInterfaceVariableInfo *SetXfbInfo(ShaderInterfaceVariableInfoMap *infoMap,
     return info;
 }
 
+std::string SubstituteTransformFeedbackMarkers(const std::string &originalSource,
+                                               const std::string &xfbDecl,
+                                               const std::string &xfbOut)
+{
+    const size_t xfbDeclMarkerStart = originalSource.find(kXfbDeclMarker);
+    const size_t xfbDeclMarkerEnd   = xfbDeclMarkerStart + ConstStrLen(kXfbDeclMarker);
+
+    const size_t xfbOutMarkerStart = originalSource.find(kXfbOutMarker, xfbDeclMarkerStart);
+    const size_t xfbOutMarkerEnd   = xfbOutMarkerStart + ConstStrLen(kXfbOutMarker);
+
+    // The shader is the following form:
+    //
+    // ..part1..
+    // @@ XFB-DECL @@
+    // ..part2..
+    // @@ XFB-OUT @@;
+    // ..part3..
+    //
+    // Construct the string by concatenating these five pieces, replacing the markers with the given
+    // values.
+    std::string result;
+
+    result.append(&originalSource[0], &originalSource[xfbDeclMarkerStart]);
+    result.append(xfbDecl);
+    result.append(&originalSource[xfbDeclMarkerEnd], &originalSource[xfbOutMarkerStart]);
+    result.append(xfbOut);
+    result.append(&originalSource[xfbOutMarkerEnd], &originalSource[originalSource.size()]);
+
+    return result;
+}
+
 std::string GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVarying &varying,
                                                    const gl::UniformTypeInfo &info,
                                                    size_t strideBytes,
@@ -615,7 +361,7 @@ std::string GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVa
 
 void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &options,
                                                const gl::ProgramState &programState,
-                                               IntermediateShaderSource *vertexShader,
+                                               std::string *vertexShader,
                                                ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
     const std::vector<gl::TransformFeedbackVarying> &varyings =
@@ -667,8 +413,7 @@ void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &optio
     }
     xfbOut += "}\n";
 
-    vertexShader->insertTransformFeedbackDeclaration(std::move(xfbDecl));
-    vertexShader->insertTransformFeedbackOutput(std::move(xfbOut));
+    *vertexShader = SubstituteTransformFeedbackMarkers(*vertexShader, xfbDecl, xfbOut);
 }
 
 bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg)
@@ -700,8 +445,8 @@ bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg)
 // Calculates XFB layout qualifier arguments for each tranform feedback varying.  Stores calculated
 // values for the SPIR-V transformation.
 void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programState,
-                                               IntermediateShaderSource *vertexShader,
                                                const gl::ProgramLinkedResources &resources,
+                                               std::string *vertexShader,
                                                ShaderInterfaceVariableInfoMap *variableInfoMapOut,
                                                uint32_t *locationsUsedForXfbExtensionOut)
 {
@@ -738,8 +483,7 @@ void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programSt
         }
     }
 
-    vertexShader->insertTransformFeedbackDeclaration(std::move(xfbDecl));
-    vertexShader->insertTransformFeedbackOutput(std::move(xfbOut));
+    *vertexShader = SubstituteTransformFeedbackMarkers(*vertexShader, xfbDecl, xfbOut);
 }
 
 void AssignAttributeLocations(const gl::ProgramState &programState,
@@ -982,14 +726,14 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramState &programS
 }
 
 void AssignUniformBindings(const GlslangSourceOptions &options,
-                           gl::ShaderMap<IntermediateShaderSource> *shaderSources,
+                           gl::ShaderMap<std::string> *shaderSources,
                            ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
     // Assign binding to the default uniforms block of each shader stage.
     uint32_t bindingIndex = 0;
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        IntermediateShaderSource &shaderSource = (*shaderSources)[shaderType];
+        const std::string &shaderSource = (*shaderSources)[shaderType];
         if (!shaderSource.empty())
         {
             AddResourceInfo(variableInfoMapOut, kDefaultUniformNames[shaderType],
@@ -2011,35 +1755,30 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
 {
     variableInfoMapOut->clear();
 
-    gl::ShaderMap<IntermediateShaderSource> intermediateSources;
     uint32_t locationsUsedForXfbExtension = 0;
 
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        gl::Shader *glShader = programState.getAttachedShader(shaderType);
-        if (glShader)
-        {
-            intermediateSources[shaderType].init(glShader->getTranslatedSource());
-        }
+        gl::Shader *glShader            = programState.getAttachedShader(shaderType);
+        (*shaderSourcesOut)[shaderType] = glShader ? glShader->getTranslatedSource() : "";
     }
 
-    IntermediateShaderSource *vertexSource   = &intermediateSources[gl::ShaderType::Vertex];
-    IntermediateShaderSource *fragmentSource = &intermediateSources[gl::ShaderType::Fragment];
-    IntermediateShaderSource *computeSource  = &intermediateSources[gl::ShaderType::Compute];
+    std::string *vertexSource         = &(*shaderSourcesOut)[gl::ShaderType::Vertex];
+    const std::string &fragmentSource = (*shaderSourcesOut)[gl::ShaderType::Fragment];
+    const std::string &computeSource  = (*shaderSourcesOut)[gl::ShaderType::Compute];
 
     // Write transform feedback output code.
     if (!vertexSource->empty())
     {
         if (programState.getLinkedTransformFeedbackVaryings().empty())
         {
-            vertexSource->insertTransformFeedbackDeclaration("");
-            vertexSource->insertTransformFeedbackOutput("");
+            *vertexSource = SubstituteTransformFeedbackMarkers(*vertexSource, "", "");
         }
         else
         {
             if (options.supportsTransformFeedbackExtension)
             {
-                GenerateTransformFeedbackExtensionOutputs(programState, vertexSource, resources,
+                GenerateTransformFeedbackExtensionOutputs(programState, resources, vertexSource,
                                                           variableInfoMapOut,
                                                           &locationsUsedForXfbExtension);
             }
@@ -2052,7 +1791,7 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
     }
 
     // Assign outputs to the fragment shader, if any.
-    if (!fragmentSource->empty())
+    if (!fragmentSource.empty())
     {
         AssignOutputLocations(programState, variableInfoMapOut);
     }
@@ -2063,7 +1802,7 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
         AssignAttributeLocations(programState, variableInfoMapOut);
     }
 
-    if (computeSource->empty())
+    if (computeSource.empty())
     {
         // Assign varying locations.
         AssignVaryingLocations(options, programState, resources, locationsUsedForXfbExtension,
@@ -2077,14 +1816,9 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
         }
     }
 
-    AssignUniformBindings(options, &intermediateSources, variableInfoMapOut);
+    AssignUniformBindings(options, shaderSourcesOut, variableInfoMapOut);
     AssignTextureBindings(options, programState, variableInfoMapOut);
     AssignNonTextureBindings(options, programState, variableInfoMapOut);
-
-    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        (*shaderSourcesOut)[shaderType] = intermediateSources[shaderType].getShaderSource();
-    }
 }
 
 angle::Result GlslangGetShaderSpirvCode(GlslangErrorCallback callback,
