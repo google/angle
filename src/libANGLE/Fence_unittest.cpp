@@ -26,6 +26,7 @@ class MockFenceNVImpl : public rx::FenceNVImpl
   public:
     virtual ~MockFenceNVImpl() { destroy(); }
 
+    MOCK_METHOD1(onDestroy, void(const gl::Context *context));
     MOCK_METHOD2(set, angle::Result(const gl::Context *, GLenum));
     MOCK_METHOD2(test, angle::Result(const gl::Context *, GLboolean *));
     MOCK_METHOD1(finish, angle::Result(const gl::Context *));

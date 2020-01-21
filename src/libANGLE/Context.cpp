@@ -569,6 +569,10 @@ egl::Error Context::onDestroy(const egl::Display *display)
 
     for (auto fence : mFenceNVMap)
     {
+        if (fence.second)
+        {
+            fence.second->onDestroy(this);
+        }
         SafeDelete(fence.second);
     }
     mFenceNVMap.clear();
@@ -976,6 +980,10 @@ void Context::deleteFencesNV(GLsizei n, const FenceNVID *fences)
         if (mFenceNVMap.erase(fence, &fenceObject))
         {
             mFenceNVHandleAllocator.release(fence.value);
+            if (fenceObject)
+            {
+                fenceObject->onDestroy(this);
+            }
             delete fenceObject;
         }
     }

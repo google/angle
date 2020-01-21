@@ -27,6 +27,11 @@ FenceNV::~FenceNV()
     SafeDelete(mFence);
 }
 
+void FenceNV::onDestroy(const gl::Context *context)
+{
+    mFence->onDestroy(context);
+}
+
 angle::Result FenceNV::set(const Context *context, GLenum condition)
 {
     ANGLE_TRY(mFence->set(context, condition));

@@ -461,6 +461,9 @@ void RendererVk::ensureCapsInitialized() const
     // Enable GL_NV_pixel_buffer_object extension.
     mNativeExtensions.pixelBufferObjectNV = true;
 
+    // Enable GL_NV_fence extension.
+    mNativeExtensions.fenceNV = true;
+
     // Geometry shader is optional.
     if (mPhysicalDeviceFeatures.geometryShader)
     {

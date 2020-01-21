@@ -32,6 +32,7 @@ class FenceNV final : angle::NonCopyable
     explicit FenceNV(rx::GLImplFactory *factory);
     virtual ~FenceNV();
 
+    void onDestroy(const gl::Context *context);
     angle::Result set(const Context *context, GLenum condition);
     angle::Result test(const Context *context, GLboolean *outResult);
     angle::Result finish(const Context *context);
