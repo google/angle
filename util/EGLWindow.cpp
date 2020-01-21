@@ -182,6 +182,12 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         disabledFeatureOverrides.push_back("command_graph");
     }
 
+    if (params.transformFeedbackFeature == EGL_FALSE)
+    {
+        disabledFeatureOverrides.push_back("supports_transform_feedback_extension");
+        disabledFeatureOverrides.push_back("emulate_transform_feedback");
+    }
+
     if (!disabledFeatureOverrides.empty())
     {
         if (strstr(extensionString, "EGL_ANGLE_feature_control") == nullptr)

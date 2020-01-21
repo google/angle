@@ -196,6 +196,15 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_CommandGraph";
     }
 
+    if (pp.eglParameters.transformFeedbackFeature == EGL_FALSE)
+    {
+        stream << "_NoTransformFeedback";
+    }
+    else if (pp.eglParameters.transformFeedbackFeature == EGL_TRUE)
+    {
+        stream << "_TransformFeedback";
+    }
+
     return stream;
 }
 

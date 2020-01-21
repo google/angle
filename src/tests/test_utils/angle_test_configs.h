@@ -213,6 +213,14 @@ inline PlatformParameters WithNoCommandGraph(const PlatformParameters &params)
     withNoCommandGraph.eglParameters.commandGraphFeature = EGL_FALSE;
     return withNoCommandGraph;
 }
+
+inline PlatformParameters WithNoTransformFeedback(const PlatformParameters &params)
+{
+    PlatformParameters withNoTransformFeedback                     = params;
+    withNoTransformFeedback.eglParameters.transformFeedbackFeature = EGL_FALSE;
+    return withNoTransformFeedback;
+}
+
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_

@@ -841,6 +841,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // Flush any relevant dirty bits.
     for (size_t dirtyBit : dirtyBits)
     {
+        ASSERT(mGraphicsDirtyBitHandlers[dirtyBit]);
         ANGLE_TRY((this->*mGraphicsDirtyBitHandlers[dirtyBit])(context, *commandBufferOut));
     }
 
@@ -1026,6 +1027,7 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context,
     // Flush any relevant dirty bits.
     for (size_t dirtyBit : dirtyBits)
     {
+        ASSERT(mComputeDirtyBitHandlers[dirtyBit]);
         ANGLE_TRY((this->*mComputeDirtyBitHandlers[dirtyBit])(context, *commandBufferOut));
     }
 
@@ -2749,7 +2751,10 @@ void ContextVk::onDrawFramebufferChange(FramebufferVk *framebufferVk)
 
 void ContextVk::invalidateCurrentTransformFeedbackBuffers()
 {
-    mGraphicsDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
+    if (getFeatures().supportsTransformFeedbackExtension.enabled)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
+    }
     if (getFeatures().emulateTransformFeedback.enabled)
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
