@@ -6783,6 +6783,15 @@ uint32_t RoundUpPow2(uint32_t value, uint32_t alignment)
     return (value + alignment - 1) & ~(alignment - 1);
 }
 
+void CreateOutputBuffer(GLBuffer *buffer, uint32_t binding)
+{
+    unsigned int outputInitData = 0;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, *buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(outputInitData), &outputInitData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, *buffer);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Fill provided buffer with matrices based on the given dimensions.  The buffer should be large
 // enough to accomodate the data.
 uint32_t FillBuffer(const std::pair<uint32_t, uint32_t> matrixDims[],
@@ -6859,6 +6868,13 @@ bool VerifyBuffer(GLuint buffer, const float data[], uint32_t dataSize)
     return isCorrect;
 }
 
+// Verify that the success output of the shader is as expected.
+bool VerifySuccess(GLuint buffer)
+{
+    uint32_t success = 1;
+    return VerifyBuffer(buffer, reinterpret_cast<const float *>(&success), 1);
+}
+
 // Test reading from UBOs and SSBOs and writing to SSBOs with mixed row- and colum-major layouts in
 // both std140 and std430 layouts.  Tests many combinations of std140 vs std430, struct being used
 // as row- or column-major in different UBOs, reading from UBOs and SSBOs and writing to SSBOs,
@@ -6867,6 +6883,12 @@ bool VerifyBuffer(GLuint buffer, const float data[], uint32_t dataSize)
 // Some very specific corner cases that are not covered here are tested in the subsequent tests.
 TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices)
 {
+    GLint maxComputeShaderStorageBlocks;
+    glGetIntegerv(GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS, &maxComputeShaderStorageBlocks);
+
+    // The test uses 9 SSBOs.  Skip if not that many are supported.
+    ANGLE_SKIP_TEST_IF(maxComputeShaderStorageBlocks < 9);
+
     // Fails on Nvidia because having |Matrices| qualified as row-major in one UBO makes the other
     // UBO also see it as row-major despite explicit column-major qualifier.
     // http://anglebug.com/3830
@@ -6891,9 +6913,9 @@ TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices)
     // Fails input verification as well as std140 SSBO validation.  http://anglebug.com/3844
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
-    constexpr char kFS[] = R"(#version 310 es
+    constexpr char kCS[] = R"(#version 310 es
 precision highp float;
-out vec4 outColor;
+layout(local_size_x=1) in;
 
 struct Inner
 {
@@ -6973,6 +6995,11 @@ layout(std430, row_major, binding = 7) buffer Ssbo430rOut
     mat4 m4c4r;
     layout(column_major) Matrices m;
 } ssbo430rOut;
+
+layout(std140, binding = 8) buffer Result
+{
+    uint success;
+} resultOut;
 
 #define EXPECT(result, expression, value) if ((expression) != value) { result = false; }
 #define EXPECTV(result, expression, value) if (any(notEqual(expression, value))) { result = false; }
@@ -7059,9 +7086,8 @@ void main()
     VERIFY_IN(result, ssbo430rIn.m.inner.m3c4r, 3, 4);
     EXPECT(result, verifyMatrices(ssbo430rIn.m), true);
 
-    // Only assign to SSBO from a single pixel.
-    bool isOriginPixel = all(lessThan(gl_FragCoord.xy, vec2(1.0, 1.0)));
-    if (isOriginPixel)
+    // Only assign to SSBO from a single invocation.
+    if (gl_GlobalInvocationID.x == 0u)
     {
         ssbo140cOut.m4c4r = copyMat4(ssbo140cIn.m4c4r);
         copyMatrices(ssbo430cIn.m, ssbo140cOut.m);
@@ -7082,12 +7108,12 @@ void main()
         copyMatrices(ssbo140rIn.m, ssbo430rOut.m);
         ssbo430rOut.m.inner.m4c3r = mat4x3(0);
         COPY(ssbo430rIn.m.inner.m4c3r, ssbo430rOut.m.inner.m4c3r, 4, 3);
-    }
 
-    outColor = result ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+        resultOut.success = uint(result);
+    }
 })";
 
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
     EXPECT_GL_NO_ERROR();
 
     constexpr size_t kMatrixCount                                     = 7;
@@ -7141,9 +7167,13 @@ void main()
                false);
     EXPECT_GL_NO_ERROR();
 
-    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    GLBuffer outputBuffer;
+    CreateOutputBuffer(&outputBuffer, 8);
+
+    glUseProgram(program);
+    glDispatchCompute(1, 1, 1);
     EXPECT_GL_NO_ERROR();
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_TRUE(VerifySuccess(outputBuffer));
 
     EXPECT_TRUE(VerifyBuffer(ssboStd140ColMajorOut, dataStd140ColMajor, sizeStd140ColMajor));
     EXPECT_TRUE(VerifyBuffer(ssboStd140RowMajorOut, dataStd140RowMajor, sizeStd140RowMajor));
@@ -7595,9 +7625,9 @@ TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices_WriteSideEffect)
     // Fails on D3D due to mistranslation: http://anglebug.com/3841
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    constexpr char kFS[] = R"(#version 310 es
+    constexpr char kCS[] = R"(#version 310 es
 precision highp float;
-out vec4 outColor;
+layout(local_size_x=1) in;
 
 layout(std140, column_major) uniform Ubo
 {
@@ -7611,24 +7641,28 @@ layout(std140, row_major, binding = 0) buffer Ssbo
     mat4 m2;
 } ssbo;
 
+layout(std140, binding = 1) buffer Result
+{
+    uint success;
+} resultOut;
+
 void main()
 {
     bool result = true;
 
-    // Only assign to SSBO from a single pixel.
-    bool isOriginPixel = all(lessThan(gl_FragCoord.xy, vec2(1.0, 1.0)));
-    if (isOriginPixel)
+    // Only assign to SSBO from a single invocation.
+    if (gl_GlobalInvocationID.x == 0u)
     {
         if ((ssbo.m2 = ssbo.m1 = ubo.m1) != ubo.m2)
         {
             result = false;
         }
-    }
 
-    outColor = result ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+        resultOut.success = uint(result);
+    }
 })";
 
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
     EXPECT_GL_NO_ERROR();
 
     constexpr size_t kMatrixCount                                     = 2;
@@ -7653,8 +7687,13 @@ void main()
     InitBuffer(program, "Ssbo", ssbo, 0, zeros, size, false);
     EXPECT_GL_NO_ERROR();
 
-    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    GLBuffer outputBuffer;
+    CreateOutputBuffer(&outputBuffer, 1);
+
+    glUseProgram(program);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_TRUE(VerifySuccess(outputBuffer));
 
     EXPECT_TRUE(VerifyBuffer(ssbo, data, size));
 }
@@ -7671,9 +7710,9 @@ TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices_WriteArrayOfArray)
     // Fails compiling shader on Android/Vulkan.  http://anglebug.com/4290
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
-    constexpr char kFS[] = R"(#version 310 es
+    constexpr char kCS[] = R"(#version 310 es
 precision highp float;
-out vec4 outColor;
+layout(local_size_x=1) in;
 
 layout(std140, column_major) uniform Ubo
 {
@@ -7687,22 +7726,26 @@ layout(std140, row_major, binding = 0) buffer Ssbo
     mat4 m2[2][3];
 } ssbo;
 
+layout(std140, binding = 1) buffer Result
+{
+    uint success;
+} resultOut;
+
 void main()
 {
     bool result = true;
 
-    // Only assign to SSBO from a single pixel.
-    bool isOriginPixel = all(lessThan(gl_FragCoord.xy, vec2(1.0, 1.0)));
-    if (isOriginPixel)
+    // Only assign to SSBO from a single invocation.
+    if (gl_GlobalInvocationID.x == 0u)
     {
         ssbo.m1 = ubo.m1;
         ssbo.m2 = ubo.m2;
-    }
 
-    outColor = result ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+        resultOut.success = uint(result);
+    }
 })";
 
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
     EXPECT_GL_NO_ERROR();
 
     constexpr size_t kMatrixCount                                     = 7;
@@ -7725,8 +7768,13 @@ void main()
     InitBuffer(program, "Ssbo", ssbo, 0, zeros, size, false);
     EXPECT_GL_NO_ERROR();
 
-    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    GLBuffer outputBuffer;
+    CreateOutputBuffer(&outputBuffer, 1);
+
+    glUseProgram(program);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_TRUE(VerifySuccess(outputBuffer));
 
     EXPECT_TRUE(VerifyBuffer(ssbo, data, size));
 }
