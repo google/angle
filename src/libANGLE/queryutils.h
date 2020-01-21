@@ -130,6 +130,8 @@ void SetTexParameteri(Context *context, Texture *texture, GLenum pname, GLint pa
 void SetTexParameteriv(Context *context, Texture *texture, GLenum pname, const GLint *params);
 void SetTexParameterIiv(Context *context, Texture *texture, GLenum pname, const GLint *params);
 void SetTexParameterIuiv(Context *context, Texture *texture, GLenum pname, const GLuint *params);
+void SetTexParameterx(Context *context, Texture *texture, GLenum pname, GLfixed param);
+void SetTexParameterxv(Context *context, Texture *texture, GLenum pname, const GLfixed *params);
 
 void SetSamplerParameterf(Context *context, Sampler *sampler, GLenum pname, GLfloat param);
 void SetSamplerParameterfv(Context *context, Sampler *sampler, GLenum pname, const GLfloat *params);

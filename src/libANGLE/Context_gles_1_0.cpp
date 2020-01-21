@@ -555,12 +555,14 @@ void Context::texEnvxv(TextureEnvTarget target, TextureEnvParameter pname, const
 
 void Context::texParameterx(TextureType target, GLenum pname, GLfixed param)
 {
-    UNIMPLEMENTED();
+    Texture *const texture = getTextureByType(target);
+    SetTexParameterx(this, texture, pname, param);
 }
 
 void Context::texParameterxv(TextureType target, GLenum pname, const GLfixed *params)
 {
-    UNIMPLEMENTED();
+    Texture *const texture = getTextureByType(target);
+    SetTexParameterxv(this, texture, pname, params);
 }
 
 void Context::translatef(float x, float y, float z)

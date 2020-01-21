@@ -1343,11 +1343,33 @@ bool ValidateTexEnvxv(const Context *context,
     return ValidateTexEnvCommon(context, target, pname, paramsf);
 }
 
+bool ValidateTexParameterBaseForGLfixed(const Context *context,
+                                        TextureType target,
+                                        GLenum pname,
+                                        GLsizei bufSize,
+                                        bool vectorParams,
+                                        const GLfixed *params)
+{
+    // Convert GLfixed parameter for GL_TEXTURE_MAX_ANISOTROPY_EXT independently
+    // since it compares against 1 and maxTextureAnisotropy instead of just 0
+    // (other values are fine to leave unconverted since they only check positive or negative or
+    // are used as enums)
+    GLfloat paramValue;
+    if (pname == GL_TEXTURE_MAX_ANISOTROPY_EXT)
+    {
+        paramValue = ConvertFixedToFloat(static_cast<GLfixed>(params[0]));
+    }
+    else
+    {
+        paramValue = static_cast<GLfloat>(params[0]);
+    }
+    return ValidateTexParameterBase(context, target, pname, bufSize, vectorParams, &paramValue);
+}
+
 bool ValidateTexParameterx(const Context *context, TextureType target, GLenum pname, GLfixed param)
 {
     ANGLE_VALIDATE_IS_GLES1(context);
-    GLfloat paramf = ConvertFixedToFloat(param);
-    return ValidateTexParameterBase(context, target, pname, -1, false, &paramf);
+    return ValidateTexParameterBaseForGLfixed(context, target, pname, -1, false, &param);
 }
 
 bool ValidateTexParameterxv(const Context *context,
@@ -1356,12 +1378,7 @@ bool ValidateTexParameterxv(const Context *context,
                             const GLfixed *params)
 {
     ANGLE_VALIDATE_IS_GLES1(context);
-    GLfloat paramsf[4] = {};
-    for (unsigned int i = 0; i < GetTexParameterCount(pname); i++)
-    {
-        paramsf[i] = ConvertFixedToFloat(params[i]);
-    }
-    return ValidateTexParameterBase(context, target, pname, -1, true, paramsf);
+    return ValidateTexParameterBaseForGLfixed(context, target, pname, -1, true, params);
 }
 
 bool ValidateTranslatef(const Context *context, GLfloat x, GLfloat y, GLfloat z)
