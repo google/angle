@@ -88,6 +88,24 @@
       "revId": "27bb0de529dacbcd94e185374eb9eccedc3f32b0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b484df6b_05131d21",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-01-21T16:11:15Z",
+      "side": 1,
+      "message": "Thanks for the info/ideas Shabi!  I\u0027m sure they\u0027ll apply to the other bugs in this space.",
+      "parentUuid": "c862baf6_de6e61c1",
+      "revId": "27bb0de529dacbcd94e185374eb9eccedc3f32b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
