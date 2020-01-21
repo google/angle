@@ -661,10 +661,6 @@
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.points_8_samples = FAIL
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.triangles_max_samples = FAIL
 
-// Debug failures that occur on Android:
-4323 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterf = FAIL
-4323 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterfv = FAIL
-
 // Passing on recent drivers:
 3726 VULKAN ANDROID : dEQP-GLES31.functional.ssbo.layout.* = FAIL
 3726 VULKAN ANDROID : dEQP-GLES31.functional.atomic_counter.* = FAIL
