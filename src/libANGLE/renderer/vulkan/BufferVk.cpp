@@ -271,15 +271,15 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
     {
         // If there are pending commands for the buffer, flush them.
-        if (mBuffer.isInUseByANGLE())
+        if (mBuffer.hasRecordedCommands())
         {
             ANGLE_TRY(contextVk->flushImpl(nullptr));
         }
 
         // Make sure the driver is done with the buffer.
-        if (mBuffer.isInUseByDriver(contextVk->getLastCompletedQueueSerial()))
+        if (mBuffer.hasRunningCommands(contextVk->getLastCompletedQueueSerial()))
         {
-            ANGLE_TRY(mBuffer.finishDriverUse(contextVk));
+            ANGLE_TRY(mBuffer.finishRunningCommands(contextVk));
         }
 
         ASSERT(!mBuffer.isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()));
@@ -332,7 +332,7 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
 
     ANGLE_TRACE_EVENT0("gpu.angle", "BufferVk::getIndexRange");
     // Needed before reading buffer or we could get stale data.
-    ANGLE_TRY(mBuffer.finishDriverUse(contextVk));
+    ANGLE_TRY(mBuffer.finishRunningCommands(contextVk));
 
     // TODO(jmadill): Consider keeping a shadow system memory copy in some cases.
     ASSERT(mBuffer.valid());

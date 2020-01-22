@@ -438,10 +438,10 @@ class CommandGraphResource : angle::NonCopyable
 
     // Returns true if the resource has commands in the graph.  This is used to know if a flush
     // should be performed, e.g. if we need to wait for the GPU to finish with the resource.
-    bool isInUseByANGLE() const { return mUse.hasRecordedCommands(); }
+    bool hasRecordedCommands() const { return mUse.hasRecordedCommands(); }
 
     // Determine if the driver has finished execution with this resource.
-    bool isInUseByDriver(Serial lastCompletedSerial) const
+    bool hasRunningCommands(Serial lastCompletedSerial) const
     {
         return mUse.hasRunningCommands(lastCompletedSerial);
     }
@@ -453,7 +453,7 @@ class CommandGraphResource : angle::NonCopyable
     }
 
     // Ensures the driver is caught up to this resource and it is only in use by ANGLE.
-    angle::Result finishDriverUse(ContextVk *contextVk);
+    angle::Result finishRunningCommands(ContextVk *contextVk);
 
     // Sets up dependency relations. 'this' resource is the resource being written to.
     void addWriteDependency(ContextVk *contextVk, CommandGraphResource *writingResource);

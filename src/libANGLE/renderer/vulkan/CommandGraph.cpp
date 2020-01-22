@@ -297,7 +297,7 @@ CommandGraphResource::~CommandGraphResource()
     mUse.release();
 }
 
-angle::Result CommandGraphResource::finishDriverUse(ContextVk *contextVk)
+angle::Result CommandGraphResource::finishRunningCommands(ContextVk *contextVk)
 {
     return contextVk->finishToSerial(mUse.getSerial());
 }
