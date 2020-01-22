@@ -543,7 +543,8 @@
 1442 NVIDIA OPENGL : dEQP-GLES31.functional.fbo.no_attachments.maximums.all = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.atomic_counter_buffer.referenced_by* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.resource_query = FAIL
-1442 OPENGL : dEQP-GLES31.functional.program_interface_query.buffer_variable.* = FAIL
+2277 OPENGL : dEQP-GLES31.functional.program_interface_query.buffer_variable.referenced_by.* = FAIL
+2277 OPENGL : dEQP-GLES31.functional.program_interface_query.buffer_variable.random.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.program_input.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.program_output.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.shader_storage_block.referenced_by.* = FAIL
