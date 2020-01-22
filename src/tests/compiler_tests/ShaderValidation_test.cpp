@@ -1924,6 +1924,21 @@ TEST_F(ComputeShaderValidationTest, NoWorkGroupSizeSpecified)
     }
 }
 
+// Test that workgroup size declaration doesn't accept variable declaration.
+TEST_F(ComputeShaderValidationTest, NoVariableDeclrationAfterWorkGroupSize)
+{
+    constexpr char kShaderString[] =
+        R"(#version 310 es
+        layout(local_size_x = 1) in vec4 x;
+        void main()
+        {
+        })";
+    if (compile(kShaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
 // Work group size is less than 1. It should be at least 1.
 // GLSL ES 3.10 Revision 4, 7.1.3 Compute Shader Special Variables
 // The spec is not clear whether having a local size qualifier equal zero
@@ -6183,5 +6198,157 @@ void main() {
     if (compile(shaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that layout(early_fragment_tests) in; is valid in fragment shader
+TEST_F(FragmentShaderValidationTest, ValidEarlyFragmentTests)
+{
+    constexpr char kShaderString[] =
+        R"(#version 310 es
+        precision mediump float;
+        layout(early_fragment_tests) in;
+        out vec4 color;
+        void main()
+        {
+            color = vec4(0.0);
+        })";
+    if (!compile(kShaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Test that layout(early_fragment_tests=x) in; is invalid
+TEST_F(FragmentShaderValidationTest, InvalidValueForEarlyFragmentTests)
+{
+    constexpr char kShaderString[] =
+        R"(#version 310 es
+        precision mediump float;
+        layout(early_fragment_tests=1) in;
+        out vec4 color;
+        void main()
+        {
+            color = vec4(0.0);
+        })";
+    if (compile(kShaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that layout(early_fragment_tests) in varying; is invalid
+TEST_F(FragmentShaderValidationTest, InvalidEarlyFragmentTestsOnVariableDecl)
+{
+    constexpr char kShaderString[] =
+        R"(#version 310 es
+        precision mediump float;
+        layout(early_fragment_tests) in vec4 v;
+        out vec4 color;
+        void main()
+        {
+            color = v;
+        })";
+    if (compile(kShaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that layout(early_fragment_tests) in; is invalid in vertex shader
+TEST_F(VertexShaderValidationTest, InvalidEarlyFragmentTests)
+{
+    constexpr char kShaderString[] =
+        R"(#version 310 es
+        layout(early_fragment_tests) in;
+        void main()
+        {
+            gl_Position = vec4(0.0);
+        })";
+    if (compile(kShaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that layout(early_fragment_tests) in; is invalid in compute shader
+TEST_F(ComputeShaderValidationTest, InvalidEarlyFragmentTests)
+{
+    constexpr char kShaderString[] =
+        R"(#version 310 es
+        layout(local_size_x = 1) in;
+        layout(early_fragment_tests) in;
+        void main() {})";
+    if (compile(kShaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that layout(x) in; only accepts x=early_fragment_tests.
+TEST_F(FragmentShaderValidationTest, NothingButEarlyFragmentTestsWithInWithoutVariableDecl)
+{
+    const char *noValueQualifiers[] = {
+        "shared",      "packed",
+        "std140",      "std430",
+        "row_major",   "col_major",
+        "location",    "yuv",
+        "rgba32f",     "rgba16f",
+        "r32f",        "rgba8",
+        "rgba8_snorm", "rgba32i",
+        "rgba16i",     "rgba8i",
+        "r32i",        "rgba32ui",
+        "rgba16ui",    "rgba8ui",
+        "r32ui",       "points",
+        "lines",       "lines_adjacency",
+        "triangles",   "triangles_adjacency",
+        "line_strip",  "triangle_strip",
+    };
+
+    const char *withValueQualifiers[] = {
+        "location",     "binding",   "offset",      "local_size_x", "local_size_y",
+        "local_size_z", "num_views", "invocations", "max_vertices", "index",
+    };
+
+    constexpr char kShaderStringPre[] =
+        R"(#version 310 es
+        precision mediump float;
+        layout()";
+    constexpr char kShaderStringPost[] =
+        R"() in;
+        out vec4 color;
+        void main()
+        {
+            color = vec4(0.0);
+        })";
+
+    // Make sure the method of constructing shaders is valid.
+    const std::string validShaderString =
+        kShaderStringPre + std::string("early_fragment_tests") + kShaderStringPost;
+    if (!compile(validShaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+
+    for (size_t i = 0; i < ArraySize(noValueQualifiers); ++i)
+    {
+        const std::string shaderString =
+            kShaderStringPre + std::string(noValueQualifiers[i]) + kShaderStringPost;
+
+        if (compile(shaderString))
+        {
+            FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+        }
+    }
+
+    for (size_t i = 0; i < ArraySize(withValueQualifiers); ++i)
+    {
+        const std::string shaderString =
+            kShaderStringPre + std::string(withValueQualifiers[i]) + "=1" + kShaderStringPost;
+
+        if (compile(shaderString))
+        {
+            FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+        }
     }
 }

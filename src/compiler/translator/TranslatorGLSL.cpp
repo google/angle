@@ -201,6 +201,8 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
             sink << "out vec4 angle_SecondaryFragData[" << getResources().MaxDualSourceDrawBuffers
                  << "];\n";
         }
+
+        EmitEarlyFragmentTestsGLSL(*this, sink);
     }
 
     if (getShaderType() == GL_COMPUTE_SHADER)

@@ -915,6 +915,8 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 return false;
             }
         }
+
+        EmitEarlyFragmentTestsGLSL(*this, sink);
     }
     else if (getShaderType() == GL_VERTEX_SHADER)
     {

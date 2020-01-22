@@ -185,6 +185,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mFunctionReturnsValue(false),
       mChecksPrecisionErrors(checksPrecErrors),
       mFragmentPrecisionHighOnESSL1(false),
+      mEarlyFragmentTestsSpecified(false),
       mDefaultUniformMatrixPacking(EmpColumnMajor),
       mDefaultUniformBlockStorage(sh::IsWebGLBasedSpec(spec) ? EbsStd140 : EbsShared),
       mDefaultBufferMatrixPacking(EmpColumnMajor),
@@ -1360,6 +1361,11 @@ void TParseContext::declarationQualifierErrorCheck(const sh::TQualifier qualifie
         checkYuvIsNotSpecified(location, layoutQualifier.yuv);
     }
 
+    if (qualifier != EvqFragmentIn)
+    {
+        checkEarlyFragmentTestsIsNotSpecified(location, layoutQualifier.earlyFragmentTests);
+    }
+
     // If multiview extension is enabled, "in" qualifier is allowed in the vertex shader in previous
     // parsing steps. So it needs to be checked here.
     if (anyMultiviewExtensionAvailable() && mShaderVersion < 300 && qualifier == EvqVertexIn)
@@ -1733,6 +1739,17 @@ void TParseContext::checkYuvIsNotSpecified(const TSourceLoc &location, bool yuv)
     if (yuv != false)
     {
         error(location, "invalid layout qualifier: only valid on program outputs", "yuv");
+    }
+}
+
+void TParseContext::checkEarlyFragmentTestsIsNotSpecified(const TSourceLoc &location,
+                                                          bool earlyFragmentTests)
+{
+    if (earlyFragmentTests != false)
+    {
+        error(location,
+              "invalid layout qualifier: only valid when used with 'in' in a fragment shader",
+              "early_fragment_tests");
     }
 }
 
@@ -2214,6 +2231,9 @@ TPublicType TParseContext::addFullySpecifiedType(const TTypeQualifierBuilder &ty
                                     typeSpecifier.getLine());
 
     checkWorkGroupSizeIsNotSpecified(typeSpecifier.getLine(), returnType.layoutQualifier);
+
+    checkEarlyFragmentTestsIsNotSpecified(typeSpecifier.getLine(),
+                                          returnType.layoutQualifier.earlyFragmentTests);
 
     if (mShaderVersion < 300)
     {
@@ -3067,6 +3087,12 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
     checkStd430IsForShaderStorageBlock(typeQualifier.line, layoutQualifier.blockStorage,
                                        typeQualifier.qualifier);
 
+    if (typeQualifier.qualifier != EvqFragmentIn)
+    {
+        checkEarlyFragmentTestsIsNotSpecified(typeQualifier.line,
+                                              layoutQualifier.earlyFragmentTests);
+    }
+
     if (typeQualifier.qualifier == EvqComputeIn)
     {
         if (mComputeShaderLocalSizeDeclared &&
@@ -3169,6 +3195,27 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
         }
 
         mNumViews = layoutQualifier.numViews;
+    }
+    else if (typeQualifier.qualifier == EvqFragmentIn)
+    {
+        if (mShaderVersion < 310)
+        {
+            error(typeQualifier.line,
+                  "in type qualifier without variable declaration supported in GLSL ES 3.10 only",
+                  "layout");
+            return;
+        }
+
+        if (!layoutQualifier.earlyFragmentTests)
+        {
+            error(typeQualifier.line,
+                  "only early_fragment_tests is allowed as layout qualifier when not declaring a "
+                  "variable",
+                  "layout");
+            return;
+        }
+
+        mEarlyFragmentTestsSpecified = true;
     }
     else
     {
@@ -3713,6 +3760,8 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     }
 
     checkYuvIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier.yuv);
+    checkEarlyFragmentTestsIsNotSpecified(typeQualifier.line,
+                                          typeQualifier.layoutQualifier.earlyFragmentTests);
 
     TLayoutQualifier blockLayoutQualifier = typeQualifier.layoutQualifier;
     checkLocationIsNotSpecified(typeQualifier.line, blockLayoutQualifier);
@@ -4348,6 +4397,11 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
             qualifier.yuv = true;
         }
     }
+    else if (qualifierType == "early_fragment_tests")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.earlyFragmentTests = true;
+    }
     else if (qualifierType == "rgba32f")
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
@@ -4858,6 +4912,8 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
                    typeSpecifier.getBasicType());
 
     checkWorkGroupSizeIsNotSpecified(typeSpecifier.getLine(), typeSpecifier.layoutQualifier);
+    checkEarlyFragmentTestsIsNotSpecified(typeSpecifier.getLine(),
+                                          typeSpecifier.layoutQualifier.earlyFragmentTests);
 
     TFieldList *fieldList = new TFieldList();
 

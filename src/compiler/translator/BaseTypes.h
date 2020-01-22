@@ -1122,16 +1122,16 @@ struct TLayoutQualifier
     bool isEmpty() const
     {
         return location == -1 && binding == -1 && offset == -1 && numViews == -1 && yuv == false &&
-               matrixPacking == EmpUnspecified && blockStorage == EbsUnspecified &&
-               !localSize.isAnyValueSet() && imageInternalFormat == EiifUnspecified &&
-               primitiveType == EptUndefined && invocations == 0 && maxVertices == -1 &&
-               index == -1;
+               earlyFragmentTests == false && matrixPacking == EmpUnspecified &&
+               blockStorage == EbsUnspecified && !localSize.isAnyValueSet() &&
+               imageInternalFormat == EiifUnspecified && primitiveType == EptUndefined &&
+               invocations == 0 && maxVertices == -1 && index == -1;
     }
 
     bool isCombinationValid() const
     {
-        bool workSizeSpecified = localSize.isAnyValueSet();
-        bool numViewsSet       = (numViews != -1);
+        bool workGroupSizeSpecified = localSize.isAnyValueSet();
+        bool numViewsSet            = (numViews != -1);
         bool geometryShaderSpecified =
             (primitiveType != EptUndefined) || (invocations != 0) || (maxVertices != -1);
         bool otherLayoutQualifiersSpecified =
@@ -1139,9 +1139,11 @@ struct TLayoutQualifier
              blockStorage != EbsUnspecified || imageInternalFormat != EiifUnspecified);
 
         // we can have either the work group size specified, or number of views,
-        // or yuv layout qualifier, or the other layout qualifiers.
-        return (workSizeSpecified ? 1 : 0) + (numViewsSet ? 1 : 0) + (yuv ? 1 : 0) +
-                   (otherLayoutQualifiersSpecified ? 1 : 0) + (geometryShaderSpecified ? 1 : 0) <=
+        // or yuv layout qualifier, or early_fragment_tests layout qualifier, or the other layout
+        // qualifiers.
+        return (workGroupSizeSpecified ? 1 : 0) + (numViewsSet ? 1 : 0) + (yuv ? 1 : 0) +
+                   (earlyFragmentTests ? 1 : 0) + (otherLayoutQualifiersSpecified ? 1 : 0) +
+                   (geometryShaderSpecified ? 1 : 0) <=
                1;
     }
 
@@ -1170,6 +1172,9 @@ struct TLayoutQualifier
     // EXT_YUV_target yuv layout qualifier.
     bool yuv;
 
+    // early_fragment_tests qualifier.
+    bool earlyFragmentTests;
+
     // OES_geometry_shader layout qualifiers.
     TLayoutPrimitiveType primitiveType;
     int invocations;
@@ -1190,6 +1195,7 @@ struct TLayoutQualifier
           imageInternalFormat(EiifUnspecified),
           numViews(-1),
           yuv(false),
+          earlyFragmentTests(false),
           primitiveType(EptUndefined),
           invocations(0),
           maxVertices(-1),

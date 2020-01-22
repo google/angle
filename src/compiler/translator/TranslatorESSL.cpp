@@ -90,6 +90,11 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     // Write array bounds clamping emulation if needed.
     getArrayBoundsClamper().OutputClampingFunctionDefinition(sink);
 
+    if (getShaderType() == GL_FRAGMENT_SHADER)
+    {
+        EmitEarlyFragmentTestsGLSL(*this, sink);
+    }
+
     if (getShaderType() == GL_COMPUTE_SHADER)
     {
         EmitWorkGroupSizeGLSL(*this, sink);

@@ -482,6 +482,8 @@ void TCompiler::setASTMetadata(const TParseContext &parseContext)
     mPragma = parseContext.pragma();
     mSymbolTable.setGlobalInvariant(mPragma.stdgl.invariantAll);
 
+    mEarlyFragmentTestsSpecified = parseContext.isEarlyFragmentTestsSpecified();
+
     mComputeShaderLocalSizeDeclared = parseContext.isComputeShaderLocalSizeDeclared();
     mComputeShaderLocalSize         = parseContext.getComputeShaderLocalSize();
 
@@ -1461,6 +1463,14 @@ bool TCompiler::isVaryingDefined(const char *varyingName)
     }
 
     return false;
+}
+
+void EmitEarlyFragmentTestsGLSL(const TCompiler &compiler, TInfoSinkBase &sink)
+{
+    if (compiler.isEarlyFragmentTestsSpecified())
+    {
+        sink << "layout (early_fragment_tests) in;\n";
+    }
 }
 
 void EmitWorkGroupSizeGLSL(const TCompiler &compiler, TInfoSinkBase &sink)

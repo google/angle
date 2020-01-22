@@ -638,6 +638,10 @@ TLayoutQualifier JoinLayoutQualifiers(TLayoutQualifier leftQualifier,
     {
         joinedQualifier.yuv = rightQualifier.yuv;
     }
+    if (rightQualifier.earlyFragmentTests != false)
+    {
+        joinedQualifier.earlyFragmentTests = rightQualifier.earlyFragmentTests;
+    }
     if (rightQualifier.binding != -1)
     {
         joinedQualifier.binding = rightQualifier.binding;
