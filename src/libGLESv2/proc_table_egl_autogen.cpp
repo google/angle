@@ -71,6 +71,7 @@ ProcEntry g_procTable[] = {
     {"eglGetError", P(EGL_GetError)},
     {"eglGetFrameTimestampSupportedANDROID", P(EGL_GetFrameTimestampSupportedANDROID)},
     {"eglGetFrameTimestampsANDROID", P(EGL_GetFrameTimestampsANDROID)},
+    {"eglGetMscRateCHROMIUM", P(EGL_GetMscRateCHROMIUM)},
     {"eglGetNativeClientBufferANDROID", P(EGL_GetNativeClientBufferANDROID)},
     {"eglGetNextFrameIdANDROID", P(EGL_GetNextFrameIdANDROID)},
     {"eglGetPlatformDisplay", P(EGL_GetPlatformDisplay)},
@@ -1539,5 +1540,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1435;
+size_t g_numProcs = 1436;
 }  // namespace egl

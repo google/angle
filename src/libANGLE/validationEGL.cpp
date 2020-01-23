@@ -3126,11 +3126,7 @@ Error ValidateStreamPostD3DTextureANGLE(const Display *display,
     return stream->validateD3D11Texture(texture, attribs);
 }
 
-Error ValidateGetSyncValuesCHROMIUM(const Display *display,
-                                    const Surface *eglSurface,
-                                    const EGLuint64KHR *ust,
-                                    const EGLuint64KHR *msc,
-                                    const EGLuint64KHR *sbc)
+Error ValidateSyncControlCHROMIUM(const Display *display, const Surface *eglSurface)
 {
     ANGLE_TRY(ValidateDisplay(display));
     ANGLE_TRY(ValidateSurface(display, eglSurface));
@@ -3140,6 +3136,36 @@ Error ValidateGetSyncValuesCHROMIUM(const Display *display,
     {
         return EglBadAccess() << "syncControlCHROMIUM extension not active";
     }
+
+    return NoError();
+}
+
+Error ValidateGetMscRateCHROMIUM(const Display *display,
+                                 const Surface *eglSurface,
+                                 const EGLint *numerator,
+                                 const EGLint *denominator)
+{
+    ANGLE_TRY(ValidateSyncControlCHROMIUM(display, eglSurface));
+
+    if (numerator == nullptr)
+    {
+        return EglBadParameter() << "numerator is null";
+    }
+    if (denominator == nullptr)
+    {
+        return EglBadParameter() << "denominator is null";
+    }
+
+    return NoError();
+}
+
+Error ValidateGetSyncValuesCHROMIUM(const Display *display,
+                                    const Surface *eglSurface,
+                                    const EGLuint64KHR *ust,
+                                    const EGLuint64KHR *msc,
+                                    const EGLuint64KHR *sbc)
+{
+    ANGLE_TRY(ValidateSyncControlCHROMIUM(display, eglSurface));
 
     if (ust == nullptr)
     {

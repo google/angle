@@ -269,6 +269,12 @@ egl::Error OffscreenSurfaceVk::getSyncValues(EGLuint64KHR * /*ust*/,
     return egl::EglBadAccess();
 }
 
+egl::Error OffscreenSurfaceVk::getMscRate(EGLint * /*numerator*/, EGLint * /*denominator*/)
+{
+    UNIMPLEMENTED();
+    return egl::EglBadAccess();
+}
+
 void OffscreenSurfaceVk::setSwapInterval(EGLint /*interval*/) {}
 
 EGLint OffscreenSurfaceVk::getWidth() const
@@ -1269,6 +1275,12 @@ egl::Error WindowSurfaceVk::releaseTexImage(const gl::Context *context, EGLint b
 egl::Error WindowSurfaceVk::getSyncValues(EGLuint64KHR * /*ust*/,
                                           EGLuint64KHR * /*msc*/,
                                           EGLuint64KHR * /*sbc*/)
+{
+    UNIMPLEMENTED();
+    return egl::EglBadAccess();
+}
+
+egl::Error WindowSurfaceVk::getMscRate(EGLint * /*numerator*/, EGLint * /*denominator*/)
 {
     UNIMPLEMENTED();
     return egl::EglBadAccess();

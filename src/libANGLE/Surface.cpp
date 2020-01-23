@@ -482,6 +482,11 @@ Error Surface::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR 
     return mImplementation->getSyncValues(ust, msc, sbc);
 }
 
+Error Surface::getMscRate(EGLint *numerator, EGLint *denominator)
+{
+    return mImplementation->getMscRate(numerator, denominator);
+}
+
 Error Surface::releaseTexImageFromTexture(const gl::Context *context)
 {
     ASSERT(mTexture);
