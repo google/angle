@@ -472,6 +472,8 @@ const char *GetLinkMismatchErrorString(LinkMismatchError linkError)
             return "Offset layout qualifier";
         case LinkMismatchError::INSTANCE_NAME_MISMATCH:
             return "Instance name qualifier";
+        case LinkMismatchError::FORMAT_MISMATCH:
+            return "Format qualifier";
 
         case LinkMismatchError::LAYOUT_QUALIFIER_MISMATCH:
             return "Layout qualifier";
@@ -3937,6 +3939,10 @@ LinkMismatchError Program::LinkValidateVariablesBase(const sh::ShaderVariable &v
     if (variable1.structName != variable2.structName)
     {
         return LinkMismatchError::STRUCT_NAME_MISMATCH;
+    }
+    if (variable1.imageUnitFormat != variable2.imageUnitFormat)
+    {
+        return LinkMismatchError::FORMAT_MISMATCH;
     }
 
     if (variable1.fields.size() != variable2.fields.size())

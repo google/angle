@@ -77,10 +77,11 @@ enum class LinkMismatchError
     LOCATION_MISMATCH,
     OFFSET_MISMATCH,
     INSTANCE_NAME_MISMATCH,
+    FORMAT_MISMATCH,
 
     // Interface block specific
     LAYOUT_QUALIFIER_MISMATCH,
-    MATRIX_PACKING_MISMATCH
+    MATRIX_PACKING_MISMATCH,
 };
 
 class InfoLog : angle::NonCopyable
