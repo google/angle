@@ -351,8 +351,18 @@ angle_static_library("angle_gpu_info_util") {
   libs = []
   defines = []
 
+  if (is_android || is_fuchsia) {
+    sources += libangle_gpu_info_util_vulkan_sources
+  }
+
   if (is_android) {
-    sources += [ "src/gpu_info_util/SystemInfo_android.cpp" ]
+    sources += libangle_gpu_info_util_android_sources
+  }
+
+  if (is_fuchsia) {
+    sources += libangle_gpu_info_util_fuchsia_sources
+    deps +=
+        [ "$angle_root/src/libANGLE/renderer/vulkan:angle_vulkan_entry_points" ]
   }
 
   if (is_win) {
@@ -363,7 +373,7 @@ angle_static_library("angle_gpu_info_util") {
     libs += [ "dxgi.lib" ]
   }
 
-  if (is_linux || is_fuchsia) {
+  if (is_linux) {
     sources += libangle_gpu_info_util_linux_sources
 
     if (angle_use_x11) {

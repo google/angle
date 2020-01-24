@@ -122,8 +122,19 @@ libangle_gpu_info_util_sources = [
 
 libangle_gpu_info_util_win_sources = [ "src/gpu_info_util/SystemInfo_win.cpp" ]
 
+libangle_gpu_info_util_android_sources =
+    [ "src/gpu_info_util/SystemInfo_android.cpp" ]
+
 libangle_gpu_info_util_linux_sources =
     [ "src/gpu_info_util/SystemInfo_linux.cpp" ]
+
+libangle_gpu_info_util_fuchsia_sources =
+    [ "src/gpu_info_util/SystemInfo_fuchsia.cpp" ]
+
+libangle_gpu_info_util_vulkan_sources = [
+  "src/gpu_info_util/SystemInfo_vulkan.cpp",
+  "src/gpu_info_util/SystemInfo_vulkan.h",
+]
 
 libangle_gpu_info_util_libpci_sources =
     [ "src/gpu_info_util/SystemInfo_libpci.cpp" ]
