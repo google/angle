@@ -393,13 +393,17 @@ TEST_P(ClearTest, ChangeFramebufferAttachmentFromRGBAtoRGB)
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
 
     GLTexture texture;
-    glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
-
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, nullptr);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 
+    // Initially clear to black.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Clear with masked color.
+    glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
     glClearColor(0.5f, 0.5f, 0.5f, 0.75f);
     glClear(GL_COLOR_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
