@@ -1025,14 +1025,22 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
+    vk::CommandBuffer *commandBuffer = nullptr;
+    if (!contextVk->commandGraphEnabled())
+    {
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    }
+
     if (mColorImageMS.valid())
     {
         // Transition the multisampled image to TRANSFER_SRC for resolve.
-        vk::CommandBuffer *multisampledTransition = nullptr;
-        ANGLE_TRY(mColorImageMS.recordCommands(contextVk, &multisampledTransition));
+        if (contextVk->commandGraphEnabled())
+        {
+            ANGLE_TRY(mColorImageMS.recordCommands(contextVk, &commandBuffer));
+        }
 
         mColorImageMS.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
-                                   multisampledTransition);
+                                   commandBuffer);
 
         // Setup graph dependency between the swapchain image and the multisampled one.
         image.image.addReadDependency(contextVk, &mColorImageMS);
@@ -1047,17 +1055,20 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         resolveRegion.dstOffset                     = {};
         resolveRegion.extent                        = image.image.getExtents();
 
-        vk::CommandBuffer *resolveCommands = nullptr;
-        ANGLE_TRY(image.image.recordCommands(contextVk, &resolveCommands));
-        mColorImageMS.resolve(&image.image, resolveRegion, resolveCommands);
+        if (contextVk->commandGraphEnabled())
+        {
+            ANGLE_TRY(image.image.recordCommands(contextVk, &commandBuffer));
+        }
+        mColorImageMS.resolve(&image.image, resolveRegion, commandBuffer);
     }
 
     ANGLE_TRY(updateAndDrawOverlay(contextVk, &image));
 
-    vk::CommandBuffer *transitionCommands = nullptr;
-    ANGLE_TRY(image.image.recordCommands(contextVk, &transitionCommands));
-    image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present,
-                             transitionCommands);
+    if (contextVk->commandGraphEnabled())
+    {
+        ANGLE_TRY(image.image.recordCommands(contextVk, &commandBuffer));
+    }
+    image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present, commandBuffer);
 
     // Knowing that the kSwapHistorySize'th submission ago has finished, we can know that the
     // (kSwapHistorySize+1)'th present ago of this image is definitely finished and so its wait

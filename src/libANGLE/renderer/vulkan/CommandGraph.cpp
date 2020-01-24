@@ -305,6 +305,8 @@ angle::Result CommandGraphResource::finishRunningCommands(ContextVk *contextVk)
 angle::Result CommandGraphResource::recordCommands(ContextVk *contextVk,
                                                    CommandBuffer **commandBufferOut)
 {
+    ASSERT(contextVk->commandGraphEnabled());
+
     updateCurrentAccessNodes();
 
     if (!hasChildlessWritingNode() || hasStartedRenderPass())
@@ -357,6 +359,8 @@ angle::Result CommandGraphResource::beginRenderPass(
 void CommandGraphResource::addWriteDependency(ContextVk *contextVk,
                                               CommandGraphResource *writingResource)
 {
+    ASSERT(contextVk->commandGraphEnabled());
+
     CommandGraphNode *writingNode = writingResource->mCurrentWritingNode;
     ASSERT(writingNode);
 
@@ -366,6 +370,8 @@ void CommandGraphResource::addWriteDependency(ContextVk *contextVk,
 void CommandGraphResource::addReadDependency(ContextVk *contextVk,
                                              CommandGraphResource *readingResource)
 {
+    ASSERT(contextVk->commandGraphEnabled());
+
     onResourceAccess(&contextVk->getResourceUseList());
 
     CommandGraphNode *readingNode = readingResource->mCurrentWritingNode;
@@ -383,11 +389,13 @@ void CommandGraphResource::addReadDependency(ContextVk *contextVk,
 
 void CommandGraphResource::finishCurrentCommands(ContextVk *contextVk)
 {
+    ASSERT(contextVk->commandGraphEnabled());
     startNewCommands(contextVk);
 }
 
 void CommandGraphResource::startNewCommands(ContextVk *contextVk)
 {
+    ASSERT(contextVk->commandGraphEnabled());
     CommandGraphNode *newCommands =
         contextVk->getCommandGraph()->allocateNode(CommandGraphNodeFunction::Generic);
     newCommands->setDiagnosticInfo(mResourceType, reinterpret_cast<uintptr_t>(this));

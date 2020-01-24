@@ -557,6 +557,18 @@ class BufferHelper final : public CommandGraphResource
 
     void changeQueue(uint32_t newQueueFamilyIndex, CommandBuffer *commandBuffer);
 
+    // New methods used when the CommandGraph is disabled.
+    bool canAccumulateRead(ContextVk *contextVk, VkAccessFlags readAccessType);
+    bool canAccumulateWrite(ContextVk *contextVk, VkAccessFlags writeAccessType);
+
+    void updateReadBarrier(VkAccessFlags readAccessType,
+                           VkAccessFlags *barrierSrcOut,
+                           VkAccessFlags *barrierDstOut);
+
+    void updateWriteBarrier(VkAccessFlags writeAccessType,
+                            VkAccessFlags *barrierSrcOut,
+                            VkAccessFlags *barrierDstOut);
+
   private:
     angle::Result mapImpl(ContextVk *contextVk);
     bool needsOnReadBarrier(VkAccessFlags readAccessType,

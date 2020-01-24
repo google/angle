@@ -65,8 +65,11 @@ angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk,
     mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
                          commandBuffer);
 
-    // Set up dependencies between the RT resource and the Framebuffer.
-    mImage->addWriteDependency(contextVk, framebufferVk);
+    if (contextVk->commandGraphEnabled())
+    {
+        // Set up dependencies between the RT resource and the Framebuffer.
+        mImage->addWriteDependency(contextVk, framebufferVk);
+    }
 
     onImageViewAccess(contextVk);
 

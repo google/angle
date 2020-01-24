@@ -636,6 +636,12 @@ class SecondaryCommandBuffer final : angle::NonCopyable
         reinterpret_cast<CommandHeader *>(mCurrentWritePointer)->id = CommandID::Invalid;
     }
 
+    void reset()
+    {
+        mCommands.clear();
+        initialize(mAllocator);
+    }
+
     // This will cause the SecondaryCommandBuffer to become invalid by clearing its allocator
     void releaseHandle() { mAllocator = nullptr; }
     // The SecondaryCommandBuffer is valid if it's been initialized

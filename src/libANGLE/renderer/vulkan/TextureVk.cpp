@@ -1429,7 +1429,14 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
     }
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+    if (contextVk->commandGraphEnabled())
+    {
+        ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+    }
+    else
+    {
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    }
     return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
                                       getNativeImageLayer(0), mImage->getLayerCount(),
                                       commandBuffer);

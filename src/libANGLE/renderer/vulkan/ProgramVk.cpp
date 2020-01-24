@@ -1389,12 +1389,26 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
         if (isStorageBuffer)
         {
             // We set the SHADER_READ_BIT to be conservative.
-            bufferHelper.onWrite(contextVk, recorder,
-                                 VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT);
+            VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+            if (contextVk->getFeatures().commandGraph.enabled)
+            {
+                bufferHelper.onWrite(contextVk, recorder, accessFlags);
+            }
+            else
+            {
+                contextVk->onBufferWrite(accessFlags, &bufferHelper);
+            }
         }
         else
         {
-            bufferHelper.onRead(contextVk, recorder, VK_ACCESS_UNIFORM_READ_BIT);
+            if (contextVk->getFeatures().commandGraph.enabled)
+            {
+                bufferHelper.onRead(contextVk, recorder, VK_ACCESS_UNIFORM_READ_BIT);
+            }
+            else
+            {
+                contextVk->onBufferRead(VK_ACCESS_UNIFORM_READ_BIT, &bufferHelper);
+            }
         }
 
         ++writeCount;

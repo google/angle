@@ -1640,6 +1640,51 @@ void BufferHelper::changeQueue(uint32_t newQueueFamilyIndex, CommandBuffer *comm
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
 
+bool BufferHelper::canAccumulateRead(ContextVk *contextVk, VkAccessFlags readAccessType)
+{
+    // We only need to start a new command buffer when we need a new barrier.
+    // For simplicity's sake for now we always start a new command buffer.
+    // TODO(jmadill): Re-use the command buffer. http://anglebug.com/4029
+    return false;
+}
+
+bool BufferHelper::canAccumulateWrite(ContextVk *contextVk, VkAccessFlags writeAccessType)
+{
+    // We only need to start a new command buffer when we need a new barrier.
+    // For simplicity's sake for now we always start a new command buffer.
+    // TODO(jmadill): Re-use the command buffer. http://anglebug.com/4029
+    return false;
+}
+
+void BufferHelper::updateReadBarrier(VkAccessFlags readAccessType,
+                                     VkAccessFlags *barrierSrcOut,
+                                     VkAccessFlags *barrierDstOut)
+{
+    if (mCurrentWriteAccess != 0 && (mCurrentReadAccess & readAccessType) != readAccessType)
+    {
+        *barrierSrcOut |= mCurrentWriteAccess;
+        *barrierDstOut |= readAccessType;
+    }
+
+    // Accumulate new read usage.
+    mCurrentReadAccess |= readAccessType;
+}
+
+void BufferHelper::updateWriteBarrier(VkAccessFlags writeAccessType,
+                                      VkAccessFlags *barrierSrcOut,
+                                      VkAccessFlags *barrierDstOut)
+{
+    if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
+    {
+        *barrierSrcOut |= mCurrentWriteAccess;
+        *barrierDstOut |= writeAccessType;
+    }
+
+    // Reset usages on the new write.
+    mCurrentWriteAccess = writeAccessType;
+    mCurrentReadAccess  = 0;
+}
+
 // ImageHelper implementation.
 ImageHelper::ImageHelper()
     : CommandGraphResource(CommandGraphResourceType::Image),
@@ -3165,7 +3210,14 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
     // Note that although we're reading from the image, we need to update the layout below.
     CommandBuffer *commandBuffer;
-    ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
+    if (contextVk->commandGraphEnabled())
+    {
+        ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
+    }
+    else
+    {
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    }
     changeLayout(copyAspectFlags, ImageLayout::TransferSrc, commandBuffer);
 
     const angle::Format *readFormat = &mFormat->actualImageFormat();
@@ -3638,5 +3690,24 @@ angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
     return angle::Result::Continue;
 }
 
+void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label)
+{
+    static constexpr angle::ColorF kLabelColors[6] = {
+        angle::ColorF(1.0f, 0.5f, 0.5f, 1.0f),  // DEBUG_SOURCE_API
+        angle::ColorF(0.5f, 1.0f, 0.5f, 1.0f),  // DEBUG_SOURCE_WINDOW_SYSTEM
+        angle::ColorF(0.5f, 0.5f, 1.0f, 1.0f),  // DEBUG_SOURCE_SHADER_COMPILER
+        angle::ColorF(0.7f, 0.7f, 0.7f, 1.0f),  // DEBUG_SOURCE_THIRD_PARTY
+        angle::ColorF(0.5f, 0.8f, 0.9f, 1.0f),  // DEBUG_SOURCE_APPLICATION
+        angle::ColorF(0.9f, 0.8f, 0.5f, 1.0f),  // DEBUG_SOURCE_OTHER
+    };
+
+    int colorIndex = source - GL_DEBUG_SOURCE_API;
+    ASSERT(colorIndex >= 0 && static_cast<size_t>(colorIndex) < ArraySize(kLabelColors));
+
+    label->sType      = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+    label->pNext      = nullptr;
+    label->pLabelName = marker;
+    kLabelColors[colorIndex].writeData(label->color);
+}
 }  // namespace vk
 }  // namespace rx
