@@ -138,6 +138,15 @@ inline bool IsApple()
 #endif
 }
 
+inline bool IsFuchsia()
+{
+#if defined(ANGLE_PLATFORM_FUCHSIA)
+    return true;
+#else
+    return false;
+#endif
+}
+
 struct OSVersion
 {
     OSVersion();
