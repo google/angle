@@ -48,7 +48,8 @@ struct EGLPlatformParameters
     auto tie() const
     {
         return std::tie(renderer, majorVersion, minorVersion, deviceType, presentPath,
-                        debugLayersEnabled, contextVirtualization, platformMethods);
+                        debugLayersEnabled, contextVirtualization, commandGraphFeature,
+                        transformFeedbackFeature, platformMethods);
     }
 
     EGLint renderer                         = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
