@@ -691,8 +691,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     void updateFlipViewportDrawFramebuffer(const gl::State &glState);
     void updateFlipViewportReadFramebuffer(const gl::State &glState);
 
-    angle::Result updateActiveTextures(const gl::Context *context,
-                                       vk::CommandGraphResource *recorder);
+    angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateActiveImages(const gl::Context *context,
                                      vk::CommandGraphResource *recorder);
     angle::Result updateDefaultAttribute(size_t attribIndex);
@@ -708,7 +707,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     }
 
     void invalidateCurrentDefaultUniforms();
-    void invalidateCurrentTextures();
+    angle::Result invalidateCurrentTextures(const gl::Context *context);
     void invalidateCurrentShaderResources();
     void invalidateGraphicsDriverUniforms();
     void invalidateDriverUniforms();

@@ -568,8 +568,8 @@ class State : angle::NonCopyable
         DIRTY_BIT_PROGRAM_BINDING,
         DIRTY_BIT_PROGRAM_EXECUTABLE,
         // TODO(jmadill): Fine-grained dirty bits for each texture/sampler.
-        DIRTY_BIT_TEXTURE_BINDINGS,
         DIRTY_BIT_SAMPLER_BINDINGS,
+        DIRTY_BIT_TEXTURE_BINDINGS,
         DIRTY_BIT_IMAGE_BINDINGS,
         DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING,
         DIRTY_BIT_UNIFORM_BUFFER_BINDINGS,

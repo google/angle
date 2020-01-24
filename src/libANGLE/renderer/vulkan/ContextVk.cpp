@@ -1138,8 +1138,20 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(const gl::Context 
                                                               vk::CommandBuffer *commandBuffer,
                                                               vk::CommandGraphResource *recorder)
 {
+    if (commandGraphEnabled())
+    {
+        ANGLE_TRY(updateActiveTextures(context));
 
-    ANGLE_TRY(updateActiveTextures(context, recorder));
+        const gl::ActiveTextureMask &activeTextures = mProgram->getState().getActiveSamplersMask();
+        for (size_t textureUnit : activeTextures)
+        {
+            vk::TextureUnit &unit = mActiveTextures[textureUnit];
+            TextureVk *textureVk  = unit.texture;
+            ASSERT(textureVk);
+            vk::ImageHelper &image = textureVk->getImage();
+            image.addReadDependency(this, recorder);
+        }
+    }
 
     if (mProgram->hasTextures())
     {
@@ -2300,8 +2312,9 @@ angle::Result ContextVk::syncState(const gl::Context *context,
         invalidateVertexAndIndexBuffers();
     }
 
-    for (size_t dirtyBit : dirtyBits)
+    for (auto iter = dirtyBits.begin(), endIter = dirtyBits.end(); iter != endIter; ++iter)
     {
+        size_t dirtyBit = *iter;
         switch (dirtyBit)
         {
             case gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED:
@@ -2525,7 +2538,9 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
                 invalidateCurrentDefaultUniforms();
-                invalidateCurrentTextures();
+                ASSERT(gl::State::DIRTY_BIT_TEXTURE_BINDINGS >
+                       gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE);
+                iter.setLaterBit(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
                 invalidateCurrentShaderResources();
                 if (glState.getProgram()->isCompute())
                 {
@@ -2545,11 +2560,15 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 }
                 break;
             }
-            case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
-                invalidateCurrentTextures();
-                break;
             case gl::State::DIRTY_BIT_SAMPLER_BINDINGS:
-                invalidateCurrentTextures();
+            {
+                ASSERT(gl::State::DIRTY_BIT_TEXTURE_BINDINGS >
+                       gl::State::DIRTY_BIT_SAMPLER_BINDINGS);
+                iter.setLaterBit(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
+                break;
+            }
+            case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
+                ANGLE_TRY(invalidateCurrentTextures(context));
                 break;
             case gl::State::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING:
                 // Nothing to do.
@@ -2789,7 +2808,7 @@ void ContextVk::invalidateCurrentDefaultUniforms()
     }
 }
 
-void ContextVk::invalidateCurrentTextures()
+angle::Result ContextVk::invalidateCurrentTextures(const gl::Context *context)
 {
     ASSERT(mProgram);
     if (mProgram->hasTextures())
@@ -2799,6 +2818,13 @@ void ContextVk::invalidateCurrentTextures()
         mComputeDirtyBits.set(DIRTY_BIT_TEXTURES);
         mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
+
+    if (!commandGraphEnabled())
+    {
+        ANGLE_TRY(updateActiveTextures(context));
+    }
+
+    return angle::Result::Continue;
 }
 
 void ContextVk::invalidateCurrentShaderResources()
@@ -3201,8 +3227,7 @@ void ContextVk::handleError(VkResult errorCode,
     mErrors->handleError(glErrorCode, errorStream.str().c_str(), file, function, line);
 }
 
-angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
-                                              vk::CommandGraphResource *recorder)
+angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 {
     const gl::State &glState   = mState;
     const gl::Program *program = glState.getProgram();
@@ -3275,11 +3300,6 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
         }
 
         textureVk->onImageViewUse(&mResourceUseList);
-
-        if (commandGraphEnabled())
-        {
-            image.addReadDependency(this, recorder);
-        }
 
         mActiveTextures[textureUnit].texture = textureVk;
         mActiveTextures[textureUnit].sampler = samplerVk;
