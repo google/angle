@@ -373,6 +373,11 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
         if (param.majorVersion > 2 && IsARM())
             return false;
 
+        // Loading swiftshader is not brought up on Fuchsia.
+        // TODO(anglebug.com/4353): Support loading swiftshader vulkan ICD.
+        if (param.getDeviceType() == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE)
+            return false;
+
         // Currently we only support the Vulkan back-end on Fuchsia.
         return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
     }
