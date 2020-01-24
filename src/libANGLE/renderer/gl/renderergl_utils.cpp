@@ -1599,9 +1599,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // The WebGL conformance/uniforms/out-of-bounds-uniform-array-access test has been seen to fail
     // on AMD and Android devices.
-    ANGLE_FEATURE_CONDITION(
-        features, clampArrayAccess,
-        IsAndroid() || isAMD || !functions->hasExtension("GL_KHR_robust_buffer_access_behavior"));
+    // This test is also flaky on Linux Nvidia. So we just turn it on everywhere and don't rely on
+    // driver since security is important.
+    ANGLE_FEATURE_CONDITION(features, clampArrayAccess, true);
 
     ANGLE_FEATURE_CONDITION(features, resetTexImage2DBaseLevel,
                             IsApple() && isIntel && GetMacOSVersion() >= OSVersion(10, 12, 4));
