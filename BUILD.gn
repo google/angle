@@ -111,6 +111,10 @@ config("internal_config") {
   if (is_chromeos) {
     defines += [ "ANGLE_PLATFORM_CHROMEOS" ]
   }
+
+  if (is_ggp) {
+    defines += [ "__ggp__" ]
+  }
 }
 
 config("constructor_and_destructor_warnings") {
