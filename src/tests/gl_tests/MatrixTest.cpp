@@ -183,10 +183,6 @@ layout(location=6) in vec3 vector;
 
 out vec4 oColor;
 
-bool isZero(vec4 value) {
-    return value == vec4(0,0,0,0);
-}
-
 void main()
 {
     oColor = vec4(matrix[0][0]);
@@ -212,6 +208,82 @@ void main()
 {
     matrix[0] = mat3x4(1.0);
     matrix[1] = mat3x4(1.0);
+    vector = vec3(1.0);
+    gl_Position = a_position;
+})";
+
+    GLProgram program;
+
+    GLuint vs                    = glCreateShader(GL_VERTEX_SHADER);
+    const char *sourceVsArray[1] = {kVS};
+    glShaderSource(vs, 1, sourceVsArray, nullptr);
+    glCompileShader(vs);
+    GLint compileResult;
+    glGetShaderiv(vs, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_GL_FALSE(compileResult);
+}
+
+TEST_P(MatrixTest31, Mat3x4StructVarying)
+{
+    constexpr char kVS[] = R"(#version 310 es
+precision mediump float;
+
+in vec4 a_position;
+
+struct S
+{
+    mat3x4 m;
+};
+layout(location=0) out S matrix;
+layout(location=3) out vec3 vector;
+
+void main()
+{
+    matrix.m = mat3x4(1.0);
+    vector = vec3(1.0);
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+
+struct S
+{
+    mat3x4 m;
+};
+layout(location=0) in S matrix;
+layout(location=3) in vec3 vector;
+
+out vec4 oColor;
+
+void main()
+{
+    oColor = vec4(matrix.m[0]);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+}
+
+TEST_P(MatrixTest31, Mat3x4StructVaryingBadLocation)
+{
+    constexpr char kVS[] = R"(#version 310 es
+precision mediump float;
+
+in vec4 a_position;
+
+struct S
+{
+    mat3x4 m;
+};
+layout(location=0) out S matrix;
+layout(location=2) out vec3 vector;
+
+void main()
+{
+    matrix.m = mat3x4(1.0);
     vector = vec3(1.0);
     gl_Position = a_position;
 })";

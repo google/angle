@@ -37,7 +37,8 @@ int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
             const auto *fieldType = field->type();
             ASSERT(fieldType->getStruct() == nullptr && !fieldType->isArray());
 
-            totalLocation += fieldType->getSecondarySize();
+            totalLocation +=
+                fieldType->isMatrix() ? fieldType->getNominalSize() : fieldType->getSecondarySize();
         }
         return totalLocation;
     }
