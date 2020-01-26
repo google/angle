@@ -362,10 +362,6 @@ TEST_P(FramebufferFormatsTest, ReadDrawCompleteness)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
-
 class FramebufferTest_ES3 : public ANGLETest
 {};
 
@@ -818,7 +814,61 @@ TEST_P(FramebufferTest_ES3, ResizeTextureSmallToLarge)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green);
 }
 
-ANGLE_INSTANTIATE_TEST_ES3(FramebufferTest_ES3);
+// Test that fewer outputs than framebuffer attachments doesn't crash.  This causes a Vulkan
+// validation warning, but should not be fatal.
+TEST_P(FramebufferTest_ES3, FewerShaderOutputsThanAttachments)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+
+layout(location = 0) out vec4 color0;
+layout(location = 1) out vec4 color1;
+layout(location = 2) out vec4 color2;
+
+void main()
+{
+    color0 = vec4(1.0, 0.0, 0.0, 1.0);
+    color1 = vec4(0.0, 1.0, 0.0, 1.0);
+    color2 = vec4(0.0, 0.0, 1.0, 1.0);
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    constexpr GLint kDrawBufferCount = 4;
+
+    GLint maxDrawBuffers;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ASSERT_GE(maxDrawBuffers, kDrawBufferCount);
+
+    GLTexture textures[kDrawBufferCount];
+
+    for (GLint texIndex = 0; texIndex < kDrawBufferCount; ++texIndex)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[texIndex]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+    }
+
+    GLenum allBufs[kDrawBufferCount] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                        GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+
+    // Enable all draw buffers.
+    for (GLint texIndex = 0; texIndex < kDrawBufferCount; ++texIndex)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[texIndex]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texIndex, GL_TEXTURE_2D,
+                               textures[texIndex], 0);
+    }
+    glDrawBuffers(kDrawBufferCount, allBufs);
+
+    // Draw with simple program.
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+}
 
 class FramebufferTest_ES31 : public ANGLETest
 {
@@ -1124,8 +1174,6 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
-ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31);
-
 class AddDummyTextureNoRenderTargetTest : public ANGLETest
 {
   public:
@@ -1161,3 +1209,6 @@ TEST_P(AddDummyTextureNoRenderTargetTest, NoProgramOutputWorkaround)
 }
 
 ANGLE_INSTANTIATE_TEST_ES2(AddDummyTextureNoRenderTargetTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
+ANGLE_INSTANTIATE_TEST_ES3(FramebufferTest_ES3);
+ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31);

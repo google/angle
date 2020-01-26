@@ -616,6 +616,61 @@ void main()
     verifyAttachment2DColor(3, textures[3], GL_TEXTURE_2D, 0, GLColor::white);
 }
 
+// Test that inactive fragment shader outputs don't cause a crash.
+TEST_P(GLSLTest_ES3, InactiveFragmentShaderOutput)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+
+// Make color0 inactive but specify color1 first.  The Vulkan backend assigns bogus locations when
+// compiling and fixes it up in SPIR-V.  If color0's location is not fixed, it will return location
+// 1 (aliasing color1).  This will lead to a Vulkan validation warning about attachment 0 not being
+// written to, which shouldn't be fatal.
+layout(location = 1) out vec4 color1;
+layout(location = 0) out vec4 color0;
+
+void main()
+{
+    color1 = vec4(0.0, 1.0, 0.0, 1.0);
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    constexpr GLint kDrawBufferCount = 2;
+
+    GLint maxDrawBuffers;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ASSERT_GE(maxDrawBuffers, kDrawBufferCount);
+
+    GLTexture textures[kDrawBufferCount];
+
+    for (GLint texIndex = 0; texIndex < kDrawBufferCount; ++texIndex)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[texIndex]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+    }
+
+    GLenum allBufs[kDrawBufferCount] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+
+    // Enable all draw buffers.
+    for (GLint texIndex = 0; texIndex < kDrawBufferCount; ++texIndex)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[texIndex]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texIndex, GL_TEXTURE_2D,
+                               textures[texIndex], 0);
+    }
+    glDrawBuffers(kDrawBufferCount, allBufs);
+
+    // Draw with simple program.
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+}
+
 TEST_P(GLSLTest, ScopedStructsOrderBug)
 {
     // TODO(geofflang): Find out why this doesn't compile on Apple OpenGL drivers

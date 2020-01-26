@@ -734,7 +734,8 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
     // every field of an active uniform that's of struct type as active, i.e. no extracted sampler
     // is inactive.
     if (!RemoveInactiveInterfaceVariables(this, root, getAttributes(), getInputVaryings(),
-                                          getUniforms(), getInterfaceBlocks()))
+                                          getOutputVariables(), getUniforms(),
+                                          getInterfaceBlocks()))
     {
         return false;
     }

@@ -31,6 +31,7 @@ ANGLE_NO_DISCARD bool RemoveInactiveInterfaceVariables(
     TIntermBlock *root,
     const std::vector<sh::ShaderVariable> &attributes,
     const std::vector<sh::ShaderVariable> &inputVaryings,
+    const std::vector<sh::ShaderVariable> &outputVariables,
     const std::vector<sh::ShaderVariable> &uniforms,
     const std::vector<sh::InterfaceBlock> &interfaceBlocks);
 
