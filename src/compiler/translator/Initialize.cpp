@@ -107,17 +107,27 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     }
 }
 
-void ResetExtensionBehavior(TExtensionBehavior &extBehavior)
+void ResetExtensionBehavior(const ShBuiltInResources &resources,
+                            TExtensionBehavior &extBehavior,
+                            const ShCompileOptions compileOptions)
 {
     for (auto &ext : extBehavior)
     {
-        if (ext.first == TExtension::ARB_texture_rectangle)
+        ext.second = EBhUndefined;
+    }
+    if (resources.ARB_texture_rectangle)
+    {
+        if (compileOptions & SH_DISABLE_ARB_TEXTURE_RECTANGLE)
         {
-            ext.second = EBhEnable;
+            // Remove ARB_texture_rectangle so it can't be enabled by extension directives.
+            extBehavior.erase(TExtension::ARB_texture_rectangle);
         }
         else
         {
-            ext.second = EBhUndefined;
+            // Restore ARB_texture_rectangle in case it was removed during an earlier reset.  As
+            // noted above, it doesn't follow the standard for extension directives and is enabled
+            // by default.
+            extBehavior[TExtension::ARB_texture_rectangle] = EBhEnable;
         }
     }
 }
