@@ -3321,6 +3321,14 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
 
     const gl::ActiveTextureMask &activeImages = program->getActiveImagesMask();
 
+    // Note: currently, the image layout is transitioned entirely even if only one level or layer is
+    // used.  This is an issue if one subresource of the image is used as framebuffer attachment and
+    // the other as image.  This is a similar issue to http://anglebug.com/2914.  Another issue
+    // however is if multiple subresources of the same image are used at the same time.
+    // Inefficiencies aside, setting write dependency on the same image multiple times is not
+    // supported.  The following makes sure write dependencies are set only once per image.
+    std::set<vk::ImageHelper *> alreadyProcessed;
+
     for (size_t imageUnitIndex : activeImages)
     {
         const gl::ImageUnit &imageUnit = glState.getImageUnit(imageUnitIndex);
@@ -3332,6 +3340,14 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
 
         TextureVk *textureVk   = vk::GetImpl(texture);
         vk::ImageHelper *image = &textureVk->getImage();
+
+        mActiveImages[imageUnitIndex] = textureVk;
+
+        if (alreadyProcessed.find(image) != alreadyProcessed.end())
+        {
+            continue;
+        }
+        alreadyProcessed.insert(image);
 
         // The image should be flushed and ready to use at this point. There may still be
         // lingering staged updates in its staging buffer for unused texture mip levels or
@@ -3349,7 +3365,7 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
             imageLayout = vk::ImageLayout::ComputeShaderWrite;
         }
 
-        // Ensure the image is in read-only layout
+        // Ensure the image is in the correct layout
         if (image->isLayoutChangeNecessary(imageLayout))
         {
             vk::CommandBuffer *layoutChange;
@@ -3360,8 +3376,6 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         }
 
         image->addWriteDependency(this, recorder);
-
-        mActiveImages[imageUnitIndex] = textureVk;
     }
 
     return angle::Result::Continue;
