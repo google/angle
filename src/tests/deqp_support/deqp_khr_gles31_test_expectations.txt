@@ -73,6 +73,8 @@
 // --gtest_filter=dEQP.KHR_GLES31/core_texture_storage_multisample_FunctionalTests_verify_sample_masking_for_non_integer_color_renderable_internalformats* --use-angle=swiftshader
 4259 SWIFTSHADER : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.verify_sample_masking_for_non_integer_color_renderable_internalformats = FAIL
 
+// Swiftshader uses "old" sampler rewrite that doesn't support array of arrays
+4071 SWIFTSHADER : KHR-GLES31.core.arrays_of_arrays.* = SKIP
 
 ////
 //// General Vulkan expectations
@@ -135,3 +137,6 @@
 // Fails on Pixel2 and Pixel2 XL
 4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-elements = FAIL
 4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-arrays = FAIL
+
+// Android uses "old" sampler rewrite that doesn't support array of arrays
+2703 VULKAN ANDROID : KHR-GLES31.core.arrays_of_arrays.* = SKIP

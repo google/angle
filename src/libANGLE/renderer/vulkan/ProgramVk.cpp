@@ -367,13 +367,12 @@ ProgramVk::ShaderInfo::~ShaderInfo() = default;
 angle::Result ProgramVk::ShaderInfo::initShaders(
     ContextVk *contextVk,
     const gl::ShaderMap<std::string> &shaderSources,
-    const ShaderInterfaceVariableInfoMap &variableInfoMap,
-    gl::ShaderMap<SpirvBlob> *spirvBlobsOut)
+    const ShaderInterfaceVariableInfoMap &variableInfoMap)
 {
     ASSERT(!valid());
 
     ANGLE_TRY(GlslangWrapperVk::GetShaderCode(contextVk, contextVk->getCaps(), shaderSources,
-                                              variableInfoMap, spirvBlobsOut));
+                                              variableInfoMap, &mSpirvBlobs));
 
     mIsInitialized = true;
     return angle::Result::Continue;
@@ -386,6 +385,34 @@ void ProgramVk::ShaderInfo::release(ContextVk *contextVk)
         spirvBlob.clear();
     }
     mIsInitialized = false;
+}
+
+void ProgramVk::ShaderInfo::load(gl::BinaryInputStream *stream)
+{
+    // Read in shader codes for all shader types
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        SpirvBlob *spirvBlob = &mSpirvBlobs[shaderType];
+
+        // Read the SPIR-V
+        stream->readIntVector<uint32_t>(spirvBlob);
+    }
+
+    mIsInitialized = true;
+}
+
+void ProgramVk::ShaderInfo::save(gl::BinaryOutputStream *stream)
+{
+    ASSERT(valid());
+
+    // Write out shader codes for all shader types
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        const SpirvBlob &spirvBlob = mSpirvBlobs[shaderType];
+
+        // Write the SPIR-V
+        stream->writeIntVector(spirvBlob);
+    }
 }
 
 // ProgramVk::ProgramInfo implementation.
@@ -429,78 +456,6 @@ void ProgramVk::ProgramInfo::release(ContextVk *contextVk)
     for (vk::RefCounted<vk::ShaderAndSerial> &shader : mShaders)
     {
         shader.get().destroy(contextVk->getDevice());
-    }
-}
-
-angle::Result ProgramVk::loadSpirvBlob(ContextVk *contextVk, gl::BinaryInputStream *stream)
-{
-    // Read in shader codes for all shader types
-    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        // Read the shader source
-        mShaderSources[shaderType] = stream->readString();
-
-        SpirvBlob *spirvBlob = &mShaderInfo.getSpirvBlobs()[shaderType];
-
-        // Read the SPIR-V
-        stream->readIntVector<uint32_t>(spirvBlob);
-    }
-
-    // Read the expected bindings
-    size_t infoCount = stream->readInt<size_t>();
-    for (size_t i = 0; i < infoCount; ++i)
-    {
-        std::string varName = stream->readString();
-        ShaderInterfaceVariableInfo info;
-
-        info.descriptorSet = stream->readInt<uint32_t>();
-        info.binding       = stream->readInt<uint32_t>();
-        info.activeStages  = gl::ShaderBitSet(static_cast<uint8_t>(stream->readInt<uint32_t>()));
-        info.xfbBuffer     = stream->readInt<uint32_t>();
-        info.xfbOffset     = stream->readInt<uint32_t>();
-        info.xfbStride     = stream->readInt<uint32_t>();
-        for (gl::ShaderType shaderType : gl::AllShaderTypes())
-        {
-            info.location[shaderType]  = stream->readInt<uint32_t>();
-            info.component[shaderType] = stream->readInt<uint32_t>();
-        }
-
-        mVariableInfoMap[varName] = info;
-    }
-
-    return angle::Result::Continue;
-}
-
-void ProgramVk::saveSpirvBlob(gl::BinaryOutputStream *stream)
-{
-    // Write out shader codes for all shader types
-    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        // Write the shader source
-        stream->writeString(mShaderSources[shaderType]);
-
-        const SpirvBlob &spirvBlob = mShaderInfo.getSpirvBlobs()[shaderType];
-
-        // Write the SPIR-V
-        stream->writeIntVector(spirvBlob);
-    }
-
-    // Write the expected bindings
-    stream->writeInt(mVariableInfoMap.size());
-    for (const auto &nameInfo : mVariableInfoMap)
-    {
-        stream->writeString(nameInfo.first);
-        stream->writeIntOrNegOne(nameInfo.second.descriptorSet);
-        stream->writeIntOrNegOne(nameInfo.second.binding);
-        stream->writeIntOrNegOne(nameInfo.second.activeStages.bits());
-        stream->writeIntOrNegOne(nameInfo.second.xfbBuffer);
-        stream->writeIntOrNegOne(nameInfo.second.xfbOffset);
-        stream->writeIntOrNegOne(nameInfo.second.xfbStride);
-        for (gl::ShaderType shaderType : gl::AllShaderTypes())
-        {
-            stream->writeIntOrNegOne(nameInfo.second.location[shaderType]);
-            stream->writeIntOrNegOne(nameInfo.second.component[shaderType]);
-        }
     }
 }
 
@@ -571,11 +526,9 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
     gl::ShaderMap<size_t> requiredBufferSize;
     requiredBufferSize.fill(0);
 
-    angle::Result status = loadSpirvBlob(contextVk, stream);
-    if (status != angle::Result::Continue)
-    {
-        return std::make_unique<LinkEventDone>(status);
-    }
+    reset(contextVk);
+
+    mShaderInfo.load(stream);
 
     // Deserializes the uniformLayout data of mDefaultUniformBlocks
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -595,10 +548,8 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
         requiredBufferSize[shaderType] = stream->readInt<size_t>();
     }
 
-    reset(contextVk);
-
     // Initialize and resize the mDefaultUniformBlocks' memory
-    status = resizeUniformBlockMemory(contextVk, requiredBufferSize);
+    angle::Result status = resizeUniformBlockMemory(contextVk, requiredBufferSize);
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);
@@ -609,9 +560,7 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
 
 void ProgramVk::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 {
-    // (geofflang): Look into saving shader modules in ShaderInfo objects (keep in mind that we
-    // compile shaders lazily)
-    saveSpirvBlob(stream);
+    mShaderInfo.save(stream);
 
     // Serializes the uniformLayout data of mDefaultUniformBlocks
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -652,12 +601,22 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     // assignment done in that function.
     linkResources(resources);
 
-    GlslangWrapperVk::GetShaderSource(contextVk->getRenderer()->getFeatures(), mState, resources,
-                                      &mShaderSources, &mVariableInfoMap);
-
     reset(contextVk);
 
-    angle::Result status = initDefaultUniformBlocks(context);
+    // Gather variable info and transform sources.
+    gl::ShaderMap<std::string> shaderSources;
+    ShaderInterfaceVariableInfoMap variableInfoMap;
+    GlslangWrapperVk::GetShaderSource(contextVk->getRenderer()->getFeatures(), mState, resources,
+                                      &shaderSources, &variableInfoMap);
+
+    // Compile the shaders.
+    angle::Result status = mShaderInfo.initShaders(contextVk, shaderSources, variableInfoMap);
+    if (status != angle::Result::Continue)
+    {
+        return std::make_unique<LinkEventDone>(status);
+    }
+
+    status = initDefaultUniformBlocks(context);
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);

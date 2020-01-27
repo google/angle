@@ -534,11 +534,6 @@
 
 // General Vulkan failures
 
-// ANGLEPosition location assignment overlaps other varyings.  This only affects platforms that
-// don't support the bresenham line raster extension, which in turn also depends on the driver
-// versions.
-4251 VULKAN NVIDIA : dEQP-GLES3.functional.shaders.linkage.varying.struct.float_uvec2_vec3 = FAIL
-
 // Tests failing due to the "flat" qualifier in the shader:
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.basic.int.* = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.basic.uint.* = FAIL

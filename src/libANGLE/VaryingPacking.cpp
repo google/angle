@@ -433,7 +433,8 @@ void VaryingPacking::packUserVaryingFieldTF(const ProgramVaryingRef &ref,
 
 bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
                                                 const ProgramMergedVaryings &mergedVaryings,
-                                                const std::vector<std::string> &tfVaryings)
+                                                const std::vector<std::string> &tfVaryings,
+                                                const bool isSeparableProgram)
 {
     VaryingUniqueFullNames uniqueFullNames;
     mPackedVaryings.clear();
@@ -450,7 +451,8 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         // optimizations" may be used to make vertex shader outputs fit.
         if ((input && output && output->staticUse) ||
             (input && input->isBuiltIn() && input->active) ||
-            (output && output->isBuiltIn() && output->active))
+            (output && output->isBuiltIn() && output->active) ||
+            (isSeparableProgram && ((input && input->active) || (output && output->active))))
         {
             const sh::ShaderVariable *varying = output ? output : input;
 
@@ -485,7 +487,7 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         }
 
         // If the varying is not used in the input, we know it is inactive.
-        if (!input)
+        if (!input && !isSeparableProgram)
         {
             mInactiveVaryingMappedNames[ref.backShaderStage].push_back(output->mappedName);
             continue;

@@ -2246,20 +2246,21 @@ TEST_P(GLSLTest_ES3, AmbiguousFunctionCall2x2)
 TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
 {
     std::stringstream vertexShaderStream;
-    const unsigned int paramCount = 1024u;
+    // Note: SPIR-V doesn't allow more than 255 parameters to a function.
+    const unsigned int paramCount = IsVulkan() ? 255u : 1024u;
 
     vertexShaderStream << "#version 300 es\n"
                           "precision highp float;\n"
                           "in vec4 a_vec;\n"
                           "vec4 lotsOfVec4Parameters(";
-    for (unsigned int i = 0; i < paramCount; ++i)
+    for (unsigned int i = 0; i < paramCount - 1; ++i)
     {
         vertexShaderStream << "vec4 a" << i << ", ";
     }
     vertexShaderStream << "vec4 aLast)\n"
                           "{\n"
                           "    vec4 sum = vec4(0.0, 0.0, 0.0, 0.0);\n";
-    for (unsigned int i = 0; i < paramCount; ++i)
+    for (unsigned int i = 0; i < paramCount - 1; ++i)
     {
         vertexShaderStream << "    sum += a" << i << ";\n";
     }
@@ -2269,7 +2270,7 @@ TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
                           "void main()\n"
                           "{\n"
                           "    gl_Position = lotsOfVec4Parameters(";
-    for (unsigned int i = 0; i < paramCount; ++i)
+    for (unsigned int i = 0; i < paramCount - 1; ++i)
     {
         vertexShaderStream << "a_vec, ";
     }

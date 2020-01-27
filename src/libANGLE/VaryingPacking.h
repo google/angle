@@ -72,7 +72,11 @@ struct PackedVarying : angle::NonCopyable
 
     PackedVarying &operator=(PackedVarying &&other);
 
-    bool isStructField() const { return !frontVarying.parentStructName.empty(); }
+    bool isStructField() const
+    {
+        return frontVarying.varying ? !frontVarying.parentStructName.empty()
+                                    : !backVarying.parentStructName.empty();
+    }
 
     bool isArrayElement() const { return arrayIndex != GL_INVALID_INDEX; }
 
@@ -190,7 +194,8 @@ class VaryingPacking final : angle::NonCopyable
 
     bool collectAndPackUserVaryings(gl::InfoLog &infoLog,
                                     const ProgramMergedVaryings &mergedVaryings,
-                                    const std::vector<std::string> &tfVaryings);
+                                    const std::vector<std::string> &tfVaryings,
+                                    const bool isSeparableProgram);
 
     struct Register
     {
