@@ -5700,6 +5700,50 @@ TEST_F(FragmentShaderValidationTest, AtomicAddWithNonStorageVariable)
     }
 }
 
+// Test that it is acceptable to pass a swizzle of a member of a shader storage block to the mem
+// argument of an atomic memory function.
+TEST_F(FragmentShaderValidationTest, AtomicAddWithSwizzle)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+
+        layout(std140) buffer bufferName{
+            uvec4 u1[2];
+        } instanceName[3];
+
+        void main()
+        {
+            atomicAdd(instanceName[2].u1[1].y, 2u);
+        })";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Test that it is not allowed to pass an expression that does not constitute of indexing, field
+// selection or swizzle to the mem argument of an atomic memory function.
+TEST_F(FragmentShaderValidationTest, AtomicAddWithNonIndexNonSwizzleExpression)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+
+        layout(std140) buffer bufferName{
+            uint u1[2];
+        } instanceName[3];
+
+        void main()
+        {
+            atomicAdd(instanceName[2].u1[1] + 1u, 2u);
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
 // Test that negative indexing of a matrix doesn't result in an assert.
 TEST_F(FragmentShaderValidationTest, MatrixNegativeIndex)
 {

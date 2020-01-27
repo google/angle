@@ -5898,9 +5898,13 @@ void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *function
             return;
         }
 
-        while (memNode->getAsBinaryNode())
+        while (memNode->getAsBinaryNode() || memNode->getAsSwizzleNode())
         {
-            memNode = memNode->getAsBinaryNode()->getLeft();
+            // Child 0 is "left" if binary, and the expression being swizzled if swizzle.
+            // Note: we don't need to check that the binary operation is one of EOp*Index*, as any
+            // other operation will result in a temp value which cannot be passed to this
+            // out/inout parameter anyway.
+            memNode = memNode->getChildNode(0)->getAsTyped();
             if (IsBufferOrSharedVariable(memNode))
             {
                 return;
