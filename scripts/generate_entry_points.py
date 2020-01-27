@@ -149,7 +149,7 @@ template_entry_point_no_return = """void GL_APIENTRY {name}{explicit_context_suf
 
     if (context)
     {{{assert_explicit_context}{packed_gl_enum_conversions}
-        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid = (context->skipValidation() || Validate{name}({validate_params}));
         if (isCallValid)
         {{
@@ -168,7 +168,7 @@ template_entry_point_with_return = """{return_type}GL_APIENTRY {name}{explicit_c
     {return_type} returnValue;
     if (context)
     {{{assert_explicit_context}{packed_gl_enum_conversions}
-        std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid = (context->skipValidation() || Validate{name}({validate_params}));
         if (isCallValid)
         {{
