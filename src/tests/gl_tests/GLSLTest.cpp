@@ -6078,6 +6078,34 @@ void main()
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
+// Test that linking varyings by location works.
+TEST_P(GLSLTest_ES31, LinkVaryingsByLocation)
+{
+    // http://anglebug.com/4355
+    ANGLE_SKIP_TEST_IF(IsVulkan() || IsMetal() || IsD3D11());
+
+    constexpr char kVS[] = R"(#version 310 es
+precision highp float;
+in vec4 position;
+layout(location = 1) out vec4 shaderOutput;
+void main() {
+    gl_Position = position;
+    shaderOutput = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+layout(location = 1) in vec4 shaderInput;
+out vec4 outColor;
+void main() {
+    outColor = shaderInput;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test nesting floor() calls with a large multiplier inside.
 TEST_P(GLSLTest_ES3, NestedFloorWithLargeMultiplierInside)
 {
