@@ -128,6 +128,7 @@ const ShCompileOptions SH_ENFORCE_PACKING_RESTRICTIONS = UINT64_C(1) << 9;
 // vec234, or mat234 type. The ShArrayIndexClampingStrategy enum,
 // specified in the ShBuiltInResources when constructing the
 // compiler, selects the strategy for the clamping implementation.
+// TODO(http://anglebug.com/4361): fix for compute shaders.
 const ShCompileOptions SH_CLAMP_INDIRECT_ARRAY_BOUNDS = UINT64_C(1) << 10;
 
 // This flag limits the complexity of an expression.

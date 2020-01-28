@@ -1601,7 +1601,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // on AMD and Android devices.
     // This test is also flaky on Linux Nvidia. So we just turn it on everywhere and don't rely on
     // driver since security is important.
-    ANGLE_FEATURE_CONDITION(features, clampArrayAccess, true);
+    ANGLE_FEATURE_CONDITION(
+        features, clampArrayAccess,
+        IsAndroid() || isAMD || !functions->hasExtension("GL_KHR_robust_buffer_access_behavior"));
 
     ANGLE_FEATURE_CONDITION(features, resetTexImage2DBaseLevel,
                             IsApple() && isIntel && GetMacOSVersion() >= OSVersion(10, 12, 4));
