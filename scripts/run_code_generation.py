@@ -232,7 +232,8 @@ def main():
         # line length limits. Work around this by calling git cl format with --full.
         args += ['cl', 'format', '--full']
         print('Calling git cl format')
-        subprocess.call(args)
+        if subprocess.call(args) != 0:
+            sys.exit(1)
 
         # Update the output hashes again since they can be formatted.
         for name, script in sorted(generators.iteritems()):
