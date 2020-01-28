@@ -604,12 +604,6 @@
 4098 SWIFTSHADER : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_multiple_groups = FAIL
 4098 SWIFTSHADER : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_single_invocation = FAIL
 
-// The following are failing because of pixel/sub-pixel rendering differences than what is expected:
-4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_1.sample_position = FAIL
-4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_2.sample_position = FAIL
-4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_3.sample_position = FAIL
-4213 SWIFTSHADER : dEQP-GLES31.functional.texture.multisample.samples_4.sample_position = FAIL
-
 
 // Not failing in last official run, but failed recently:
 4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.value.lines_8_samples = FAIL
