@@ -543,6 +543,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "/wd4701",  # potentially uninit used
         "/wd4702",  # unreachable code
         "/wd4706",  # assignment within conditional expression
+        "/wd4834",  # discarding return value of function with 'nodiscard' attribute
         "/wd4838",  # conversion requires a narrowing conversion
         "/wd4996",  # deprecated
       ]
