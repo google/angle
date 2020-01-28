@@ -622,12 +622,6 @@ static bool DetermineDepthTextureOESSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, true, true, true, false);
 }
 
-// Check for GL_OES_depth_texture_cube_map support
-static bool DetermineDepthTextureCubeMapOESSupport(const TextureCapsMap &textureCaps)
-{
-    return false;
-}
-
 // Check for GL_OES_depth24
 static bool DetermineDepth24OESSupport(const TextureCapsMap &textureCaps)
 {
@@ -805,7 +799,6 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     sRGB                                = DetermineSRGBTextureSupport(textureCaps);
     depthTextureANGLE                   = DetermineDepthTextureANGLESupport(textureCaps);
     depthTextureOES                     = DetermineDepthTextureOESSupport(textureCaps);
-    depthTextureCubeMapOES              = DetermineDepthTextureCubeMapOESSupport(textureCaps);
     depth24OES                          = DetermineDepth24OESSupport(textureCaps);
     depth32OES                          = DetermineDepth32Support(textureCaps);
     colorBufferFloatRGB                 = DetermineColorBufferFloatRGBSupport(textureCaps);
@@ -887,7 +880,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextureANGLE);
         map["GL_OES_depth_texture"] = esOnlyExtension(&Extensions::depthTextureOES);
-        map["GL_OES_depth_texture_cube_map"] = esOnlyExtension(&Extensions::depthTextureCubeMapOES);
+        map["GL_OES_depth_texture_cube_map"] = enableableExtension(&Extensions::depthTextureCubeMapOES);
         map["GL_OES_depth24"] = esOnlyExtension(&Extensions::depth24OES);
         map["GL_OES_depth32"] = esOnlyExtension(&Extensions::depth32OES);
         map["GL_OES_texture_3D"] = enableableExtension(&Extensions::texture3DOES);

@@ -198,7 +198,8 @@ TEST_P(DepthStencilFormatsTest, PackedDepthStencil)
     EXPECT_EQ(shouldHaveRenderbufferSupport,
               checkRenderbufferFormatSupport(GL_DEPTH24_STENCIL8_OES));
 
-    bool shouldHaveTextureSupport = (IsGLExtensionEnabled("GL_OES_packed_depth_stencil") &&
+    bool shouldHaveTextureSupport = ((IsGLExtensionEnabled("GL_OES_packed_depth_stencil") ||
+                                      IsGLExtensionEnabled("GL_OES_depth_texture_cube_map")) &&
                                      IsGLExtensionEnabled("GL_OES_depth_texture")) ||
                                     IsGLExtensionEnabled("GL_ANGLE_depth_texture");
     EXPECT_EQ(shouldHaveTextureSupport,
@@ -235,6 +236,8 @@ void main()
 
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_depth_texture") &&
                        !IsGLExtensionEnabled("GL_ANGLE_depth_texture"));
+
+    bool depthTextureCubeSupport = IsGLExtensionEnabled("GL_OES_depth_texture_cube_map");
 
     // http://anglebug.com/3454
     ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsD3D9());
@@ -301,7 +304,14 @@ void main()
         for (const GLuint target : targets)
         {
             glTexImage2D(target, 0, type.format, 1, 1, 0, type.format, type.type, nullptr);
-            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+            if (depthTextureCubeSupport)
+            {
+                ASSERT_GL_NO_ERROR();
+            }
+            else
+            {
+                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+            }
         }
 
         std::vector<GLuint> filterModes = {GL_LINEAR, GL_NEAREST};

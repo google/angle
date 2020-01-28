@@ -141,6 +141,11 @@ void RendererVk::ensureCapsInitialized() const
     // We support getting image data for Textures and Renderbuffers.
     mNativeExtensions.getImageANGLE = true;
 
+    // Vulkan has no restrictions of the format of cubemaps, so if the proper formats are supported,
+    // creating a cube of any of these formats should be implicitly supported.
+    mNativeExtensions.depthTextureCubeMapOES =
+        mNativeExtensions.depthTextureOES && mNativeExtensions.packedDepthStencilOES;
+
     mNativeExtensions.gpuShader5EXT = vk::CanSupportGPUShader5EXT(mPhysicalDeviceFeatures);
 
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html

@@ -776,7 +776,8 @@ bool ValidateES2CopyTexImageParameters(Context *context,
             case GL_DEPTH_STENCIL_OES:
             case GL_DEPTH24_STENCIL8_OES:
                 if (context->getExtensions().depthTextureAny() ||
-                    context->getExtensions().packedDepthStencilOES)
+                    context->getExtensions().packedDepthStencilOES ||
+                    context->getExtensions().depthTextureCubeMapOES)
                 {
                     context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
                     return false;
@@ -1656,17 +1657,36 @@ bool ValidateES2TexImageParametersBase(Context *context,
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_STENCIL_OES:
                 if (!context->getExtensions().depthTextureANGLE &&
-                    !(context->getExtensions().packedDepthStencilOES &&
+                    !((context->getExtensions().packedDepthStencilOES ||
+                       context->getExtensions().depthTextureCubeMapOES) &&
                       context->getExtensions().depthTextureOES))
                 {
                     context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                     return false;
                 }
-                if (target != TextureTarget::_2D)
+
+                switch (target)
                 {
-                    context->validationError(GL_INVALID_OPERATION, kMismatchedTargetAndFormat);
-                    return false;
+                    case TextureTarget::_2D:
+                        break;
+                    case TextureTarget::CubeMapNegativeX:
+                    case TextureTarget::CubeMapNegativeY:
+                    case TextureTarget::CubeMapNegativeZ:
+                    case TextureTarget::CubeMapPositiveX:
+                    case TextureTarget::CubeMapPositiveY:
+                    case TextureTarget::CubeMapPositiveZ:
+                        if (!context->getExtensions().depthTextureCubeMapOES)
+                        {
+                            context->validationError(GL_INVALID_OPERATION,
+                                                     kMismatchedTargetAndFormat);
+                            return false;
+                        }
+                        break;
+                    default:
+                        context->validationError(GL_INVALID_OPERATION, kMismatchedTargetAndFormat);
+                        return false;
                 }
+
                 // OES_depth_texture supports loading depth data and multiple levels,
                 // but ANGLE_depth_texture does not
                 if (!context->getExtensions().depthTextureOES)
@@ -1759,7 +1779,8 @@ bool ValidateES2TexImageParametersBase(Context *context,
 
                 case GL_DEPTH_STENCIL:
                     if (!(context->getExtensions().depthTextureANGLE ||
-                          context->getExtensions().packedDepthStencilOES))
+                          context->getExtensions().packedDepthStencilOES ||
+                          context->getExtensions().depthTextureCubeMapOES))
                     {
                         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
                         return false;
@@ -2116,11 +2137,23 @@ bool ValidateES2TexStorageParameters(Context *context,
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
             }
-            if (target != TextureType::_2D)
+
+            switch (target)
             {
-                context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
-                return false;
+                case TextureType::_2D:
+                    break;
+                case TextureType::CubeMap:
+                    if (!context->getExtensions().depthTextureCubeMapOES)
+                    {
+                        context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
+                        return false;
+                    }
+                    break;
+                default:
+                    context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
+                    return false;
             }
+
             // ANGLE_depth_texture only supports 1-level textures
             if (!context->getExtensions().depthTextureOES)
             {
@@ -2133,18 +2166,32 @@ bool ValidateES2TexStorageParameters(Context *context,
             break;
         case GL_DEPTH24_STENCIL8_OES:
             if (!(context->getExtensions().depthTextureANGLE ||
-                  (context->getExtensions().packedDepthStencilOES &&
+                  ((context->getExtensions().packedDepthStencilOES ||
+                    context->getExtensions().depthTextureCubeMapOES) &&
                    context->getExtensions().textureStorage)))
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
             }
-            if (target != TextureType::_2D)
+
+            switch (target)
             {
-                context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
-                return false;
+                case TextureType::_2D:
+                    break;
+                case TextureType::CubeMap:
+                    if (!context->getExtensions().depthTextureCubeMapOES)
+                    {
+                        context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
+                        return false;
+                    }
+                    break;
+                default:
+                    context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
+                    return false;
             }
-            if (!context->getExtensions().packedDepthStencilOES)
+
+            if (!context->getExtensions().packedDepthStencilOES &&
+                !context->getExtensions().depthTextureCubeMapOES)
             {
                 // ANGLE_depth_texture only supports 1-level textures
                 if (levels != 1)
