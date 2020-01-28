@@ -1501,10 +1501,11 @@ angle::Result Buffer11::StructuredBufferStorage::getStructuredBufferRangeSRV(
     }
 
     D3D11_SHADER_RESOURCE_VIEW_DESC bufferSRVDesc = {};
-    bufferSRVDesc.Buffer.NumElements  = structureByteStride == 0u ? 1 : size / structureByteStride;
-    bufferSRVDesc.Buffer.FirstElement = 0;
-    bufferSRVDesc.ViewDimension       = D3D11_SRV_DIMENSION_BUFFEREX;
-    bufferSRVDesc.Format              = DXGI_FORMAT_UNKNOWN;
+    bufferSRVDesc.BufferEx.NumElements = structureByteStride == 0u ? 1 : size / structureByteStride;
+    bufferSRVDesc.BufferEx.FirstElement = 0;
+    bufferSRVDesc.BufferEx.Flags        = 0;
+    bufferSRVDesc.ViewDimension         = D3D11_SRV_DIMENSION_BUFFEREX;
+    bufferSRVDesc.Format                = DXGI_FORMAT_UNKNOWN;
 
     ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), bufferSRVDesc,
                                           mBuffer.get(), &mStructuredBufferResourceView));
