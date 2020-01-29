@@ -221,17 +221,67 @@ void WriteParamStaticVarName(const CallCapture &call,
     out << call.name() << "_" << param.name << "_" << counter;
 }
 
+void WriteGLFloatValue(std::ostream &out, GLfloat value)
+{
+    // Check for non-representable values
+    ASSERT(std::numeric_limits<float>::has_infinity);
+    ASSERT(std::numeric_limits<float>::has_quiet_NaN);
+
+    if (std::isinf(value))
+    {
+        float negativeInf = -std::numeric_limits<float>::infinity();
+        if (value == negativeInf)
+        {
+            out << "-";
+        }
+        out << "std::numeric_limits<float>::infinity()";
+    }
+    else if (std::isnan(value))
+    {
+        out << "std::numeric_limits<float>::quiet_NaN()";
+    }
+    else
+    {
+        out << value;
+    }
+}
+
 template <typename T, typename CastT = T>
 void WriteInlineData(const std::vector<uint8_t> &vec, std::ostream &out)
 {
     const T *data = reinterpret_cast<const T *>(vec.data());
     size_t count  = vec.size() / sizeof(T);
 
+    if (data == nullptr)
+    {
+        return;
+    }
+
     out << static_cast<CastT>(data[0]);
 
     for (size_t dataIndex = 1; dataIndex < count; ++dataIndex)
     {
         out << ", " << static_cast<CastT>(data[dataIndex]);
+    }
+}
+
+template <>
+void WriteInlineData<GLfloat>(const std::vector<uint8_t> &vec, std::ostream &out)
+{
+    const float *data = reinterpret_cast<const GLfloat *>(vec.data());
+    size_t count      = vec.size() / sizeof(GLfloat);
+
+    if (data == nullptr)
+    {
+        return;
+    }
+
+    WriteGLFloatValue(out, data[0]);
+
+    for (size_t dataIndex = 1; dataIndex < count; ++dataIndex)
+    {
+        out << ", ";
+        WriteGLFloatValue(out, data[dataIndex]);
     }
 }
 
@@ -287,7 +337,7 @@ void WriteResourceIDPointerParamReplay(DataCounters *counters,
     ASSERT(resourceIDType != ResourceIDType::InvalidEnum);
     const char *name = GetResourceIDTypeName(resourceIDType);
 
-    GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+    GLsizei n = call.params.getParamFlexName("n", "count", ParamType::TGLsizei, 0).value.GLsizeiVal;
     ASSERT(param.data.size() == 1);
     const ParamT *returnedIDs = reinterpret_cast<const ParamT *>(param.data[0].data());
     for (GLsizei resIndex = 0; resIndex < n; ++resIndex)
@@ -418,6 +468,10 @@ void WriteCppReplayForCall(const CallCapture &call,
             else if (param.type == ParamType::TGLbitfield)
             {
                 OutputGLbitfieldString(callOut, param.enumGroup, param.value.GLbitfieldVal);
+            }
+            else if (param.type == ParamType::TGLfloat)
+            {
+                WriteGLFloatValue(callOut, param.value.GLfloatVal);
             }
             else
             {
@@ -669,6 +723,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     header << "#include <cstdint>\n";
     header << "#include <cstdio>\n";
     header << "#include <cstring>\n";
+    header << "#include <limits>\n";
     header << "#include <unordered_map>\n";
     header << "\n";
     header << "// Replay functions\n";
@@ -779,7 +834,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     source << "    char pathBuffer[1000] = {};\n";
     source << "    sprintf(pathBuffer, \"%s/%s\", gBinaryDataDir, fileName);\n";
     source << "    FILE *fp = fopen(pathBuffer, \"rb\");\n";
-    source << "    fread(gBinaryData, 1, size, fp);\n";
+    source << "    (void)fread(gBinaryData, 1, size, fp);\n";
     source << "    fclose(fp);\n";
     source << "}\n";
 
@@ -870,7 +925,7 @@ void CaptureUpdateResourceIDs(const CallCapture &call,
                               const ParamCapture &param,
                               std::vector<CallCapture> *callsOut)
 {
-    GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+    GLsizei n = call.params.getParamFlexName("n", "count", ParamType::TGLsizei, 0).value.GLsizeiVal;
     ASSERT(param.data.size() == 1);
     ResourceIDType resourceIDType = GetResourceIDTypeFromParamType(param.type);
     ASSERT(resourceIDType != ResourceIDType::InvalidEnum);
@@ -992,7 +1047,7 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
         case gl::EntryPoint::GenVertexArraysOES:
         {
             const ParamCapture &vertexArrays =
-                call.params.getParam("vetexArraysPacked", ParamType::TVertexArrayIDPointer, 1);
+                call.params.getParam("arraysPacked", ParamType::TVertexArrayIDPointer, 1);
             CaptureUpdateResourceIDs<gl::VertexArrayID>(call, vertexArrays, callsOut);
             break;
         }
@@ -1806,6 +1861,26 @@ const ParamCapture &ParamBuffer::getParam(const char *paramName,
                                           int index) const
 {
     return const_cast<ParamBuffer *>(this)->getParam(paramName, paramType, index);
+}
+
+ParamCapture &ParamBuffer::getParamFlexName(const char *paramName1,
+                                            const char *paramName2,
+                                            ParamType paramType,
+                                            int index)
+{
+    ParamCapture &capture = mParamCaptures[index];
+    ASSERT(capture.name == paramName1 || capture.name == paramName2);
+    ASSERT(capture.type == paramType);
+    return capture;
+}
+
+const ParamCapture &ParamBuffer::getParamFlexName(const char *paramName1,
+                                                  const char *paramName2,
+                                                  ParamType paramType,
+                                                  int index) const
+{
+    return const_cast<ParamBuffer *>(this)->getParamFlexName(paramName1, paramName2, paramType,
+                                                             index);
 }
 
 void ParamBuffer::addParam(ParamCapture &&param)

@@ -60,6 +60,14 @@ class ParamBuffer final : angle::NonCopyable
 
     ParamCapture &getParam(const char *paramName, ParamType paramType, int index);
     const ParamCapture &getParam(const char *paramName, ParamType paramType, int index) const;
+    ParamCapture &getParamFlexName(const char *paramName1,
+                                   const char *paramName2,
+                                   ParamType paramType,
+                                   int index);
+    const ParamCapture &getParamFlexName(const char *paramName1,
+                                         const char *paramName2,
+                                         ParamType paramType,
+                                         int index) const;
     const ParamCapture &getReturnValue() const { return mReturnValueCapture; }
 
     void addParam(ParamCapture &&param);
