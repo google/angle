@@ -528,6 +528,27 @@ TEST_P(EGLSurfaceTest, ResizeWindowWithDraw)
     EXPECT_PIXEL_COLOR_EQ(size, size, GLColor::transparentBlack);
 }
 
+// Test that the window can be reset repeatedly before surface creation.
+TEST_P(EGLSurfaceTest, ResetNativeWindow)
+{
+    mOSWindow->setVisible(true);
+
+    initializeDisplay();
+
+    for (int i = 0; i < 10; ++i)
+    {
+        mOSWindow->resetNativeWindow();
+    }
+
+    initializeSurfaceWithDefaultConfig();
+    initializeContext();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+}
+
 // Test that swap interval works.
 TEST_P(EGLSurfaceTest, SwapInterval)
 {
