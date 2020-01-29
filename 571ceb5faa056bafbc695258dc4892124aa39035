@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "91a89294_1baa2224",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-01-29T03:22:20Z",
+      "side": 1,
+      "message": "Without having looked at how clampArrayAccess works, it looks to me like the condition should have really been \"!functions-\u003ehasExtension(\"GL_KHR_robust_buffer_access_behavior\")\". I imagine there\u0027s overhead added in the form of clamp, which is unnecessary if the driver supports robust access, isn\u0027t that right?",
+      "revId": "571ceb5faa056bafbc695258dc4892124aa39035",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
