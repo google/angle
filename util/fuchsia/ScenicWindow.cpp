@@ -96,7 +96,7 @@ bool ScenicWindow::initialize(const std::string &name, int width, int height)
     mView->AddChild(mShape);
 
     // Present view.
-    mPresenter->PresentView(std::move(viewHolderToken), nullptr);
+    mPresenter->PresentOrReplaceView(std::move(viewHolderToken), nullptr);
 
     mWidth  = width;
     mHeight = height;
