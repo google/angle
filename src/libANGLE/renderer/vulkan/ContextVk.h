@@ -403,6 +403,12 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     void invalidateCurrentTransformFeedbackState();
     void onTransformFeedbackStateChanged();
 
+    // When UtilsVk issues draw or dispatch calls, it binds descriptor sets that the context is not
+    // aware of.  This function is called to make sure affected descriptor set bindings are dirtied
+    // for the next application draw/dispatch call.
+    void invalidateGraphicsDescriptorSet(uint32_t usedDescriptorSet);
+    void invalidateComputeDescriptorSet(uint32_t usedDescriptorSet);
+
     vk::DynamicQueryPool *getQueryPool(gl::QueryType queryType);
 
     const VkClearValue &getClearColorValue() const;

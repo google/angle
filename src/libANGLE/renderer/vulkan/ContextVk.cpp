@@ -2899,6 +2899,26 @@ void ContextVk::onTransformFeedbackStateChanged()
     }
 }
 
+void ContextVk::invalidateGraphicsDescriptorSet(uint32_t usedDescriptorSet)
+{
+    // UtilsVk currently only uses set 0
+    ASSERT(usedDescriptorSet == kDriverUniformsDescriptorSetIndex);
+    if (mDriverUniforms[PipelineType::Graphics].descriptorSet != VK_NULL_HANDLE)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
+    }
+}
+
+void ContextVk::invalidateComputeDescriptorSet(uint32_t usedDescriptorSet)
+{
+    // UtilsVk currently only uses set 0
+    ASSERT(usedDescriptorSet == kDriverUniformsDescriptorSetIndex);
+    if (mDriverUniforms[PipelineType::Compute].descriptorSet != VK_NULL_HANDLE)
+    {
+        mComputeDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
+    }
+}
+
 angle::Result ContextVk::dispatchCompute(const gl::Context *context,
                                          GLuint numGroupsX,
                                          GLuint numGroupsY,
