@@ -112,7 +112,7 @@ bool ScratchBuffer::getImpl(size_t requestedSize,
 
     if (mResetCounter == 0 || mScratchMemory.size() < requestedSize)
     {
-        mScratchMemory.resize(0);
+        clear();
         if (!mScratchMemory.resize(requestedSize))
         {
             return false;
@@ -141,7 +141,7 @@ void ScratchBuffer::tick()
 void ScratchBuffer::clear()
 {
     mResetCounter = mLifetime;
-    mScratchMemory.resize(0);
+    mScratchMemory.clear();
 }
 
 }  // namespace angle

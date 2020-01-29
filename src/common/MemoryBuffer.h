@@ -21,13 +21,13 @@ class MemoryBuffer final : NonCopyable
 {
   public:
     MemoryBuffer() = default;
-    MemoryBuffer(size_t size) { resize(size); }
     ~MemoryBuffer();
 
     MemoryBuffer(MemoryBuffer &&other);
     MemoryBuffer &operator=(MemoryBuffer &&other);
 
-    bool resize(size_t size);
+    ANGLE_NO_DISCARD bool resize(size_t size);
+    void clear() { (void)resize(0); }
     size_t size() const { return mSize; }
     bool empty() const { return mSize == 0; }
 

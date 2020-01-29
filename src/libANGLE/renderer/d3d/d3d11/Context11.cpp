@@ -667,7 +667,7 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
     // Refresh the program cache entry.
     if (mMemoryProgramCache)
     {
-        mMemoryProgramCache->updateProgram(context, program);
+        ANGLE_TRY(mMemoryProgramCache->updateProgram(context, program));
     }
 
     return angle::Result::Continue;
@@ -705,7 +705,7 @@ angle::Result Context11::triggerDispatchCallProgramRecompilation(const gl::Conte
     // Refresh the program cache entry.
     if (mMemoryProgramCache)
     {
-        mMemoryProgramCache->updateProgram(context, program);
+        ANGLE_TRY(mMemoryProgramCache->updateProgram(context, program));
     }
 
     return angle::Result::Continue;
