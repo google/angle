@@ -6,6 +6,9 @@ import("//build_overrides/angle.gni")
 
 declare_args() {
   is_ggp = false
+
+  # Extract native libs in ANGLE apk. Useful for flamegraph generation.
+  angle_extract_native_libs = false
 }
 
 if (angle_has_build) {
