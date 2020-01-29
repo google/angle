@@ -357,19 +357,12 @@ std::vector<TestIdentifier> GetFilteredTests(std::map<TestIdentifier, FileLine> 
     return FilterTests(fileLinesOut, gtestIDFilter, alsoRunDisabledTests);
 }
 
-std::vector<TestIdentifier> GetCompiledInTests(std::map<TestIdentifier, FileLine> *fileLinesOut,
-                                               bool alsoRunDisabledTests)
-{
-    TestIdentifierFilter passthroughFilter = [](const TestIdentifier &id) { return true; };
-    return FilterTests(fileLinesOut, passthroughFilter, alsoRunDisabledTests);
-}
-
 std::vector<TestIdentifier> GetShardTests(int shardIndex,
                                           int shardCount,
                                           std::map<TestIdentifier, FileLine> *fileLinesOut,
                                           bool alsoRunDisabledTests)
 {
-    std::vector<TestIdentifier> allTests = GetCompiledInTests(fileLinesOut, alsoRunDisabledTests);
+    std::vector<TestIdentifier> allTests = GetFilteredTests(fileLinesOut, alsoRunDisabledTests);
     std::vector<TestIdentifier> shardTests;
 
     for (int testIndex = shardIndex; testIndex < static_cast<int>(allTests.size());
@@ -713,12 +706,6 @@ TestSuite::TestSuite(int *argc, char **argv)
             exit(1);
         }
 
-        if (mShardCount > 0)
-        {
-            printf("Cannot use filter file in conjunction with sharding parameters.\n");
-            exit(1);
-        }
-
         uint32_t fileSize = 0;
         if (!GetFileSize(mFilterFile.c_str(), &fileSize))
         {
@@ -745,18 +732,14 @@ TestSuite::TestSuite(int *argc, char **argv)
         AddArg(argc, argv, mFilterString.c_str());
     }
 
-    // Call into gtest internals to force parameterized test name registration.
-    // TODO(jmadill): Clean this up so we don't need to call it.
-    testing::internal::UnitTestImpl *impl = testing::internal::GetUnitTestImpl();
-    impl->RegisterParameterizedTests();
-
     if (mShardCount > 0)
     {
-        if (hasFilter)
-        {
-            printf("Cannot use gtest_filter in conjunction with sharding parameters.\n");
-            exit(1);
-        }
+        // Call into gtest internals to force parameterized test name registration.
+        testing::internal::UnitTestImpl *impl = testing::internal::GetUnitTestImpl();
+        impl->RegisterParameterizedTests();
+
+        // Initialize internal GoogleTest filter arguments so we can call "FilterMatchesTest".
+        testing::internal::ParseGoogleTestFlagsOnly(argc, argv);
 
         mTestQueue = GetShardTests(mShardIndex, mShardCount, &mTestFileLines, alsoRunDisabledTests);
         mFilterString = GetTestFilter(mTestQueue);
@@ -764,6 +747,9 @@ TestSuite::TestSuite(int *argc, char **argv)
         // Note that we only add a filter string if we previously deleted a shader index/count
         // argument. So we will have space for the new filter string in argv.
         AddArg(argc, argv, mFilterString.c_str());
+
+        // Force-re-initialize GoogleTest flags to load the shard filter.
+        testing::internal::ParseGoogleTestFlagsOnly(argc, argv);
     }
 
     testing::InitGoogleTest(argc, argv);
