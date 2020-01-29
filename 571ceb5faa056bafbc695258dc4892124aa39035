@@ -16,6 +16,24 @@
       "revId": "571ceb5faa056bafbc695258dc4892124aa39035",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af213119_218dd3d6",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-01-29T07:02:12Z",
+      "side": 1,
+      "message": "NVIDIA\u0027s Linux driver has KHR_robust_buffer_access_behavior, and still flakily failed the test. Drivers\u0027 actual behavior seems to not quite follow the extension spec, and fails the WebGL conformance test. (The test may have to be updated.) The plan is to enable clampArrayAccess only for WebGL contexts.",
+      "parentUuid": "91a89294_1baa2224",
+      "revId": "571ceb5faa056bafbc695258dc4892124aa39035",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
