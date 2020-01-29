@@ -586,6 +586,14 @@
 3816 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgb16* = FAIL
 3816 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rg32* = FAIL
 
+// Failing on the Pixel 2 due to Qualcomm Vulkan driver
+4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.54 = FAIL
+4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.35 = FAIL
+4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.56 = FAIL
+4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.62 = FAIL
+4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.68 = FAIL
+
+
 // Fails only with SwiftShader:
 
 // These only fail for a 565 config

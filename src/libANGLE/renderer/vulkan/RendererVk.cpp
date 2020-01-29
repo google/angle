@@ -1521,9 +1521,6 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 
     ANGLE_FEATURE_CONDITION((&mFeatures), disableFifoPresentMode, IsLinux() && isIntel);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), restartRenderPassAfterLoadOpClear,
-                            IsAndroid() && isQualcomm && vk::CommandBuffer::ExecutesInline());
-
     ANGLE_FEATURE_CONDITION((&mFeatures), bindEmptyForUnusedDescriptorSets,
                             IsAndroid() && isQualcomm);
 

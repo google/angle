@@ -296,16 +296,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
             contextVk, scissoredRenderArea, clearBuffersWithRenderPassLoadOp, clearDepth,
             clearStencilWithRenderPassLoadOp, clearColorValue, modifiedDepthStencilValue));
 
-        // On some hardware, having inline commands at this point results in corrupted output.  In
-        // that case, end the render pass immediately.  http://anglebug.com/2361
-        if (contextVk->getRenderer()->getFeatures().restartRenderPassAfterLoadOpClear.enabled)
-        {
-            if (contextVk->commandGraphEnabled())
-            {
-                mFramebuffer.finishCurrentCommands(contextVk);
-            }
-        }
-
         // Fallback to other methods for whatever isn't cleared here.
         clearDepth = false;
         if (clearColorWithRenderPassLoadOp)

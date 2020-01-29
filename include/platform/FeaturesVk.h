@@ -146,13 +146,6 @@ struct FeaturesVk : FeatureSetBase
         "disable_fifo_present_mode", FeatureCategory::VulkanWorkarounds,
         "VK_PRESENT_MODE_FIFO_KHR causes random timeouts", &members, "http://anglebug.com/3153"};
 
-    // On Qualcomm, a bug is preventing us from using loadOp=Clear with inline commands in the
-    // render pass.  http://anglebug.com/2361
-    Feature restartRenderPassAfterLoadOpClear = {
-        "restart_render_pass_after_load_op_clear", FeatureCategory::VulkanWorkarounds,
-        "A bug is preventing us from using loadOp=Clear with inline commands in the render pass",
-        &members, "http://anglebug.com/2361"};
-
     // On Qualcomm, gaps in bound descriptor set indices causes the post-gap sets to misbehave.
     // For example, binding only descriptor set 3 results in zero being read from a uniform buffer
     // object within that set.  This flag results in empty descriptor sets being bound for any
