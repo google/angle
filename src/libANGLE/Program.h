@@ -972,7 +972,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     ANGLE_INLINE bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
     // Writes a program's binary to the output memory buffer.
-    void serialize(const Context *context, angle::MemoryBuffer *binaryOut) const;
+    angle::Result serialize(const Context *context, angle::MemoryBuffer *binaryOut) const;
 
     rx::Serial serial() const { return mSerial; }
 

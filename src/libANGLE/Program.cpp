@@ -1674,7 +1674,12 @@ void Program::resolveLinkImpl(const Context *context)
         (mState.mLinkedTransformFeedbackVaryings.empty() ||
          !context->getFrontendFeatures().disableProgramCachingForTransformFeedback.enabled))
     {
-        cache->putProgram(linkingState->programHash, context, this);
+        if (cache->putProgram(linkingState->programHash, context, this) == angle::Result::Stop)
+        {
+            // Don't fail linking if putting the program binary into the cache fails, the program is
+            // still usable.
+            WARN() << "Failed to save linked program to memory program cache.";
+        }
     }
 }
 
@@ -1944,7 +1949,7 @@ angle::Result Program::saveBinary(Context *context,
     }
 
     angle::MemoryBuffer memoryBuf;
-    serialize(context, &memoryBuf);
+    ANGLE_TRY(serialize(context, &memoryBuf));
 
     GLsizei streamLength       = static_cast<GLsizei>(memoryBuf.size());
     const uint8_t *streamState = memoryBuf.data();
@@ -5006,7 +5011,7 @@ angle::Result Program::syncState(const Context *context)
     return angle::Result::Continue;
 }
 
-void Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) const
+angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) const
 {
     BinaryOutputStream stream;
 
@@ -5196,8 +5201,14 @@ void Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) 
     mProgram->save(context, &stream);
 
     ASSERT(binaryOut);
-    binaryOut->resize(stream.length());
+    if (!binaryOut->resize(stream.length()))
+    {
+        WARN() << "Failed to allocate enough memory to serialize a program. (" << stream.length()
+               << " bytes )";
+        return angle::Result::Incomplete;
+    }
     memcpy(binaryOut->data(), stream.data(), stream.length());
+    return angle::Result::Continue;
 }
 
 angle::Result Program::deserialize(const Context *context,

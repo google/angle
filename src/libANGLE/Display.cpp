@@ -1586,8 +1586,12 @@ Error Display::programCachePopulate(const void *key,
     BlobCache::Key programHash;
     memcpy(programHash.data(), key, BlobCache::kKeyLength);
 
-    mMemoryProgramCache.putBinary(programHash, reinterpret_cast<const uint8_t *>(binary),
-                                  static_cast<size_t>(binarysize));
+    if (!mMemoryProgramCache.putBinary(programHash, reinterpret_cast<const uint8_t *>(binary),
+                                       static_cast<size_t>(binarysize)))
+    {
+        return EglBadAccess() << "Failed to copy program binary into the cache.";
+    }
+
     return NoError();
 }
 
