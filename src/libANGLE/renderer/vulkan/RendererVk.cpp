@@ -1132,16 +1132,32 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     // Select additional features to be enabled.
     VkPhysicalDeviceFeatures2KHR enabledFeatures = {};
     enabledFeatures.sType                        = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-    enabledFeatures.features.independentBlend    = mPhysicalDeviceFeatures.independentBlend;
-    enabledFeatures.features.robustBufferAccess  = mPhysicalDeviceFeatures.robustBufferAccess;
-    enabledFeatures.features.samplerAnisotropy   = mPhysicalDeviceFeatures.samplerAnisotropy;
+    // Used to support framebuffers with multiple attachments:
+    enabledFeatures.features.independentBlend = mPhysicalDeviceFeatures.independentBlend;
+    // Used to support robust buffer access:
+    enabledFeatures.features.robustBufferAccess = mPhysicalDeviceFeatures.robustBufferAccess;
+    // Used to support Anisotropic filtering:
+    enabledFeatures.features.samplerAnisotropy = mPhysicalDeviceFeatures.samplerAnisotropy;
+    // Used to emulate transform feedback:
     enabledFeatures.features.vertexPipelineStoresAndAtomics =
         mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics;
+    // Used to implement storage buffers and images in the fragment shader:
     enabledFeatures.features.fragmentStoresAndAtomics =
         mPhysicalDeviceFeatures.fragmentStoresAndAtomics;
+    // Used to support geometry shaders:
     enabledFeatures.features.geometryShader = mPhysicalDeviceFeatures.geometryShader;
+    // Used to support EXT_gpu_shader5:
     enabledFeatures.features.shaderImageGatherExtended =
         mPhysicalDeviceFeatures.shaderImageGatherExtended;
+    // Used to support EXT_gpu_shader5:
+    enabledFeatures.features.shaderUniformBufferArrayDynamicIndexing =
+        mPhysicalDeviceFeatures.shaderUniformBufferArrayDynamicIndexing;
+    // Used to support EXT_gpu_shader5 and sampler array of array emulation:
+    enabledFeatures.features.shaderSampledImageArrayDynamicIndexing =
+        mPhysicalDeviceFeatures.shaderSampledImageArrayDynamicIndexing;
+    // Used to support atomic counter emulation:
+    enabledFeatures.features.shaderStorageBufferArrayDynamicIndexing =
+        mPhysicalDeviceFeatures.shaderStorageBufferArrayDynamicIndexing;
 
     if (!vk::CommandBuffer::ExecutesInline())
     {
