@@ -161,6 +161,38 @@ bool ValidReadPixelsFormatEnum(const Context *context, GLenum format)
     }
 }
 
+bool ValidReadPixelsUnsignedNormalizedDepthType(const Context *context,
+                                                const gl::InternalFormat *info,
+                                                GLenum type)
+{
+    bool supportsReadDepthNV = (context->getExtensions().readDepthNV && (info->depthBits > 0) &&
+                                (info->componentCount == 1));
+    bool isGLES31            = (context->getClientVersion() >= ES_3_1);
+    switch (type)
+    {
+        case GL_UNSIGNED_SHORT:
+            return supportsReadDepthNV ||
+                   (isGLES31 && (info->sizedInternalFormat == GL_DEPTH_COMPONENT16));
+        case GL_UNSIGNED_INT:
+            return supportsReadDepthNV ||
+                   (isGLES31 && ((info->sizedInternalFormat == GL_DEPTH_COMPONENT16) ||
+                                 (info->internalFormat == GL_DEPTH_COMPONENT24)));
+        case GL_UNSIGNED_INT_24_8:
+            return supportsReadDepthNV ||
+                   (isGLES31 && (info->sizedInternalFormat == GL_DEPTH24_STENCIL8));
+        default:
+            return false;
+    }
+}
+
+bool ValidReadPixelsFloatDepthType(const Context *context,
+                                   const gl::InternalFormat *info,
+                                   GLenum type)
+{
+    return context->getExtensions().readDepthNV && (type == GL_FLOAT) &&
+           context->getExtensions().depthBufferFloat2NV && (info->componentCount == 1);
+}
+
 bool ValidReadPixelsFormatType(const Context *context,
                                const gl::InternalFormat *info,
                                GLenum format,
@@ -171,12 +203,21 @@ bool ValidReadPixelsFormatType(const Context *context,
         case GL_UNSIGNED_NORMALIZED:
             // TODO(geofflang): Don't accept BGRA here.  Some chrome internals appear to try to use
             // ReadPixels with BGRA even if the extension is not present
-            return (format == GL_RGBA && type == GL_UNSIGNED_BYTE && info->pixelBytes >= 1) ||
-                   (context->getExtensions().textureNorm16 && format == GL_RGBA &&
-                    type == GL_UNSIGNED_SHORT && info->pixelBytes >= 2) ||
-                   (context->getExtensions().readFormatBGRA && format == GL_BGRA_EXT &&
-                    type == GL_UNSIGNED_BYTE);
-
+            switch (format)
+            {
+                case GL_RGBA:
+                    return ((type == GL_UNSIGNED_BYTE) && info->pixelBytes >= 1) ||
+                           (context->getExtensions().textureNorm16 && (type == GL_UNSIGNED_SHORT) &&
+                            info->pixelBytes >= 2);
+                case GL_BGRA_EXT:
+                    return context->getExtensions().readFormatBGRA && (type == GL_UNSIGNED_BYTE);
+                case GL_STENCIL_INDEX_OES:
+                    return context->getExtensions().readStencilNV && (type == GL_UNSIGNED_BYTE);
+                case GL_DEPTH_COMPONENT:
+                    return ValidReadPixelsUnsignedNormalizedDepthType(context, info, type);
+                default:
+                    return false;
+            }
         case GL_SIGNED_NORMALIZED:
             return (format == GL_RGBA && type == GL_BYTE && info->pixelBytes >= 1) ||
                    (context->getExtensions().textureNorm16 && format == GL_RGBA &&
@@ -189,8 +230,15 @@ bool ValidReadPixelsFormatType(const Context *context,
             return (format == GL_RGBA_INTEGER && type == GL_UNSIGNED_INT);
 
         case GL_FLOAT:
-            return (format == GL_RGBA && type == GL_FLOAT);
-
+            switch (format)
+            {
+                case GL_RGBA:
+                    return (type == GL_FLOAT);
+                case GL_DEPTH_COMPONENT:
+                    return ValidReadPixelsFloatDepthType(context, info, type);
+                default:
+                    return false;
+            }
         default:
             UNREACHABLE();
             return false;
@@ -5620,7 +5668,20 @@ bool ValidateReadPixelsBase(const Context *context,
         return false;
     }
 
-    const FramebufferAttachment *readBuffer = readFramebuffer->getReadColorAttachment();
+    const FramebufferAttachment *readBuffer = nullptr;
+    switch (format)
+    {
+        case GL_DEPTH_COMPONENT:
+            readBuffer = readFramebuffer->getDepthAttachment();
+            break;
+        case GL_STENCIL_INDEX_OES:
+            readBuffer = readFramebuffer->getStencilOrDepthStencilAttachment();
+            break;
+        default:
+            readBuffer = readFramebuffer->getReadColorAttachment();
+            break;
+    }
+
     // WebGL 1.0 [Section 6.26] Reading From a Missing Attachment
     // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
     // attachment and WebGL defines it to be an error. We do the check unconditionnaly as the
@@ -5663,11 +5724,21 @@ bool ValidateReadPixelsBase(const Context *context,
     }
 
     GLenum currentFormat = GL_NONE;
-    ANGLE_VALIDATION_TRY(
-        readFramebuffer->getImplementationColorReadFormat(context, &currentFormat));
+    GLenum currentType   = GL_NONE;
 
-    GLenum currentType = GL_NONE;
-    ANGLE_VALIDATION_TRY(readFramebuffer->getImplementationColorReadType(context, &currentType));
+    switch (format)
+    {
+        case GL_DEPTH_COMPONENT:
+        case GL_STENCIL_INDEX_OES:
+            // Only rely on ValidReadPixelsFormatType for depth/stencil formats
+            break;
+        default:
+            ANGLE_VALIDATION_TRY(
+                readFramebuffer->getImplementationColorReadFormat(context, &currentFormat));
+            ANGLE_VALIDATION_TRY(
+                readFramebuffer->getImplementationColorReadType(context, &currentType));
+            break;
+    }
 
     bool validFormatTypeCombination =
         ValidReadPixelsFormatType(context, readBuffer->getFormat().info, format, type);

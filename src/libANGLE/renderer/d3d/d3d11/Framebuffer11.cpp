@@ -253,7 +253,7 @@ angle::Result Framebuffer11::readPixelsImpl(const gl::Context *context,
                                             const gl::PixelPackState &pack,
                                             uint8_t *pixels)
 {
-    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
+    const gl::FramebufferAttachment *readAttachment = mState.getReadPixelsAttachment(format);
     ASSERT(readAttachment);
 
     gl::Buffer *packBuffer = context->getState().getTargetBuffer(gl::BufferBinding::PixelPack);

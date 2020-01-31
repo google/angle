@@ -223,19 +223,32 @@ static bool DeterminePackedDepthStencilSupport(const TextureCapsMap &textureCaps
 // Checks for GL_NV_read_depth support
 static bool DetermineReadDepthSupport(const TextureCapsMap &textureCaps)
 {
-    return false;
+    constexpr GLenum requiredFormats[] = {
+        GL_DEPTH_COMPONENT16,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, false, true, false, false);
 }
 
 // Checks for GL_NV_read_stencil support
 static bool DetermineReadStencilSupport(const TextureCapsMap &textureCaps)
 {
-    return false;
+    constexpr GLenum requiredFormats[] = {
+        GL_STENCIL_INDEX8,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, false, false, true, false, false);
 }
 
 // Checks for GL_NV_depth_buffer_float2 support
 static bool DetermineDepthBufferFloat2Support(const TextureCapsMap &textureCaps)
 {
-    return false;
+    constexpr GLenum requiredFormats[] = {
+        GL_DEPTH_COMPONENT32F,
+        GL_DEPTH32F_STENCIL8,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, false, true, false, false);
 }
 
 // Checks for GL_OES_rgb8_rgba8 support
@@ -850,9 +863,9 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_packed_depth_stencil"] = esOnlyExtension(&Extensions::packedDepthStencilOES);
         map["GL_OES_get_program_binary"] = enableableExtension(&Extensions::getProgramBinaryOES);
         map["GL_OES_rgb8_rgba8"] = enableableExtension(&Extensions::rgb8rgba8OES);
-        map["GL_NV_read_depth"] = esOnlyExtension(&Extensions::readDepthNV);
-        map["GL_NV_read_stencil"] = esOnlyExtension(&Extensions::readStencilNV);
-        map["GL_NV_depth_buffer_float2"] = esOnlyExtension(&Extensions::depthBufferFloat2NV);
+        map["GL_NV_read_depth"] = enableableExtension(&Extensions::readDepthNV);
+        map["GL_NV_read_stencil"] = enableableExtension(&Extensions::readStencilNV);
+        map["GL_NV_depth_buffer_float2"] = enableableExtension(&Extensions::depthBufferFloat2NV);
         map["GL_EXT_texture_format_BGRA8888"] = enableableExtension(&Extensions::textureFormatBGRA8888);
         map["GL_EXT_texture_type_2_10_10_10_REV"] = enableableExtension(&Extensions::textureFormat2101010REV);
         map["GL_EXT_read_format_bgra"] = enableableExtension(&Extensions::readFormatBGRA);

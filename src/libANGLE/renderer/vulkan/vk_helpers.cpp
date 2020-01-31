@@ -3371,14 +3371,16 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
         resolvedImage.get().retain(&contextVk->getResourceUseList());
     }
 
+    VkImageAspectFlags layoutChangeAspectFlags = src->getAspectFlags();
+
     // Note that although we're reading from the image, we need to update the layout below.
     CommandBuffer *commandBuffer;
     if (isMultisampled)
     {
-        ANGLE_TRY(contextVk->onImageWrite(copyAspectFlags, ImageLayout::TransferDst,
+        ANGLE_TRY(contextVk->onImageWrite(layoutChangeAspectFlags, ImageLayout::TransferDst,
                                           &resolvedImage.get()));
     }
-    ANGLE_TRY(contextVk->onImageRead(copyAspectFlags, ImageLayout::TransferSrc, this));
+    ANGLE_TRY(contextVk->onImageRead(layoutChangeAspectFlags, ImageLayout::TransferSrc, this));
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     const angle::Format *readFormat = &mFormat->actualImageFormat();
@@ -3426,7 +3428,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
         resolve(&resolvedImage.get(), resolveRegion, commandBuffer);
 
-        ANGLE_TRY(contextVk->onImageRead(copyAspectFlags, ImageLayout::TransferSrc,
+        ANGLE_TRY(contextVk->onImageRead(layoutChangeAspectFlags, ImageLayout::TransferSrc,
                                          &resolvedImage.get()));
 
         // Make the resolved image the target of buffer copy.

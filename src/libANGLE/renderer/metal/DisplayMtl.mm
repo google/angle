@@ -618,6 +618,11 @@ void DisplayMtl::initializeTextureCaps() const
 
     // Re-verify texture extensions.
     mNativeExtensions.setTextureExtensionSupport(mNativeTextureCaps);
+
+    // Disable all depth buffer and stencil buffer readback extensions until we need them
+    mNativeExtensions.readDepthNV         = false;
+    mNativeExtensions.readStencilNV       = false;
+    mNativeExtensions.depthBufferFloat2NV = false;
 }
 
 void DisplayMtl::initializeFeatures()

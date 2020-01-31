@@ -444,7 +444,7 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
                                         void *pixels)
 {
     // Clip read area to framebuffer.
-    const gl::Extents &fbSize = getState().getReadAttachment()->getSize();
+    const gl::Extents &fbSize = getState().getReadPixelsAttachment(format)->getSize();
     const gl::Rectangle fbRect(0, 0, fbSize.width, fbSize.height);
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -470,8 +470,8 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
         params.reverseRowOrder = !params.reverseRowOrder;
     }
 
-    ANGLE_TRY(readPixelsImpl(contextVk, params.area, params, VK_IMAGE_ASPECT_COLOR_BIT,
-                             getColorReadRenderTarget(),
+    ANGLE_TRY(readPixelsImpl(contextVk, params.area, params, getReadPixelsAspectFlags(format),
+                             getReadPixelsRenderTarget(format),
                              static_cast<uint8_t *>(pixels) + outputSkipBytes));
     mReadPixelBuffer.releaseInFlightBuffers(contextVk);
     return angle::Result::Continue;
@@ -496,6 +496,31 @@ RenderTargetVk *FramebufferVk::getColorReadRenderTarget() const
     RenderTargetVk *renderTarget = mRenderTargetCache.getColorRead(mState);
     ASSERT(renderTarget && renderTarget->getImage().valid());
     return renderTarget;
+}
+
+RenderTargetVk *FramebufferVk::getReadPixelsRenderTarget(GLenum format) const
+{
+    switch (format)
+    {
+        case GL_DEPTH_COMPONENT:
+        case GL_STENCIL_INDEX_OES:
+            return getDepthStencilRenderTarget();
+        default:
+            return getColorReadRenderTarget();
+    }
+}
+
+VkImageAspectFlagBits FramebufferVk::getReadPixelsAspectFlags(GLenum format) const
+{
+    switch (format)
+    {
+        case GL_DEPTH_COMPONENT:
+            return VK_IMAGE_ASPECT_DEPTH_BIT;
+        case GL_STENCIL_INDEX_OES:
+            return VK_IMAGE_ASPECT_STENCIL_BIT;
+        default:
+            return VK_IMAGE_ASPECT_COLOR_BIT;
+    }
 }
 
 angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,

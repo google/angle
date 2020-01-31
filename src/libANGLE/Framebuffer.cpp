@@ -432,6 +432,19 @@ const FramebufferAttachment *FramebufferState::getReadAttachment() const
     return framebufferAttachment.isAttached() ? &framebufferAttachment : nullptr;
 }
 
+const FramebufferAttachment *FramebufferState::getReadPixelsAttachment(GLenum readFormat) const
+{
+    switch (readFormat)
+    {
+        case GL_DEPTH_COMPONENT:
+            return getDepthAttachment();
+        case GL_STENCIL_INDEX_OES:
+            return getStencilOrDepthStencilAttachment();
+        default:
+            return getReadAttachment();
+    }
+}
+
 const FramebufferAttachment *FramebufferState::getFirstNonNullAttachment() const
 {
     auto *colorAttachment = getFirstColorAttachment();

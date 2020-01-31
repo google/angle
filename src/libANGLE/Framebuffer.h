@@ -78,6 +78,7 @@ class FramebufferState final : angle::NonCopyable
     const FramebufferAttachment *getDepthAttachment() const;
     const FramebufferAttachment *getStencilAttachment() const;
     const FramebufferAttachment *getDepthStencilAttachment() const;
+    const FramebufferAttachment *getReadPixelsAttachment(GLenum readFormat) const;
 
     const std::vector<GLenum> &getDrawBufferStates() const { return mDrawBufferStates; }
     DrawBufferMask getEnabledDrawBuffers() const { return mEnabledDrawBuffers; }
