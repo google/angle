@@ -2529,6 +2529,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RGBA8I";
                 case 0x8D8F:
                     return "GL_RGB8I";
+                case 0x8DBB:
+                    return "GL_COMPRESSED_RED_RGTC1_EXT";
+                case 0x8DBC:
+                    return "GL_COMPRESSED_SIGNED_RED_RGTC1_EXT";
+                case 0x8DBD:
+                    return "GL_COMPRESSED_RED_GREEN_RGTC2_EXT";
+                case 0x8DBE:
+                    return "GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT";
                 case 0x8E8C:
                     return "GL_COMPRESSED_RGBA_BPTC_UNORM_EXT";
                 case 0x8E8D:

@@ -6,11 +6,11 @@
   "scripts/gen_proc_table.py":
     "24dbcc78fd3f000f58ca98237ccc0da4",
   "scripts/gl.xml":
-    "c4a3213e606d844e812883fd729c4fd3",
+    "2af7b077ec347349b3a92683e8fb8b03",
   "scripts/gl_angle_ext.xml":
     "d6907cd84d95ac0b32a164194eadcf53",
   "scripts/registry_xml.py":
-    "467ae1a9988049a429d8202e5d2cf73c",
+    "1cf8c2638c7a2ea439f79d3ba05592bd",
   "scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "src/libGL/proc_table_wgl_autogen.cpp":

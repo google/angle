@@ -389,6 +389,7 @@
     void importSemaphoreFd(SemaphoreID semaphorePacked, HandleType handleTypePacked, GLint fd);    \
     /* GL_EXT_texture_compression_bptc */                                                          \
     /* GL_EXT_texture_compression_dxt1 */                                                          \
+    /* GL_EXT_texture_compression_rgtc */                                                          \
     /* GL_EXT_texture_compression_s3tc */                                                          \
     /* GL_EXT_texture_compression_s3tc_srgb */                                                     \
     /* GL_EXT_texture_filter_anisotropic */                                                        \

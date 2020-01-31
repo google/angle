@@ -726,6 +726,54 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vertexLoadRequiresConversion = false;
             break;
 
+        case angle::FormatID::BC4_RED_SNORM_BLOCK:
+            internalFormat               = GL_COMPRESSED_SIGNED_RED_RGTC1_EXT;
+            actualImageFormatID          = angle::FormatID::BC4_RED_SNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC4_SNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
+            actualBufferFormatID         = angle::FormatID::BC4_RED_SNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC4_SNORM_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
+            break;
+
+        case angle::FormatID::BC4_RED_UNORM_BLOCK:
+            internalFormat               = GL_COMPRESSED_RED_RGTC1_EXT;
+            actualImageFormatID          = angle::FormatID::BC4_RED_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC4_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
+            actualBufferFormatID         = angle::FormatID::BC4_RED_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC4_UNORM_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
+            break;
+
+        case angle::FormatID::BC5_RG_SNORM_BLOCK:
+            internalFormat               = GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT;
+            actualImageFormatID          = angle::FormatID::BC5_RG_SNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC5_SNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
+            actualBufferFormatID         = angle::FormatID::BC5_RG_SNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC5_SNORM_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
+            break;
+
+        case angle::FormatID::BC5_RG_UNORM_BLOCK:
+            internalFormat               = GL_COMPRESSED_RED_GREEN_RGTC2_EXT;
+            actualImageFormatID          = angle::FormatID::BC5_RG_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC5_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
+            actualBufferFormatID         = angle::FormatID::BC5_RG_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC5_UNORM_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
+            break;
+
         case angle::FormatID::BPTC_RGBA_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_BPTC_UNORM_EXT;
             actualImageFormatID          = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;

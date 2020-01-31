@@ -1830,7 +1830,9 @@ typedef unsigned int GLhandleARB;
             <enum name="GL_COMPRESSED_R11_EAC"/>
             <enum name="GL_COMPRESSED_SIGNED_R11_EAC"/>
             <enum name="GL_COMPRESSED_RG_RGTC2"/>
+            <enum name="GL_COMPRESSED_RED_GREEN_RGTC2_EXT"/>
             <enum name="GL_COMPRESSED_SIGNED_RG_RGTC2"/>
+            <enum name="GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT"/>
             <enum name="GL_COMPRESSED_RGBA_BPTC_UNORM"/>
             <enum name="GL_COMPRESSED_RGBA_BPTC_UNORM_ARB"/>
             <enum name="GL_COMPRESSED_RGBA_BPTC_UNORM_EXT"/>
