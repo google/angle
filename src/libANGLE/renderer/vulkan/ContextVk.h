@@ -570,6 +570,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // avoid calling vkAllocateDesctiporSets each texture update.
     Serial generateTextureSerial() { return mTextureSerialFactory.generate(); }
     const vk::TextureDescriptorDesc &getActiveTexturesDesc() const { return mActiveTexturesDesc; }
+    Serial generateAttachmentImageSerial() { return mAttachmentImageSerialFactory.generate(); }
 
     angle::Result updateScissor(const gl::State &glState);
 
@@ -1023,8 +1024,9 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // double.
     uint64_t mGpuEventTimestampOrigin;
 
-    // Generator for texure serials.
+    // Generators for texture & framebuffer serials.
     SerialFactory mTextureSerialFactory;
+    SerialFactory mAttachmentImageSerialFactory;
 
     gl::State::DirtyBits mPipelineDirtyBitsMask;
 

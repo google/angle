@@ -114,11 +114,12 @@ class FramebufferVk : public FramebufferImpl
                                    const gl::Rectangle &renderArea,
                                    vk::CommandBuffer **commandBufferOut)
     {
-        return mFramebuffer.appendToStartedRenderPass(resourceUseList, renderArea,
-                                                      commandBufferOut);
+        ASSERT(mFramebuffer);
+        return mFramebuffer->appendToStartedRenderPass(resourceUseList, renderArea,
+                                                       commandBufferOut);
     }
 
-    vk::FramebufferHelper *getFramebuffer() { return &mFramebuffer; }
+    vk::FramebufferHelper *getFramebuffer() { return mFramebuffer; }
 
     angle::Result startNewRenderPass(ContextVk *context,
                                      const gl::Rectangle &renderArea,
@@ -128,6 +129,7 @@ class FramebufferVk : public FramebufferImpl
     GLint getSamples() const;
 
     const vk::RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
+    const vk::FramebufferDesc &getFramebufferDesc() const { return mCurrentFramebufferDesc; }
 
   private:
     FramebufferVk(RendererVk *renderer,
@@ -179,11 +181,13 @@ class FramebufferVk : public FramebufferImpl
     void updateRenderPassDesc();
     angle::Result updateColorAttachment(const gl::Context *context, size_t colorIndex);
     angle::Result invalidateImpl(ContextVk *contextVk, size_t count, const GLenum *attachments);
+    // Release all FramebufferVk objects in the cache and clear cache
+    void clearCache(ContextVk *contextVk);
 
     WindowSurfaceVk *mBackbuffer;
 
     vk::RenderPassDesc mRenderPassDesc;
-    vk::FramebufferHelper mFramebuffer;
+    vk::FramebufferHelper *mFramebuffer;
     RenderTargetCache<RenderTargetVk> mRenderTargetCache;
 
     // These two variables are used to quickly compute if we need to do a masked clear. If a color
@@ -197,6 +201,9 @@ class FramebufferVk : public FramebufferImpl
     // the framebuffer does not, we need to mask out the alpha channel. This DrawBufferMask will
     // contain the mask to apply to the alpha channel when drawing.
     gl::DrawBufferMask mEmulatedAlphaAttachmentMask;
+
+    vk::FramebufferDesc mCurrentFramebufferDesc;
+    std::unordered_map<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
 };
 }  // namespace rx
 

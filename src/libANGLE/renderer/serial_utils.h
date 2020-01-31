@@ -75,6 +75,9 @@ class Serial final
     static constexpr uint64_t kInvalid = 0;
 };
 
+// Used as default/initial serial
+static constexpr Serial kZeroSerial = Serial();
+
 template <typename SerialBaseType>
 class SerialFactoryBase final : angle::NonCopyable
 {
