@@ -614,6 +614,8 @@ egl::Config GenerateDefaultConfig(const RendererVk *renderer,
         renderer->getPhysicalDeviceProperties();
     gl::Version maxSupportedESVersion = renderer->getMaxSupportedESVersion();
 
+    // ES3 features are required to emulate ES1
+    EGLint es1Support = (maxSupportedESVersion.major >= 3 ? EGL_OPENGL_ES_BIT : 0);
     EGLint es2Support = (maxSupportedESVersion.major >= 2 ? EGL_OPENGL_ES2_BIT : 0);
     EGLint es3Support = (maxSupportedESVersion.major >= 3 ? EGL_OPENGL_ES3_BIT : 0);
 
@@ -631,7 +633,7 @@ egl::Config GenerateDefaultConfig(const RendererVk *renderer,
     config.bindToTextureRGBA  = colorFormat.format == GL_RGBA || colorFormat.format == GL_BGRA_EXT;
     config.colorBufferType    = EGL_RGB_BUFFER;
     config.configCaveat       = GetConfigCaveat(colorFormat.internalFormat);
-    config.conformant         = es2Support | es3Support;
+    config.conformant         = es1Support | es2Support | es3Support;
     config.depthSize          = depthStencilFormat.depthBits;
     config.stencilSize        = depthStencilFormat.stencilBits;
     config.level              = 0;
@@ -644,7 +646,7 @@ egl::Config GenerateDefaultConfig(const RendererVk *renderer,
     config.nativeRenderable   = EGL_TRUE;
     config.nativeVisualID     = static_cast<EGLint>(GetNativeVisualID(colorFormat));
     config.nativeVisualType   = EGL_NONE;
-    config.renderableType     = es2Support | es3Support;
+    config.renderableType     = es1Support | es2Support | es3Support;
     config.sampleBuffers      = (sampleCount > 0) ? 1 : 0;
     config.samples            = sampleCount;
     config.surfaceType        = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
