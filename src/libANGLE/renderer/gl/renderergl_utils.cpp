@@ -1649,6 +1649,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             // IsApple() && functions->standard == STANDARD_GL_DESKTOP);
                             // TODO(anglebug.com/2273): diagnose crashes with this workaround.
                             false);
+
+    // Workaround for incorrect sampling from DXT1 sRGB textures in Intel OpenGL on Windows.
+    ANGLE_FEATURE_CONDITION(features, avoidDXT1sRGBTextureFormat, IsWindows() && isIntel);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

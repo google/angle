@@ -411,6 +411,14 @@ struct FeaturesGL : FeatureSetBase
         "rewrite_row_major_matrices", FeatureCategory::OpenGLWorkarounds,
         "Rewrite row major matrices in shaders as column major as a driver bug workaround",
         &members, "http://anglebug.com/2273"};
+
+    // Bugs exist in various OpenGL Intel drivers on Windows that produce incorrect
+    // values for GL_COMPRESSED_SRGB_S3TC_DXT1_EXT format. Replace it with
+    // GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT as it's the closest option allowed by
+    // the WebGL extension spec.
+    Feature avoidDXT1sRGBTextureFormat = {
+        "avoid_dxt1_srgb_texture_format", FeatureCategory::OpenGLWorkarounds,
+        "Replaces DXT1 sRGB with DXT1 sRGB Alpha as a driver bug workaround.", &members};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
