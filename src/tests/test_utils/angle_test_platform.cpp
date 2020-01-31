@@ -81,6 +81,11 @@ bool IsMetal()
     return (rendererString.find("Metal") != std::string::npos);
 }
 
+bool IsD3D()
+{
+    return IsD3D9() || IsD3D11();
+}
+
 bool IsDebug()
 {
 #if !defined(NDEBUG)

@@ -1728,6 +1728,7 @@ TEST_P(ComputeShaderTest, groupMemoryBarrierAndBarrierTest)
     // TODO(xinghua.cao@intel.com): Figure out why we get this error message
     // that shader uses features not recognized by this D3D version.
     ANGLE_SKIP_TEST_IF((IsAMD() || IsNVIDIA()) && IsD3D11());
+    ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
 
     GLTexture texture;
     GLFramebuffer framebuffer;
@@ -1975,6 +1976,8 @@ TEST_P(ComputeShaderTest, AtomicFunctionsNoReturnValue)
 
     // Fails to link on Android.  http://anglebug.com/3874
     ANGLE_SKIP_TEST_IF(IsAndroid());
+
+    ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
 
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 8, local_size_y = 1, local_size_z = 1) in;

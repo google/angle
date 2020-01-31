@@ -4282,8 +4282,8 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
         };
 
         // Put default settings at the last
-        std::vector<GLint> paramsPackRowLength                        = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0};
-        std::vector<GLint> paramsPackAlignment                        = {1, 2, 8, 4};
+        std::vector<GLint> paramsPackRowLength = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0};
+        std::vector<GLint> paramsPackAlignment = {1, 2, 8, 4};
         std::vector<std::array<GLint, 2>> paramsPackSkipPixelsAndRows = {{1, 0}, {0, 1},   {1, 1},
                                                                          {3, 1}, {20, 20}, {0, 0}};
 
@@ -5356,6 +5356,7 @@ TEST_P(Texture2DDepthTest, DepthTextureES2Compatibility)
                        !IsGLExtensionEnabled("GL_OES_depth_texture"));
     // http://anglebug.com/4092
     ANGLE_SKIP_TEST_IF(IsOpenGL() || IsOpenGLES());
+    ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
 
     // When the depth texture is specified with unsized internalformat implementations follow
     // OES_depth_texture behavior. Otherwise they follow GLES 3.0 behavior.

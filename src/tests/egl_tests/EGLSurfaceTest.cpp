@@ -564,6 +564,8 @@ TEST_P(EGLSurfaceTest, SwapInterval)
     // Test fails on Swangle http://anglebug.com/4169
     ANGLE_SKIP_TEST_IF(isVulkanSwiftshaderRenderer());
 
+    ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
+
     initializeDisplay();
     initializeSurfaceWithDefaultConfig();
     initializeContext();

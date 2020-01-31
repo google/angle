@@ -1124,6 +1124,7 @@ TEST_P(ClearTestES3, RepeatedClear)
 {
     // Fails on 431.02 driver. http://anglebug.com/3748
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
 
     constexpr char kVS[] =
         "#version 300 es\n"

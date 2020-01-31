@@ -847,6 +847,7 @@ TEST_P(D3D11TextureStreamSamplingTest, P010)
     ANGLE_SKIP_TEST_IF(
         !IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_stream_producer_d3d_texture"));
     ANGLE_SKIP_TEST_IF(!CheckP010TextureSupport(mD3D));
+    ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
 
     constexpr char kVertShader[] = R"(
 attribute vec4 aPos;
