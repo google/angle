@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bdad48d_0b539a02",
+        "filename": "include/platform/FeaturesD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-01-31T20:18:48Z",
+      "side": 1,
+      "message": "can you document this please in the comment? and also tag it to a bug ID? see a couple other examples in this file.",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 56
+      },
+      "revId": "11fcc01af3bb2f5464225aca1d7c04e4adc9a1d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
