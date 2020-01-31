@@ -888,7 +888,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     // We use a single pool for recording commands. We also keep a free list for pool recycling.
     vk::CommandPool mCommandPool;
-    std::vector<vk::CommandPool> mCommandPoolFreeList;
 
     CommandQueue mCommandQueue;
     vk::GarbageList mCurrentGarbage;

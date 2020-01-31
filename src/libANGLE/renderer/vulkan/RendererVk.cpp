@@ -1545,11 +1545,6 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     ANGLE_FEATURE_CONDITION((&mFeatures), disableFlippingBlitWithCommand,
                             IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION(
-        (&mFeatures), transientCommandBuffer,
-        IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) ||
-            IsPixel1XL(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
-
     ANGLE_FEATURE_CONDITION((&mFeatures), commandGraph, true);
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();

@@ -182,16 +182,6 @@ struct FeaturesVk : FeatureSetBase
         "Vulkan swapchain is not returning VK_ERROR_OUT_OF_DATE when window resizing", &members,
         "http://anglebug.com/3623, http://anglebug.com/3624, http://anglebug.com/3625"};
 
-    // On Pixel1XL and Pixel2, reset a vkCommandBuffer seems to have side effects on binding
-    // descriptor sets to it afterwards, Work-around by keep using transient vkCommandBuffer on
-    // those devices.
-    // http://b/135763283
-    Feature transientCommandBuffer = {
-        "transient_command_buffer", FeatureCategory::VulkanWorkarounds,
-        "Keep using transient vkCommandBuffer to work around driver issue in reseting"
-        "vkCommandBuffer",
-        &members, "http://b/135763283"};
-
     // Seamful cube map emulation misbehaves on the AMD windows driver, so it's disallowed.
     Feature disallowSeamfulCubeMapEmulation = {
         "disallow_seamful_cube_map_emulation", FeatureCategory::VulkanWorkarounds,

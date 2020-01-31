@@ -239,10 +239,7 @@ angle::Result CommandQueue::init(vk::Context *context)
 
     // Initialize the command pool now that we know the queue family index.
     uint32_t queueFamilyIndex = renderer->getQueueFamilyIndex();
-    if (!renderer->getFeatures().transientCommandBuffer.enabled)
-    {
-        ANGLE_TRY(mPrimaryCommandPool.init(context, queueFamilyIndex));
-    }
+    ANGLE_TRY(mPrimaryCommandPool.init(context, queueFamilyIndex));
 
     return angle::Result::Continue;
 }
@@ -347,39 +344,14 @@ angle::Result CommandQueue::allocatePrimaryCommandBuffer(vk::Context *context,
                                                          const vk::CommandPool &commandPool,
                                                          vk::PrimaryCommandBuffer *commandBufferOut)
 {
-    RendererVk *renderer = context->getRenderer();
-    VkDevice device      = renderer->getDevice();
-
-    if (ANGLE_LIKELY(!renderer->getFeatures().transientCommandBuffer.enabled))
-    {
-        return mPrimaryCommandPool.allocate(context, commandBufferOut);
-    }
-
-    VkCommandBufferAllocateInfo commandBufferInfo = {};
-    commandBufferInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    commandBufferInfo.commandPool                 = commandPool.getHandle();
-    commandBufferInfo.level                       = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    commandBufferInfo.commandBufferCount          = 1;
-
-    ANGLE_VK_TRY(context, commandBufferOut->init(device, commandBufferInfo));
-    return angle::Result::Continue;
+    return mPrimaryCommandPool.allocate(context, commandBufferOut);
 }
 
 angle::Result CommandQueue::releasePrimaryCommandBuffer(vk::Context *context,
                                                         vk::PrimaryCommandBuffer &&commandBuffer)
 {
-    RendererVk *renderer = context->getRenderer();
-    VkDevice device      = renderer->getDevice();
-
-    if (ANGLE_LIKELY(!renderer->getFeatures().transientCommandBuffer.enabled))
-    {
-        ASSERT(mPrimaryCommandPool.valid());
-        ANGLE_TRY(mPrimaryCommandPool.collect(context, std::move(commandBuffer)));
-    }
-    else
-    {
-        commandBuffer.destroy(device);
-    }
+    ASSERT(mPrimaryCommandPool.valid());
+    ANGLE_TRY(mPrimaryCommandPool.collect(context, std::move(commandBuffer)));
 
     return angle::Result::Continue;
 }
@@ -660,11 +632,6 @@ void ContextVk::onDestroy(const gl::Context *context)
     mGpuEventQueryPool.destroy(device);
     mCommandPool.destroy(device);
     mPrimaryCommands.destroy(device);
-
-    for (vk::CommandPool &pool : mCommandPoolFreeList)
-    {
-        pool.destroy(device);
-    }
 }
 
 angle::Result ContextVk::getIncompleteTexture(const gl::Context *context,
@@ -722,19 +689,6 @@ angle::Result ContextVk::initialize()
     }
 
     ANGLE_TRY(mCommandQueue.init(this));
-
-    if (mRenderer->getFeatures().transientCommandBuffer.enabled)
-    {
-        // Once http://anglebug.com/3508 is resolved, the commandPool will only
-        // used for secondaryBuffer allocation, so we can guard this block of code use macro
-        // ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS.
-        VkCommandPoolCreateInfo commandPoolInfo = {};
-        commandPoolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-        commandPoolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-        commandPoolInfo.queueFamilyIndex        = mRenderer->getQueueFamilyIndex();
-
-        ANGLE_VK_TRY(this, mCommandPool.init(getDevice(), commandPoolInfo));
-    }
 
 #if ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
