@@ -1646,7 +1646,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // anglebug.com/2273
     // Seems to affect both Intel and AMD GPUs. Enable workaround for all GPUs on macOS.
     ANGLE_FEATURE_CONDITION(features, rewriteRowMajorMatrices,
-                            IsApple() && functions->standard == STANDARD_GL_DESKTOP);
+                            // IsApple() && functions->standard == STANDARD_GL_DESKTOP);
+                            // TODO(anglebug.com/2273): diagnose crashes with this workaround.
+                            false);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

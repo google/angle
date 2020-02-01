@@ -2154,8 +2154,8 @@ TEST_P(UniformBufferTest, UniformBlocksInDiffProgramShareUniformBuffer)
 // Test a uniform block where an array of row-major matrices is dynamically indexed.
 TEST_P(UniformBufferTest, Std140UniformBlockWithDynamicallyIndexedRowMajorArray)
 {
-    // http://anglebug.com/3837
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
+    // http://anglebug.com/3837 , http://anglebug.com/2273
+    ANGLE_SKIP_TEST_IF((IsLinux() && IsIntel() && IsOpenGL()) || IsOSX());
 
     constexpr char kFS[] =
         R"(#version 300 es
