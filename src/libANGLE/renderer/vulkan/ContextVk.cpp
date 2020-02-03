@@ -1298,6 +1298,15 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
 angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
                                      vk::PrimaryCommandBuffer &&commandBuffer)
 {
+    // Update overlay if active.
+    if (!commandGraphEnabled())
+    {
+        gl::RunningGraphWidget *renderPassCount =
+            mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassCount);
+        renderPassCount->add(mRenderPassCommands.getAndResetCounter());
+        renderPassCount->next();
+    }
+
     ANGLE_TRY(ensureSubmitFenceInitialized());
     ANGLE_TRY(mCommandQueue.submitFrame(this, mContextPriority, submitInfo, mSubmitFence,
                                         &mCurrentGarbage, &mCommandPool, std::move(commandBuffer)));
@@ -3797,7 +3806,7 @@ void OutsideRenderPassCommandBuffer::reset()
     mCommandBuffer.reset();
 }
 
-RenderPassCommandBuffer::RenderPassCommandBuffer() = default;
+RenderPassCommandBuffer::RenderPassCommandBuffer() : mCounter(0) {}
 
 RenderPassCommandBuffer::~RenderPassCommandBuffer()
 {

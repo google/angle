@@ -59,6 +59,8 @@ enum class WidgetId
     VulkanValidationMessageCount,
     // Number of nodes in command graph (RunningGraph).
     VulkanCommandGraphSize,
+    // Number of RenderPasses in a frame (RunningGraph).
+    VulkanRenderPassCount,
     // Secondary Command Buffer pool memory waste (RunningHistogram).
     VulkanSecondaryCommandBufferPoolWaste,
 

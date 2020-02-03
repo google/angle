@@ -474,6 +474,8 @@ angle::Result CommandGraphNode::beginOutsideRenderPassRecording(ContextVk *conte
 angle::Result CommandGraphNode::beginInsideRenderPassRecording(ContextVk *context,
                                                                CommandBuffer **commandsOut)
 {
+    context->getCommandGraph()->tickRenderPassCount();
+
     ASSERT(!mHasChildren);
 
     // Get a compatible RenderPass from the cache so we can initialize the inheritance info.
@@ -939,7 +941,8 @@ bool SharedGarbage::destroyIfComplete(VkDevice device, Serial completedSerial)
 CommandGraph::CommandGraph(bool enableGraphDiagnostics, angle::PoolAllocator *poolAllocator)
     : mEnableGraphDiagnostics(enableGraphDiagnostics),
       mPoolAllocator(poolAllocator),
-      mLastBarrierIndex(kInvalidNodeIndex)
+      mLastBarrierIndex(kInvalidNodeIndex),
+      mRenderPassCount(0)
 {
     // Push so that allocations made from here will be recycled in clear() below.
     mPoolAllocator->push();
@@ -998,6 +1001,7 @@ angle::Result CommandGraph::submitCommands(ContextVk *context,
     ASSERT(!mNodes.empty());
 
     updateOverlay(context);
+    mRenderPassCount = 0;
 
     size_t previousBarrierIndex       = 0;
     CommandGraphNode *previousBarrier = getLastBarrierNode(&previousBarrierIndex);
@@ -1321,9 +1325,15 @@ void CommandGraph::updateOverlay(ContextVk *contextVk) const
 
     overlay->getRunningGraphWidget(gl::WidgetId::VulkanCommandGraphSize)->add(mNodes.size());
 
-    overlay->getRunningHistogramWidget(gl::WidgetId::VulkanSecondaryCommandBufferPoolWaste)
-        ->set(CalculateSecondaryCommandBufferPoolWaste(mNodes));
-    overlay->getRunningHistogramWidget(gl::WidgetId::VulkanSecondaryCommandBufferPoolWaste)->next();
+    gl::RunningHistogramWidget *poolWaste =
+        overlay->getRunningHistogramWidget(gl::WidgetId::VulkanSecondaryCommandBufferPoolWaste);
+    poolWaste->set(CalculateSecondaryCommandBufferPoolWaste(mNodes));
+    poolWaste->next();
+
+    gl::RunningGraphWidget *renderPassCount =
+        overlay->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassCount);
+    renderPassCount->add(mRenderPassCount);
+    renderPassCount->next();
 }
 
 CommandGraphNode *CommandGraph::getLastBarrierNode(size_t *indexOut)

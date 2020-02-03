@@ -608,6 +608,7 @@ class CommandGraph final : angle::NonCopyable
     void makeHostVisibleBufferWriteAvailable();
     // External memory synchronization:
     void syncExternalMemory();
+    void tickRenderPassCount() { mRenderPassCount++; }
 
   private:
     CommandGraphNode *allocateBarrierNode(CommandGraphNodeFunction function,
@@ -672,6 +673,7 @@ class CommandGraph final : angle::NonCopyable
     // issued.
     static constexpr size_t kInvalidNodeIndex = std::numeric_limits<std::size_t>::max();
     size_t mLastBarrierIndex;
+    uint32_t mRenderPassCount;
 };
 
 // CommandGraphResource inlines.

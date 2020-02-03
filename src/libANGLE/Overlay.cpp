@@ -26,6 +26,7 @@ constexpr std::pair<const char *, WidgetId> kWidgetNames[] = {
     {"VulkanLastValidationMessage", WidgetId::VulkanLastValidationMessage},
     {"VulkanValidationMessageCount", WidgetId::VulkanValidationMessageCount},
     {"VulkanCommandGraphSize", WidgetId::VulkanCommandGraphSize},
+    {"VulkanRenderPassCount", WidgetId::VulkanRenderPassCount},
     {"VulkanSecondaryCommandBufferPoolWaste", WidgetId::VulkanSecondaryCommandBufferPoolWaste},
 };
 }  // namespace

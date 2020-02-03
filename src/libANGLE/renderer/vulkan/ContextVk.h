@@ -172,7 +172,15 @@ class RenderPassCommandBuffer final : angle::NonCopyable
     bool empty() const { return mCommandBuffer.empty(); }
     void reset();
 
+    uint32_t getAndResetCounter()
+    {
+        uint32_t count = mCounter;
+        mCounter       = 0;
+        return count;
+    }
+
   private:
+    uint32_t mCounter;
     vk::RenderPassDesc mRenderPassDesc;
     vk::AttachmentOpsArray mAttachmentOps;
     vk::Framebuffer mFramebuffer;
