@@ -388,6 +388,8 @@ void ANGLESetDefaultDisplayPlatform(angle::EGLDisplayType display)
     platformMethods->logInfo    = Display_logInfo;
 }
 
+static constexpr uint32_t kScratchBufferLifetime = 64u;
+
 }  // anonymous namespace
 
 DisplayState::DisplayState() : label(nullptr), featuresAllDisabled(false) {}
@@ -1071,6 +1073,21 @@ Error Display::makeCurrent(const Thread *thread,
         ANGLE_TRY(context->makeCurrent(this, drawSurface, readSurface));
     }
 
+    // Tick all the scratch buffers to make sure they get cleaned up eventually if they stop being
+    // used.
+    {
+        std::lock_guard<std::mutex> lock(mScratchBufferMutex);
+
+        for (angle::ScratchBuffer &scatchBuffer : mScratchBuffers)
+        {
+            scatchBuffer.tick();
+        }
+        for (angle::ScratchBuffer &zeroFilledBuffer : mZeroFilledBuffers)
+        {
+            zeroFilledBuffer.tick();
+        }
+    }
+
     return NoError();
 }
 
@@ -1663,4 +1680,46 @@ EGLAttrib Display::queryAttrib(const EGLint attribute)
     }
     return value;
 }
+
+angle::ScratchBuffer Display::requestScratchBuffer()
+{
+    return requestScratchBufferImpl(&mScratchBuffers);
+}
+
+void Display::returnScratchBuffer(angle::ScratchBuffer scratchBuffer)
+{
+    returnScratchBufferImpl(std::move(scratchBuffer), &mScratchBuffers);
+}
+
+angle::ScratchBuffer Display::requestZeroFilledBuffer()
+{
+    return requestScratchBufferImpl(&mZeroFilledBuffers);
+}
+
+void Display::returnZeroFilledBuffer(angle::ScratchBuffer zeroFilledBuffer)
+{
+    returnScratchBufferImpl(std::move(zeroFilledBuffer), &mZeroFilledBuffers);
+}
+
+angle::ScratchBuffer Display::requestScratchBufferImpl(
+    std::vector<angle::ScratchBuffer> *bufferVector)
+{
+    std::lock_guard<std::mutex> lock(mScratchBufferMutex);
+    if (!bufferVector->empty())
+    {
+        angle::ScratchBuffer buffer = std::move(bufferVector->back());
+        bufferVector->pop_back();
+        return buffer;
+    }
+
+    return angle::ScratchBuffer(kScratchBufferLifetime);
+}
+
+void Display::returnScratchBufferImpl(angle::ScratchBuffer scratchBuffer,
+                                      std::vector<angle::ScratchBuffer> *bufferVector)
+{
+    std::lock_guard<std::mutex> lock(mScratchBufferMutex);
+    bufferVector->push_back(std::move(scratchBuffer));
+}
+
 }  // namespace egl

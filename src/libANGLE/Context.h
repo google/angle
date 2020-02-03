@@ -480,7 +480,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                            angle::MemoryBuffer **scratchBufferOut) const;
     ANGLE_NO_DISCARD bool getZeroFilledBuffer(size_t requstedSizeBytes,
                                               angle::MemoryBuffer **zeroBufferOut) const;
-    angle::ScratchBuffer *getScratchBuffer() const { return &mScratchBuffer; }
+    angle::ScratchBuffer *getScratchBuffer() const;
 
     angle::Result prepareForCopyImage();
     angle::Result prepareForDispatch();
@@ -731,8 +731,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     std::vector<angle::ObserverBinding> mImageObserverBindings;
 
     // Not really a property of context state. The size and contexts change per-api-call.
-    mutable angle::ScratchBuffer mScratchBuffer;
-    mutable angle::ScratchBuffer mZeroFilledBuffer;
+    mutable Optional<angle::ScratchBuffer> mScratchBuffer;
+    mutable Optional<angle::ScratchBuffer> mZeroFilledBuffer;
 
     std::shared_ptr<angle::WorkerThreadPool> mThreadPool;
 

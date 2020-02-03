@@ -11,6 +11,7 @@
 #ifndef LIBANGLE_DISPLAY_H_
 #define LIBANGLE_DISPLAY_H_
 
+#include <mutex>
 #include <set>
 #include <vector>
 
@@ -208,6 +209,12 @@ class Display final : public LabeledObject, angle::NonCopyable
 
     EGLAttrib queryAttrib(const EGLint attribute);
 
+    angle::ScratchBuffer requestScratchBuffer();
+    void returnScratchBuffer(angle::ScratchBuffer scratchBuffer);
+
+    angle::ScratchBuffer requestZeroFilledBuffer();
+    void returnZeroFilledBuffer(angle::ScratchBuffer zeroFilledBuffer);
+
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
@@ -222,6 +229,10 @@ class Display final : public LabeledObject, angle::NonCopyable
     void initDisplayExtensions();
     void initVendorString();
     void initializeFrontendFeatures();
+
+    angle::ScratchBuffer requestScratchBufferImpl(std::vector<angle::ScratchBuffer> *bufferVector);
+    void returnScratchBufferImpl(angle::ScratchBuffer scratchBuffer,
+                                 std::vector<angle::ScratchBuffer> *bufferVector);
 
     DisplayState mState;
     rx::DisplayImpl *mImplementation;
@@ -265,6 +276,10 @@ class Display final : public LabeledObject, angle::NonCopyable
     angle::FrontendFeatures mFrontendFeatures;
 
     angle::FeatureList mFeatures;
+
+    std::mutex mScratchBufferMutex;
+    std::vector<angle::ScratchBuffer> mScratchBuffers;
+    std::vector<angle::ScratchBuffer> mZeroFilledBuffers;
 };
 
 }  // namespace egl
