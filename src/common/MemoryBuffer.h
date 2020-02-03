@@ -62,8 +62,12 @@ class ScratchBuffer final : NonCopyable
     // If we request a scratch buffer requesting a smaller size this many times, release and
     // recreate the scratch buffer. This ensures we don't have a degenerate case where we are stuck
     // hogging memory.
+    ScratchBuffer();
     ScratchBuffer(uint32_t lifetime);
     ~ScratchBuffer();
+
+    ScratchBuffer(ScratchBuffer &&other);
+    ScratchBuffer &operator=(ScratchBuffer &&other);
 
     // Returns true with a memory buffer of the requested size, or false on failure.
     bool get(size_t requestedSize, MemoryBuffer **memoryBufferOut);
@@ -79,7 +83,7 @@ class ScratchBuffer final : NonCopyable
   private:
     bool getImpl(size_t requestedSize, MemoryBuffer **memoryBufferOut, Optional<uint8_t> initValue);
 
-    const uint32_t mLifetime;
+    uint32_t mLifetime;
     uint32_t mResetCounter;
     MemoryBuffer mScratchMemory;
 };

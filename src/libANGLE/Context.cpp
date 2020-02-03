@@ -347,8 +347,6 @@ Context::Context(egl::Display *display,
       mVertexArrayObserverBinding(this, kVertexArraySubjectIndex),
       mDrawFramebufferObserverBinding(this, kDrawFramebufferSubjectIndex),
       mReadFramebufferObserverBinding(this, kReadFramebufferSubjectIndex),
-      mScratchBuffer(1000u),
-      mZeroFilledBuffer(1000u),
       mThreadPool(nullptr),
       mFrameCapture(new angle::FrameCapture),
       mOverlay(mImplementation.get())
@@ -706,7 +704,20 @@ egl::Error Context::unMakeCurrent(const egl::Display *display)
 {
     ANGLE_TRY(unsetDefaultFramebuffer());
 
-    return angle::ResultToEGL(mImplementation->onUnMakeCurrent(this));
+    ANGLE_TRY(angle::ResultToEGL(mImplementation->onUnMakeCurrent(this)));
+
+    // Return the scratch buffers to the display so they can be shared with other contexts while
+    // this one is not current.
+    if (mScratchBuffer.valid())
+    {
+        mDisplay->returnScratchBuffer(mScratchBuffer.release());
+    }
+    if (mZeroFilledBuffer.valid())
+    {
+        mDisplay->returnZeroFilledBuffer(mZeroFilledBuffer.release());
+    }
+
+    return egl::NoError();
 }
 
 BufferID Context::createBuffer()
@@ -5757,13 +5768,36 @@ void Context::framebufferParameteri(GLenum target, GLenum pname, GLint param)
 bool Context::getScratchBuffer(size_t requstedSizeBytes,
                                angle::MemoryBuffer **scratchBufferOut) const
 {
-    return mScratchBuffer.get(requstedSizeBytes, scratchBufferOut);
+    if (!mScratchBuffer.valid())
+    {
+        mScratchBuffer = mDisplay->requestScratchBuffer();
+    }
+
+    ASSERT(mScratchBuffer.valid());
+    return mScratchBuffer.value().get(requstedSizeBytes, scratchBufferOut);
+}
+
+angle::ScratchBuffer *Context::getScratchBuffer() const
+{
+    if (!mScratchBuffer.valid())
+    {
+        mScratchBuffer = mDisplay->requestScratchBuffer();
+    }
+
+    ASSERT(mScratchBuffer.valid());
+    return &mScratchBuffer.value();
 }
 
 bool Context::getZeroFilledBuffer(size_t requstedSizeBytes,
                                   angle::MemoryBuffer **zeroBufferOut) const
 {
-    return mZeroFilledBuffer.getInitialized(requstedSizeBytes, zeroBufferOut, 0);
+    if (!mZeroFilledBuffer.valid())
+    {
+        mZeroFilledBuffer = mDisplay->requestZeroFilledBuffer();
+    }
+
+    ASSERT(mZeroFilledBuffer.valid());
+    return mZeroFilledBuffer.value().getInitialized(requstedSizeBytes, zeroBufferOut, 0);
 }
 
 void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
