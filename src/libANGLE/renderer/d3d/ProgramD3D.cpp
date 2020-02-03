@@ -3141,7 +3141,7 @@ void ProgramD3D::gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyi
             for (GLuint registerIndex = 0u; registerIndex < registerInfos.size(); ++registerIndex)
             {
                 const auto &registerInfo = registerInfos[registerIndex];
-                const auto &varying      = *registerInfo.packedVarying->varying;
+                const auto &varying      = registerInfo.packedVarying->varying();
                 GLenum transposedType    = gl::TransposeMatrixType(varying.type);
                 int componentCount       = gl::VariableColumnCount(transposedType);
                 ASSERT(!varying.isBuiltIn() && !varying.isStruct());

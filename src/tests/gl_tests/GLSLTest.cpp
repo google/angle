@@ -6166,9 +6166,6 @@ void main()
 // Test that linking varyings by location works.
 TEST_P(GLSLTest_ES31, LinkVaryingsByLocation)
 {
-    // http://anglebug.com/4355
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsMetal() || IsD3D11());
-
     constexpr char kVS[] = R"(#version 310 es
 precision highp float;
 in vec4 position;

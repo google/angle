@@ -237,23 +237,20 @@ ShaderInterfaceVariableInfo *AddLocationInfo(ShaderInterfaceVariableInfoMap *inf
                                              const std::string &varName,
                                              uint32_t location,
                                              uint32_t component,
-                                             gl::ShaderBitSet activeStages)
+                                             gl::ShaderType stage)
 {
     // The info map for this name may or may not exist already.  This function merges the
     // location/component information.
     ShaderInterfaceVariableInfo *info = &(*infoMap)[varName];
 
-    for (const gl::ShaderType shaderType : activeStages)
-    {
-        ASSERT(info->descriptorSet == ShaderInterfaceVariableInfo::kInvalid);
-        ASSERT(info->binding == ShaderInterfaceVariableInfo::kInvalid);
-        ASSERT(info->location[shaderType] == ShaderInterfaceVariableInfo::kInvalid);
-        ASSERT(info->component[shaderType] == ShaderInterfaceVariableInfo::kInvalid);
+    ASSERT(info->descriptorSet == ShaderInterfaceVariableInfo::kInvalid);
+    ASSERT(info->binding == ShaderInterfaceVariableInfo::kInvalid);
+    ASSERT(info->location[stage] == ShaderInterfaceVariableInfo::kInvalid);
+    ASSERT(info->component[stage] == ShaderInterfaceVariableInfo::kInvalid);
 
-        info->location[shaderType]  = location;
-        info->component[shaderType] = component;
-    }
-    info->activeStages |= activeStages;
+    info->location[stage]  = location;
+    info->component[stage] = component;
+    info->activeStages.set(stage);
 
     return info;
 }
@@ -489,16 +486,13 @@ void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programSt
 void AssignAttributeLocations(const gl::ProgramState &programState,
                               ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    gl::ShaderBitSet vertexOnly;
-    vertexOnly.set(gl::ShaderType::Vertex);
-
     // Assign attribute locations for the vertex shader.
     for (const sh::ShaderVariable &attribute : programState.getProgramInputs())
     {
         ASSERT(attribute.active);
 
         AddLocationInfo(variableInfoMapOut, attribute.mappedName, attribute.location,
-                        ShaderInterfaceVariableInfo::kInvalid, vertexOnly);
+                        ShaderInterfaceVariableInfo::kInvalid, gl::ShaderType::Vertex);
     }
 }
 
@@ -511,9 +505,6 @@ void AssignOutputLocations(const gl::ProgramState &programState,
     const auto &outputVariables                      = programState.getOutputVariables();
     const std::array<std::string, 3> implicitOutputs = {"gl_FragDepth", "gl_SampleMask",
                                                         "gl_FragStencilRefARB"};
-
-    gl::ShaderBitSet fragmentOnly;
-    fragmentOnly.set(gl::ShaderType::Fragment);
 
     for (const gl::VariableLocation &outputLocation : outputLocations)
     {
@@ -536,7 +527,7 @@ void AssignOutputLocations(const gl::ProgramState &programState,
             }
 
             AddLocationInfo(variableInfoMapOut, outputVar.mappedName, location,
-                            ShaderInterfaceVariableInfo::kInvalid, fragmentOnly);
+                            ShaderInterfaceVariableInfo::kInvalid, gl::ShaderType::Fragment);
         }
     }
 
@@ -545,8 +536,8 @@ void AssignOutputLocations(const gl::ProgramState &programState,
     // location 0 to these entries, adding an entry for them here allows us to ASSERT that every
     // shader interface variable is processed during the SPIR-V transformation.  This is done when
     // iterating the ids provided by OpEntryPoint.
-    AddLocationInfo(variableInfoMapOut, "webgl_FragColor", 0, 0, fragmentOnly);
-    AddLocationInfo(variableInfoMapOut, "webgl_FragData", 0, 0, fragmentOnly);
+    AddLocationInfo(variableInfoMapOut, "webgl_FragColor", 0, 0, gl::ShaderType::Fragment);
+    AddLocationInfo(variableInfoMapOut, "webgl_FragData", 0, 0, gl::ShaderType::Fragment);
 }
 
 void AssignVaryingLocations(const GlslangSourceOptions &options,
@@ -563,12 +554,12 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     {
         uint32_t lineRasterEmulationPositionLocation = locationsUsedForEmulation++;
 
-        gl::ShaderBitSet allActiveStages;
-        allActiveStages.set();
-
-        AddLocationInfo(variableInfoMapOut, sh::vk::kLineRasterEmulationPosition,
-                        lineRasterEmulationPositionLocation, ShaderInterfaceVariableInfo::kInvalid,
-                        allActiveStages);
+        for (const gl::ShaderType shaderType : programState.getLinkedShaderStages())
+        {
+            AddLocationInfo(variableInfoMapOut, sh::vk::kLineRasterEmulationPosition,
+                            lineRasterEmulationPositionLocation,
+                            ShaderInterfaceVariableInfo::kInvalid, shaderType);
+        }
     }
 
     // Assign varying locations.
@@ -581,6 +572,15 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
 
         const gl::PackedVarying &varying = *varyingReg.packedVarying;
 
+        uint32_t location  = varyingReg.registerRow + locationsUsedForEmulation;
+        uint32_t component = ShaderInterfaceVariableInfo::kInvalid;
+        if (varyingReg.registerColumn > 0)
+        {
+            ASSERT(!varying.varying().isStruct());
+            ASSERT(!gl::IsMatrixType(varying.varying().type));
+            component = varyingReg.registerColumn;
+        }
+
         // In the following:
         //
         //     struct S { vec4 field; };
@@ -588,41 +588,48 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
         //
         // "_uvarStruct" is found through |parentStructMappedName|, with |varying->mappedName|
         // being "_ufield".  In such a case, use |parentStructMappedName|.
-        const std::string &name =
-            varying.isStructField() ? varying.parentStructMappedName : varying.varying->mappedName;
-
-        uint32_t location  = varyingReg.registerRow + locationsUsedForEmulation;
-        uint32_t component = ShaderInterfaceVariableInfo::kInvalid;
-        if (varyingReg.registerColumn > 0)
+        if (varying.frontVarying.varying)
         {
-            ASSERT(!varying.varying->isStruct());
-            ASSERT(!gl::IsMatrixType(varying.varying->type));
-            component = varyingReg.registerColumn;
+            const std::string &name = varying.isStructField()
+                                          ? varying.frontVarying.parentStructMappedName
+                                          : varying.frontVarying.varying->mappedName;
+            AddLocationInfo(variableInfoMapOut, name, location, component,
+                            varying.frontVarying.stage);
         }
-
-        AddLocationInfo(variableInfoMapOut, name, location, component, varying.shaderStages);
+        if (varying.backVarying.varying)
+        {
+            const std::string &name = varying.isStructField()
+                                          ? varying.backVarying.parentStructMappedName
+                                          : varying.backVarying.varying->mappedName;
+            AddLocationInfo(variableInfoMapOut, name, location, component,
+                            varying.backVarying.stage);
+        }
     }
 
     // Add an entry for inactive varyings.
-    for (const std::string &varyingName : resources.varyingPacking.getInactiveVaryingMappedNames())
+    const gl::ShaderMap<std::vector<std::string>> &inactiveVaryingMappedNames =
+        resources.varyingPacking.getInactiveVaryingMappedNames();
+    for (const gl::ShaderType shaderType : programState.getLinkedShaderStages())
     {
-        bool isBuiltin = angle::BeginsWith(varyingName, "gl_");
-        if (isBuiltin)
+        for (const std::string &varyingName : inactiveVaryingMappedNames[shaderType])
         {
-            continue;
-        }
+            bool isBuiltin = angle::BeginsWith(varyingName, "gl_");
+            if (isBuiltin)
+            {
+                continue;
+            }
 
-        // TODO(syoussefi): inactive varying names should be unique.  However, due to mishandling of
-        // partially captured arrays, a varying name can end up in both the active and inactive
-        // lists.  The test below should be removed once that issue is resolved.
-        // http://anglebug.com/4140
-        if (variableInfoMapOut->find(varyingName) != variableInfoMapOut->end())
-        {
-            continue;
-        }
+            // If name is already in the map, it will automatically have marked all other stages
+            // inactive.
+            if (variableInfoMapOut->find(varyingName) != variableInfoMapOut->end())
+            {
+                continue;
+            }
 
-        AddLocationInfo(variableInfoMapOut, varyingName, ShaderInterfaceVariableInfo::kInvalid,
-                        ShaderInterfaceVariableInfo::kInvalid, gl::ShaderBitSet());
+            // Otherwise, add an entry for it with all locations inactive.
+            ShaderInterfaceVariableInfo *info = &(*variableInfoMapOut)[varyingName];
+            ASSERT(info->location[shaderType] == ShaderInterfaceVariableInfo::kInvalid);
+        }
     }
 }
 
@@ -675,11 +682,8 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramState &programS
 
             ASSERT(xfbVaryingLocation < locationsUsedForXfbExtension);
 
-            gl::ShaderBitSet vertexOnly;
-            vertexOnly.set(gl::ShaderType::Vertex);
-
             AddLocationInfo(variableInfoMapOut, xfbVaryingName, xfbVaryingLocation,
-                            ShaderInterfaceVariableInfo::kInvalid, vertexOnly);
+                            ShaderInterfaceVariableInfo::kInvalid, gl::ShaderType::Vertex);
             SetXfbInfo(variableInfoMapOut, xfbVaryingName, bufferIndex, currentOffset,
                        currentStride);
         }
@@ -703,7 +707,7 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramState &programS
 
                 const gl::PackedVarying *varying = varyingReg.packedVarying;
 
-                if (varying->varying->name == tfVarying.name)
+                if (varying->frontVarying.varying->name == tfVarying.name)
                 {
                     originalVarying = varying;
                     break;
@@ -712,9 +716,10 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramState &programS
 
             if (originalVarying)
             {
-                const std::string &mappedName = originalVarying->isStructField()
-                                                    ? originalVarying->parentStructMappedName
-                                                    : originalVarying->varying->mappedName;
+                const std::string &mappedName =
+                    originalVarying->isStructField()
+                        ? originalVarying->frontVarying.parentStructMappedName
+                        : originalVarying->frontVarying.varying->mappedName;
 
                 // Set xfb info for this varying.  AssignVaryingLocations should have already added
                 // location information for these varyings.

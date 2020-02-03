@@ -568,7 +568,13 @@ class ProgramAliasedBindings final : angle::NonCopyable
 
 struct ProgramVaryingRef
 {
-    const sh::ShaderVariable *get() const { return frontShader ? frontShader : backShader; }
+    const sh::ShaderVariable *get(ShaderType stage) const
+    {
+        ASSERT(stage == frontShaderStage || stage == backShaderStage);
+        const sh::ShaderVariable *ref = stage == frontShaderStage ? frontShader : backShader;
+        ASSERT(ref);
+        return ref;
+    }
 
     const sh::ShaderVariable *frontShader = nullptr;
     const sh::ShaderVariable *backShader  = nullptr;
@@ -576,7 +582,7 @@ struct ProgramVaryingRef
     ShaderType backShaderStage            = ShaderType::InvalidEnum;
 };
 
-using ProgramMergedVaryings = std::map<std::string, ProgramVaryingRef>;
+using ProgramMergedVaryings = std::vector<ProgramVaryingRef>;
 
 class Program final : angle::NonCopyable, public LabeledObject
 {
@@ -1025,10 +1031,11 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkValidateTransformFeedback(const Version &version,
                                        InfoLog &infoLog,
                                        const ProgramMergedVaryings &linkedVaryings,
+                                       ShaderType stage,
                                        const Caps &caps) const;
     bool linkValidateGlobalNames(InfoLog &infoLog) const;
 
-    void gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings);
+    void gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings, ShaderType stage);
 
     ProgramMergedVaryings getMergedVaryings() const;
     int getOutputLocationForLink(const sh::ShaderVariable &outputVariable) const;
