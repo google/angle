@@ -1166,7 +1166,16 @@ void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *un
                 GLuint imageIndex = mState.getImageIndexFromUniformIndex(locationRef.index);
                 (*imageBindings)[imageIndex].unreferenced = true;
             }
-            locationRef.markUnused();
+            // If the location has been previously bound by a glBindUniformLocation call, it should
+            // be marked as ignored. Otherwise it's unused.
+            if (mState.getUniformLocationBindings().getBindingByLocation(location) != -1)
+            {
+                locationRef.markIgnored();
+            }
+            else
+            {
+                locationRef.markUnused();
+            }
         }
     }
 }

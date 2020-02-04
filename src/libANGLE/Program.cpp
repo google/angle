@@ -999,6 +999,18 @@ int ProgramAliasedBindings::getBindingByName(const std::string &name) const
     return (iter != mBindings.end()) ? iter->second.location : -1;
 }
 
+int ProgramAliasedBindings::getBindingByLocation(GLuint location) const
+{
+    for (const auto &iter : mBindings)
+    {
+        if (iter.second.location == location)
+        {
+            return iter.second.location;
+        }
+    }
+    return -1;
+}
+
 int ProgramAliasedBindings::getBinding(const sh::ShaderVariable &variable) const
 {
     const std::string &name = variable.name;
@@ -1349,7 +1361,7 @@ void Program::bindAttributeLocation(GLuint index, const char *name)
 void Program::bindUniformLocation(GLuint index, const char *name)
 {
     ASSERT(mLinkResolved);
-    mUniformLocationBindings.bindLocation(index, name);
+    mState.mUniformLocationBindings.bindLocation(index, name);
 }
 
 void Program::bindFragmentInputLocation(GLint index, const char *name)
@@ -1498,7 +1510,7 @@ angle::Result Program::link(const Context *context)
 
         GLuint combinedImageUniforms = 0u;
         if (!linkUniforms(context->getCaps(), context->getClientVersion(), mInfoLog,
-                          mUniformLocationBindings, &combinedImageUniforms,
+                          mState.mUniformLocationBindings, &combinedImageUniforms,
                           &resources->unusedUniforms))
         {
             return angle::Result::Continue;
@@ -1563,7 +1575,7 @@ angle::Result Program::link(const Context *context)
 
         GLuint combinedImageUniforms = 0u;
         if (!linkUniforms(context->getCaps(), context->getClientVersion(), mInfoLog,
-                          mUniformLocationBindings, &combinedImageUniforms,
+                          mState.mUniformLocationBindings, &combinedImageUniforms,
                           &resources->unusedUniforms))
         {
             return angle::Result::Continue;
@@ -2444,7 +2456,7 @@ const ProgramBindings &Program::getAttributeBindings() const
 const ProgramAliasedBindings &Program::getUniformLocationBindings() const
 {
     ASSERT(mLinkResolved);
-    return mUniformLocationBindings;
+    return mState.mUniformLocationBindings;
 }
 const ProgramBindings &Program::getFragmentInputBindings() const
 {
