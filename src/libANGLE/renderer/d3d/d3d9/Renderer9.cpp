@@ -3020,7 +3020,7 @@ void Renderer9::initializeFeatures(angle::FeaturesD3D *features) const
     {
         d3d9::InitializeFeatures(features);
     }
-    OverrideFeaturesWithDisplayState(features, mDisplay->getState());
+    ApplyFeatureOverrides(features, mDisplay->getState());
 }
 
 DeviceImpl *Renderer9::createEGLDevice()

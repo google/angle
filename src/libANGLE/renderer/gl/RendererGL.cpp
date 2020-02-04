@@ -224,7 +224,7 @@ RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions,
     {
         nativegl_gl::InitializeFeatures(mFunctions.get(), &mFeatures);
     }
-    OverrideFeaturesWithDisplayState(&mFeatures, display->getState());
+    ApplyFeatureOverrides(&mFeatures, display->getState());
     mStateManager =
         new StateManagerGL(mFunctions.get(), getNativeCaps(), getNativeExtensions(), mFeatures);
     mBlitter          = new BlitGL(mFunctions.get(), mFeatures, mStateManager);

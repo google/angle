@@ -141,11 +141,7 @@ class RendererVk : angle::NonCopyable
     // Issues a new serial for linked shader modules. Used in the pipeline cache.
     Serial issueShaderSerial();
 
-    const angle::FeaturesVk &getFeatures() const
-    {
-        ASSERT(mFeaturesInitialized);
-        return mFeatures;
-    }
+    const angle::FeaturesVk &getFeatures() const { return mFeatures; }
     uint32_t getMaxVertexAttribDivisor() const { return mMaxVertexAttribDivisor; }
     VkDeviceSize getMaxVertexAttribStride() const { return mMaxVertexAttribStride; }
 
@@ -230,7 +226,7 @@ class RendererVk : angle::NonCopyable
 
     void queryDeviceExtensionFeatures(const ExtensionNameList &deviceExtensionNames);
 
-    void initFeatures(const ExtensionNameList &extensions);
+    void initFeatures(DisplayVk *display, const ExtensionNameList &extensions);
     void initPipelineCacheVkKey();
     angle::Result initPipelineCache(DisplayVk *display,
                                     vk::PipelineCache *pipelineCache,
@@ -252,7 +248,6 @@ class RendererVk : angle::NonCopyable
     mutable gl::TextureCapsMap mNativeTextureCaps;
     mutable gl::Extensions mNativeExtensions;
     mutable gl::Limitations mNativeLimitations;
-    mutable bool mFeaturesInitialized;
     mutable angle::FeaturesVk mFeatures;
 
     VkInstance mInstance;

@@ -12,6 +12,8 @@
 #include "common/Optional.h"
 #include "common/angleutils.h"
 
+#include <string>
+
 namespace angle
 {
 std::string GetExecutablePath();

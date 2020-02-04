@@ -543,7 +543,6 @@ gl::Version LimitVersionTo(const gl::Version &current, const gl::Version &lower)
 RendererVk::RendererVk()
     : mDisplay(nullptr),
       mCapsInitialized(false),
-      mFeaturesInitialized(false),
       mInstance(VK_NULL_HANDLE),
       mEnableValidationLayers(false),
       mEnabledICD(vk::ICD::Default),
@@ -1071,12 +1070,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     queryDeviceExtensionFeatures(deviceExtensionNames);
 
     // Initialize features and workarounds.
-    if (!displayVk->getState().featuresAllDisabled)
-    {
-        initFeatures(deviceExtensionNames);
-    }
-    OverrideFeaturesWithDisplayState(&mFeatures, displayVk->getState());
-    mFeaturesInitialized = true;
+    initFeatures(displayVk, deviceExtensionNames);
 
     // Selectively enable KHR_MAINTENANCE1 to support viewport flipping.
     if ((getFeatures().flipViewportY.enabled) &&
@@ -1441,8 +1435,14 @@ gl::Version RendererVk::getMaxConformantESVersion() const
     return LimitVersionTo(getMaxSupportedESVersion(), {3, 0});
 }
 
-void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
+void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &deviceExtensionNames)
 {
+    if (displayVk->getState().featuresAllDisabled)
+    {
+        ApplyFeatureOverrides(&mFeatures, displayVk->getState());
+        return;
+    }
+
     bool isAMD      = IsAMD(mPhysicalDeviceProperties.vendorID);
     bool isIntel    = IsIntel(mPhysicalDeviceProperties.vendorID);
     bool isNvidia   = IsNvidia(mPhysicalDeviceProperties.vendorID);
@@ -1565,6 +1565,8 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);
+
+    ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 }
 
 void RendererVk::initPipelineCacheVkKey()

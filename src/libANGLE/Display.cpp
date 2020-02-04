@@ -1499,7 +1499,7 @@ void Display::initializeFrontendFeatures()
 
     mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
 
-    rx::OverrideFeaturesWithDisplayState(&mFrontendFeatures, mState);
+    rx::ApplyFeatureOverrides(&mFrontendFeatures, mState);
 }
 
 const DisplayExtensions &Display::getExtensions() const
