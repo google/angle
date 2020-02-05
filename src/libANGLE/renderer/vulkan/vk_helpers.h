@@ -324,9 +324,9 @@ class QueryHelper final
     // Used only by DynamicQueryPool.
     size_t getQueryPoolIndex() const { return mQueryPoolIndex; }
 
-    void beginQuery(ContextVk *contextVk);
-    void endQuery(ContextVk *contextVk);
-    void writeTimestamp(ContextVk *contextVk);
+    angle::Result beginQuery(ContextVk *contextVk);
+    angle::Result endQuery(ContextVk *contextVk);
+    angle::Result writeTimestamp(ContextVk *contextVk);
 
     Serial getStoredQueueSerial() { return mMostRecentSerial; }
     bool hasPendingWork(ContextVk *contextVk);

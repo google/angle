@@ -1019,22 +1019,57 @@ void QueryHelper::deinit()
     mQuery            = 0;
 }
 
-void QueryHelper::beginQuery(ContextVk *contextVk)
+angle::Result QueryHelper::beginQuery(ContextVk *contextVk)
 {
-    contextVk->getCommandGraph()->beginQuery(getQueryPool(), getQuery());
+    if (contextVk->commandGraphEnabled())
+    {
+        contextVk->getCommandGraph()->beginQuery(getQueryPool(), getQuery());
+    }
+    else
+    {
+        vk::PrimaryCommandBuffer *primaryCommands;
+        ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primaryCommands));
+        VkQueryPool queryPool = getQueryPool()->getHandle();
+        primaryCommands->resetQueryPool(queryPool, mQuery, 1);
+        primaryCommands->beginQuery(queryPool, mQuery, 0);
+    }
     mMostRecentSerial = contextVk->getCurrentQueueSerial();
+    return angle::Result::Continue;
 }
 
-void QueryHelper::endQuery(ContextVk *contextVk)
+angle::Result QueryHelper::endQuery(ContextVk *contextVk)
 {
-    contextVk->getCommandGraph()->endQuery(getQueryPool(), getQuery());
+    if (contextVk->commandGraphEnabled())
+    {
+        contextVk->getCommandGraph()->endQuery(getQueryPool(), getQuery());
+    }
+    else
+    {
+        vk::PrimaryCommandBuffer *primaryCommands;
+        ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primaryCommands));
+        VkQueryPool queryPool = getQueryPool()->getHandle();
+        primaryCommands->endQuery(queryPool, mQuery);
+    }
     mMostRecentSerial = contextVk->getCurrentQueueSerial();
+    return angle::Result::Continue;
 }
 
-void QueryHelper::writeTimestamp(ContextVk *contextVk)
+angle::Result QueryHelper::writeTimestamp(ContextVk *contextVk)
 {
-    contextVk->getCommandGraph()->writeTimestamp(getQueryPool(), getQuery());
+    if (contextVk->commandGraphEnabled())
+    {
+        contextVk->getCommandGraph()->writeTimestamp(getQueryPool(), getQuery());
+    }
+    else
+    {
+        vk::PrimaryCommandBuffer *primaryCommands;
+        ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primaryCommands));
+        VkQueryPool queryPool = getQueryPool()->getHandle();
+        primaryCommands->resetQueryPool(queryPool, mQuery, 1);
+        primaryCommands->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, mQuery);
+    }
     mMostRecentSerial = contextVk->getCurrentQueueSerial();
+    return angle::Result::Continue;
 }
 
 bool QueryHelper::hasPendingWork(ContextVk *contextVk)
