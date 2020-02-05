@@ -8,16 +8,18 @@
 
 #include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 
+#include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/egl/ImageEGL.h"
+#include "libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h"
+#include "libANGLE/renderer/gl/egl/RendererEGL.h"
 #include "libANGLE/renderer/gl/egl/SyncEGL.h"
+#include "libANGLE/renderer/gl/egl/WindowSurfaceEGL.h"
 
 namespace rx
 {
 
-#define EGL_NO_CONFIG ((EGLConfig)0)
-
 DisplayEGL::DisplayEGL(const egl::DisplayState &state)
-    : DisplayGL(state), mEGL(nullptr), mConfig(EGL_NO_CONFIG)
+    : DisplayGL(state), mRenderer(nullptr), mEGL(nullptr), mConfig(EGL_NO_CONFIG_KHR)
 {}
 
 DisplayEGL::~DisplayEGL() {}
@@ -111,6 +113,252 @@ egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
     return egl::Error(mEGL->getError(), "eglCreateContext failed");
 }
 
+SurfaceImpl *DisplayEGL::createWindowSurface(const egl::SurfaceState &state,
+                                             EGLNativeWindowType window,
+                                             const egl::AttributeMap &attribs)
+{
+    EGLConfig config;
+    EGLint numConfig;
+    EGLBoolean success;
+
+    const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[state.config->configID], EGL_NONE};
+    success                         = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
+    ASSERT(success && numConfig == 1);
+
+    return new WindowSurfaceEGL(state, mEGL, config, window);
+}
+
+SurfaceImpl *DisplayEGL::createPbufferSurface(const egl::SurfaceState &state,
+                                              const egl::AttributeMap &attribs)
+{
+    EGLConfig config;
+    EGLint numConfig;
+    EGLBoolean success;
+
+    const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[state.config->configID], EGL_NONE};
+    success                         = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
+    ASSERT(success && numConfig == 1);
+
+    return new PbufferSurfaceEGL(state, mEGL, config);
+}
+
+SurfaceImpl *DisplayEGL::createPbufferFromClientBuffer(const egl::SurfaceState &state,
+                                                       EGLenum buftype,
+                                                       EGLClientBuffer clientBuffer,
+                                                       const egl::AttributeMap &attribs)
+{
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
+SurfaceImpl *DisplayEGL::createPixmapSurface(const egl::SurfaceState &state,
+                                             NativePixmapType nativePixmap,
+                                             const egl::AttributeMap &attribs)
+{
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
+template <typename T>
+void DisplayEGL::getConfigAttrib(EGLConfig config, EGLint attribute, T *value) const
+{
+    EGLint tmp;
+    EGLBoolean success = mEGL->getConfigAttrib(config, attribute, &tmp);
+    ASSERT(success == EGL_TRUE);
+    *value = tmp;
+}
+
+template <typename T, typename U>
+void DisplayEGL::getConfigAttribIfExtension(EGLConfig config,
+                                            EGLint attribute,
+                                            T *value,
+                                            const char *extension,
+                                            const U &defaultValue) const
+{
+    if (mEGL->hasExtension(extension))
+    {
+        getConfigAttrib(config, attribute, value);
+    }
+    else
+    {
+        *value = static_cast<T>(defaultValue);
+    }
+}
+
+egl::ConfigSet DisplayEGL::generateConfigs()
+{
+    egl::ConfigSet configSet;
+    mConfigIds.clear();
+
+    EGLint numConfigs;
+    EGLBoolean success = mEGL->chooseConfig(mConfigAttribList.data(), nullptr, 0, &numConfigs);
+    ASSERT(success == EGL_TRUE && numConfigs > 0);
+
+    std::vector<EGLConfig> configs(numConfigs);
+    EGLint numConfigs2;
+    success =
+        mEGL->chooseConfig(mConfigAttribList.data(), configs.data(), numConfigs, &numConfigs2);
+    ASSERT(success == EGL_TRUE && numConfigs2 == numConfigs);
+
+    for (int i = 0; i < numConfigs; i++)
+    {
+        egl::Config config;
+
+        getConfigAttrib(configs[i], EGL_BUFFER_SIZE, &config.bufferSize);
+        getConfigAttrib(configs[i], EGL_RED_SIZE, &config.redSize);
+        getConfigAttrib(configs[i], EGL_GREEN_SIZE, &config.greenSize);
+        getConfigAttrib(configs[i], EGL_BLUE_SIZE, &config.blueSize);
+        getConfigAttrib(configs[i], EGL_LUMINANCE_SIZE, &config.luminanceSize);
+        getConfigAttrib(configs[i], EGL_ALPHA_SIZE, &config.alphaSize);
+        getConfigAttrib(configs[i], EGL_ALPHA_MASK_SIZE, &config.alphaMaskSize);
+        getConfigAttrib(configs[i], EGL_BIND_TO_TEXTURE_RGB, &config.bindToTextureRGB);
+        getConfigAttrib(configs[i], EGL_BIND_TO_TEXTURE_RGBA, &config.bindToTextureRGBA);
+        getConfigAttrib(configs[i], EGL_COLOR_BUFFER_TYPE, &config.colorBufferType);
+        getConfigAttrib(configs[i], EGL_CONFIG_CAVEAT, &config.configCaveat);
+        getConfigAttrib(configs[i], EGL_CONFIG_ID, &config.configID);
+        getConfigAttrib(configs[i], EGL_CONFORMANT, &config.conformant);
+        getConfigAttrib(configs[i], EGL_DEPTH_SIZE, &config.depthSize);
+        getConfigAttrib(configs[i], EGL_LEVEL, &config.level);
+        getConfigAttrib(configs[i], EGL_MAX_PBUFFER_WIDTH, &config.maxPBufferWidth);
+        getConfigAttrib(configs[i], EGL_MAX_PBUFFER_HEIGHT, &config.maxPBufferHeight);
+        getConfigAttrib(configs[i], EGL_MAX_PBUFFER_PIXELS, &config.maxPBufferPixels);
+        getConfigAttrib(configs[i], EGL_MAX_SWAP_INTERVAL, &config.maxSwapInterval);
+        getConfigAttrib(configs[i], EGL_MIN_SWAP_INTERVAL, &config.minSwapInterval);
+        getConfigAttrib(configs[i], EGL_NATIVE_RENDERABLE, &config.nativeRenderable);
+        getConfigAttrib(configs[i], EGL_NATIVE_VISUAL_ID, &config.nativeVisualID);
+        getConfigAttrib(configs[i], EGL_NATIVE_VISUAL_TYPE, &config.nativeVisualType);
+        getConfigAttrib(configs[i], EGL_RENDERABLE_TYPE, &config.renderableType);
+        getConfigAttrib(configs[i], EGL_SAMPLE_BUFFERS, &config.sampleBuffers);
+        getConfigAttrib(configs[i], EGL_SAMPLES, &config.samples);
+        getConfigAttrib(configs[i], EGL_STENCIL_SIZE, &config.stencilSize);
+        getConfigAttrib(configs[i], EGL_SURFACE_TYPE, &config.surfaceType);
+        getConfigAttrib(configs[i], EGL_TRANSPARENT_TYPE, &config.transparentType);
+        getConfigAttrib(configs[i], EGL_TRANSPARENT_RED_VALUE, &config.transparentRedValue);
+        getConfigAttrib(configs[i], EGL_TRANSPARENT_GREEN_VALUE, &config.transparentGreenValue);
+        getConfigAttrib(configs[i], EGL_TRANSPARENT_BLUE_VALUE, &config.transparentBlueValue);
+        getConfigAttribIfExtension(configs[i], EGL_COLOR_COMPONENT_TYPE_EXT,
+                                   &config.colorComponentType, "EGL_EXT_pixel_format_float",
+                                   EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
+
+        if (config.colorBufferType == EGL_RGB_BUFFER)
+        {
+            ASSERT(config.colorComponentType == EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
+            if (config.redSize == 8 && config.greenSize == 8 && config.blueSize == 8 &&
+                config.alphaSize == 8)
+            {
+                config.renderTargetFormat = GL_RGBA8;
+            }
+            else if (config.redSize == 8 && config.greenSize == 8 && config.blueSize == 8 &&
+                     config.alphaSize == 0)
+            {
+                config.renderTargetFormat = GL_RGB8;
+            }
+            else if (config.redSize == 5 && config.greenSize == 6 && config.blueSize == 5 &&
+                     config.alphaSize == 0)
+            {
+                config.renderTargetFormat = GL_RGB565;
+            }
+            else if (config.redSize == 5 && config.greenSize == 5 && config.blueSize == 5 &&
+                     config.alphaSize == 1)
+            {
+                config.renderTargetFormat = GL_RGB5_A1;
+            }
+            else if (config.redSize == 4 && config.greenSize == 4 && config.blueSize == 4 &&
+                     config.alphaSize == 4)
+            {
+                config.renderTargetFormat = GL_RGBA4;
+            }
+            else
+            {
+                ERR() << "RGBA(" << config.redSize << "," << config.greenSize << ","
+                      << config.blueSize << "," << config.alphaSize << ") not handled";
+                UNREACHABLE();
+            }
+        }
+        else
+        {
+            UNREACHABLE();
+        }
+
+        if (config.depthSize == 0 && config.stencilSize == 0)
+        {
+            config.depthStencilFormat = GL_ZERO;
+        }
+        else if (config.depthSize == 16 && config.stencilSize == 0)
+        {
+            config.depthStencilFormat = GL_DEPTH_COMPONENT16;
+        }
+        else if (config.depthSize == 24 && config.stencilSize == 0)
+        {
+            config.depthStencilFormat = GL_DEPTH_COMPONENT24;
+        }
+        else if (config.depthSize == 24 && config.stencilSize == 8)
+        {
+            config.depthStencilFormat = GL_DEPTH24_STENCIL8;
+        }
+        else if (config.depthSize == 0 && config.stencilSize == 8)
+        {
+            config.depthStencilFormat = GL_STENCIL_INDEX8;
+        }
+        else
+        {
+            UNREACHABLE();
+        }
+
+        config.matchNativePixmap  = EGL_NONE;
+        config.optimalOrientation = 0;
+
+        int internalId         = configSet.add(config);
+        mConfigIds[internalId] = config.configID;
+    }
+
+    return configSet;
+}
+
+bool DisplayEGL::testDeviceLost()
+{
+    return false;
+}
+
+egl::Error DisplayEGL::restoreLostDevice(const egl::Display *display)
+{
+    UNIMPLEMENTED();
+    return egl::NoError();
+}
+
+bool DisplayEGL::isValidNativeWindow(EGLNativeWindowType window) const
+{
+    return true;
+}
+
+DeviceImpl *DisplayEGL::createDevice()
+{
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
+egl::Error DisplayEGL::waitClient(const gl::Context *context)
+{
+    UNIMPLEMENTED();
+    return egl::NoError();
+}
+
+egl::Error DisplayEGL::waitNative(const gl::Context *context, EGLint engine)
+{
+    UNIMPLEMENTED();
+    return egl::NoError();
+}
+
+gl::Version DisplayEGL::getMaxSupportedESVersion() const
+{
+    return mRenderer->getMaxSupportedESVersion();
+}
+
+void DisplayEGL::destroyNativeContext(EGLContext context)
+{
+    mEGL->destroyContext(context);
+}
+
 void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
@@ -184,6 +432,23 @@ void DisplayEGL::setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDR
     {
         mEGL->setBlobCacheFuncsANDROID(set, get);
     }
+}
+
+egl::Error DisplayEGL::makeCurrentSurfaceless(gl::Context *context)
+{
+    // Nothing to do because EGL always uses the same context and the previous surface can be left
+    // current.
+    return egl::NoError();
+}
+
+void DisplayEGL::initializeFrontendFeatures(angle::FrontendFeatures *features) const
+{
+    mRenderer->initializeFrontendFeatures(features);
+}
+
+void DisplayEGL::populateFeatureList(angle::FeatureList *features)
+{
+    mRenderer->getFeatures().populateFeatureList(features);
 }
 
 }  // namespace rx
