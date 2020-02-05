@@ -953,10 +953,10 @@ void DisplayOzone::setSwapInterval(EGLSurface drawable, SwapControlData *data)
 
 void DisplayOzone::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
+    DisplayEGL::generateExtensions(outExtensions);
+
     // Surfaceless contexts are emulated even if there is no native support.
     outExtensions->surfacelessContext = true;
-
-    DisplayEGL::generateExtensions(outExtensions);
 }
 
 class WorkerContextOzone final : public WorkerContext
