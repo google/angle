@@ -84,14 +84,14 @@ class BufferVk : public BufferImpl
 
     const vk::BufferHelper &getBuffer() const
     {
-        ASSERT(mBuffer.valid());
-        return mBuffer;
+        ASSERT(mBuffer && mBuffer->valid());
+        return *mBuffer;
     }
 
     vk::BufferHelper &getBuffer()
     {
-        ASSERT(mBuffer.valid());
-        return mBuffer;
+        ASSERT(mBuffer && mBuffer->valid());
+        return *mBuffer;
     }
 
     angle::Result mapImpl(ContextVk *contextVk, void **mapPtr);
@@ -146,6 +146,10 @@ class BufferVk : public BufferImpl
     void release(ContextVk *context);
     void markConversionBuffersDirty();
 
+    angle::Result acquireBufferHelper(ContextVk *contextVk,
+                                      size_t sizeInBytes,
+                                      vk::BufferHelper **bufferHelperOut);
+
     struct VertexConversionBuffer : public ConversionBuffer
     {
         VertexConversionBuffer(RendererVk *renderer,
@@ -163,7 +167,10 @@ class BufferVk : public BufferImpl
         size_t offset;
     };
 
-    vk::BufferHelper mBuffer;
+    vk::BufferHelper *mBuffer;
+
+    // Pool of BufferHelpers for mBuffer to acquire from
+    vk::DynamicBuffer mBufferPool;
 
     // All staging buffer support is provided by a DynamicBuffer.
     vk::DynamicBuffer mStagingBuffer;
