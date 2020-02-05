@@ -920,6 +920,13 @@ ContextImpl *DisplayOzone::createContext(const gl::State &state,
     return new ContextEGL(state, errorSet, mRenderer);
 }
 
+egl::Error DisplayOzone::makeCurrent(egl::Surface *drawSurface,
+                                     egl::Surface *readSurface,
+                                     gl::Context *context)
+{
+    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
+}
+
 egl::ConfigSet DisplayOzone::generateConfigs()
 {
     egl::ConfigSet configs;
@@ -953,10 +960,10 @@ void DisplayOzone::setSwapInterval(EGLSurface drawable, SwapControlData *data)
 
 void DisplayOzone::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
+    DisplayEGL::generateExtensions(outExtensions);
+
     // Surfaceless contexts are emulated even if there is no native support.
     outExtensions->surfacelessContext = true;
-
-    DisplayEGL::generateExtensions(outExtensions);
 }
 
 class WorkerContextOzone final : public WorkerContext

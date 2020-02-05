@@ -127,6 +127,10 @@ class DisplayOzone final : public DisplayEGL
                                const gl::Context *shareContext,
                                const egl::AttributeMap &attribs) override;
 
+    egl::Error makeCurrent(egl::Surface *drawSurface,
+                           egl::Surface *readSurface,
+                           gl::Context *context) override;
+
     egl::ConfigSet generateConfigs() override;
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
