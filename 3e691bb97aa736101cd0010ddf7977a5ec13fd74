@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86f2c883_a7e925e2",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1335,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-02-05T03:44:47Z",
+      "side": 1,
+      "message": "I would turn this into a function that walks the graph and calculates the render pass count. The point is that if the Overlay is disabled, you wouldn\u0027t be paying the cost of gathering statistical data.\n\nAdmittedly, I haven\u0027t verified if for example `CalculateSecondaryCommandBufferPoolWaste` above is truly optimized away, since the result is unused. But I imagine adding a `pure` attribute to these functions should do that.\n\nAnyway, this is quite simple, so no big deal. But adding a lot of these little things could add up.",
+      "range": {
+        "startLine": 1335,
+        "startChar": 25,
+        "endLine": 1335,
+        "endChar": 41
+      },
+      "revId": "3e691bb97aa736101cd0010ddf7977a5ec13fd74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
