@@ -39,7 +39,7 @@ class SyncHelper
                              bool flushCommands,
                              uint64_t timeout,
                              VkResult *outResult);
-    void serverWait(ContextVk *contextVk);
+    angle::Result serverWait(ContextVk *contextVk);
     angle::Result getStatus(Context *context, bool *signaled);
 
   private:

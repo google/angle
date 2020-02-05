@@ -2135,7 +2135,10 @@ void ContextVk::popGroupMarker()
     }
 }
 
-void ContextVk::pushDebugGroup(GLenum source, GLuint id, const std::string &message)
+angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
+                                        GLenum source,
+                                        GLuint id,
+                                        const std::string &message)
 {
     if (commandGraphEnabled())
     {
@@ -2146,9 +2149,11 @@ void ContextVk::pushDebugGroup(GLenum source, GLuint id, const std::string &mess
         // TODO(jmadill): http://anglebug.com/4029
         UNIMPLEMENTED();
     }
+
+    return angle::Result::Continue;
 }
 
-void ContextVk::popDebugGroup()
+angle::Result ContextVk::popDebugGroup(const gl::Context *context)
 {
     if (commandGraphEnabled())
     {
@@ -2159,6 +2164,8 @@ void ContextVk::popDebugGroup()
         // TODO(jmadill): http://anglebug.com/4029
         UNIMPLEMENTED();
     }
+
+    return angle::Result::Continue;
 }
 
 bool ContextVk::isViewportFlipEnabledForDrawFBO() const

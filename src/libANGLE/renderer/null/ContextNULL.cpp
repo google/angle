@@ -324,9 +324,18 @@ void ContextNULL::pushGroupMarker(GLsizei length, const char *marker) {}
 
 void ContextNULL::popGroupMarker() {}
 
-void ContextNULL::pushDebugGroup(GLenum source, GLuint id, const std::string &message) {}
+angle::Result ContextNULL::pushDebugGroup(const gl::Context *context,
+                                          GLenum source,
+                                          GLuint id,
+                                          const std::string &message)
+{
+    return angle::Result::Continue;
+}
 
-void ContextNULL::popDebugGroup() {}
+angle::Result ContextNULL::popDebugGroup(const gl::Context *context)
+{
+    return angle::Result::Continue;
+}
 
 angle::Result ContextNULL::syncState(const gl::Context *context,
                                      const gl::State::DirtyBits &dirtyBits,

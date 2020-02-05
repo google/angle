@@ -5482,14 +5482,14 @@ GLuint Context::getDebugMessageLog(GLuint count,
 void Context::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message)
 {
     std::string msg(message, (length > 0) ? static_cast<size_t>(length) : strlen(message));
-    mImplementation->pushDebugGroup(source, id, msg);
+    ANGLE_CONTEXT_TRY(mImplementation->pushDebugGroup(this, source, id, msg));
     mState.getDebug().pushGroup(source, id, std::move(msg));
 }
 
 void Context::popDebugGroup()
 {
     mState.getDebug().popGroup();
-    mImplementation->popDebugGroup();
+    ANGLE_CONTEXT_TRY(mImplementation->popDebugGroup(this));
 }
 
 void Context::primitiveBoundingBox(GLfloat minX,

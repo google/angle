@@ -491,8 +491,18 @@ void ContextMtl::popGroupMarker()
 }
 
 // KHR_debug
-void ContextMtl::pushDebugGroup(GLenum source, GLuint id, const std::string &message) {}
-void ContextMtl::popDebugGroup() {}
+angle::Result ContextMtl::pushDebugGroup(const gl::Context *context,
+                                         GLenum source,
+                                         GLuint id,
+                                         const std::string &message)
+{
+    return angle::Result::Continue;
+}
+
+angle::Result ContextMtl::popDebugGroup(const gl::Context *context)
+{
+    return angle::Result::Continue;
+}
 
 // State sync with dirty bits.
 angle::Result ContextMtl::syncState(const gl::Context *context,
@@ -1435,8 +1445,7 @@ angle::Result ContextMtl::setupDraw(const gl::Context *context,
                 ANGLE_TRY(handleDirtyDepthBias(context));
                 break;
             case DIRTY_BIT_STENCIL_REF:
-                mRenderEncoder.setStencilRefVals(mStencilRefFront,
-                                                 mStencilRefBack);
+                mRenderEncoder.setStencilRefVals(mStencilRefFront, mStencilRefBack);
                 break;
             case DIRTY_BIT_BLEND_COLOR:
                 mRenderEncoder.setBlendColor(

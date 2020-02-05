@@ -789,14 +789,19 @@ void ContextGL::popGroupMarker()
     mRenderer->popGroupMarker();
 }
 
-void ContextGL::pushDebugGroup(GLenum source, GLuint id, const std::string &message)
+angle::Result ContextGL::pushDebugGroup(const gl::Context *context,
+                                        GLenum source,
+                                        GLuint id,
+                                        const std::string &message)
 {
     mRenderer->pushDebugGroup(source, id, message);
+    return angle::Result::Continue;
 }
 
-void ContextGL::popDebugGroup()
+angle::Result ContextGL::popDebugGroup(const gl::Context *context)
 {
     mRenderer->popDebugGroup();
+    return angle::Result::Continue;
 }
 
 angle::Result ContextGL::syncState(const gl::Context *context,
@@ -910,6 +915,5 @@ void ContextGL::flushIfNecessaryBeforeDeleteTextures()
 {
     mRenderer->flushIfNecessaryBeforeDeleteTextures();
 }
-
 
 }  // namespace rx

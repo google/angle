@@ -512,16 +512,21 @@ void Context11::popGroupMarker()
     }
 }
 
-void Context11::pushDebugGroup(GLenum source, GLuint id, const std::string &message)
+angle::Result Context11::pushDebugGroup(const gl::Context *context,
+                                        GLenum source,
+                                        GLuint id,
+                                        const std::string &message)
 {
     // Fall through to the EXT_debug_marker functions
     pushGroupMarker(static_cast<GLsizei>(message.size()), message.c_str());
+    return angle::Result::Continue;
 }
 
-void Context11::popDebugGroup()
+angle::Result Context11::popDebugGroup(const gl::Context *context)
 {
     // Fall through to the EXT_debug_marker functions
     popGroupMarker();
+    return angle::Result::Continue;
 }
 
 angle::Result Context11::syncState(const gl::Context *context,
