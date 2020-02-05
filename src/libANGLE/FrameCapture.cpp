@@ -1278,10 +1278,14 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
             const gl::InternalFormat &format = *desc.format.info;
 
-            // Assume 2D or Cube for now.
-            // TODO(jmadill): 3D and 2D array textures. http://anglebug.com/4048
+            // Check for supported textures
             ASSERT(index.getType() == gl::TextureType::_2D ||
+                   index.getType() == gl::TextureType::_3D ||
+                   index.getType() == gl::TextureType::_2DArray ||
                    index.getType() == gl::TextureType::CubeMap);
+
+            bool is3D = (index.getType() == gl::TextureType::_3D ||
+                         index.getType() == gl::TextureType::_2DArray);
 
             if (format.compressed)
             {
@@ -1299,25 +1303,42 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 const std::vector<uint8_t> &capturedTextureLevel = foundTextureLevel->second;
 
                 // Use the shadow copy of the data to populate the call
-                cap(CaptureCompressedTexImage2D(
-                    replayState, true, index.getTarget(), index.getLevelIndex(),
-                    format.internalFormat, desc.size.width, desc.size.height, 0,
-                    static_cast<GLuint>(capturedTextureLevel.size()), capturedTextureLevel.data()));
+                if (is3D)
+                {
+                    cap(CaptureCompressedTexImage3D(
+                        replayState, true, index.getTarget(), index.getLevelIndex(),
+                        format.internalFormat, desc.size.width, desc.size.height, desc.size.depth,
+                        0, static_cast<GLuint>(capturedTextureLevel.size()),
+                        capturedTextureLevel.data()));
+                }
+                else
+                {
+                    cap(CaptureCompressedTexImage2D(
+                        replayState, true, index.getTarget(), index.getLevelIndex(),
+                        format.internalFormat, desc.size.width, desc.size.height, 0,
+                        static_cast<GLuint>(capturedTextureLevel.size()),
+                        capturedTextureLevel.data()));
+                }
             }
             else
             {
                 // Use ANGLE_get_image to read back pixel data.
                 if (context->getExtensions().getImageANGLE)
                 {
-                    GLenum getFormat   = format.format;
-                    GLenum getType     = format.type;
-                    GLsizei pixelBytes = format.pixelBytes;
+                    GLenum getFormat = format.format;
+                    GLenum getType   = format.type;
 
                     angle::MemoryBuffer data;
 
-                    uint32_t dataSize = pixelBytes * desc.size.width * desc.size.height;
+                    const gl::Extents size(desc.size.width, desc.size.height, desc.size.depth);
+                    const gl::PixelUnpackState &unpack = apiState.getUnpackState();
 
-                    bool result = data.resize(dataSize);
+                    GLuint endByte = 0;
+                    bool unpackSize =
+                        format.computePackUnpackEndByte(getType, size, unpack, true, &endByte);
+                    ASSERT(unpackSize);
+
+                    bool result = data.resize(endByte);
                     ASSERT(result);
 
                     gl::PixelPackState packState;
@@ -1327,17 +1348,37 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                                                index.getLevelIndex(), getFormat, getType,
                                                data.data());
 
-                    cap(CaptureTexImage2D(replayState, true, index.getTarget(),
-                                          index.getLevelIndex(), format.internalFormat,
-                                          desc.size.width, desc.size.height, 0, getFormat, getType,
-                                          data.data()));
+                    if (is3D)
+                    {
+                        cap(CaptureTexImage3D(replayState, true, index.getTarget(),
+                                              index.getLevelIndex(), format.internalFormat,
+                                              desc.size.width, desc.size.height, desc.size.depth, 0,
+                                              getFormat, getType, data.data()));
+                    }
+                    else
+                    {
+                        cap(CaptureTexImage2D(replayState, true, index.getTarget(),
+                                              index.getLevelIndex(), format.internalFormat,
+                                              desc.size.width, desc.size.height, 0, getFormat,
+                                              getType, data.data()));
+                    }
                 }
                 else
                 {
-                    cap(CaptureTexImage2D(replayState, true, index.getTarget(),
-                                          index.getLevelIndex(), format.internalFormat,
-                                          desc.size.width, desc.size.height, 0, format.format,
-                                          format.type, nullptr));
+                    if (is3D)
+                    {
+                        cap(CaptureTexImage3D(replayState, true, index.getTarget(),
+                                              index.getLevelIndex(), format.internalFormat,
+                                              desc.size.width, desc.size.height, desc.size.depth, 0,
+                                              format.format, format.type, nullptr));
+                    }
+                    else
+                    {
+                        cap(CaptureTexImage2D(replayState, true, index.getTarget(),
+                                              index.getLevelIndex(), format.internalFormat,
+                                              desc.size.width, desc.size.height, 0, format.format,
+                                              format.type, nullptr));
+                    }
                 }
             }
         }
@@ -2016,6 +2057,106 @@ FrameCapture::FrameCapture()
 
 FrameCapture::~FrameCapture() = default;
 
+void FrameCapture::captureCompressedTextureData(const gl::Context *context, const CallCapture &call)
+{
+    // For compressed textures, track a shadow copy of the data
+    // for use during mid-execution capture, rather than reading it back
+    // with ANGLE_get_image
+
+    // Storing the compressed data is handled the same for all entry points,
+    // they just have slightly different parameter locations
+    int32_t paramOffset = 0;
+    switch (call.entryPoint)
+    {
+        case gl::EntryPoint::CompressedTexSubImage3D:
+            paramOffset = 3;
+            break;
+        case gl::EntryPoint::CompressedTexImage3D:
+            paramOffset = 2;
+            break;
+        case gl::EntryPoint::CompressedTexSubImage2D:
+            paramOffset = 1;
+            break;
+        case gl::EntryPoint::CompressedTexImage2D:
+            paramOffset = 0;
+            break;
+        default:
+            // There should be no other callers of this function
+            ASSERT(0);
+            break;
+    }
+
+    gl::Buffer *pixelUnpackBuffer =
+        context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
+
+    const uint8_t *data = static_cast<const uint8_t *>(
+        call.params.getParam("data", ParamType::TvoidConstPointer, 7 + paramOffset)
+            .value.voidConstPointerVal);
+
+    GLsizei imageSize =
+        call.params.getParam("imageSize", ParamType::TGLsizei, 6 + paramOffset).value.GLsizeiVal;
+
+    const uint8_t *readData = nullptr;
+
+    if (pixelUnpackBuffer)
+    {
+        // If using pixel unpack buffer, map the buffer and track its data
+        ASSERT(!pixelUnpackBuffer->isMapped());
+        (void)pixelUnpackBuffer->mapRange(context, reinterpret_cast<GLintptr>(data), imageSize,
+                                          GL_MAP_READ_BIT);
+
+        readData = reinterpret_cast<const uint8_t *>(pixelUnpackBuffer->getMapPointer());
+    }
+    else
+    {
+        readData = data;
+    }
+
+    if (!readData)
+    {
+        // If no pointer was provided and we weren't able to map the buffer, there is no data to
+        // capture
+        return;
+    }
+
+    // Look up the texture type
+    gl::TextureTarget targetPacked =
+        call.params.getParam("targetPacked", ParamType::TTextureTarget, 0).value.TextureTargetVal;
+    gl::TextureType textureType = gl::TextureTargetToType(targetPacked);
+
+    // Create a copy of the incoming data
+    std::vector<uint8_t> compressedData;
+    compressedData.assign(readData, readData + imageSize);
+
+    // Look up the currently bound texture
+    gl::Texture *texture = context->getState().getTargetTexture(textureType);
+
+    // Record the data, indexed by textureID and level
+    GLint level = call.params.getParam("level", ParamType::TGLint, 1).value.GLintVal;
+    const auto &foundTextureLevels = mCachedTextureLevelData.find(texture->id());
+    if (foundTextureLevels != mCachedTextureLevelData.end())
+    {
+        // If we've already got a map to track this texture's levels, use it
+        foundTextureLevels->second[level] = std::move(compressedData);
+    }
+    else
+    {
+        // If this is a new texture, create a map for its levels
+        TextureLevels textureLevels;
+        textureLevels[level] = std::move(compressedData);
+
+        // Then add it into our data map
+        mCachedTextureLevelData[texture->id()] = std::move(textureLevels);
+    }
+
+    if (pixelUnpackBuffer)
+    {
+        GLboolean success;
+        (void)pixelUnpackBuffer->unmap(context, &success);
+        ASSERT(success);
+    }
+}
+
 void FrameCapture::maybeCaptureClientData(const gl::Context *context, const CallCapture &call)
 {
     switch (call.entryPoint)
@@ -2108,67 +2249,19 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, const Call
             break;
         }
 
-        case gl::EntryPoint::CompressedTexImage2D:
+        case gl::EntryPoint::CompressedTexImage1D:
+        case gl::EntryPoint::CompressedTexSubImage1D:
         {
-            // For compressed textures, track a shadow copy of the data
-            // for use during mid-execution capture, rather than reading it back
-            // with ANGLE_get_image
-
-            if (context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack))
-            {
-                // If using pixel unpack buffer, there is no need to back up the data here.
-                // It will be captured as just another buffer.
-                return;
-            }
-
-            const uint8_t *data = static_cast<const uint8_t *>(
-                call.params.getParam("data", ParamType::TvoidConstPointer, 7)
-                    .value.voidConstPointerVal);
-            if (!data)
-            {
-                // If no pointer was provided and no buffer was bound, there is no data to capture
-                return;
-            }
-
-            // Look up the texture type
-            gl::TextureTarget targetPacked =
-                call.params.getParam("targetPacked", ParamType::TTextureTarget, 0)
-                    .value.TextureTargetVal;
-            gl::TextureType textureType = gl::TextureTargetToType(targetPacked);
-            ASSERT(textureType == gl::TextureType::_2D || textureType == gl::TextureType::CubeMap);
-
-            // Create a copy of the incoming data
-            GLsizei imageSize =
-                call.params.getParam("imageSize", ParamType::TGLsizei, 6).value.GLsizeiVal;
-            std::vector<uint8_t> compressedData;
-            compressedData.assign(data, data + imageSize);
-
-            // Look up the currently bound texture
-            gl::Texture *texture = context->getState().getTargetTexture(textureType);
-
-            // Record the data, indexed by textureID and level
-            GLint level = call.params.getParam("level", ParamType::TGLint, 1).value.GLintVal;
-            const auto &foundTextureLevels = mCachedTextureLevelData.find(texture->id());
-            if (foundTextureLevels != mCachedTextureLevelData.end())
-            {
-                // If we've already got a map to track this texture's levels, use it
-                foundTextureLevels->second[level] = std::move(compressedData);
-            }
-            else
-            {
-                // If this is a new texture, create a map for its levels
-                TextureLevels textureLevels;
-                textureLevels[level] = std::move(compressedData);
-
-                // Then add it into our data map
-                mCachedTextureLevelData[texture->id()] = std::move(textureLevels);
-            }
+            UNIMPLEMENTED();
             break;
         }
 
+        case gl::EntryPoint::CompressedTexImage2D:
+        case gl::EntryPoint::CompressedTexImage3D:
         case gl::EntryPoint::CompressedTexSubImage2D:
+        case gl::EntryPoint::CompressedTexSubImage3D:
         {
-            UNIMPLEMENTED();
+            captureCompressedTextureData(context, call);
             break;
         }
 

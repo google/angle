@@ -200,6 +200,8 @@ class FrameCapture final : angle::NonCopyable
                                     size_t vertexCount,
                                     size_t instanceCount);
 
+    void captureCompressedTextureData(const gl::Context *context, const CallCapture &call);
+
     void reset();
     void maybeCaptureClientData(const gl::Context *context, const CallCapture &call);
 
