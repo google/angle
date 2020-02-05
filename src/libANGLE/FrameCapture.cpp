@@ -1220,7 +1220,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         // we set earlier.
         bool isArray                  = binding == gl::BufferBinding::Array;
         const gl::Buffer *arrayBuffer = replayState.getArrayBuffer();
-        if ((isArray && arrayBuffer->id() != bufferID) || (!isArray && bufferID.value != 0))
+        if ((isArray && arrayBuffer && arrayBuffer->id() != bufferID) ||
+            (!isArray && bufferID.value != 0))
         {
             cap(CaptureBindBuffer(replayState, true, binding, bufferID));
         }
