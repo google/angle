@@ -751,8 +751,18 @@ TexStorageFormat GetTexStorageFormat(const FunctionsGL *functions,
                                      GLenum internalFormat)
 {
     TexStorageFormat result;
-    result.internalFormat = GetNativeInternalFormat(functions, features,
-                                                    gl::GetSizedInternalFormatInfo(internalFormat));
+    // TexStorage entrypoints accept both compressed and uncompressed formats.
+    // All compressed formats are sized.
+    gl::InternalFormat sizedFormatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
+    if (sizedFormatInfo.compressed)
+    {
+        result.internalFormat = GetNativeCompressedFormat(functions, features, internalFormat);
+    }
+    else
+    {
+        result.internalFormat = GetNativeInternalFormat(functions, features, sizedFormatInfo);
+    }
+
     return result;
 }
 
