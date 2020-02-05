@@ -1067,6 +1067,35 @@ bool IsDefaultCurrentValue(const gl::VertexAttribCurrentValueData &currentValue)
            currentValue.Values.FloatValues[2] == 0.0f && currentValue.Values.FloatValues[3] == 1.0f;
 }
 
+void Capture(std::vector<CallCapture> *setupCalls, CallCapture &&call)
+{
+    setupCalls->emplace_back(std::move(call));
+}
+
+void CaptureFramebufferAttachment(std::vector<CallCapture> *setupCalls,
+                                  const gl::State &replayState,
+                                  const gl::FramebufferAttachment &attachment)
+{
+    GLuint resourceID = attachment.getResource()->getId();
+
+    // TODO(jmadill): Layer attachments. http://anglebug.com/3662
+    if (attachment.type() == GL_TEXTURE)
+    {
+        gl::ImageIndex index = attachment.getTextureImageIndex();
+
+        Capture(setupCalls, CaptureFramebufferTexture2D(replayState, true, GL_FRAMEBUFFER,
+                                                        attachment.getBinding(), index.getTarget(),
+                                                        {resourceID}, index.getLevelIndex()));
+    }
+    else
+    {
+        ASSERT(attachment.type() == GL_RENDERBUFFER);
+        Capture(setupCalls, CaptureFramebufferRenderbuffer(replayState, true, GL_FRAMEBUFFER,
+                                                           attachment.getBinding(), GL_RENDERBUFFER,
+                                                           {resourceID}));
+    }
+}
+
 void CaptureMidExecutionSetup(const gl::Context *context,
                               std::vector<CallCapture> *setupCalls,
                               const ShaderSourceMap &cachedShaderSources,
@@ -1488,43 +1517,21 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 continue;
             }
 
-            GLuint resourceID = colorAttachment.getResource()->getId();
-
-            // TODO(jmadill): Layer attachments. http://anglebug.com/3662
-            if (colorAttachment.type() == GL_TEXTURE)
-            {
-                gl::ImageIndex index = colorAttachment.getTextureImageIndex();
-
-                cap(CaptureFramebufferTexture2D(replayState, true, GL_FRAMEBUFFER,
-                                                colorAttachment.getBinding(), index.getTarget(),
-                                                {resourceID}, index.getLevelIndex()));
-            }
-            else
-            {
-                ASSERT(colorAttachment.type() == GL_RENDERBUFFER);
-                cap(CaptureFramebufferRenderbuffer(replayState, true, GL_FRAMEBUFFER,
-                                                   colorAttachment.getBinding(), GL_RENDERBUFFER,
-                                                   {resourceID}));
-            }
+            CaptureFramebufferAttachment(setupCalls, replayState, colorAttachment);
         }
 
         const gl::FramebufferAttachment *depthAttachment = framebuffer->getDepthAttachment();
         if (depthAttachment)
         {
-            ASSERT(depthAttachment->type() == GL_RENDERBUFFER);
-            GLuint resourceID = depthAttachment->getResource()->getId();
-            cap(CaptureFramebufferRenderbuffer(replayState, true, GL_FRAMEBUFFER,
-                                               GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, {resourceID}));
+            ASSERT(depthAttachment->getBinding() == GL_DEPTH_ATTACHMENT);
+            CaptureFramebufferAttachment(setupCalls, replayState, *depthAttachment);
         }
 
         const gl::FramebufferAttachment *stencilAttachment = framebuffer->getStencilAttachment();
         if (stencilAttachment)
         {
-            ASSERT(stencilAttachment->type() == GL_RENDERBUFFER);
-            GLuint resourceID = stencilAttachment->getResource()->getId();
-            cap(CaptureFramebufferRenderbuffer(replayState, true, GL_FRAMEBUFFER,
-                                               GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                                               {resourceID}));
+            ASSERT(stencilAttachment->getBinding() == GL_STENCIL_ATTACHMENT);
+            CaptureFramebufferAttachment(setupCalls, replayState, *stencilAttachment);
         }
 
         // TODO(jmadill): Draw buffer states. http://anglebug.com/3662
