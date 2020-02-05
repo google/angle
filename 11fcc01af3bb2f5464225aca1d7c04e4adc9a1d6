@@ -22,6 +22,30 @@
       "revId": "11fcc01af3bb2f5464225aca1d7c04e4adc9a1d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84888b06_e4feda8d",
+        "filename": "include/platform/FeaturesD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2020-02-05T01:38:23Z",
+      "side": 1,
+      "message": "I wrote a comment, and then changed the name to something more descriptive also. I find the logic easier to understand afterwards, but PTAL!",
+      "parentUuid": "4bdad48d_0b539a02",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 56
+      },
+      "revId": "11fcc01af3bb2f5464225aca1d7c04e4adc9a1d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
