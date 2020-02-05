@@ -109,6 +109,8 @@ class ProgramVk : public ProgramImpl
     angle::Result updateUniforms(ContextVk *contextVk);
     angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
     angle::Result updateShaderResourcesDescriptorSet(ContextVk *contextVk,
+                                                     vk::ResourceUseList *resourceUseList,
+                                                     RenderPassCommandBuffer *renderPassCommands,
                                                      vk::CommandGraphResource *recorder);
     angle::Result updateTransformFeedbackDescriptorSet(ContextVk *contextVk,
                                                        vk::FramebufferHelper *framebuffer);
@@ -188,6 +190,8 @@ class ProgramVk : public ProgramImpl
     void updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
     void updateTransformFeedbackDescriptorSetImpl(ContextVk *contextVk);
     void updateBuffersDescriptorSet(ContextVk *contextVk,
+                                    vk::ResourceUseList *resourceUseList,
+                                    RenderPassCommandBuffer *renderPassCommands,
                                     vk::CommandGraphResource *recorder,
                                     const std::vector<gl::InterfaceBlock> &blocks,
                                     VkDescriptorType descriptorType);

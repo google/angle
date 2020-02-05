@@ -163,6 +163,10 @@ class RenderPassCommandBuffer final : public CommandBufferHelper
                          const std::vector<VkClearValue> &clearValues,
                          vk::CommandBuffer **commandBufferOut);
 
+    void beginTransformFeedback(size_t validBufferCount,
+                                const VkBuffer *counterBuffers,
+                                bool rebindBuffer);
+
     void clearRenderPassColorAttachment(size_t attachmentIndex, const VkClearColorValue &clearValue)
     {
         mAttachmentOps[attachmentIndex].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
@@ -218,6 +222,11 @@ class RenderPassCommandBuffer final : public CommandBufferHelper
     gl::Rectangle mRenderArea;
     gl::AttachmentArray<VkClearValue> mClearValues;
     bool mRenderPassStarted;
+
+    // Transform feedback state
+    gl::TransformFeedbackBuffersArray<VkBuffer> mTransformFeedbackCounterBuffers;
+    uint32_t mValidTransformFeedbackBufferCount;
+    bool mRebindTransformFeedbackBuffers;
 };
 
 class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassOwner

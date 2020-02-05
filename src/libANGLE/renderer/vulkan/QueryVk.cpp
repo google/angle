@@ -49,7 +49,14 @@ angle::Result QueryVk::begin(const gl::Context *context)
     if (getType() == gl::QueryType::TransformFeedbackPrimitivesWritten)
     {
         mTransformFeedbackPrimitivesDrawn = 0;
-        contextVk->getCommandGraph()->beginTransformFeedbackEmulatedQuery();
+        if (contextVk->commandGraphEnabled())
+        {
+            contextVk->getCommandGraph()->beginTransformFeedbackEmulatedQuery();
+        }
+        else
+        {
+            // We could consider using VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT.
+        }
         return angle::Result::Continue;
     }
 
@@ -94,7 +101,14 @@ angle::Result QueryVk::end(const gl::Context *context)
             mCachedResult += transformFeedback->getPrimitivesDrawn();
         }
         mCachedResultValid = true;
-        contextVk->getCommandGraph()->endTransformFeedbackEmulatedQuery();
+        if (contextVk->commandGraphEnabled())
+        {
+            contextVk->getCommandGraph()->endTransformFeedbackEmulatedQuery();
+        }
+        else
+        {
+            // We could consider using VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT.
+        }
     }
     else if (getType() == gl::QueryType::TimeElapsed)
     {

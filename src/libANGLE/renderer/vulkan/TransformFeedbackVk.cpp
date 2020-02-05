@@ -52,9 +52,7 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
         mRebindTransformFeedbackBuffer = true;
     }
 
-    onTransformFeedbackStateChanged(context);
-
-    return angle::Result::Continue;
+    return onTransformFeedbackStateChanged(contextVk);
 }
 
 angle::Result TransformFeedbackVk::end(const gl::Context *context)
@@ -69,11 +67,10 @@ angle::Result TransformFeedbackVk::end(const gl::Context *context)
         vk::GetImpl(transformFeedbackQuery)->onTransformFeedbackEnd(context);
     }
 
-    vk::GetImpl(context)->onTransformFeedbackStateChanged();
+    ContextVk *contextVk = vk::GetImpl(context);
+    contextVk->onTransformFeedbackStateChanged();
 
-    onTransformFeedbackStateChanged(context);
-
-    return angle::Result::Continue;
+    return onTransformFeedbackStateChanged(contextVk);
 }
 
 angle::Result TransformFeedbackVk::pause(const gl::Context *context)
@@ -86,7 +83,7 @@ angle::Result TransformFeedbackVk::pause(const gl::Context *context)
     {
         // We need to create new commandGraphNode to perform transform feedback pause/resume
         // becasue vkCmdBegin/EndTransformFeedback can be placed once per commandGraphNode.
-        onTransformFeedbackStateChanged(context);
+        ANGLE_TRY(onTransformFeedbackStateChanged(contextVk));
     }
 
     return angle::Result::Continue;
@@ -102,7 +99,7 @@ angle::Result TransformFeedbackVk::resume(const gl::Context *context)
     {
         // We need to create new commandGraphNode to perform transform feedback pause/resume
         // becasue vkCmdBegin/EndTransformFeedback can be placed once per commandGraphNode.
-        onTransformFeedbackStateChanged(context);
+        ANGLE_TRY(onTransformFeedbackStateChanged(contextVk));
     }
 
     return angle::Result::Continue;
@@ -312,7 +309,7 @@ void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
     }
 }
 
-void TransformFeedbackVk::onTransformFeedbackStateChanged(const gl::Context *context)
+angle::Result TransformFeedbackVk::onTransformFeedbackStateChanged(ContextVk *contextVk)
 {
     // Currently, we don't handle resources switching from read-only to writable and back correctly.
     // In the case of transform feedback, the attached buffers can switch between being written by
@@ -322,15 +319,23 @@ void TransformFeedbackVk::onTransformFeedbackStateChanged(const gl::Context *con
     // TODO(syoussefi): detect changes to buffer usage (e.g. as transform feedback output, vertex
     // or index data etc) in the front end and notify the backend.  A new node should be created
     // only on such changes.  http://anglebug.com/3205
-    ContextVk *contextVk               = vk::GetImpl(context);
-    FramebufferVk *framebufferVk       = vk::GetImpl(context->getState().getDrawFramebuffer());
+    FramebufferVk *framebufferVk       = vk::GetImpl(contextVk->getState().getDrawFramebuffer());
     vk::FramebufferHelper *framebuffer = framebufferVk->getFramebuffer();
 
-    framebuffer->updateCurrentAccessNodes();
-    if (framebuffer->hasStartedRenderPass())
+    if (contextVk->commandGraphEnabled())
     {
-        framebuffer->finishCurrentCommands(contextVk);
+        framebuffer->updateCurrentAccessNodes();
+        if (framebuffer->hasStartedRenderPass())
+        {
+            framebuffer->finishCurrentCommands(contextVk);
+        }
     }
+    else
+    {
+        ANGLE_TRY(contextVk->endRenderPass());
+    }
+
+    return angle::Result::Continue;
 }
 
 void TransformFeedbackVk::writeDescriptorSet(ContextVk *contextVk,

@@ -525,17 +525,29 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
         blitAspectMask &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
     }
 
-    if (srcImage->isLayoutChangeNecessary(vk::ImageLayout::TransferSrc))
-    {
-        vk::CommandBuffer *srcLayoutChange;
-        ANGLE_TRY(srcImage->recordCommands(contextVk, &srcLayoutChange));
-        srcImage->changeLayout(imageAspectMask, vk::ImageLayout::TransferSrc, srcLayoutChange);
-    }
-
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
+    if (contextVk->commandGraphEnabled())
+    {
+        if (srcImage->isLayoutChangeNecessary(vk::ImageLayout::TransferSrc))
+        {
+            vk::CommandBuffer *srcLayoutChange;
+            ANGLE_TRY(srcImage->recordCommands(contextVk, &srcLayoutChange));
+            srcImage->changeLayout(imageAspectMask, vk::ImageLayout::TransferSrc, srcLayoutChange);
+        }
+        ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
-    srcImage->addReadDependency(contextVk, &mFramebuffer);
+        srcImage->addReadDependency(contextVk, &mFramebuffer);
+
+        // Requirement of the copyImageToBuffer, the dst image must be in
+        // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL layout.
+        dstImage->changeLayout(imageAspectMask, vk::ImageLayout::TransferDst, commandBuffer);
+    }
+    else
+    {
+        ANGLE_TRY(contextVk->onImageRead(imageAspectMask, vk::ImageLayout::TransferSrc, srcImage));
+        ANGLE_TRY(contextVk->onImageWrite(imageAspectMask, vk::ImageLayout::TransferDst, dstImage));
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    }
 
     VkImageBlit blit                   = {};
     blit.srcSubresource.aspectMask     = blitAspectMask;
@@ -550,10 +562,6 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     blit.dstSubresource.layerCount     = 1;
     blit.dstOffsets[0]                 = {destArea.x0(), destArea.y0(), 0};
     blit.dstOffsets[1]                 = {destArea.x1(), destArea.y1(), 1};
-
-    // Requirement of the copyImageToBuffer, the dst image must be in
-    // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL layout.
-    dstImage->changeLayout(imageAspectMask, vk::ImageLayout::TransferDst, commandBuffer);
 
     commandBuffer->blitImage(srcImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                              dstImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,

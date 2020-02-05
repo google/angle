@@ -179,7 +179,10 @@ vk::ImageHelper *RenderTargetVk::getImageForWrite(ContextVk *contextVk,
                                                   vk::CommandGraphResource *writingResource) const
 {
     ASSERT(mImage && mImage->valid());
-    mImage->addWriteDependency(contextVk, writingResource);
+    if (contextVk->commandGraphEnabled())
+    {
+        mImage->addWriteDependency(contextVk, writingResource);
+    }
     onImageViewAccess(contextVk);
     return mImage;
 }

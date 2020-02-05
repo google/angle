@@ -614,6 +614,7 @@ static_assert(sizeof(SpecializationConstantBitSet) == sizeof(uint32_t), "Unexpec
 template <typename T>
 using SpecializationConstantMap = angle::PackedEnumMap<sh::vk::SpecializationConstantId, T>;
 
+void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label);
 }  // namespace vk
 
 namespace gl_vk

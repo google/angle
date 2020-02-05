@@ -3798,25 +3798,5 @@ angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
     *pipelineOut = &mComputePipeline;
     return angle::Result::Continue;
 }
-
-void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label)
-{
-    static constexpr angle::ColorF kLabelColors[6] = {
-        angle::ColorF(1.0f, 0.5f, 0.5f, 1.0f),  // DEBUG_SOURCE_API
-        angle::ColorF(0.5f, 1.0f, 0.5f, 1.0f),  // DEBUG_SOURCE_WINDOW_SYSTEM
-        angle::ColorF(0.5f, 0.5f, 1.0f, 1.0f),  // DEBUG_SOURCE_SHADER_COMPILER
-        angle::ColorF(0.7f, 0.7f, 0.7f, 1.0f),  // DEBUG_SOURCE_THIRD_PARTY
-        angle::ColorF(0.5f, 0.8f, 0.9f, 1.0f),  // DEBUG_SOURCE_APPLICATION
-        angle::ColorF(0.9f, 0.8f, 0.5f, 1.0f),  // DEBUG_SOURCE_OTHER
-    };
-
-    int colorIndex = source - GL_DEBUG_SOURCE_API;
-    ASSERT(colorIndex >= 0 && static_cast<size_t>(colorIndex) < ArraySize(kLabelColors));
-
-    label->sType      = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
-    label->pNext      = nullptr;
-    label->pLabelName = marker;
-    kLabelColors[colorIndex].writeData(label->color);
-}
 }  // namespace vk
 }  // namespace rx

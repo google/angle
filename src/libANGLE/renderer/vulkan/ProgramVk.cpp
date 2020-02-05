@@ -1324,6 +1324,8 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
 }
 
 void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
+                                           vk::ResourceUseList *resourceUseList,
+                                           RenderPassCommandBuffer *renderPassCommands,
                                            vk::CommandGraphResource *recorder,
                                            const std::vector<gl::InterfaceBlock> &blocks,
                                            VkDescriptorType descriptorType)
@@ -1400,6 +1402,20 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
                 bufferHelper.onRead(contextVk, recorder, VK_ACCESS_UNIFORM_READ_BIT);
             }
         }
+        else
+        {
+            if (isStorageBuffer)
+            {
+                // We set the SHADER_READ_BIT to be conservative.
+                VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+                renderPassCommands->bufferWrite(resourceUseList, accessFlags, &bufferHelper);
+            }
+            else
+            {
+                renderPassCommands->bufferRead(resourceUseList, VK_ACCESS_UNIFORM_READ_BIT,
+                                               &bufferHelper);
+            }
+        }
 
         ++writeCount;
     }
@@ -1457,8 +1473,15 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
         // We set SHADER_READ_BIT to be conservative.
-        bufferHelper.onWrite(contextVk, recorder,
-                             VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT);
+        if (contextVk->commandGraphEnabled())
+        {
+            bufferHelper.onWrite(contextVk, recorder,
+                                 VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT);
+        }
+        else
+        {
+            UNIMPLEMENTED();
+        }
 
         writtenBindings.set(binding);
     }
@@ -1567,15 +1590,18 @@ angle::Result ProgramVk::updateImagesDescriptorSet(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result ProgramVk::updateShaderResourcesDescriptorSet(ContextVk *contextVk,
-                                                            vk::CommandGraphResource *recorder)
+angle::Result ProgramVk::updateShaderResourcesDescriptorSet(
+    ContextVk *contextVk,
+    vk::ResourceUseList *resourceUseList,
+    RenderPassCommandBuffer *renderPassCommands,
+    vk::CommandGraphResource *recorder)
 {
     ANGLE_TRY(allocateDescriptorSet(contextVk, kShaderResourceDescriptorSetIndex));
 
-    updateBuffersDescriptorSet(contextVk, recorder, mState.getUniformBlocks(),
-                               VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-    updateBuffersDescriptorSet(contextVk, recorder, mState.getShaderStorageBlocks(),
-                               VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
+    updateBuffersDescriptorSet(contextVk, resourceUseList, renderPassCommands, recorder,
+                               mState.getUniformBlocks(), VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+    updateBuffersDescriptorSet(contextVk, resourceUseList, renderPassCommands, recorder,
+                               mState.getShaderStorageBlocks(), VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
     updateAtomicCounterBuffersDescriptorSet(contextVk, recorder);
     return updateImagesDescriptorSet(contextVk, recorder);
 }
@@ -1586,8 +1612,12 @@ angle::Result ProgramVk::updateTransformFeedbackDescriptorSet(ContextVk *context
     const gl::State &glState = contextVk->getState();
     ASSERT(hasTransformFeedbackOutput());
 
-    TransformFeedbackVk *transformFeedbackVk = vk::GetImpl(glState.getCurrentTransformFeedback());
-    transformFeedbackVk->addFramebufferDependency(contextVk, mState, framebuffer);
+    if (contextVk->commandGraphEnabled())
+    {
+        TransformFeedbackVk *transformFeedbackVk =
+            vk::GetImpl(glState.getCurrentTransformFeedback());
+        transformFeedbackVk->addFramebufferDependency(contextVk, mState, framebuffer);
+    }
 
     ANGLE_TRY(allocateDescriptorSet(contextVk, kUniformsAndXfbDescriptorSetIndex));
 
