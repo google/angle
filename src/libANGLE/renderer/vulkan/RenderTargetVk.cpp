@@ -61,14 +61,18 @@ angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk,
     ASSERT(commandBuffer->valid());
     ASSERT(!mImage->getFormat().actualImageFormat().hasDepthOrStencilBits());
 
-    // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
-    mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
-                         commandBuffer);
-
     if (contextVk->commandGraphEnabled())
     {
+        mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
+                             commandBuffer);
+
         // Set up dependencies between the RT resource and the Framebuffer.
         mImage->addWriteDependency(contextVk, framebufferVk);
+    }
+    else
+    {
+        ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
+                                          vk::ImageLayout::ColorAttachment, mImage));
     }
 
     onImageViewAccess(contextVk);
@@ -83,14 +87,21 @@ angle::Result RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk,
     ASSERT(commandBuffer->valid());
     ASSERT(mImage->getFormat().actualImageFormat().hasDepthOrStencilBits());
 
-    // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
     const angle::Format &format    = mImage->getFormat().actualImageFormat();
     VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
 
-    mImage->changeLayout(aspectFlags, vk::ImageLayout::DepthStencilAttachment, commandBuffer);
+    if (contextVk->commandGraphEnabled())
+    {
+        mImage->changeLayout(aspectFlags, vk::ImageLayout::DepthStencilAttachment, commandBuffer);
 
-    // Set up dependencies between the RT resource and the Framebuffer.
-    mImage->addWriteDependency(contextVk, framebufferVk);
+        // Set up dependencies between the RT resource and the Framebuffer.
+        mImage->addWriteDependency(contextVk, framebufferVk);
+    }
+    else
+    {
+        ANGLE_TRY(
+            contextVk->onImageWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment, mImage));
+    }
 
     onImageViewAccess(contextVk);
 
@@ -180,7 +191,14 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk)
         return angle::Result::Continue;
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+    if (contextVk->commandGraphEnabled())
+    {
+        ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+    }
+    else
+    {
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    }
     return mImage->flushStagedUpdates(contextVk, mLevelIndex, mLevelIndex + 1, mLayerIndex,
                                       mLayerIndex + 1, commandBuffer);
 }

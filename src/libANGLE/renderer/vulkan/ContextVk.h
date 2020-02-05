@@ -95,31 +95,43 @@ class CommandQueue final : angle::NonCopyable
     vk::PersistentCommandPool mPrimaryCommandPool;
 };
 
-class OutsideRenderPassCommandBuffer final : angle::NonCopyable
+struct CommandBufferHelper : angle::NonCopyable
+{
+  public:
+    void bufferRead(vk::ResourceUseList *resourceUseList,
+                    VkAccessFlags readAccessType,
+                    vk::BufferHelper *buffer);
+    void bufferWrite(vk::ResourceUseList *resourceUseList,
+                     VkAccessFlags writeAccessType,
+                     vk::BufferHelper *buffer);
+
+    vk::CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
+
+  protected:
+    CommandBufferHelper();
+    ~CommandBufferHelper();
+
+    void recordBarrier(vk::PrimaryCommandBuffer *primary);
+
+    VkFlags mGlobalMemoryBarrierSrcAccess;
+    VkFlags mGlobalMemoryBarrierDstAccess;
+    VkPipelineStageFlags mGlobalMemoryBarrierStages;
+    vk::CommandBuffer mCommandBuffer;
+};
+
+class OutsideRenderPassCommandBuffer final : public CommandBufferHelper
 {
   public:
     OutsideRenderPassCommandBuffer();
     ~OutsideRenderPassCommandBuffer();
 
-    void bufferRead(VkAccessFlags readAccessType, vk::BufferHelper *buffer);
-    void bufferWrite(VkAccessFlags writeAccessType, vk::BufferHelper *buffer);
-
     void flushToPrimary(vk::PrimaryCommandBuffer *primary);
-
-    vk::CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
 
     bool empty() const { return mCommandBuffer.empty(); }
     void reset();
-
-  private:
-    VkFlags mGlobalMemoryBarrierSrcAccess;
-    VkFlags mGlobalMemoryBarrierDstAccess;
-    VkPipelineStageFlags mGlobalMemoryBarrierStages;
-
-    vk::CommandBuffer mCommandBuffer;
 };
 
-class RenderPassCommandBuffer final : angle::NonCopyable
+class RenderPassCommandBuffer final : public CommandBufferHelper
 {
   public:
     RenderPassCommandBuffer();
@@ -167,9 +179,11 @@ class RenderPassCommandBuffer final : angle::NonCopyable
         mAttachmentOps[attachmentIndex].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     }
 
+    const gl::Rectangle &getRenderArea() const { return mRenderArea; }
+
     angle::Result flushToPrimary(ContextVk *contextVk, vk::PrimaryCommandBuffer *primary);
 
-    bool empty() const { return mCommandBuffer.empty(); }
+    bool empty() const { return !mRenderPassStarted; }
     void reset();
 
     uint32_t getAndResetCounter()
@@ -186,7 +200,7 @@ class RenderPassCommandBuffer final : angle::NonCopyable
     vk::Framebuffer mFramebuffer;
     gl::Rectangle mRenderArea;
     gl::AttachmentArray<VkClearValue> mClearValues;
-    vk::CommandBuffer mCommandBuffer;
+    bool mRenderPassStarted;
 };
 
 class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassOwner
@@ -517,7 +531,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     Serial generateTextureSerial() { return mTextureSerialFactory.generate(); }
     const vk::TextureDescriptorDesc &getActiveTexturesDesc() const { return mActiveTexturesDesc; }
 
-    void updateScissor(const gl::State &glState);
+    angle::Result updateScissor(const gl::State &glState);
 
     bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
 
@@ -527,13 +541,22 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     vk::ResourceUseList &getResourceUseList() { return mResourceUseList; }
 
-    void onBufferRead(VkAccessFlags readAccessType, vk::BufferHelper *buffer);
-    void onBufferWrite(VkAccessFlags writeAccessType, vk::BufferHelper *buffer);
+    angle::Result onBufferRead(VkAccessFlags readAccessType, vk::BufferHelper *buffer);
+    angle::Result onBufferWrite(VkAccessFlags writeAccessType, vk::BufferHelper *buffer);
+
+    angle::Result onImageRead(VkImageAspectFlags aspectFlags,
+                              vk::ImageLayout imageLayout,
+                              vk::ImageHelper *image);
+
+    angle::Result onImageWrite(VkImageAspectFlags aspectFlags,
+                               vk::ImageLayout imageLayout,
+                               vk::ImageHelper *image);
+
     angle::Result getOutsideRenderPassCommandBuffer(vk::CommandBuffer **commandBufferOut)
     {
         if (!mRenderPassCommands.empty())
         {
-            ANGLE_TRY(mRenderPassCommands.flushToPrimary(this, &mPrimaryCommands));
+            ANGLE_TRY(endRenderPass());
         }
         *commandBufferOut = &mOutsideRenderPassCommands.getCommandBuffer();
         return angle::Result::Continue;
@@ -556,6 +579,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     }
 
     egl::ContextPriority getContextPriority() const override { return mContextPriority; }
+    angle::Result endRenderPass();
 
   private:
     // Dirty bits.

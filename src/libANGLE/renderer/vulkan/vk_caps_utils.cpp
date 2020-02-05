@@ -108,15 +108,19 @@ void RendererVk::ensureCapsInitialized() const
     // We use secondary command buffers almost everywhere and they require a feature to be
     // able to execute in the presence of queries.  As a result, we won't support queries
     // unless that feature is available.
+    // TODO(jmadill): Enable without graph. http://anglebug.com/4029
     mNativeExtensions.occlusionQueryBoolean =
-        vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures);
+        vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures) &&
+        mFeatures.commandGraph.enabled;
 
     // From the Vulkan specs:
     // > The number of valid bits in a timestamp value is determined by the
     // > VkQueueFamilyProperties::timestampValidBits property of the queue on which the timestamp is
     // > written. Timestamps are supported on any queue which reports a non-zero value for
     // > timestampValidBits via vkGetPhysicalDeviceQueueFamilyProperties.
-    mNativeExtensions.disjointTimerQuery          = queueFamilyProperties.timestampValidBits > 0;
+    // TODO(jmadill): Enable without graph. http://anglebug.com/4029
+    mNativeExtensions.disjointTimerQuery =
+        queueFamilyProperties.timestampValidBits > 0 && mFeatures.commandGraph.enabled;
     mNativeExtensions.queryCounterBitsTimeElapsed = queueFamilyProperties.timestampValidBits;
     mNativeExtensions.queryCounterBitsTimestamp   = queueFamilyProperties.timestampValidBits;
 
@@ -467,7 +471,8 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.pixelBufferObjectNV = true;
 
     // Enable GL_NV_fence extension.
-    mNativeExtensions.fenceNV = true;
+    // TODO(jmadill): Enable without graph. http://anglebug.com/4029
+    mNativeExtensions.fenceNV = mFeatures.commandGraph.enabled;
 
     // Geometry shader is optional.
     if (mPhysicalDeviceFeatures.geometryShader)

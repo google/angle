@@ -859,19 +859,27 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
                                                      const UtilsVk::BlitResolveParameters &params,
                                                      vk::ImageHelper *srcImage)
 {
-    if (srcImage->isLayoutChangeNecessary(vk::ImageLayout::TransferSrc))
-    {
-        vk::CommandBuffer *srcLayoutChange;
-        ANGLE_TRY(srcImage->recordCommands(contextVk, &srcLayoutChange));
-        srcImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
-                               srcLayoutChange);
-    }
-
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
+    if (contextVk->commandGraphEnabled())
+    {
+        if (srcImage->isLayoutChangeNecessary(vk::ImageLayout::TransferSrc))
+        {
+            vk::CommandBuffer *srcLayoutChange;
+            ANGLE_TRY(srcImage->recordCommands(contextVk, &srcLayoutChange));
+            srcImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
+                                   srcLayoutChange);
+        }
 
-    // Source's layout change should happen before rendering
-    srcImage->addReadDependency(contextVk, &mFramebuffer);
+        ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
+
+        // Source's layout change should happen before rendering
+        srcImage->addReadDependency(contextVk, &mFramebuffer);
+    }
+    else
+    {
+        ANGLE_TRY(contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
+                                         srcImage));
+    }
 
     VkImageResolve resolveRegion                = {};
     resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -893,9 +901,20 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
-        vk::ImageHelper *drawImage = drawRenderTarget->getImageForWrite(contextVk, &mFramebuffer);
-        drawImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
-                                commandBuffer);
+        if (contextVk->commandGraphEnabled())
+        {
+            vk::ImageHelper *drawImage =
+                drawRenderTarget->getImageForWrite(contextVk, &mFramebuffer);
+            drawImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
+                                    commandBuffer);
+        }
+        else
+        {
+            ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
+                                              vk::ImageLayout::TransferDst,
+                                              &drawRenderTarget->getImage()));
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+        }
 
         resolveRegion.dstSubresource.mipLevel       = drawRenderTarget->getLevelIndex();
         resolveRegion.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
@@ -1074,7 +1093,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 
     // The FBOs new attachment may have changed the renderable area
     const gl::State &glState = context->getState();
-    contextVk->updateScissor(glState);
+    ANGLE_TRY(contextVk->updateScissor(glState));
 
     mActiveColorComponents = gl_vk::GetColorComponentFlags(
         mActiveColorComponentMasksForClear[0].any(), mActiveColorComponentMasksForClear[1].any(),
@@ -1087,6 +1106,10 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         // Will freeze the current set of dependencies on this FBO. The next time we render we will
         // create a new entry in the command graph.
         mFramebuffer.finishCurrentCommands(contextVk);
+    }
+    else
+    {
+        ANGLE_TRY(contextVk->endRenderPass());
     }
 
     // Notify the ContextVk to update the pipeline desc.
@@ -1222,7 +1245,7 @@ angle::Result FramebufferVk::clearWithRenderPassOp(
     // render pass is needed,
     // - the current render area doesn't match the clear area.  We need the render area to be
     // exactly as specified by the scissor for the loadOp to clear only that area.  See
-    // onScissorChange for more information.
+    // ContextVk::updateScissor for more information.
 
     if (!mFramebuffer.valid() || !mFramebuffer.renderPassStartedButEmpty() ||
         mFramebuffer.getRenderPassRenderArea() != clearArea)
@@ -1466,28 +1489,6 @@ gl::Rectangle FramebufferVk::getScissoredRenderArea(ContextVk *contextVk) const
     bool invertViewport = contextVk->isViewportFlipEnabledForDrawFBO();
 
     return ClipRectToScissor(contextVk->getState(), renderArea, invertViewport);
-}
-
-void FramebufferVk::onScissorChange(ContextVk *contextVk)
-{
-    gl::Rectangle scissoredRenderArea = getScissoredRenderArea(contextVk);
-
-    // If the scissor has grown beyond the previous scissoredRenderArea, make sure the render pass
-    // is restarted.  Otherwise, we can continue using the same renderpass area.
-    //
-    // Without a scissor, the render pass area covers the whole of the framebuffer.  With a
-    // scissored clear, the render pass area could be smaller than the framebuffer size.  When the
-    // scissor changes, if the scissor area is completely encompassed by the render pass area, it's
-    // possible to continue using the same render pass.  However, if the current render pass area
-    // is too small, we need to start a new one.  The latter can happen if a scissored clear starts
-    // a render pass, the scissor is disabled and a draw call is issued to affect the whole
-    // framebuffer.
-    mFramebuffer.updateCurrentAccessNodes();
-    if (mFramebuffer.hasStartedRenderPass() &&
-        !mFramebuffer.getRenderPassRenderArea().encloses(scissoredRenderArea))
-    {
-        mFramebuffer.finishCurrentCommands(contextVk);
-    }
 }
 
 RenderTargetVk *FramebufferVk::getFirstRenderTarget() const

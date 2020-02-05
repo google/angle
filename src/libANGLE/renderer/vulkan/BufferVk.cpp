@@ -229,8 +229,8 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
     }
     else
     {
-        contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, &sourceBuffer->getBuffer());
-        contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, &mBuffer);
+        ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, &sourceBuffer->getBuffer()));
+        ANGLE_TRY(contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, &mBuffer));
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
     }
 
@@ -421,8 +421,8 @@ angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
     }
     else
     {
-        contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, destBuffer);
-        contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, &mBuffer);
+        ANGLE_TRY(contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, destBuffer));
+        ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, &mBuffer));
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
     }
 

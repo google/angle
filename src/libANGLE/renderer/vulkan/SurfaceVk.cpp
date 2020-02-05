@@ -1086,13 +1086,23 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         if (contextVk->commandGraphEnabled())
         {
             ANGLE_TRY(mColorImageMS.recordCommands(contextVk, &commandBuffer));
+            mColorImageMS.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
+                                       commandBuffer);
+            image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
+                                     commandBuffer);
+
+            // Setup graph dependency between the swapchain image and the multisampled one.
+            image.image.addReadDependency(contextVk, &mColorImageMS);
+            ANGLE_TRY(image.image.recordCommands(contextVk, &commandBuffer));
         }
-
-        mColorImageMS.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
-                                   commandBuffer);
-
-        // Setup graph dependency between the swapchain image and the multisampled one.
-        image.image.addReadDependency(contextVk, &mColorImageMS);
+        else
+        {
+            ANGLE_TRY(contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT,
+                                             vk::ImageLayout::TransferSrc, &mColorImageMS));
+            ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
+                                              vk::ImageLayout::TransferDst, &image.image));
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+        }
 
         VkImageResolve resolveRegion                = {};
         resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1104,10 +1114,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         resolveRegion.dstOffset                     = {};
         resolveRegion.extent                        = image.image.getExtents();
 
-        if (contextVk->commandGraphEnabled())
-        {
-            ANGLE_TRY(image.image.recordCommands(contextVk, &commandBuffer));
-        }
         mColorImageMS.resolve(&image.image, resolveRegion, commandBuffer);
     }
 
