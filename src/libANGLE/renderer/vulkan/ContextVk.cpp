@@ -1266,9 +1266,9 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
     const TransformFeedbackBufferRange &xfbBufferRangeExtension =
         transformFeedbackVk->getTransformFeedbackBufferRange();
 
-    commandBuffer->bindTransformFeedbackBuffers(bufferCount, bufferHandles.data(),
-                                                xfbBufferRangeExtension.offsets.data(),
-                                                xfbBufferRangeExtension.sizes.data());
+    commandBuffer->bindTransformFeedbackBuffers(
+        static_cast<uint32_t>(bufferCount), bufferHandles.data(),
+        xfbBufferRangeExtension.offsets.data(), xfbBufferRangeExtension.sizes.data());
 
     vk::FramebufferHelper *framebuffer = mDrawFramebuffer->getFramebuffer();
     transformFeedbackVk->addFramebufferDependency(this, mProgram->getState(), framebuffer);

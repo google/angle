@@ -356,6 +356,21 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void writeTimestamp(VkPipelineStageFlagBits pipelineStage,
                         VkQueryPool queryPool,
                         uint32_t query);
+
+    // VK_EXT_transform_feedback
+    void beginTransformFeedbackEXT(uint32_t firstCounterBuffer,
+                                   uint32_t counterBufferCount,
+                                   const VkBuffer *counterBuffers,
+                                   const VkDeviceSize *counterBufferOffsets);
+    void endTransformFeedbackEXT(uint32_t firstCounterBuffer,
+                                 uint32_t counterBufferCount,
+                                 const VkBuffer *counterBuffers,
+                                 const VkDeviceSize *counterBufferOffsets);
+    void bindTransformFeedbackBuffersEXT(uint32_t firstBinding,
+                                         uint32_t bindingCount,
+                                         const VkBuffer *buffers,
+                                         const VkDeviceSize *offsets,
+                                         const VkDeviceSize *sizes);
 };
 }  // namespace priv
 
@@ -1065,6 +1080,36 @@ ANGLE_INLINE void CommandBuffer::bindVertexBuffers(uint32_t firstBinding,
     vkCmdBindVertexBuffers(mHandle, firstBinding, bindingCount, buffers, offsets);
 }
 
+ANGLE_INLINE void CommandBuffer::beginTransformFeedbackEXT(uint32_t firstCounterBuffer,
+                                                           uint32_t counterBufferCount,
+                                                           const VkBuffer *counterBuffers,
+                                                           const VkDeviceSize *counterBufferOffsets)
+{
+    ASSERT(valid());
+    vkCmdBeginTransformFeedbackEXT(mHandle, firstCounterBuffer, counterBufferCount, counterBuffers,
+                                   counterBufferOffsets);
+}
+
+ANGLE_INLINE void CommandBuffer::endTransformFeedbackEXT(uint32_t firstCounterBuffer,
+                                                         uint32_t counterBufferCount,
+                                                         const VkBuffer *counterBuffers,
+                                                         const VkDeviceSize *counterBufferOffsets)
+{
+    ASSERT(valid());
+    vkCmdEndTransformFeedbackEXT(mHandle, firstCounterBuffer, counterBufferCount, counterBuffers,
+                                 counterBufferOffsets);
+}
+
+ANGLE_INLINE void CommandBuffer::bindTransformFeedbackBuffersEXT(uint32_t firstBinding,
+                                                                 uint32_t bindingCount,
+                                                                 const VkBuffer *buffers,
+                                                                 const VkDeviceSize *offsets,
+                                                                 const VkDeviceSize *sizes)
+{
+    ASSERT(valid());
+    vkCmdBindTransformFeedbackBuffersEXT(mHandle, firstBinding, bindingCount, buffers, offsets,
+                                         sizes);
+}
 }  // namespace priv
 
 // Image implementation.

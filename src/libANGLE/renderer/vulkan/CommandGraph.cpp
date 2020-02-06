@@ -213,11 +213,8 @@ void InsertBeginTransformFeedback(PrimaryCommandBuffer *primCmdBuffer,
                                   const VkBuffer *counterBuffers,
                                   bool rebindBuffer)
 {
-    gl::TransformFeedbackBuffersArray<VkDeviceSize> offsets = {0, 0, 0, 0};
-    uint32_t counterBufferSize                              = (rebindBuffer) ? 0 : validBufferCount;
-
-    vkCmdBeginTransformFeedbackEXT(primCmdBuffer->getHandle(), 0, counterBufferSize, counterBuffers,
-                                   offsets.data());
+    uint32_t counterBufferCount = (rebindBuffer) ? 0 : validBufferCount;
+    primCmdBuffer->beginTransformFeedbackEXT(0, counterBufferCount, counterBuffers, nullptr);
 }
 
 ANGLE_MAYBE_UNUSED
@@ -226,10 +223,7 @@ void InsertEndTransformFeedback(PrimaryCommandBuffer *primCmdBuffer,
                                 uint32_t validBufferCount,
                                 const VkBuffer *counterBuffers)
 {
-    gl::TransformFeedbackBuffersArray<VkDeviceSize> offsets = {0, 0, 0, 0};
-
-    vkCmdEndTransformFeedbackEXT(primCmdBuffer->getHandle(), 0, validBufferCount, counterBuffers,
-                                 offsets.data());
+    primCmdBuffer->endTransformFeedbackEXT(0, validBufferCount, counterBuffers, nullptr);
 }
 
 ANGLE_MAYBE_UNUSED

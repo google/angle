@@ -451,7 +451,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     void bindIndexBuffer(const Buffer &buffer, VkDeviceSize offset, VkIndexType indexType);
 
-    void bindTransformFeedbackBuffers(size_t bindingCount,
+    void bindTransformFeedbackBuffers(uint32_t bindingCount,
                                       const VkBuffer *buffers,
                                       const VkDeviceSize *offsets,
                                       const VkDeviceSize *sizes);
@@ -796,7 +796,7 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindIndexBuffer(const Buffer &buffer,
     paramStruct->indexType = indexType;
 }
 
-ANGLE_INLINE void SecondaryCommandBuffer::bindTransformFeedbackBuffers(size_t bindingCount,
+ANGLE_INLINE void SecondaryCommandBuffer::bindTransformFeedbackBuffers(uint32_t bindingCount,
                                                                        const VkBuffer *buffers,
                                                                        const VkDeviceSize *offsets,
                                                                        const VkDeviceSize *sizes)
@@ -810,7 +810,7 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindTransformFeedbackBuffers(size_t bi
                                                         buffersSize + offsetsSize + sizesSize,
                                                         &writePtr);
     // Copy params
-    paramStruct->bindingCount = static_cast<uint32_t>(bindingCount);
+    paramStruct->bindingCount = bindingCount;
     writePtr                  = storePointerParameter(writePtr, buffers, buffersSize);
     writePtr                  = storePointerParameter(writePtr, offsets, offsetsSize);
     storePointerParameter(writePtr, sizes, sizesSize);
