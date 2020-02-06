@@ -555,6 +555,8 @@ TEST_P(TransformFeedbackTest, MultiContext)
         EGL_NONE,
     };
 
+    // Keep a fixed seed RNG so we are deterministic.
+    RNG rng(0);
     EGLWindow *window = getEGLWindow();
 
     EGLDisplay display = window->getDisplay();
@@ -572,7 +574,7 @@ TEST_P(TransformFeedbackTest, MultiContext)
     };
     ContextInfo contexts[32];
 
-    const size_t maxDrawSize = 1024;
+    const size_t maxDrawSize = 512;
 
     std::vector<float> transformFeedbackData(maxDrawSize);
     for (size_t i = 0; i < maxDrawSize; i++)
@@ -640,9 +642,9 @@ void main(void)
         ASSERT_GL_NO_ERROR();
 
         // For each pass, draw between 0 and maxDrawSize primitives
-        for (auto &primCount : context.primitiveCounts)
+        for (size_t &primCount : context.primitiveCounts)
         {
-            primCount = rand() % maxDrawSize;
+            primCount = rng.randomIntBetween(1, maxDrawSize);
         }
 
         glBeginTransformFeedback(GL_POINTS);
