@@ -144,7 +144,7 @@ class ProgramVk : public ProgramImpl
         return shaderProgram->getGraphicsPipeline(
             contextVk, &contextVk->getRenderPassCache(), *pipelineCache,
             contextVk->getCurrentQueueSerial(), mPipelineLayout.get(), desc, activeAttribLocations,
-            mState.getAttributesTypeMask(), descPtrOut, pipelineOut);
+            mState.getProgramExecutable().getAttributesTypeMask(), descPtrOut, pipelineOut);
     }
 
     angle::Result getComputePipeline(ContextVk *contextVk, vk::PipelineAndSerial **pipelineOut)

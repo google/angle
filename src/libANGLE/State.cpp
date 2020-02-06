@@ -360,6 +360,7 @@ State::State(ContextID contextIn,
       mReadFramebuffer(nullptr),
       mDrawFramebuffer(nullptr),
       mProgram(nullptr),
+      mExecutable(nullptr),
       mProvokingVertex(gl::ProvokingVertexConvention::LastVertexConvention),
       mVertexArray(nullptr),
       mActiveSampler(0),
@@ -488,7 +489,8 @@ void State::initialize(Context *context)
         mActiveQueries[type].set(context, nullptr);
     }
 
-    mProgram = nullptr;
+    mProgram    = nullptr;
+    mExecutable = nullptr;
 
     mReadFramebuffer = nullptr;
     mDrawFramebuffer = nullptr;
@@ -549,8 +551,8 @@ void State::reset(const Context *context)
     {
         mProgram->release(context);
     }
-    mProgram = nullptr;
-
+    mProgram    = nullptr;
+    mExecutable = nullptr;
     mProgramPipeline.set(context, nullptr);
 
     if (mTransformFeedback.get())
@@ -1700,10 +1702,12 @@ angle::Result State::setProgram(const Context *context, Program *newProgram)
             mProgram->release(context);
         }
 
-        mProgram = newProgram;
+        mProgram    = newProgram;
+        mExecutable = nullptr;
 
         if (mProgram)
         {
+            mExecutable = &mProgram->getExecutable();
             newProgram->addRef();
             ANGLE_TRY(onProgramExecutableChange(context, newProgram));
         }
@@ -1747,11 +1751,25 @@ bool State::removeTransformFeedbackBinding(const Context *context,
 void State::setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline)
 {
     mProgramPipeline.set(context, pipeline);
+
+    // A bound Program always overrides the ProgramPipeline, so only update the
+    // current ProgramExecutable if there isn't currently a Program bound.
+    if (!mProgram && pipeline)
+    {
+        mExecutable = &mProgramPipeline->getExecutable();
+    }
 }
 
 void State::detachProgramPipeline(const Context *context, ProgramPipelineID pipeline)
 {
     mProgramPipeline.set(context, nullptr);
+
+    // A bound Program always overrides the ProgramPipeline, so only update the
+    // current ProgramExecutable if there isn't currently a Program bound.
+    if (!mProgram)
+    {
+        mExecutable = nullptr;
+    }
 }
 
 bool State::isQueryActive(QueryType type) const

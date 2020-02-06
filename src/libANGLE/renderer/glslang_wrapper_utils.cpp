@@ -546,7 +546,8 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
                             uint32_t locationsUsedForXfbExtension,
                             ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    uint32_t locationsUsedForEmulation = locationsUsedForXfbExtension;
+    uint32_t locationsUsedForEmulation        = locationsUsedForXfbExtension;
+    const gl::ProgramExecutable &glExecutable = programState.getProgramExecutable();
 
     // Substitute layout and qualifier strings for the position varying added for line raster
     // emulation.
@@ -554,7 +555,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     {
         uint32_t lineRasterEmulationPositionLocation = locationsUsedForEmulation++;
 
-        for (const gl::ShaderType shaderType : programState.getLinkedShaderStages())
+        for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
         {
             AddLocationInfo(variableInfoMapOut, sh::vk::kLineRasterEmulationPosition,
                             lineRasterEmulationPositionLocation,
@@ -609,7 +610,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     // Add an entry for inactive varyings.
     const gl::ShaderMap<std::vector<std::string>> &inactiveVaryingMappedNames =
         resources.varyingPacking.getInactiveVaryingMappedNames();
-    for (const gl::ShaderType shaderType : programState.getLinkedShaderStages())
+    for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
     {
         for (const std::string &varyingName : inactiveVaryingMappedNames[shaderType])
         {

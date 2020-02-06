@@ -193,8 +193,9 @@ void SortAttributesByLayout(const ProgramD3D &programD3D,
     sortedAttributesOut->clear();
 
     const AttribIndexArray &locationToSemantic = programD3D.getAttribLocationToD3DSemantics();
+    const gl::ProgramExecutable &executable    = programD3D.getState().getProgramExecutable();
 
-    for (auto locationIndex : programD3D.getState().getActiveAttribLocationsMask())
+    for (auto locationIndex : executable.getActiveAttribLocationsMask())
     {
         int d3dSemantic = locationToSemantic[locationIndex];
         if (sortedAttributesOut->size() <= static_cast<size_t>(d3dSemantic))
@@ -1205,8 +1206,8 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 invalidateProgramAtomicCounterBuffers();
                 invalidateProgramShaderStorageBuffers();
                 invalidateDriverUniforms();
-                const gl::Program *program = state.getProgram();
-                if (!program || !program->hasLinkedShaderStage(gl::ShaderType::Compute))
+                const gl::ProgramExecutable *executable = state.getProgramExecutable();
+                if (!executable || !executable->isCompute())
                 {
                     mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
                     invalidateVertexBuffer();
@@ -2052,8 +2053,9 @@ angle::Result StateManager11::syncCurrentValueAttribs(
     const gl::Context *context,
     const std::vector<gl::VertexAttribCurrentValueData> &currentValues)
 {
-    const auto &activeAttribsMask  = mProgramD3D->getState().getActiveAttribLocationsMask();
-    const auto &dirtyActiveAttribs = (activeAttribsMask & mDirtyCurrentValueAttribs);
+    const gl::ProgramExecutable &executable = mProgramD3D->getState().getProgramExecutable();
+    const auto &activeAttribsMask           = executable.getActiveAttribLocationsMask();
+    const auto &dirtyActiveAttribs          = (activeAttribsMask & mDirtyCurrentValueAttribs);
 
     if (!dirtyActiveAttribs.any())
     {

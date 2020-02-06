@@ -1946,7 +1946,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         cap(CaptureCreateProgram(replayState, true, id.value));
 
         // Compile with last linked sources.
-        for (gl::ShaderType shaderType : program->getState().getLinkedShaderStages())
+        for (gl::ShaderType shaderType : program->getExecutable().getLinkedShaderStages())
         {
             const std::string &sourceString = linkedSources[shaderType];
             const char *sourcePointer       = sourceString.c_str();

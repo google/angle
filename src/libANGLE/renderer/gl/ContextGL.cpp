@@ -198,13 +198,13 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
 {
     if (context->getStateCache().hasAnyActiveClientAttrib())
     {
-        const gl::State &glState   = context->getState();
-        const gl::Program *program = glState.getProgram();
-        const gl::VertexArray *vao = glState.getVertexArray();
-        const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
+        const gl::State &glState                = context->getState();
+        const gl::ProgramExecutable *executable = getState().getProgramExecutable();
+        const gl::VertexArray *vao              = glState.getVertexArray();
+        const VertexArrayGL *vaoGL              = GetImplAs<VertexArrayGL>(vao);
 
-        ANGLE_TRY(vaoGL->syncClientSideData(context, program->getActiveAttribLocationsMask(), first,
-                                            count, instanceCount));
+        ANGLE_TRY(vaoGL->syncClientSideData(context, executable->getActiveAttribLocationsMask(),
+                                            first, count, instanceCount));
 
 #if defined(ANGLE_STATE_VALIDATION_ENABLED)
         vaoGL->validateState();
@@ -221,17 +221,15 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
                                                            GLsizei instanceCount,
                                                            const void **outIndices)
 {
-    const gl::State &glState = context->getState();
+    const gl::State &glState                = context->getState();
+    const gl::ProgramExecutable *executable = getState().getProgramExecutable();
+    const gl::VertexArray *vao              = glState.getVertexArray();
+    const gl::StateCache &stateCache        = context->getStateCache();
 
-    const gl::Program *program = glState.getProgram();
-
-    const gl::VertexArray *vao = glState.getVertexArray();
-
-    const gl::StateCache &stateCache = context->getStateCache();
     if (stateCache.hasAnyActiveClientAttrib() || vao->getElementArrayBuffer() == nullptr)
     {
         const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
-        ANGLE_TRY(vaoGL->syncDrawElementsState(context, program->getActiveAttribLocationsMask(),
+        ANGLE_TRY(vaoGL->syncDrawElementsState(context, executable->getActiveAttribLocationsMask(),
                                                count, type, indices, instanceCount,
                                                glState.isPrimitiveRestartEnabled(), outIndices));
     }
@@ -303,6 +301,7 @@ angle::Result ContextGL::drawArraysInstanced(const gl::Context *context,
 gl::AttributesMask ContextGL::updateAttributesForBaseInstance(const gl::Program *program,
                                                               GLuint baseInstance)
 {
+    const gl::ProgramExecutable *executable = getState().getProgramExecutable();
     gl::AttributesMask attribToUpdateMask;
 
     if (baseInstance != 0)
@@ -314,7 +313,7 @@ gl::AttributesMask ContextGL::updateAttributesForBaseInstance(const gl::Program 
         {
             const gl::VertexAttribute &attrib = attribs[attribIndex];
             const gl::VertexBinding &binding  = bindings[attrib.bindingIndex];
-            if (program->isAttribLocationActive(attribIndex) && binding.getDivisor() != 0)
+            if (executable->isAttribLocationActive(attribIndex) && binding.getDivisor() != 0)
             {
                 attribToUpdateMask.set(attribIndex);
                 const char *p             = static_cast<const char *>(attrib.pointer);
