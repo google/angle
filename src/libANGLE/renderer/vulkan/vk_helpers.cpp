@@ -3652,8 +3652,7 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
 {
     onResourceAccess(&contextVk->getResourceUseList());
 
-    // TODO(http://anglebug.com/4008): Possibly incorrect level count.
-    ImageView *imageView = GetLevelImageView(&mLevelDrawImageViews, level, 1);
+    ImageView *imageView = GetLevelImageView(&mLevelDrawImageViews, level, image.getLevelCount());
 
     *imageViewOut = imageView;
     if (imageView->valid())

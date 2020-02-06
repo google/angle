@@ -62,7 +62,6 @@
 
 4312 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-sync-imageAccess = SKIP
 4315 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-memory-order-vsfs = FAIL
-4108 VULKAN : KHR-GLES31.core.shader_image_size.*-nonMS-* = SKIP
 
 // Unimplemented glValidateCreateShaderProgramv:
 4146 : KHR-GLES31.core.shader_storage_buffer_object.basic-syntaxSSO = FAIL
