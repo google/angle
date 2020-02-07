@@ -1870,9 +1870,6 @@ TEST_P(RobustResourceInitTestES31, Multisample2DTextureArray)
 // Tests that using an out of bounds draw offset with a dynamic array succeeds.
 TEST_P(RobustResourceInitTest, DynamicVertexArrayOffsetOutOfBounds)
 {
-    // Not implemented on Vulkan.  http://anglebug.com/3350
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program);
 
