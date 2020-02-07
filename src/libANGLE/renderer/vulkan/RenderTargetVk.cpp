@@ -71,8 +71,8 @@ angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk,
     }
     else
     {
-        ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
-                                          vk::ImageLayout::ColorAttachment, mImage));
+        contextVk->onRenderPassImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
+                                          vk::ImageLayout::ColorAttachment, mImage);
     }
 
     onImageViewAccess(contextVk);
@@ -99,8 +99,8 @@ angle::Result RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk,
     }
     else
     {
-        ANGLE_TRY(
-            contextVk->onImageWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment, mImage));
+        contextVk->onRenderPassImageWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment,
+                                          mImage);
     }
 
     onImageViewAccess(contextVk);

@@ -310,7 +310,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
 
     void imageBarrier(VkPipelineStageFlags srcStageMask,
                       VkPipelineStageFlags dstStageMask,
-                      const VkImageMemoryBarrier *imageMemoryBarrier);
+                      const VkImageMemoryBarrier &imageMemoryBarrier);
 
     void memoryBarrier(VkPipelineStageFlags srcStageMask,
                        VkPipelineStageFlags dstStageMask,
@@ -702,11 +702,11 @@ ANGLE_INLINE void CommandBuffer::bufferBarrier(VkPipelineStageFlags srcStageMask
 
 ANGLE_INLINE void CommandBuffer::imageBarrier(VkPipelineStageFlags srcStageMask,
                                               VkPipelineStageFlags dstStageMask,
-                                              const VkImageMemoryBarrier *imageMemoryBarrier)
+                                              const VkImageMemoryBarrier &imageMemoryBarrier)
 {
     ASSERT(valid());
     vkCmdPipelineBarrier(mHandle, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1,
-                         imageMemoryBarrier);
+                         &imageMemoryBarrier);
 }
 
 ANGLE_INLINE void CommandBuffer::destroy(VkDevice device)

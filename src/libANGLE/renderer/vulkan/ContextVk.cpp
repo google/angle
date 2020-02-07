@@ -1093,18 +1093,53 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(const gl::Context 
                                                               vk::CommandBuffer *commandBuffer,
                                                               vk::CommandGraphResource *recorder)
 {
-    if (commandGraphEnabled())
-    {
-        ANGLE_TRY(updateActiveTextures(context));
+    const gl::ActiveTextureMask &activeTextures = mProgram->getState().getActiveSamplersMask();
 
-        const gl::ActiveTextureMask &activeTextures = mProgram->getState().getActiveSamplersMask();
-        for (size_t textureUnit : activeTextures)
+    for (size_t textureUnit : activeTextures)
+    {
+        const vk::TextureUnit &unit = mActiveTextures[textureUnit];
+        TextureVk *textureVk        = unit.texture;
+        vk::ImageHelper &image      = textureVk->getImage();
+
+        // The image should be flushed and ready to use at this point. There may still be
+        // lingering staged updates in its staging buffer for unused texture mip levels or
+        // layers. Therefore we can't verify it has no staged updates right here.
+
+        vk::ImageLayout textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
+        if (mProgram->getState().isCompute())
         {
-            vk::TextureUnit &unit = mActiveTextures[textureUnit];
-            TextureVk *textureVk  = unit.texture;
-            ASSERT(textureVk);
-            vk::ImageHelper &image = textureVk->getImage();
+            textureLayout = vk::ImageLayout::ComputeShaderReadOnly;
+        }
+
+        // Ensure the image is in read-only layout
+        if (commandGraphEnabled())
+        {
+            if (image.isLayoutChangeNecessary(textureLayout))
+            {
+                vk::CommandBuffer *srcLayoutChange;
+                VkImageAspectFlags aspectFlags = image.getAspectFlags();
+                ASSERT(aspectFlags != 0);
+                ANGLE_TRY(image.recordCommands(this, &srcLayoutChange));
+                image.changeLayout(aspectFlags, textureLayout, srcLayoutChange);
+            }
+
             image.addReadDependency(this, recorder);
+        }
+        else
+        {
+            mRenderPassCommands.imageRead(&mResourceUseList, image.getAspectFlags(), textureLayout,
+                                          &image);
+        }
+
+        textureVk->onImageViewUse(&mResourceUseList);
+
+        if (unit.sampler)
+        {
+            unit.sampler->onSamplerAccess(&mResourceUseList);
+        }
+        else
+        {
+            textureVk->onSamplerUse(&mResourceUseList);
         }
     }
 
@@ -2831,10 +2866,7 @@ angle::Result ContextVk::invalidateCurrentTextures(const gl::Context *context)
         mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
         mComputeDirtyBits.set(DIRTY_BIT_TEXTURES);
         mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
-    }
 
-    if (!commandGraphEnabled())
-    {
         ANGLE_TRY(updateActiveTextures(context));
     }
 
@@ -3294,45 +3326,12 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         {
             samplerVk     = nullptr;
             samplerSerial = kZeroSerial;
-            textureVk->onSamplerUse(&mResourceUseList);
         }
         else
         {
             samplerVk     = vk::GetImpl(sampler);
             samplerSerial = samplerVk->getSerial();
-            samplerVk->onSamplerAccess(&mResourceUseList);
         }
-
-        vk::ImageHelper &image = textureVk->getImage();
-
-        // The image should be flushed and ready to use at this point. There may still be
-        // lingering staged updates in its staging buffer for unused texture mip levels or
-        // layers. Therefore we can't verify it has no staged updates right here.
-
-        vk::ImageLayout textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
-        if (program->isCompute())
-        {
-            textureLayout = vk::ImageLayout::ComputeShaderReadOnly;
-        }
-
-        // Ensure the image is in read-only layout
-        if (commandGraphEnabled())
-        {
-            if (image.isLayoutChangeNecessary(textureLayout))
-            {
-                vk::CommandBuffer *srcLayoutChange;
-                VkImageAspectFlags aspectFlags = image.getAspectFlags();
-                ASSERT(aspectFlags != 0);
-                ANGLE_TRY(image.recordCommands(this, &srcLayoutChange));
-                image.changeLayout(aspectFlags, textureLayout, srcLayoutChange);
-            }
-        }
-        else
-        {
-            ANGLE_TRY(onImageRead(image.getAspectFlags(), textureLayout, &image));
-        }
-
-        textureVk->onImageViewUse(&mResourceUseList);
 
         mActiveTextures[textureUnit].texture = textureVk;
         mActiveTextures[textureUnit].sampler = samplerVk;
@@ -3860,8 +3859,17 @@ angle::Result ContextVk::endRenderPass()
     return mRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
 }
 
+void ContextVk::onRenderPassImageWrite(VkImageAspectFlags aspectFlags,
+                                       vk::ImageLayout imageLayout,
+                                       vk::ImageHelper *image)
+{
+    mRenderPassCommands.imageWrite(&mResourceUseList, aspectFlags, imageLayout, image);
+}
+
 CommandBufferHelper::CommandBufferHelper()
-    : mGlobalMemoryBarrierSrcAccess(0),
+    : mImageBarrierSrcStageMask(0),
+      mImageBarrierDstStageMask(0),
+      mGlobalMemoryBarrierSrcAccess(0),
       mGlobalMemoryBarrierDstAccess(0),
       mGlobalMemoryBarrierStages(0)
 {}
@@ -3888,23 +3896,81 @@ void CommandBufferHelper::bufferWrite(vk::ResourceUseList *resourceUseList,
     mGlobalMemoryBarrierStages = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
 }
 
-void CommandBufferHelper::recordBarrier(vk::PrimaryCommandBuffer *primary)
+void CommandBufferHelper::imageBarrier(VkPipelineStageFlags srcStageMask,
+                                       VkPipelineStageFlags dstStageMask,
+                                       const VkImageMemoryBarrier &imageMemoryBarrier)
 {
-    if (mGlobalMemoryBarrierSrcAccess == 0)
+    ASSERT(imageMemoryBarrier.pNext == nullptr);
+    mImageBarrierSrcStageMask |= srcStageMask;
+    mImageBarrierDstStageMask |= dstStageMask;
+    mImageMemoryBarriers.push_back(imageMemoryBarrier);
+}
+
+void CommandBufferHelper::imageRead(vk::ResourceUseList *resourceUseList,
+                                    VkImageAspectFlags aspectFlags,
+                                    vk::ImageLayout imageLayout,
+                                    vk::ImageHelper *image)
+{
+    image->onResourceAccess(resourceUseList);
+    if (image->isLayoutChangeNecessary(imageLayout))
+    {
+        image->changeLayout(aspectFlags, imageLayout, this);
+    }
+}
+
+void CommandBufferHelper::imageWrite(vk::ResourceUseList *resourceUseList,
+                                     VkImageAspectFlags aspectFlags,
+                                     vk::ImageLayout imageLayout,
+                                     vk::ImageHelper *image)
+{
+    image->onResourceAccess(resourceUseList);
+    image->changeLayout(aspectFlags, imageLayout, this);
+}
+
+void CommandBufferHelper::executeBarriers(vk::PrimaryCommandBuffer *primary)
+{
+    if (mImageMemoryBarriers.empty() && mGlobalMemoryBarrierSrcAccess == 0)
     {
         return;
     }
 
+    VkPipelineStageFlags srcStages = 0;
+    VkPipelineStageFlags dstStages = 0;
+
     VkMemoryBarrier memoryBarrier = {};
-    memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
-    memoryBarrier.srcAccessMask   = mGlobalMemoryBarrierSrcAccess;
-    memoryBarrier.dstAccessMask   = mGlobalMemoryBarrierDstAccess;
+    uint32_t memoryBarrierCount   = 0;
 
-    primary->memoryBarrier(mGlobalMemoryBarrierStages, mGlobalMemoryBarrierStages, &memoryBarrier);
+    if (mGlobalMemoryBarrierSrcAccess != 0)
+    {
+        memoryBarrier.sType         = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+        memoryBarrier.srcAccessMask = mGlobalMemoryBarrierSrcAccess;
+        memoryBarrier.dstAccessMask = mGlobalMemoryBarrierDstAccess;
 
-    mGlobalMemoryBarrierSrcAccess = 0;
-    mGlobalMemoryBarrierDstAccess = 0;
-    mGlobalMemoryBarrierStages    = 0;
+        memoryBarrierCount++;
+        srcStages |= mGlobalMemoryBarrierStages;
+        dstStages |= mGlobalMemoryBarrierStages;
+
+        mGlobalMemoryBarrierSrcAccess = 0;
+        mGlobalMemoryBarrierDstAccess = 0;
+        mGlobalMemoryBarrierStages    = 0;
+    }
+
+    if (!mImageMemoryBarriers.empty())
+    {
+        srcStages |= mImageBarrierSrcStageMask;
+        dstStages |= mImageBarrierDstStageMask;
+        primary->pipelineBarrier(srcStages, dstStages, 0, memoryBarrierCount, &memoryBarrier, 0,
+                                 nullptr, static_cast<uint32_t>(mImageMemoryBarriers.size()),
+                                 mImageMemoryBarriers.data());
+        mImageMemoryBarriers.clear();
+        mImageBarrierSrcStageMask = 0;
+        mImageBarrierDstStageMask = 0;
+    }
+    else
+    {
+        primary->pipelineBarrier(srcStages, dstStages, 0, memoryBarrierCount, &memoryBarrier, 0,
+                                 nullptr, 0, nullptr);
+    }
 }
 
 OutsideRenderPassCommandBuffer::OutsideRenderPassCommandBuffer() = default;
@@ -3916,7 +3982,7 @@ void OutsideRenderPassCommandBuffer::flushToPrimary(vk::PrimaryCommandBuffer *pr
     if (empty())
         return;
 
-    recordBarrier(primary);
+    executeBarriers(primary);
     mCommandBuffer.executeCommands(primary->getHandle());
 
     // Restart secondary buffer.
@@ -3969,7 +4035,7 @@ angle::Result RenderPassCommandBuffer::flushToPrimary(ContextVk *contextVk,
     if (empty())
         return angle::Result::Continue;
 
-    recordBarrier(primary);
+    executeBarriers(primary);
 
     // Pull a RenderPass from the cache.
     RenderPassCache &renderPassCache = contextVk->getRenderPassCache();

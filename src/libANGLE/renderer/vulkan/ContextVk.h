@@ -105,14 +105,31 @@ struct CommandBufferHelper : angle::NonCopyable
                      VkAccessFlags writeAccessType,
                      vk::BufferHelper *buffer);
 
+    void imageRead(vk::ResourceUseList *resourceUseList,
+                   VkImageAspectFlags aspectFlags,
+                   vk::ImageLayout imageLayout,
+                   vk::ImageHelper *image);
+
+    void imageWrite(vk::ResourceUseList *resourceUseList,
+                    VkImageAspectFlags aspectFlags,
+                    vk::ImageLayout imageLayout,
+                    vk::ImageHelper *image);
+
+    void imageBarrier(VkPipelineStageFlags srcStageMask,
+                      VkPipelineStageFlags dstStageMask,
+                      const VkImageMemoryBarrier &imageMemoryBarrier);
+
     vk::CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
 
   protected:
     CommandBufferHelper();
     ~CommandBufferHelper();
 
-    void recordBarrier(vk::PrimaryCommandBuffer *primary);
+    void executeBarriers(vk::PrimaryCommandBuffer *primary);
 
+    VkPipelineStageFlags mImageBarrierSrcStageMask;
+    VkPipelineStageFlags mImageBarrierDstStageMask;
+    std::vector<VkImageMemoryBarrier> mImageMemoryBarriers;
     VkFlags mGlobalMemoryBarrierSrcAccess;
     VkFlags mGlobalMemoryBarrierDstAccess;
     VkPipelineStageFlags mGlobalMemoryBarrierStages;
@@ -558,6 +575,10 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     angle::Result onImageWrite(VkImageAspectFlags aspectFlags,
                                vk::ImageLayout imageLayout,
                                vk::ImageHelper *image);
+
+    void onRenderPassImageWrite(VkImageAspectFlags aspectFlags,
+                                vk::ImageLayout imageLayout,
+                                vk::ImageHelper *image);
 
     angle::Result getOutsideRenderPassCommandBuffer(vk::CommandBuffer **commandBufferOut)
     {

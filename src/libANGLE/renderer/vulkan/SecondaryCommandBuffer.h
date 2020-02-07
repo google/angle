@@ -559,7 +559,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     void imageBarrier(VkPipelineStageFlags srcStageMask,
                       VkPipelineStageFlags dstStageMask,
-                      const VkImageMemoryBarrier *imageMemoryBarrier);
+                      const VkImageMemoryBarrier &imageMemoryBarrier);
 
     void memoryBarrier(VkPipelineStageFlags srcStageMask,
                        VkPipelineStageFlags dstStageMask,
@@ -1129,12 +1129,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::fillBuffer(const Buffer &dstBuffer,
 ANGLE_INLINE void SecondaryCommandBuffer::imageBarrier(
     VkPipelineStageFlags srcStageMask,
     VkPipelineStageFlags dstStageMask,
-    const VkImageMemoryBarrier *imageMemoryBarrier)
+    const VkImageMemoryBarrier &imageMemoryBarrier)
 {
     ImageBarrierParams *paramStruct = initCommand<ImageBarrierParams>(CommandID::ImageBarrier);
+    ASSERT(imageMemoryBarrier.pNext == nullptr);
     paramStruct->srcStageMask       = srcStageMask;
     paramStruct->dstStageMask       = dstStageMask;
-    paramStruct->imageMemoryBarrier = *imageMemoryBarrier;
+    paramStruct->imageMemoryBarrier = imageMemoryBarrier;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::memoryBarrier(VkPipelineStageFlags srcStageMask,

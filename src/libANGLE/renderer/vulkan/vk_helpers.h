@@ -892,9 +892,18 @@ class ImageHelper final : public CommandGraphResource
     // purpose of performing a transition (which may then not be issued).
     bool isLayoutChangeNecessary(ImageLayout newLayout) const;
 
+    template <typename CommandBufferT>
     void changeLayout(VkImageAspectFlags aspectMask,
                       ImageLayout newLayout,
-                      CommandBuffer *commandBuffer);
+                      CommandBufferT *commandBuffer)
+    {
+        if (!isLayoutChangeNecessary(newLayout))
+        {
+            return;
+        }
+
+        forceChangeLayoutAndQueue(aspectMask, newLayout, mCurrentQueueFamilyIndex, commandBuffer);
+    }
 
     bool isQueueChangeNeccesary(uint32_t newQueueFamilyIndex) const
     {
@@ -962,10 +971,12 @@ class ImageHelper final : public CommandGraphResource
                                       GLuint *inputSkipBytes);
 
   private:
+    // Generalized to accept both "primary" and "secondary" command buffers.
+    template <typename CommandBufferT>
     void forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
                                    ImageLayout newLayout,
                                    uint32_t newQueueFamilyIndex,
-                                   CommandBuffer *commandBuffer);
+                                   CommandBufferT *commandBuffer);
 
     void stageSubresourceClear(const gl::ImageIndex &index,
                                const angle::Format &format,
