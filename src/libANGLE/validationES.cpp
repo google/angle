@@ -477,28 +477,6 @@ void SetRobustLengthParam(GLsizei *length, GLsizei value)
     }
 }
 
-bool IsETC2EACFormat(const GLenum format)
-{
-    // ES 3.1, Table 8.19
-    switch (format)
-    {
-        case GL_COMPRESSED_R11_EAC:
-        case GL_COMPRESSED_SIGNED_R11_EAC:
-        case GL_COMPRESSED_RG11_EAC:
-        case GL_COMPRESSED_SIGNED_RG11_EAC:
-        case GL_COMPRESSED_RGB8_ETC2:
-        case GL_COMPRESSED_SRGB8_ETC2:
-        case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2:
-        case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2:
-        case GL_COMPRESSED_RGBA8_ETC2_EAC:
-        case GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC:
-            return true;
-
-        default:
-            return false;
-    }
-}
-
 bool ValidTextureTarget(const Context *context, TextureType type)
 {
     switch (type)

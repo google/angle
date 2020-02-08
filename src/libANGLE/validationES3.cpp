@@ -346,6 +346,38 @@ static bool ValidateTexImageFormatCombination(gl::Context *context,
     return true;
 }
 
+static bool ValidateES3CompressedFormatForTexture3D(Context *context, GLenum format)
+{
+    if (IsETC2EACFormat(format))
+    {
+        // ES 3.1, Section 8.7, page 169.
+        context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);
+        return false;
+    }
+
+    if (IsASTC2DFormat(format) && !context->getExtensions().textureCompressionASTCHDRKHR)
+    {
+        // GL_KHR_texture_compression_astc_hdr, TEXTURE_3D is not supported without HDR profile
+        context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArrayASTC);
+        return false;
+    }
+
+    if (IsS3TCFormat(format))
+    {
+        // GL_EXT_texture_compression_s3tc
+        context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArrayS3TC);
+        return false;
+    }
+
+    if (IsRGTCFormat(format))
+    {
+        // GL_EXT_texture_compression_rgtc
+        context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArrayRGTC);
+        return false;
+    }
+    return true;
+}
+
 bool ValidateES3TexImageParametersBase(Context *context,
                                        TextureTarget target,
                                        GLint level,
@@ -477,10 +509,9 @@ bool ValidateES3TexImageParametersBase(Context *context,
     if (isCompressed && texType == TextureType::_3D)
     {
         GLenum compressedDataFormat = isSubImage ? format : internalformat;
-        if (IsETC2EACFormat(compressedDataFormat))
+        if (!ValidateES3CompressedFormatForTexture3D(context, compressedDataFormat))
         {
-            // ES 3.1, Section 8.7, page 169.
-            context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);
+            // Error already generated.
             return false;
         }
     }
@@ -1209,8 +1240,11 @@ bool ValidateES3TexStorageParametersBase(Context *context,
 
     if (formatInfo.compressed && target == TextureType::_3D)
     {
-        context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
-        return false;
+        if (!ValidateES3CompressedFormatForTexture3D(context, formatInfo.internalFormat))
+        {
+            // Error already generated.
+            return false;
+        }
     }
 
     return true;
