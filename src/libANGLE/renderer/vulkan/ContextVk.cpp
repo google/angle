@@ -3437,12 +3437,6 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         // lingering staged updates in its staging buffer for unused texture mip levels or
         // layers. Therefore we can't verify it has no staged updates right here.
 
-        // TODO(syoussefi): make sure front-end syncs textures that are used as images (they are
-        // already notified of content change).
-        // Test: SimpleStateChangeTestES31.DispatchWithImageTextureTexSubImageThenDispatchAgain
-        // http://anglebug.com/3539
-        ANGLE_TRY(textureVk->ensureImageInitialized(this, ImageMipLevels::EnabledLevels));
-
         vk::ImageLayout imageLayout = vk::ImageLayout::AllGraphicsShadersWrite;
         if (program->isCompute())
         {
