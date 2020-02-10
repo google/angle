@@ -32,11 +32,20 @@ namespace angle
 {
 namespace
 {
-constexpr char kTestTimeoutArg[]  = "--test-timeout=";
-constexpr char kFilterFileArg[]   = "--filter-file=";
-constexpr char kResultFileArg[]   = "--results-file=";
-constexpr int kDefaultTestTimeout = 10;
-constexpr int kDefaultBatchSize   = 1000;
+constexpr char kTestTimeoutArg[] = "--test-timeout=";
+constexpr char kFilterFileArg[]  = "--filter-file=";
+constexpr char kResultFileArg[]  = "--results-file=";
+#if defined(NDEBUG)
+constexpr int kDefaultTestTimeout = 20;
+#else
+constexpr int kDefaultTestTimeout  = 60;
+#endif
+#if defined(NDEBUG)
+constexpr int kDefaultBatchTimeout = 240;
+#else
+constexpr int kDefaultBatchTimeout = 600;
+#endif
+constexpr int kDefaultBatchSize = 1000;
 
 const char *ParseFlagValue(const char *flag, const char *argument)
 {
@@ -645,7 +654,7 @@ TestSuite::TestSuite(int *argc, char **argv)
       mTotalResultCount(0),
       mMaxProcesses(NumberOfProcessors()),
       mTestTimeout(kDefaultTestTimeout),
-      mBatchTimeout(60)
+      mBatchTimeout(kDefaultBatchTimeout)
 {
     bool hasFilter            = false;
     bool alsoRunDisabledTests = false;
