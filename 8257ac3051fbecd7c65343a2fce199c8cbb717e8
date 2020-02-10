@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b504ac4a_dc0b1404",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-02-10T23:00:52Z",
+      "side": 1,
+      "message": "It was related to the problem I had mentioned to you before you left. The code with my dirty bits change was only issuing a barrier on a *GL* dirty bit. The clear/draw alternating calls needed a layout transition barrier between each when there was no GL dirty bit triggered. So we needed to do it on a Vulkan dirty bit. So the barrier call needed to be moved back into the setupDraw and not the syncState call.",
+      "parentUuid": "085346f0_e5e56e0b",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 63
+      },
+      "revId": "8257ac3051fbecd7c65343a2fce199c8cbb717e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6a55d94c_fe35202a",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2020-02-10T22:37:51Z",
       "side": 1,
       "message": "You can probably unconditionally do this. No harm in `mImageMemoryBarriers.data()` if it\u0027s empty.",
+      "range": {
+        "startLine": 3960,
+        "startChar": 0,
+        "endLine": 3967,
+        "endChar": 38
+      },
+      "revId": "8257ac3051fbecd7c65343a2fce199c8cbb717e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ab64f18_3affab51",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3967,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-02-10T23:00:52Z",
+      "side": 1,
+      "message": "Probably a good idea.",
+      "parentUuid": "6a55d94c_fe35202a",
       "range": {
         "startLine": 3960,
         "startChar": 0,
