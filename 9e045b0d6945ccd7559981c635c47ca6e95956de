@@ -281,6 +281,24 @@
       "revId": "9e045b0d6945ccd7559981c635c47ca6e95956de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe7f165d_4fef2ec0",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1392,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-02-10T23:16:02Z",
+      "side": 1,
+      "message": "onBufferRead: yes!\n\nhttps://chromium.googlesource.com/angle/angle/+/cd8167fb49c773ddeb3f8029bf10f4ab6c84be69/src/libANGLE/renderer/vulkan/vk_helpers.cpp#3013\n\nonBufferWrite: yes, if it\u0027s a GPU copy. not when mapping.",
+      "parentUuid": "93f529a0_c5611fda",
+      "revId": "9e045b0d6945ccd7559981c635c47ca6e95956de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
