@@ -2915,6 +2915,9 @@ TEST_P(TextureSizeTextureArrayTest, BaseLevelVariesInTextureArray)
 {
     ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
 
+    // http://anglebug.com/4391
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsWindows() && IsD3D11());
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2DA);
     GLsizei size = 64;

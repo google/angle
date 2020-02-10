@@ -2911,6 +2911,9 @@ TEST_P(ComputeShaderTest, ImageSizeMipmapSlice)
     // TODO(xinghua.cao@intel.com): http://anglebug.com/3101
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
 
+    // http://anglebug.com/4392
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsD3D11());
+
     GLTexture texture[2];
     GLFramebuffer framebuffer;
     const char kCS[] = R"(#version 310 es
