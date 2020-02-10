@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "085346f0_e5e56e0b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-02-10T22:37:51Z",
+      "side": 1,
+      "message": "I\u0027m curious to know how exactly this happened. What was missing and what\u0027s fixing it now?",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 63
+      },
+      "revId": "8257ac3051fbecd7c65343a2fce199c8cbb717e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a55d94c_fe35202a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3967,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-02-10T22:37:51Z",
+      "side": 1,
+      "message": "You can probably unconditionally do this. No harm in `mImageMemoryBarriers.data()` if it\u0027s empty.",
+      "range": {
+        "startLine": 3960,
+        "startChar": 0,
+        "endLine": 3967,
+        "endChar": 38
+      },
+      "revId": "8257ac3051fbecd7c65343a2fce199c8cbb717e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
