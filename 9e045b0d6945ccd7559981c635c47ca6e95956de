@@ -263,6 +263,24 @@
       "revId": "9e045b0d6945ccd7559981c635c47ca6e95956de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93f529a0_c5611fda",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1392,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-02-10T22:40:51Z",
+      "side": 1,
+      "message": "Is `onBufferRead` now called on staging buffers when they are flushed? Is there a corresponding `onBufferWrite` somewhere when executing `copyAndStageImageSubresource`?",
+      "parentUuid": "5f021171_acb8c696",
+      "revId": "9e045b0d6945ccd7559981c635c47ca6e95956de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
