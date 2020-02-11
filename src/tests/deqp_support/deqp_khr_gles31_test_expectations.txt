@@ -123,7 +123,7 @@
 ////
 
 // Crashes on Android
-3520 VULKAN ANDROID : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength* = SKIP
+4107 VULKAN ANDROID : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength* = SKIP
 
 // Passing on recent drivers:
 3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.* = FAIL
