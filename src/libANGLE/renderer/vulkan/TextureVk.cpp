@@ -1389,6 +1389,8 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk,
         }
     }
 
+    // This global barrier is no longer needed without the command graph as barriers are correctly
+    // inserted using the normal command APIs.
     if (contextVk->commandGraphEnabled())
     {
         // Create a new node for the image and add a global memory barrier for the staging buffers.

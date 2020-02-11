@@ -591,10 +591,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     angle::Result getOutsideRenderPassCommandBuffer(vk::CommandBuffer **commandBufferOut)
     {
-        if (!mRenderPassCommands.empty())
-        {
-            ANGLE_TRY(endRenderPass());
-        }
+        ANGLE_TRY(endRenderPass());
         *commandBufferOut = &mOutsideRenderPassCommands.getCommandBuffer();
         return angle::Result::Continue;
     }
@@ -773,7 +770,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateActiveImages(const gl::Context *context,
-                                     vk::CommandGraphResource *recorder);
+                                     vk::CommandGraphResource *recorder,
+                                     CommandBufferHelper *commandBufferHelper);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
     ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
@@ -833,10 +831,12 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // Common parts of the common dirty bit handlers.
     angle::Result handleDirtyTexturesImpl(const gl::Context *context,
                                           vk::CommandBuffer *commandBuffer,
-                                          vk::CommandGraphResource *recorder);
+                                          vk::CommandGraphResource *recorder,
+                                          CommandBufferHelper *commandBufferHelper);
     angle::Result handleDirtyShaderResourcesImpl(const gl::Context *context,
                                                  vk::CommandBuffer *commandBuffer,
-                                                 vk::CommandGraphResource *recorder);
+                                                 vk::CommandGraphResource *recorder,
+                                                 CommandBufferHelper *commandBufferHelper);
     void handleDirtyDriverUniformsBindingImpl(vk::CommandBuffer *commandBuffer,
                                               VkPipelineBindPoint bindPoint,
                                               const DriverUniformsDescriptorSet &driverUniforms);
@@ -857,7 +857,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     angle::Result submitFrame(const VkSubmitInfo &submitInfo,
                               vk::PrimaryCommandBuffer &&commandBuffer);
     angle::Result flushCommandGraph(vk::PrimaryCommandBuffer *commandBatch);
-    void memoryBarrierImpl(GLbitfield barriers, VkPipelineStageFlags stageMask);
+    angle::Result memoryBarrierImpl(GLbitfield barriers, VkPipelineStageFlags stageMask);
 
     angle::Result synchronizeCpuGpuTime();
     angle::Result traceGpuEventImpl(vk::PrimaryCommandBuffer *commandBuffer,
