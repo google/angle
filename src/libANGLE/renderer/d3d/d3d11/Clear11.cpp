@@ -295,7 +295,6 @@ angle::Result Clear11::ensureResourcesInitialized(const gl::Context *context)
     mBlendStateKey.blendState.blendEquationRGB      = GL_FUNC_ADD;
     mBlendStateKey.blendState.blendEquationAlpha    = GL_FUNC_ADD;
     mBlendStateKey.blendState.sampleAlphaToCoverage = false;
-    mBlendStateKey.blendState.dither                = true;
 
     mResourcesInitialized = true;
     return angle::Result::Continue;

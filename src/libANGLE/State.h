@@ -207,7 +207,7 @@ class State : angle::NonCopyable
     const Rectangle &getScissor() const { return mScissor; }
 
     // Dither state toggle & query
-    bool isDitherEnabled() const { return mBlend.dither; }
+    bool isDitherEnabled() const { return mRasterizer.dither; }
     void setDither(bool enabled);
 
     // Generic state toggle & query

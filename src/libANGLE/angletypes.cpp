@@ -27,6 +27,12 @@ RasterizerState::RasterizerState()
     polygonOffsetUnits  = 0.0f;
     pointDrawMode       = false;
     multiSample         = false;
+    dither              = true;
+}
+
+RasterizerState::RasterizerState(const RasterizerState &other)
+{
+    memcpy(this, &other, sizeof(RasterizerState));
 }
 
 bool operator==(const RasterizerState &a, const RasterizerState &b)
@@ -51,7 +57,6 @@ BlendState::BlendState()
     blendEquationRGB      = GL_FUNC_ADD;
     blendEquationAlpha    = GL_FUNC_ADD;
     sampleAlphaToCoverage = false;
-    dither                = true;
     colorMaskRed          = true;
     colorMaskGreen        = true;
     colorMaskBlue         = true;

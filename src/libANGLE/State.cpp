@@ -898,7 +898,7 @@ void State::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
 
 void State::setDither(bool enabled)
 {
-    mBlend.dither = enabled;
+    mRasterizer.dither = enabled;
     mDirtyBits.set(DIRTY_BIT_DITHER_ENABLED);
 }
 
@@ -1906,7 +1906,7 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
             *params = mBlend.blend;
             break;
         case GL_DITHER:
-            *params = mBlend.dither;
+            *params = mRasterizer.dither;
             break;
         case GL_TRANSFORM_FEEDBACK_ACTIVE:
             *params = getCurrentTransformFeedback()->isActive() ? GL_TRUE : GL_FALSE;

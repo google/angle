@@ -201,7 +201,7 @@ void StateManager9::syncState(const gl::State &state, const gl::State::DirtyBits
                 break;
             }
             case gl::State::DIRTY_BIT_DITHER_ENABLED:
-                if (state.getBlendState().dither != mCurBlendState.dither)
+                if (state.getRasterizerState().dither != mCurRasterState.dither)
                 {
                     mDirtyBits.set(DIRTY_BIT_DITHER);
                 }
@@ -361,7 +361,7 @@ void StateManager9::setBlendDepthRasterStates(const gl::State &glState, unsigned
                              blendState.colorMaskGreen, blendState.colorMaskAlpha);
                 break;
             case DIRTY_BIT_DITHER:
-                setDither(blendState.dither);
+                setDither(rasterState.dither);
                 break;
             case DIRTY_BIT_CULL_MODE:
                 setCullMode(rasterState.cullFace, rasterState.cullMode, rasterState.frontFace);
@@ -763,7 +763,7 @@ void StateManager9::setBlendEnabled(bool enabled)
 void StateManager9::setDither(bool dither)
 {
     mRenderer9->getDevice()->SetRenderState(D3DRS_DITHERENABLE, dither ? TRUE : FALSE);
-    mCurBlendState.dither = dither;
+    mCurRasterState.dither = dither;
 }
 
 // TODO(dianx) one bit for color mask

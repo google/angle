@@ -127,6 +127,7 @@ struct RasterizerState final
 {
     // This will zero-initialize the struct, including padding.
     RasterizerState();
+    RasterizerState(const RasterizerState &other);
 
     bool cullFace;
     CullFaceMode cullMode;
@@ -140,6 +141,8 @@ struct RasterizerState final
     bool multiSample;
 
     bool rasterizerDiscard;
+
+    bool dither;
 };
 
 bool operator==(const RasterizerState &a, const RasterizerState &b);
@@ -167,8 +170,6 @@ struct BlendState final
     bool colorMaskAlpha;
 
     bool sampleAlphaToCoverage;
-
-    bool dither;
 };
 
 bool operator==(const BlendState &a, const BlendState &b);

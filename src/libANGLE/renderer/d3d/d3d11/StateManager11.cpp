@@ -711,7 +711,6 @@ StateManager11::StateManager11(Renderer11 *renderer)
     mCurBlendState.colorMaskGreen        = true;
     mCurBlendState.colorMaskAlpha        = true;
     mCurBlendState.sampleAlphaToCoverage = false;
-    mCurBlendState.dither                = false;
 
     mCurDepthStencilState.depthTest                = false;
     mCurDepthStencilState.depthFunc                = GL_LESS;
@@ -738,6 +737,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
     mCurRasterState.polygonOffsetUnits  = 0.0f;
     mCurRasterState.pointDrawMode       = false;
     mCurRasterState.multiSample         = false;
+    mCurRasterState.dither              = false;
 
     // Start with all internal dirty bits set except DIRTY_BIT_COMPUTE_SRVUAV_STATE and
     // DIRTY_BIT_GRAPHICS_SRVUAV_STATE.
@@ -993,9 +993,9 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 }
                 break;
             case gl::State::DIRTY_BIT_DITHER_ENABLED:
-                if (state.getBlendState().dither != mCurBlendState.dither)
+                if (state.getRasterizerState().dither != mCurRasterState.dither)
                 {
-                    mInternalDirtyBits.set(DIRTY_BIT_BLEND_STATE);
+                    mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
                 }
                 break;
             case gl::State::DIRTY_BIT_COLOR_MASK:
