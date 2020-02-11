@@ -28,7 +28,7 @@ enum class CacheOpResult
     GetMemoryTooSmall,
     GetSuccess,
     ValueNotSet,
-    EnumCount = ValueNotSet,
+    EnumCount
 };
 
 angle::PackedEnumMap<CacheOpResult, std::string> kCacheOpToString = {
