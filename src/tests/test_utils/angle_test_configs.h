@@ -59,6 +59,8 @@ struct PlatformParameters
     EGLint minorVersion;
 };
 
+const char *GetRendererName(EGLint renderer);
+
 bool operator<(const PlatformParameters &a, const PlatformParameters &b);
 bool operator==(const PlatformParameters &a, const PlatformParameters &b);
 std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp);

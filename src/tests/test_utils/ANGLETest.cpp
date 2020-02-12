@@ -271,6 +271,18 @@ GLColor32F ReadColor32F(GLint x, GLint y)
     EXPECT_GL_NO_ERROR();
     return actual;
 }
+
+void LoadEntryPointsWithUtilLoader()
+{
+#if defined(ANGLE_USE_UTIL_LOADER)
+    PFNEGLGETPROCADDRESSPROC getProcAddress;
+    ANGLETestEnvironment::GetEGLLibrary()->getAs("eglGetProcAddress", &getProcAddress);
+    ASSERT_NE(nullptr, getProcAddress);
+
+    LoadEGL(getProcAddress);
+    LoadGLES(getProcAddress);
+#endif  // defined(ANGLE_USE_UTIL_LOADER)
+}
 }  // namespace angle
 
 using namespace angle;
@@ -512,14 +524,7 @@ void ANGLETestBase::ANGLETestSetUp()
 
     if (mCurrentParams->noFixture)
     {
-#if defined(ANGLE_USE_UTIL_LOADER)
-        PFNEGLGETPROCADDRESSPROC getProcAddress;
-        ANGLETestEnvironment::GetEGLLibrary()->getAs("eglGetProcAddress", &getProcAddress);
-        ASSERT_NE(nullptr, getProcAddress);
-
-        LoadEGL(getProcAddress);
-        LoadGLES(getProcAddress);
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
+        LoadEntryPointsWithUtilLoader();
         return;
     }
 
