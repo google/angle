@@ -173,15 +173,6 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
     std::vector<const char *> disabledFeatureOverrides;
     std::vector<const char *> enabledFeatureOverrides;
 
-    if (params.commandGraphFeature == EGL_TRUE)
-    {
-        enabledFeatureOverrides.push_back("command_graph");
-    }
-    else if (params.commandGraphFeature == EGL_FALSE)
-    {
-        disabledFeatureOverrides.push_back("command_graph");
-    }
-
     if (params.transformFeedbackFeature == EGL_FALSE)
     {
         disabledFeatureOverrides.push_back("supports_transform_feedback_extension");

@@ -187,15 +187,6 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_NoVirtual";
     }
 
-    if (pp.eglParameters.commandGraphFeature == EGL_FALSE)
-    {
-        stream << "_NoCommandGraph";
-    }
-    else if (pp.eglParameters.commandGraphFeature == EGL_TRUE)
-    {
-        stream << "_CommandGraph";
-    }
-
     if (pp.eglParameters.transformFeedbackFeature == EGL_FALSE)
     {
         stream << "_NoTransformFeedback";

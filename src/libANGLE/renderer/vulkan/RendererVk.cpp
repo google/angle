@@ -1595,7 +1595,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     ANGLE_FEATURE_CONDITION((&mFeatures), disableFlippingBlitWithCommand,
                             IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), commandGraph, true);
+    ANGLE_FEATURE_CONDITION((&mFeatures), commandGraph, false);
 
     ANGLE_FEATURE_CONDITION(
         (&mFeatures), supportsExternalMemoryHost,
