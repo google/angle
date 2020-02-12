@@ -292,9 +292,19 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         {
             clearBuffersWithRenderPassLoadOp = clearColorBuffers;
         }
-        ANGLE_TRY(clearWithRenderPassOp(
-            contextVk, scissoredRenderArea, clearBuffersWithRenderPassLoadOp, clearDepth,
-            clearStencilWithRenderPassLoadOp, clearColorValue, modifiedDepthStencilValue));
+
+        if (contextVk->commandGraphEnabled())
+        {
+            ANGLE_TRY(clearWithRenderPassOp(
+                contextVk, scissoredRenderArea, clearBuffersWithRenderPassLoadOp, clearDepth,
+                clearStencilWithRenderPassLoadOp, clearColorValue, modifiedDepthStencilValue));
+        }
+        else
+        {
+            ANGLE_TRY(contextVk->clearWithRenderPassOp(
+                scissoredRenderArea, clearBuffersWithRenderPassLoadOp, clearDepth,
+                clearStencilWithRenderPassLoadOp, clearColorValue, modifiedDepthStencilValue));
+        }
 
         // Fallback to other methods for whatever isn't cleared here.
         clearDepth = false;
@@ -1246,6 +1256,7 @@ angle::Result FramebufferVk::clearWithRenderPassOp(
     const VkClearColorValue &clearColorValue,
     const VkClearDepthStencilValue &clearDepthStencilValue)
 {
+    ASSERT(contextVk->commandGraphEnabled());
     // Start a new render pass if:
     //
     // - no render pass has started,

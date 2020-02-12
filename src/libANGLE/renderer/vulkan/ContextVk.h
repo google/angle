@@ -314,6 +314,12 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                                        gl::PrimitiveMode mode,
                                        gl::DrawElementsType type,
                                        const void *indirect) override;
+    angle::Result clearWithRenderPassOp(const gl::Rectangle &clearArea,
+                                        gl::DrawBufferMask clearColorBuffers,
+                                        bool clearDepth,
+                                        bool clearStencil,
+                                        const VkClearColorValue &clearColorValue,
+                                        const VkClearDepthStencilValue &clearDepthStencilValue);
 
     // Device loss
     gl::GraphicsResetStatus getResetStatus() override;

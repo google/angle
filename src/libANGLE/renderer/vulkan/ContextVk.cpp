@@ -46,6 +46,10 @@ namespace rx
 
 namespace
 {
+// The value to assign an alpha channel that's emulated.  The type is unsigned int, though it will
+// automatically convert to the actual data type.
+constexpr unsigned int kEmulatedAlphaValue = 1;
+
 // For shader uniforms such as gl_DepthRange and the viewport size.
 struct GraphicsDriverUniforms
 {
@@ -2185,6 +2189,93 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
 
     commandBuffer->drawIndexedIndirect(currentIndirectBuf->getBuffer(), currentIndirectBufOffset, 1,
                                        0);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::clearWithRenderPassOp(
+    const gl::Rectangle &clearArea,
+    gl::DrawBufferMask clearColorBuffers,
+    bool clearDepth,
+    bool clearStencil,
+    const VkClearColorValue &clearColorValue,
+    const VkClearDepthStencilValue &clearDepthStencilValue)
+{
+    ASSERT(!commandGraphEnabled());
+    // Start a new render pass if:
+    //
+    // - no render pass has started,
+    // - there is a render pass started but it contains commands; we cannot modify its ops, so new
+    // render pass is needed,
+    // - the current render area doesn't match the clear area.  We need the render area to be
+    // exactly as specified by the scissor for the loadOp to clear only that area.  See
+    // ContextVk::updateScissor for more information.
+    vk::FramebufferHelper *framebuffer = mDrawFramebuffer->getFramebuffer();
+    if (!framebuffer->valid() || !framebuffer->renderPassStartedButEmpty() ||
+        framebuffer->getRenderPassRenderArea() != clearArea)
+    {
+        mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
+
+        ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, clearArea, &mRenderPassCommandBuffer));
+    }
+    else
+    {
+        mOutsideRenderPassCommands.flushToPrimary(&mPrimaryCommands);
+    }
+
+    size_t attachmentIndexVk = 0;
+
+    // Go through clearColorBuffers and set the appropriate loadOp and clear values.
+    for (size_t colorIndexGL : mDrawFramebuffer->getState().getEnabledDrawBuffers())
+    {
+        if (clearColorBuffers.test(colorIndexGL))
+        {
+            RenderTargetVk *renderTarget = mDrawFramebuffer->getColorDrawRenderTarget(colorIndexGL);
+
+            // If the render target doesn't have alpha, but its emulated format has it, clear the
+            // alpha to 1.
+            VkClearColorValue value = clearColorValue;
+            if (mDrawFramebuffer->getEmulatedAlphaAttachmentMask()[colorIndexGL])
+            {
+                const vk::Format &format = renderTarget->getImageFormat();
+                if (format.vkFormatIsInt)
+                {
+                    if (format.vkFormatIsUnsigned)
+                    {
+                        value.uint32[3] = kEmulatedAlphaValue;
+                    }
+                    else
+                    {
+                        value.int32[3] = kEmulatedAlphaValue;
+                    }
+                }
+                else
+                {
+                    value.float32[3] = kEmulatedAlphaValue;
+                }
+            }
+
+            mRenderPassCommands.clearRenderPassColorAttachment(attachmentIndexVk, value);
+        }
+        ++attachmentIndexVk;
+    }
+
+    // Set the appropriate loadOp and clear values for depth and stencil.
+    RenderTargetVk *depthStencilRenderTarget = mDrawFramebuffer->getDepthStencilRenderTarget();
+    if (depthStencilRenderTarget)
+    {
+        if (clearDepth)
+        {
+            getRenderPassCommandBuffer().clearRenderPassDepthAttachment(
+                attachmentIndexVk, clearDepthStencilValue.depth);
+        }
+
+        if (clearStencil)
+        {
+            getRenderPassCommandBuffer().clearRenderPassStencilAttachment(
+                attachmentIndexVk, clearDepthStencilValue.stencil);
+        }
+    }
+
     return angle::Result::Continue;
 }
 
