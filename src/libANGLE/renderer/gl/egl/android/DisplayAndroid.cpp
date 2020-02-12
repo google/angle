@@ -152,7 +152,7 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
         mConfig           = configWithFormat;
     }
 
-    ANGLE_TRY(createRenderer(EGL_NO_CONTEXT, true, &mRenderer));
+    ANGLE_TRY(createRendererHelper(EGL_NO_CONTEXT, true, &mRenderer));
 
     const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
     if (maxVersion < gl::Version(2, 0))
@@ -210,27 +210,8 @@ ContextImpl *DisplayAndroid::createContext(const gl::State &state,
     {
         renderer = mRenderer;
     }
-    else
-    {
-        EGLContext nativeShareContext = EGL_NO_CONTEXT;
-        if (shareContext)
-        {
-            ContextEGL *shareContextEGL = GetImplAs<ContextEGL>(shareContext);
-            nativeShareContext          = shareContextEGL->getContext();
-        }
 
-        // Create a new renderer for this context.  It only needs to share with the user's requested
-        // share context because there are no internal resources in DisplayAndroid that are shared
-        // at the GL level.
-        egl::Error error = createRenderer(nativeShareContext, false, &renderer);
-        if (error.isError())
-        {
-            ERR() << "Failed to create a shared renderer: " << error.getMessage();
-            return nullptr;
-        }
-    }
-
-    return new ContextEGL(state, errorSet, renderer);
+    return new ContextEGL(state, errorSet, this, shareContext, renderer);
 }
 
 bool DisplayAndroid::isValidNativeWindow(EGLNativeWindowType window) const
@@ -286,7 +267,11 @@ egl::Error DisplayAndroid::makeCurrent(egl::Surface *drawSurface,
     if (context)
     {
         ContextEGL *contextEGL = GetImplAs<ContextEGL>(context);
-        newContext             = contextEGL->getContext();
+        if (!contextEGL->getRenderer() && contextEGL->initialize() != angle::Result::Continue)
+        {
+            return egl::Error(mEGL->getError(), "eglMakeCurrent failed");
+        }
+        newContext = contextEGL->getContext();
     }
 
     // The context should never change when context virtualization is being used, even when a null
@@ -346,16 +331,16 @@ void DisplayAndroid::destroyNativeContext(EGLContext context)
 
 void DisplayAndroid::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
+    DisplayEGL::generateExtensions(outExtensions);
+
     // Surfaceless can be support if the native driver supports it or we know that we are running on
     // a single thread (mVirtualizedContexts == true)
     outExtensions->surfacelessContext = mSupportsSurfaceless || mVirtualizedContexts;
-
-    DisplayEGL::generateExtensions(outExtensions);
 }
 
-egl::Error DisplayAndroid::createRenderer(EGLContext shareContext,
-                                          bool makeNewContextCurrent,
-                                          std::shared_ptr<RendererEGL> *outRenderer)
+egl::Error DisplayAndroid::createRendererHelper(EGLContext shareContext,
+                                                bool makeNewContextCurrent,
+                                                std::shared_ptr<RendererEGL> *outRenderer)
 {
     EGLContext context = EGL_NO_CONTEXT;
     native_egl::AttributeVector attribs;
@@ -444,6 +429,12 @@ WorkerContext *DisplayAndroid::createWorkerContext(std::string *infoLog,
         return nullptr;
     }
     return new WorkerContextAndroid(context, mEGL, mDummyPbuffer);
+}
+
+egl::Error DisplayAndroid::createRenderer(EGLContext shareContext,
+                                          std::shared_ptr<RendererEGL> *outRenderer)
+{
+    return createRendererHelper(shareContext, false, outRenderer);
 }
 
 }  // namespace rx
