@@ -70,6 +70,30 @@
       "revId": "246fd42457a141140d2991fb3091f7e17064fc55",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22b67763_43433eec",
+        "filename": "src/tests/test_utils/angle_test_instantiate.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-02-13T17:37:06Z",
+      "side": 1,
+      "message": "Understood. Just a point of order - your initial concern was that I was submitting code you did not approve. The code submitted does not significantly differ from the code you approved.\n\nAnyway I\u0027ll proceed with removing the dead code if that\u0027s good with you.",
+      "parentUuid": "a1ad7ec6_14648500",
+      "range": {
+        "startLine": 129,
+        "startChar": 8,
+        "endLine": 129,
+        "endChar": 26
+      },
+      "revId": "246fd42457a141140d2991fb3091f7e17064fc55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
