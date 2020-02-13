@@ -2444,7 +2444,7 @@ void Context::finish()
 void Context::insertEventMarker(GLsizei length, const char *marker)
 {
     ASSERT(mImplementation);
-    mImplementation->insertEventMarker(length, marker);
+    ANGLE_CONTEXT_TRY(mImplementation->insertEventMarker(length, marker));
 }
 
 void Context::pushGroupMarker(GLsizei length, const char *marker)
@@ -2455,18 +2455,18 @@ void Context::pushGroupMarker(GLsizei length, const char *marker)
     {
         // From the EXT_debug_marker spec,
         // "If <marker> is null then an empty string is pushed on the stack."
-        mImplementation->pushGroupMarker(length, "");
+        ANGLE_CONTEXT_TRY(mImplementation->pushGroupMarker(length, ""));
     }
     else
     {
-        mImplementation->pushGroupMarker(length, marker);
+        ANGLE_CONTEXT_TRY(mImplementation->pushGroupMarker(length, marker));
     }
 }
 
 void Context::popGroupMarker()
 {
     ASSERT(mImplementation);
-    mImplementation->popGroupMarker();
+    ANGLE_CONTEXT_TRY(mImplementation->popGroupMarker());
 }
 
 void Context::bindUniformLocation(ShaderProgramID program, GLint location, const GLchar *name)

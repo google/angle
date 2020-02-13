@@ -169,9 +169,9 @@ class ContextImpl : public GLImplFactory
     virtual std::string getRendererDescription() const = 0;
 
     // EXT_debug_marker
-    virtual void insertEventMarker(GLsizei length, const char *marker) = 0;
-    virtual void pushGroupMarker(GLsizei length, const char *marker)   = 0;
-    virtual void popGroupMarker()                                      = 0;
+    virtual angle::Result insertEventMarker(GLsizei length, const char *marker) = 0;
+    virtual angle::Result pushGroupMarker(GLsizei length, const char *marker)   = 0;
+    virtual angle::Result popGroupMarker()                                      = 0;
 
     // KHR_debug
     virtual angle::Result pushDebugGroup(const gl::Context *context,

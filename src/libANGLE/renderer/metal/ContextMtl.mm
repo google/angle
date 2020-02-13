@@ -483,11 +483,19 @@ std::string ContextMtl::getRendererDescription() const
 }
 
 // EXT_debug_marker
-void ContextMtl::insertEventMarker(GLsizei length, const char *marker) {}
-void ContextMtl::pushGroupMarker(GLsizei length, const char *marker) {}
-void ContextMtl::popGroupMarker()
+angle::Result ContextMtl::insertEventMarker(GLsizei length, const char *marker)
 {
-    // TODO(hqle
+    return angle::Result::Continue;
+}
+
+angle::Result ContextMtl::pushGroupMarker(GLsizei length, const char *marker)
+{
+    return angle::Result::Continue;
+}
+
+angle::Result ContextMtl::popGroupMarker()
+{
+    return angle::Result::Continue;
 }
 
 // KHR_debug

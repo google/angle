@@ -2303,7 +2303,7 @@ std::string ContextVk::getRendererDescription() const
     return mRenderer->getRendererDescription();
 }
 
-void ContextVk::insertEventMarker(GLsizei length, const char *marker)
+angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 {
     if (commandGraphEnabled())
     {
@@ -2315,9 +2315,11 @@ void ContextVk::insertEventMarker(GLsizei length, const char *marker)
         // TODO(jmadill): http://anglebug.com/4029
         UNIMPLEMENTED();
     }
+
+    return angle::Result::Continue;
 }
 
-void ContextVk::pushGroupMarker(GLsizei length, const char *marker)
+angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
 {
     if (commandGraphEnabled())
     {
@@ -2329,9 +2331,11 @@ void ContextVk::pushGroupMarker(GLsizei length, const char *marker)
         // TODO(jmadill): http://anglebug.com/4029
         UNIMPLEMENTED();
     }
+
+    return angle::Result::Continue;
 }
 
-void ContextVk::popGroupMarker()
+angle::Result ContextVk::popGroupMarker()
 {
     if (commandGraphEnabled())
     {
@@ -2342,6 +2346,8 @@ void ContextVk::popGroupMarker()
         // TODO(jmadill): http://anglebug.com/4029
         UNIMPLEMENTED();
     }
+
+    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::pushDebugGroup(const gl::Context *context,

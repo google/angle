@@ -303,18 +303,20 @@ std::string Context9::getRendererDescription() const
     return mRenderer->getRendererDescription();
 }
 
-void Context9::insertEventMarker(GLsizei length, const char *marker)
+angle::Result Context9::insertEventMarker(GLsizei length, const char *marker)
 {
     mRenderer->getAnnotator()->setMarker(marker);
+    return angle::Result::Continue;
 }
 
-void Context9::pushGroupMarker(GLsizei length, const char *marker)
+angle::Result Context9::pushGroupMarker(GLsizei length, const char *marker)
 {
     mRenderer->getAnnotator()->beginEvent(marker, marker);
     mMarkerStack.push(std::string(marker));
+    return angle::Result::Continue;
 }
 
-void Context9::popGroupMarker()
+angle::Result Context9::popGroupMarker()
 {
     const char *marker = nullptr;
     if (!mMarkerStack.empty())
@@ -323,6 +325,7 @@ void Context9::popGroupMarker()
         mMarkerStack.pop();
         mRenderer->getAnnotator()->endEvent(marker);
     }
+    return angle::Result::Continue;
 }
 
 angle::Result Context9::pushDebugGroup(const gl::Context *context,
@@ -331,15 +334,13 @@ angle::Result Context9::pushDebugGroup(const gl::Context *context,
                                        const std::string &message)
 {
     // Fall through to the EXT_debug_marker functions
-    pushGroupMarker(static_cast<GLsizei>(message.size()), message.c_str());
-    return angle::Result::Continue;
+    return pushGroupMarker(static_cast<GLsizei>(message.size()), message.c_str());
 }
 
 angle::Result Context9::popDebugGroup(const gl::Context *context)
 {
     // Fall through to the EXT_debug_marker functions
-    popGroupMarker();
-    return angle::Result::Continue;
+    return popGroupMarker();
 }
 
 angle::Result Context9::syncState(const gl::Context *context,
