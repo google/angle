@@ -47,6 +47,13 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.setTextureExtensionSupport(mNativeTextureCaps);
 
+    // To ensure that ETC2/EAC formats are enabled only on hardware that supports them natively,
+    // this flag is not set by the function above and must be set explicitly. It exposes
+    // ANGLE_compressed_texture_etc extension string.
+    mNativeExtensions.compressedTextureETC =
+        (mPhysicalDeviceFeatures.textureCompressionETC2 == VK_TRUE) &&
+        gl::DetermineCompressedTextureETCSupport(mNativeTextureCaps);
+
     // Vulkan technically only supports the LDR profile but driver all appear to support the HDR
     // profile as well. http://anglebug.com/1185#c8
     mNativeExtensions.textureCompressionASTCHDRKHR = mNativeExtensions.textureCompressionASTCLDRKHR;
