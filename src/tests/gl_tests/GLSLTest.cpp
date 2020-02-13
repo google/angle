@@ -3280,10 +3280,6 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysSampler)
 // Test that structs containing arrays of samplers work as expected.
 TEST_P(GLSLTest_ES31, StructArraySampler)
 {
-    // ASAN error on vulkan backend; ASAN tests only enabled on Mac Swangle
-    // (http://crbug.com/1029378)
-    ANGLE_SKIP_TEST_IF(IsOSX() && isSwiftshader());
-
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision mediump float;\n"
@@ -3299,13 +3295,14 @@ TEST_P(GLSLTest_ES31, StructArraySampler)
     glUseProgram(program.get());
     GLTexture textures[2];
     GLColor expected = MakeGLColor(32, 64, 96, 255);
+    GLubyte data[6]  = {};  // Two bytes of padding, so that texture can be initialized with 4 bytes
+    memcpy(data, expected.data(), sizeof(expected));
     for (int i = 0; i < 2; i++)
     {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, textures[i]);
         // Each element provides two components.
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                     expected.data() + 2 * i);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data + 2 * i);
         std::stringstream uniformName;
         uniformName << "test.data[" << i << "]";
         // Then send it as a uniform
