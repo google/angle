@@ -441,6 +441,18 @@ void WriteCppReplayForCall(const CallCapture &call,
         callOut << "gShaderProgramMap[" << id << "] = ";
     }
 
+    if (call.entryPoint == gl::EntryPoint::MapBufferRange)
+    {
+        GLbitfield access =
+            call.params.getParam("access", ParamType::TGLbitfield, 3).value.GLbitfieldVal;
+
+        if (access & GL_MAP_WRITE_BIT)
+        {
+            // Track the returned pointer so we update its data
+            callOut << "gMappedBufferData = ";
+        }
+    }
+
     callOut << call.name() << "(";
 
     bool first = true;
@@ -752,6 +764,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     header << "// Global state\n";
     header << "\n";
     header << "extern uint8_t *gBinaryData;\n";
+    header << "extern void *gMappedBufferData;\n";
 
     source << "#include \"" << FmtCapturePrefix(contextId, captureLabel) << ".h\"\n";
     source << "\n";
@@ -778,6 +791,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     }
 
     source << "uint8_t *gBinaryData = nullptr;\n";
+    source << "void* gMappedBufferData = nullptr;\n";
 
     if (readBufferSize > 0)
     {
@@ -850,6 +864,14 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
         source << "    memcpy(gClientArrays[arrayIndex], data, size);\n";
         source << "}\n";
     }
+
+    header << "void UpdateClientBufferData(const void *source, GLsizei size);\n";
+    source << "\n";
+    source << "void UpdateClientBufferData(const void *source, GLsizei size)";
+    source << "\n";
+    source << "{\n";
+    source << "    memcpy(gMappedBufferData, source, size);\n";
+    source << "}\n";
 
     for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
     {
@@ -2301,6 +2323,47 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, const Call
             break;
         }
 
+        case gl::EntryPoint::MapBuffer:
+        case gl::EntryPoint::MapBufferOES:
+        case gl::EntryPoint::MapBufferRangeEXT:
+        case gl::EntryPoint::UnmapBufferOES:
+        case gl::EntryPoint::UnmapNamedBuffer:
+        {
+            UNIMPLEMENTED();
+            break;
+        }
+
+        case gl::EntryPoint::MapBufferRange:
+        {
+            // Use the access bits to see if contents may be modified
+            GLbitfield access =
+                call.params.getParam("access", ParamType::TGLbitfield, 3).value.GLbitfieldVal;
+
+            if (access & GL_MAP_WRITE_BIT)
+            {
+                // If this buffer was mapped writable, we don't have any visibility into what
+                // happens to it. Therefore, remember the details about it, and we'll read it back
+                // on Unmap to repopulate it during replay.
+
+                gl::BufferBinding target =
+                    call.params.getParam("targetPacked", ParamType::TBufferBinding, 0)
+                        .value.BufferBindingVal;
+                GLintptr offset =
+                    call.params.getParam("offset", ParamType::TGLintptr, 1).value.GLintptrVal;
+                GLsizeiptr length =
+                    call.params.getParam("length", ParamType::TGLsizeiptr, 2).value.GLsizeiptrVal;
+
+                mBufferDataMap[target] = std::make_pair(offset, length);
+            }
+            break;
+        }
+
+        case gl::EntryPoint::UnmapBuffer:
+        {
+            // See if we need to capture the buffer contents
+            captureMappedBufferSnapshot(context, call);
+            break;
+        }
         default:
             break;
     }
@@ -2365,6 +2428,57 @@ void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
                 std::max(mClientArraySizes[attribIndex], bytesToCapture);
         }
     }
+}
+
+void FrameCapture::captureMappedBufferSnapshot(const gl::Context *context, const CallCapture &call)
+{
+    // If the buffer was mapped writable, we need to restore its data, since we have no visibility
+    // into what the client did to the buffer while mapped
+    // This sequence will result in replay calls like this:
+    //   ...
+    //   gMappedBufferData = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, 65536, GL_MAP_WRITE_BIT);
+    //   ...
+    //   UpdateClientBufferData(&gBinaryData[164631024], 65536);
+    //   glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    //   ...
+
+    // Re-map the buffer, using the info we tracked about the buffer
+    gl::BufferBinding target =
+        call.params.getParam("targetPacked", ParamType::TBufferBinding, 0).value.BufferBindingVal;
+
+    const auto &bufferDataInfo = mBufferDataMap.find(target);
+    if (bufferDataInfo == mBufferDataMap.end())
+    {
+        // This buffer was not marked writable, so we did not back it up
+        return;
+    }
+
+    GLintptr offset   = bufferDataInfo->second.first;
+    GLsizeiptr length = bufferDataInfo->second.second;
+
+    // Map the buffer so we can copy its contents out
+    gl::Buffer *buffer = context->getState().getTargetBuffer(target);
+    ASSERT(!buffer->isMapped());
+    (void)buffer->mapRange(context, offset, length, GL_MAP_READ_BIT);
+    const uint8_t *data = reinterpret_cast<const uint8_t *>(buffer->getMapPointer());
+
+    // Create the parameters to our helper for use during replay
+    ParamBuffer dataParamBuffer;
+
+    // Capture the current buffer data with a binary param
+    ParamCapture captureData("source", ParamType::TvoidConstPointer);
+    CaptureMemory(data, length, &captureData);
+    dataParamBuffer.addParam(std::move(captureData));
+
+    // Also track its size for use with memcpy
+    dataParamBuffer.addValueParam<GLsizeiptr>("size", ParamType::TGLsizeiptr, length);
+
+    // Call the helper that populates the buffer with captured data
+    mFrameCalls.emplace_back("UpdateClientBufferData", std::move(dataParamBuffer));
+
+    // Unmap the buffer and move on
+    GLboolean dontCare;
+    (void)buffer->unmap(context, &dontCare);
 }
 
 void FrameCapture::onEndFrame(const gl::Context *context)
