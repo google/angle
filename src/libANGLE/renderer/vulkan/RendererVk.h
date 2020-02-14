@@ -225,6 +225,8 @@ class RendererVk : angle::NonCopyable
         return (mSharedGarbage.size() > mGarbageCollectionFlushThreshold);
     }
 
+    bool enableDebugUtils() const { return mEnableDebugUtils; }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -257,6 +259,7 @@ class RendererVk : angle::NonCopyable
 
     VkInstance mInstance;
     bool mEnableValidationLayers;
+    bool mEnableDebugUtils;
     vk::ICD mEnabledICD;
     VkDebugUtilsMessengerEXT mDebugUtilsMessenger;
     VkDebugReportCallbackEXT mDebugReportCallback;

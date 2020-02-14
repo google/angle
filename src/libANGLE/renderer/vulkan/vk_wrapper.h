@@ -371,6 +371,11 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                                          const VkBuffer *buffers,
                                          const VkDeviceSize *offsets,
                                          const VkDeviceSize *sizes);
+
+    // VK_EXT_debug_utils
+    void beginDebugUtilsLabelEXT(const VkDebugUtilsLabelEXT &labelInfo);
+    void endDebugUtilsLabelEXT();
+    void insertDebugUtilsLabelEXT(const VkDebugUtilsLabelEXT &labelInfo);
 };
 }  // namespace priv
 
@@ -1086,6 +1091,7 @@ ANGLE_INLINE void CommandBuffer::beginTransformFeedbackEXT(uint32_t firstCounter
                                                            const VkDeviceSize *counterBufferOffsets)
 {
     ASSERT(valid());
+    ASSERT(vkCmdBeginTransformFeedbackEXT);
     vkCmdBeginTransformFeedbackEXT(mHandle, firstCounterBuffer, counterBufferCount, counterBuffers,
                                    counterBufferOffsets);
 }
@@ -1096,6 +1102,7 @@ ANGLE_INLINE void CommandBuffer::endTransformFeedbackEXT(uint32_t firstCounterBu
                                                          const VkDeviceSize *counterBufferOffsets)
 {
     ASSERT(valid());
+    ASSERT(vkCmdEndTransformFeedbackEXT);
     vkCmdEndTransformFeedbackEXT(mHandle, firstCounterBuffer, counterBufferCount, counterBuffers,
                                  counterBufferOffsets);
 }
@@ -1107,8 +1114,30 @@ ANGLE_INLINE void CommandBuffer::bindTransformFeedbackBuffersEXT(uint32_t firstB
                                                                  const VkDeviceSize *sizes)
 {
     ASSERT(valid());
+    ASSERT(vkCmdBindTransformFeedbackBuffersEXT);
     vkCmdBindTransformFeedbackBuffersEXT(mHandle, firstBinding, bindingCount, buffers, offsets,
                                          sizes);
+}
+
+ANGLE_INLINE void CommandBuffer::beginDebugUtilsLabelEXT(const VkDebugUtilsLabelEXT &labelInfo)
+{
+    ASSERT(valid());
+    ASSERT(vkCmdBeginDebugUtilsLabelEXT);
+    vkCmdBeginDebugUtilsLabelEXT(mHandle, &labelInfo);
+}
+
+ANGLE_INLINE void CommandBuffer::endDebugUtilsLabelEXT()
+{
+    ASSERT(valid());
+    ASSERT(vkCmdEndDebugUtilsLabelEXT);
+    vkCmdEndDebugUtilsLabelEXT(mHandle);
+}
+
+ANGLE_INLINE void CommandBuffer::insertDebugUtilsLabelEXT(const VkDebugUtilsLabelEXT &labelInfo)
+{
+    ASSERT(valid());
+    ASSERT(vkCmdInsertDebugUtilsLabelEXT);
+    vkCmdInsertDebugUtilsLabelEXT(mHandle, &labelInfo);
 }
 }  // namespace priv
 

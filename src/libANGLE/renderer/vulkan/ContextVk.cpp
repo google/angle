@@ -2361,14 +2361,14 @@ angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
     }
     else
     {
-        if (vkCmdInsertDebugUtilsLabelEXT)
+        if (mRenderer->enableDebugUtils())
         {
             vk::PrimaryCommandBuffer *primary;
             ANGLE_TRY(getPrimaryCommandBuffer(&primary));
 
             VkDebugUtilsLabelEXT label;
             vk::MakeDebugUtilsLabel(source, message.c_str(), &label);
-            vkCmdInsertDebugUtilsLabelEXT(primary->getHandle(), &label);
+            primary->insertDebugUtilsLabelEXT(label);
         }
     }
 
@@ -2383,11 +2383,11 @@ angle::Result ContextVk::popDebugGroup(const gl::Context *context)
     }
     else
     {
-        if (vkCmdEndDebugUtilsLabelEXT)
+        if (mRenderer->enableDebugUtils())
         {
             vk::PrimaryCommandBuffer *primary;
             ANGLE_TRY(getPrimaryCommandBuffer(&primary));
-            vkCmdEndDebugUtilsLabelEXT(primary->getHandle());
+            primary->endDebugUtilsLabelEXT();
         }
     }
 

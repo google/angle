@@ -722,33 +722,31 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
         case CommandGraphNodeFunction::InsertDebugMarker:
             ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
 
-            if (vkCmdInsertDebugUtilsLabelEXT)
+            if (context->getRenderer()->enableDebugUtils())
             {
                 VkDebugUtilsLabelEXT label;
                 MakeDebugUtilsLabel(mDebugMarkerSource, mDebugMarker.c_str(), &label);
-
-                vkCmdInsertDebugUtilsLabelEXT(primaryCommandBuffer->getHandle(), &label);
+                primaryCommandBuffer->insertDebugUtilsLabelEXT(label);
             }
             break;
 
         case CommandGraphNodeFunction::PushDebugMarker:
             ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
 
-            if (vkCmdBeginDebugUtilsLabelEXT)
+            if (context->getRenderer()->enableDebugUtils())
             {
                 VkDebugUtilsLabelEXT label;
                 MakeDebugUtilsLabel(mDebugMarkerSource, mDebugMarker.c_str(), &label);
-
-                vkCmdBeginDebugUtilsLabelEXT(primaryCommandBuffer->getHandle(), &label);
+                primaryCommandBuffer->beginDebugUtilsLabelEXT(label);
             }
             break;
 
         case CommandGraphNodeFunction::PopDebugMarker:
             ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
 
-            if (vkCmdEndDebugUtilsLabelEXT)
+            if (context->getRenderer()->enableDebugUtils())
             {
-                vkCmdEndDebugUtilsLabelEXT(primaryCommandBuffer->getHandle());
+                primaryCommandBuffer->endDebugUtilsLabelEXT();
             }
             break;
 

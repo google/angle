@@ -560,6 +560,7 @@ RendererVk::RendererVk()
       mCapsInitialized(false),
       mInstance(VK_NULL_HANDLE),
       mEnableValidationLayers(false),
+      mEnableDebugUtils(false),
       mEnabledICD(vk::ICD::Default),
       mDebugUtilsMessenger(VK_NULL_HANDLE),
       mDebugReportCallback(VK_NULL_HANDLE),
@@ -724,15 +725,14 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     ExtensionNameList enabledInstanceExtensions;
     enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
     enabledInstanceExtensions.push_back(wsiExtension);
-    bool enableDebugUtils =
-        mEnableValidationLayers &&
-        ExtensionFound(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, instanceExtensionNames);
+    mEnableDebugUtils = mEnableValidationLayers &&
+                        ExtensionFound(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, instanceExtensionNames);
 
     bool enableDebugReport =
-        mEnableValidationLayers && !enableDebugUtils &&
+        mEnableValidationLayers && !mEnableDebugUtils &&
         ExtensionFound(VK_EXT_DEBUG_REPORT_EXTENSION_NAME, instanceExtensionNames);
 
-    if (enableDebugUtils)
+    if (mEnableDebugUtils)
     {
         enabledInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     }
@@ -802,7 +802,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
     volkLoadInstance(mInstance);
 
-    if (enableDebugUtils)
+    if (mEnableDebugUtils)
     {
         // Use the newer EXT_debug_utils if it exists.
         // Create the messenger callback.
