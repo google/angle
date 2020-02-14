@@ -2305,6 +2305,9 @@ std::string ContextVk::getRendererDescription() const
 
 angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 {
+    if (!mRenderer->enableDebugUtils())
+        return angle::Result::Continue;
+
     if (commandGraphEnabled())
     {
         std::string markerStr(marker, length <= 0 ? strlen(marker) : length);
@@ -2312,8 +2315,12 @@ angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
     }
     else
     {
-        // TODO(jmadill): http://anglebug.com/4029
-        UNIMPLEMENTED();
+        vk::PrimaryCommandBuffer *primary;
+        ANGLE_TRY(getPrimaryCommandBuffer(&primary));
+
+        VkDebugUtilsLabelEXT label;
+        vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_APPLICATION, marker, &label);
+        primary->insertDebugUtilsLabelEXT(label);
     }
 
     return angle::Result::Continue;
@@ -2321,6 +2328,9 @@ angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 
 angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
 {
+    if (!mRenderer->enableDebugUtils())
+        return angle::Result::Continue;
+
     if (commandGraphEnabled())
     {
         std::string markerStr(marker, length <= 0 ? strlen(marker) : length);
@@ -2328,8 +2338,12 @@ angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
     }
     else
     {
-        // TODO(jmadill): http://anglebug.com/4029
-        UNIMPLEMENTED();
+        vk::PrimaryCommandBuffer *primary;
+        ANGLE_TRY(getPrimaryCommandBuffer(&primary));
+
+        VkDebugUtilsLabelEXT label;
+        vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_APPLICATION, marker, &label);
+        primary->beginDebugUtilsLabelEXT(label);
     }
 
     return angle::Result::Continue;
@@ -2337,14 +2351,18 @@ angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
 
 angle::Result ContextVk::popGroupMarker()
 {
+    if (!mRenderer->enableDebugUtils())
+        return angle::Result::Continue;
+
     if (commandGraphEnabled())
     {
         mCommandGraph.popDebugMarker();
     }
     else
     {
-        // TODO(jmadill): http://anglebug.com/4029
-        UNIMPLEMENTED();
+        vk::PrimaryCommandBuffer *primary;
+        ANGLE_TRY(getPrimaryCommandBuffer(&primary));
+        primary->endDebugUtilsLabelEXT();
     }
 
     return angle::Result::Continue;
@@ -2355,21 +2373,21 @@ angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
                                         GLuint id,
                                         const std::string &message)
 {
+    if (!mRenderer->enableDebugUtils())
+        return angle::Result::Continue;
+
     if (commandGraphEnabled())
     {
         mCommandGraph.insertDebugMarker(source, std::string(message));
     }
     else
     {
-        if (mRenderer->enableDebugUtils())
-        {
-            vk::PrimaryCommandBuffer *primary;
-            ANGLE_TRY(getPrimaryCommandBuffer(&primary));
+        vk::PrimaryCommandBuffer *primary;
+        ANGLE_TRY(getPrimaryCommandBuffer(&primary));
 
-            VkDebugUtilsLabelEXT label;
-            vk::MakeDebugUtilsLabel(source, message.c_str(), &label);
-            primary->insertDebugUtilsLabelEXT(label);
-        }
+        VkDebugUtilsLabelEXT label;
+        vk::MakeDebugUtilsLabel(source, message.c_str(), &label);
+        primary->insertDebugUtilsLabelEXT(label);
     }
 
     return angle::Result::Continue;
@@ -2377,18 +2395,18 @@ angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
 
 angle::Result ContextVk::popDebugGroup(const gl::Context *context)
 {
+    if (!mRenderer->enableDebugUtils())
+        return angle::Result::Continue;
+
     if (commandGraphEnabled())
     {
         mCommandGraph.popDebugMarker();
     }
     else
     {
-        if (mRenderer->enableDebugUtils())
-        {
-            vk::PrimaryCommandBuffer *primary;
-            ANGLE_TRY(getPrimaryCommandBuffer(&primary));
-            primary->endDebugUtilsLabelEXT();
-        }
+        vk::PrimaryCommandBuffer *primary;
+        ANGLE_TRY(getPrimaryCommandBuffer(&primary));
+        primary->endDebugUtilsLabelEXT();
     }
 
     return angle::Result::Continue;
