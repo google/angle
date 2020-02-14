@@ -36,7 +36,6 @@
 ////
 
 // Crashing Tests
-1920 NVIDIA D3D11 : dEQP-GLES31.functional.layout_binding.ubo.vertex_binding_max = SKIP
 1442 D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.builtin_gl_position = SKIP
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.builtin_gl_position = SKIP
 
