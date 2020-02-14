@@ -49,18 +49,17 @@ BlendState::BlendState()
 {
     memset(this, 0, sizeof(BlendState));
 
-    blend                 = false;
-    sourceBlendRGB        = GL_ONE;
-    sourceBlendAlpha      = GL_ONE;
-    destBlendRGB          = GL_ZERO;
-    destBlendAlpha        = GL_ZERO;
-    blendEquationRGB      = GL_FUNC_ADD;
-    blendEquationAlpha    = GL_FUNC_ADD;
-    sampleAlphaToCoverage = false;
-    colorMaskRed          = true;
-    colorMaskGreen        = true;
-    colorMaskBlue         = true;
-    colorMaskAlpha        = true;
+    blend              = false;
+    sourceBlendRGB     = GL_ONE;
+    sourceBlendAlpha   = GL_ONE;
+    destBlendRGB       = GL_ZERO;
+    destBlendAlpha     = GL_ZERO;
+    blendEquationRGB   = GL_FUNC_ADD;
+    blendEquationAlpha = GL_FUNC_ADD;
+    colorMaskRed       = true;
+    colorMaskGreen     = true;
+    colorMaskBlue      = true;
+    colorMaskAlpha     = true;
 }
 
 BlendState::BlendState(const BlendState &other)

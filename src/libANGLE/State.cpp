@@ -293,6 +293,7 @@ State::State(ContextID contextIn,
       mDepthClearValue(0),
       mStencilClearValue(0),
       mScissorTest(false),
+      mSampleAlphaToCoverage(false),
       mSampleCoverage(false),
       mSampleCoverageValue(0),
       mSampleCoverageInvert(false),
@@ -838,7 +839,7 @@ void State::setPolygonOffsetParams(GLfloat factor, GLfloat units)
 
 void State::setSampleAlphaToCoverage(bool enabled)
 {
-    mBlend.sampleAlphaToCoverage = enabled;
+    mSampleAlphaToCoverage = enabled;
     mDirtyBits.set(DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED);
 }
 
@@ -1885,7 +1886,7 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
             *params = mRasterizer.polygonOffsetFill;
             break;
         case GL_SAMPLE_ALPHA_TO_COVERAGE:
-            *params = mBlend.sampleAlphaToCoverage;
+            *params = mSampleAlphaToCoverage;
             break;
         case GL_SAMPLE_COVERAGE:
             *params = mSampleCoverage;

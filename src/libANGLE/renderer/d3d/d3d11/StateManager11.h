@@ -315,7 +315,8 @@ class StateManager11 final : angle::NonCopyable
     angle::Result syncBlendState(const gl::Context *context,
                                  const gl::BlendState &blendState,
                                  const gl::ColorF &blendColor,
-                                 unsigned int sampleMask);
+                                 unsigned int sampleMask,
+                                 bool sampleAlphaToCoverage);
 
     angle::Result syncDepthStencilState(const gl::Context *context);
 
@@ -460,6 +461,8 @@ class StateManager11 final : angle::NonCopyable
     DirtyBits mInternalDirtyBits;
     DirtyBits mGraphicsDirtyBitsMask;
     DirtyBits mComputeDirtyBitsMask;
+
+    bool mCurSampleAlphaToCoverage;
 
     // Blend State
     gl::BlendState mCurBlendState;

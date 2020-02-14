@@ -287,14 +287,13 @@ angle::Result Clear11::ensureResourcesInitialized(const gl::Context *context)
     mDepthStencilStateKey.stencilBackFunc          = GL_ALWAYS;
 
     // Initialize BlendStateKey with defaults
-    mBlendStateKey.blendState.blend                 = false;
-    mBlendStateKey.blendState.sourceBlendRGB        = GL_ONE;
-    mBlendStateKey.blendState.sourceBlendAlpha      = GL_ONE;
-    mBlendStateKey.blendState.destBlendRGB          = GL_ZERO;
-    mBlendStateKey.blendState.destBlendAlpha        = GL_ZERO;
-    mBlendStateKey.blendState.blendEquationRGB      = GL_FUNC_ADD;
-    mBlendStateKey.blendState.blendEquationAlpha    = GL_FUNC_ADD;
-    mBlendStateKey.blendState.sampleAlphaToCoverage = false;
+    mBlendStateKey.blendState.blend              = false;
+    mBlendStateKey.blendState.sourceBlendRGB     = GL_ONE;
+    mBlendStateKey.blendState.sourceBlendAlpha   = GL_ONE;
+    mBlendStateKey.blendState.destBlendRGB       = GL_ZERO;
+    mBlendStateKey.blendState.destBlendAlpha     = GL_ZERO;
+    mBlendStateKey.blendState.blendEquationRGB   = GL_FUNC_ADD;
+    mBlendStateKey.blendState.blendEquationAlpha = GL_FUNC_ADD;
 
     mResourcesInitialized = true;
     return angle::Result::Continue;
@@ -646,7 +645,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
     mBlendStateKey.blendState.colorMaskGreen = clearParams.colorMaskGreen;
     mBlendStateKey.blendState.colorMaskBlue  = clearParams.colorMaskBlue;
     mBlendStateKey.blendState.colorMaskAlpha = clearParams.colorMaskAlpha;
-    mBlendStateKey.rtvMax                    = numRtvs;
+    mBlendStateKey.rtvMax                    = static_cast<uint8_t>(numRtvs);
     memcpy(mBlendStateKey.rtvMasks, &rtvMasks[0], sizeof(mBlendStateKey.rtvMasks));
 
     // Get BlendState
