@@ -43,6 +43,8 @@ _vulkan_backend_sources = [
   "OverlayVk.h",
   "PersistentCommandPool.cpp",
   "PersistentCommandPool.h",
+  "ProgramExecutableVk.cpp",
+  "ProgramExecutableVk.h",
   "ProgramPipelineVk.cpp",
   "ProgramPipelineVk.h",
   "ProgramVk.cpp",
