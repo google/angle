@@ -3501,8 +3501,8 @@ Extensions Context::generateSupportedExtensions() const
     supportedExtensions.maxDebugGroupStackDepth = 1024;
     supportedExtensions.maxLabelLength          = 1024;
 
-    // Explicitly enable GL_ANGLE_robust_client_memory
-    supportedExtensions.robustClientMemory = true;
+    // Explicitly enable GL_ANGLE_robust_client_memory if the context supports validation.
+    supportedExtensions.robustClientMemory = !mSkipValidation;
 
     // Determine robust resource init availability from EGL.
     supportedExtensions.robustResourceInitialization = mState.isRobustResourceInitEnabled();
