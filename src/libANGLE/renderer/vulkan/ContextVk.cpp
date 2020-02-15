@@ -721,6 +721,8 @@ angle::Result ContextVk::initialize()
 
     if (!commandGraphEnabled())
     {
+        // Push a scope in the pool allocator so we can easily reinitialize on flush.
+        mPoolAllocator.push();
         mOutsideRenderPassCommands.getCommandBuffer().initialize(&mPoolAllocator);
         mRenderPassCommands.initialize(&mPoolAllocator);
         ANGLE_TRY(startPrimaryCommandBuffer());
@@ -3698,6 +3700,13 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
     {
         mOutsideRenderPassCommands.flushToPrimary(&mPrimaryCommands);
         ANGLE_TRY(endRenderPass());
+
+        // Free secondary command pool allocations and restart command buffers with the new page.
+        mPoolAllocator.pop();
+        mPoolAllocator.push();
+        mOutsideRenderPassCommands.reset();
+        mRenderPassCommands.reset();
+
         ANGLE_VK_TRY(this, mPrimaryCommands.end());
 
         Serial serial = getCurrentQueueSerial();
