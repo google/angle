@@ -748,7 +748,7 @@ void AssignUniformBindings(const GlslangSourceOptions &options,
     }
 
     // Assign binding to the driver uniforms block
-    AddResourceInfo(variableInfoMapOut, sh::vk::kDriverUniformsVarName,
+    AddResourceInfo(variableInfoMapOut, sh::vk::kDriverUniformsBlockName,
                     options.driverUniformsDescriptorSetIndex, 0);
 }
 
@@ -781,7 +781,7 @@ uint32_t AssignAtomicCounterBufferBindings(const GlslangSourceOptions &options,
         return bindingStart;
     }
 
-    AddResourceInfo(variableInfoMapOut, sh::vk::kAtomicCountersVarName,
+    AddResourceInfo(variableInfoMapOut, sh::vk::kAtomicCountersBlockName,
                     options.shaderResourceDescriptorSetIndex, bindingStart);
 
     return bindingStart + 1;
@@ -1050,6 +1050,12 @@ class SpirvTransformer final : angle::NonCopyable
 
     // Transformation state:
 
+    // Names associated with ids through OpName.  The same name may be assigned to multiple ids, but
+    // not all names are interesting (for example function arguments).  When the variable
+    // declaration is met (OpVariable), the variable info is matched with the corresponding id's
+    // name based on the Storage Class.
+    std::vector<const char *> mNamesById;
+
     // Shader variable info per id, if id is a shader variable.
     std::vector<const ShaderInterfaceVariableInfo *> mVariableInfoById;
 
@@ -1122,6 +1128,11 @@ void SetSpirvInstructionOp(uint32_t *instruction, uint32_t op)
 void SpirvTransformer::resolveVariableIds()
 {
     size_t indexBound = mSpirvBlobIn[kHeaderIndexIndexBound];
+
+    // Allocate storage for id-to-name map.  Used to associate ShaderInterfaceVariableInfo with ids
+    // based on name, but only when it's determined that the name corresponds to a shader interface
+    // variable.
+    mNamesById.resize(indexBound + 1, nullptr);
 
     // Allocate storage for id-to-info map.  If %i is the id of a name in mVariableInfoMap, index i
     // in this vector will hold a pointer to the ShaderInterfaceVariableInfo object associated with
@@ -1255,37 +1266,10 @@ void SpirvTransformer::visitName(const uint32_t *instruction)
     const char *name  = reinterpret_cast<const char *>(&instruction[kNameIndex]);
 
     // The names and ids are unique
-    ASSERT(id < mVariableInfoById.size());
-    ASSERT(mVariableInfoById[id] == nullptr);
+    ASSERT(id < mNamesById.size());
+    ASSERT(mNamesById[id] == nullptr);
 
-    bool isBuiltin = angle::BeginsWith(name, "gl_");
-    if (isBuiltin)
-    {
-        // Make all builtins point to this no-op info.  Adding this entry allows us to ASSERT that
-        // every shader interface variable is processed during the SPIR-V transformation.  This is
-        // done when iterating the ids provided by OpEntryPoint.
-        mVariableInfoById[id] = &mBuiltinVariableInfo;
-        return;
-    }
-
-    auto infoIter = mVariableInfoMap.find(name);
-    if (infoIter == mVariableInfoMap.end())
-    {
-        return;
-    }
-
-    const ShaderInterfaceVariableInfo *info = &infoIter->second;
-
-    // Associate the id of this name with its info.
-    mVariableInfoById[id] = info;
-
-    // Note if the variable is captured by transform feedback.  In that case, the TransformFeedback
-    // capability needs to be added.
-    if (mShaderType != gl::ShaderType::Fragment &&
-        info->xfbBuffer != ShaderInterfaceVariableInfo::kInvalid && info->activeStages[mShaderType])
-    {
-        mHasTransformFeedbackOutput = true;
-    }
+    mNamesById[id] = name;
 }
 
 void SpirvTransformer::visitTypeHelper(const uint32_t *instruction,
@@ -1296,19 +1280,17 @@ void SpirvTransformer::visitTypeHelper(const uint32_t *instruction,
     const uint32_t typeId = instruction[typeIdIndex];
 
     // Every type id is declared only once.
-    ASSERT(typeId < mVariableInfoById.size());
+    ASSERT(id < mNamesById.size());
+    ASSERT(mNamesById[id] == nullptr);
 
-    if (mVariableInfoById[typeId] != nullptr)
-    {
-        // Carry the info forward from the base type.  This is only necessary for interface blocks,
-        // as the variable info is associated with the block name instead of the variable name (to
-        // support nameless interface blocks).  In that case, the variable itself doesn't yet have
-        // an associated info.
-        ASSERT(id < mVariableInfoById.size());
-        ASSERT(mVariableInfoById[id] == nullptr);
+    // Carry the name forward from the base type.  This is only necessary for interface blocks,
+    // as the variable info is associated with the block name instead of the variable name (to
+    // support nameless interface blocks).  When the variable declaration is met, either the
+    // type name or the variable name is used to associate with info based on the variable's
+    // storage class.
+    ASSERT(typeId < mNamesById.size());
 
-        mVariableInfoById[id] = mVariableInfoById[typeId];
-    }
+    mNamesById[id] = mNamesById[typeId];
 }
 
 void SpirvTransformer::visitTypeArray(const uint32_t *instruction)
@@ -1336,15 +1318,66 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
     constexpr size_t kIdIndex           = 2;
     constexpr size_t kStorageClassIndex = 3;
 
-    visitTypeHelper(instruction, kIdIndex, kTypeIdIndex);
-
     // All resources that take set/binding should be transformed.
+    const uint32_t typeId       = instruction[kTypeIdIndex];
     const uint32_t id           = instruction[kIdIndex];
     const uint32_t storageClass = instruction[kStorageClassIndex];
 
-    ASSERT((storageClass != spv::StorageClassUniform && storageClass != spv::StorageClassImage &&
-            storageClass != spv::StorageClassStorageBuffer) ||
-           mVariableInfoById[id] != nullptr);
+    ASSERT(typeId < mNamesById.size());
+    ASSERT(id < mNamesById.size());
+
+    // If storage class indicates that this is not a shader interface variable, ignore it.
+    const bool isInterfaceBlockVariable =
+        storageClass == spv::StorageClassUniform || storageClass == spv::StorageClassStorageBuffer;
+    const bool isOpaqueUniform = storageClass == spv::StorageClassUniformConstant;
+    const bool isInOut =
+        storageClass == spv::StorageClassInput || storageClass == spv::StorageClassOutput;
+
+    if (!isInterfaceBlockVariable && !isOpaqueUniform && !isInOut)
+    {
+        return;
+    }
+
+    // The ids are unique.
+    ASSERT(id < mVariableInfoById.size());
+    ASSERT(mVariableInfoById[id] == nullptr);
+
+    // For interface block variables, the name that's used to associate info is the block name
+    // rather than the variable name.
+    const char *name = mNamesById[isInterfaceBlockVariable ? typeId : id];
+    ASSERT(name != nullptr);
+
+    // Handle builtins, which all start with "gl_".  Either the variable name could be an indication
+    // of a builtin variable (such as with gl_FragCoord) or the type name (such as with
+    // gl_PerVertex).
+    const bool isNameBuiltin = isInOut && angle::BeginsWith(name, "gl_");
+    const bool isTypeBuiltin =
+        isInOut && mNamesById[typeId] != nullptr && angle::BeginsWith(mNamesById[typeId], "gl_");
+    if (isNameBuiltin || isTypeBuiltin)
+    {
+        // Make all builtins point to this no-op info.  Adding this entry allows us to ASSERT that
+        // every shader interface variable is processed during the SPIR-V transformation.  This is
+        // done when iterating the ids provided by OpEntryPoint.
+        mVariableInfoById[id] = &mBuiltinVariableInfo;
+        return;
+    }
+
+    // Every shader interface variable should have an associated data.
+    auto infoIter = mVariableInfoMap.find(name);
+    ASSERT(infoIter != mVariableInfoMap.end());
+
+    const ShaderInterfaceVariableInfo *info = &infoIter->second;
+
+    // Associate the id of this name with its info.
+    mVariableInfoById[id] = info;
+
+    // Note if the variable is captured by transform feedback.  In that case, the TransformFeedback
+    // capability needs to be added.
+    if (mShaderType != gl::ShaderType::Fragment &&
+        info->xfbBuffer != ShaderInterfaceVariableInfo::kInvalid && info->activeStages[mShaderType])
+    {
+        mHasTransformFeedbackOutput = true;
+    }
 }
 
 bool SpirvTransformer::transformDecorate(const uint32_t *instruction, size_t wordCount)
@@ -1566,9 +1599,11 @@ bool SpirvTransformer::transformTypePointer(const uint32_t *instruction, size_t 
     // SPIR-V 1.0 Section 3.32 Instructions, OpTypePointer
     constexpr size_t kIdIndex           = 1;
     constexpr size_t kStorageClassIndex = 2;
+    constexpr size_t kTypeIdIndex       = 3;
 
     const uint32_t id           = instruction[kIdIndex];
     const uint32_t storageClass = instruction[kStorageClassIndex];
+    const uint32_t typeId       = instruction[kTypeIdIndex];
 
     // If the storage class is output, this may be used to create a variable corresponding to an
     // inactive varying, or if that varying is a struct, an Op*AccessChain retrieving a field of
@@ -1584,14 +1619,9 @@ bool SpirvTransformer::transformTypePointer(const uint32_t *instruction, size_t 
         return false;
     }
 
-    // Cannot create a Private type declaration from the builtin gl_PerVertex.  Note that
-    // mVariableInfoById is only ever set for variables, except for nameless interface blocks and
-    // the builtin gl_PerVertex.  Since the storage class is Output, if mVariableInfoById for this
-    // type is not nullptr, this must be a builtin.
-    const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
-    if (info)
+    // Cannot create a Private type declaration from builtins such as gl_PerVertex.
+    if (mNamesById[typeId] != nullptr && angle::BeginsWith(mNamesById[typeId], "gl_"))
     {
-        ASSERT(info == &mBuiltinVariableInfo);
         return false;
     }
 

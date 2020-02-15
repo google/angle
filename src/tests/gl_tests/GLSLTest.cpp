@@ -7933,6 +7933,72 @@ void main() { v_varying = a_position.x; gl_Position = a_position; })";
     EXPECT_EQ(0u, program);
 }
 
+// Test that reusing the same variable name for different uses across stages links fine.  Glslang
+// wrapper's SPIR-V transformation should ignore all names for non-shader-interface variables and
+// not get confused by them.
+TEST_P(GLSLTest_ES31, VariableNameReuseAcrossStages)
+{
+    // Fails to compile the fragment shader with error "undeclared identifier '_g'"
+    // http://anglebug.com/4404
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    constexpr char kVS[] = R"(#version 310 es
+precision mediump float;
+uniform highp vec4 a;
+in highp vec4 b;
+in highp vec4 c;
+in highp vec4 d;
+out highp vec4 e;
+
+vec4 f(vec4 a)
+{
+    return a;
+}
+
+vec4 g(vec4 f)
+{
+    return f + f;
+}
+
+void main() {
+    e = f(b) + a;
+    gl_Position = g(c) + f(d);
+}
+)";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+in highp vec4 e;
+uniform sampler2D f;
+layout(rgba8) uniform highp readonly image2D g;
+uniform A
+{
+    vec4 x;
+} c;
+layout(std140, binding=0) buffer B
+{
+    vec4 x;
+} d[2];
+out vec4 col;
+
+vec4 h(vec4 c)
+{
+    return texture(f, c.xy) + imageLoad(g, ivec2(c.zw));
+}
+
+vec4 i(vec4 x, vec4 y)
+{
+    return vec4(x.xy, y.zw);
+}
+
+void main() {
+    col = h(e) + i(c.x, d[0].x) + d[1].x;
+}
+)";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_NE(0u, program);
+}
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
