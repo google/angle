@@ -157,6 +157,17 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
 
     outFile.close();
 }
+
+ANGLE_MAYBE_UNUSED void KHRONOS_APIENTRY DebugMessageCallback(GLenum source,
+                                                              GLenum type,
+                                                              GLuint id,
+                                                              GLenum severity,
+                                                              GLsizei length,
+                                                              const GLchar *message,
+                                                              const void *userParam)
+{
+    std::cerr << "%s\n";
+}
 }  // anonymous namespace
 
 ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
@@ -498,6 +509,23 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
+#if defined(ANGLE_ENABLE_ASSERTS)
+    if (IsGLExtensionEnabled("GL_KHR_debug"))
+    {
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_HIGH, 0, nullptr,
+                                 GL_TRUE);
+        glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_MEDIUM, 0, nullptr,
+                                 GL_TRUE);
+        glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_LOW, 0, nullptr,
+                                 GL_FALSE);
+        glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0,
+                                 nullptr, GL_FALSE);
+        glDebugMessageCallbackKHR(DebugMessageCallback, this);
+    }
+#endif
+
     initializeBenchmark();
 
     if (mTestParams.iterationsPerStep == 0)
@@ -583,6 +611,10 @@ void ANGLERenderTest::step()
         // command queues.
         mGLWindow->swap();
         mOSWindow->messageLoop();
+
+#if defined(ANGLE_ENABLE_ASSERTS)
+        EXPECT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError());
+#endif  // defined(ANGLE_ENABLE_ASSERTS)
     }
 
     endInternalTraceEvent("step");
