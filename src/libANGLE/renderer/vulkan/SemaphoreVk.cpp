@@ -85,7 +85,14 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
     if (!bufferBarriers.empty() || !textureBarriers.empty())
     {
         // Create one global memory barrier to cover all barriers.
-        contextVk->getCommandGraph()->syncExternalMemory();
+        if (contextVk->commandGraphEnabled())
+        {
+            contextVk->getCommandGraph()->syncExternalMemory();
+        }
+        else
+        {
+            ANGLE_TRY(contextVk->syncExternalMemory());
+        }
     }
 
     uint32_t rendererQueueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
@@ -98,15 +105,22 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
             BufferVk *bufferVk             = vk::GetImpl(buffer);
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-            // If there were GL commands using this buffer prior to this call, that's a
-            // synchronization error on behalf of the program.
-            ASSERT(!bufferHelper.hasRecordedCommands());
+            vk::CommandBuffer *commandBuffer;
+            if (contextVk->commandGraphEnabled())
+            {
+                // If there were GL commands using this buffer prior to this call, that's a
+                // synchronization error on behalf of the program.
+                ASSERT(!bufferHelper.hasRecordedCommands());
 
-            vk::CommandBuffer *queueChange;
-            ANGLE_TRY(bufferHelper.recordCommands(contextVk, &queueChange));
+                ANGLE_TRY(bufferHelper.recordCommands(contextVk, &commandBuffer));
+            }
+            else
+            {
+                ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+            }
 
             // Queue ownership transfer.
-            bufferHelper.changeQueue(rendererQueueFamilyIndex, queueChange);
+            bufferHelper.changeQueue(rendererQueueFamilyIndex, commandBuffer);
         }
     }
 
@@ -121,19 +135,24 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
             vk::ImageHelper &image = textureVk->getImage();
             vk::ImageLayout layout = GetVulkanImageLayout(textureAndLayout.layout);
 
-            // If there were GL commands using this image prior to this call, that's a
-            // synchronization error on behalf of the program.
-            ASSERT(!image.hasRecordedCommands());
-
             // Inform the image that the layout has been externally changed.
             image.onExternalLayoutChange(layout);
 
-            vk::CommandBuffer *queueChange;
-            ANGLE_TRY(image.recordCommands(contextVk, &queueChange));
-
+            vk::CommandBuffer *commandBuffer;
+            if (contextVk->commandGraphEnabled())
+            {
+                // If there were GL commands using this image prior to this call, that's a
+                // synchronization error on behalf of the program.
+                ASSERT(!image.hasRecordedCommands());
+                ANGLE_TRY(image.recordCommands(contextVk, &commandBuffer));
+            }
+            else
+            {
+                ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+            }
             // Queue ownership transfer.
             image.changeLayoutAndQueue(image.getAspectFlags(), layout, rendererQueueFamilyIndex,
-                                       queueChange);
+                                       commandBuffer);
         }
     }
 
@@ -155,11 +174,18 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
             BufferVk *bufferVk             = vk::GetImpl(buffer);
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-            vk::CommandBuffer *queueChange;
-            ANGLE_TRY(bufferHelper.recordCommands(contextVk, &queueChange));
+            vk::CommandBuffer *commandBuffer;
+            if (contextVk->commandGraphEnabled())
+            {
+                ANGLE_TRY(bufferHelper.recordCommands(contextVk, &commandBuffer));
+            }
+            else
+            {
+                ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+            }
 
             // Queue ownership transfer.
-            bufferHelper.changeQueue(VK_QUEUE_FAMILY_EXTERNAL, queueChange);
+            bufferHelper.changeQueue(VK_QUEUE_FAMILY_EXTERNAL, commandBuffer);
         }
     }
 
@@ -181,19 +207,33 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
                 layout = image.getCurrentImageLayout();
             }
 
-            vk::CommandBuffer *layoutChange;
-            ANGLE_TRY(image.recordCommands(contextVk, &layoutChange));
+            vk::CommandBuffer *commandBuffer;
+            if (contextVk->commandGraphEnabled())
+            {
+                ANGLE_TRY(image.recordCommands(contextVk, &commandBuffer));
+            }
+            else
+            {
+                ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+            }
 
             // Queue ownership transfer and layout transition.
             image.changeLayoutAndQueue(image.getAspectFlags(), layout, VK_QUEUE_FAMILY_EXTERNAL,
-                                       layoutChange);
+                                       commandBuffer);
         }
     }
 
     if (!bufferBarriers.empty() || !textureBarriers.empty())
     {
         // Create one global memory barrier to cover all barriers.
-        contextVk->getCommandGraph()->syncExternalMemory();
+        if (contextVk->commandGraphEnabled())
+        {
+            contextVk->getCommandGraph()->syncExternalMemory();
+        }
+        else
+        {
+            ANGLE_TRY(contextVk->syncExternalMemory());
+        }
     }
 
     return contextVk->flushImpl(&mSemaphore);

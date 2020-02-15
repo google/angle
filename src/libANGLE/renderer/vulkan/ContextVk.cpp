@@ -4103,6 +4103,21 @@ void ContextVk::onRenderPassImageWrite(VkImageAspectFlags aspectFlags,
     mRenderPassCommands.imageWrite(&mResourceUseList, aspectFlags, imageLayout, image);
 }
 
+angle::Result ContextVk::syncExternalMemory()
+{
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(getOutsideRenderPassCommandBuffer(&commandBuffer));
+
+    VkMemoryBarrier memoryBarrier = {};
+    memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    memoryBarrier.srcAccessMask   = VK_ACCESS_MEMORY_WRITE_BIT;
+    memoryBarrier.dstAccessMask   = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
+
+    commandBuffer->memoryBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, &memoryBarrier);
+    return angle::Result::Continue;
+}
+
 CommandBufferHelper::CommandBufferHelper()
     : mImageBarrierSrcStageMask(0),
       mImageBarrierDstStageMask(0),

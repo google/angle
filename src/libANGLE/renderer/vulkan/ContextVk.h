@@ -626,6 +626,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     egl::ContextPriority getContextPriority() const override { return mContextPriority; }
     angle::Result endRenderPass();
 
+    angle::Result syncExternalMemory();
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
