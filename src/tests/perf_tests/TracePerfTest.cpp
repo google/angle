@@ -8,6 +8,7 @@
 //
 
 #include <gtest/gtest.h>
+#include "common/PackedEnums.h"
 #include "common/system_utils.h"
 #include "tests/perf_tests/ANGLEPerfTest.h"
 #include "util/egl_loader_autogen.h"
@@ -33,6 +34,7 @@ enum class TracePerfTestID
     TRex800,
     TRex900,
     TRex1300,
+    InvalidEnum,
 };
 
 struct TracePerfParams final : public RenderTestParams
@@ -167,83 +169,43 @@ void TracePerfTest::drawBenchmark()
     stopGpuTimer();
 }
 
-TracePerfParams TRexReplayPerfOpenGLOrGLESParams_200_210()
-{
-    TracePerfParams params;
-    params.eglParameters = OPENGL_OR_GLES();
-    params.testID        = TracePerfTestID::TRex200;
-    return params;
-}
-
-TracePerfParams TRexReplayPerfOpenGLOrGLESParams_800_810()
-{
-    TracePerfParams params;
-    params.eglParameters = OPENGL_OR_GLES();
-    params.testID        = TracePerfTestID::TRex800;
-    return params;
-}
-
-TracePerfParams TRexReplayPerfOpenGLOrGLESParams_900_910()
-{
-    TracePerfParams params;
-    params.eglParameters = OPENGL_OR_GLES();
-    params.testID        = TracePerfTestID::TRex900;
-    return params;
-}
-
-TracePerfParams TRexReplayPerfOpenGLOrGLESParams_1300_1310()
-{
-    TracePerfParams params;
-    params.eglParameters = OPENGL_OR_GLES();
-    params.testID        = TracePerfTestID::TRex1300;
-    return params;
-}
-
-TracePerfParams TRexReplayPerfVulkanParams_200_210()
-{
-    TracePerfParams params;
-    params.eglParameters = VULKAN();
-    params.testID        = TracePerfTestID::TRex200;
-    return params;
-}
-
-TracePerfParams TRexReplayPerfVulkanParams_800_810()
-{
-    TracePerfParams params;
-    params.eglParameters = VULKAN();
-    params.testID        = TracePerfTestID::TRex800;
-    return params;
-}
-
-TracePerfParams TRexReplayPerfVulkanParams_900_910()
-{
-    TracePerfParams params;
-    params.eglParameters = VULKAN();
-    params.testID        = TracePerfTestID::TRex900;
-    return params;
-}
-
-TracePerfParams TRexReplayPerfVulkanParams_1300_1310()
-{
-    TracePerfParams params;
-    params.eglParameters = VULKAN();
-    params.testID        = TracePerfTestID::TRex1300;
-    return params;
-}
-
 TEST_P(TracePerfTest, Run)
 {
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(TracePerfTest,
-                       TRexReplayPerfOpenGLOrGLESParams_200_210(),
-                       TRexReplayPerfOpenGLOrGLESParams_800_810(),
-                       TRexReplayPerfOpenGLOrGLESParams_900_910(),
-                       TRexReplayPerfOpenGLOrGLESParams_1300_1310(),
-                       TRexReplayPerfVulkanParams_200_210(),
-                       TRexReplayPerfVulkanParams_800_810(),
-                       TRexReplayPerfVulkanParams_900_910(),
-                       TRexReplayPerfVulkanParams_1300_1310());
+TracePerfParams GL(const TracePerfParams &in)
+{
+    TracePerfParams out = in;
+    out.eglParameters   = OPENGL_OR_GLES();
+    return out;
+}
+
+TracePerfParams Vulkan(const TracePerfParams &in)
+{
+    TracePerfParams out = in;
+    out.eglParameters   = VULKAN();
+    return out;
+}
+
+// Note: WGL replay currently broken because interface locations are not remapped.
+ANGLE_MAYBE_UNUSED TracePerfParams WGL(const TracePerfParams &in)
+{
+    TracePerfParams out = in;
+    out.driver          = angle::GLESDriverType::SystemWGL;
+    return out;
+}
+
+TracePerfParams CombineTestID(const TracePerfParams &in, TracePerfTestID id)
+{
+    TracePerfParams out = in;
+    out.testID          = id;
+    return out;
+}
+
+std::vector<TracePerfParams> gTestsWithID =
+    CombineWithValues({TracePerfParams()}, AllEnums<TracePerfTestID>(), CombineTestID);
+std::vector<TracePerfParams> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {GL, Vulkan});
+ANGLE_INSTANTIATE_TEST_ARRAY(TracePerfTest, gTestsWithRenderer);
 
 }  // anonymous namespace

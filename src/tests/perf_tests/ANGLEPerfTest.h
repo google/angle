@@ -195,5 +195,4 @@ ParamsT NullDevice(const ParamsT &input)
     return output;
 }
 }  // namespace params
-
 #endif  // PERF_TESTS_ANGLE_PERF_TEST_H_

@@ -77,25 +77,23 @@ constexpr BenchmarkInfo kBenchmarks[] = {
     {"loop:fragment-steps=5:fragment-uniform=true:vertex-steps=5", "loop"},
 };
 
-using GLMark2BenchmarkTestParams = std::tuple<PlatformParameters, size_t>;
-std::string GLMark2BenchmarkPrint(
-    const ::testing::TestParamInfo<GLMark2BenchmarkTestParams> &paramsInfo)
+struct GLMark2TestParams : public PlatformParameters
 {
-    const GLMark2BenchmarkTestParams &params = paramsInfo.param;
-    std::ostringstream out;
+    BenchmarkInfo info;
+};
 
-    out << std::get<0>(params) << '_';
-    out << kBenchmarks[std::get<1>(params)].name;
-
-    return out.str();
+std::ostream &operator<<(std::ostream &os, const GLMark2TestParams &params)
+{
+    os << static_cast<const PlatformParameters &>(params) << "_" << params.info.name;
+    return os;
 }
 
-class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParams>
+class GLMark2Benchmark : public testing::TestWithParam<GLMark2TestParams>
 {
   public:
     GLMark2Benchmark()
     {
-        switch (std::get<0>(GetParam()).getRenderer())
+        switch (GetParam().getRenderer())
         {
             case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
                 mBackend = "d3d11";
@@ -109,7 +107,7 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
             default:
                 break;
         }
-        std::string story = kBenchmarks[std::get<1>(GetParam())].name;
+        std::string story = GetParam().info.name;
         mReporter = std::make_unique<perf_test::PerfResultReporter>("glmark2_" + mBackend, story);
         mReporter->RegisterImportantMetric(".fps", "fps");
         mReporter->RegisterImportantMetric(".score", "score");
@@ -123,7 +121,7 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
             return;
         }
 
-        const BenchmarkInfo benchmarkInfo = kBenchmarks[std::get<1>(GetParam())];
+        const BenchmarkInfo benchmarkInfo = GetParam().info;
         const char *benchmark             = benchmarkInfo.glmark2Config;
         const char *benchmarkName         = benchmarkInfo.name;
         bool completeRun                  = benchmark == nullptr || benchmark[0] == '\0';
@@ -275,11 +273,28 @@ TEST_P(GLMark2Benchmark, Run)
     run();
 }
 
-ANGLE_INSTANTIATE_TEST_COMBINE_1(GLMark2Benchmark,
-                                 GLMark2BenchmarkPrint,
-                                 testing::Range(static_cast<size_t>(0), ArraySize(kBenchmarks)),
-                                 ES2_D3D11(),
-                                 ES2_OPENGLES(),
-                                 ES2_VULKAN());
+GLMark2TestParams CombineEGLPlatform(const GLMark2TestParams &in, EGLPlatformParameters eglParams)
+{
+    GLMark2TestParams out = in;
+    out.eglParameters     = eglParams;
+    return out;
+}
+
+GLMark2TestParams CombineInfo(const GLMark2TestParams &in, BenchmarkInfo info)
+{
+    GLMark2TestParams out = in;
+    out.info              = info;
+    return out;
+}
+
+using namespace egl_platform;
+
+std::vector<GLMark2TestParams> gTestsWithInfo =
+    CombineWithValues({GLMark2TestParams()}, kBenchmarks, CombineInfo);
+std::vector<EGLPlatformParameters> gEGLPlatforms = {D3D11(), OPENGLES(), VULKAN()};
+std::vector<GLMark2TestParams> gTestsWithPlatform =
+    CombineWithValues(gTestsWithInfo, gEGLPlatforms, CombineEGLPlatform);
+
+ANGLE_INSTANTIATE_TEST_ARRAY(GLMark2Benchmark, gTestsWithPlatform);
 
 }  // namespace
