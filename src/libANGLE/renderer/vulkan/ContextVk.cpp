@@ -459,13 +459,15 @@ angle::Result CommandQueue::submitFrame(vk::Context *context,
 
     mInFlightCommands.emplace_back(scopedBatch.release());
 
-    // CPU should be throttled to avoid mInFlightCommands from growing too fast.  That is done
-    // on swap() though, and there could be multiple submissions in between (through glFlush()
-    // calls), so the limit is larger than the expected number of images.  The
-    // InterleavedAttributeDataBenchmark perf test for example issues a large number of flushes.
-    ASSERT(mInFlightCommands.size() <= kInFlightCommandsLimit);
-
     ANGLE_TRY(checkCompletedCommands(context));
+
+    // CPU should be throttled to avoid mInFlightCommands from growing too fast. Important for
+    // off-screen scenarios.
+    while (mInFlightCommands.size() > kInFlightCommandsLimit)
+    {
+        ANGLE_TRY(finishToSerial(context, mInFlightCommands[0].serial,
+                                 renderer->getMaxFenceWaitTimeNs()));
+    }
 
     return angle::Result::Continue;
 }
