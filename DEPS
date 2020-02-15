@@ -422,7 +422,7 @@ hooks = [
                 '--recursive',
                 '--extract',
                 '--bucket', 'chrome-angle-capture-binaries',
-                './src/tests/perf_tests/restricted_traces',
+                'src/tests/perf_tests/restricted_traces',
     ]
   }
 ]
