@@ -260,20 +260,37 @@ std::vector<ParamsT> CombineWithFuncs(const std::vector<ParamsT> &in,
     return out;
 }
 
-template <typename ParamT, typename ModifiersT, typename ModifierT>
+template <typename ParamT, typename RangeT, typename ModifierT>
 std::vector<ParamT> CombineWithValues(const std::vector<ParamT> &in,
-                                      const ModifiersT &modifiers,
+                                      RangeT begin,
+                                      RangeT end,
                                       ParamT combine(const ParamT &, ModifierT))
 {
     std::vector<ParamT> out;
     for (const ParamT &paramsIn : in)
     {
-        for (ModifierT modifier : modifiers)
+        for (auto iter = begin; iter != end; ++iter)
         {
-            out.push_back(combine(paramsIn, modifier));
+            out.push_back(combine(paramsIn, *iter));
         }
     }
     return out;
+}
+
+template <typename ParamT, typename ModifierT>
+std::vector<ParamT> CombineWithValues(const std::vector<ParamT> &in,
+                                      const std::initializer_list<ModifierT> &modifiers,
+                                      ParamT combine(const ParamT &, ModifierT))
+{
+    return CombineWithValues(in, modifiers.begin(), modifiers.end(), combine);
+}
+
+template <typename ParamT, typename ModifiersT, typename ModifierT>
+std::vector<ParamT> CombineWithValues(const std::vector<ParamT> &in,
+                                      const ModifiersT &modifiers,
+                                      ParamT combine(const ParamT &, ModifierT))
+{
+    return CombineWithValues(in, std::begin(modifiers), std::end(modifiers), combine);
 }
 }  // namespace angle
 

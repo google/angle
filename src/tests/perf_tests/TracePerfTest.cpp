@@ -11,6 +11,7 @@
 #include "common/PackedEnums.h"
 #include "common/system_utils.h"
 #include "tests/perf_tests/ANGLEPerfTest.h"
+#include "tests/perf_tests/DrawCallPerfParams.h"
 #include "util/egl_loader_autogen.h"
 
 #include "restricted_traces/trex_1300_1310/trex_1300_1310_capture_context1.h"
@@ -174,28 +175,6 @@ TEST_P(TracePerfTest, Run)
     run();
 }
 
-TracePerfParams GL(const TracePerfParams &in)
-{
-    TracePerfParams out = in;
-    out.eglParameters   = OPENGL_OR_GLES();
-    return out;
-}
-
-TracePerfParams Vulkan(const TracePerfParams &in)
-{
-    TracePerfParams out = in;
-    out.eglParameters   = VULKAN();
-    return out;
-}
-
-// Note: WGL replay currently broken because interface locations are not remapped.
-ANGLE_MAYBE_UNUSED TracePerfParams WGL(const TracePerfParams &in)
-{
-    TracePerfParams out = in;
-    out.driver          = angle::GLESDriverType::SystemWGL;
-    return out;
-}
-
 TracePerfParams CombineTestID(const TracePerfParams &in, TracePerfTestID id)
 {
     TracePerfParams out = in;
@@ -203,9 +182,11 @@ TracePerfParams CombineTestID(const TracePerfParams &in, TracePerfTestID id)
     return out;
 }
 
-std::vector<TracePerfParams> gTestsWithID =
-    CombineWithValues({TracePerfParams()}, AllEnums<TracePerfTestID>(), CombineTestID);
-std::vector<TracePerfParams> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {GL, Vulkan});
+using namespace params;
+using P = TracePerfParams;
+
+std::vector<P> gTestsWithID = CombineWithValues({P()}, AllEnums<TracePerfTestID>(), CombineTestID);
+std::vector<P> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {GL<P>, Vulkan<P>});
 ANGLE_INSTANTIATE_TEST_ARRAY(TracePerfTest, gTestsWithRenderer);
 
 }  // anonymous namespace

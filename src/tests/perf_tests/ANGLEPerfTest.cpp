@@ -332,9 +332,11 @@ std::string RenderTestParams::backend() const
         case angle::GLESDriverType::AngleEGL:
             break;
         case angle::GLESDriverType::SystemEGL:
-            return "_native";
+            strstr << "_native";
+            break;
         case angle::GLESDriverType::SystemWGL:
-            return "_wgl";
+            strstr << "_wgl";
+            break;
         default:
             assert(0);
             return "_unk";
@@ -342,6 +344,8 @@ std::string RenderTestParams::backend() const
 
     switch (getRenderer())
     {
+        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
+            break;
         case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
             strstr << "_d3d11";
             break;
@@ -353,9 +357,6 @@ std::string RenderTestParams::backend() const
             break;
         case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
             strstr << "_gles";
-            break;
-        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
-            strstr << "_default";
             break;
         case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
             strstr << "_vulkan";
