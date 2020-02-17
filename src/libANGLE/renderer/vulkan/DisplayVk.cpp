@@ -92,8 +92,13 @@ egl::Error DisplayVk::waitClient(const gl::Context *context)
 
 egl::Error DisplayVk::waitNative(const gl::Context *context, EGLint engine)
 {
-    UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    ANGLE_TRACE_EVENT0("gpu.angle", "DisplayVk::waitNative");
+    return angle::ResultToEGL(waitNativeImpl());
+}
+
+angle::Result DisplayVk::waitNativeImpl()
+{
+    return angle::Result::Continue;
 }
 
 SurfaceImpl *DisplayVk::createWindowSurface(const egl::SurfaceState &state,

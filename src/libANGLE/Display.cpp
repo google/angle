@@ -392,7 +392,9 @@ static constexpr uint32_t kScratchBufferLifetime = 64u;
 
 }  // anonymous namespace
 
-DisplayState::DisplayState() : label(nullptr), featuresAllDisabled(false) {}
+DisplayState::DisplayState(EGLNativeDisplayType nativeDisplayId)
+    : label(nullptr), featuresAllDisabled(false), displayId(nativeDisplayId)
+{}
 
 DisplayState::~DisplayState() {}
 
@@ -506,8 +508,8 @@ Display *Display::GetDisplayFromDevice(Device *device, const AttributeMap &attri
 }
 
 Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice)
-    : mImplementation(nullptr),
-      mDisplayId(displayId),
+    : mState(displayId),
+      mImplementation(nullptr),
       mAttributeMap(),
       mConfigSet(),
       mContextSet(),
@@ -535,7 +537,7 @@ Display::~Display()
     if (mPlatform == EGL_PLATFORM_ANGLE_ANGLE)
     {
         ANGLEPlatformDisplayMap *displays      = GetANGLEPlatformDisplayMap();
-        ANGLEPlatformDisplayMap::iterator iter = displays->find(mDisplayId);
+        ANGLEPlatformDisplayMap::iterator iter = displays->find(mState.displayId);
         if (iter != displays->end())
         {
             displays->erase(iter);
