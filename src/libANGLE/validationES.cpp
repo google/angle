@@ -1672,17 +1672,16 @@ bool ValidateBeginQueryBase(Context *context, QueryType target, QueryID id)
         return false;
     }
 
-    Query *queryObject = context->getQuery(id, true, target);
-
     // check that name was obtained with glGenQueries
-    if (!queryObject)
+    if (!context->isQueryGenerated(id))
     {
         context->validationError(GL_INVALID_OPERATION, kInvalidQueryId);
         return false;
     }
 
-    // check for type mismatch
-    if (queryObject->getType() != target)
+    // Check for type mismatch. If query is not yet started we're good to go.
+    Query *queryObject = context->getQuery(id);
+    if (queryObject && queryObject->getType() != target)
     {
         context->validationError(GL_INVALID_OPERATION, kQueryTargetMismatch);
         return false;
@@ -1748,14 +1747,15 @@ bool ValidateQueryCounterEXT(Context *context, QueryID id, QueryType target)
         return false;
     }
 
-    Query *queryObject = context->getQuery(id, true, target);
-    if (queryObject == nullptr)
+    if (!context->isQueryGenerated(id))
     {
         context->validationError(GL_INVALID_OPERATION, kInvalidQueryId);
         return false;
     }
 
-    if (context->getState().isQueryActive(queryObject))
+    // If query object is not started, that's fine.
+    Query *queryObject = context->getQuery(id);
+    if (queryObject && context->getState().isQueryActive(queryObject))
     {
         context->validationError(GL_INVALID_OPERATION, kQueryActive);
         return false;
@@ -1872,7 +1872,7 @@ bool ValidateGetQueryObjectValueBase(Context *context, QueryID id, GLenum pname,
         }
     }
 
-    Query *queryObject = context->getQuery(id, false, QueryType::InvalidEnum);
+    Query *queryObject = context->getQuery(id);
 
     if (!queryObject)
     {

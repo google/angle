@@ -1239,7 +1239,7 @@ void Context::bindProgramPipeline(ProgramPipelineID pipelineHandle)
 
 void Context::beginQuery(QueryType target, QueryID query)
 {
-    Query *queryObject = getQuery(query, true, target);
+    Query *queryObject = getOrCreateQuery(query, target);
     ASSERT(queryObject);
 
     // begin query
@@ -1267,7 +1267,7 @@ void Context::queryCounter(QueryID id, QueryType target)
 {
     ASSERT(target == QueryType::Timestamp);
 
-    Query *queryObject = getQuery(id, true, target);
+    Query *queryObject = getOrCreateQuery(id, target);
     ASSERT(queryObject);
 
     ANGLE_CONTEXT_TRY(queryObject->queryCounter(this));
@@ -1386,7 +1386,7 @@ FenceNV *Context::getFenceNV(FenceNVID handle)
     return mFenceNVMap.query(handle);
 }
 
-Query *Context::getQuery(QueryID handle, bool create, QueryType type)
+Query *Context::getOrCreateQuery(QueryID handle, QueryType type)
 {
     if (!mQueryMap.contains(handle))
     {
@@ -1394,7 +1394,7 @@ Query *Context::getQuery(QueryID handle, bool create, QueryType type)
     }
 
     Query *query = mQueryMap.query(handle);
-    if (!query && create)
+    if (!query)
     {
         ASSERT(type != QueryType::InvalidEnum);
         query = new Query(mImplementation.get(), type, handle);
@@ -7083,9 +7083,14 @@ void Context::deleteQueries(GLsizei n, const QueryID *ids)
     }
 }
 
+bool Context::isQueryGenerated(QueryID query) const
+{
+    return mQueryMap.contains(query);
+}
+
 GLboolean Context::isQuery(QueryID id)
 {
-    return ConvertToGLBoolean(getQuery(id, false, QueryType::InvalidEnum) != nullptr);
+    return ConvertToGLBoolean(getQuery(id) != nullptr);
 }
 
 void Context::uniformMatrix2x3fv(GLint location,
