@@ -233,7 +233,7 @@
     /* GL_CHROMIUM_path_rendering */                                                               \
     GLuint genPaths(GLsizei range);                                                                \
     void deletePaths(PathID firstPacked, GLsizei range);                                           \
-    GLboolean isPath(PathID pathPacked);                                                           \
+    GLboolean isPath(PathID pathPacked) const;                                                     \
     void pathCommands(PathID pathPacked, GLsizei numCommands, const GLubyte *commands,             \
                       GLsizei numCoords, GLenum coordType, const void *coords);                    \
     void pathParameterf(PathID pathPacked, GLenum pname, GLfloat value);                           \
@@ -345,7 +345,7 @@
                                     GLint *params);                                                \
     void getUnsignedBytev(GLenum pname, GLubyte *data);                                            \
     void getUnsignedBytei_v(GLenum target, GLuint index, GLubyte *data);                           \
-    GLboolean isMemoryObject(MemoryObjectID memoryObjectPacked);                                   \
+    GLboolean isMemoryObject(MemoryObjectID memoryObjectPacked) const;                             \
     void memoryObjectParameteriv(MemoryObjectID memoryObjectPacked, GLenum pname,                  \
                                  const GLint *params);                                             \
     void texStorageMem2D(TextureType targetPacked, GLsizei levels, GLenum internalFormat,          \
@@ -376,7 +376,7 @@
     void deleteSemaphores(GLsizei n, const SemaphoreID *semaphoresPacked);                         \
     void genSemaphores(GLsizei n, SemaphoreID *semaphoresPacked);                                  \
     void getSemaphoreParameterui64v(SemaphoreID semaphorePacked, GLenum pname, GLuint64 *params);  \
-    GLboolean isSemaphore(SemaphoreID semaphorePacked);                                            \
+    GLboolean isSemaphore(SemaphoreID semaphorePacked) const;                                      \
     void semaphoreParameterui64v(SemaphoreID semaphorePacked, GLenum pname,                        \
                                  const GLuint64 *params);                                          \
     void signalSemaphore(SemaphoreID semaphorePacked, GLuint numBufferBarriers,                    \
@@ -404,7 +404,7 @@
     void finishFenceNV(FenceNVID fencePacked);                                                     \
     void genFencesNV(GLsizei n, FenceNVID *fencesPacked);                                          \
     void getFenceivNV(FenceNVID fencePacked, GLenum pname, GLint *params);                         \
-    GLboolean isFenceNV(FenceNVID fencePacked);                                                    \
+    GLboolean isFenceNV(FenceNVID fencePacked) const;                                              \
     void setFenceNV(FenceNVID fencePacked, GLenum condition);                                      \
     GLboolean testFenceNV(FenceNVID fencePacked);                                                  \
     /* GL_OES_EGL_image */                                                                         \

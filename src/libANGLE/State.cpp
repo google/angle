@@ -1862,7 +1862,7 @@ void State::setMaxShaderCompilerThreads(GLuint count)
     mMaxShaderCompilerThreads = count;
 }
 
-void State::getBooleanv(GLenum pname, GLboolean *params)
+void State::getBooleanv(GLenum pname, GLboolean *params) const
 {
     switch (pname)
     {
@@ -1960,7 +1960,7 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
     }
 }
 
-void State::getFloatv(GLenum pname, GLfloat *params)
+void State::getFloatv(GLenum pname, GLfloat *params) const
 {
     // Please note: DEPTH_CLEAR_VALUE is included in our internal getFloatv implementation
     // because it is stored as a float, despite the fact that the GL ES 2.0 spec names
@@ -2038,13 +2038,14 @@ void State::getFloatv(GLenum pname, GLfloat *params)
             break;
         }
         case GL_MODELVIEW_MATRIX:
-            memcpy(params, mGLES1State.mModelviewMatrices.back().data(), 16 * sizeof(GLfloat));
+            memcpy(params, mGLES1State.mModelviewMatrices.back().constData(), 16 * sizeof(GLfloat));
             break;
         case GL_PROJECTION_MATRIX:
-            memcpy(params, mGLES1State.mProjectionMatrices.back().data(), 16 * sizeof(GLfloat));
+            memcpy(params, mGLES1State.mProjectionMatrices.back().constData(),
+                   16 * sizeof(GLfloat));
             break;
         case GL_TEXTURE_MATRIX:
-            memcpy(params, mGLES1State.mTextureMatrices[mActiveSampler].back().data(),
+            memcpy(params, mGLES1State.mTextureMatrices[mActiveSampler].back().constData(),
                    16 * sizeof(GLfloat));
             break;
         case GL_LIGHT_MODEL_AMBIENT:
@@ -2072,7 +2073,7 @@ void State::getFloatv(GLenum pname, GLfloat *params)
     }
 }
 
-angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *params)
+angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *params) const
 {
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {
@@ -2526,7 +2527,7 @@ void State::getPointerv(const Context *context, GLenum pname, void **params) con
     }
 }
 
-void State::getIntegeri_v(GLenum target, GLuint index, GLint *data)
+void State::getIntegeri_v(GLenum target, GLuint index, GLint *data) const
 {
     switch (target)
     {
@@ -2592,7 +2593,7 @@ void State::getIntegeri_v(GLenum target, GLuint index, GLint *data)
     }
 }
 
-void State::getInteger64i_v(GLenum target, GLuint index, GLint64 *data)
+void State::getInteger64i_v(GLenum target, GLuint index, GLint64 *data) const
 {
     switch (target)
     {
@@ -2634,7 +2635,7 @@ void State::getInteger64i_v(GLenum target, GLuint index, GLint64 *data)
     }
 }
 
-void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
+void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data) const
 {
     switch (target)
     {

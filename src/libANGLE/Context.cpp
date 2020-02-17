@@ -871,7 +871,7 @@ void Context::deletePaths(PathID first, GLsizei range)
     mState.mPathManager->deletePaths(first, range);
 }
 
-GLboolean Context::isPath(PathID path)
+GLboolean Context::isPath(PathID path) const
 {
     const auto *pathObj = mState.mPathManager->getPath(path);
     if (pathObj == nullptr)
@@ -1126,7 +1126,7 @@ void Context::getObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *lengt
     GetObjectLabelBase(objectLabel, bufSize, length, label);
 }
 
-GLboolean Context::isSampler(SamplerID samplerName)
+GLboolean Context::isSampler(SamplerID samplerName) const
 {
     return mState.mSamplerManager->isSampler(samplerName);
 }
@@ -1381,7 +1381,7 @@ Framebuffer *Context::getFramebuffer(FramebufferID handle) const
     return mState.mFramebufferManager->getFramebuffer(handle);
 }
 
-FenceNV *Context::getFenceNV(FenceNVID handle)
+FenceNV *Context::getFenceNV(FenceNVID handle) const
 {
     return mFenceNVMap.query(handle);
 }
@@ -1434,7 +1434,7 @@ Compiler *Context::getCompiler() const
     return mCompiler.get();
 }
 
-void Context::getBooleanvImpl(GLenum pname, GLboolean *params)
+void Context::getBooleanvImpl(GLenum pname, GLboolean *params) const
 {
     switch (pname)
     {
@@ -1451,7 +1451,7 @@ void Context::getBooleanvImpl(GLenum pname, GLboolean *params)
     }
 }
 
-void Context::getFloatvImpl(GLenum pname, GLfloat *params)
+void Context::getFloatvImpl(GLenum pname, GLfloat *params) const
 {
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
@@ -1505,7 +1505,7 @@ void Context::getFloatvImpl(GLenum pname, GLfloat *params)
     }
 }
 
-void Context::getIntegervImpl(GLenum pname, GLint *params)
+void Context::getIntegervImpl(GLenum pname, GLint *params) const
 {
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
@@ -1889,30 +1889,26 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
         case GL_COLOR_ARRAY_BUFFER_BINDING:
         case GL_POINT_SIZE_ARRAY_BUFFER_BINDING_OES:
         case GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING:
-            getVertexAttribiv(static_cast<GLuint>(vertexArrayIndex(ParamToVertexArrayType(pname))),
-                              GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, params);
+            getIntegerVertexAttribImpl(pname, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, params);
             break;
         case GL_VERTEX_ARRAY_STRIDE:
         case GL_NORMAL_ARRAY_STRIDE:
         case GL_COLOR_ARRAY_STRIDE:
         case GL_POINT_SIZE_ARRAY_STRIDE_OES:
         case GL_TEXTURE_COORD_ARRAY_STRIDE:
-            getVertexAttribiv(static_cast<GLuint>(vertexArrayIndex(ParamToVertexArrayType(pname))),
-                              GL_VERTEX_ATTRIB_ARRAY_STRIDE, params);
+            getIntegerVertexAttribImpl(pname, GL_VERTEX_ATTRIB_ARRAY_STRIDE, params);
             break;
         case GL_VERTEX_ARRAY_SIZE:
         case GL_COLOR_ARRAY_SIZE:
         case GL_TEXTURE_COORD_ARRAY_SIZE:
-            getVertexAttribiv(static_cast<GLuint>(vertexArrayIndex(ParamToVertexArrayType(pname))),
-                              GL_VERTEX_ATTRIB_ARRAY_SIZE, params);
+            getIntegerVertexAttribImpl(pname, GL_VERTEX_ATTRIB_ARRAY_SIZE, params);
             break;
         case GL_VERTEX_ARRAY_TYPE:
         case GL_COLOR_ARRAY_TYPE:
         case GL_NORMAL_ARRAY_TYPE:
         case GL_POINT_SIZE_ARRAY_TYPE_OES:
         case GL_TEXTURE_COORD_ARRAY_TYPE:
-            getVertexAttribiv(static_cast<GLuint>(vertexArrayIndex(ParamToVertexArrayType(pname))),
-                              GL_VERTEX_ATTRIB_ARRAY_TYPE, params);
+            getIntegerVertexAttribImpl(pname, GL_VERTEX_ATTRIB_ARRAY_TYPE, params);
             break;
 
         // GL_KHR_parallel_shader_compile
@@ -1931,7 +1927,13 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
     }
 }
 
-void Context::getInteger64vImpl(GLenum pname, GLint64 *params)
+void Context::getIntegerVertexAttribImpl(GLenum pname, GLenum attribpname, GLint *params) const
+{
+    getVertexAttribivImpl(static_cast<GLuint>(vertexArrayIndex(ParamToVertexArrayType(pname))),
+                          attribpname, params);
+}
+
+void Context::getInteger64vImpl(GLenum pname, GLint64 *params) const
 {
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
@@ -2760,9 +2762,9 @@ void Context::handleError(GLenum errorCode,
     mErrors.handleError(errorCode, message, file, function, line);
 }
 
-void Context::validationError(GLenum errorCode, const char *message)
+void Context::validationError(GLenum errorCode, const char *message) const
 {
-    mErrors.validationError(errorCode, message);
+    const_cast<Context *>(this)->mErrors.validationError(errorCode, message);
 }
 
 // Get one of the recorded errors and clear its flag, if any.
@@ -2903,13 +2905,13 @@ TransformFeedback *Context::checkTransformFeedbackAllocation(
     return transformFeedback;
 }
 
-bool Context::isVertexArrayGenerated(VertexArrayID vertexArray)
+bool Context::isVertexArrayGenerated(VertexArrayID vertexArray) const
 {
     ASSERT(mVertexArrayMap.contains({0}));
     return mVertexArrayMap.contains(vertexArray);
 }
 
-bool Context::isTransformFeedbackGenerated(TransformFeedbackID transformFeedback)
+bool Context::isTransformFeedbackGenerated(TransformFeedbackID transformFeedback) const
 {
     ASSERT(mTransformFeedbackMap.contains({0}));
     return mTransformFeedbackMap.contains(transformFeedback);
@@ -3291,7 +3293,7 @@ size_t Context::getExtensionStringCount() const
     return mExtensionStrings.size();
 }
 
-bool Context::isExtensionRequestable(const char *name)
+bool Context::isExtensionRequestable(const char *name) const
 {
     const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
     auto extension                         = extensionInfos.find(name);
@@ -3300,7 +3302,7 @@ bool Context::isExtensionRequestable(const char *name)
            mSupportedExtensions.*(extension->second.ExtensionsMember);
 }
 
-bool Context::isExtensionDisablable(const char *name)
+bool Context::isExtensionDisablable(const char *name) const
 {
     const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
     auto extension                         = extensionInfos.find(name);
@@ -5351,13 +5353,18 @@ void Context::vertexAttribI4uiv(GLuint index, const GLuint *v)
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::getVertexAttribiv(GLuint index, GLenum pname, GLint *params)
+void Context::getVertexAttribivImpl(GLuint index, GLenum pname, GLint *params) const
 {
     const VertexAttribCurrentValueData &currentValues =
         getState().getVertexAttribCurrentValue(index);
     const VertexArray *vao = getState().getVertexArray();
     QueryVertexAttribiv(vao->getVertexAttribute(index), vao->getBindingFromAttribIndex(index),
                         currentValues, pname, params);
+}
+
+void Context::getVertexAttribiv(GLuint index, GLenum pname, GLint *params)
+{
+    return getVertexAttribivImpl(index, pname, params);
 }
 
 void Context::getVertexAttribivRobust(GLuint index,
@@ -6677,7 +6684,7 @@ GLint Context::getUniformLocation(ShaderProgramID program, const GLchar *name)
     return programObject->getUniformLocation(name);
 }
 
-GLboolean Context::isBuffer(BufferID buffer)
+GLboolean Context::isBuffer(BufferID buffer) const
 {
     if (buffer.value == 0)
     {
@@ -6687,18 +6694,18 @@ GLboolean Context::isBuffer(BufferID buffer)
     return ConvertToGLBoolean(getBuffer(buffer));
 }
 
-GLboolean Context::isEnabled(GLenum cap)
+GLboolean Context::isEnabled(GLenum cap) const
 {
     return mState.getEnableFeature(cap);
 }
 
-GLboolean Context::isEnabledi(GLenum target, GLuint index)
+GLboolean Context::isEnabledi(GLenum target, GLuint index) const
 {
     UNIMPLEMENTED();
     return false;
 }
 
-GLboolean Context::isFramebuffer(FramebufferID framebuffer)
+GLboolean Context::isFramebuffer(FramebufferID framebuffer) const
 {
     if (framebuffer.value == 0)
     {
@@ -6708,7 +6715,7 @@ GLboolean Context::isFramebuffer(FramebufferID framebuffer)
     return ConvertToGLBoolean(getFramebuffer(framebuffer));
 }
 
-GLboolean Context::isProgram(ShaderProgramID program)
+GLboolean Context::isProgram(ShaderProgramID program) const
 {
     if (program.value == 0)
     {
@@ -6718,7 +6725,7 @@ GLboolean Context::isProgram(ShaderProgramID program)
     return ConvertToGLBoolean(getProgramNoResolveLink(program));
 }
 
-GLboolean Context::isRenderbuffer(RenderbufferID renderbuffer)
+GLboolean Context::isRenderbuffer(RenderbufferID renderbuffer) const
 {
     if (renderbuffer.value == 0)
     {
@@ -6728,7 +6735,7 @@ GLboolean Context::isRenderbuffer(RenderbufferID renderbuffer)
     return ConvertToGLBoolean(getRenderbuffer(renderbuffer));
 }
 
-GLboolean Context::isShader(ShaderProgramID shader)
+GLboolean Context::isShader(ShaderProgramID shader) const
 {
     if (shader.value == 0)
     {
@@ -6738,7 +6745,7 @@ GLboolean Context::isShader(ShaderProgramID shader)
     return ConvertToGLBoolean(getShader(shader));
 }
 
-GLboolean Context::isTexture(TextureID texture)
+GLboolean Context::isTexture(TextureID texture) const
 {
     if (texture.value == 0)
     {
@@ -7088,7 +7095,7 @@ bool Context::isQueryGenerated(QueryID query) const
     return mQueryMap.contains(query);
 }
 
-GLboolean Context::isQuery(QueryID id)
+GLboolean Context::isQuery(QueryID id) const
 {
     return ConvertToGLBoolean(getQuery(id) != nullptr);
 }
@@ -7180,7 +7187,7 @@ void Context::genVertexArrays(GLsizei n, VertexArrayID *arrays)
     }
 }
 
-GLboolean Context::isVertexArray(VertexArrayID array)
+GLboolean Context::isVertexArray(VertexArrayID array) const
 {
     if (array.value == 0)
     {
@@ -7255,7 +7262,7 @@ void Context::genTransformFeedbacks(GLsizei n, TransformFeedbackID *ids)
     }
 }
 
-GLboolean Context::isTransformFeedback(TransformFeedbackID id)
+GLboolean Context::isTransformFeedback(TransformFeedbackID id) const
 {
     if (id.value == 0)
     {
@@ -7404,7 +7411,7 @@ GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
     return syncHandle;
 }
 
-GLboolean Context::isSync(GLsync sync)
+GLboolean Context::isSync(GLsync sync) const
 {
     return (getSync(sync) != nullptr);
 }
@@ -7850,7 +7857,7 @@ void Context::deleteProgramPipelines(GLsizei count, const ProgramPipelineID *pip
     }
 }
 
-GLboolean Context::isProgramPipeline(ProgramPipelineID pipeline)
+GLboolean Context::isProgramPipeline(ProgramPipelineID pipeline) const
 {
     if (pipeline.value == 0)
     {
@@ -7958,7 +7965,7 @@ void Context::getnUniformuivRobust(ShaderProgramID program,
     UNIMPLEMENTED();
 }
 
-GLboolean Context::isFenceNV(FenceNVID fence)
+GLboolean Context::isFenceNV(FenceNVID fence) const
 {
     FenceNV *fenceObject = getFenceNV(fence);
 
@@ -8018,7 +8025,7 @@ void Context::deleteMemoryObjects(GLsizei n, const MemoryObjectID *memoryObjects
     }
 }
 
-GLboolean Context::isMemoryObject(MemoryObjectID memoryObject)
+GLboolean Context::isMemoryObject(MemoryObjectID memoryObject) const
 {
     if (memoryObject.value == 0)
     {
@@ -8132,7 +8139,7 @@ void Context::deleteSemaphores(GLsizei n, const SemaphoreID *semaphores)
     }
 }
 
-GLboolean Context::isSemaphore(SemaphoreID semaphore)
+GLboolean Context::isSemaphore(SemaphoreID semaphore) const
 {
     if (semaphore.value == 0)
     {
@@ -8739,14 +8746,14 @@ void StateCache::updateBasicDrawElementsError()
     mCachedBasicDrawElementsError = kInvalidPointer;
 }
 
-intptr_t StateCache::getBasicDrawStatesErrorImpl(Context *context) const
+intptr_t StateCache::getBasicDrawStatesErrorImpl(const Context *context) const
 {
     ASSERT(mCachedBasicDrawStatesError == kInvalidPointer);
     mCachedBasicDrawStatesError = reinterpret_cast<intptr_t>(ValidateDrawStates(context));
     return mCachedBasicDrawStatesError;
 }
 
-intptr_t StateCache::getBasicDrawElementsErrorImpl(Context *context) const
+intptr_t StateCache::getBasicDrawElementsErrorImpl(const Context *context) const
 {
     ASSERT(mCachedBasicDrawElementsError == kInvalidPointer);
     mCachedBasicDrawElementsError = reinterpret_cast<intptr_t>(ValidateDrawElementsStates(context));

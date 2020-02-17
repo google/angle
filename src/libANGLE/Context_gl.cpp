@@ -1139,7 +1139,7 @@ void Context::initNames()
     UNIMPLEMENTED();
 }
 
-GLboolean Context::isList(GLuint list)
+GLboolean Context::isList(GLuint list) const
 {
     UNIMPLEMENTED();
     return false;

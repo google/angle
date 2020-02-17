@@ -187,7 +187,7 @@ class StateCache final : angle::NonCopyable
         return getBasicDrawStatesErrorImpl(context) != 0;
     }
 
-    intptr_t getBasicDrawStatesError(Context *context) const
+    intptr_t getBasicDrawStatesError(const Context *context) const
     {
         if (mCachedBasicDrawStatesError != kInvalidPointer)
         {
@@ -201,7 +201,7 @@ class StateCache final : angle::NonCopyable
     // 1. onActiveTransformFeedbackChange.
     // 2. onVertexArrayBufferStateChange.
     // 3. onBufferBindingChange.
-    intptr_t getBasicDrawElementsError(Context *context) const
+    intptr_t getBasicDrawElementsError(const Context *context) const
     {
         if (mCachedBasicDrawElementsError != kInvalidPointer)
         {
@@ -291,8 +291,8 @@ class StateCache final : angle::NonCopyable
 
     void setValidDrawModes(bool pointsOK, bool linesOK, bool trisOK, bool lineAdjOK, bool triAdjOK);
 
-    intptr_t getBasicDrawStatesErrorImpl(Context *context) const;
-    intptr_t getBasicDrawElementsErrorImpl(Context *context) const;
+    intptr_t getBasicDrawStatesErrorImpl(const Context *context) const;
+    intptr_t getBasicDrawElementsErrorImpl(const Context *context) const;
 
     static constexpr intptr_t kInvalidPointer = 1;
 
@@ -374,7 +374,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void bindDrawFramebuffer(FramebufferID framebufferHandle);
 
     Buffer *getBuffer(BufferID handle) const;
-    FenceNV *getFenceNV(FenceNVID handle);
+    FenceNV *getFenceNV(FenceNVID handle) const;
     Sync *getSync(GLsync handle) const;
     ANGLE_INLINE Texture *getTexture(TextureID handle) const
     {
@@ -398,13 +398,15 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     Compiler *getCompiler() const;
 
-    bool isVertexArrayGenerated(VertexArrayID vertexArray);
-    bool isTransformFeedbackGenerated(TransformFeedbackID transformFeedback);
+    bool isVertexArrayGenerated(VertexArrayID vertexArray) const;
+    bool isTransformFeedbackGenerated(TransformFeedbackID transformFeedback) const;
 
-    void getBooleanvImpl(GLenum pname, GLboolean *params);
-    void getFloatvImpl(GLenum pname, GLfloat *params);
-    void getIntegervImpl(GLenum pname, GLint *params);
-    void getInteger64vImpl(GLenum pname, GLint64 *params);
+    void getBooleanvImpl(GLenum pname, GLboolean *params) const;
+    void getFloatvImpl(GLenum pname, GLfloat *params) const;
+    void getIntegervImpl(GLenum pname, GLint *params) const;
+    void getInteger64vImpl(GLenum pname, GLint64 *params) const;
+    void getIntegerVertexAttribImpl(GLenum pname, GLenum attribpname, GLint *params) const;
+    void getVertexAttribivImpl(GLuint index, GLenum pname, GLint *params) const;
 
     // Framebuffers are owned by the Context, so these methods do not pass through
     FramebufferID createFramebuffer();
@@ -448,7 +450,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                      const char *function,
                      unsigned int line);
 
-    void validationError(GLenum errorCode, const char *message);
+    void validationError(GLenum errorCode, const char *message) const;
 
     void markContextLost(GraphicsResetStatus status);
 
@@ -468,8 +470,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     size_t getExtensionStringCount() const;
 
-    bool isExtensionRequestable(const char *name);
-    bool isExtensionDisablable(const char *name);
+    bool isExtensionRequestable(const char *name) const;
+    bool isExtensionDisablable(const char *name) const;
     size_t getRequestableExtensionStringCount() const;
     void setExtensionEnabled(const char *name, bool enabled);
     void reinitializeAfterExtensionsChanged();

@@ -29,7 +29,7 @@ using namespace err;
 
 namespace
 {
-bool ValidateFramebufferTextureMultiviewBaseANGLE(Context *context,
+bool ValidateFramebufferTextureMultiviewBaseANGLE(const Context *context,
                                                   GLenum target,
                                                   GLenum attachment,
                                                   TextureID texture,
@@ -63,8 +63,8 @@ bool ValidateFramebufferTextureMultiviewBaseANGLE(Context *context,
     return true;
 }
 
-bool ValidateFramebufferTextureMultiviewLevelAndFormat(Context *context,
-                                                       Texture *texture,
+bool ValidateFramebufferTextureMultiviewLevelAndFormat(const Context *context,
+                                                       const Texture *texture,
                                                        GLint level)
 {
     TextureType type = texture->getType();
@@ -83,7 +83,7 @@ bool ValidateFramebufferTextureMultiviewLevelAndFormat(Context *context,
     return true;
 }
 
-bool ValidateUniformES3(Context *context, GLenum uniformType, GLint location, GLint count)
+bool ValidateUniformES3(const Context *context, GLenum uniformType, GLint location, GLint count)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -94,7 +94,7 @@ bool ValidateUniformES3(Context *context, GLenum uniformType, GLint location, GL
     return ValidateUniform(context, uniformType, location, count);
 }
 
-bool ValidateUniformMatrixES3(Context *context,
+bool ValidateUniformMatrixES3(const Context *context,
                               GLenum valueType,
                               GLint location,
                               GLsizei count,
@@ -110,7 +110,7 @@ bool ValidateUniformMatrixES3(Context *context,
     return ValidateUniformMatrix(context, valueType, location, count, transpose);
 }
 
-bool ValidateGenOrDeleteES3(Context *context, GLint n)
+bool ValidateGenOrDeleteES3(const Context *context, GLint n)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -120,7 +120,7 @@ bool ValidateGenOrDeleteES3(Context *context, GLint n)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateGenOrDeleteCountES3(Context *context, GLint count)
+bool ValidateGenOrDeleteCountES3(const Context *context, GLint count)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -135,7 +135,7 @@ bool ValidateGenOrDeleteCountES3(Context *context, GLint count)
     return true;
 }
 
-bool ValidateCopyTexture3DCommon(Context *context,
+bool ValidateCopyTexture3DCommon(const Context *context,
                                  const Texture *source,
                                  GLint sourceLevel,
                                  GLint srcInternalFormat,
@@ -258,7 +258,7 @@ bool ValidateCopyTexture3DCommon(Context *context,
 }
 }  // anonymous namespace
 
-static bool ValidateTexImageFormatCombination(gl::Context *context,
+static bool ValidateTexImageFormatCombination(const Context *context,
                                               TextureType target,
                                               GLenum internalFormat,
                                               GLenum format,
@@ -336,7 +336,7 @@ static bool ValidateTexImageFormatCombination(gl::Context *context,
         }
     }
 
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
+    const InternalFormat &formatInfo = GetInternalFormatInfo(internalFormat, type);
     if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
         context->validationError(GL_INVALID_OPERATION, kInvalidInternalFormat);
@@ -346,7 +346,7 @@ static bool ValidateTexImageFormatCombination(gl::Context *context,
     return true;
 }
 
-static bool ValidateES3CompressedFormatForTexture3D(Context *context, GLenum format)
+static bool ValidateES3CompressedFormatForTexture3D(const Context *context, GLenum format)
 {
     if (IsETC2EACFormat(format))
     {
@@ -378,7 +378,7 @@ static bool ValidateES3CompressedFormatForTexture3D(Context *context, GLenum for
     return true;
 }
 
-bool ValidateES3TexImageParametersBase(Context *context,
+bool ValidateES3TexImageParametersBase(const Context *context,
                                        TextureTarget target,
                                        GLint level,
                                        GLenum internalformat,
@@ -426,7 +426,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
         return false;
     }
 
-    const gl::Caps &caps = context->getCaps();
+    const Caps &caps = context->getCaps();
 
     switch (texType)
     {
@@ -493,7 +493,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
             return false;
     }
 
-    gl::Texture *texture = context->getTextureByType(texType);
+    Texture *texture = context->getTextureByType(texType);
     if (!texture)
     {
         context->validationError(GL_INVALID_OPERATION, kMissingTexture);
@@ -525,9 +525,9 @@ bool ValidateES3TexImageParametersBase(Context *context,
         return false;
     }
 
-    const gl::InternalFormat &actualFormatInfo = isSubImage
-                                                     ? *texture->getFormat(target, level).info
-                                                     : GetInternalFormatInfo(internalformat, type);
+    const InternalFormat &actualFormatInfo = isSubImage
+                                                 ? *texture->getFormat(target, level).info
+                                                 : GetInternalFormatInfo(internalformat, type);
     if (isCompressed)
     {
         if (!actualFormatInfo.compressed)
@@ -623,7 +623,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
         }
 
         if (width > 0 && height > 0 && depth > 0 && pixels == nullptr &&
-            context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack) == nullptr)
+            context->getState().getTargetBuffer(BufferBinding::PixelUnpack) == nullptr)
         {
             context->validationError(GL_INVALID_VALUE, kPixelDataNull);
             return false;
@@ -638,7 +638,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
     }
 
     // Check for pixel unpack buffer related API errors
-    gl::Buffer *pixelUnpackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelUnpack);
+    Buffer *pixelUnpackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelUnpack);
     if (pixelUnpackBuffer != nullptr)
     {
         // ...data is not evenly divisible into the number of bytes needed to store in memory a
@@ -647,7 +647,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
         if (!isCompressed)
         {
             size_t offset            = reinterpret_cast<size_t>(pixels);
-            size_t dataBytesPerPixel = static_cast<size_t>(gl::GetTypeInfo(type).bytes);
+            size_t dataBytesPerPixel = static_cast<size_t>(GetTypeInfo(type).bytes);
 
             if ((offset % dataBytesPerPixel) != 0)
             {
@@ -667,7 +667,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
     return true;
 }
 
-bool ValidateES3TexImage2DParameters(Context *context,
+bool ValidateES3TexImage2DParameters(const Context *context,
                                      TextureTarget target,
                                      GLint level,
                                      GLenum internalformat,
@@ -696,7 +696,7 @@ bool ValidateES3TexImage2DParameters(Context *context,
                                              depth, border, format, type, imageSize, pixels);
 }
 
-bool ValidateES3TexImage3DParameters(Context *context,
+bool ValidateES3TexImage3DParameters(const Context *context,
                                      TextureTarget target,
                                      GLint level,
                                      GLenum internalformat,
@@ -982,7 +982,7 @@ static bool IsValidES3CopyTexImageCombination(const InternalFormat &textureForma
                   // conversion between these formats.
 }
 
-bool ValidateES3CopyTexImageParametersBase(Context *context,
+bool ValidateES3CopyTexImageParametersBase(const Context *context,
                                            TextureTarget target,
                                            GLint level,
                                            GLenum internalformat,
@@ -1006,7 +1006,7 @@ bool ValidateES3CopyTexImageParametersBase(Context *context,
     ASSERT(textureFormat.valid() || !isSubImage);
 
     const auto &state               = context->getState();
-    gl::Framebuffer *framebuffer    = state.getReadFramebuffer();
+    Framebuffer *framebuffer        = state.getReadFramebuffer();
     FramebufferID readFramebufferID = framebuffer->id();
 
     if (!ValidateFramebufferComplete(context, framebuffer))
@@ -1057,7 +1057,7 @@ bool ValidateES3CopyTexImageParametersBase(Context *context,
     return (width > 0 && height > 0);
 }
 
-bool ValidateES3CopyTexImage2DParameters(Context *context,
+bool ValidateES3CopyTexImage2DParameters(const Context *context,
                                          TextureTarget target,
                                          GLint level,
                                          GLenum internalformat,
@@ -1082,7 +1082,7 @@ bool ValidateES3CopyTexImage2DParameters(Context *context,
                                                  border);
 }
 
-bool ValidateES3CopyTexImage3DParameters(Context *context,
+bool ValidateES3CopyTexImage3DParameters(const Context *context,
                                          TextureTarget target,
                                          GLint level,
                                          GLenum internalformat,
@@ -1107,7 +1107,7 @@ bool ValidateES3CopyTexImage3DParameters(Context *context,
                                                  border);
 }
 
-bool ValidateES3TexStorageParametersBase(Context *context,
+bool ValidateES3TexStorageParametersBase(const Context *context,
                                          TextureType target,
                                          GLsizei levels,
                                          GLenum internalformat,
@@ -1127,13 +1127,13 @@ bool ValidateES3TexStorageParametersBase(Context *context,
         maxDim = std::max(maxDim, depth);
     }
 
-    if (levels > gl::log2(maxDim) + 1)
+    if (levels > log2(maxDim) + 1)
     {
         context->validationError(GL_INVALID_OPERATION, kInvalidMipLevels);
         return false;
     }
 
-    const gl::Caps &caps = context->getCaps();
+    const Caps &caps = context->getCaps();
 
     switch (target)
     {
@@ -1206,7 +1206,7 @@ bool ValidateES3TexStorageParametersBase(Context *context,
             return false;
     }
 
-    gl::Texture *texture = context->getTextureByType(target);
+    Texture *texture = context->getTextureByType(target);
     if (!texture || texture->id().value == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kMissingTexture);
@@ -1219,7 +1219,7 @@ bool ValidateES3TexStorageParametersBase(Context *context,
         return false;
     }
 
-    const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalformat);
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalformat);
     if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
@@ -1250,7 +1250,7 @@ bool ValidateES3TexStorageParametersBase(Context *context,
     return true;
 }
 
-bool ValidateES3TexStorage2DParameters(Context *context,
+bool ValidateES3TexStorage2DParameters(const Context *context,
                                        TextureType target,
                                        GLsizei levels,
                                        GLenum internalformat,
@@ -1268,7 +1268,7 @@ bool ValidateES3TexStorage2DParameters(Context *context,
                                                height, depth);
 }
 
-bool ValidateES3TexStorage3DParameters(Context *context,
+bool ValidateES3TexStorage3DParameters(const Context *context,
                                        TextureType target,
                                        GLsizei levels,
                                        GLenum internalformat,
@@ -1286,7 +1286,7 @@ bool ValidateES3TexStorage3DParameters(Context *context,
                                                height, depth);
 }
 
-bool ValidateBeginQuery(gl::Context *context, QueryType target, QueryID id)
+bool ValidateBeginQuery(const Context *context, QueryType target, QueryID id)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1297,7 +1297,7 @@ bool ValidateBeginQuery(gl::Context *context, QueryType target, QueryID id)
     return ValidateBeginQueryBase(context, target, id);
 }
 
-bool ValidateEndQuery(gl::Context *context, QueryType target)
+bool ValidateEndQuery(const Context *context, QueryType target)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1308,7 +1308,7 @@ bool ValidateEndQuery(gl::Context *context, QueryType target)
     return ValidateEndQueryBase(context, target);
 }
 
-bool ValidateGetQueryiv(Context *context, QueryType target, GLenum pname, GLint *params)
+bool ValidateGetQueryiv(const Context *context, QueryType target, GLenum pname, const GLint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1319,7 +1319,10 @@ bool ValidateGetQueryiv(Context *context, QueryType target, GLenum pname, GLint 
     return ValidateGetQueryivBase(context, target, pname, nullptr);
 }
 
-bool ValidateGetQueryObjectuiv(Context *context, QueryID id, GLenum pname, GLuint *params)
+bool ValidateGetQueryObjectuiv(const Context *context,
+                               QueryID id,
+                               GLenum pname,
+                               const GLuint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1330,7 +1333,7 @@ bool ValidateGetQueryObjectuiv(Context *context, QueryID id, GLenum pname, GLuin
     return ValidateGetQueryObjectValueBase(context, id, pname, nullptr);
 }
 
-bool ValidateFramebufferTextureLayer(Context *context,
+bool ValidateFramebufferTextureLayer(const Context *context,
                                      GLenum target,
                                      GLenum attachment,
                                      TextureID texture,
@@ -1348,7 +1351,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
         return false;
     }
 
-    const gl::Caps &caps = context->getCaps();
+    const Caps &caps = context->getCaps();
     if (texture.value != 0)
     {
         if (layer < 0)
@@ -1357,14 +1360,14 @@ bool ValidateFramebufferTextureLayer(Context *context,
             return false;
         }
 
-        gl::Texture *tex = context->getTexture(texture);
+        Texture *tex = context->getTexture(texture);
         ASSERT(tex);
 
         switch (tex->getType())
         {
             case TextureType::_2DArray:
             {
-                if (level > gl::log2(caps.max2DTextureSize))
+                if (level > log2(caps.max2DTextureSize))
                 {
                     context->validationError(GL_INVALID_VALUE, kFramebufferTextureInvalidMipLevel);
                     return false;
@@ -1380,7 +1383,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
 
             case TextureType::_3D:
             {
-                if (level > gl::log2(caps.max3DTextureSize))
+                if (level > log2(caps.max3DTextureSize))
                 {
                     context->validationError(GL_INVALID_VALUE, kFramebufferTextureInvalidMipLevel);
                     return false;
@@ -1427,7 +1430,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
     return true;
 }
 
-bool ValidateInvalidateFramebuffer(Context *context,
+bool ValidateInvalidateFramebuffer(const Context *context,
                                    GLenum target,
                                    GLsizei numAttachments,
                                    const GLenum *attachments)
@@ -1458,7 +1461,7 @@ bool ValidateInvalidateFramebuffer(Context *context,
                                           defaultFramebuffer);
 }
 
-bool ValidateInvalidateSubFramebuffer(Context *context,
+bool ValidateInvalidateSubFramebuffer(const Context *context,
                                       GLenum target,
                                       GLsizei numAttachments,
                                       const GLenum *attachments,
@@ -1476,7 +1479,7 @@ bool ValidateInvalidateSubFramebuffer(Context *context,
     return ValidateInvalidateFramebuffer(context, target, numAttachments, attachments);
 }
 
-bool ValidateClearBuffer(Context *context)
+bool ValidateClearBuffer(const Context *context)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1492,7 +1495,7 @@ bool ValidateClearBuffer(Context *context)
     return true;
 }
 
-bool ValidateDrawRangeElements(Context *context,
+bool ValidateDrawRangeElements(const Context *context,
                                PrimitiveMode mode,
                                GLuint start,
                                GLuint end,
@@ -1526,10 +1529,10 @@ bool ValidateDrawRangeElements(Context *context,
     return true;
 }
 
-bool ValidateGetUniformuiv(Context *context,
+bool ValidateGetUniformuiv(const Context *context,
                            ShaderProgramID program,
                            GLint location,
-                           GLuint *params)
+                           const GLuint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1540,7 +1543,7 @@ bool ValidateGetUniformuiv(Context *context,
     return ValidateGetUniformBase(context, program, location);
 }
 
-bool ValidateReadBuffer(Context *context, GLenum src)
+bool ValidateReadBuffer(const Context *context, GLenum src)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1589,7 +1592,7 @@ bool ValidateReadBuffer(Context *context, GLenum src)
     return true;
 }
 
-bool ValidateCompressedTexImage3D(Context *context,
+bool ValidateCompressedTexImage3D(const Context *context,
                                   TextureTarget target,
                                   GLint level,
                                   GLenum internalformat,
@@ -1628,7 +1631,7 @@ bool ValidateCompressedTexImage3D(Context *context,
     }
 
     GLuint blockSize = 0;
-    if (!formatInfo.computeCompressedImageSize(gl::Extents(width, height, depth), &blockSize))
+    if (!formatInfo.computeCompressedImageSize(Extents(width, height, depth), &blockSize))
     {
         context->validationError(GL_INVALID_VALUE, kIntegerOverflow);
         return false;
@@ -1658,7 +1661,7 @@ bool ValidateCompressedTexImage3D(Context *context,
     return true;
 }
 
-bool ValidateCompressedTexImage3DRobustANGLE(Context *context,
+bool ValidateCompressedTexImage3DRobustANGLE(const Context *context,
                                              TextureTarget target,
                                              GLint level,
                                              GLenum internalformat,
@@ -1679,7 +1682,7 @@ bool ValidateCompressedTexImage3DRobustANGLE(Context *context,
                                         depth, border, imageSize, data);
 }
 
-bool ValidateBindVertexArray(Context *context, VertexArrayID array)
+bool ValidateBindVertexArray(const Context *context, VertexArrayID array)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1690,7 +1693,7 @@ bool ValidateBindVertexArray(Context *context, VertexArrayID array)
     return ValidateBindVertexArrayBase(context, array);
 }
 
-bool ValidateIsVertexArray(Context *context, VertexArrayID array)
+bool ValidateIsVertexArray(const Context *context, VertexArrayID array)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1701,7 +1704,7 @@ bool ValidateIsVertexArray(Context *context, VertexArrayID array)
     return true;
 }
 
-static bool ValidateBindBufferCommon(Context *context,
+static bool ValidateBindBufferCommon(const Context *context,
                                      BufferBinding target,
                                      GLuint index,
                                      BufferID buffer,
@@ -1815,12 +1818,15 @@ static bool ValidateBindBufferCommon(Context *context,
     return true;
 }
 
-bool ValidateBindBufferBase(Context *context, BufferBinding target, GLuint index, BufferID buffer)
+bool ValidateBindBufferBase(const Context *context,
+                            BufferBinding target,
+                            GLuint index,
+                            BufferID buffer)
 {
     return ValidateBindBufferCommon(context, target, index, buffer, 0, 0);
 }
 
-bool ValidateBindBufferRange(Context *context,
+bool ValidateBindBufferRange(const Context *context,
                              BufferBinding target,
                              GLuint index,
                              BufferID buffer,
@@ -1835,7 +1841,7 @@ bool ValidateBindBufferRange(Context *context,
     return ValidateBindBufferCommon(context, target, index, buffer, offset, size);
 }
 
-bool ValidateProgramBinary(Context *context,
+bool ValidateProgramBinary(const Context *context,
                            ShaderProgramID program,
                            GLenum binaryFormat,
                            const void *binary,
@@ -1850,12 +1856,12 @@ bool ValidateProgramBinary(Context *context,
     return ValidateProgramBinaryBase(context, program, binaryFormat, binary, length);
 }
 
-bool ValidateGetProgramBinary(Context *context,
+bool ValidateGetProgramBinary(const Context *context,
                               ShaderProgramID program,
                               GLsizei bufSize,
-                              GLsizei *length,
-                              GLenum *binaryFormat,
-                              void *binary)
+                              const GLsizei *length,
+                              const GLenum *binaryFormat,
+                              const void *binary)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1866,7 +1872,10 @@ bool ValidateGetProgramBinary(Context *context,
     return ValidateGetProgramBinaryBase(context, program, bufSize, length, binaryFormat, binary);
 }
 
-bool ValidateProgramParameteri(Context *context, ShaderProgramID program, GLenum pname, GLint value)
+bool ValidateProgramParameteri(const Context *context,
+                               ShaderProgramID program,
+                               GLenum pname,
+                               GLint value)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1911,7 +1920,7 @@ bool ValidateProgramParameteri(Context *context, ShaderProgramID program, GLenum
     return true;
 }
 
-bool ValidateBlitFramebuffer(Context *context,
+bool ValidateBlitFramebuffer(const Context *context,
                              GLint srcX0,
                              GLint srcY0,
                              GLint srcX1,
@@ -1933,7 +1942,10 @@ bool ValidateBlitFramebuffer(Context *context,
                                              dstX1, dstY1, mask, filter);
 }
 
-bool ValidateClearBufferiv(Context *context, GLenum buffer, GLint drawbuffer, const GLint *value)
+bool ValidateClearBufferiv(const Context *context,
+                           GLenum buffer,
+                           GLint drawbuffer,
+                           const GLint *value)
 {
     switch (buffer)
     {
@@ -1970,7 +1982,10 @@ bool ValidateClearBufferiv(Context *context, GLenum buffer, GLint drawbuffer, co
     return ValidateClearBuffer(context);
 }
 
-bool ValidateClearBufferuiv(Context *context, GLenum buffer, GLint drawbuffer, const GLuint *value)
+bool ValidateClearBufferuiv(const Context *context,
+                            GLenum buffer,
+                            GLint drawbuffer,
+                            const GLuint *value)
 {
     switch (buffer)
     {
@@ -1999,7 +2014,10 @@ bool ValidateClearBufferuiv(Context *context, GLenum buffer, GLint drawbuffer, c
     return ValidateClearBuffer(context);
 }
 
-bool ValidateClearBufferfv(Context *context, GLenum buffer, GLint drawbuffer, const GLfloat *value)
+bool ValidateClearBufferfv(const Context *context,
+                           GLenum buffer,
+                           GLint drawbuffer,
+                           const GLfloat *value)
 {
     switch (buffer)
     {
@@ -2037,7 +2055,7 @@ bool ValidateClearBufferfv(Context *context, GLenum buffer, GLint drawbuffer, co
     return ValidateClearBuffer(context);
 }
 
-bool ValidateClearBufferfi(Context *context,
+bool ValidateClearBufferfi(const Context *context,
                            GLenum buffer,
                            GLint drawbuffer,
                            GLfloat depth,
@@ -2061,7 +2079,7 @@ bool ValidateClearBufferfi(Context *context,
     return ValidateClearBuffer(context);
 }
 
-bool ValidateDrawBuffers(Context *context, GLsizei n, const GLenum *bufs)
+bool ValidateDrawBuffers(const Context *context, GLsizei n, const GLenum *bufs)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2072,7 +2090,7 @@ bool ValidateDrawBuffers(Context *context, GLsizei n, const GLenum *bufs)
     return ValidateDrawBuffersBase(context, n, bufs);
 }
 
-bool ValidateCopyTexSubImage3D(Context *context,
+bool ValidateCopyTexSubImage3D(const Context *context,
                                TextureTarget target,
                                GLint level,
                                GLint xoffset,
@@ -2093,7 +2111,7 @@ bool ValidateCopyTexSubImage3D(Context *context,
                                                yoffset, zoffset, x, y, width, height, 0);
 }
 
-bool ValidateCopyTexture3DANGLE(Context *context,
+bool ValidateCopyTexture3DANGLE(const Context *context,
                                 TextureID sourceId,
                                 GLint sourceLevel,
                                 TextureTarget destTarget,
@@ -2154,7 +2172,7 @@ bool ValidateCopyTexture3DANGLE(Context *context,
     return true;
 }
 
-bool ValidateCopySubTexture3DANGLE(Context *context,
+bool ValidateCopySubTexture3DANGLE(const Context *context,
                                    TextureID sourceId,
                                    GLint sourceLevel,
                                    TextureTarget destTarget,
@@ -2244,7 +2262,7 @@ bool ValidateCopySubTexture3DANGLE(Context *context,
     return true;
 }
 
-bool ValidateTexImage3D(Context *context,
+bool ValidateTexImage3D(const Context *context,
                         TextureTarget target,
                         GLint level,
                         GLint internalformat,
@@ -2267,7 +2285,7 @@ bool ValidateTexImage3D(Context *context,
                                            pixels);
 }
 
-bool ValidateTexImage3DRobustANGLE(Context *context,
+bool ValidateTexImage3DRobustANGLE(const Context *context,
                                    TextureTarget target,
                                    GLint level,
                                    GLint internalformat,
@@ -2296,7 +2314,7 @@ bool ValidateTexImage3DRobustANGLE(Context *context,
                                            bufSize, pixels);
 }
 
-bool ValidateTexSubImage3D(Context *context,
+bool ValidateTexSubImage3D(const Context *context,
                            TextureTarget target,
                            GLint level,
                            GLint xoffset,
@@ -2320,7 +2338,7 @@ bool ValidateTexSubImage3D(Context *context,
                                            -1, pixels);
 }
 
-bool ValidateTexSubImage3DRobustANGLE(Context *context,
+bool ValidateTexSubImage3DRobustANGLE(const Context *context,
                                       TextureTarget target,
                                       GLint level,
                                       GLint xoffset,
@@ -2350,7 +2368,7 @@ bool ValidateTexSubImage3DRobustANGLE(Context *context,
                                            bufSize, pixels);
 }
 
-bool ValidateCompressedTexSubImage3D(Context *context,
+bool ValidateCompressedTexSubImage3D(const Context *context,
                                      TextureTarget target,
                                      GLint level,
                                      GLint xoffset,
@@ -2377,7 +2395,7 @@ bool ValidateCompressedTexSubImage3D(Context *context,
     }
 
     GLuint blockSize = 0;
-    if (!formatInfo.computeCompressedImageSize(gl::Extents(width, height, depth), &blockSize))
+    if (!formatInfo.computeCompressedImageSize(Extents(width, height, depth), &blockSize))
     {
         context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
         return false;
@@ -2405,7 +2423,7 @@ bool ValidateCompressedTexSubImage3D(Context *context,
     return true;
 }
 
-bool ValidateCompressedTexSubImage3DRobustANGLE(Context *context,
+bool ValidateCompressedTexSubImage3DRobustANGLE(const Context *context,
                                                 TextureTarget target,
                                                 GLint level,
                                                 GLint xoffset,
@@ -2428,32 +2446,34 @@ bool ValidateCompressedTexSubImage3DRobustANGLE(Context *context,
                                            height, depth, format, imageSize, data);
 }
 
-bool ValidateGenQueries(Context *context, GLint n, QueryID *)
+bool ValidateGenQueries(const Context *context, GLint n, const QueryID *queries)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateDeleteQueries(Context *context, GLint n, const QueryID *)
+bool ValidateDeleteQueries(const Context *context, GLint n, const QueryID *queries)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateGenSamplers(Context *context, GLint count, SamplerID *samplers)
+bool ValidateGenSamplers(const Context *context, GLint count, const SamplerID *samplers)
 {
     return ValidateGenOrDeleteCountES3(context, count);
 }
 
-bool ValidateDeleteSamplers(Context *context, GLint count, const SamplerID *samplers)
+bool ValidateDeleteSamplers(const Context *context, GLint count, const SamplerID *samplers)
 {
     return ValidateGenOrDeleteCountES3(context, count);
 }
 
-bool ValidateGenTransformFeedbacks(Context *context, GLint n, TransformFeedbackID *ids)
+bool ValidateGenTransformFeedbacks(const Context *context, GLint n, const TransformFeedbackID *ids)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateDeleteTransformFeedbacks(Context *context, GLint n, const TransformFeedbackID *ids)
+bool ValidateDeleteTransformFeedbacks(const Context *context,
+                                      GLint n,
+                                      const TransformFeedbackID *ids)
 {
     if (!ValidateGenOrDeleteES3(context, n))
     {
@@ -2472,17 +2492,17 @@ bool ValidateDeleteTransformFeedbacks(Context *context, GLint n, const Transform
     return true;
 }
 
-bool ValidateGenVertexArrays(Context *context, GLint n, VertexArrayID *arrays)
+bool ValidateGenVertexArrays(const Context *context, GLint n, const VertexArrayID *arrays)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateDeleteVertexArrays(Context *context, GLint n, const VertexArrayID *arrays)
+bool ValidateDeleteVertexArrays(const Context *context, GLint n, const VertexArrayID *arrays)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateBeginTransformFeedback(Context *context, PrimitiveMode primitiveMode)
+bool ValidateBeginTransformFeedback(const Context *context, PrimitiveMode primitiveMode)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2548,7 +2568,10 @@ bool ValidateBeginTransformFeedback(Context *context, PrimitiveMode primitiveMod
     return true;
 }
 
-bool ValidateGetBufferPointerv(Context *context, BufferBinding target, GLenum pname, void **params)
+bool ValidateGetBufferPointerv(const Context *context,
+                               BufferBinding target,
+                               GLenum pname,
+                               void *const *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2559,12 +2582,12 @@ bool ValidateGetBufferPointerv(Context *context, BufferBinding target, GLenum pn
     return ValidateGetBufferPointervBase(context, target, pname, nullptr, params);
 }
 
-bool ValidateGetBufferPointervRobustANGLE(Context *context,
+bool ValidateGetBufferPointervRobustANGLE(const Context *context,
                                           BufferBinding target,
                                           GLenum pname,
                                           GLsizei bufSize,
-                                          GLsizei *length,
-                                          void **params)
+                                          const GLsizei *length,
+                                          void *const *params)
 {
     if (!ValidateRobustEntryPoint(context, bufSize))
     {
@@ -2594,7 +2617,7 @@ bool ValidateGetBufferPointervRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateUnmapBuffer(Context *context, BufferBinding target)
+bool ValidateUnmapBuffer(const Context *context, BufferBinding target)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2605,7 +2628,7 @@ bool ValidateUnmapBuffer(Context *context, BufferBinding target)
     return ValidateUnmapBufferBase(context, target);
 }
 
-bool ValidateMapBufferRange(Context *context,
+bool ValidateMapBufferRange(const Context *context,
                             BufferBinding target,
                             GLintptr offset,
                             GLsizeiptr length,
@@ -2620,7 +2643,7 @@ bool ValidateMapBufferRange(Context *context,
     return ValidateMapBufferRangeBase(context, target, offset, length, access);
 }
 
-bool ValidateFlushMappedBufferRange(Context *context,
+bool ValidateFlushMappedBufferRange(const Context *context,
                                     BufferBinding target,
                                     GLintptr offset,
                                     GLsizeiptr length)
@@ -2634,7 +2657,7 @@ bool ValidateFlushMappedBufferRange(Context *context,
     return ValidateFlushMappedBufferRangeBase(context, target, offset, length);
 }
 
-bool ValidateIndexedStateQuery(Context *context, GLenum pname, GLuint index, GLsizei *length)
+bool ValidateIndexedStateQuery(const Context *context, GLenum pname, GLuint index, GLsizei *length)
 {
     if (length)
     {
@@ -2770,7 +2793,7 @@ bool ValidateIndexedStateQuery(Context *context, GLenum pname, GLuint index, GLs
     return true;
 }
 
-bool ValidateGetIntegeri_v(Context *context, GLenum target, GLuint index, GLint *data)
+bool ValidateGetIntegeri_v(const Context *context, GLenum target, GLuint index, const GLint *data)
 {
     if (context->getClientVersion() < ES_3_0)
     {
@@ -2780,12 +2803,12 @@ bool ValidateGetIntegeri_v(Context *context, GLenum target, GLuint index, GLint 
     return ValidateIndexedStateQuery(context, target, index, nullptr);
 }
 
-bool ValidateGetIntegeri_vRobustANGLE(Context *context,
+bool ValidateGetIntegeri_vRobustANGLE(const Context *context,
                                       GLenum target,
                                       GLuint index,
                                       GLsizei bufSize,
-                                      GLsizei *length,
-                                      GLint *data)
+                                      const GLsizei *length,
+                                      const GLint *data)
 {
     if (context->getClientVersion() < ES_3_0)
     {
@@ -2815,7 +2838,10 @@ bool ValidateGetIntegeri_vRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGetInteger64i_v(Context *context, GLenum target, GLuint index, GLint64 *data)
+bool ValidateGetInteger64i_v(const Context *context,
+                             GLenum target,
+                             GLuint index,
+                             const GLint64 *data)
 {
     if (context->getClientVersion() < ES_3_0)
     {
@@ -2825,12 +2851,12 @@ bool ValidateGetInteger64i_v(Context *context, GLenum target, GLuint index, GLin
     return ValidateIndexedStateQuery(context, target, index, nullptr);
 }
 
-bool ValidateGetInteger64i_vRobustANGLE(Context *context,
+bool ValidateGetInteger64i_vRobustANGLE(const Context *context,
                                         GLenum target,
                                         GLuint index,
                                         GLsizei bufSize,
-                                        GLsizei *length,
-                                        GLint64 *data)
+                                        const GLsizei *length,
+                                        const GLint64 *data)
 {
     if (context->getClientVersion() < ES_3_0)
     {
@@ -2860,7 +2886,7 @@ bool ValidateGetInteger64i_vRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateCopyBufferSubData(Context *context,
+bool ValidateCopyBufferSubData(const Context *context,
                                BufferBinding readTarget,
                                BufferBinding writeTarget,
                                GLintptr readOffset,
@@ -2958,7 +2984,7 @@ bool ValidateCopyBufferSubData(Context *context,
     return true;
 }
 
-bool ValidateGetStringi(Context *context, GLenum name, GLuint index)
+bool ValidateGetStringi(const Context *context, GLenum name, GLuint index)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2997,7 +3023,7 @@ bool ValidateGetStringi(Context *context, GLenum name, GLuint index)
     return true;
 }
 
-bool ValidateRenderbufferStorageMultisample(Context *context,
+bool ValidateRenderbufferStorageMultisample(const Context *context,
                                             GLenum target,
                                             GLsizei samples,
                                             GLenum internalformat,
@@ -3019,7 +3045,7 @@ bool ValidateRenderbufferStorageMultisample(Context *context,
     // The ES3 spec(section 4.4.2) states that the internal format must be sized and not an integer
     // format if samples is greater than zero. In ES3.1(section 9.2.5), it can support integer
     // multisample renderbuffer, but the samples should not be greater than MAX_INTEGER_SAMPLES.
-    const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalformat);
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalformat);
     if (formatInfo.isInt())
     {
         if ((samples > 0 && context->getClientVersion() == ES_3_0) ||
@@ -3041,7 +3067,7 @@ bool ValidateRenderbufferStorageMultisample(Context *context,
     return true;
 }
 
-bool ValidateVertexAttribIPointer(Context *context,
+bool ValidateVertexAttribIPointer(const Context *context,
                                   GLuint index,
                                   GLint size,
                                   VertexAttribType type,
@@ -3106,12 +3132,12 @@ bool ValidateVertexAttribIPointer(Context *context,
     return true;
 }
 
-bool ValidateGetSynciv(Context *context,
+bool ValidateGetSynciv(const Context *context,
                        GLsync sync,
                        GLenum pname,
                        GLsizei bufSize,
-                       GLsizei *length,
-                       GLint *values)
+                       const GLsizei *length,
+                       const GLint *values)
 {
     if ((context->getClientMajorVersion() < 3) && !context->getExtensions().glSyncARB)
     {
@@ -3164,7 +3190,7 @@ bool ValidateGetSynciv(Context *context,
     return true;
 }
 
-bool ValidateDrawElementsInstanced(Context *context,
+bool ValidateDrawElementsInstanced(const Context *context,
                                    PrimitiveMode mode,
                                    GLsizei count,
                                    DrawElementsType type,
@@ -3180,7 +3206,7 @@ bool ValidateDrawElementsInstanced(Context *context,
     return ValidateDrawElementsInstancedBase(context, mode, count, type, indices, instanceCount);
 }
 
-bool ValidateMultiDrawArraysInstancedANGLE(Context *context,
+bool ValidateMultiDrawArraysInstancedANGLE(const Context *context,
                                            PrimitiveMode mode,
                                            const GLint *firsts,
                                            const GLsizei *counts,
@@ -3215,7 +3241,7 @@ bool ValidateMultiDrawArraysInstancedANGLE(Context *context,
     return true;
 }
 
-bool ValidateMultiDrawElementsInstancedANGLE(Context *context,
+bool ValidateMultiDrawElementsInstancedANGLE(const Context *context,
                                              PrimitiveMode mode,
                                              const GLsizei *counts,
                                              DrawElementsType type,
@@ -3251,7 +3277,7 @@ bool ValidateMultiDrawElementsInstancedANGLE(Context *context,
     return true;
 }
 
-bool ValidateDrawArraysInstancedBaseInstanceANGLE(Context *context,
+bool ValidateDrawArraysInstancedBaseInstanceANGLE(const Context *context,
                                                   PrimitiveMode mode,
                                                   GLint first,
                                                   GLsizei count,
@@ -3270,7 +3296,7 @@ bool ValidateDrawArraysInstancedBaseInstanceANGLE(Context *context,
     return true;
 }
 
-bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(Context *context,
+bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context *context,
                                                               PrimitiveMode mode,
                                                               GLsizei count,
                                                               DrawElementsType type,
@@ -3291,7 +3317,7 @@ bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(Context *context,
     return true;
 }
 
-bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(Context *context,
+bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,
                                                        PrimitiveMode modePacked,
                                                        const GLint *firsts,
                                                        const GLsizei *counts,
@@ -3319,7 +3345,7 @@ bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(Context *context,
     return true;
 }
 
-bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(Context *context,
+bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context *context,
                                                                    PrimitiveMode modePacked,
                                                                    const GLsizei *counts,
                                                                    DrawElementsType typePacked,
@@ -3349,7 +3375,7 @@ bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(Context *cont
     return true;
 }
 
-bool ValidateFramebufferTextureMultiviewOVR(Context *context,
+bool ValidateFramebufferTextureMultiviewOVR(const Context *context,
                                             GLenum target,
                                             GLenum attachment,
                                             TextureID texture,
@@ -3411,22 +3437,22 @@ bool ValidateFramebufferTextureMultiviewOVR(Context *context,
     return true;
 }
 
-bool ValidateUniform1ui(Context *context, GLint location, GLuint v0)
+bool ValidateUniform1ui(const Context *context, GLint location, GLuint v0)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT, location, 1);
 }
 
-bool ValidateUniform2ui(Context *context, GLint location, GLuint v0, GLuint v1)
+bool ValidateUniform2ui(const Context *context, GLint location, GLuint v0, GLuint v1)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC2, location, 1);
 }
 
-bool ValidateUniform3ui(Context *context, GLint location, GLuint v0, GLuint v1, GLuint v2)
+bool ValidateUniform3ui(const Context *context, GLint location, GLuint v0, GLuint v1, GLuint v2)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC3, location, 1);
 }
 
-bool ValidateUniform4ui(Context *context,
+bool ValidateUniform4ui(const Context *context,
                         GLint location,
                         GLuint v0,
                         GLuint v1,
@@ -3436,27 +3462,27 @@ bool ValidateUniform4ui(Context *context,
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC4, location, 1);
 }
 
-bool ValidateUniform1uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+bool ValidateUniform1uiv(const Context *context, GLint location, GLsizei count, const GLuint *value)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT, location, count);
 }
 
-bool ValidateUniform2uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+bool ValidateUniform2uiv(const Context *context, GLint location, GLsizei count, const GLuint *value)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC2, location, count);
 }
 
-bool ValidateUniform3uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+bool ValidateUniform3uiv(const Context *context, GLint location, GLsizei count, const GLuint *value)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC3, location, count);
 }
 
-bool ValidateUniform4uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+bool ValidateUniform4uiv(const Context *context, GLint location, GLsizei count, const GLuint *value)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC4, location, count);
 }
 
-bool ValidateIsQuery(Context *context, QueryID id)
+bool ValidateIsQuery(const Context *context, QueryID id)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3467,7 +3493,7 @@ bool ValidateIsQuery(Context *context, QueryID id)
     return true;
 }
 
-bool ValidateUniformMatrix2x3fv(Context *context,
+bool ValidateUniformMatrix2x3fv(const Context *context,
                                 GLint location,
                                 GLsizei count,
                                 GLboolean transpose,
@@ -3476,7 +3502,7 @@ bool ValidateUniformMatrix2x3fv(Context *context,
     return ValidateUniformMatrixES3(context, GL_FLOAT_MAT2x3, location, count, transpose);
 }
 
-bool ValidateUniformMatrix3x2fv(Context *context,
+bool ValidateUniformMatrix3x2fv(const Context *context,
                                 GLint location,
                                 GLsizei count,
                                 GLboolean transpose,
@@ -3485,7 +3511,7 @@ bool ValidateUniformMatrix3x2fv(Context *context,
     return ValidateUniformMatrixES3(context, GL_FLOAT_MAT3x2, location, count, transpose);
 }
 
-bool ValidateUniformMatrix2x4fv(Context *context,
+bool ValidateUniformMatrix2x4fv(const Context *context,
                                 GLint location,
                                 GLsizei count,
                                 GLboolean transpose,
@@ -3494,7 +3520,7 @@ bool ValidateUniformMatrix2x4fv(Context *context,
     return ValidateUniformMatrixES3(context, GL_FLOAT_MAT2x4, location, count, transpose);
 }
 
-bool ValidateUniformMatrix4x2fv(Context *context,
+bool ValidateUniformMatrix4x2fv(const Context *context,
                                 GLint location,
                                 GLsizei count,
                                 GLboolean transpose,
@@ -3503,7 +3529,7 @@ bool ValidateUniformMatrix4x2fv(Context *context,
     return ValidateUniformMatrixES3(context, GL_FLOAT_MAT4x2, location, count, transpose);
 }
 
-bool ValidateUniformMatrix3x4fv(Context *context,
+bool ValidateUniformMatrix3x4fv(const Context *context,
                                 GLint location,
                                 GLsizei count,
                                 GLboolean transpose,
@@ -3512,7 +3538,7 @@ bool ValidateUniformMatrix3x4fv(Context *context,
     return ValidateUniformMatrixES3(context, GL_FLOAT_MAT3x4, location, count, transpose);
 }
 
-bool ValidateUniformMatrix4x3fv(Context *context,
+bool ValidateUniformMatrix4x3fv(const Context *context,
                                 GLint location,
                                 GLsizei count,
                                 GLboolean transpose,
@@ -3521,7 +3547,7 @@ bool ValidateUniformMatrix4x3fv(Context *context,
     return ValidateUniformMatrixES3(context, GL_FLOAT_MAT4x3, location, count, transpose);
 }
 
-bool ValidateEndTransformFeedback(Context *context)
+bool ValidateEndTransformFeedback(const Context *context)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3541,7 +3567,7 @@ bool ValidateEndTransformFeedback(Context *context)
     return true;
 }
 
-bool ValidateTransformFeedbackVaryings(Context *context,
+bool ValidateTransformFeedbackVaryings(const Context *context,
                                        ShaderProgramID program,
                                        GLsizei count,
                                        const GLchar *const *varyings,
@@ -3587,14 +3613,14 @@ bool ValidateTransformFeedbackVaryings(Context *context,
     return true;
 }
 
-bool ValidateGetTransformFeedbackVarying(Context *context,
+bool ValidateGetTransformFeedbackVarying(const Context *context,
                                          ShaderProgramID program,
                                          GLuint index,
                                          GLsizei bufSize,
-                                         GLsizei *length,
-                                         GLsizei *size,
-                                         GLenum *type,
-                                         GLchar *name)
+                                         const GLsizei *length,
+                                         const GLsizei *size,
+                                         const GLenum *type,
+                                         const GLchar *name)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3623,7 +3649,7 @@ bool ValidateGetTransformFeedbackVarying(Context *context,
     return true;
 }
 
-bool ValidateBindTransformFeedback(Context *context, GLenum target, TransformFeedbackID id)
+bool ValidateBindTransformFeedback(const Context *context, GLenum target, TransformFeedbackID id)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3661,7 +3687,7 @@ bool ValidateBindTransformFeedback(Context *context, GLenum target, TransformFee
     return true;
 }
 
-bool ValidateIsTransformFeedback(Context *context, TransformFeedbackID id)
+bool ValidateIsTransformFeedback(const Context *context, TransformFeedbackID id)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3672,7 +3698,7 @@ bool ValidateIsTransformFeedback(Context *context, TransformFeedbackID id)
     return true;
 }
 
-bool ValidatePauseTransformFeedback(Context *context)
+bool ValidatePauseTransformFeedback(const Context *context)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3699,7 +3725,7 @@ bool ValidatePauseTransformFeedback(Context *context)
     return true;
 }
 
-bool ValidateResumeTransformFeedback(Context *context)
+bool ValidateResumeTransformFeedback(const Context *context)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3726,7 +3752,12 @@ bool ValidateResumeTransformFeedback(Context *context)
     return true;
 }
 
-bool ValidateVertexAttribI4i(Context *context, GLuint index, GLint x, GLint y, GLint z, GLint w)
+bool ValidateVertexAttribI4i(const Context *context,
+                             GLuint index,
+                             GLint x,
+                             GLint y,
+                             GLint z,
+                             GLint w)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3737,7 +3768,7 @@ bool ValidateVertexAttribI4i(Context *context, GLuint index, GLint x, GLint y, G
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateVertexAttribI4ui(Context *context,
+bool ValidateVertexAttribI4ui(const Context *context,
                               GLuint index,
                               GLuint x,
                               GLuint y,
@@ -3753,7 +3784,7 @@ bool ValidateVertexAttribI4ui(Context *context,
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateVertexAttribI4iv(Context *context, GLuint index, const GLint *v)
+bool ValidateVertexAttribI4iv(const Context *context, GLuint index, const GLint *v)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3764,7 +3795,7 @@ bool ValidateVertexAttribI4iv(Context *context, GLuint index, const GLint *v)
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateVertexAttribI4uiv(Context *context, GLuint index, const GLuint *v)
+bool ValidateVertexAttribI4uiv(const Context *context, GLuint index, const GLuint *v)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3775,7 +3806,9 @@ bool ValidateVertexAttribI4uiv(Context *context, GLuint index, const GLuint *v)
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateGetFragDataLocation(Context *context, ShaderProgramID program, const GLchar *name)
+bool ValidateGetFragDataLocation(const Context *context,
+                                 ShaderProgramID program,
+                                 const GLchar *name)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3798,11 +3831,11 @@ bool ValidateGetFragDataLocation(Context *context, ShaderProgramID program, cons
     return true;
 }
 
-bool ValidateGetUniformIndices(Context *context,
+bool ValidateGetUniformIndices(const Context *context,
                                ShaderProgramID program,
                                GLsizei uniformCount,
                                const GLchar *const *uniformNames,
-                               GLuint *uniformIndices)
+                               const GLuint *uniformIndices)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3825,12 +3858,12 @@ bool ValidateGetUniformIndices(Context *context,
     return true;
 }
 
-bool ValidateGetActiveUniformsiv(Context *context,
+bool ValidateGetActiveUniformsiv(const Context *context,
                                  ShaderProgramID program,
                                  GLsizei uniformCount,
                                  const GLuint *uniformIndices,
                                  GLenum pname,
-                                 GLint *params)
+                                 const GLint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3894,7 +3927,7 @@ bool ValidateGetActiveUniformsiv(Context *context,
     return true;
 }
 
-bool ValidateGetUniformBlockIndex(Context *context,
+bool ValidateGetUniformBlockIndex(const Context *context,
                                   ShaderProgramID program,
                                   const GLchar *uniformBlockName)
 {
@@ -3913,21 +3946,21 @@ bool ValidateGetUniformBlockIndex(Context *context,
     return true;
 }
 
-bool ValidateGetActiveUniformBlockiv(Context *context,
+bool ValidateGetActiveUniformBlockiv(const Context *context,
                                      ShaderProgramID program,
                                      GLuint uniformBlockIndex,
                                      GLenum pname,
-                                     GLint *params)
+                                     const GLint *params)
 {
     return ValidateGetActiveUniformBlockivBase(context, program, uniformBlockIndex, pname, nullptr);
 }
 
-bool ValidateGetActiveUniformBlockName(Context *context,
+bool ValidateGetActiveUniformBlockName(const Context *context,
                                        ShaderProgramID program,
                                        GLuint uniformBlockIndex,
                                        GLsizei bufSize,
-                                       GLsizei *length,
-                                       GLchar *uniformBlockName)
+                                       const GLsizei *length,
+                                       const GLchar *uniformBlockName)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -3950,7 +3983,7 @@ bool ValidateGetActiveUniformBlockName(Context *context,
     return true;
 }
 
-bool ValidateUniformBlockBinding(Context *context,
+bool ValidateUniformBlockBinding(const Context *context,
                                  ShaderProgramID program,
                                  GLuint uniformBlockIndex,
                                  GLuint uniformBlockBinding)
@@ -3983,7 +4016,7 @@ bool ValidateUniformBlockBinding(Context *context,
     return true;
 }
 
-bool ValidateDrawArraysInstanced(Context *context,
+bool ValidateDrawArraysInstanced(const Context *context,
                                  PrimitiveMode mode,
                                  GLint first,
                                  GLsizei count,
@@ -3998,7 +4031,7 @@ bool ValidateDrawArraysInstanced(Context *context,
     return ValidateDrawArraysInstancedBase(context, mode, first, count, primcount);
 }
 
-bool ValidateFenceSync(Context *context, GLenum condition, GLbitfield flags)
+bool ValidateFenceSync(const Context *context, GLenum condition, GLbitfield flags)
 {
     if ((context->getClientMajorVersion() < 3) && !context->getExtensions().glSyncARB)
     {
@@ -4021,7 +4054,7 @@ bool ValidateFenceSync(Context *context, GLenum condition, GLbitfield flags)
     return true;
 }
 
-bool ValidateIsSync(Context *context, GLsync sync)
+bool ValidateIsSync(const Context *context, GLsync sync)
 {
     if ((context->getClientMajorVersion() < 3) && !context->getExtensions().glSyncARB)
     {
@@ -4032,7 +4065,7 @@ bool ValidateIsSync(Context *context, GLsync sync)
     return true;
 }
 
-bool ValidateDeleteSync(Context *context, GLsync sync)
+bool ValidateDeleteSync(const Context *context, GLsync sync)
 {
     if ((context->getClientMajorVersion() < 3) && !context->getExtensions().glSyncARB)
     {
@@ -4049,7 +4082,7 @@ bool ValidateDeleteSync(Context *context, GLsync sync)
     return true;
 }
 
-bool ValidateClientWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout)
+bool ValidateClientWaitSync(const Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
     if ((context->getClientMajorVersion() < 3) && !context->getExtensions().glSyncARB)
     {
@@ -4073,7 +4106,7 @@ bool ValidateClientWaitSync(Context *context, GLsync sync, GLbitfield flags, GLu
     return true;
 }
 
-bool ValidateWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout)
+bool ValidateWaitSync(const Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
     if ((context->getClientMajorVersion() < 3) && !context->getExtensions().glSyncARB)
     {
@@ -4103,7 +4136,7 @@ bool ValidateWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 
     return true;
 }
 
-bool ValidateGetInteger64v(Context *context, GLenum pname, GLint64 *params)
+bool ValidateGetInteger64v(const Context *context, GLenum pname, const GLint64 *params)
 {
     if ((context->getClientMajorVersion() < 3) && !context->getExtensions().glSyncARB)
     {
@@ -4121,7 +4154,7 @@ bool ValidateGetInteger64v(Context *context, GLenum pname, GLint64 *params)
     return true;
 }
 
-bool ValidateIsSampler(Context *context, SamplerID sampler)
+bool ValidateIsSampler(const Context *context, SamplerID sampler)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -4132,7 +4165,7 @@ bool ValidateIsSampler(Context *context, SamplerID sampler)
     return true;
 }
 
-bool ValidateBindSampler(Context *context, GLuint unit, SamplerID sampler)
+bool ValidateBindSampler(const Context *context, GLuint unit, SamplerID sampler)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -4155,7 +4188,7 @@ bool ValidateBindSampler(Context *context, GLuint unit, SamplerID sampler)
     return true;
 }
 
-bool ValidateVertexAttribDivisor(Context *context, GLuint index, GLuint divisor)
+bool ValidateVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -4166,7 +4199,7 @@ bool ValidateVertexAttribDivisor(Context *context, GLuint index, GLuint divisor)
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateTexStorage2D(Context *context,
+bool ValidateTexStorage2D(const Context *context,
                           TextureType target,
                           GLsizei levels,
                           GLenum internalformat,
@@ -4188,7 +4221,7 @@ bool ValidateTexStorage2D(Context *context,
     return true;
 }
 
-bool ValidateTexStorage3D(Context *context,
+bool ValidateTexStorage3D(const Context *context,
                           TextureType target,
                           GLsizei levels,
                           GLenum internalformat,
@@ -4211,31 +4244,34 @@ bool ValidateTexStorage3D(Context *context,
     return true;
 }
 
-bool ValidateGetBufferParameteri64v(Context *context,
+bool ValidateGetBufferParameteri64v(const Context *context,
                                     BufferBinding target,
                                     GLenum pname,
-                                    GLint64 *params)
+                                    const GLint64 *params)
 {
     return ValidateGetBufferParameterBase(context, target, pname, false, nullptr);
 }
 
-bool ValidateGetSamplerParameterfv(Context *context,
+bool ValidateGetSamplerParameterfv(const Context *context,
                                    SamplerID sampler,
                                    GLenum pname,
-                                   GLfloat *params)
+                                   const GLfloat *params)
 {
     return ValidateGetSamplerParameterBase(context, sampler, pname, nullptr);
 }
 
-bool ValidateGetSamplerParameteriv(Context *context, SamplerID sampler, GLenum pname, GLint *params)
+bool ValidateGetSamplerParameteriv(const Context *context,
+                                   SamplerID sampler,
+                                   GLenum pname,
+                                   const GLint *params)
 {
     return ValidateGetSamplerParameterBase(context, sampler, pname, nullptr);
 }
 
-bool ValidateGetSamplerParameterIivOES(Context *context,
+bool ValidateGetSamplerParameterIivOES(const Context *context,
                                        SamplerID sampler,
                                        GLenum pname,
-                                       GLint *params)
+                                       const GLint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -4245,10 +4281,10 @@ bool ValidateGetSamplerParameterIivOES(Context *context,
     return ValidateGetSamplerParameterBase(context, sampler, pname, nullptr);
 }
 
-bool ValidateGetSamplerParameterIuivOES(Context *context,
+bool ValidateGetSamplerParameterIuivOES(const Context *context,
                                         SamplerID sampler,
                                         GLenum pname,
-                                        GLuint *params)
+                                        const GLuint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -4258,12 +4294,15 @@ bool ValidateGetSamplerParameterIuivOES(Context *context,
     return ValidateGetSamplerParameterBase(context, sampler, pname, nullptr);
 }
 
-bool ValidateSamplerParameterf(Context *context, SamplerID sampler, GLenum pname, GLfloat param)
+bool ValidateSamplerParameterf(const Context *context,
+                               SamplerID sampler,
+                               GLenum pname,
+                               GLfloat param)
 {
     return ValidateSamplerParameterBase(context, sampler, pname, -1, false, &param);
 }
 
-bool ValidateSamplerParameterfv(Context *context,
+bool ValidateSamplerParameterfv(const Context *context,
                                 SamplerID sampler,
                                 GLenum pname,
                                 const GLfloat *params)
@@ -4271,12 +4310,12 @@ bool ValidateSamplerParameterfv(Context *context,
     return ValidateSamplerParameterBase(context, sampler, pname, -1, true, params);
 }
 
-bool ValidateSamplerParameteri(Context *context, SamplerID sampler, GLenum pname, GLint param)
+bool ValidateSamplerParameteri(const Context *context, SamplerID sampler, GLenum pname, GLint param)
 {
     return ValidateSamplerParameterBase(context, sampler, pname, -1, false, &param);
 }
 
-bool ValidateSamplerParameteriv(Context *context,
+bool ValidateSamplerParameteriv(const Context *context,
                                 SamplerID sampler,
                                 GLenum pname,
                                 const GLint *params)
@@ -4284,7 +4323,7 @@ bool ValidateSamplerParameteriv(Context *context,
     return ValidateSamplerParameterBase(context, sampler, pname, -1, true, params);
 }
 
-bool ValidateSamplerParameterIivOES(Context *context,
+bool ValidateSamplerParameterIivOES(const Context *context,
                                     SamplerID sampler,
                                     GLenum pname,
                                     const GLint *params)
@@ -4297,7 +4336,7 @@ bool ValidateSamplerParameterIivOES(Context *context,
     return ValidateSamplerParameterBase(context, sampler, pname, -1, true, params);
 }
 
-bool ValidateSamplerParameterIuivOES(Context *context,
+bool ValidateSamplerParameterIuivOES(const Context *context,
                                      SamplerID sampler,
                                      GLenum pname,
                                      const GLuint *params)
@@ -4310,28 +4349,34 @@ bool ValidateSamplerParameterIuivOES(Context *context,
     return ValidateSamplerParameterBase(context, sampler, pname, -1, true, params);
 }
 
-bool ValidateGetVertexAttribIiv(Context *context, GLuint index, GLenum pname, GLint *params)
+bool ValidateGetVertexAttribIiv(const Context *context,
+                                GLuint index,
+                                GLenum pname,
+                                const GLint *params)
 {
     return ValidateGetVertexAttribBase(context, index, pname, nullptr, false, true);
 }
 
-bool ValidateGetVertexAttribIuiv(Context *context, GLuint index, GLenum pname, GLuint *params)
+bool ValidateGetVertexAttribIuiv(const Context *context,
+                                 GLuint index,
+                                 GLenum pname,
+                                 const GLuint *params)
 {
     return ValidateGetVertexAttribBase(context, index, pname, nullptr, false, true);
 }
 
-bool ValidateGetInternalformativ(Context *context,
+bool ValidateGetInternalformativ(const Context *context,
                                  GLenum target,
                                  GLenum internalformat,
                                  GLenum pname,
                                  GLsizei bufSize,
-                                 GLint *params)
+                                 const GLint *params)
 {
     return ValidateGetInternalFormativBase(context, target, internalformat, pname, bufSize,
                                            nullptr);
 }
 
-bool ValidateBindFragDataLocationIndexedEXT(Context *context,
+bool ValidateBindFragDataLocationIndexedEXT(const Context *context,
                                             ShaderProgramID program,
                                             GLuint colorNumber,
                                             GLuint index,
@@ -4380,7 +4425,7 @@ bool ValidateBindFragDataLocationIndexedEXT(Context *context,
     return true;
 }
 
-bool ValidateBindFragDataLocationEXT(Context *context,
+bool ValidateBindFragDataLocationEXT(const Context *context,
                                      ShaderProgramID program,
                                      GLuint colorNumber,
                                      const char *name)
@@ -4388,7 +4433,7 @@ bool ValidateBindFragDataLocationEXT(Context *context,
     return ValidateBindFragDataLocationIndexedEXT(context, program, colorNumber, 0u, name);
 }
 
-bool ValidateGetFragDataIndexEXT(Context *context, ShaderProgramID program, const char *name)
+bool ValidateGetFragDataIndexEXT(const Context *context, ShaderProgramID program, const char *name)
 {
     if (!context->getExtensions().blendFuncExtended)
     {
@@ -4413,7 +4458,7 @@ bool ValidateGetFragDataIndexEXT(Context *context, ShaderProgramID program, cons
     return true;
 }
 
-bool ValidateTexStorage2DMultisampleANGLE(Context *context,
+bool ValidateTexStorage2DMultisampleANGLE(const Context *context,
                                           TextureType target,
                                           GLsizei samples,
                                           GLenum internalFormat,
@@ -4431,11 +4476,11 @@ bool ValidateTexStorage2DMultisampleANGLE(Context *context,
                                                height);
 }
 
-bool ValidateGetTexLevelParameterfvANGLE(Context *context,
+bool ValidateGetTexLevelParameterfvANGLE(const Context *context,
                                          TextureTarget target,
                                          GLint level,
                                          GLenum pname,
-                                         GLfloat *params)
+                                         const GLfloat *params)
 {
     if (!context->getExtensions().textureMultisample)
     {
@@ -4446,11 +4491,11 @@ bool ValidateGetTexLevelParameterfvANGLE(Context *context,
     return ValidateGetTexLevelParameterBase(context, target, level, pname, nullptr);
 }
 
-bool ValidateGetTexLevelParameterivANGLE(Context *context,
+bool ValidateGetTexLevelParameterivANGLE(const Context *context,
                                          TextureTarget target,
                                          GLint level,
                                          GLenum pname,
-                                         GLint *params)
+                                         const GLint *params)
 {
     if (!context->getExtensions().textureMultisample)
     {
@@ -4461,7 +4506,10 @@ bool ValidateGetTexLevelParameterivANGLE(Context *context,
     return ValidateGetTexLevelParameterBase(context, target, level, pname, nullptr);
 }
 
-bool ValidateGetMultisamplefvANGLE(Context *context, GLenum pname, GLuint index, GLfloat *val)
+bool ValidateGetMultisamplefvANGLE(const Context *context,
+                                   GLenum pname,
+                                   GLuint index,
+                                   const GLfloat *val)
 {
     if (!context->getExtensions().textureMultisample)
     {
@@ -4472,7 +4520,7 @@ bool ValidateGetMultisamplefvANGLE(Context *context, GLenum pname, GLuint index,
     return ValidateGetMultisamplefvBase(context, pname, index, val);
 }
 
-bool ValidateSampleMaskiANGLE(Context *context, GLuint maskNumber, GLbitfield mask)
+bool ValidateSampleMaskiANGLE(const Context *context, GLuint maskNumber, GLbitfield mask)
 {
     if (!context->getExtensions().textureMultisample)
     {

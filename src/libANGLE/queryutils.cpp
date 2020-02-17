@@ -2792,7 +2792,7 @@ void SetPointSize(GLES1State *state, GLfloat size)
     params.pointSize        = size;
 }
 
-void GetPointSize(GLES1State *state, GLfloat *sizeOut)
+void GetPointSize(const GLES1State *state, GLfloat *sizeOut)
 {
     const PointParameters &params = state->pointParameters();
     *sizeOut                      = params.pointSize;

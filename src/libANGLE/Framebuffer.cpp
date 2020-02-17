@@ -1055,7 +1055,7 @@ void Framebuffer::invalidateCompletenessCache()
     onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
 }
 
-GLenum Framebuffer::checkStatusImpl(const Context *context)
+GLenum Framebuffer::checkStatusImpl(const Context *context) const
 {
     ASSERT(!isDefault());
     ASSERT(hasAnyDirtyBit() || !mCachedStatus.valid());
@@ -1083,7 +1083,7 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
     return mCachedStatus.value();
 }
 
-GLenum Framebuffer::checkStatusWithGLFrontEnd(const Context *context)
+GLenum Framebuffer::checkStatusWithGLFrontEnd(const Context *context) const
 {
     const State &state = context->getState();
 
@@ -1640,12 +1640,12 @@ angle::Result Framebuffer::blit(const Context *context,
     return mImpl->blit(context, sourceArea, destArea, blitMask, filter);
 }
 
-int Framebuffer::getSamples(const Context *context)
+int Framebuffer::getSamples(const Context *context) const
 {
     return (isComplete(context) ? getCachedSamples(context, AttachmentSampleType::Emulated) : 0);
 }
 
-int Framebuffer::getResourceSamples(const Context *context)
+int Framebuffer::getResourceSamples(const Context *context) const
 {
     return (isComplete(context) ? getCachedSamples(context, AttachmentSampleType::Resource) : 0);
 }
@@ -1946,7 +1946,7 @@ void Framebuffer::resetAttachment(const Context *context, GLenum binding)
     setAttachment(context, GL_NONE, binding, ImageIndex(), nullptr);
 }
 
-angle::Result Framebuffer::syncState(const Context *context)
+angle::Result Framebuffer::syncState(const Context *context) const
 {
     if (mDirtyBits.any())
     {

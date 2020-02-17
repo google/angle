@@ -48,7 +48,7 @@
                                 GLfloat *params);                                                  \
     void getTexLevelParameteriv(TextureTarget targetPacked, GLint level, GLenum pname,             \
                                 GLint *params);                                                    \
-    GLboolean isProgramPipeline(ProgramPipelineID pipelinePacked);                                 \
+    GLboolean isProgramPipeline(ProgramPipelineID pipelinePacked) const;                           \
     void memoryBarrier(GLbitfield barriers);                                                       \
     void memoryBarrierByRegion(GLbitfield barriers);                                               \
     void programUniform1f(ShaderProgramID programPacked, GLint location, GLfloat v0);              \

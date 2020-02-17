@@ -58,7 +58,7 @@
                        GLint *params);                                                             \
     void getnUniformuiv(ShaderProgramID programPacked, GLint location, GLsizei bufSize,            \
                         GLuint *params);                                                           \
-    GLboolean isEnabledi(GLenum target, GLuint index);                                             \
+    GLboolean isEnabledi(GLenum target, GLuint index) const;                                       \
     void minSampleShading(GLfloat value);                                                          \
     void objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label);         \
     void objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label);                     \

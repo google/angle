@@ -11,32 +11,38 @@
 namespace gl
 {
 
-bool ValidateDepthRangeArrayv(Context *context, GLuint first, GLsizei count, const GLdouble *v)
+bool ValidateDepthRangeArrayv(const Context *context,
+                              GLuint first,
+                              GLsizei count,
+                              const GLdouble *v)
 {
     return true;
 }
 
-bool ValidateDepthRangeIndexed(Context *context, GLuint index, GLdouble n, GLdouble f)
+bool ValidateDepthRangeIndexed(const Context *context, GLuint index, GLdouble n, GLdouble f)
 {
     return true;
 }
 
-bool ValidateGetDoublei_v(Context *context, GLenum target, GLuint index, GLdouble *data)
+bool ValidateGetDoublei_v(const Context *context, GLenum target, GLuint index, const GLdouble *data)
 {
     return true;
 }
 
-bool ValidateGetFloati_v(Context *context, GLenum target, GLuint index, GLfloat *data)
+bool ValidateGetFloati_v(const Context *context, GLenum target, GLuint index, const GLfloat *data)
 {
     return true;
 }
 
-bool ValidateGetVertexAttribLdv(Context *context, GLuint index, GLenum pname, GLdouble *params)
+bool ValidateGetVertexAttribLdv(const Context *context,
+                                GLuint index,
+                                GLenum pname,
+                                const GLdouble *params)
 {
     return true;
 }
 
-bool ValidateProgramUniform1d(Context *context,
+bool ValidateProgramUniform1d(const Context *context,
                               ShaderProgramID program,
                               GLint location,
                               GLdouble v0)
@@ -44,7 +50,7 @@ bool ValidateProgramUniform1d(Context *context,
     return true;
 }
 
-bool ValidateProgramUniform1dv(Context *context,
+bool ValidateProgramUniform1dv(const Context *context,
                                ShaderProgramID program,
                                GLint location,
                                GLsizei count,
@@ -53,7 +59,7 @@ bool ValidateProgramUniform1dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniform2d(Context *context,
+bool ValidateProgramUniform2d(const Context *context,
                               ShaderProgramID program,
                               GLint location,
                               GLdouble v0,
@@ -62,7 +68,7 @@ bool ValidateProgramUniform2d(Context *context,
     return true;
 }
 
-bool ValidateProgramUniform2dv(Context *context,
+bool ValidateProgramUniform2dv(const Context *context,
                                ShaderProgramID program,
                                GLint location,
                                GLsizei count,
@@ -71,7 +77,7 @@ bool ValidateProgramUniform2dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniform3d(Context *context,
+bool ValidateProgramUniform3d(const Context *context,
                               ShaderProgramID program,
                               GLint location,
                               GLdouble v0,
@@ -81,7 +87,7 @@ bool ValidateProgramUniform3d(Context *context,
     return true;
 }
 
-bool ValidateProgramUniform3dv(Context *context,
+bool ValidateProgramUniform3dv(const Context *context,
                                ShaderProgramID program,
                                GLint location,
                                GLsizei count,
@@ -90,7 +96,7 @@ bool ValidateProgramUniform3dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniform4d(Context *context,
+bool ValidateProgramUniform4d(const Context *context,
                               ShaderProgramID program,
                               GLint location,
                               GLdouble v0,
@@ -101,7 +107,7 @@ bool ValidateProgramUniform4d(Context *context,
     return true;
 }
 
-bool ValidateProgramUniform4dv(Context *context,
+bool ValidateProgramUniform4dv(const Context *context,
                                ShaderProgramID program,
                                GLint location,
                                GLsizei count,
@@ -110,7 +116,7 @@ bool ValidateProgramUniform4dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniformMatrix2dv(Context *context,
+bool ValidateProgramUniformMatrix2dv(const Context *context,
                                      ShaderProgramID program,
                                      GLint location,
                                      GLsizei count,
@@ -120,7 +126,7 @@ bool ValidateProgramUniformMatrix2dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniformMatrix2x3dv(Context *context,
+bool ValidateProgramUniformMatrix2x3dv(const Context *context,
                                        ShaderProgramID program,
                                        GLint location,
                                        GLsizei count,
@@ -130,7 +136,7 @@ bool ValidateProgramUniformMatrix2x3dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniformMatrix2x4dv(Context *context,
+bool ValidateProgramUniformMatrix2x4dv(const Context *context,
                                        ShaderProgramID program,
                                        GLint location,
                                        GLsizei count,
@@ -140,7 +146,7 @@ bool ValidateProgramUniformMatrix2x4dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniformMatrix3dv(Context *context,
+bool ValidateProgramUniformMatrix3dv(const Context *context,
                                      ShaderProgramID program,
                                      GLint location,
                                      GLsizei count,
@@ -150,7 +156,7 @@ bool ValidateProgramUniformMatrix3dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniformMatrix3x2dv(Context *context,
+bool ValidateProgramUniformMatrix3x2dv(const Context *context,
                                        ShaderProgramID program,
                                        GLint location,
                                        GLsizei count,
@@ -160,7 +166,7 @@ bool ValidateProgramUniformMatrix3x2dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniformMatrix3x4dv(Context *context,
+bool ValidateProgramUniformMatrix3x4dv(const Context *context,
                                        ShaderProgramID program,
                                        GLint location,
                                        GLsizei count,
@@ -170,7 +176,7 @@ bool ValidateProgramUniformMatrix3x4dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniformMatrix4dv(Context *context,
+bool ValidateProgramUniformMatrix4dv(const Context *context,
                                      ShaderProgramID program,
                                      GLint location,
                                      GLsizei count,
@@ -180,7 +186,7 @@ bool ValidateProgramUniformMatrix4dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniformMatrix4x2dv(Context *context,
+bool ValidateProgramUniformMatrix4x2dv(const Context *context,
                                        ShaderProgramID program,
                                        GLint location,
                                        GLsizei count,
@@ -190,7 +196,7 @@ bool ValidateProgramUniformMatrix4x2dv(Context *context,
     return true;
 }
 
-bool ValidateProgramUniformMatrix4x3dv(Context *context,
+bool ValidateProgramUniformMatrix4x3dv(const Context *context,
                                        ShaderProgramID program,
                                        GLint location,
                                        GLsizei count,
@@ -200,12 +206,12 @@ bool ValidateProgramUniformMatrix4x3dv(Context *context,
     return true;
 }
 
-bool ValidateScissorArrayv(Context *context, GLuint first, GLsizei count, const GLint *v)
+bool ValidateScissorArrayv(const Context *context, GLuint first, GLsizei count, const GLint *v)
 {
     return true;
 }
 
-bool ValidateScissorIndexed(Context *context,
+bool ValidateScissorIndexed(const Context *context,
                             GLuint index,
                             GLint left,
                             GLint bottom,
@@ -215,42 +221,46 @@ bool ValidateScissorIndexed(Context *context,
     return true;
 }
 
-bool ValidateScissorIndexedv(Context *context, GLuint index, const GLint *v)
+bool ValidateScissorIndexedv(const Context *context, GLuint index, const GLint *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribL1d(Context *context, GLuint index, GLdouble x)
+bool ValidateVertexAttribL1d(const Context *context, GLuint index, GLdouble x)
 {
     return true;
 }
 
-bool ValidateVertexAttribL1dv(Context *context, GLuint index, const GLdouble *v)
+bool ValidateVertexAttribL1dv(const Context *context, GLuint index, const GLdouble *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribL2d(Context *context, GLuint index, GLdouble x, GLdouble y)
+bool ValidateVertexAttribL2d(const Context *context, GLuint index, GLdouble x, GLdouble y)
 {
     return true;
 }
 
-bool ValidateVertexAttribL2dv(Context *context, GLuint index, const GLdouble *v)
+bool ValidateVertexAttribL2dv(const Context *context, GLuint index, const GLdouble *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribL3d(Context *context, GLuint index, GLdouble x, GLdouble y, GLdouble z)
+bool ValidateVertexAttribL3d(const Context *context,
+                             GLuint index,
+                             GLdouble x,
+                             GLdouble y,
+                             GLdouble z)
 {
     return true;
 }
 
-bool ValidateVertexAttribL3dv(Context *context, GLuint index, const GLdouble *v)
+bool ValidateVertexAttribL3dv(const Context *context, GLuint index, const GLdouble *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribL4d(Context *context,
+bool ValidateVertexAttribL4d(const Context *context,
                              GLuint index,
                              GLdouble x,
                              GLdouble y,
@@ -260,12 +270,12 @@ bool ValidateVertexAttribL4d(Context *context,
     return true;
 }
 
-bool ValidateVertexAttribL4dv(Context *context, GLuint index, const GLdouble *v)
+bool ValidateVertexAttribL4dv(const Context *context, GLuint index, const GLdouble *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribLPointer(Context *context,
+bool ValidateVertexAttribLPointer(const Context *context,
                                   GLuint index,
                                   GLint size,
                                   GLenum type,
@@ -275,12 +285,12 @@ bool ValidateVertexAttribLPointer(Context *context,
     return true;
 }
 
-bool ValidateViewportArrayv(Context *context, GLuint first, GLsizei count, const GLfloat *v)
+bool ValidateViewportArrayv(const Context *context, GLuint first, GLsizei count, const GLfloat *v)
 {
     return true;
 }
 
-bool ValidateViewportIndexedf(Context *context,
+bool ValidateViewportIndexedf(const Context *context,
                               GLuint index,
                               GLfloat x,
                               GLfloat y,
@@ -290,7 +300,7 @@ bool ValidateViewportIndexedf(Context *context,
     return true;
 }
 
-bool ValidateViewportIndexedfv(Context *context, GLuint index, const GLfloat *v)
+bool ValidateViewportIndexedfv(const Context *context, GLuint index, const GLfloat *v)
 {
     return true;
 }

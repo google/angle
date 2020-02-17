@@ -498,13 +498,13 @@ class State : angle::NonCopyable
     GLuint getMaxShaderCompilerThreads() const { return mMaxShaderCompilerThreads; }
 
     // State query functions
-    void getBooleanv(GLenum pname, GLboolean *params);
-    void getFloatv(GLenum pname, GLfloat *params);
-    angle::Result getIntegerv(const Context *context, GLenum pname, GLint *params);
+    void getBooleanv(GLenum pname, GLboolean *params) const;
+    void getFloatv(GLenum pname, GLfloat *params) const;
+    angle::Result getIntegerv(const Context *context, GLenum pname, GLint *params) const;
     void getPointerv(const Context *context, GLenum pname, void **params) const;
-    void getIntegeri_v(GLenum target, GLuint index, GLint *data);
-    void getInteger64i_v(GLenum target, GLuint index, GLint64 *data);
-    void getBooleani_v(GLenum target, GLuint index, GLboolean *data);
+    void getIntegeri_v(GLenum target, GLuint index, GLint *data) const;
+    void getInteger64i_v(GLenum target, GLuint index, GLint64 *data) const;
+    void getBooleani_v(GLenum target, GLuint index, GLboolean *data) const;
 
     bool isRobustResourceInitEnabled() const { return mRobustResourceInit; }
 

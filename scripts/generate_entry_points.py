@@ -206,7 +206,7 @@ context_header = """// GENERATED FILE - DO NOT EDIT.
 #endif // ANGLE_CONTEXT_API_{version}_AUTOGEN_H_
 """
 
-context_decl_format = """    {return_type} {name_lower_no_suffix}({internal_params}); \\"""
+context_decl_format = """    {return_type} {name_lower_no_suffix}({internal_params}){maybe_const}; \\"""
 
 libgles_entry_point_def = """{return_type}GL_APIENTRY gl{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
@@ -948,6 +948,16 @@ def format_capture_method(command, cmd_name, proto, params, all_param_types, cap
         return template_capture_method_with_return_value.format(**format_args)
 
 
+def const_pointer_type(param, packed_gl_enums):
+    type = just_the_type_packed(param, packed_gl_enums)
+    if "**" in type and "const" not in type:
+        return type.replace("**", "* const *")
+    elif "*" in type and "const" not in type:
+        return "const " + type
+    else:
+        return type
+
+
 def get_internal_params(cmd_name, params, cmd_packed_gl_enums):
     packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name)
     return ", ".join([
@@ -957,17 +967,29 @@ def get_internal_params(cmd_name, params, cmd_packed_gl_enums):
     ])
 
 
+def get_validation_params(cmd_name, params, cmd_packed_gl_enums):
+    packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name)
+    return ", ".join([
+        make_param(
+            const_pointer_type(param, packed_gl_enums), just_the_name_packed(
+                param, packed_gl_enums)) for param in params
+    ])
+
+
 def format_context_decl(cmd_name, proto, params, template, cmd_packed_gl_enums):
     internal_params = get_internal_params(cmd_name, params, cmd_packed_gl_enums)
 
     return_type = proto[:-len(cmd_name)]
     name_lower_no_suffix = cmd_name[2:3].lower() + cmd_name[3:]
     name_lower_no_suffix = strip_suffix(name_lower_no_suffix)
+    maybe_const = " const" if name_lower_no_suffix.startswith(
+        "is") and name_lower_no_suffix[2].isupper() else ""
 
     return template.format(
         return_type=return_type,
         name_lower_no_suffix=name_lower_no_suffix,
-        internal_params=internal_params)
+        internal_params=internal_params,
+        maybe_const=maybe_const)
 
 
 def format_libgles_entry_point_def(cmd_name, proto, params, is_explicit_context):
@@ -986,8 +1008,8 @@ def format_libgles_entry_point_def(cmd_name, proto, params, is_explicit_context)
 
 
 def format_validation_proto(cmd_name, params, cmd_packed_gl_enums):
-    internal_params = get_internal_params(cmd_name, ["Context *context"] + params,
-                                          cmd_packed_gl_enums)
+    internal_params = get_validation_params(cmd_name, ["Context *context"] + params,
+                                            cmd_packed_gl_enums)
     return template_validation_proto % (cmd_name[2:], internal_params)
 
 

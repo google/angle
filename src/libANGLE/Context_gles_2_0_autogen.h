@@ -112,13 +112,13 @@
     void getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params);                           \
     void getVertexAttribiv(GLuint index, GLenum pname, GLint *params);                             \
     void hint(GLenum target, GLenum mode);                                                         \
-    GLboolean isBuffer(BufferID bufferPacked);                                                     \
-    GLboolean isEnabled(GLenum cap);                                                               \
-    GLboolean isFramebuffer(FramebufferID framebufferPacked);                                      \
-    GLboolean isProgram(ShaderProgramID programPacked);                                            \
-    GLboolean isRenderbuffer(RenderbufferID renderbufferPacked);                                   \
-    GLboolean isShader(ShaderProgramID shaderPacked);                                              \
-    GLboolean isTexture(TextureID texturePacked);                                                  \
+    GLboolean isBuffer(BufferID bufferPacked) const;                                               \
+    GLboolean isEnabled(GLenum cap) const;                                                         \
+    GLboolean isFramebuffer(FramebufferID framebufferPacked) const;                                \
+    GLboolean isProgram(ShaderProgramID programPacked) const;                                      \
+    GLboolean isRenderbuffer(RenderbufferID renderbufferPacked) const;                             \
+    GLboolean isShader(ShaderProgramID shaderPacked) const;                                        \
+    GLboolean isTexture(TextureID texturePacked) const;                                            \
     void lineWidth(GLfloat width);                                                                 \
     void linkProgram(ShaderProgramID programPacked);                                               \
     void pixelStorei(GLenum pname, GLint param);                                                   \

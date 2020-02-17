@@ -94,11 +94,11 @@
     void invalidateSubFramebuffer(GLenum target, GLsizei numAttachments,                           \
                                   const GLenum *attachments, GLint x, GLint y, GLsizei width,      \
                                   GLsizei height);                                                 \
-    GLboolean isQuery(QueryID idPacked);                                                           \
-    GLboolean isSampler(SamplerID samplerPacked);                                                  \
-    GLboolean isSync(GLsync sync);                                                                 \
-    GLboolean isTransformFeedback(TransformFeedbackID idPacked);                                   \
-    GLboolean isVertexArray(VertexArrayID arrayPacked);                                            \
+    GLboolean isQuery(QueryID idPacked) const;                                                     \
+    GLboolean isSampler(SamplerID samplerPacked) const;                                            \
+    GLboolean isSync(GLsync sync) const;                                                           \
+    GLboolean isTransformFeedback(TransformFeedbackID idPacked) const;                             \
+    GLboolean isVertexArray(VertexArrayID arrayPacked) const;                                      \
     void *mapBufferRange(BufferBinding targetPacked, GLintptr offset, GLsizeiptr length,           \
                          GLbitfield access);                                                       \
     void pauseTransformFeedback();                                                                 \
