@@ -22,6 +22,30 @@
       "revId": "bb7534ee99ce9448b46be8975e916763ec6f0bf5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "492cff7c_9100babc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-02-17T16:33:34Z",
+      "side": 1,
+      "message": "ANGLE developers are pretty used to how ANGLE\u0027s macros work. If we were starting a new project totally green I\u0027d maybe agree with you. Chromium uses CHECK and DCHECK for that reason. If you wanted to rename SwiftShader\u0027s macros to something like that it would make sense. Having release asserts/checks is very valuable and essentially eliminates the need to have separate debug/release testing.",
+      "parentUuid": "5adf9515_a6b02b61",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "bb7534ee99ce9448b46be8975e916763ec6f0bf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
