@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5adf9515_a6b02b61",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2020-02-17T16:00:35Z",
+      "side": 1,
+      "message": "Just noticed this. Is this really desired? I think most people would expect ASSERT() to behave like assert(). This reasonable assumption can lead to crashes in production builds for things that would have otherwise been benign.\n\nAnother macro name seems in order for something that always aborts the process if a condition is not met.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "bb7534ee99ce9448b46be8975e916763ec6f0bf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
