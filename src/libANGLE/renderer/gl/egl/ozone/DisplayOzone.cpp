@@ -917,7 +917,7 @@ ContextImpl *DisplayOzone::createContext(const gl::State &state,
                                          const egl::AttributeMap &attribs)
 {
     // All contexts on Ozone are virtualized and share the same renderer.
-    return new ContextEGL(state, errorSet, this, shareContext, mRenderer);
+    return new ContextEGL(state, errorSet, mRenderer);
 }
 
 egl::ConfigSet DisplayOzone::generateConfigs()

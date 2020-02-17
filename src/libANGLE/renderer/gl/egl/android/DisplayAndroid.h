@@ -57,15 +57,12 @@ class DisplayAndroid : public DisplayEGL
                                        EGLContext sharedContext,
                                        const native_egl::AttributeVector workerAttribs) override;
 
-    egl::Error createRenderer(EGLContext shareContext,
-                              std::shared_ptr<RendererEGL> *outRenderer) override;
-
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
 
-    egl::Error createRendererHelper(EGLContext shareContext,
-                                    bool makeNewContextCurrent,
-                                    std::shared_ptr<RendererEGL> *outRenderer);
+    egl::Error createRenderer(EGLContext shareContext,
+                              bool makeNewContextCurrent,
+                              std::shared_ptr<RendererEGL> *outRenderer);
 
     bool mVirtualizedContexts;
 
