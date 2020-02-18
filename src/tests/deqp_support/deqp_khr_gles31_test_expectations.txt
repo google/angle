@@ -50,11 +50,12 @@
 3570 VULKAN : KHR-GLES31.core.sepshaderobjs* = FAIL
 
 // Shader support:
-3596 : KHR-GLES31.core.shader_bitfield_operation.frexp.* = SKIP
-3596 : KHR-GLES31.core.shader_bitfield_operation.uaddCarry.* = SKIP
-3596 : KHR-GLES31.core.shader_bitfield_operation.usubBorrow.* = SKIP
-3596 : KHR-GLES31.core.shader_bitfield_operation.umulExtended.* = SKIP
-3596 : KHR-GLES31.core.shader_bitfield_operation.imulExtended.* = SKIP
+4402 : KHR-GLES31.core.shader_bitfield_operation.frexp.* = SKIP
+4402 : KHR-GLES31.core.shader_bitfield_operation.uaddCarry.* = SKIP
+4402 : KHR-GLES31.core.shader_bitfield_operation.usubBorrow.* = SKIP
+4402 : KHR-GLES31.core.shader_bitfield_operation.umulExtended.* = SKIP
+4402 : KHR-GLES31.core.shader_bitfield_operation.imulExtended.* = SKIP
+
 // Program interface query.
 3596 VULKAN : KHR-GLES31.core.program_interface_query.* = FAIL
 
