@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "84fdb1c8_44f13184",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-02-18T19:29:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "124053af_e8d867f1",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 95,
+        "endChar": 21
+      },
+      "revId": "c4683a5dc66764688707ad6c1506020124bb15ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8cb78101_671c4c1c",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "71d3d09f_9b21b8df",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-02-18T19:29:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cb78101_671c4c1c",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 101,
+        "endChar": 21
+      },
+      "revId": "c4683a5dc66764688707ad6c1506020124bb15ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc382161_31f50bbc",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 5
@@ -68,6 +116,30 @@
       "revId": "c4683a5dc66764688707ad6c1506020124bb15ed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d4a4fa7_c39dead5",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-02-18T19:29:27Z",
+      "side": 1,
+      "message": "I am not sure if we will can some version like:\nMesa 19.2, Mesa 20, etc, so just set them all to 0 before sscanf.",
+      "parentUuid": "fc382161_31f50bbc",
+      "range": {
+        "startLine": 104,
+        "startChar": 4,
+        "endLine": 104,
+        "endChar": 15
+      },
+      "revId": "c4683a5dc66764688707ad6c1506020124bb15ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
