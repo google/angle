@@ -9,6 +9,7 @@
 
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 
+#include <array>
 #include <limits>
 
 #include "common/mathutil.h"
@@ -84,6 +85,30 @@ uint32_t GetDeviceID(const FunctionsGL *functions)
     }
 
     return 0;
+}
+
+bool IsMesa(const FunctionsGL *functions, std::array<int, 3> *version)
+{
+    ASSERT(version);
+
+    if (functions->standard != STANDARD_GL_DESKTOP)
+    {
+        return false;
+    }
+
+    std::string nativeVersionString(
+        reinterpret_cast<const char *>(functions->getString(GL_VERSION)));
+    size_t pos = nativeVersionString.find("Mesa");
+    if (pos == std::string::npos)
+    {
+        return false;
+    }
+
+    int *data = version->data();
+    data[0] = data[1] = data[2] = 0;
+    std::sscanf(nativeVersionString.c_str() + pos, "Mesa %d.%d.%d", data, data + 1, data + 2);
+
+    return true;
 }
 
 namespace nativegl_gl
@@ -1471,8 +1496,9 @@ void GenerateCaps(const FunctionsGL *functions,
                             functions->hasGLESExtension("GL_EXT_semaphore");
     extensions->memoryObjectFd = functions->hasGLExtension("GL_EXT_memory_object_fd") ||
                                  functions->hasGLESExtension("GL_EXT_memory_object_fd");
-    extensions->semaphoreFd = functions->hasGLExtension("GL_EXT_semaphore_fd") ||
-                              functions->hasGLESExtension("GL_EXT_semaphore_fd");
+    extensions->semaphoreFd = !features.disableSemaphoreFd.enabled &&
+                              (functions->hasGLExtension("GL_EXT_semaphore_fd") ||
+                               functions->hasGLESExtension("GL_EXT_semaphore_fd"));
     extensions->gpuShader5EXT = functions->isAtLeastGL(gl::Version(4, 0)) ||
                                 functions->isAtLeastGLES(gl::Version(3, 2)) ||
                                 functions->hasGLExtension("GL_ARB_gpu_shader5") ||
@@ -1487,6 +1513,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     bool isIntel    = IsIntel(vendor);
     bool isNvidia   = IsNvidia(vendor);
     bool isQualcomm = IsQualcomm(vendor);
+
+    std::array<int, 3> mesaVersion = {0, 0, 0};
+    bool isMesa                    = IsMesa(functions, &mesaVersion);
 
     // Don't use 1-bit alpha formats on desktop GL with AMD drivers.
     ANGLE_FEATURE_CONDITION(features, avoid1BitAlphaTextureFormats,
@@ -1653,6 +1682,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // Workaround for incorrect sampling from DXT1 sRGB textures in Intel OpenGL on Windows.
     ANGLE_FEATURE_CONDITION(features, avoidDXT1sRGBTextureFormat, IsWindows() && isIntel);
+
+    ANGLE_FEATURE_CONDITION(
+        features, disableSemaphoreFd,
+        IsLinux() && isAMD && isMesa && mesaVersion < (std::array<int, 3>{19, 3, 5}));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

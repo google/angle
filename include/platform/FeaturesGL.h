@@ -419,6 +419,11 @@ struct FeaturesGL : FeatureSetBase
     Feature avoidDXT1sRGBTextureFormat = {
         "avoid_dxt1_srgb_texture_format", FeatureCategory::OpenGLWorkarounds,
         "Replaces DXT1 sRGB with DXT1 sRGB Alpha as a driver bug workaround.", &members};
+
+    // GL_EXT_semaphore_fd doesn't work properly with Mesa 19.3.4 and earlier versions.
+    Feature disableSemaphoreFd = {"disable_semaphore_fd", FeatureCategory::OpenGLWorkarounds,
+                                  "Disable GL_EXT_semaphore_fd extension", &members,
+                                  "https://crbug.com/1046462"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
