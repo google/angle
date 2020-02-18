@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "610c1872_a124a202",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1509,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-02-18T15:57:11Z",
+      "side": 1,
+      "message": "Hey Peng, I have a suggestion on how to fit this into our architecture a bit better:\n\n - Because this is a workaround, put a new member in FeaturesGL (https://cs.chromium.org/chromium/src/third_party/angle/include/platform/FeaturesGL.h) with a small description of the bug.  It could be named something like disableSemaphoreFd or a more descriptive name if you can think of one.\n - Initialize the new member below in InitializeFeatures and use the member here to disable the extension.\n - Refactor your string checks into functions.  Add an IsMesa(versionString) and GetMesaVersion(versionString).\n - The final check could then be something simple like \"IsLinux() \u0026\u0026 isAMD \u0026\u0026 isMesa \u0026\u0026 mesaVersion \u003c {19, 3, 5}\"\n\nIf it\u0027s in FeaturesGL then it shows up in about:gpu which is useful for debugging user setups.",
+      "range": {
+        "startLine": 1477,
+        "startChar": 0,
+        "endLine": 1509,
+        "endChar": 6
+      },
+      "revId": "6f9d8235917aa265d6f7a0e5c53d68ee666ee7e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
