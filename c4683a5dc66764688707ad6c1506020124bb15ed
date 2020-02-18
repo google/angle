@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "124053af_e8d867f1",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-02-18T19:12:54Z",
+      "side": 1,
+      "message": "nit: use braces",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 95,
+        "endChar": 21
+      },
+      "revId": "c4683a5dc66764688707ad6c1506020124bb15ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cb78101_671c4c1c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-02-18T19:12:54Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 101,
+        "endChar": 21
+      },
+      "revId": "c4683a5dc66764688707ad6c1506020124bb15ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc382161_31f50bbc",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-02-18T19:12:54Z",
+      "side": 1,
+      "message": "We check the return value of this.  Or at least set the version to all 0s if it fails?",
+      "range": {
+        "startLine": 104,
+        "startChar": 4,
+        "endLine": 104,
+        "endChar": 15
+      },
+      "revId": "c4683a5dc66764688707ad6c1506020124bb15ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
