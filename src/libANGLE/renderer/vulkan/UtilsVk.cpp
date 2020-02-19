@@ -1279,7 +1279,8 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     const gl::Rectangle &scissoredRenderArea = params.clearArea;
 
     vk::CommandBuffer *commandBuffer;
-    if (!framebuffer->appendToStartedRenderPass(&contextVk->getResourceUseList(),
+    if (!contextVk->commandGraphEnabled() ||
+        !framebuffer->appendToStartedRenderPass(&contextVk->getResourceUseList(),
                                                 scissoredRenderArea, &commandBuffer))
     {
         ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, scissoredRenderArea, &commandBuffer));
@@ -1516,7 +1517,8 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     }
 
     vk::CommandBuffer *commandBuffer;
-    if (!framebuffer->appendToStartedRenderPass(&contextVk->getResourceUseList(), params.blitArea,
+    if (!contextVk->commandGraphEnabled() ||
+        !framebuffer->appendToStartedRenderPass(&contextVk->getResourceUseList(), params.blitArea,
                                                 &commandBuffer))
     {
         ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, params.blitArea, &commandBuffer));
