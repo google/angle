@@ -862,7 +862,14 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
     if (mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
     {
         vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+        if (contextVk->commandGraphEnabled())
+        {
+            ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+        }
+        else
+        {
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+        }
         mImage->changeLayoutAndQueue(VK_IMAGE_ASPECT_COLOR_BIT,
                                      vk::ImageLayout::AllGraphicsShadersReadOnly,
                                      rendererQueueFamilyIndex, commandBuffer);
