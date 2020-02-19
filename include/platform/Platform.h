@@ -10,6 +10,7 @@
 #define ANGLE_PLATFORM_H
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <array>
 
 #define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x3482
