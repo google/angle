@@ -41,6 +41,8 @@
 
 #include "libANGLE/trace.h"
 
+#include <iostream>
+
 namespace rx
 {
 
@@ -107,8 +109,8 @@ constexpr size_t kDriverUniformsAllocatorPageSize = 4 * 1024;
 
 constexpr size_t kInFlightCommandsLimit = 100u;
 
-// Initially dumping the command graphs is disabled.
-constexpr bool kEnableCommandGraphDiagnostics = false;
+// Dumping the command stream is disabled by default.
+constexpr bool kEnableCommandStreamDiagnostics = false;
 
 void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
                           const vk::PrimaryCommandBuffer &commandBuffer,
@@ -175,6 +177,29 @@ void ApplySampleCoverage(const gl::State &glState,
     *maskOut &= coverageMask;
 }
 
+char GetLoadOpShorthand(uint32_t loadOp)
+{
+    switch (loadOp)
+    {
+        case VK_ATTACHMENT_LOAD_OP_CLEAR:
+            return 'C';
+        case VK_ATTACHMENT_LOAD_OP_LOAD:
+            return 'L';
+        default:
+            return 'D';
+    }
+}
+
+char GetStoreOpShorthand(uint32_t storeOp)
+{
+    switch (storeOp)
+    {
+        case VK_ATTACHMENT_STORE_OP_STORE:
+            return 'S';
+        default:
+            return 'D';
+    }
+}
 }  // anonymous namespace
 
 ContextVk::DriverUniformsDescriptorSet::DriverUniformsDescriptorSet()
@@ -506,7 +531,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mEmulateSeamfulCubeMapSampling(false),
       mUseOldRewriteStructSamplers(false),
       mPoolAllocator(kDefaultPoolAllocatorPageSize, 1),
-      mCommandGraph(kEnableCommandGraphDiagnostics, &mPoolAllocator),
+      mCommandGraph(kEnableCommandStreamDiagnostics, &mPoolAllocator),
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
@@ -1020,7 +1045,7 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context,
         // |setupDispatch| and |setupDraw| are special in that they flush dirty bits. Therefore they
         // don't use the same APIs to record commands as the functions outside ContextVk.
         // The following ensures prior commands are flushed before we start processing dirty bits.
-        mOutsideRenderPassCommands.flushToPrimary(&mPrimaryCommands);
+        mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
         ANGLE_TRY(endRenderPass());
         *commandBufferOut = &mOutsideRenderPassCommands.getCommandBuffer();
     }
@@ -1423,6 +1448,11 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
             mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassCount);
         renderPassCount->add(mRenderPassCommands.getAndResetCounter());
         renderPassCount->next();
+
+        if (kEnableCommandStreamDiagnostics)
+        {
+            dumpCommandStreamDiagnostics();
+        }
     }
 
     ANGLE_TRY(ensureSubmitFenceInitialized());
@@ -2222,7 +2252,7 @@ angle::Result ContextVk::clearWithRenderPassOp(
     }
     else
     {
-        mOutsideRenderPassCommands.flushToPrimary(&mPrimaryCommands);
+        mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
     }
 
     size_t attachmentIndexVk = 0;
@@ -3699,7 +3729,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
     }
     else
     {
-        mOutsideRenderPassCommands.flushToPrimary(&mPrimaryCommands);
+        mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
         ANGLE_TRY(endRenderPass());
 
         if (mIsAnyHostVisibleBufferWritten)
@@ -4024,7 +4054,7 @@ angle::Result ContextVk::onBufferRead(VkAccessFlags readAccessType, vk::BufferHe
 
     if (!buffer->canAccumulateRead(this, readAccessType))
     {
-        mOutsideRenderPassCommands.flushToPrimary(&mPrimaryCommands);
+        mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
     }
 
     mOutsideRenderPassCommands.bufferRead(&mResourceUseList, readAccessType, buffer);
@@ -4040,7 +4070,7 @@ angle::Result ContextVk::onBufferWrite(VkAccessFlags writeAccessType, vk::Buffer
 
     if (!buffer->canAccumulateWrite(this, writeAccessType))
     {
-        mOutsideRenderPassCommands.flushToPrimary(&mPrimaryCommands);
+        mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
     }
 
     mOutsideRenderPassCommands.bufferWrite(&mResourceUseList, writeAccessType, buffer);
@@ -4130,6 +4160,37 @@ angle::Result ContextVk::syncExternalMemory()
     commandBuffer->memoryBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, &memoryBarrier);
     return angle::Result::Continue;
+}
+
+void ContextVk::addCommandBufferDiagnostics(const std::string &commandBufferDiagnostics)
+{
+    mCommandBufferDiagnostics.push_back(commandBufferDiagnostics);
+}
+
+void ContextVk::dumpCommandStreamDiagnostics()
+{
+    std::ostream &out = std::cout;
+
+    if (mCommandBufferDiagnostics.empty())
+        return;
+
+    out << "digraph {\n"
+        << "  node [shape=plaintext fontname=\"Consolas\"]\n";
+
+    for (size_t index = 0; index < mCommandBufferDiagnostics.size(); ++index)
+    {
+        const std::string &payload = mCommandBufferDiagnostics[index];
+        out << "  cb" << index << " [label =\"" << payload << "\"];\n";
+    }
+
+    for (size_t index = 0; index < mCommandBufferDiagnostics.size() - 1; ++index)
+    {
+        out << "  cb" << index << " -> cb" << index + 1 << "\n";
+    }
+
+    mCommandBufferDiagnostics.clear();
+
+    out << "}\n";
 }
 
 CommandBufferHelper::CommandBufferHelper()
@@ -4235,10 +4296,24 @@ OutsideRenderPassCommandBuffer::OutsideRenderPassCommandBuffer() = default;
 
 OutsideRenderPassCommandBuffer::~OutsideRenderPassCommandBuffer() = default;
 
-void OutsideRenderPassCommandBuffer::flushToPrimary(vk::PrimaryCommandBuffer *primary)
+void OutsideRenderPassCommandBuffer::flushToPrimary(ContextVk *contextVk,
+                                                    vk::PrimaryCommandBuffer *primary)
 {
     if (empty())
         return;
+
+    if (kEnableCommandStreamDiagnostics)
+    {
+        std::ostringstream out;
+        if (mGlobalMemoryBarrierSrcAccess != 0 || mGlobalMemoryBarrierDstAccess != 0)
+        {
+            out << "Memory Barrier Src: 0x" << std::hex << mGlobalMemoryBarrierSrcAccess
+                << " &rarr; Dst: 0x" << std::hex << mGlobalMemoryBarrierDstAccess << "\\l";
+        }
+
+        out << mCommandBuffer.dumpCommands("\\l");
+        contextVk->addCommandBufferDiagnostics(out.str());
+    }
 
     executeBarriers(primary);
     mCommandBuffer.executeCommands(primary->getHandle());
@@ -4311,6 +4386,11 @@ angle::Result RenderPassCommandBuffer::flushToPrimary(ContextVk *contextVk,
     if (empty())
         return angle::Result::Continue;
 
+    if (kEnableCommandStreamDiagnostics)
+    {
+        addRenderPassCommandDiagnostics(contextVk);
+    }
+
     executeBarriers(primary);
 
     // Pull a RenderPass from the cache.
@@ -4375,6 +4455,58 @@ angle::Result RenderPassCommandBuffer::flushToPrimary(ContextVk *contextVk,
     reset();
 
     return angle::Result::Continue;
+}
+
+void RenderPassCommandBuffer::addRenderPassCommandDiagnostics(ContextVk *contextVk)
+{
+    std::ostringstream out;
+    if (mGlobalMemoryBarrierSrcAccess != 0 || mGlobalMemoryBarrierDstAccess != 0)
+    {
+        out << "Memory Barrier Src: 0x" << std::hex << mGlobalMemoryBarrierSrcAccess
+            << " &rarr; Dst: 0x" << std::hex << mGlobalMemoryBarrierDstAccess << "\\l";
+    }
+
+    size_t attachmentCount             = mRenderPassDesc.attachmentCount();
+    size_t depthStencilAttachmentCount = mRenderPassDesc.hasDepthStencilAttachment();
+    size_t colorAttachmentCount        = attachmentCount - depthStencilAttachmentCount;
+
+    std::string loadOps, storeOps;
+
+    if (colorAttachmentCount > 0)
+    {
+        loadOps += " Color: ";
+        storeOps += " Color: ";
+
+        for (size_t i = 0; i < colorAttachmentCount; ++i)
+        {
+            loadOps += GetLoadOpShorthand(mAttachmentOps[i].loadOp);
+            storeOps += GetStoreOpShorthand(mAttachmentOps[i].storeOp);
+        }
+    }
+
+    if (depthStencilAttachmentCount > 0)
+    {
+        ASSERT(depthStencilAttachmentCount == 1);
+
+        loadOps += " Depth/Stencil: ";
+        storeOps += " Depth/Stencil: ";
+        size_t dsIndex = colorAttachmentCount;
+
+        loadOps += GetLoadOpShorthand(mAttachmentOps[dsIndex].loadOp);
+        loadOps += GetLoadOpShorthand(mAttachmentOps[dsIndex].stencilLoadOp);
+
+        storeOps += GetStoreOpShorthand(mAttachmentOps[dsIndex].storeOp);
+        storeOps += GetStoreOpShorthand(mAttachmentOps[dsIndex].stencilStoreOp);
+    }
+
+    if (attachmentCount > 0)
+    {
+        out << "LoadOp:  " << loadOps << "\\l";
+        out << "StoreOp: " << storeOps << "\\l";
+    }
+
+    out << mCommandBuffer.dumpCommands("\\l");
+    contextVk->addCommandBufferDiagnostics(out.str());
 }
 
 void RenderPassCommandBuffer::reset()
