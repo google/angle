@@ -204,7 +204,8 @@ class RenderPassCommandBuffer final : public CommandBufferHelper
 
     angle::Result flushToPrimary(ContextVk *contextVk, vk::PrimaryCommandBuffer *primary);
 
-    bool empty() const { return !mRenderPassStarted; }
+    bool empty() const { return !started() && mCommandBuffer.empty(); }
+    bool started() const { return mRenderPassStarted; }
     void reset();
 
     uint32_t getAndResetCounter()
@@ -602,16 +603,18 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
         return angle::Result::Continue;
     }
 
-    void beginRenderPass(const vk::Framebuffer &framebuffer,
-                         const gl::Rectangle &renderArea,
-                         const vk::RenderPassDesc &renderPassDesc,
-                         const vk::AttachmentOpsArray &renderPassAttachmentOps,
-                         const std::vector<VkClearValue> &clearValues,
-                         vk::CommandBuffer **commandBufferOut);
+    angle::Result beginRenderPass(const vk::Framebuffer &framebuffer,
+                                  const gl::Rectangle &renderArea,
+                                  const vk::RenderPassDesc &renderPassDesc,
+                                  const vk::AttachmentOpsArray &renderPassAttachmentOps,
+                                  const std::vector<VkClearValue> &clearValues,
+                                  vk::CommandBuffer **commandBufferOut);
 
-    RenderPassCommandBuffer &getRenderPassCommandBuffer()
+    bool hasStartedRenderPass() const { return !mRenderPassCommands.empty(); }
+
+    RenderPassCommandBuffer &getStartedRenderPassCommands()
     {
-        mOutsideRenderPassCommands.flushToPrimary(&mPrimaryCommands);
+        ASSERT(hasStartedRenderPass());
         return mRenderPassCommands;
     }
 

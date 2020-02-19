@@ -164,9 +164,22 @@ angle::Result FramebufferVk::invalidate(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
     mFramebuffer.onResourceAccess(&contextVk->getResourceUseList());
 
-    if (mFramebuffer.valid() && mFramebuffer.hasStartedRenderPass())
+    if (mFramebuffer.valid())
     {
-        invalidateImpl(contextVk, count, attachments);
+        if (contextVk->commandGraphEnabled())
+        {
+            if (mFramebuffer.hasStartedRenderPass())
+            {
+                ANGLE_TRY(invalidateImpl(contextVk, count, attachments));
+            }
+        }
+        else
+        {
+            if (contextVk->hasStartedRenderPass())
+            {
+                ANGLE_TRY(invalidateImpl(contextVk, count, attachments));
+            }
+        }
     }
 
     return angle::Result::Continue;
@@ -182,10 +195,24 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
 
     // RenderPass' storeOp cannot be made conditional to a specific region, so we only apply this
     // hint if the requested area encompasses the render area.
-    if (mFramebuffer.valid() && mFramebuffer.hasStartedRenderPass() &&
-        area.encloses(mFramebuffer.getRenderPassRenderArea()))
+    if (mFramebuffer.valid())
     {
-        invalidateImpl(contextVk, count, attachments);
+        if (contextVk->commandGraphEnabled())
+        {
+            if (mFramebuffer.hasStartedRenderPass() &&
+                area.encloses(mFramebuffer.getRenderPassRenderArea()))
+            {
+                ANGLE_TRY(invalidateImpl(contextVk, count, attachments));
+            }
+        }
+        else
+        {
+            if (contextVk->hasStartedRenderPass() &&
+                area.encloses(contextVk->getStartedRenderPassCommands().getRenderArea()))
+            {
+                ANGLE_TRY(invalidateImpl(contextVk, count, attachments));
+            }
+        }
     }
 
     return angle::Result::Continue;
@@ -983,9 +1010,11 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context, s
     return angle::Result::Continue;
 }
 
-void FramebufferVk::invalidateImpl(ContextVk *contextVk, size_t count, const GLenum *attachments)
+angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
+                                            size_t count,
+                                            const GLenum *attachments)
 {
-    ASSERT(mFramebuffer.hasStartedRenderPass());
+    ASSERT(contextVk->hasStartedRenderPass());
 
     gl::DrawBufferMask invalidateColorBuffers;
     bool invalidateDepthBuffer   = false;
@@ -1025,7 +1054,15 @@ void FramebufferVk::invalidateImpl(ContextVk *contextVk, size_t count, const GLe
     {
         if (invalidateColorBuffers.test(colorIndexGL))
         {
-            mFramebuffer.invalidateRenderPassColorAttachment(attachmentIndexVk);
+            if (contextVk->commandGraphEnabled())
+            {
+                mFramebuffer.invalidateRenderPassColorAttachment(attachmentIndexVk);
+            }
+            else
+            {
+                contextVk->getStartedRenderPassCommands().invalidateRenderPassColorAttachment(
+                    attachmentIndexVk);
+            }
         }
         ++attachmentIndexVk;
     }
@@ -1035,12 +1072,28 @@ void FramebufferVk::invalidateImpl(ContextVk *contextVk, size_t count, const GLe
     {
         if (invalidateDepthBuffer)
         {
-            mFramebuffer.invalidateRenderPassDepthAttachment(attachmentIndexVk);
+            if (contextVk->commandGraphEnabled())
+            {
+                mFramebuffer.invalidateRenderPassDepthAttachment(attachmentIndexVk);
+            }
+            else
+            {
+                contextVk->getStartedRenderPassCommands().invalidateRenderPassDepthAttachment(
+                    attachmentIndexVk);
+            }
         }
 
         if (invalidateStencilBuffer)
         {
-            mFramebuffer.invalidateRenderPassStencilAttachment(attachmentIndexVk);
+            if (contextVk->commandGraphEnabled())
+            {
+                mFramebuffer.invalidateRenderPassStencilAttachment(attachmentIndexVk);
+            }
+            else
+            {
+                contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment(
+                    attachmentIndexVk);
+            }
         }
     }
 
@@ -1057,7 +1110,16 @@ void FramebufferVk::invalidateImpl(ContextVk *contextVk, size_t count, const GLe
     // this pattern, this optimization may not be necessary if no application does this.  It is
     // expected that an application would invalidate() when it's done with the framebuffer, so the
     // render pass would have closed either way.
-    mFramebuffer.finishCurrentCommands(contextVk);
+    if (contextVk->commandGraphEnabled())
+    {
+        mFramebuffer.finishCurrentCommands(contextVk);
+    }
+    else
+    {
+        ANGLE_TRY(contextVk->endRenderPass());
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::syncState(const gl::Context *context,
@@ -1290,15 +1352,7 @@ angle::Result FramebufferVk::clearWithRenderPassOp(
                 SetEmulatedAlphaValue(renderTarget->getImageFormat(), &value);
             }
 
-            if (contextVk->commandGraphEnabled())
-            {
-                mFramebuffer.clearRenderPassColorAttachment(attachmentIndexVk, value);
-            }
-            else
-            {
-                contextVk->getRenderPassCommandBuffer().clearRenderPassColorAttachment(
-                    attachmentIndexVk, value);
-            }
+            mFramebuffer.clearRenderPassColorAttachment(attachmentIndexVk, value);
         }
         ++attachmentIndexVk;
     }
@@ -1309,30 +1363,14 @@ angle::Result FramebufferVk::clearWithRenderPassOp(
     {
         if (clearDepth)
         {
-            if (contextVk->commandGraphEnabled())
-            {
-                mFramebuffer.clearRenderPassDepthAttachment(attachmentIndexVk,
-                                                            clearDepthStencilValue.depth);
-            }
-            else
-            {
-                contextVk->getRenderPassCommandBuffer().clearRenderPassDepthAttachment(
-                    attachmentIndexVk, clearDepthStencilValue.depth);
-            }
+            mFramebuffer.clearRenderPassDepthAttachment(attachmentIndexVk,
+                                                        clearDepthStencilValue.depth);
         }
 
         if (clearStencil)
         {
-            if (contextVk->commandGraphEnabled())
-            {
-                mFramebuffer.clearRenderPassStencilAttachment(attachmentIndexVk,
-                                                              clearDepthStencilValue.stencil);
-            }
-            else
-            {
-                contextVk->getRenderPassCommandBuffer().clearRenderPassStencilAttachment(
-                    attachmentIndexVk, clearDepthStencilValue.stencil);
-            }
+            mFramebuffer.clearRenderPassStencilAttachment(attachmentIndexVk,
+                                                          clearDepthStencilValue.stencil);
         }
     }
 
@@ -1413,7 +1451,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     }
     else
     {
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&writeCommands));
+        ANGLE_TRY(contextVk->endRenderPass());
     }
 
     // Initialize RenderPass info.
@@ -1451,10 +1489,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     }
     else
     {
-        contextVk->beginRenderPass(*framebuffer, renderArea, mRenderPassDesc,
-                                   renderPassAttachmentOps, attachmentClearValues,
-                                   commandBufferOut);
-        return angle::Result::Continue;
+        return contextVk->beginRenderPass(*framebuffer, renderArea, mRenderPassDesc,
+                                          renderPassAttachmentOps, attachmentClearValues,
+                                          commandBufferOut);
     }
 }
 

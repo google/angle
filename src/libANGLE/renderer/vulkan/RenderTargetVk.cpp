@@ -58,11 +58,11 @@ angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk,
                                           vk::FramebufferHelper *framebufferVk,
                                           vk::CommandBuffer *commandBuffer)
 {
-    ASSERT(commandBuffer->valid());
     ASSERT(!mImage->getFormat().actualImageFormat().hasDepthOrStencilBits());
 
     if (contextVk->commandGraphEnabled())
     {
+        ASSERT(commandBuffer->valid());
         mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
                              commandBuffer);
 
@@ -84,7 +84,6 @@ angle::Result RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk,
                                                  vk::FramebufferHelper *framebufferVk,
                                                  vk::CommandBuffer *commandBuffer)
 {
-    ASSERT(commandBuffer->valid());
     ASSERT(mImage->getFormat().actualImageFormat().hasDepthOrStencilBits());
 
     const angle::Format &format    = mImage->getFormat().actualImageFormat();
@@ -92,6 +91,7 @@ angle::Result RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk,
 
     if (contextVk->commandGraphEnabled())
     {
+        ASSERT(commandBuffer->valid());
         mImage->changeLayout(aspectFlags, vk::ImageLayout::DepthStencilAttachment, commandBuffer);
 
         // Set up dependencies between the RT resource and the Framebuffer.
