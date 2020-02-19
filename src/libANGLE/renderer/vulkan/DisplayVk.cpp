@@ -203,7 +203,8 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->framebufferTargetANDROID = true;
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 
-    outExtensions->contextPriority = true;
+    // Disable context priority when non-zero memory init is enabled. This enforces a queue order.
+    outExtensions->contextPriority = !getRenderer()->getFeatures().allocateNonZeroMemory.enabled;
     outExtensions->noConfigContext = true;
 
 #if defined(ANGLE_PLATFORM_GGP)

@@ -201,13 +201,10 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initializeWithExternalMemory(
 void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display)
 {
     DisplayVk *displayVk = vk::GetImpl(display);
-    VkDevice device      = displayVk->getDevice();
-
-    // It should be safe to immediately destroy the backing images of a surface on surface
-    // destruction. If this assumption is incorrect, we could use the last submit serial
-    // to determine when to destroy the surface.
-    image.destroy(device);
-    imageViews.destroy(device);
+    RendererVk *renderer = displayVk->getRenderer();
+    image.releaseImage(renderer);
+    image.releaseStagingBuffer(renderer);
+    imageViews.release(renderer);
 }
 
 OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState)

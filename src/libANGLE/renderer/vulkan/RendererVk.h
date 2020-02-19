@@ -10,8 +10,10 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_RENDERERVK_H_
 #define LIBANGLE_RENDERER_VULKAN_RENDERERVK_H_
 
+#include <deque>
 #include <memory>
 #include <mutex>
+
 #include "vk_ext_provoking_vertex.h"
 #include "volk.h"
 
@@ -169,11 +171,22 @@ class RendererVk : angle::NonCopyable
     angle::Result queueSubmit(vk::Context *context,
                               egl::ContextPriority priority,
                               const VkSubmitInfo &submitInfo,
-                              const vk::Fence &fence,
+                              const vk::Fence *fence,
                               Serial *serialOut);
     angle::Result queueWaitIdle(vk::Context *context, egl::ContextPriority priority);
     angle::Result deviceWaitIdle(vk::Context *context);
     VkResult queuePresent(egl::ContextPriority priority, const VkPresentInfoKHR &presentInfo);
+
+    // This command buffer should be submitted immediately via queueSubmitOneOff.
+    angle::Result getCommandBufferOneOff(vk::Context *context,
+                                         vk::PrimaryCommandBuffer *commandBufferOut);
+
+    // Fire off a single command buffer immediately with default priority.
+    // Command buffer must be allocated with getCommandBufferOneOff and is reclaimed.
+    angle::Result queueSubmitOneOff(vk::Context *context,
+                                    vk::PrimaryCommandBuffer &&primary,
+                                    egl::ContextPriority priority,
+                                    Serial *serialOut);
 
     angle::Result newSharedFence(vk::Context *context, vk::Shared<vk::Fence> *sharedFenceOut);
     inline void resetSharedFence(vk::Shared<vk::Fence> *sharedFenceIn)
@@ -201,7 +214,10 @@ class RendererVk : angle::NonCopyable
 
     void collectGarbage(vk::SharedResourceUse &&use, std::vector<vk::GarbageObject> &&sharedGarbage)
     {
-        mSharedGarbage.emplace_back(std::move(use), std::move(sharedGarbage));
+        if (!sharedGarbage.empty())
+        {
+            mSharedGarbage.emplace_back(std::move(use), std::move(sharedGarbage));
+        }
     }
 
     static constexpr size_t kMaxExtensionNames = 200;
@@ -326,6 +342,16 @@ class RendererVk : angle::NonCopyable
     static constexpr double kPercentMaxMemoryAllocationCount = 0.3;
     // How many objects to garbage collect before issuing a flush()
     uint32_t mGarbageCollectionFlushThreshold;
+
+    // Only used for "one off" command buffers.
+    vk::CommandPool mOneOffCommandPool;
+
+    struct PendingOneOffCommands
+    {
+        Serial serial;
+        vk::PrimaryCommandBuffer commandBuffer;
+    };
+    std::deque<PendingOneOffCommands> mPendingOneOffCommands;
 };
 
 }  // namespace rx

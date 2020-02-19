@@ -322,6 +322,9 @@ class SharedResourceUse final : angle::NonCopyable
         mUse->counter++;
     }
 
+    // Specifically for use with command buffers that are used as one-offs.
+    void updateSerialOneOff(Serial serial) { mUse->serial = serial; }
+
     ANGLE_INLINE void release()
     {
         ASSERT(valid());

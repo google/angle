@@ -593,8 +593,26 @@ RendererVk::~RendererVk()
 
 void RendererVk::onDestroy(vk::Context *context)
 {
+    // Force all commands to finish by flushing all queues.
+    for (VkQueue queue : mQueues)
+    {
+        if (queue != VK_NULL_HANDLE)
+        {
+            vkQueueWaitIdle(queue);
+        }
+    }
+
+    // Then assign an infinite "last completed" serial to force garbage to delete.
+    mLastCompletedQueueSerial = Serial::Infinite();
     (void)cleanupGarbage(context, true);
     ASSERT(mSharedGarbage.empty());
+
+    for (PendingOneOffCommands &pending : mPendingOneOffCommands)
+    {
+        pending.commandBuffer.releaseHandle();
+    }
+
+    mOneOffCommandPool.destroy(mDevice);
 
     mFenceRecycler.destroy(mDevice);
 
@@ -1597,6 +1615,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
 
     ANGLE_FEATURE_CONDITION((&mFeatures), commandGraph, false);
 
+    // Allocation sanitization disabled by default because of a heaveyweight implementation
+    // that can cause OOM and timeouts.
+    ANGLE_FEATURE_CONDITION((&mFeatures), allocateNonZeroMemory, false);
+
     ANGLE_FEATURE_CONDITION(
         (&mFeatures), supportsExternalMemoryHost,
         ExtensionFound(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME, deviceExtensionNames));
@@ -1828,12 +1850,13 @@ bool RendererVk::hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatu
 angle::Result RendererVk::queueSubmit(vk::Context *context,
                                       egl::ContextPriority priority,
                                       const VkSubmitInfo &submitInfo,
-                                      const vk::Fence &fence,
+                                      const vk::Fence *fence,
                                       Serial *serialOut)
 {
     {
         std::lock_guard<decltype(mQueueMutex)> lock(mQueueMutex);
-        ANGLE_VK_TRY(context, vkQueueSubmit(mQueues[priority], 1, &submitInfo, fence.getHandle()));
+        VkFence handle = fence ? fence->getHandle() : VK_NULL_HANDLE;
+        ANGLE_VK_TRY(context, vkQueueSubmit(mQueues[priority], 1, &submitInfo, handle));
     }
 
     ANGLE_TRY(cleanupGarbage(context, false));
@@ -1841,6 +1864,23 @@ angle::Result RendererVk::queueSubmit(vk::Context *context,
     *serialOut                = mCurrentQueueSerial;
     mLastSubmittedQueueSerial = mCurrentQueueSerial;
     mCurrentQueueSerial       = mQueueSerialFactory.generate();
+
+    return angle::Result::Continue;
+}
+
+angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
+                                            vk::PrimaryCommandBuffer &&primary,
+                                            egl::ContextPriority priority,
+                                            Serial *serialOut)
+{
+    VkSubmitInfo submitInfo       = {};
+    submitInfo.sType              = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers    = primary.ptr();
+
+    ANGLE_TRY(queueSubmit(context, priority, submitInfo, nullptr, serialOut));
+
+    mPendingOneOffCommands.push_back({*serialOut, std::move(primary)});
 
     return angle::Result::Continue;
 }
@@ -1999,5 +2039,43 @@ void RendererVk::reloadVolkIfNeeded() const
     {
         volkLoadDevice(mDevice);
     }
+}
+
+angle::Result RendererVk::getCommandBufferOneOff(vk::Context *context,
+                                                 vk::PrimaryCommandBuffer *commandBufferOut)
+{
+    if (!mOneOffCommandPool.valid())
+    {
+        VkCommandPoolCreateInfo createInfo = {};
+        createInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        createInfo.flags                   = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+        ANGLE_VK_TRY(context, mOneOffCommandPool.init(mDevice, createInfo));
+    }
+
+    if (!mPendingOneOffCommands.empty() &&
+        mPendingOneOffCommands.front().serial < mLastCompletedQueueSerial)
+    {
+        *commandBufferOut = std::move(mPendingOneOffCommands.front().commandBuffer);
+        mPendingOneOffCommands.pop_front();
+        ANGLE_VK_TRY(context, commandBufferOut->reset());
+    }
+    else
+    {
+        VkCommandBufferAllocateInfo allocInfo = {};
+        allocInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        allocInfo.level                       = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        allocInfo.commandBufferCount          = 1;
+        allocInfo.commandPool                 = mOneOffCommandPool.getHandle();
+
+        ANGLE_VK_TRY(context, commandBufferOut->init(context->getDevice(), allocInfo));
+    }
+
+    VkCommandBufferBeginInfo beginInfo = {};
+    beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags                    = 0;
+    beginInfo.pInheritanceInfo         = nullptr;
+    ANGLE_VK_TRY(context, commandBufferOut->begin(beginInfo));
+
+    return angle::Result::Continue;
 }
 }  // namespace rx

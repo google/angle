@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_SERIAL_UTILS_H_
 
 #include <atomic>
+#include <limits>
 
 #include "common/angleutils.h"
 #include "common/debug.h"
@@ -44,6 +45,8 @@ class Serial final
     constexpr Serial() : mValue(kInvalid) {}
     constexpr Serial(const Serial &other) = default;
     Serial &operator=(const Serial &other) = default;
+
+    static constexpr Serial Infinite() { return Serial(std::numeric_limits<uint64_t>::max()); }
 
     constexpr bool operator==(const Serial &other) const
     {

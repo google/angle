@@ -196,6 +196,15 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_TransformFeedback";
     }
 
+    if (pp.eglParameters.allocateNonZeroMemoryFeature == EGL_FALSE)
+    {
+        stream << "_NoAllocateNonZeroMemory";
+    }
+    else if (pp.eglParameters.allocateNonZeroMemoryFeature == EGL_TRUE)
+    {
+        stream << "_AllocateNonZeroMemory";
+    }
+
     return stream;
 }
 

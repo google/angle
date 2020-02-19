@@ -235,6 +235,13 @@ struct FeaturesVk : FeatureSetBase
     Feature supportsExternalMemoryHost = {
         "supports_external_memory_host", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_EXT_external_memory_host extension", &members};
+
+    // Whether to fill new buffers and textures with nonzero data to sanitize robust resource
+    // initialization and flush out assumptions about zero init.
+    Feature allocateNonZeroMemory = {
+        "allocate_non_zero_memory", FeatureCategory::VulkanFeatures,
+        "Fill new allocations with non-zero values to flush out errors.", &members,
+        "http://anglebug.com/4384"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

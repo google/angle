@@ -1473,7 +1473,7 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
                                  const VkBufferCreateInfo &requestedCreateInfo,
                                  VkMemoryPropertyFlags memoryPropertyFlags)
 {
-    RendererVk *rendererVk = contextVk->getRenderer();
+    RendererVk *renderer = contextVk->getRenderer();
 
     // TODO: Remove with anglebug.com/2162: Vulkan: Implement device memory sub-allocation
     // Check if we have too many resources allocated already and need to free some before allocating
@@ -1488,9 +1488,9 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
     VkBufferCreateInfo modifiedCreateInfo;
     const VkBufferCreateInfo *createInfo = &requestedCreateInfo;
 
-    if (rendererVk->getFeatures().roundUpBuffersToMaxVertexAttribStride.enabled)
+    if (renderer->getFeatures().roundUpBuffersToMaxVertexAttribStride.enabled)
     {
-        const VkDeviceSize maxVertexAttribStride = rendererVk->getMaxVertexAttribStride();
+        const VkDeviceSize maxVertexAttribStride = renderer->getMaxVertexAttribStride();
         ASSERT(maxVertexAttribStride);
         modifiedCreateInfo      = requestedCreateInfo;
         modifiedCreateInfo.size = roundUp(modifiedCreateInfo.size, maxVertexAttribStride);
@@ -1498,9 +1498,55 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
     }
 
     ANGLE_VK_TRY(contextVk, mBuffer.init(contextVk->getDevice(), *createInfo));
+
+    VkDeviceSize size;
     ANGLE_TRY(AllocateBufferMemory(contextVk, memoryPropertyFlags, &mMemoryPropertyFlags, nullptr,
-                                   &mBuffer, &mDeviceMemory));
+                                   &mBuffer, &mDeviceMemory, &size));
     mCurrentQueueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
+
+    if (renderer->getFeatures().allocateNonZeroMemory.enabled)
+    {
+        // This memory can't be mapped, so the buffer must be marked as a transfer destination so we
+        // can use a staging resource to initialize it to a non-zero value. If the memory is
+        // mappable we do the initialization in AllocateBufferMemory.
+        if ((memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) == 0 &&
+            (requestedCreateInfo.usage & VK_BUFFER_USAGE_TRANSFER_DST_BIT) != 0)
+        {
+            ANGLE_TRY(initializeNonZeroMemory(contextVk, size));
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result BufferHelper::initializeNonZeroMemory(Context *context, VkDeviceSize size)
+{
+    // Staging buffer memory is non-zero-initialized in 'init'.
+    StagingBuffer stagingBuffer;
+    ANGLE_TRY(stagingBuffer.init(context, size, StagingUsage::Both));
+
+    RendererVk *renderer = context->getRenderer();
+
+    vk::PrimaryCommandBuffer commandBuffer;
+    ANGLE_TRY(renderer->getCommandBufferOneOff(context, &commandBuffer));
+
+    // Queue a DMA copy.
+    VkBufferCopy copyRegion = {};
+    copyRegion.srcOffset    = 0;
+    copyRegion.dstOffset    = 0;
+    copyRegion.size         = size;
+
+    commandBuffer.copyBuffer(stagingBuffer.getBuffer(), mBuffer, 1, &copyRegion);
+
+    ANGLE_VK_TRY(context, commandBuffer.end());
+
+    Serial serial;
+    ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer),
+                                          egl::ContextPriority::Medium, &serial));
+
+    stagingBuffer.collectGarbage(renderer, serial);
+    mUse.updateSerialOneOff(serial);
+
     return angle::Result::Continue;
 }
 
@@ -1875,13 +1921,69 @@ void ImageHelper::resetImageWeakReference()
     mImage.reset();
 }
 
+angle::Result ImageHelper::initializeNonZeroMemory(Context *context, VkDeviceSize size)
+{
+    // The staging buffer memory is non-zero-initialized in 'init'.
+    vk::StagingBuffer stagingBuffer;
+    ANGLE_TRY(stagingBuffer.init(context, size, vk::StagingUsage::Write));
+
+    RendererVk *renderer = context->getRenderer();
+
+    vk::PrimaryCommandBuffer commandBuffer;
+    ANGLE_TRY(renderer->getCommandBufferOneOff(context, &commandBuffer));
+
+    // Queue a DMA copy.
+    forceChangeLayoutAndQueue(getAspectFlags(), ImageLayout::TransferDst, mCurrentQueueFamilyIndex,
+                              &commandBuffer);
+
+    VkBufferImageCopy copyRegion           = {};
+    copyRegion.imageExtent                 = mExtents;
+    copyRegion.imageSubresource.aspectMask = getAspectFlags();
+    copyRegion.imageSubresource.layerCount = 1;
+
+    commandBuffer.copyBufferToImage(stagingBuffer.getBuffer().getHandle(), mImage,
+                                    VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);
+
+    ANGLE_VK_TRY(context, commandBuffer.end());
+
+    Serial serial;
+    ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer),
+                                          egl::ContextPriority::Medium, &serial));
+
+    stagingBuffer.collectGarbage(renderer, serial);
+    mUse.updateSerialOneOff(serial);
+
+    return angle::Result::Continue;
+}
+
 angle::Result ImageHelper::initMemory(Context *context,
                                       const MemoryProperties &memoryProperties,
                                       VkMemoryPropertyFlags flags)
 {
     // TODO(jmadill): Memory sub-allocation. http://anglebug.com/2162
-    ANGLE_TRY(AllocateImageMemory(context, flags, nullptr, &mImage, &mDeviceMemory));
+    VkDeviceSize size;
+    ANGLE_TRY(AllocateImageMemory(context, flags, nullptr, &mImage, &mDeviceMemory, &size));
     mCurrentQueueFamilyIndex = context->getRenderer()->getQueueFamilyIndex();
+
+    RendererVk *renderer = context->getRenderer();
+    if (renderer->getFeatures().allocateNonZeroMemory.enabled)
+    {
+        // Can't map the memory. Use a staging resource.
+        if ((flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) == 0)
+        {
+            // Only currently works with single-sampled color images with one mip/layer.
+            if (mLevelCount == 1 && mLayerCount == 1 &&
+                getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT && mSamples == 1)
+            {
+                ANGLE_TRY(initializeNonZeroMemory(context, size));
+            }
+            else
+            {
+                UNIMPLEMENTED();
+            }
+        }
+    }
+
     return angle::Result::Continue;
 }
 
@@ -3578,13 +3680,25 @@ void ImageViewHelper::release(RendererVk *renderer)
 {
     std::vector<GarbageObject> garbage;
 
-    garbage.emplace_back(GetGarbage(&mReadImageView));
-    garbage.emplace_back(GetGarbage(&mFetchImageView));
-    garbage.emplace_back(GetGarbage(&mStencilReadImageView));
+    if (mReadImageView.valid())
+    {
+        garbage.emplace_back(GetGarbage(&mReadImageView));
+    }
+    if (mFetchImageView.valid())
+    {
+        garbage.emplace_back(GetGarbage(&mFetchImageView));
+    }
+    if (mStencilReadImageView.valid())
+    {
+        garbage.emplace_back(GetGarbage(&mStencilReadImageView));
+    }
 
     for (ImageView &imageView : mLevelDrawImageViews)
     {
-        garbage.emplace_back(GetGarbage(&imageView));
+        if (imageView.valid())
+        {
+            garbage.emplace_back(GetGarbage(&imageView));
+        }
     }
     mLevelDrawImageViews.clear();
 
@@ -3592,15 +3706,21 @@ void ImageViewHelper::release(RendererVk *renderer)
     {
         for (ImageView &imageView : layerViews)
         {
-            garbage.emplace_back(GetGarbage(&imageView));
+            if (imageView.valid())
+            {
+                garbage.emplace_back(GetGarbage(&imageView));
+            }
         }
     }
     mLayerLevelDrawImageViews.clear();
 
-    renderer->collectGarbage(std::move(mUse), std::move(garbage));
+    if (!garbage.empty())
+    {
+        renderer->collectGarbage(std::move(mUse), std::move(garbage));
 
-    // Ensure the resource use is always valid.
-    mUse.init();
+        // Ensure the resource use is always valid.
+        mUse.init();
+    }
 }
 
 void ImageViewHelper::destroy(VkDevice device)

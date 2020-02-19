@@ -214,6 +214,12 @@ inline PlatformParameters WithNoTransformFeedback(const PlatformParameters &para
     return withNoTransformFeedback;
 }
 
+inline PlatformParameters WithAllocateNonZeroMemory(const PlatformParameters &params)
+{
+    PlatformParameters allocateNonZero                         = params;
+    allocateNonZero.eglParameters.allocateNonZeroMemoryFeature = EGL_TRUE;
+    return allocateNonZero;
+}
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_

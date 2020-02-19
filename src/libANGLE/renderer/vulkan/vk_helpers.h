@@ -598,6 +598,8 @@ class BufferHelper final : public CommandGraphResource
                              VkAccessFlags *barrierDstOut);
     void onWriteAccess(ContextVk *contextVk, VkAccessFlags writeAccessType);
 
+    angle::Result initializeNonZeroMemory(Context *context, VkDeviceSize size);
+
     // Vulkan objects.
     Buffer mBuffer;
     BufferView mBufferView;
@@ -1002,6 +1004,8 @@ class ImageHelper final : public CommandGraphResource
                            uint32_t baseArrayLayer,
                            uint32_t layerCount,
                            CommandBuffer *commandBuffer);
+
+    angle::Result initializeNonZeroMemory(Context *context, VkDeviceSize size);
 
     enum class UpdateSource
     {

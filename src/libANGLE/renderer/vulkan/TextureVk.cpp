@@ -29,8 +29,9 @@ namespace rx
 {
 namespace
 {
-constexpr VkImageUsageFlags kDrawStagingImageFlags =
-    VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+constexpr VkImageUsageFlags kDrawStagingImageFlags = VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
+                                                     VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
+                                                     VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
 constexpr VkImageUsageFlags kTransferStagingImageFlags =
     VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
@@ -1654,6 +1655,7 @@ angle::Result TextureVk::initializeContents(const gl::Context *context,
         vk::GetImpl(context)->getRenderer()->getFormat(desc.format.info->sizedInternalFormat);
 
     mImage->stageSubresourceRobustClear(imageIndex, format.intendedFormat());
+    onStagingBufferChange();
 
     // Note that we cannot ensure the image is initialized because we might be calling subImage
     // on a non-complete cube map.
