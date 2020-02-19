@@ -52,23 +52,14 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::AttachmentSerial getAssignSerial(ContextVk *contextVk);
 
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
-    angle::Result onColorDraw(ContextVk *contextVk,
-                              vk::FramebufferHelper *framebufferVk,
-                              vk::CommandBuffer *commandBuffer);
-    angle::Result onDepthStencilDraw(ContextVk *contextVk,
-                                     vk::FramebufferHelper *framebufferVk,
-                                     vk::CommandBuffer *commandBuffer);
+    angle::Result onColorDraw(ContextVk *contextVk);
+    angle::Result onDepthStencilDraw(ContextVk *contextVk);
 
     vk::ImageHelper &getImage();
     const vk::ImageHelper &getImage() const;
 
     // getImageForRead will also transition the resource to the given layout.
-    vk::ImageHelper *getImageForRead(ContextVk *contextVk,
-                                     vk::CommandGraphResource *readingResource,
-                                     vk::ImageLayout layout,
-                                     vk::CommandBuffer *commandBuffer);
-    vk::ImageHelper *getImageForWrite(ContextVk *contextVk,
-                                      vk::CommandGraphResource *writingResource) const;
+    vk::ImageHelper *getImageForWrite(ContextVk *contextVk) const;
 
     // For cube maps we use single-level single-layer 2D array views.
     angle::Result getImageView(ContextVk *contextVk, const vk::ImageView **imageViewOut) const;

@@ -52,17 +52,9 @@ angle::Result SyncHelper::initialize(ContextVk *contextVk)
 
     mEvent = event.release();
 
-    if (contextVk->commandGraphEnabled())
-    {
-        CommandGraph *commandGraph = contextVk->getCommandGraph();
-        commandGraph->setFenceSync(mEvent);
-    }
-    else
-    {
-        vk::PrimaryCommandBuffer *primary;
-        ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primary));
-        primary->setEvent(mEvent.getHandle(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
-    }
+    vk::PrimaryCommandBuffer *primary;
+    ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primary));
+    primary->setEvent(mEvent.getHandle(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
     contextVk->getResourceUseList().add(mUse);
 
     return angle::Result::Continue;
@@ -114,19 +106,10 @@ angle::Result SyncHelper::clientWait(Context *context,
 
 angle::Result SyncHelper::serverWait(ContextVk *contextVk)
 {
-    if (contextVk->commandGraphEnabled())
-    {
-        CommandGraph *commandGraph = contextVk->getCommandGraph();
-        commandGraph->waitFenceSync(mEvent);
-    }
-    else
-    {
-        vk::PrimaryCommandBuffer *primary;
-        ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primary));
-        primary->waitEvents(1, mEvent.ptr(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-                            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0,
-                            nullptr);
-    }
+    vk::PrimaryCommandBuffer *primary;
+    ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primary));
+    primary->waitEvents(1, mEvent.ptr(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0, nullptr);
     contextVk->getResourceUseList().add(mUse);
     return angle::Result::Continue;
 }

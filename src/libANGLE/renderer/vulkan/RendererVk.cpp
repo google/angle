@@ -1613,8 +1613,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     ANGLE_FEATURE_CONDITION((&mFeatures), disableFlippingBlitWithCommand,
                             IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), commandGraph, false);
-
     // Allocation sanitization disabled by default because of a heaveyweight implementation
     // that can cause OOM and timeouts.
     ANGLE_FEATURE_CONDITION((&mFeatures), allocateNonZeroMemory, false);

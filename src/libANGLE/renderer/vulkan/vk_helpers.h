@@ -476,42 +476,6 @@ class BufferHelper final : public CommandGraphResource
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
     VkDeviceSize getSize() const { return mSize; }
 
-    // Helpers for setting the graph dependencies *and* setting the appropriate barrier.  These are
-    // made for dependencies to non-buffer resources, as only one of two resources participating in
-    // the dependency would require a memory barrier.  Note that onWrite takes read access flags
-    // too, as output buffers could be read as well.
-    void onRead(ContextVk *contextVk, CommandGraphResource *reader, VkAccessFlags readAccessType)
-    {
-        addReadDependency(contextVk, reader);
-        onReadAccess(reader, readAccessType);
-    }
-    void onWrite(ContextVk *contextVk, CommandGraphResource *writer, VkAccessFlags writeAccessType)
-    {
-        addWriteDependency(contextVk, writer);
-        onWriteAccess(contextVk, writeAccessType);
-    }
-    // Helper for setting a graph dependency between two buffers.  This is a specialized function as
-    // both buffers may incur a memory barrier.  Using |onRead| followed by |onWrite| between the
-    // buffers is impossible as it would result in a command graph loop.
-    void onReadByBuffer(ContextVk *contextVk,
-                        BufferHelper *reader,
-                        VkAccessFlags readAccessType,
-                        VkAccessFlags writeAccessType)
-    {
-        addReadDependency(contextVk, reader);
-        onReadAccess(reader, readAccessType);
-        reader->onWriteAccess(contextVk, writeAccessType);
-    }
-    // Helper for setting a barrier when different parts of the same buffer is being read from and
-    // written to in the same command.
-    void onSelfReadWrite(ContextVk *contextVk, VkAccessFlags writeAccessType)
-    {
-        if (mCurrentReadAccess || mCurrentWriteAccess)
-        {
-            finishCurrentCommands(contextVk);
-        }
-        onWriteAccess(contextVk, writeAccessType);
-    }
     // Set write access mask when the buffer is modified externally, e.g. by host.  There is no
     // graph resource to create a dependency to.
     void onExternalWrite(VkAccessFlags writeAccessType) { mCurrentWriteAccess |= writeAccessType; }
@@ -557,7 +521,7 @@ class BufferHelper final : public CommandGraphResource
 
     void changeQueue(uint32_t newQueueFamilyIndex, CommandBuffer *commandBuffer);
 
-    // New methods used when the CommandGraph is disabled.
+    // Currently always returns false. Should be smarter about accumulation.
     bool canAccumulateRead(ContextVk *contextVk, VkAccessFlags readAccessType);
     bool canAccumulateWrite(ContextVk *contextVk, VkAccessFlags writeAccessType);
 
@@ -584,19 +548,9 @@ class BufferHelper final : public CommandGraphResource
         mCurrentReadAccess |= readAccessType;
         return needsBarrier;
     }
-    void onReadAccess(CommandGraphResource *reader, VkAccessFlags readAccessType)
-    {
-        VkAccessFlags barrierSrc, barrierDst;
-        if (needsOnReadBarrier(readAccessType, &barrierSrc, &barrierDst))
-        {
-            reader->addGlobalMemoryBarrier(barrierSrc, barrierDst,
-                                           VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
-        }
-    }
     bool needsOnWriteBarrier(VkAccessFlags writeAccessType,
                              VkAccessFlags *barrierSrcOut,
                              VkAccessFlags *barrierDstOut);
-    void onWriteAccess(ContextVk *contextVk, VkAccessFlags writeAccessType);
 
     angle::Result initializeNonZeroMemory(Context *context, VkDeviceSize size);
 

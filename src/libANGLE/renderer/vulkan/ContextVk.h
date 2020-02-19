@@ -425,7 +425,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     egl::ContextPriority getPriority() const { return mContextPriority; }
 
     ANGLE_INLINE const angle::FeaturesVk &getFeatures() const { return mRenderer->getFeatures(); }
-    ANGLE_INLINE bool commandGraphEnabled() const { return getFeatures().commandGraph.enabled; }
 
     ANGLE_INLINE void invalidateVertexAndIndexBuffers()
     {
@@ -536,13 +535,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // Get (or allocate) the fence that will be signaled on next submission.
     angle::Result getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut);
     vk::Shared<vk::Fence> getLastSubmittedFence() const;
-
-    // This should only be called from ResourceVk.
-    vk::CommandGraph *getCommandGraph()
-    {
-        ASSERT(commandGraphEnabled());
-        return &mCommandGraph;
-    }
 
     vk::ShaderLibrary &getShaderLibrary() { return mShaderLibrary; }
     UtilsVk &getUtils() { return mUtils; }
@@ -995,9 +987,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     // Pool allocator used for command graph but may be expanded to other allocations
     angle::PoolAllocator mPoolAllocator;
-
-    // See CommandGraph.h for a desription of the Command Graph.
-    vk::CommandGraph mCommandGraph;
 
     // When the command graph is disabled we record commands completely linearly. We have plans to
     // reorder independent draws so that we can create fewer RenderPasses in some scenarios.

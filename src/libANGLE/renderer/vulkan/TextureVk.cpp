@@ -573,21 +573,8 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
     gl::Extents extents  = {sourceArea.width, sourceArea.height, 1};
 
     // Change source layout if necessary
-    if (contextVk->commandGraphEnabled())
-    {
-        if (srcImage->isLayoutChangeNecessary(vk::ImageLayout::TransferSrc))
-        {
-            vk::CommandBuffer *srcLayoutChange;
-            ANGLE_TRY(srcImage->recordCommands(contextVk, &srcLayoutChange));
-            srcImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
-                                   srcLayoutChange);
-        }
-    }
-    else
-    {
-        ANGLE_TRY(contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
-                                         srcImage));
-    }
+    ANGLE_TRY(
+        contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc, srcImage));
 
     VkImageSubresourceLayers srcSubresource = {};
     srcSubresource.aspectMask               = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -602,23 +589,9 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
         ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
         vk::CommandBuffer *commandBuffer;
-        if (contextVk->commandGraphEnabled())
-        {
-            ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-
-            // Change the image layout before the transfer
-            mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
-                                 commandBuffer);
-
-            // Source's layout change should happen before the copy
-            srcImage->addReadDependency(contextVk, mImage);
-        }
-        else
-        {
-            ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
-                                              vk::ImageLayout::TransferDst, mImage));
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
-        }
+        ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
+                                          mImage));
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
         VkImageSubresourceLayers destSubresource = srcSubresource;
         destSubresource.mipLevel                 = level;
@@ -646,23 +619,9 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
                                               destFormat, kTransferStagingImageFlags, layerCount));
 
         vk::CommandBuffer *commandBuffer;
-        if (contextVk->commandGraphEnabled())
-        {
-            ANGLE_TRY(stagingImage->recordCommands(contextVk, &commandBuffer));
-
-            // Change the image layout before the transfer
-            stagingImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
-                                       commandBuffer);
-
-            // Source's layout change should happen before the copy
-            srcImage->addReadDependency(contextVk, stagingImage.get());
-        }
-        else
-        {
-            ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
-                                              vk::ImageLayout::TransferDst, stagingImage.get()));
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
-        }
+        ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
+                                          stagingImage.get()));
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
         VkImageSubresourceLayers destSubresource = srcSubresource;
         destSubresource.mipLevel                 = 0;
@@ -863,14 +822,7 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
     if (mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
     {
         vk::CommandBuffer *commandBuffer = nullptr;
-        if (contextVk->commandGraphEnabled())
-        {
-            ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-        }
-        else
-        {
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
-        }
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
         mImage->changeLayoutAndQueue(VK_IMAGE_ASPECT_COLOR_BIT,
                                      vk::ImageLayout::AllGraphicsShadersReadOnly,
                                      rendererQueueFamilyIndex, commandBuffer);
@@ -1079,23 +1031,10 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    if (contextVk->commandGraphEnabled())
-    {
-        ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-        mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
-                             commandBuffer);
-
-        // Source's layout change should happen before the copy
-        // Also updates the serial of the srcBuffer
-        srcBuffer->addReadDependency(contextVk, mImage);
-    }
-    else
-    {
-        ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, srcBuffer));
-        ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
-                                          mImage));
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
-    }
+    ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, srcBuffer));
+    ANGLE_TRY(
+        contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst, mImage));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     VkBufferImageCopy region               = {};
     region.bufferOffset                    = offset;
@@ -1155,7 +1094,7 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
     }
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
     return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
                                       getNativeImageLayer(0), mImage->getLayerCount(),
                                       commandBuffer);
@@ -1199,15 +1138,8 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         if (mImage->hasStagedUpdates())
         {
             vk::CommandBuffer *commandBuffer = nullptr;
-            if (contextVk->commandGraphEnabled())
-            {
-                ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-            }
-            else
-            {
-                mImage->onResourceAccess(&contextVk->getResourceUseList());
-                ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
-            }
+            mImage->onResourceAccess(&contextVk->getResourceUseList());
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
             ANGLE_TRY(mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0),
                                                  mImage->getLevelCount(), getNativeImageLayer(0),
                                                  mImage->getLayerCount(), commandBuffer));
@@ -1217,16 +1149,6 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         // Copy image to the staging buffer and stage an update to the new one.
         ANGLE_TRY(copyAndStageImageSubresource(contextVk, baseLevelDesc, false,
                                                getNativeImageLayer(0), 0, mImage->getBaseLevel()));
-
-        // Create a new node for the image and add a global memory barrier for the staging buffer.
-        // It's written to and staged to be read from when ensureImageInitialized() is called.
-        if (contextVk->commandGraphEnabled())
-        {
-            mImage->finishCurrentCommands(contextVk);
-            mImage->addGlobalMemoryBarrier(VK_ACCESS_TRANSFER_WRITE_BIT,
-                                           VK_ACCESS_TRANSFER_READ_BIT,
-                                           VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
-        }
 
         onStagingBufferChange();
         // Release the origin image and recreate it with new mipmap counts.
@@ -1339,15 +1261,7 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk,
     if (mImage->valid() && mImage->hasStagedUpdates())
     {
         vk::CommandBuffer *commandBuffer = nullptr;
-
-        if (contextVk->commandGraphEnabled())
-        {
-            ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-        }
-        else
-        {
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
-        }
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
         ANGLE_TRY(mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0),
                                              mImage->getLevelCount(), getNativeImageLayer(0),
                                              mImage->getLayerCount(), commandBuffer));
@@ -1395,17 +1309,6 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk,
             ANGLE_TRY(
                 copyAndStageImageSubresource(contextVk, desc, true, layer, srcLevelVK, level));
         }
-    }
-
-    // This global barrier is no longer needed without the command graph as barriers are correctly
-    // inserted using the normal command APIs.
-    if (contextVk->commandGraphEnabled())
-    {
-        // Create a new node for the image and add a global memory barrier for the staging buffers.
-        // They are written to and staged to be read from when ensureImageInitialized() is called.
-        mImage->finishCurrentCommands(contextVk);
-        mImage->addGlobalMemoryBarrier(VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
-                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
     }
 
     // Inform the front end that we've updated the staging buffer
@@ -1498,14 +1401,7 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
     }
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    if (contextVk->commandGraphEnabled())
-    {
-        ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-    }
-    else
-    {
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
-    }
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
     return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
                                       getNativeImageLayer(0), mImage->getLayerCount(),
                                       commandBuffer);

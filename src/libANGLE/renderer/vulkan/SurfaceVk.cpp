@@ -1072,34 +1072,16 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    if (!contextVk->commandGraphEnabled())
-    {
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
-    }
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     if (mColorImageMS.valid())
     {
         // Transition the multisampled image to TRANSFER_SRC for resolve.
-        if (contextVk->commandGraphEnabled())
-        {
-            ANGLE_TRY(mColorImageMS.recordCommands(contextVk, &commandBuffer));
-            mColorImageMS.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
-                                       commandBuffer);
-            image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
-                                     commandBuffer);
-
-            // Setup graph dependency between the swapchain image and the multisampled one.
-            image.image.addReadDependency(contextVk, &mColorImageMS);
-            ANGLE_TRY(image.image.recordCommands(contextVk, &commandBuffer));
-        }
-        else
-        {
-            ANGLE_TRY(contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT,
-                                             vk::ImageLayout::TransferSrc, &mColorImageMS));
-            ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
-                                              vk::ImageLayout::TransferDst, &image.image));
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
-        }
+        ANGLE_TRY(contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc,
+                                         &mColorImageMS));
+        ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
+                                          &image.image));
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
         VkImageResolve resolveRegion                = {};
         resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1116,10 +1098,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     ANGLE_TRY(updateAndDrawOverlay(contextVk, &image));
 
-    if (contextVk->commandGraphEnabled())
-    {
-        ANGLE_TRY(image.image.recordCommands(contextVk, &commandBuffer));
-    }
     image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present, commandBuffer);
 
     // Knowing that the kSwapHistorySize'th submission ago has finished, we can know that the
@@ -1509,6 +1487,7 @@ angle::Result WindowSurfaceVk::updateAndDrawOverlay(ContextVk *contextVk,
         image->imageViews.getLevelLayerDrawImageView(contextVk, image->image, 0, 0, &imageView));
     ANGLE_TRY(overlayVk->onPresent(contextVk, &image->image, imageView));
 
+    // TODO(jmadill): Remove this. http://anglebug.com/4029
     overlay->getRunningGraphWidget(gl::WidgetId::VulkanCommandGraphSize)->next();
 
     return angle::Result::Continue;

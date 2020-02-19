@@ -1389,32 +1389,16 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
         BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-        if (contextVk->getFeatures().commandGraph.enabled)
+        if (isStorageBuffer)
         {
-            if (isStorageBuffer)
-            {
-                // We set the SHADER_READ_BIT to be conservative.
-                VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-                bufferHelper.onWrite(contextVk, recorder, accessFlags);
-            }
-            else
-            {
-                bufferHelper.onRead(contextVk, recorder, VK_ACCESS_UNIFORM_READ_BIT);
-            }
+            // We set the SHADER_READ_BIT to be conservative.
+            VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+            commandBufferHelper->bufferWrite(resourceUseList, accessFlags, &bufferHelper);
         }
         else
         {
-            if (isStorageBuffer)
-            {
-                // We set the SHADER_READ_BIT to be conservative.
-                VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-                commandBufferHelper->bufferWrite(resourceUseList, accessFlags, &bufferHelper);
-            }
-            else
-            {
-                commandBufferHelper->bufferRead(resourceUseList, VK_ACCESS_UNIFORM_READ_BIT,
-                                                &bufferHelper);
-            }
+            commandBufferHelper->bufferRead(resourceUseList, VK_ACCESS_UNIFORM_READ_BIT,
+                                            &bufferHelper);
         }
 
         ++writeCount;
@@ -1475,17 +1459,8 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
         // We set SHADER_READ_BIT to be conservative.
-        if (contextVk->commandGraphEnabled())
-        {
-            bufferHelper.onWrite(contextVk, recorder,
-                                 VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT);
-        }
-        else
-        {
-            commandBufferHelper->bufferWrite(resourceUseList,
-                                             VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
-                                             &bufferHelper);
-        }
+        commandBufferHelper->bufferWrite(
+            resourceUseList, VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT, &bufferHelper);
 
         writtenBindings.set(binding);
     }
@@ -1614,15 +1589,7 @@ angle::Result ProgramVk::updateShaderResourcesDescriptorSet(
 angle::Result ProgramVk::updateTransformFeedbackDescriptorSet(ContextVk *contextVk,
                                                               vk::FramebufferHelper *framebuffer)
 {
-    const gl::State &glState = contextVk->getState();
     ASSERT(hasTransformFeedbackOutput());
-
-    if (contextVk->commandGraphEnabled())
-    {
-        TransformFeedbackVk *transformFeedbackVk =
-            vk::GetImpl(glState.getCurrentTransformFeedback());
-        transformFeedbackVk->addFramebufferDependency(contextVk, mState, framebuffer);
-    }
 
     ANGLE_TRY(allocateDescriptorSet(contextVk, kUniformsAndXfbDescriptorSetIndex));
 

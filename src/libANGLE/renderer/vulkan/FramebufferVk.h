@@ -109,16 +109,6 @@ class FramebufferVk : public FramebufferImpl
     RenderTargetVk *getColorDrawRenderTarget(size_t colorIndex) const;
     RenderTargetVk *getColorReadRenderTarget() const;
 
-    // This will clear the current write operation if it is complete.
-    bool appendToStartedRenderPass(vk::ResourceUseList *resourceUseList,
-                                   const gl::Rectangle &renderArea,
-                                   vk::CommandBuffer **commandBufferOut)
-    {
-        ASSERT(mFramebuffer);
-        return mFramebuffer->appendToStartedRenderPass(resourceUseList, renderArea,
-                                                       commandBufferOut);
-    }
-
     vk::FramebufferHelper *getFramebuffer() { return mFramebuffer; }
 
     angle::Result startNewRenderPass(ContextVk *context,
@@ -162,13 +152,6 @@ class FramebufferVk : public FramebufferImpl
                             bool clearStencil,
                             const VkClearColorValue &clearColorValue,
                             const VkClearDepthStencilValue &clearDepthStencilValue);
-    angle::Result clearWithRenderPassOp(ContextVk *contextVk,
-                                        const gl::Rectangle &clearArea,
-                                        gl::DrawBufferMask clearColorBuffers,
-                                        bool clearDepth,
-                                        bool clearStencil,
-                                        const VkClearColorValue &clearColorValue,
-                                        const VkClearDepthStencilValue &clearDepthStencilValue);
     angle::Result clearWithDraw(ContextVk *contextVk,
                                 const gl::Rectangle &clearArea,
                                 gl::DrawBufferMask clearColorBuffers,
