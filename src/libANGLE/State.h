@@ -175,7 +175,7 @@ class State : angle::NonCopyable
     void setPolygonOffsetParams(GLfloat factor, GLfloat units);
 
     // Multisample coverage state manipulation
-    bool isSampleAlphaToCoverageEnabled() const { return mSampleAlphaToCoverage; }
+    bool isSampleAlphaToCoverageEnabled() const { return mBlend.sampleAlphaToCoverage; }
     void setSampleAlphaToCoverage(bool enabled);
     bool isSampleCoverageEnabled() const { return mSampleCoverage; }
     void setSampleCoverage(bool enabled);
@@ -808,7 +808,6 @@ class State : angle::NonCopyable
 
     BlendState mBlend;
     ColorF mBlendColor;
-    bool mSampleAlphaToCoverage;
     bool mSampleCoverage;
     GLfloat mSampleCoverageValue;
     bool mSampleCoverageInvert;

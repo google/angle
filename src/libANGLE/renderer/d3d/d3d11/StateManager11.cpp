@@ -665,7 +665,6 @@ angle::Result ShaderConstants11::updateBuffer(const gl::Context *context,
 StateManager11::StateManager11(Renderer11 *renderer)
     : mRenderer(renderer),
       mInternalDirtyBits(),
-      mCurSampleAlphaToCoverage(false),
       mCurBlendColor(0, 0, 0, 0),
       mCurSampleMask(0),
       mCurStencilRef(0),
@@ -700,17 +699,18 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mVertexArray11(nullptr),
       mFramebuffer11(nullptr)
 {
-    mCurBlendState.blend              = false;
-    mCurBlendState.sourceBlendRGB     = GL_ONE;
-    mCurBlendState.destBlendRGB       = GL_ZERO;
-    mCurBlendState.sourceBlendAlpha   = GL_ONE;
-    mCurBlendState.destBlendAlpha     = GL_ZERO;
-    mCurBlendState.blendEquationRGB   = GL_FUNC_ADD;
-    mCurBlendState.blendEquationAlpha = GL_FUNC_ADD;
-    mCurBlendState.colorMaskRed       = true;
-    mCurBlendState.colorMaskBlue      = true;
-    mCurBlendState.colorMaskGreen     = true;
-    mCurBlendState.colorMaskAlpha     = true;
+    mCurBlendState.blend                 = false;
+    mCurBlendState.sourceBlendRGB        = GL_ONE;
+    mCurBlendState.destBlendRGB          = GL_ZERO;
+    mCurBlendState.sourceBlendAlpha      = GL_ONE;
+    mCurBlendState.destBlendAlpha        = GL_ZERO;
+    mCurBlendState.blendEquationRGB      = GL_FUNC_ADD;
+    mCurBlendState.blendEquationAlpha    = GL_FUNC_ADD;
+    mCurBlendState.colorMaskRed          = true;
+    mCurBlendState.colorMaskBlue         = true;
+    mCurBlendState.colorMaskGreen        = true;
+    mCurBlendState.colorMaskAlpha        = true;
+    mCurBlendState.sampleAlphaToCoverage = false;
 
     mCurDepthStencilState.depthTest                = false;
     mCurDepthStencilState.depthFunc                = GL_LESS;
@@ -986,7 +986,8 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 }
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
-                if (state.isSampleAlphaToCoverageEnabled() != mCurSampleAlphaToCoverage)
+                if (state.getBlendState().sampleAlphaToCoverage !=
+                    mCurBlendState.sampleAlphaToCoverage)
                 {
                     mInternalDirtyBits.set(DIRTY_BIT_BLEND_STATE);
                 }
@@ -1231,12 +1232,11 @@ void StateManager11::handleMultiviewDrawFramebufferChange(const gl::Context *con
 angle::Result StateManager11::syncBlendState(const gl::Context *context,
                                              const gl::BlendState &blendState,
                                              const gl::ColorF &blendColor,
-                                             unsigned int sampleMask,
-                                             bool sampleAlphaToCoverage)
+                                             unsigned int sampleMask)
 {
     const d3d11::BlendState *dxBlendState = nullptr;
-    const d3d11::BlendStateKey &key       = RenderStateCache::GetBlendStateKey(
-        context, mFramebuffer11, blendState, sampleAlphaToCoverage);
+    const d3d11::BlendStateKey &key =
+        RenderStateCache::GetBlendStateKey(context, mFramebuffer11, blendState);
 
     ANGLE_TRY(mRenderer->getBlendState(context, key, &dxBlendState));
 
@@ -1263,10 +1263,9 @@ angle::Result StateManager11::syncBlendState(const gl::Context *context,
 
     mRenderer->getDeviceContext()->OMSetBlendState(dxBlendState->get(), blendColors, sampleMask);
 
-    mCurBlendState            = blendState;
-    mCurBlendColor            = blendColor;
-    mCurSampleMask            = sampleMask;
-    mCurSampleAlphaToCoverage = sampleAlphaToCoverage;
+    mCurBlendState = blendState;
+    mCurBlendColor = blendColor;
+    mCurSampleMask = sampleMask;
 
     return angle::Result::Continue;
 }
@@ -2249,7 +2248,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                 break;
             case DIRTY_BIT_BLEND_STATE:
                 ANGLE_TRY(syncBlendState(context, glState.getBlendState(), glState.getBlendColor(),
-                                         sampleMask, glState.isSampleAlphaToCoverageEnabled()));
+                                         sampleMask));
                 break;
             case DIRTY_BIT_DEPTH_STENCIL_STATE:
                 ANGLE_TRY(syncDepthStencilState(context));

@@ -168,6 +168,8 @@ struct BlendState final
     bool colorMaskGreen;
     bool colorMaskBlue;
     bool colorMaskAlpha;
+
+    bool sampleAlphaToCoverage;
 };
 
 bool operator==(const BlendState &a, const BlendState &b);

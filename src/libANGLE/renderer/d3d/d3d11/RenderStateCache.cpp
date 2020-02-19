@@ -45,8 +45,7 @@ void RenderStateCache::clear()
 // static
 d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *context,
                                                         Framebuffer11 *framebuffer11,
-                                                        const gl::BlendState &blendState,
-                                                        bool sampleAlphaToCoverage)
+                                                        const gl::BlendState &blendState)
 {
     d3d11::BlendStateKey key;
     const gl::AttachmentList &colorbuffers = framebuffer11->getColorAttachmentsForRender(context);
@@ -54,8 +53,7 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *conte
         gl_d3d11::ConvertColorMask(blendState.colorMaskRed, blendState.colorMaskGreen,
                                    blendState.colorMaskBlue, blendState.colorMaskAlpha);
 
-    key.blendState            = blendState;
-    key.sampleAlphaToCoverage = sampleAlphaToCoverage;
+    key.blendState = blendState;
 
     for (size_t i = 0; i < colorbuffers.size(); i++)
     {
@@ -63,7 +61,7 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *conte
 
         if (attachment)
         {
-            key.rtvMax = static_cast<uint8_t>(i) + 1;
+            key.rtvMax = static_cast<uint32_t>(i) + 1;
             key.rtvMasks[i] =
                 (gl_d3d11::GetColorMask(*attachment->getFormat().info)) & blendStateMask;
         }
@@ -91,7 +89,7 @@ angle::Result RenderStateCache::getBlendState(const gl::Context *context,
     D3D11_RENDER_TARGET_BLEND_DESC &rtDesc0 = blendDesc.RenderTarget[0];
     const gl::BlendState &blendState        = key.blendState;
 
-    blendDesc.AlphaToCoverageEnable  = key.sampleAlphaToCoverage;
+    blendDesc.AlphaToCoverageEnable  = blendState.sampleAlphaToCoverage;
     blendDesc.IndependentBlendEnable = key.rtvMax > 1 ? TRUE : FALSE;
 
     rtDesc0 = {};
