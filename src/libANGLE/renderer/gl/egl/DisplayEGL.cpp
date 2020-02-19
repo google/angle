@@ -8,95 +8,12 @@
 
 #include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 
-#include "common/debug.h"
-#include "libANGLE/Context.h"
-#include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
-#include "libANGLE/renderer/gl/ContextGL.h"
-#include "libANGLE/renderer/gl/RendererGL.h"
-#include "libANGLE/renderer/gl/egl/ContextEGL.h"
-#include "libANGLE/renderer/gl/egl/FunctionsEGLDL.h"
 #include "libANGLE/renderer/gl/egl/ImageEGL.h"
 #include "libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h"
 #include "libANGLE/renderer/gl/egl/RendererEGL.h"
 #include "libANGLE/renderer/gl/egl/SyncEGL.h"
 #include "libANGLE/renderer/gl/egl/WindowSurfaceEGL.h"
-#include "libANGLE/renderer/gl/renderergl_utils.h"
-
-namespace
-{
-
-EGLint ESBitFromPlatformAttrib(const rx::FunctionsEGL *egl, const EGLAttrib platformAttrib)
-{
-    EGLint esBit = EGL_NONE;
-    switch (platformAttrib)
-    {
-        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-        {
-            esBit = EGL_OPENGL_BIT;
-            break;
-        }
-
-        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-        {
-            static_assert(EGL_OPENGL_ES3_BIT == EGL_OPENGL_ES3_BIT_KHR,
-                          "Extension define must match core");
-
-            gl::Version eglVersion(egl->majorVersion, egl->minorVersion);
-            esBit = (eglVersion >= gl::Version(1, 5) || egl->hasExtension("EGL_KHR_create_context"))
-                        ? EGL_OPENGL_ES3_BIT
-                        : EGL_OPENGL_ES2_BIT;
-            break;
-        }
-
-        default:
-            break;
-    }
-    return esBit;
-}
-
-class WorkerContextEGL final : public rx::WorkerContext
-{
-  public:
-    WorkerContextEGL(EGLContext context, rx::FunctionsEGL *functions, EGLSurface pbuffer);
-    ~WorkerContextEGL() override;
-
-    bool makeCurrent() override;
-    void unmakeCurrent() override;
-
-  private:
-    EGLContext mContext;
-    rx::FunctionsEGL *mFunctions;
-    EGLSurface mPbuffer;
-};
-
-WorkerContextEGL::WorkerContextEGL(EGLContext context,
-                                   rx::FunctionsEGL *functions,
-                                   EGLSurface pbuffer)
-    : mContext(context), mFunctions(functions), mPbuffer(pbuffer)
-{}
-
-WorkerContextEGL::~WorkerContextEGL()
-{
-    mFunctions->destroyContext(mContext);
-}
-
-bool WorkerContextEGL::makeCurrent()
-{
-    if (mFunctions->makeCurrent(mPbuffer, mContext) == EGL_FALSE)
-    {
-        ERR() << "Unable to make the EGL context current.";
-        return false;
-    }
-    return true;
-}
-
-void WorkerContextEGL::unmakeCurrent()
-{
-    mFunctions->makeCurrent(EGL_NO_SURFACE, EGL_NO_CONTEXT);
-}
-
-}  // namespace
 
 namespace rx
 {
@@ -196,96 +113,6 @@ egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
     return egl::Error(mEGL->getError(), "eglCreateContext failed");
 }
 
-egl::Error DisplayEGL::initialize(egl::Display *display)
-{
-    mDisplayAttributes = display->getAttributeMap();
-    mEGL               = new FunctionsEGLDL();
-
-    void *eglHandle =
-        reinterpret_cast<void *>(mDisplayAttributes.get(EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE, 0));
-    ANGLE_TRY(mEGL->initialize(display->getNativeDisplayId(), "libEGL.so.1", eglHandle));
-
-    gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
-    if (eglVersion < gl::Version(1, 4))
-    {
-        return egl::EglNotInitialized() << "EGL >= 1.4 is required";
-    }
-
-    // Only support modern EGL implementation to keep default implementation
-    // simple.
-    const char *necessaryExtensions[] = {
-        "EGL_KHR_no_config_context",
-        "EGL_KHR_surfaceless_context",
-    };
-
-    for (const char *ext : necessaryExtensions)
-    {
-        if (!mEGL->hasExtension(ext))
-        {
-            return egl::EglNotInitialized() << "need " << ext;
-        }
-    }
-
-    const EGLAttrib platformAttrib = mDisplayAttributes.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, 0);
-    EGLint esBit                   = ESBitFromPlatformAttrib(mEGL, platformAttrib);
-    if (esBit == EGL_NONE)
-    {
-        return egl::EglNotInitialized() << "No matching ES Bit";
-    }
-
-    std::vector<EGLint> configAttribListBase = {
-        EGL_COLOR_BUFFER_TYPE, EGL_RGB_BUFFER, EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
-        EGL_CONFIG_CAVEAT,     EGL_NONE,       EGL_CONFORMANT,   esBit,
-        EGL_RENDERABLE_TYPE,   esBit,          EGL_NONE};
-
-    mConfigAttribList = configAttribListBase;
-
-    EGLContext context = EGL_NO_CONTEXT;
-    native_egl::AttributeVector attribs;
-    ANGLE_TRY(initializeContext(EGL_NO_CONTEXT, mDisplayAttributes, &context, &attribs));
-
-    if (!mEGL->makeCurrent(EGL_NO_SURFACE, context))
-    {
-        return egl::EglNotInitialized() << "Could not make context current.";
-    }
-
-    std::unique_ptr<FunctionsGL> functionsGL(mEGL->makeFunctionsGL());
-    functionsGL->initialize(mDisplayAttributes);
-
-    mRenderer.reset(
-        new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context, attribs));
-    const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
-    if (maxVersion < gl::Version(2, 0))
-    {
-        return egl::EglNotInitialized() << "OpenGL ES 2.0 is not supportable.";
-    }
-
-    ANGLE_TRY(DisplayGL::initialize(display));
-
-    return egl::NoError();
-}
-
-void DisplayEGL::terminate()
-{
-    DisplayGL::terminate();
-
-    EGLBoolean success = mEGL->makeCurrent(EGL_NO_SURFACE, EGL_NO_CONTEXT);
-    if (success == EGL_FALSE)
-    {
-        ERR() << "eglMakeCurrent error " << egl::Error(mEGL->getError());
-    }
-
-    mRenderer.reset();
-
-    egl::Error result = mEGL->terminate();
-    if (result.isError())
-    {
-        ERR() << "eglTerminate error " << result;
-    }
-
-    SafeDelete(mEGL);
-}
-
 SurfaceImpl *DisplayEGL::createWindowSurface(const egl::SurfaceState &state,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
@@ -330,30 +157,6 @@ SurfaceImpl *DisplayEGL::createPixmapSurface(const egl::SurfaceState &state,
 {
     UNIMPLEMENTED();
     return nullptr;
-}
-
-ContextImpl *DisplayEGL::createContext(const gl::State &state,
-                                       gl::ErrorSet *errorSet,
-                                       const egl::Config *configuration,
-                                       const gl::Context *shareContext,
-                                       const egl::AttributeMap &attribs)
-{
-    std::shared_ptr<RendererEGL> renderer;
-    EGLContext nativeShareContext = EGL_NO_CONTEXT;
-    if (shareContext)
-    {
-        ContextEGL *shareContextEGL = GetImplAs<ContextEGL>(shareContext);
-        nativeShareContext          = shareContextEGL->getContext();
-    }
-
-    egl::Error error = createRenderer(nativeShareContext, &renderer);
-    if (error.isError())
-    {
-        ERR() << "Failed to create a shared renderer: " << error.getMessage();
-        return nullptr;
-    }
-
-    return new ContextEGL(state, errorSet, renderer);
 }
 
 template <typename T>
@@ -546,32 +349,6 @@ egl::Error DisplayEGL::waitNative(const gl::Context *context, EGLint engine)
     return egl::NoError();
 }
 
-egl::Error DisplayEGL::makeCurrent(egl::Surface *drawSurface,
-                                   egl::Surface *readSurface,
-                                   gl::Context *context)
-{
-    EGLSurface newSurface = EGL_NO_SURFACE;
-    if (drawSurface)
-    {
-        SurfaceEGL *drawSurfaceEGL = GetImplAs<SurfaceEGL>(drawSurface);
-        newSurface                 = drawSurfaceEGL->getSurface();
-    }
-
-    EGLContext newContext = EGL_NO_CONTEXT;
-    if (context)
-    {
-        ContextEGL *contextEGL = GetImplAs<ContextEGL>(context);
-        newContext             = contextEGL->getContext();
-    }
-
-    if (mEGL->makeCurrent(newSurface, newContext) == EGL_FALSE)
-    {
-        return egl::Error(mEGL->getError(), "eglMakeCurrent failed");
-    }
-
-    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
-}
-
 gl::Version DisplayEGL::getMaxSupportedESVersion() const
 {
     return mRenderer->getMaxSupportedESVersion();
@@ -639,8 +416,6 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     outExtensions->noConfigContext = mEGL->hasExtension("EGL_KHR_no_config_context");
 
-    outExtensions->surfacelessContext = mEGL->hasExtension("EGL_KHR_surfaceless_context");
-
     outExtensions->framebufferTargetANDROID = mEGL->hasExtension("EGL_ANDROID_framebuffer_target");
 
     DisplayGL::generateExtensions(outExtensions);
@@ -664,41 +439,6 @@ egl::Error DisplayEGL::makeCurrentSurfaceless(gl::Context *context)
     // Nothing to do because EGL always uses the same context and the previous surface can be left
     // current.
     return egl::NoError();
-}
-
-egl::Error DisplayEGL::createRenderer(EGLContext shareContext,
-                                      std::shared_ptr<RendererEGL> *outRenderer)
-{
-    EGLContext context = EGL_NO_CONTEXT;
-    native_egl::AttributeVector attribs;
-    ANGLE_TRY(initializeContext(shareContext, mDisplayAttributes, &context, &attribs));
-
-    if (mEGL->makeCurrent(EGL_NO_SURFACE, context) == EGL_FALSE)
-    {
-        return egl::EglNotInitialized()
-               << "eglMakeCurrent failed with " << egl::Error(mEGL->getError());
-    }
-
-    std::unique_ptr<FunctionsGL> functionsGL(mEGL->makeFunctionsGL());
-    functionsGL->initialize(mDisplayAttributes);
-
-    outRenderer->reset(
-        new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context, attribs));
-
-    return egl::NoError();
-}
-
-WorkerContext *DisplayEGL::createWorkerContext(std::string *infoLog,
-                                               EGLContext sharedContext,
-                                               const native_egl::AttributeVector workerAttribs)
-{
-    EGLContext context = mEGL->createContext(mConfig, sharedContext, workerAttribs.data());
-    if (context == EGL_NO_CONTEXT)
-    {
-        *infoLog += "Unable to create the EGL context.";
-        return nullptr;
-    }
-    return new WorkerContextEGL(context, mEGL, EGL_NO_SURFACE);
 }
 
 void DisplayEGL::initializeFrontendFeatures(angle::FrontendFeatures *features) const

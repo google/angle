@@ -14,12 +14,12 @@
 #include <vector>
 
 #include "libANGLE/renderer/gl/DisplayGL.h"
+#include "libANGLE/renderer/gl/egl/FunctionsEGL.h"
 #include "libANGLE/renderer/gl/egl/egl_utils.h"
 
 namespace rx
 {
 
-class FunctionsEGLDL;
 class RendererEGL;
 class WorkerContext;
 
@@ -44,10 +44,7 @@ class DisplayEGL : public DisplayGL
 
     virtual WorkerContext *createWorkerContext(std::string *infoLog,
                                                EGLContext sharedContext,
-                                               const native_egl::AttributeVector workerAttribs);
-
-    egl::Error initialize(egl::Display *display) override;
-    void terminate() override;
+                                               const native_egl::AttributeVector workerAttribs) = 0;
 
     SurfaceImpl *createWindowSurface(const egl::SurfaceState &state,
                                      EGLNativeWindowType window,
@@ -62,12 +59,6 @@ class DisplayEGL : public DisplayGL
                                      NativePixmapType nativePixmap,
                                      const egl::AttributeMap &attribs) override;
 
-    ContextImpl *createContext(const gl::State &state,
-                               gl::ErrorSet *errorSet,
-                               const egl::Config *configuration,
-                               const gl::Context *shareContext,
-                               const egl::AttributeMap &attribs) override;
-
     egl::ConfigSet generateConfigs() override;
 
     bool testDeviceLost() override;
@@ -79,10 +70,6 @@ class DisplayEGL : public DisplayGL
 
     egl::Error waitClient(const gl::Context *context) override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) override;
-
-    egl::Error makeCurrent(egl::Surface *drawSurface,
-                           egl::Surface *readSurface,
-                           gl::Context *context) override;
 
     gl::Version getMaxSupportedESVersion() const override;
 
@@ -98,8 +85,6 @@ class DisplayEGL : public DisplayGL
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
 
-    egl::Error createRenderer(EGLContext shareContext, std::shared_ptr<RendererEGL> *outRenderer);
-
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
     template <typename T>
@@ -113,7 +98,7 @@ class DisplayEGL : public DisplayGL
                                     const U &defaultValue) const;
 
     std::shared_ptr<RendererEGL> mRenderer;
-    FunctionsEGLDL *mEGL;
+    FunctionsEGL *mEGL;
     EGLConfig mConfig;
     egl::AttributeMap mDisplayAttributes;
     std::vector<EGLint> mConfigAttribList;
