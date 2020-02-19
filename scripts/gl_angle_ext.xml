@@ -8,6 +8,15 @@
     gl_angle_ext.xml
         Includes data used to auto-generate ANGLE classes.
     </comment>
+
+    <!-- SECTION: GL parameter class type definitions. -->
+    <groups>
+        <group name="ExternalHandleType">
+            <enum name="GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE"/>
+            <enum name="GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE"/>
+        </group>
+    </groups>
+
     <!-- SECTION: GL command definitions. -->
     <commands namespace="GL">
         <command>
@@ -977,7 +986,21 @@
             <param group="PixelType"><ptype>GLenum</ptype> <name>type</name></param>
             <param len="COMPSIZE(target,level,format,type)">void *<name>pixels</name></param>
         </command>
+        <command>
+            <proto>void <name>glImportMemoryZirconHandleANGLE</name></proto>
+            <param><ptype>GLuint</ptype> <name>memory</name></param>
+            <param><ptype>GLuint64</ptype> <name>size</name></param>
+            <param group="ExternalHandleType"><ptype>GLenum</ptype> <name>handleType</name></param>
+            <param><ptype>GLuint</ptype> <name>handle</name></param>
+        </command>
+        <command>
+            <proto>void <name>glImportSemaphoreZirconHandleANGLE</name></proto>
+            <param><ptype>GLuint</ptype> <name>semaphore</name></param>
+            <param group="ExternalHandleType"><ptype>GLenum</ptype> <name>handleType</name></param>
+            <param><ptype>GLuint</ptype> <name>handle</name></param>
+        </command>
     </commands>
+
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
         <extension name="GL_CHROMIUM_bind_uniform_location" supported='gles2'>
@@ -1163,5 +1186,23 @@
                 <command name="glGetRenderbufferImageANGLE"/>
             </require>
         </extension>
+        <extension name="GL_ANGLE_memory_object_fuchsia" supported="gl|gles2">
+            <require>
+                <enum name="GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE"/>
+                <command name="glImportMemoryZirconHandleANGLE"/>
+            </require>
+        </extension>
+        <extension name="GL_ANGLE_semaphore_fuchsia" supported="gl|gles2">
+            <require>
+                <enum name="GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE"/>
+                <command name="glImportSemaphoreZirconHandleANGLE"/>
+            </require>
+        </extension>
     </extensions>
+
+    <!-- SECTION: GL enumerant (token) definitions. -->
+    <enums namespace="GL" start="0x93AE" end="0x93AF" vendor="ANGLE">
+        <enum value="0x93AE" name="GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE"/>
+        <enum value="0x93AF" name="GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE"/>
+    </enums>
 </registry>

@@ -713,6 +713,34 @@ GL_APICALL void GL_APIENTRY glGetRenderbufferImageANGLE (GLenum target, GLenum f
 #define GL_SAMPLER_VIDEO_IMAGE_WEBGL 0x9249
 #endif /* GL_WEBGL_video_texture */
 
+#ifndef GL_ANGLE_memory_object_fuchsia
+#define GL_ANGLE_memory_object_fuchsia 1
+#define GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE 0x93AE
+typedef void(GL_APIENTRYP PFNGLIMPORTMEMORYZIRCONHANDLEANGLEPROC)(GLuint memory,
+                                                                  GLuint64 size,
+                                                                  GLenum handleType,
+                                                                  GLuint handle);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glImportMemoryZirconHandleANGLE(GLuint memory,
+                                                            GLuint64 size,
+                                                            GLenum handleType,
+                                                            GLuint handle);
+#endif
+#endif /* GL_ANGLE_memory_object_fuchsia */
+
+#ifndef GL_ANGLE_semaphore_fuchsia
+#define GL_ANGLE_semaphore_fuchsia 1
+#define GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE 0x93AF
+typedef void(GL_APIENTRYP PFNGLIMPORTSEMAPHOREZIRCONHANDLEANGLEPROC)(GLuint semaphore,
+                                                                     GLenum handleType,
+                                                                     GLuint handle);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glImportSemaphoreZirconHandleANGLE(GLuint memory,
+                                                               GLenum handleType,
+                                                               GLuint handle);
+#endif
+#endif /* GL_ANGLE_semaphore_fuchsia */
+
 // clang-format on
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_
