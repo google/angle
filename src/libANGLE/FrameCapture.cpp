@@ -2755,4 +2755,12 @@ void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::Ve
 {
     os << "gVertexArrayMap[" << value.value << "]";
 }
+
+template <>
+void WriteParamValueToStream<ParamType::TUniformLocation>(std::ostream &os,
+                                                          gl::UniformLocation value)
+{
+    // TODO(jmadill): Uniform locations map. http://anglebug.com/4411
+    os << value.value;
+}
 }  // namespace angle

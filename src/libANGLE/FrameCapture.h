@@ -356,6 +356,10 @@ void WriteParamValueToStream<ParamType::TTransformFeedbackID>(std::ostream &os,
 template <>
 void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::VertexArrayID value);
 
+template <>
+void WriteParamValueToStream<ParamType::TUniformLocation>(std::ostream &os,
+                                                          gl::UniformLocation value);
+
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>
 void WriteParamValueToStream(std::ostream &os, T value)

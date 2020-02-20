@@ -231,13 +231,13 @@ bool ValidateGetTexParameterivRobustANGLE(const Context *context,
                                           const GLint *params);
 bool ValidateGetUniformfvRobustANGLE(const Context *context,
                                      ShaderProgramID programPacked,
-                                     GLint location,
+                                     UniformLocation locationPacked,
                                      GLsizei bufSize,
                                      const GLsizei *length,
                                      const GLfloat *params);
 bool ValidateGetUniformivRobustANGLE(const Context *context,
                                      ShaderProgramID programPacked,
-                                     GLint location,
+                                     UniformLocation locationPacked,
                                      GLsizei bufSize,
                                      const GLsizei *length,
                                      const GLint *params);
@@ -418,7 +418,7 @@ bool ValidateGetVertexAttribIuivRobustANGLE(const Context *context,
                                             const GLuint *params);
 bool ValidateGetUniformuivRobustANGLE(const Context *context,
                                       ShaderProgramID programPacked,
-                                      GLint location,
+                                      UniformLocation locationPacked,
                                       GLsizei bufSize,
                                       const GLsizei *length,
                                       const GLuint *params);
@@ -526,19 +526,19 @@ bool ValidateReadnPixelsRobustANGLE(const Context *context,
                                     const void *data);
 bool ValidateGetnUniformfvRobustANGLE(const Context *context,
                                       ShaderProgramID programPacked,
-                                      GLint location,
+                                      UniformLocation locationPacked,
                                       GLsizei bufSize,
                                       const GLsizei *length,
                                       const GLfloat *params);
 bool ValidateGetnUniformivRobustANGLE(const Context *context,
                                       ShaderProgramID programPacked,
-                                      GLint location,
+                                      UniformLocation locationPacked,
                                       GLsizei bufSize,
                                       const GLsizei *length,
                                       const GLint *params);
 bool ValidateGetnUniformuivRobustANGLE(const Context *context,
                                        ShaderProgramID programPacked,
-                                       GLint location,
+                                       UniformLocation locationPacked,
                                        GLsizei bufSize,
                                        const GLsizei *length,
                                        const GLuint *params);
@@ -657,7 +657,7 @@ bool ValidateGetTranslatedShaderSourceANGLE(const Context *context,
 // GL_CHROMIUM_bind_uniform_location
 bool ValidateBindUniformLocationCHROMIUM(const Context *context,
                                          ShaderProgramID programPacked,
-                                         GLint location,
+                                         UniformLocation locationPacked,
                                          const GLchar *name);
 
 // GL_CHROMIUM_copy_compressed_texture
@@ -1031,12 +1031,12 @@ bool ValidateRenderbufferStorageMultisampleEXT(const Context *context,
 bool ValidateGetGraphicsResetStatusEXT(const Context *context);
 bool ValidateGetnUniformfvEXT(const Context *context,
                               ShaderProgramID programPacked,
-                              GLint location,
+                              UniformLocation locationPacked,
                               GLsizei bufSize,
                               const GLfloat *params);
 bool ValidateGetnUniformivEXT(const Context *context,
                               ShaderProgramID programPacked,
-                              GLint location,
+                              UniformLocation locationPacked,
                               GLsizei bufSize,
                               const GLint *params);
 bool ValidateReadnPixelsEXT(const Context *context,

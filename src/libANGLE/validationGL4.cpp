@@ -110,7 +110,7 @@ bool ValidateGetUniformSubroutineuiv(const Context *context,
 
 bool ValidateGetUniformdv(const Context *context,
                           ShaderProgramID program,
-                          GLint location,
+                          UniformLocation location,
                           const GLdouble *params)
 {
     return true;
@@ -121,39 +121,43 @@ bool ValidatePatchParameterfv(const Context *context, GLenum pname, const GLfloa
     return true;
 }
 
-bool ValidateUniform1d(const Context *context, GLint location, GLdouble x)
+bool ValidateUniform1d(const Context *context, UniformLocation location, GLdouble x)
 {
     return true;
 }
 
 bool ValidateUniform1dv(const Context *context,
-                        GLint location,
+                        UniformLocation location,
                         GLsizei count,
                         const GLdouble *value)
 {
     return true;
 }
 
-bool ValidateUniform2d(const Context *context, GLint location, GLdouble x, GLdouble y)
+bool ValidateUniform2d(const Context *context, UniformLocation location, GLdouble x, GLdouble y)
 {
     return true;
 }
 
 bool ValidateUniform2dv(const Context *context,
-                        GLint location,
+                        UniformLocation location,
                         GLsizei count,
                         const GLdouble *value)
 {
     return true;
 }
 
-bool ValidateUniform3d(const Context *context, GLint location, GLdouble x, GLdouble y, GLdouble z)
+bool ValidateUniform3d(const Context *context,
+                       UniformLocation location,
+                       GLdouble x,
+                       GLdouble y,
+                       GLdouble z)
 {
     return true;
 }
 
 bool ValidateUniform3dv(const Context *context,
-                        GLint location,
+                        UniformLocation location,
                         GLsizei count,
                         const GLdouble *value)
 {
@@ -161,7 +165,7 @@ bool ValidateUniform3dv(const Context *context,
 }
 
 bool ValidateUniform4d(const Context *context,
-                       GLint location,
+                       UniformLocation location,
                        GLdouble x,
                        GLdouble y,
                        GLdouble z,
@@ -171,7 +175,7 @@ bool ValidateUniform4d(const Context *context,
 }
 
 bool ValidateUniform4dv(const Context *context,
-                        GLint location,
+                        UniformLocation location,
                         GLsizei count,
                         const GLdouble *value)
 {
@@ -179,7 +183,7 @@ bool ValidateUniform4dv(const Context *context,
 }
 
 bool ValidateUniformMatrix2dv(const Context *context,
-                              GLint location,
+                              UniformLocation location,
                               GLsizei count,
                               GLboolean transpose,
                               const GLdouble *value)
@@ -188,7 +192,7 @@ bool ValidateUniformMatrix2dv(const Context *context,
 }
 
 bool ValidateUniformMatrix2x3dv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLdouble *value)
@@ -197,7 +201,7 @@ bool ValidateUniformMatrix2x3dv(const Context *context,
 }
 
 bool ValidateUniformMatrix2x4dv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLdouble *value)
@@ -206,7 +210,7 @@ bool ValidateUniformMatrix2x4dv(const Context *context,
 }
 
 bool ValidateUniformMatrix3dv(const Context *context,
-                              GLint location,
+                              UniformLocation location,
                               GLsizei count,
                               GLboolean transpose,
                               const GLdouble *value)
@@ -215,7 +219,7 @@ bool ValidateUniformMatrix3dv(const Context *context,
 }
 
 bool ValidateUniformMatrix3x2dv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLdouble *value)
@@ -224,7 +228,7 @@ bool ValidateUniformMatrix3x2dv(const Context *context,
 }
 
 bool ValidateUniformMatrix3x4dv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLdouble *value)
@@ -233,7 +237,7 @@ bool ValidateUniformMatrix3x4dv(const Context *context,
 }
 
 bool ValidateUniformMatrix4dv(const Context *context,
-                              GLint location,
+                              UniformLocation location,
                               GLsizei count,
                               GLboolean transpose,
                               const GLdouble *value)
@@ -242,7 +246,7 @@ bool ValidateUniformMatrix4dv(const Context *context,
 }
 
 bool ValidateUniformMatrix4x2dv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLdouble *value)
@@ -251,7 +255,7 @@ bool ValidateUniformMatrix4x2dv(const Context *context,
 }
 
 bool ValidateUniformMatrix4x3dv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLdouble *value)

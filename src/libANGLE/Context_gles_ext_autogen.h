@@ -83,10 +83,10 @@
                                  GLsizei *length, GLfloat *params);                                \
     void getTexParameterivRobust(TextureType targetPacked, GLenum pname, GLsizei bufSize,          \
                                  GLsizei *length, GLint *params);                                  \
-    void getUniformfvRobust(ShaderProgramID programPacked, GLint location, GLsizei bufSize,        \
-                            GLsizei *length, GLfloat *params);                                     \
-    void getUniformivRobust(ShaderProgramID programPacked, GLint location, GLsizei bufSize,        \
-                            GLsizei *length, GLint *params);                                       \
+    void getUniformfvRobust(ShaderProgramID programPacked, UniformLocation locationPacked,         \
+                            GLsizei bufSize, GLsizei *length, GLfloat *params);                    \
+    void getUniformivRobust(ShaderProgramID programPacked, UniformLocation locationPacked,         \
+                            GLsizei bufSize, GLsizei *length, GLint *params);                      \
     void getVertexAttribfvRobust(GLuint index, GLenum pname, GLsizei bufSize, GLsizei *length,     \
                                  GLfloat *params);                                                 \
     void getVertexAttribivRobust(GLuint index, GLenum pname, GLsizei bufSize, GLsizei *length,     \
@@ -141,8 +141,8 @@
                                   GLint *params);                                                  \
     void getVertexAttribIuivRobust(GLuint index, GLenum pname, GLsizei bufSize, GLsizei *length,   \
                                    GLuint *params);                                                \
-    void getUniformuivRobust(ShaderProgramID programPacked, GLint location, GLsizei bufSize,       \
-                             GLsizei *length, GLuint *params);                                     \
+    void getUniformuivRobust(ShaderProgramID programPacked, UniformLocation locationPacked,        \
+                             GLsizei bufSize, GLsizei *length, GLuint *params);                    \
     void getActiveUniformBlockivRobust(ShaderProgramID programPacked, GLuint uniformBlockIndex,    \
                                        GLenum pname, GLsizei bufSize, GLsizei *length,             \
                                        GLint *params);                                             \
@@ -177,12 +177,12 @@
     void readnPixelsRobust(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,         \
                            GLenum type, GLsizei bufSize, GLsizei *length, GLsizei *columns,        \
                            GLsizei *rows, void *data);                                             \
-    void getnUniformfvRobust(ShaderProgramID programPacked, GLint location, GLsizei bufSize,       \
-                             GLsizei *length, GLfloat *params);                                    \
-    void getnUniformivRobust(ShaderProgramID programPacked, GLint location, GLsizei bufSize,       \
-                             GLsizei *length, GLint *params);                                      \
-    void getnUniformuivRobust(ShaderProgramID programPacked, GLint location, GLsizei bufSize,      \
-                              GLsizei *length, GLuint *params);                                    \
+    void getnUniformfvRobust(ShaderProgramID programPacked, UniformLocation locationPacked,        \
+                             GLsizei bufSize, GLsizei *length, GLfloat *params);                   \
+    void getnUniformivRobust(ShaderProgramID programPacked, UniformLocation locationPacked,        \
+                             GLsizei bufSize, GLsizei *length, GLint *params);                     \
+    void getnUniformuivRobust(ShaderProgramID programPacked, UniformLocation locationPacked,       \
+                              GLsizei bufSize, GLsizei *length, GLuint *params);                   \
     void texParameterIivRobust(TextureType targetPacked, GLenum pname, GLsizei bufSize,            \
                                const GLint *params);                                               \
     void texParameterIuivRobust(TextureType targetPacked, GLenum pname, GLsizei bufSize,           \
@@ -211,7 +211,8 @@
                             GLenum type);                                                          \
     void invalidateTexture(TextureType targetPacked);                                              \
     /* GL_CHROMIUM_bind_uniform_location */                                                        \
-    void bindUniformLocation(ShaderProgramID programPacked, GLint location, const GLchar *name);   \
+    void bindUniformLocation(ShaderProgramID programPacked, UniformLocation locationPacked,        \
+                             const GLchar *name);                                                  \
     /* GL_CHROMIUM_copy_compressed_texture */                                                      \
     void compressedCopyTexture(TextureID sourceIdPacked, TextureID destIdPacked);                  \
     /* GL_CHROMIUM_copy_texture */                                                                 \

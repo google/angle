@@ -2471,7 +2471,9 @@ void Context::popGroupMarker()
     ANGLE_CONTEXT_TRY(mImplementation->popGroupMarker());
 }
 
-void Context::bindUniformLocation(ShaderProgramID program, GLint location, const GLchar *name)
+void Context::bindUniformLocation(ShaderProgramID program,
+                                  UniformLocation location,
+                                  const GLchar *name)
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
@@ -6645,7 +6647,7 @@ void Context::getShaderSource(ShaderProgramID shader,
     shaderObject->getSource(bufsize, length, source);
 }
 
-void Context::getUniformfv(ShaderProgramID program, GLint location, GLfloat *params)
+void Context::getUniformfv(ShaderProgramID program, UniformLocation location, GLfloat *params)
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
@@ -6653,7 +6655,7 @@ void Context::getUniformfv(ShaderProgramID program, GLint location, GLfloat *par
 }
 
 void Context::getUniformfvRobust(ShaderProgramID program,
-                                 GLint location,
+                                 UniformLocation location,
                                  GLsizei bufSize,
                                  GLsizei *length,
                                  GLfloat *params)
@@ -6661,7 +6663,7 @@ void Context::getUniformfvRobust(ShaderProgramID program,
     getUniformfv(program, location, params);
 }
 
-void Context::getUniformiv(ShaderProgramID program, GLint location, GLint *params)
+void Context::getUniformiv(ShaderProgramID program, UniformLocation location, GLint *params)
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
@@ -6669,7 +6671,7 @@ void Context::getUniformiv(ShaderProgramID program, GLint location, GLint *param
 }
 
 void Context::getUniformivRobust(ShaderProgramID program,
-                                 GLint location,
+                                 UniformLocation location,
                                  GLsizei bufSize,
                                  GLsizei *length,
                                  GLint *params)
@@ -6681,7 +6683,7 @@ GLint Context::getUniformLocation(ShaderProgramID program, const GLchar *name)
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    return programObject->getUniformLocation(name);
+    return programObject->getUniformLocation(name).value;
 }
 
 GLboolean Context::isBuffer(BufferID buffer) const
@@ -6838,19 +6840,22 @@ void Context::patchParameteri(GLenum pname, GLint value)
     UNIMPLEMENTED();
 }
 
-void Context::uniform1f(GLint location, GLfloat x)
+void Context::uniform1f(UniformLocation location, GLfloat x)
 {
     Program *program = mState.getProgram();
     program->setUniform1fv(location, 1, &x);
 }
 
-void Context::uniform1fv(GLint location, GLsizei count, const GLfloat *v)
+void Context::uniform1fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
     Program *program = mState.getProgram();
     program->setUniform1fv(location, count, v);
 }
 
-void Context::setUniform1iImpl(Program *program, GLint location, GLsizei count, const GLint *v)
+void Context::setUniform1iImpl(Program *program,
+                               UniformLocation location,
+                               GLsizei count,
+                               const GLint *v)
 {
     program->setUniform1iv(this, location, count, v);
 }
@@ -6861,95 +6866,95 @@ void Context::onSamplerUniformChange(size_t textureUnitIndex)
     mStateCache.onActiveTextureChange(this);
 }
 
-void Context::uniform1i(GLint location, GLint x)
+void Context::uniform1i(UniformLocation location, GLint x)
 {
     setUniform1iImpl(mState.getProgram(), location, 1, &x);
 }
 
-void Context::uniform1iv(GLint location, GLsizei count, const GLint *v)
+void Context::uniform1iv(UniformLocation location, GLsizei count, const GLint *v)
 {
     setUniform1iImpl(mState.getProgram(), location, count, v);
 }
 
-void Context::uniform2f(GLint location, GLfloat x, GLfloat y)
+void Context::uniform2f(UniformLocation location, GLfloat x, GLfloat y)
 {
     GLfloat xy[2]    = {x, y};
     Program *program = mState.getProgram();
     program->setUniform2fv(location, 1, xy);
 }
 
-void Context::uniform2fv(GLint location, GLsizei count, const GLfloat *v)
+void Context::uniform2fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
     Program *program = mState.getProgram();
     program->setUniform2fv(location, count, v);
 }
 
-void Context::uniform2i(GLint location, GLint x, GLint y)
+void Context::uniform2i(UniformLocation location, GLint x, GLint y)
 {
     GLint xy[2]      = {x, y};
     Program *program = mState.getProgram();
     program->setUniform2iv(location, 1, xy);
 }
 
-void Context::uniform2iv(GLint location, GLsizei count, const GLint *v)
+void Context::uniform2iv(UniformLocation location, GLsizei count, const GLint *v)
 {
     Program *program = mState.getProgram();
     program->setUniform2iv(location, count, v);
 }
 
-void Context::uniform3f(GLint location, GLfloat x, GLfloat y, GLfloat z)
+void Context::uniform3f(UniformLocation location, GLfloat x, GLfloat y, GLfloat z)
 {
     GLfloat xyz[3]   = {x, y, z};
     Program *program = mState.getProgram();
     program->setUniform3fv(location, 1, xyz);
 }
 
-void Context::uniform3fv(GLint location, GLsizei count, const GLfloat *v)
+void Context::uniform3fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
     Program *program = mState.getProgram();
     program->setUniform3fv(location, count, v);
 }
 
-void Context::uniform3i(GLint location, GLint x, GLint y, GLint z)
+void Context::uniform3i(UniformLocation location, GLint x, GLint y, GLint z)
 {
     GLint xyz[3]     = {x, y, z};
     Program *program = mState.getProgram();
     program->setUniform3iv(location, 1, xyz);
 }
 
-void Context::uniform3iv(GLint location, GLsizei count, const GLint *v)
+void Context::uniform3iv(UniformLocation location, GLsizei count, const GLint *v)
 {
     Program *program = mState.getProgram();
     program->setUniform3iv(location, count, v);
 }
 
-void Context::uniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+void Context::uniform4f(UniformLocation location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
     GLfloat xyzw[4]  = {x, y, z, w};
     Program *program = mState.getProgram();
     program->setUniform4fv(location, 1, xyzw);
 }
 
-void Context::uniform4fv(GLint location, GLsizei count, const GLfloat *v)
+void Context::uniform4fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
     Program *program = mState.getProgram();
     program->setUniform4fv(location, count, v);
 }
 
-void Context::uniform4i(GLint location, GLint x, GLint y, GLint z, GLint w)
+void Context::uniform4i(UniformLocation location, GLint x, GLint y, GLint z, GLint w)
 {
     GLint xyzw[4]    = {x, y, z, w};
     Program *program = mState.getProgram();
     program->setUniform4iv(location, 1, xyzw);
 }
 
-void Context::uniform4iv(GLint location, GLsizei count, const GLint *v)
+void Context::uniform4iv(UniformLocation location, GLsizei count, const GLint *v)
 {
     Program *program = mState.getProgram();
     program->setUniform4iv(location, count, v);
 }
 
-void Context::uniformMatrix2fv(GLint location,
+void Context::uniformMatrix2fv(UniformLocation location,
                                GLsizei count,
                                GLboolean transpose,
                                const GLfloat *value)
@@ -6958,7 +6963,7 @@ void Context::uniformMatrix2fv(GLint location,
     program->setUniformMatrix2fv(location, count, transpose, value);
 }
 
-void Context::uniformMatrix3fv(GLint location,
+void Context::uniformMatrix3fv(UniformLocation location,
                                GLsizei count,
                                GLboolean transpose,
                                const GLfloat *value)
@@ -6967,7 +6972,7 @@ void Context::uniformMatrix3fv(GLint location,
     program->setUniformMatrix3fv(location, count, transpose, value);
 }
 
-void Context::uniformMatrix4fv(GLint location,
+void Context::uniformMatrix4fv(UniformLocation location,
                                GLsizei count,
                                GLboolean transpose,
                                const GLfloat *value)
@@ -7012,51 +7017,51 @@ void Context::programBinary(ShaderProgramID program,
     ANGLE_CONTEXT_TRY(onProgramLink(programObject));
 }
 
-void Context::uniform1ui(GLint location, GLuint v0)
+void Context::uniform1ui(UniformLocation location, GLuint v0)
 {
     Program *program = mState.getProgram();
     program->setUniform1uiv(location, 1, &v0);
 }
 
-void Context::uniform2ui(GLint location, GLuint v0, GLuint v1)
+void Context::uniform2ui(UniformLocation location, GLuint v0, GLuint v1)
 {
     Program *program  = mState.getProgram();
     const GLuint xy[] = {v0, v1};
     program->setUniform2uiv(location, 1, xy);
 }
 
-void Context::uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2)
+void Context::uniform3ui(UniformLocation location, GLuint v0, GLuint v1, GLuint v2)
 {
     Program *program   = mState.getProgram();
     const GLuint xyz[] = {v0, v1, v2};
     program->setUniform3uiv(location, 1, xyz);
 }
 
-void Context::uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
+void Context::uniform4ui(UniformLocation location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
     Program *program    = mState.getProgram();
     const GLuint xyzw[] = {v0, v1, v2, v3};
     program->setUniform4uiv(location, 1, xyzw);
 }
 
-void Context::uniform1uiv(GLint location, GLsizei count, const GLuint *value)
+void Context::uniform1uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
     Program *program = mState.getProgram();
     program->setUniform1uiv(location, count, value);
 }
-void Context::uniform2uiv(GLint location, GLsizei count, const GLuint *value)
+void Context::uniform2uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
     Program *program = mState.getProgram();
     program->setUniform2uiv(location, count, value);
 }
 
-void Context::uniform3uiv(GLint location, GLsizei count, const GLuint *value)
+void Context::uniform3uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
     Program *program = mState.getProgram();
     program->setUniform3uiv(location, count, value);
 }
 
-void Context::uniform4uiv(GLint location, GLsizei count, const GLuint *value)
+void Context::uniform4uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
     Program *program = mState.getProgram();
     program->setUniform4uiv(location, count, value);
@@ -7100,7 +7105,7 @@ GLboolean Context::isQuery(QueryID id) const
     return ConvertToGLBoolean(getQuery(id) != nullptr);
 }
 
-void Context::uniformMatrix2x3fv(GLint location,
+void Context::uniformMatrix2x3fv(UniformLocation location,
                                  GLsizei count,
                                  GLboolean transpose,
                                  const GLfloat *value)
@@ -7109,7 +7114,7 @@ void Context::uniformMatrix2x3fv(GLint location,
     program->setUniformMatrix2x3fv(location, count, transpose, value);
 }
 
-void Context::uniformMatrix3x2fv(GLint location,
+void Context::uniformMatrix3x2fv(UniformLocation location,
                                  GLsizei count,
                                  GLboolean transpose,
                                  const GLfloat *value)
@@ -7118,7 +7123,7 @@ void Context::uniformMatrix3x2fv(GLint location,
     program->setUniformMatrix3x2fv(location, count, transpose, value);
 }
 
-void Context::uniformMatrix2x4fv(GLint location,
+void Context::uniformMatrix2x4fv(UniformLocation location,
                                  GLsizei count,
                                  GLboolean transpose,
                                  const GLfloat *value)
@@ -7127,7 +7132,7 @@ void Context::uniformMatrix2x4fv(GLint location,
     program->setUniformMatrix2x4fv(location, count, transpose, value);
 }
 
-void Context::uniformMatrix4x2fv(GLint location,
+void Context::uniformMatrix4x2fv(UniformLocation location,
                                  GLsizei count,
                                  GLboolean transpose,
                                  const GLfloat *value)
@@ -7136,7 +7141,7 @@ void Context::uniformMatrix4x2fv(GLint location,
     program->setUniformMatrix4x2fv(location, count, transpose, value);
 }
 
-void Context::uniformMatrix3x4fv(GLint location,
+void Context::uniformMatrix3x4fv(UniformLocation location,
                                  GLsizei count,
                                  GLboolean transpose,
                                  const GLfloat *value)
@@ -7145,7 +7150,7 @@ void Context::uniformMatrix3x4fv(GLint location,
     program->setUniformMatrix3x4fv(location, count, transpose, value);
 }
 
-void Context::uniformMatrix4x3fv(GLint location,
+void Context::uniformMatrix4x3fv(UniformLocation location,
                                  GLsizei count,
                                  GLboolean transpose,
                                  const GLfloat *value)
@@ -7289,14 +7294,14 @@ void Context::resumeTransformFeedback()
     mStateCache.onActiveTransformFeedbackChange(this);
 }
 
-void Context::getUniformuiv(ShaderProgramID program, GLint location, GLuint *params)
+void Context::getUniformuiv(ShaderProgramID program, UniformLocation location, GLuint *params)
 {
     const Program *programObject = getProgramResolveLink(program);
     programObject->getUniformuiv(this, location, params);
 }
 
 void Context::getUniformuivRobust(ShaderProgramID program,
-                                  GLint location,
+                                  UniformLocation location,
                                   GLsizei bufSize,
                                   GLsizei *length,
                                   GLuint *params)
@@ -7518,19 +7523,22 @@ void Context::getInternalformativRobust(GLenum target,
     getInternalformativ(target, internalformat, pname, bufSize, params);
 }
 
-void Context::programUniform1i(ShaderProgramID program, GLint location, GLint v0)
+void Context::programUniform1i(ShaderProgramID program, UniformLocation location, GLint v0)
 {
     programUniform1iv(program, location, 1, &v0);
 }
 
-void Context::programUniform2i(ShaderProgramID program, GLint location, GLint v0, GLint v1)
+void Context::programUniform2i(ShaderProgramID program,
+                               UniformLocation location,
+                               GLint v0,
+                               GLint v1)
 {
     GLint xy[2] = {v0, v1};
     programUniform2iv(program, location, 1, xy);
 }
 
 void Context::programUniform3i(ShaderProgramID program,
-                               GLint location,
+                               UniformLocation location,
                                GLint v0,
                                GLint v1,
                                GLint v2)
@@ -7540,7 +7548,7 @@ void Context::programUniform3i(ShaderProgramID program,
 }
 
 void Context::programUniform4i(ShaderProgramID program,
-                               GLint location,
+                               UniformLocation location,
                                GLint v0,
                                GLint v1,
                                GLint v2,
@@ -7550,19 +7558,22 @@ void Context::programUniform4i(ShaderProgramID program,
     programUniform4iv(program, location, 1, xyzw);
 }
 
-void Context::programUniform1ui(ShaderProgramID program, GLint location, GLuint v0)
+void Context::programUniform1ui(ShaderProgramID program, UniformLocation location, GLuint v0)
 {
     programUniform1uiv(program, location, 1, &v0);
 }
 
-void Context::programUniform2ui(ShaderProgramID program, GLint location, GLuint v0, GLuint v1)
+void Context::programUniform2ui(ShaderProgramID program,
+                                UniformLocation location,
+                                GLuint v0,
+                                GLuint v1)
 {
     GLuint xy[2] = {v0, v1};
     programUniform2uiv(program, location, 1, xy);
 }
 
 void Context::programUniform3ui(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLuint v0,
                                 GLuint v1,
                                 GLuint v2)
@@ -7572,7 +7583,7 @@ void Context::programUniform3ui(ShaderProgramID program,
 }
 
 void Context::programUniform4ui(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLuint v0,
                                 GLuint v1,
                                 GLuint v2,
@@ -7582,19 +7593,22 @@ void Context::programUniform4ui(ShaderProgramID program,
     programUniform4uiv(program, location, 1, xyzw);
 }
 
-void Context::programUniform1f(ShaderProgramID program, GLint location, GLfloat v0)
+void Context::programUniform1f(ShaderProgramID program, UniformLocation location, GLfloat v0)
 {
     programUniform1fv(program, location, 1, &v0);
 }
 
-void Context::programUniform2f(ShaderProgramID program, GLint location, GLfloat v0, GLfloat v1)
+void Context::programUniform2f(ShaderProgramID program,
+                               UniformLocation location,
+                               GLfloat v0,
+                               GLfloat v1)
 {
     GLfloat xy[2] = {v0, v1};
     programUniform2fv(program, location, 1, xy);
 }
 
 void Context::programUniform3f(ShaderProgramID program,
-                               GLint location,
+                               UniformLocation location,
                                GLfloat v0,
                                GLfloat v1,
                                GLfloat v2)
@@ -7604,7 +7618,7 @@ void Context::programUniform3f(ShaderProgramID program,
 }
 
 void Context::programUniform4f(ShaderProgramID program,
-                               GLint location,
+                               UniformLocation location,
                                GLfloat v0,
                                GLfloat v1,
                                GLfloat v2,
@@ -7615,7 +7629,7 @@ void Context::programUniform4f(ShaderProgramID program,
 }
 
 void Context::programUniform1iv(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 const GLint *value)
 {
@@ -7625,7 +7639,7 @@ void Context::programUniform1iv(ShaderProgramID program,
 }
 
 void Context::programUniform2iv(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 const GLint *value)
 {
@@ -7635,7 +7649,7 @@ void Context::programUniform2iv(ShaderProgramID program,
 }
 
 void Context::programUniform3iv(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 const GLint *value)
 {
@@ -7645,7 +7659,7 @@ void Context::programUniform3iv(ShaderProgramID program,
 }
 
 void Context::programUniform4iv(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 const GLint *value)
 {
@@ -7655,7 +7669,7 @@ void Context::programUniform4iv(ShaderProgramID program,
 }
 
 void Context::programUniform1uiv(ShaderProgramID program,
-                                 GLint location,
+                                 UniformLocation location,
                                  GLsizei count,
                                  const GLuint *value)
 {
@@ -7665,7 +7679,7 @@ void Context::programUniform1uiv(ShaderProgramID program,
 }
 
 void Context::programUniform2uiv(ShaderProgramID program,
-                                 GLint location,
+                                 UniformLocation location,
                                  GLsizei count,
                                  const GLuint *value)
 {
@@ -7675,7 +7689,7 @@ void Context::programUniform2uiv(ShaderProgramID program,
 }
 
 void Context::programUniform3uiv(ShaderProgramID program,
-                                 GLint location,
+                                 UniformLocation location,
                                  GLsizei count,
                                  const GLuint *value)
 {
@@ -7685,7 +7699,7 @@ void Context::programUniform3uiv(ShaderProgramID program,
 }
 
 void Context::programUniform4uiv(ShaderProgramID program,
-                                 GLint location,
+                                 UniformLocation location,
                                  GLsizei count,
                                  const GLuint *value)
 {
@@ -7695,7 +7709,7 @@ void Context::programUniform4uiv(ShaderProgramID program,
 }
 
 void Context::programUniform1fv(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 const GLfloat *value)
 {
@@ -7705,7 +7719,7 @@ void Context::programUniform1fv(ShaderProgramID program,
 }
 
 void Context::programUniform2fv(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 const GLfloat *value)
 {
@@ -7715,7 +7729,7 @@ void Context::programUniform2fv(ShaderProgramID program,
 }
 
 void Context::programUniform3fv(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 const GLfloat *value)
 {
@@ -7725,7 +7739,7 @@ void Context::programUniform3fv(ShaderProgramID program,
 }
 
 void Context::programUniform4fv(ShaderProgramID program,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 const GLfloat *value)
 {
@@ -7735,7 +7749,7 @@ void Context::programUniform4fv(ShaderProgramID program,
 }
 
 void Context::programUniformMatrix2fv(ShaderProgramID program,
-                                      GLint location,
+                                      UniformLocation location,
                                       GLsizei count,
                                       GLboolean transpose,
                                       const GLfloat *value)
@@ -7746,7 +7760,7 @@ void Context::programUniformMatrix2fv(ShaderProgramID program,
 }
 
 void Context::programUniformMatrix3fv(ShaderProgramID program,
-                                      GLint location,
+                                      UniformLocation location,
                                       GLsizei count,
                                       GLboolean transpose,
                                       const GLfloat *value)
@@ -7757,7 +7771,7 @@ void Context::programUniformMatrix3fv(ShaderProgramID program,
 }
 
 void Context::programUniformMatrix4fv(ShaderProgramID program,
-                                      GLint location,
+                                      UniformLocation location,
                                       GLsizei count,
                                       GLboolean transpose,
                                       const GLfloat *value)
@@ -7768,7 +7782,7 @@ void Context::programUniformMatrix4fv(ShaderProgramID program,
 }
 
 void Context::programUniformMatrix2x3fv(ShaderProgramID program,
-                                        GLint location,
+                                        UniformLocation location,
                                         GLsizei count,
                                         GLboolean transpose,
                                         const GLfloat *value)
@@ -7779,7 +7793,7 @@ void Context::programUniformMatrix2x3fv(ShaderProgramID program,
 }
 
 void Context::programUniformMatrix3x2fv(ShaderProgramID program,
-                                        GLint location,
+                                        UniformLocation location,
                                         GLsizei count,
                                         GLboolean transpose,
                                         const GLfloat *value)
@@ -7790,7 +7804,7 @@ void Context::programUniformMatrix3x2fv(ShaderProgramID program,
 }
 
 void Context::programUniformMatrix2x4fv(ShaderProgramID program,
-                                        GLint location,
+                                        UniformLocation location,
                                         GLsizei count,
                                         GLboolean transpose,
                                         const GLfloat *value)
@@ -7801,7 +7815,7 @@ void Context::programUniformMatrix2x4fv(ShaderProgramID program,
 }
 
 void Context::programUniformMatrix4x2fv(ShaderProgramID program,
-                                        GLint location,
+                                        UniformLocation location,
                                         GLsizei count,
                                         GLboolean transpose,
                                         const GLfloat *value)
@@ -7812,7 +7826,7 @@ void Context::programUniformMatrix4x2fv(ShaderProgramID program,
 }
 
 void Context::programUniformMatrix3x4fv(ShaderProgramID program,
-                                        GLint location,
+                                        UniformLocation location,
                                         GLsizei count,
                                         GLboolean transpose,
                                         const GLfloat *value)
@@ -7823,7 +7837,7 @@ void Context::programUniformMatrix3x4fv(ShaderProgramID program,
 }
 
 void Context::programUniformMatrix4x3fv(ShaderProgramID program,
-                                        GLint location,
+                                        UniformLocation location,
                                         GLsizei count,
                                         GLboolean transpose,
                                         const GLfloat *value)
@@ -7920,7 +7934,7 @@ void Context::getTranslatedShaderSource(ShaderProgramID shader,
 }
 
 void Context::getnUniformfv(ShaderProgramID program,
-                            GLint location,
+                            UniformLocation location,
                             GLsizei bufSize,
                             GLfloat *params)
 {
@@ -7931,7 +7945,7 @@ void Context::getnUniformfv(ShaderProgramID program,
 }
 
 void Context::getnUniformfvRobust(ShaderProgramID program,
-                                  GLint location,
+                                  UniformLocation location,
                                   GLsizei bufSize,
                                   GLsizei *length,
                                   GLfloat *params)
@@ -7939,7 +7953,10 @@ void Context::getnUniformfvRobust(ShaderProgramID program,
     UNIMPLEMENTED();
 }
 
-void Context::getnUniformiv(ShaderProgramID program, GLint location, GLsizei bufSize, GLint *params)
+void Context::getnUniformiv(ShaderProgramID program,
+                            UniformLocation location,
+                            GLsizei bufSize,
+                            GLint *params)
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
@@ -7948,7 +7965,7 @@ void Context::getnUniformiv(ShaderProgramID program, GLint location, GLsizei buf
 }
 
 void Context::getnUniformivRobust(ShaderProgramID program,
-                                  GLint location,
+                                  UniformLocation location,
                                   GLsizei bufSize,
                                   GLsizei *length,
                                   GLint *params)
@@ -7957,7 +7974,7 @@ void Context::getnUniformivRobust(ShaderProgramID program,
 }
 
 void Context::getnUniformuivRobust(ShaderProgramID program,
-                                   GLint location,
+                                   UniformLocation location,
                                    GLsizei bufSize,
                                    GLsizei *length,
                                    GLuint *params)

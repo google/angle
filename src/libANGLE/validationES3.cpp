@@ -83,7 +83,10 @@ bool ValidateFramebufferTextureMultiviewLevelAndFormat(const Context *context,
     return true;
 }
 
-bool ValidateUniformES3(const Context *context, GLenum uniformType, GLint location, GLint count)
+bool ValidateUniformES3(const Context *context,
+                        GLenum uniformType,
+                        UniformLocation location,
+                        GLint count)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -96,7 +99,7 @@ bool ValidateUniformES3(const Context *context, GLenum uniformType, GLint locati
 
 bool ValidateUniformMatrixES3(const Context *context,
                               GLenum valueType,
-                              GLint location,
+                              UniformLocation location,
                               GLsizei count,
                               GLboolean transpose)
 {
@@ -1531,7 +1534,7 @@ bool ValidateDrawRangeElements(const Context *context,
 
 bool ValidateGetUniformuiv(const Context *context,
                            ShaderProgramID program,
-                           GLint location,
+                           UniformLocation location,
                            const GLuint *params)
 {
     if (context->getClientMajorVersion() < 3)
@@ -3437,23 +3440,27 @@ bool ValidateFramebufferTextureMultiviewOVR(const Context *context,
     return true;
 }
 
-bool ValidateUniform1ui(const Context *context, GLint location, GLuint v0)
+bool ValidateUniform1ui(const Context *context, UniformLocation location, GLuint v0)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT, location, 1);
 }
 
-bool ValidateUniform2ui(const Context *context, GLint location, GLuint v0, GLuint v1)
+bool ValidateUniform2ui(const Context *context, UniformLocation location, GLuint v0, GLuint v1)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC2, location, 1);
 }
 
-bool ValidateUniform3ui(const Context *context, GLint location, GLuint v0, GLuint v1, GLuint v2)
+bool ValidateUniform3ui(const Context *context,
+                        UniformLocation location,
+                        GLuint v0,
+                        GLuint v1,
+                        GLuint v2)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC3, location, 1);
 }
 
 bool ValidateUniform4ui(const Context *context,
-                        GLint location,
+                        UniformLocation location,
                         GLuint v0,
                         GLuint v1,
                         GLuint v2,
@@ -3462,22 +3469,34 @@ bool ValidateUniform4ui(const Context *context,
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC4, location, 1);
 }
 
-bool ValidateUniform1uiv(const Context *context, GLint location, GLsizei count, const GLuint *value)
+bool ValidateUniform1uiv(const Context *context,
+                         UniformLocation location,
+                         GLsizei count,
+                         const GLuint *value)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT, location, count);
 }
 
-bool ValidateUniform2uiv(const Context *context, GLint location, GLsizei count, const GLuint *value)
+bool ValidateUniform2uiv(const Context *context,
+                         UniformLocation location,
+                         GLsizei count,
+                         const GLuint *value)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC2, location, count);
 }
 
-bool ValidateUniform3uiv(const Context *context, GLint location, GLsizei count, const GLuint *value)
+bool ValidateUniform3uiv(const Context *context,
+                         UniformLocation location,
+                         GLsizei count,
+                         const GLuint *value)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC3, location, count);
 }
 
-bool ValidateUniform4uiv(const Context *context, GLint location, GLsizei count, const GLuint *value)
+bool ValidateUniform4uiv(const Context *context,
+                         UniformLocation location,
+                         GLsizei count,
+                         const GLuint *value)
 {
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC4, location, count);
 }
@@ -3494,7 +3513,7 @@ bool ValidateIsQuery(const Context *context, QueryID id)
 }
 
 bool ValidateUniformMatrix2x3fv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLfloat *value)
@@ -3503,7 +3522,7 @@ bool ValidateUniformMatrix2x3fv(const Context *context,
 }
 
 bool ValidateUniformMatrix3x2fv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLfloat *value)
@@ -3512,7 +3531,7 @@ bool ValidateUniformMatrix3x2fv(const Context *context,
 }
 
 bool ValidateUniformMatrix2x4fv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLfloat *value)
@@ -3521,7 +3540,7 @@ bool ValidateUniformMatrix2x4fv(const Context *context,
 }
 
 bool ValidateUniformMatrix4x2fv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLfloat *value)
@@ -3530,7 +3549,7 @@ bool ValidateUniformMatrix4x2fv(const Context *context,
 }
 
 bool ValidateUniformMatrix3x4fv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLfloat *value)
@@ -3539,7 +3558,7 @@ bool ValidateUniformMatrix3x4fv(const Context *context,
 }
 
 bool ValidateUniformMatrix4x3fv(const Context *context,
-                                GLint location,
+                                UniformLocation location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLfloat *value)

@@ -406,6 +406,9 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
             WriteParamValueToStream<ParamType::TTransformFeedbackIDPointer>(
                 os, paramValue.TransformFeedbackIDPointerVal);
             break;
+        case ParamType::TUniformLocation:
+            WriteParamValueToStream<ParamType::TUniformLocation>(os, paramValue.UniformLocationVal);
+            break;
         case ParamType::TVertexArrayID:
             WriteParamValueToStream<ParamType::TVertexArrayID>(os, paramValue.VertexArrayIDVal);
             break;
@@ -670,6 +673,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "const GLuint *";
         case ParamType::TTransformFeedbackIDPointer:
             return "GLuint *";
+        case ParamType::TUniformLocation:
+            return "GLenum";
         case ParamType::TVertexArrayID:
             return "GLuint";
         case ParamType::TVertexArrayIDConstPointer:

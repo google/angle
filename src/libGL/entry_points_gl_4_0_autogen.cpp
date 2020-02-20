@@ -547,14 +547,15 @@ void GL_APIENTRY GetUniformdv(GLuint program, GLint location, GLdouble *params)
     if (context)
     {
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetUniformdv(context, programPacked, location, params));
+                            ValidateGetUniformdv(context, programPacked, locationPacked, params));
         if (isCallValid)
         {
-            context->getUniformdv(programPacked, location, params);
+            context->getUniformdv(programPacked, locationPacked, params);
         }
-        ANGLE_CAPTURE(GetUniformdv, isCallValid, context, programPacked, location, params);
+        ANGLE_CAPTURE(GetUniformdv, isCallValid, context, programPacked, locationPacked, params);
     }
 }
 
@@ -685,13 +686,15 @@ void GL_APIENTRY Uniform1d(GLint location, GLdouble x)
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateUniform1d(context, location, x));
+        bool isCallValid =
+            (context->skipValidation() || ValidateUniform1d(context, locationPacked, x));
         if (isCallValid)
         {
-            context->uniform1d(location, x);
+            context->uniform1d(locationPacked, x);
         }
-        ANGLE_CAPTURE(Uniform1d, isCallValid, context, location, x);
+        ANGLE_CAPTURE(Uniform1d, isCallValid, context, locationPacked, x);
     }
 }
 
@@ -705,14 +708,15 @@ void GL_APIENTRY Uniform1dv(GLint location, GLsizei count, const GLdouble *value
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateUniform1dv(context, location, count, value));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateUniform1dv(context, locationPacked, count, value));
         if (isCallValid)
         {
-            context->uniform1dv(location, count, value);
+            context->uniform1dv(locationPacked, count, value);
         }
-        ANGLE_CAPTURE(Uniform1dv, isCallValid, context, location, count, value);
+        ANGLE_CAPTURE(Uniform1dv, isCallValid, context, locationPacked, count, value);
     }
 }
 
@@ -724,14 +728,15 @@ void GL_APIENTRY Uniform2d(GLint location, GLdouble x, GLdouble y)
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateUniform2d(context, location, x, y));
+            (context->skipValidation() || ValidateUniform2d(context, locationPacked, x, y));
         if (isCallValid)
         {
-            context->uniform2d(location, x, y);
+            context->uniform2d(locationPacked, x, y);
         }
-        ANGLE_CAPTURE(Uniform2d, isCallValid, context, location, x, y);
+        ANGLE_CAPTURE(Uniform2d, isCallValid, context, locationPacked, x, y);
     }
 }
 
@@ -745,14 +750,15 @@ void GL_APIENTRY Uniform2dv(GLint location, GLsizei count, const GLdouble *value
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateUniform2dv(context, location, count, value));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateUniform2dv(context, locationPacked, count, value));
         if (isCallValid)
         {
-            context->uniform2dv(location, count, value);
+            context->uniform2dv(locationPacked, count, value);
         }
-        ANGLE_CAPTURE(Uniform2dv, isCallValid, context, location, count, value);
+        ANGLE_CAPTURE(Uniform2dv, isCallValid, context, locationPacked, count, value);
     }
 }
 
@@ -765,14 +771,15 @@ void GL_APIENTRY Uniform3d(GLint location, GLdouble x, GLdouble y, GLdouble z)
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateUniform3d(context, location, x, y, z));
+            (context->skipValidation() || ValidateUniform3d(context, locationPacked, x, y, z));
         if (isCallValid)
         {
-            context->uniform3d(location, x, y, z);
+            context->uniform3d(locationPacked, x, y, z);
         }
-        ANGLE_CAPTURE(Uniform3d, isCallValid, context, location, x, y, z);
+        ANGLE_CAPTURE(Uniform3d, isCallValid, context, locationPacked, x, y, z);
     }
 }
 
@@ -786,14 +793,15 @@ void GL_APIENTRY Uniform3dv(GLint location, GLsizei count, const GLdouble *value
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateUniform3dv(context, location, count, value));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateUniform3dv(context, locationPacked, count, value));
         if (isCallValid)
         {
-            context->uniform3dv(location, count, value);
+            context->uniform3dv(locationPacked, count, value);
         }
-        ANGLE_CAPTURE(Uniform3dv, isCallValid, context, location, count, value);
+        ANGLE_CAPTURE(Uniform3dv, isCallValid, context, locationPacked, count, value);
     }
 }
 
@@ -807,14 +815,15 @@ void GL_APIENTRY Uniform4d(GLint location, GLdouble x, GLdouble y, GLdouble z, G
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateUniform4d(context, location, x, y, z, w));
+            (context->skipValidation() || ValidateUniform4d(context, locationPacked, x, y, z, w));
         if (isCallValid)
         {
-            context->uniform4d(location, x, y, z, w);
+            context->uniform4d(locationPacked, x, y, z, w);
         }
-        ANGLE_CAPTURE(Uniform4d, isCallValid, context, location, x, y, z, w);
+        ANGLE_CAPTURE(Uniform4d, isCallValid, context, locationPacked, x, y, z, w);
     }
 }
 
@@ -828,14 +837,15 @@ void GL_APIENTRY Uniform4dv(GLint location, GLsizei count, const GLdouble *value
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateUniform4dv(context, location, count, value));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateUniform4dv(context, locationPacked, count, value));
         if (isCallValid)
         {
-            context->uniform4dv(location, count, value);
+            context->uniform4dv(locationPacked, count, value);
         }
-        ANGLE_CAPTURE(Uniform4dv, isCallValid, context, location, count, value);
+        ANGLE_CAPTURE(Uniform4dv, isCallValid, context, locationPacked, count, value);
     }
 }
 
@@ -852,14 +862,17 @@ void GL_APIENTRY UniformMatrix2dv(GLint location,
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformMatrix2dv(context, location, count, transpose, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix2dv(context, locationPacked, count, transpose, value));
         if (isCallValid)
         {
-            context->uniformMatrix2dv(location, count, transpose, value);
+            context->uniformMatrix2dv(locationPacked, count, transpose, value);
         }
-        ANGLE_CAPTURE(UniformMatrix2dv, isCallValid, context, location, count, transpose, value);
+        ANGLE_CAPTURE(UniformMatrix2dv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
 }
 
@@ -876,14 +889,17 @@ void GL_APIENTRY UniformMatrix2x3dv(GLint location,
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformMatrix2x3dv(context, location, count, transpose, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix2x3dv(context, locationPacked, count, transpose, value));
         if (isCallValid)
         {
-            context->uniformMatrix2x3dv(location, count, transpose, value);
+            context->uniformMatrix2x3dv(locationPacked, count, transpose, value);
         }
-        ANGLE_CAPTURE(UniformMatrix2x3dv, isCallValid, context, location, count, transpose, value);
+        ANGLE_CAPTURE(UniformMatrix2x3dv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
 }
 
@@ -900,14 +916,17 @@ void GL_APIENTRY UniformMatrix2x4dv(GLint location,
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformMatrix2x4dv(context, location, count, transpose, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix2x4dv(context, locationPacked, count, transpose, value));
         if (isCallValid)
         {
-            context->uniformMatrix2x4dv(location, count, transpose, value);
+            context->uniformMatrix2x4dv(locationPacked, count, transpose, value);
         }
-        ANGLE_CAPTURE(UniformMatrix2x4dv, isCallValid, context, location, count, transpose, value);
+        ANGLE_CAPTURE(UniformMatrix2x4dv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
 }
 
@@ -924,14 +943,17 @@ void GL_APIENTRY UniformMatrix3dv(GLint location,
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformMatrix3dv(context, location, count, transpose, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix3dv(context, locationPacked, count, transpose, value));
         if (isCallValid)
         {
-            context->uniformMatrix3dv(location, count, transpose, value);
+            context->uniformMatrix3dv(locationPacked, count, transpose, value);
         }
-        ANGLE_CAPTURE(UniformMatrix3dv, isCallValid, context, location, count, transpose, value);
+        ANGLE_CAPTURE(UniformMatrix3dv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
 }
 
@@ -948,14 +970,17 @@ void GL_APIENTRY UniformMatrix3x2dv(GLint location,
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformMatrix3x2dv(context, location, count, transpose, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix3x2dv(context, locationPacked, count, transpose, value));
         if (isCallValid)
         {
-            context->uniformMatrix3x2dv(location, count, transpose, value);
+            context->uniformMatrix3x2dv(locationPacked, count, transpose, value);
         }
-        ANGLE_CAPTURE(UniformMatrix3x2dv, isCallValid, context, location, count, transpose, value);
+        ANGLE_CAPTURE(UniformMatrix3x2dv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
 }
 
@@ -972,14 +997,17 @@ void GL_APIENTRY UniformMatrix3x4dv(GLint location,
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformMatrix3x4dv(context, location, count, transpose, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix3x4dv(context, locationPacked, count, transpose, value));
         if (isCallValid)
         {
-            context->uniformMatrix3x4dv(location, count, transpose, value);
+            context->uniformMatrix3x4dv(locationPacked, count, transpose, value);
         }
-        ANGLE_CAPTURE(UniformMatrix3x4dv, isCallValid, context, location, count, transpose, value);
+        ANGLE_CAPTURE(UniformMatrix3x4dv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
 }
 
@@ -996,14 +1024,17 @@ void GL_APIENTRY UniformMatrix4dv(GLint location,
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformMatrix4dv(context, location, count, transpose, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix4dv(context, locationPacked, count, transpose, value));
         if (isCallValid)
         {
-            context->uniformMatrix4dv(location, count, transpose, value);
+            context->uniformMatrix4dv(locationPacked, count, transpose, value);
         }
-        ANGLE_CAPTURE(UniformMatrix4dv, isCallValid, context, location, count, transpose, value);
+        ANGLE_CAPTURE(UniformMatrix4dv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
 }
 
@@ -1020,14 +1051,17 @@ void GL_APIENTRY UniformMatrix4x2dv(GLint location,
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformMatrix4x2dv(context, location, count, transpose, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix4x2dv(context, locationPacked, count, transpose, value));
         if (isCallValid)
         {
-            context->uniformMatrix4x2dv(location, count, transpose, value);
+            context->uniformMatrix4x2dv(locationPacked, count, transpose, value);
         }
-        ANGLE_CAPTURE(UniformMatrix4x2dv, isCallValid, context, location, count, transpose, value);
+        ANGLE_CAPTURE(UniformMatrix4x2dv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
 }
 
@@ -1044,14 +1078,17 @@ void GL_APIENTRY UniformMatrix4x3dv(GLint location,
 
     if (context)
     {
+        UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformMatrix4x3dv(context, location, count, transpose, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix4x3dv(context, locationPacked, count, transpose, value));
         if (isCallValid)
         {
-            context->uniformMatrix4x3dv(location, count, transpose, value);
+            context->uniformMatrix4x3dv(locationPacked, count, transpose, value);
         }
-        ANGLE_CAPTURE(UniformMatrix4x3dv, isCallValid, context, location, count, transpose, value);
+        ANGLE_CAPTURE(UniformMatrix4x3dv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
 }
 

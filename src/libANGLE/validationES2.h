@@ -23,7 +23,10 @@ ANGLE_INLINE bool ValidateDrawArrays(const Context *context,
     return ValidateDrawArraysCommon(context, mode, first, count, 1);
 }
 
-ANGLE_INLINE bool ValidateUniform2f(const Context *context, GLint location, GLfloat x, GLfloat y)
+ANGLE_INLINE bool ValidateUniform2f(const Context *context,
+                                    UniformLocation location,
+                                    GLfloat x,
+                                    GLfloat y)
 {
     return ValidateUniform(context, GL_FLOAT_VEC2, location, 1);
 }

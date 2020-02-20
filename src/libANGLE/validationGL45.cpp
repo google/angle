@@ -648,7 +648,7 @@ bool ValidateGetnTexImage(const Context *context,
 
 bool ValidateGetnUniformdv(const Context *context,
                            ShaderProgramID program,
-                           GLint location,
+                           UniformLocation location,
                            GLsizei bufSize,
                            const GLdouble *params)
 {

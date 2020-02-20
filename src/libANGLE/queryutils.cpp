@@ -1729,7 +1729,7 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
             return GetCommonVariableProperty(uniform, resourceProp);
 
         case GL_LOCATION:
-            return program->getUniformLocation(uniform.name);
+            return program->getUniformLocation(uniform.name).value;
 
         case GL_BLOCK_INDEX:
             return (uniform.isAtomicCounter() ? -1 : uniform.bufferIndex);
@@ -1904,7 +1904,7 @@ GLint QueryProgramResourceLocation(const Program *program,
             return program->getOutputResourceLocation(name);
 
         case GL_UNIFORM:
-            return program->getUniformLocation(name);
+            return program->getUniformLocation(name).value;
 
         default:
             UNREACHABLE();

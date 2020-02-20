@@ -376,7 +376,7 @@ bool ValidateGetnTexImage(const Context *context,
                           const void *pixels);
 bool ValidateGetnUniformdv(const Context *context,
                            ShaderProgramID programPacked,
-                           GLint location,
+                           UniformLocation locationPacked,
                            GLsizei bufSize,
                            const GLdouble *params);
 bool ValidateInvalidateNamedFramebufferData(const Context *context,

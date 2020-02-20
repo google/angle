@@ -548,6 +548,11 @@ FromGL(FromT from)
 {
     return reinterpret_cast<EnumT>(from);
 }
+
+struct UniformLocation
+{
+    int value;
+};
 }  // namespace gl
 
 namespace egl

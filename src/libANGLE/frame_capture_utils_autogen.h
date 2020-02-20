@@ -129,6 +129,7 @@ enum class ParamType
     TTransformFeedbackID,
     TTransformFeedbackIDConstPointer,
     TTransformFeedbackIDPointer,
+    TUniformLocation,
     TVertexArrayID,
     TVertexArrayIDConstPointer,
     TVertexArrayIDPointer,
@@ -139,7 +140,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 120;
+constexpr uint32_t kParamTypeCount = 121;
 
 union ParamValue
 {
@@ -255,6 +256,7 @@ union ParamValue
     gl::TransformFeedbackID TransformFeedbackIDVal;
     const gl::TransformFeedbackID *TransformFeedbackIDConstPointerVal;
     gl::TransformFeedbackID *TransformFeedbackIDPointerVal;
+    gl::UniformLocation UniformLocationVal;
     gl::VertexArrayID VertexArrayIDVal;
     const gl::VertexArrayID *VertexArrayIDConstPointerVal;
     gl::VertexArrayID *VertexArrayIDPointerVal;
@@ -1012,6 +1014,13 @@ inline gl::TransformFeedbackID *GetParamVal<ParamType::TTransformFeedbackIDPoint
 }
 
 template <>
+inline gl::UniformLocation GetParamVal<ParamType::TUniformLocation, gl::UniformLocation>(
+    const ParamValue &value)
+{
+    return value.UniformLocationVal;
+}
+
+template <>
 inline gl::VertexArrayID GetParamVal<ParamType::TVertexArrayID, gl::VertexArrayID>(
     const ParamValue &value)
 {
@@ -1300,6 +1309,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TTransformFeedbackIDConstPointer, T>(value);
         case ParamType::TTransformFeedbackIDPointer:
             return GetParamVal<ParamType::TTransformFeedbackIDPointer, T>(value);
+        case ParamType::TUniformLocation:
+            return GetParamVal<ParamType::TUniformLocation, T>(value);
         case ParamType::TVertexArrayID:
             return GetParamVal<ParamType::TVertexArrayID, T>(value);
         case ParamType::TVertexArrayIDConstPointer:
@@ -2045,6 +2056,13 @@ inline void SetParamVal<ParamType::TTransformFeedbackIDPointer>(gl::TransformFee
 }
 
 template <>
+inline void SetParamVal<ParamType::TUniformLocation>(gl::UniformLocation valueIn,
+                                                     ParamValue *valueOut)
+{
+    valueOut->UniformLocationVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TVertexArrayID>(gl::VertexArrayID valueIn, ParamValue *valueOut)
 {
     valueOut->VertexArrayIDVal = valueIn;
@@ -2442,6 +2460,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TTransformFeedbackIDPointer:
             SetParamVal<ParamType::TTransformFeedbackIDPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TUniformLocation:
+            SetParamVal<ParamType::TUniformLocation>(valueIn, valueOut);
             break;
         case ParamType::TVertexArrayID:
             SetParamVal<ParamType::TVertexArrayID>(valueIn, valueOut);

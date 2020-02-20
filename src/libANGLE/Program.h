@@ -420,8 +420,8 @@ class ProgramState final : angle::NonCopyable
     size_t getUniqueStorageBlockCount() const;
 
     GLuint getUniformIndexFromName(const std::string &name) const;
-    GLuint getUniformIndexFromLocation(GLint location) const;
-    Optional<GLuint> getSamplerIndex(GLint location) const;
+    GLuint getUniformIndexFromLocation(UniformLocation location) const;
+    Optional<GLuint> getSamplerIndex(UniformLocation location) const;
     bool isSamplerUniformIndex(GLuint index) const;
     GLuint getSamplerIndexFromUniformIndex(GLuint uniformIndex) const;
     GLuint getUniformIndexFromSamplerIndex(GLuint samplerIndex) const;
@@ -618,7 +618,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     const Shader *getAttachedShader(ShaderType shaderType) const;
 
     void bindAttributeLocation(GLuint index, const char *name);
-    void bindUniformLocation(GLuint index, const char *name);
+    void bindUniformLocation(UniformLocation location, const char *name);
 
     // CHROMIUM_path_rendering
     BindingInfo getFragmentInputBindingInfo(GLint index) const;
@@ -704,9 +704,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLint getActiveUniformCount() const;
     size_t getActiveBufferVariableCount() const;
     GLint getActiveUniformMaxLength() const;
-    bool isValidUniformLocation(GLint location) const;
-    const LinkedUniform &getUniformByLocation(GLint location) const;
-    const VariableLocation &getUniformLocation(GLint location) const;
+    bool isValidUniformLocation(UniformLocation location) const;
+    const LinkedUniform &getUniformByLocation(UniformLocation location) const;
+    const VariableLocation &getUniformLocation(UniformLocation location) const;
 
     const std::vector<VariableLocation> &getUniformLocations() const
     {
@@ -729,60 +729,60 @@ class Program final : angle::NonCopyable, public LabeledObject
         NoSamplerChange,
     };
 
-    GLint getUniformLocation(const std::string &name) const;
+    UniformLocation getUniformLocation(const std::string &name) const;
     GLuint getUniformIndex(const std::string &name) const;
-    void setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
-    void setUniform2fv(GLint location, GLsizei count, const GLfloat *v);
-    void setUniform3fv(GLint location, GLsizei count, const GLfloat *v);
-    void setUniform4fv(GLint location, GLsizei count, const GLfloat *v);
-    void setUniform1iv(Context *context, GLint location, GLsizei count, const GLint *v);
-    void setUniform2iv(GLint location, GLsizei count, const GLint *v);
-    void setUniform3iv(GLint location, GLsizei count, const GLint *v);
-    void setUniform4iv(GLint location, GLsizei count, const GLint *v);
-    void setUniform1uiv(GLint location, GLsizei count, const GLuint *v);
-    void setUniform2uiv(GLint location, GLsizei count, const GLuint *v);
-    void setUniform3uiv(GLint location, GLsizei count, const GLuint *v);
-    void setUniform4uiv(GLint location, GLsizei count, const GLuint *v);
-    void setUniformMatrix2fv(GLint location,
+    void setUniform1fv(UniformLocation location, GLsizei count, const GLfloat *v);
+    void setUniform2fv(UniformLocation location, GLsizei count, const GLfloat *v);
+    void setUniform3fv(UniformLocation location, GLsizei count, const GLfloat *v);
+    void setUniform4fv(UniformLocation location, GLsizei count, const GLfloat *v);
+    void setUniform1iv(Context *context, UniformLocation location, GLsizei count, const GLint *v);
+    void setUniform2iv(UniformLocation location, GLsizei count, const GLint *v);
+    void setUniform3iv(UniformLocation location, GLsizei count, const GLint *v);
+    void setUniform4iv(UniformLocation location, GLsizei count, const GLint *v);
+    void setUniform1uiv(UniformLocation location, GLsizei count, const GLuint *v);
+    void setUniform2uiv(UniformLocation location, GLsizei count, const GLuint *v);
+    void setUniform3uiv(UniformLocation location, GLsizei count, const GLuint *v);
+    void setUniform4uiv(UniformLocation location, GLsizei count, const GLuint *v);
+    void setUniformMatrix2fv(UniformLocation location,
                              GLsizei count,
                              GLboolean transpose,
                              const GLfloat *value);
-    void setUniformMatrix3fv(GLint location,
+    void setUniformMatrix3fv(UniformLocation location,
                              GLsizei count,
                              GLboolean transpose,
                              const GLfloat *value);
-    void setUniformMatrix4fv(GLint location,
+    void setUniformMatrix4fv(UniformLocation location,
                              GLsizei count,
                              GLboolean transpose,
                              const GLfloat *value);
-    void setUniformMatrix2x3fv(GLint location,
+    void setUniformMatrix2x3fv(UniformLocation location,
                                GLsizei count,
                                GLboolean transpose,
                                const GLfloat *value);
-    void setUniformMatrix3x2fv(GLint location,
+    void setUniformMatrix3x2fv(UniformLocation location,
                                GLsizei count,
                                GLboolean transpose,
                                const GLfloat *value);
-    void setUniformMatrix2x4fv(GLint location,
+    void setUniformMatrix2x4fv(UniformLocation location,
                                GLsizei count,
                                GLboolean transpose,
                                const GLfloat *value);
-    void setUniformMatrix4x2fv(GLint location,
+    void setUniformMatrix4x2fv(UniformLocation location,
                                GLsizei count,
                                GLboolean transpose,
                                const GLfloat *value);
-    void setUniformMatrix3x4fv(GLint location,
+    void setUniformMatrix3x4fv(UniformLocation location,
                                GLsizei count,
                                GLboolean transpose,
                                const GLfloat *value);
-    void setUniformMatrix4x3fv(GLint location,
+    void setUniformMatrix4x3fv(UniformLocation location,
                                GLsizei count,
                                GLboolean transpose,
                                const GLfloat *value);
 
-    void getUniformfv(const Context *context, GLint location, GLfloat *params) const;
-    void getUniformiv(const Context *context, GLint location, GLint *params) const;
-    void getUniformuiv(const Context *context, GLint location, GLuint *params) const;
+    void getUniformfv(const Context *context, UniformLocation location, GLfloat *params) const;
+    void getUniformiv(const Context *context, UniformLocation location, GLint *params) const;
+    void getUniformuiv(const Context *context, UniformLocation location, GLuint *params) const;
 
     void getActiveUniformBlockName(const GLuint blockIndex,
                                    GLsizei bufSize,
@@ -1068,7 +1068,10 @@ class Program final : angle::NonCopyable, public LabeledObject
                               int vectorSize,
                               const T *v);
     template <size_t cols, size_t rows, typename T>
-    GLsizei clampMatrixUniformCount(GLint location, GLsizei count, GLboolean transpose, const T *v);
+    GLsizei clampMatrixUniformCount(UniformLocation location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const T *v);
 
     void updateSamplerUniform(Context *context,
                               const VariableLocation &locationInfo,
@@ -1078,7 +1081,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     template <typename DestT>
     void getUniformInternal(const Context *context,
                             DestT *dataOut,
-                            GLint location,
+                            UniformLocation location,
                             GLenum nativeType,
                             int components) const;
 
