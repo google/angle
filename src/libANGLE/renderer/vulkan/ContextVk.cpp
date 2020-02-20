@@ -3705,13 +3705,28 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
         mOutsideRenderPassCommands.flushToPrimary(&mPrimaryCommands);
         ANGLE_TRY(endRenderPass());
 
+        if (mIsAnyHostVisibleBufferWritten)
+        {
+            // Make sure all writes to host-visible buffers are flushed.  We have no way of knowing
+            // whether any buffer will be mapped for readback in the future, and we can't afford to
+            // flush and wait on a one-pipeline-barrier command buffer on every map().
+            VkMemoryBarrier memoryBarrier = {};
+            memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+            memoryBarrier.srcAccessMask   = VK_ACCESS_MEMORY_WRITE_BIT;
+            memoryBarrier.dstAccessMask   = VK_ACCESS_HOST_READ_BIT;
+
+            mPrimaryCommands.memoryBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                           VK_PIPELINE_STAGE_HOST_BIT, &memoryBarrier);
+            mIsAnyHostVisibleBufferWritten = false;
+        }
+
+        ANGLE_VK_TRY(this, mPrimaryCommands.end());
+
         // Free secondary command pool allocations and restart command buffers with the new page.
         mPoolAllocator.pop();
         mPoolAllocator.push();
         mOutsideRenderPassCommands.reset();
         mRenderPassCommands.reset();
-
-        ANGLE_VK_TRY(this, mPrimaryCommands.end());
 
         Serial serial = getCurrentQueueSerial();
         mResourceUseList.releaseResourceUsesAndUpdateSerials(serial);
