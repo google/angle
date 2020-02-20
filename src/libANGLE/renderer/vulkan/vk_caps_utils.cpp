@@ -474,8 +474,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.pixelBufferObjectNV = true;
 
     // Enable GL_NV_fence extension.
-    // TODO(jmadill): Enable without graph. http://anglebug.com/4029
-    mNativeExtensions.fenceNV = mFeatures.commandGraph.enabled;
+    mNativeExtensions.fenceNV = true;
 
     // Geometry shader is optional.
     if (mPhysicalDeviceFeatures.geometryShader)
