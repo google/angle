@@ -26,6 +26,7 @@ struct FeaturesVk;
 
 namespace rx
 {
+class ProgramExecutableVk;
 class RendererVk;
 class WindowSurfaceVk;
 
@@ -657,6 +658,11 @@ class ContextVk : public ContextImpl, public vk::Context
     size_t getVkIndexTypeSize(gl::DrawElementsType glIndexType) const;
     bool shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) const;
 
+    const ProgramExecutableVk *getExecutable() const { return mExecutable; }
+    ProgramExecutableVk *getExecutable() { return mExecutable; }
+
+    ProgramVk *getShaderProgram(const gl::State &glState, gl::ShaderType shaderType) const;
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -950,6 +956,7 @@ class ContextVk : public ContextImpl, public vk::Context
     VertexArrayVk *mVertexArray;
     FramebufferVk *mDrawFramebuffer;
     ProgramVk *mProgram;
+    ProgramExecutableVk *mExecutable;
 
     // Graph resource used to record dispatch commands and hold resource dependencies.
     vk::DispatchHelper mDispatcher;

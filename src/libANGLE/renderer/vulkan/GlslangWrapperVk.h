@@ -25,6 +25,8 @@ namespace rx
 class GlslangWrapperVk
 {
   public:
+    static GlslangSourceOptions CreateSourceOptions(const angle::FeaturesVk &features);
+
     static void ResetGlslangProgramInterfaceInfo(
         GlslangProgramInterfaceInfo *glslangProgramInterfaceInfo);
 

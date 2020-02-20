@@ -11,6 +11,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Query.h"
+#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
@@ -161,6 +162,7 @@ angle::Result TransformFeedbackVk::bindIndexedBuffer(
 
 void TransformFeedbackVk::updateDescriptorSetLayout(
     ContextVk *contextVk,
+    ShaderInterfaceVariableInfoMap &vsVariableInfoMap,
     size_t xfbBufferCount,
     vk::DescriptorSetLayoutDesc *descSetLayoutOut) const
 {
@@ -169,8 +171,11 @@ void TransformFeedbackVk::updateDescriptorSetLayout(
 
     for (uint32_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
-        descSetLayoutOut->update(kXfbBindingIndexStart + bufferIndex,
-                                 VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_VERTEX_BIT);
+        const std::string bufferName            = GetXfbBufferName(bufferIndex);
+        const ShaderInterfaceVariableInfo &info = vsVariableInfoMap[bufferName];
+
+        descSetLayoutOut->update(info.binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
+                                 VK_SHADER_STAGE_VERTEX_BIT);
     }
 }
 
@@ -296,12 +301,17 @@ void TransformFeedbackVk::writeDescriptorSet(ContextVk *contextVk,
                                              VkDescriptorBufferInfo *pBufferInfo,
                                              VkDescriptorSet descSet) const
 {
-    VkDevice device = contextVk->getDevice();
+    VkDevice device                   = contextVk->getDevice();
+    ProgramExecutableVk *executableVk = contextVk->getExecutable();
+    ShaderInterfaceVariableInfoMap variableInfoMap =
+        executableVk->getShaderInterfaceVariableInfoMap();
+    const std::string bufferName      = GetXfbBufferName(0);
+    ShaderInterfaceVariableInfo &info = variableInfoMap[bufferName];
 
     VkWriteDescriptorSet writeDescriptorInfo = {};
     writeDescriptorInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeDescriptorInfo.dstSet               = descSet;
-    writeDescriptorInfo.dstBinding           = kXfbBindingIndexStart;
+    writeDescriptorInfo.dstBinding           = info.binding;
     writeDescriptorInfo.dstArrayElement      = 0;
     writeDescriptorInfo.descriptorCount      = static_cast<uint32_t>(xfbBufferCount);
     writeDescriptorInfo.descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;

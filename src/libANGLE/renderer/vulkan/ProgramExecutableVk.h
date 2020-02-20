@@ -44,9 +44,13 @@ class ProgramExecutableVk
 
     void reset(ContextVk *contextVk);
 
+    void save(gl::BinaryOutputStream *stream);
+    std::unique_ptr<rx::LinkEvent> load(gl::BinaryInputStream *stream);
+
     void clearVariableInfoMap();
     ShaderInterfaceVariableInfoMap &getShaderInterfaceVariableInfoMap() { return mVariableInfoMap; }
 
+    const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
     angle::Result createPipelineLayout(const gl::Context *glContext,
                                        const gl::ProgramExecutable &glExecutable,
                                        const gl::ProgramState &programState);
@@ -68,19 +72,21 @@ class ProgramExecutableVk
     friend class ProgramVk;
     friend class ProgramPipelineVk;
 
-    void updateBindingOffsets(const gl::ProgramState &programState);
-    uint32_t getUniformBlockBindingsOffset() const { return 0; }
-    uint32_t getStorageBlockBindingsOffset() const { return mStorageBlockBindingsOffset; }
-    uint32_t getAtomicCounterBufferBindingsOffset() const
-    {
-        return mAtomicCounterBufferBindingsOffset;
-    }
-    uint32_t getImageBindingsOffset() const { return mImageBindingsOffset; }
-
     angle::Result allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex);
     angle::Result allocateDescriptorSetAndGetInfo(ContextVk *contextVk,
                                                   uint32_t descriptorSetIndex,
                                                   bool *newPoolAllocatedOut);
+    void addInterfaceBlockDescriptorSetDesc(const std::vector<gl::InterfaceBlock> &blocks,
+                                            VkDescriptorType descType,
+                                            vk::DescriptorSetLayoutDesc *descOut);
+    void addAtomicCounterBufferDescriptorSetDesc(
+        const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,
+        vk::DescriptorSetLayoutDesc *descOut);
+    void addImageDescriptorSetDesc(const gl::ProgramState &programState,
+                                   vk::DescriptorSetLayoutDesc *descOut);
+    void addTextureDescriptorSetDesc(const gl::ProgramState &programState,
+                                     bool useOldRewriteStructSamplers,
+                                     vk::DescriptorSetLayoutDesc *descOut);
 
     void updateDefaultUniformsDescriptorSet(
         const gl::ProgramState &programState,
@@ -100,13 +106,6 @@ class ProgramExecutableVk
     angle::Result updateImagesDescriptorSet(const gl::ProgramState &programState,
                                             ContextVk *contextVk);
 
-    // In their descriptor set, uniform buffers are placed first, then storage buffers, then atomic
-    // counter buffers and then images.  These cached values contain the offsets where storage
-    // buffer, atomic counter buffer and image bindings start.
-    uint32_t mStorageBlockBindingsOffset;
-    uint32_t mAtomicCounterBufferBindingsOffset;
-    uint32_t mImageBindingsOffset;
-
     // This is a special "empty" placeholder buffer for when a shader has no uniforms or doesn't
     // use all slots in the atomic counter buffer array.
     //
@@ -118,6 +117,7 @@ class ProgramExecutableVk
     std::vector<VkDescriptorSet> mDescriptorSets;
     vk::DescriptorSetLayoutArray<VkDescriptorSet> mEmptyDescriptorSets;
     std::vector<vk::BufferHelper *> mDescriptorBuffersCache;
+    size_t mNumDefaultUniformDescriptors;
 
     std::unordered_map<vk::TextureDescriptorDesc, VkDescriptorSet> mTextureDescriptorsCache;
 
@@ -137,6 +137,8 @@ class ProgramExecutableVk
 
     gl::ShaderVector<uint32_t> mDynamicBufferOffsets;
 
+    // TODO: http://anglebug.com/4524: Need a different hash key than a string,
+    // since that's slow to calculate.
     ShaderInterfaceVariableInfoMap mVariableInfoMap;
 };
 

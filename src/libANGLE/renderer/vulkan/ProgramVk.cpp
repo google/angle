@@ -303,6 +303,7 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
     reset(contextVk);
 
     mShaderInfo.load(stream);
+    mExecutable.load(stream);
 
     // Deserializes the uniformLayout data of mDefaultUniformBlocks
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -337,6 +338,7 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
 void ProgramVk::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 {
     mShaderInfo.save(stream);
+    mExecutable.save(stream);
 
     // Serializes the uniformLayout data of mDefaultUniformBlocks
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -378,6 +380,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     linkResources(resources);
 
     reset(contextVk);
+    mExecutable.clearVariableInfoMap();
 
     // Gather variable info and transform sources.
     gl::ShaderMap<std::string> shaderSources;

@@ -21,7 +21,10 @@ angle::Result ErrorHandler(vk::Context *context, GlslangError)
     return angle::Result::Stop;
 }
 
-GlslangSourceOptions CreateSourceOptions(const angle::FeaturesVk &features)
+}  // namespace
+
+// static
+GlslangSourceOptions GlslangWrapperVk::CreateSourceOptions(const angle::FeaturesVk &features)
 {
     GlslangSourceOptions options;
 
@@ -33,7 +36,6 @@ GlslangSourceOptions CreateSourceOptions(const angle::FeaturesVk &features)
 
     return options;
 }
-}  // namespace
 
 // static
 void GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(
@@ -41,12 +43,14 @@ void GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(
 {
     glslangProgramInterfaceInfo->uniformsAndXfbDescriptorSetIndex =
         kUniformsAndXfbDescriptorSetIndex;
-    glslangProgramInterfaceInfo->textureDescriptorSetIndex = kTextureDescriptorSetIndex;
+    glslangProgramInterfaceInfo->currentUniformBindingIndex = 0;
+    glslangProgramInterfaceInfo->textureDescriptorSetIndex  = kTextureDescriptorSetIndex;
+    glslangProgramInterfaceInfo->currentTextureBindingIndex = 0;
     glslangProgramInterfaceInfo->shaderResourceDescriptorSetIndex =
         kShaderResourceDescriptorSetIndex;
+    glslangProgramInterfaceInfo->currentShaderResourceBindingIndex = 0;
     glslangProgramInterfaceInfo->driverUniformsDescriptorSetIndex =
         kDriverUniformsDescriptorSetIndex;
-    glslangProgramInterfaceInfo->xfbBindingIndexStart = kXfbBindingIndexStart;
 
     glslangProgramInterfaceInfo->locationsUsedForXfbExtension = 0;
 }
@@ -59,8 +63,9 @@ void GlslangWrapperVk::GetShaderSource(const angle::FeaturesVk &features,
                                        gl::ShaderMap<std::string> *shaderSourcesOut,
                                        ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    GlslangGetShaderSource(CreateSourceOptions(features), programState, resources,
-                           programInterfaceInfo, shaderSourcesOut, variableInfoMapOut);
+    GlslangSourceOptions options = CreateSourceOptions(features);
+    GlslangGetShaderSource(options, programState, resources, programInterfaceInfo, shaderSourcesOut,
+                           variableInfoMapOut);
 }
 
 // static

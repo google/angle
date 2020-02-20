@@ -977,8 +977,6 @@ constexpr uint32_t kReservedDriverUniformBindingCount = 1;
 // supported.
 constexpr uint32_t kReservedPerStageDefaultUniformBindingCount = 1;
 constexpr uint32_t kReservedDefaultUniformBindingCount         = 3;
-// Binding index start for transform feedback buffers:
-constexpr uint32_t kXfbBindingIndexStart = kReservedDefaultUniformBindingCount;
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_
