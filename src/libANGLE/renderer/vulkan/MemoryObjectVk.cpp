@@ -55,10 +55,12 @@ angle::Result MemoryObjectVk::importFd(gl::Context *context,
                                        gl::HandleType handleType,
                                        GLint fd)
 {
+    ContextVk *contextVk = vk::GetImpl(context);
+
     switch (handleType)
     {
         case gl::HandleType::OpaqueFd:
-            return importOpaqueFd(context, size, fd);
+            return importOpaqueFd(contextVk, size, fd);
 
         default:
             UNREACHABLE();
@@ -66,7 +68,7 @@ angle::Result MemoryObjectVk::importFd(gl::Context *context,
     }
 }
 
-angle::Result MemoryObjectVk::importOpaqueFd(gl::Context *context, GLuint64 size, GLint fd)
+angle::Result MemoryObjectVk::importOpaqueFd(ContextVk *contextVk, GLuint64 size, GLint fd)
 {
     ASSERT(mFd == kInvalidFd);
     mFd   = fd;
@@ -74,7 +76,7 @@ angle::Result MemoryObjectVk::importOpaqueFd(gl::Context *context, GLuint64 size
     return angle::Result::Continue;
 }
 
-angle::Result MemoryObjectVk::createImage(const gl::Context *context,
+angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
                                           gl::TextureType type,
                                           size_t levels,
                                           GLenum internalFormat,
@@ -82,7 +84,6 @@ angle::Result MemoryObjectVk::createImage(const gl::Context *context,
                                           GLuint64 offset,
                                           vk::ImageHelper *image)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
     const vk::Format &vkFormat = renderer->getFormat(internalFormat);

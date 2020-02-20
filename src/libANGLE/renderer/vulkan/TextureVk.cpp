@@ -830,7 +830,7 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
     setImageHelper(contextVk, new vk::ImageHelper(), mState.getType(), format, 0, 0, 0, true);
 
     ANGLE_TRY(
-        memoryObjectVk->createImage(context, type, levels, internalFormat, size, offset, mImage));
+        memoryObjectVk->createImage(contextVk, type, levels, internalFormat, size, offset, mImage));
 
     gl::Format glFormat(internalFormat);
     ANGLE_TRY(initImageViews(contextVk, format, glFormat.info->sized, static_cast<uint32_t>(levels),

@@ -34,7 +34,7 @@ class SemaphoreVk : public SemaphoreImpl
                          const gl::TextureBarrierVector &textureBarriers) override;
 
   private:
-    angle::Result importOpaqueFd(gl::Context *context, GLint fd);
+    angle::Result importOpaqueFd(ContextVk *contextVk, GLint fd);
 
     vk::Semaphore mSemaphore;
 };

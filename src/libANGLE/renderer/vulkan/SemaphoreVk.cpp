@@ -65,13 +65,15 @@ void SemaphoreVk::onDestroy(const gl::Context *context)
 
 angle::Result SemaphoreVk::importFd(gl::Context *context, gl::HandleType handleType, GLint fd)
 {
+    ContextVk *contextVk = vk::GetImpl(context);
+
     switch (handleType)
     {
         case gl::HandleType::OpaqueFd:
-            return importOpaqueFd(context, fd);
+            return importOpaqueFd(contextVk, fd);
 
         default:
-            ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
+            ANGLE_VK_UNREACHABLE(contextVk);
             return angle::Result::Stop;
     }
 }
@@ -239,9 +241,8 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
     return contextVk->flushImpl(&mSemaphore);
 }
 
-angle::Result SemaphoreVk::importOpaqueFd(gl::Context *context, GLint fd)
+angle::Result SemaphoreVk::importOpaqueFd(ContextVk *contextVk, GLint fd)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
     if (!mSemaphore.valid())

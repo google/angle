@@ -28,7 +28,7 @@ class MemoryObjectVk : public MemoryObjectImpl
                            gl::HandleType handleType,
                            GLint fd) override;
 
-    angle::Result createImage(const gl::Context *context,
+    angle::Result createImage(ContextVk *contextVk,
                               gl::TextureType type,
                               size_t levels,
                               GLenum internalFormat,
@@ -37,7 +37,7 @@ class MemoryObjectVk : public MemoryObjectImpl
                               vk::ImageHelper *image);
 
   private:
-    angle::Result importOpaqueFd(gl::Context *context, GLuint64 size, GLint fd);
+    angle::Result importOpaqueFd(ContextVk *contextVk, GLuint64 size, GLint fd);
 
     GLuint64 mSize;
     int mFd;
