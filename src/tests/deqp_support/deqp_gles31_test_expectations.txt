@@ -131,9 +131,6 @@
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform.random.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform_block.referenced_by.* = FAIL
 
-// An NVIDIA bug seems to occur when sending GL commands in a certain order to the driver
-2432 NVIDIA OPENGL : dEQP-GLES31.functional.vertex_attribute_binding.usage.mixed_usage.mixed_api_change_binding_point = SKIP
-
 // OpenGL/D3D11 Failing Tests
 1442 OPENGL : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
