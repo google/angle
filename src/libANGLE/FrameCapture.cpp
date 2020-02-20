@@ -738,15 +738,27 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     header << "#include <limits>\n";
     header << "#include <unordered_map>\n";
     header << "\n";
-    header << "// Replay functions\n";
-    header << "\n";
-    header << "using ResourceMap = std::unordered_map<GLuint, GLuint>;\n";
-    header << "\n";
+
     if (!captureLabel.empty())
     {
         header << "namespace " << captureLabel << "\n";
         header << "{\n";
     }
+    header << "// Replay functions\n";
+    header << "\n";
+    header << "// Maps from <captured Program ID, captured location> to run-time location.\n";
+    header
+        << "using LocationsMap = std::unordered_map<GLuint, std::unordered_map<GLint, GLint>>;\n";
+    header << "extern LocationsMap gUniformLocations;\n";
+    header << "extern GLuint gCurrentProgram;\n";
+    header << "void UpdateUniformLocation(GLuint program, const char *name, GLint location);\n";
+    header << "void DeleteUniformLocations(GLuint program);\n";
+    header << "void UpdateCurrentProgram(GLuint program);\n";
+    header << "\n";
+    header << "// Maps from captured Resource ID to run-time Resource ID.\n";
+    header << "using ResourceMap = std::unordered_map<GLuint, GLuint>;\n";
+    header << "\n";
+    header << "\n";
     header << "constexpr uint32_t kReplayFrameStart = " << frameStart << ";\n";
     header << "constexpr uint32_t kReplayFrameEnd = " << frameEnd << ";\n";
     header << "\n";
@@ -768,6 +780,13 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
 
     source << "#include \"" << FmtCapturePrefix(contextId, captureLabel) << ".h\"\n";
     source << "\n";
+
+    if (!captureLabel.empty())
+    {
+        source << "namespace " << captureLabel << "\n";
+        source << "{\n";
+    }
+
     source << "namespace\n";
     source << "{\n";
     source << "void UpdateResourceMap(ResourceMap *resourceMap, GLuint id, GLsizei "
@@ -783,12 +802,22 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     source << "const char *gBinaryDataDir = \".\";\n";
     source << "}  // namespace\n";
     source << "\n";
-
-    if (!captureLabel.empty())
-    {
-        source << "namespace " << captureLabel << "\n";
-        source << "{\n";
-    }
+    source << "LocationsMap gUniformLocations;\n";
+    source << "GLuint gCurrentProgram = 0;\n";
+    source << "\n";
+    source << "void UpdateUniformLocation(GLuint program, const char *name, GLint location)\n";
+    source << "{\n";
+    source << "    gUniformLocations[program][location] = glGetUniformLocation(program, name);\n";
+    source << "}\n";
+    source << "void DeleteUniformLocations(GLuint program)\n";
+    source << "{\n";
+    source << "    gUniformLocations.erase(program);\n";
+    source << "}\n";
+    source << "void UpdateCurrentProgram(GLuint program)\n";
+    source << "{\n";
+    source << "    gCurrentProgram = program;\n";
+    source << "}\n";
+    source << "\n";
 
     source << "uint8_t *gBinaryData = nullptr;\n";
     source << "void* gMappedBufferData = nullptr;\n";
@@ -967,6 +996,56 @@ void CaptureUpdateResourceIDs(const CallCapture &call,
     }
 }
 
+void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallCapture> *callsOut)
+{
+    const std::vector<gl::LinkedUniform> &uniforms     = program->getState().getUniforms();
+    const std::vector<gl::VariableLocation> &locations = program->getUniformLocations();
+
+    for (GLint location = 0; location < static_cast<GLint>(locations.size()); ++location)
+    {
+        const gl::VariableLocation &locationVar = locations[location];
+        const gl::LinkedUniform &uniform        = uniforms[locationVar.index];
+
+        ParamBuffer params;
+        params.addValueParam("program", ParamType::TShaderProgramID, program->id());
+
+        std::string name = uniform.name;
+
+        if (uniform.isArray())
+        {
+            if (locationVar.arrayIndex > 0)
+            {
+                // Non-sequential array uniform locations are not currently handled.
+                // In practice array locations shouldn't ever be non-sequential.
+                ASSERT(uniform.location == -1 ||
+                       location == uniform.location + static_cast<int>(locationVar.arrayIndex));
+                continue;
+            }
+
+            if (uniform.isArrayOfArrays())
+            {
+                UNIMPLEMENTED();
+            }
+
+            name = gl::StripLastArrayIndex(name);
+        }
+
+        ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
+        CaptureString(name.c_str(), &nameParam);
+        params.addParam(std::move(nameParam));
+
+        params.addValueParam("location", ParamType::TGLint, location);
+        callsOut->emplace_back("UpdateUniformLocation", std::move(params));
+    }
+}
+
+void CaptureDeleteUniformLocations(gl::ShaderProgramID program, std::vector<CallCapture> *callsOut)
+{
+    ParamBuffer params;
+    params.addValueParam("program", ParamType::TShaderProgramID, program);
+    callsOut->emplace_back("DeleteUniformLocations", std::move(params));
+}
+
 void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
 {
     const CallCapture &call = callsOut->back();
@@ -1074,6 +1153,18 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
         default:
             break;
     }
+}
+
+void CaptureUpdateCurrentProgram(const CallCapture &call, std::vector<CallCapture> *callsOut)
+{
+    const ParamCapture &param =
+        call.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
+    gl::ShaderProgramID programID = param.value.ShaderProgramIDVal;
+
+    ParamBuffer paramBuffer;
+    paramBuffer.addValueParam("program", ParamType::TShaderProgramID, programID);
+
+    callsOut->emplace_back("UpdateCurrentProgram", std::move(paramBuffer));
 }
 
 bool IsDefaultCurrentValue(const gl::VertexAttribCurrentValueData &currentValue)
@@ -1598,8 +1689,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     gl::ShaderProgramID tempShaderID = {1};
     for (const auto &programIter : programs)
     {
-        gl::ShaderProgramID id = {programIter.first};
-        gl::Program *program   = programIter.second;
+        gl::ShaderProgramID id     = {programIter.first};
+        const gl::Program *program = programIter.second;
 
         // Get last compiled shader source.
         const auto &foundSources = cachedProgramSources.find(id);
@@ -1629,6 +1720,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         }
 
         cap(CaptureLinkProgram(replayState, true, id));
+        CaptureUpdateUniformLocations(program, setupCalls);
     }
 
     // Handle shaders.
@@ -1671,6 +1763,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     if (apiState.getProgram())
     {
         cap(CaptureUseProgram(replayState, true, apiState.getProgram()->id()));
+        CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
     }
 
     // TODO(http://anglebug.com/3662): ES 3.x objects.
@@ -2374,8 +2467,39 @@ void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
     mReadBufferSize = std::max(mReadBufferSize, call.params.getReadBufferSize());
     mFrameCalls.emplace_back(std::move(call));
 
+    maybeCapturePostCallUpdates(context);
+}
+
+void FrameCapture::maybeCapturePostCallUpdates(const gl::Context *context)
+{
     // Process resource ID updates.
     MaybeCaptureUpdateResourceIDs(&mFrameCalls);
+
+    const CallCapture &lastCall = mFrameCalls.back();
+    switch (lastCall.entryPoint)
+    {
+        case gl::EntryPoint::LinkProgram:
+        {
+            const ParamCapture &param =
+                lastCall.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
+            const gl::Program *program =
+                context->getProgramResolveLink(param.value.ShaderProgramIDVal);
+            CaptureUpdateUniformLocations(program, &mFrameCalls);
+            break;
+        }
+        case gl::EntryPoint::UseProgram:
+            CaptureUpdateCurrentProgram(lastCall, &mFrameCalls);
+            break;
+        case gl::EntryPoint::DeleteProgram:
+        {
+            const ParamCapture &param =
+                lastCall.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
+            CaptureDeleteUniformLocations(param.value.ShaderProgramIDVal, &mFrameCalls);
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
@@ -2783,12 +2907,44 @@ void WriteParamValueReplay<ParamType::TVertexArrayID>(std::ostream &os,
     os << "gVertexArrayMap[" << value.value << "]";
 }
 
+bool FindShaderProgramIDInCall(const CallCapture &call, gl::ShaderProgramID *idOut)
+{
+    for (const ParamCapture &param : call.params.getParamCaptures())
+    {
+        if (param.type == ParamType::TShaderProgramID && param.name == "programPacked")
+        {
+            *idOut = param.value.ShaderProgramIDVal;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 template <>
 void WriteParamValueReplay<ParamType::TUniformLocation>(std::ostream &os,
                                                         const CallCapture &call,
                                                         gl::UniformLocation value)
 {
-    // TODO(jmadill): Uniform locations map. http://anglebug.com/4411
-    os << value.value;
+    if (value.value == -1)
+    {
+        os << "-1";
+        return;
+    }
+
+    os << "gUniformLocations[";
+
+    // Find the program from the call parameters.
+    gl::ShaderProgramID programID;
+    if (FindShaderProgramIDInCall(call, &programID))
+    {
+        os << "gShaderProgramMap[" << programID.value << "]";
+    }
+    else
+    {
+        os << "gCurrentProgram";
+    }
+
+    os << "][" << value.value << "]";
 }
 }  // namespace angle

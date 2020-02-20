@@ -208,6 +208,7 @@ class FrameCapture final : angle::NonCopyable
 
     void reset();
     void maybeCaptureClientData(const gl::Context *context, const CallCapture &call);
+    void maybeCapturePostCallUpdates(const gl::Context *context);
 
     static void ReplayCall(gl::Context *context,
                            ReplayContext *replayContext,
