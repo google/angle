@@ -807,9 +807,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     }
     for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
     {
-        if (!hasResourceType[resourceType])
-            continue;
-
+        // TODO: Only emit resources needed by the frames (anglebug.com/4223)
         const char *name = GetResourceIDTypeName(resourceType);
         header << "extern ResourceMap g" << name << "Map;\n";
         source << "ResourceMap g" << name << "Map;\n";
@@ -875,8 +873,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
 
     for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
     {
-        if (!hasResourceType[resourceType])
-            continue;
+        // TODO: Only emit resources needed by the frames (anglebug.com/4223)
         const char *name = GetResourceIDTypeName(resourceType);
         header << "void Update" << name << "ID(GLuint id, GLsizei readBufferOffset);\n";
 
