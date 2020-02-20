@@ -26,7 +26,6 @@ constexpr std::pair<const char *, WidgetId> kWidgetNames[] = {
     {"FPS", WidgetId::FPS},
     {"VulkanLastValidationMessage", WidgetId::VulkanLastValidationMessage},
     {"VulkanValidationMessageCount", WidgetId::VulkanValidationMessageCount},
-    {"VulkanCommandGraphSize", WidgetId::VulkanCommandGraphSize},
     {"VulkanRenderPassCount", WidgetId::VulkanRenderPassCount},
     {"VulkanSecondaryCommandBufferPoolWaste", WidgetId::VulkanSecondaryCommandBufferPoolWaste},
 };

@@ -1487,9 +1487,6 @@ angle::Result WindowSurfaceVk::updateAndDrawOverlay(ContextVk *contextVk,
         image->imageViews.getLevelLayerDrawImageView(contextVk, image->image, 0, 0, &imageView));
     ANGLE_TRY(overlayVk->onPresent(contextVk, &image->image, imageView));
 
-    // TODO(jmadill): Remove this. http://anglebug.com/4029
-    overlay->getRunningGraphWidget(gl::WidgetId::VulkanCommandGraphSize)->next();
-
     return angle::Result::Continue;
 }
 

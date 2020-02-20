@@ -179,6 +179,8 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
     if (mFramebuffer != nullptr)
     {
         ASSERT(mFramebuffer->valid());
+        mFramebuffer->onResourceAccess(&contextVk->getResourceUseList());
+
         if (contextVk->hasStartedRenderPass() &&
             area.encloses(contextVk->getStartedRenderPassCommands().getRenderArea()))
         {

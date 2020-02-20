@@ -423,8 +423,6 @@ constexpr angle::PackedEnumMap<WidgetId, AppendWidgetDataFunc> kWidgetIdToAppend
      overlay_impl::AppendWidgetDataHelper::AppendVulkanLastValidationMessage},
     {WidgetId::VulkanValidationMessageCount,
      overlay_impl::AppendWidgetDataHelper::AppendVulkanValidationMessageCount},
-    {WidgetId::VulkanCommandGraphSize,
-     overlay_impl::AppendWidgetDataHelper::AppendVulkanCommandGraphSize},
     {WidgetId::VulkanRenderPassCount,
      overlay_impl::AppendWidgetDataHelper::AppendVulkanRenderPassCount},
     {WidgetId::VulkanSecondaryCommandBufferPoolWaste,
