@@ -61,7 +61,7 @@
 
 // Image related failures
 
-4312 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-sync-imageAccess = SKIP
+4413 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-sync-imageAccess = SKIP
 4315 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-memory-order-vsfs = FAIL
 
 // Unimplemented glValidateCreateShaderProgramv:
@@ -75,6 +75,10 @@
 
 // Swiftshader uses "old" sampler rewrite that doesn't support array of arrays
 4071 SWIFTSHADER : KHR-GLES31.core.arrays_of_arrays.* = SKIP
+
+// Failing on SwiftShader
+4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-cs = FAIL
+4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-fs = FAIL
 
 ////
 //// General Vulkan expectations
@@ -156,10 +160,6 @@
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-bvec4 = FAIL
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-ivec4 = FAIL
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-uvec4 = FAIL
-
-// Failing on Android with SwiftShader
-4312 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_image_load_store.advanced-allMips-cs = FAIL
-4312 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_image_load_store.advanced-allMips-fs = FAIL
 
 // Crashing on Android with SwiftShader
 4108 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_image_size.basic-nonMS* = SKIP
