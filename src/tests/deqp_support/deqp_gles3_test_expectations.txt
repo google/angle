@@ -607,3 +607,11 @@
 4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_value.render.nested_structs_arrays.sampler2D_samplerCube_vertex = FAIL
 4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_value.render.struct_in_array.sampler2D_samplerCube_both = FAIL
 4045 SWIFTSHADER : dEQP-GLES3.functional.uniform_api.value.assigned.by_value.render.struct_in_array.sampler2D_samplerCube_fragment = FAIL
+
+// Fails on SwANGLE bots
+4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.r11f_g11f_b10f_to_r16f = FAIL
+4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.r11f_g11f_b10f_to_rg16f = FAIL
+4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.r11f_g11f_b10f_to_rgba16f = FAIL
+4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.r16f_to_r11f_g11f_b10f = FAIL
+4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.rg16f_to_r11f_g11f_b10f = FAIL
+4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.rgba16f_to_r11f_g11f_b10f = FAIL
