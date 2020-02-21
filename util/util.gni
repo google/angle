@@ -3,10 +3,19 @@
 # found in the LICENSE file.
 
 util_sources = [
+  "util/EGLPlatformParameters.h",
+  "util/EGLWindow.cpp",
+  "util/EGLWindow.h",
+  "util/Event.h",
+  "util/Matrix.cpp",
+  "util/Matrix.h",
+  "util/OSPixmap.h",
+  "util/OSWindow.cpp",
+  "util/OSWindow.h",
   "util/com_utils.h",
-  "util/keyboard.h",
   "util/geometry_utils.cpp",
   "util/geometry_utils.h",
+  "util/keyboard.h",
   "util/mouse.h",
   "util/random_utils.cpp",
   "util/random_utils.h",
@@ -14,15 +23,6 @@ util_sources = [
   "util/shader_utils.h",
   "util/util_export.h",
   "util/util_gl.h",
-  "util/Event.h",
-  "util/EGLPlatformParameters.h",
-  "util/EGLWindow.cpp",
-  "util/EGLWindow.h",
-  "util/Matrix.cpp",
-  "util/Matrix.h",
-  "util/OSPixmap.h",
-  "util/OSWindow.cpp",
-  "util/OSWindow.h",
 ]
 
 if (is_win) {
@@ -57,10 +57,10 @@ util_ozone_sources = [
 ]
 
 util_osx_sources = [
-  "util/osx/OSXPixmap.mm",
   "util/osx/OSXPixmap.h",
-  "util/osx/OSXWindow.mm",
+  "util/osx/OSXPixmap.mm",
   "util/osx/OSXWindow.h",
+  "util/osx/OSXWindow.mm",
 ]
 
 util_android_sources = [

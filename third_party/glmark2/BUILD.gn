@@ -73,9 +73,7 @@ group("glmark2_gles") {
     ":glmark2_common_config",
     ":glmark2_gles_config",
   ]
-  public_deps = [
-    ":glmark2_glad_gles",
-  ]
+  public_deps = [ ":glmark2_glad_gles" ]
 }
 
 group("glmark2_gl") {
@@ -83,9 +81,7 @@ group("glmark2_gl") {
     ":glmark2_common_config",
     ":glmark2_gl_config",
   ]
-  public_deps = [
-    ":glmark2_glad_gl",
-  ]
+  public_deps = [ ":glmark2_glad_gl" ]
 }
 
 # Supplies compatible headers on Win32.
@@ -156,23 +152,17 @@ template("glmark2_libmatrix") {
     if (is_clang) {
       cflags_cc = [ "-Wno-implicit-fallthrough" ]
     }
-    public_deps = [
-      ":glmark2_headers",
-    ]
+    public_deps = [ ":glmark2_headers" ]
     public_configs = [ ":glmark2_libmatrix_config" ]
   }
 }
 
 glmark2_libmatrix("glmark2_libmatrix_gles") {
-  deps = [
-    ":glmark2_gles",
-  ]
+  deps = [ ":glmark2_gles" ]
 }
 
 glmark2_libmatrix("glmark2_libmatrix_gl") {
-  deps = [
-    ":glmark2_gl",
-  ]
+  deps = [ ":glmark2_gl" ]
 }
 
 config("glmark2_scene_ideas_config") {
@@ -345,9 +335,7 @@ template("glmark2_exe") {
       "src/src/canvas-generic.h",
       "src/src/main.cpp",
     ]
-    data = [
-      "src/data/",
-    ]
+    data = [ "src/data/" ]
 
     defines += [ "GLMARK_VERSION=\"${glmark2_version}\"" ]
 
@@ -370,12 +358,8 @@ template("glmark2_exe") {
 }
 
 glmark2_exe("glmark2_angle") {
-  sources = [
-    "src/src/gl-state-egl.cpp",
-  ]
-  deps = [
-    ":glmark2_common_gles",
-  ]
+  sources = [ "src/src/gl-state-egl.cpp" ]
+  deps = [ ":glmark2_common_gles" ]
   data_deps = [
     "${angle_root}:libEGL",
     "${angle_root}:libGLESv2",
@@ -399,9 +383,7 @@ if (is_linux) {
       "src/src/glad/include/glad/glx.h",
       "src/src/glad/src/glx.c",
     ]
-    deps = [
-      ":glmark2_common_gl",
-    ]
+    deps = [ ":glmark2_common_gl" ]
 
     defines = [ "GLMARK2_USE_GLX" ]
   }
@@ -410,12 +392,8 @@ if (is_linux) {
 # opengl32.lib/opengl32.dll are not available on Windows ARM64.
 if (is_win && target_cpu != "arm64") {
   glmark2_exe("glmark2_wgl") {
-    sources = [
-      "src/src/gl-state-wgl.cpp",
-    ]
-    deps = [
-      ":glmark2_common_gl",
-    ]
+    sources = [ "src/src/gl-state-wgl.cpp" ]
+    deps = [ ":glmark2_common_gl" ]
 
     libs = [ "opengl32.lib" ]
     defines = [ "GLMARK2_USE_WGL" ]

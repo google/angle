@@ -24,9 +24,7 @@ angle_test("test_utils_unittest_helper") {
     "test_utils/runner/TestSuite_unittest.cpp",
   ]
 
-  deps = [
-    "$angle_root:angle_common",
-  ]
+  deps = [ "$angle_root:angle_common" ]
 }
 
 test_expectations_sources = [
@@ -81,9 +79,7 @@ angle_test("angle_unittests") {
   if (!is_android && !is_fuchsia) {
     # SystemUtils.RunApp, the only unittest using a helper binary, is not supported on these
     # platforms yet.
-    data_deps = [
-      ":test_utils_unittest_helper",
-    ]
+    data_deps = [ ":test_utils_unittest_helper" ]
   }
 }
 
@@ -477,9 +473,7 @@ if (build_angle_gles1_conform_tests) {
   }
 
   angle_test("angle_gles1_conformance_tests") {
-    deps = [
-      ":angle_gles1_conformance_no_gtest",
-    ]
+    deps = [ ":angle_gles1_conformance_no_gtest" ]
 
     include_dirs = [ "." ]
 
@@ -543,7 +537,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "/wd4701",  # potentially uninit used
         "/wd4702",  # unreachable code
         "/wd4706",  # assignment within conditional expression
-        "/wd4834",  # discarding return value of function with 'nodiscard' attribute
+        "/wd4834",  # discarding return value of function with 'nodiscard'
+                    # attribute
         "/wd4838",  # conversion requires a narrowing conversion
         "/wd4996",  # deprecated
       ]
@@ -571,10 +566,12 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       cflags_c = [ "-Wno-unused-local-typedef" ]
       cflags_cc = [
         "-Wno-sizeof-array-div",  # https://gitlab.khronos.org/Tracker/vk-gl-cts/issues/2127
-        "-Wno-string-conversion",  # implicit conversion turns string literal into bool
+        "-Wno-string-conversion",  # implicit conversion turns string literal
+                                   # into bool
         "-Wno-unused-function",
         "-Wno-unused-local-typedef",
-        "-Wno-unused-result",  # ignoring return value of function declared with 'nodiscard' attribute
+        "-Wno-unused-result",  # ignoring return value of function declared with
+                               # 'nodiscard' attribute
       ]
     }
 
@@ -704,9 +701,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ":angle_deqp_support",
     ]
 
-    public_deps = [
-      ":angle_deqp_framework_debase",
-    ]
+    public_deps = [ ":angle_deqp_framework_debase" ]
   }
 
   config("angle_deqp_framework_common_config") {
@@ -737,9 +732,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   angle_deqp_source_set("angle_deqp_framework_opengl") {
     sources = deqp_framework_opengl_sources
     public_configs = [ ":angle_deqp_framework_opengl_config" ]
-    public_deps = [
-      ":angle_deqp_framework_common",
-    ]
+    public_deps = [ ":angle_deqp_framework_common" ]
   }
 
   config("angle_deqp_framework_egl_config") {
@@ -752,9 +745,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   angle_deqp_source_set("angle_deqp_framework_egl") {
     sources = deqp_framework_egl_sources
     public_configs = [ ":angle_deqp_framework_egl_config" ]
-    public_deps = [
-      ":angle_deqp_framework_opengl",
-    ]
+    public_deps = [ ":angle_deqp_framework_opengl" ]
   }
 
   config("angle_deqp_framework_qphelper_config") {
@@ -776,9 +767,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
   angle_deqp_source_set("angle_deqp_glshared") {
     sources = deqp_glshared_sources
-    public_deps = [
-      ":angle_deqp_framework_opengl",
-    ]
+    public_deps = [ ":angle_deqp_framework_opengl" ]
     public_configs = [ ":angle_deqp_glshared_config" ]
   }
 
@@ -855,12 +844,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     if (!build_with_chromium) {
       angle_executable("angle_deqp_${_api}_no_gtest") {
         testonly = true
-        sources = [
-          "deqp_support/angle_deqp_tests_main.cpp",
-        ]
-        deps = [
-          ":$shared_library_name",
-        ]
+        sources = [ "deqp_support/angle_deqp_tests_main.cpp" ]
+        deps = [ ":$shared_library_name" ]
       }
     }
 
@@ -873,9 +858,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ]
 
       # Must be included outside of the source set for the define
-      sources = [
-        "deqp_support/angle_deqp_gtest.cpp",
-      ]
+      sources = [ "deqp_support/angle_deqp_gtest.cpp" ]
       main = "angle_deqp_tests_main"
 
       data = [
@@ -909,9 +892,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         data = angle_deqp_data_gles31
       } else {
         # Make sure we include something so that angle_deqp_libtester_main.cpp can find something.
-        data = [
-          "$root_gen_dir/vk_gl_cts_data/data/gles2/shaders/misc.test",
-        ]
+        data = [ "$root_gen_dir/vk_gl_cts_data/data/gles2/shaders/misc.test" ]
       }
     }
   }
@@ -953,7 +934,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       "$deqp_path/external/openglcts/modules/glesext",
     ]
     if (is_clang) {
-      cflags = [ "-Wno-header-hygiene" ]  # using namespace directive in global context in header
+      cflags = [ "-Wno-header-hygiene" ]  # using namespace directive in global
+                                          # context in header
     }
   }
 
@@ -978,9 +960,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   template("angle_deqp_khr_gtest") {
     angle_deqp_gtest(target_name) {
       forward_variables_from(invoker, "*")
-      deps = [
-        ":angle_deqp_khr_common",
-      ]
+      deps = [ ":angle_deqp_khr_common" ]
       deps += angle_deqp_data_copy_targets
       data = angle_deqp_external_openglcts_data_gles3
       mustpass_dir = _khronos_mustpass

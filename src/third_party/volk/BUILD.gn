@@ -27,7 +27,5 @@ source_set("volk") {
     ":volk_config",
     ":volk_internal_config",
   ]
-  public_deps = [
-    "../../../third_party/vulkan-headers/src:vulkan_headers",
-  ]
+  public_deps = [ "../../../third_party/vulkan-headers/src:vulkan_headers" ]
 }
