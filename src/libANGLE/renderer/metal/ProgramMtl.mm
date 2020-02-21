@@ -312,7 +312,7 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
 
     // Gather variable info and transform sources.
     gl::ShaderMap<std::string> shaderSources;
-    ShaderInterfaceVariableInfoMap variableInfoMap;
+    ShaderMapInterfaceVariableInfoMap variableInfoMap;
     mtl::GlslangGetShaderSource(mState, resources, &shaderSources, &variableInfoMap);
 
     // Convert GLSL to spirv code

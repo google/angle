@@ -303,10 +303,10 @@ void TransformFeedbackVk::writeDescriptorSet(ContextVk *contextVk,
 {
     VkDevice device                   = contextVk->getDevice();
     ProgramExecutableVk *executableVk = contextVk->getExecutable();
-    ShaderInterfaceVariableInfoMap variableInfoMap =
+    ShaderMapInterfaceVariableInfoMap variableInfoMap =
         executableVk->getShaderInterfaceVariableInfoMap();
     const std::string bufferName      = GetXfbBufferName(0);
-    ShaderInterfaceVariableInfo &info = variableInfoMap[bufferName];
+    ShaderInterfaceVariableInfo &info = variableInfoMap[gl::ShaderType::Vertex][bufferName];
 
     VkWriteDescriptorSet writeDescriptorInfo = {};
     writeDescriptorInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

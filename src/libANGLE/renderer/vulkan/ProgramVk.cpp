@@ -168,7 +168,7 @@ ProgramVk::ShaderInfo::~ShaderInfo() = default;
 angle::Result ProgramVk::ShaderInfo::initShaders(
     ContextVk *contextVk,
     const gl::ShaderMap<std::string> &shaderSources,
-    const ShaderInterfaceVariableInfoMap &variableInfoMap)
+    const ShaderMapInterfaceVariableInfoMap &variableInfoMap)
 {
     ASSERT(!valid());
 

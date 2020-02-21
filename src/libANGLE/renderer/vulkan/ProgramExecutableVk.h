@@ -48,7 +48,10 @@ class ProgramExecutableVk
     std::unique_ptr<rx::LinkEvent> load(gl::BinaryInputStream *stream);
 
     void clearVariableInfoMap();
-    ShaderInterfaceVariableInfoMap &getShaderInterfaceVariableInfoMap() { return mVariableInfoMap; }
+    ShaderMapInterfaceVariableInfoMap &getShaderInterfaceVariableInfoMap()
+    {
+        return mVariableInfoMap;
+    }
 
     const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
     angle::Result createPipelineLayout(const gl::Context *glContext,
@@ -77,10 +80,12 @@ class ProgramExecutableVk
                                                   uint32_t descriptorSetIndex,
                                                   bool *newPoolAllocatedOut);
     void addInterfaceBlockDescriptorSetDesc(const std::vector<gl::InterfaceBlock> &blocks,
+                                            const gl::ShaderType shaderType,
                                             VkDescriptorType descType,
                                             vk::DescriptorSetLayoutDesc *descOut);
     void addAtomicCounterBufferDescriptorSetDesc(
         const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,
+        const gl::ShaderType shaderType,
         vk::DescriptorSetLayoutDesc *descOut);
     void addImageDescriptorSetDesc(const gl::ProgramState &programState,
                                    vk::DescriptorSetLayoutDesc *descOut);
@@ -95,15 +100,18 @@ class ProgramExecutableVk
     void updateTransformFeedbackDescriptorSetImpl(const gl::ProgramState &programState,
                                                   ContextVk *contextVk);
     void updateBuffersDescriptorSet(ContextVk *contextVk,
+                                    const gl::ShaderType shaderType,
                                     vk::ResourceUseList *resourceUseList,
                                     CommandBufferHelper *commandBufferHelper,
                                     const std::vector<gl::InterfaceBlock> &blocks,
                                     VkDescriptorType descriptorType);
     void updateAtomicCounterBuffersDescriptorSet(const gl::ProgramState &programState,
+                                                 const gl::ShaderType shaderType,
                                                  ContextVk *contextVk,
                                                  vk::ResourceUseList *resourceUseList,
                                                  CommandBufferHelper *commandBufferHelper);
     angle::Result updateImagesDescriptorSet(const gl::ProgramState &programState,
+                                            const gl::ShaderType shaderType,
                                             ContextVk *contextVk);
 
     // This is a special "empty" placeholder buffer for when a shader has no uniforms or doesn't
@@ -139,7 +147,7 @@ class ProgramExecutableVk
 
     // TODO: http://anglebug.com/4524: Need a different hash key than a string,
     // since that's slow to calculate.
-    ShaderInterfaceVariableInfoMap mVariableInfoMap;
+    ShaderMapInterfaceVariableInfoMap mVariableInfoMap;
 };
 
 }  // namespace rx
