@@ -63,6 +63,10 @@ void QueryTexParameterfv(const Context *context,
                          const Texture *texture,
                          GLenum pname,
                          GLfloat *params);
+void QueryTexParameterxv(const Context *context,
+                         const Texture *texture,
+                         GLenum pname,
+                         GLfixed *params);
 void QueryTexParameteriv(const Context *context,
                          const Texture *texture,
                          GLenum pname,
