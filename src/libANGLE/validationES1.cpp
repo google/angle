@@ -1123,7 +1123,10 @@ bool ValidateOrthof(const Context *context,
                     GLfloat f)
 {
     ANGLE_VALIDATE_IS_GLES1(context);
-    if (l == r || b == t || n == f || n <= 0.0f || f <= 0.0f)
+    // [OpenGL ES 1.1.12] section 2.10.2 page 31:
+    // If l is equal to r, b is equal to t, or n is equal to f, the
+    // error INVALID VALUE results.
+    if (l == r || b == t || n == f)
     {
         context->validationError(GL_INVALID_VALUE, kInvalidProjectionMatrix);
     }
@@ -1139,7 +1142,7 @@ bool ValidateOrthox(const Context *context,
                     GLfixed f)
 {
     ANGLE_VALIDATE_IS_GLES1(context);
-    if (l == r || b == t || n == f || n <= 0 || f <= 0)
+    if (l == r || b == t || n == f)
     {
         context->validationError(GL_INVALID_VALUE, kInvalidProjectionMatrix);
     }
