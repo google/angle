@@ -20,6 +20,50 @@
 namespace rx
 {
 
+class ShaderInfo final : angle::NonCopyable
+{
+  public:
+    ShaderInfo();
+    ~ShaderInfo();
+
+    angle::Result initShaders(ContextVk *contextVk,
+                              const gl::ShaderMap<std::string> &shaderSources,
+                              const ShaderMapInterfaceVariableInfoMap &variableInfoMap);
+    void release(ContextVk *contextVk);
+
+    ANGLE_INLINE bool valid() const { return mIsInitialized; }
+
+    const gl::ShaderMap<SpirvBlob> &getSpirvBlobs() const { return mSpirvBlobs; }
+
+    // Save and load implementation for GLES Program Binary support.
+    void load(gl::BinaryInputStream *stream);
+    void save(gl::BinaryOutputStream *stream);
+
+  private:
+    gl::ShaderMap<SpirvBlob> mSpirvBlobs;
+    bool mIsInitialized = false;
+};
+
+class ProgramInfo final : angle::NonCopyable
+{
+  public:
+    ProgramInfo();
+    ~ProgramInfo();
+
+    angle::Result initProgram(ContextVk *contextVk,
+                              const ShaderInfo &shaderInfo,
+                              bool enableLineRasterEmulation);
+    void release(ContextVk *contextVk);
+
+    ANGLE_INLINE bool valid() const { return mProgramHelper.valid(); }
+
+    vk::ShaderProgramHelper *getShaderProgram() { return &mProgramHelper; }
+
+  private:
+    vk::ShaderProgramHelper mProgramHelper;
+    gl::ShaderMap<vk::RefCounted<vk::ShaderAndSerial>> mShaders;
+};
+
 // State for the default uniform blocks.
 struct DefaultUniformBlock final : private angle::NonCopyable
 {
@@ -148,6 +192,9 @@ class ProgramExecutableVk
     // TODO: http://anglebug.com/4524: Need a different hash key than a string,
     // since that's slow to calculate.
     ShaderMapInterfaceVariableInfoMap mVariableInfoMap;
+
+    ProgramInfo mDefaultProgramInfo;
+    ProgramInfo mLineRasterProgramInfo;
 };
 
 }  // namespace rx
