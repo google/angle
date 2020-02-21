@@ -80,4 +80,17 @@ angle::Result GlslangWrapperVk::GetShaderCode(
         [context](GlslangError error) { return ErrorHandler(context, error); }, glCaps,
         shaderSources, variableInfoMap, shaderCodeOut);
 }
+
+// static
+angle::Result GlslangWrapperVk::TransformSpirV(
+    vk::Context *context,
+    const gl::ShaderType shaderType,
+    const ShaderInterfaceVariableInfoMap &variableInfoMap,
+    std::vector<uint32_t> &initialSpirvBlob,
+    std::vector<uint32_t> *shaderCodeOut)
+{
+    return TransformSpirvCode(
+        [context](GlslangError error) { return ErrorHandler(context, error); }, shaderType,
+        variableInfoMap, initialSpirvBlob, shaderCodeOut);
+}
 }  // namespace rx
