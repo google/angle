@@ -111,7 +111,7 @@ class ProgramVk : public ProgramImpl
     angle::Result updateShaderResourcesDescriptorSet(ContextVk *contextVk,
                                                      vk::ResourceUseList *resourceUseList,
                                                      CommandBufferHelper *commandBufferHelper,
-                                                     vk::CommandGraphResource *recorder);
+                                                     vk::Resource *recorder);
     angle::Result updateTransformFeedbackDescriptorSet(ContextVk *contextVk,
                                                        vk::FramebufferHelper *framebuffer);
 
@@ -192,15 +192,14 @@ class ProgramVk : public ProgramImpl
     void updateBuffersDescriptorSet(ContextVk *contextVk,
                                     vk::ResourceUseList *resourceUseList,
                                     CommandBufferHelper *commandBufferHelper,
-                                    vk::CommandGraphResource *recorder,
+                                    vk::Resource *recorder,
                                     const std::vector<gl::InterfaceBlock> &blocks,
                                     VkDescriptorType descriptorType);
     void updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
                                                  vk::ResourceUseList *resourceUseList,
                                                  CommandBufferHelper *commandBufferHelper,
-                                                 vk::CommandGraphResource *recorder);
-    angle::Result updateImagesDescriptorSet(ContextVk *contextVk,
-                                            vk::CommandGraphResource *recorder);
+                                                 vk::Resource *recorder);
+    angle::Result updateImagesDescriptorSet(ContextVk *contextVk, vk::Resource *recorder);
 
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;

@@ -258,13 +258,13 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
     {
         // If there are pending commands for the buffer, flush them.
-        if (mBuffer.hasRecordedCommands())
+        if (mBuffer.usedInRecordedCommands())
         {
             ANGLE_TRY(contextVk->flushImpl(nullptr));
         }
 
         // Make sure the driver is done with the buffer.
-        if (mBuffer.hasRunningCommands(contextVk->getLastCompletedQueueSerial()))
+        if (mBuffer.usedInRunningCommands(contextVk->getLastCompletedQueueSerial()))
         {
             ANGLE_TRY(mBuffer.finishRunningCommands(contextVk));
         }
@@ -366,7 +366,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         VkBufferCopy copyRegion = {stagingBufferOffset, offset, size};
         ANGLE_TRY(mBuffer.copyFromBuffer(contextVk, mStagingBuffer.getCurrentBuffer()->getBuffer(),
                                          VK_ACCESS_HOST_WRITE_BIT, copyRegion));
-        mStagingBuffer.getCurrentBuffer()->onResourceAccess(&contextVk->getResourceUseList());
+        mStagingBuffer.getCurrentBuffer()->retain(&contextVk->getResourceUseList());
     }
     else
     {

@@ -9,8 +9,8 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
 
-#include "libANGLE/renderer/vulkan/CommandGraph.h"
-#include "libANGLE/renderer/vulkan/vk_utils.h"
+#include "libANGLE/renderer/vulkan/ResourceVk.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
 namespace gl
 {
@@ -458,7 +458,7 @@ class LineLoopHelper final : angle::NonCopyable
 
 class FramebufferHelper;
 
-class BufferHelper final : public CommandGraphResource
+class BufferHelper final : public Resource
 {
   public:
     BufferHelper();
@@ -621,7 +621,7 @@ enum class ImageLayout
     EnumCount   = 13,
 };
 
-class ImageHelper final : public CommandGraphResource
+class ImageHelper final : public Resource
 {
   public:
     ImageHelper();
@@ -1063,7 +1063,7 @@ class ImageViewHelper : angle::NonCopyable
     bool hasFetchImageView() const { return mFetchImageView.valid(); }
 
     // Store reference to usage in graph.
-    void onResourceAccess(ResourceUseList *resourceUseList) const { resourceUseList->add(mUse); }
+    void retain(ResourceUseList *resourceUseList) const { resourceUseList->add(mUse); }
 
     // Creates views with multiple layers and levels.
     angle::Result initReadViews(ContextVk *contextVk,
@@ -1118,14 +1118,14 @@ class SamplerHelper final : angle::NonCopyable
     Sampler &get() { return mSampler; }
     const Sampler &get() const { return mSampler; }
 
-    void onResourceAccess(ResourceUseList *resourceUseList) { resourceUseList->add(mUse); }
+    void retain(ResourceUseList *resourceUseList) { resourceUseList->add(mUse); }
 
   private:
     SharedResourceUse mUse;
     Sampler mSampler;
 };
 
-class FramebufferHelper : public CommandGraphResource
+class FramebufferHelper : public Resource
 {
   public:
     FramebufferHelper();
@@ -1158,7 +1158,7 @@ class FramebufferHelper : public CommandGraphResource
 
 // A special command graph resource to hold resource dependencies for dispatch calls.  It's the
 // equivalent of FramebufferHelper, though it doesn't contain a Vulkan object.
-class DispatchHelper : public CommandGraphResource
+class DispatchHelper : public Resource
 {
   public:
     DispatchHelper();

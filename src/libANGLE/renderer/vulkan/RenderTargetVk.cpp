@@ -9,8 +9,8 @@
 
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 
-#include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
@@ -74,7 +74,7 @@ angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk)
 
     contextVk->onRenderPassImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
                                       mImage);
-    onImageViewAccess(contextVk);
+    retainImageViews(contextVk);
 
     return angle::Result::Continue;
 }
@@ -87,7 +87,7 @@ angle::Result RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk)
     VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
 
     contextVk->onRenderPassImageWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment, mImage);
-    onImageViewAccess(contextVk);
+    retainImageViews(contextVk);
 
     return angle::Result::Continue;
 }
@@ -134,7 +134,7 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageViewH
 vk::ImageHelper *RenderTargetVk::getImageForWrite(ContextVk *contextVk) const
 {
     ASSERT(mImage && mImage->valid());
-    onImageViewAccess(contextVk);
+    retainImageViews(contextVk);
     return mImage;
 }
 
@@ -150,8 +150,8 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk)
                                       mLayerIndex + 1, commandBuffer);
 }
 
-void RenderTargetVk::onImageViewAccess(ContextVk *contextVk) const
+void RenderTargetVk::retainImageViews(ContextVk *contextVk) const
 {
-    mImageViews->onResourceAccess(&contextVk->getResourceUseList());
+    mImageViews->retain(&contextVk->getResourceUseList());
 }
 }  // namespace rx

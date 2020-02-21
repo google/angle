@@ -24,7 +24,7 @@ struct Format;
 class FramebufferHelper;
 class ImageHelper;
 class ImageView;
-class CommandGraphResource;
+class Resource;
 class RenderPassDesc;
 }  // namespace vk
 
@@ -75,7 +75,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     angle::Result flushStagedUpdates(ContextVk *contextVk);
 
-    void onImageViewAccess(ContextVk *contextVk) const;
+    void retainImageViews(ContextVk *contextVk) const;
 
   private:
     vk::ImageHelper *mImage;

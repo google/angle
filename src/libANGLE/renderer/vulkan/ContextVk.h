@@ -232,7 +232,7 @@ class RenderPassCommandBuffer final : public CommandBufferHelper
     bool mRebindTransformFeedbackBuffers;
 };
 
-class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassOwner
+class ContextVk : public ContextImpl, public vk::Context
 {
   public:
     ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk *renderer);
@@ -778,7 +778,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateActiveImages(const gl::Context *context,
-                                     vk::CommandGraphResource *recorder,
+                                     vk::Resource *recorder,
                                      CommandBufferHelper *commandBufferHelper);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
@@ -839,11 +839,11 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // Common parts of the common dirty bit handlers.
     angle::Result handleDirtyTexturesImpl(const gl::Context *context,
                                           vk::CommandBuffer *commandBuffer,
-                                          vk::CommandGraphResource *recorder,
+                                          vk::Resource *recorder,
                                           CommandBufferHelper *commandBufferHelper);
     angle::Result handleDirtyShaderResourcesImpl(const gl::Context *context,
                                                  vk::CommandBuffer *commandBuffer,
-                                                 vk::CommandGraphResource *recorder,
+                                                 vk::Resource *recorder,
                                                  CommandBufferHelper *commandBufferHelper);
     void handleDirtyDriverUniformsBindingImpl(vk::CommandBuffer *commandBuffer,
                                               VkPipelineBindPoint bindPoint,
@@ -883,8 +883,12 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     bool hasRecordedCommands();
     void dumpCommandStreamDiagnostics();
 
+    ANGLE_INLINE void onRenderPassFinished() { mRenderPassCommandBuffer = nullptr; }
+
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
+
+    vk::CommandBuffer *mRenderPassCommandBuffer;
 
     vk::PipelineHelper *mCurrentGraphicsPipeline;
     vk::PipelineAndSerial *mCurrentComputePipeline;

@@ -12,7 +12,7 @@
 
 #include "libANGLE/renderer/EGLSyncImpl.h"
 #include "libANGLE/renderer/SyncImpl.h"
-#include "libANGLE/renderer/vulkan/CommandGraph.h"
+#include "libANGLE/renderer/vulkan/ResourceVk.h"
 
 namespace egl
 {

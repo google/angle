@@ -448,7 +448,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
 
         const vk::ImageView *readImageView = nullptr;
         ANGLE_TRY(colorReadRT->getImageView(contextVk, &readImageView));
-        colorReadRT->onImageViewAccess(contextVk);
+        colorReadRT->retainImageViews(contextVk);
 
         return copySubImageImplWithDraw(contextVk, offsetImageIndex, modifiedDestOffset, destFormat,
                                         0, clippedSourceArea, isViewportFlipY, false, false, false,
@@ -1138,7 +1138,7 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         if (mImage->hasStagedUpdates())
         {
             vk::CommandBuffer *commandBuffer = nullptr;
-            mImage->onResourceAccess(&contextVk->getResourceUseList());
+            mImage->retain(&contextVk->getResourceUseList());
             ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
             ANGLE_TRY(mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0),
                                                  mImage->getLevelCount(), getNativeImageLayer(0),
@@ -1154,7 +1154,7 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         // Release the origin image and recreate it with new mipmap counts.
         releaseImage(contextVk);
 
-        mImage->onResourceRecreated(&contextVk->getResourceUseList());
+        mImage->retain(&contextVk->getResourceUseList());
 
         ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::FullMipChain));
     }
@@ -1317,7 +1317,7 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk,
     // recreated with the correct number of mip levels, base level, and max level.
     releaseImage(contextVk);
 
-    mImage->onResourceRecreated(&contextVk->getResourceUseList());
+    mImage->retain(&contextVk->getResourceUseList());
 
     return angle::Result::Continue;
 }
@@ -1570,7 +1570,7 @@ const vk::ImageView &TextureVk::getReadImageViewAndRecordUse(ContextVk *contextV
 {
     ASSERT(mImage->valid());
 
-    mImageViews.onResourceAccess(&contextVk->getResourceUseList());
+    mImageViews.retain(&contextVk->getResourceUseList());
 
     if (mState.isStencilMode() && mImageViews.hasStencilReadImageView())
     {
@@ -1584,7 +1584,7 @@ const vk::ImageView &TextureVk::getFetchImageViewAndRecordUse(ContextVk *context
 {
     ASSERT(mImage->valid());
 
-    mImageViews.onResourceAccess(&contextVk->getResourceUseList());
+    mImageViews.retain(&contextVk->getResourceUseList());
 
     // We don't currently support fetch for depth/stencil cube map textures.
     ASSERT(!mImageViews.hasStencilReadImageView() || !mImageViews.hasFetchImageView());

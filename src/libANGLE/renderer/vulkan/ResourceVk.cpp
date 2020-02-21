@@ -3,39 +3,30 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// CommandGraph:
-//    Deferred work constructed by GL calls, that will later be flushed to Vulkan.
+// Resource:
+//    Resource lifetime tracking in the Vulkan back-end.
 //
 
-#include "libANGLE/renderer/vulkan/CommandGraph.h"
+#include "libANGLE/renderer/vulkan/ResourceVk.h"
 
-#include <iostream>
-
-#include "libANGLE/Overlay.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
-#include "libANGLE/renderer/vulkan/RenderTargetVk.h"
-#include "libANGLE/renderer/vulkan/RendererVk.h"
-#include "libANGLE/renderer/vulkan/vk_format_utils.h"
-#include "libANGLE/renderer/vulkan/vk_helpers.h"
-
-#include "libANGLE/trace.h"
 
 namespace rx
 {
 namespace vk
 {
-// CommandGraphResource implementation.
-CommandGraphResource::CommandGraphResource()
+// Resource implementation.
+Resource::Resource()
 {
     mUse.init();
 }
 
-CommandGraphResource::~CommandGraphResource()
+Resource::~Resource()
 {
     mUse.release();
 }
 
-angle::Result CommandGraphResource::finishRunningCommands(ContextVk *contextVk)
+angle::Result Resource::finishRunningCommands(ContextVk *contextVk)
 {
     return contextVk->finishToSerial(mUse.getSerial());
 }

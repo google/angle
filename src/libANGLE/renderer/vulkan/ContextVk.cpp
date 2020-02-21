@@ -513,6 +513,7 @@ egl::ContextPriority GetContextPriority(const gl::State &state)
 ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk *renderer)
     : ContextImpl(state, errorSet),
       vk::Context(renderer),
+      mRenderPassCommandBuffer(nullptr),
       mCurrentGraphicsPipeline(nullptr),
       mCurrentComputePipeline(nullptr),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
@@ -1116,7 +1117,7 @@ angle::Result ContextVk::handleDirtyComputePipeline(const gl::Context *context,
 ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
     const gl::Context *context,
     vk::CommandBuffer *commandBuffer,
-    vk::CommandGraphResource *recorder,
+    vk::Resource *recorder,
     CommandBufferHelper *commandBufferHelper)
 {
     const gl::ActiveTextureMask &activeTextures = mProgram->getState().getActiveSamplersMask();
@@ -1141,15 +1142,15 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
         commandBufferHelper->imageRead(&mResourceUseList, image.getAspectFlags(), textureLayout,
                                        &image);
 
-        textureVk->onImageViewUse(&mResourceUseList);
+        textureVk->retainImageViews(&mResourceUseList);
 
         if (unit.sampler)
         {
-            unit.sampler->onSamplerAccess(&mResourceUseList);
+            unit.sampler->retain(&mResourceUseList);
         }
         else
         {
-            textureVk->onSamplerUse(&mResourceUseList);
+            textureVk->retainSampler(&mResourceUseList);
         }
     }
 
@@ -1221,7 +1222,7 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(const gl::Context *conte
 ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
     const gl::Context *context,
     vk::CommandBuffer *commandBuffer,
-    vk::CommandGraphResource *recorder,
+    vk::Resource *recorder,
     CommandBufferHelper *commandBufferHelper)
 {
     if (mProgram->hasImages())
@@ -3400,7 +3401,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 }
 
 angle::Result ContextVk::updateActiveImages(const gl::Context *context,
-                                            vk::CommandGraphResource *recorder,
+                                            vk::Resource *recorder,
                                             CommandBufferHelper *commandBufferHelper)
 {
     const gl::State &glState   = mState;
@@ -3838,7 +3839,7 @@ angle::Result ContextVk::onImageRead(VkImageAspectFlags aspectFlags,
         ANGLE_TRY(getOutsideRenderPassCommandBuffer(&commandBuffer));
         image->changeLayout(aspectFlags, imageLayout, commandBuffer);
     }
-    image->onResourceAccess(&mResourceUseList);
+    image->retain(&mResourceUseList);
     return angle::Result::Continue;
 }
 
@@ -3855,7 +3856,7 @@ angle::Result ContextVk::onImageWrite(VkImageAspectFlags aspectFlags,
     ANGLE_TRY(getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     image->changeLayout(aspectFlags, imageLayout, commandBuffer);
-    image->onResourceAccess(&mResourceUseList);
+    image->retain(&mResourceUseList);
 
     return angle::Result::Continue;
 }
@@ -3947,7 +3948,7 @@ void CommandBufferHelper::bufferRead(vk::ResourceUseList *resourceUseList,
                                      VkAccessFlags readAccessType,
                                      vk::BufferHelper *buffer)
 {
-    buffer->onResourceAccess(resourceUseList);
+    buffer->retain(resourceUseList);
     buffer->updateReadBarrier(readAccessType, &mGlobalMemoryBarrierSrcAccess,
                               &mGlobalMemoryBarrierDstAccess);
     mGlobalMemoryBarrierStages = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
@@ -3957,7 +3958,7 @@ void CommandBufferHelper::bufferWrite(vk::ResourceUseList *resourceUseList,
                                       VkAccessFlags writeAccessType,
                                       vk::BufferHelper *buffer)
 {
-    buffer->onResourceAccess(resourceUseList);
+    buffer->retain(resourceUseList);
     buffer->updateWriteBarrier(writeAccessType, &mGlobalMemoryBarrierSrcAccess,
                                &mGlobalMemoryBarrierDstAccess);
     mGlobalMemoryBarrierStages = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
@@ -3978,7 +3979,7 @@ void CommandBufferHelper::imageRead(vk::ResourceUseList *resourceUseList,
                                     vk::ImageLayout imageLayout,
                                     vk::ImageHelper *image)
 {
-    image->onResourceAccess(resourceUseList);
+    image->retain(resourceUseList);
     if (image->isLayoutChangeNecessary(imageLayout))
     {
         image->changeLayout(aspectFlags, imageLayout, this);
@@ -3990,7 +3991,7 @@ void CommandBufferHelper::imageWrite(vk::ResourceUseList *resourceUseList,
                                      vk::ImageLayout imageLayout,
                                      vk::ImageHelper *image)
 {
-    image->onResourceAccess(resourceUseList);
+    image->retain(resourceUseList);
     image->changeLayout(aspectFlags, imageLayout, this);
 }
 

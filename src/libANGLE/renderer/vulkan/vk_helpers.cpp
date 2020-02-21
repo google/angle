@@ -3328,7 +3328,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
         ANGLE_TRY(resolvedImage.get().init2DStaging(
             contextVk, renderer->getMemoryProperties(), gl::Extents(area.width, area.height, 1),
             *mFormat, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT, 1));
-        resolvedImage.get().onResourceAccess(&contextVk->getResourceUseList());
+        resolvedImage.get().retain(&contextVk->getResourceUseList());
     }
 
     // Note that although we're reading from the image, we need to update the layout below.
@@ -3674,7 +3674,7 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
                                                      uint32_t layer,
                                                      const ImageView **imageViewOut)
 {
-    onResourceAccess(&contextVk->getResourceUseList());
+    retain(&contextVk->getResourceUseList());
 
     ImageView *imageView = GetLevelImageView(&mLevelDrawImageViews, level, image.getLevelCount());
 
@@ -3698,7 +3698,7 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
     ASSERT(image.valid());
     ASSERT(!image.getFormat().actualImageFormat().isBlock);
 
-    onResourceAccess(&contextVk->getResourceUseList());
+    retain(&contextVk->getResourceUseList());
 
     uint32_t layerCount = GetImageLayerCountForView(image);
 

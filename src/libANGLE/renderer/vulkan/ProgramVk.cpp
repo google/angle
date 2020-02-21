@@ -1293,7 +1293,7 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
         }
         else
         {
-            mEmptyBuffer.onResourceAccess(&contextVk->getResourceUseList());
+            mEmptyBuffer.retain(&contextVk->getResourceUseList());
             bufferInfo.buffer = mEmptyBuffer.getBuffer().getHandle();
             mDescriptorBuffersCache.emplace_back(&mEmptyBuffer);
         }
@@ -1326,7 +1326,7 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
 void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
                                            vk::ResourceUseList *resourceUseList,
                                            CommandBufferHelper *commandBufferHelper,
-                                           vk::CommandGraphResource *recorder,
+                                           vk::Resource *recorder,
                                            const std::vector<gl::InterfaceBlock> &blocks,
                                            VkDescriptorType descriptorType)
 {
@@ -1412,7 +1412,7 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
 void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
                                                         vk::ResourceUseList *resourceUseList,
                                                         CommandBufferHelper *commandBufferHelper,
-                                                        vk::CommandGraphResource *recorder)
+                                                        vk::Resource *recorder)
 {
     const gl::State &glState = contextVk->getState();
     const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers =
@@ -1466,7 +1466,7 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
     }
 
     // Bind the empty buffer to every array slot that's unused.
-    mEmptyBuffer.onResourceAccess(&contextVk->getResourceUseList());
+    mEmptyBuffer.retain(&contextVk->getResourceUseList());
     for (size_t binding : ~writtenBindings)
     {
         VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[binding];
@@ -1494,8 +1494,7 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
                            writeDescriptorInfo.data(), 0, nullptr);
 }
 
-angle::Result ProgramVk::updateImagesDescriptorSet(ContextVk *contextVk,
-                                                   vk::CommandGraphResource *recorder)
+angle::Result ProgramVk::updateImagesDescriptorSet(ContextVk *contextVk, vk::Resource *recorder)
 {
     const gl::State &glState                           = contextVk->getState();
     const std::vector<gl::ImageBinding> &imageBindings = mState.getImageBindings();
@@ -1573,7 +1572,7 @@ angle::Result ProgramVk::updateShaderResourcesDescriptorSet(
     ContextVk *contextVk,
     vk::ResourceUseList *resourceUseList,
     CommandBufferHelper *commandBufferHelper,
-    vk::CommandGraphResource *recorder)
+    vk::Resource *recorder)
 {
     ANGLE_TRY(allocateDescriptorSet(contextVk, kShaderResourceDescriptorSetIndex));
 
@@ -1829,7 +1828,7 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
 
     for (vk::BufferHelper *buffer : mDescriptorBuffersCache)
     {
-        buffer->onResourceAccess(&contextVk->getResourceUseList());
+        buffer->retain(&contextVk->getResourceUseList());
     }
 
     return angle::Result::Continue;
