@@ -1,6 +1,7 @@
 # See https://chromium.googlesource.com/angle/angle/+/master/doc/ContributingCode.md#selecting-reviewers for per-file owners
 cwallez@chromium.org
 geofflang@chromium.org
+geofflang@google.com
 jmadill@chromium.org
 syoussefi@chromium.org
 ynovikov@chromium.org
