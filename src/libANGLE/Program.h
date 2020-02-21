@@ -1057,6 +1057,7 @@ class Program final : angle::NonCopyable, public LabeledObject
                              GLuint combinedShaderStorageBlocksCount);
 
     void setUniformValuesFromBindingQualifiers();
+    bool shouldIgnoreUniform(UniformLocation location) const;
 
     void initInterfaceBlockBindings();
 
