@@ -13,6 +13,7 @@
 #include "common/debug.h"
 #include "common/platform.h"
 #include "common/system_utils.h"
+#include "common/utilities.h"
 #include "third_party/perf/perf_test.h"
 #include "third_party/trace_event/trace_event.h"
 #include "util/shader_utils.h"
@@ -166,7 +167,10 @@ ANGLE_MAYBE_UNUSED void KHRONOS_APIENTRY DebugMessageCallback(GLenum source,
                                                               const GLchar *message,
                                                               const void *userParam)
 {
-    std::cerr << "%s\n";
+    std::string sourceText   = gl::GetDebugMessageSourceString(source);
+    std::string typeText     = gl::GetDebugMessageTypeString(type);
+    std::string severityText = gl::GetDebugMessageSeverityString(severity);
+    std::cerr << sourceText << ", " << typeText << ", " << severityText << ": " << message << "\n";
 }
 }  // anonymous namespace
 
@@ -515,14 +519,19 @@ void ANGLERenderTest::SetUp()
     {
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        // Enable medium and high priority messages.
         glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_HIGH, 0, nullptr,
                                  GL_TRUE);
         glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_MEDIUM, 0, nullptr,
                                  GL_TRUE);
+        // Disable low and notification priority messages.
         glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_LOW, 0, nullptr,
                                  GL_FALSE);
         glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0,
                                  nullptr, GL_FALSE);
+        // Disable medium priority performance messages to reduce spam.
+        glDebugMessageControlKHR(GL_DONT_CARE, GL_DEBUG_TYPE_PERFORMANCE, GL_DEBUG_SEVERITY_MEDIUM,
+                                 0, nullptr, GL_FALSE);
         glDebugMessageCallbackKHR(DebugMessageCallback, this);
     }
 #endif

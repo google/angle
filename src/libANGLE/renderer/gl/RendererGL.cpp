@@ -88,80 +88,9 @@ static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
                                                    const GLchar *message,
                                                    const void *userParam)
 {
-    std::string sourceText;
-    switch (source)
-    {
-        case GL_DEBUG_SOURCE_API:
-            sourceText = "OpenGL";
-            break;
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-            sourceText = "Windows";
-            break;
-        case GL_DEBUG_SOURCE_SHADER_COMPILER:
-            sourceText = "Shader Compiler";
-            break;
-        case GL_DEBUG_SOURCE_THIRD_PARTY:
-            sourceText = "Third Party";
-            break;
-        case GL_DEBUG_SOURCE_APPLICATION:
-            sourceText = "Application";
-            break;
-        case GL_DEBUG_SOURCE_OTHER:
-            sourceText = "Other";
-            break;
-        default:
-            sourceText = "UNKNOWN";
-            break;
-    }
-
-    std::string typeText;
-    switch (type)
-    {
-        case GL_DEBUG_TYPE_ERROR:
-            typeText = "Error";
-            break;
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-            typeText = "Deprecated behavior";
-            break;
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-            typeText = "Undefined behavior";
-            break;
-        case GL_DEBUG_TYPE_PORTABILITY:
-            typeText = "Portability";
-            break;
-        case GL_DEBUG_TYPE_PERFORMANCE:
-            typeText = "Performance";
-            break;
-        case GL_DEBUG_TYPE_OTHER:
-            typeText = "Other";
-            break;
-        case GL_DEBUG_TYPE_MARKER:
-            typeText = "Marker";
-            break;
-        default:
-            typeText = "UNKNOWN";
-            break;
-    }
-
-    std::string severityText;
-    switch (severity)
-    {
-        case GL_DEBUG_SEVERITY_HIGH:
-            severityText = "High";
-            break;
-        case GL_DEBUG_SEVERITY_MEDIUM:
-            severityText = "Medium";
-            break;
-        case GL_DEBUG_SEVERITY_LOW:
-            severityText = "Low";
-            break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION:
-            severityText = "Notification";
-            break;
-        default:
-            severityText = "UNKNOWN";
-            break;
-    }
+    std::string sourceText   = gl::GetDebugMessageSourceString(source);
+    std::string typeText     = gl::GetDebugMessageTypeString(type);
+    std::string severityText = gl::GetDebugMessageSeverityString(severity);
 
 #if defined(ANGLE_PLATFORM_ANDROID)
     if (type == GL_DEBUG_TYPE_ERROR)
