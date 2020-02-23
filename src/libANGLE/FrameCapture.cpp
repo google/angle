@@ -487,7 +487,7 @@ void WriteCppReplayForCall(const CallCapture &call,
             }
             else
             {
-                callOut << param;
+                WriteParamCaptureReplay(callOut, call, param);
             }
         }
         else
@@ -2584,12 +2584,6 @@ void FrameCapture::reset()
     // necessary.
 }
 
-std::ostream &operator<<(std::ostream &os, const ParamCapture &capture)
-{
-    WriteParamTypeToStream(os, capture.type, capture.value);
-    return os;
-}
-
 void CaptureMemory(const void *source, size_t size, ParamCapture *paramCapture)
 {
     std::vector<uint8_t> data(size);
@@ -2632,7 +2626,9 @@ void CaptureGenHandlesImpl(GLsizei n, GLuint *handles, ParamCapture *paramCaptur
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TGLboolean>(std::ostream &os, GLboolean value)
+void WriteParamValueReplay<ParamType::TGLboolean>(std::ostream &os,
+                                                  const CallCapture &call,
+                                                  GLboolean value)
 {
     switch (value)
     {
@@ -2648,7 +2644,9 @@ void WriteParamValueToStream<ParamType::TGLboolean>(std::ostream &os, GLboolean 
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TvoidConstPointer>(std::ostream &os, const void *value)
+void WriteParamValueReplay<ParamType::TvoidConstPointer>(std::ostream &os,
+                                                         const CallCapture &call,
+                                                         const void *value)
 {
     if (value == 0)
     {
@@ -2662,103 +2660,133 @@ void WriteParamValueToStream<ParamType::TvoidConstPointer>(std::ostream &os, con
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TGLDEBUGPROCKHR>(std::ostream &os, GLDEBUGPROCKHR value)
+void WriteParamValueReplay<ParamType::TGLDEBUGPROCKHR>(std::ostream &os,
+                                                       const CallCapture &call,
+                                                       GLDEBUGPROCKHR value)
 {}
 
 template <>
-void WriteParamValueToStream<ParamType::TGLDEBUGPROC>(std::ostream &os, GLDEBUGPROC value)
+void WriteParamValueReplay<ParamType::TGLDEBUGPROC>(std::ostream &os,
+                                                    const CallCapture &call,
+                                                    GLDEBUGPROC value)
 {}
 
 template <>
-void WriteParamValueToStream<ParamType::TBufferID>(std::ostream &os, gl::BufferID value)
+void WriteParamValueReplay<ParamType::TBufferID>(std::ostream &os,
+                                                 const CallCapture &call,
+                                                 gl::BufferID value)
 {
     os << "gBufferMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TFenceNVID>(std::ostream &os, gl::FenceNVID value)
+void WriteParamValueReplay<ParamType::TFenceNVID>(std::ostream &os,
+                                                  const CallCapture &call,
+                                                  gl::FenceNVID value)
 {
     os << "gFenceMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TFramebufferID>(std::ostream &os, gl::FramebufferID value)
+void WriteParamValueReplay<ParamType::TFramebufferID>(std::ostream &os,
+                                                      const CallCapture &call,
+                                                      gl::FramebufferID value)
 {
     os << "gFramebufferMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TMemoryObjectID>(std::ostream &os, gl::MemoryObjectID value)
+void WriteParamValueReplay<ParamType::TMemoryObjectID>(std::ostream &os,
+                                                       const CallCapture &call,
+                                                       gl::MemoryObjectID value)
 {
     os << "gMemoryObjectMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TPathID>(std::ostream &os, gl::PathID value)
+void WriteParamValueReplay<ParamType::TPathID>(std::ostream &os,
+                                               const CallCapture &call,
+                                               gl::PathID value)
 {
     os << "gPathMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TProgramPipelineID>(std::ostream &os,
-                                                            gl::ProgramPipelineID value)
+void WriteParamValueReplay<ParamType::TProgramPipelineID>(std::ostream &os,
+                                                          const CallCapture &call,
+                                                          gl::ProgramPipelineID value)
 {
     os << "gProgramPipelineMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TQueryID>(std::ostream &os, gl::QueryID value)
+void WriteParamValueReplay<ParamType::TQueryID>(std::ostream &os,
+                                                const CallCapture &call,
+                                                gl::QueryID value)
 {
     os << "gQueryMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TRenderbufferID>(std::ostream &os, gl::RenderbufferID value)
+void WriteParamValueReplay<ParamType::TRenderbufferID>(std::ostream &os,
+                                                       const CallCapture &call,
+                                                       gl::RenderbufferID value)
 {
     os << "gRenderbufferMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TSamplerID>(std::ostream &os, gl::SamplerID value)
+void WriteParamValueReplay<ParamType::TSamplerID>(std::ostream &os,
+                                                  const CallCapture &call,
+                                                  gl::SamplerID value)
 {
     os << "gSamplerMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TSemaphoreID>(std::ostream &os, gl::SemaphoreID value)
+void WriteParamValueReplay<ParamType::TSemaphoreID>(std::ostream &os,
+                                                    const CallCapture &call,
+                                                    gl::SemaphoreID value)
 {
     os << "gSempahoreMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TShaderProgramID>(std::ostream &os,
-                                                          gl::ShaderProgramID value)
+void WriteParamValueReplay<ParamType::TShaderProgramID>(std::ostream &os,
+                                                        const CallCapture &call,
+                                                        gl::ShaderProgramID value)
 {
     os << "gShaderProgramMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TTextureID>(std::ostream &os, gl::TextureID value)
+void WriteParamValueReplay<ParamType::TTextureID>(std::ostream &os,
+                                                  const CallCapture &call,
+                                                  gl::TextureID value)
 {
     os << "gTextureMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TTransformFeedbackID>(std::ostream &os,
-                                                              gl::TransformFeedbackID value)
+void WriteParamValueReplay<ParamType::TTransformFeedbackID>(std::ostream &os,
+                                                            const CallCapture &call,
+                                                            gl::TransformFeedbackID value)
 {
     os << "gTransformFeedbackMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TVertexArrayID>(std::ostream &os, gl::VertexArrayID value)
+void WriteParamValueReplay<ParamType::TVertexArrayID>(std::ostream &os,
+                                                      const CallCapture &call,
+                                                      gl::VertexArrayID value)
 {
     os << "gVertexArrayMap[" << value.value << "]";
 }
 
 template <>
-void WriteParamValueToStream<ParamType::TUniformLocation>(std::ostream &os,
-                                                          gl::UniformLocation value)
+void WriteParamValueReplay<ParamType::TUniformLocation>(std::ostream &os,
+                                                        const CallCapture &call,
+                                                        gl::UniformLocation value)
 {
     // TODO(jmadill): Uniform locations map. http://anglebug.com/4411
     os << value.value;

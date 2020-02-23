@@ -563,7 +563,10 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
     }}
 }}
 
-void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamValue& paramValue);
+struct CallCapture;
+struct ParamCapture;
+
+void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const ParamCapture &param);
 const char *ParamTypeToString(ParamType paramType);
 
 enum class ResourceIDType
@@ -594,9 +597,9 @@ template_frame_capture_utils_source = """// GENERATED FILE - DO NOT EDIT.
 
 namespace angle
 {{
-void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamValue& paramValue)
+void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const ParamCapture &param)
 {{
-    switch (paramType)
+    switch (param.type)
     {{
 {write_param_type_to_stream_cases}
         default:
@@ -659,7 +662,7 @@ template_init_param_value_case = """        case ParamType::T{enum}:
             break;"""
 
 template_write_param_type_to_stream_case = """        case ParamType::T{enum}:
-            WriteParamValueToStream<ParamType::T{enum}>(os, paramValue.{union_name});
+            WriteParamValueReplay<ParamType::T{enum}>(os, call, param.value.{union_name});
             break;"""
 
 template_param_type_to_string_case = """        case ParamType::T{enum}:

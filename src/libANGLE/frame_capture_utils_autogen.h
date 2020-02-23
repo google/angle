@@ -2491,7 +2491,10 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
     }
 }
 
-void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamValue &paramValue);
+struct CallCapture;
+struct ParamCapture;
+
+void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const ParamCapture &param);
 const char *ParamTypeToString(ParamType paramType);
 
 enum class ResourceIDType
