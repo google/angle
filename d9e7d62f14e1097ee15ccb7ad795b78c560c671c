@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4af9ced2_8d136240",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2349,
+      "author": {
+        "id": 1323708
+      },
+      "writtenOn": "2020-02-24T07:52:17Z",
+      "side": 1,
+      "message": "There is an assert in swiftshader:\n[ RUN      ] MipmapTestES3.MipmapsForTexture3D/ES3_Vulkan_SwiftShader\n../../third_party/SwiftShader/src/Device/Blitter.cpp:1773 ABORT: ASSERT(numSlices \u003d\u003d (region.dstOffsets[1].z - region.dstOffsets[0].z))\n\nit asserts that the src depth must be equal to dst depth. So I think this is a bug in swiftshader.\nBut I don\u0027t know if Adreno/Intel have the same bug?",
+      "revId": "d9e7d62f14e1097ee15ccb7ad795b78c560c671c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
