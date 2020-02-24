@@ -2705,10 +2705,30 @@ const char *ValidateDrawStates(const Context *context)
         }
     }
 
-    if (!extensions.floatBlend && context->getState().isBlendEnabled() &&
-        framebuffer->hasActiveFloat32ColorAttachment())
+    if (!extensions.floatBlend)
     {
-        return kUnsupportedFloatBlending;
+        const DrawBufferMask blendEnabledActiveFloat32ColorAttachmentDrawBufferMask =
+            state.getBlendEnabledDrawBufferMask() &
+            framebuffer->getActiveFloat32ColorAttachmentDrawBufferMask();
+        if (blendEnabledActiveFloat32ColorAttachmentDrawBufferMask.any())
+        {
+            return kUnsupportedFloatBlending;
+        }
+    }
+
+    if (context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||
+        extensions.webglCompatibility)
+    {
+        if (state.hasSimultaneousConstantColorAndAlphaBlendFunc())
+        {
+            if (extensions.webglCompatibility)
+            {
+                return kInvalidConstantColor;
+            }
+
+            WARN() << kConstantColorAlphaLimitation;
+            return kConstantColorAlphaLimitation;
+        }
     }
 
     if (!framebuffer->isComplete(context))
@@ -2719,7 +2739,7 @@ const char *ValidateDrawStates(const Context *context)
 
     if (context->getStateCache().hasAnyEnabledClientAttrib())
     {
-        if (context->getExtensions().webglCompatibility || !state.areClientArraysEnabled())
+        if (extensions.webglCompatibility || !state.areClientArraysEnabled())
         {
             // [WebGL 1.0] Section 6.5 Enabled Vertex Attributes and Range Checking
             // If a vertex attribute is enabled as an array via enableVertexAttribArray but no
@@ -2838,7 +2858,7 @@ const char *ValidateDrawStates(const Context *context)
             }
 
             if (!context->getState().getRasterizerState().rasterizerDiscard &&
-                !context->getState().getBlendState().allChannelsMasked())
+                !context->getState().allActiveDrawBufferChannelsMasked())
             {
                 // Detect that if there's active color buffer without fragment shader output
                 if (!ValidateFragmentShaderColorBufferMaskMatch(context))

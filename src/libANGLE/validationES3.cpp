@@ -2678,6 +2678,19 @@ bool ValidateIndexedStateQuery(const Context *context, GLenum pname, GLuint inde
     const Caps &caps = context->getCaps();
     switch (pname)
     {
+        case GL_BLEND_SRC_RGB:
+        case GL_BLEND_SRC_ALPHA:
+        case GL_BLEND_DST_RGB:
+        case GL_BLEND_DST_ALPHA:
+        case GL_BLEND_EQUATION_RGB:
+        case GL_BLEND_EQUATION_ALPHA:
+        case GL_COLOR_WRITEMASK:
+            if (index >= static_cast<GLuint>(caps.maxDrawBuffers))
+            {
+                context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
+                return false;
+            }
+            break;
         case GL_TRANSFORM_FEEDBACK_BUFFER_START:
         case GL_TRANSFORM_FEEDBACK_BUFFER_SIZE:
         case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:

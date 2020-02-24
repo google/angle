@@ -35,11 +35,35 @@ bool ValidateBlendEquationSeparatei(const Context *context,
                                     GLenum modeRGB,
                                     GLenum modeAlpha)
 {
+    if (buf >= static_cast<GLuint>(context->getCaps().maxDrawBuffers))
+    {
+        context->validationError(GL_INVALID_VALUE, kExceedsMaxDrawBuffers);
+        return false;
+    }
+
+    if (!ValidateBlendEquationSeparate(context, modeRGB, modeAlpha))
+    {
+        // error already generated
+        return false;
+    }
+
     return true;
 }
 
 bool ValidateBlendEquationi(const Context *context, GLuint buf, GLenum mode)
 {
+    if (buf >= static_cast<GLuint>(context->getCaps().maxDrawBuffers))
+    {
+        context->validationError(GL_INVALID_VALUE, kExceedsMaxDrawBuffers);
+        return false;
+    }
+
+    if (!ValidateBlendEquation(context, mode))
+    {
+        // error already generated
+        return false;
+    }
+
     return true;
 }
 
@@ -50,11 +74,35 @@ bool ValidateBlendFuncSeparatei(const Context *context,
                                 GLenum srcAlpha,
                                 GLenum dstAlpha)
 {
+    if (buf >= static_cast<GLuint>(context->getCaps().maxDrawBuffers))
+    {
+        context->validationError(GL_INVALID_VALUE, kExceedsMaxDrawBuffers);
+        return false;
+    }
+
+    if (!ValidateBlendFuncSeparate(context, srcRGB, dstRGB, srcAlpha, dstAlpha))
+    {
+        // error already generated
+        return false;
+    }
+
     return true;
 }
 
 bool ValidateBlendFunci(const Context *context, GLuint buf, GLenum src, GLenum dst)
 {
+    if (buf >= static_cast<GLuint>(context->getCaps().maxDrawBuffers))
+    {
+        context->validationError(GL_INVALID_VALUE, kExceedsMaxDrawBuffers);
+        return false;
+    }
+
+    if (!ValidateBlendFunc(context, src, dst))
+    {
+        // error already generated
+        return false;
+    }
+
     return true;
 }
 
@@ -65,6 +113,12 @@ bool ValidateColorMaski(const Context *context,
                         GLboolean b,
                         GLboolean a)
 {
+    if (index >= static_cast<GLuint>(context->getCaps().maxDrawBuffers))
+    {
+        context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
+        return false;
+    }
+
     return true;
 }
 
@@ -119,6 +173,19 @@ bool ValidateDebugMessageInsert(const Context *context,
 
 bool ValidateDisablei(const Context *context, GLenum target, GLuint index)
 {
+    switch (target)
+    {
+        case GL_BLEND:
+            if (index >= static_cast<GLuint>(context->getCaps().maxDrawBuffers))
+            {
+                context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
+                return false;
+            }
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+            return false;
+    }
     return true;
 }
 
@@ -192,6 +259,19 @@ bool ValidateDrawRangeElementsBaseVertex(const Context *context,
 
 bool ValidateEnablei(const Context *context, GLenum target, GLuint index)
 {
+    switch (target)
+    {
+        case GL_BLEND:
+            if (index >= static_cast<GLuint>(context->getCaps().maxDrawBuffers))
+            {
+                context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
+                return false;
+            }
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+            return false;
+    }
     return true;
 }
 
@@ -340,6 +420,19 @@ bool ValidateGetnUniformuiv(const Context *context,
 
 bool ValidateIsEnabledi(const Context *context, GLenum target, GLuint index)
 {
+    switch (target)
+    {
+        case GL_BLEND:
+            if (index >= static_cast<GLuint>(context->getCaps().maxDrawBuffers))
+            {
+                context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
+                return false;
+            }
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+            return false;
+    }
     return true;
 }
 

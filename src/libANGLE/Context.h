@@ -174,6 +174,7 @@ class StateCache final : angle::NonCopyable
     // 13. onUniformBufferStateChange.
     // 14. onColorMaskChange.
     // 15. onBufferBindingChange.
+    // 16. onBlendFuncIndexedChange.
     bool hasBasicDrawStatesError(Context *context) const
     {
         if (mCachedBasicDrawStatesError == 0)
@@ -274,6 +275,7 @@ class StateCache final : angle::NonCopyable
     void onUniformBufferStateChange(Context *context);
     void onColorMaskChange(Context *context);
     void onBufferBindingChange(Context *context);
+    void onBlendFuncIndexedChange(Context *context);
 
   private:
     // Cache update functions.

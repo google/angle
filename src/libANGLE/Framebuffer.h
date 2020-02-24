@@ -363,9 +363,9 @@ class Framebuffer final : public angle::ObserverInterface,
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
-    bool hasActiveFloat32ColorAttachment() const
+    DrawBufferMask getActiveFloat32ColorAttachmentDrawBufferMask() const
     {
-        return (mFloat32ColorAttachmentBits & getDrawBufferMask()).any();
+        return mFloat32ColorAttachmentBits & getDrawBufferMask();
     }
 
     bool hasResourceThatNeedsInit() const { return mState.mResourceNeedsInit.any(); }

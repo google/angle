@@ -1936,6 +1936,96 @@ TEST_P(WebGLCompatibilityTest, BlendWithConstantColor)
             CheckBlendFunctions(src, dst);
         }
     }
+
+    // Ensure the same semantics for indexed blendFunc
+    if (IsGLExtensionRequestable("GL_OES_draw_buffers_indexed"))
+    {
+        glRequestExtensionANGLE("GL_OES_draw_buffers_indexed");
+        EXPECT_GL_NO_ERROR();
+        EXPECT_TRUE(IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+        for (GLenum src : srcFunc)
+        {
+            for (GLenum dst : dstFunc)
+            {
+                glBlendFunciOES(0, src, dst);
+                CheckBlendFunctions(src, dst);
+                glBlendFuncSeparateiOES(0, src, dst, GL_ONE, GL_ONE);
+                CheckBlendFunctions(src, dst);
+            }
+        }
+    }
+}
+
+// Test draw state validation and invalidation wrt indexed blendFunc.
+TEST_P(WebGLCompatibilityTest, IndexedBlendWithConstantColorInvalidation)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionRequestable("GL_OES_draw_buffers_indexed"));
+
+    glRequestExtensionANGLE("GL_OES_draw_buffers_indexed");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_TRUE(IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    constexpr char kVS[] =
+        R"(#version 300 es
+void main()
+{
+    gl_PointSize = 1.0;
+    gl_Position = vec4(0, 0, 0, 1);
+})";
+
+    constexpr char kFS[] =
+        R"(#version 300 es
+precision lowp float;
+layout(location = 0) out vec4 o_color0;
+layout(location = 1) out vec4 o_color1;
+void main()
+{
+    o_color0 = vec4(1, 0, 0, 1);
+    o_color1 = vec4(0, 1, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    glDisable(GL_BLEND);
+    glEnableiOES(GL_BLEND, 0);
+    glEnableiOES(GL_BLEND, 1);
+
+    GLTexture texture1;
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    GLTexture texture2;
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture1, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texture2, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    GLenum drawbuffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawbuffers);
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Force-invalidate draw call
+    glBlendFuncSeparateiOES(0, GL_CONSTANT_COLOR, GL_CONSTANT_COLOR, GL_CONSTANT_ALPHA,
+                            GL_CONSTANT_ALPHA);
+    EXPECT_GL_NO_ERROR();
+
+    glBlendFuncSeparateiOES(1, GL_CONSTANT_ALPHA, GL_CONSTANT_ALPHA, GL_CONSTANT_COLOR,
+                            GL_CONSTANT_COLOR);
+    EXPECT_GL_NO_ERROR();
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Test that binding/querying uniforms and attributes with invalid names generates errors

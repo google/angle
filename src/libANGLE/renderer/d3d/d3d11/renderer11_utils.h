@@ -146,8 +146,9 @@ struct BlendStateKey final
 {
     // This will zero-initialize the struct, including padding.
     BlendStateKey();
+    BlendStateKey(const BlendStateKey &other);
 
-    gl::BlendState blendState;
+    gl::BlendStateArray blendStateArray;
 
     uint8_t rtvMasks[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 

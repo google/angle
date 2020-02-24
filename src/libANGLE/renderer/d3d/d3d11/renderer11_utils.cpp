@@ -1570,15 +1570,18 @@ void GenerateCaps(ID3D11Device *device,
     // becomes core. WebGL doesn't want to expose it unless there is native support.
     extensions->compressedETC1RGB8TextureOES = false;
 
-    extensions->elementIndexUintOES         = true;
-    extensions->getProgramBinaryOES         = true;
-    extensions->rgb8rgba8OES                = true;
-    extensions->readFormatBGRA              = true;
-    extensions->pixelBufferObjectNV         = true;
-    extensions->mapBufferOES                = true;
-    extensions->mapBufferRange              = true;
-    extensions->textureNPOTOES              = GetNPOTTextureSupport(featureLevel);
-    extensions->drawBuffers                 = GetMaximumSimultaneousRenderTargets(featureLevel) > 1;
+    extensions->elementIndexUintOES = true;
+    extensions->getProgramBinaryOES = true;
+    extensions->rgb8rgba8OES        = true;
+    extensions->readFormatBGRA      = true;
+    extensions->pixelBufferObjectNV = true;
+    extensions->mapBufferOES        = true;
+    extensions->mapBufferRange      = true;
+    extensions->textureNPOTOES      = GetNPOTTextureSupport(featureLevel);
+    extensions->drawBuffers         = GetMaximumSimultaneousRenderTargets(featureLevel) > 1;
+    extensions->drawBuffersIndexedEXT =
+        (renderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_1);
+    extensions->drawBuffersIndexedOES       = extensions->drawBuffersIndexedEXT;
     extensions->textureStorage              = true;
     extensions->textureFilterAnisotropic    = true;
     extensions->maxTextureAnisotropy        = GetMaximumAnisotropy(featureLevel);
@@ -2211,6 +2214,11 @@ void SetPositionLayerTexCoord3DVertex(PositionLayerTexCoord3DVertex *vertex,
 BlendStateKey::BlendStateKey()
 {
     memset(this, 0, sizeof(BlendStateKey));
+}
+
+BlendStateKey::BlendStateKey(const BlendStateKey &other)
+{
+    memcpy(this, &other, sizeof(BlendStateKey));
 }
 
 bool operator==(const BlendStateKey &a, const BlendStateKey &b)

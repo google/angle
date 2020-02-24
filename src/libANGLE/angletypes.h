@@ -154,8 +154,6 @@ struct BlendState final
     BlendState();
     BlendState(const BlendState &other);
 
-    bool allChannelsMasked() const;
-
     bool blend;
     GLenum sourceBlendRGB;
     GLenum destBlendRGB;
@@ -172,6 +170,8 @@ struct BlendState final
 
 bool operator==(const BlendState &a, const BlendState &b);
 bool operator!=(const BlendState &a, const BlendState &b);
+
+using BlendStateArray = std::array<BlendState, IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 
 struct DepthStencilState final
 {
