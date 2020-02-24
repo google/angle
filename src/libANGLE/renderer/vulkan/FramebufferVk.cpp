@@ -527,7 +527,7 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->onImageRead(imageAspectMask, vk::ImageLayout::TransferSrc, srcImage));
     ANGLE_TRY(contextVk->onImageWrite(imageAspectMask, vk::ImageLayout::TransferDst, dstImage));
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     VkImageBlit blit                   = {};
     blit.srcSubresource.aspectMask     = blitAspectMask;
@@ -873,7 +873,7 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
         ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
                                           &drawRenderTarget->getImage()));
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+        ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
         resolveRegion.dstSubresource.mipLevel       = drawRenderTarget->getLevelIndex();
         resolveRegion.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
@@ -1343,9 +1343,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
 
-    return contextVk->beginRenderPass(*framebuffer, renderArea, mRenderPassDesc,
-                                      renderPassAttachmentOps, attachmentClearValues,
-                                      commandBufferOut);
+    return contextVk->flushAndBeginRenderPass(*framebuffer, renderArea, mRenderPassDesc,
+                                              renderPassAttachmentOps, attachmentClearValues,
+                                              commandBufferOut);
 }
 
 void FramebufferVk::updateActiveColorMasks(size_t colorIndexGL, bool r, bool g, bool b, bool a)

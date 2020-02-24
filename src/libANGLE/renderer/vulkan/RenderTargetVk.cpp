@@ -145,7 +145,7 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk)
         return angle::Result::Continue;
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
     return mImage->flushStagedUpdates(contextVk, mLevelIndex, mLevelIndex + 1, mLayerIndex,
                                       mLayerIndex + 1, commandBuffer);
 }

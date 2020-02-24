@@ -591,19 +591,19 @@ class ContextVk : public ContextImpl, public vk::Context
                                 vk::ImageLayout imageLayout,
                                 vk::ImageHelper *image);
 
-    angle::Result getOutsideRenderPassCommandBuffer(vk::CommandBuffer **commandBufferOut)
+    angle::Result endRenderPassAndGetCommandBuffer(vk::CommandBuffer **commandBufferOut)
     {
         ANGLE_TRY(endRenderPass());
         *commandBufferOut = &mOutsideRenderPassCommands.getCommandBuffer();
         return angle::Result::Continue;
     }
 
-    angle::Result beginRenderPass(const vk::Framebuffer &framebuffer,
-                                  const gl::Rectangle &renderArea,
-                                  const vk::RenderPassDesc &renderPassDesc,
-                                  const vk::AttachmentOpsArray &renderPassAttachmentOps,
-                                  const std::vector<VkClearValue> &clearValues,
-                                  vk::CommandBuffer **commandBufferOut);
+    angle::Result flushAndBeginRenderPass(const vk::Framebuffer &framebuffer,
+                                          const gl::Rectangle &renderArea,
+                                          const vk::RenderPassDesc &renderPassDesc,
+                                          const vk::AttachmentOpsArray &renderPassAttachmentOps,
+                                          const std::vector<VkClearValue> &clearValues,
+                                          vk::CommandBuffer **commandBufferOut);
 
     bool hasStartedRenderPass() const { return !mRenderPassCommands.empty(); }
 
@@ -613,7 +613,7 @@ class ContextVk : public ContextImpl, public vk::Context
         return mRenderPassCommands;
     }
 
-    angle::Result getPrimaryCommandBuffer(vk::PrimaryCommandBuffer **primaryCommands)
+    angle::Result flushAndGetPrimaryCommandBuffer(vk::PrimaryCommandBuffer **primaryCommands)
     {
         mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
         ANGLE_TRY(endRenderPass());

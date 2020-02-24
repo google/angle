@@ -1072,7 +1072,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     if (mColorImageMS.valid())
     {
@@ -1081,7 +1081,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                                          &mColorImageMS));
         ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
                                           &image.image));
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+        ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
         VkImageResolve resolveRegion                = {};
         resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;

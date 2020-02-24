@@ -126,7 +126,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     if (mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
     {
         vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+        ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
         mImage->changeLayoutAndQueue(aspect, vk::ImageLayout::ColorAttachment,
                                      rendererQueueFamilyIndex, commandBuffer);
     }

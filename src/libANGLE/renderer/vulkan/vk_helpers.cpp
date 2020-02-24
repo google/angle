@@ -1022,7 +1022,7 @@ void QueryHelper::deinit()
 angle::Result QueryHelper::beginQuery(ContextVk *contextVk)
 {
     vk::PrimaryCommandBuffer *primaryCommands;
-    ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primaryCommands));
+    ANGLE_TRY(contextVk->flushAndGetPrimaryCommandBuffer(&primaryCommands));
     VkQueryPool queryPool = getQueryPool()->getHandle();
     primaryCommands->resetQueryPool(queryPool, mQuery, 1);
     primaryCommands->beginQuery(queryPool, mQuery, 0);
@@ -1033,7 +1033,7 @@ angle::Result QueryHelper::beginQuery(ContextVk *contextVk)
 angle::Result QueryHelper::endQuery(ContextVk *contextVk)
 {
     vk::PrimaryCommandBuffer *primaryCommands;
-    ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primaryCommands));
+    ANGLE_TRY(contextVk->flushAndGetPrimaryCommandBuffer(&primaryCommands));
     VkQueryPool queryPool = getQueryPool()->getHandle();
     primaryCommands->endQuery(queryPool, mQuery);
     mMostRecentSerial = contextVk->getCurrentQueueSerial();
@@ -1043,7 +1043,7 @@ angle::Result QueryHelper::endQuery(ContextVk *contextVk)
 angle::Result QueryHelper::writeTimestamp(ContextVk *contextVk)
 {
     vk::PrimaryCommandBuffer *primaryCommands;
-    ANGLE_TRY(contextVk->getPrimaryCommandBuffer(&primaryCommands));
+    ANGLE_TRY(contextVk->flushAndGetPrimaryCommandBuffer(&primaryCommands));
     VkQueryPool queryPool = getQueryPool()->getHandle();
     primaryCommands->resetQueryPool(queryPool, mQuery, 1);
     primaryCommands->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, mQuery);
@@ -1572,7 +1572,7 @@ angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
 {
     // 'recordCommands' will implicitly stop any reads from using the old buffer data.
     CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0 || bufferAccessType != 0)
     {
@@ -2303,7 +2303,7 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint 
 {
     CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, ImageLayout::TransferDst, this));
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     // We are able to use blitImage since the image format we are using supports it. This
     // is a faster way we can generate the mips.
@@ -3091,7 +3091,7 @@ angle::Result ImageHelper::flushAllStagedUpdates(ContextVk *contextVk)
 {
     // Clear the image.
     CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
     return flushStagedUpdates(contextVk, 0, mLevelCount, 0, mLayerCount, commandBuffer);
 }
 
@@ -3177,7 +3177,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->onImageRead(aspectFlags, ImageLayout::TransferSrc, this));
     ANGLE_TRY(contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, *bufferOut));
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     VkBufferImageCopy regions[2] = {};
     // Default to non-combined DS case
@@ -3339,7 +3339,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
                                           &resolvedImage.get()));
     }
     ANGLE_TRY(contextVk->onImageRead(copyAspectFlags, ImageLayout::TransferSrc, this));
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     const angle::Format *readFormat = &mFormat->actualImageFormat();
 
