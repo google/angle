@@ -447,8 +447,27 @@ void RendererVk::ensureCapsInitialized() const
     // vars section. It is implicit that we need to actually reserve it for Vulkan in that case.
     GLint reservedVaryingVectorCount = 1;
 
-    mNativeCaps.maxVaryingVectors = LimitToInt(
-        (limitsVk.maxVertexOutputComponents / kComponentsPerVector) - reservedVaryingVectorCount);
+    // reserve 1 extra for ANGLEPosition when GLLineRasterization is enabled
+    constexpr GLint kRservedVaryingForGLLineRasterization = 1;
+    // reserve 2 extra for builtin varables when feedback is enabled
+    // possible capturable out varable: gl_Position, gl_PointSize
+    // https://www.khronos.org/registry/OpenGL/specs/es/3.1/GLSL_ES_Specification_3.10.withchanges.pdf
+    // page 105
+    constexpr GLint kReservedVaryingForTransformFeedbackExtension = 2;
+
+    if (getFeatures().basicGLLineRasterization.enabled)
+    {
+        reservedVaryingVectorCount += kRservedVaryingForGLLineRasterization;
+    }
+    if (getFeatures().supportsTransformFeedbackExtension.enabled)
+    {
+        reservedVaryingVectorCount += kReservedVaryingForTransformFeedbackExtension;
+    }
+
+    const GLint maxVaryingCount =
+        std::min(limitsVk.maxVertexOutputComponents, limitsVk.maxFragmentInputComponents);
+    mNativeCaps.maxVaryingVectors =
+        LimitToInt((maxVaryingCount / kComponentsPerVector) - reservedVaryingVectorCount);
     mNativeCaps.maxVertexOutputComponents = LimitToInt(limitsVk.maxVertexOutputComponents);
 
     mNativeCaps.maxTransformFeedbackInterleavedComponents =

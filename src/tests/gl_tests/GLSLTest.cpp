@@ -1605,6 +1605,103 @@ TEST_P(GLSLTest, MaxVaryingVec2Arrays)
     VaryingTestBase(0, 0, 0, maxVec2Arrays, 0, 0, 0, 0, false, false, false, true);
 }
 
+// Verify max varying with feedback and gl_line enabled
+TEST_P(GLSLTest_ES3, MaxVaryingWithFeedbackAndGLline)
+{
+    // (http://anglebug.com/4439)
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsVulkan());
+
+    // http://anglebug.com/4446
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::stringstream vertexShaderSource;
+    std::stringstream fragmentShaderSource;
+
+    // substract 1 here for gl_PointSize
+    const GLint vec4Count     = maxVaryings - 1;
+    unsigned int varyingCount = 0;
+    std::string varyingDeclaration;
+    for (GLint i = 0; i < vec4Count; i++)
+    {
+        varyingDeclaration += GenerateVectorVaryingDeclaration(4, 1, varyingCount);
+        varyingCount += 1;
+    }
+    // Generate the vertex shader
+    vertexShaderSource.clear();
+    vertexShaderSource << varyingDeclaration;
+    vertexShaderSource << "\nattribute vec4 a_position;\n";
+    vertexShaderSource << "\nvoid main()\n{\n";
+    unsigned int currentVSVarying = 0;
+    for (GLint i = 0; i < vec4Count; i++)
+    {
+        vertexShaderSource << GenerateVectorVaryingSettingCode(4, 1, currentVSVarying);
+        currentVSVarying += 1;
+    }
+    vertexShaderSource << "\tgl_Position = vec4(a_position.rgb, 1);\n";
+    vertexShaderSource << "\tgl_PointSize = 1.0;\n";
+    vertexShaderSource << "}\n";
+
+    // Generate the fragment shader
+    fragmentShaderSource.clear();
+    fragmentShaderSource << "precision highp float;\n";
+    fragmentShaderSource << varyingDeclaration;
+    fragmentShaderSource << "\nvoid main() \n{ \n\tvec4 retColor = vec4(0,0,0,0);\n";
+    unsigned int currentFSVarying = 0;
+    // Make use of the vec4 varyings
+    fragmentShaderSource << "\tretColor += ";
+    for (GLint i = 0; i < vec4Count; i++)
+    {
+        fragmentShaderSource << GenerateVectorVaryingUseCode(1, currentFSVarying);
+        currentFSVarying += 1;
+    }
+    fragmentShaderSource << "vec4(0.0, 0.0, 0.0, 0.0);\n";
+    constexpr GLuint testValue = 234;
+    fragmentShaderSource << "\tgl_FragColor = (retColor/vec4(" << std::to_string(currentFSVarying)
+                         << ")) /255.0*" << std::to_string(testValue) << ".0;\n";
+    fragmentShaderSource << "}\n";
+
+    std::vector<std::string> tfVaryings = {"gl_Position", "gl_PointSize"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program1, vertexShaderSource.str().c_str(),
+                                        fragmentShaderSource.str().c_str(), tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+
+    GLBuffer xfbBuffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 6 * (sizeof(float[4]) + sizeof(float)), nullptr,
+                 GL_STATIC_DRAW);
+
+    GLTransformFeedback xfb;
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, xfb);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, xfbBuffer);
+
+    glUseProgram(program1);
+
+    const GLint positionLocation = glGetAttribLocation(program1, essl1_shaders::PositionAttrib());
+    GLBuffer vertexBuffer;
+    // need to shift half pixel to make sure the line covers the center of the pixel
+    const Vector3 vertices[2] = {
+        {-1.0f, -1.0f + 0.5f / static_cast<float>(getWindowHeight()), 0.0f},
+        {1.0f, -1.0f + 0.5f / static_cast<float>(getWindowHeight()), 0.0f}};
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(*vertices) * 2, vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glBeginTransformFeedback(GL_LINES);
+    glDrawArrays(GL_LINES, 0, 2);
+    glEndTransformFeedback();
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(testValue, testValue, testValue, testValue));
+}
+
 // Verify shader source with a fixed length that is less than the null-terminated length will
 // compile.
 TEST_P(GLSLTest, FixedShaderLength)
