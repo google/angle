@@ -352,6 +352,9 @@ class RendererVk : angle::NonCopyable
         vk::PrimaryCommandBuffer commandBuffer;
     };
     std::deque<PendingOneOffCommands> mPendingOneOffCommands;
+
+    // track whether we initialized (or released) glslang
+    bool mGlslangInitialized;
 };
 
 }  // namespace rx

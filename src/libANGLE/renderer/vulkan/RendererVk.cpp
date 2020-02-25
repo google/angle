@@ -575,7 +575,8 @@ RendererVk::RendererVk()
       mDeviceLost(false),
       mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod),
       mPipelineCacheDirty(false),
-      mPipelineCacheInitialized(false)
+      mPipelineCacheInitialized(false),
+      mGlslangInitialized(false)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
     mFormatProperties.fill(invalid);
@@ -621,7 +622,11 @@ void RendererVk::onDestroy(vk::Context *context)
 
     mPipelineCache.destroy(mDevice);
 
-    GlslangRelease();
+    if (mGlslangInitialized)
+    {
+        GlslangRelease();
+        mGlslangInitialized = false;
+    }
 
     if (mDevice)
     {
@@ -922,7 +927,11 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // Store the physical device memory properties so we can find the right memory pools.
     mMemoryProperties.init(mPhysicalDevice);
 
-    GlslangInitialize();
+    if (!mGlslangInitialized)
+    {
+        GlslangInitialize();
+        mGlslangInitialized = true;
+    }
 
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);
