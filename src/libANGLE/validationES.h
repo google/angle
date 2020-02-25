@@ -756,6 +756,13 @@ ANGLE_INLINE bool ValidateFramebufferComplete(const Context *context,
     return true;
 }
 
+const char *ValidateProgramDrawStates(const State &state,
+                                      const Extensions &extensions,
+                                      Program *program);
+const char *ValidateProgramPipelineDrawStates(const State &state,
+                                              const Extensions &extensions,
+                                              ProgramPipeline *programPipeline);
+const char *ValidateProgramPipelineAttachedPrograms(ProgramPipeline *programPipeline);
 const char *ValidateDrawStates(const Context *context);
 
 void RecordDrawAttribsError(const Context *context);

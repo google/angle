@@ -33,6 +33,7 @@
     PROC(Query)                  \
     PROC(Overlay)                \
     PROC(Program)                \
+    PROC(ProgramPipeline)        \
     PROC(Sampler)                \
     PROC(Semaphore)              \
     PROC(Texture)                \

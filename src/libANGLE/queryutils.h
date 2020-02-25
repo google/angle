@@ -256,6 +256,11 @@ bool GetQueryParameterInfo(const State &glState,
                            GLenum pname,
                            GLenum *type,
                            unsigned int *numParams);
+
+void QueryProgramPipelineiv(const Context *context,
+                            ProgramPipeline *programPipeline,
+                            GLenum pname,
+                            GLint *params);
 }  // namespace gl
 
 namespace egl

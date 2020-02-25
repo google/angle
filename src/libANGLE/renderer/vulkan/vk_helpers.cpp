@@ -4007,9 +4007,9 @@ ShaderProgramHelper::ShaderProgramHelper() = default;
 
 ShaderProgramHelper::~ShaderProgramHelper() = default;
 
-bool ShaderProgramHelper::valid() const
+bool ShaderProgramHelper::valid(const gl::ShaderType shaderType) const
 {
-    return mShaders[gl::ShaderType::Vertex].valid() || mShaders[gl::ShaderType::Compute].valid();
+    return mShaders[shaderType].valid();
 }
 
 void ShaderProgramHelper::destroy(VkDevice device)

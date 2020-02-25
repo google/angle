@@ -349,6 +349,8 @@ class State : angle::NonCopyable
         return mProgram;
     }
 
+    ProgramPipeline *getProgramPipeline() const { return mProgramPipeline.get(); }
+
     // Transform feedback object (not buffer) binding manipulation
     void setTransformFeedbackBinding(const Context *context, TransformFeedback *transformFeedback);
     TransformFeedback *getCurrentTransformFeedback() const { return mTransformFeedback.get(); }
@@ -376,7 +378,11 @@ class State : angle::NonCopyable
     Query *getActiveQuery(QueryType type) const;
 
     // Program Pipeline binding manipulation
-    void setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline);
+    angle::Result useProgramStages(const Context *context,
+                                   ProgramPipeline *programPipeline,
+                                   GLbitfield stages,
+                                   Program *shaderProgram);
+    angle::Result setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline);
     void detachProgramPipeline(const Context *context, ProgramPipelineID pipeline);
 
     //// Typed buffer binding point manipulation ////
@@ -540,6 +546,9 @@ class State : angle::NonCopyable
 
     // Sets the dirty bit for the program executable.
     angle::Result onProgramExecutableChange(const Context *context, Program *program);
+    // Sets the dirty bit for the program pipeline executable.
+    angle::Result onProgramPipelineExecutableChange(const Context *context,
+                                                    ProgramPipeline *program);
 
     enum DirtyBitType
     {
@@ -595,7 +604,7 @@ class State : angle::NonCopyable
         DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING,
         DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING,
         // TODO(jmadill): Fine-grained dirty bits for each index.
-        DIRTY_BIT_PROGRAM_BINDING,
+        DIRTY_BIT_PROGRAM_BINDING,  // Must be before DIRTY_BIT_PROGRAM_EXECUTABLE
         DIRTY_BIT_PROGRAM_EXECUTABLE,
         // TODO(jmadill): Fine-grained dirty bits for each texture/sampler.
         DIRTY_BIT_SAMPLER_BINDINGS,
@@ -631,6 +640,7 @@ class State : angle::NonCopyable
         DIRTY_OBJECT_IMAGES,    // Top-level dirty bit. Also see mDirtyImages.
         DIRTY_OBJECT_SAMPLERS,  // Top-level dirty bit. Also see mDirtySamplers.
         DIRTY_OBJECT_PROGRAM,
+        DIRTY_OBJECT_PROGRAM_PIPELINE,
         DIRTY_OBJECT_UNKNOWN,
         DIRTY_OBJECT_MAX = DIRTY_OBJECT_UNKNOWN,
     };
@@ -791,13 +801,14 @@ class State : angle::NonCopyable
     angle::Result syncImages(const Context *context);
     angle::Result syncSamplers(const Context *context);
     angle::Result syncProgram(const Context *context);
+    angle::Result syncProgramPipeline(const Context *context);
 
     using DirtyObjectHandler = angle::Result (State::*)(const Context *context);
     static constexpr DirtyObjectHandler kDirtyObjectHandlers[DIRTY_OBJECT_MAX] = {
         &State::syncTexturesInit,    &State::syncImagesInit,      &State::syncReadAttachments,
         &State::syncDrawAttachments, &State::syncReadFramebuffer, &State::syncDrawFramebuffer,
         &State::syncVertexArray,     &State::syncTextures,        &State::syncImages,
-        &State::syncSamplers,        &State::syncProgram,
+        &State::syncSamplers,        &State::syncProgram,         &State::syncProgramPipeline,
     };
 
     // Robust init must happen before Framebuffer init for the Vulkan back-end.
@@ -817,6 +828,7 @@ class State : angle::NonCopyable
     static_assert(DIRTY_OBJECT_IMAGES == 8, "check DIRTY_OBJECT_IMAGES index");
     static_assert(DIRTY_OBJECT_SAMPLERS == 9, "check DIRTY_OBJECT_SAMPLERS index");
     static_assert(DIRTY_OBJECT_PROGRAM == 10, "check DIRTY_OBJECT_PROGRAM index");
+    static_assert(DIRTY_OBJECT_PROGRAM_PIPELINE == 11, "check DIRTY_OBJECT_PROGRAM_PIPELINE index");
 
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;
@@ -956,7 +968,7 @@ class State : angle::NonCopyable
     // GL_EXT_sRGB_write_control
     bool mFramebufferSRGB;
 
-    // GL_ANGLE_robust_resource_intialization
+    // GL_ANGLE_robust_resource_initialization
     const bool mRobustResourceInit;
 
     // GL_ANGLE_program_cache_control

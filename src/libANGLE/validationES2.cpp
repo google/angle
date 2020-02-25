@@ -2462,6 +2462,14 @@ static bool ValidateObjectIdentifierAndName(const Context *context, GLenum ident
             }
             return true;
 
+        case GL_PROGRAM_PIPELINE:
+            if (context->getProgramPipeline({name}) == nullptr)
+            {
+                context->validationError(GL_INVALID_VALUE, kInvalidProgramPipelineName);
+                return false;
+            }
+            return true;
+
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidIndentifier);
             return false;

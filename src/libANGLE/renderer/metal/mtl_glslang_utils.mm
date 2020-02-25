@@ -24,8 +24,6 @@ angle::Result HandleError(ErrorHandler *context, GlslangError)
 
 void ResetGlslangProgramInterfaceInfo(GlslangProgramInterfaceInfo *programInterfaceInfo)
 {
-    // We don't actually use descriptor set for now, the actual binding will be done inside
-    // ProgramMtl using spirv-cross.
     programInterfaceInfo->uniformsAndXfbDescriptorSetIndex = kDefaultUniformsBindingIndex;
     programInterfaceInfo->currentUniformBindingIndex       = 0;
     programInterfaceInfo->textureDescriptorSetIndex        = 0;

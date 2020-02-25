@@ -63,6 +63,8 @@ class ProgramExecutable
 
     void reset();
 
+    const ProgramState *getProgramState(ShaderType shaderType) const;
+
     int getInfoLogLength() const;
     InfoLog &getInfoLog() { return mInfoLog; }
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const;
@@ -109,16 +111,18 @@ class ProgramExecutable
         return mActiveSamplerTypes;
     }
 
-    bool hasDefaultUniforms(const gl::State &glState) const;
-    bool hasTextures(const gl::State &glState) const;
-    bool hasUniformBuffers(const gl::State &glState) const;
-    bool hasStorageBuffers(const gl::State &glState) const;
-    bool hasAtomicCounterBuffers(const gl::State &glState) const;
-    bool hasImages(const gl::State &glState) const;
-    bool hasTransformFeedbackOutput(const gl::State &glState) const;
+    bool hasDefaultUniforms() const;
+    bool hasTextures() const;
+    bool hasUniformBuffers() const;
+    bool hasStorageBuffers() const;
+    bool hasAtomicCounterBuffers() const;
+    bool hasImages() const;
+    bool hasTransformFeedbackOutput() const;
 
     // Count the number of uniform and storage buffer declarations, counting arrays as one.
     size_t getTransformFeedbackBufferCount(const gl::State &glState) const;
+
+    bool linkValidateGlobalNames(InfoLog &infoLog) const;
 
     // TODO: http://anglebug.com/4520: Remove mProgramState/mProgramPipelineState
     void setProgramState(ProgramState *state)
@@ -139,7 +143,7 @@ class ProgramExecutable
     friend class ProgramPipeline;
     friend class ProgramState;
 
-    void updateActiveSamplers(const std::vector<SamplerBinding> &samplerBindings);
+    void updateActiveSamplers(const ProgramState &programState);
     void updateActiveImages(std::vector<ImageBinding> &imageBindings);
 
     // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.

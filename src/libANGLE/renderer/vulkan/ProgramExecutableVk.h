@@ -34,6 +34,7 @@ class ShaderInfo final : angle::NonCopyable
     ANGLE_INLINE bool valid() const { return mIsInitialized; }
 
     const gl::ShaderMap<SpirvBlob> &getSpirvBlobs() const { return mSpirvBlobs; }
+    gl::ShaderMap<SpirvBlob> &getSpirvBlobs() { return mSpirvBlobs; }
 
     // Save and load implementation for GLES Program Binary support.
     void load(gl::BinaryInputStream *stream);
@@ -51,11 +52,15 @@ class ProgramInfo final : angle::NonCopyable
     ~ProgramInfo();
 
     angle::Result initProgram(ContextVk *contextVk,
+                              const gl::ShaderType shaderType,
                               const ShaderInfo &shaderInfo,
                               bool enableLineRasterEmulation);
     void release(ContextVk *contextVk);
 
-    ANGLE_INLINE bool valid() const { return mProgramHelper.valid(); }
+    ANGLE_INLINE bool valid(const gl::ShaderType shaderType) const
+    {
+        return mProgramHelper.valid(shaderType);
+    }
 
     vk::ShaderProgramHelper *getShaderProgram() { return &mProgramHelper; }
 
@@ -97,15 +102,32 @@ class ProgramExecutableVk
         return mVariableInfoMap;
     }
 
-    const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
-    angle::Result createPipelineLayout(const gl::Context *glContext,
-                                       const gl::ProgramExecutable &glExecutable,
-                                       const gl::ProgramState &programState);
+    ProgramVk *getShaderProgram(const gl::State &glState, gl::ShaderType shaderType) const;
 
-    angle::Result updateTexturesDescriptorSet(const gl::ProgramState &programState,
-                                              ContextVk *contextVk);
-    angle::Result updateShaderResourcesDescriptorSet(const gl::ProgramState &programState,
-                                                     ContextVk *contextVk,
+    void fillProgramStateMap(const ContextVk *contextVk,
+                             gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
+    const gl::ProgramExecutable &getGlExecutable();
+
+    ProgramInfo &getDefaultProgramInfo() { return mDefaultProgramInfo; }
+    ProgramInfo &getProgramInfo(bool enableLineRasterEmulation)
+    {
+        return enableLineRasterEmulation ? mLineRasterProgramInfo : mDefaultProgramInfo;
+    }
+
+    angle::Result getGraphicsPipeline(ContextVk *contextVk,
+                                      gl::PrimitiveMode mode,
+                                      const vk::GraphicsPipelineDesc &desc,
+                                      const gl::AttributesMask &activeAttribLocations,
+                                      const vk::GraphicsPipelineDesc **descPtrOut,
+                                      vk::PipelineHelper **pipelineOut);
+
+    angle::Result getComputePipeline(ContextVk *contextVk, vk::PipelineAndSerial **pipelineOut);
+
+    const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
+    angle::Result createPipelineLayout(const gl::Context *glContext);
+
+    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
+    angle::Result updateShaderResourcesDescriptorSet(ContextVk *contextVk,
                                                      vk::ResourceUseList *resourceUseList,
                                                      CommandBufferHelper *commandBufferHelper);
     angle::Result updateTransformFeedbackDescriptorSet(
@@ -114,6 +136,17 @@ class ProgramExecutableVk
         ContextVk *contextVk);
 
     angle::Result updateDescriptorSets(ContextVk *contextVk, vk::CommandBuffer *commandBuffer);
+
+    void setProgram(ProgramVk *program)
+    {
+        ASSERT(!mProgram && !mProgramPipeline);
+        mProgram = program;
+    }
+    void setProgramPipeline(ProgramPipelineVk *pipeline)
+    {
+        ASSERT(!mProgram && !mProgramPipeline);
+        mProgramPipeline = pipeline;
+    }
 
   private:
     friend class ProgramVk;
@@ -138,7 +171,7 @@ class ProgramExecutableVk
                                      vk::DescriptorSetLayoutDesc *descOut);
 
     void updateDefaultUniformsDescriptorSet(
-        const gl::ProgramState &programState,
+        const gl::ShaderType shaderType,
         gl::ShaderMap<DefaultUniformBlock> &defaultUniformBlocks,
         ContextVk *contextVk);
     void updateTransformFeedbackDescriptorSetImpl(const gl::ProgramState &programState,
@@ -177,6 +210,7 @@ class ProgramExecutableVk
     // deleted while this program is in use.
     vk::BindingPointer<vk::PipelineLayout> mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
+    bool mPipelineLayoutCreated;
 
     // Keep bindings to the descriptor pools. This ensures the pools stay valid while the Program
     // is in use.
@@ -195,6 +229,9 @@ class ProgramExecutableVk
 
     ProgramInfo mDefaultProgramInfo;
     ProgramInfo mLineRasterProgramInfo;
+
+    ProgramVk *mProgram;
+    ProgramPipelineVk *mProgramPipeline;
 };
 
 }  // namespace rx

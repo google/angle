@@ -36,18 +36,13 @@
 //// Failures blocking an official GLES 3.1 conformance run on SwiftShader
 ////
 
-// Dispatch indirect:
-3570 VULKAN : KHR-GLES31.core.compute_shader.build-separable = SKIP
+// Verify that compute and non-compute stages can be attached to one pipeline object:
 3570 VULKAN : KHR-GLES31.core.compute_shader.sso-compute-pipeline = SKIP
 3570 VULKAN : KHR-GLES31.core.compute_shader.sso-case2 = SKIP
 3570 VULKAN : KHR-GLES31.core.compute_shader.sso-case3 = SKIP
-// Program Pipeline Objects:
-3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-draw-calls2 = FAIL
-3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-dispatches = FAIL
-3570 VULKAN : KHR-GLES31.core.vertex_attrib_binding.basic-usage = FAIL
-3570 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-sso-simple = FAIL
+3570 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-sso-simple = SKIP
 // Separate shader objects:
-3570 VULKAN : KHR-GLES31.core.sepshaderobjs* = FAIL
+3570 VULKAN : KHR-GLES31.core.sepshaderobjs.StateInteraction = SKIP
 
 // Shader support:
 4402 : KHR-GLES31.core.shader_bitfield_operation.frexp.* = SKIP

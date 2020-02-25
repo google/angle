@@ -553,9 +553,9 @@ void State::reset(const Context *context)
     {
         mProgram->release(context);
     }
-    mProgram    = nullptr;
-    mExecutable = nullptr;
+    mProgram = nullptr;
     mProgramPipeline.set(context, nullptr);
+    mExecutable = nullptr;
 
     if (mTransformFeedback.get())
         mTransformFeedback->onBindingChanged(context, false);
@@ -587,7 +587,7 @@ void State::reset(const Context *context)
 ANGLE_INLINE void State::unsetActiveTextures(ActiveTextureMask textureMask)
 {
     // Unset any relevant bound textures.
-    for (size_t textureIndex : mExecutable->getActiveSamplersMask())
+    for (size_t textureIndex : textureMask)
     {
         mActiveTexturesCache.reset(mID, textureIndex);
         mCompleteTextureBindings[textureIndex].reset();
@@ -1709,6 +1709,10 @@ angle::Result State::setProgram(const Context *context, Program *newProgram)
             newProgram->addRef();
             ANGLE_TRY(onProgramExecutableChange(context, newProgram));
         }
+        else if (mProgramPipeline.get())
+        {
+            mExecutable = &mProgramPipeline->getExecutable();
+        }
 
         // Note that rendering is undefined if glUseProgram(0) is called. But ANGLE will generate
         // an error if the app tries to draw in this case.
@@ -1746,16 +1750,59 @@ bool State::removeTransformFeedbackBinding(const Context *context,
     return false;
 }
 
-void State::setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline)
+angle::Result State::useProgramStages(const Context *context,
+                                      ProgramPipeline *programPipeline,
+                                      GLbitfield stages,
+                                      Program *shaderProgram)
 {
+    programPipeline->useProgramStages(context, stages, shaderProgram);
+    ANGLE_TRY(onProgramPipelineExecutableChange(context, programPipeline));
+    mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_PIPELINE);
+
+    return angle::Result::Continue;
+}
+
+angle::Result State::setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline)
+{
+    if (mProgramPipeline.get() == pipeline)
+    {
+        return angle::Result::Continue;
+    }
+
+    if (mProgramPipeline.get())
+    {
+        unsetActiveTextures(mProgramPipeline->getExecutable().getActiveSamplersMask());
+    }
+
     mProgramPipeline.set(context, pipeline);
+    mDirtyBits.set(DIRTY_BIT_PROGRAM_BINDING);
 
     // A bound Program always overrides the ProgramPipeline, so only update the
     // current ProgramExecutable if there isn't currently a Program bound.
-    if (!mProgram && pipeline)
+    if (!mProgram)
     {
-        mExecutable = &mProgramPipeline->getExecutable();
+        if (mProgramPipeline.get())
+        {
+            mExecutable = &mProgramPipeline->getExecutable();
+        }
+        else
+        {
+            mExecutable = nullptr;
+        }
     }
+
+    if (mProgramPipeline.get())
+    {
+        mProgramPipeline->bind();
+        ANGLE_TRY(onProgramPipelineExecutableChange(context, mProgramPipeline.get()));
+
+        if (mProgramPipeline->hasAnyDirtyBit())
+        {
+            mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_PIPELINE);
+        }
+    }
+
+    return angle::Result::Continue;
 }
 
 void State::detachProgramPipeline(const Context *context, ProgramPipelineID pipeline)
@@ -2689,6 +2736,20 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             *params = ToGLenum(mProvokingVertex);
             break;
 
+        case GL_PROGRAM_PIPELINE_BINDING:
+        {
+            ProgramPipeline *pipeline = getProgramPipeline();
+            if (pipeline)
+            {
+                *params = pipeline->id().value;
+            }
+            else
+            {
+                *params = 0;
+            }
+            break;
+        }
+
         default:
             UNREACHABLE();
             break;
@@ -3019,7 +3080,22 @@ angle::Result State::syncVertexArray(const Context *context)
 
 angle::Result State::syncProgram(const Context *context)
 {
-    return mProgram->syncState(context);
+    // There may not be a program if the calling application only uses program pipelines.
+    if (mProgram)
+    {
+        return mProgram->syncState(context);
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result State::syncProgramPipeline(const Context *context)
+{
+    // There may not be a program pipeline if the calling application only uses programs.
+    if (mProgramPipeline.get())
+    {
+        return mProgramPipeline->syncState(context);
+    }
+    return angle::Result::Continue;
 }
 
 angle::Result State::syncDirtyObject(const Context *context, GLenum target)
@@ -3111,6 +3187,51 @@ angle::Result State::onProgramExecutableChange(const Context *context, Program *
     }
 
     for (size_t imageUnitIndex : executable.getActiveImagesMask())
+    {
+        Texture *image = mImageUnits[imageUnitIndex].texture.get();
+        if (!image)
+            continue;
+
+        if (image->hasAnyDirtyBit())
+        {
+            ANGLE_TRY(image->syncState(context));
+        }
+
+        if (mRobustResourceInit && image->initState() == InitState::MayNeedInit)
+        {
+            mDirtyObjects.set(DIRTY_OBJECT_IMAGES_INIT);
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result State::onProgramPipelineExecutableChange(const Context *context,
+                                                       ProgramPipeline *programPipeline)
+{
+    mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
+
+    if (programPipeline->hasAnyDirtyBit())
+    {
+        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
+    }
+
+    // Set any bound textures.
+    const ActiveTextureTypeArray &textureTypes =
+        programPipeline->getExecutable().getActiveSamplerTypes();
+    for (size_t textureIndex : programPipeline->getExecutable().getActiveSamplersMask())
+    {
+        TextureType type = textureTypes[textureIndex];
+
+        // This can happen if there is a conflicting texture type.
+        if (type == TextureType::InvalidEnum)
+            continue;
+
+        Texture *texture = getTextureForActiveSampler(type, textureIndex);
+        updateActiveTexture(context, textureIndex, texture);
+    }
+
+    for (size_t imageUnitIndex : programPipeline->getExecutable().getActiveImagesMask())
     {
         Texture *image = mImageUnits[imageUnitIndex].texture.get();
         if (!image)
