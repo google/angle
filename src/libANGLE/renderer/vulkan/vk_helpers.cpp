@@ -1466,13 +1466,13 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
     VkBufferCreateInfo modifiedCreateInfo;
     const VkBufferCreateInfo *createInfo = &requestedCreateInfo;
 
-    if (renderer->getFeatures().roundUpBuffersToMaxVertexAttribStride.enabled)
+    if (renderer->getFeatures().padBuffersToMaxVertexAttribStride.enabled)
     {
         const VkDeviceSize maxVertexAttribStride = renderer->getMaxVertexAttribStride();
         ASSERT(maxVertexAttribStride);
-        modifiedCreateInfo      = requestedCreateInfo;
-        modifiedCreateInfo.size = roundUp(modifiedCreateInfo.size, maxVertexAttribStride);
-        createInfo              = &modifiedCreateInfo;
+        modifiedCreateInfo = requestedCreateInfo;
+        modifiedCreateInfo.size += maxVertexAttribStride;
+        createInfo = &modifiedCreateInfo;
     }
 
     ANGLE_VK_TRY(contextVk, mBuffer.init(contextVk->getDevice(), *createInfo));

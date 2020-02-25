@@ -208,24 +208,22 @@ struct FeaturesVk : FeatureSetBase
         "RewriteStructSamplers behavior, which produces fewer.",
         &members, "http://anglebug.com/2703"};
 
-    // If the robustBufferAccess feature is enabled, Vulkan considers vertex attribute accesses only
-    // valid up to the last multiple of stride.  If a vertex's attribute range is such that it falls
-    // within the range of the buffer, but beyond the last multiple of stride, the driver is allowed
-    // to either read that range from the buffer anyway, or to return (0, 0, 0, 1).  Most drivers
-    // implement the former, while amdvlk on Linux and AMD's windows driver implement the latter.
-    // For the latter, this workaround limits GL_MAX_VERTEX_ATTRIB_STRIDE to a reasonable value, and
-    // rounds up every buffer allocation size to be a multiple of that.
-    // http://anglebug.com/2514
-    Feature roundUpBuffersToMaxVertexAttribStride = {
-        "round_up_buffers_to_max_vertex_attrib_stride", FeatureCategory::VulkanWorkarounds,
-        "If the robustBufferAccess feature is enabled, Vulkan considers vertex attribute accesses "
-        "only valid up to the last multiple of stride. If a vertex's attribute range is such that "
-        "it falls within the range of the buffer, but beyond the last multiple of stride, the "
-        "driver is allowed to either read that range from the buffer anyway, or to return "
-        "(0, 0, 0, 1). Most drivers implement the former, while some drivers the latter. For the "
-        "latter, this workaround limits GL_MAX_VERTEX_ATTRIB_STRIDE to a reasonable value, and "
-        "rounds up every buffer allocation size to be a multiple of that.",
-        &members, "http://anglebug.com/2848"};
+    // Vulkan considers vertex attribute accesses to count up to the last multiple of the stride.
+    // This additional access supports AMD's robust buffer access implementation.
+    // AMDVLK in particular will return incorrect values when the vertex access extends into the
+    // range that would be the stride padding and the buffer is too small.
+    // This workaround limits GL_MAX_VERTEX_ATTRIB_STRIDE to a reasonable value and pads out
+    // every buffer allocation size to be large enough to support a maximum vertex stride.
+    // http://anglebug.com/4428
+    Feature padBuffersToMaxVertexAttribStride = {
+        "pad_buffers_to_max_vertex_attrib_stride", FeatureCategory::VulkanWorkarounds,
+        "Vulkan considers vertex attribute accesses to count up to the last multiple of the "
+        "stride. This additional access supports AMD's robust buffer access implementation. "
+        "AMDVLK in particular will return incorrect values when the vertex access extends into "
+        "the range that would be the stride padding and the buffer is too small. "
+        "This workaround limits GL_MAX_VERTEX_ATTRIB_STRIDE to a maximum value and "
+        "pads up every buffer allocation size to be a multiple of the maximum stride.",
+        &members, "http://anglebug.com/4428"};
 
     // Whether the VkDevice supports the VK_EXT_swapchain_colorspace extension
     // http://anglebug.com/2514

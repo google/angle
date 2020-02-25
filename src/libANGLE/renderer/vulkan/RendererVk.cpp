@@ -1620,11 +1620,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     // Disabled on AMD/windows due to buggy behavior.
     ANGLE_FEATURE_CONDITION((&mFeatures), disallowSeamfulCubeMapEmulation, IsWindows() && isAMD);
 
-    // Round up buffer sizes in the presence of robustBufferAccess to emulate GLES behavior when
-    // vertex attributes are fetched from beyond the last multiple of the stride.  Currently, only
-    // AMD is known to refuse reading these attributes.
-    ANGLE_FEATURE_CONDITION((&mFeatures), roundUpBuffersToMaxVertexAttribStride,
-                            isAMD && mPhysicalDeviceFeatures.robustBufferAccess);
+    ANGLE_FEATURE_CONDITION((&mFeatures), padBuffersToMaxVertexAttribStride, isAMD);
     mMaxVertexAttribStride = std::min(static_cast<uint32_t>(gl::limits::kMaxVertexAttribStride),
                                       mPhysicalDeviceProperties.limits.maxVertexInputBindingStride);
 
