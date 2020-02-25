@@ -46,7 +46,7 @@ vars = {
   'spirv_headers_revision': 'dc77030acc9c6fe7ca21fff54c5a9d7b532d7da6',
 
   # Current revision of SPIRV-Tools for Vulkan.
-  'spirv_tools_revision': '79f8caf9154a0328a87424354bd10ab69e811185',
+  'spirv_tools_revision': '8910ea5f1c7bc38f79a8b70b265cd9d1571f4b56',
 
   # Current revision of Khronos Vulkan-Headers.
   'vulkan_headers_revision': '9bd3f561bcee3f01d22912de10bb07ce4e23d378',
@@ -182,7 +182,7 @@ deps = {
   },
 
   'third_party/SwiftShader': {
-    'url': '{swiftshader_git}/SwiftShader@214ec337a0b2745e6c41fbb3d562fa517122812f',
+    'url': '{swiftshader_git}/SwiftShader@da659b3741132fe6a6904e45d96112eef776bc28',
     'condition': 'not build_with_chromium',
   },
 
