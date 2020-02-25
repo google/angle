@@ -1115,6 +1115,26 @@ void TCompiler::collectInterfaceBlocks()
     mInterfaceBlocks.insert(mInterfaceBlocks.end(), mInBlocks.begin(), mInBlocks.end());
 }
 
+bool TCompiler::emulatePrecisionIfNeeded(TIntermBlock *root,
+                                         TInfoSinkBase &sink,
+                                         bool *isNeeded,
+                                         const ShShaderOutput outputLanguage)
+{
+    *isNeeded = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
+
+    if (*isNeeded)
+    {
+        EmulatePrecision emulatePrecision(&getSymbolTable());
+        root->traverse(&emulatePrecision);
+        if (!emulatePrecision.updateTree(this, root))
+        {
+            return false;
+        }
+        emulatePrecision.writeEmulationHelpers(sink, getShaderVersion(), outputLanguage);
+    }
+    return true;
+}
+
 void TCompiler::clearResults()
 {
     mArrayBoundsClamper.Cleanup();
