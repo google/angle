@@ -1689,7 +1689,7 @@ bool BufferHelper::canAccumulateRead(ContextVk *contextVk, VkAccessFlags readAcc
 {
     // We only need to start a new command buffer when we need a new barrier.
     // For simplicity's sake for now we always start a new command buffer.
-    // TODO(jmadill): Re-use the command buffer. http://anglebug.com/4029
+    // TODO(jmadill): Re-use the command buffer. http://anglebug.com/4429
     return false;
 }
 
@@ -1697,7 +1697,7 @@ bool BufferHelper::canAccumulateWrite(ContextVk *contextVk, VkAccessFlags writeA
 {
     // We only need to start a new command buffer when we need a new barrier.
     // For simplicity's sake for now we always start a new command buffer.
-    // TODO(jmadill): Re-use the command buffer. http://anglebug.com/4029
+    // TODO(jmadill): Re-use the command buffer. http://anglebug.com/4429
     return false;
 }
 
