@@ -659,6 +659,7 @@ void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
     stream->writeIntVector(var.arraySizes);
     stream->writeInt(var.staticUse);
     stream->writeInt(var.active);
+    stream->writeInt(var.binding);
     stream->writeString(var.structName);
     stream->writeInt(var.hasParentArrayIndex() ? var.parentArrayIndex() : -1);
     ASSERT(var.fields.empty());
@@ -673,6 +674,7 @@ void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
     stream->readIntVector<unsigned int>(&var->arraySizes);
     var->staticUse  = stream->readBool();
     var->active     = stream->readBool();
+    var->binding    = stream->readInt<int>();
     var->structName = stream->readString();
     var->setParentArrayIndex(stream->readInt<int>());
 }
@@ -1684,10 +1686,6 @@ void Program::resolveLinkImpl(const Context *context)
 
     // Must be called after markUnusedUniformLocations.
     postResolveLink(context);
-
-    // TODO(syoussefi): this might need to be moved to postResolveLink() so it will be called from
-    // deserialize() as well.  http://anglebug.com/3089
-    setUniformValuesFromBindingQualifiers();
 
     // Save to the program cache.
     MemoryProgramCache *cache = context->getMemoryProgramCache();
@@ -5708,6 +5706,8 @@ void Program::postResolveLink(const gl::Context *context)
 {
     mState.updateActiveSamplers();
     mState.updateActiveImages();
+
+    setUniformValuesFromBindingQualifiers();
 
     if (context->getExtensions().multiDraw)
     {

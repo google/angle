@@ -146,17 +146,6 @@
 2703 VULKAN ANDROID : KHR-GLES31.core.arrays_of_arrays.* = SKIP
 
 // Failing on Android with SwiftShader
-4106 SWIFTSHADER ANDROID : KHR-GLES31.core.layout_binding.sampler2D_layout_binding_texture_ComputeShader = FAIL
-4106 SWIFTSHADER ANDROID : KHR-GLES31.core.layout_binding.sampler2D_layout_binding_texture_FragmentShader = FAIL
-4106 SWIFTSHADER ANDROID : KHR-GLES31.core.layout_binding.sampler2D_layout_binding_texture_VertexShader = FAIL
-4106 SWIFTSHADER ANDROID : KHR-GLES31.core.layout_binding.sampler2DArray_layout_binding_texture_ComputeShader = FAIL
-4106 SWIFTSHADER ANDROID : KHR-GLES31.core.layout_binding.sampler2DArray_layout_binding_texture_FragmentShader = FAIL
-4106 SWIFTSHADER ANDROID : KHR-GLES31.core.layout_binding.sampler2DArray_layout_binding_texture_VertexShader = FAIL
-4106 SWIFTSHADER ANDROID : KHR-GLES31.core.layout_binding.sampler3D_layout_binding_texture_ComputeShader = FAIL
-4106 SWIFTSHADER ANDROID : KHR-GLES31.core.layout_binding.sampler3D_layout_binding_texture_FragmentShader = FAIL
-4106 SWIFTSHADER ANDROID : KHR-GLES31.core.layout_binding.sampler3D_layout_binding_texture_VertexShader = FAIL
-
-// Failing on Android with SwiftShader
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-bvec4 = FAIL
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-ivec4 = FAIL
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-uvec4 = FAIL
