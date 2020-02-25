@@ -124,9 +124,9 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkDestroySemaphore-semaphore-parameter",
     // http://anglebug.com/4063
     "VUID-VkDeviceCreateInfo-pNext-pNext",
-    "VUID-VkPipelineRasterizationStateCreateInfo-pNext-pNext",
-    "VUID_Undefined",
-};
+    "VUID-VkPipelineRasterizationStateCreateInfo-pNext-pNext", "VUID_Undefined",
+    // http://anglebug.com/3078
+    "UNASSIGNED-CoreValidation-Shader-InterfaceTypeMismatch"};
 
 // Suppress validation errors that are known
 //  return "true" if given code/prefix/message is known, else return "false"

@@ -25,6 +25,7 @@ class TOutputVulkanGLSL : public TOutputGLSL
                       sh::GLenum shaderType,
                       int shaderVersion,
                       ShShaderOutput output,
+                      bool forceHighp,
                       ShCompileOptions compileOptions);
 
     void writeStructType(const TStructure *structure);
@@ -48,6 +49,7 @@ class TOutputVulkanGLSL : public TOutputGLSL
     void writeVariableType(const TType &type,
                            const TSymbol *symbol,
                            bool isFunctionArgument) override;
+    bool writeVariablePrecision(TPrecision) override;
 
     // Every resource that requires set & binding layout qualifiers is assigned set 0 and an
     // arbitrary binding when outputting GLSL.  Every input/output that requires a location
@@ -57,6 +59,9 @@ class TOutputVulkanGLSL : public TOutputGLSL
     uint32_t mNextUnusedBinding;
     uint32_t mNextUnusedInputLocation;
     uint32_t mNextUnusedOutputLocation;
+
+  private:
+    bool mForceHighp;
 };
 
 }  // namespace sh

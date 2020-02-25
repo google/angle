@@ -567,6 +567,14 @@
 2830 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.fbo.texture_2d.primitives.lines = FAIL
 2830 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.primitives.line* = FAIL
 2808 ANDROID VULKAN : dEQP-GLES3.functional.shaders.builtin_variable.fragcoord_w = FAIL
+3078 ANDROID VULKAN : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.lowp_uint_fragment = FAIL
+3078 ANDROID VULKAN : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.lowp_uvec2_fragment = FAIL
+3078 ANDROID VULKAN : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.lowp_uvec3_fragment = FAIL
+3078 ANDROID VULKAN : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.lowp_uvec4_fragment = FAIL
+3078 ANDROID VULKAN : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.mediump_uint_fragment = FAIL
+3078 ANDROID VULKAN : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.mediump_uvec2_fragment = FAIL
+3078 ANDROID VULKAN : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.mediump_uvec3_fragment = FAIL
+3078 ANDROID VULKAN : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.mediump_uvec4_fragment = FAIL
 
 // Pixel driver issues
 4024 PIXEL2ORXL VULKAN : dEQP-GLES3.functional.draw.random.5 = SKIP
