@@ -124,9 +124,9 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkDestroySemaphore-semaphore-parameter",
     // http://anglebug.com/4063
     "VUID-VkDeviceCreateInfo-pNext-pNext",
-    "VUID-VkPipelineRasterizationStateCreateInfo-pNext-pNext",
-    "VUID_Undefined",
-};
+    "VUID-VkPipelineRasterizationStateCreateInfo-pNext-pNext", "VUID_Undefined",
+    // http://anglebug.com/3078
+    "UNASSIGNED-CoreValidation-Shader-InterfaceTypeMismatch"};
 
 // Suppress validation errors that are known
 //  return "true" if given code/prefix/message is known, else return "false"
@@ -1672,6 +1672,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
 
     // Currently disable FramebufferVk cache on Apple: http://anglebug.com/4442
     ANGLE_FEATURE_CONDITION((&mFeatures), enableFramebufferVkCache, !IsApple());
+
+    // Currently disabled by default: http://anglebug.com/3078
+    ANGLE_FEATURE_CONDITION((&mFeatures), enablePrecisionQualifiers, false);
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);

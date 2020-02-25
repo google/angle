@@ -333,6 +333,9 @@ const ShCompileOptions SH_DISABLE_ARB_TEXTURE_RECTANGLE = UINT64_C(1) << 52;
 // as column-major in ESSL 3.00 and greater shaders.
 const ShCompileOptions SH_REWRITE_ROW_MAJOR_MATRICES = UINT64_C(1) << 53;
 
+// Drop any explicit precision qualifiers from shader.
+const ShCompileOptions SH_IGNORE_PRECISION_QUALIFIERS = UINT64_C(1) << 54;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {

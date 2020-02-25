@@ -1043,9 +1043,17 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
 {
 
     TInfoSinkBase &sink = getInfoSink().obj;
+
+    bool precisionEmulation = false;
+    if (!emulatePrecisionIfNeeded(root, sink, &precisionEmulation, SH_GLSL_VULKAN_OUTPUT))
+        return false;
+
+    bool enablePrecision = ((compileOptions & SH_IGNORE_PRECISION_QUALIFIERS) == 0);
+
     TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
                                  getNameMap(), &getSymbolTable(), getShaderType(),
-                                 getShaderVersion(), getOutputType(), compileOptions);
+                                 getShaderVersion(), getOutputType(), precisionEmulation,
+                                 enablePrecision, compileOptions);
 
     if (!translateImpl(root, compileOptions, perfDiagnostics, nullptr, &outputGLSL))
     {
