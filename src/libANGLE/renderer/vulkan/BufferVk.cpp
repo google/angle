@@ -364,7 +364,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
 
         // Enqueue a copy command on the GPU.
         VkBufferCopy copyRegion = {stagingBufferOffset, offset, size};
-        ANGLE_TRY(mBuffer.copyFromBuffer(contextVk, mStagingBuffer.getCurrentBuffer()->getBuffer(),
+        ANGLE_TRY(mBuffer.copyFromBuffer(contextVk, mStagingBuffer.getCurrentBuffer(),
                                          VK_ACCESS_HOST_WRITE_BIT, copyRegion));
         mStagingBuffer.getCurrentBuffer()->retain(&contextVk->getResourceUseList());
     }

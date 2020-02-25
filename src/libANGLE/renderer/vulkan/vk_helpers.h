@@ -482,7 +482,7 @@ class BufferHelper final : public Resource
 
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(ContextVk *contextVk,
-                                 const Buffer &buffer,
+                                 BufferHelper *srcBuffer,
                                  VkAccessFlags bufferAccessType,
                                  const VkBufferCopy &copyRegion);
 
