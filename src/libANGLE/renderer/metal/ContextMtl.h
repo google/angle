@@ -393,6 +393,10 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
         // We'll use x, y, z, w for near / far / diff / zscale respectively.
         float depthRange[4];
+
+        // Used to pre-rotate gl_Position for Vulkan swapchain images on Android (a mat2, which is
+        // padded to the size of two vec4's).
+        float preRotation[8];
     };
 
     struct DefaultAttribute

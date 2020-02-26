@@ -1607,6 +1607,16 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context)
     mDriverUniforms.depthRange[2] = depthRangeDiff;
     mDriverUniforms.depthRange[3] = NeedToInvertDepthRange(depthRangeNear, depthRangeFar) ? -1 : 1;
 
+    // Fill in a mat2 identity matrix, plus padding
+    mDriverUniforms.preRotation[0] = 1.0f;
+    mDriverUniforms.preRotation[1] = 0.0f;
+    mDriverUniforms.preRotation[2] = 0.0f;
+    mDriverUniforms.preRotation[3] = 0.0f;
+    mDriverUniforms.preRotation[4] = 0.0f;
+    mDriverUniforms.preRotation[5] = 1.0f;
+    mDriverUniforms.preRotation[6] = 0.0f;
+    mDriverUniforms.preRotation[7] = 0.0f;
+
     ASSERT(mRenderEncoder.valid());
     mRenderEncoder.setFragmentData(mDriverUniforms, mtl::kDriverUniformsBindingIndex);
     mRenderEncoder.setVertexData(mDriverUniforms, mtl::kDriverUniformsBindingIndex);

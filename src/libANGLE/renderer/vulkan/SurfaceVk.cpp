@@ -95,6 +95,19 @@ constexpr VkImageUsageFlags kSurfaceVKColorImageUsageFlags =
 constexpr VkImageUsageFlags kSurfaceVKDepthStencilImageUsageFlags =
     kSurfaceVKImageUsageFlags | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
+// If the device is rotated with any of the following transform flags, the swapchain width and
+// height must be swapped (e.g. make a landscape window portrait).  This must also be done for all
+// attachments used with the swapchain (i.e. depth, stencil, and multisample buffers).
+constexpr VkSurfaceTransformFlagsKHR k90DegreeRotationVariants =
+    VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR | VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR |
+    VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR |
+    VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR;
+
+bool Is90DegreeRotation(VkSurfaceTransformFlagsKHR transform)
+{
+    return ((transform & k90DegreeRotationVariants) != 0);
+}
+
 }  // namespace
 
 SurfaceVk::SurfaceVk(const egl::SurfaceState &surfaceState) : SurfaceImpl(surfaceState) {}
@@ -554,6 +567,27 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 
     gl::Extents extents(static_cast<int>(width), static_cast<int>(height), 1);
 
+    if (renderer->getFeatures().enablePreRotateSurfaces.enabled)
+    {
+        // Use the surface's transform.  For many platforms, this will always be identity (ANGLE
+        // does not need to do any pre-rotation).  However, when mSurfaceCaps.currentTransform is
+        // not identity, the device has been rotated away from its natural orientation.  In such a
+        // case, ANGLE must rotate all rendering in order to avoid the compositor
+        // (e.g. SurfaceFlinger on Android) performing an additional rotation blit.  In addition,
+        // ANGLE must create the swapchain with VkSwapchainCreateInfoKHR::preTransform set to the
+        // value of mSurfaceCaps.currentTransform.
+        mPreTransform = mSurfaceCaps.currentTransform;
+    }
+    else
+    {
+        // Default to identity transform.
+        mPreTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+        if ((mSurfaceCaps.supportedTransforms & mPreTransform) == 0)
+        {
+            mPreTransform = mSurfaceCaps.currentTransform;
+        }
+    }
+
     uint32_t presentModeCount = 0;
     ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, mSurface,
                                                                       &presentModeCount, nullptr));
@@ -566,13 +600,6 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     // Select appropriate present mode based on vsync parameter.  Default to 1 (FIFO), though it
     // will get clamped to the min/max values specified at display creation time.
     setSwapInterval(renderer->getFeatures().disableFifoPresentMode.enabled ? 0 : 1);
-
-    // Default to identity transform.
-    mPreTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
-    if ((mSurfaceCaps.supportedTransforms & mPreTransform) == 0)
-    {
-        mPreTransform = mSurfaceCaps.currentTransform;
-    }
 
     uint32_t surfaceFormatCount = 0;
     ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, mSurface,
@@ -793,6 +820,19 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     const vk::Format &format = renderer->getFormat(mState.config->renderTargetFormat);
     VkFormat nativeFormat    = format.vkImageFormat;
 
+    gl::Extents rotatedExtents = extents;
+    if (Is90DegreeRotation(mPreTransform))
+    {
+        // The Surface is oriented such that its aspect ratio no longer matches that of the
+        // device.  In this case, the width and height of the swapchain images must be swapped to
+        // match the device's native orientation.  This must also be done for other attachments
+        // used with the swapchain (e.g. depth buffer).  The width and height of the viewport,
+        // scissor, and render-pass render area must also be swapped.  Then, when ANGLE rotates
+        // gl_Position in the vertex shader, the rendering will look the same as if no
+        // pre-rotation had been done.
+        std::swap(rotatedExtents.width, rotatedExtents.height);
+    }
+
     // We need transfer src for reading back from the backbuffer.
     VkImageUsageFlags imageUsageFlags = kSurfaceVKColorImageUsageFlags;
 
@@ -813,8 +853,8 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     swapchainInfo.imageColorSpace          = MapEglColorSpaceToVkColorSpace(
         static_cast<EGLenum>(mState.attributes.get(EGL_GL_COLORSPACE, EGL_NONE)));
     // Note: Vulkan doesn't allow 0-width/height swapchains.
-    swapchainInfo.imageExtent.width     = std::max(extents.width, 1);
-    swapchainInfo.imageExtent.height    = std::max(extents.height, 1);
+    swapchainInfo.imageExtent.width     = std::max(rotatedExtents.width, 1);
+    swapchainInfo.imageExtent.height    = std::max(rotatedExtents.height, 1);
     swapchainInfo.imageArrayLayers      = 1;
     swapchainInfo.imageUsage            = imageUsageFlags;
     swapchainInfo.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;
@@ -845,7 +885,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     ANGLE_VK_CHECK(context, samples > 0, VK_ERROR_INITIALIZATION_FAILED);
 
     VkExtent3D vkExtents;
-    gl_vk::GetExtent(extents, &vkExtents);
+    gl_vk::GetExtent(rotatedExtents, &vkExtents);
 
     if (samples > 1)
     {
@@ -926,12 +966,17 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
         // If window size has changed, check with surface capabilities.  It has been observed on
         // Android that `getCurrentWindowSize()` returns 1920x1080 for example, while surface
         // capabilities returns the size the surface was created with.
+        const VkPhysicalDevice &physicalDevice = contextVk->getRenderer()->getPhysicalDevice();
+        ANGLE_VK_TRY(contextVk, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,
+                                                                          &mSurfaceCaps));
+        if (contextVk->getFeatures().enablePreRotateSurfaces.enabled)
+        {
+            // Update the surface's transform, which can change even if the window size does not.
+            mPreTransform = mSurfaceCaps.currentTransform;
+        }
+
         if (currentExtents != swapchainExtents)
         {
-            const VkPhysicalDevice &physicalDevice = contextVk->getRenderer()->getPhysicalDevice();
-            ANGLE_VK_TRY(contextVk, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-                                        physicalDevice, mSurface, &mSurfaceCaps));
-
             uint32_t width  = mSurfaceCaps.currentExtent.width;
             uint32_t height = mSurfaceCaps.currentExtent.height;
 
@@ -1179,13 +1224,24 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
     // continuing.
     // If VK_SUBOPTIMAL_KHR is returned it's because the device orientation changed and we should
-    // recreate the swapchain with a new window orientation. We aren't quite ready for that so just
-    // ignore for now.
-    // TODO: Check for preRotation: http://anglebug.com/3502
-    *presentOutOfDate = result == VK_ERROR_OUT_OF_DATE_KHR;
-    if (!*presentOutOfDate && result != VK_SUBOPTIMAL_KHR)
+    // recreate the swapchain with a new window orientation.
+    if (contextVk->getFeatures().enablePreRotateSurfaces.enabled)
     {
-        ANGLE_VK_TRY(contextVk, result);
+        // Also check for VK_SUBOPTIMAL_KHR.
+        *presentOutOfDate = ((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR));
+        if (!*presentOutOfDate)
+        {
+            ANGLE_VK_TRY(contextVk, result);
+        }
+    }
+    else
+    {
+        // We aren't quite ready for that so just ignore for now.
+        *presentOutOfDate = result == VK_ERROR_OUT_OF_DATE_KHR;
+        if (!*presentOutOfDate && result != VK_SUBOPTIMAL_KHR)
+        {
+            ANGLE_VK_TRY(contextVk, result);
+        }
     }
 
     return angle::Result::Continue;
@@ -1399,7 +1455,11 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
     framebufferInfo.pAttachments    = imageViews.data();
     framebufferInfo.width           = static_cast<uint32_t>(extents.width);
     framebufferInfo.height          = static_cast<uint32_t>(extents.height);
-    framebufferInfo.layers          = 1;
+    if (Is90DegreeRotation(mPreTransform))
+    {
+        std::swap(framebufferInfo.width, framebufferInfo.height);
+    }
+    framebufferInfo.layers = 1;
 
     if (isMultiSampled())
     {

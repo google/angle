@@ -75,6 +75,10 @@ struct GraphicsDriverUniforms
 
     // We'll use x, y, z for near / far / diff respectively.
     std::array<float, 4> depthRange;
+
+    // Used to pre-rotate gl_Position for swapchain images on Android (a mat2, which is padded to
+    // the size of two vec4's).
+    std::array<float, 8> preRotation;
 };
 
 struct ComputeDriverUniforms
@@ -198,6 +202,71 @@ char GetStoreOpShorthand(uint32_t storeOp)
             return 'D';
     }
 }
+
+// When an Android surface is rotated differently than the device's native orientation, ANGLE must
+// rotate gl_Position in the vertex shader.  The following are the rotation matrices used.
+//
+// Note: these are mat2's that are appropriately padded (4 floats per row).
+using PreRotationMatrixValues = std::array<float, 8>;
+constexpr angle::PackedEnumMap<rx::SurfaceRotationType,
+                               PreRotationMatrixValues,
+                               angle::EnumSize<rx::SurfaceRotationType>()>
+    kPreRotationMatrices = {
+        {{rx::SurfaceRotationType::Identity, {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotationType::Rotated90Degrees,
+          {{0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotationType::Rotated180Degrees,
+          {{-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotationType::Rotated270Degrees,
+          {{0.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotationType::FlippedIdentity,
+          {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotationType::FlippedRotated90Degrees,
+          {{0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotationType::FlippedRotated180Degrees,
+          {{-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotationType::FlippedRotated270Degrees,
+          {{0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}}}};
+
+bool IsRotatedAspectRatio(SurfaceRotationType rotation)
+{
+    return ((rotation == SurfaceRotationType::Rotated90Degrees) ||
+            (rotation == SurfaceRotationType::Rotated270Degrees) ||
+            (rotation == SurfaceRotationType::FlippedRotated90Degrees) ||
+            (rotation == SurfaceRotationType::FlippedRotated270Degrees));
+}
+
+SurfaceRotationType DetermineSurfaceRotation(gl::Framebuffer *framebuffer,
+                                             WindowSurfaceVk *windowSurface)
+{
+    if (windowSurface && framebuffer->isDefault())
+    {
+        switch (windowSurface->getPreTransform())
+        {
+            case VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR:
+                // Do not rotate gl_Position (surface matches the device's orientation):
+                return SurfaceRotationType::Identity;
+            case VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR:
+                // Rotate gl_Position 90 degrees:
+                return SurfaceRotationType::Rotated90Degrees;
+            case VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR:
+                // Rotate gl_Position 180 degrees:
+                return SurfaceRotationType::Rotated180Degrees;
+            case VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR:
+                // Rotate gl_Position 270 degrees:
+                return SurfaceRotationType::Rotated180Degrees;
+            default:
+                UNREACHABLE();
+                return SurfaceRotationType::Identity;
+        }
+    }
+    else
+    {
+        // Do not rotate gl_Position (offscreen framebuffer):
+        return SurfaceRotationType::Identity;
+    }
+}
+
 }  // anonymous namespace
 
 ContextVk::DriverUniformsDescriptorSet::DriverUniformsDescriptorSet()
@@ -517,6 +586,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mCurrentComputePipeline(nullptr),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
       mCurrentWindowSurface(nullptr),
+      mCurrentRotationDrawFramebuffer(SurfaceRotationType::Identity),
+      mCurrentRotationReadFramebuffer(SurfaceRotationType::Identity),
       mVertexArray(nullptr),
       mDrawFramebuffer(nullptr),
       mProgram(nullptr),
@@ -2287,6 +2358,15 @@ bool ContextVk::isViewportFlipEnabledForReadFBO() const
     return mFlipViewportForReadFramebuffer;
 }
 
+bool ContextVk::isRotatedAspectRatioForDrawFBO() const
+{
+    return IsRotatedAspectRatio(mCurrentRotationDrawFramebuffer);
+}
+bool ContextVk::isRotatedAspectRatioForReadFBO() const
+{
+    return IsRotatedAspectRatio(mCurrentRotationReadFramebuffer);
+}
+
 void ContextVk::updateColorMask(const gl::BlendState &blendState)
 {
     mClearColorMask =
@@ -2354,11 +2434,21 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
         correctedHeight = viewportBoundsRangeHigh - correctedY;
     }
 
+    gl::Box framebufferDimensions = framebufferVk->getState().getDimensions();
+    if (isRotatedAspectRatioForDrawFBO())
+    {
+        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
+        // Swap the width and height of the viewport we calculate, and the framebuffer height that
+        // we use to calculate it with.
+        // TODO(ianelliott): handle small viewport/scissor cases.  http://anglebug.com/4431
+        std::swap(correctedWidth, correctedHeight);
+        std::swap(framebufferDimensions.width, framebufferDimensions.height);
+    }
     gl::Rectangle correctedRect =
         gl::Rectangle(correctedX, correctedY, correctedWidth, correctedHeight);
 
     gl_vk::GetViewport(correctedRect, nearPlane, farPlane, invertViewport,
-                       framebufferVk->getState().getDimensions().height, &vkViewport);
+                       framebufferDimensions.height, &vkViewport);
     mGraphicsPipelineDesc->updateViewport(&mGraphicsPipelineTransition, vkViewport);
     invalidateGraphicsDriverUniforms();
 }
@@ -2382,6 +2472,13 @@ angle::Result ContextVk::updateScissor(const gl::State &glState)
     if (isViewportFlipEnabledForDrawFBO())
     {
         scissoredArea.y = renderArea.height - scissoredArea.y - scissoredArea.height;
+    }
+    if (isRotatedAspectRatioForDrawFBO())
+    {
+        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
+        // Swap the width and height of the scissor we use.
+        // TODO(ianelliott): handle small viewport/scissor cases.  http://anglebug.com/4431
+        std::swap(scissoredArea.width, scissoredArea.height);
     }
 
     mGraphicsPipelineDesc->updateScissor(&mGraphicsPipelineTransition,
@@ -2588,6 +2685,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
                 updateFlipViewportReadFramebuffer(context->getState());
+                updateSurfaceRotationReadFramebuffer(glState);
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
@@ -2601,6 +2699,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
                 mDrawFramebuffer                 = vk::GetImpl(drawFramebuffer);
                 updateFlipViewportDrawFramebuffer(glState);
+                updateSurfaceRotationDrawFramebuffer(glState);
                 updateViewport(mDrawFramebuffer, glState.getViewport(), glState.getNearPlane(),
                                glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
                 updateColorMask(glState.getBlendState());
@@ -2770,6 +2869,8 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
     const gl::State &glState = context->getState();
     updateFlipViewportDrawFramebuffer(glState);
     updateFlipViewportReadFramebuffer(glState);
+    updateSurfaceRotationDrawFramebuffer(glState);
+    updateSurfaceRotationReadFramebuffer(glState);
     invalidateDriverUniforms();
 
     return angle::Result::Continue;
@@ -2794,6 +2895,20 @@ void ContextVk::updateFlipViewportReadFramebuffer(const gl::State &glState)
     gl::Framebuffer *readFramebuffer = glState.getReadFramebuffer();
     mFlipViewportForReadFramebuffer =
         readFramebuffer->isDefault() && mRenderer->getFeatures().flipViewportY.enabled;
+}
+
+void ContextVk::updateSurfaceRotationDrawFramebuffer(const gl::State &glState)
+{
+    gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
+    mCurrentRotationDrawFramebuffer =
+        DetermineSurfaceRotation(drawFramebuffer, mCurrentWindowSurface);
+}
+
+void ContextVk::updateSurfaceRotationReadFramebuffer(const gl::State &glState)
+{
+    gl::Framebuffer *readFramebuffer = glState.getReadFramebuffer();
+    mCurrentRotationDrawFramebuffer =
+        DetermineSurfaceRotation(readFramebuffer, mCurrentWindowSurface);
 }
 
 gl::Caps ContextVk::getNativeCaps() const
@@ -3177,9 +3292,17 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
                                      &mDriverUniforms[PipelineType::Graphics], &buffer, &ptr,
                                      &newBuffer));
 
-    const gl::Rectangle &glViewport = mState.getViewport();
+    gl::Rectangle glViewport = mState.getViewport();
     float halfRenderAreaHeight =
         static_cast<float>(mDrawFramebuffer->getState().getDimensions().height) * 0.5f;
+    if (isRotatedAspectRatioForDrawFBO())
+    {
+        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
+        // TODO(ianelliott): handle small viewport/scissor cases.  http://anglebug.com/4431
+        std::swap(glViewport.width, glViewport.height);
+        halfRenderAreaHeight =
+            static_cast<float>(mDrawFramebuffer->getState().getDimensions().width) * 0.5f;
+    }
     float scaleY = isViewportFlipEnabledForDrawFBO() ? -1.0f : 1.0f;
 
     uint32_t xfbActiveUnpaused = mState.isTransformFeedbackActiveUnpaused();
@@ -3201,7 +3324,10 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
         {},
         {},
         {},
-        {depthRangeNear, depthRangeFar, depthRangeDiff, 0.0f}};
+        {depthRangeNear, depthRangeFar, depthRangeDiff, 0.0f},
+        {}};
+    memcpy(&driverUniforms->preRotation, &kPreRotationMatrices[mCurrentRotationDrawFramebuffer],
+           sizeof(PreRotationMatrixValues));
 
     if (xfbActiveUnpaused)
     {
@@ -3870,7 +3996,17 @@ angle::Result ContextVk::flushAndBeginRenderPass(
 {
     vk::PrimaryCommandBuffer *primary;
     ANGLE_TRY(flushAndGetPrimaryCommandBuffer(&primary));
-    mRenderPassCommands.beginRenderPass(framebuffer, renderArea, renderPassDesc,
+
+    gl::Rectangle rotatedRenderArea = renderArea;
+    if (isRotatedAspectRatioForDrawFBO())
+    {
+        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of
+        // the surface.  Swap the width and height of the renderArea.
+        // TODO(ianelliott): handle small viewport/scissor cases.  http://anglebug.com/4431
+        std::swap(rotatedRenderArea.width, rotatedRenderArea.height);
+    }
+
+    mRenderPassCommands.beginRenderPass(framebuffer, rotatedRenderArea, renderPassDesc,
                                         renderPassAttachmentOps, clearValues, commandBufferOut);
     return angle::Result::Continue;
 }

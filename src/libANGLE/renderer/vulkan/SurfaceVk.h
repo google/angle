@@ -224,6 +224,8 @@ class WindowSurfaceVk : public SurfaceVk
 
     vk::Semaphore getAcquireImageSemaphore();
 
+    VkSurfaceTransformFlagBitsKHR getPreTransform() { return mPreTransform; }
+
   protected:
     angle::Result swapImpl(const gl::Context *context,
                            EGLint *rects,

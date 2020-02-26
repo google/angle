@@ -244,6 +244,14 @@ struct FeaturesVk : FeatureSetBase
         "allocate_non_zero_memory", FeatureCategory::VulkanFeatures,
         "Fill new allocations with non-zero values to flush out errors.", &members,
         "http://anglebug.com/4384"};
+
+    // Android needs to pre-rotate surfaces that are not oriented per the native device's
+    // orientation (e.g. a landscape application on a Pixel phone).  This feature works for
+    // full-screen applications. http://anglebug.com/3502
+    Feature enablePreRotateSurfaces = {"enable_pre_rotation_surfaces",
+                                       FeatureCategory::VulkanFeatures,
+                                       "Enable Android pre-rotation for landscape applications",
+                                       &members, "http://anglebug.com/3502"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
