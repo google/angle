@@ -761,6 +761,9 @@ angle::Result ContextVk::initialize()
                                                                vk::kDefaultTimestampQueryPoolSize));
     }
 
+    // Init gles to vulkan index type map
+    initIndexTypeMap();
+
     // Init driver uniforms and get the descriptor set layouts.
     constexpr angle::PackedEnumMap<PipelineType, VkShaderStageFlags> kPipelineStages = {
         {PipelineType::Graphics, VK_SHADER_STAGE_ALL_GRAPHICS},
@@ -954,9 +957,7 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
             mLastIndexBufferOffset = indices;
             mVertexArray->updateCurrentElementArrayBufferOffset(mLastIndexBufferOffset);
         }
-
-        if (indexType == gl::DrawElementsType::UnsignedByte &&
-            mGraphicsDirtyBits[DIRTY_BIT_INDEX_BUFFER])
+        if (shouldConvertUint8VkIndexType(indexType) && mGraphicsDirtyBits[DIRTY_BIT_INDEX_BUFFER])
         {
             BufferVk *bufferVk             = vk::GetImpl(elementArrayBuffer);
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
@@ -1298,7 +1299,7 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(const gl::Context *conte
 
     commandBuffer->bindIndexBuffer(elementArrayBuffer->getBuffer(),
                                    mVertexArray->getCurrentElementArrayBufferOffset(),
-                                   gl_vk::kIndexTypeMap[mCurrentDrawElementsType]);
+                                   getVkIndexType(mCurrentDrawElementsType));
 
     mRenderPassCommands.bufferRead(&mResourceUseList, VK_ACCESS_INDEX_READ_BIT, elementArrayBuffer);
 
@@ -2122,7 +2123,7 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    if (type == gl::DrawElementsType::UnsignedByte && mGraphicsDirtyBits[DIRTY_BIT_INDEX_BUFFER])
+    if (shouldConvertUint8VkIndexType(type) && mGraphicsDirtyBits[DIRTY_BIT_INDEX_BUFFER])
     {
         vk::BufferHelper *dstIndirectBuf;
         VkDeviceSize dstIndirectBufOffset;
@@ -4053,6 +4054,38 @@ void ContextVk::dumpCommandStreamDiagnostics()
     mCommandBufferDiagnostics.clear();
 
     out << "}\n";
+}
+
+void ContextVk::initIndexTypeMap()
+{
+    // Init gles-vulkan index type map
+    mIndexTypeMap[gl::DrawElementsType::UnsignedByte] =
+        mRenderer->getFeatures().supportsIndexTypeUint8.enabled ? VK_INDEX_TYPE_UINT8_EXT
+                                                                : VK_INDEX_TYPE_UINT16;
+    mIndexTypeMap[gl::DrawElementsType::UnsignedShort] = VK_INDEX_TYPE_UINT16;
+    mIndexTypeMap[gl::DrawElementsType::UnsignedInt]   = VK_INDEX_TYPE_UINT32;
+}
+
+VkIndexType ContextVk::getVkIndexType(gl::DrawElementsType glIndexType) const
+{
+    return mIndexTypeMap[glIndexType];
+}
+
+size_t ContextVk::getVkIndexTypeSize(gl::DrawElementsType glIndexType) const
+{
+    gl::DrawElementsType elementsType = shouldConvertUint8VkIndexType(glIndexType)
+                                            ? gl::DrawElementsType::UnsignedShort
+                                            : glIndexType;
+    ASSERT(elementsType < gl::DrawElementsType::EnumCount);
+
+    // Use GetDrawElementsTypeSize() to get the size
+    return static_cast<size_t>(gl::GetDrawElementsTypeSize(elementsType));
+}
+
+bool ContextVk::shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) const
+{
+    return (glIndexType == gl::DrawElementsType::UnsignedByte &&
+            !mRenderer->getFeatures().supportsIndexTypeUint8.enabled);
 }
 
 CommandBufferHelper::CommandBufferHelper()

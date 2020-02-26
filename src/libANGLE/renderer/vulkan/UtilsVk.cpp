@@ -17,14 +17,15 @@
 namespace rx
 {
 
-namespace BufferUtils_comp                = vk::InternalShader::BufferUtils_comp;
-namespace ConvertVertex_comp              = vk::InternalShader::ConvertVertex_comp;
-namespace ImageClear_frag                 = vk::InternalShader::ImageClear_frag;
-namespace ImageCopy_frag                  = vk::InternalShader::ImageCopy_frag;
-namespace BlitResolve_frag                = vk::InternalShader::BlitResolve_frag;
-namespace BlitResolveStencilNoExport_comp = vk::InternalShader::BlitResolveStencilNoExport_comp;
-namespace OverlayCull_comp                = vk::InternalShader::OverlayCull_comp;
-namespace OverlayDraw_comp                = vk::InternalShader::OverlayDraw_comp;
+namespace BufferUtils_comp                  = vk::InternalShader::BufferUtils_comp;
+namespace ConvertVertex_comp                = vk::InternalShader::ConvertVertex_comp;
+namespace ImageClear_frag                   = vk::InternalShader::ImageClear_frag;
+namespace ImageCopy_frag                    = vk::InternalShader::ImageCopy_frag;
+namespace BlitResolve_frag                  = vk::InternalShader::BlitResolve_frag;
+namespace BlitResolveStencilNoExport_comp   = vk::InternalShader::BlitResolveStencilNoExport_comp;
+namespace OverlayCull_comp                  = vk::InternalShader::OverlayCull_comp;
+namespace OverlayDraw_comp                  = vk::InternalShader::OverlayDraw_comp;
+namespace ConvertIndexIndirectLineLoop_comp = vk::InternalShader::ConvertIndexIndirectLineLoop_comp;
 
 namespace
 {
@@ -294,6 +295,22 @@ uint32_t GetBlitResolveFlags(bool blitColor,
     else
     {
         return BlitResolve_frag::kBlitStencil;
+    }
+}
+
+uint32_t GetConvertIndexIndirectLineLoopFlag(uint32_t indicesBitsWidth)
+{
+    switch (indicesBitsWidth)
+    {
+        case 8:
+            return ConvertIndexIndirectLineLoop_comp::kIs8Bits;
+        case 16:
+            return ConvertIndexIndirectLineLoop_comp::kIs16Bits;
+        case 32:
+            return ConvertIndexIndirectLineLoop_comp::kIs32Bits;
+        default:
+            UNREACHABLE();
+            return 0;
     }
 }
 
@@ -990,11 +1007,7 @@ angle::Result UtilsVk::convertLineLoopIndexIndirectBuffer(
         params.indirectBufferOffset >> 2, params.dstIndirectBufferOffset >> 2,
         params.dstIndexBufferOffset >> 2, contextVk->getState().isPrimitiveRestartEnabled()};
 
-    uint32_t flags = 0;
-    if (params.is32Bit)
-    {
-        flags |= vk::InternalShader::ConvertIndexIndirectLineLoop_comp::kIs32Bit;
-    }
+    uint32_t flags = GetConvertIndexIndirectLineLoopFlag(params.indicesBitsWidth);
 
     vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
     ANGLE_TRY(contextVk->getShaderLibrary().getConvertIndexIndirectLineLoop_comp(contextVk, flags,

@@ -650,6 +650,10 @@ class ContextVk : public ContextImpl, public vk::Context
 
     void addCommandBufferDiagnostics(const std::string &commandBufferDiagnostics);
 
+    VkIndexType getVkIndexType(gl::DrawElementsType glIndexType) const;
+    size_t getVkIndexTypeSize(gl::DrawElementsType glIndexType) const;
+    bool shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) const;
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -905,6 +909,8 @@ class ContextVk : public ContextImpl, public vk::Context
 
     ANGLE_INLINE void onRenderPassFinished() { mRenderPassCommandBuffer = nullptr; }
 
+    void initIndexTypeMap();
+
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
 
@@ -951,6 +957,7 @@ class ContextVk : public ContextImpl, public vk::Context
     // The offset we had the last time we bound the index buffer.
     const GLvoid *mLastIndexBufferOffset;
     gl::DrawElementsType mCurrentDrawElementsType;
+    angle::PackedEnumMap<gl::DrawElementsType, VkIndexType> mIndexTypeMap;
 
     // Cache the current draw call's firstVertex to be passed to
     // TransformFeedbackVk::getBufferOffsets.  Unfortunately, gl_BaseVertex support in Vulkan is

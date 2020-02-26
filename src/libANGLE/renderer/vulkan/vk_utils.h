@@ -640,12 +640,6 @@ VkSampleCountFlagBits GetSamples(GLint sampleCount);
 VkComponentSwizzle GetSwizzle(const GLenum swizzle);
 VkCompareOp GetCompareOp(const GLenum compareFunc);
 
-constexpr angle::PackedEnumMap<gl::DrawElementsType, VkIndexType> kIndexTypeMap = {
-    {gl::DrawElementsType::UnsignedByte, VK_INDEX_TYPE_UINT16},
-    {gl::DrawElementsType::UnsignedShort, VK_INDEX_TYPE_UINT16},
-    {gl::DrawElementsType::UnsignedInt, VK_INDEX_TYPE_UINT32},
-};
-
 constexpr gl::ShaderMap<VkShaderStageFlagBits> kShaderStageMap = {
     {gl::ShaderType::Vertex, VK_SHADER_STAGE_VERTEX_BIT},
     {gl::ShaderType::Fragment, VK_SHADER_STAGE_FRAGMENT_BIT},

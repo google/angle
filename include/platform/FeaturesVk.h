@@ -153,6 +153,12 @@ struct FeaturesVk : FeatureSetBase
         "Transform feedback uses the VK_EXT_transform_feedback extension.", &members,
         "http://anglebug.com/3206"};
 
+    // Whether the VkDevice supports the VK_EXT_index_type_uint8 extension
+    // http://anglebug.com/4405
+    Feature supportsIndexTypeUint8 = {"supports_index_type_uint8", FeatureCategory::VulkanFeatures,
+                                      "VkDevice supports the VK_EXT_index_type_uint8 extension",
+                                      &members, "http://anglebug.com/4405"};
+
     // VK_PRESENT_MODE_FIFO_KHR causes random timeouts on Linux Intel. http://anglebug.com/3153
     Feature disableFifoPresentMode = {
         "disable_fifo_present_mode", FeatureCategory::VulkanWorkarounds,
