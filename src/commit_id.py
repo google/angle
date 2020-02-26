@@ -23,17 +23,13 @@ if len(sys.argv) < 3:
     sys.exit(usage)
 
 operation = sys.argv[1]
-if os.path.isdir(sys.argv[2]):
-    cwd = sys.argv[2]
-else:
-    cwd = os.path.dirname(sys.argv[2])
+cwd = sys.argv[2]
 
 if operation == 'check':
-    try:
-        # Try a git command to verify the cwd is valid and we can use the 'gen command'
-        grab_output('git status', cwd)
+    index_path = os.path.join(cwd, '.git', 'index')
+    if os.path.exists(index_path):
         print("1")
-    except:
+    else:
         print("0")
     sys.exit(0)
 
@@ -42,23 +38,18 @@ if len(sys.argv) < 4 or operation != 'gen':
 
 output_file = sys.argv[3]
 commit_id_size = 12
-commit_id = 'unknown hash'
-commit_date = 'unknown date'
 
-additional_defines = []
 try:
     commit_id = grab_output('git rev-parse --short=%d HEAD' % commit_id_size, cwd)
     commit_date = grab_output('git show -s --format=%ci HEAD', cwd)
 except:
-    additional_defines.append('#define ANGLE_DISABLE_PROGRAM_BINARY_LOAD')
+    commit_id = 'invalid-hash'
+    commit_date = 'invalid-date'
 
 hfile = open(output_file, 'w')
 
 hfile.write('#define ANGLE_COMMIT_HASH "%s"\n' % commit_id)
 hfile.write('#define ANGLE_COMMIT_HASH_SIZE %d\n' % commit_id_size)
 hfile.write('#define ANGLE_COMMIT_DATE "%s"\n' % commit_date)
-
-for additional_define in additional_defines:
-    hfile.write(additional_define + '\n')
 
 hfile.close()

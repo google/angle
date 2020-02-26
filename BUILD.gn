@@ -54,6 +54,15 @@ if (ozone_platform_gbm) {
   }
 }
 
+angle_git_is_present = exec_script("src/commit_id.py",
+                                   [
+                                     "check",
+                                     rebase_path(".", root_build_dir),
+                                   ],
+                                   "value")
+
+angle_use_commit_id = angle_git_is_present == 1
+
 import("src/compiler.gni")
 import("src/libGLESv2.gni")
 
@@ -457,33 +466,29 @@ config("commit_id_config") {
   visibility = [ ":commit_id" ]
 }
 
-commit_id_output_file = "$root_gen_dir/angle/commit.h"
-action("commit_id") {
-  script = "src/commit_id.py"
-  outputs = [ commit_id_output_file ]
+commit_id_output_file = "$root_gen_dir/angle/id/commit.h"
+if (angle_use_commit_id) {
+  action("commit_id") {
+    script = "src/commit_id.py"
+    outputs = [ commit_id_output_file ]
 
-  # commit id should depend on angle's HEAD revision
-  commit_id_git_dep = ".git/HEAD"
+    # commit id should depend on angle's HEAD revision
+    inputs = [ ".git/HEAD" ]
 
-  # Add git as a dependency if it is available.
-  angle_git_is_present =
-      exec_script("src/commit_id.py",
-                  [
-                    "check",
-                    rebase_path(commit_id_git_dep, root_build_dir),
-                  ],
-                  "value") == 1
-  if (angle_git_is_present) {
-    inputs = [ commit_id_git_dep ]
+    args = [
+      "gen",
+      rebase_path(".", root_build_dir),
+      rebase_path(commit_id_output_file, root_build_dir),
+    ]
+
+    public_configs = [ ":commit_id_config" ]
   }
-
-  args = [
-    "gen",
-    rebase_path(commit_id_git_dep, root_build_dir),
-    rebase_path(commit_id_output_file, root_build_dir),
-  ]
-
-  public_configs = [ ":commit_id_config" ]
+} else {
+  copy("commit_id") {
+    sources = [ "src/commit.h" ]
+    outputs = [ commit_id_output_file ]
+    public_configs = [ ":commit_id_config" ]
+  }
 }
 
 angle_source_set("angle_version") {
