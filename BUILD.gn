@@ -772,10 +772,17 @@ config("shared_library_public_config") {
 }
 
 config("library_name_config") {
-  defines = [
-    "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"",
-    "ANGLE_GLESV2_LIBRARY_NAME=\"libGLESv2${angle_libs_suffix}\"",
-  ]
+  if (is_component_build && is_android) {
+    defines = [
+      "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}.cr\"",
+      "ANGLE_GLESV2_LIBRARY_NAME=\"libGLESv2${angle_libs_suffix}.cr\"",
+    ]
+  } else {
+    defines = [
+      "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"",
+      "ANGLE_GLESV2_LIBRARY_NAME=\"libGLESv2${angle_libs_suffix}\"",
+    ]
+  }
 }
 
 # This config controls export definitions on ANGLE API calls.
