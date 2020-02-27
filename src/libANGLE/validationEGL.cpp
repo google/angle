@@ -178,7 +178,6 @@ Error ValidateConfigAttribute(const Display *display, EGLAttrib attribute)
         case EGL_SAMPLES:
         case EGL_SAMPLE_BUFFERS:
         case EGL_SURFACE_TYPE:
-        case EGL_BIND_TO_TEXTURE_TARGET_ANGLE:
         case EGL_TRANSPARENT_TYPE:
         case EGL_TRANSPARENT_BLUE_VALUE:
         case EGL_TRANSPARENT_GREEN_VALUE:
@@ -223,6 +222,13 @@ Error ValidateConfigAttribute(const Display *display, EGLAttrib attribute)
             if (!display->getExtensions().framebufferTargetANDROID)
             {
                 return EglBadAttribute() << "EGL_ANDROID_framebuffer_target is not enabled.";
+            }
+            break;
+
+        case EGL_BIND_TO_TEXTURE_TARGET_ANGLE:
+            if (!display->getExtensions().iosurfaceClientBuffer)
+            {
+                return EglBadAttribute() << "EGL_ANGLE_iosurface_client_buffer is not enabled.";
             }
             break;
 
