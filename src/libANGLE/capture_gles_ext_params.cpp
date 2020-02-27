@@ -8,6 +8,8 @@
 
 #include "libANGLE/capture_gles_ext_autogen.h"
 
+#include "libANGLE/capture_gles_3_0_autogen.h"
+
 using namespace angle;
 
 namespace gl
@@ -2370,7 +2372,7 @@ void CaptureDrawBuffersEXT_bufs(const State &glState,
                                 const GLenum *bufs,
                                 ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureDrawBuffers_bufs(glState, isCallValid, n, bufs, paramCapture);
 }
 
 void CaptureDrawElementsInstancedEXT_indices(const State &glState,
