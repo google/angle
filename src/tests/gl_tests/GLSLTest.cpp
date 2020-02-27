@@ -7713,7 +7713,7 @@ void main(void)
         glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData), GL_MAP_READ_BIT));
     EXPECT_EQ(ptr[0], inputData);
     EXPECT_EQ(ptr[1], uniformData);
-    EXPECT_EQ(ptr[2], textureData.R);
+    EXPECT_NEAR(ptr[2], textureData.R, 1.0);
     EXPECT_EQ(ptr[3], acData);
     EXPECT_EQ(ptr[4], imageData);
 
