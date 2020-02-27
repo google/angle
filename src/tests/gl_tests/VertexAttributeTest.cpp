@@ -2530,7 +2530,7 @@ TEST_P(VertexAttributeTestES31, LargeStride)
 
     RNG rng(0);
 
-    std::vector<Vertex> vertexData;
+    std::vector<Vertex> vertexData(bufferSize, {Vector4(), Vector2()});
     std::vector<GLColor> expectedColors;
     for (uint32_t vertexIndex = 0; vertexIndex < numVertices; ++vertexIndex)
     {
@@ -2544,13 +2544,16 @@ TEST_P(VertexAttributeTestES31, LargeStride)
         randomColor[3]     = 255;
         Vector4 clampedVec = randomColor.toNormalizedVector();
 
-        vertexData.push_back({Vector4(x, y, 0.0f, 1.0f), Vector2(clampedVec[0], clampedVec[1])});
+        vertexData[vertexIndex] = {Vector4(x, y, 0.0f, 1.0f),
+                                   Vector2(clampedVec[0], clampedVec[1])};
         expectedColors.push_back(randomColor);
     }
 
     GLBuffer buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glBufferData(GL_ARRAY_BUFFER, bufferSize, vertexData.data(), GL_STATIC_DRAW);
+
+    vertexData.resize(numVertices);
 
     constexpr char kVS[] = R"(#version 310 es
 in vec4 pos;
