@@ -765,6 +765,12 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     header << "void SetupContext" << contextId << "Replay();\n";
     header << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex);\n";
     header << "\n";
+    header << "using FramebufferChangeCallback = void(*)(void *userData, GLenum target, GLuint "
+              "framebuffer);\n";
+    header << "void SetFramebufferChangeCallback(void *userData, FramebufferChangeCallback "
+              "callback);\n";
+    header << "void OnFramebufferChange(GLenum target, GLuint framebuffer);\n";
+    header << "\n";
     for (uint32_t frameIndex = frameStart; frameIndex < frameEnd; ++frameIndex)
     {
         header << "void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
@@ -800,6 +806,8 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     source << "}\n";
     source << "\n";
     source << "const char *gBinaryDataDir = \".\";\n";
+    source << "FramebufferChangeCallback gFramebufferChangeCallback;\n";
+    source << "void *gFramebufferChangeCallbackUserData;\n";
     source << "}  // namespace\n";
     source << "\n";
     source << "LocationsMap gUniformLocations;\n";
@@ -843,6 +851,21 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     }
 
     header << "\n";
+
+    source << "\n";
+    source << "void SetFramebufferChangeCallback(void *userData, FramebufferChangeCallback "
+              "callback)\n";
+    source << "{\n";
+    source << "    gFramebufferChangeCallbackUserData = userData;\n";
+    source << "    gFramebufferChangeCallback = callback;\n";
+    source << "}\n";
+    source << "\n";
+    source << "void OnFramebufferChange(GLenum target, GLuint framebuffer)\n";
+    source << "{\n";
+    source << "    if (gFramebufferChangeCallback)\n";
+    source << "        gFramebufferChangeCallback(gFramebufferChangeCallbackUserData, target, "
+              "framebuffer);\n";
+    source << "}\n";
 
     source << "\n";
     source << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex)\n";
@@ -1044,6 +1067,16 @@ void CaptureDeleteUniformLocations(gl::ShaderProgramID program, std::vector<Call
     ParamBuffer params;
     params.addValueParam("program", ParamType::TShaderProgramID, program);
     callsOut->emplace_back("DeleteUniformLocations", std::move(params));
+}
+
+void CaptureOnFramebufferChange(GLenum target,
+                                gl::FramebufferID framebufferID,
+                                std::vector<CallCapture> *callsOut)
+{
+    ParamBuffer params;
+    params.addValueParam("target", ParamType::TGLenum, target);
+    params.addValueParam("framebuffer", ParamType::TFramebufferID, framebufferID);
+    callsOut->emplace_back("OnFramebufferChange", std::move(params));
 }
 
 void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
@@ -2495,6 +2528,15 @@ void FrameCapture::maybeCapturePostCallUpdates(const gl::Context *context)
             const ParamCapture &param =
                 lastCall.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
             CaptureDeleteUniformLocations(param.value.ShaderProgramIDVal, &mFrameCalls);
+            break;
+        }
+        case gl::EntryPoint::BindFramebuffer:
+        {
+            const ParamCapture &target = lastCall.params.getParam("target", ParamType::TGLenum, 0);
+            const ParamCapture &framebuffer =
+                lastCall.params.getParam("framebufferPacked", ParamType::TFramebufferID, 1);
+            CaptureOnFramebufferChange(target.value.GLenumVal, framebuffer.value.FramebufferIDVal,
+                                       &mFrameCalls);
             break;
         }
         default:
