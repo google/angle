@@ -1649,6 +1649,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     // Pre-rotation support is not fully ready to be enabled.
     ANGLE_FEATURE_CONDITION((&mFeatures), enablePreRotateSurfaces, false);
 
+    // Currently disable FramebufferVk cache on Apple: http://anglebug.com/4442
+    ANGLE_FEATURE_CONDITION((&mFeatures), enableFramebufferVkCache, !IsApple());
+
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);
 

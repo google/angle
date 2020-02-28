@@ -252,6 +252,11 @@ struct FeaturesVk : FeatureSetBase
                                        FeatureCategory::VulkanFeatures,
                                        "Enable Android pre-rotation for landscape applications",
                                        &members, "http://anglebug.com/3502"};
+
+    // Cache FramebufferVk objects. Currently hitting a bug on Apple: http://anglebug.com/4442
+    Feature enableFramebufferVkCache = {
+        "enable_framebuffer_vk_cache", FeatureCategory::VulkanFeatures,
+        "Enable FramebufferVk objects to be cached", &members, "http://anglebug.com/4442"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
