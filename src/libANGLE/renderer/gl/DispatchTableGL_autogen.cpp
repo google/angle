@@ -2341,6 +2341,7 @@ void DispatchTableGL::initProcsGLES(const gl::Version &version,
         ASSIGN("glDeleteQueriesEXT", deleteQueries);
         ASSIGN("glEndQueryEXT", endQuery);
         ASSIGN("glGenQueriesEXT", genQueries);
+        ASSIGN("glGetInteger64vEXT", getInteger64v);
         ASSIGN("glGetQueryObjecti64vEXT", getQueryObjecti64v);
         ASSIGN("glGetQueryObjectivEXT", getQueryObjectiv);
         ASSIGN("glGetQueryObjectui64vEXT", getQueryObjectui64v);
@@ -5132,6 +5133,7 @@ void DispatchTableGL::initProcsGLESNULL(const gl::Version &version,
         deleteQueries       = &glDeleteQueriesNULL;
         endQuery            = &glEndQueryNULL;
         genQueries          = &glGenQueriesNULL;
+        getInteger64v       = &glGetInteger64vNULL;
         getQueryObjecti64v  = &glGetQueryObjecti64vNULL;
         getQueryObjectiv    = &glGetQueryObjectivNULL;
         getQueryObjectui64v = &glGetQueryObjectui64vNULL;

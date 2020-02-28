@@ -3585,6 +3585,23 @@ CallCapture CaptureGenQueriesEXT(const State &glState,
     return CallCapture(gl::EntryPoint::GenQueriesEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureGetInteger64vEXT(const State &glState,
+                                    bool isCallValid,
+                                    GLenum pname,
+                                    GLint64 *data)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("pname", GLenumGroup::GetPName, ParamType::TGLenum, pname);
+
+    ParamCapture dataParam("data", ParamType::TGLint64Pointer);
+    InitParamValue(ParamType::TGLint64Pointer, data, &dataParam.value);
+    CaptureGetInteger64vEXT_data(glState, isCallValid, pname, data, &dataParam);
+    paramBuffer.addParam(std::move(dataParam));
+
+    return CallCapture(gl::EntryPoint::GetInteger64vEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureGetQueryObjecti64vEXT(const State &glState,
                                          bool isCallValid,
                                          QueryID idPacked,

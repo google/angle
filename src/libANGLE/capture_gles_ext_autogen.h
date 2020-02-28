@@ -1029,6 +1029,10 @@ angle::CallCapture CaptureGenQueriesEXT(const State &glState,
                                         bool isCallValid,
                                         GLsizei n,
                                         QueryID *idsPacked);
+angle::CallCapture CaptureGetInteger64vEXT(const State &glState,
+                                           bool isCallValid,
+                                           GLenum pname,
+                                           GLint64 *data);
 angle::CallCapture CaptureGetQueryObjecti64vEXT(const State &glState,
                                                 bool isCallValid,
                                                 QueryID idPacked,
@@ -3481,6 +3485,11 @@ void CaptureGenQueriesEXT_idsPacked(const State &glState,
                                     GLsizei n,
                                     QueryID *idsPacked,
                                     angle::ParamCapture *paramCapture);
+void CaptureGetInteger64vEXT_data(const State &glState,
+                                  bool isCallValid,
+                                  GLenum pname,
+                                  GLint64 *data,
+                                  angle::ParamCapture *paramCapture);
 void CaptureGetQueryObjecti64vEXT_params(const State &glState,
                                          bool isCallValid,
                                          QueryID idPacked,

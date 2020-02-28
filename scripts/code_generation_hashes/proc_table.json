@@ -6,7 +6,7 @@
   "scripts/gen_proc_table.py":
     "24dbcc78fd3f000f58ca98237ccc0da4",
   "scripts/gl.xml":
-    "2af7b077ec347349b3a92683e8fb8b03",
+    "e74a595068cbdd6064300be1e71b7cc9",
   "scripts/gl_angle_ext.xml":
     "872ecabf7ca7767c7801ba835ddbd1eb",
   "scripts/registry_xml.py":
@@ -16,5 +16,5 @@
   "src/libGL/proc_table_wgl_autogen.cpp":
     "03c05f20c57c1de822b0ddaf6d4f9607",
   "src/libGLESv2/proc_table_egl_autogen.cpp":
-    "4b576066b0915f136df5479dbcef0852"
+    "29dbd578aeded8fb3412ab2adc3a1cde"
 }

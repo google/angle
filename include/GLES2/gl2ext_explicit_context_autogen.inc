@@ -212,6 +212,7 @@ typedef GLuint (GL_APIENTRYP PFNGLGETDEBUGMESSAGELOGKHRCONTEXTANGLEPROC)(GLeglCo
 typedef void (GL_APIENTRYP PFNGLGETFENCEIVNVCONTEXTANGLEPROC)(GLeglContext ctx, GLuint fence, GLenum pname, GLint *params);
 typedef GLint (GL_APIENTRYP PFNGLGETFRAGDATAINDEXEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint program, const GLchar *name);
 typedef GLenum (GL_APIENTRYP PFNGLGETGRAPHICSRESETSTATUSEXTCONTEXTANGLEPROC)(GLeglContext ctx);
+typedef void (GL_APIENTRYP PFNGLGETINTEGER64VEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum pname, GLint64 *data);
 typedef void (GL_APIENTRYP PFNGLGETMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint memoryObject, GLenum pname, GLint *params);
 typedef void (GL_APIENTRYP PFNGLGETOBJECTLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length, GLchar *label);
 typedef void (GL_APIENTRYP PFNGLGETOBJECTPTRLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label);
@@ -605,6 +606,7 @@ GL_APICALL GLuint GL_APIENTRY glGetDebugMessageLogKHRContextANGLE(GLeglContext c
 GL_APICALL void GL_APIENTRY glGetFenceivNVContextANGLE(GLeglContext ctx, GLuint fence, GLenum pname, GLint *params);
 GL_APICALL GLint GL_APIENTRY glGetFragDataIndexEXTContextANGLE(GLeglContext ctx, GLuint program, const GLchar *name);
 GL_APICALL GLenum GL_APIENTRY glGetGraphicsResetStatusEXTContextANGLE(GLeglContext ctx);
+GL_APICALL void GL_APIENTRY glGetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data);
 GL_APICALL void GL_APIENTRY glGetMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx, GLuint memoryObject, GLenum pname, GLint *params);
 GL_APICALL void GL_APIENTRY glGetObjectLabelKHRContextANGLE(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length, GLchar *label);
 GL_APICALL void GL_APIENTRY glGetObjectPtrLabelKHRContextANGLE(GLeglContext ctx, const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label);

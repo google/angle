@@ -4035,6 +4035,26 @@ void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint *ids)
     }
 }
 
+void GL_APIENTRY GetInteger64vEXT(GLenum pname, GLint64 *data)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glGetInteger64vEXT",
+          "context = %d, GLenum pname = %s, GLint64 *data = 0x%016" PRIxPTR "", CID(context),
+          GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetInteger64vEXT(context, pname, data));
+        if (isCallValid)
+        {
+            context->getInteger64v(pname, data);
+        }
+        ANGLE_CAPTURE(GetInteger64vEXT, isCallValid, context, pname, data);
+    }
+}
+
 void GL_APIENTRY GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
 {
     Context *context = GetGlobalContext();
@@ -14184,6 +14204,27 @@ void GL_APIENTRY GetInteger64vContextANGLE(GLeglContext ctx, GLenum pname, GLint
             context->getInteger64v(pname, data);
         }
         ANGLE_CAPTURE(GetInteger64v, isCallValid, context, pname, data);
+    }
+}
+
+void GL_APIENTRY GetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glGetInteger64vEXT",
+          "context = %d, GLenum pname = %s, GLint64 *data = 0x%016" PRIxPTR "", CID(context),
+          GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetInteger64vEXT(context, pname, data));
+        if (isCallValid)
+        {
+            context->getInteger64v(pname, data);
+        }
+        ANGLE_CAPTURE(GetInteger64vEXT, isCallValid, context, pname, data);
     }
 }
 

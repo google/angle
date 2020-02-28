@@ -2326,6 +2326,15 @@ void CaptureGetQueryObjecti64vEXT_params(const State &glState,
     UNIMPLEMENTED();
 }
 
+void CaptureGetInteger64vEXT_data(const State &glState,
+                                  bool isCallValid,
+                                  GLenum pname,
+                                  GLint64 *data,
+                                  angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
 void CaptureGetQueryObjectivEXT_params(const State &glState,
                                        bool isCallValid,
                                        QueryID id,

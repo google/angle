@@ -444,6 +444,7 @@ enum class EntryPoint
     GetInteger64i_v,
     GetInteger64i_vRobustANGLE,
     GetInteger64v,
+    GetInteger64vEXT,
     GetInteger64vRobustANGLE,
     GetIntegeri_v,
     GetIntegeri_vRobustANGLE,

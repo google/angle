@@ -876,6 +876,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetInteger64i_vRobustANGLE";
         case EntryPoint::GetInteger64v:
             return "glGetInteger64v";
+        case EntryPoint::GetInteger64vEXT:
+            return "glGetInteger64vEXT";
         case EntryPoint::GetInteger64vRobustANGLE:
             return "glGetInteger64vRobustANGLE";
         case EntryPoint::GetIntegeri_v:

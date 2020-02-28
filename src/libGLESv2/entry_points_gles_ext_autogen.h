@@ -721,6 +721,7 @@ ANGLE_EXPORT void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id);
 ANGLE_EXPORT void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids);
 ANGLE_EXPORT void GL_APIENTRY EndQueryEXT(GLenum target);
 ANGLE_EXPORT void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint *ids);
+ANGLE_EXPORT void GL_APIENTRY GetInteger64vEXT(GLenum pname, GLint64 *data);
 ANGLE_EXPORT void GL_APIENTRY GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params);
 ANGLE_EXPORT void GL_APIENTRY GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params);
 ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *params);
@@ -2170,6 +2171,9 @@ ANGLE_EXPORT void GL_APIENTRY GetInteger64i_vContextANGLE(GLeglContext ctx,
 ANGLE_EXPORT void GL_APIENTRY GetInteger64vContextANGLE(GLeglContext ctx,
                                                         GLenum pname,
                                                         GLint64 *data);
+ANGLE_EXPORT void GL_APIENTRY GetInteger64vEXTContextANGLE(GLeglContext ctx,
+                                                           GLenum pname,
+                                                           GLint64 *data);
 ANGLE_EXPORT void GL_APIENTRY GetIntegeri_vContextANGLE(GLeglContext ctx,
                                                         GLenum target,
                                                         GLuint index,

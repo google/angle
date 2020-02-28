@@ -850,6 +850,7 @@ bool ValidateBeginQueryEXT(const Context *context, QueryType targetPacked, Query
 bool ValidateDeleteQueriesEXT(const Context *context, GLsizei n, const QueryID *idsPacked);
 bool ValidateEndQueryEXT(const Context *context, QueryType targetPacked);
 bool ValidateGenQueriesEXT(const Context *context, GLsizei n, const QueryID *idsPacked);
+bool ValidateGetInteger64vEXT(const Context *context, GLenum pname, const GLint64 *data);
 bool ValidateGetQueryObjecti64vEXT(const Context *context,
                                    QueryID idPacked,
                                    GLenum pname,

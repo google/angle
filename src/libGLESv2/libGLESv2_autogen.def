@@ -648,6 +648,7 @@ EXPORTS
     glDeleteQueriesEXT
     glEndQueryEXT
     glGenQueriesEXT
+    glGetInteger64vEXT
     glGetQueryObjecti64vEXT
     glGetQueryObjectivEXT
     glGetQueryObjectui64vEXT
@@ -1167,6 +1168,7 @@ EXPORTS
     glGetInteger64i_vContextANGLE
     glGetInteger64i_vRobustANGLEContextANGLE
     glGetInteger64vContextANGLE
+    glGetInteger64vEXTContextANGLE
     glGetInteger64vRobustANGLEContextANGLE
     glGetIntegeri_vContextANGLE
     glGetIntegeri_vRobustANGLEContextANGLE

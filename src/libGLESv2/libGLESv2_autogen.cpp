@@ -3971,6 +3971,11 @@ void GL_APIENTRY glGenQueriesEXT(GLsizei n, GLuint *ids)
     return gl::GenQueriesEXT(n, ids);
 }
 
+void GL_APIENTRY glGetInteger64vEXT(GLenum pname, GLint64 *data)
+{
+    return gl::GetInteger64vEXT(pname, data);
+}
+
 void GL_APIENTRY glGetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
 {
     return gl::GetQueryObjecti64vEXT(id, pname, params);
@@ -6876,6 +6881,11 @@ void GL_APIENTRY glGetInteger64i_vContextANGLE(GLeglContext ctx,
 void GL_APIENTRY glGetInteger64vContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data)
 {
     return gl::GetInteger64vContextANGLE(ctx, pname, data);
+}
+
+void GL_APIENTRY glGetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data)
+{
+    return gl::GetInteger64vEXTContextANGLE(ctx, pname, data);
 }
 
 void GL_APIENTRY glGetIntegeri_vContextANGLE(GLeglContext ctx,
