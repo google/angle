@@ -10,6 +10,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/ErrorStrings.h"
 #include "libANGLE/validationES.h"
+#include "libANGLE/validationES32.h"
 
 namespace gl
 {
@@ -293,5 +294,207 @@ bool ValidateDrawRangeElementsBaseVertexOES(const Context *context,
         return false;
     }
     return true;
+}
+
+bool ValidateBlendEquationSeparateiEXT(const Context *context,
+                                       GLuint buf,
+                                       GLenum modeRGB,
+                                       GLenum modeAlpha)
+{
+    if (!context->getExtensions().drawBuffersIndexedEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateBlendEquationSeparatei(context, buf, modeRGB, modeAlpha);
+}
+
+bool ValidateBlendEquationiEXT(const Context *context, GLuint buf, GLenum mode)
+{
+    if (!context->getExtensions().drawBuffersIndexedEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateBlendEquationi(context, buf, mode);
+}
+
+bool ValidateBlendFuncSeparateiEXT(const Context *context,
+                                   GLuint buf,
+                                   GLenum srcRGB,
+                                   GLenum dstRGB,
+                                   GLenum srcAlpha,
+                                   GLenum dstAlpha)
+{
+    if (!context->getExtensions().drawBuffersIndexedEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateBlendFuncSeparatei(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+bool ValidateBlendFunciEXT(const Context *context, GLuint buf, GLenum src, GLenum dst)
+{
+    if (!context->getExtensions().drawBuffersIndexedEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateBlendFunci(context, buf, src, dst);
+}
+
+bool ValidateColorMaskiEXT(const Context *context,
+                           GLuint index,
+                           GLboolean r,
+                           GLboolean g,
+                           GLboolean b,
+                           GLboolean a)
+{
+    if (!context->getExtensions().drawBuffersIndexedEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateColorMaski(context, index, r, g, b, a);
+}
+
+bool ValidateDisableiEXT(const Context *context, GLenum target, GLuint index)
+{
+    if (!context->getExtensions().drawBuffersIndexedEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateDisablei(context, target, index);
+}
+
+bool ValidateEnableiEXT(const Context *context, GLenum target, GLuint index)
+{
+    if (!context->getExtensions().drawBuffersIndexedEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateEnablei(context, target, index);
+}
+
+bool ValidateIsEnablediEXT(const Context *context, GLenum target, GLuint index)
+{
+    if (!context->getExtensions().drawBuffersIndexedEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateIsEnabledi(context, target, index);
+}
+
+bool ValidateBlendEquationSeparateiOES(const Context *context,
+                                       GLuint buf,
+                                       GLenum modeRGB,
+                                       GLenum modeAlpha)
+{
+    if (!context->getExtensions().drawBuffersIndexedOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateBlendEquationSeparatei(context, buf, modeRGB, modeAlpha);
+}
+
+bool ValidateBlendEquationiOES(const Context *context, GLuint buf, GLenum mode)
+{
+    if (!context->getExtensions().drawBuffersIndexedOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateBlendEquationi(context, buf, mode);
+}
+
+bool ValidateBlendFuncSeparateiOES(const Context *context,
+                                   GLuint buf,
+                                   GLenum srcRGB,
+                                   GLenum dstRGB,
+                                   GLenum srcAlpha,
+                                   GLenum dstAlpha)
+{
+    if (!context->getExtensions().drawBuffersIndexedOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateBlendFuncSeparatei(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+bool ValidateBlendFunciOES(const Context *context, GLuint buf, GLenum src, GLenum dst)
+{
+    if (!context->getExtensions().drawBuffersIndexedOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateBlendFunci(context, buf, src, dst);
+}
+
+bool ValidateColorMaskiOES(const Context *context,
+                           GLuint index,
+                           GLboolean r,
+                           GLboolean g,
+                           GLboolean b,
+                           GLboolean a)
+{
+    if (!context->getExtensions().drawBuffersIndexedOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateColorMaski(context, index, r, g, b, a);
+}
+
+bool ValidateDisableiOES(const Context *context, GLenum target, GLuint index)
+{
+    if (!context->getExtensions().drawBuffersIndexedOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateDisablei(context, target, index);
+}
+
+bool ValidateEnableiOES(const Context *context, GLenum target, GLuint index)
+{
+    if (!context->getExtensions().drawBuffersIndexedOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateEnablei(context, target, index);
+}
+
+bool ValidateIsEnablediOES(const Context *context, GLenum target, GLuint index)
+{
+    if (!context->getExtensions().drawBuffersIndexedOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateIsEnabledi(context, target, index);
 }
 }  // namespace gl

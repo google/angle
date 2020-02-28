@@ -336,6 +336,7 @@
     void getQueryObjectui64v(QueryID idPacked, GLenum pname, GLuint64 *params);                    \
     void queryCounter(QueryID idPacked, QueryType targetPacked);                                   \
     /* GL_EXT_draw_buffers */                                                                      \
+    /* GL_EXT_draw_buffers_indexed */                                                              \
     /* GL_EXT_draw_elements_base_vertex */                                                         \
     void multiDrawElementsBaseVertex(PrimitiveMode modePacked, const GLsizei *count,               \
                                      DrawElementsType typePacked, const void *const *indices,      \
@@ -419,6 +420,7 @@
     void eGLImageTargetTexture2D(TextureType targetPacked, GLeglImageOES image);                   \
     /* GL_OES_compressed_ETC1_RGB8_texture */                                                      \
     /* GL_OES_depth32 */                                                                           \
+    /* GL_OES_draw_buffers_indexed */                                                              \
     /* GL_OES_draw_elements_base_vertex */                                                         \
     /* GL_OES_get_program_binary */                                                                \
     /* GL_OES_mapbuffer */                                                                         \

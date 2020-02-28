@@ -4012,6 +4012,48 @@ void GL_APIENTRY glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
     return gl::DrawBuffersEXT(n, bufs);
 }
 
+// GL_EXT_draw_buffers_indexed
+void GL_APIENTRY glBlendEquationSeparateiEXT(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+{
+    return gl::BlendEquationSeparateiEXT(buf, modeRGB, modeAlpha);
+}
+
+void GL_APIENTRY glBlendEquationiEXT(GLuint buf, GLenum mode)
+{
+    return gl::BlendEquationiEXT(buf, mode);
+}
+
+void GL_APIENTRY
+glBlendFuncSeparateiEXT(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+{
+    return gl::BlendFuncSeparateiEXT(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+void GL_APIENTRY glBlendFunciEXT(GLuint buf, GLenum src, GLenum dst)
+{
+    return gl::BlendFunciEXT(buf, src, dst);
+}
+
+void GL_APIENTRY glColorMaskiEXT(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+{
+    return gl::ColorMaskiEXT(index, r, g, b, a);
+}
+
+void GL_APIENTRY glDisableiEXT(GLenum target, GLuint index)
+{
+    return gl::DisableiEXT(target, index);
+}
+
+void GL_APIENTRY glEnableiEXT(GLenum target, GLuint index)
+{
+    return gl::EnableiEXT(target, index);
+}
+
+GLboolean GL_APIENTRY glIsEnablediEXT(GLenum target, GLuint index)
+{
+    return gl::IsEnablediEXT(target, index);
+}
+
 // GL_EXT_draw_elements_base_vertex
 void GL_APIENTRY glDrawElementsBaseVertexEXT(GLenum mode,
                                              GLsizei count,
@@ -4499,6 +4541,48 @@ void GL_APIENTRY glEGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image
 // GL_OES_compressed_ETC1_RGB8_texture
 
 // GL_OES_depth32
+
+// GL_OES_draw_buffers_indexed
+void GL_APIENTRY glBlendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+{
+    return gl::BlendEquationSeparateiOES(buf, modeRGB, modeAlpha);
+}
+
+void GL_APIENTRY glBlendEquationiOES(GLuint buf, GLenum mode)
+{
+    return gl::BlendEquationiOES(buf, mode);
+}
+
+void GL_APIENTRY
+glBlendFuncSeparateiOES(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+{
+    return gl::BlendFuncSeparateiOES(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+void GL_APIENTRY glBlendFunciOES(GLuint buf, GLenum src, GLenum dst)
+{
+    return gl::BlendFunciOES(buf, src, dst);
+}
+
+void GL_APIENTRY glColorMaskiOES(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+{
+    return gl::ColorMaskiOES(index, r, g, b, a);
+}
+
+void GL_APIENTRY glDisableiOES(GLenum target, GLuint index)
+{
+    return gl::DisableiOES(target, index);
+}
+
+void GL_APIENTRY glEnableiOES(GLenum target, GLuint index)
+{
+    return gl::EnableiOES(target, index);
+}
+
+GLboolean GL_APIENTRY glIsEnablediOES(GLenum target, GLuint index)
+{
+    return gl::IsEnablediOES(target, index);
+}
 
 // GL_OES_draw_elements_base_vertex
 void GL_APIENTRY glDrawElementsBaseVertexOES(GLenum mode,
@@ -5154,9 +5238,35 @@ void GL_APIENTRY glBlendEquationSeparateiContextANGLE(GLeglContext ctx,
     return gl::BlendEquationSeparateiContextANGLE(ctx, buf, modeRGB, modeAlpha);
 }
 
+void GL_APIENTRY glBlendEquationSeparateiEXTContextANGLE(GLeglContext ctx,
+                                                         GLuint buf,
+                                                         GLenum modeRGB,
+                                                         GLenum modeAlpha)
+{
+    return gl::BlendEquationSeparateiEXTContextANGLE(ctx, buf, modeRGB, modeAlpha);
+}
+
+void GL_APIENTRY glBlendEquationSeparateiOESContextANGLE(GLeglContext ctx,
+                                                         GLuint buf,
+                                                         GLenum modeRGB,
+                                                         GLenum modeAlpha)
+{
+    return gl::BlendEquationSeparateiOESContextANGLE(ctx, buf, modeRGB, modeAlpha);
+}
+
 void GL_APIENTRY glBlendEquationiContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
 {
     return gl::BlendEquationiContextANGLE(ctx, buf, mode);
+}
+
+void GL_APIENTRY glBlendEquationiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
+{
+    return gl::BlendEquationiEXTContextANGLE(ctx, buf, mode);
+}
+
+void GL_APIENTRY glBlendEquationiOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
+{
+    return gl::BlendEquationiOESContextANGLE(ctx, buf, mode);
 }
 
 void GL_APIENTRY glBlendFuncContextANGLE(GLeglContext ctx, GLenum sfactor, GLenum dfactor)
@@ -5184,9 +5294,39 @@ void GL_APIENTRY glBlendFuncSeparateiContextANGLE(GLeglContext ctx,
     return gl::BlendFuncSeparateiContextANGLE(ctx, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
 }
 
+void GL_APIENTRY glBlendFuncSeparateiEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint buf,
+                                                     GLenum srcRGB,
+                                                     GLenum dstRGB,
+                                                     GLenum srcAlpha,
+                                                     GLenum dstAlpha)
+{
+    return gl::BlendFuncSeparateiEXTContextANGLE(ctx, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+void GL_APIENTRY glBlendFuncSeparateiOESContextANGLE(GLeglContext ctx,
+                                                     GLuint buf,
+                                                     GLenum srcRGB,
+                                                     GLenum dstRGB,
+                                                     GLenum srcAlpha,
+                                                     GLenum dstAlpha)
+{
+    return gl::BlendFuncSeparateiOESContextANGLE(ctx, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
 void GL_APIENTRY glBlendFunciContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
 {
     return gl::BlendFunciContextANGLE(ctx, buf, src, dst);
+}
+
+void GL_APIENTRY glBlendFunciEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
+{
+    return gl::BlendFunciEXTContextANGLE(ctx, buf, src, dst);
+}
+
+void GL_APIENTRY glBlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
+{
+    return gl::BlendFunciOESContextANGLE(ctx, buf, src, dst);
 }
 
 void GL_APIENTRY glBlitFramebufferContextANGLE(GLeglContext ctx,
@@ -5381,6 +5521,26 @@ void GL_APIENTRY glColorMaskiContextANGLE(GLeglContext ctx,
                                           GLboolean a)
 {
     return gl::ColorMaskiContextANGLE(ctx, index, r, g, b, a);
+}
+
+void GL_APIENTRY glColorMaskiEXTContextANGLE(GLeglContext ctx,
+                                             GLuint index,
+                                             GLboolean r,
+                                             GLboolean g,
+                                             GLboolean b,
+                                             GLboolean a)
+{
+    return gl::ColorMaskiEXTContextANGLE(ctx, index, r, g, b, a);
+}
+
+void GL_APIENTRY glColorMaskiOESContextANGLE(GLeglContext ctx,
+                                             GLuint index,
+                                             GLboolean r,
+                                             GLboolean g,
+                                             GLboolean b,
+                                             GLboolean a)
+{
+    return gl::ColorMaskiOESContextANGLE(ctx, index, r, g, b, a);
 }
 
 void GL_APIENTRY glColorPointerContextANGLE(GLeglContext ctx,
@@ -5835,6 +5995,16 @@ void GL_APIENTRY glDisableiContextANGLE(GLeglContext ctx, GLenum target, GLuint 
     return gl::DisableiContextANGLE(ctx, target, index);
 }
 
+void GL_APIENTRY glDisableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    return gl::DisableiEXTContextANGLE(ctx, target, index);
+}
+
+void GL_APIENTRY glDisableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    return gl::DisableiOESContextANGLE(ctx, target, index);
+}
+
 void GL_APIENTRY glDiscardFramebufferEXTContextANGLE(GLeglContext ctx,
                                                      GLenum target,
                                                      GLsizei numAttachments,
@@ -6156,6 +6326,16 @@ void GL_APIENTRY glEnableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint 
 void GL_APIENTRY glEnableiContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     return gl::EnableiContextANGLE(ctx, target, index);
+}
+
+void GL_APIENTRY glEnableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    return gl::EnableiEXTContextANGLE(ctx, target, index);
+}
+
+void GL_APIENTRY glEnableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    return gl::EnableiOESContextANGLE(ctx, target, index);
 }
 
 void GL_APIENTRY glEndQueryContextANGLE(GLeglContext ctx, GLenum target)
@@ -7467,6 +7647,16 @@ GLboolean GL_APIENTRY glIsEnabledContextANGLE(GLeglContext ctx, GLenum cap)
 GLboolean GL_APIENTRY glIsEnablediContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     return gl::IsEnablediContextANGLE(ctx, target, index);
+}
+
+GLboolean GL_APIENTRY glIsEnablediEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    return gl::IsEnablediEXTContextANGLE(ctx, target, index);
+}
+
+GLboolean GL_APIENTRY glIsEnablediOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    return gl::IsEnablediOESContextANGLE(ctx, target, index);
 }
 
 GLboolean GL_APIENTRY glIsFenceNVContextANGLE(GLeglContext ctx, GLuint fence)

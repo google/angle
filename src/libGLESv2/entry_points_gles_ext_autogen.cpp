@@ -4214,6 +4214,183 @@ void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs)
     }
 }
 
+// GL_EXT_draw_buffers_indexed
+void GL_APIENTRY BlendEquationSeparateiEXT(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glBlendEquationSeparateiEXT",
+          "context = %d, GLuint buf = %u, GLenum modeRGB = %s, GLenum modeAlpha = %s", CID(context),
+          buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, modeRGB),
+          GLenumToString(GLenumGroup::BlendEquationModeEXT, modeAlpha));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBlendEquationSeparateiEXT(context, buf, modeRGB, modeAlpha));
+        if (isCallValid)
+        {
+            context->blendEquationSeparatei(buf, modeRGB, modeAlpha);
+        }
+        ANGLE_CAPTURE(BlendEquationSeparateiEXT, isCallValid, context, buf, modeRGB, modeAlpha);
+    }
+}
+
+void GL_APIENTRY BlendEquationiEXT(GLuint buf, GLenum mode)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glBlendEquationiEXT", "context = %d, GLuint buf = %u, GLenum mode = %s", CID(context),
+          buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendEquationiEXT(context, buf, mode));
+        if (isCallValid)
+        {
+            context->blendEquationi(buf, mode);
+        }
+        ANGLE_CAPTURE(BlendEquationiEXT, isCallValid, context, buf, mode);
+    }
+}
+
+void GL_APIENTRY
+BlendFuncSeparateiEXT(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glBlendFuncSeparateiEXT",
+          "context = %d, GLuint buf = %u, GLenum srcRGB = %s, GLenum dstRGB = %s, GLenum srcAlpha "
+          "= %s, GLenum dstAlpha = %s",
+          CID(context), buf, GLenumToString(GLenumGroup::BlendingFactor, srcRGB),
+          GLenumToString(GLenumGroup::BlendingFactor, dstRGB),
+          GLenumToString(GLenumGroup::BlendingFactor, srcAlpha),
+          GLenumToString(GLenumGroup::BlendingFactor, dstAlpha));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBlendFuncSeparateiEXT(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha));
+        if (isCallValid)
+        {
+            context->blendFuncSeparatei(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+        }
+        ANGLE_CAPTURE(BlendFuncSeparateiEXT, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
+                      dstAlpha);
+    }
+}
+
+void GL_APIENTRY BlendFunciEXT(GLuint buf, GLenum src, GLenum dst)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glBlendFunciEXT", "context = %d, GLuint buf = %u, GLenum src = %s, GLenum dst = %s",
+          CID(context), buf, GLenumToString(GLenumGroup::BlendingFactor, src),
+          GLenumToString(GLenumGroup::BlendingFactor, dst));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendFunciEXT(context, buf, src, dst));
+        if (isCallValid)
+        {
+            context->blendFunci(buf, src, dst);
+        }
+        ANGLE_CAPTURE(BlendFunciEXT, isCallValid, context, buf, src, dst);
+    }
+}
+
+void GL_APIENTRY ColorMaskiEXT(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glColorMaskiEXT",
+          "context = %d, GLuint index = %u, GLboolean r = %s, GLboolean g = %s, GLboolean b = %s, "
+          "GLboolean a = %s",
+          CID(context), index, GLbooleanToString(r), GLbooleanToString(g), GLbooleanToString(b),
+          GLbooleanToString(a));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateColorMaskiEXT(context, index, r, g, b, a));
+        if (isCallValid)
+        {
+            context->colorMaski(index, r, g, b, a);
+        }
+        ANGLE_CAPTURE(ColorMaskiEXT, isCallValid, context, index, r, g, b, a);
+    }
+}
+
+void GL_APIENTRY DisableiEXT(GLenum target, GLuint index)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glDisableiEXT", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateDisableiEXT(context, target, index));
+        if (isCallValid)
+        {
+            context->disablei(target, index);
+        }
+        ANGLE_CAPTURE(DisableiEXT, isCallValid, context, target, index);
+    }
+}
+
+void GL_APIENTRY EnableiEXT(GLenum target, GLuint index)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glEnableiEXT", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateEnableiEXT(context, target, index));
+        if (isCallValid)
+        {
+            context->enablei(target, index);
+        }
+        ANGLE_CAPTURE(EnableiEXT, isCallValid, context, target, index);
+    }
+}
+
+GLboolean GL_APIENTRY IsEnablediEXT(GLenum target, GLuint index)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glIsEnablediEXT", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    GLboolean returnValue;
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateIsEnablediEXT(context, target, index));
+        if (isCallValid)
+        {
+            returnValue = context->isEnabledi(target, index);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediEXT, GLboolean>();
+        }
+        ANGLE_CAPTURE(IsEnablediEXT, isCallValid, context, target, index, returnValue);
+    }
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediEXT, GLboolean>();
+    }
+    return returnValue;
+}
+
 // GL_EXT_draw_elements_base_vertex
 void GL_APIENTRY DrawElementsBaseVertexEXT(GLenum mode,
                                            GLsizei count,
@@ -5889,6 +6066,183 @@ void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
 // GL_OES_compressed_ETC1_RGB8_texture
 
 // GL_OES_depth32
+
+// GL_OES_draw_buffers_indexed
+void GL_APIENTRY BlendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glBlendEquationSeparateiOES",
+          "context = %d, GLuint buf = %u, GLenum modeRGB = %s, GLenum modeAlpha = %s", CID(context),
+          buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, modeRGB),
+          GLenumToString(GLenumGroup::BlendEquationModeEXT, modeAlpha));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBlendEquationSeparateiOES(context, buf, modeRGB, modeAlpha));
+        if (isCallValid)
+        {
+            context->blendEquationSeparatei(buf, modeRGB, modeAlpha);
+        }
+        ANGLE_CAPTURE(BlendEquationSeparateiOES, isCallValid, context, buf, modeRGB, modeAlpha);
+    }
+}
+
+void GL_APIENTRY BlendEquationiOES(GLuint buf, GLenum mode)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glBlendEquationiOES", "context = %d, GLuint buf = %u, GLenum mode = %s", CID(context),
+          buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendEquationiOES(context, buf, mode));
+        if (isCallValid)
+        {
+            context->blendEquationi(buf, mode);
+        }
+        ANGLE_CAPTURE(BlendEquationiOES, isCallValid, context, buf, mode);
+    }
+}
+
+void GL_APIENTRY
+BlendFuncSeparateiOES(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glBlendFuncSeparateiOES",
+          "context = %d, GLuint buf = %u, GLenum srcRGB = %s, GLenum dstRGB = %s, GLenum srcAlpha "
+          "= %s, GLenum dstAlpha = %s",
+          CID(context), buf, GLenumToString(GLenumGroup::BlendingFactor, srcRGB),
+          GLenumToString(GLenumGroup::BlendingFactor, dstRGB),
+          GLenumToString(GLenumGroup::BlendingFactor, srcAlpha),
+          GLenumToString(GLenumGroup::BlendingFactor, dstAlpha));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBlendFuncSeparateiOES(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha));
+        if (isCallValid)
+        {
+            context->blendFuncSeparatei(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+        }
+        ANGLE_CAPTURE(BlendFuncSeparateiOES, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
+                      dstAlpha);
+    }
+}
+
+void GL_APIENTRY BlendFunciOES(GLuint buf, GLenum src, GLenum dst)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glBlendFunciOES", "context = %d, GLuint buf = %u, GLenum src = %s, GLenum dst = %s",
+          CID(context), buf, GLenumToString(GLenumGroup::BlendingFactor, src),
+          GLenumToString(GLenumGroup::BlendingFactor, dst));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendFunciOES(context, buf, src, dst));
+        if (isCallValid)
+        {
+            context->blendFunci(buf, src, dst);
+        }
+        ANGLE_CAPTURE(BlendFunciOES, isCallValid, context, buf, src, dst);
+    }
+}
+
+void GL_APIENTRY ColorMaskiOES(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glColorMaskiOES",
+          "context = %d, GLuint index = %u, GLboolean r = %s, GLboolean g = %s, GLboolean b = %s, "
+          "GLboolean a = %s",
+          CID(context), index, GLbooleanToString(r), GLbooleanToString(g), GLbooleanToString(b),
+          GLbooleanToString(a));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateColorMaskiOES(context, index, r, g, b, a));
+        if (isCallValid)
+        {
+            context->colorMaski(index, r, g, b, a);
+        }
+        ANGLE_CAPTURE(ColorMaskiOES, isCallValid, context, index, r, g, b, a);
+    }
+}
+
+void GL_APIENTRY DisableiOES(GLenum target, GLuint index)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glDisableiOES", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateDisableiOES(context, target, index));
+        if (isCallValid)
+        {
+            context->disablei(target, index);
+        }
+        ANGLE_CAPTURE(DisableiOES, isCallValid, context, target, index);
+    }
+}
+
+void GL_APIENTRY EnableiOES(GLenum target, GLuint index)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glEnableiOES", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateEnableiOES(context, target, index));
+        if (isCallValid)
+        {
+            context->enablei(target, index);
+        }
+        ANGLE_CAPTURE(EnableiOES, isCallValid, context, target, index);
+    }
+}
+
+GLboolean GL_APIENTRY IsEnablediOES(GLenum target, GLuint index)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glIsEnablediOES", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    GLboolean returnValue;
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateIsEnablediOES(context, target, index));
+        if (isCallValid)
+        {
+            returnValue = context->isEnabledi(target, index);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediOES, GLboolean>();
+        }
+        ANGLE_CAPTURE(IsEnablediOES, isCallValid, context, target, index, returnValue);
+    }
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediOES, GLboolean>();
+    }
+    return returnValue;
+}
 
 // GL_OES_draw_elements_base_vertex
 void GL_APIENTRY DrawElementsBaseVertexOES(GLenum mode,
@@ -8287,6 +8641,56 @@ void GL_APIENTRY BlendEquationSeparateiContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY BlendEquationSeparateiEXTContextANGLE(GLeglContext ctx,
+                                                       GLuint buf,
+                                                       GLenum modeRGB,
+                                                       GLenum modeAlpha)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glBlendEquationSeparateiEXT",
+          "context = %d, GLuint buf = %u, GLenum modeRGB = %s, GLenum modeAlpha = %s", CID(context),
+          buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, modeRGB),
+          GLenumToString(GLenumGroup::BlendEquationModeEXT, modeAlpha));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBlendEquationSeparateiEXT(context, buf, modeRGB, modeAlpha));
+        if (isCallValid)
+        {
+            context->blendEquationSeparatei(buf, modeRGB, modeAlpha);
+        }
+        ANGLE_CAPTURE(BlendEquationSeparateiEXT, isCallValid, context, buf, modeRGB, modeAlpha);
+    }
+}
+
+void GL_APIENTRY BlendEquationSeparateiOESContextANGLE(GLeglContext ctx,
+                                                       GLuint buf,
+                                                       GLenum modeRGB,
+                                                       GLenum modeAlpha)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glBlendEquationSeparateiOES",
+          "context = %d, GLuint buf = %u, GLenum modeRGB = %s, GLenum modeAlpha = %s", CID(context),
+          buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, modeRGB),
+          GLenumToString(GLenumGroup::BlendEquationModeEXT, modeAlpha));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBlendEquationSeparateiOES(context, buf, modeRGB, modeAlpha));
+        if (isCallValid)
+        {
+            context->blendEquationSeparatei(buf, modeRGB, modeAlpha);
+        }
+        ANGLE_CAPTURE(BlendEquationSeparateiOES, isCallValid, context, buf, modeRGB, modeAlpha);
+    }
+}
+
 void GL_APIENTRY BlendEquationiContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
@@ -8304,6 +8708,46 @@ void GL_APIENTRY BlendEquationiContextANGLE(GLeglContext ctx, GLuint buf, GLenum
             context->blendEquationi(buf, mode);
         }
         ANGLE_CAPTURE(BlendEquationi, isCallValid, context, buf, mode);
+    }
+}
+
+void GL_APIENTRY BlendEquationiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glBlendEquationiEXT", "context = %d, GLuint buf = %u, GLenum mode = %s", CID(context),
+          buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendEquationiEXT(context, buf, mode));
+        if (isCallValid)
+        {
+            context->blendEquationi(buf, mode);
+        }
+        ANGLE_CAPTURE(BlendEquationiEXT, isCallValid, context, buf, mode);
+    }
+}
+
+void GL_APIENTRY BlendEquationiOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glBlendEquationiOES", "context = %d, GLuint buf = %u, GLenum mode = %s", CID(context),
+          buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendEquationiOES(context, buf, mode));
+        if (isCallValid)
+        {
+            context->blendEquationi(buf, mode);
+        }
+        ANGLE_CAPTURE(BlendEquationiOES, isCallValid, context, buf, mode);
     }
 }
 
@@ -8391,6 +8835,70 @@ void GL_APIENTRY BlendFuncSeparateiContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY BlendFuncSeparateiEXTContextANGLE(GLeglContext ctx,
+                                                   GLuint buf,
+                                                   GLenum srcRGB,
+                                                   GLenum dstRGB,
+                                                   GLenum srcAlpha,
+                                                   GLenum dstAlpha)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glBlendFuncSeparateiEXT",
+          "context = %d, GLuint buf = %u, GLenum srcRGB = %s, GLenum dstRGB = %s, GLenum srcAlpha "
+          "= %s, GLenum dstAlpha = %s",
+          CID(context), buf, GLenumToString(GLenumGroup::BlendingFactor, srcRGB),
+          GLenumToString(GLenumGroup::BlendingFactor, dstRGB),
+          GLenumToString(GLenumGroup::BlendingFactor, srcAlpha),
+          GLenumToString(GLenumGroup::BlendingFactor, dstAlpha));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBlendFuncSeparateiEXT(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha));
+        if (isCallValid)
+        {
+            context->blendFuncSeparatei(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+        }
+        ANGLE_CAPTURE(BlendFuncSeparateiEXT, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
+                      dstAlpha);
+    }
+}
+
+void GL_APIENTRY BlendFuncSeparateiOESContextANGLE(GLeglContext ctx,
+                                                   GLuint buf,
+                                                   GLenum srcRGB,
+                                                   GLenum dstRGB,
+                                                   GLenum srcAlpha,
+                                                   GLenum dstAlpha)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glBlendFuncSeparateiOES",
+          "context = %d, GLuint buf = %u, GLenum srcRGB = %s, GLenum dstRGB = %s, GLenum srcAlpha "
+          "= %s, GLenum dstAlpha = %s",
+          CID(context), buf, GLenumToString(GLenumGroup::BlendingFactor, srcRGB),
+          GLenumToString(GLenumGroup::BlendingFactor, dstRGB),
+          GLenumToString(GLenumGroup::BlendingFactor, srcAlpha),
+          GLenumToString(GLenumGroup::BlendingFactor, dstAlpha));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBlendFuncSeparateiOES(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha));
+        if (isCallValid)
+        {
+            context->blendFuncSeparatei(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+        }
+        ANGLE_CAPTURE(BlendFuncSeparateiOES, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
+                      dstAlpha);
+    }
+}
+
 void GL_APIENTRY BlendFunciContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
 {
     Context *context = static_cast<gl::Context *>(ctx);
@@ -8409,6 +8917,48 @@ void GL_APIENTRY BlendFunciContextANGLE(GLeglContext ctx, GLuint buf, GLenum src
             context->blendFunci(buf, src, dst);
         }
         ANGLE_CAPTURE(BlendFunci, isCallValid, context, buf, src, dst);
+    }
+}
+
+void GL_APIENTRY BlendFunciEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glBlendFunciEXT", "context = %d, GLuint buf = %u, GLenum src = %s, GLenum dst = %s",
+          CID(context), buf, GLenumToString(GLenumGroup::BlendingFactor, src),
+          GLenumToString(GLenumGroup::BlendingFactor, dst));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendFunciEXT(context, buf, src, dst));
+        if (isCallValid)
+        {
+            context->blendFunci(buf, src, dst);
+        }
+        ANGLE_CAPTURE(BlendFunciEXT, isCallValid, context, buf, src, dst);
+    }
+}
+
+void GL_APIENTRY BlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glBlendFunciOES", "context = %d, GLuint buf = %u, GLenum src = %s, GLenum dst = %s",
+          CID(context), buf, GLenumToString(GLenumGroup::BlendingFactor, src),
+          GLenumToString(GLenumGroup::BlendingFactor, dst));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateBlendFunciOES(context, buf, src, dst));
+        if (isCallValid)
+        {
+            context->blendFunci(buf, src, dst);
+        }
+        ANGLE_CAPTURE(BlendFunciOES, isCallValid, context, buf, src, dst);
     }
 }
 
@@ -9076,6 +9626,62 @@ void GL_APIENTRY ColorMaskiContextANGLE(GLeglContext ctx,
             context->colorMaski(index, r, g, b, a);
         }
         ANGLE_CAPTURE(ColorMaski, isCallValid, context, index, r, g, b, a);
+    }
+}
+
+void GL_APIENTRY ColorMaskiEXTContextANGLE(GLeglContext ctx,
+                                           GLuint index,
+                                           GLboolean r,
+                                           GLboolean g,
+                                           GLboolean b,
+                                           GLboolean a)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glColorMaskiEXT",
+          "context = %d, GLuint index = %u, GLboolean r = %s, GLboolean g = %s, GLboolean b = %s, "
+          "GLboolean a = %s",
+          CID(context), index, GLbooleanToString(r), GLbooleanToString(g), GLbooleanToString(b),
+          GLbooleanToString(a));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateColorMaskiEXT(context, index, r, g, b, a));
+        if (isCallValid)
+        {
+            context->colorMaski(index, r, g, b, a);
+        }
+        ANGLE_CAPTURE(ColorMaskiEXT, isCallValid, context, index, r, g, b, a);
+    }
+}
+
+void GL_APIENTRY ColorMaskiOESContextANGLE(GLeglContext ctx,
+                                           GLuint index,
+                                           GLboolean r,
+                                           GLboolean g,
+                                           GLboolean b,
+                                           GLboolean a)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glColorMaskiOES",
+          "context = %d, GLuint index = %u, GLboolean r = %s, GLboolean g = %s, GLboolean b = %s, "
+          "GLboolean a = %s",
+          CID(context), index, GLbooleanToString(r), GLbooleanToString(g), GLbooleanToString(b),
+          GLbooleanToString(a));
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateColorMaskiOES(context, index, r, g, b, a));
+        if (isCallValid)
+        {
+            context->colorMaski(index, r, g, b, a);
+        }
+        ANGLE_CAPTURE(ColorMaskiOES, isCallValid, context, index, r, g, b, a);
     }
 }
 
@@ -10529,6 +11135,46 @@ void GL_APIENTRY DisableiContextANGLE(GLeglContext ctx, GLenum target, GLuint in
     }
 }
 
+void GL_APIENTRY DisableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glDisableiEXT", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateDisableiEXT(context, target, index));
+        if (isCallValid)
+        {
+            context->disablei(target, index);
+        }
+        ANGLE_CAPTURE(DisableiEXT, isCallValid, context, target, index);
+    }
+}
+
+void GL_APIENTRY DisableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glDisableiOES", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateDisableiOES(context, target, index));
+        if (isCallValid)
+        {
+            context->disablei(target, index);
+        }
+        ANGLE_CAPTURE(DisableiOES, isCallValid, context, target, index);
+    }
+}
+
 void GL_APIENTRY DiscardFramebufferEXTContextANGLE(GLeglContext ctx,
                                                    GLenum target,
                                                    GLsizei numAttachments,
@@ -11569,6 +12215,46 @@ void GL_APIENTRY EnableiContextANGLE(GLeglContext ctx, GLenum target, GLuint ind
             context->enablei(target, index);
         }
         ANGLE_CAPTURE(Enablei, isCallValid, context, target, index);
+    }
+}
+
+void GL_APIENTRY EnableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glEnableiEXT", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateEnableiEXT(context, target, index));
+        if (isCallValid)
+        {
+            context->enablei(target, index);
+        }
+        ANGLE_CAPTURE(EnableiEXT, isCallValid, context, target, index);
+    }
+}
+
+void GL_APIENTRY EnableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glEnableiOES", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateEnableiOES(context, target, index));
+        if (isCallValid)
+        {
+            context->enablei(target, index);
+        }
+        ANGLE_CAPTURE(EnableiOES, isCallValid, context, target, index);
     }
 }
 
@@ -16124,6 +16810,66 @@ GLboolean GL_APIENTRY IsEnablediContextANGLE(GLeglContext ctx, GLenum target, GL
     else
     {
         returnValue = GetDefaultReturnValue<EntryPoint::IsEnabledi, GLboolean>();
+    }
+    return returnValue;
+}
+
+GLboolean GL_APIENTRY IsEnablediEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glIsEnablediEXT", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    GLboolean returnValue;
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateIsEnablediEXT(context, target, index));
+        if (isCallValid)
+        {
+            returnValue = context->isEnabledi(target, index);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediEXT, GLboolean>();
+        }
+        ANGLE_CAPTURE(IsEnablediEXT, isCallValid, context, target, index, returnValue);
+    }
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediEXT, GLboolean>();
+    }
+    return returnValue;
+}
+
+GLboolean GL_APIENTRY IsEnablediOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glIsEnablediOES", "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, target), index);
+
+    GLboolean returnValue;
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateIsEnablediOES(context, target, index));
+        if (isCallValid)
+        {
+            returnValue = context->isEnabledi(target, index);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediOES, GLboolean>();
+        }
+        ANGLE_CAPTURE(IsEnablediOES, isCallValid, context, target, index, returnValue);
+    }
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediOES, GLboolean>();
     }
     return returnValue;
 }

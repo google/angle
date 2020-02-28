@@ -116,16 +116,32 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glBlendEquationSeparate";
         case EntryPoint::BlendEquationSeparatei:
             return "glBlendEquationSeparatei";
+        case EntryPoint::BlendEquationSeparateiEXT:
+            return "glBlendEquationSeparateiEXT";
+        case EntryPoint::BlendEquationSeparateiOES:
+            return "glBlendEquationSeparateiOES";
         case EntryPoint::BlendEquationi:
             return "glBlendEquationi";
+        case EntryPoint::BlendEquationiEXT:
+            return "glBlendEquationiEXT";
+        case EntryPoint::BlendEquationiOES:
+            return "glBlendEquationiOES";
         case EntryPoint::BlendFunc:
             return "glBlendFunc";
         case EntryPoint::BlendFuncSeparate:
             return "glBlendFuncSeparate";
         case EntryPoint::BlendFuncSeparatei:
             return "glBlendFuncSeparatei";
+        case EntryPoint::BlendFuncSeparateiEXT:
+            return "glBlendFuncSeparateiEXT";
+        case EntryPoint::BlendFuncSeparateiOES:
+            return "glBlendFuncSeparateiOES";
         case EntryPoint::BlendFunci:
             return "glBlendFunci";
+        case EntryPoint::BlendFunciEXT:
+            return "glBlendFunciEXT";
+        case EntryPoint::BlendFunciOES:
+            return "glBlendFunciOES";
         case EntryPoint::BlitFramebuffer:
             return "glBlitFramebuffer";
         case EntryPoint::BlitFramebufferANGLE:
@@ -280,6 +296,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glColorMask";
         case EntryPoint::ColorMaski:
             return "glColorMaski";
+        case EntryPoint::ColorMaskiEXT:
+            return "glColorMaskiEXT";
+        case EntryPoint::ColorMaskiOES:
+            return "glColorMaskiOES";
         case EntryPoint::ColorMaterial:
             return "glColorMaterial";
         case EntryPoint::ColorP3ui:
@@ -482,6 +502,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDisableVertexAttribArray";
         case EntryPoint::Disablei:
             return "glDisablei";
+        case EntryPoint::DisableiEXT:
+            return "glDisableiEXT";
+        case EntryPoint::DisableiOES:
+            return "glDisableiOES";
         case EntryPoint::DiscardFramebufferEXT:
             return "glDiscardFramebufferEXT";
         case EntryPoint::DispatchCompute:
@@ -590,6 +614,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glEnableVertexAttribArray";
         case EntryPoint::Enablei:
             return "glEnablei";
+        case EntryPoint::EnableiEXT:
+            return "glEnableiEXT";
+        case EntryPoint::EnableiOES:
+            return "glEnableiOES";
         case EntryPoint::End:
             return "glEnd";
         case EntryPoint::EndConditionalRender:
@@ -1302,6 +1330,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glIsEnabled";
         case EntryPoint::IsEnabledi:
             return "glIsEnabledi";
+        case EntryPoint::IsEnablediEXT:
+            return "glIsEnablediEXT";
+        case EntryPoint::IsEnablediOES:
+            return "glIsEnablediOES";
         case EntryPoint::IsFenceNV:
             return "glIsFenceNV";
         case EntryPoint::IsFramebuffer:

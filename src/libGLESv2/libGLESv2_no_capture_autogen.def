@@ -659,6 +659,16 @@ EXPORTS
     ; GL_EXT_draw_buffers
     glDrawBuffersEXT
 
+    ; GL_EXT_draw_buffers_indexed
+    glBlendEquationSeparateiEXT
+    glBlendEquationiEXT
+    glBlendFuncSeparateiEXT
+    glBlendFunciEXT
+    glColorMaskiEXT
+    glDisableiEXT
+    glEnableiEXT
+    glIsEnablediEXT
+
     ; GL_EXT_draw_elements_base_vertex
     glDrawElementsBaseVertexEXT
     glDrawElementsInstancedBaseVertexEXT
@@ -773,6 +783,16 @@ EXPORTS
     ; GL_OES_compressed_ETC1_RGB8_texture
 
     ; GL_OES_depth32
+
+    ; GL_OES_draw_buffers_indexed
+    glBlendEquationSeparateiOES
+    glBlendEquationiOES
+    glBlendFuncSeparateiOES
+    glBlendFunciOES
+    glColorMaskiOES
+    glDisableiOES
+    glEnableiOES
+    glIsEnablediOES
 
     ; GL_OES_draw_elements_base_vertex
     glDrawElementsBaseVertexOES
@@ -906,11 +926,19 @@ EXPORTS
     glBlendEquationContextANGLE
     glBlendEquationSeparateContextANGLE
     glBlendEquationSeparateiContextANGLE
+    glBlendEquationSeparateiEXTContextANGLE
+    glBlendEquationSeparateiOESContextANGLE
     glBlendEquationiContextANGLE
+    glBlendEquationiEXTContextANGLE
+    glBlendEquationiOESContextANGLE
     glBlendFuncContextANGLE
     glBlendFuncSeparateContextANGLE
     glBlendFuncSeparateiContextANGLE
+    glBlendFuncSeparateiEXTContextANGLE
+    glBlendFuncSeparateiOESContextANGLE
     glBlendFunciContextANGLE
+    glBlendFunciEXTContextANGLE
+    glBlendFunciOESContextANGLE
     glBlitFramebufferContextANGLE
     glBlitFramebufferANGLEContextANGLE
     glBufferDataContextANGLE
@@ -937,6 +965,8 @@ EXPORTS
     glColor4xContextANGLE
     glColorMaskContextANGLE
     glColorMaskiContextANGLE
+    glColorMaskiEXTContextANGLE
+    glColorMaskiOESContextANGLE
     glColorPointerContextANGLE
     glCompileShaderContextANGLE
     glCompressedCopyTextureCHROMIUMContextANGLE
@@ -1007,6 +1037,8 @@ EXPORTS
     glDisableExtensionANGLEContextANGLE
     glDisableVertexAttribArrayContextANGLE
     glDisableiContextANGLE
+    glDisableiEXTContextANGLE
+    glDisableiOESContextANGLE
     glDiscardFramebufferEXTContextANGLE
     glDispatchComputeContextANGLE
     glDispatchComputeIndirectContextANGLE
@@ -1048,6 +1080,8 @@ EXPORTS
     glEnableClientStateContextANGLE
     glEnableVertexAttribArrayContextANGLE
     glEnableiContextANGLE
+    glEnableiEXTContextANGLE
+    glEnableiOESContextANGLE
     glEndQueryContextANGLE
     glEndQueryEXTContextANGLE
     glEndTransformFeedbackContextANGLE
@@ -1273,6 +1307,8 @@ EXPORTS
     glIsBufferContextANGLE
     glIsEnabledContextANGLE
     glIsEnablediContextANGLE
+    glIsEnablediEXTContextANGLE
+    glIsEnablediOESContextANGLE
     glIsFenceNVContextANGLE
     glIsFramebufferContextANGLE
     glIsFramebufferOESContextANGLE

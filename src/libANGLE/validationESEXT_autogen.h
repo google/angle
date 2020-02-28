@@ -876,6 +876,29 @@ bool ValidateQueryCounterEXT(const Context *context, QueryID idPacked, QueryType
 // GL_EXT_draw_buffers
 bool ValidateDrawBuffersEXT(const Context *context, GLsizei n, const GLenum *bufs);
 
+// GL_EXT_draw_buffers_indexed
+bool ValidateBlendEquationSeparateiEXT(const Context *context,
+                                       GLuint buf,
+                                       GLenum modeRGB,
+                                       GLenum modeAlpha);
+bool ValidateBlendEquationiEXT(const Context *context, GLuint buf, GLenum mode);
+bool ValidateBlendFuncSeparateiEXT(const Context *context,
+                                   GLuint buf,
+                                   GLenum srcRGB,
+                                   GLenum dstRGB,
+                                   GLenum srcAlpha,
+                                   GLenum dstAlpha);
+bool ValidateBlendFunciEXT(const Context *context, GLuint buf, GLenum src, GLenum dst);
+bool ValidateColorMaskiEXT(const Context *context,
+                           GLuint index,
+                           GLboolean r,
+                           GLboolean g,
+                           GLboolean b,
+                           GLboolean a);
+bool ValidateDisableiEXT(const Context *context, GLenum target, GLuint index);
+bool ValidateEnableiEXT(const Context *context, GLenum target, GLuint index);
+bool ValidateIsEnablediEXT(const Context *context, GLenum target, GLuint index);
+
 // GL_EXT_draw_elements_base_vertex
 bool ValidateDrawElementsBaseVertexEXT(const Context *context,
                                        PrimitiveMode modePacked,
@@ -1203,6 +1226,29 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
 // GL_OES_compressed_ETC1_RGB8_texture
 
 // GL_OES_depth32
+
+// GL_OES_draw_buffers_indexed
+bool ValidateBlendEquationSeparateiOES(const Context *context,
+                                       GLuint buf,
+                                       GLenum modeRGB,
+                                       GLenum modeAlpha);
+bool ValidateBlendEquationiOES(const Context *context, GLuint buf, GLenum mode);
+bool ValidateBlendFuncSeparateiOES(const Context *context,
+                                   GLuint buf,
+                                   GLenum srcRGB,
+                                   GLenum dstRGB,
+                                   GLenum srcAlpha,
+                                   GLenum dstAlpha);
+bool ValidateBlendFunciOES(const Context *context, GLuint buf, GLenum src, GLenum dst);
+bool ValidateColorMaskiOES(const Context *context,
+                           GLuint index,
+                           GLboolean r,
+                           GLboolean g,
+                           GLboolean b,
+                           GLboolean a);
+bool ValidateDisableiOES(const Context *context, GLenum target, GLuint index);
+bool ValidateEnableiOES(const Context *context, GLenum target, GLuint index);
+bool ValidateIsEnablediOES(const Context *context, GLenum target, GLuint index);
 
 // GL_OES_draw_elements_base_vertex
 bool ValidateDrawElementsBaseVertexOES(const Context *context,

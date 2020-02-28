@@ -3732,6 +3732,127 @@ CallCapture CaptureDrawBuffersEXT(const State &glState,
     return CallCapture(gl::EntryPoint::DrawBuffersEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureBlendEquationSeparateiEXT(const State &glState,
+                                             bool isCallValid,
+                                             GLuint buf,
+                                             GLenum modeRGB,
+                                             GLenum modeAlpha)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("buf", ParamType::TGLuint, buf);
+    paramBuffer.addEnumParam("modeRGB", GLenumGroup::BlendEquationModeEXT, ParamType::TGLenum,
+                             modeRGB);
+    paramBuffer.addEnumParam("modeAlpha", GLenumGroup::BlendEquationModeEXT, ParamType::TGLenum,
+                             modeAlpha);
+
+    return CallCapture(gl::EntryPoint::BlendEquationSeparateiEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureBlendEquationiEXT(const State &glState,
+                                     bool isCallValid,
+                                     GLuint buf,
+                                     GLenum mode)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("buf", ParamType::TGLuint, buf);
+    paramBuffer.addEnumParam("mode", GLenumGroup::BlendEquationModeEXT, ParamType::TGLenum, mode);
+
+    return CallCapture(gl::EntryPoint::BlendEquationiEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureBlendFuncSeparateiEXT(const State &glState,
+                                         bool isCallValid,
+                                         GLuint buf,
+                                         GLenum srcRGB,
+                                         GLenum dstRGB,
+                                         GLenum srcAlpha,
+                                         GLenum dstAlpha)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("buf", ParamType::TGLuint, buf);
+    paramBuffer.addEnumParam("srcRGB", GLenumGroup::BlendingFactor, ParamType::TGLenum, srcRGB);
+    paramBuffer.addEnumParam("dstRGB", GLenumGroup::BlendingFactor, ParamType::TGLenum, dstRGB);
+    paramBuffer.addEnumParam("srcAlpha", GLenumGroup::BlendingFactor, ParamType::TGLenum, srcAlpha);
+    paramBuffer.addEnumParam("dstAlpha", GLenumGroup::BlendingFactor, ParamType::TGLenum, dstAlpha);
+
+    return CallCapture(gl::EntryPoint::BlendFuncSeparateiEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureBlendFunciEXT(const State &glState,
+                                 bool isCallValid,
+                                 GLuint buf,
+                                 GLenum src,
+                                 GLenum dst)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("buf", ParamType::TGLuint, buf);
+    paramBuffer.addEnumParam("src", GLenumGroup::BlendingFactor, ParamType::TGLenum, src);
+    paramBuffer.addEnumParam("dst", GLenumGroup::BlendingFactor, ParamType::TGLenum, dst);
+
+    return CallCapture(gl::EntryPoint::BlendFunciEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureColorMaskiEXT(const State &glState,
+                                 bool isCallValid,
+                                 GLuint index,
+                                 GLboolean r,
+                                 GLboolean g,
+                                 GLboolean b,
+                                 GLboolean a)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("r", ParamType::TGLboolean, r);
+    paramBuffer.addValueParam("g", ParamType::TGLboolean, g);
+    paramBuffer.addValueParam("b", ParamType::TGLboolean, b);
+    paramBuffer.addValueParam("a", ParamType::TGLboolean, a);
+
+    return CallCapture(gl::EntryPoint::ColorMaskiEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureDisableiEXT(const State &glState, bool isCallValid, GLenum target, GLuint index)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLenumGroup::EnableCap, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+
+    return CallCapture(gl::EntryPoint::DisableiEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureEnableiEXT(const State &glState, bool isCallValid, GLenum target, GLuint index)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLenumGroup::EnableCap, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+
+    return CallCapture(gl::EntryPoint::EnableiEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureIsEnablediEXT(const State &glState,
+                                 bool isCallValid,
+                                 GLenum target,
+                                 GLuint index,
+                                 GLboolean returnValue)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLenumGroup::EnableCap, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
+    return CallCapture(gl::EntryPoint::IsEnablediEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureDrawElementsBaseVertexEXT(const State &glState,
                                              bool isCallValid,
                                              PrimitiveMode modePacked,
@@ -5041,6 +5162,127 @@ CallCapture CaptureEGLImageTargetTexture2DOES(const State &glState,
     paramBuffer.addValueParam("image", ParamType::TGLeglImageOES, image);
 
     return CallCapture(gl::EntryPoint::EGLImageTargetTexture2DOES, std::move(paramBuffer));
+}
+
+CallCapture CaptureBlendEquationSeparateiOES(const State &glState,
+                                             bool isCallValid,
+                                             GLuint buf,
+                                             GLenum modeRGB,
+                                             GLenum modeAlpha)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("buf", ParamType::TGLuint, buf);
+    paramBuffer.addEnumParam("modeRGB", GLenumGroup::BlendEquationModeEXT, ParamType::TGLenum,
+                             modeRGB);
+    paramBuffer.addEnumParam("modeAlpha", GLenumGroup::BlendEquationModeEXT, ParamType::TGLenum,
+                             modeAlpha);
+
+    return CallCapture(gl::EntryPoint::BlendEquationSeparateiOES, std::move(paramBuffer));
+}
+
+CallCapture CaptureBlendEquationiOES(const State &glState,
+                                     bool isCallValid,
+                                     GLuint buf,
+                                     GLenum mode)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("buf", ParamType::TGLuint, buf);
+    paramBuffer.addEnumParam("mode", GLenumGroup::BlendEquationModeEXT, ParamType::TGLenum, mode);
+
+    return CallCapture(gl::EntryPoint::BlendEquationiOES, std::move(paramBuffer));
+}
+
+CallCapture CaptureBlendFuncSeparateiOES(const State &glState,
+                                         bool isCallValid,
+                                         GLuint buf,
+                                         GLenum srcRGB,
+                                         GLenum dstRGB,
+                                         GLenum srcAlpha,
+                                         GLenum dstAlpha)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("buf", ParamType::TGLuint, buf);
+    paramBuffer.addEnumParam("srcRGB", GLenumGroup::BlendingFactor, ParamType::TGLenum, srcRGB);
+    paramBuffer.addEnumParam("dstRGB", GLenumGroup::BlendingFactor, ParamType::TGLenum, dstRGB);
+    paramBuffer.addEnumParam("srcAlpha", GLenumGroup::BlendingFactor, ParamType::TGLenum, srcAlpha);
+    paramBuffer.addEnumParam("dstAlpha", GLenumGroup::BlendingFactor, ParamType::TGLenum, dstAlpha);
+
+    return CallCapture(gl::EntryPoint::BlendFuncSeparateiOES, std::move(paramBuffer));
+}
+
+CallCapture CaptureBlendFunciOES(const State &glState,
+                                 bool isCallValid,
+                                 GLuint buf,
+                                 GLenum src,
+                                 GLenum dst)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("buf", ParamType::TGLuint, buf);
+    paramBuffer.addEnumParam("src", GLenumGroup::BlendingFactor, ParamType::TGLenum, src);
+    paramBuffer.addEnumParam("dst", GLenumGroup::BlendingFactor, ParamType::TGLenum, dst);
+
+    return CallCapture(gl::EntryPoint::BlendFunciOES, std::move(paramBuffer));
+}
+
+CallCapture CaptureColorMaskiOES(const State &glState,
+                                 bool isCallValid,
+                                 GLuint index,
+                                 GLboolean r,
+                                 GLboolean g,
+                                 GLboolean b,
+                                 GLboolean a)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("r", ParamType::TGLboolean, r);
+    paramBuffer.addValueParam("g", ParamType::TGLboolean, g);
+    paramBuffer.addValueParam("b", ParamType::TGLboolean, b);
+    paramBuffer.addValueParam("a", ParamType::TGLboolean, a);
+
+    return CallCapture(gl::EntryPoint::ColorMaskiOES, std::move(paramBuffer));
+}
+
+CallCapture CaptureDisableiOES(const State &glState, bool isCallValid, GLenum target, GLuint index)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLenumGroup::EnableCap, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+
+    return CallCapture(gl::EntryPoint::DisableiOES, std::move(paramBuffer));
+}
+
+CallCapture CaptureEnableiOES(const State &glState, bool isCallValid, GLenum target, GLuint index)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLenumGroup::EnableCap, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+
+    return CallCapture(gl::EntryPoint::EnableiOES, std::move(paramBuffer));
+}
+
+CallCapture CaptureIsEnablediOES(const State &glState,
+                                 bool isCallValid,
+                                 GLenum target,
+                                 GLuint index,
+                                 GLboolean returnValue)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLenumGroup::EnableCap, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
+    return CallCapture(gl::EntryPoint::IsEnablediOES, std::move(paramBuffer));
 }
 
 CallCapture CaptureDrawElementsBaseVertexOES(const State &glState,
