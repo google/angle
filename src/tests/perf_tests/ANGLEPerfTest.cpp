@@ -116,10 +116,7 @@ void UpdateTraceEventDuration(angle::PlatformMethods *platform,
 
 double MonotonicallyIncreasingTime(angle::PlatformMethods *platform)
 {
-    // Move the time origin to the first call to this function, to avoid generating unnecessarily
-    // large timestamps.
-    static double origin = angle::GetCurrentTime();
-    return angle::GetCurrentTime() - origin;
+    return GetHostTimeSeconds();
 }
 
 void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
@@ -173,6 +170,16 @@ ANGLE_MAYBE_UNUSED void KHRONOS_APIENTRY DebugMessageCallback(GLenum source,
     std::cerr << sourceText << ", " << typeText << ", " << severityText << ": " << message << "\n";
 }
 }  // anonymous namespace
+
+TraceEvent::TraceEvent(char phaseIn,
+                       const char *categoryNameIn,
+                       const char *nameIn,
+                       double timestampIn)
+    : phase(phaseIn), categoryName(categoryNameIn), name{}, timestamp(timestampIn)
+{
+    ASSERT(strlen(nameIn) < kMaxNameLen);
+    strcpy(name, nameIn);
+}
 
 ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
                              const std::string &backend,
@@ -394,9 +401,9 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
                     testParams.story(),
                     OneFrame() ? 1 : testParams.iterationsPerStep),
       mTestParams(testParams),
+      mIsTimestampQueryAvailable(false),
       mGLWindow(nullptr),
-      mOSWindow(nullptr),
-      mIsTimestampQueryAvailable(false)
+      mOSWindow(nullptr)
 {
     // Force fast tests to make sure our slowest bots don't time out.
     if (OneFrame())
@@ -592,6 +599,24 @@ void ANGLERenderTest::endInternalTraceEvent(const char *name)
     }
 }
 
+void ANGLERenderTest::beginGLTraceEvent(const char *name, double hostTimeSec)
+{
+    if (gEnableTrace)
+    {
+        mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_BEGIN, gTraceCategories[1].name, name,
+                                       hostTimeSec);
+    }
+}
+
+void ANGLERenderTest::endGLTraceEvent(const char *name, double hostTimeSec)
+{
+    if (gEnableTrace)
+    {
+        mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_END, gTraceCategories[1].name, name,
+                                       hostTimeSec);
+    }
+}
+
 void ANGLERenderTest::step()
 {
     beginInternalTraceEvent("step");
@@ -714,3 +739,14 @@ std::vector<TraceEvent> &ANGLERenderTest::getTraceEventBuffer()
 {
     return mTraceEventBuffer;
 }
+
+namespace angle
+{
+double GetHostTimeSeconds()
+{
+    // Move the time origin to the first call to this function, to avoid generating unnecessarily
+    // large timestamps.
+    static double origin = angle::GetCurrentTime();
+    return angle::GetCurrentTime() - origin;
+}
+}  // namespace angle

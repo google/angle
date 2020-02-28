@@ -109,6 +109,7 @@ EGLPlatformParameters OPENGLES(EGLint major, EGLint minor);
 EGLPlatformParameters OPENGLES_NULL();
 
 EGLPlatformParameters OPENGL_OR_GLES();
+EGLPlatformParameters OPENGL_OR_GLES(EGLint major, EGLint minor);
 EGLPlatformParameters OPENGL_OR_GLES_NULL();
 
 EGLPlatformParameters VULKAN();

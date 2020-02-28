@@ -398,6 +398,15 @@ EGLPlatformParameters OPENGL_OR_GLES()
 #endif
 }
 
+EGLPlatformParameters OPENGL_OR_GLES(EGLint major, EGLint minor)
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    return OPENGLES(major, minor);
+#else
+    return OPENGL(major, minor);
+#endif
+}
+
 EGLPlatformParameters OPENGL_OR_GLES_NULL()
 {
 #if defined(ANGLE_PLATFORM_ANDROID)

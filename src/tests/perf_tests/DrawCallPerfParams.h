@@ -55,6 +55,14 @@ ParamsT GL(const ParamsT &in)
 }
 
 template <typename ParamsT>
+ParamsT GL3(const ParamsT &in)
+{
+    ParamsT out       = in;
+    out.eglParameters = angle::egl_platform::OPENGL_OR_GLES(3, 0);
+    return out;
+}
+
+template <typename ParamsT>
 ParamsT Vulkan(const ParamsT &in)
 {
     ParamsT out       = in;
