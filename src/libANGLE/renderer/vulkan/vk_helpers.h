@@ -286,7 +286,7 @@ class DynamicQueryPool final : public DynamicallyGrowingPool<QueryPool>
     angle::Result allocateQuery(ContextVk *contextVk, size_t *poolIndex, uint32_t *queryIndex);
     void freeQuery(ContextVk *contextVk, size_t poolIndex, uint32_t queryIndex);
 
-    const QueryPool *getQueryPool(size_t index) const { return &mPools[index]; }
+    const QueryPool &getQueryPool(size_t index) const { return mPools[index]; }
 
   private:
     angle::Result allocateNewPool(ContextVk *contextVk);
@@ -315,23 +315,30 @@ class QueryHelper final
               uint32_t query);
     void deinit();
 
-    const QueryPool *getQueryPool() const
-    {
-        return mDynamicQueryPool ? mDynamicQueryPool->getQueryPool(mQueryPoolIndex) : nullptr;
-    }
-    uint32_t getQuery() const { return mQuery; }
-
-    // Used only by DynamicQueryPool.
-    size_t getQueryPoolIndex() const { return mQueryPoolIndex; }
+    bool valid() const { return mDynamicQueryPool != nullptr; }
 
     angle::Result beginQuery(ContextVk *contextVk);
     angle::Result endQuery(ContextVk *contextVk);
-    angle::Result writeTimestamp(ContextVk *contextVk);
+
+    angle::Result flushAndWriteTimestamp(ContextVk *contextVk);
+    void writeTimestamp(vk::PrimaryCommandBuffer *primary);
 
     Serial getStoredQueueSerial() { return mMostRecentSerial; }
     bool hasPendingWork(ContextVk *contextVk);
 
+    angle::Result getUint64ResultNonBlocking(ContextVk *contextVk,
+                                             uint64_t *resultOut,
+                                             bool *availableOut);
+    angle::Result getUint64Result(ContextVk *contextVk, uint64_t *resultOut);
+
   private:
+    friend class DynamicQueryPool;
+    const QueryPool &getQueryPool() const
+    {
+        ASSERT(valid());
+        return mDynamicQueryPool->getQueryPool(mQueryPoolIndex);
+    }
+
     const DynamicQueryPool *mDynamicQueryPool;
     size_t mQueryPoolIndex;
     uint32_t mQuery;

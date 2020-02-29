@@ -1593,13 +1593,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         commandBuffer.waitEvents(1, cpuReady.get().ptr(), VK_PIPELINE_STAGE_HOST_BIT,
                                  VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, nullptr, 0, nullptr, 0,
                                  nullptr);
-
-        commandBuffer.resetQueryPool(timestampQuery.getQueryPool()->getHandle(),
-                                     timestampQuery.getQuery(), 1);
-        commandBuffer.writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-                                     timestampQuery.getQueryPool()->getHandle(),
-                                     timestampQuery.getQuery());
-
+        timestampQuery.writeTimestamp(&commandBuffer);
         commandBuffer.setEvent(gpuDone.get().getHandle(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
 
         ANGLE_VK_TRY(this, commandBuffer.end());
@@ -1643,12 +1637,8 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         // Get the query results
         ANGLE_TRY(finishToSerial(getLastSubmittedQueueSerial()));
 
-        constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
-
         uint64_t gpuTimestampCycles = 0;
-        ANGLE_VK_TRY(this, timestampQuery.getQueryPool()->getResults(
-                               device, timestampQuery.getQuery(), 1, sizeof(gpuTimestampCycles),
-                               &gpuTimestampCycles, sizeof(gpuTimestampCycles), queryFlags));
+        ANGLE_TRY(timestampQuery.getUint64Result(this, &gpuTimestampCycles));
 
         // Use the first timestamp queried as origin.
         if (mGpuEventTimestampOrigin == 0)
@@ -1696,11 +1686,11 @@ angle::Result ContextVk::traceGpuEventImpl(vk::PrimaryCommandBuffer *commandBuff
 
     ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &event.queryPoolIndex, &event.queryIndex));
 
-    commandBuffer->resetQueryPool(
-        mGpuEventQueryPool.getQueryPool(event.queryPoolIndex)->getHandle(), event.queryIndex, 1);
-    commandBuffer->writeTimestamp(
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-        mGpuEventQueryPool.getQueryPool(event.queryPoolIndex)->getHandle(), event.queryIndex);
+    const vk::QueryPool &queryPool = mGpuEventQueryPool.getQueryPool(event.queryPoolIndex);
+
+    commandBuffer->resetQueryPool(queryPool, event.queryIndex, 1);
+    commandBuffer->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool,
+                                  event.queryIndex);
 
     mInFlightGpuEventQueries.push_back(std::move(event));
 
@@ -1727,11 +1717,11 @@ angle::Result ContextVk::checkCompletedGpuEvents()
         }
 
         // See if the results are available.
-        uint64_t gpuTimestampCycles = 0;
-        VkResult result             = mGpuEventQueryPool.getQueryPool(eventQuery.queryPoolIndex)
-                              ->getResults(getDevice(), eventQuery.queryIndex, 1,
-                                           sizeof(gpuTimestampCycles), &gpuTimestampCycles,
-                                           sizeof(gpuTimestampCycles), VK_QUERY_RESULT_64_BIT);
+        uint64_t gpuTimestampCycles    = 0;
+        const vk::QueryPool &queryPool = mGpuEventQueryPool.getQueryPool(eventQuery.queryPoolIndex);
+        VkResult result                = queryPool.getResults(getDevice(), eventQuery.queryIndex, 1,
+                                               sizeof(gpuTimestampCycles), &gpuTimestampCycles,
+                                               sizeof(gpuTimestampCycles), VK_QUERY_RESULT_64_BIT);
         if (result == VK_NOT_READY)
         {
             break;
@@ -3805,13 +3795,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     beginInfo.pInheritanceInfo         = nullptr;
 
     ANGLE_VK_TRY(this, commandBuffer.begin(beginInfo));
-
-    commandBuffer.resetQueryPool(timestampQuery.getQueryPool()->getHandle(),
-                                 timestampQuery.getQuery(), 1);
-    commandBuffer.writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-                                 timestampQuery.getQueryPool()->getHandle(),
-                                 timestampQuery.getQuery());
-
+    timestampQuery.writeTimestamp(&commandBuffer);
     ANGLE_VK_TRY(this, commandBuffer.end());
 
     // Create fence for the submission
@@ -3842,12 +3826,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     ANGLE_VK_TRY(this, fence.get().wait(device, mRenderer->getMaxFenceWaitTimeNs()));
 
     // Get the query results
-    constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
-
-    ANGLE_VK_TRY(this, timestampQuery.getQueryPool()->getResults(
-                           device, timestampQuery.getQuery(), 1, sizeof(*timestampOut),
-                           timestampOut, sizeof(*timestampOut), queryFlags));
-
+    ANGLE_TRY(timestampQuery.getUint64Result(this, timestampOut));
     timestampQueryPool.get().freeQuery(this, &timestampQuery);
 
     // Convert results to nanoseconds.

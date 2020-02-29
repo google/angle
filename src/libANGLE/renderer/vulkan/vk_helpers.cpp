@@ -931,7 +931,7 @@ void DynamicQueryPool::destroy(VkDevice device)
 
 angle::Result DynamicQueryPool::allocateQuery(ContextVk *contextVk, QueryHelper *queryOut)
 {
-    ASSERT(!queryOut->getQueryPool());
+    ASSERT(!queryOut->valid());
 
     size_t poolIndex    = 0;
     uint32_t queryIndex = 0;
@@ -944,12 +944,12 @@ angle::Result DynamicQueryPool::allocateQuery(ContextVk *contextVk, QueryHelper 
 
 void DynamicQueryPool::freeQuery(ContextVk *contextVk, QueryHelper *query)
 {
-    if (query->getQueryPool())
+    if (query->valid())
     {
-        size_t poolIndex = query->getQueryPoolIndex();
-        ASSERT(query->getQueryPool()->valid());
+        size_t poolIndex = query->mQueryPoolIndex;
+        ASSERT(getQueryPool(poolIndex).valid());
 
-        freeQuery(contextVk, poolIndex, query->getQuery());
+        freeQuery(contextVk, poolIndex, query->mQuery);
 
         query->deinit();
     }
@@ -1023,7 +1023,7 @@ angle::Result QueryHelper::beginQuery(ContextVk *contextVk)
 {
     vk::PrimaryCommandBuffer *primaryCommands;
     ANGLE_TRY(contextVk->flushAndGetPrimaryCommandBuffer(&primaryCommands));
-    VkQueryPool queryPool = getQueryPool()->getHandle();
+    const QueryPool &queryPool = getQueryPool();
     primaryCommands->resetQueryPool(queryPool, mQuery, 1);
     primaryCommands->beginQuery(queryPool, mQuery, 0);
     mMostRecentSerial = contextVk->getCurrentQueueSerial();
@@ -1034,21 +1034,25 @@ angle::Result QueryHelper::endQuery(ContextVk *contextVk)
 {
     vk::PrimaryCommandBuffer *primaryCommands;
     ANGLE_TRY(contextVk->flushAndGetPrimaryCommandBuffer(&primaryCommands));
-    VkQueryPool queryPool = getQueryPool()->getHandle();
-    primaryCommands->endQuery(queryPool, mQuery);
+    primaryCommands->endQuery(getQueryPool(), mQuery);
     mMostRecentSerial = contextVk->getCurrentQueueSerial();
     return angle::Result::Continue;
 }
 
-angle::Result QueryHelper::writeTimestamp(ContextVk *contextVk)
+angle::Result QueryHelper::flushAndWriteTimestamp(ContextVk *contextVk)
 {
-    vk::PrimaryCommandBuffer *primaryCommands;
-    ANGLE_TRY(contextVk->flushAndGetPrimaryCommandBuffer(&primaryCommands));
-    VkQueryPool queryPool = getQueryPool()->getHandle();
-    primaryCommands->resetQueryPool(queryPool, mQuery, 1);
-    primaryCommands->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, mQuery);
+    vk::PrimaryCommandBuffer *primary;
+    ANGLE_TRY(contextVk->flushAndGetPrimaryCommandBuffer(&primary));
+    writeTimestamp(primary);
     mMostRecentSerial = contextVk->getCurrentQueueSerial();
     return angle::Result::Continue;
+}
+
+void QueryHelper::writeTimestamp(vk::PrimaryCommandBuffer *primary)
+{
+    const QueryPool &queryPool = getQueryPool();
+    primary->resetQueryPool(queryPool, mQuery, 1);
+    primary->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, mQuery);
 }
 
 bool QueryHelper::hasPendingWork(ContextVk *contextVk)
@@ -1056,6 +1060,39 @@ bool QueryHelper::hasPendingWork(ContextVk *contextVk)
     // If the renderer has a queue serial higher than the stored one, the command buffers that
     // recorded this query have already been submitted, so there is no pending work.
     return mMostRecentSerial == contextVk->getCurrentQueueSerial();
+}
+
+angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
+                                                      uint64_t *resultOut,
+                                                      bool *availableOut)
+{
+    ASSERT(valid());
+    VkDevice device                     = contextVk->getDevice();
+    constexpr VkQueryResultFlags kFlags = VK_QUERY_RESULT_64_BIT;
+    VkResult result = getQueryPool().getResults(device, mQuery, 1, sizeof(uint64_t), resultOut,
+                                                sizeof(uint64_t), kFlags);
+
+    if (result == VK_NOT_READY)
+    {
+        *availableOut = false;
+        return angle::Result::Continue;
+    }
+    else
+    {
+        ANGLE_VK_TRY(contextVk, result);
+        *availableOut = true;
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result QueryHelper::getUint64Result(ContextVk *contextVk, uint64_t *resultOut)
+{
+    ASSERT(valid());
+    VkDevice device                     = contextVk->getDevice();
+    constexpr VkQueryResultFlags kFlags = VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT;
+    ANGLE_VK_TRY(contextVk, getQueryPool().getResults(device, mQuery, 1, sizeof(uint64_t),
+                                                      resultOut, sizeof(uint64_t), kFlags));
+    return angle::Result::Continue;
 }
 
 // DynamicSemaphorePool implementation

@@ -188,7 +188,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
 
     VkResult begin(const VkCommandBufferBeginInfo &info);
 
-    void beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);
+    void beginQuery(const QueryPool &queryPool, uint32_t query, VkQueryControlFlags flags);
 
     void beginRenderPass(const VkRenderPassBeginInfo &beginInfo, VkSubpassContents subpassContents);
 
@@ -294,7 +294,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                       uint32_t stride);
 
     VkResult end();
-    void endQuery(VkQueryPool queryPool, uint32_t query);
+    void endQuery(const QueryPool &queryPool, uint32_t query);
     void endRenderPass();
     void executeCommands(uint32_t commandBufferCount, const CommandBuffer *commandBuffers);
 
@@ -338,7 +338,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
     VkResult reset();
     void resetEvent(VkEvent event, VkPipelineStageFlags stageMask);
-    void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount);
+    void resetQueryPool(const QueryPool &queryPool, uint32_t firstQuery, uint32_t queryCount);
     void resolveImage(const Image &srcImage,
                       VkImageLayout srcImageLayout,
                       const Image &dstImage,
@@ -357,7 +357,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                     const VkImageMemoryBarrier *imageMemoryBarriers);
 
     void writeTimestamp(VkPipelineStageFlagBits pipelineStage,
-                        VkQueryPool queryPool,
+                        const QueryPool &queryPool,
                         uint32_t query);
 
     // VK_EXT_transform_feedback
@@ -916,12 +916,12 @@ ANGLE_INLINE void CommandBuffer::waitEvents(uint32_t eventCount,
                     imageMemoryBarrierCount, imageMemoryBarriers);
 }
 
-ANGLE_INLINE void CommandBuffer::resetQueryPool(VkQueryPool queryPool,
+ANGLE_INLINE void CommandBuffer::resetQueryPool(const QueryPool &queryPool,
                                                 uint32_t firstQuery,
                                                 uint32_t queryCount)
 {
-    ASSERT(valid());
-    vkCmdResetQueryPool(mHandle, queryPool, firstQuery, queryCount);
+    ASSERT(valid() && queryPool.valid());
+    vkCmdResetQueryPool(mHandle, queryPool.getHandle(), firstQuery, queryCount);
 }
 
 ANGLE_INLINE void CommandBuffer::resolveImage(const Image &srcImage,
@@ -936,26 +936,26 @@ ANGLE_INLINE void CommandBuffer::resolveImage(const Image &srcImage,
                       dstImageLayout, regionCount, regions);
 }
 
-ANGLE_INLINE void CommandBuffer::beginQuery(VkQueryPool queryPool,
+ANGLE_INLINE void CommandBuffer::beginQuery(const QueryPool &queryPool,
                                             uint32_t query,
                                             VkQueryControlFlags flags)
 {
-    ASSERT(valid());
-    vkCmdBeginQuery(mHandle, queryPool, query, flags);
+    ASSERT(valid() && queryPool.valid());
+    vkCmdBeginQuery(mHandle, queryPool.getHandle(), query, flags);
 }
 
-ANGLE_INLINE void CommandBuffer::endQuery(VkQueryPool queryPool, uint32_t query)
+ANGLE_INLINE void CommandBuffer::endQuery(const QueryPool &queryPool, uint32_t query)
 {
-    ASSERT(valid());
-    vkCmdEndQuery(mHandle, queryPool, query);
+    ASSERT(valid() && queryPool.valid());
+    vkCmdEndQuery(mHandle, queryPool.getHandle(), query);
 }
 
 ANGLE_INLINE void CommandBuffer::writeTimestamp(VkPipelineStageFlagBits pipelineStage,
-                                                VkQueryPool queryPool,
+                                                const QueryPool &queryPool,
                                                 uint32_t query)
 {
     ASSERT(valid());
-    vkCmdWriteTimestamp(mHandle, pipelineStage, queryPool, query);
+    vkCmdWriteTimestamp(mHandle, pipelineStage, queryPool.getHandle(), query);
 }
 
 ANGLE_INLINE void CommandBuffer::draw(uint32_t vertexCount,
