@@ -921,9 +921,6 @@ TEST_P(RobustResourceInitTest, Texture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
-    // Flaky failure on Linux / NV / Vulkan when run in a sequence. http://anglebug.com/3416
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsNVIDIA() && IsLinux());
-
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
