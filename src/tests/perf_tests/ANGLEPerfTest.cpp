@@ -138,8 +138,8 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
         value["cat"]  = traceEvent.categoryName;
         value["ph"]   = phaseName.str();
         value["ts"]   = microseconds;
-        value["pid"]  = "ANGLE";
-        value["tid"]  = strcmp(traceEvent.categoryName, "gpu.angle.gpu") == 0 ? "GPU" : "CPU";
+        value["pid"]  = strcmp(traceEvent.categoryName, "gpu.angle.gpu") == 0 ? "GPU" : "ANGLE";
+        value["tid"]  = 1;
 
         eventsValue.append(value);
     }
@@ -175,7 +175,7 @@ TraceEvent::TraceEvent(char phaseIn,
                        const char *categoryNameIn,
                        const char *nameIn,
                        double timestampIn)
-    : phase(phaseIn), categoryName(categoryNameIn), name{}, timestamp(timestampIn)
+    : phase(phaseIn), categoryName(categoryNameIn), name{}, timestamp(timestampIn), tid(1)
 {
     ASSERT(strlen(nameIn) < kMaxNameLen);
     strcpy(name, nameIn);

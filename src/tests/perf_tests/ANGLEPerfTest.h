@@ -51,6 +51,7 @@ struct TraceEvent final
     const char *categoryName = nullptr;
     char name[kMaxNameLen]   = {};
     double timestamp         = 0;
+    uint32_t tid             = 0;
 };
 
 class ANGLEPerfTest : public testing::Test, angle::NonCopyable

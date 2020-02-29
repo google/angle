@@ -249,6 +249,9 @@ class RenderPassCommandBuffer final : public CommandBufferHelper
     bool mRebindTransformFeedbackBuffers;
 };
 
+static constexpr uint32_t kMaxGpuEventNameLen = 32;
+using EventName                               = std::array<char, kMaxGpuEventNameLen>;
+
 class ContextVk : public ContextImpl, public vk::Context
 {
   public:
@@ -568,7 +571,7 @@ class ContextVk : public ContextImpl, public vk::Context
     // are TRACE_EVENT_PHASE_*
     ANGLE_INLINE angle::Result traceGpuEvent(vk::PrimaryCommandBuffer *commandBuffer,
                                              char phase,
-                                             const char *name)
+                                             const EventName &name)
     {
         if (mGpuEventsEnabled)
             return traceGpuEventImpl(commandBuffer, phase, name);
@@ -637,9 +640,12 @@ class ContextVk : public ContextImpl, public vk::Context
 
     angle::Result flushAndGetPrimaryCommandBuffer(vk::PrimaryCommandBuffer **primaryCommands)
     {
-        mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
+        flushOutsideRenderPassCommands();
         ANGLE_TRY(endRenderPass());
         *primaryCommands = &mPrimaryCommands;
+
+        // We assume any calling code is going to record primary commands.
+        mHasPrimaryCommands = true;
         return angle::Result::Continue;
     }
 
@@ -713,7 +719,7 @@ class ContextVk : public ContextImpl, public vk::Context
     //   submitted, the query is not checked to avoid incuring a flush.
     struct GpuEventQuery final
     {
-        const char *name;
+        EventName name;
         char phase;
         vk::QueryHelper queryHelper;
     };
@@ -724,7 +730,7 @@ class ContextVk : public ContextImpl, public vk::Context
     struct GpuEvent final
     {
         uint64_t gpuTimestampCycles;
-        const char *name;
+        std::array<char, kMaxGpuEventNameLen> name;
         char phase;
     };
 
@@ -888,13 +894,12 @@ class ContextVk : public ContextImpl, public vk::Context
 
     angle::Result submitFrame(const VkSubmitInfo &submitInfo,
                               vk::PrimaryCommandBuffer &&commandBuffer);
-    angle::Result flushCommandGraph(vk::PrimaryCommandBuffer *commandBatch);
     angle::Result memoryBarrierImpl(GLbitfield barriers, VkPipelineStageFlags stageMask);
 
     angle::Result synchronizeCpuGpuTime();
     angle::Result traceGpuEventImpl(vk::PrimaryCommandBuffer *commandBuffer,
                                     char phase,
-                                    const char *name);
+                                    const EventName &name);
     angle::Result checkCompletedGpuEvents();
     void flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS);
     void handleDeviceLost();
@@ -906,6 +911,7 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result startPrimaryCommandBuffer();
     bool hasRecordedCommands();
     void dumpCommandStreamDiagnostics();
+    void flushOutsideRenderPassCommands();
 
     ANGLE_INLINE void onRenderPassFinished() { mRenderPassCommandBuffer = nullptr; }
 
@@ -1028,6 +1034,7 @@ class ContextVk : public ContextImpl, public vk::Context
     OutsideRenderPassCommandBuffer mOutsideRenderPassCommands;
     RenderPassCommandBuffer mRenderPassCommands;
     vk::PrimaryCommandBuffer mPrimaryCommands;
+    bool mHasPrimaryCommands;
 
     // Internal shader library.
     vk::ShaderLibrary mShaderLibrary;
@@ -1052,6 +1059,10 @@ class ContextVk : public ContextImpl, public vk::Context
     // have a value close to zero, to avoid losing 12 bits when converting these 64 bit values to
     // double.
     uint64_t mGpuEventTimestampOrigin;
+
+    // Used to count events for tracing.
+    uint32_t mPrimaryBufferCounter;
+    uint32_t mRenderPassCounter;
 
     // Generators for texture & framebuffer serials.
     SerialFactory mTextureSerialFactory;
