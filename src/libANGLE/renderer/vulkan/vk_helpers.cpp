@@ -933,11 +933,14 @@ angle::Result DynamicQueryPool::allocateQuery(ContextVk *contextVk, QueryHelper 
 {
     ASSERT(!queryOut->valid());
 
-    size_t poolIndex    = 0;
-    uint32_t queryIndex = 0;
-    ANGLE_TRY(allocateQuery(contextVk, &poolIndex, &queryIndex));
+    if (mCurrentFreeEntry >= mPoolSize)
+    {
+        // No more queries left in this pool, create another one.
+        ANGLE_TRY(allocateNewPool(contextVk));
+    }
 
-    queryOut->init(this, poolIndex, queryIndex);
+    uint32_t queryIndex = mCurrentFreeEntry++;
+    queryOut->init(this, mCurrentPool, queryIndex);
 
     return angle::Result::Continue;
 }
@@ -949,32 +952,10 @@ void DynamicQueryPool::freeQuery(ContextVk *contextVk, QueryHelper *query)
         size_t poolIndex = query->mQueryPoolIndex;
         ASSERT(getQueryPool(poolIndex).valid());
 
-        freeQuery(contextVk, poolIndex, query->mQuery);
+        onEntryFreed(contextVk, poolIndex);
 
         query->deinit();
     }
-}
-
-angle::Result DynamicQueryPool::allocateQuery(ContextVk *contextVk,
-                                              size_t *poolIndex,
-                                              uint32_t *queryIndex)
-{
-    if (mCurrentFreeEntry >= mPoolSize)
-    {
-        // No more queries left in this pool, create another one.
-        ANGLE_TRY(allocateNewPool(contextVk));
-    }
-
-    *poolIndex  = mCurrentPool;
-    *queryIndex = mCurrentFreeEntry++;
-
-    return angle::Result::Continue;
-}
-
-void DynamicQueryPool::freeQuery(ContextVk *contextVk, size_t poolIndex, uint32_t queryIndex)
-{
-    ANGLE_UNUSED_VARIABLE(queryIndex);
-    onEntryFreed(contextVk, poolIndex);
 }
 
 angle::Result DynamicQueryPool::allocateNewPool(ContextVk *contextVk)

@@ -1678,22 +1678,14 @@ angle::Result ContextVk::traceGpuEventImpl(vk::PrimaryCommandBuffer *commandBuff
 {
     ASSERT(mGpuEventsEnabled);
 
-    GpuEventQuery event;
+    GpuEventQuery gpuEvent;
+    gpuEvent.name  = name;
+    gpuEvent.phase = phase;
+    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &gpuEvent.queryHelper));
 
-    event.name   = name;
-    event.phase  = phase;
-    event.serial = getCurrentQueueSerial();
+    gpuEvent.queryHelper.writeTimestamp(commandBuffer);
 
-    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &event.queryPoolIndex, &event.queryIndex));
-
-    const vk::QueryPool &queryPool = mGpuEventQueryPool.getQueryPool(event.queryPoolIndex);
-
-    commandBuffer->resetQueryPool(queryPool, event.queryIndex, 1);
-    commandBuffer->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool,
-                                  event.queryIndex);
-
-    mInFlightGpuEventQueries.push_back(std::move(event));
-
+    mInFlightGpuEventQueries.push_back(std::move(gpuEvent));
     return angle::Result::Continue;
 }
 
@@ -1711,31 +1703,29 @@ angle::Result ContextVk::checkCompletedGpuEvents()
     for (GpuEventQuery &eventQuery : mInFlightGpuEventQueries)
     {
         // Only check the timestamp query if the submission has finished.
-        if (eventQuery.serial > lastCompletedSerial)
+        if (eventQuery.queryHelper.getStoredQueueSerial() > lastCompletedSerial)
         {
             break;
         }
 
         // See if the results are available.
-        uint64_t gpuTimestampCycles    = 0;
-        const vk::QueryPool &queryPool = mGpuEventQueryPool.getQueryPool(eventQuery.queryPoolIndex);
-        VkResult result                = queryPool.getResults(getDevice(), eventQuery.queryIndex, 1,
-                                               sizeof(gpuTimestampCycles), &gpuTimestampCycles,
-                                               sizeof(gpuTimestampCycles), VK_QUERY_RESULT_64_BIT);
-        if (result == VK_NOT_READY)
+        uint64_t gpuTimestampCycles = 0;
+        bool available              = false;
+        ANGLE_TRY(eventQuery.queryHelper.getUint64ResultNonBlocking(this, &gpuTimestampCycles,
+                                                                    &available));
+        if (!available)
         {
             break;
         }
-        ANGLE_VK_TRY(this, result);
 
-        mGpuEventQueryPool.freeQuery(this, eventQuery.queryPoolIndex, eventQuery.queryIndex);
+        mGpuEventQueryPool.freeQuery(this, &eventQuery.queryHelper);
 
-        GpuEvent event;
-        event.gpuTimestampCycles = gpuTimestampCycles;
-        event.name               = eventQuery.name;
-        event.phase              = eventQuery.phase;
+        GpuEvent gpuEvent;
+        gpuEvent.gpuTimestampCycles = gpuTimestampCycles;
+        gpuEvent.name               = eventQuery.name;
+        gpuEvent.phase              = eventQuery.phase;
 
-        mGpuEvents.emplace_back(event);
+        mGpuEvents.emplace_back(gpuEvent);
 
         ++finishedCount;
     }

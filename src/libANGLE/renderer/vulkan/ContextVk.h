@@ -711,11 +711,7 @@ class ContextVk : public ContextImpl, public vk::Context
     {
         const char *name;
         char phase;
-
-        uint32_t queryIndex;
-        size_t queryPoolIndex;
-
-        Serial serial;
+        vk::QueryHelper queryHelper;
     };
 
     // Once a query result is available, the timestamp is read and a GpuEvent object is kept until
