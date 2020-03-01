@@ -24,7 +24,7 @@
 
 // We directly call into a function to register the parameterized tests. This saves spinning up
 // a subprocess with a new gtest filter.
-#include "third_party/googletest/src/googletest/src/gtest-internal-inl.h"
+#include <gtest/../../src/gtest-internal-inl.h>
 
 namespace js = rapidjson;
 
