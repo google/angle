@@ -734,6 +734,7 @@ class State : angle::NonCopyable
     {
         return *mShaderProgramManager;
     }
+    const SyncManager &getSyncManagerForCapture() const { return *mSyncManager; }
     const SamplerManager &getSamplerManagerForCapture() const { return *mSamplerManager; }
     const SamplerBindingVector &getSamplerBindingsForCapture() const { return mSamplers; }
 
