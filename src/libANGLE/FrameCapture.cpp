@@ -19,6 +19,8 @@
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
+#include "libANGLE/Query.h"
+#include "libANGLE/ResourceMap.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/capture_gles_2_0_autogen.h"
@@ -1210,6 +1212,21 @@ bool IsDefaultCurrentValue(const gl::VertexAttribCurrentValueData &currentValue)
            currentValue.Values.FloatValues[2] == 0.0f && currentValue.Values.FloatValues[3] == 1.0f;
 }
 
+bool IsQueryActive(const gl::State &glState, gl::QueryID &queryID)
+{
+    const gl::ActiveQueryMap &activeQueries = glState.getActiveQueriesForCapture();
+    for (const auto &activeQueryIter : activeQueries)
+    {
+        const gl::Query *activeQuery = activeQueryIter.get();
+        if (activeQuery && activeQuery->id() == queryID)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void Capture(std::vector<CallCapture> *setupCalls, CallCapture &&call)
 {
     setupCalls->emplace_back(std::move(call));
@@ -1800,6 +1817,31 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 
     // TODO(http://anglebug.com/3662): ES 3.x objects.
+
+    // Create existing queries
+    const gl::QueryMap &queryMap = context->getQueriesForCapture();
+    for (const auto &queryIter : queryMap)
+    {
+        ASSERT(queryIter.first);
+        gl::QueryID queryID = {queryIter.first};
+
+        cap(CaptureGenQueries(replayState, true, 1, &queryID));
+        MaybeCaptureUpdateResourceIDs(setupCalls);
+
+        if (queryIter.second)
+        {
+            gl::QueryType queryType = queryIter.second->getType();
+
+            // Begin the query to generate the object
+            cap(CaptureBeginQuery(replayState, true, queryType, queryID));
+
+            // End the query if it was not active
+            if (!IsQueryActive(apiState, queryID))
+            {
+                cap(CaptureEndQuery(replayState, true, queryType));
+            }
+        }
+    }
 
     // Capture GL Context states.
     // TODO(http://anglebug.com/3662): Complete state capture.

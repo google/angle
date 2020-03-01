@@ -324,6 +324,8 @@ class StateCache final : angle::NonCopyable
         mCachedIntegerVertexAttribTypesValidation;
 };
 
+using QueryMap = ResourceMap<Query, QueryID>;
+
 class Context final : public egl::LabeledObject, angle::NonCopyable, public angle::ObserverInterface
 {
   public:
@@ -587,6 +589,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     angle::FrameCapture *getFrameCapture() { return mFrameCapture.get(); }
 
+    const QueryMap &getQueriesForCapture() const { return mQueryMap; }
+
     void onPostSwap() const;
 
   private:
@@ -672,7 +676,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     ResourceMap<FenceNV, FenceNVID> mFenceNVMap;
     HandleAllocator mFenceNVHandleAllocator;
 
-    ResourceMap<Query, QueryID> mQueryMap;
+    QueryMap mQueryMap;
     HandleAllocator mQueryHandleAllocator;
 
     ResourceMap<VertexArray, VertexArrayID> mVertexArrayMap;

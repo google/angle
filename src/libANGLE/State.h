@@ -61,6 +61,7 @@ using BufferBindingMap     = angle::PackedEnumMap<BufferBinding, T>;
 using BoundBufferMap       = BufferBindingMap<BindingPointer<Buffer>>;
 using TextureBindingVector = std::vector<BindingPointer<Texture>>;
 using TextureBindingMap    = angle::PackedEnumMap<TextureType, TextureBindingVector>;
+using ActiveQueryMap       = angle::PackedEnumMap<QueryType, BindingPointer<Query>>;
 
 class State : angle::NonCopyable
 {
@@ -715,6 +716,8 @@ class State : angle::NonCopyable
         return *mShaderProgramManager;
     }
 
+    const ActiveQueryMap &getActiveQueriesForCapture() const { return mActiveQueries; }
+
   private:
     friend class Context;
 
@@ -875,7 +878,6 @@ class State : angle::NonCopyable
     // It would be nice to merge the image and observer binding. Same for textures.
     std::vector<ImageUnit> mImageUnits;
 
-    using ActiveQueryMap = angle::PackedEnumMap<QueryType, BindingPointer<Query>>;
     ActiveQueryMap mActiveQueries;
 
     // Stores the currently bound buffer for each binding point. It has an entry for the element

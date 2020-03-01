@@ -365,7 +365,6 @@ class SemaphoreManager : public ResourceManagerBase<HandleAllocator>
 
     ResourceMap<Semaphore, SemaphoreID> mSemaphores;
 };
-
 }  // namespace gl
 
 #endif  // LIBANGLE_RESOURCEMANAGER_H_

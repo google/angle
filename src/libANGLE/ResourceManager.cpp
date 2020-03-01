@@ -16,6 +16,7 @@
 #include "libANGLE/Path.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/ProgramPipeline.h"
+#include "libANGLE/Query.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Sampler.h"
 #include "libANGLE/Semaphore.h"
@@ -590,5 +591,4 @@ Semaphore *SemaphoreManager::getSemaphore(SemaphoreID handle) const
 {
     return mSemaphores.query(handle);
 }
-
 }  // namespace gl
