@@ -1769,6 +1769,28 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             cap(CaptureDeleteShader(replayState, true, tempShaderID));
         }
 
+        // Gather XFB varyings
+        std::vector<std::string> xfbVaryings;
+        for (const gl::TransformFeedbackVarying &xfbVarying :
+             program->getState().getLinkedTransformFeedbackVaryings())
+        {
+            xfbVaryings.push_back(xfbVarying.nameWithArrayIndex());
+        }
+
+        if (!xfbVaryings.empty())
+        {
+            std::vector<const char *> varyingsStrings;
+            for (const std::string &varyingString : xfbVaryings)
+            {
+                varyingsStrings.push_back(varyingString.data());
+            }
+
+            GLenum xfbMode = program->getState().getTransformFeedbackBufferMode();
+            cap(CaptureTransformFeedbackVaryings(replayState, true, id,
+                                                 static_cast<GLint>(xfbVaryings.size()),
+                                                 varyingsStrings.data(), xfbMode));
+        }
+
         cap(CaptureLinkProgram(replayState, true, id));
         CaptureUpdateUniformLocations(program, setupCalls);
     }
@@ -1842,6 +1864,45 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             }
         }
     }
+
+    // Transform Feedback
+    const gl::TransformFeedbackMap &xfbMap = context->getTransformFeedbacksForCapture();
+    for (const auto &xfbIter : xfbMap)
+    {
+        gl::TransformFeedbackID xfbID = {xfbIter.first};
+        cap(CaptureGenTransformFeedbacks(replayState, true, 1, &xfbID));
+        MaybeCaptureUpdateResourceIDs(setupCalls);
+
+        gl::TransformFeedback *xfb = xfbIter.second;
+        if (!xfb)
+        {
+            // The object was never created
+            continue;
+        }
+
+        // Bind XFB to create the object
+        cap(CaptureBindTransformFeedback(replayState, true, GL_TRANSFORM_FEEDBACK, xfbID));
+
+        // Bind the buffers associated with this XFB object
+        for (size_t i = 0; i < xfb->getIndexedBufferCount(); ++i)
+        {
+            const gl::OffsetBindingPointer<gl::Buffer> &xfbBuffer = xfb->getIndexedBuffer(i);
+
+            // Note: Buffers bound with BindBufferBase can be used with BindBuffer
+            cap(CaptureBindBufferRange(replayState, true, gl::BufferBinding::TransformFeedback, 0,
+                                       xfbBuffer.id(), xfbBuffer.getOffset(), xfbBuffer.getSize()));
+        }
+
+        if (xfb->isActive() || xfb->isPaused())
+        {
+            // We don't support active XFB in MEC yet
+            UNIMPLEMENTED();
+        }
+    }
+
+    // Bind the current XFB buffer after populating XFB objects
+    gl::TransformFeedback *currentXFB = apiState.getCurrentTransformFeedback();
+    cap(CaptureBindTransformFeedback(replayState, true, GL_TRANSFORM_FEEDBACK, currentXFB->id()));
 
     // Capture GL Context states.
     // TODO(http://anglebug.com/3662): Complete state capture.
