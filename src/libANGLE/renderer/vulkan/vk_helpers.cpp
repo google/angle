@@ -3284,19 +3284,33 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
 {
     const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
 
-    // Depth/stencil readback is not yet implemented.
-    // TODO(http://anglebug.com/4058): Depth/stencil readback.
-    if (angleFormat.depthBits > 0 || angleFormat.stencilBits > 0)
+    VkImageAspectFlagBits aspectFlags = {};
+    if (angleFormat.redBits > 0 || angleFormat.blueBits > 0 || angleFormat.greenBits > 0 ||
+        angleFormat.alphaBits > 0)
     {
-        UNIMPLEMENTED();
-        return angle::Result::Continue;
+        aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT;
     }
+    else
+    {
+        if (angleFormat.depthBits > 0)
+        {
+            aspectFlags = VK_IMAGE_ASPECT_DEPTH_BIT;
+        }
+        if (angleFormat.stencilBits > 0)
+        {
+            ASSERT(angleFormat.depthBits == 0);
+            aspectFlags = VK_IMAGE_ASPECT_STENCIL_BIT;
+        }
+    }
+
+    ASSERT(aspectFlags != 0);
 
     PackPixelsParams params;
     GLuint outputSkipBytes = 0;
 
     uint32_t width  = std::max(1u, mExtents.width >> level);
     uint32_t height = std::max(1u, mExtents.height >> level);
+    uint32_t depth  = std::max(1u, mExtents.depth >> level);
     gl::Rectangle area(0, 0, width, height);
 
     ANGLE_TRY(GetReadPixelsParams(contextVk, packState, packBuffer, format, type, area, area,
@@ -3307,8 +3321,26 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
     stagingBuffer.get().init(contextVk->getRenderer(), VK_BUFFER_USAGE_TRANSFER_DST_BIT, 1,
                              kStagingBufferSize, true);
 
-    return readPixels(contextVk, area, params, VK_IMAGE_ASPECT_COLOR_BIT, level, layer,
-                      static_cast<uint8_t *>(pixels) + outputSkipBytes, &stagingBuffer.get());
+    if (mExtents.depth > 1)
+    {
+        // Depth > 1 means this is a 3D texture and we need to copy all layers
+        for (layer = 0; layer < depth; layer++)
+        {
+            ANGLE_TRY(readPixels(contextVk, area, params, aspectFlags, level, layer,
+                                 static_cast<uint8_t *>(pixels) + outputSkipBytes,
+                                 &stagingBuffer.get()));
+
+            outputSkipBytes += width * height * gl::GetInternalFormatInfo(format, type).pixelBytes;
+        }
+    }
+    else
+    {
+        ANGLE_TRY(readPixels(contextVk, area, params, aspectFlags, level, layer,
+                             static_cast<uint8_t *>(pixels) + outputSkipBytes,
+                             &stagingBuffer.get()));
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result ImageHelper::readPixels(ContextVk *contextVk,
