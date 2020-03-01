@@ -394,6 +394,9 @@ TEST_P(EGLContextCompatibilityTest, PbufferDifferentConfig)
     }
 }
 
+// TODO(jmadill): Register tests dynamically. http://anglebug.com/4449
+ANGLE_MAYBE_UNUSED void RegisterContextCompatibilityTests() {}
+
 ANGLE_INSTANTIATE_TEST(EGLContextCompatibilityTest,
                        WithNoFixture(ES2_D3D9()),
                        WithNoFixture(ES2_D3D11()),
