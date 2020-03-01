@@ -59,6 +59,7 @@ using ContextID = uintptr_t;
 template <typename T>
 using BufferBindingMap     = angle::PackedEnumMap<BufferBinding, T>;
 using BoundBufferMap       = BufferBindingMap<BindingPointer<Buffer>>;
+using SamplerBindingVector = std::vector<BindingPointer<Sampler>>;
 using TextureBindingVector = std::vector<BindingPointer<Texture>>;
 using TextureBindingMap    = angle::PackedEnumMap<TextureType, TextureBindingVector>;
 using ActiveQueryMap       = angle::PackedEnumMap<QueryType, BindingPointer<Query>>;
@@ -281,7 +282,6 @@ class State : angle::NonCopyable
 
     Sampler *getSampler(GLuint textureUnit) const { return mSamplers[textureUnit].get(); }
 
-    using SamplerBindingVector = std::vector<BindingPointer<Sampler>>;
     const SamplerBindingVector &getSamplers() const { return mSamplers; }
 
     void detachSampler(const Context *context, SamplerID sampler);
@@ -734,6 +734,8 @@ class State : angle::NonCopyable
     {
         return *mShaderProgramManager;
     }
+    const SamplerManager &getSamplerManagerForCapture() const { return *mSamplerManager; }
+    const SamplerBindingVector &getSamplerBindingsForCapture() const { return mSamplers; }
 
     const ActiveQueryMap &getActiveQueriesForCapture() const { return mActiveQueries; }
 

@@ -1946,6 +1946,80 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     gl::TransformFeedback *currentXFB = apiState.getCurrentTransformFeedback();
     cap(CaptureBindTransformFeedback(replayState, true, GL_TRANSFORM_FEEDBACK, currentXFB->id()));
 
+    // Capture Sampler Objects
+    const gl::SamplerManager &samplers = apiState.getSamplerManagerForCapture();
+    for (const auto &samplerIter : samplers)
+    {
+        gl::SamplerID samplerID = {samplerIter.first};
+        cap(CaptureGenSamplers(replayState, true, 1, &samplerID));
+        MaybeCaptureUpdateResourceIDs(setupCalls);
+
+        gl::Sampler *sampler = samplerIter.second;
+        if (!sampler)
+        {
+            continue;
+        }
+
+        gl::SamplerState defaultSamplerState;
+        if (sampler->getMinFilter() != defaultSamplerState.getMinFilter())
+        {
+            cap(CaptureSamplerParameteri(replayState, true, samplerID, GL_TEXTURE_MIN_FILTER,
+                                         sampler->getMinFilter()));
+        }
+        if (sampler->getMagFilter() != defaultSamplerState.getMagFilter())
+        {
+            cap(CaptureSamplerParameteri(replayState, true, samplerID, GL_TEXTURE_MAG_FILTER,
+                                         sampler->getMagFilter()));
+        }
+        if (sampler->getWrapS() != defaultSamplerState.getWrapS())
+        {
+            cap(CaptureSamplerParameteri(replayState, true, samplerID, GL_TEXTURE_WRAP_S,
+                                         sampler->getWrapS()));
+        }
+        if (sampler->getWrapR() != defaultSamplerState.getWrapR())
+        {
+            cap(CaptureSamplerParameteri(replayState, true, samplerID, GL_TEXTURE_WRAP_R,
+                                         sampler->getWrapR()));
+        }
+        if (sampler->getWrapT() != defaultSamplerState.getWrapT())
+        {
+            cap(CaptureSamplerParameteri(replayState, true, samplerID, GL_TEXTURE_WRAP_T,
+                                         sampler->getWrapT()));
+        }
+        if (sampler->getMinLod() != defaultSamplerState.getMinLod())
+        {
+            cap(CaptureSamplerParameterf(replayState, true, samplerID, GL_TEXTURE_MIN_LOD,
+                                         sampler->getMinLod()));
+        }
+        if (sampler->getMaxLod() != defaultSamplerState.getMaxLod())
+        {
+            cap(CaptureSamplerParameterf(replayState, true, samplerID, GL_TEXTURE_MAX_LOD,
+                                         sampler->getMaxLod()));
+        }
+        if (sampler->getCompareMode() != defaultSamplerState.getCompareMode())
+        {
+            cap(CaptureSamplerParameteri(replayState, true, samplerID, GL_TEXTURE_COMPARE_MODE,
+                                         sampler->getCompareMode()));
+        }
+        if (sampler->getCompareFunc() != defaultSamplerState.getCompareFunc())
+        {
+            cap(CaptureSamplerParameteri(replayState, true, samplerID, GL_TEXTURE_COMPARE_FUNC,
+                                         sampler->getCompareFunc()));
+        }
+    }
+
+    // Bind samplers
+    gl::SamplerBindingVector samplerBindings = apiState.getSamplers();
+    for (GLuint bindingIndex = 0; bindingIndex < static_cast<GLuint>(samplerBindings.size());
+         ++bindingIndex)
+    {
+        gl::SamplerID samplerID = samplerBindings[bindingIndex].id();
+        if (samplerID.value != 0)
+        {
+            cap(CaptureBindSampler(replayState, true, bindingIndex, samplerID));
+        }
+    }
+
     // Capture GL Context states.
     // TODO(http://anglebug.com/3662): Complete state capture.
     auto capCap = [cap, &replayState](GLenum capEnum, bool capValue) {

@@ -2123,7 +2123,7 @@ void StateManagerGL::updateMultiviewBaseViewLayerIndexUniformImpl(
 
 void StateManagerGL::syncSamplersState(const gl::Context *context)
 {
-    const gl::State::SamplerBindingVector &samplers = context->getState().getSamplers();
+    const gl::SamplerBindingVector &samplers = context->getState().getSamplers();
 
     // This could be optimized by using a separate binding dirty bit per sampler.
     for (size_t samplerIndex = 0; samplerIndex < samplers.size(); ++samplerIndex)
