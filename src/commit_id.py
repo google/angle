@@ -23,14 +23,16 @@ if len(sys.argv) < 2:
     sys.exit(usage)
 
 operation = sys.argv[1]
+
+# Set the root of ANGLE's repo as the working directory
 cwd = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 
+git_dir_exists = os.path.exists(os.path.join(cwd, '.git', 'HEAD'))
+
 if operation == 'check':
-    try:
-        # Try a git command to verify the cwd is valid and we can use the 'gen command'
-        grab_output('git status', cwd)
+    if git_dir_exists:
         print("1")
-    except:
+    else:
         print("0")
     sys.exit(0)
 
@@ -41,13 +43,15 @@ output_file = sys.argv[2]
 commit_id_size = 12
 commit_id = 'unknown hash'
 commit_date = 'unknown date'
+enable_binary_loading = False
 
-additional_defines = []
-try:
-    commit_id = grab_output('git rev-parse --short=%d HEAD' % commit_id_size, cwd)
-    commit_date = grab_output('git show -s --format=%ci HEAD', cwd)
-except:
-    additional_defines.append('#define ANGLE_DISABLE_PROGRAM_BINARY_LOAD')
+if git_dir_exists:
+    try:
+        commit_id = grab_output('git rev-parse --short=%d HEAD' % commit_id_size, cwd)
+        commit_date = grab_output('git show -s --format=%ci HEAD', cwd)
+        enable_binary_loading = True
+    except:
+        pass
 
 hfile = open(output_file, 'w')
 
@@ -55,7 +59,7 @@ hfile.write('#define ANGLE_COMMIT_HASH "%s"\n' % commit_id)
 hfile.write('#define ANGLE_COMMIT_HASH_SIZE %d\n' % commit_id_size)
 hfile.write('#define ANGLE_COMMIT_DATE "%s"\n' % commit_date)
 
-for additional_define in additional_defines:
-    hfile.write(additional_define + '\n')
+if not enable_binary_loading:
+    hfile.write('#define ANGLE_DISABLE_PROGRAM_BINARY_LOAD\n')
 
 hfile.close()
