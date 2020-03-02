@@ -1392,6 +1392,33 @@ void Program::bindFragmentOutputIndex(GLuint index, const char *name)
     mFragmentOutputIndexes.bindLocation(index, name);
 }
 
+angle::Result Program::linkMergedVaryings(const Context *context,
+                                          VaryingPacking &varyingPacking,
+                                          const ProgramMergedVaryings &mergedVaryings,
+                                          ProgramLinkedResources *resources)
+{
+    ShaderType tfStage =
+        mState.mAttachedShaders[ShaderType::Geometry] ? ShaderType::Geometry : ShaderType::Vertex;
+    InfoLog &infoLog = getExecutable().getInfoLog();
+
+    if (!linkValidateTransformFeedback(context->getClientVersion(), infoLog, mergedVaryings,
+                                       tfStage, context->getCaps()))
+    {
+        return angle::Result::Stop;
+    }
+
+    if (!resources->varyingPacking.collectAndPackUserVaryings(
+            infoLog, mergedVaryings, mState.getTransformFeedbackVaryingNames(), isSeparable()))
+    {
+        return angle::Result::Stop;
+    }
+
+    gatherTransformFeedbackVaryings(mergedVaryings, tfStage);
+    mState.updateTransformFeedbackStrides();
+
+    return angle::Result::Continue;
+}
+
 // The attached shaders are checked for linking errors by matching up their variables.
 // Uniform, input and output variables get collected.
 // The code gets compiled into binaries.
@@ -1540,8 +1567,6 @@ angle::Result Program::link(const Context *context)
             return angle::Result::Continue;
         }
 
-        const ProgramMergedVaryings &mergedVaryings = getMergedVaryings();
-
         gl::Shader *vertexShader = mState.mAttachedShaders[ShaderType::Vertex];
         if (vertexShader)
         {
@@ -1551,23 +1576,9 @@ angle::Result Program::link(const Context *context)
         InitUniformBlockLinker(mState, &resources->uniformBlockLinker);
         InitShaderStorageBlockLinker(mState, &resources->shaderStorageBlockLinker);
 
-        ShaderType tfStage = mState.mAttachedShaders[ShaderType::Geometry] ? ShaderType::Geometry
-                                                                           : ShaderType::Vertex;
-
-        if (!linkValidateTransformFeedback(context->getClientVersion(), infoLog, mergedVaryings,
-                                           tfStage, context->getCaps()))
-        {
-            return angle::Result::Continue;
-        }
-
-        if (!resources->varyingPacking.collectAndPackUserVaryings(
-                infoLog, mergedVaryings, mState.getTransformFeedbackVaryingNames(), isSeparable()))
-        {
-            return angle::Result::Continue;
-        }
-
-        gatherTransformFeedbackVaryings(mergedVaryings, tfStage);
-        mState.updateTransformFeedbackStrides();
+        const ProgramMergedVaryings &mergedVaryings = getMergedVaryings();
+        ANGLE_TRY(linkMergedVaryings(context, resources->varyingPacking, mergedVaryings,
+                                     resources.get()));
     }
 
     updateLinkedShaderStages();
@@ -3394,7 +3405,8 @@ bool Program::linkVaryings(InfoLog &infoLog) const
 
         if (previousShader)
         {
-            if (!linkValidateShaderInterfaceMatching(previousShader, currentShader, infoLog))
+            if (!linkValidateShaderInterfaceMatching(previousShader, currentShader, isSeparable(),
+                                                     infoLog))
             {
                 return false;
             }
@@ -3402,7 +3414,9 @@ bool Program::linkVaryings(InfoLog &infoLog) const
         previousShader = currentShader;
     }
 
-    if (!linkValidateBuiltInVaryings(infoLog))
+    Shader *vertexShader   = mState.mAttachedShaders[ShaderType::Vertex];
+    Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
+    if (!linkValidateBuiltInVaryings(vertexShader, fragmentShader, infoLog))
     {
         return false;
     }
@@ -3410,56 +3424,101 @@ bool Program::linkVaryings(InfoLog &infoLog) const
     return true;
 }
 
+void Program::getFilteredVaryings(const std::vector<sh::ShaderVariable> &varyings,
+                                  std::vector<const sh::ShaderVariable *> *filteredVaryingsOut)
+{
+    for (const sh::ShaderVariable &varying : varyings)
+    {
+        // Built-in varyings obey special rules
+        if (varying.isBuiltIn())
+        {
+            continue;
+        }
+
+        filteredVaryingsOut->push_back(&varying);
+    }
+}
+
+bool Program::doShaderVariablesMatch(gl::Shader *generatingShader,
+                                     gl::Shader *consumingShader,
+                                     const sh::ShaderVariable &input,
+                                     const sh::ShaderVariable &output,
+                                     bool validateGeometryShaderInputs,
+                                     bool isSeparable,
+                                     gl::InfoLog &infoLog)
+{
+    bool namesMatch     = input.name == output.name;
+    bool locationsMatch = (input.location != -1) && (input.location == output.location);
+
+    // An output variable is considered to match an input variable in the subsequent
+    // shader if:
+    // - the two variables match in name, type, and qualification; or
+    // - the two variables are declared with the same location qualifier and
+    //   match in type and qualification.
+
+    if (namesMatch || locationsMatch)
+    {
+        std::string mismatchedStructFieldName;
+        LinkMismatchError linkError = LinkValidateVaryings(
+            output, input, generatingShader->getShaderVersion(), validateGeometryShaderInputs,
+            isSeparable, &mismatchedStructFieldName);
+        if (linkError != LinkMismatchError::NO_MISMATCH)
+        {
+            LogLinkMismatch(infoLog, input.name, "varying", linkError, mismatchedStructFieldName,
+                            generatingShader->getType(), consumingShader->getType());
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 // [OpenGL ES 3.1] Chapter 7.4.1 "Shader Interface Matching" Page 91
 // TODO(jiawei.shao@intel.com): add validation on input/output blocks matching
 bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
                                                   gl::Shader *consumingShader,
-                                                  gl::InfoLog &infoLog) const
+                                                  bool isSeparable,
+                                                  gl::InfoLog &infoLog)
 {
     ASSERT(generatingShader->getShaderVersion() == consumingShader->getShaderVersion());
 
     const std::vector<sh::ShaderVariable> &outputVaryings = generatingShader->getOutputVaryings();
     const std::vector<sh::ShaderVariable> &inputVaryings  = consumingShader->getInputVaryings();
-
+    std::vector<const sh::ShaderVariable *> filteredInputVaryings;
+    std::vector<const sh::ShaderVariable *> filteredOutputVaryings;
     bool validateGeometryShaderInputs = consumingShader->getType() == ShaderType::Geometry;
 
-    for (const sh::ShaderVariable &input : inputVaryings)
+    getFilteredVaryings(inputVaryings, &filteredInputVaryings);
+    getFilteredVaryings(outputVaryings, &filteredOutputVaryings);
+
+    // Separable programs require the number of inputs and outputs match
+    if (isSeparable && filteredInputVaryings.size() < filteredOutputVaryings.size())
     {
-        bool matched = false;
+        infoLog << GetShaderTypeString(consumingShader->getType())
+                << " does not consume all varyings generated by "
+                << GetShaderTypeString(generatingShader->getType());
+        return false;
+    }
+    if (isSeparable && filteredInputVaryings.size() > filteredOutputVaryings.size())
+    {
+        infoLog << GetShaderTypeString(generatingShader->getType())
+                << " does not generate all varyings consumed by "
+                << GetShaderTypeString(consumingShader->getType());
+        return false;
+    }
 
-        // Built-in varyings obey special rules
-        if (input.isBuiltIn())
+    // All inputs must match all outputs
+    for (const sh::ShaderVariable *input : filteredInputVaryings)
+    {
+        bool match = false;
+        for (const sh::ShaderVariable *output : filteredOutputVaryings)
         {
-            continue;
-        }
-
-        // An output variable is considered to match an input variable in the subsequent
-        // shader if:
-        // - the two variables match in name, type, and qualification; or
-        // - the two variables are declared with the same location qualifier and
-        //   match in type and qualification.
-        for (const sh::ShaderVariable &output : outputVaryings)
-        {
-            bool namesMatch     = input.name == output.name;
-            bool locationsMatch = (input.location != -1) && (input.location == output.location);
-
-            if (namesMatch || locationsMatch)
+            if (doShaderVariablesMatch(generatingShader, consumingShader, *input, *output,
+                                       validateGeometryShaderInputs, isSeparable, infoLog))
             {
-                ASSERT(!output.isBuiltIn());
-
-                std::string mismatchedStructFieldName;
-                LinkMismatchError linkError =
-                    LinkValidateVaryings(output, input, generatingShader->getShaderVersion(),
-                                         validateGeometryShaderInputs, &mismatchedStructFieldName);
-                if (linkError != LinkMismatchError::NO_MISMATCH)
-                {
-                    LogLinkMismatch(infoLog, input.name, "varying", linkError,
-                                    mismatchedStructFieldName, generatingShader->getType(),
-                                    consumingShader->getType());
-                    return false;
-                }
-
-                matched = true;
+                match = true;
                 break;
             }
         }
@@ -3467,16 +3526,14 @@ bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
         // We permit unmatched, unreferenced varyings. Note that this specifically depends on
         // whether the input is statically used - a statically used input should fail this test even
         // if it is not active. GLSL ES 3.00.6 section 4.3.10.
-        if (!matched && input.staticUse)
+        if (!match && input->staticUse)
         {
-            infoLog << GetShaderTypeString(consumingShader->getType()) << " varying " << input.name
+            infoLog << GetShaderTypeString(consumingShader->getType()) << " varying " << input->name
                     << " does not match any " << GetShaderTypeString(generatingShader->getType())
                     << " varying";
             return false;
         }
     }
-
-    // TODO(jmadill): verify no unmatched output varyings?
 
     return true;
 }
@@ -3952,6 +4009,7 @@ LinkMismatchError Program::LinkValidateVaryings(const sh::ShaderVariable &output
                                                 const sh::ShaderVariable &inputVarying,
                                                 int shaderVersion,
                                                 bool validateGeometryShaderInputVarying,
+                                                bool isSeparable,
                                                 std::string *mismatchedStructFieldName)
 {
     if (validateGeometryShaderInputVarying)
@@ -3976,12 +4034,20 @@ LinkMismatchError Program::LinkValidateVaryings(const sh::ShaderVariable &output
 
     // Skip the validation on the array sizes between a vertex output varying and a geometry input
     // varying as it has been done before.
+    bool validatePrecision = isSeparable && (shaderVersion > 100);
     LinkMismatchError linkError =
-        LinkValidateVariablesBase(outputVarying, inputVarying, false,
+        LinkValidateVariablesBase(outputVarying, inputVarying, validatePrecision,
                                   !validateGeometryShaderInputVarying, mismatchedStructFieldName);
     if (linkError != LinkMismatchError::NO_MISMATCH)
     {
         return linkError;
+    }
+
+    // Explicit locations must match if the names match.
+    if ((outputVarying.name == inputVarying.name) &&
+        (outputVarying.location != inputVarying.location))
+    {
+        return LinkMismatchError::LOCATION_MISMATCH;
     }
 
     if (!sh::InterpolationTypesMatch(outputVarying.interpolation, inputVarying.interpolation))
@@ -3997,11 +4063,10 @@ LinkMismatchError Program::LinkValidateVaryings(const sh::ShaderVariable &output
     return LinkMismatchError::NO_MISMATCH;
 }
 
-bool Program::linkValidateBuiltInVaryings(InfoLog &infoLog) const
+bool Program::linkValidateBuiltInVaryings(Shader *vertexShader,
+                                          Shader *fragmentShader,
+                                          InfoLog &infoLog)
 {
-    Shader *vertexShader   = mState.mAttachedShaders[ShaderType::Vertex];
-    Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
-
     if (!vertexShader || !fragmentShader)
     {
         // We can't validate an interface if we don't have both a producer and a consumer

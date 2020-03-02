@@ -503,6 +503,11 @@ class Program final : angle::NonCopyable, public LabeledObject
     void bindFragmentOutputLocation(GLuint index, const char *name);
     void bindFragmentOutputIndex(GLuint index, const char *name);
 
+    angle::Result linkMergedVaryings(const Context *context,
+                                     VaryingPacking &varyingPacking,
+                                     const ProgramMergedVaryings &mergedVaryings,
+                                     ProgramLinkedResources *resources);
+
     // KHR_parallel_shader_compile
     // Try to link the program asynchrously. As a result, background threads may be launched to
     // execute the linking tasks concurrently.
@@ -842,6 +847,26 @@ class Program final : angle::NonCopyable, public LabeledObject
     const ProgramExecutable &getExecutable() const { return mState.getProgramExecutable(); }
     ProgramExecutable &getExecutable() { return mState.getProgramExecutable(); }
 
+    static void getFilteredVaryings(const std::vector<sh::ShaderVariable> &varyings,
+                                    std::vector<const sh::ShaderVariable *> *filteredVaryingsOut);
+    static bool doShaderVariablesMatch(gl::Shader *generatingShader,
+                                       gl::Shader *consumingShader,
+                                       const sh::ShaderVariable &input,
+                                       const sh::ShaderVariable &output,
+                                       bool validateGeometryShaderInputs,
+                                       bool isSeparable,
+                                       gl::InfoLog &infoLog);
+    static bool linkValidateShaderInterfaceMatching(Shader *generatingShader,
+                                                    Shader *consumingShader,
+                                                    bool isSeparable,
+                                                    InfoLog &infoLog);
+    static bool linkValidateBuiltInVaryings(Shader *vertexShader,
+                                            Shader *fragmentShader,
+                                            InfoLog &infoLog);
+    // Check for aliased path rendering input bindings (if any).
+    // If more than one binding refer statically to the same location the link must fail.
+    bool linkValidateFragmentInputBindings(InfoLog &infoLog) const;
+
   private:
     struct LinkingState;
 
@@ -877,13 +902,9 @@ class Program final : angle::NonCopyable, public LabeledObject
                                                   const sh::ShaderVariable &inputVarying,
                                                   int shaderVersion,
                                                   bool validateGeometryShaderInputVarying,
+                                                  bool isSeparable,
                                                   std::string *mismatchedStructFieldName);
 
-    bool linkValidateShaderInterfaceMatching(Shader *generatingShader,
-                                             Shader *consumingShader,
-                                             InfoLog &infoLog) const;
-
-    bool linkValidateBuiltInVaryings(InfoLog &infoLog) const;
     bool linkValidateTransformFeedback(const Version &version,
                                        InfoLog &infoLog,
                                        const ProgramMergedVaryings &linkedVaryings,
