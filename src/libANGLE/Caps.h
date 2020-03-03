@@ -1116,6 +1116,9 @@ struct ClientExtensions
 
     // EGL_ANGLE_platform_angle_device_type_swiftshader
     bool platformANGLEDeviceTypeSwiftShader = false;
+
+    // EGL_ANGLE_platform_angle_device_type_egl_angle
+    bool platformANGLEDeviceTypeEGLANGLE = false;
 };
 
 }  // namespace egl
