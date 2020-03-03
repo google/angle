@@ -58,7 +58,7 @@ vars = {
   'vulkan_tools_revision': 'a553ed74b7fe3d5d14da312d47144ccfc4514a4b',
 
   # Current revision of Khronos Vulkan-ValidationLayers.
-  'vulkan_validation_revision': 'cb689b0b1d30116ee1454492df393c768d2b3ed2',
+  'vulkan_validation_revision': 'f32bf1c930c803d45b2bb6a28406dfa02231ebc8',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
