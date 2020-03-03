@@ -349,6 +349,11 @@ class ProgramState final : angle::NonCopyable
         return !getLinkedTransformFeedbackVaryings().empty();
     }
 
+    bool isShaderMarkedForDetach(gl::ShaderType shaderType) const
+    {
+        return mAttachedShadersMarkedForDetach[shaderType];
+    }
+
   private:
     friend class MemoryProgramCache;
     friend class Program;
@@ -367,6 +372,7 @@ class ProgramState final : angle::NonCopyable
     sh::WorkGroupSize mComputeShaderLocalSize;
 
     ShaderMap<Shader *> mAttachedShaders;
+    ShaderMap<bool> mAttachedShadersMarkedForDetach;
 
     uint32_t mLocationsUsedForXfbExtension;
     std::vector<std::string> mTransformFeedbackVaryingNames;
@@ -490,7 +496,7 @@ class Program final : angle::NonCopyable, public LabeledObject
         return mProgram;
     }
 
-    void attachShader(Shader *shader);
+    void attachShader(const Context *context, Shader *shader);
     void detachShader(const Context *context, Shader *shader);
     int getAttachedShadersCount() const;
 
