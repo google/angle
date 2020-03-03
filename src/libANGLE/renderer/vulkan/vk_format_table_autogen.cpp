@@ -2273,22 +2273,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8_UNORM:
-            internalFormat = GL_RGB8;
-            {
-                static constexpr ImageFormatInitInfo kInfo[] = {
-                    {angle::FormatID::R8G8B8_UNORM, VK_FORMAT_R8G8B8_UNORM, nullptr},
-                    {angle::FormatID::R8G8B8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM,
-                     Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>}};
-                initImageFallback(renderer, kInfo, ArraySize(kInfo));
-            }
-            {
-                static constexpr BufferFormatInitInfo kInfo[] = {
-                    {angle::FormatID::R8G8B8_UNORM, VK_FORMAT_R8G8B8_UNORM, false,
-                     CopyNativeVertexData<GLubyte, 3, 3, 0>, false},
-                    {angle::FormatID::R32G32B32_FLOAT, VK_FORMAT_R32G32B32_SFLOAT, false,
-                     CopyTo32FVertexData<GLubyte, 3, 3, true>, true}};
-                initBufferFallback(renderer, kInfo, ArraySize(kInfo));
-            }
+            internalFormat           = GL_RGB8;
+            actualImageFormatID      = angle::FormatID::R8G8B8A8_UNORM;
+            vkImageFormat            = VK_FORMAT_R8G8B8A8_UNORM;
+            imageInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            actualBufferFormatID     = angle::FormatID::R32G32B32_FLOAT;
+            vkBufferFormat           = VK_FORMAT_R32G32B32_SFLOAT;
+            vkBufferFormatIsPacked   = false;
+            vertexLoadFunction       = CopyTo32FVertexData<GLubyte, 3, 3, true>;
+            vertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8G8B8_UNORM_SRGB:
