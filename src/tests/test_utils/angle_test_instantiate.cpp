@@ -551,15 +551,6 @@ bool IsPlatformAvailable(const PlatformParameters &param)
         case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
 #if !defined(ANGLE_ENABLE_VULKAN)
             return false;
-#elif defined(ANGLE_IS_32_BIT_CPU)
-            // http://anglebug.com/4092
-            //  Currently hitting crashes in SwS w/ 32-bit Windows so skipping for now
-            if (IsWindows() && (param.eglParameters.deviceType ==
-                                EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE))
-            {
-                return false;
-            }
-            break;
 #else
             break;
 #endif
