@@ -54,7 +54,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl
                                     const gl::OffsetBindingPointer<gl::Buffer> &binding) override;
 
     void updateDescriptorSetLayout(ContextVk *contextVk,
-                                   const gl::ProgramState &programState,
+                                   size_t xfbBufferCount,
                                    vk::DescriptorSetLayoutDesc *descSetLayoutOut) const;
     void initDescriptorSet(ContextVk *contextVk,
                            size_t xfbBufferCount,
@@ -64,7 +64,6 @@ class TransformFeedbackVk : public TransformFeedbackImpl
                              const gl::ProgramState &programState,
                              VkDescriptorSet descSet) const;
     void getBufferOffsets(ContextVk *contextVk,
-                          const gl::ProgramState &programState,
                           GLint drawCallFirstVertex,
                           int32_t *offsetsOut,
                           size_t offsetsSize) const;

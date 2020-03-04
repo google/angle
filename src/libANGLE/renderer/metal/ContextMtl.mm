@@ -1538,7 +1538,7 @@ angle::Result ContextMtl::handleDirtyActiveTextures(const gl::Context *context)
     const gl::Program *program = glState.getProgram();
 
     const gl::ActiveTexturesCache &textures     = glState.getActiveTexturesCache();
-    const gl::ActiveTextureMask &activeTextures = program->getActiveSamplersMask();
+    const gl::ActiveTextureMask &activeTextures = program->getExecutable().getActiveSamplersMask();
 
     for (size_t textureUnit : activeTextures)
     {

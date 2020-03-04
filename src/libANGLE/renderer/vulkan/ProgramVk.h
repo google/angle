@@ -352,6 +352,8 @@ class ProgramVk : public ProgramImpl
     // cache management. It can also allow fewer descriptors for shaders which use fewer
     // textures/buffers.
     vk::DescriptorSetLayoutArray<vk::DynamicDescriptorPool> mDynamicDescriptorPools;
+
+    GlslangProgramInterfaceInfo mGlslangProgramInterfaceInfo;
 };
 
 }  // namespace rx

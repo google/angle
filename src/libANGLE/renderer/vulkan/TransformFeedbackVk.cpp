@@ -161,13 +161,11 @@ angle::Result TransformFeedbackVk::bindIndexedBuffer(
 
 void TransformFeedbackVk::updateDescriptorSetLayout(
     ContextVk *contextVk,
-    const gl::ProgramState &programState,
+    size_t xfbBufferCount,
     vk::DescriptorSetLayoutDesc *descSetLayoutOut) const
 {
     if (!contextVk->getFeatures().emulateTransformFeedback.enabled)
         return;
-
-    size_t xfbBufferCount = programState.getTransformFeedbackBufferCount();
 
     for (uint32_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
@@ -207,7 +205,9 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
 
     const std::vector<gl::OffsetBindingPointer<gl::Buffer>> &xfbBuffers =
         mState.getIndexedBuffers();
-    size_t xfbBufferCount = programState.getTransformFeedbackBufferCount();
+    const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
+    ASSERT(executable);
+    size_t xfbBufferCount = executable->getTransformFeedbackBufferCount(contextVk->getState());
 
     ASSERT(xfbBufferCount > 0);
     ASSERT(programState.getTransformFeedbackBufferMode() != GL_INTERLEAVED_ATTRIBS ||
@@ -239,7 +239,6 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
 }
 
 void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
-                                           const gl::ProgramState &programState,
                                            GLint drawCallFirstVertex,
                                            int32_t *offsetsOut,
                                            size_t offsetsSize) const
@@ -250,7 +249,9 @@ void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
     GLsizeiptr verticesDrawn = mState.getVerticesDrawn();
     const std::vector<GLsizei> &bufferStrides =
         mState.getBoundProgram()->getTransformFeedbackStrides();
-    size_t xfbBufferCount = programState.getTransformFeedbackBufferCount();
+    const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
+    ASSERT(executable);
+    size_t xfbBufferCount = executable->getTransformFeedbackBufferCount(contextVk->getState());
 
     ASSERT(xfbBufferCount > 0);
 

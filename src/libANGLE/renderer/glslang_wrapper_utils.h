@@ -21,20 +21,25 @@ enum class GlslangError
     InvalidSpirv,
 };
 
-struct GlslangSourceOptions
+struct GlslangProgramInterfaceInfo
 {
     // Uniforms set index:
-    uint32_t uniformsAndXfbDescriptorSetIndex = 0;
+    uint32_t uniformsAndXfbDescriptorSetIndex;
     // Textures set index:
-    uint32_t textureDescriptorSetIndex = 1;
+    uint32_t textureDescriptorSetIndex;
     // Other shader resources set index:
-    uint32_t shaderResourceDescriptorSetIndex = 2;
+    uint32_t shaderResourceDescriptorSetIndex;
     // ANGLE driver uniforms set index:
-    uint32_t driverUniformsDescriptorSetIndex = 3;
+    uint32_t driverUniformsDescriptorSetIndex;
 
     // Binding index start for transform feedback buffers:
-    uint32_t xfbBindingIndexStart = 16;
+    uint32_t xfbBindingIndexStart;
 
+    uint32_t locationsUsedForXfbExtension;
+};
+
+struct GlslangSourceOptions
+{
     bool useOldRewriteStructSamplers        = false;
     bool supportsTransformFeedbackExtension = false;
     bool emulateTransformFeedback           = false;
@@ -86,6 +91,7 @@ std::string GlslangGetMappedSamplerName(const std::string &originalName);
 void GlslangGetShaderSource(const GlslangSourceOptions &options,
                             const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
+                            GlslangProgramInterfaceInfo *programInterfaceInfo,
                             gl::ShaderMap<std::string> *shaderSourcesOut,
                             ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 

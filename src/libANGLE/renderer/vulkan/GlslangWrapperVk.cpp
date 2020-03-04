@@ -24,29 +24,43 @@ angle::Result ErrorHandler(vk::Context *context, GlslangError)
 GlslangSourceOptions CreateSourceOptions(const angle::FeaturesVk &features)
 {
     GlslangSourceOptions options;
-    options.uniformsAndXfbDescriptorSetIndex = kUniformsAndXfbDescriptorSetIndex;
-    options.textureDescriptorSetIndex        = kTextureDescriptorSetIndex;
-    options.shaderResourceDescriptorSetIndex = kShaderResourceDescriptorSetIndex;
-    options.driverUniformsDescriptorSetIndex = kDriverUniformsDescriptorSetIndex;
-    options.xfbBindingIndexStart             = kXfbBindingIndexStart;
-    options.useOldRewriteStructSamplers      = features.forceOldRewriteStructSamplers.enabled;
+
+    options.useOldRewriteStructSamplers = features.forceOldRewriteStructSamplers.enabled;
     options.supportsTransformFeedbackExtension =
         features.supportsTransformFeedbackExtension.enabled;
     options.emulateTransformFeedback = features.emulateTransformFeedback.enabled;
     options.emulateBresenhamLines    = features.basicGLLineRasterization.enabled;
+
     return options;
 }
 }  // namespace
 
 // static
+void GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(
+    GlslangProgramInterfaceInfo *glslangProgramInterfaceInfo)
+{
+    glslangProgramInterfaceInfo->uniformsAndXfbDescriptorSetIndex =
+        kUniformsAndXfbDescriptorSetIndex;
+    glslangProgramInterfaceInfo->textureDescriptorSetIndex = kTextureDescriptorSetIndex;
+    glslangProgramInterfaceInfo->shaderResourceDescriptorSetIndex =
+        kShaderResourceDescriptorSetIndex;
+    glslangProgramInterfaceInfo->driverUniformsDescriptorSetIndex =
+        kDriverUniformsDescriptorSetIndex;
+    glslangProgramInterfaceInfo->xfbBindingIndexStart = kXfbBindingIndexStart;
+
+    glslangProgramInterfaceInfo->locationsUsedForXfbExtension = 0;
+}
+
+// static
 void GlslangWrapperVk::GetShaderSource(const angle::FeaturesVk &features,
                                        const gl::ProgramState &programState,
                                        const gl::ProgramLinkedResources &resources,
+                                       GlslangProgramInterfaceInfo *programInterfaceInfo,
                                        gl::ShaderMap<std::string> *shaderSourcesOut,
                                        ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    GlslangGetShaderSource(CreateSourceOptions(features), programState, resources, shaderSourcesOut,
-                           variableInfoMapOut);
+    GlslangGetShaderSource(CreateSourceOptions(features), programState, resources,
+                           programInterfaceInfo, shaderSourcesOut, variableInfoMapOut);
 }
 
 // static

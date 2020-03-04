@@ -814,12 +814,16 @@ angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
 
 void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
 {
-    const gl::State &glState   = context->getState();
-    const gl::Program *program = glState.getProgram();
+    const gl::State &glState                = context->getState();
+    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
+
+    // It is possible there is no active program during a path operation.
+    if (!executable)
+        return;
 
     const gl::ActiveTexturesCache &textures        = glState.getActiveTexturesCache();
-    const gl::ActiveTextureMask &activeTextures    = program->getActiveSamplersMask();
-    const gl::ActiveTextureTypeArray &textureTypes = program->getActiveSamplerTypes();
+    const gl::ActiveTextureMask &activeTextures    = executable->getActiveSamplersMask();
+    const gl::ActiveTextureTypeArray &textureTypes = executable->getActiveSamplerTypes();
 
     for (size_t textureUnitIndex : activeTextures)
     {
@@ -930,11 +934,16 @@ void StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context 
 
 void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
 {
-    const gl::State &glState   = context->getState();
-    const gl::Program *program = glState.getProgram();
+    const gl::State &glState                = context->getState();
+    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
+    const gl::Program *program              = glState.getProgram();
 
-    ASSERT(context->getClientVersion() >= gl::ES_3_1 || program->getImageBindings().size() == 0);
-    for (size_t imageUnitIndex : program->getActiveImagesMask())
+    // It is possible there is no active program during a path operation.
+    if (!executable || !program)
+        return;
+
+    ASSERT(context->getClientVersion() >= gl::ES_3_1 || program->getImageBindings().empty());
+    for (size_t imageUnitIndex : executable->getActiveImagesMask())
     {
         const gl::ImageUnit &imageUnit = glState.getImageUnit(imageUnitIndex);
         const TextureGL *textureGL     = SafeGetImplAs<TextureGL>(imageUnit.texture.get());
@@ -1755,12 +1764,14 @@ void StateManagerGL::syncState(const gl::Context *context,
             }
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
-                const gl::Program *program = state.getProgram();
-                if (program)
+                const gl::Program *program              = state.getProgram();
+                const gl::ProgramExecutable *executable = state.getProgramExecutable();
+
+                if (program && executable)
                 {
                     iter.setLaterBit(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
 
-                    if (program->getActiveImagesMask().any())
+                    if (executable->getActiveImagesMask().any())
                     {
                         iter.setLaterBit(gl::State::DIRTY_BIT_IMAGE_BINDINGS);
                     }

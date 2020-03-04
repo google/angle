@@ -22,21 +22,25 @@ angle::Result HandleError(ErrorHandler *context, GlslangError)
     return angle::Result::Stop;
 }
 
-GlslangSourceOptions CreateSourceOptions()
+void ResetGlslangProgramInterfaceInfo(GlslangProgramInterfaceInfo *programInterfaceInfo)
 {
-    GlslangSourceOptions options;
     // We don't actually use descriptor set for now, the actual binding will be done inside
     // ProgramMtl using spirv-cross.
-    options.uniformsAndXfbDescriptorSetIndex = kDefaultUniformsBindingIndex;
-    options.textureDescriptorSetIndex        = 0;
-    options.driverUniformsDescriptorSetIndex = kDriverUniformsBindingIndex;
+    programInterfaceInfo->uniformsAndXfbDescriptorSetIndex = kDefaultUniformsBindingIndex;
+    programInterfaceInfo->textureDescriptorSetIndex        = 0;
+    programInterfaceInfo->driverUniformsDescriptorSetIndex = kDriverUniformsBindingIndex;
     // NOTE(hqle): Unused for now, until we support ES 3.0
-    options.shaderResourceDescriptorSetIndex = -1;
-    options.xfbBindingIndexStart             = -1;
+    programInterfaceInfo->shaderResourceDescriptorSetIndex = -1;
+    programInterfaceInfo->xfbBindingIndexStart             = -1;
+    programInterfaceInfo->locationsUsedForXfbExtension     = 0;
 
     static_assert(kDefaultUniformsBindingIndex != 0, "kDefaultUniformsBindingIndex must not be 0");
     static_assert(kDriverUniformsBindingIndex != 0, "kDriverUniformsBindingIndex must not be 0");
+}
 
+GlslangSourceOptions CreateSourceOptions()
+{
+    GlslangSourceOptions options;
     return options;
 }
 }  // namespace
@@ -46,8 +50,11 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
                             gl::ShaderMap<std::string> *shaderSourcesOut,
                             ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    rx::GlslangGetShaderSource(CreateSourceOptions(), programState, resources, shaderSourcesOut,
-                               variableInfoMapOut);
+    GlslangProgramInterfaceInfo programInterfaceInfo;
+    ResetGlslangProgramInterfaceInfo(&programInterfaceInfo);
+
+    rx::GlslangGetShaderSource(CreateSourceOptions(), programState, resources,
+                               &programInterfaceInfo, shaderSourcesOut, variableInfoMapOut);
 }
 
 angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,

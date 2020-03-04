@@ -470,7 +470,9 @@ ProgramVk::ProgramVk(const gl::ProgramState &state)
       mStorageBlockBindingsOffset(0),
       mAtomicCounterBufferBindingsOffset(0),
       mImageBindingsOffset(0)
-{}
+{
+    GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mGlslangProgramInterfaceInfo);
+}
 
 ProgramVk::~ProgramVk() = default;
 
@@ -516,6 +518,8 @@ void ProgramVk::reset(ContextVk *contextVk)
 
     mTextureDescriptorsCache.clear();
     mDescriptorBuffersCache.clear();
+
+    GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mGlslangProgramInterfaceInfo);
 }
 
 std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
@@ -607,7 +611,8 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     gl::ShaderMap<std::string> shaderSources;
     ShaderInterfaceVariableInfoMap variableInfoMap;
     GlslangWrapperVk::GetShaderSource(contextVk->getRenderer()->getFeatures(), mState, resources,
-                                      &shaderSources, &variableInfoMap);
+                                      &mGlslangProgramInterfaceInfo, &shaderSources,
+                                      &variableInfoMap);
 
     // Compile the shaders.
     angle::Result status = mShaderInfo.initShaders(contextVk, shaderSources, variableInfoMap);
@@ -652,8 +657,10 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
     if (glExecutable.hasLinkedShaderStage(gl::ShaderType::Vertex) && transformFeedback &&
         !mState.getLinkedTransformFeedbackVaryings().empty())
     {
+        size_t xfbBufferCount                    = mState.getTransformFeedbackBufferCount();
         TransformFeedbackVk *transformFeedbackVk = vk::GetImpl(transformFeedback);
-        transformFeedbackVk->updateDescriptorSetLayout(contextVk, mState, &uniformsAndXfbSetDesc);
+        transformFeedbackVk->updateDescriptorSetLayout(contextVk, xfbBufferCount,
+                                                       &uniformsAndXfbSetDesc);
     }
 
     ANGLE_TRY(renderer->getDescriptorSetLayout(

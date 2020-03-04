@@ -732,6 +732,7 @@ void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block)
     LoadShaderVariableBuffer(stream, block);
 }
 
+// TODO(timvp): http://anglebug.com/3570: Remove when PPOs are supported
 size_t CountUniqueBlocks(const std::vector<InterfaceBlock> &blocks)
 {
     size_t count = 0;
@@ -1107,11 +1108,10 @@ ProgramState::ProgramState()
       mBaseVertexLocation(-1),
       mBaseInstanceLocation(-1),
       mCachedBaseVertex(0),
-      mCachedBaseInstance(0),
-      mActiveSamplerRefCounts{}
+      mCachedBaseInstance(0)
 {
     mComputeShaderLocalSize.fill(1);
-    mActiveSamplerTypes.fill(TextureType::InvalidEnum);
+    mExecutable.setProgramState(this);
 }
 
 ProgramState::~ProgramState()
@@ -1130,6 +1130,7 @@ Shader *ProgramState::getAttachedShader(ShaderType shaderType) const
     return mAttachedShaders[shaderType];
 }
 
+// TODO(timvp): http://anglebug.com/3570: Remove when PPOs are supported
 size_t ProgramState::getUniqueUniformBlockCount() const
 {
     return CountUniqueBlocks(mUniformBlocks);
@@ -1138,6 +1139,11 @@ size_t ProgramState::getUniqueUniformBlockCount() const
 size_t ProgramState::getUniqueStorageBlockCount() const
 {
     return CountUniqueBlocks(mShaderStorageBlocks);
+}
+
+size_t ProgramState::getTransformFeedbackBufferCount() const
+{
+    return mTransformFeedbackStrides.size();
 }
 
 GLuint ProgramState::getUniformIndexFromName(const std::string &name) const
@@ -1672,48 +1678,13 @@ void ProgramState::updateTransformFeedbackStrides()
 
 void ProgramState::updateActiveSamplers()
 {
-    mActiveSamplerRefCounts.fill(0);
-
-    for (SamplerBinding &samplerBinding : mSamplerBindings)
-    {
-        if (samplerBinding.unreferenced)
-            continue;
-
-        for (GLint textureUnit : samplerBinding.boundTextureUnits)
-        {
-            if (++mActiveSamplerRefCounts[textureUnit] == 1)
-            {
-                mActiveSamplerTypes[textureUnit]   = samplerBinding.textureType;
-                mActiveSamplerFormats[textureUnit] = samplerBinding.format;
-            }
-            else
-            {
-                if (mActiveSamplerTypes[textureUnit] != samplerBinding.textureType)
-                {
-                    mActiveSamplerTypes[textureUnit] = TextureType::InvalidEnum;
-                }
-                if (mActiveSamplerFormats[textureUnit] != samplerBinding.format)
-                {
-                    mActiveSamplerFormats[textureUnit] = SamplerFormat::InvalidEnum;
-                }
-            }
-            mActiveSamplersMask.set(textureUnit);
-        }
-    }
+    mExecutable.mActiveSamplerRefCounts.fill(0);
+    mExecutable.updateActiveSamplers(mSamplerBindings);
 }
 
 void ProgramState::updateActiveImages()
 {
-    for (ImageBinding &imageBinding : mImageBindings)
-    {
-        if (imageBinding.unreferenced)
-            continue;
-
-        for (GLint imageUnit : imageBinding.boundImageUnits)
-        {
-            mActiveImagesMask.set(imageUnit);
-        }
-    }
+    mExecutable.updateActiveImages(mImageBindings);
 }
 
 void ProgramState::updateProgramInterfaceInputs()
@@ -1826,7 +1797,6 @@ void Program::unlink()
     mState.mComputeShaderLocalSize.fill(1);
     mState.mSamplerBindings.clear();
     mState.mImageBindings.clear();
-    mState.mActiveImagesMask.reset();
     mState.mNumViews                          = -1;
     mState.mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
     mState.mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
@@ -2979,14 +2949,15 @@ void Program::validate(const Caps &caps)
 
 bool Program::validateSamplersImpl(InfoLog *infoLog, const Caps &caps)
 {
+    const ProgramExecutable &executable = mState.mExecutable;
     ASSERT(mLinkResolved);
 
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
-    for (size_t textureUnit : mState.mActiveSamplersMask)
+    for (size_t textureUnit : executable.mActiveSamplersMask)
     {
-        if (mState.mActiveSamplerTypes[textureUnit] == TextureType::InvalidEnum)
+        if (executable.mActiveSamplerTypes[textureUnit] == TextureType::InvalidEnum)
         {
             if (infoLog)
             {
@@ -4895,24 +4866,24 @@ void Program::updateSamplerUniform(Context *context,
         boundTextureUnits[arrayIndex + locationInfo.arrayIndex] = newTextureUnit;
 
         // Update the reference counts.
-        uint32_t &oldRefCount = mState.mActiveSamplerRefCounts[oldTextureUnit];
-        uint32_t &newRefCount = mState.mActiveSamplerRefCounts[newTextureUnit];
+        uint32_t &oldRefCount = mState.mExecutable.mActiveSamplerRefCounts[oldTextureUnit];
+        uint32_t &newRefCount = mState.mExecutable.mActiveSamplerRefCounts[newTextureUnit];
         ASSERT(oldRefCount > 0);
         ASSERT(newRefCount < std::numeric_limits<uint32_t>::max());
         oldRefCount--;
         newRefCount++;
 
         // Check for binding type change.
-        TextureType &newSamplerType     = mState.mActiveSamplerTypes[newTextureUnit];
-        TextureType &oldSamplerType     = mState.mActiveSamplerTypes[oldTextureUnit];
-        SamplerFormat &newSamplerFormat = mState.mActiveSamplerFormats[newTextureUnit];
-        SamplerFormat &oldSamplerFormat = mState.mActiveSamplerFormats[oldTextureUnit];
+        TextureType &newSamplerType     = mState.mExecutable.mActiveSamplerTypes[newTextureUnit];
+        TextureType &oldSamplerType     = mState.mExecutable.mActiveSamplerTypes[oldTextureUnit];
+        SamplerFormat &newSamplerFormat = mState.mExecutable.mActiveSamplerFormats[newTextureUnit];
+        SamplerFormat &oldSamplerFormat = mState.mExecutable.mActiveSamplerFormats[oldTextureUnit];
 
         if (newRefCount == 1)
         {
             newSamplerType   = samplerBinding.textureType;
             newSamplerFormat = samplerBinding.format;
-            mState.mActiveSamplersMask.set(newTextureUnit);
+            mState.mExecutable.mActiveSamplersMask.set(newTextureUnit);
         }
         else
         {
@@ -4932,7 +4903,7 @@ void Program::updateSamplerUniform(Context *context,
         {
             oldSamplerType   = TextureType::InvalidEnum;
             oldSamplerFormat = SamplerFormat::InvalidEnum;
-            mState.mActiveSamplersMask.reset(oldTextureUnit);
+            mState.mExecutable.mActiveSamplersMask.reset(oldTextureUnit);
         }
         else
         {
@@ -4958,44 +4929,7 @@ void Program::updateSamplerUniform(Context *context,
 
 void ProgramState::setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex)
 {
-    bool foundBinding         = false;
-    TextureType foundType     = TextureType::InvalidEnum;
-    SamplerFormat foundFormat = SamplerFormat::InvalidEnum;
-
-    for (const SamplerBinding &binding : mSamplerBindings)
-    {
-        if (binding.unreferenced)
-            continue;
-
-        // A conflict exists if samplers of different types are sourced by the same texture unit.
-        // We need to check all bound textures to detect this error case.
-        for (GLuint textureUnit : binding.boundTextureUnits)
-        {
-            if (textureUnit == textureUnitIndex)
-            {
-                if (!foundBinding)
-                {
-                    foundBinding = true;
-                    foundType    = binding.textureType;
-                    foundFormat  = binding.format;
-                }
-                else
-                {
-                    if (foundType != binding.textureType)
-                    {
-                        foundType = TextureType::InvalidEnum;
-                    }
-                    if (foundFormat != binding.format)
-                    {
-                        foundFormat = SamplerFormat::InvalidEnum;
-                    }
-                }
-            }
-        }
-    }
-
-    mActiveSamplerTypes[textureUnitIndex]   = foundType;
-    mActiveSamplerFormats[textureUnitIndex] = foundFormat;
+    mExecutable.setSamplerUniformTextureTypeAndFormat(textureUnitIndex, mSamplerBindings);
 }
 
 template <typename T>
