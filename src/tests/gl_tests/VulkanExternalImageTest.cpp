@@ -38,6 +38,33 @@ VkFormat ChooseAnyImageFormat(const VulkanExternalHelper &helper)
     return VK_FORMAT_UNDEFINED;
 }
 
+// List of VkFormat/internalformat combinations Chrome uses.
+// This is compiled from the maps in
+// components/viz/common/resources/resource_format_utils.cc.
+const struct ImageFormatPair
+{
+    VkFormat vkFormat;
+    GLenum internalFormat;
+    const char *requiredExtension;
+} kChromeFormats[] = {
+    {VK_FORMAT_R8G8B8A8_UNORM, GL_RGBA8_OES},                    // RGBA_8888
+    {VK_FORMAT_B8G8R8A8_UNORM, GL_BGRA8_EXT},                    // BGRA_8888
+    {VK_FORMAT_R4G4B4A4_UNORM_PACK16, GL_RGBA4},                 // RGBA_4444
+    {VK_FORMAT_R16G16B16A16_SFLOAT, GL_RGBA16F_EXT},             // RGBA_F16
+    {VK_FORMAT_R8_UNORM, GL_R8_EXT},                             // RED_8
+    {VK_FORMAT_R5G6B5_UNORM_PACK16, GL_RGB565},                  // RGB_565
+    {VK_FORMAT_R16_UNORM, GL_R16_EXT, "GL_EXT_texture_norm16"},  // R16_EXT
+    {VK_FORMAT_A2B10G10R10_UNORM_PACK32, GL_RGB10_A2_EXT},       // RGBA_1010102
+    {VK_FORMAT_R8_UNORM, GL_ALPHA8_EXT},                         // ALPHA_8
+    {VK_FORMAT_R8_UNORM, GL_LUMINANCE8_EXT},                     // LUMINANCE_8
+    {VK_FORMAT_R8G8_UNORM, GL_RG8_EXT},                          // RG_88
+
+    // TODO(spang): Chrome could use GL_RGBA8_OES here if we can solve a couple
+    // of validation comformance issues (see crbug.com/1058521). Or, we can add
+    // a new internalformat that's unambiguously R8G8B8X8 in ANGLE and use that.
+    {VK_FORMAT_R8G8B8A8_UNORM, GL_RGB8_OES},  // RGBX_8888
+};
+
 }  // namespace
 
 class VulkanExternalImageTest : public ANGLETest
@@ -226,6 +253,113 @@ TEST_P(VulkanExternalImageTest, ShouldClearZirconVmoRGBA8)
 
     vkDestroyImage(helper.getDevice(), image, nullptr);
     vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
+}
+
+// Test all format combinations used by Chrome import successfully (opaque fd).
+TEST_P(VulkanExternalImageTest, TextureFormatCompatChromiumFd)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
+
+    VulkanExternalHelper helper;
+    helper.initialize();
+    for (const ImageFormatPair &format : kChromeFormats)
+    {
+        if (!helper.canCreateImageOpaqueFd(format.vkFormat, VK_IMAGE_TYPE_2D,
+                                           VK_IMAGE_TILING_OPTIMAL))
+        {
+            continue;
+        }
+
+        if (format.requiredExtension && !IsGLExtensionEnabled(format.requiredExtension))
+        {
+            continue;
+        }
+
+        VkImage image                 = VK_NULL_HANDLE;
+        VkDeviceMemory deviceMemory   = VK_NULL_HANDLE;
+        VkDeviceSize deviceMemorySize = 0;
+
+        VkExtent3D extent = {113, 211, 1};
+        VkResult result   = helper.createImage2DOpaqueFd(format.vkFormat, extent, &image,
+                                                       &deviceMemory, &deviceMemorySize);
+        EXPECT_EQ(result, VK_SUCCESS);
+
+        int fd = kInvalidFd;
+        result = helper.exportMemoryOpaqueFd(deviceMemory, &fd);
+        EXPECT_EQ(result, VK_SUCCESS);
+        EXPECT_NE(fd, kInvalidFd);
+
+        {
+            GLMemoryObject memoryObject;
+            glImportMemoryFdEXT(memoryObject, deviceMemorySize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
+
+            GLTexture texture;
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, format.internalFormat, extent.width,
+                                 extent.height, memoryObject, 0);
+        }
+
+        EXPECT_GL_NO_ERROR();
+
+        vkDestroyImage(helper.getDevice(), image, nullptr);
+        vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
+    }
+}
+
+// Test all format combinations used by Chrome import successfully (fuchsia).
+TEST_P(VulkanExternalImageTest, TextureFormatCompatChromiumZirconHandle)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
+
+    VulkanExternalHelper helper;
+    helper.initialize();
+    for (const ImageFormatPair &format : kChromeFormats)
+    {
+        if (!helper.canCreateImageZirconVmo(format.vkFormat, VK_IMAGE_TYPE_2D,
+                                            VK_IMAGE_TILING_OPTIMAL))
+        {
+            continue;
+        }
+
+        if (format.requiredExtension && !IsGLExtensionEnabled(format.requiredExtension))
+        {
+            continue;
+        }
+
+        VkImage image                 = VK_NULL_HANDLE;
+        VkDeviceMemory deviceMemory   = VK_NULL_HANDLE;
+        VkDeviceSize deviceMemorySize = 0;
+
+        VkExtent3D extent = {113, 211, 1};
+        VkResult result   = helper.createImage2DZirconVmo(format.vkFormat, extent, &image,
+                                                        &deviceMemory, &deviceMemorySize);
+        EXPECT_EQ(result, VK_SUCCESS);
+
+        zx_handle_t vmo = ZX_HANDLE_INVALID;
+        result          = helper.exportMemoryZirconVmo(deviceMemory, &vmo);
+        EXPECT_EQ(result, VK_SUCCESS);
+        EXPECT_NE(vmo, ZX_HANDLE_INVALID);
+
+        {
+            GLMemoryObject memoryObject;
+            glImportMemoryZirconHandleANGLE(memoryObject, deviceMemorySize,
+                                            GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE, vmo);
+
+            GLTexture texture;
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, format.internalFormat, extent.width,
+                                 extent.height, memoryObject, 0);
+        }
+
+        EXPECT_GL_NO_ERROR();
+
+        vkDestroyImage(helper.getDevice(), image, nullptr);
+        vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
+    }
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
