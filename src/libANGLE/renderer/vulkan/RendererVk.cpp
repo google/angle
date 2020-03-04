@@ -1536,6 +1536,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     bool isIntel    = IsIntel(mPhysicalDeviceProperties.vendorID);
     bool isNvidia   = IsNvidia(mPhysicalDeviceProperties.vendorID);
     bool isQualcomm = IsQualcomm(mPhysicalDeviceProperties.vendorID);
+    bool isSwS      = (IsGoogle(mPhysicalDeviceProperties.vendorID) &&
+                  (mPhysicalDeviceProperties.deviceID == kSwiftShaderDeviceID));
 
     if (mLineRasterizationFeatures.bresenhamLines == VK_TRUE)
     {
@@ -1640,7 +1642,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     ANGLE_FEATURE_CONDITION((&mFeatures), bindEmptyForUnusedDescriptorSets,
                             IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), forceOldRewriteStructSamplers, IsAndroid());
+    ANGLE_FEATURE_CONDITION((&mFeatures), forceOldRewriteStructSamplers, IsAndroid() && !isSwS);
 
     ANGLE_FEATURE_CONDITION((&mFeatures), perFrameWindowSizeQuery,
                             isIntel || (IsWindows() && isAMD) || IsFuchsia());

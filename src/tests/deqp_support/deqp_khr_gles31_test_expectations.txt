@@ -69,9 +69,6 @@
 4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-bindingUpdate = FAIL
 4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-largeStrideAndOffsetsNewAndLegacyAPI = FAIL
 
-// Swiftshader uses "old" sampler rewrite that doesn't support array of arrays
-4071 SWIFTSHADER : KHR-GLES31.core.arrays_of_arrays.* = SKIP
-
 // Failing on SwiftShader
 4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-cs = FAIL
 4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-fs = FAIL

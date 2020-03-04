@@ -185,10 +185,6 @@
 3881 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.location.default_block.array.array.image_2d = SKIP
 3881 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.location.default_block.array.array.iimage_2d_array = SKIP
 
-// Swiftshader uses "old" sampler rewrite that doesn't support array of arrays
-4071 SWIFTSHADER : dEQP-GLES31.functional.program_interface_query.uniform.location.default_block.array.array.*sampler* = SKIP
-4071 SWIFTSHADER : dEQP-GLES31.functional.uniform_location.nested_array.*sampler2D* = SKIP
-
 ////
 //// General Vulkan expectations
 ////
