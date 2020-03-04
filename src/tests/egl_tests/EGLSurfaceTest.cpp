@@ -399,6 +399,9 @@ TEST_P(EGLSurfaceTest, MakeCurrentTwice)
 // Test that the window surface is correctly resized after calling swapBuffers
 TEST_P(EGLSurfaceTest, ResizeWindow)
 {
+    // http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
+
     // Necessary for a window resizing test if there is no per-frame window size query
     mOSWindow->setVisible(true);
 
@@ -448,8 +451,10 @@ TEST_P(EGLSurfaceTest, ResizeWindow)
 // Test that the backbuffer is correctly resized after calling swapBuffers
 TEST_P(EGLSurfaceTest, ResizeWindowWithDraw)
 {
-    // Necessary for a window resizing test if there is no per-frame window size query
+    // http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
 
+    // Necessary for a window resizing test if there is no per-frame window size query
     mOSWindow->setVisible(true);
 
     initializeDisplay();
