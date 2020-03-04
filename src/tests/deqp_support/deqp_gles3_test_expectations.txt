@@ -649,3 +649,6 @@
 4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.12x10 = FAIL
 4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.12x12 = FAIL
 
+3983 SWIFTSHADER : dEQP-GLES3.functional.samplers.multi_tex_3d.* = SKIP
+3983 SWIFTSHADER : dEQP-GLES3.functional.samplers.single_tex_3d.* = SKIP
+
