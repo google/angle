@@ -84,12 +84,10 @@ class VulkanExternalImageTest : public ANGLETest
 // glImportMemoryFdEXT must be able to import a valid opaque fd.
 TEST_P(VulkanExternalImageTest, ShouldImportMemoryOpaqueFd)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
 
     VulkanExternalHelper helper;
-    helper.initialize();
+    helper.initialize(isSwiftshader());
 
     VkFormat format = ChooseAnyImageFormat(helper);
     ANGLE_SKIP_TEST_IF(format == VK_FORMAT_UNDEFINED);
@@ -129,12 +127,10 @@ TEST_P(VulkanExternalImageTest, ShouldImportMemoryOpaqueFd)
 // glImportSemaphoreFdEXT must be able to import a valid opaque fd.
 TEST_P(VulkanExternalImageTest, ShouldImportSemaphoreOpaqueFd)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
 
     VulkanExternalHelper helper;
-    helper.initialize();
+    helper.initialize(isSwiftshader());
 
     ANGLE_SKIP_TEST_IF(!helper.canCreateSemaphoreOpaqueFd());
 
@@ -165,7 +161,7 @@ TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdRGBA8)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
 
     VulkanExternalHelper helper;
-    helper.initialize();
+    helper.initialize(isSwiftshader());
 
     VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
     ANGLE_SKIP_TEST_IF(
@@ -217,7 +213,7 @@ TEST_P(VulkanExternalImageTest, ShouldClearZirconVmoRGBA8)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
 
     VulkanExternalHelper helper;
-    helper.initialize();
+    helper.initialize(isSwiftshader());
 
     VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
     ANGLE_SKIP_TEST_IF(
@@ -266,11 +262,9 @@ TEST_P(VulkanExternalImageTest, ShouldClearZirconVmoRGBA8)
 TEST_P(VulkanExternalImageTest, TextureFormatCompatChromiumFd)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
 
     VulkanExternalHelper helper;
-    helper.initialize();
+    helper.initialize(isSwiftshader());
     for (const ImageFormatPair &format : kChromeFormats)
     {
         if (!helper.canCreateImageOpaqueFd(format.vkFormat, VK_IMAGE_TYPE_2D,
@@ -319,11 +313,9 @@ TEST_P(VulkanExternalImageTest, TextureFormatCompatChromiumFd)
 TEST_P(VulkanExternalImageTest, TextureFormatCompatChromiumZirconHandle)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
 
     VulkanExternalHelper helper;
-    helper.initialize();
+    helper.initialize(isSwiftshader());
     for (const ImageFormatPair &format : kChromeFormats)
     {
         if (!helper.canCreateImageZirconVmo(format.vkFormat, VK_IMAGE_TYPE_2D,

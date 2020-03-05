@@ -20,7 +20,7 @@ class VulkanExternalHelper
     VulkanExternalHelper();
     ~VulkanExternalHelper();
 
-    void initialize();
+    void initialize(bool useSwiftshader);
 
     VkInstance getInstance() const { return mInstance; }
     VkPhysicalDevice getPhysicalDevice() const { return mPhysicalDevice; }
