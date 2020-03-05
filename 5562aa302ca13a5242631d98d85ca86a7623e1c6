@@ -22,6 +22,30 @@
       "revId": "5562aa302ca13a5242631d98d85ca86a7623e1c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1add20ff_39b3fe14",
+        "filename": "src/common/vulkan/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1001794
+      },
+      "writtenOn": "2020-03-05T17:53:20Z",
+      "side": 1,
+      "message": "Swiftshader ICD is the important part to make the tests pass, but I think bringing the validation layers makes sense. Then we can also enable validation for tests.\n\nAll of this is related to the vulkan API \u0026 loader rather than the ANGLE vulkan backend, so I\u0027m not sure what you\u0027re asking for when you say we could encapsulate the backend better. I don\u0027t think we are breaking encapsulation here, just sharing code.\n\nWe were already linking volk into tests. I have no opinion about this really but sharing code will be harder if we make a different choice in tests than in the backend.",
+      "parentUuid": "7ed0c165_57d18f40",
+      "range": {
+        "startLine": 10,
+        "startChar": 18,
+        "endLine": 10,
+        "endChar": 24
+      },
+      "revId": "5562aa302ca13a5242631d98d85ca86a7623e1c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
