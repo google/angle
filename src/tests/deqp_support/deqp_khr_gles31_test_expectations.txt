@@ -96,9 +96,6 @@
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
 
-// Arrays-of-arrays as vertex inputs:
-4148 : KHR-GLES31.core.arrays_of_arrays.InteractionInterfaceArrays2 = FAIL
-
 
 ////
 //// Desktop Vulkan expectations

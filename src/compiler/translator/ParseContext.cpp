@@ -1067,6 +1067,35 @@ bool TParseContext::checkArrayElementIsNotArray(const TSourceLoc &line,
     return true;
 }
 
+// Check for array-of-arrays being used as non-allowed shader inputs/outputs.
+bool TParseContext::checkArrayOfArraysInOut(const TSourceLoc &line,
+                                            const TPublicType &elementType,
+                                            const TType &arrayType)
+{
+    if (arrayType.isArrayOfArrays())
+    {
+        if (elementType.qualifier == EvqVertexOut)
+        {
+            error(line, "vertex shader output cannot be an array of arrays",
+                  TType(elementType).getQualifierString());
+            return false;
+        }
+        if (elementType.qualifier == EvqFragmentIn)
+        {
+            error(line, "fragment shader input cannot be an array of arrays",
+                  TType(elementType).getQualifierString());
+            return false;
+        }
+        if (elementType.qualifier == EvqFragmentOut)
+        {
+            error(line, "fragment shader output cannot be an array of arrays",
+                  TType(elementType).getQualifierString());
+            return false;
+        }
+    }
+    return true;
+}
+
 // Check if this qualified element type can be formed into an array. This is only called when array
 // brackets are associated with an identifier in a declaration, like this:
 //   float a[2];
@@ -2574,6 +2603,8 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(
 
     TType *arrayType = new TType(elementType);
     arrayType->makeArrays(arraySizes);
+
+    checkArrayOfArraysInOut(indexLocation, elementType, *arrayType);
 
     checkGeometryShaderInputAndSetArraySize(indexLocation, identifier, arrayType);
 
