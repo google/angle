@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ed0c165_57d18f40",
+        "filename": "src/common/vulkan/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-03-05T13:53:09Z",
+      "side": 1,
+      "message": "I think we could improve the encapsulation of the Vulkan back-end. Here you\u0027re including the validation layer stuff. Aren\u0027t you just interested in the ICD? Do you really want to be static linking volk into angle_end2end_tests?",
+      "range": {
+        "startLine": 10,
+        "startChar": 18,
+        "endLine": 10,
+        "endChar": 24
+      },
+      "revId": "5562aa302ca13a5242631d98d85ca86a7623e1c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
