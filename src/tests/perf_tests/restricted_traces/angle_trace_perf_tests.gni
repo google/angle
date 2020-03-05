@@ -8,6 +8,10 @@
 import("../../../../gni/angle.gni")
 
 _tests = [
+  "manhattan_10_20",
+  "manhattan_750_760",
+  "manhattan_1100_1110",
+  "manhattan_1440_1450",
   "trex_200_210",
   "trex_800_810",
   "trex_900_910",

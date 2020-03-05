@@ -14,6 +14,10 @@
 #include "tests/perf_tests/DrawCallPerfParams.h"
 #include "util/egl_loader_autogen.h"
 
+#include "restricted_traces/manhattan_10_20/manhattan_10_20_capture_context1.h"
+#include "restricted_traces/manhattan_1100_1110/manhattan_1100_1110_capture_context1.h"
+#include "restricted_traces/manhattan_1440_1450/manhattan_1440_1450_capture_context1.h"
+#include "restricted_traces/manhattan_750_760/manhattan_750_760_capture_context1.h"
 #include "restricted_traces/trex_1300_1310/trex_1300_1310_capture_context1.h"
 #include "restricted_traces/trex_200_210/trex_200_210_capture_context1.h"
 #include "restricted_traces/trex_800_810/trex_800_810_capture_context1.h"
@@ -32,6 +36,10 @@ void FramebufferChangeCallback(void *userData, GLenum target, GLuint framebuffer
 
 enum class TracePerfTestID
 {
+    Manhattan10,
+    Manhattan750,
+    Manhattan1100,
+    Manhattan1440,
     TRex200,
     TRex800,
     TRex900,
@@ -44,7 +52,7 @@ struct TracePerfParams final : public RenderTestParams
     // Common default options
     TracePerfParams()
     {
-        majorVersion = 2;
+        majorVersion = 3;
         minorVersion = 0;
         windowWidth  = 1920;
         windowHeight = 1080;
@@ -62,6 +70,18 @@ struct TracePerfParams final : public RenderTestParams
 
         switch (testID)
         {
+            case TracePerfTestID::Manhattan10:
+                strstr << "_manhattan_10";
+                break;
+            case TracePerfTestID::Manhattan750:
+                strstr << "_manhattan_750";
+                break;
+            case TracePerfTestID::Manhattan1100:
+                strstr << "_manhattan_1100";
+                break;
+            case TracePerfTestID::Manhattan1440:
+                strstr << "_manhattan_1440";
+                break;
             case TracePerfTestID::TRex200:
                 strstr << "_trex_200";
                 break;
@@ -143,6 +163,34 @@ void TracePerfTest::initializeBenchmark()
     switch (params.testID)
     {
         // For each case, bootstrap the trace
+        case TracePerfTestID::Manhattan10:
+            mStartFrame = 10;
+            mEndFrame   = 20;
+            mReplayFunc = manhattan_10_20::ReplayContext1Frame;
+            manhattan_10_20::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_manhattan_10_20);
+            manhattan_10_20::SetupContext1Replay();
+            break;
+        case TracePerfTestID::Manhattan750:
+            mStartFrame = 750;
+            mEndFrame   = 760;
+            mReplayFunc = manhattan_750_760::ReplayContext1Frame;
+            manhattan_750_760::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_manhattan_750_760);
+            manhattan_750_760::SetupContext1Replay();
+            break;
+        case TracePerfTestID::Manhattan1100:
+            mStartFrame = 1100;
+            mEndFrame   = 1110;
+            mReplayFunc = manhattan_1100_1110::ReplayContext1Frame;
+            manhattan_1100_1110::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_manhattan_1100_1110);
+            manhattan_1100_1110::SetupContext1Replay();
+            break;
+        case TracePerfTestID::Manhattan1440:
+            mStartFrame = 1440;
+            mEndFrame   = 1450;
+            mReplayFunc = manhattan_1440_1450::ReplayContext1Frame;
+            manhattan_1440_1450::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_manhattan_1440_1450);
+            manhattan_1440_1450::SetupContext1Replay();
+            break;
         case TracePerfTestID::TRex200:
             mStartFrame = 200;
             mEndFrame   = 210;
@@ -179,6 +227,8 @@ void TracePerfTest::initializeBenchmark()
     ASSERT_TRUE(mEndFrame > mStartFrame);
 
     getWindow()->setVisible(true);
+
+    mIgnoreErrors = true;
 }
 
 void TracePerfTest::destroyBenchmark() {}
@@ -346,7 +396,7 @@ using namespace params;
 using P = TracePerfParams;
 
 std::vector<P> gTestsWithID = CombineWithValues({P()}, AllEnums<TracePerfTestID>(), CombineTestID);
-std::vector<P> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {GL<P>, Vulkan<P>});
+std::vector<P> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {Vulkan<P>});
 ANGLE_INSTANTIATE_TEST_ARRAY(TracePerfTest, gTestsWithRenderer);
 
 }  // anonymous namespace

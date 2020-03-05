@@ -44,7 +44,7 @@ out/Release/bin/run_angle_perftests --gtest_filter=TracePerfTest*
 
 ## Updating traces
 
-The current TRex traces were captured on Windows with an Nvidia driver.
+The Manhattan and TRex traces were captured on Windows with an Intel driver (due to better compressed texture support).
 
 Update START and END for each range.
 
@@ -77,6 +77,7 @@ export TFW_PACKAGE_DIR=../../../build/linux/testfw_Release/tfw-dev
 export ANGLE_DEFAULT_PLATFORM=vulkan
 export LD_LIBRARY_PATH=.
 
+# TRex
 export START=200
 export END=210
 export LABEL=trex
@@ -85,7 +86,18 @@ export ANGLE_CAPTURE_LABEL=${LABEL}_${START}_${END}
 export ANGLE_CAPTURE_FRAME_START=$START
 export ANGLE_CAPTURE_FRAME_END=$END
 export ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}_${END}
-../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 512 -h 512 -t gl_trex --ei -frame_step_time=40
+../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_trex --ei -frame_step_time=40
+
+# Manhattan
+export START=10
+export END=20
+export LABEL=manhattan
+mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}_${END}
+export ANGLE_CAPTURE_LABEL=${LABEL}_${START}_${END}
+export ANGLE_CAPTURE_FRAME_START=$START
+export ANGLE_CAPTURE_FRAME_END=$END
+export ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}_${END}
+../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_manhattan --ei -frame_step_time=40
 ```
 
 ## Upload to the cloud
@@ -96,6 +108,10 @@ upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive tre
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive trex_800_810
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive trex_900_910
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive trex_1300_1310
+upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive manhattan_10_20
+upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive manhattan_750_760
+upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive manhattan_1100_1110
+upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive manhattan_1440_1450
 ```
 
 ## Adding new tests
