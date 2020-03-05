@@ -117,17 +117,6 @@ void AddToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
     localPtr->pNext              = reinterpret_cast<VkBaseOutStructure *>(ptr);
 }
 
-extern const char *gLoaderLayersPathEnv;
-extern const char *gLoaderICDFilenamesEnv;
-extern const char *gANGLEPreferredDevice;
-
-enum class ICD
-{
-    Default,
-    Mock,
-    SwiftShader,
-};
-
 // Abstracts error handling. Implemented by both ContextVk for GL and DisplayVk for EGL errors.
 class Context : angle::NonCopyable
 {

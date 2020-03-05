@@ -19,6 +19,7 @@
 #include "common/PackedEnums.h"
 #include "common/PoolAlloc.h"
 #include "common/angleutils.h"
+#include "common/vulkan/vulkan_icd.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
@@ -154,7 +155,7 @@ class RendererVk : angle::NonCopyable
         return mMinImportedHostPointerAlignment;
     }
 
-    bool isMockICDEnabled() const { return mEnabledICD == vk::ICD::Mock; }
+    bool isMockICDEnabled() const { return mEnabledICD == angle::vk::ICD::Mock; }
 
     // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
     // bufferFeatures).  Looks through mandatory features first, and falls back to querying the
@@ -281,7 +282,7 @@ class RendererVk : angle::NonCopyable
     VkInstance mInstance;
     bool mEnableValidationLayers;
     bool mEnableDebugUtils;
-    vk::ICD mEnabledICD;
+    angle::vk::ICD mEnabledICD;
     VkDebugUtilsMessengerEXT mDebugUtilsMessenger;
     VkDebugReportCallbackEXT mDebugReportCallback;
     VkPhysicalDevice mPhysicalDevice;

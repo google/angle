@@ -17,6 +17,7 @@
 #include "common/debug.h"
 #include "common/platform.h"
 #include "common/system_utils.h"
+#include "common/vulkan/vulkan_icd.h"
 #include "gpu_info_util/SystemInfo.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
@@ -37,10 +38,6 @@
 // Consts
 namespace
 {
-const uint32_t kMockVendorID                              = 0xba5eba11;
-const uint32_t kMockDeviceID                              = 0xf005ba11;
-constexpr char kMockDeviceName[]                          = "Vulkan Mock Device";
-constexpr char kSwiftShaderDeviceName[]                   = "SwiftShader Device";
 constexpr VkFormatFeatureFlags kInvalidFormatFeatureFlags = static_cast<VkFormatFeatureFlags>(-1);
 }  // anonymous namespace
 
@@ -58,7 +55,7 @@ constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
 // version of Vulkan.
 constexpr uint32_t kPreferredVulkanAPIVersion = VK_API_VERSION_1_1;
 
-vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
+angle::vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
 {
 #if !defined(ANGLE_PLATFORM_ANDROID)
     // Mock ICD does not currently run on Android
@@ -70,16 +67,16 @@ vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
             break;
         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
-            return vk::ICD::Mock;
+            return angle::vk::ICD::Mock;
         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
-            return vk::ICD::SwiftShader;
+            return angle::vk::ICD::SwiftShader;
         default:
             UNREACHABLE();
             break;
     }
 #endif  // !defined(ANGLE_PLATFORM_ANDROID)
 
-    return vk::ICD::Default;
+    return angle::vk::ICD::Default;
 }
 
 bool StrLess(const char *a, const char *b)
@@ -245,21 +242,6 @@ const char *GetVkObjectTypeName(VkObjectType type)
     }
 }
 
-// This function is unused on Android/Fuschia/GGP
-#if !defined(ANGLE_PLATFORM_ANDROID) && !defined(ANGLE_PLATFORM_FUCHSIA) && \
-    !defined(ANGLE_PLATFORM_GGP)
-const std::string WrapICDEnvironment(const char *icdEnvironment)
-{
-#    if defined(ANGLE_PLATFORM_APPLE)
-    // On MacOS the libraries are bundled into the application directory
-    std::string ret = angle::GetHelperExecutableDir() + icdEnvironment;
-    return ret;
-#    endif  // defined(ANGLE_PLATFORM_APPLE)
-    return icdEnvironment;
-}
-#endif  // !defined(ANGLE_PLATFORM_ANDROID) && !defined(ANGLE_PLATFORM_FUCHSIA) &&
-        // !defined(ANGLE_PLATFORM_GGP)
-
 VKAPI_ATTR VkBool32 VKAPI_CALL
 DebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                     VkDebugUtilsMessageTypeFlagsEXT messageTypes,
@@ -380,176 +362,6 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
     return VK_FALSE;
 }
 
-// If we're loading the validation layers, we could be running from any random directory.
-// Change to the executable directory so we can find the layers, then change back to the
-// previous directory to be safe we don't disrupt the application.
-class ScopedVkLoaderEnvironment : angle::NonCopyable
-{
-  public:
-    ScopedVkLoaderEnvironment(bool enableValidationLayers, vk::ICD icd)
-        : mEnableValidationLayers(enableValidationLayers),
-          mICD(icd),
-          mChangedCWD(false),
-          mChangedICDEnv(false)
-    {
-// Changing CWD and setting environment variables makes no sense on Android,
-// since this code is a part of Java application there.
-// Android Vulkan loader doesn't need this either.
-#if !defined(ANGLE_PLATFORM_ANDROID) && !defined(ANGLE_PLATFORM_FUCHSIA) && \
-    !defined(ANGLE_PLATFORM_GGP)
-        if (icd == vk::ICD::Mock)
-        {
-            if (!setICDEnvironment(WrapICDEnvironment(ANGLE_VK_MOCK_ICD_JSON).c_str()))
-            {
-                ERR() << "Error setting environment for Mock/Null Driver.";
-            }
-        }
-#    if defined(ANGLE_VK_SWIFTSHADER_ICD_JSON)
-        else if (icd == vk::ICD::SwiftShader)
-        {
-            if (!setICDEnvironment(WrapICDEnvironment(ANGLE_VK_SWIFTSHADER_ICD_JSON).c_str()))
-            {
-                ERR() << "Error setting environment for SwiftShader.";
-            }
-        }
-#    endif  // defined(ANGLE_VK_SWIFTSHADER_ICD_JSON)
-        if (mEnableValidationLayers || icd != vk::ICD::Default)
-        {
-            const auto &cwd = angle::GetCWD();
-            if (!cwd.valid())
-            {
-                ERR() << "Error getting CWD for Vulkan layers init.";
-                mEnableValidationLayers = false;
-                mICD                    = vk::ICD::Default;
-            }
-            else
-            {
-                mPreviousCWD       = cwd.value();
-                std::string exeDir = angle::GetExecutableDirectory();
-                mChangedCWD        = angle::SetCWD(exeDir.c_str());
-                if (!mChangedCWD)
-                {
-                    ERR() << "Error setting CWD for Vulkan layers init.";
-                    mEnableValidationLayers = false;
-                    mICD                    = vk::ICD::Default;
-                }
-            }
-        }
-
-        // Override environment variable to use the ANGLE layers.
-        if (mEnableValidationLayers)
-        {
-            if (!angle::PrependPathToEnvironmentVar(vk::gLoaderLayersPathEnv, ANGLE_VK_LAYERS_DIR))
-            {
-                ERR() << "Error setting environment for Vulkan layers init.";
-                mEnableValidationLayers = false;
-            }
-        }
-#endif  // !defined(ANGLE_PLATFORM_ANDROID)
-    }
-
-    ~ScopedVkLoaderEnvironment()
-    {
-        if (mChangedCWD)
-        {
-#if !defined(ANGLE_PLATFORM_ANDROID)
-            ASSERT(mPreviousCWD.valid());
-            angle::SetCWD(mPreviousCWD.value().c_str());
-#endif  // !defined(ANGLE_PLATFORM_ANDROID)
-        }
-        if (mChangedICDEnv)
-        {
-            if (mPreviousICDEnv.value().empty())
-            {
-                angle::UnsetEnvironmentVar(vk::gLoaderICDFilenamesEnv);
-            }
-            else
-            {
-                angle::SetEnvironmentVar(vk::gLoaderICDFilenamesEnv,
-                                         mPreviousICDEnv.value().c_str());
-            }
-        }
-    }
-
-    bool canEnableValidationLayers() const { return mEnableValidationLayers; }
-    vk::ICD getEnabledICD() const { return mICD; }
-
-  private:
-    bool setICDEnvironment(const char *icd)
-    {
-        // Override environment variable to use built Mock ICD
-        // ANGLE_VK_ICD_JSON gets set to the built mock ICD in BUILD.gn
-        mPreviousICDEnv = angle::GetEnvironmentVar(vk::gLoaderICDFilenamesEnv);
-        mChangedICDEnv  = angle::SetEnvironmentVar(vk::gLoaderICDFilenamesEnv, icd);
-
-        if (!mChangedICDEnv)
-        {
-            mICD = vk::ICD::Default;
-        }
-        return mChangedICDEnv;
-    }
-
-    bool mEnableValidationLayers;
-    vk::ICD mICD;
-    bool mChangedCWD;
-    Optional<std::string> mPreviousCWD;
-    bool mChangedICDEnv;
-    Optional<std::string> mPreviousICDEnv;
-};
-
-using ICDFilterFunc = std::function<bool(const VkPhysicalDeviceProperties &)>;
-
-ICDFilterFunc GetFilterForICD(vk::ICD preferredICD)
-{
-    switch (preferredICD)
-    {
-        case vk::ICD::Mock:
-            return [](const VkPhysicalDeviceProperties &deviceProperties) {
-                return ((deviceProperties.vendorID == kMockVendorID) &&
-                        (deviceProperties.deviceID == kMockDeviceID) &&
-                        (strcmp(deviceProperties.deviceName, kMockDeviceName) == 0));
-            };
-        case vk::ICD::SwiftShader:
-            return [](const VkPhysicalDeviceProperties &deviceProperties) {
-                return (IsSwiftshader(deviceProperties.vendorID, deviceProperties.deviceID) &&
-                        (strncmp(deviceProperties.deviceName, kSwiftShaderDeviceName,
-                                 strlen(kSwiftShaderDeviceName)) == 0));
-            };
-        default:
-            const std::string anglePreferredDevice =
-                angle::GetEnvironmentVar(vk::gANGLEPreferredDevice);
-            return [anglePreferredDevice](const VkPhysicalDeviceProperties &deviceProperties) {
-                return (anglePreferredDevice.empty() ||
-                        anglePreferredDevice == deviceProperties.deviceName);
-            };
-    }
-}
-
-void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
-                          vk::ICD preferredICD,
-                          VkPhysicalDevice *physicalDeviceOut,
-                          VkPhysicalDeviceProperties *physicalDevicePropertiesOut)
-{
-    ASSERT(!physicalDevices.empty());
-
-    ICDFilterFunc filter = GetFilterForICD(preferredICD);
-
-    for (const VkPhysicalDevice &physicalDevice : physicalDevices)
-    {
-        vkGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
-        if (filter(*physicalDevicePropertiesOut))
-        {
-            *physicalDeviceOut = physicalDevice;
-            return;
-        }
-    }
-    WARN() << "Preferred device ICD not found. Using default physicalDevice instead.";
-
-    // Fall back to first device.
-    *physicalDeviceOut = physicalDevices[0];
-    vkGetPhysicalDeviceProperties(*physicalDeviceOut, physicalDevicePropertiesOut);
-}
-
 bool ShouldUseValidationLayers(const egl::AttributeMap &attribs)
 {
 #if defined(ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT)
@@ -622,7 +434,7 @@ RendererVk::RendererVk()
       mInstance(VK_NULL_HANDLE),
       mEnableValidationLayers(false),
       mEnableDebugUtils(false),
-      mEnabledICD(vk::ICD::Default),
+      mEnabledICD(angle::vk::ICD::Default),
       mDebugUtilsMessenger(VK_NULL_HANDLE),
       mDebugReportCallback(VK_NULL_HANDLE),
       mPhysicalDevice(VK_NULL_HANDLE),
@@ -745,8 +557,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     mDisplay                         = display;
     const egl::AttributeMap &attribs = mDisplay->getAttributeMap();
-    ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseValidationLayers(attribs),
-                                                ChooseICDFromAttribs(attribs));
+    angle::vk::ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseValidationLayers(attribs),
+                                                           ChooseICDFromAttribs(attribs));
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
     mEnabledICD             = scopedEnvironment.getEnabledICD();
 
