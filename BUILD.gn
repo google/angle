@@ -758,6 +758,16 @@ config("shared_library_public_config") {
       "-rpath",
       "@executable_path/",
     ]
+    if (build_with_chromium) {
+      ldflags += [
+        # Path for loading shared libraries for unbundled binaries.
+        # From //build/config/mac/BUILD.gn, this is only added for
+        # component builds. However, since ANGLE always dynamically
+        # links to libvulkan, it should be re-added for non-component
+        # builds. (anglebug.com/4455)
+        "-Wl,-rpath,@loader_path/.",
+      ]
+    }
   }
 
   if (angle_is_winuwp) {
