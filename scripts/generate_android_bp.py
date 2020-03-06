@@ -135,11 +135,9 @@ def gn_sources_to_blueprint_sources(sources):
 
 target_blackist = [
     '//build/config:shared_library_deps',
-    '//third_party/vulkan-headers/src:vulkan_headers',
 ]
 
 include_blacklist = [
-    '//third_party/vulkan-headers/src/include/',
 ]
 
 

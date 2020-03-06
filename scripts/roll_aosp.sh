@@ -12,6 +12,7 @@ deps=(
     "third_party/spirv-tools/src"
     "third_party/glslang/src"
     "third_party/spirv-headers/src"
+    "third_party/vulkan-headers/src"
     "third_party/jsoncpp"
     "third_party/jsoncpp/source"
 )
