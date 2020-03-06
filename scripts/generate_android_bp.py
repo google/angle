@@ -25,20 +25,50 @@ sdk_version = '28'
 stl = 'libc++_static'
 
 
-def write_blueprint_key_value(output, name, value, sort=True):
-    if isinstance(value, set):
-        value = sorted(value)
+def tabs(indent):
+    return ' ' * (indent * 4)
+
+
+def has_child_values(value):
+    # Elements of the blueprint can be pruned if they are empty lists or dictionaries of empty
+    # lists
+    if isinstance(value, list):
+        return len(value) > 0
+    if isinstance(value, dict):
+        for (item, item_value) in value.items():
+            if has_child_values(item_value):
+                return True
+        return False
+
+    # This is a value leaf node
+    return True
+
+
+def write_blueprint_key_value(output, name, value, indent=1):
+    if not has_child_values(value):
+        return
+
+    if isinstance(value, set) or isinstance(value, list):
+        value = list(sorted(set(value)))
 
     if isinstance(value, list):
-        output.append('    %s: [' % name)
-        for item in sorted(set(value)) if sort else value:
-            output.append('        "%s",' % item)
-        output.append('    ],')
+        output.append(tabs(indent) + '%s: [' % name)
+        for item in value:
+            output.append(tabs(indent + 1) + '"%s",' % item)
+        output.append(tabs(indent) + '],')
+        return
+    if isinstance(value, dict):
+        if not value:
+            return
+        output.append(tabs(indent) + '%s: {' % name)
+        for (item, item_value) in value.items():
+            write_blueprint_key_value(output, item, item_value, indent + 1)
+        output.append(tabs(indent) + '},')
         return
     if isinstance(value, bool):
-        output.append('    %s: %s,' % (name, 'true' if value else 'false'))
+        output.append(tabs(indent) + '%s: %s,' % (name, 'true' if value else 'false'))
         return
-    output.append('    %s: "%s",' % (name, value))
+    output.append(tabs(indent) + '%s: "%s",' % (name, value))
 
 
 def write_blueprint(output, target_type, values):
@@ -180,6 +210,9 @@ def escape_quotes(str):
     return str.replace("\"", "\\\"").replace("\'", "\\\'")
 
 
+angle_cpu_bits_define = r'^ANGLE_IS_[0-9]+_BIT_CPU$'
+
+
 def gn_cflags_to_blueprint_cflags(target_info):
     result = []
 
@@ -206,7 +239,40 @@ def gn_cflags_to_blueprint_cflags(target_info):
 
     if 'defines' in target_info:
         for define in target_info['defines']:
-            result.append('-D%s' % escape_quotes(define))
+            # Don't emit ANGLE's CPU-bits define here, it will be part of the arch-specific
+            # information later
+            if not re.search(angle_cpu_bits_define, define):
+                result.append('-D%s' % escape_quotes(define))
+
+    return result
+
+
+def gn_arch_specific_to_blueprint(target_info):
+    arch_infos = {
+        'arm': {
+            'bits': 32
+        },
+        'arm64': {
+            'bits': 64
+        },
+        'x86': {
+            'bits': 32
+        },
+        'x86_64': {
+            'bits': 64
+        },
+    }
+
+    result = {}
+    for (arch_name, arch_info) in arch_infos.items():
+        result[arch_name] = {'cflags': []}
+
+    # If the target has ANGLE's CPU-bits define, replace it with the arch-specific bits here.
+    if 'defines' in target_info:
+        for define in target_info['defines']:
+            if re.search(angle_cpu_bits_define, define):
+                for (arch_name, arch_info) in arch_infos.items():
+                    result[arch_name]['cflags'].append('-DANGLE_IS_%d_BIT_CPU' % arch_info['bits'])
 
     return result
 
@@ -240,6 +306,7 @@ def library_target_to_blueprint(target, build_info):
     bp['local_include_dirs'] = gn_include_dirs_to_blueprint_include_dirs(target_info)
 
     bp['cflags'] = gn_cflags_to_blueprint_cflags(target_info)
+    bp['arch'] = gn_arch_specific_to_blueprint(target_info)
 
     bp['sdk_version'] = sdk_version
     bp['stl'] = stl
