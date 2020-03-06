@@ -1647,7 +1647,7 @@ bool TextureDescriptorDesc::operator==(const TextureDescriptorDesc &other) const
 
 FramebufferDesc::FramebufferDesc()
 {
-    clearSerials();
+    reset();
 }
 
 FramebufferDesc::~FramebufferDesc()                            = default;
@@ -1666,7 +1666,7 @@ size_t FramebufferDesc::hash() const
                                      sizeof(AttachmentSerial) * kMaxFramebufferAttachments);
 }
 
-void FramebufferDesc::clearSerials()
+void FramebufferDesc::reset()
 {
     memset(&mSerials, 0, sizeof(AttachmentSerial) * kMaxFramebufferAttachments);
 }

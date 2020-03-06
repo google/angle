@@ -748,11 +748,11 @@ class FramebufferDesc
 
     void update(uint32_t index, AttachmentSerial serial);
     size_t hash() const;
+    void reset();
 
     bool operator==(const FramebufferDesc &other) const;
 
   private:
-    void clearSerials();
     gl::AttachmentArray<AttachmentSerial> mSerials;
 };
 }  // namespace vk
