@@ -2456,8 +2456,9 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
     ANGLE_FEATURE_CONDITION(features, selectViewInGeometryShader,
                             !deviceCaps.supportsVpRtIndexWriteFromVertexShader);
 
-    // Never clear for robust resource init.  This matches Chrome's texture clearning behaviour.
-    ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, false);
+    // Intel and AMD drivers have trouble clearing textures without causing corruption. NVidia,
+    // on the other hand, can handle.
+    ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, isNvidia);
 
     // Don't translate uniform block to StructuredBuffer on Windows 7 and earlier. This is targeted
     // to work around a bug that fails to allocate ShaderResourceView for StructuredBuffer.
