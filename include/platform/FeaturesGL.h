@@ -426,6 +426,12 @@ struct FeaturesGL : FeatureSetBase
         "avoid_dxt1_srgb_texture_format", FeatureCategory::OpenGLWorkarounds,
         "Replaces DXT1 sRGB with DXT1 sRGB Alpha as a driver bug workaround.", &members};
 
+    // Bugs exist in OpenGL AMD drivers on Windows that produce incorrect pipeline state for
+    // colorMaski calls.
+    Feature disableDrawBuffersIndexed = {"disable_draw_buffers_indexed",
+                                         FeatureCategory::OpenGLWorkarounds,
+                                         "Disable OES_draw_buffers_indexed extension.", &members};
+
     // GL_EXT_semaphore_fd doesn't work properly with Mesa 19.3.4 and earlier versions.
     Feature disableSemaphoreFd = {"disable_semaphore_fd", FeatureCategory::OpenGLWorkarounds,
                                   "Disable GL_EXT_semaphore_fd extension", &members,

@@ -1162,7 +1162,16 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->drawBuffers = functions->isAtLeastGL(gl::Version(2, 0)) ||
                               functions->hasGLExtension("ARB_draw_buffers") ||
                               functions->hasGLESExtension("GL_EXT_draw_buffers");
-    extensions->textureStorage = functions->standard == STANDARD_GL_DESKTOP ||
+    extensions->drawBuffersIndexedEXT =
+        !features.disableDrawBuffersIndexed.enabled &&
+        (functions->isAtLeastGL(gl::Version(4, 0)) ||
+         (functions->hasGLExtension("GL_EXT_draw_buffers2") &&
+          functions->hasGLExtension("GL_ARB_draw_buffers_blend")) ||
+         functions->isAtLeastGLES(gl::Version(3, 2)) ||
+         functions->hasGLESExtension("GL_OES_draw_buffers_indexed") ||
+         functions->hasGLESExtension("GL_EXT_draw_buffers_indexed"));
+    extensions->drawBuffersIndexedOES = extensions->drawBuffersIndexedEXT;
+    extensions->textureStorage        = functions->standard == STANDARD_GL_DESKTOP ||
                                  functions->hasGLESExtension("GL_EXT_texture_storage");
     extensions->textureFilterAnisotropic =
         functions->hasGLExtension("GL_EXT_texture_filter_anisotropic") ||
@@ -1704,6 +1713,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // Workaround for incorrect sampling from DXT1 sRGB textures in Intel OpenGL on Windows.
     ANGLE_FEATURE_CONDITION(features, avoidDXT1sRGBTextureFormat, IsWindows() && isIntel);
+
+    ANGLE_FEATURE_CONDITION(features, disableDrawBuffersIndexed, IsWindows() && isAMD);
 
     ANGLE_FEATURE_CONDITION(
         features, disableSemaphoreFd,

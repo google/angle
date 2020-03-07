@@ -89,12 +89,10 @@ class StateManagerGL final : angle::NonCopyable
     void setDepthRange(float near, float far);
 
     void setBlendEnabled(bool enabled);
+    void setBlendEnabledIndexed(const gl::DrawBufferMask blendEnabledMask);
     void setBlendColor(const gl::ColorF &blendColor);
-    void setBlendFuncs(GLenum sourceBlendRGB,
-                       GLenum destBlendRGB,
-                       GLenum sourceBlendAlpha,
-                       GLenum destBlendAlpha);
-    void setBlendEquations(GLenum blendEquationRGB, GLenum blendEquationAlpha);
+    void setBlendFuncs(const gl::BlendStateExt &blendStateExt);
+    void setBlendEquations(const gl::BlendStateExt &blendStateExt);
     void setColorMask(bool red, bool green, bool blue, bool alpha);
     void setSampleAlphaToCoverageEnabled(bool enabled);
     void setSampleCoverageEnabled(bool enabled);
@@ -137,11 +135,8 @@ class StateManagerGL final : angle::NonCopyable
     void setFramebufferSRGBEnabledForFramebuffer(const gl::Context *context,
                                                  bool enabled,
                                                  const FramebufferGL *framebuffer);
-    void setColorMaskForFramebuffer(bool red,
-                                    bool green,
-                                    bool blue,
-                                    bool alpha,
-                                    const FramebufferGL *framebuffer);
+    void setColorMaskForFramebuffer(const gl::BlendStateExt &blendStateExt,
+                                    const bool disableAlpha);
 
     void setDitherEnabled(bool enabled);
 
@@ -279,18 +274,10 @@ class StateManagerGL final : angle::NonCopyable
     float mNear;
     float mFar;
 
-    bool mBlendEnabled;
     gl::ColorF mBlendColor;
-    GLenum mSourceBlendRGB;
-    GLenum mDestBlendRGB;
-    GLenum mSourceBlendAlpha;
-    GLenum mDestBlendAlpha;
-    GLenum mBlendEquationRGB;
-    GLenum mBlendEquationAlpha;
-    bool mColorMaskRed;
-    bool mColorMaskGreen;
-    bool mColorMaskBlue;
-    bool mColorMaskAlpha;
+    gl::BlendStateExt mBlendStateExt;
+    const bool mIndependentBlendStates;
+
     bool mSampleAlphaToCoverageEnabled;
     bool mSampleCoverageEnabled;
     float mSampleCoverageValue;

@@ -852,7 +852,7 @@ TEST_P(ClearTestES3, MaskedIndexedClearMultipleAttachments)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
 
     constexpr uint32_t kSize            = 16;
-    constexpr uint32_t kAttachmentCount = 2;
+    constexpr uint32_t kAttachmentCount = 4;
     std::vector<unsigned char> pixelData(kSize * kSize * 4, 255);
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
@@ -882,7 +882,8 @@ TEST_P(ClearTestES3, MaskedIndexedClearMultipleAttachments)
     // Block blue channel for all attachements
     glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
 
-    // Unblock blue channel for attachement 1
+    // Unblock blue channel for attachments 0 and 1
+    glColorMaskiOES(0, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     glColorMaskiOES(1, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
@@ -895,12 +896,12 @@ TEST_P(ClearTestES3, MaskedIndexedClearMultipleAttachments)
         glReadBuffer(GL_COLOR_ATTACHMENT0 + i);
         ASSERT_GL_NO_ERROR();
 
-        const GLColor attachementColor = (i == 1) ? clearColor : clearColorMasked;
-        EXPECT_PIXEL_COLOR_EQ(0, 0, attachementColor);
-        EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, attachementColor);
-        EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, attachementColor);
-        EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, attachementColor);
-        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, attachementColor);
+        const GLColor attachmentColor = (i > 1) ? clearColorMasked : clearColor;
+        EXPECT_PIXEL_COLOR_EQ(0, 0, attachmentColor);
+        EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, attachmentColor);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, attachmentColor);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, attachmentColor);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, attachmentColor);
     }
 }
 
