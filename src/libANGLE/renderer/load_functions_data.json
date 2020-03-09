@@ -650,6 +650,9 @@
     }
   },
   "GL_DEPTH_COMPONENT24": {
+    "D24_UNORM_X8_UINT": {
+      "GL_UNSIGNED_INT": "LoadR32ToR24G8"
+    },
     "D24_UNORM_S8_UINT": {
       "GL_UNSIGNED_INT": "LoadR32ToR24G8"
     },

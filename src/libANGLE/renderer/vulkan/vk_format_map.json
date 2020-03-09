@@ -107,6 +107,7 @@
         "D32_FLOAT": "VK_FORMAT_D32_SFLOAT",
         "S8_UINT": "VK_FORMAT_S8_UINT",
         "D24_UNORM_S8_UINT": "VK_FORMAT_D24_UNORM_S8_UINT",
+        "D24_UNORM_X8_UINT": "VK_FORMAT_X8_D24_UNORM_PACK32",
         "D32_FLOAT_S8X24_UINT": "VK_FORMAT_D32_SFLOAT_S8_UINT",
         "BC1_RGB_UNORM_BLOCK": "VK_FORMAT_BC1_RGB_UNORM_BLOCK",
         "BC1_RGB_UNORM_SRGB_BLOCK": "VK_FORMAT_BC1_RGB_SRGB_BLOCK",
@@ -209,7 +210,6 @@
             "image": "B8G8R8A8_UNORM"
         },
         "D24_UNORM_X8_UINT": {
-            "buffer": "NONE",
             "image": ["D24_UNORM_S8_UINT", "D32_FLOAT_S8X24_UINT"]
         },
         "D32_UNORM": {

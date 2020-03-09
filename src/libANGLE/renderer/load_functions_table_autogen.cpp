@@ -1486,6 +1486,18 @@ LoadImageFunctionInfo DEPTH_COMPONENT24_to_D24_UNORM_S8_UINT(GLenum type)
     }
 }
 
+LoadImageFunctionInfo DEPTH_COMPONENT24_to_D24_UNORM_X8_UINT(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_INT:
+            return LoadImageFunctionInfo(LoadR32ToR24G8, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
 LoadImageFunctionInfo DEPTH_COMPONENT24_to_D32_FLOAT_S8X24_UINT(GLenum type)
 {
     switch (type)
@@ -3563,6 +3575,8 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             {
                 case FormatID::D24_UNORM_S8_UINT:
                     return DEPTH_COMPONENT24_to_D24_UNORM_S8_UINT;
+                case FormatID::D24_UNORM_X8_UINT:
+                    return DEPTH_COMPONENT24_to_D24_UNORM_X8_UINT;
                 case FormatID::D32_FLOAT_S8X24_UINT:
                     return DEPTH_COMPONENT24_to_D32_FLOAT_S8X24_UINT;
                 default:

@@ -854,15 +854,16 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             internalFormat = GL_DEPTH_COMPONENT24;
             {
                 static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::D24_UNORM_X8_UINT, VK_FORMAT_X8_D24_UNORM_PACK32, nullptr},
                     {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr},
                     {angle::FormatID::D32_FLOAT_S8X24_UINT, VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr}};
                 initImageFallback(renderer, kInfo, ArraySize(kInfo));
             }
-            actualBufferFormatID         = angle::FormatID::NONE;
-            vkBufferFormat               = VK_FORMAT_UNDEFINED;
-            vkBufferFormatIsPacked       = false;
-            vertexLoadFunction           = nullptr;
-            vertexLoadRequiresConversion = true;
+            actualBufferFormatID         = angle::FormatID::D24_UNORM_X8_UINT;
+            vkBufferFormat               = VK_FORMAT_X8_D24_UNORM_PACK32;
+            vkBufferFormatIsPacked       = true;
+            vertexLoadFunction           = CopyNativeVertexData<GLuint, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::D32_FLOAT:

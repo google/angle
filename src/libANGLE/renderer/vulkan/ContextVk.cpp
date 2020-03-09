@@ -2233,6 +2233,25 @@ angle::Result ContextVk::clearWithRenderPassOp(
     RenderTargetVk *depthStencilRenderTarget = mDrawFramebuffer->getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
+        const vk::Format &format = depthStencilRenderTarget->getImageFormat();
+        if (format.hasEmulatedImageChannels())
+        {
+            if (format.intendedFormat().stencilBits == 0)
+            {
+                // If the format we picked has stencil but user did not ask for
+                // it due to hardware limitation, force clear the stencil so
+                // that no load will happen. Also don't try to store stencil
+                // value as well. Same logic for depth bits bellow.
+                mRenderPassCommands.invalidateRenderPassStencilAttachment(attachmentIndexVk);
+                clearStencil = true;
+            }
+            if (format.intendedFormat().depthBits == 0)
+            {
+                mRenderPassCommands.invalidateRenderPassDepthAttachment(attachmentIndexVk);
+                clearDepth = true;
+            }
+        }
+
         if (clearDepth)
         {
             mRenderPassCommands.clearRenderPassDepthAttachment(attachmentIndexVk,
