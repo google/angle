@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4d5f415f_95a5bb4e",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-03-09T21:47:41Z",
+      "side": 1,
+      "message": "If you want to include a section on default values for arguments I\u0027d be fine with that. We should keep the argument blocks as small as possible so they are easily readable and comprehensible for new developers. Is that OK?",
+      "parentUuid": "6d3e9f17_fc1bbe77",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 23
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "45b702d0_7cd35c9d",
         "filename": "doc/DevSetupAndroid.md",
         "patchSetId": 6
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "Yes, it is hard to pin down an exact combination that satisfies everyone, but I think these are a good starting point.",
       "parentUuid": "45b702d0_7cd35c9d",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 7
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eee3c527_d673a99d",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-03-09T21:47:41Z",
+      "side": 1,
+      "message": "Again I strongly suggest we remove redundant arguments. If you want to include a separate section on defaults I\u0027d be fine with that.",
+      "parentUuid": "41076b72_77390e0f",
       "range": {
         "startLine": 31,
         "startChar": 0,
