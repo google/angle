@@ -151,19 +151,7 @@ angle::Result FramebufferVk::invalidate(const gl::Context *context,
                                         size_t count,
                                         const GLenum *attachments)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
-
-    if (mFramebuffer != nullptr)
-    {
-        ASSERT(mFramebuffer->valid());
-        mFramebuffer->retain(&contextVk->getResourceUseList());
-
-        if (contextVk->hasStartedRenderPass())
-        {
-            ANGLE_TRY(invalidateImpl(contextVk, count, attachments));
-        }
-    }
-
+    // TODO(jmadill): Re-enable. See http://anglebug.com/4444
     return angle::Result::Continue;
 }
 
@@ -172,22 +160,7 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
                                            const GLenum *attachments,
                                            const gl::Rectangle &area)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
-
-    // RenderPass' storeOp cannot be made conditional to a specific region, so we only apply this
-    // hint if the requested area encompasses the render area.
-    if (mFramebuffer != nullptr)
-    {
-        ASSERT(mFramebuffer->valid());
-        mFramebuffer->retain(&contextVk->getResourceUseList());
-
-        if (contextVk->hasStartedRenderPass() &&
-            area.encloses(contextVk->getStartedRenderPassCommands().getRenderArea()))
-        {
-            ANGLE_TRY(invalidateImpl(contextVk, count, attachments));
-        }
-    }
-
+    // TODO(jmadill): Re-enable. See http://anglebug.com/4444
     return angle::Result::Continue;
 }
 
