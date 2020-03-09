@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0389c90a_899c80c1",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-03-09T17:19:07Z",
+      "side": 1,
+      "message": "can you remove these arguments? shouldn\u0027t be necessary.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 23
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45b702d0_7cd35c9d",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-03-09T17:19:07Z",
+      "side": 1,
+      "message": "this is kind of a \"release with no debugging at all\". e.g. for performance profiling. \n\nyou can omit the dcheck_always_on\u003dfalse (that\u0027s default) as well as enable_vulkan \u003d true, layers \u003d false, gl \u003d false. not sure about resource_whitelist_generation. I suspect that might not be necessary.\n\nalso using symbol_level \u003d 1 is fine for profiling.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 7
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e177da8_6d305a38",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-03-09T17:19:07Z",
+      "side": 1,
+      "message": "we should make a note to add an angle_tests target and then we can reduce this to\n\n\"angle\", \"angle_apks\" and \"angle_tests\"",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 21
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
