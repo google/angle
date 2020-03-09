@@ -19,6 +19,7 @@
 #include "compiler/translator/OutputVulkanGLSL.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_ops/NameEmbeddedUniformStructs.h"
+#include "compiler/translator/tree_ops/RemoveAtomicCounterBuiltins.h"
 #include "compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.h"
 #include "compiler/translator/tree_ops/RewriteAtomicCounters.h"
 #include "compiler/translator/tree_ops/RewriteCubeMapSamplersAs2DArray.h"
@@ -860,6 +861,16 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             CreateDriverUniformRef(driverUniforms, kAcbBufferOffsets);
 
         if (!RewriteAtomicCounters(this, root, &getSymbolTable(), acbBufferOffsets))
+        {
+            return false;
+        }
+    }
+    else if (getShaderVersion() >= 310)
+    {
+        // Vulkan doesn't support Atomic Storage as a Storage Class, but we've seen
+        // cases where builtins are using it even with no active atomic counters.
+        // This pass simply removes those builtins in that scenario.
+        if (!RemoveAtomicCounterBuiltins(this, root))
         {
             return false;
         }
