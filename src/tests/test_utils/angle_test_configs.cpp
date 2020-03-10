@@ -44,6 +44,11 @@ EGLint PlatformParameters::getDeviceType() const
     return eglParameters.deviceType;
 }
 
+bool PlatformParameters::isSwiftshader() const
+{
+    return eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
+}
+
 void PlatformParameters::initDefaultParameters()
 {
     // Default debug layers to enabled in tests.

@@ -476,7 +476,7 @@ class ANGLETestBase
     bool isVulkanSwiftshaderRenderer() const
     {
         return mCurrentParams->getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
-               mCurrentParams->getDeviceType() == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
+               mCurrentParams->isSwiftshader();
     }
 
     bool platformSupportsMultithreading() const;

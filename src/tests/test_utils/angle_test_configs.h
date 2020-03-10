@@ -44,6 +44,7 @@ struct PlatformParameters
 
     EGLint getRenderer() const;
     EGLint getDeviceType() const;
+    bool isSwiftshader() const;
 
     void initDefaultParameters();
 
@@ -222,6 +223,13 @@ inline PlatformParameters WithAllocateNonZeroMemory(const PlatformParameters &pa
     PlatformParameters allocateNonZero                         = params;
     allocateNonZero.eglParameters.allocateNonZeroMemoryFeature = EGL_TRUE;
     return allocateNonZero;
+}
+
+inline PlatformParameters WithRobustness(const PlatformParameters &params)
+{
+    PlatformParameters withRobustness       = params;
+    withRobustness.eglParameters.robustness = EGL_TRUE;
+    return withRobustness;
 }
 }  // namespace angle
 

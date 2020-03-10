@@ -174,7 +174,7 @@ gl::Version DisplayVk::getMaxConformantESVersion() const
 
 void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    outExtensions->createContextRobustness      = true;
+    outExtensions->createContextRobustness      = getRenderer()->getNativeExtensions().robustness;
     outExtensions->surfaceOrientation           = true;
     outExtensions->displayTextureShareGroup     = true;
     outExtensions->robustResourceInitialization = true;
