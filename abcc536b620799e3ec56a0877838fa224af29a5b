@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7692ebfc_f8edc807",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-03-10T19:38:59Z",
+      "side": 1,
+      "message": "GL_LINK_STATUS with program \u003d\u003d nullptr is not expected to happen.\n\nIn fact, the caller of QueryProgramiv doesn\u0027t expected program to be nullptr in either case:\n\n    Program *programObject \u003d nullptr;\n    if (!isContextLost())\n    {\n        // Don\u0027t resolve link if checking the link completion status.\n        programObject \u003d (pname \u003d\u003d GL_COMPLETION_STATUS_KHR ? getProgramNoResolveLink(program)\n                                                           : getProgramResolveLink(program));\n        ASSERT(programObject);\n    }\n    QueryProgramiv(this, programObject, pname, params);\n\nexcept if the context is lost.\n\nIn fact, if the context is lost, then program is always nullptr (not just for GL_LINK_STATUS).\n\nOn the other hand, if the context is lost, the validation layer already fails. It also handles program being nullptr:\n\nbool ValidateGetProgramivBase(Context *context,\n                              ShaderProgramID program,\n                              GLenum pname,\n                              GLsizei *numParams)\n{\n    ...\n\n    if (context-\u003eisContextLost())\n    {\n        ...\n\n        if (context-\u003egetExtensions().parallelShaderCompile \u0026\u0026 pname \u003d\u003d GL_COMPLETION_STATUS_KHR)\n        {\n            // Generate an error but still return true, the context still needs to return a\n            // value in this case.\n            return true;\n        }\n        else\n        {\n            return false;\n        }\n    }\n\n    // Special case for GL_COMPLETION_STATUS_KHR: don\u0027t resolve the link. Otherwise resolve it now.\n    Program *programObject \u003d (pname \u003d\u003d GL_COMPLETION_STATUS_KHR)\n                                 ? GetValidProgramNoResolve(context, program)\n                                 : GetValidProgram(context, program);\n    if (!programObject)\n    {\n        return false;\n    }\n\n---\n\nDo you suspect the crashes come from context loss? The only possibility I see with program being nullptr here in the case of GL_LINK_STATUS is if the context gets lost between the validation and usage of `Context::getProgramiv`.\n\nOne possible solution is probably to change Context::getProgramiv to always return a valid program (if that is indeed the problem):\n\n    // Don\u0027t resolve link if checking the link completion status.\n    Program *programObject \u003d getProgramNoResolveLink(program);\n\n    if (!isContextLost() \u0026\u0026 pname !\u003d GL_COMPLETION_STATUS_KHR)\n    {\n        programObject \u003d getProgramResolveLink(program));\n    }\n\n    ASSERT(programObject);\n    QueryProgramiv(this, programObject, pname, params);",
+      "range": {
+        "startLine": 1190,
+        "startChar": 4,
+        "endLine": 1190,
+        "endChar": 68
+      },
+      "revId": "abcc536b620799e3ec56a0877838fa224af29a5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
