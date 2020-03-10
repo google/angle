@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "53f56f4a_55254772",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-03-10T13:40:51Z",
+      "side": 1,
+      "message": "Is there a way to determine the default GN args used by ANGLE?.",
+      "parentUuid": "4d5f415f_95a5bb4e",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 23
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "45b702d0_7cd35c9d",
         "filename": "doc/DevSetupAndroid.md",
         "patchSetId": 6
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "Again I strongly suggest we remove redundant arguments. If you want to include a separate section on defaults I\u0027d be fine with that.",
       "parentUuid": "41076b72_77390e0f",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 7
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5aca4fc_2ec6b5f3",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-03-10T13:40:51Z",
+      "side": 1,
+      "message": "Determining redundancy is the problem here.",
+      "parentUuid": "eee3c527_d673a99d",
       "range": {
         "startLine": 31,
         "startChar": 0,
