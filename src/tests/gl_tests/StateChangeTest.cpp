@@ -794,9 +794,6 @@ TEST_P(StateChangeRenderTest, GenerateMipmap)
 // Tests that gl_DepthRange syncs correctly after a change.
 TEST_P(StateChangeRenderTest, DepthRangeUpdates)
 {
-    // http://anglebug.com/2598: Seems to be an Intel driver bug.
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL() && IsWindows());
-
     constexpr char kFragCoordShader[] = R"(void main()
 {
     if (gl_DepthRange.near == 0.2)
