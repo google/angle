@@ -46,23 +46,23 @@ def add_base_software(swarming_args):
     ]
 
     for pkg, vers in cipd_packages:
-        swarming_args.append('--cipd-package=.swarming_module:%s:%s' % (pkg, vers))
+        swarming_args.append('--cipd-package=.swarming_module:%s=%s' % (pkg, vers))
 
     # Add packages to $PATH
     swarming_args.extend([
-        '--env-prefix=PATH',
-        '.swarming_module',
-        '--env-prefix=PATH',
-        '.swarming_module/bin',
+        '--env-prefix',
+        'PATH=.swarming_module',
+        '--env-prefix',
+        'PATH=.swarming_module/bin',
     ])
 
     # Add cache directives for vpython.
     vpython_cache_path = '.swarming_module_cache/vpython'
     swarming_args.extend([
-        '--named-cache=swarming_module_cache_vpython',
-        vpython_cache_path,
-        '--env-prefix=VPYTHON_VIRTUALENV_ROOT',
-        vpython_cache_path,
+        '--named-cache',
+        'swarming_module_cache_vpython=' + vpython_cache_path,
+        '--env-prefix',
+        'VPYTHON_VIRTUALENV_ROOT=' + vpython_cache_path,
     ])
 
 
@@ -88,22 +88,29 @@ def main():
         sha = hashlib.sha1(f.read()).hexdigest()
 
     print('Got an isolated SHA of %s' % sha)
-    swarming_script_path = os.path.join('tools', 'swarming_client', 'swarming.py')
+    swarming_script_path = os.path.join('tools', 'luci-go', 'swarming')
 
     swarming_args = [
-        'python', swarming_script_path, 'trigger', '-S', 'chromium-swarm.appspot.com', '-I',
-        'isolateserver.appspot.com', '-d', 'os', args.os_dim, '-d', 'pool', args.pool, '-d', 'gpu',
-        args.gpu_dim,
-        '--shards=%d' % args.shards, '-s', sha
+        swarming_script_path, 'trigger', '-S', 'chromium-swarm.appspot.com', '-I',
+        'https://isolateserver.appspot.com', '-d', 'os=' + args.os_dim, '-d', 'pool=' + args.pool,
+        '-d', 'gpu=' + args.gpu_dim, '-s', sha
     ]
 
     add_base_software(swarming_args)
 
-    if unknown:
-        swarming_args += ["--"] + unknown
+    for i in range(args.shards):
+        shard_args = swarming_args[:]
+        shard_args.extend([
+            '--env',
+            'GTEST_TOTAL_SHARDS=%d' % args.shards,
+            '--env',
+            'GTEST_SHARD_INDEX=%d' % i,
+        ])
+        if unknown:
+            shard_args += ["--"] + unknown
 
-    print(' '.join(swarming_args))
-    subprocess.call(swarming_args)
+        print(' '.join(shard_args))
+        subprocess.call(shard_args)
     return 0
 
 
