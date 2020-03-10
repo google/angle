@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "92795ca0_e55f0bc6",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2020-03-10T17:53:21Z",
+      "side": 1,
+      "message": "\"gn args --list \u003cdir\u003e\" gives list of gn args, their current value, and where that value comes from, along with all the default values.",
+      "parentUuid": "53f56f4a_55254772",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 23
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "45b702d0_7cd35c9d",
         "filename": "doc/DevSetupAndroid.md",
         "patchSetId": 6
