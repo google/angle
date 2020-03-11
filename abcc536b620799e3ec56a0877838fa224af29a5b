@@ -22,6 +22,30 @@
       "revId": "abcc536b620799e3ec56a0877838fa224af29a5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60febe5c_bbfdd6ab",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2020-03-11T18:03:16Z",
+      "side": 1,
+      "message": "Thanks Shahbaz for the input. Let me upload a patch with this fix",
+      "parentUuid": "7692ebfc_f8edc807",
+      "range": {
+        "startLine": 1190,
+        "startChar": 4,
+        "endLine": 1190,
+        "endChar": 68
+      },
+      "revId": "abcc536b620799e3ec56a0877838fa224af29a5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
