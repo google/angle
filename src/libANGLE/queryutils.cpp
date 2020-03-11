@@ -1195,7 +1195,7 @@ void QueryProgramiv(Context *context, const Program *program, GLenum pname, GLin
             *params = program->isFlaggedForDeletion();
             return;
         case GL_LINK_STATUS:
-            *params = program ? program->isLinked() : false;
+            *params = program->isLinked();
             return;
         case GL_COMPLETION_STATUS_KHR:
             if (context->isContextLost())
