@@ -34,7 +34,7 @@
                  android:forceQueryable="true"
                  android:multiArch="true">
 
-        <activity android:name=".MainActivity"
+        <activity android:name="com.android.angle.MainActivity"
                   android:label="@string/angle_preferences"
                   android:description="@string/angle_preferences_summary"
                   android:theme="@style/Theme.Settings"

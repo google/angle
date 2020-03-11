@@ -63,8 +63,7 @@ public class SearchProvider extends SearchIndexablesProvider
         ref[COLUMN_INDEX_RAW_KEYWORDS]      = context.getString(R.string.keywords);
         ref[COLUMN_INDEX_RAW_INTENT_ACTION] = Intent.ACTION_MAIN;
         ref[COLUMN_INDEX_RAW_INTENT_TARGET_PACKAGE] = getContext().getApplicationInfo().packageName;
-        ref[COLUMN_INDEX_RAW_INTENT_TARGET_CLASS] =
-                getContext().getApplicationInfo().packageName + ".MainActivity";
+        ref[COLUMN_INDEX_RAW_INTENT_TARGET_CLASS]   = "com.android.angle.MainActivity";
 
         cursor.addRow(ref);
         return cursor;
