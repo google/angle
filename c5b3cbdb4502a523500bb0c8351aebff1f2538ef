@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffa77113_59b04b1a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2246,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-03-11T03:54:58Z",
+      "side": 1,
+      "message": "Even better would be to use LOAD_OP_DONT_CARE, and set clearStencil \u003d false. Clear instead of load is faster on tilers, but could be slower on desktop GPUs. With don\u0027t care, we can let the driver do what\u0027s best.",
+      "range": {
+        "startLine": 2246,
+        "startChar": 16,
+        "endLine": 2246,
+        "endChar": 36
+      },
+      "revId": "c5b3cbdb4502a523500bb0c8351aebff1f2538ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
