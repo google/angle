@@ -22,6 +22,7 @@
 
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
     <uses-sdk android:minSdkVersion="26"
               android:targetSdkVersion="28">
@@ -30,12 +31,14 @@
     <application android:label="Android System Angle"
                  android:icon="@drawable/icon"
                  android:extractNativeLibs="false"
+                 android:forceQueryable="true"
                  android:multiArch="true">
 
         <activity android:name=".MainActivity"
                   android:label="@string/angle_preferences"
                   android:description="@string/angle_preferences_summary"
                   android:theme="@style/Theme.Settings"
+                  android:visibleToInstantApps="true"
                   android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -61,6 +64,7 @@
             <meta-data android:name="com.android.settings.summary" android:resource="@string/angle_preferences_summary" />
             <meta-data android:name="com.android.settings.order" android:value="20" />
             <meta-data android:name="com.android.settings.profile" android:value="primary_profile_only" />
+            <meta-data android:name="instantapps.clients.allowed" android:value="true" />
         </activity>
 
         <receiver android:name="com.android.angle.common.Receiver"
@@ -70,5 +74,17 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+
+        <provider
+            android:name="com.android.angle.common.SearchProvider"
+            android:authorities="com.android.angle"
+            android:multiprocess="false"
+            android:grantUriPermissions="true"
+            android:permission="android.permission.READ_SEARCH_INDEXABLES"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.action.SEARCH_INDEXABLES_PROVIDER" />
+            </intent-filter>
+        </provider>
     </application>
 </manifest>
