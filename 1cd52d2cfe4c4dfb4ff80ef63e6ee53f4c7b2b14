@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "cdcc0717_2f0d74a3",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-03-11T16:13:06Z",
+      "side": 1,
+      "message": "Ah, okay.  I thought that only listed the options you\u0027d already specified, but indeed it spits out a ton.  Thanks, Tobin.  I\u0027ll cook up another pass that minimizes these, but also points to common blocks we use day to day.",
+      "parentUuid": "92795ca0_e55f0bc6",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 23
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "45b702d0_7cd35c9d",
         "filename": "doc/DevSetupAndroid.md",
         "patchSetId": 6
