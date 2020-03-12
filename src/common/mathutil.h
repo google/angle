@@ -1052,17 +1052,28 @@ inline unsigned long ScanForward(uint32_t bits)
     return firstBitIndex;
 }
 
-#    if defined(ANGLE_IS_64_BIT_CPU)
 inline unsigned long ScanForward(uint64_t bits)
 {
     ASSERT(bits != 0u);
     unsigned long firstBitIndex = 0ul;
-    unsigned char ret           = _BitScanForward64(&firstBitIndex, bits);
+#    if defined(ANGLE_IS_64_BIT_CPU)
+    unsigned char ret = _BitScanForward64(&firstBitIndex, bits);
+#    else
+    unsigned char ret;
+    if (static_cast<uint32_t>(bits) == 0)
+    {
+        ret = _BitScanForward(&firstBitIndex, static_cast<uint32_t>(bits >> 32));
+        firstBitIndex += 32ul;
+    }
+    else
+    {
+        ret = _BitScanForward(&firstBitIndex, static_cast<uint32_t>(bits));
+    }
+#    endif  // defined(ANGLE_IS_64_BIT_CPU)
     ASSERT(ret != 0u);
     return firstBitIndex;
 }
-#    endif  // defined(ANGLE_IS_64_BIT_CPU)
-#endif      // defined(ANGLE_PLATFORM_WINDOWS)
+#endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
 #if defined(ANGLE_PLATFORM_POSIX)
 inline unsigned long ScanForward(uint32_t bits)
@@ -1071,14 +1082,18 @@ inline unsigned long ScanForward(uint32_t bits)
     return static_cast<unsigned long>(__builtin_ctz(bits));
 }
 
-#    if defined(ANGLE_IS_64_BIT_CPU)
 inline unsigned long ScanForward(uint64_t bits)
 {
     ASSERT(bits != 0u);
+#    if defined(ANGLE_IS_64_BIT_CPU)
     return static_cast<unsigned long>(__builtin_ctzll(bits));
-}
+#    else
+    return static_cast<unsigned long>(static_cast<uint32_t>(bits) == 0
+                                          ? __builtin_ctz(static_cast<uint32_t>(bits >> 32)) + 32
+                                          : __builtin_ctz(static_cast<uint32_t>(bits)));
 #    endif  // defined(ANGLE_IS_64_BIT_CPU)
-#endif      // defined(ANGLE_PLATFORM_POSIX)
+}
+#endif  // defined(ANGLE_PLATFORM_POSIX)
 
 inline unsigned long ScanForward(uint8_t bits)
 {

@@ -272,11 +272,13 @@ TEST(MathUtilTest, ScanForward)
     EXPECT_EQ(16ul, gl::ScanForward(0x80010000u));
     EXPECT_EQ(31ul, gl::ScanForward(0x80000000u));
 
-#if defined(ANGLE_IS_64_BIT_CPU)
     EXPECT_EQ(0ul, gl::ScanForward(static_cast<uint64_t>(1ull)));
     EXPECT_EQ(16ul, gl::ScanForward(static_cast<uint64_t>(0x80010000ull)));
     EXPECT_EQ(31ul, gl::ScanForward(static_cast<uint64_t>(0x80000000ull)));
-#endif  // defined(ANGLE_IS_64_BIT_CPU)
+
+    EXPECT_EQ(32ul, gl::ScanForward(static_cast<uint64_t>(0x100000000ull)));
+    EXPECT_EQ(48ul, gl::ScanForward(static_cast<uint64_t>(0x8001000000000000ull)));
+    EXPECT_EQ(63ul, gl::ScanForward(static_cast<uint64_t>(0x8000000000000000ull)));
 }
 
 // Test ScanReverse, which scans for the most significant 1 bit from a non-zero integer.
