@@ -612,7 +612,7 @@ egl::Config GenerateDefaultConfig(const RendererVk *renderer,
     config.maxSwapInterval    = 1;
     config.minSwapInterval    = 0;
     config.nativeRenderable   = EGL_TRUE;
-    config.nativeVisualID     = 0;
+    config.nativeVisualID     = static_cast<EGLint>(GetNativeVisualID(colorFormat));
     config.nativeVisualType   = EGL_NONE;
     config.renderableType     = es2Support | es3Support;
     config.sampleBuffers      = (sampleCount > 0) ? 1 : 0;

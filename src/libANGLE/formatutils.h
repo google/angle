@@ -14,6 +14,7 @@
 #include <ostream>
 
 #include "angle_gl.h"
+#include "common/android_util.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Version.h"
@@ -270,6 +271,16 @@ const FormatSet &GetAllSizedInternalFormats();
 typedef std::unordered_map<GLenum, std::unordered_map<GLenum, InternalFormat>>
     InternalFormatInfoMap;
 const InternalFormatInfoMap &GetInternalFormatMap();
+
+ANGLE_INLINE int GetNativeVisualID(const InternalFormat &internalFormat)
+{
+    int nativeVisualId = 0;
+#if defined(ANGLE_PLATFORM_ANDROID)
+    nativeVisualId =
+        angle::android::GLInternalFormatToNativePixelFormat(internalFormat.internalFormat);
+#endif
+    return nativeVisualId;
+}
 
 // From the ESSL 3.00.4 spec:
 // Vertex shader inputs can only be float, floating-point vectors, matrices, signed and unsigned
