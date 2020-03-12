@@ -1219,13 +1219,21 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
         // lingering staged updates in its staging buffer for unused texture mip levels or
         // layers. Therefore we can't verify it has no staged updates right here.
 
-        vk::ImageLayout textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
-        if (mProgram->getState().isCompute())
+        // Select the appropriate vk::ImageLayout depending on whether the texture is also bound as
+        // a GL image, and whether the program is a compute or graphics shader.
+        vk::ImageLayout textureLayout;
+        if (textureVk->isBoundAsImageTexture())
         {
-            textureLayout = vk::ImageLayout::ComputeShaderReadOnly;
+            textureLayout = mProgram->getState().isCompute()
+                                ? vk::ImageLayout::ComputeShaderWrite
+                                : vk::ImageLayout::AllGraphicsShadersWrite;
         }
-
-        // Ensure the image is in read-only layout
+        else
+        {
+            textureLayout = mProgram->getState().isCompute()
+                                ? vk::ImageLayout::ComputeShaderReadOnly
+                                : vk::ImageLayout::AllGraphicsShadersReadOnly;
+        }
         commandBufferHelper->imageRead(&mResourceUseList, image.getAspectFlags(), textureLayout,
                                        &image);
 

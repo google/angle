@@ -135,6 +135,7 @@ class TextureState final : private angle::NonCopyable
     GLenum getUsage() const { return mUsage; }
     GLenum getDepthStencilTextureMode() const { return mDepthStencilTextureMode; }
     bool isStencilMode() const { return mDepthStencilTextureMode == GL_STENCIL_INDEX; }
+    bool isBoundAsImageTexture() const { return mBoundAsImageTexture; }
 
     // Returns the desc of the base level. Only valid for cube-complete/mip-complete textures.
     const ImageDesc &getBaseLevelDesc() const;

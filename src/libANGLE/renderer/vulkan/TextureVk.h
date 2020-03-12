@@ -226,6 +226,8 @@ class TextureVk : public TextureImpl
                               GLenum type,
                               void *pixels) override;
 
+    ANGLE_INLINE bool isBoundAsImageTexture() const { return mState.isBoundAsImageTexture(); }
+
   private:
     // Transform an image index from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets
