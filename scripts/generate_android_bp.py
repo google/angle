@@ -433,7 +433,7 @@ def main():
         'java_defaults',
         {
             'name':
-                'ANGLE_defaults',
+                'ANGLE_java_defaults',
             'sdk_version':
                 'system_current',
             'min_sdk_version':
@@ -477,7 +477,7 @@ def main():
 
     blueprint_targets.append(('android_app', {
         'name': 'ANGLE',
-        'defaults': ['ANGLE_defaults'],
+        'defaults': ['ANGLE_java_defaults'],
         'static_libs': ['ANGLE_library'],
         'manifest': 'src/android_system_settings/src/com/android/angle/AndroidManifest.xml',
         'required': ['privapp_whitelist_com.android.angle'],
