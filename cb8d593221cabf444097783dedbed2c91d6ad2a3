@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d91b09f3_12c66dcf",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1333,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-03-13T19:19:24Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem like it\u0027s releasing the right shader.\nShouldn\u0027t it be: mState.mAttachedShaders[shaderType]-\u003erelease(context); ?",
+      "revId": "cb8d593221cabf444097783dedbed2c91d6ad2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
