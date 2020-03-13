@@ -15,7 +15,6 @@
 #include <mutex>
 
 #include "vk_ext_provoking_vertex.h"
-#include "volk.h"
 
 #include "common/PackedEnums.h"
 #include "common/PoolAlloc.h"
@@ -26,6 +25,7 @@
 #include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/UtilsVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
+#include "libANGLE/renderer/vulkan/vk_headers.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h"
 #include "libANGLE/renderer/vulkan/vk_mem_alloc_wrapper.h"

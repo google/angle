@@ -141,8 +141,11 @@ VulkanExternalHelper::~VulkanExternalHelper()
 void VulkanExternalHelper::initialize()
 {
     ASSERT(mInstance == VK_NULL_HANDLE);
-    VkResult result = volkInitialize();
+    VkResult result = VK_SUCCESS;
+#if ANGLE_SHARED_LIBVULKAN
+    result = volkInitialize();
     ASSERT(result == VK_SUCCESS);
+#endif  // ANGLE_SHARED_LIBVULKAN
     std::vector<VkExtensionProperties> instanceExtensionProperties =
         EnumerateInstanceExtensionProperties(nullptr);
 
@@ -188,7 +191,9 @@ void VulkanExternalHelper::initialize()
     result = vkCreateInstance(&instanceCreateInfo, nullptr, &mInstance);
     ASSERT(result == VK_SUCCESS);
     ASSERT(mInstance != VK_NULL_HANDLE);
+#if ANGLE_SHARED_LIBVULKAN
     volkLoadInstance(mInstance);
+#endif  // ANGLE_SHARED_LIBVULKAN
 
     std::vector<VkPhysicalDevice> physicalDevices = EnumeratePhysicalDevices(mInstance);
     ASSERT(physicalDevices.size() > 0);
@@ -261,7 +266,9 @@ void VulkanExternalHelper::initialize()
     result = vkCreateDevice(mPhysicalDevice, &deviceCreateInfo, nullptr, &mDevice);
     ASSERT(result == VK_SUCCESS);
     ASSERT(mDevice != VK_NULL_HANDLE);
+#if ANGLE_SHARED_LIBVULKAN
     volkLoadDevice(mDevice);
+#endif  // ANGLE_SHARED_LIBVULKAN
 
     constexpr uint32_t kGraphicsQueueIndex = 0;
     static_assert(kGraphicsQueueIndex < kGraphicsQueueCount, "must be in range");

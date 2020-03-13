@@ -10,7 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_MEM_ALLOC_WRAPPER_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_MEM_ALLOC_WRAPPER_H_
 
-#include <volk.h>
+#include "libANGLE/renderer/vulkan/vk_headers.h"
 
 VK_DEFINE_HANDLE(VmaAllocator)
 VK_DEFINE_HANDLE(VmaAllocation)

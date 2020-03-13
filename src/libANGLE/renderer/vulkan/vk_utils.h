@@ -637,6 +637,45 @@ using SpecializationConstantMap = angle::PackedEnumMap<sh::vk::SpecializationCon
 void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label);
 }  // namespace vk
 
+#if !defined(ANGLE_SHARED_LIBVULKAN)
+// Lazily load entry points for each extension as necessary.
+void InitDebugUtilsEXTFunctions(VkInstance instance);
+void InitDebugReportEXTFunctions(VkInstance instance);
+void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance);
+void InitTransformFeedbackEXTFunctions(VkDevice device);
+
+#    if defined(ANGLE_PLATFORM_FUCHSIA)
+// VK_FUCHSIA_imagepipe_surface
+void InitImagePipeSurfaceFUCHSIAFunctions(VkInstance instance);
+#    endif
+
+#    if defined(ANGLE_PLATFORM_ANDROID)
+// VK_ANDROID_external_memory_android_hardware_buffer
+void InitExternalMemoryHardwareBufferANDROIDFunctions(VkInstance instance);
+#    endif
+
+#    if defined(ANGLE_PLATFORM_GGP)
+// VK_GGP_stream_descriptor_surface
+void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance);
+#    endif  // defined(ANGLE_PLATFORM_GGP)
+
+// VK_KHR_external_semaphore_fd
+void InitExternalSemaphoreFdFunctions(VkInstance instance);
+
+// VK_EXT_external_memory_host
+void InitExternalMemoryHostFunctions(VkInstance instance);
+
+// VK_KHR_external_fence_capabilities
+void InitExternalFenceCapabilitiesFunctions(VkInstance instance);
+
+// VK_KHR_external_fence_fd
+void InitExternalFenceFdFunctions(VkInstance instance);
+
+// VK_KHR_external_semaphore_capabilities
+void InitExternalSemaphoreCapabilitiesFunctions(VkInstance instance);
+
+#endif  // !defined(ANGLE_SHARED_LIBVULKAN)
+
 namespace gl_vk
 {
 VkRect2D GetRect(const gl::Rectangle &source);

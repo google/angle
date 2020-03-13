@@ -684,6 +684,167 @@ void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT
 }
 }  // namespace vk
 
+#if !defined(ANGLE_SHARED_LIBVULKAN)
+// VK_EXT_debug_utils
+PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT   = nullptr;
+PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT = nullptr;
+PFN_vkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXT       = nullptr;
+PFN_vkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXT           = nullptr;
+PFN_vkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXT     = nullptr;
+
+// VK_EXT_debug_report
+PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT   = nullptr;
+PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT = nullptr;
+
+// VK_KHR_get_physical_device_properties2
+PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR = nullptr;
+PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR     = nullptr;
+
+// VK_KHR_external_semaphore_fd
+PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR = nullptr;
+
+// VK_EXT_external_memory_host
+PFN_vkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXT = nullptr;
+
+// VK_EXT_transform_feedback
+PFN_vkCmdBindTransformFeedbackBuffersEXT vkCmdBindTransformFeedbackBuffersEXT = nullptr;
+PFN_vkCmdBeginTransformFeedbackEXT vkCmdBeginTransformFeedbackEXT             = nullptr;
+PFN_vkCmdEndTransformFeedbackEXT vkCmdEndTransformFeedbackEXT                 = nullptr;
+PFN_vkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXT                       = nullptr;
+PFN_vkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXT                           = nullptr;
+PFN_vkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXT               = nullptr;
+
+PFN_vkGetBufferMemoryRequirements2KHR vkGetBufferMemoryRequirements2KHR = nullptr;
+PFN_vkGetImageMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR   = nullptr;
+
+// VK_KHR_external_fence_capabilities
+PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR vkGetPhysicalDeviceExternalFencePropertiesKHR =
+    nullptr;
+
+// VK_KHR_external_fence_fd
+PFN_vkGetFenceFdKHR vkGetFenceFdKHR       = nullptr;
+PFN_vkImportFenceFdKHR vkImportFenceFdKHR = nullptr;
+
+// VK_KHR_external_semaphore_capabilities
+PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR
+    vkGetPhysicalDeviceExternalSemaphorePropertiesKHR = nullptr;
+
+#    if defined(ANGLE_PLATFORM_FUCHSIA)
+// VK_FUCHSIA_imagepipe_surface
+PFN_vkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIA = nullptr;
+#    endif
+
+#    if defined(ANGLE_PLATFORM_ANDROID)
+PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROID =
+    nullptr;
+PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID = nullptr;
+#    endif
+
+#    if defined(ANGLE_PLATFORM_GGP)
+PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP = nullptr;
+#    endif
+
+#    define GET_INSTANCE_FUNC(vkName)                                                          \
+        do                                                                                     \
+        {                                                                                      \
+            vkName = reinterpret_cast<PFN_##vkName>(vkGetInstanceProcAddr(instance, #vkName)); \
+            ASSERT(vkName);                                                                    \
+        } while (0)
+
+#    define GET_DEVICE_FUNC(vkName)                                                        \
+        do                                                                                 \
+        {                                                                                  \
+            vkName = reinterpret_cast<PFN_##vkName>(vkGetDeviceProcAddr(device, #vkName)); \
+            ASSERT(vkName);                                                                \
+        } while (0)
+
+void InitDebugUtilsEXTFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkCreateDebugUtilsMessengerEXT);
+    GET_INSTANCE_FUNC(vkDestroyDebugUtilsMessengerEXT);
+    GET_INSTANCE_FUNC(vkCmdBeginDebugUtilsLabelEXT);
+    GET_INSTANCE_FUNC(vkCmdEndDebugUtilsLabelEXT);
+    GET_INSTANCE_FUNC(vkCmdInsertDebugUtilsLabelEXT);
+}
+
+void InitDebugReportEXTFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkCreateDebugReportCallbackEXT);
+    GET_INSTANCE_FUNC(vkDestroyDebugReportCallbackEXT);
+}
+
+void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkGetPhysicalDeviceProperties2KHR);
+    GET_INSTANCE_FUNC(vkGetPhysicalDeviceFeatures2KHR);
+}
+
+void InitTransformFeedbackEXTFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCmdBindTransformFeedbackBuffersEXT);
+    GET_DEVICE_FUNC(vkCmdBeginTransformFeedbackEXT);
+    GET_DEVICE_FUNC(vkCmdEndTransformFeedbackEXT);
+    GET_DEVICE_FUNC(vkCmdBeginQueryIndexedEXT);
+    GET_DEVICE_FUNC(vkCmdEndQueryIndexedEXT);
+    GET_DEVICE_FUNC(vkCmdDrawIndirectByteCountEXT);
+}
+
+#    if defined(ANGLE_PLATFORM_FUCHSIA)
+void InitImagePipeSurfaceFUCHSIAFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkCreateImagePipeSurfaceFUCHSIA);
+}
+#    endif
+
+#    if defined(ANGLE_PLATFORM_ANDROID)
+void InitExternalMemoryHardwareBufferANDROIDFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkGetAndroidHardwareBufferPropertiesANDROID);
+    GET_INSTANCE_FUNC(vkGetMemoryAndroidHardwareBufferANDROID);
+}
+#    endif
+
+#    if defined(ANGLE_PLATFORM_GGP)
+void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkCreateStreamDescriptorSurfaceGGP);
+}
+#    endif  // defined(ANGLE_PLATFORM_GGP)
+
+void InitExternalSemaphoreFdFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkImportSemaphoreFdKHR);
+}
+
+void InitExternalMemoryHostFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkGetMemoryHostPointerPropertiesEXT);
+}
+
+// VK_KHR_external_fence_capabilities
+void InitExternalFenceCapabilitiesFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkGetPhysicalDeviceExternalFencePropertiesKHR);
+}
+
+// VK_KHR_external_fence_fd
+void InitExternalFenceFdFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkGetFenceFdKHR);
+    GET_INSTANCE_FUNC(vkImportFenceFdKHR);
+}
+
+// VK_KHR_external_semaphore_capabilities
+void InitExternalSemaphoreCapabilitiesFunctions(VkInstance instance)
+{
+    GET_INSTANCE_FUNC(vkGetPhysicalDeviceExternalSemaphorePropertiesKHR);
+}
+
+#    undef GET_INSTANCE_FUNC
+#    undef GET_DEVICE_FUNC
+
+#endif  // !defined(ANGLE_SHARED_LIBVULKAN)
+
 namespace gl_vk
 {
 

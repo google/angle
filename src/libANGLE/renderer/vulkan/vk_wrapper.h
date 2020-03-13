@@ -11,9 +11,8 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_WRAPPER_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_WRAPPER_H_
 
-#include "volk.h"
-
 #include "libANGLE/renderer/renderer_utils.h"
+#include "libANGLE/renderer/vulkan/vk_headers.h"
 #include "libANGLE/renderer/vulkan/vk_mem_alloc_wrapper.h"
 
 namespace rx
@@ -1159,8 +1158,16 @@ ANGLE_INLINE void CommandBuffer::bindTransformFeedbackBuffersEXT(uint32_t firstB
 ANGLE_INLINE void CommandBuffer::beginDebugUtilsLabelEXT(const VkDebugUtilsLabelEXT &labelInfo)
 {
     ASSERT(valid());
-    ASSERT(vkCmdBeginDebugUtilsLabelEXT);
-    vkCmdBeginDebugUtilsLabelEXT(mHandle, &labelInfo);
+    {
+#if !defined(ANGLE_SHARED_LIBVULKAN)
+        // When the vulkan-loader is statically linked, we need to use the extension
+        // functions defined in ANGLE's rx namespace. When it's dynamically linked
+        // with volk, this will default to the function definitions with no namespace
+        using rx::vkCmdBeginDebugUtilsLabelEXT;
+#endif  // !defined(ANGLE_SHARED_LIBVULKAN)
+        ASSERT(vkCmdBeginDebugUtilsLabelEXT);
+        vkCmdBeginDebugUtilsLabelEXT(mHandle, &labelInfo);
+    }
 }
 
 ANGLE_INLINE void CommandBuffer::endDebugUtilsLabelEXT()
