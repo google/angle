@@ -1100,60 +1100,66 @@ void State::setEnableFeature(GLenum feature, bool enabled)
     {
         case GL_MULTISAMPLE_EXT:
             setMultisampling(enabled);
-            break;
+            return;
         case GL_SAMPLE_ALPHA_TO_ONE_EXT:
             setSampleAlphaToOne(enabled);
-            break;
+            return;
         case GL_CULL_FACE:
             setCullFace(enabled);
-            break;
+            return;
         case GL_POLYGON_OFFSET_FILL:
             setPolygonOffsetFill(enabled);
-            break;
+            return;
         case GL_SAMPLE_ALPHA_TO_COVERAGE:
             setSampleAlphaToCoverage(enabled);
-            break;
+            return;
         case GL_SAMPLE_COVERAGE:
             setSampleCoverage(enabled);
-            break;
+            return;
         case GL_SCISSOR_TEST:
             setScissorTest(enabled);
-            break;
+            return;
         case GL_STENCIL_TEST:
             setStencilTest(enabled);
-            break;
+            return;
         case GL_DEPTH_TEST:
             setDepthTest(enabled);
-            break;
+            return;
         case GL_BLEND:
             setBlend(enabled);
-            break;
+            return;
         case GL_DITHER:
             setDither(enabled);
-            break;
+            return;
         case GL_PRIMITIVE_RESTART_FIXED_INDEX:
             setPrimitiveRestart(enabled);
-            break;
+            return;
         case GL_RASTERIZER_DISCARD:
             setRasterizerDiscard(enabled);
-            break;
+            return;
         case GL_SAMPLE_MASK:
             setSampleMaskEnabled(enabled);
-            break;
+            return;
         case GL_DEBUG_OUTPUT_SYNCHRONOUS:
             mDebug.setOutputSynchronous(enabled);
-            break;
+            return;
         case GL_DEBUG_OUTPUT:
             mDebug.setOutputEnabled(enabled);
-            break;
+            return;
         case GL_FRAMEBUFFER_SRGB_EXT:
             setFramebufferSRGB(enabled);
-            break;
+            return;
         case GL_TEXTURE_RECTANGLE_ANGLE:
             mTextureRectangleEnabled = enabled;
-            break;
+            return;
+    }
 
-        // GLES1 emulation
+    ASSERT(mClientVersion.major == 1);
+
+    // GLES1 emulation. Need to separate from main switch due to some enums that
+    // could be conflicted between GLES1 & GLES2+
+    switch (feature)
+    {
         case GL_ALPHA_TEST:
             mGLES1State.mAlphaTestEnabled = enabled;
             break;
@@ -1273,7 +1279,12 @@ bool State::getEnableFeature(GLenum feature) const
             return mProgramBinaryCacheEnabled;
         case GL_TEXTURE_RECTANGLE_ANGLE:
             return mTextureRectangleEnabled;
+    }
 
+    ASSERT(mClientVersion.major == 1);
+
+    switch (feature)
+    {
         // GLES1 emulation
         case GL_ALPHA_TEST:
             return mGLES1State.mAlphaTestEnabled;
