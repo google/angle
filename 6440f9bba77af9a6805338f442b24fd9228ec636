@@ -201,6 +201,24 @@
     },
     {
       "key": {
+        "uuid": "f5d3dd48_2f9db54f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1696,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-03-14T02:55:12Z",
+      "side": 1,
+      "message": "Irrelevant now that you use a std::array, but FYI strncpy doesn\u0027t always nul-terminate. If the source is larger than the destination, it will copy N chars and leave the destination not nul-terminated. cplusplus.com is famously inaccurate, but even that has this remark:\n\n\u003e No null-character is implicitly appended at the end of destination if source is longer than num. Thus, in this case, destination shall not be considered a null terminated C string (reading it as such would overflow).",
+      "parentUuid": "2bcbb3da_c0d00e85",
+      "revId": "6440f9bba77af9a6805338f442b24fd9228ec636",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53041e81_41b5bc63",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 5
