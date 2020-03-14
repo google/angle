@@ -40,7 +40,7 @@ foreach(_test, _tests) {
   if (is_android) {
     _test_data_path = "/sdcard/chromium_tests_root/third_party/angle/src/tests/perf_tests/restricted_traces/${_test}"
   } else {
-    _test_data_path = rebase_path("${_test_dir}")
+    _test_data_path = rebase_path("${_test_dir}", root_out_dir)
   }
 
   angle_trace_perf_defines +=
