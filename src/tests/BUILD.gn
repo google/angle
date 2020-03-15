@@ -282,6 +282,34 @@ if (is_win || is_linux || is_android || is_mac) {
 if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
   import("angle_perftests.gni")
 
+  angle_source_set("angle_trace_perftests") {
+    testonly = true
+    if (build_angle_trace_perf_tests) {
+      import("perf_tests/restricted_traces/angle_trace_perf_tests.gni")
+      sources = angle_trace_perf_sources
+      defines = angle_trace_perf_defines
+      data = angle_trace_perf_data
+      deps = [ ":angle_perftests_shared" ]
+      suppressed_configs +=
+          [ "$angle_root:constructor_and_destructor_warnings" ]
+
+      # Disable optimization in the trace perf tests to avoid optimizing huge files.
+      if (!is_debug) {
+        suppressed_configs += [ "//build/config/compiler:default_optimization" ]
+        configs += [ "//build/config/compiler:no_optimize" ]
+      }
+
+      # TODO(jmadill/cnorthrop): Lift after traces updated. http://anglebug.com/3630
+      if (is_win && current_cpu == "x86") {
+        if (is_clang) {
+          cflags_cc = [ "-Wno-shorten-64-to-32" ]
+        } else {
+          cflags_cc = [ "/wd4244" ]
+        }
+      }
+    }
+  }
+
   # This test suite is designed to run against a generic GL implementation.
   angle_test("angle_perftests") {
     include_dirs = [ "." ]
@@ -290,6 +318,7 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
 
     deps = [
       ":angle_perftests_shared",
+      ":angle_trace_perftests",
       "$angle_spirv_tools_dir:spvtools_val",
     ]
 
@@ -311,20 +340,6 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     if (is_clang) {
       # Allows us to edit traces and remove chunks of code without compile warnings.
       cflags_cc = [ "-Wno-unused-const-variable" ]
-    }
-
-    if (build_angle_trace_perf_tests) {
-      import("perf_tests/restricted_traces/angle_trace_perf_tests.gni")
-      sources += angle_trace_perf_sources
-      defines += angle_trace_perf_defines
-      data += angle_trace_perf_data
-
-      # Temporarily disable optimization in the test runner.
-      # TODO(jmadill): Only apply no-optimize to trace perf tests themselves.
-      if (!is_debug) {
-        suppressed_configs += [ "//build/config/compiler:default_optimization" ]
-        configs += [ "//build/config/compiler:no_optimize" ]
-      }
     }
   }
 }

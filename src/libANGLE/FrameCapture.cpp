@@ -913,7 +913,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
         source << "void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size)"
                << "\n";
         source << "{\n";
-        source << "    memcpy(gClientArrays[arrayIndex], data, size);\n";
+        source << "    memcpy(gClientArrays[arrayIndex], data, static_cast<size_t>(size));\n";
         source << "}\n";
     }
 
