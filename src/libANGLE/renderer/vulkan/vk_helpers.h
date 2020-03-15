@@ -615,22 +615,28 @@ class BufferHelper final : public Resource
 // are the same, they may occasionally be BOTTOM_OF_PIPE and TOP_OF_PIPE respectively.
 enum class ImageLayout
 {
-    Undefined                  = 0,
-    ExternalPreInitialized     = 1,
-    ExternalShadersReadOnly    = 2,
-    ExternalShadersWrite       = 3,
-    TransferSrc                = 4,
-    TransferDst                = 5,
-    ComputeShaderReadOnly      = 6,
-    ComputeShaderWrite         = 7,
-    AllGraphicsShadersReadOnly = 8,
-    AllGraphicsShadersWrite    = 9,
-    ColorAttachment            = 10,
-    DepthStencilAttachment     = 11,
-    Present                    = 12,
+    Undefined                   = 0,
+    ExternalPreInitialized      = 1,
+    ExternalShadersReadOnly     = 2,
+    ExternalShadersWrite        = 3,
+    TransferSrc                 = 4,
+    TransferDst                 = 5,
+    VertexShaderReadOnly        = 6,
+    VertexShaderWrite           = 7,
+    GeometryShaderReadOnly      = 8,
+    GeometryShaderWrite         = 9,
+    FragmentShaderReadOnly      = 10,
+    FragmentShaderWrite         = 11,
+    ComputeShaderReadOnly       = 12,
+    ComputeShaderWrite          = 13,
+    AllGraphicsShadersReadOnly  = 14,
+    AllGraphicsShadersReadWrite = 15,
+    ColorAttachment             = 16,
+    DepthStencilAttachment      = 17,
+    Present                     = 18,
 
-    InvalidEnum = 13,
-    EnumCount   = 13,
+    InvalidEnum = 19,
+    EnumCount   = 19,
 };
 
 class ImageHelper final : public Resource, public angle::Subject

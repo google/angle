@@ -181,17 +181,22 @@ size_t ProgramExecutable::getTransformFeedbackBufferCount(const gl::State &glSta
 
 void ProgramExecutable::updateActiveSamplers(const std::vector<SamplerBinding> &samplerBindings)
 {
-    for (const SamplerBinding &samplerBinding : samplerBindings)
+    for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
+        const SamplerBinding &samplerBinding = samplerBindings[samplerIndex];
         if (samplerBinding.unreferenced)
             continue;
+
+        uint32_t uniformIndex = mProgramState->getUniformIndexFromSamplerIndex(samplerIndex);
+        const gl::LinkedUniform &samplerUniform = mProgramState->getUniforms()[uniformIndex];
 
         for (GLint textureUnit : samplerBinding.boundTextureUnits)
         {
             if (++mActiveSamplerRefCounts[textureUnit] == 1)
             {
-                mActiveSamplerTypes[textureUnit]   = samplerBinding.textureType;
-                mActiveSamplerFormats[textureUnit] = samplerBinding.format;
+                mActiveSamplerTypes[textureUnit]      = samplerBinding.textureType;
+                mActiveSamplerFormats[textureUnit]    = samplerBinding.format;
+                mActiveSamplerShaderBits[textureUnit] = samplerUniform.activeShaders();
             }
             else
             {
@@ -211,14 +216,23 @@ void ProgramExecutable::updateActiveSamplers(const std::vector<SamplerBinding> &
 
 void ProgramExecutable::updateActiveImages(std::vector<ImageBinding> &imageBindings)
 {
-    for (ImageBinding &imageBinding : imageBindings)
+    const bool compute = isCompute() ? true : false;
+    for (uint32_t imageIndex = 0; imageIndex < imageBindings.size(); ++imageIndex)
     {
+        const gl::ImageBinding &imageBinding = imageBindings[imageIndex];
         if (imageBinding.unreferenced)
             continue;
 
+        uint32_t uniformIndex = mProgramState->getUniformIndexFromImageIndex(imageIndex);
+        const gl::LinkedUniform &imageUniform = mProgramState->getUniforms()[uniformIndex];
+        const ShaderBitSet shaderBits         = imageUniform.activeShaders();
         for (GLint imageUnit : imageBinding.boundImageUnits)
         {
             mActiveImagesMask.set(imageUnit);
+            if (compute)
+                mActiveImageShaderBits[imageUnit].set(gl::ShaderType::Compute);
+            else
+                mActiveImageShaderBits[imageUnit] = shaderBits;
         }
     }
 }

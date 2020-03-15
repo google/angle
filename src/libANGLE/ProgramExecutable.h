@@ -94,7 +94,15 @@ class ProgramExecutable
     {
         return mActiveSamplerFormats[textureUnitIndex];
     }
+    const ShaderBitSet getSamplerShaderBitsForTextureUnitIndex(size_t textureUnitIndex) const
+    {
+        return mActiveSamplerShaderBits[textureUnitIndex];
+    }
     const ActiveTextureMask &getActiveImagesMask() const { return mActiveImagesMask; }
+    const ActiveTextureArray<ShaderBitSet> &getActiveImageShaderBits() const
+    {
+        return mActiveImageShaderBits;
+    }
 
     const ActiveTextureArray<TextureType> &getActiveSamplerTypes() const
     {
@@ -157,9 +165,11 @@ class ProgramExecutable
     ActiveTextureArray<uint32_t> mActiveSamplerRefCounts;
     ActiveTextureArray<TextureType> mActiveSamplerTypes;
     ActiveTextureArray<SamplerFormat> mActiveSamplerFormats;
+    ActiveTextureArray<ShaderBitSet> mActiveSamplerShaderBits;
 
     // Cached mask of active images.
     ActiveTextureMask mActiveImagesMask;
+    ActiveTextureArray<ShaderBitSet> mActiveImageShaderBits;
 };
 
 }  // namespace gl

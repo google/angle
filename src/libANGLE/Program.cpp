@@ -4949,6 +4949,8 @@ void Program::updateSamplerUniform(Context *context,
             newSamplerType   = samplerBinding.textureType;
             newSamplerFormat = samplerBinding.format;
             mState.mExecutable.mActiveSamplersMask.set(newTextureUnit);
+            mState.mExecutable.mActiveSamplerShaderBits[newTextureUnit] =
+                mState.mUniforms[locationInfo.index].activeShaders();
         }
         else
         {

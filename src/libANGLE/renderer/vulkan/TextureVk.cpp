@@ -8,6 +8,7 @@
 //
 
 #include "libANGLE/renderer/vulkan/TextureVk.h"
+#include <vulkan/vulkan.h>
 
 #include "common/debug.h"
 #include "image_util/generatemip.inc"
