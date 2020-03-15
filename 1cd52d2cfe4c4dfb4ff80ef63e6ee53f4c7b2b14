@@ -284,6 +284,30 @@
       "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3afc685c_f0286e81",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-03-15T20:14:24Z",
+      "side": 1,
+      "message": "Derp, we already have this. See https://chromium.googlesource.com/angle/angle.git/+/869e901ad7ddb58198945705dd142feb5a3c2ed4/src/tests/BUILD.gn#998",
+      "parentUuid": "27d985c9_07afbc37",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 21
+      },
+      "revId": "1cd52d2cfe4c4dfb4ff80ef63e6ee53f4c7b2b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
