@@ -273,6 +273,13 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
       sources += angle_trace_perf_sources
       defines += angle_trace_perf_defines
       data += angle_trace_perf_data
+
+      # Temporarily disable optimization in the test runner.
+      # TODO(jmadill): Only apply no-optimize to trace perf tests themselves.
+      if (!is_debug) {
+        suppressed_configs += [ "//build/config/compiler:default_optimization" ]
+        configs += [ "//build/config/compiler:no_optimize" ]
+      }
     }
   }
 }
