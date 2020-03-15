@@ -220,13 +220,13 @@ void ANGLEPerfTest::run()
     }
 
     // Calibrate to a fixed number of steps during an initial set time.
-    if (!gStepsToRunOverride.valid())
+    if (gStepsToRunOverride <= 0)
     {
         doRunLoop(kCalibrationRunTimeSeconds);
 
         // Scale steps down according to the time that exeeded one second.
         double scale = kCalibrationRunTimeSeconds / mTimer.getElapsedTime();
-        mStepsToRun  = static_cast<size_t>(static_cast<double>(mNumStepsPerformed) * scale);
+        mStepsToRun  = static_cast<unsigned int>(static_cast<double>(mNumStepsPerformed) * scale);
 
         // Calibration allows the perf test runner script to save some time.
         if (gCalibration)
@@ -237,7 +237,7 @@ void ANGLEPerfTest::run()
     }
     else
     {
-        mStepsToRun = gStepsToRunOverride.value();
+        mStepsToRun = gStepsToRunOverride;
     }
 
     // Do another warmup run. Seems to consistently improve results.

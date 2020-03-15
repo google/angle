@@ -4,6 +4,8 @@
 
 #include "perf_test.h"
 
+#include "common/third_party/base/anglebase/no_destructor.h"
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <vector>
@@ -13,21 +15,21 @@ namespace
 
 std::string FormatString(const char *fmt, va_list vararg)
 {
-    static std::vector<char> buffer(512);
+    static angle::base::NoDestructor<std::vector<char>> buffer(512);
 
     // Attempt to just print to the current buffer
-    int len = vsnprintf(&buffer[0], buffer.size(), fmt, vararg);
-    if (len < 0 || static_cast<size_t>(len) >= buffer.size())
+    int len = vsnprintf(buffer->data(), buffer->size(), fmt, vararg);
+    if (len < 0 || static_cast<size_t>(len) >= buffer->size())
     {
         // Buffer was not large enough, calculate the required size and resize the buffer
         len = vsnprintf(NULL, 0, fmt, vararg);
-        buffer.resize(len + 1);
+        buffer->resize(len + 1);
 
         // Print again
-        vsnprintf(&buffer[0], buffer.size(), fmt, vararg);
+        vsnprintf(buffer->data(), buffer->size(), fmt, vararg);
     }
 
-    return std::string(buffer.data(), len);
+    return std::string(buffer->data(), len);
 }
 
 std::string StringPrintf(const char *fmt, ...)

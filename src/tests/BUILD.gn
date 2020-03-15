@@ -219,6 +219,38 @@ if (is_win || is_linux || is_mac || is_android) {
   }
 }
 
+template("angle_perftests_common") {
+  assert(defined(invoker.test_utils))
+
+  angle_source_set(target_name) {
+    testonly = true
+    sources = [
+      "../third_party/trace_event/trace_event.h",
+      "perf_tests/ANGLEPerfTest.cpp",
+      "perf_tests/ANGLEPerfTest.h",
+      "perf_tests/ANGLEPerfTestArgs.cpp",
+      "perf_tests/ANGLEPerfTestArgs.h",
+      "perf_tests/DrawCallPerfParams.cpp",
+      "perf_tests/DrawCallPerfParams.h",
+      "perf_tests/third_party/perf/perf_result_reporter.cc",
+      "perf_tests/third_party/perf/perf_result_reporter.h",
+      "perf_tests/third_party/perf/perf_test.cc",
+      "perf_tests/third_party/perf/perf_test.h",
+    ]
+    deps = [ "$angle_jsoncpp_dir:jsoncpp" ]
+    public_deps = [ "${invoker.test_utils}" ]
+    public_configs += [ "${angle_root}:libANGLE_config" ]
+  }
+}
+
+angle_perftests_common("angle_perftests_shared") {
+  test_utils = ":angle_common_test_utils_shared"
+}
+
+angle_perftests_common("angle_perftests_static") {
+  test_utils = ":angle_common_test_utils_static"
+}
+
 if (is_win || is_linux || is_android || is_mac) {
   import("angle_perftests.gni")
 
@@ -229,16 +261,11 @@ if (is_win || is_linux || is_android || is_mac) {
     main = "angle_perftests_main"
 
     deps = [
-      ":angle_common_test_utils_static",
-      "$angle_jsoncpp_dir:jsoncpp",
+      ":angle_perftests_static",
       "$angle_root:libANGLE",
       "$angle_root:libEGL_static",
       "$angle_root:libGLESv2_static",
     ]
-
-    if (is_win) {
-      sources += angle_white_box_perf_tests_win_sources
-    }
 
     # These tests depend on vulkan_command_buffer_utils, which is
     # not yet compatible with mac
@@ -249,11 +276,6 @@ if (is_win || is_linux || is_android || is_mac) {
         "$angle_root/src/libANGLE/renderer/vulkan:angle_vulkan_entry_points",
       ]
     }
-
-    configs += [
-      "${angle_jsoncpp_dir}:jsoncpp_config",
-      "${angle_root}:libANGLE_config",
-    ]
   }
 }
 
@@ -267,21 +289,13 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     main = "angle_perftests_main"
 
     deps = [
-      ":angle_common_test_utils_shared",
-      "$angle_jsoncpp_dir:jsoncpp",
-      "$angle_root:angle_common",
-      "$angle_root:angle_system_utils",
+      ":angle_perftests_shared",
       "$angle_spirv_tools_dir:spvtools_val",
     ]
 
     data_deps = [
       "${angle_root}:libEGL",
       "${angle_root}:libGLESv2",
-    ]
-
-    configs += [
-      "${angle_jsoncpp_dir}:jsoncpp_config",
-      "${angle_root}:libANGLE_config",
     ]
 
     if (is_win || is_linux) {
