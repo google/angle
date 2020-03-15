@@ -7,13 +7,6 @@ angle_white_box_tests_sources = [
   "gl_tests/FormatPrintTest.cpp",
   "test_utils/ANGLETest.cpp",
   "test_utils/ANGLETest.h",
-  "test_utils/angle_test_configs.cpp",
-  "test_utils/angle_test_configs.h",
-  "test_utils/angle_test_instantiate.cpp",
-  "test_utils/angle_test_instantiate.h",
-  "test_utils/angle_test_platform.cpp",
-  "test_utils/angle_test_platform.h",
-  "test_utils/gl_raii.h",
   "util_tests/PrintSystemInfoTest.cpp",
 ]
 angle_white_box_tests_win_sources = [
@@ -27,8 +20,4 @@ angle_white_box_tests_win_sources = [
 angle_white_box_tests_vulkan_sources = [
   "gl_tests/VulkanFormatTablesTest.cpp",
   "gl_tests/VulkanUniformUpdatesTest.cpp",
-]
-angle_white_box_tests_mac_sources = [
-  "test_utils/angle_test_instantiate_apple.h",
-  "test_utils/angle_test_instantiate_apple.mm",
 ]

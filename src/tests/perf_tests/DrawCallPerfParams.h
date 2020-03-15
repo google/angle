@@ -19,7 +19,7 @@ struct DrawCallPerfParams : public RenderTestParams
 {
     // Common default options
     DrawCallPerfParams();
-    virtual ~DrawCallPerfParams();
+    ~DrawCallPerfParams() override;
 
     std::string story() const override;
 

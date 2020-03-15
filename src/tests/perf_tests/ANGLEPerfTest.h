@@ -61,7 +61,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
                   const std::string &backend,
                   const std::string &story,
                   unsigned int iterationsPerStep);
-    virtual ~ANGLEPerfTest();
+    ~ANGLEPerfTest() override;
 
     virtual void step() = 0;
 
@@ -120,7 +120,7 @@ class ANGLERenderTest : public ANGLEPerfTest
 {
   public:
     ANGLERenderTest(const std::string &name, const RenderTestParams &testParams);
-    ~ANGLERenderTest();
+    ~ANGLERenderTest() override;
 
     void addExtensionPrerequisite(const char *extensionName);
 

@@ -85,6 +85,7 @@ config("angle_util_loader_config") {
 }
 
 config("angle_util_loader_headers_config") {
+  # Force users to include "util/header.h" instead of just "header.h".
   include_dirs = [ ".." ]
 }
 
@@ -129,7 +130,8 @@ angle_source_set("angle_util_loader") {
 }
 
 config("angle_util_config") {
-  include_dirs = [ "." ]
+  # Force users to include "util/header.h" instead of just "header.h".
+  include_dirs = [ ".." ]
   if (is_linux && angle_use_x11) {
     libs = [ "X11" ]
   }
@@ -153,12 +155,11 @@ foreach(is_shared_library,
   target(library_type, library_name) {
     testonly = true
     sources = _util_sources
-    deps = [
+    deps = [ "$angle_root:angle_common" ]
+    public_deps = [
       ":angle_test_utils",
       ":angle_util_loader_headers",
-      "$angle_root:angle_common",
     ]
-    public_deps = []
     libs = []
 
     if (is_linux) {

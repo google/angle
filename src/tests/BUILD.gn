@@ -57,6 +57,53 @@ angle_static_library("angle_test_expectations") {
   }
 }
 
+config("angle_common_test_utils_config") {
+  include_dirs = [ "." ]
+}
+
+template("angle_common_test_utils") {
+  assert(defined(invoker.angle_util))
+  angle_source_set(target_name) {
+    testonly = true
+    public_configs = [
+      ":angle_common_test_utils_config",
+      "$angle_root:library_name_config",
+    ]
+    public_deps = [
+      "$angle_root:angle_common",
+      "$angle_root:angle_gpu_info_util",
+      "$angle_root/util:${invoker.angle_util}",
+      "//testing/gmock",
+      "//testing/gtest",
+      "//third_party/googletest:gmock",
+      "//third_party/googletest:gtest",
+    ]
+    sources = [
+      "test_utils/angle_test_configs.cpp",
+      "test_utils/angle_test_configs.h",
+      "test_utils/angle_test_instantiate.cpp",
+      "test_utils/angle_test_instantiate.h",
+      "test_utils/angle_test_platform.cpp",
+      "test_utils/angle_test_platform.h",
+      "test_utils/gl_raii.h",
+    ]
+    if (is_mac) {
+      sources += [
+        "test_utils/angle_test_instantiate_apple.h",
+        "test_utils/angle_test_instantiate_apple.mm",
+      ]
+    }
+  }
+}
+
+angle_common_test_utils("angle_common_test_utils_shared") {
+  angle_util = "angle_util"
+}
+
+angle_common_test_utils("angle_common_test_utils_static") {
+  angle_util = "angle_util_static"
+}
+
 angle_test("angle_unittests") {
   sources = angle_unittests_sources
   main = "angle_unittest_main"
@@ -107,17 +154,12 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
       sources += angle_end2end_tests_x11_sources
     }
 
-    configs += [
-      "${angle_root}:libANGLE_config",
-      "${angle_root}:library_name_config",
-    ]
+    configs += [ "${angle_root}:libANGLE_config" ]
 
     deps = [
+      ":angle_common_test_utils_shared",
       ":angle_test_expectations",
-      "$angle_root:angle_gpu_info_util",
       "$angle_root:angle_image_util",
-      "$angle_root/util:angle_util",
-      "$angle_root/util:angle_util_loader_headers",
     ]
 
     data_deps = [
@@ -155,22 +197,15 @@ if (is_win || is_linux || is_mac || is_android) {
       sources += angle_white_box_tests_win_sources
     }
 
-    if (is_mac) {
-      sources += angle_white_box_tests_mac_sources
-    }
-
-    configs += [
-      "${angle_root}:libANGLE_config",
-      "${angle_root}:library_name_config",
-    ]
+    configs += [ "${angle_root}:libANGLE_config" ]
 
     deps = [
+      ":angle_common_test_utils_static",
       "$angle_root:libANGLE",
       "$angle_root:libEGL_static",
       "$angle_root:libGLESv2_static",
       "$angle_root:preprocessor",
       "$angle_root:translator",
-      "$angle_root/util:angle_util_static",
     ]
 
     deps += [ "${angle_root}:angle_gl_enum_utils" ]
@@ -194,11 +229,11 @@ if (is_win || is_linux || is_android || is_mac) {
     main = "angle_perftests_main"
 
     deps = [
+      ":angle_common_test_utils_static",
       "$angle_jsoncpp_dir:jsoncpp",
       "$angle_root:libANGLE",
       "$angle_root:libEGL_static",
       "$angle_root:libGLESv2_static",
-      "$angle_root/util:angle_util_static",
     ]
 
     if (is_win) {
@@ -218,7 +253,6 @@ if (is_win || is_linux || is_android || is_mac) {
     configs += [
       "${angle_jsoncpp_dir}:jsoncpp_config",
       "${angle_root}:libANGLE_config",
-      "${angle_root}:library_name_config",
     ]
   }
 }
@@ -233,12 +267,10 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     main = "angle_perftests_main"
 
     deps = [
+      ":angle_common_test_utils_shared",
       "$angle_jsoncpp_dir:jsoncpp",
       "$angle_root:angle_common",
-      "$angle_root:angle_gpu_info_util",
       "$angle_root:angle_system_utils",
-      "$angle_root/util:angle_util",
-      "$angle_root/util:angle_util_loader_headers",
       "$angle_spirv_tools_dir:spvtools_val",
     ]
 
@@ -250,7 +282,6 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     configs += [
       "${angle_jsoncpp_dir}:jsoncpp_config",
       "${angle_root}:libANGLE_config",
-      "${angle_root}:library_name_config",
     ]
 
     if (is_win || is_linux) {
@@ -485,7 +516,10 @@ if (build_angle_gles1_conform_tests) {
   }
 
   angle_test("angle_gles1_conformance_tests") {
-    deps = [ ":angle_gles1_conformance_no_gtest" ]
+    deps = [
+      ":angle_common_test_utils_static",
+      ":angle_gles1_conformance_no_gtest",
+    ]
 
     include_dirs = [ "." ]
 
@@ -493,25 +527,11 @@ if (build_angle_gles1_conform_tests) {
       "gles1_conformance_tests/ConformanceTests.cpp",
       "test_utils/ANGLETest.cpp",
       "test_utils/ANGLETest.h",
-      "test_utils/angle_test_configs.cpp",
-      "test_utils/angle_test_configs.h",
-      "test_utils/angle_test_instantiate.cpp",
-      "test_utils/angle_test_instantiate.h",
-      "test_utils/angle_test_platform.cpp",
-      "test_utils/angle_test_platform.h",
-      "test_utils/gl_raii.h",
     ]
-    if (is_mac) {
-      sources += [
-        "test_utils/angle_test_instantiate_apple.h",
-        "test_utils/angle_test_instantiate_apple.mm",
-      ]
-    }
     main = "angle_end2end_tests_main"
 
     configs += [
       "${angle_root}:libANGLE_config",
-      "${angle_root}:library_name_config",
       "${angle_root}:angle_backend_config",
     ]
   }

@@ -622,13 +622,6 @@ bool EGLWindow::hasError() const
     return eglGetError() != EGL_SUCCESS;
 }
 
-bool CheckExtensionExists(const char *allExtensions, const std::string &extName)
-{
-    const std::string paddedExtensions = std::string(" ") + allExtensions + std::string(" ");
-    return paddedExtensions.find(std::string(" ") + extName + std::string(" ")) !=
-           std::string::npos;
-}
-
 // static
 void GLWindowBase::Delete(GLWindowBase **window)
 {
