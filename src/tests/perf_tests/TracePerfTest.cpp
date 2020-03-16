@@ -154,70 +154,50 @@ TracePerfTest::TracePerfTest()
     : ANGLERenderTest("TracePerf", GetParam()), mStartFrame(0), mEndFrame(0)
 {}
 
+#define TRACE_TEST_CASE(NAME)                            \
+    mStartFrame = NAME::kReplayFrameStart;               \
+    mEndFrame   = NAME::kReplayFrameEnd;                 \
+    mReplayFunc = NAME::ReplayContext1Frame;             \
+    NAME::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_##NAME); \
+    NAME::SetupContext1Replay()
+
 void TracePerfTest::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    // TODO: Note the start and end frames in the trace
-    //       i.e. mStartFrame = trex_200_210::kReplayFrameStart
+    // To load the trace data path correctly we set the CWD to the executable dir.
+    if (!IsAndroid())
+    {
+        std::string exeDir = angle::GetExecutableDirectory();
+        angle::SetCWD(exeDir.c_str());
+    }
+
     switch (params.testID)
     {
         // For each case, bootstrap the trace
         case TracePerfTestID::Manhattan10:
-            mStartFrame = 10;
-            mEndFrame   = 20;
-            mReplayFunc = manhattan_10_20::ReplayContext1Frame;
-            manhattan_10_20::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_manhattan_10_20);
-            manhattan_10_20::SetupContext1Replay();
+            TRACE_TEST_CASE(manhattan_10_20);
             break;
         case TracePerfTestID::Manhattan750:
-            mStartFrame = 750;
-            mEndFrame   = 760;
-            mReplayFunc = manhattan_750_760::ReplayContext1Frame;
-            manhattan_750_760::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_manhattan_750_760);
-            manhattan_750_760::SetupContext1Replay();
+            TRACE_TEST_CASE(manhattan_750_760);
             break;
         case TracePerfTestID::Manhattan1100:
-            mStartFrame = 1100;
-            mEndFrame   = 1110;
-            mReplayFunc = manhattan_1100_1110::ReplayContext1Frame;
-            manhattan_1100_1110::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_manhattan_1100_1110);
-            manhattan_1100_1110::SetupContext1Replay();
+            TRACE_TEST_CASE(manhattan_1100_1110);
             break;
         case TracePerfTestID::Manhattan1440:
-            mStartFrame = 1440;
-            mEndFrame   = 1450;
-            mReplayFunc = manhattan_1440_1450::ReplayContext1Frame;
-            manhattan_1440_1450::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_manhattan_1440_1450);
-            manhattan_1440_1450::SetupContext1Replay();
+            TRACE_TEST_CASE(manhattan_1440_1450);
             break;
         case TracePerfTestID::TRex200:
-            mStartFrame = 200;
-            mEndFrame   = 210;
-            mReplayFunc = trex_200_210::ReplayContext1Frame;
-            trex_200_210::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_trex_200_210);
-            trex_200_210::SetupContext1Replay();
+            TRACE_TEST_CASE(trex_200_210);
             break;
         case TracePerfTestID::TRex800:
-            mStartFrame = 800;
-            mEndFrame   = 810;
-            mReplayFunc = trex_800_810::ReplayContext1Frame;
-            trex_800_810::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_trex_800_810);
-            trex_800_810::SetupContext1Replay();
+            TRACE_TEST_CASE(trex_800_810);
             break;
         case TracePerfTestID::TRex900:
-            mStartFrame = 900;
-            mEndFrame   = 910;
-            mReplayFunc = trex_900_910::ReplayContext1Frame;
-            trex_900_910::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_trex_900_910);
-            trex_900_910::SetupContext1Replay();
+            TRACE_TEST_CASE(trex_900_910);
             break;
         case TracePerfTestID::TRex1300:
-            mStartFrame = 1300;
-            mEndFrame   = 1310;
-            mReplayFunc = trex_1300_1310::ReplayContext1Frame;
-            trex_1300_1310::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_trex_1300_1310);
-            trex_1300_1310::SetupContext1Replay();
+            TRACE_TEST_CASE(trex_1300_1310);
             break;
         default:
             assert(0);
@@ -230,6 +210,8 @@ void TracePerfTest::initializeBenchmark()
 
     mIgnoreErrors = true;
 }
+
+#undef TRACE_TEST_CASE
 
 void TracePerfTest::destroyBenchmark() {}
 
