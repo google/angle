@@ -64,6 +64,8 @@
    * We do not currently have the capability to run individual bots or tests in a run.
 * Tests can also be run locally, ANGLE's main testing methods are:
    * `angle_unittests`, `angle_end2end_tests` and `angle_white_box_tests` targets.
+   * The OpenGL CTS also known as [drawElements Quality Program (dEQP)](dEQP.md).
+     If you're working on a new feature, there may be some extensive tests for it already written.
    * The [Top-of-Tree WebGL Conformance tests][WebGL-CTS].
      * If you are a Chromium developer, see
        [Building ANGLE for Chromium Development][build-ANGLE-for-chromium] for instructions on
@@ -84,8 +86,6 @@
     ANGLE patches that have been committed.  There may be hardware configurations that are not
     tested by the ANGLE trybots, if you notice breakage on this waterfall after landing a patch,
     please notify a project member.
-  * ANGLE also includes the [drawElements Quality Program (dEQP)](dEQP.md) for additional testing.
-    If you're working on a new feature, there may be some extensive tests for it already written.
 
 [WebGL-CTS]: https://www.khronos.org/registry/webgl/sdk/tests/webgl-conformance-tests.html
 [build-ANGLE-for-Chromium]: BuildingAngleForChromiumDevelopment.md
