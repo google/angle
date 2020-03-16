@@ -351,6 +351,29 @@ angle::Result MemoryProperties::findCompatibleMemoryIndex(
         }
     }
 
+    // We did not find a compatible memory type, the Vulkan spec says the following -
+    //     There must be at least one memory type with both the
+    //     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT and VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+    //     bits set in its propertyFlags
+    constexpr VkMemoryPropertyFlags fallbackMemoryPropertyFlags =
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+    // If the caller wanted a host visible memory, just return the memory index
+    // with the fallback memory flags.
+    if (requestedMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+    {
+        for (size_t memoryIndex : angle::BitSet32<32>(memoryRequirements.memoryTypeBits))
+        {
+            if ((mMemoryProperties.memoryTypes[memoryIndex].propertyFlags &
+                 fallbackMemoryPropertyFlags) == fallbackMemoryPropertyFlags)
+            {
+                *memoryPropertyFlagsOut = mMemoryProperties.memoryTypes[memoryIndex].propertyFlags;
+                *typeIndexOut           = static_cast<uint32_t>(memoryIndex);
+                return angle::Result::Continue;
+            }
+        }
+    }
+
     // TODO(jmadill): Add error message to error.
     context->handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, ANGLE_FUNCTION, __LINE__);
     return angle::Result::Stop;
