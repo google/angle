@@ -744,8 +744,21 @@ angle_source_set("angle_gl_enum_utils") {
   ]
 }
 
+config("angle_compression_config") {
+  include_dirs = [ "//third_party/zlib/google" ]
+}
+
+group("angle_compression") {
+  public_configs = [
+    ":angle_compression_config",
+    "//third_party/zlib:zlib_config",
+  ]
+  public_deps = [ "//third_party/zlib/google:compression_utils_portable" ]
+}
+
 angle_source_set("libANGLE_with_capture") {
   public_deps = [ ":libANGLE_base" ]
+  deps = [ ":angle_compression" ]
   public_configs = [ ":angle_frame_capture_enabled" ]
   sources = libangle_capture_sources
 }

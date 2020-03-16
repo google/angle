@@ -225,6 +225,7 @@ class FrameCapture final : angle::NonCopyable
     bool mEnabled;
     std::string mOutDirectory;
     std::string mCaptureLabel;
+    bool mCompression;
     gl::AttribArray<int> mClientVertexArrayMap;
     uint32_t mFrameIndex;
     uint32_t mFrameStart;

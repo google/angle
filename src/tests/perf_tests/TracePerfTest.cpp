@@ -27,12 +27,35 @@
 #include <functional>
 #include <sstream>
 
+#define USE_SYSTEM_ZLIB
+#include "compression_utils_portable.h"
+
 using namespace angle;
 using namespace egl_platform;
 
 namespace
 {
 void FramebufferChangeCallback(void *userData, GLenum target, GLuint framebuffer);
+
+ANGLE_MAYBE_UNUSED uint8_t *DecompressBinaryData(const std::vector<uint8_t> &compressedData)
+{
+    uint32_t uncompressedSize =
+        zlib_internal::GetGzipUncompressedSize(compressedData.data(), compressedData.size());
+
+    std::unique_ptr<uint8_t[]> uncompressedData(new uint8_t[uncompressedSize]);
+    uLong destLen = uncompressedSize;
+    int zResult =
+        zlib_internal::GzipUncompressHelper(uncompressedData.get(), &destLen, compressedData.data(),
+                                            static_cast<uLong>(compressedData.size()));
+
+    if (zResult != Z_OK)
+    {
+        std::cerr << "Failure to decompressed binary data: " << zResult << "\n";
+        return nullptr;
+    }
+
+    return uncompressedData.release();
+}
 
 enum class TracePerfTestID
 {
@@ -154,6 +177,7 @@ TracePerfTest::TracePerfTest()
     : ANGLERenderTest("TracePerf", GetParam()), mStartFrame(0), mEndFrame(0)
 {}
 
+// TODO(jmadill/cnorthrop): Use decompression path. http://anglebug.com/3630
 #define TRACE_TEST_CASE(NAME)                            \
     mStartFrame = NAME::kReplayFrameStart;               \
     mEndFrame   = NAME::kReplayFrameEnd;                 \
