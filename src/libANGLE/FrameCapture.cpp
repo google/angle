@@ -604,25 +604,29 @@ struct SaveFileHelper
     std::string filePath;
 };
 
+std::string GetBinaryDataFilePath(int contextId, const std::string &captureLabel)
+{
+    std::stringstream fnameStream;
+    fnameStream << FmtCapturePrefix(contextId, captureLabel) << ".angledata";
+    return fnameStream.str();
+}
+
 void SaveBinaryData(const std::string &outDir,
-                    std::ostream &out,
                     int contextId,
                     const std::string &captureLabel,
-                    uint32_t frameIndex,
-                    const char *suffix,
                     const std::vector<uint8_t> &binaryData)
 {
-    std::string binaryDataFileName =
-        GetCaptureFileName(contextId, captureLabel, frameIndex, suffix);
-
-    out << "    LoadBinaryData(\"" << binaryDataFileName << "\", "
-        << static_cast<int>(binaryData.size()) << ");\n";
-
-    std::string dataFilepath =
-        GetCaptureFilePath(outDir, contextId, captureLabel, frameIndex, suffix);
+    std::string binaryDataFileName = GetBinaryDataFilePath(contextId, captureLabel);
+    std::string dataFilepath       = outDir + binaryDataFileName;
 
     SaveFileHelper saveData(dataFilepath, std::ios::binary);
     saveData.ofs.write(reinterpret_cast<const char *>(binaryData.data()), binaryData.size());
+}
+
+void WriteLoadBinaryDataCall(std::ostream &out, int contextId, const std::string &captureLabel)
+{
+    std::string binaryDataFileName = GetBinaryDataFilePath(contextId, captureLabel);
+    out << "    LoadBinaryData(\"" << binaryDataFileName << "\");\n";
 }
 
 void WriteCppReplay(const std::string &outDir,
@@ -630,7 +634,8 @@ void WriteCppReplay(const std::string &outDir,
                     const std::string &captureLabel,
                     uint32_t frameIndex,
                     const std::vector<CallCapture> &frameCalls,
-                    const std::vector<CallCapture> &setupCalls)
+                    const std::vector<CallCapture> &setupCalls,
+                    std::vector<uint8_t> *binaryData)
 {
     DataCounters counters;
 
@@ -655,19 +660,14 @@ void WriteCppReplay(const std::string &outDir,
         out << "{\n";
 
         std::stringstream setupCallStream;
-        std::vector<uint8_t> setupBinaryData;
+
+        WriteLoadBinaryDataCall(setupCallStream, contextId, captureLabel);
 
         for (const CallCapture &call : setupCalls)
         {
             setupCallStream << "    ";
-            WriteCppReplayForCall(call, &counters, setupCallStream, header, &setupBinaryData);
+            WriteCppReplayForCall(call, &counters, setupCallStream, header, binaryData);
             setupCallStream << ";\n";
-        }
-
-        if (!setupBinaryData.empty())
-        {
-            SaveBinaryData(outDir, out, contextId, captureLabel, frameIndex, ".setup.angledata",
-                           setupBinaryData);
         }
 
         out << setupCallStream.str();
@@ -680,18 +680,12 @@ void WriteCppReplay(const std::string &outDir,
     out << "{\n";
 
     std::stringstream callStream;
-    std::vector<uint8_t> binaryData;
 
     for (const CallCapture &call : frameCalls)
     {
         callStream << "    ";
-        WriteCppReplayForCall(call, &counters, callStream, header, &binaryData);
+        WriteCppReplayForCall(call, &counters, callStream, header, binaryData);
         callStream << ";\n";
-    }
-
-    if (!binaryData.empty())
-    {
-        SaveBinaryData(outDir, out, contextId, captureLabel, frameIndex, ".angledata", binaryData);
     }
 
     out << callStream.str();
@@ -779,7 +773,7 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     }
     header << "\n";
     header << "void SetBinaryDataDir(const char *dataDir);\n";
-    header << "void LoadBinaryData(const char *fileName, size_t size);\n";
+    header << "void LoadBinaryData(const char *fileName);\n";
     header << "\n";
     header << "// Global state\n";
     header << "\n";
@@ -890,16 +884,24 @@ void WriteCppReplayIndexFiles(const std::string &outDir,
     source << "    gBinaryDataDir = dataDir;\n";
     source << "}\n";
     source << "\n";
-    source << "void LoadBinaryData(const char *fileName, size_t size)\n";
+    source << "void LoadBinaryData(const char *fileName)\n";
     source << "{\n";
     source << "    if (gBinaryData != nullptr)\n";
     source << "    {\n";
     source << "        delete [] gBinaryData;\n";
     source << "    }\n";
-    source << "    gBinaryData = new uint8_t[size];\n";
     source << "    char pathBuffer[1000] = {};\n";
     source << "    sprintf(pathBuffer, \"%s/%s\", gBinaryDataDir, fileName);\n";
     source << "    FILE *fp = fopen(pathBuffer, \"rb\");\n";
+    source << "    if (fp == 0)\n";
+    source << "    {\n";
+    source << "        fprintf(stderr, \"Error loading binary data file: %s\\n\", fileName);\n";
+    source << "        exit(1);\n";
+    source << "    }\n";
+    source << "    fseek(fp, 0, SEEK_END);\n";
+    source << "    long size = ftell(fp);\n";
+    source << "    fseek(fp, 0, SEEK_SET);\n";
+    source << "    gBinaryData = new uint8_t[size];\n";
     source << "    (void)fread(gBinaryData, 1, size, fp);\n";
     source << "    fclose(fp);\n";
     source << "}\n";
@@ -2983,7 +2985,7 @@ void FrameCapture::onEndFrame(const gl::Context *context)
     if (!mFrameCalls.empty() && mFrameIndex >= mFrameStart)
     {
         WriteCppReplay(mOutDirectory, context->id(), mCaptureLabel, mFrameIndex, mFrameCalls,
-                       mSetupCalls);
+                       mSetupCalls, &mBinaryData);
 
         // Save the index files after the last frame.
         if (mFrameIndex == mFrameEnd)
@@ -2991,6 +2993,12 @@ void FrameCapture::onEndFrame(const gl::Context *context)
             WriteCppReplayIndexFiles(mOutDirectory, context->id(), mCaptureLabel, mFrameStart,
                                      mFrameEnd, mReadBufferSize, mClientArraySizes,
                                      mHasResourceType);
+
+            if (!mBinaryData.empty())
+            {
+                SaveBinaryData(mOutDirectory, context->id(), mCaptureLabel, mBinaryData);
+                mBinaryData.clear();
+            }
         }
     }
 

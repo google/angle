@@ -218,6 +218,10 @@ class FrameCapture final : angle::NonCopyable
     std::vector<CallCapture> mFrameCalls;
     std::vector<CallCapture> mTearDownCalls;
 
+    // We save one large buffer of binary data for the whole CPP replay.
+    // This simplifies a lot of file management.
+    std::vector<uint8_t> mBinaryData;
+
     bool mEnabled;
     std::string mOutDirectory;
     std::string mCaptureLabel;
