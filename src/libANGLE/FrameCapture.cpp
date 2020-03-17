@@ -2626,20 +2626,41 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
 
     // Storing the compressed data is handled the same for all entry points,
     // they just have slightly different parameter locations
-    int32_t paramOffset = 0;
+    int dataParamOffset    = -1;
+    int xoffsetParamOffset = -1;
+    int yoffsetParamOffset = -1;
+    int zoffsetParamOffset = -1;
+    int widthParamOffset   = -1;
+    int heightParamOffset  = -1;
+    int depthParamOffset   = -1;
     switch (call.entryPoint)
     {
         case gl::EntryPoint::CompressedTexSubImage3D:
-            paramOffset = 3;
+            xoffsetParamOffset = 2;
+            yoffsetParamOffset = 3;
+            zoffsetParamOffset = 4;
+            widthParamOffset   = 5;
+            heightParamOffset  = 6;
+            depthParamOffset   = 7;
+            dataParamOffset    = 10;
             break;
         case gl::EntryPoint::CompressedTexImage3D:
-            paramOffset = 2;
+            widthParamOffset  = 4;
+            heightParamOffset = 5;
+            depthParamOffset  = 6;
+            dataParamOffset   = 9;
             break;
         case gl::EntryPoint::CompressedTexSubImage2D:
-            paramOffset = 1;
+            xoffsetParamOffset = 2;
+            yoffsetParamOffset = 3;
+            widthParamOffset   = 4;
+            heightParamOffset  = 5;
+            dataParamOffset    = 8;
             break;
         case gl::EntryPoint::CompressedTexImage2D:
-            paramOffset = 0;
+            widthParamOffset  = 3;
+            heightParamOffset = 4;
+            dataParamOffset   = 7;
             break;
         default:
             // There should be no other callers of this function
@@ -2651,13 +2672,13 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
         context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
     const uint8_t *data = static_cast<const uint8_t *>(
-        call.params.getParam("data", ParamType::TvoidConstPointer, 7 + paramOffset)
+        call.params.getParam("data", ParamType::TvoidConstPointer, dataParamOffset)
             .value.voidConstPointerVal);
 
-    GLsizei imageSize =
-        call.params.getParam("imageSize", ParamType::TGLsizei, 6 + paramOffset).value.GLsizeiVal;
+    GLsizei imageSize = call.params.getParam("imageSize", ParamType::TGLsizei, dataParamOffset - 1)
+                            .value.GLsizeiVal;
 
-    const uint8_t *readData = nullptr;
+    const uint8_t *pixelData = nullptr;
 
     if (pixelUnpackBuffer)
     {
@@ -2666,14 +2687,14 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
         (void)pixelUnpackBuffer->mapRange(context, reinterpret_cast<GLintptr>(data), imageSize,
                                           GL_MAP_READ_BIT);
 
-        readData = reinterpret_cast<const uint8_t *>(pixelUnpackBuffer->getMapPointer());
+        pixelData = reinterpret_cast<const uint8_t *>(pixelUnpackBuffer->getMapPointer());
     }
     else
     {
-        readData = data;
+        pixelData = data;
     }
 
-    if (!readData)
+    if (!pixelData)
     {
         // If no pointer was provided and we weren't able to map the buffer, there is no data to
         // capture
@@ -2687,27 +2708,110 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
 
     // Create a copy of the incoming data
     std::vector<uint8_t> compressedData;
-    compressedData.assign(readData, readData + imageSize);
+    compressedData.assign(pixelData, pixelData + imageSize);
 
     // Look up the currently bound texture
     gl::Texture *texture = context->getState().getTargetTexture(textureType);
+    ASSERT(texture);
 
     // Record the data, indexed by textureID and level
-    GLint level = call.params.getParam("level", ParamType::TGLint, 1).value.GLintVal;
-    const auto &foundTextureLevels = mCachedTextureLevelData.find(texture->id());
-    if (foundTextureLevels != mCachedTextureLevelData.end())
+    GLint level             = call.params.getParam("level", ParamType::TGLint, 1).value.GLintVal;
+    auto foundTextureLevels = mCachedTextureLevelData.find(texture->id());
+    if (foundTextureLevels == mCachedTextureLevelData.end())
     {
-        // If we've already got a map to track this texture's levels, use it
-        foundTextureLevels->second[level] = std::move(compressedData);
+        // Initialize the texture ID data.
+        auto emplaceResult = mCachedTextureLevelData.emplace(texture->id(), TextureLevels());
+        ASSERT(emplaceResult.second);
+        foundTextureLevels = emplaceResult.first;
     }
-    else
-    {
-        // If this is a new texture, create a map for its levels
-        TextureLevels textureLevels;
-        textureLevels[level] = std::move(compressedData);
 
-        // Then add it into our data map
-        mCachedTextureLevelData[texture->id()] = std::move(textureLevels);
+    // Get the format of the texture for use with the compressed block size math.
+    const gl::InternalFormat &format = *texture->getFormat(targetPacked, level).info;
+
+    TextureLevels &foundLevels = foundTextureLevels->second;
+    auto foundLevel            = foundLevels.find(level);
+
+    // Divide dimensions according to block size.
+    const gl::Extents &levelExtents = texture->getExtents(targetPacked, level);
+
+    if (foundLevel == foundLevels.end())
+    {
+        // Initialize texture rectangle data. Default init to zero for stability.
+        GLuint sizeInBytes;
+        bool result = format.computeCompressedImageSize(levelExtents, &sizeInBytes);
+        ASSERT(result);
+
+        std::vector<uint8_t> newPixelData(sizeInBytes, 0);
+        auto emplaceResult = foundLevels.emplace(level, std::move(newPixelData));
+        ASSERT(emplaceResult.second);
+        foundLevel = emplaceResult.first;
+    }
+
+    // Unpack the various pixel rectangle parameters.
+    ASSERT(widthParamOffset != -1);
+    ASSERT(heightParamOffset != -1);
+    GLsizei pixelWidth =
+        call.params.getParam("width", ParamType::TGLsizei, widthParamOffset).value.GLsizeiVal;
+    GLsizei pixelHeight =
+        call.params.getParam("height", ParamType::TGLsizei, heightParamOffset).value.GLsizeiVal;
+    GLsizei pixelDepth = 1;
+    if (depthParamOffset != -1)
+    {
+        pixelDepth =
+            call.params.getParam("depth", ParamType::TGLsizei, depthParamOffset).value.GLsizeiVal;
+    }
+
+    GLint xoffset = 0;
+    GLint yoffset = 0;
+    GLint zoffset = 0;
+
+    if (xoffsetParamOffset != -1)
+    {
+        xoffset =
+            call.params.getParam("xoffset", ParamType::TGLint, xoffsetParamOffset).value.GLintVal;
+    }
+
+    if (yoffsetParamOffset != -1)
+    {
+        yoffset =
+            call.params.getParam("yoffset", ParamType::TGLint, yoffsetParamOffset).value.GLintVal;
+    }
+
+    if (zoffsetParamOffset != -1)
+    {
+        zoffset =
+            call.params.getParam("zoffset", ParamType::TGLint, zoffsetParamOffset).value.GLintVal;
+    }
+
+    // Since we're dealing in 4x4 blocks, scale down the width/height pixel offsets.
+    ASSERT(format.compressedBlockWidth == 4);
+    ASSERT(format.compressedBlockHeight == 4);
+    ASSERT(format.compressedBlockDepth == 1);
+    pixelWidth >>= 2;
+    pixelHeight >>= 2;
+    xoffset >>= 2;
+    yoffset >>= 2;
+
+    // Update pixel data.
+    std::vector<uint8_t> &levelData = foundLevel->second;
+
+    GLint pixelBytes = static_cast<GLint>(format.pixelBytes);
+
+    GLint pixelRowPitch   = pixelWidth * pixelBytes;
+    GLint pixelDepthPitch = pixelRowPitch * pixelHeight;
+    GLint levelRowPitch   = (levelExtents.width >> 2) * pixelBytes;
+    GLint levelDepthPitch = levelRowPitch * (levelExtents.height >> 2);
+
+    for (GLint zindex = 0; zindex < pixelDepth; ++zindex)
+    {
+        GLint z = zindex + zoffset;
+        for (GLint yindex = 0; yindex < pixelHeight; ++yindex)
+        {
+            GLint y           = yindex + yoffset;
+            GLint pixelOffset = zindex * pixelDepthPitch + yindex * pixelRowPitch;
+            GLint levelOffset = z * levelDepthPitch + y * levelRowPitch + xoffset * pixelBytes;
+            memcpy(&levelData[levelOffset], &pixelData[pixelOffset], pixelWidth);
+        }
     }
 
     if (pixelUnpackBuffer)

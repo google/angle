@@ -300,6 +300,7 @@ class Texture final : public RefCountObject<TextureID>,
 
     const TextureState &getTextureState() const;
 
+    const gl::Extents &getExtents(TextureTarget target, size_t level) const;
     size_t getWidth(TextureTarget target, size_t level) const;
     size_t getHeight(TextureTarget target, size_t level) const;
     size_t getDepth(TextureTarget target, size_t level) const;

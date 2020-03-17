@@ -929,6 +929,12 @@ const TextureState &Texture::getTextureState() const
     return mState;
 }
 
+const gl::Extents &Texture::getExtents(TextureTarget target, size_t level) const
+{
+    ASSERT(TextureTargetToType(target) == mState.mType);
+    return mState.getImageDesc(target, level).size;
+}
+
 size_t Texture::getWidth(TextureTarget target, size_t level) const
 {
     ASSERT(TextureTargetToType(target) == mState.mType);
