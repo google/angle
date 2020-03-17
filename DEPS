@@ -208,7 +208,7 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@c2eb8a7f7a0fa7884234ebc1b836644084ccbec9',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@156be8c52f80cde343088b4a69a80579101b6e67',
     'condition': 'not build_with_chromium',
   },
 
