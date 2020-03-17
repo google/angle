@@ -1043,17 +1043,24 @@ void State::setMultisampling(bool enabled)
 
 void State::setScissorTest(bool enabled)
 {
-    mScissorTest = enabled;
-    mDirtyBits.set(DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    if (mScissorTest != enabled)
+    {
+        mScissorTest = enabled;
+        mDirtyBits.set(DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    }
 }
 
 void State::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    mScissor.x      = x;
-    mScissor.y      = y;
-    mScissor.width  = width;
-    mScissor.height = height;
-    mDirtyBits.set(DIRTY_BIT_SCISSOR);
+    // Skip if same scissor info
+    if (mScissor.x != x || mScissor.y != y || mScissor.width != width || mScissor.height != height)
+    {
+        mScissor.x      = x;
+        mScissor.y      = y;
+        mScissor.width  = width;
+        mScissor.height = height;
+        mDirtyBits.set(DIRTY_BIT_SCISSOR);
+    }
 }
 
 void State::setDither(bool enabled)
@@ -1341,11 +1348,16 @@ void State::setFragmentShaderDerivativeHint(GLenum hint)
 
 void State::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    mViewport.x      = x;
-    mViewport.y      = y;
-    mViewport.width  = width;
-    mViewport.height = height;
-    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
+    // Skip if same viewport info
+    if (mViewport.x != x || mViewport.y != y || mViewport.width != width ||
+        mViewport.height != height)
+    {
+        mViewport.x      = x;
+        mViewport.y      = y;
+        mViewport.width  = width;
+        mViewport.height = height;
+        mDirtyBits.set(DIRTY_BIT_VIEWPORT);
+    }
 }
 
 void State::setActiveSampler(unsigned int active)
