@@ -1886,6 +1886,7 @@ void Program::unlink()
     mState.mUniforms.clear();
     mState.mUniformLocations.clear();
     mState.mUniformBlocks.clear();
+    mState.mBufferVariables.clear();
     mState.mShaderStorageBlocks.clear();
     mState.mActiveUniformBlockBindings.reset();
     mState.mAtomicCounterBuffers.clear();
