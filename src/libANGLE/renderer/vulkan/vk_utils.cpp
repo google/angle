@@ -440,13 +440,14 @@ angle::Result InitMappableDeviceMemory(Context *context,
     uint8_t *mapPointer;
     ANGLE_VK_TRY(context, deviceMemory->map(device, 0, VK_WHOLE_SIZE, 0, &mapPointer));
     memset(mapPointer, value, static_cast<size_t>(size));
-    deviceMemory->unmap(device);
 
     VkMappedMemoryRange mappedRange = {};
     mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     mappedRange.memory              = deviceMemory->getHandle();
     mappedRange.size                = VK_WHOLE_SIZE;
     ANGLE_VK_TRY(context, vkFlushMappedMemoryRanges(device, 1, &mappedRange));
+
+    deviceMemory->unmap(device);
 
     return angle::Result::Continue;
 }
