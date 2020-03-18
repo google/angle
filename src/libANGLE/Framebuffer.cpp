@@ -316,6 +316,8 @@ FramebufferState::FramebufferState()
       mDefaultFixedSampleLocations(GL_FALSE),
       mDefaultLayers(0),
       mWebGLDepthStencilConsistent(true),
+      mDepthBufferFeedbackLoop(false),
+      mStencilBufferFeedbackLoop(false),
       mDefaultFramebufferReadAttachmentInitialized(false)
 {
     ASSERT(mDrawBufferStates.size() > 0);
@@ -335,6 +337,8 @@ FramebufferState::FramebufferState(const Caps &caps, FramebufferID id)
       mDefaultFixedSampleLocations(GL_FALSE),
       mDefaultLayers(0),
       mWebGLDepthStencilConsistent(true),
+      mDepthBufferFeedbackLoop(false),
+      mStencilBufferFeedbackLoop(false),
       mDefaultFramebufferReadAttachmentInitialized(false)
 {
     ASSERT(mId != Framebuffer::kDefaultDrawFramebufferHandle);
@@ -671,6 +675,26 @@ Extents FramebufferState::getExtents() const
 bool FramebufferState::isDefault() const
 {
     return mId == Framebuffer::kDefaultDrawFramebufferHandle;
+}
+
+bool FramebufferState::updateAttachmentFeedbackLoop(size_t dirtyBit)
+{
+    switch (dirtyBit)
+    {
+        case Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT:
+            mDepthBufferFeedbackLoop = mDepthAttachment.isBoundAsSamplerOrImage();
+            return mDepthBufferFeedbackLoop;
+
+        case Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT:
+            mStencilBufferFeedbackLoop = mStencilAttachment.isBoundAsSamplerOrImage();
+            return mStencilBufferFeedbackLoop;
+
+        default:
+            ASSERT(dirtyBit <= Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX);
+            mDrawBufferFeedbackLoops[dirtyBit] =
+                mColorAttachments[dirtyBit].isBoundAsSamplerOrImage();
+            return mDrawBufferFeedbackLoops.test(dirtyBit);
+    }
 }
 
 const FramebufferID Framebuffer::kDefaultDrawFramebufferHandle = {0};
@@ -1859,18 +1883,14 @@ void Framebuffer::setAttachmentImpl(const Context *context,
 
             if (!resource)
             {
-                mColorAttachmentBits.reset(colorIndex);
                 mFloat32ColorAttachmentBits.reset(colorIndex);
             }
             else
             {
-                mColorAttachmentBits.set(colorIndex);
                 updateFloat32ColorAttachmentBits(
                     colorIndex, resource->getAttachmentFormat(binding, textureIndex).info);
             }
 
-            // TODO(jmadill): ASSERT instead of checking the attachment exists in
-            // formsRenderingFeedbackLoopWith
             bool enabled = (type != GL_NONE && getDrawBufferState(colorIndex) != GL_NONE);
             mState.mEnabledDrawBuffers.set(colorIndex, enabled);
             SetComponentTypeMask(getDrawbufferWriteType(colorIndex), colorIndex,
@@ -1899,6 +1919,7 @@ void Framebuffer::updateAttachment(const Context *context,
     mState.mResourceNeedsInit.set(dirtyBit, attachment->initState() == InitState::MayNeedInit);
     onDirtyBinding->bind(resource);
 
+    mState.updateAttachmentFeedbackLoop(dirtyBit);
     invalidateCompletenessCache();
 }
 
@@ -1928,6 +1949,17 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
         {
             mDirtyBits.set(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 + index);
             onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
+            return;
+        }
+
+        // Triggered by changes to Texture feedback loops.
+        if (message == angle::SubjectMessage::BindingChanged)
+        {
+            if (mState.updateAttachmentFeedbackLoop(index))
+            {
+                mDirtyBits.set(index);
+                onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
+            }
             return;
         }
 
@@ -1973,68 +2005,16 @@ FramebufferAttachment *Framebuffer::getAttachmentFromSubjectIndex(angle::Subject
 
 bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context) const
 {
-    const State &state     = context->getState();
-    const Program *program = state.getProgram();
-
-    // TODO(jmadill): Default framebuffer feedback loops.
+    // We don't handle tricky cases where the default FBO is bound as a sampler.
+    // We also don't handle tricky cases with EGLImages and mipmap selection.
+    // TODO(http://anglebug.com/4500): Tricky rendering feedback loop cases.
     if (mState.isDefault())
     {
         return false;
     }
 
-    const FramebufferAttachment *depth   = getDepthAttachment();
-    const FramebufferAttachment *stencil = getStencilAttachment();
-
-    const bool checkDepth = depth && depth->type() == GL_TEXTURE;
-    // Skip the feedback loop check for stencil if depth/stencil point to the same resource.
-    const bool checkStencil =
-        (stencil && stencil->type() == GL_TEXTURE) && (!depth || *stencil != *depth);
-
-    const gl::ActiveTextureMask &activeTextures   = program->getActiveSamplersMask();
-    const gl::ActiveTexturePointerArray &textures = state.getActiveTexturesCache();
-
-    for (size_t textureUnit : activeTextures)
-    {
-        Texture *texture = textures[textureUnit];
-
-        if (texture == nullptr)
-        {
-            continue;
-        }
-
-        // Depth and stencil attachment form feedback loops
-        // Regardless of if enabled or masked.
-        if (checkDepth)
-        {
-            if (texture->getId() == depth->id())
-            {
-                return true;
-            }
-        }
-
-        if (checkStencil)
-        {
-            if (texture->getId() == stencil->id())
-            {
-                return true;
-            }
-        }
-
-        // Check if any color attachment forms a feedback loop.
-        for (size_t drawIndex : mColorAttachmentBits)
-        {
-            const FramebufferAttachment &attachment = mState.mColorAttachments[drawIndex];
-            ASSERT(attachment.isAttached());
-
-            if (attachment.isTextureWithId(texture->id()))
-            {
-                // TODO(jmadill): Check for appropriate overlap.
-                return true;
-            }
-        }
-    }
-
-    return false;
+    return mState.mDrawBufferFeedbackLoops.any() || mState.mDepthBufferFeedbackLoop ||
+           mState.mStencilBufferFeedbackLoop;
 }
 
 bool Framebuffer::formsCopyingFeedbackLoopWith(TextureID copyTextureID,
