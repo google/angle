@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "736ae745_c321b99f",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1145695
+      },
+      "writtenOn": "2020-03-18T17:44:07Z",
+      "side": 1,
+      "message": "A single write, much better!\n\nThis file should be a standard .gzip (not the same as .zip) file that is compatible with file compression utilities.",
+      "revId": "7e453a2537a82cb7d9326e7cd78d7765e5d8ea70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f256273c_5fd79489",
         "filename": "src/tests/perf_tests/TracePerfTest.cpp",
         "patchSetId": 15
