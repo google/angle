@@ -7118,6 +7118,9 @@ TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices)
     // Fails input verification as well as std140 SSBO validation.  http://anglebug.com/3844
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
+    // Fails on ARM on Vulkan.  http://anglebug.com/4492
+    ANGLE_SKIP_TEST_IF(IsARM() && IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 precision highp float;
 layout(local_size_x=1) in;
@@ -7913,6 +7916,9 @@ TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices_WriteArrayOfArray)
 
     // Fails compiling shader on Android/Vulkan.  http://anglebug.com/4290
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
+    // Fails on ARM on Vulkan.  http://anglebug.com/4492
+    ANGLE_SKIP_TEST_IF(IsARM() && IsVulkan());
 
     constexpr char kCS[] = R"(#version 310 es
 precision highp float;
