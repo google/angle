@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f256273c_5fd79489",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1145695
+      },
+      "writtenOn": "2020-03-18T17:39:19Z",
+      "side": 1,
+      "message": "Looks way better!\n\nThanks for doing the changes.\n\nAnother advantage of using a regular GZIP wrapper is that the file should be compatible with  any file-compression utility.\n\nMy guess is that before (as you were using a ZLIB wrapper i.e. default behavior of \u0027compress()\u0027 ) and pre-pending the expected output size in the stream, probably it would make file-compression utilities confused.",
+      "revId": "7e453a2537a82cb7d9326e7cd78d7765e5d8ea70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
