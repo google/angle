@@ -96,10 +96,11 @@ ANGLE_INLINE VkMemoryPropertyFlags GetPreferredMemoryType(gl::BufferBinding targ
 ConversionBuffer::ConversionBuffer(RendererVk *renderer,
                                    VkBufferUsageFlags usageFlags,
                                    size_t initialSize,
-                                   size_t alignment)
+                                   size_t alignment,
+                                   bool hostVisible)
     : dirty(true), lastAllocationOffset(0)
 {
-    data.init(renderer, usageFlags, alignment, initialSize, true);
+    data.init(renderer, usageFlags, alignment, initialSize, hostVisible);
 }
 
 ConversionBuffer::~ConversionBuffer() = default;
@@ -110,11 +111,13 @@ ConversionBuffer::ConversionBuffer(ConversionBuffer &&other) = default;
 BufferVk::VertexConversionBuffer::VertexConversionBuffer(RendererVk *renderer,
                                                          angle::FormatID formatIDIn,
                                                          GLuint strideIn,
-                                                         size_t offsetIn)
+                                                         size_t offsetIn,
+                                                         bool hostVisible)
     : ConversionBuffer(renderer,
                        vk::kVertexBufferUsageFlags,
                        kConvertedArrayBufferInitialSize,
-                       vk::kVertexBufferAlignment),
+                       vk::kVertexBufferAlignment,
+                       hostVisible),
       formatID(formatIDIn),
       stride(strideIn),
       offset(offsetIn)
@@ -436,7 +439,8 @@ angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
 ConversionBuffer *BufferVk::getVertexConversionBuffer(RendererVk *renderer,
                                                       angle::FormatID formatID,
                                                       GLuint stride,
-                                                      size_t offset)
+                                                      size_t offset,
+                                                      bool hostVisible)
 {
     for (VertexConversionBuffer &buffer : mVertexConversionBuffers)
     {
@@ -446,7 +450,7 @@ ConversionBuffer *BufferVk::getVertexConversionBuffer(RendererVk *renderer,
         }
     }
 
-    mVertexConversionBuffers.emplace_back(renderer, formatID, stride, offset);
+    mVertexConversionBuffers.emplace_back(renderer, formatID, stride, offset, hostVisible);
     return &mVertexConversionBuffers.back();
 }
 
