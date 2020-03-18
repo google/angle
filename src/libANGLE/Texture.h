@@ -135,7 +135,8 @@ class TextureState final : private angle::NonCopyable
     GLenum getUsage() const { return mUsage; }
     GLenum getDepthStencilTextureMode() const { return mDepthStencilTextureMode; }
     bool isStencilMode() const { return mDepthStencilTextureMode == GL_STENCIL_INDEX; }
-    bool isBoundAsImageTexture() const { return mBoundAsImageTexture; }
+    bool isBoundAsSamplerTexture() const { return mSamplerBindingCount > 0; }
+    bool isBoundAsImageTexture() const { return mImageBindingCount > 0; }
 
     // Returns the desc of the base level. Only valid for cube-complete/mip-complete textures.
     const ImageDesc &getBaseLevelDesc() const;
@@ -191,7 +192,8 @@ class TextureState final : private angle::NonCopyable
 
     GLenum mDepthStencilTextureMode;
 
-    bool mBoundAsImageTexture;
+    uint32_t mSamplerBindingCount;
+    uint32_t mImageBindingCount;
     bool mImmutableFormat;
     GLuint mImmutableLevels;
 
@@ -415,7 +417,22 @@ class Texture final : public RefCountObject<TextureID>,
     angle::Result setEGLImageTarget(Context *context, TextureType type, egl::Image *imageTarget);
 
     angle::Result generateMipmap(Context *context);
-    void onBindImageTexture();
+
+    void onBindAsImageTexture();
+
+    ANGLE_INLINE void onUnbindAsImageTexture()
+    {
+        ASSERT(mState.isBoundAsImageTexture());
+        mState.mImageBindingCount--;
+    }
+
+    ANGLE_INLINE void onBindAsSamplerTexture() { mState.mSamplerBindingCount++; }
+
+    ANGLE_INLINE void onUnbindAsSamplerTexture()
+    {
+        ASSERT(mState.isBoundAsSamplerTexture());
+        mState.mSamplerBindingCount--;
+    }
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;

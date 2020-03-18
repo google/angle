@@ -99,7 +99,8 @@ TextureState::TextureState(TextureType type)
       mBaseLevel(0),
       mMaxLevel(1000),
       mDepthStencilTextureMode(GL_DEPTH_COMPONENT),
-      mBoundAsImageTexture(false),
+      mSamplerBindingCount(0),
+      mImageBindingCount(0),
       mImmutableFormat(false),
       mImmutableLevels(0),
       mUsage(GL_NONE),
@@ -1920,13 +1921,13 @@ angle::Result Texture::getTexImage(const Context *context,
                                  pixels);
 }
 
-void Texture::onBindImageTexture()
+void Texture::onBindAsImageTexture()
 {
-    if (!mState.mBoundAsImageTexture)
+    if (!mState.isBoundAsImageTexture())
     {
         mDirtyBits.set(DIRTY_BIT_BOUND_AS_IMAGE);
-        mState.mBoundAsImageTexture = true;
     }
+    mState.mImageBindingCount++;
 }
 
 }  // namespace gl

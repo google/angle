@@ -759,7 +759,9 @@ class State : angle::NonCopyable
   private:
     friend class Context;
 
+    void unsetActiveTexture(size_t textureIndex);
     void unsetActiveTextures(ActiveTextureMask textureMask);
+    void setActiveTexture(size_t textureIndex, Texture *texture);
     void updateActiveTexture(const Context *context, size_t textureIndex, Texture *texture);
     void updateActiveTextureState(const Context *context,
                                   size_t textureIndex,
