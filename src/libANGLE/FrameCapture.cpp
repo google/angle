@@ -848,7 +848,7 @@ void WriteCppReplayIndexFiles(bool compression,
     source << "    GLuint returnedID;\n";
     std::string captureNamespace = !captureLabel.empty() ? captureLabel + "::" : "";
     source << "    memcpy(&returnedID, &" << captureNamespace
-           << "gReadBuffer[readBufferOffset], sizeof(GLuint));\n ";
+           << "gReadBuffer[readBufferOffset], sizeof(GLuint));\n";
     source << "    (*resourceMap)[id] = returnedID;\n";
     source << "}\n";
     source << "\n";
@@ -1996,19 +1996,22 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     // TODO(http://anglebug.com/3662): ES 3.x objects.
 
-    // Create existing queries
+    // Create existing queries. Note that queries may be genned and not yet started. In that
+    // case the queries will exist in the query map as nullptr entries.
     const gl::QueryMap &queryMap = context->getQueriesForCapture();
-    for (const auto &queryIter : queryMap)
+    for (gl::QueryMap::Iterator queryIter = queryMap.beginWithNull();
+         queryIter != queryMap.endWithNull(); ++queryIter)
     {
-        ASSERT(queryIter.first);
-        gl::QueryID queryID = {queryIter.first};
+        ASSERT(queryIter->first);
+        gl::QueryID queryID = {queryIter->first};
 
         cap(CaptureGenQueries(replayState, true, 1, &queryID));
         MaybeCaptureUpdateResourceIDs(setupCalls);
 
-        if (queryIter.second)
+        gl::Query *query = queryIter->second;
+        if (query)
         {
-            gl::QueryType queryType = queryIter.second->getType();
+            gl::QueryType queryType = query->getType();
 
             // Begin the query to generate the object
             cap(CaptureBeginQuery(replayState, true, queryType, queryID));
