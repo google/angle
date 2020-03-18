@@ -397,6 +397,29 @@ if (build_angle_gles1_conform_tests) {
   }
 
   # This source set is a bit special so we don't use angle_source_set.
+  angle_gles1_conform_common_source = [
+    "$gles1_conform_root/ctk/ctk.h",
+    "$gles1_conform_root/ctk/ctkn.c",
+    "$gles1_conform_root/ctk/glext.c",
+    "$gles1_conform_root/fixed/fixed.c",
+    "$gles1_conform_root/fixed/float64.c",
+    "$gles1_conform_root/fixed/int32.c",
+    "$gles1_conform_root/fixed/int64.c",
+    "$gles1_conform_root/platform/gl_fixed_point.h",
+    "$gles1_conform_root/platform/gl_single_precision.h",
+    "$gles1_conform_root/platform/math_fixed.h",
+    "$gles1_conform_root/platform/math_float.h",
+    "$gles1_conform_root/platform/platform.h",
+    "$gles1_conform_root/platform/platform_gl.h",
+    "$gles1_conform_root/platform/platform_random.h",
+    "$gles1_conform_root/platform/platform_stdlib.h",
+    "$gles1_conform_root/platform/platform_types.h",
+    "$gles1_conform_root/platform/printf_fixed.h",
+    "$gles1_conform_root/platform/printf_float.h",
+    "$gles1_conform_root/platform/random.c",
+    "$gles1_conform_root/platform/stdlib_ansi.h",
+  ]
+
   source_set("angle_gles1_conformance_no_gtest") {
     configs += [
       ":angle_gles1_conform_support",
@@ -524,27 +547,9 @@ if (build_angle_gles1_conform_tests) {
       "$gles1_conform_root/conform/conformshell/utils.h",
       "$gles1_conform_root/conform/conformshell/utilt.c",
       "$gles1_conform_root/conform/conformshell/utilt.h",
-      "$gles1_conform_root/ctk/ctk.h",
-      "$gles1_conform_root/ctk/ctkn.c",
-      "$gles1_conform_root/ctk/glext.c",
-      "$gles1_conform_root/fixed/fixed.c",
-      "$gles1_conform_root/fixed/float64.c",
-      "$gles1_conform_root/fixed/int32.c",
-      "$gles1_conform_root/fixed/int64.c",
-      "$gles1_conform_root/platform/gl_fixed_point.h",
-      "$gles1_conform_root/platform/gl_single_precision.h",
-      "$gles1_conform_root/platform/math_fixed.h",
-      "$gles1_conform_root/platform/math_float.h",
-      "$gles1_conform_root/platform/platform.h",
-      "$gles1_conform_root/platform/platform_gl.h",
-      "$gles1_conform_root/platform/platform_random.h",
-      "$gles1_conform_root/platform/platform_stdlib.h",
-      "$gles1_conform_root/platform/platform_types.h",
-      "$gles1_conform_root/platform/printf_fixed.h",
-      "$gles1_conform_root/platform/printf_float.h",
-      "$gles1_conform_root/platform/random.c",
-      "$gles1_conform_root/platform/stdlib_ansi.h",
     ]
+
+    sources += angle_gles1_conform_common_source
   }
 
   angle_test("angle_gles1_conformance_tests") {
@@ -617,27 +622,9 @@ if (build_angle_gles1_conform_tests) {
         "$gles1_conform_root/conform/covgl/t.c",
         "$gles1_conform_root/conform/covgl/v.c",
         "$gles1_conform_root/conform/covgl/w.c",
-        "$gles1_conform_root/ctk/ctk.h",
-        "$gles1_conform_root/ctk/ctkn.c",
-        "$gles1_conform_root/ctk/glext.c",
-        "$gles1_conform_root/fixed/fixed.c",
-        "$gles1_conform_root/fixed/float64.c",
-        "$gles1_conform_root/fixed/int32.c",
-        "$gles1_conform_root/fixed/int64.c",
-        "$gles1_conform_root/platform/gl_fixed_point.h",
-        "$gles1_conform_root/platform/gl_single_precision.h",
-        "$gles1_conform_root/platform/math_fixed.h",
-        "$gles1_conform_root/platform/math_float.h",
-        "$gles1_conform_root/platform/platform.h",
-        "$gles1_conform_root/platform/platform_gl.h",
-        "$gles1_conform_root/platform/platform_random.h",
-        "$gles1_conform_root/platform/platform_stdlib.h",
-        "$gles1_conform_root/platform/platform_types.h",
-        "$gles1_conform_root/platform/printf_fixed.h",
-        "$gles1_conform_root/platform/printf_float.h",
-        "$gles1_conform_root/platform/random.c",
-        "$gles1_conform_root/platform/stdlib_ansi.h",
       ]
+
+      sources += angle_gles1_conform_common_source
 
       defines = [ "ProbeEnum=ProbeEnumANGLE" ]
     }
@@ -664,6 +651,79 @@ if (build_angle_gles1_conform_tests) {
         "${angle_root}:angle_backend_config",
       ]
     }
+  }
+  source_set("angle_gles1_primtest_no_gtest") {
+    configs += [
+      ":angle_gles1_conform_support",
+      "$angle_root:internal_config",
+    ]
+
+    public_configs = [
+      "$angle_root/util:angle_util_config",
+      "$angle_root:angle_static",
+      "$angle_root:gl_prototypes",
+    ]
+
+    testonly = true
+
+    public_deps = [
+      "$angle_root:angle_common",
+      "$angle_root:libEGL_static",
+      "$angle_root:libGLESv1_CM_static",
+      "$angle_root:libGLESv2_static",
+      "$angle_root:preprocessor",
+      "$angle_root:translator",
+      "$angle_root/util:angle_util_static",
+    ]
+
+    sources = [
+      "$gles1_conform_root/conform/primtest/alias.c",
+      "$gles1_conform_root/conform/primtest/alpha.c",
+      "$gles1_conform_root/conform/primtest/blend.c",
+      "$gles1_conform_root/conform/primtest/depth.c",
+      "$gles1_conform_root/conform/primtest/dither.c",
+      "$gles1_conform_root/conform/primtest/driver.c",
+      "$gles1_conform_root/conform/primtest/driver.h",
+      "$gles1_conform_root/conform/primtest/fog.c",
+      "$gles1_conform_root/conform/primtest/hint.c",
+      "$gles1_conform_root/conform/primtest/light.c",
+      "$gles1_conform_root/conform/primtest/logic.c",
+      "$gles1_conform_root/conform/primtest/prim.c",
+      "$gles1_conform_root/conform/primtest/scissor.c",
+      "$gles1_conform_root/conform/primtest/shade.c",
+      "$gles1_conform_root/conform/primtest/shell.c",
+      "$gles1_conform_root/conform/primtest/shell.h",
+      "$gles1_conform_root/conform/primtest/stencil.c",
+      "$gles1_conform_root/conform/primtest/texture.c",
+      "$gles1_conform_root/conform/primtest/tproto.h",
+    ]
+
+    sources += angle_gles1_conform_common_source
+  }
+
+  angle_test("angle_gles1_primtest_tests") {
+    deps = [
+      ":angle_common_test_utils_static",
+      ":angle_gles1_primtest_no_gtest",
+    ]
+
+    include_dirs = [
+      ".",
+      "$gles1_conform_root/conform",
+    ]
+
+    sources = [
+      "gles1_conformance_tests/PrimtestTests.cpp",
+      "test_utils/ANGLETest.cpp",
+      "test_utils/ANGLETest.h",
+    ]
+    main = "angle_end2end_tests_main"
+
+    configs += [
+      ":angle_gles1_conform_support",
+      "${angle_root}:libANGLE_config",
+      "${angle_root}:angle_backend_config",
+    ]
   }
 }
 
@@ -1175,7 +1235,10 @@ group("angle_tests") {
     }
   }
   if (build_angle_gles1_conform_tests) {
-    deps += [ ":angle_gles1_conformance_tests" ]
+    deps += [
+      ":angle_gles1_conformance_tests",
+      ":angle_gles1_primtest_tests",
+    ]
     if (!is_win && !is_mac) {
       deps += [ ":angle_gles1_covgl_tests" ]
     }
