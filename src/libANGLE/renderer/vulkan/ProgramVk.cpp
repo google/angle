@@ -1326,7 +1326,6 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
 void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
                                            vk::ResourceUseList *resourceUseList,
                                            CommandBufferHelper *commandBufferHelper,
-                                           vk::Resource *recorder,
                                            const std::vector<gl::InterfaceBlock> &blocks,
                                            VkDescriptorType descriptorType)
 {
@@ -1411,8 +1410,7 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
 
 void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
                                                         vk::ResourceUseList *resourceUseList,
-                                                        CommandBufferHelper *commandBufferHelper,
-                                                        vk::Resource *recorder)
+                                                        CommandBufferHelper *commandBufferHelper)
 {
     const gl::State &glState = contextVk->getState();
     const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers =
@@ -1494,7 +1492,7 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
                            writeDescriptorInfo.data(), 0, nullptr);
 }
 
-angle::Result ProgramVk::updateImagesDescriptorSet(ContextVk *contextVk, vk::Resource *recorder)
+angle::Result ProgramVk::updateImagesDescriptorSet(ContextVk *contextVk)
 {
     const gl::State &glState                           = contextVk->getState();
     const std::vector<gl::ImageBinding> &imageBindings = mState.getImageBindings();
@@ -1571,22 +1569,19 @@ angle::Result ProgramVk::updateImagesDescriptorSet(ContextVk *contextVk, vk::Res
 angle::Result ProgramVk::updateShaderResourcesDescriptorSet(
     ContextVk *contextVk,
     vk::ResourceUseList *resourceUseList,
-    CommandBufferHelper *commandBufferHelper,
-    vk::Resource *recorder)
+    CommandBufferHelper *commandBufferHelper)
 {
     ANGLE_TRY(allocateDescriptorSet(contextVk, kShaderResourceDescriptorSetIndex));
 
-    updateBuffersDescriptorSet(contextVk, resourceUseList, commandBufferHelper, recorder,
+    updateBuffersDescriptorSet(contextVk, resourceUseList, commandBufferHelper,
                                mState.getUniformBlocks(), VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-    updateBuffersDescriptorSet(contextVk, resourceUseList, commandBufferHelper, recorder,
+    updateBuffersDescriptorSet(contextVk, resourceUseList, commandBufferHelper,
                                mState.getShaderStorageBlocks(), VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
-    updateAtomicCounterBuffersDescriptorSet(contextVk, resourceUseList, commandBufferHelper,
-                                            recorder);
-    return updateImagesDescriptorSet(contextVk, recorder);
+    updateAtomicCounterBuffersDescriptorSet(contextVk, resourceUseList, commandBufferHelper);
+    return updateImagesDescriptorSet(contextVk);
 }
 
-angle::Result ProgramVk::updateTransformFeedbackDescriptorSet(ContextVk *contextVk,
-                                                              vk::FramebufferHelper *framebuffer)
+angle::Result ProgramVk::updateTransformFeedbackDescriptorSet(ContextVk *contextVk)
 {
     ASSERT(hasTransformFeedbackOutput());
 

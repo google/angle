@@ -808,7 +808,6 @@ class ContextVk : public ContextImpl, public vk::Context
 
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateActiveImages(const gl::Context *context,
-                                     vk::Resource *recorder,
                                      CommandBufferHelper *commandBufferHelper);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
@@ -869,11 +868,9 @@ class ContextVk : public ContextImpl, public vk::Context
     // Common parts of the common dirty bit handlers.
     angle::Result handleDirtyTexturesImpl(const gl::Context *context,
                                           vk::CommandBuffer *commandBuffer,
-                                          vk::Resource *recorder,
                                           CommandBufferHelper *commandBufferHelper);
     angle::Result handleDirtyShaderResourcesImpl(const gl::Context *context,
                                                  vk::CommandBuffer *commandBuffer,
-                                                 vk::Resource *recorder,
                                                  CommandBufferHelper *commandBufferHelper);
     void handleDirtyDriverUniformsBindingImpl(vk::CommandBuffer *commandBuffer,
                                               VkPipelineBindPoint bindPoint,

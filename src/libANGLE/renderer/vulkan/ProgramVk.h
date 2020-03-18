@@ -110,10 +110,8 @@ class ProgramVk : public ProgramImpl
     angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
     angle::Result updateShaderResourcesDescriptorSet(ContextVk *contextVk,
                                                      vk::ResourceUseList *resourceUseList,
-                                                     CommandBufferHelper *commandBufferHelper,
-                                                     vk::Resource *recorder);
-    angle::Result updateTransformFeedbackDescriptorSet(ContextVk *contextVk,
-                                                       vk::FramebufferHelper *framebuffer);
+                                                     CommandBufferHelper *commandBufferHelper);
+    angle::Result updateTransformFeedbackDescriptorSet(ContextVk *contextVk);
 
     angle::Result updateDescriptorSets(ContextVk *contextVk, vk::CommandBuffer *commandBuffer);
 
@@ -192,14 +190,12 @@ class ProgramVk : public ProgramImpl
     void updateBuffersDescriptorSet(ContextVk *contextVk,
                                     vk::ResourceUseList *resourceUseList,
                                     CommandBufferHelper *commandBufferHelper,
-                                    vk::Resource *recorder,
                                     const std::vector<gl::InterfaceBlock> &blocks,
                                     VkDescriptorType descriptorType);
     void updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
                                                  vk::ResourceUseList *resourceUseList,
-                                                 CommandBufferHelper *commandBufferHelper,
-                                                 vk::Resource *recorder);
-    angle::Result updateImagesDescriptorSet(ContextVk *contextVk, vk::Resource *recorder);
+                                                 CommandBufferHelper *commandBufferHelper);
+    angle::Result updateImagesDescriptorSet(ContextVk *contextVk);
 
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;

@@ -1221,7 +1221,6 @@ angle::Result ContextVk::handleDirtyComputePipeline(const gl::Context *context,
 ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
     const gl::Context *context,
     vk::CommandBuffer *commandBuffer,
-    vk::Resource *recorder,
     CommandBufferHelper *commandBufferHelper)
 {
     const gl::ActiveTextureMask &activeTextures = mProgram->getState().getActiveSamplersMask();
@@ -1277,15 +1276,13 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
 angle::Result ContextVk::handleDirtyGraphicsTextures(const gl::Context *context,
                                                      vk::CommandBuffer *commandBuffer)
 {
-    return handleDirtyTexturesImpl(context, commandBuffer, mDrawFramebuffer->getFramebuffer(),
-                                   &mRenderPassCommands);
+    return handleDirtyTexturesImpl(context, commandBuffer, &mRenderPassCommands);
 }
 
 angle::Result ContextVk::handleDirtyComputeTextures(const gl::Context *context,
                                                     vk::CommandBuffer *commandBuffer)
 {
-    return handleDirtyTexturesImpl(context, commandBuffer, &mDispatcher,
-                                   &mOutsideRenderPassCommands);
+    return handleDirtyTexturesImpl(context, commandBuffer, &mOutsideRenderPassCommands);
 }
 
 angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(const gl::Context *context,
@@ -1334,19 +1331,18 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(const gl::Context *conte
 ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
     const gl::Context *context,
     vk::CommandBuffer *commandBuffer,
-    vk::Resource *recorder,
     CommandBufferHelper *commandBufferHelper)
 {
     if (mProgram->hasImages())
     {
-        ANGLE_TRY(updateActiveImages(context, recorder, commandBufferHelper));
+        ANGLE_TRY(updateActiveImages(context, commandBufferHelper));
     }
 
     if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers() ||
         mProgram->hasAtomicCounterBuffers() || mProgram->hasImages())
     {
         ANGLE_TRY(mProgram->updateShaderResourcesDescriptorSet(this, &mResourceUseList,
-                                                               commandBufferHelper, recorder));
+                                                               commandBufferHelper));
     }
     return angle::Result::Continue;
 }
@@ -1354,15 +1350,13 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
 angle::Result ContextVk::handleDirtyGraphicsShaderResources(const gl::Context *context,
                                                             vk::CommandBuffer *commandBuffer)
 {
-    return handleDirtyShaderResourcesImpl(context, commandBuffer,
-                                          mDrawFramebuffer->getFramebuffer(), &mRenderPassCommands);
+    return handleDirtyShaderResourcesImpl(context, commandBuffer, &mRenderPassCommands);
 }
 
 angle::Result ContextVk::handleDirtyComputeShaderResources(const gl::Context *context,
                                                            vk::CommandBuffer *commandBuffer)
 {
-    return handleDirtyShaderResourcesImpl(context, commandBuffer, &mDispatcher,
-                                          &mOutsideRenderPassCommands);
+    return handleDirtyShaderResourcesImpl(context, commandBuffer, &mOutsideRenderPassCommands);
 }
 
 angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
@@ -1387,8 +1381,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
                 &mResourceUseList, VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT, &bufferHelper);
         }
 
-        ANGLE_TRY(mProgram->updateTransformFeedbackDescriptorSet(
-            this, mDrawFramebuffer->getFramebuffer()));
+        ANGLE_TRY(mProgram->updateTransformFeedbackDescriptorSet(this));
     }
     return angle::Result::Continue;
 }
@@ -3568,7 +3561,6 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 }
 
 angle::Result ContextVk::updateActiveImages(const gl::Context *context,
-                                            vk::Resource *recorder,
                                             CommandBufferHelper *commandBufferHelper)
 {
     const gl::State &glState   = mState;

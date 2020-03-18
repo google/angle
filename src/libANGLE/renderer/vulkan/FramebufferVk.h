@@ -109,8 +109,6 @@ class FramebufferVk : public FramebufferImpl
     RenderTargetVk *getColorDrawRenderTarget(size_t colorIndex) const;
     RenderTargetVk *getColorReadRenderTarget() const;
 
-    vk::FramebufferHelper *getFramebuffer() { return mFramebuffer; }
-
     angle::Result startNewRenderPass(ContextVk *context,
                                      const gl::Rectangle &renderArea,
                                      vk::CommandBuffer **commandBufferOut);
