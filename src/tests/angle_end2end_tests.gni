@@ -106,6 +106,7 @@ angle_end2end_tests_sources = [
   "gl_tests/SRGBTextureTest.cpp",
   "gl_tests/SamplersTest.cpp",
   "gl_tests/SemaphoreTest.cpp",
+  "gl_tests/ShaderNonConstGlobalInitializerTest.cpp",
   "gl_tests/ShaderStorageBufferTest.cpp",
   "gl_tests/SimpleOperationTest.cpp",
   "gl_tests/SixteenBppTextureTest.cpp",

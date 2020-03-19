@@ -162,6 +162,9 @@ void RendererVk::ensureCapsInitialized() const
     // We support getting image data for Textures and Renderbuffers.
     mNativeExtensions.getImageANGLE = true;
 
+    // Implemented in the translator
+    mNativeExtensions.shaderNonConstGlobalInitializersEXT = true;
+
     // Vulkan has no restrictions of the format of cubemaps, so if the proper formats are supported,
     // creating a cube of any of these formats should be implicitly supported.
     mNativeExtensions.depthTextureCubeMapOES =
