@@ -183,6 +183,13 @@ void QueryProgramInterfaceiv(const Program *program,
                              GLenum programInterface,
                              GLenum pname,
                              GLint *params);
+
+angle::Result SetMemoryObjectParameteriv(const Context *context,
+                                         MemoryObject *memoryObject,
+                                         GLenum pname,
+                                         const GLint *params);
+void QueryMemoryObjectParameteriv(const MemoryObject *memoryObject, GLenum pname, GLint *params);
+
 // GLES1 emulation
 
 ClientVertexArrayType ParamToVertexArrayType(GLenum param);

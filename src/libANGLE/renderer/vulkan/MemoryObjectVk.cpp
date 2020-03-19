@@ -95,6 +95,12 @@ void MemoryObjectVk::onDestroy(const gl::Context *context)
     }
 }
 
+angle::Result MemoryObjectVk::setDedicatedMemory(const gl::Context *context, bool dedicatedMemory)
+{
+    UNIMPLEMENTED();
+    return angle::Result::Continue;
+}
+
 angle::Result MemoryObjectVk::importFd(gl::Context *context,
                                        GLuint64 size,
                                        gl::HandleType handleType,

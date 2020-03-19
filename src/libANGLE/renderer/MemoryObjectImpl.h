@@ -29,6 +29,8 @@ class MemoryObjectImpl : angle::NonCopyable
 
     virtual void onDestroy(const gl::Context *context) = 0;
 
+    virtual angle::Result setDedicatedMemory(const gl::Context *context, bool dedicatedMemory) = 0;
+
     virtual angle::Result importFd(gl::Context *context,
                                    GLuint64 size,
                                    gl::HandleType handleType,

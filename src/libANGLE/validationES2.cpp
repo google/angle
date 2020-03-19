@@ -18,6 +18,7 @@
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/MemoryObject.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/Texture.h"
@@ -1049,6 +1050,18 @@ bool ValidateES2TexImageParameters(const Context *context,
     return ValidateES2TexImageParametersBase(context, target, level, internalformat, isCompressed,
                                              isSubImage, xoffset, yoffset, width, height, border,
                                              format, type, imageSize, pixels);
+}
+
+bool IsValidMemoryObjectParamater(const Context *context, GLenum pname)
+{
+    switch (pname)
+    {
+        case GL_DEDICATED_MEMORY_OBJECT_EXT:
+            return true;
+
+        default:
+            return false;
+    }
 }
 
 }  // anonymous namespace
@@ -3291,8 +3304,19 @@ bool ValidateGetMemoryObjectParameterivEXT(const Context *context,
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    const MemoryObject *memory = context->getMemoryObject(memoryObject);
+    if (memory == nullptr)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidMemoryObject);
+    }
+
+    if (!IsValidMemoryObjectParamater(context, pname))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidMemoryObjectParameter);
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateGetUnsignedBytevEXT(const Context *context, GLenum pname, const GLubyte *data)
@@ -3344,8 +3368,26 @@ bool ValidateMemoryObjectParameterivEXT(const Context *context,
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    const MemoryObject *memory = context->getMemoryObject(memoryObject);
+    if (memory == nullptr)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidMemoryObject);
+        return false;
+    }
+
+    if (memory->isImmutable())
+    {
+        context->validationError(GL_INVALID_OPERATION, kImmutableMemoryObject);
+        return false;
+    }
+
+    if (!IsValidMemoryObjectParamater(context, pname))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidMemoryObjectParameter);
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateTexStorageMem2DEXT(const Context *context,

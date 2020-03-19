@@ -18,6 +18,7 @@
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/GLES1State.h"
+#include "libANGLE/MemoryObject.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Sampler.h"
@@ -2068,6 +2069,37 @@ void QueryProgramInterfaceiv(const Program *program,
 
         case GL_MAX_NUM_ACTIVE_VARIABLES:
             *params = QueryProgramInterfaceMaxNumActiveVariables(program, programInterface);
+            break;
+
+        default:
+            UNREACHABLE();
+    }
+}
+
+angle::Result SetMemoryObjectParameteriv(const Context *context,
+                                         MemoryObject *memoryObject,
+                                         GLenum pname,
+                                         const GLint *params)
+{
+    switch (pname)
+    {
+        case GL_DEDICATED_MEMORY_OBJECT_EXT:
+            ANGLE_TRY(memoryObject->setDedicatedMemory(context, ConvertToBool(params[0])));
+            break;
+
+        default:
+            UNREACHABLE();
+    }
+
+    return angle::Result::Continue;
+}
+
+void QueryMemoryObjectParameteriv(const MemoryObject *memoryObject, GLenum pname, GLint *params)
+{
+    switch (pname)
+    {
+        case GL_DEDICATED_MEMORY_OBJECT_EXT:
+            *params = memoryObject->isDedicatedMemory();
             break;
 
         default:

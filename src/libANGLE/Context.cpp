@@ -7662,16 +7662,18 @@ void Context::createMemoryObjects(GLsizei n, MemoryObjectID *memoryObjects)
     }
 }
 
-void Context::memoryObjectParameteriv(MemoryObjectID memoryObject,
-                                      GLenum pname,
-                                      const GLint *params)
+void Context::memoryObjectParameteriv(MemoryObjectID memory, GLenum pname, const GLint *params)
 {
-    UNIMPLEMENTED();
+    MemoryObject *memoryObject = getMemoryObject(memory);
+    ASSERT(memoryObject);
+    ANGLE_CONTEXT_TRY(SetMemoryObjectParameteriv(this, memoryObject, pname, params));
 }
 
-void Context::getMemoryObjectParameteriv(MemoryObjectID memoryObject, GLenum pname, GLint *params)
+void Context::getMemoryObjectParameteriv(MemoryObjectID memory, GLenum pname, GLint *params)
 {
-    UNIMPLEMENTED();
+    const MemoryObject *memoryObject = getMemoryObject(memory);
+    ASSERT(memoryObject);
+    QueryMemoryObjectParameteriv(memoryObject, pname, params);
 }
 
 void Context::texStorageMem2D(TextureType target,

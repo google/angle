@@ -111,6 +111,13 @@ TEST_P(VulkanExternalImageTest, ShouldImportMemoryOpaqueFd)
     {
         GLMemoryObject memoryObject;
         glImportMemoryFdEXT(memoryObject, deviceMemorySize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
+
+        // Test that after calling glImportMemoryFdEXT, the parameters of the memory object cannot
+        // be changed
+        GLint dedicatedMemory = GL_TRUE;
+        glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                     &dedicatedMemory);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
 
     EXPECT_GL_NO_ERROR();

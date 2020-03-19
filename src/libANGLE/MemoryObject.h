@@ -34,6 +34,11 @@ class MemoryObject final : public RefCountObject<MemoryObjectID>
 
     rx::MemoryObjectImpl *getImplementation() const { return mImplementation.get(); }
 
+    bool isImmutable() const { return mImmutable; }
+
+    angle::Result setDedicatedMemory(const Context *context, bool dedicatedMemory);
+    bool isDedicatedMemory() const { return mDedicatedMemory; }
+
     angle::Result importFd(Context *context, GLuint64 size, HandleType handleType, GLint fd);
     angle::Result importZirconHandle(Context *context,
                                      GLuint64 size,
@@ -42,6 +47,9 @@ class MemoryObject final : public RefCountObject<MemoryObjectID>
 
   private:
     std::unique_ptr<rx::MemoryObjectImpl> mImplementation;
+
+    bool mImmutable;
+    bool mDedicatedMemory;
 };
 
 }  // namespace gl
