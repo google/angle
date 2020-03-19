@@ -196,10 +196,10 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
     //
     // If the content is not already defined, the first operation may not be a
     // glWaitSemaphore, but in this case undefined layout is appropriate.
-    ANGLE_TRY(image->initExternal(contextVk, type, vkExtents, vkFormat, 1, imageUsageFlags,
-                                  vk::ImageLayout::Undefined, &externalMemoryImageCreateInfo, 0,
-                                  static_cast<uint32_t>(levels) - 1, static_cast<uint32_t>(levels),
-                                  layerCount));
+    ANGLE_TRY(image->initExternal(
+        contextVk, type, vkExtents, vkFormat, 1, imageUsageFlags, vk::kVkImageCreateFlagsNone,
+        vk::ImageLayout::Undefined, &externalMemoryImageCreateInfo, 0,
+        static_cast<uint32_t>(levels) - 1, static_cast<uint32_t>(levels), layerCount));
 
     VkMemoryRequirements externalMemoryRequirements;
     image->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);

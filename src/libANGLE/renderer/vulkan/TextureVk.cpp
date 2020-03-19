@@ -123,6 +123,7 @@ TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
       mImage(nullptr),
       mStagingBufferInitialSize(vk::kStagingBufferSize),
       mImageUsageFlags(0),
+      mImageCreateFlags(0),
       mImageObserverBinding(this, kTextureImageSubjectIndex)
 {}
 
@@ -1209,7 +1210,7 @@ angle::Result TextureVk::copyAndStageImageSubresource(ContextVk *contextVk,
                                    &layerCount);
     gl::Box area(offset.x, offset.y, offset.z, updatedExtents.width, updatedExtents.height,
                  updatedExtents.depth);
-    // TODO: Refactor TextureVk::changeLevels() to avoid this workaround.
+    // TODO: Refactor TextureVk::respecifyImageAttributesAndLevels() to avoid this workaround.
     if (ignoreLayerCount)
     {
         layerCount = 1;
@@ -1278,13 +1279,19 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    return changeLevels(contextVk, previousBaseLevel, baseLevel, maxLevel);
+    return respecifyImageAttributesAndLevels(contextVk, previousBaseLevel, baseLevel, maxLevel);
 }
 
-angle::Result TextureVk::changeLevels(ContextVk *contextVk,
-                                      GLuint previousBaseLevel,
-                                      GLuint baseLevel,
-                                      GLuint maxLevel)
+angle::Result TextureVk::respecifyImageAttributes(ContextVk *contextVk)
+{
+    return respecifyImageAttributesAndLevels(contextVk, mImage->getBaseLevel(),
+                                             mState.getEffectiveBaseLevel(),
+                                             mState.getEffectiveMaxLevel());
+}
+angle::Result TextureVk::respecifyImageAttributesAndLevels(ContextVk *contextVk,
+                                                           GLuint previousBaseLevel,
+                                                           GLuint baseLevel,
+                                                           GLuint maxLevel)
 {
     // Recreate the image to reflect new base or max levels.
     // First, flush any pending updates so we have good data in the existing vkImage
@@ -1320,8 +1327,8 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk,
                 // layer/level, we don't need to propagate any data from this image.
                 // This can happen for original texture levels that have never fit into
                 // the vkImage due to base/max level, and for vkImage data that has been
-                // staged by previous calls to changeLevels that didn't fit into the
-                // new vkImage.
+                // staged by previous calls to respecifyImageAttributesAndLevels that didn't fit
+                // into the new vkImage.
                 continue;
             }
 
@@ -1475,6 +1482,9 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    VkImageUsageFlags oldUsageFlags   = mImageUsageFlags;
+    VkImageCreateFlags oldCreateFlags = mImageCreateFlags;
+
     // Create a new image if the storage state is enabled for the first time.
     if (dirtyBits.test(gl::Texture::DIRTY_BIT_BOUND_AS_IMAGE))
     {
@@ -1482,9 +1492,21 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         if (!(mImageUsageFlags & VK_IMAGE_USAGE_STORAGE_BIT))
         {
             mImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
-            ANGLE_TRY(changeLevels(contextVk, mImage->getBaseLevel(),
-                                   mState.getEffectiveBaseLevel(), mState.getEffectiveMaxLevel()));
         }
+    }
+
+    if (dirtyBits.test(gl::Texture::DIRTY_BIT_SRGB_OVERRIDE))
+    {
+        if (!(mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) &&
+            mState.getSRGBOverride() != gl::SrgbOverride::Default)
+        {
+            mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+        }
+    }
+
+    if (oldUsageFlags != mImageUsageFlags || oldCreateFlags != mImageCreateFlags)
+    {
+        ANGLE_TRY(respecifyImageAttributes(contextVk));
     }
 
     // Set base and max level before initializing the image
@@ -1516,7 +1538,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     if (localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
         localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_GREEN) ||
         localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_BLUE) ||
-        localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA))
+        localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA) ||
+        localBits.test(gl::Texture::DIRTY_BIT_SRGB_OVERRIDE))
     {
         if (mImage && mImage->valid())
         {
@@ -1576,6 +1599,12 @@ const vk::ImageView &TextureVk::getReadImageViewAndRecordUse(ContextVk *contextV
         return mImageViews.getStencilReadImageView();
     }
 
+    if (mState.getSRGBOverride() == gl::SrgbOverride::Enabled)
+    {
+        ASSERT(mImageViews.getNonLinearReadImageView().valid());
+        return mImageViews.getNonLinearReadImageView();
+    }
+
     return mImageViews.getReadImageView();
 }
 
@@ -1587,6 +1616,13 @@ const vk::ImageView &TextureVk::getFetchImageViewAndRecordUse(ContextVk *context
 
     // We don't currently support fetch for depth/stencil cube map textures.
     ASSERT(!mImageViews.hasStencilReadImageView() || !mImageViews.hasFetchImageView());
+
+    if (mState.getSRGBOverride() == gl::SrgbOverride::Enabled)
+    {
+        return (mImageViews.hasFetchImageView() ? mImageViews.getNonLinearFetchImageView()
+                                                : mImageViews.getNonLinearReadImageView());
+    }
+
     return (mImageViews.hasFetchImageView() ? mImageViews.getFetchImageView()
                                             : mImageViews.getReadImageView());
 }
@@ -1635,9 +1671,10 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     gl_vk::GetExtentsAndLayerCount(mState.getType(), extents, &vkExtent, &layerCount);
     GLint samples = mState.getBaseLevelDesc().samples ? mState.getBaseLevelDesc().samples : 1;
 
-    ANGLE_TRY(mImage->init(contextVk, mState.getType(), vkExtent, format, samples, mImageUsageFlags,
-                           mState.getEffectiveBaseLevel(), mState.getEffectiveMaxLevel(),
-                           levelCount, layerCount));
+    ANGLE_TRY(mImage->initExternal(
+        contextVk, mState.getType(), vkExtent, format, samples, mImageUsageFlags, mImageCreateFlags,
+        rx::vk::ImageLayout::Undefined, nullptr, mState.getEffectiveBaseLevel(),
+        mState.getEffectiveMaxLevel(), levelCount, layerCount));
 
     const VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
@@ -1665,8 +1702,17 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     gl::SwizzleState mappedSwizzle;
     MapSwizzleState(contextVk, format, sized, mState.getSwizzleState(), &mappedSwizzle);
 
-    return mImageViews.initReadViews(contextVk, mState.getType(), *mImage, format, mappedSwizzle,
-                                     baseLevel, levelCount, baseLayer, layerCount);
+    ANGLE_TRY(mImageViews.initReadViews(contextVk, mState.getType(), *mImage, format, mappedSwizzle,
+                                        baseLevel, levelCount, baseLayer, layerCount));
+
+    if ((mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0)
+    {
+        ANGLE_TRY(mImageViews.initSRGBReadViews(contextVk, mState.getType(), *mImage, format,
+                                                mappedSwizzle, baseLevel, levelCount, baseLayer,
+                                                layerCount));
+    }
+
+    return angle::Result::Continue;
 }
 
 void TextureVk::releaseImage(ContextVk *contextVk)

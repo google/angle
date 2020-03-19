@@ -151,6 +151,8 @@ class TextureState final : private angle::NonCopyable
         return getBindingCount(contextID).imageBindingCount > 0;
     }
 
+    gl::SrgbOverride getSRGBOverride() const { return mSrgbOverride; }
+
     // Returns the desc of the base level. Only valid for cube-complete/mip-complete textures.
     const ImageDesc &getBaseLevelDesc() const;
 
@@ -215,6 +217,8 @@ class TextureState final : private angle::NonCopyable
     SwizzleState mSwizzleState;
 
     SamplerState mSamplerState;
+
+    SrgbOverride mSrgbOverride;
 
     GLuint mBaseLevel;
     GLuint mMaxLevel;
@@ -307,6 +311,9 @@ class Texture final : public RefCountObject<TextureID>,
 
     void setSRGBDecode(const Context *context, GLenum sRGBDecode);
     GLenum getSRGBDecode() const;
+
+    void setSRGBOverride(const Context *context, GLenum sRGBOverride);
+    GLenum getSRGBOverride() const;
 
     const SamplerState &getSamplerState() const;
 
@@ -549,6 +556,7 @@ class Texture final : public RefCountObject<TextureID>,
         DIRTY_BIT_COMPARE_MODE,
         DIRTY_BIT_COMPARE_FUNC,
         DIRTY_BIT_SRGB_DECODE,
+        DIRTY_BIT_SRGB_OVERRIDE,
         DIRTY_BIT_BORDER_COLOR,
 
         // Texture state

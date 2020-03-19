@@ -304,6 +304,9 @@ void QueryTexParameterBase(const Context *context,
         case GL_TEXTURE_SRGB_DECODE_EXT:
             *params = CastFromGLintStateValue<ParamType>(pname, texture->getSRGBDecode());
             break;
+        case GL_TEXTURE_FORMAT_SRGB_OVERRIDE_EXT:
+            *params = CastFromGLintStateValue<ParamType>(pname, texture->getSRGBOverride());
+            break;
         case GL_DEPTH_STENCIL_TEXTURE_MODE:
             *params =
                 CastFromGLintStateValue<ParamType>(pname, texture->getDepthStencilTextureMode());
@@ -431,6 +434,9 @@ void SetTexParameterBase(Context *context, Texture *texture, GLenum pname, const
             break;
         case GL_TEXTURE_SRGB_DECODE_EXT:
             texture->setSRGBDecode(context, ConvertToGLenum(pname, params[0]));
+            break;
+        case GL_TEXTURE_FORMAT_SRGB_OVERRIDE_EXT:
+            texture->setSRGBOverride(context, ConvertToGLenum(pname, params[0]));
             break;
         case GL_TEXTURE_CROP_RECT_OES:
             texture->setCrop(gl::Rectangle(ConvertTexParam<isGLfixed, GLint>(pname, params[0]),

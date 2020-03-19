@@ -36,6 +36,8 @@ constexpr VkBufferUsageFlags kStagingBufferFlags =
     VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 constexpr size_t kStagingBufferSize = 1024 * 16;
 
+constexpr VkImageCreateFlags kVkImageCreateFlagsNone = 0;
+
 using StagingBufferOffsetArray = std::array<VkDeviceSize, 2>;
 
 struct TextureUnit final
@@ -1052,6 +1054,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                const Format &format,
                                GLint samples,
                                VkImageUsageFlags usage,
+                               VkImageCreateFlags additionalCreateFlags,
                                ImageLayout initialLayout,
                                const void *externalImageCreateInfo,
                                uint32_t baseLevel,
@@ -1076,6 +1079,16 @@ class ImageHelper final : public Resource, public angle::Subject
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
                                      uint32_t layerCount) const;
+    angle::Result initLayerImageViewImpl(Context *context,
+                                         gl::TextureType textureType,
+                                         VkImageAspectFlags aspectMask,
+                                         const gl::SwizzleState &swizzleMap,
+                                         ImageView *imageViewOut,
+                                         uint32_t baseMipLevel,
+                                         uint32_t levelCount,
+                                         uint32_t baseArrayLayer,
+                                         uint32_t layerCount,
+                                         VkFormat imageFormat) const;
     angle::Result initImageView(Context *context,
                                 gl::TextureType textureType,
                                 VkImageAspectFlags aspectMask,
@@ -1505,14 +1518,26 @@ class ImageViewHelper : angle::NonCopyable
     void release(RendererVk *renderer);
     void destroy(VkDevice device);
 
-    const ImageView &getReadImageView() const { return mReadImageView; }
-    const ImageView &getFetchImageView() const { return mFetchImageView; }
+    const ImageView &getLinearReadImageView() const { return mLinearReadImageView; }
+    const ImageView &getNonLinearReadImageView() const { return mNonLinearReadImageView; }
+    const ImageView &getLinearFetchImageView() const { return mLinearFetchImageView; }
+    const ImageView &getNonLinearFetchImageView() const { return mNonLinearFetchImageView; }
     const ImageView &getStencilReadImageView() const { return mStencilReadImageView; }
+
+    const ImageView &getReadImageView() const
+    {
+        return mLinearColorspace ? mLinearReadImageView : mNonLinearReadImageView;
+    }
+
+    const ImageView &getFetchImageView() const
+    {
+        return mLinearColorspace ? mLinearFetchImageView : mNonLinearFetchImageView;
+    }
 
     // Used when initialized RenderTargets.
     bool hasStencilReadImageView() const { return mStencilReadImageView.valid(); }
 
-    bool hasFetchImageView() const { return mFetchImageView.valid(); }
+    bool hasFetchImageView() const { return getFetchImageView().valid(); }
 
     // Store reference to usage in graph.
     void retain(ResourceUseList *resourceUseList) const { resourceUseList->add(mUse); }
@@ -1527,6 +1552,17 @@ class ImageViewHelper : angle::NonCopyable
                                 uint32_t levelCount,
                                 uint32_t baseLayer,
                                 uint32_t layerCount);
+
+    // Create SRGB-reinterpreted read views
+    angle::Result initSRGBReadViews(ContextVk *contextVk,
+                                    gl::TextureType viewType,
+                                    const ImageHelper &image,
+                                    const Format &format,
+                                    const gl::SwizzleState &swizzleState,
+                                    uint32_t baseLevel,
+                                    uint32_t levelCount,
+                                    uint32_t baseLayer,
+                                    uint32_t layerCount);
 
     // Creates a view with all layers of the level.
     angle::Result getLevelDrawImageView(ContextVk *contextVk,
@@ -1544,13 +1580,26 @@ class ImageViewHelper : angle::NonCopyable
                                              const ImageView **imageViewOut);
 
   private:
+    ImageView &getReadImageView()
+    {
+        return mLinearColorspace ? mLinearReadImageView : mNonLinearReadImageView;
+    }
+    ImageView &getFetchImageView()
+    {
+        return mLinearColorspace ? mLinearFetchImageView : mNonLinearFetchImageView;
+    }
+
     // Lifetime.
     SharedResourceUse mUse;
 
-    // Read views.
-    ImageView mReadImageView;
-    ImageView mFetchImageView;
+    // Read views
+    ImageView mLinearReadImageView;
+    ImageView mNonLinearReadImageView;
+    ImageView mLinearFetchImageView;
+    ImageView mNonLinearFetchImageView;
     ImageView mStencilReadImageView;
+
+    bool mLinearColorspace;
 
     // Draw views.
     ImageViewVector mLevelDrawImageViews;

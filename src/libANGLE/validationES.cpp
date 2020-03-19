@@ -394,6 +394,29 @@ bool ValidateTextureSRGBDecodeValue(const Context *context, const ParamType *par
     return true;
 }
 
+template <typename ParamType>
+bool ValidateTextureSRGBOverrideValue(const Context *context, const ParamType *params)
+{
+    if (!context->getExtensions().textureSRGBOverride)
+    {
+        context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
+        return false;
+    }
+
+    switch (ConvertToGLenum(params[0]))
+    {
+        case GL_SRGB:
+        case GL_NONE:
+            break;
+
+        default:
+            context->validationError(GL_INVALID_ENUM, kUnknownParameter);
+            return false;
+    }
+
+    return true;
+}
+
 bool ValidateTextureMaxAnisotropyExtensionEnabled(const Context *context)
 {
     if (!context->getExtensions().textureFilterAnisotropic)
@@ -6147,6 +6170,13 @@ bool ValidateTexParameterBase(const Context *context,
 
         case GL_TEXTURE_SRGB_DECODE_EXT:
             if (!ValidateTextureSRGBDecodeValue(context, params))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_FORMAT_SRGB_OVERRIDE_EXT:
+            if (!ValidateTextureSRGBOverrideValue(context, params))
             {
                 return false;
             }

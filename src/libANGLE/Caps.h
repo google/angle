@@ -492,6 +492,9 @@ struct Extensions
     // GL_EXT_texture_sRGB_decode
     bool textureSRGBDecode = false;
 
+    // GL_EXT_texture_sRGB_override
+    bool textureSRGBOverride = false;
+
     // GL_EXT_sRGB_write_control
     bool sRGBWriteControl = false;
 
