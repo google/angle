@@ -164,6 +164,7 @@ class FramebufferVk : public FramebufferImpl
     angle::Result invalidateImpl(ContextVk *contextVk, size_t count, const GLenum *attachments);
     // Release all FramebufferVk objects in the cache and clear cache
     void clearCache(ContextVk *contextVk);
+    void updateDepthStencilAttachmentSerial(ContextVk *contextVk);
 
     WindowSurfaceVk *mBackbuffer;
 

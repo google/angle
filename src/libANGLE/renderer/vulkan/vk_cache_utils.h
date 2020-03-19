@@ -724,10 +724,8 @@ class TextureDescriptorDesc
 // This is IMPLEMENTATION_MAX_DRAW_BUFFERS + 1 for DS attachment
 constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS;
 // Color serials are at index [0:gl::IMPLEMENTATION_MAX_DRAW_BUFFERS-1]
-// Depth index is at gl::IMPLEMENTATION_MAX_DRAW_BUFFERS
-// Stencil index is at gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1
-constexpr size_t kFramebufferDescDepthIndex   = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
-constexpr size_t kFramebufferDescStencilIndex = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
+// Depth/stencil index is at gl::IMPLEMENTATION_MAX_DRAW_BUFFERS
+constexpr size_t kFramebufferDescDepthStencilIndex = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
 // Struct for AttachmentSerial cache signatures. Includes level/layer for imageView as
 //  well as a unique Serial value for the underlying image
 struct AttachmentSerial
