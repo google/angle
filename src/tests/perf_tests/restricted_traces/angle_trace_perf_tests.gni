@@ -7,21 +7,14 @@
 
 import("../../../../gni/angle.gni")
 
-_tests = [
-  "manhattan_10_20",
-  "manhattan_750_760",
-  "manhattan_1100_1110",
-  "manhattan_1440_1450",
-  "trex_200_210",
-  "trex_800_810",
-  "trex_900_910",
-  "trex_1300_1310",
-]
+# TODO: anglebug.com/4496
+# Temporarily limit the data uploaded to a single trace to get the bots going
+_tests = [ "trex_200" ]
 
 angle_trace_perf_sources = [ "perf_tests/TracePerfTest.cpp" ]
-angle_trace_perf_data =
-    [ "${angle_root}/src/tests/perf_tests/restricted_traces" ]
+
 angle_trace_perf_defines = []
+angle_trace_perf_data = []
 
 foreach(_test, _tests) {
   _test_dir = "${_test}"
@@ -45,4 +38,6 @@ foreach(_test, _tests) {
 
   angle_trace_perf_defines +=
       [ "ANGLE_TRACE_DATA_DIR_${_test}=\"${_test_data_path}\"" ]
+
+  angle_trace_perf_data += [ "perf_tests/restricted_traces/${_test_dir}/${_test}_capture_context1.angledata.gz" ]
 }

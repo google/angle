@@ -778,6 +778,7 @@ void WriteCppReplayIndexFiles(bool compression,
     header << "#include <cstdio>\n";
     header << "#include <cstring>\n";
     header << "#include <limits>\n";
+    header << "#include <vector>\n";
     header << "#include <unordered_map>\n";
     header << "\n";
 
