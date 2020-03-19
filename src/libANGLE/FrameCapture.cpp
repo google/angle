@@ -2813,7 +2813,7 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
             GLint y           = yindex + yoffset;
             GLint pixelOffset = zindex * pixelDepthPitch + yindex * pixelRowPitch;
             GLint levelOffset = z * levelDepthPitch + y * levelRowPitch + xoffset * pixelBytes;
-            memcpy(&levelData[levelOffset], &pixelData[pixelOffset], pixelWidth);
+            memcpy(&levelData[levelOffset], &pixelData[pixelOffset], pixelRowPitch);
         }
     }
 
