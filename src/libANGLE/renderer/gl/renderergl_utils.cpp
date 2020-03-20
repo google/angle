@@ -1132,8 +1132,9 @@ void GenerateCaps(const FunctionsGL *functions,
         extensions->textureCompressionASTCLDRKHR &&
         functions->hasExtension("GL_KHR_texture_compression_astc_hdr");
     extensions->textureCompressionSliced3dASTCKHR =
-        extensions->textureCompressionASTCLDRKHR &&
-        functions->hasExtension("GL_KHR_texture_compression_astc_sliced_3d");
+        (extensions->textureCompressionASTCLDRKHR &&
+         functions->hasExtension("GL_KHR_texture_compression_astc_sliced_3d")) ||
+        extensions->textureCompressionASTCHDRKHR;
     extensions->elementIndexUintOES = functions->standard == STANDARD_GL_DESKTOP ||
                                       functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                       functions->hasGLESExtension("GL_OES_element_index_uint");
