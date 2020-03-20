@@ -14,7 +14,6 @@
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
-#include "libANGLE/HandleRangeAllocator.h"
 #include "libANGLE/ResourceMap.h"
 
 namespace rx
@@ -262,24 +261,6 @@ class SyncManager : public TypedResourceManager<Sync, HandleAllocator, SyncManag
 
   protected:
     ~SyncManager() override {}
-};
-
-class PathManager : public ResourceManagerBase<HandleRangeAllocator>
-{
-  public:
-    PathManager();
-
-    angle::Result createPaths(Context *context, GLsizei range, PathID *numCreated);
-    void deletePaths(PathID first, GLsizei range);
-    Path *getPath(PathID handle) const;
-    bool hasPath(PathID handle) const;
-
-  protected:
-    ~PathManager() override;
-    void reset(const Context *context) override;
-
-  private:
-    ResourceMap<Path, PathID> mPaths;
 };
 
 class FramebufferManager

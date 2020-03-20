@@ -300,9 +300,6 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TMemoryObjectIDPointer>(
                 os, call, param.value.MemoryObjectIDPointerVal);
             break;
-        case ParamType::TPathID:
-            WriteParamValueReplay<ParamType::TPathID>(os, call, param.value.PathIDVal);
-            break;
         case ParamType::TPointParameter:
             WriteParamValueReplay<ParamType::TPointParameter>(os, call,
                                                               param.value.PointParameterVal);
@@ -630,8 +627,6 @@ const char *ParamTypeToString(ParamType paramType)
             return "const GLuint *";
         case ParamType::TMemoryObjectIDPointer:
             return "GLuint *";
-        case ParamType::TPathID:
-            return "GLuint";
         case ParamType::TPointParameter:
             return "GLenum";
         case ParamType::TPrimitiveMode:
@@ -752,8 +747,6 @@ ResourceIDType GetResourceIDTypeFromParamType(ParamType paramType)
             return ResourceIDType::MemoryObject;
         case ParamType::TMemoryObjectIDPointer:
             return ResourceIDType::MemoryObject;
-        case ParamType::TPathID:
-            return ResourceIDType::Path;
         case ParamType::TProgramPipelineID:
             return ResourceIDType::ProgramPipeline;
         case ParamType::TProgramPipelineIDConstPointer:
@@ -825,8 +818,6 @@ const char *GetResourceIDTypeName(ResourceIDType resourceIDType)
             return "Framebuffer";
         case ResourceIDType::MemoryObject:
             return "MemoryObject";
-        case ResourceIDType::Path:
-            return "Path";
         case ResourceIDType::ProgramPipeline:
             return "ProgramPipeline";
         case ResourceIDType::Query:

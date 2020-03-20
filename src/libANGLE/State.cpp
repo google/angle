@@ -281,7 +281,6 @@ State::State(ContextID contextIn,
       mSamplerManager(
           AllocateOrGetSharedResourceManager(shareContextState, &State::mSamplerManager)),
       mSyncManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mSyncManager)),
-      mPathManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mPathManager)),
       mFramebufferManager(new FramebufferManager()),
       mProgramPipelineManager(new ProgramPipelineManager()),
       mMemoryObjectManager(
@@ -454,12 +453,6 @@ void State::initialize(Context *context)
 
     mCoverageModulation = GL_NONE;
 
-    angle::Matrix<GLfloat>::setToIdentity(mPathMatrixProj);
-    angle::Matrix<GLfloat>::setToIdentity(mPathMatrixMV);
-    mPathStencilFunc = GL_ALWAYS;
-    mPathStencilRef  = 0;
-    mPathStencilMask = std::numeric_limits<GLuint>::max();
-
     mNoSimultaneousConstantColorAndAlphaBlendFunc =
         context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||
         context->getExtensions().webglCompatibility;
@@ -534,12 +527,6 @@ void State::reset(const Context *context)
     {
         UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::ShaderStorage, 0, 0);
     }
-
-    angle::Matrix<GLfloat>::setToIdentity(mPathMatrixProj);
-    angle::Matrix<GLfloat>::setToIdentity(mPathMatrixMV);
-    mPathStencilFunc = GL_ALWAYS;
-    mPathStencilRef  = 0;
-    mPathStencilMask = std::numeric_limits<GLuint>::max();
 
     setAllDirtyBits();
 }
@@ -2005,47 +1992,6 @@ void State::setCoverageModulation(GLenum components)
 {
     mCoverageModulation = components;
     mDirtyBits.set(DIRTY_BIT_COVERAGE_MODULATION);
-}
-
-void State::loadPathRenderingMatrix(GLenum matrixMode, const GLfloat *matrix)
-{
-    if (matrixMode == GL_PATH_MODELVIEW_CHROMIUM)
-    {
-        memcpy(mPathMatrixMV, matrix, 16 * sizeof(GLfloat));
-        mDirtyBits.set(DIRTY_BIT_PATH_RENDERING);
-    }
-    else if (matrixMode == GL_PATH_PROJECTION_CHROMIUM)
-    {
-        memcpy(mPathMatrixProj, matrix, 16 * sizeof(GLfloat));
-        mDirtyBits.set(DIRTY_BIT_PATH_RENDERING);
-    }
-    else
-    {
-        UNREACHABLE();
-    }
-}
-
-const GLfloat *State::getPathRenderingMatrix(GLenum which) const
-{
-    if (which == GL_PATH_MODELVIEW_MATRIX_CHROMIUM)
-    {
-        return mPathMatrixMV;
-    }
-    else if (which == GL_PATH_PROJECTION_MATRIX_CHROMIUM)
-    {
-        return mPathMatrixProj;
-    }
-
-    UNREACHABLE();
-    return nullptr;
-}
-
-void State::setPathStencilFunc(GLenum func, GLint ref, GLuint mask)
-{
-    mPathStencilFunc = func;
-    mPathStencilRef  = ref;
-    mPathStencilMask = mask;
-    mDirtyBits.set(DIRTY_BIT_PATH_RENDERING);
 }
 
 void State::setFramebufferSRGB(bool sRGB)

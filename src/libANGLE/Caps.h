@@ -508,9 +508,6 @@ struct Extensions
     // written against ES 3.1 but can apply to ES 3.0 as well.
     bool textureNorm16 = false;
 
-    // GL_CHROMIUM_path_rendering
-    bool pathRendering = false;
-
     // GL_OES_surfaceless_context
     bool surfacelessContextOES = false;
 

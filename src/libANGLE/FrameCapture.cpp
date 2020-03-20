@@ -1181,12 +1181,6 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenPathsCHROMIUM:
-        {
-            // TODO(jmadill): Handle path IDs. http://anglebug.com/3662
-            break;
-        }
-
         case gl::EntryPoint::GenProgramPipelines:
         {
             const ParamCapture &pipelines =
@@ -3390,14 +3384,6 @@ void WriteParamValueReplay<ParamType::TMemoryObjectID>(std::ostream &os,
                                                        gl::MemoryObjectID value)
 {
     os << "gMemoryObjectMap[" << value.value << "]";
-}
-
-template <>
-void WriteParamValueReplay<ParamType::TPathID>(std::ostream &os,
-                                               const CallCapture &call,
-                                               gl::PathID value)
-{
-    os << "gPathMap[" << value.value << "]";
 }
 
 template <>

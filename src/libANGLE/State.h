@@ -36,7 +36,6 @@ struct Caps;
 class Context;
 class FramebufferManager;
 class MemoryObjectManager;
-class PathManager;
 class ProgramPipelineManager;
 class Query;
 class RenderbufferManager;
@@ -501,14 +500,6 @@ class State : angle::NonCopyable
     void setCoverageModulation(GLenum components);
     GLenum getCoverageModulation() const { return mCoverageModulation; }
 
-    // CHROMIUM_path_rendering
-    void loadPathRenderingMatrix(GLenum matrixMode, const GLfloat *matrix);
-    const GLfloat *getPathRenderingMatrix(GLenum which) const;
-    void setPathStencilFunc(GLenum func, GLint ref, GLuint mask);
-    GLenum getPathStencilFunc() const { return mPathStencilFunc; }
-    GLint getPathStencilRef() const { return mPathStencilRef; }
-    GLuint getPathStencilMask() const { return mPathStencilMask; }
-
     // GL_EXT_sRGB_write_control
     void setFramebufferSRGB(bool sRGB);
     bool getFramebufferSRGB() const { return mFramebufferSRGB; }
@@ -598,8 +589,7 @@ class State : angle::NonCopyable
         DIRTY_BIT_MULTISAMPLING,
         DIRTY_BIT_SAMPLE_ALPHA_TO_ONE,
         DIRTY_BIT_COVERAGE_MODULATION,  // CHROMIUM_framebuffer_mixed_samples
-        DIRTY_BIT_PATH_RENDERING,
-        DIRTY_BIT_FRAMEBUFFER_SRGB,  // GL_EXT_sRGB_write_control
+        DIRTY_BIT_FRAMEBUFFER_SRGB,     // GL_EXT_sRGB_write_control
         DIRTY_BIT_CURRENT_VALUES,
         DIRTY_BIT_PROVOKING_VERTEX,
         DIRTY_BIT_INVALID,
@@ -834,7 +824,6 @@ class State : angle::NonCopyable
     RenderbufferManager *mRenderbufferManager;
     SamplerManager *mSamplerManager;
     SyncManager *mSyncManager;
-    PathManager *mPathManager;
     FramebufferManager *mFramebufferManager;
     ProgramPipelineManager *mProgramPipelineManager;
     MemoryObjectManager *mMemoryObjectManager;
@@ -946,13 +935,6 @@ class State : angle::NonCopyable
     bool mSampleAlphaToOne;
 
     GLenum mCoverageModulation;
-
-    // CHROMIUM_path_rendering
-    GLfloat mPathMatrixMV[16];
-    GLfloat mPathMatrixProj[16];
-    GLenum mPathStencilFunc;
-    GLint mPathStencilRef;
-    GLuint mPathStencilMask;
 
     // GL_EXT_sRGB_write_control
     bool mFramebufferSRGB;

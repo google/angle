@@ -1366,12 +1366,6 @@ void Program::bindUniformLocation(UniformLocation location, const char *name)
     mState.mUniformLocationBindings.bindLocation(location.value, name);
 }
 
-void Program::bindFragmentInputLocation(GLint index, const char *name)
-{
-    ASSERT(mLinkResolved);
-    mFragmentInputBindings.bindLocation(index, name);
-}
-
 void Program::bindFragmentOutputLocation(GLuint index, const char *name)
 {
     mFragmentOutputLocations.bindLocation(index, name);
@@ -1380,80 +1374,6 @@ void Program::bindFragmentOutputLocation(GLuint index, const char *name)
 void Program::bindFragmentOutputIndex(GLuint index, const char *name)
 {
     mFragmentOutputIndexes.bindLocation(index, name);
-}
-
-BindingInfo Program::getFragmentInputBindingInfo(GLint index) const
-{
-    ASSERT(mLinkResolved);
-    BindingInfo ret;
-    ret.type  = GL_NONE;
-    ret.valid = false;
-
-    Shader *fragmentShader = mState.getAttachedShader(ShaderType::Fragment);
-    ASSERT(fragmentShader);
-
-    // Find the actual fragment shader varying we're interested in
-    const std::vector<sh::ShaderVariable> &inputs = fragmentShader->getInputVaryings();
-
-    for (const auto &binding : mFragmentInputBindings)
-    {
-        if (binding.second != static_cast<GLuint>(index))
-            continue;
-
-        ret.valid = true;
-
-        size_t nameLengthWithoutArrayIndex;
-        unsigned int arrayIndex = ParseArrayIndex(binding.first, &nameLengthWithoutArrayIndex);
-
-        for (const auto &in : inputs)
-        {
-            if (in.name.length() == nameLengthWithoutArrayIndex &&
-                angle::BeginsWith(in.name, binding.first, nameLengthWithoutArrayIndex))
-            {
-                if (in.isArray())
-                {
-                    // The client wants to bind either "name" or "name[0]".
-                    // GL ES 3.1 spec refers to active array names with language such as:
-                    // "if the string identifies the base name of an active array, where the
-                    // string would exactly match the name of the variable if the suffix "[0]"
-                    // were appended to the string".
-                    if (arrayIndex == GL_INVALID_INDEX)
-                        arrayIndex = 0;
-
-                    ret.name = in.mappedName + "[" + ToString(arrayIndex) + "]";
-                }
-                else
-                {
-                    ret.name = in.mappedName;
-                }
-                ret.type = in.type;
-                return ret;
-            }
-        }
-    }
-
-    return ret;
-}
-
-void Program::pathFragmentInputGen(GLint index,
-                                   GLenum genMode,
-                                   GLint components,
-                                   const GLfloat *coeffs)
-{
-    ASSERT(mLinkResolved);
-    // If the location is -1 then the command is silently ignored
-    if (index == -1)
-        return;
-
-    const auto &binding = getFragmentInputBindingInfo(index);
-
-    // If the input doesn't exist then then the command is silently ignored
-    // This could happen through optimization for example, the shader translator
-    // decides that a variable is not actually being used and optimizes it away.
-    if (binding.name.empty())
-        return;
-
-    mProgram->setPathFragmentInputGen(binding.name, genMode, components, coeffs);
 }
 
 // The attached shaders are checked for linking errors by matching up their variables.
@@ -2456,11 +2376,6 @@ const ProgramAliasedBindings &Program::getUniformLocationBindings() const
 {
     ASSERT(mLinkResolved);
     return mState.mUniformLocationBindings;
-}
-const ProgramBindings &Program::getFragmentInputBindings() const
-{
-    ASSERT(mLinkResolved);
-    return mFragmentInputBindings;
 }
 
 ComponentTypeMask Program::getDrawBufferTypeMask() const
@@ -3540,11 +3455,6 @@ bool Program::linkVaryings(InfoLog &infoLog) const
         return false;
     }
 
-    if (!linkValidateFragmentInputBindings(infoLog))
-    {
-        return false;
-    }
-
     return true;
 }
 
@@ -3615,44 +3525,6 @@ bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
     }
 
     // TODO(jmadill): verify no unmatched output varyings?
-
-    return true;
-}
-
-bool Program::linkValidateFragmentInputBindings(gl::InfoLog &infoLog) const
-{
-    std::map<GLuint, std::string> staticFragmentInputLocations;
-
-    Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
-
-    if (!fragmentShader)
-    {
-        return true;
-    }
-
-    for (const sh::ShaderVariable &input : fragmentShader->getInputVaryings())
-    {
-        if (input.isBuiltIn() || !input.staticUse)
-        {
-            continue;
-        }
-
-        const auto inputBinding = mFragmentInputBindings.getBinding(input);
-        if (inputBinding == -1)
-            continue;
-
-        const auto it = staticFragmentInputLocations.find(inputBinding);
-        if (it == std::end(staticFragmentInputLocations))
-        {
-            staticFragmentInputLocations.insert(std::make_pair(inputBinding, input.name));
-        }
-        else
-        {
-            infoLog << "Binding for fragment input " << input.name << " conflicts with "
-                    << it->second;
-            return false;
-        }
-    }
 
     return true;
 }

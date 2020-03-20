@@ -3168,14 +3168,6 @@ const D3DUniform *ProgramD3D::getD3DUniformFromLocation(GLint location) const
     return mD3DUniforms[mState.getUniformLocations()[location].index];
 }
 
-void ProgramD3D::setPathFragmentInputGen(const std::string &inputName,
-                                         GLenum genMode,
-                                         GLint components,
-                                         const GLfloat *coeffs)
-{
-    UNREACHABLE();
-}
-
 bool ProgramD3D::hasVertexExecutableForCachedInputLayout()
 {
     return mCachedVertexExecutableIndex.valid();

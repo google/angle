@@ -229,11 +229,6 @@ ProgramPipelineImpl *Context11::createProgramPipeline(const gl::ProgramPipelineS
     return new ProgramPipeline11(data);
 }
 
-std::vector<PathImpl *> Context11::createPaths(GLsizei)
-{
-    return std::vector<PathImpl *>();
-}
-
 MemoryObjectImpl *Context11::createMemoryObject()
 {
     UNREACHABLE();

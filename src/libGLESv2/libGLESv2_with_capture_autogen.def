@@ -598,36 +598,9 @@ EXPORTS
 
     ; GL_CHROMIUM_framebuffer_mixed_samples
     glCoverageModulationCHROMIUM
-    glMatrixLoadIdentityCHROMIUM
-    glMatrixLoadfCHROMIUM
 
     ; GL_CHROMIUM_lose_context
     glLoseContextCHROMIUM
-
-    ; GL_CHROMIUM_path_rendering
-    glBindFragmentInputLocationCHROMIUM
-    glCoverFillPathCHROMIUM
-    glCoverFillPathInstancedCHROMIUM
-    glCoverStrokePathCHROMIUM
-    glCoverStrokePathInstancedCHROMIUM
-    glDeletePathsCHROMIUM
-    glGenPathsCHROMIUM
-    glGetPathParameterfvCHROMIUM
-    glGetPathParameterivCHROMIUM
-    glIsPathCHROMIUM
-    glPathCommandsCHROMIUM
-    glPathParameterfCHROMIUM
-    glPathParameteriCHROMIUM
-    glPathStencilFuncCHROMIUM
-    glProgramPathFragmentInputGenCHROMIUM
-    glStencilFillPathCHROMIUM
-    glStencilFillPathInstancedCHROMIUM
-    glStencilStrokePathCHROMIUM
-    glStencilStrokePathInstancedCHROMIUM
-    glStencilThenCoverFillPathCHROMIUM
-    glStencilThenCoverFillPathInstancedCHROMIUM
-    glStencilThenCoverStrokePathCHROMIUM
-    glStencilThenCoverStrokePathInstancedCHROMIUM
 
     ; GL_EXT_blend_func_extended
     glBindFragDataLocationEXT
@@ -908,7 +881,6 @@ EXPORTS
     glBindBufferRangeContextANGLE
     glBindFragDataLocationEXTContextANGLE
     glBindFragDataLocationIndexedEXTContextANGLE
-    glBindFragmentInputLocationCHROMIUMContextANGLE
     glBindFramebufferContextANGLE
     glBindFramebufferOESContextANGLE
     glBindImageTextureContextANGLE
@@ -991,10 +963,6 @@ EXPORTS
     glCopyTexSubImage3DOESContextANGLE
     glCopyTexture3DANGLEContextANGLE
     glCopyTextureCHROMIUMContextANGLE
-    glCoverFillPathCHROMIUMContextANGLE
-    glCoverFillPathInstancedCHROMIUMContextANGLE
-    glCoverStrokePathCHROMIUMContextANGLE
-    glCoverStrokePathInstancedCHROMIUMContextANGLE
     glCoverageModulationCHROMIUMContextANGLE
     glCreateMemoryObjectsEXTContextANGLE
     glCreateProgramContextANGLE
@@ -1013,7 +981,6 @@ EXPORTS
     glDeleteFramebuffersContextANGLE
     glDeleteFramebuffersOESContextANGLE
     glDeleteMemoryObjectsEXTContextANGLE
-    glDeletePathsCHROMIUMContextANGLE
     glDeleteProgramContextANGLE
     glDeleteProgramPipelinesContextANGLE
     glDeleteQueriesContextANGLE
@@ -1114,7 +1081,6 @@ EXPORTS
     glGenFencesNVContextANGLE
     glGenFramebuffersContextANGLE
     glGenFramebuffersOESContextANGLE
-    glGenPathsCHROMIUMContextANGLE
     glGenProgramPipelinesContextANGLE
     glGenQueriesContextANGLE
     glGenQueriesEXTContextANGLE
@@ -1188,8 +1154,6 @@ EXPORTS
     glGetObjectLabelKHRContextANGLE
     glGetObjectPtrLabelContextANGLE
     glGetObjectPtrLabelKHRContextANGLE
-    glGetPathParameterfvCHROMIUMContextANGLE
-    glGetPathParameterivCHROMIUMContextANGLE
     glGetPointervContextANGLE
     glGetPointervKHRContextANGLE
     glGetPointervRobustANGLERobustANGLEContextANGLE
@@ -1315,7 +1279,6 @@ EXPORTS
     glIsFramebufferContextANGLE
     glIsFramebufferOESContextANGLE
     glIsMemoryObjectEXTContextANGLE
-    glIsPathCHROMIUMContextANGLE
     glIsProgramContextANGLE
     glIsProgramPipelineContextANGLE
     glIsQueryContextANGLE
@@ -1355,8 +1318,6 @@ EXPORTS
     glMaterialxContextANGLE
     glMaterialxvContextANGLE
     glMatrixIndexPointerOESContextANGLE
-    glMatrixLoadIdentityCHROMIUMContextANGLE
-    glMatrixLoadfCHROMIUMContextANGLE
     glMatrixModeContextANGLE
     glMaxShaderCompilerThreadsKHRContextANGLE
     glMemoryBarrierContextANGLE
@@ -1384,10 +1345,6 @@ EXPORTS
     glOrthofContextANGLE
     glOrthoxContextANGLE
     glPatchParameteriContextANGLE
-    glPathCommandsCHROMIUMContextANGLE
-    glPathParameterfCHROMIUMContextANGLE
-    glPathParameteriCHROMIUMContextANGLE
-    glPathStencilFuncCHROMIUMContextANGLE
     glPauseTransformFeedbackContextANGLE
     glPixelStoreiContextANGLE
     glPointParameterfContextANGLE
@@ -1407,7 +1364,6 @@ EXPORTS
     glProgramBinaryContextANGLE
     glProgramBinaryOESContextANGLE
     glProgramParameteriContextANGLE
-    glProgramPathFragmentInputGenCHROMIUMContextANGLE
     glProgramUniform1fContextANGLE
     glProgramUniform1fvContextANGLE
     glProgramUniform1iContextANGLE
@@ -1489,20 +1445,12 @@ EXPORTS
     glShaderBinaryContextANGLE
     glShaderSourceContextANGLE
     glSignalSemaphoreEXTContextANGLE
-    glStencilFillPathCHROMIUMContextANGLE
-    glStencilFillPathInstancedCHROMIUMContextANGLE
     glStencilFuncContextANGLE
     glStencilFuncSeparateContextANGLE
     glStencilMaskContextANGLE
     glStencilMaskSeparateContextANGLE
     glStencilOpContextANGLE
     glStencilOpSeparateContextANGLE
-    glStencilStrokePathCHROMIUMContextANGLE
-    glStencilStrokePathInstancedCHROMIUMContextANGLE
-    glStencilThenCoverFillPathCHROMIUMContextANGLE
-    glStencilThenCoverFillPathInstancedCHROMIUMContextANGLE
-    glStencilThenCoverStrokePathCHROMIUMContextANGLE
-    glStencilThenCoverStrokePathInstancedCHROMIUMContextANGLE
     glTestFenceNVContextANGLE
     glTexBufferContextANGLE
     glTexBufferRangeContextANGLE

@@ -8,7 +8,7 @@
   "scripts/gl.xml":
     "e74a595068cbdd6064300be1e71b7cc9",
   "scripts/gl_angle_ext.xml":
-    "872ecabf7ca7767c7801ba835ddbd1eb",
+    "079cc4829de7ce638faf7bbf66e141ad",
   "scripts/registry_xml.py":
     "06c837b395c8cd0c4fc937b193365042",
   "scripts/wgl.xml":
@@ -22,9 +22,9 @@
   "util/egl_loader_autogen.h":
     "55b54071e61b3e7beab28178dc20fd28",
   "util/gles_loader_autogen.cpp":
-    "1eeaa7649d906a8ff5d8a7889f983071",
+    "b73fa86312a71c76f6a8402548d21204",
   "util/gles_loader_autogen.h":
-    "1605f0b90bb32b01ccd2470db574cdf6",
+    "f5df94d354db0d26275b1828f4083633",
   "util/windows/wgl_loader_autogen.cpp":
     "c0d9a65eaa9aac356c6fd3f88638d2be",
   "util/windows/wgl_loader_autogen.h":

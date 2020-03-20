@@ -1300,19 +1300,6 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->textureMultisample = functions->isAtLeastGL(gl::Version(3, 2)) ||
                                      functions->hasGLExtension("GL_ARB_texture_multisample");
 
-    // NV_path_rendering
-    // We also need interface query which is available in
-    // >= 4.3 core or ARB_interface_query or >= GLES 3.1
-    const bool canEnableGLPathRendering =
-        functions->hasGLExtension("GL_NV_path_rendering") &&
-        (functions->hasGLExtension("GL_ARB_program_interface_query") ||
-         functions->isAtLeastGL(gl::Version(4, 3)));
-
-    const bool canEnableESPathRendering = functions->hasGLESExtension("GL_NV_path_rendering") &&
-                                          functions->isAtLeastGLES(gl::Version(3, 1));
-
-    extensions->pathRendering = canEnableGLPathRendering || canEnableESPathRendering;
-
     extensions->textureSRGBDecode = functions->hasGLExtension("GL_EXT_texture_sRGB_decode") ||
                                     functions->hasGLESExtension("GL_EXT_texture_sRGB_decode");
 

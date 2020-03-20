@@ -3167,18 +3167,6 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.pathRendering)
-    {
-        switch (pname)
-        {
-            case GL_PATH_MODELVIEW_MATRIX_CHROMIUM:
-            case GL_PATH_PROJECTION_MATRIX_CHROMIUM:
-                *type      = GL_FLOAT;
-                *numParams = 16;
-                return true;
-        }
-    }
-
     if (extensions.bindGeneratesResource)
     {
         switch (pname)

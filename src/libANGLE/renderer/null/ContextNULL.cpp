@@ -19,7 +19,6 @@
 #include "libANGLE/renderer/null/FenceNVNULL.h"
 #include "libANGLE/renderer/null/FramebufferNULL.h"
 #include "libANGLE/renderer/null/ImageNULL.h"
-#include "libANGLE/renderer/null/PathNULL.h"
 #include "libANGLE/renderer/null/ProgramNULL.h"
 #include "libANGLE/renderer/null/ProgramPipelineNULL.h"
 #include "libANGLE/renderer/null/QueryNULL.h"
@@ -241,68 +240,6 @@ angle::Result ContextNULL::drawElementsIndirect(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-void ContextNULL::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask) {}
-
-void ContextNULL::stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask) {}
-
-void ContextNULL::coverFillPath(const gl::Path *path, GLenum coverMode) {}
-
-void ContextNULL::coverStrokePath(const gl::Path *path, GLenum coverMode) {}
-
-void ContextNULL::stencilThenCoverFillPath(const gl::Path *path,
-                                           GLenum fillMode,
-                                           GLuint mask,
-                                           GLenum coverMode)
-{}
-
-void ContextNULL::stencilThenCoverStrokePath(const gl::Path *path,
-                                             GLint reference,
-                                             GLuint mask,
-                                             GLenum coverMode)
-{}
-
-void ContextNULL::coverFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                         GLenum coverMode,
-                                         GLenum transformType,
-                                         const GLfloat *transformValues)
-{}
-
-void ContextNULL::coverStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                           GLenum coverMode,
-                                           GLenum transformType,
-                                           const GLfloat *transformValues)
-{}
-
-void ContextNULL::stencilFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                           GLenum fillMode,
-                                           GLuint mask,
-                                           GLenum transformType,
-                                           const GLfloat *transformValues)
-{}
-
-void ContextNULL::stencilStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                             GLint reference,
-                                             GLuint mask,
-                                             GLenum transformType,
-                                             const GLfloat *transformValues)
-{}
-
-void ContextNULL::stencilThenCoverFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                                    GLenum coverMode,
-                                                    GLenum fillMode,
-                                                    GLuint mask,
-                                                    GLenum transformType,
-                                                    const GLfloat *transformValues)
-{}
-
-void ContextNULL::stencilThenCoverStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                                      GLenum coverMode,
-                                                      GLint reference,
-                                                      GLuint mask,
-                                                      GLenum transformType,
-                                                      const GLfloat *transformValues)
-{}
-
 gl::GraphicsResetStatus ContextNULL::getResetStatus()
 {
     return gl::GraphicsResetStatus::NoError;
@@ -456,16 +393,6 @@ SamplerImpl *ContextNULL::createSampler(const gl::SamplerState &state)
 ProgramPipelineImpl *ContextNULL::createProgramPipeline(const gl::ProgramPipelineState &state)
 {
     return new ProgramPipelineNULL(state);
-}
-
-std::vector<PathImpl *> ContextNULL::createPaths(GLsizei range)
-{
-    std::vector<PathImpl *> result(range);
-    for (GLsizei idx = 0; idx < range; idx++)
-    {
-        result[idx] = new PathNULL();
-    }
-    return result;
 }
 
 MemoryObjectImpl *ContextNULL::createMemoryObject()

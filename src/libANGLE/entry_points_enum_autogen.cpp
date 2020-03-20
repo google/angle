@@ -66,8 +66,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glBindFragDataLocationIndexed";
         case EntryPoint::BindFragDataLocationIndexedEXT:
             return "glBindFragDataLocationIndexedEXT";
-        case EntryPoint::BindFragmentInputLocationCHROMIUM:
-            return "glBindFragmentInputLocationCHROMIUM";
         case EntryPoint::BindFramebuffer:
             return "glBindFramebuffer";
         case EntryPoint::BindFramebufferOES:
@@ -380,14 +378,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glCopyTextureSubImage2D";
         case EntryPoint::CopyTextureSubImage3D:
             return "glCopyTextureSubImage3D";
-        case EntryPoint::CoverFillPathCHROMIUM:
-            return "glCoverFillPathCHROMIUM";
-        case EntryPoint::CoverFillPathInstancedCHROMIUM:
-            return "glCoverFillPathInstancedCHROMIUM";
-        case EntryPoint::CoverStrokePathCHROMIUM:
-            return "glCoverStrokePathCHROMIUM";
-        case EntryPoint::CoverStrokePathInstancedCHROMIUM:
-            return "glCoverStrokePathInstancedCHROMIUM";
         case EntryPoint::CoverageModulationCHROMIUM:
             return "glCoverageModulationCHROMIUM";
         case EntryPoint::CreateBuffers:
@@ -444,8 +434,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDeleteLists";
         case EntryPoint::DeleteMemoryObjectsEXT:
             return "glDeleteMemoryObjectsEXT";
-        case EntryPoint::DeletePathsCHROMIUM:
-            return "glDeletePathsCHROMIUM";
         case EntryPoint::DeleteProgram:
             return "glDeleteProgram";
         case EntryPoint::DeleteProgramPipelines:
@@ -738,8 +726,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGenFramebuffersOES";
         case EntryPoint::GenLists:
             return "glGenLists";
-        case EntryPoint::GenPathsCHROMIUM:
-            return "glGenPathsCHROMIUM";
         case EntryPoint::GenProgramPipelines:
             return "glGenProgramPipelines";
         case EntryPoint::GenQueries:
@@ -942,10 +928,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetObjectPtrLabel";
         case EntryPoint::GetObjectPtrLabelKHR:
             return "glGetObjectPtrLabelKHR";
-        case EntryPoint::GetPathParameterfvCHROMIUM:
-            return "glGetPathParameterfvCHROMIUM";
-        case EntryPoint::GetPathParameterivCHROMIUM:
-            return "glGetPathParameterivCHROMIUM";
         case EntryPoint::GetPixelMapfv:
             return "glGetPixelMapfv";
         case EntryPoint::GetPixelMapuiv:
@@ -1346,8 +1328,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glIsList";
         case EntryPoint::IsMemoryObjectEXT:
             return "glIsMemoryObjectEXT";
-        case EntryPoint::IsPathCHROMIUM:
-            return "glIsPathCHROMIUM";
         case EntryPoint::IsProgram:
             return "glIsProgram";
         case EntryPoint::IsProgramPipeline:
@@ -1472,10 +1452,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMaterialxv";
         case EntryPoint::MatrixIndexPointerOES:
             return "glMatrixIndexPointerOES";
-        case EntryPoint::MatrixLoadIdentityCHROMIUM:
-            return "glMatrixLoadIdentityCHROMIUM";
-        case EntryPoint::MatrixLoadfCHROMIUM:
-            return "glMatrixLoadfCHROMIUM";
         case EntryPoint::MatrixMode:
             return "glMatrixMode";
         case EntryPoint::MaxShaderCompilerThreadsKHR:
@@ -1682,14 +1658,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glPatchParameterfv";
         case EntryPoint::PatchParameteri:
             return "glPatchParameteri";
-        case EntryPoint::PathCommandsCHROMIUM:
-            return "glPathCommandsCHROMIUM";
-        case EntryPoint::PathParameterfCHROMIUM:
-            return "glPathParameterfCHROMIUM";
-        case EntryPoint::PathParameteriCHROMIUM:
-            return "glPathParameteriCHROMIUM";
-        case EntryPoint::PathStencilFuncCHROMIUM:
-            return "glPathStencilFuncCHROMIUM";
         case EntryPoint::PauseTransformFeedback:
             return "glPauseTransformFeedback";
         case EntryPoint::PixelMapfv:
@@ -1762,8 +1730,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glProgramBinaryOES";
         case EntryPoint::ProgramParameteri:
             return "glProgramParameteri";
-        case EntryPoint::ProgramPathFragmentInputGenCHROMIUM:
-            return "glProgramPathFragmentInputGenCHROMIUM";
         case EntryPoint::ProgramUniform1d:
             return "glProgramUniform1d";
         case EntryPoint::ProgramUniform1dv:
@@ -2090,10 +2056,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glSignalSemaphoreEXT";
         case EntryPoint::SpecializeShader:
             return "glSpecializeShader";
-        case EntryPoint::StencilFillPathCHROMIUM:
-            return "glStencilFillPathCHROMIUM";
-        case EntryPoint::StencilFillPathInstancedCHROMIUM:
-            return "glStencilFillPathInstancedCHROMIUM";
         case EntryPoint::StencilFunc:
             return "glStencilFunc";
         case EntryPoint::StencilFuncSeparate:
@@ -2106,18 +2068,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glStencilOp";
         case EntryPoint::StencilOpSeparate:
             return "glStencilOpSeparate";
-        case EntryPoint::StencilStrokePathCHROMIUM:
-            return "glStencilStrokePathCHROMIUM";
-        case EntryPoint::StencilStrokePathInstancedCHROMIUM:
-            return "glStencilStrokePathInstancedCHROMIUM";
-        case EntryPoint::StencilThenCoverFillPathCHROMIUM:
-            return "glStencilThenCoverFillPathCHROMIUM";
-        case EntryPoint::StencilThenCoverFillPathInstancedCHROMIUM:
-            return "glStencilThenCoverFillPathInstancedCHROMIUM";
-        case EntryPoint::StencilThenCoverStrokePathCHROMIUM:
-            return "glStencilThenCoverStrokePathCHROMIUM";
-        case EntryPoint::StencilThenCoverStrokePathInstancedCHROMIUM:
-            return "glStencilThenCoverStrokePathInstancedCHROMIUM";
         case EntryPoint::TestFenceNV:
             return "glTestFenceNV";
         case EntryPoint::TexBuffer:

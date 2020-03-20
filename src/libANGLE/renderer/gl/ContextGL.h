@@ -76,9 +76,6 @@ class ContextGL : public ContextImpl
     // Program Pipeline object creation
     ProgramPipelineImpl *createProgramPipeline(const gl::ProgramPipelineState &data) override;
 
-    // Path object creation
-    std::vector<PathImpl *> createPaths(GLsizei range) override;
-
     // Memory object creation.
     MemoryObjectImpl *createMemoryObject() override;
 
@@ -163,50 +160,6 @@ class ContextGL : public ContextImpl
                                        gl::PrimitiveMode mode,
                                        gl::DrawElementsType type,
                                        const void *indirect) override;
-
-    // CHROMIUM_path_rendering implementation
-    void stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask) override;
-    void stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask) override;
-    void coverFillPath(const gl::Path *path, GLenum coverMode) override;
-    void coverStrokePath(const gl::Path *path, GLenum coverMode) override;
-    void stencilThenCoverFillPath(const gl::Path *path,
-                                  GLenum fillMode,
-                                  GLuint mask,
-                                  GLenum coverMode) override;
-    void stencilThenCoverStrokePath(const gl::Path *path,
-                                    GLint reference,
-                                    GLuint mask,
-                                    GLenum coverMode) override;
-    void coverFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                GLenum coverMode,
-                                GLenum transformType,
-                                const GLfloat *transformValues) override;
-    void coverStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                  GLenum coverMode,
-                                  GLenum transformType,
-                                  const GLfloat *transformValues) override;
-    void stencilFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                  GLenum fillMode,
-                                  GLuint mask,
-                                  GLenum transformType,
-                                  const GLfloat *transformValues) override;
-    void stencilStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                    GLint reference,
-                                    GLuint mask,
-                                    GLenum transformType,
-                                    const GLfloat *transformValues) override;
-    void stencilThenCoverFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                           GLenum coverMode,
-                                           GLenum fillMode,
-                                           GLuint mask,
-                                           GLenum transformType,
-                                           const GLfloat *transformValues) override;
-    void stencilThenCoverStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                             GLenum coverMode,
-                                             GLint reference,
-                                             GLuint mask,
-                                             GLenum transformType,
-                                             const GLfloat *transformValues) override;
 
     // Device loss
     gl::GraphicsResetStatus getResetStatus() override;

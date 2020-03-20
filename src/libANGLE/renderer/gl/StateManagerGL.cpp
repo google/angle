@@ -148,9 +148,6 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mMultisamplingEnabled(true),
       mSampleAlphaToOneEnabled(false),
       mCoverageModulation(GL_NONE),
-      mPathStencilFunc(GL_ALWAYS),
-      mPathStencilRef(0),
-      mPathStencilMask(std::numeric_limits<GLuint>::max()),
       mIsMultiviewEnabled(extensions.multiview || extensions.multiview2),
       mProvokingVertex(GL_LAST_VERTEX_CONVENTION),
       mLocalDirtyBits()
@@ -182,9 +179,6 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
             mFunctions->enable(GL_POINT_SPRITE);
         }
     }
-
-    angle::Matrix<GLfloat>::setToIdentity(mPathMatrixProj);
-    angle::Matrix<GLfloat>::setToIdentity(mPathMatrixMV);
 }
 
 StateManagerGL::~StateManagerGL() {}
@@ -823,10 +817,6 @@ void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
-    // It is possible there is no active program during a path operation.
-    if (!program)
-        return;
-
     const gl::ActiveTexturePointerArray &textures  = glState.getActiveTexturesCache();
     const gl::ActiveTextureMask &activeTextures    = program->getActiveSamplersMask();
     const gl::ActiveTextureTypeArray &textureTypes = program->getActiveSamplerTypes();
@@ -859,10 +849,6 @@ void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *conte
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
-    // It is possible there is no active program during a path operation.
-    if (!program)
-        return;
-
     for (size_t blockIndex = 0; blockIndex < program->getActiveShaderStorageBlockCount();
          blockIndex++)
     {
@@ -892,10 +878,6 @@ void StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *conte
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
-    // It is possible there is no active program during a path operation.
-    if (!program)
-        return;
-
     for (size_t uniformBlockIndex = 0; uniformBlockIndex < program->getActiveUniformBlockCount();
          uniformBlockIndex++)
     {
@@ -924,10 +906,6 @@ void StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context 
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
-    // It is possible there is no active program during a path operation.
-    if (!program)
-        return;
-
     for (const auto &atomicCounterBuffer : program->getState().getAtomicCounterBuffers())
     {
         GLuint binding     = atomicCounterBuffer.binding;
@@ -954,10 +932,6 @@ void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
 {
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
-
-    // It is possible there is no active program during a path operation.
-    if (!program)
-        return;
 
     ASSERT(context->getClientVersion() >= gl::ES_3_1 || program->getImageBindings().size() == 0);
     for (size_t imageUnitIndex : program->getActiveImagesMask())
@@ -1850,14 +1824,6 @@ void StateManagerGL::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
                 setCoverageModulation(state.getCoverageModulation());
                 break;
-            case gl::State::DIRTY_BIT_PATH_RENDERING:
-                setPathRenderingModelViewMatrix(
-                    state.getPathRenderingMatrix(GL_PATH_MODELVIEW_MATRIX_CHROMIUM));
-                setPathRenderingProjectionMatrix(
-                    state.getPathRenderingMatrix(GL_PATH_PROJECTION_MATRIX_CHROMIUM));
-                setPathRenderingStencilState(state.getPathStencilFunc(), state.getPathStencilRef(),
-                                             state.getPathStencilMask());
-                break;
             case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB:
                 setFramebufferSRGBEnabledForFramebuffer(
                     context, state.getFramebufferSRGB(),
@@ -2013,41 +1979,6 @@ void StateManagerGL::setCoverageModulation(GLenum components)
         mFunctions->coverageModulationNV(components);
 
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_COVERAGE_MODULATION);
-    }
-}
-
-void StateManagerGL::setPathRenderingModelViewMatrix(const GLfloat *m)
-{
-    if (memcmp(mPathMatrixMV, m, sizeof(mPathMatrixMV)) != 0)
-    {
-        memcpy(mPathMatrixMV, m, sizeof(mPathMatrixMV));
-        mFunctions->matrixLoadfEXT(GL_PATH_MODELVIEW_CHROMIUM, m);
-
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING);
-    }
-}
-
-void StateManagerGL::setPathRenderingProjectionMatrix(const GLfloat *m)
-{
-    if (memcmp(mPathMatrixProj, m, sizeof(mPathMatrixProj)) != 0)
-    {
-        memcpy(mPathMatrixProj, m, sizeof(mPathMatrixProj));
-        mFunctions->matrixLoadfEXT(GL_PATH_PROJECTION_CHROMIUM, m);
-
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING);
-    }
-}
-
-void StateManagerGL::setPathRenderingStencilState(GLenum func, GLint ref, GLuint mask)
-{
-    if (func != mPathStencilFunc || ref != mPathStencilRef || mask != mPathStencilMask)
-    {
-        mPathStencilFunc = func;
-        mPathStencilRef  = ref;
-        mPathStencilMask = mask;
-        mFunctions->pathStencilFuncNV(func, ref, mask);
-
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING);
     }
 }
 

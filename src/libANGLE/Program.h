@@ -620,11 +620,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     void bindAttributeLocation(GLuint index, const char *name);
     void bindUniformLocation(UniformLocation location, const char *name);
 
-    // CHROMIUM_path_rendering
-    BindingInfo getFragmentInputBindingInfo(GLint index) const;
-    void bindFragmentInputLocation(GLint index, const char *name);
-    void pathFragmentInputGen(GLint index, GLenum genMode, GLint components, const GLfloat *coeffs);
-
     // EXT_blend_func_extended
     void bindFragmentOutputLocation(GLuint index, const char *name);
     void bindFragmentOutputIndex(GLuint index, const char *name);
@@ -937,7 +932,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     const sh::ShaderVariable &getOutputResource(size_t index) const;
 
     const ProgramBindings &getAttributeBindings() const;
-    const ProgramBindings &getFragmentInputBindings() const;
     const ProgramAliasedBindings &getUniformLocationBindings() const;
 
     int getNumViews() const
@@ -1033,10 +1027,6 @@ class Program final : angle::NonCopyable, public LabeledObject
                                              Shader *consumingShader,
                                              InfoLog &infoLog) const;
 
-    // Check for aliased path rendering input bindings (if any).
-    // If more than one binding refer statically to the same location the link must fail.
-    bool linkValidateFragmentInputBindings(InfoLog &infoLog) const;
-
     bool linkValidateBuiltInVaryings(InfoLog &infoLog) const;
     bool linkValidateTransformFeedback(const Version &version,
                                        InfoLog &infoLog,
@@ -1111,9 +1101,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool mValidated;
 
     ProgramBindings mAttributeBindings;
-
-    // CHROMIUM_path_rendering
-    ProgramBindings mFragmentInputBindings;
 
     // EXT_blend_func_extended
     ProgramAliasedBindings mFragmentOutputLocations;

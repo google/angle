@@ -1175,14 +1175,6 @@ void ProgramVk::setUniformMatrix4x3fv(GLint location,
     setUniformMatrixfv<4, 3>(location, count, transpose, value);
 }
 
-void ProgramVk::setPathFragmentInputGen(const std::string &inputName,
-                                        GLenum genMode,
-                                        GLint components,
-                                        const GLfloat *coeffs)
-{
-    UNIMPLEMENTED();
-}
-
 angle::Result ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex)
 {
     bool ignoreNewPoolAllocated;

@@ -2787,33 +2787,6 @@ void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &ext
         ASSIGN("glGetInternalformatSampleivNV", getInternalformatSampleivNV);
     }
 
-    if (extensions.count("GL_NV_path_rendering") != 0)
-    {
-        ASSIGN("glCoverFillPathInstancedNV", coverFillPathInstancedNV);
-        ASSIGN("glCoverFillPathNV", coverFillPathNV);
-        ASSIGN("glCoverStrokePathInstancedNV", coverStrokePathInstancedNV);
-        ASSIGN("glCoverStrokePathNV", coverStrokePathNV);
-        ASSIGN("glDeletePathsNV", deletePathsNV);
-        ASSIGN("glGenPathsNV", genPathsNV);
-        ASSIGN("glGetPathParameterfvNV", getPathParameterfvNV);
-        ASSIGN("glGetPathParameterivNV", getPathParameterivNV);
-        ASSIGN("glIsPathNV", isPathNV);
-        ASSIGN("glMatrixLoadfEXT", matrixLoadfEXT);
-        ASSIGN("glPathCommandsNV", pathCommandsNV);
-        ASSIGN("glPathParameterfNV", pathParameterfNV);
-        ASSIGN("glPathParameteriNV", pathParameteriNV);
-        ASSIGN("glPathStencilFuncNV", pathStencilFuncNV);
-        ASSIGN("glProgramPathFragmentInputGenNV", programPathFragmentInputGenNV);
-        ASSIGN("glStencilFillPathInstancedNV", stencilFillPathInstancedNV);
-        ASSIGN("glStencilFillPathNV", stencilFillPathNV);
-        ASSIGN("glStencilStrokePathInstancedNV", stencilStrokePathInstancedNV);
-        ASSIGN("glStencilStrokePathNV", stencilStrokePathNV);
-        ASSIGN("glStencilThenCoverFillPathInstancedNV", stencilThenCoverFillPathInstancedNV);
-        ASSIGN("glStencilThenCoverFillPathNV", stencilThenCoverFillPathNV);
-        ASSIGN("glStencilThenCoverStrokePathInstancedNV", stencilThenCoverStrokePathInstancedNV);
-        ASSIGN("glStencilThenCoverStrokePathNV", stencilThenCoverStrokePathNV);
-    }
-
     if (extensions.count("GL_OVR_multiview") != 0)
     {
         ASSIGN("glFramebufferTextureMultiviewOVR", framebufferTextureMultiviewOVR);
@@ -5577,33 +5550,6 @@ void DispatchTableGL::initProcsSharedExtensionsNULL(const std::set<std::string> 
     if (extensions.count("GL_NV_internalformat_sample_query") != 0)
     {
         getInternalformatSampleivNV = &glGetInternalformatSampleivNVNULL;
-    }
-
-    if (extensions.count("GL_NV_path_rendering") != 0)
-    {
-        coverFillPathInstancedNV              = &glCoverFillPathInstancedNVNULL;
-        coverFillPathNV                       = &glCoverFillPathNVNULL;
-        coverStrokePathInstancedNV            = &glCoverStrokePathInstancedNVNULL;
-        coverStrokePathNV                     = &glCoverStrokePathNVNULL;
-        deletePathsNV                         = &glDeletePathsNVNULL;
-        genPathsNV                            = &glGenPathsNVNULL;
-        getPathParameterfvNV                  = &glGetPathParameterfvNVNULL;
-        getPathParameterivNV                  = &glGetPathParameterivNVNULL;
-        isPathNV                              = &glIsPathNVNULL;
-        matrixLoadfEXT                        = &glMatrixLoadfEXTNULL;
-        pathCommandsNV                        = &glPathCommandsNVNULL;
-        pathParameterfNV                      = &glPathParameterfNVNULL;
-        pathParameteriNV                      = &glPathParameteriNVNULL;
-        pathStencilFuncNV                     = &glPathStencilFuncNVNULL;
-        programPathFragmentInputGenNV         = &glProgramPathFragmentInputGenNVNULL;
-        stencilFillPathInstancedNV            = &glStencilFillPathInstancedNVNULL;
-        stencilFillPathNV                     = &glStencilFillPathNVNULL;
-        stencilStrokePathInstancedNV          = &glStencilStrokePathInstancedNVNULL;
-        stencilStrokePathNV                   = &glStencilStrokePathNVNULL;
-        stencilThenCoverFillPathInstancedNV   = &glStencilThenCoverFillPathInstancedNVNULL;
-        stencilThenCoverFillPathNV            = &glStencilThenCoverFillPathNVNULL;
-        stencilThenCoverStrokePathInstancedNV = &glStencilThenCoverStrokePathInstancedNVNULL;
-        stencilThenCoverStrokePathNV          = &glStencilThenCoverStrokePathNVNULL;
     }
 
     if (extensions.count("GL_OVR_multiview") != 0)

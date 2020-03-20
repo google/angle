@@ -131,11 +131,6 @@ ProgramPipelineImpl *Context9::createProgramPipeline(const gl::ProgramPipelineSt
     return nullptr;
 }
 
-std::vector<PathImpl *> Context9::createPaths(GLsizei)
-{
-    return std::vector<PathImpl *>();
-}
-
 MemoryObjectImpl *Context9::createMemoryObject()
 {
     UNREACHABLE();

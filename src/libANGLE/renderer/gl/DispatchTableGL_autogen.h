@@ -795,31 +795,6 @@ class DispatchTableGL : angle::NonCopyable
 
     // GL_OVR_multiview2
     PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC framebufferTextureMultiviewOVR = nullptr;
-
-    // NV_path_rendering (originally written against 3.2 compatibility profile)
-    PFNGLCOVERFILLPATHINSTANCEDNVPROC coverFillPathInstancedNV = nullptr;
-    PFNGLCOVERFILLPATHNVPROC coverFillPathNV = nullptr;
-    PFNGLCOVERSTROKEPATHINSTANCEDNVPROC coverStrokePathInstancedNV = nullptr;
-    PFNGLCOVERSTROKEPATHNVPROC coverStrokePathNV = nullptr;
-    PFNGLDELETEPATHSNVPROC deletePathsNV = nullptr;
-    PFNGLGENPATHSNVPROC genPathsNV = nullptr;
-    PFNGLGETPATHPARAMETERFVNVPROC getPathParameterfvNV = nullptr;
-    PFNGLGETPATHPARAMETERIVNVPROC getPathParameterivNV = nullptr;
-    PFNGLISPATHNVPROC isPathNV = nullptr;
-    PFNGLMATRIXLOADFEXTPROC matrixLoadfEXT = nullptr;
-    PFNGLPATHCOMMANDSNVPROC pathCommandsNV = nullptr;
-    PFNGLPATHPARAMETERFNVPROC pathParameterfNV = nullptr;
-    PFNGLPATHPARAMETERINVPROC pathParameteriNV = nullptr;
-    PFNGLPATHSTENCILFUNCNVPROC pathStencilFuncNV = nullptr;
-    PFNGLPROGRAMPATHFRAGMENTINPUTGENNVPROC programPathFragmentInputGenNV = nullptr;
-    PFNGLSTENCILFILLPATHINSTANCEDNVPROC stencilFillPathInstancedNV = nullptr;
-    PFNGLSTENCILFILLPATHNVPROC stencilFillPathNV = nullptr;
-    PFNGLSTENCILSTROKEPATHINSTANCEDNVPROC stencilStrokePathInstancedNV = nullptr;
-    PFNGLSTENCILSTROKEPATHNVPROC stencilStrokePathNV = nullptr;
-    PFNGLSTENCILTHENCOVERFILLPATHINSTANCEDNVPROC stencilThenCoverFillPathInstancedNV = nullptr;
-    PFNGLSTENCILTHENCOVERFILLPATHNVPROC stencilThenCoverFillPathNV = nullptr;
-    PFNGLSTENCILTHENCOVERSTROKEPATHINSTANCEDNVPROC stencilThenCoverStrokePathInstancedNV = nullptr;
-    PFNGLSTENCILTHENCOVERSTROKEPATHNVPROC stencilThenCoverStrokePathNV = nullptr;
     // clang-format on
 
     DispatchTableGL();

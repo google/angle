@@ -17,7 +17,6 @@
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/MemoryObjectGL.h"
-#include "libANGLE/renderer/gl/PathGL.h"
 #include "libANGLE/renderer/gl/ProgramGL.h"
 #include "libANGLE/renderer/gl/ProgramPipelineGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
@@ -63,8 +62,7 @@ ShaderImpl *ContextGL::createShader(const gl::ShaderState &data)
 
 ProgramImpl *ContextGL::createProgram(const gl::ProgramState &data)
 {
-    return new ProgramGL(data, getFunctions(), getFeaturesGL(), getStateManager(),
-                         getExtensions().pathRendering, mRenderer);
+    return new ProgramGL(data, getFunctions(), getFeaturesGL(), getStateManager(), mRenderer);
 }
 
 FramebufferImpl *ContextGL::createFramebuffer(const gl::FramebufferState &data)
@@ -155,26 +153,6 @@ SamplerImpl *ContextGL::createSampler(const gl::SamplerState &state)
 ProgramPipelineImpl *ContextGL::createProgramPipeline(const gl::ProgramPipelineState &data)
 {
     return new ProgramPipelineGL(data, getFunctions());
-}
-
-std::vector<PathImpl *> ContextGL::createPaths(GLsizei range)
-{
-    const FunctionsGL *funcs = getFunctions();
-
-    std::vector<PathImpl *> ret;
-    ret.reserve(range);
-
-    const GLuint first = funcs->genPathsNV(range);
-    if (first == 0)
-        return ret;
-
-    for (GLsizei i = 0; i < range; ++i)
-    {
-        const auto id = first + i;
-        ret.push_back(new PathGL(funcs, id));
-    }
-
-    return ret;
 }
 
 MemoryObjectImpl *ContextGL::createMemoryObject()
@@ -663,100 +641,6 @@ angle::Result ContextGL::drawElementsIndirect(const gl::Context *context,
 {
     getFunctions()->drawElementsIndirect(ToGLenum(mode), ToGLenum(type), indirect);
     return angle::Result::Continue;
-}
-
-void ContextGL::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask)
-{
-    mRenderer->stencilFillPath(mState, path, fillMode, mask);
-}
-
-void ContextGL::stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask)
-{
-    mRenderer->stencilStrokePath(mState, path, reference, mask);
-}
-
-void ContextGL::coverFillPath(const gl::Path *path, GLenum coverMode)
-{
-    mRenderer->coverFillPath(mState, path, coverMode);
-}
-
-void ContextGL::coverStrokePath(const gl::Path *path, GLenum coverMode)
-{
-    mRenderer->coverStrokePath(mState, path, coverMode);
-}
-
-void ContextGL::stencilThenCoverFillPath(const gl::Path *path,
-                                         GLenum fillMode,
-                                         GLuint mask,
-                                         GLenum coverMode)
-{
-    mRenderer->stencilThenCoverFillPath(mState, path, fillMode, mask, coverMode);
-}
-
-void ContextGL::stencilThenCoverStrokePath(const gl::Path *path,
-                                           GLint reference,
-                                           GLuint mask,
-                                           GLenum coverMode)
-{
-    mRenderer->stencilThenCoverStrokePath(mState, path, reference, mask, coverMode);
-}
-
-void ContextGL::coverFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                       GLenum coverMode,
-                                       GLenum transformType,
-                                       const GLfloat *transformValues)
-{
-    mRenderer->coverFillPathInstanced(mState, paths, coverMode, transformType, transformValues);
-}
-
-void ContextGL::coverStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                         GLenum coverMode,
-                                         GLenum transformType,
-                                         const GLfloat *transformValues)
-{
-    mRenderer->coverStrokePathInstanced(mState, paths, coverMode, transformType, transformValues);
-}
-
-void ContextGL::stencilFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                         GLenum fillMode,
-                                         GLuint mask,
-                                         GLenum transformType,
-                                         const GLfloat *transformValues)
-{
-    mRenderer->stencilFillPathInstanced(mState, paths, fillMode, mask, transformType,
-                                        transformValues);
-}
-
-void ContextGL::stencilStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                           GLint reference,
-                                           GLuint mask,
-                                           GLenum transformType,
-                                           const GLfloat *transformValues)
-{
-    mRenderer->stencilStrokePathInstanced(mState, paths, reference, mask, transformType,
-                                          transformValues);
-}
-
-void ContextGL::stencilThenCoverFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                                  GLenum coverMode,
-                                                  GLenum fillMode,
-                                                  GLuint mask,
-                                                  GLenum transformType,
-                                                  const GLfloat *transformValues)
-{
-    mRenderer->stencilThenCoverFillPathInstanced(mState, paths, coverMode, fillMode, mask,
-                                                 transformType, transformValues);
-}
-
-void ContextGL::stencilThenCoverStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                                    GLenum coverMode,
-                                                    GLint reference,
-                                                    GLuint mask,
-                                                    GLenum transformType,
-                                                    const GLfloat *transformValues)
-{
-    mRenderer->stencilThenCoverStrokePathInstanced(mState, paths, coverMode, reference, mask,
-                                                   transformType, transformValues);
 }
 
 gl::GraphicsResetStatus ContextGL::getResetStatus()
