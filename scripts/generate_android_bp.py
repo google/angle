@@ -217,23 +217,15 @@ def gn_cflags_to_blueprint_cflags(target_info):
     # Only forward cflags that disable warnings
     cflag_whitelist = r'^-Wno-.*$'
 
-    # Some clfags are not supported by the version of clang in Android
-    cflag_blacklist = [
-        '-Wno-bitwise-conditional-parentheses',
-        '-Wno-builtin-assume-aligned-alignment',
-        '-Wno-c99-designator',
-        '-Wno-deprecated-copy',
-        '-Wno-final-dtor-non-final-class',
-        '-Wno-implicit-int-float-conversion',
-        '-Wno-sizeof-array-div',
-        '-Wno-misleading-indentation',
-    ]
-
     for cflag_type in ['cflags', 'cflags_c', 'cflags_cc']:
         if cflag_type in target_info:
             for cflag in target_info[cflag_type]:
-                if re.search(cflag_whitelist, cflag) and not cflag in cflag_blacklist:
+                if re.search(cflag_whitelist, cflag):
                     result.append(cflag)
+
+    # Chrome and Android use different versions of Clang which support differnt warning options.
+    # Ignore errors about unrecognized warning flags.
+    result.append('-Wno-unknown-warning-option')
 
     if 'defines' in target_info:
         for define in target_info['defines']:
