@@ -1623,6 +1623,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->debugMarker                         = true;
     extensions->eglImageOES                         = true;
     extensions->eglImageExternalOES                 = true;
+    extensions->eglImageExternalWrapModesEXT        = true;
     extensions->eglImageExternalEssl3OES            = true;
     extensions->eglStreamConsumerExternalNV         = true;
     extensions->unpackSubimage                      = true;

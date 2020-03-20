@@ -90,9 +90,10 @@ void RendererVk::ensureCapsInitialized() const
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinMax = true;
 
-    mNativeExtensions.eglImageOES              = true;
-    mNativeExtensions.eglImageExternalOES      = true;
-    mNativeExtensions.eglImageExternalEssl3OES = true;
+    mNativeExtensions.eglImageOES                  = true;
+    mNativeExtensions.eglImageExternalOES          = true;
+    mNativeExtensions.eglImageExternalWrapModesEXT = true;
+    mNativeExtensions.eglImageExternalEssl3OES     = true;
 
     mNativeExtensions.memoryObject   = true;
     mNativeExtensions.memoryObjectFd = getFeatures().supportsExternalMemoryFd.enabled;

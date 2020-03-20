@@ -5844,8 +5844,9 @@ bool ValidateTexParameterBase(const Context *context,
         case GL_TEXTURE_WRAP_T:
         case GL_TEXTURE_WRAP_R:
         {
-            bool restrictedWrapModes =
-                target == TextureType::External || target == TextureType::Rectangle;
+            bool restrictedWrapModes = ((target == TextureType::External &&
+                                         !context->getExtensions().eglImageExternalWrapModesEXT) ||
+                                        target == TextureType::Rectangle);
             if (!ValidateTextureWrapModeValue(context, params, restrictedWrapModes))
             {
                 return false;

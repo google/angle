@@ -159,7 +159,7 @@ class TextureState final : private angle::NonCopyable
     friend class rx::TextureGL;
     friend bool operator==(const TextureState &a, const TextureState &b);
 
-    bool computeSamplerCompleteness(const SamplerState &samplerState, const State &data) const;
+    bool computeSamplerCompleteness(const SamplerState &samplerState, const State &state) const;
     bool computeMipmapCompleteness() const;
     bool computeLevelCompleteness(TextureTarget target, size_t level) const;
     SamplerFormat computeRequiredSamplerFormat(const SamplerState &samplerState) const;

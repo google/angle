@@ -271,7 +271,7 @@ SamplerFormat TextureState::computeRequiredSamplerFormat(const SamplerState &sam
 }
 
 bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
-                                              const State &data) const
+                                              const State &state) const
 {
     if (mBaseLevel > mMaxLevel)
     {
@@ -298,12 +298,13 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // filter state of multisample texture is ignored(11.1.3.3). So it shouldn't be judged as
     // incomplete texture. So, we ignore filtering for multisample texture completeness here.
     if (!IsMultisampled(mType) &&
-        !baseImageDesc.format.info->filterSupport(data.getClientVersion(), data.getExtensions()) &&
+        !baseImageDesc.format.info->filterSupport(state.getClientVersion(),
+                                                  state.getExtensions()) &&
         !IsPointSampled(samplerState))
     {
         return false;
     }
-    bool npotSupport = data.getExtensions().textureNPOTOES || data.getClientMajorVersion() >= 3;
+    bool npotSupport = state.getExtensions().textureNPOTOES || state.getClientMajorVersion() >= 3;
     if (!npotSupport)
     {
         if ((samplerState.getWrapS() != GL_CLAMP_TO_EDGE &&
@@ -343,15 +344,20 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // to that unit, the behavior of the implementation is as if the texture were incomplete. For
     // example, if TEXTURE_WRAP_S or TEXTURE_WRAP_T is set to anything but CLAMP_TO_EDGE on the
     // sampler object bound to a texture unit and the texture bound to that unit is an external
-    // texture, the texture will be considered incomplete.
-    // Sampler object state which does not affect sampling for the type of texture bound to a
-    // texture unit, such as TEXTURE_WRAP_R for an external texture, does not affect completeness.
+    // texture and EXT_EGL_image_external_wrap_modes is not enabled, the texture will be considered
+    // incomplete.
+    // Sampler object state which does not affect sampling for the type of texture bound
+    // to a texture unit, such as TEXTURE_WRAP_R for an external texture, does not affect
+    // completeness.
     if (mType == TextureType::External)
     {
-        if (samplerState.getWrapS() != GL_CLAMP_TO_EDGE ||
-            samplerState.getWrapT() != GL_CLAMP_TO_EDGE)
+        if (!state.getExtensions().eglImageExternalWrapModesEXT)
         {
-            return false;
+            if (samplerState.getWrapS() != GL_CLAMP_TO_EDGE ||
+                samplerState.getWrapT() != GL_CLAMP_TO_EDGE)
+            {
+                return false;
+            }
         }
 
         if (samplerState.getMinFilter() != GL_LINEAR && samplerState.getMinFilter() != GL_NEAREST)
@@ -366,7 +372,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
     // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
     if (!IsMultisampled(mType) && baseImageDesc.format.info->depthBits > 0 &&
-        data.getClientMajorVersion() >= 3)
+        state.getClientMajorVersion() >= 3)
     {
         // Note: we restrict this validation to sized types. For the OES_depth_textures
         // extension, due to some underspecification problems, we must allow linear filtering

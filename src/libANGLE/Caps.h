@@ -392,6 +392,9 @@ struct Extensions
     // GL_OES_EGL_image_external_essl3
     bool eglImageExternalEssl3OES = false;
 
+    // GL_EXT_EGL_image_external_wrap_modes
+    bool eglImageExternalWrapModesEXT = false;
+
     // GL_OES_EGL_sync
     bool eglSyncOES = false;
 
