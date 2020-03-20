@@ -153,6 +153,9 @@ TEST_P(ExternalWrapTest, NoWrap)
     ANGLE_SKIP_TEST_IF(
         !IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
+    // Ozone only supports external target for images created with EGL_EXT_image_dma_buf_import
+    ANGLE_SKIP_TEST_IF(IsOzone());
+
     createExternalTexture();
 
     ASSERT_NE(mProgram, 0u);
@@ -174,6 +177,9 @@ TEST_P(ExternalWrapTest, ClampToEdge)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_EGL_image_external"));
     ANGLE_SKIP_TEST_IF(
         !IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+
+    // Ozone only supports external target for images created with EGL_EXT_image_dma_buf_import
+    ANGLE_SKIP_TEST_IF(IsOzone());
 
     createExternalTexture();
 
@@ -199,6 +205,9 @@ TEST_P(ExternalWrapTest, Repeat)
     ANGLE_SKIP_TEST_IF(
         !IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_EGL_image_external_wrap_modes"));
+
+    // Ozone only supports external target for images created with EGL_EXT_image_dma_buf_import
+    ANGLE_SKIP_TEST_IF(IsOzone());
 
     createExternalTexture();
 
@@ -228,6 +237,9 @@ TEST_P(ExternalWrapTest, MirroredRepeat)
     ANGLE_SKIP_TEST_IF(
         !IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_EGL_image_external_wrap_modes"));
+
+    // Ozone only supports external target for images created with EGL_EXT_image_dma_buf_import
+    ANGLE_SKIP_TEST_IF(IsOzone());
 
     createExternalTexture();
 
