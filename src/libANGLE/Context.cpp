@@ -3543,7 +3543,8 @@ Extensions Context::generateSupportedExtensions() const
     supportedExtensions.loseContextCHROMIUM = true;
 
     // The ASTC texture extensions have dependency requirements.
-    if (supportedExtensions.textureCompressionASTCHDRKHR)
+    if (supportedExtensions.textureCompressionASTCHDRKHR ||
+        supportedExtensions.textureCompressionSliced3dASTCKHR)
     {
         // GL_KHR_texture_compression_astc_hdr cannot be exposed without also exposing
         // GL_KHR_texture_compression_astc_ldr

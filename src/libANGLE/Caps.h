@@ -213,6 +213,9 @@ struct Extensions
     // GL_OES_texture_compression_astc
     bool textureCompressionASTCOES = false;
 
+    // GL_KHR_texture_compression_astc_sliced_3d
+    bool textureCompressionSliced3dASTCKHR = false;
+
     // GL_EXT_texture_compression_bptc
     bool textureCompressionBPTC = false;
 

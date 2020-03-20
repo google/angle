@@ -55,9 +55,12 @@ void RendererVk::ensureCapsInitialized() const
         (mPhysicalDeviceFeatures.textureCompressionETC2 == VK_TRUE) &&
         gl::DetermineCompressedTextureETCSupport(mNativeTextureCaps);
 
-    // Vulkan technically only supports the LDR profile but driver all appear to support the HDR
-    // profile as well. http://anglebug.com/1185#c8
-    mNativeExtensions.textureCompressionASTCHDRKHR = mNativeExtensions.textureCompressionASTCLDRKHR;
+    // Vulkan doesn't support 3D ASTC textures, which are required by both
+    // GL_OES_texture_compression_astc and GL_KHR_texture_compression_astc_hdr
+    mNativeExtensions.textureCompressionASTCHDRKHR = false;
+    mNativeExtensions.textureCompressionASTCOES    = false;
+    mNativeExtensions.textureCompressionSliced3dASTCKHR =
+        mNativeExtensions.textureCompressionASTCLDRKHR;
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.

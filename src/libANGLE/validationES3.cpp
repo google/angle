@@ -358,7 +358,8 @@ static bool ValidateES3CompressedFormatForTexture3D(const Context *context, GLen
         return false;
     }
 
-    if (IsASTC2DFormat(format) && !context->getExtensions().textureCompressionASTCHDRKHR)
+    if (IsASTC2DFormat(format) && !(context->getExtensions().textureCompressionASTCHDRKHR ||
+                                    context->getExtensions().textureCompressionSliced3dASTCKHR))
     {
         // GL_KHR_texture_compression_astc_hdr, TEXTURE_3D is not supported without HDR profile
         context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArrayASTC);

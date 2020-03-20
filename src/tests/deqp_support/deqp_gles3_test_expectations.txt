@@ -617,35 +617,3 @@
 4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.rgba16f_to_r11f_g11f_b10f = FAIL
 
 4418 SWIFTSHADER : dEQP-GLES3.functional.negative_api.buffer.framebuffer_texture_layer = FAIL
-
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.void_extent_hdr.* = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.4x4 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.5x4 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.5x5 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.6x5 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.6x6 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.8x5 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.8x6 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.8x8 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.10x5 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.10x6 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.10x8 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.10x10 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.12x10 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.12x12 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.endpoint_value_hdr_cem_* = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.4x4 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.5x4 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.5x5 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.6x5 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.6x6 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.8x5 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.8x6 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.8x8 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.10x5 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.10x6 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.10x8 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.10x10 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.12x10 = FAIL
-4447 SWIFTSHADER : dEQP-GLES3.functional.texture.compressed.astc.random.12x12 = FAIL
-
