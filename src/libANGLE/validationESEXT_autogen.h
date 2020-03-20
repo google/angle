@@ -1011,6 +1011,8 @@ bool ValidateImportSemaphoreFdEXT(const Context *context,
 
 // GL_EXT_texture_format_BGRA8888
 
+// GL_EXT_texture_sRGB_R8
+
 // GL_EXT_texture_storage
 bool ValidateTexStorage1DEXT(const Context *context,
                              GLenum target,

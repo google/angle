@@ -720,6 +720,8 @@ EXPORTS
 
     ; GL_EXT_texture_format_BGRA8888
 
+    ; GL_EXT_texture_sRGB_R8
+
     ; GL_EXT_texture_storage
     glTexStorage1DEXT
     glTexStorage2DEXT

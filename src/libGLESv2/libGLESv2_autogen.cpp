@@ -4185,6 +4185,8 @@ void GL_APIENTRY glImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLi
 
 // GL_EXT_texture_format_BGRA8888
 
+// GL_EXT_texture_sRGB_R8
+
 // GL_EXT_texture_storage
 void GL_APIENTRY glTexStorage1DEXT(GLenum target,
                                    GLsizei levels,

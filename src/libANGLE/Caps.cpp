@@ -612,6 +612,14 @@ static bool DetermineSRGBTextureSupport(const TextureCapsMap &textureCaps)
            GetFormatSupport(textureCaps, requiredRenderFormats, true, false, true, true, false);
 }
 
+// Check for GL_EXT_texture_sRGB_R8 support
+static bool DetermineSRGBR8TextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFilterFormats[] = {GL_SR8_EXT};
+
+    return GetFormatSupport(textureCaps, requiredFilterFormats, true, true, false, false, false);
+}
+
 // Check for GL_ANGLE_depth_texture support
 static bool DetermineDepthTextureANGLESupport(const TextureCapsMap &textureCaps)
 {
@@ -820,6 +828,7 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     compressedEACRG11UnsignedTextureOES = DetermineEACRG11UnsignedTextureSupport(textureCaps);
     compressedEACRG11SignedTextureOES   = DetermineEACRG11SignedTextureSupport(textureCaps);
     sRGB                                = DetermineSRGBTextureSupport(textureCaps);
+    sRGBR8EXT                           = DetermineSRGBR8TextureSupport(textureCaps);
     depthTextureANGLE                   = DetermineDepthTextureANGLESupport(textureCaps);
     depthTextureOES                     = DetermineDepthTextureOESSupport(textureCaps);
     depth24OES                          = DetermineDepth24OESSupport(textureCaps);
@@ -905,6 +914,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_IMG_texture_compression_pvrtc"] = enableableExtension(&Extensions::compressedTexturePVRTC);
         map["GL_EXT_pvrtc_sRGB"] = enableableExtension(&Extensions::compressedTexturePVRTCsRGB);
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
+        map["GL_EXT_texture_sRGB_R8"] = enableableExtension(&Extensions::sRGBR8EXT);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextureANGLE);
         map["GL_OES_depth_texture"] = esOnlyExtension(&Extensions::depthTextureOES);
         map["GL_OES_depth_texture_cube_map"] = enableableExtension(&Extensions::depthTextureCubeMapOES);

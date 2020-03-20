@@ -855,14 +855,15 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                     }
                     break;
                 }
-                case GL_UNSIGNED_BYTE:
+                case GL_FLOAT:
                 {
                     switch (internalFormat)
                     {
                         case GL_RGB:
-                        case GL_RGB8:
-                        case GL_RGB565:
-                        case GL_SRGB8:
+                        case GL_RGB32F:
+                        case GL_RGB16F:
+                        case GL_R11F_G11F_B10F:
+                        case GL_RGB9_E5:
                             return true;
                         default:
                             break;
@@ -908,15 +909,14 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                     }
                     break;
                 }
-                case GL_FLOAT:
+                case GL_UNSIGNED_BYTE:
                 {
                     switch (internalFormat)
                     {
                         case GL_RGB:
-                        case GL_RGB32F:
-                        case GL_RGB16F:
-                        case GL_R11F_G11F_B10F:
-                        case GL_RGB9_E5:
+                        case GL_RGB8:
+                        case GL_RGB565:
+                        case GL_SRGB8:
                             return true;
                         default:
                             break;
@@ -957,20 +957,8 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                 {
                     switch (internalFormat)
                     {
-                        case GL_LUMINANCE_ALPHA:
                         case GL_LUMINANCE_ALPHA16F_EXT:
-                            return true;
-                        default:
-                            break;
-                    }
-                    break;
-                }
-                case GL_FLOAT:
-                {
-                    switch (internalFormat)
-                    {
                         case GL_LUMINANCE_ALPHA:
-                        case GL_LUMINANCE_ALPHA32F_EXT:
                             return true;
                         default:
                             break;
@@ -989,12 +977,24 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                     }
                     break;
                 }
-                case GL_HALF_FLOAT_OES:
+                case GL_FLOAT:
                 {
                     switch (internalFormat)
                     {
                         case GL_LUMINANCE_ALPHA:
+                        case GL_LUMINANCE_ALPHA32F_EXT:
+                            return true;
+                        default:
+                            break;
+                    }
+                    break;
+                }
+                case GL_HALF_FLOAT_OES:
+                {
+                    switch (internalFormat)
+                    {
                         case GL_LUMINANCE_ALPHA16F_EXT:
+                        case GL_LUMINANCE_ALPHA:
                             return true;
                         default:
                             break;
@@ -1013,20 +1013,8 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                 {
                     switch (internalFormat)
                     {
-                        case GL_ALPHA:
                         case GL_ALPHA16F_EXT:
-                            return true;
-                        default:
-                            break;
-                    }
-                    break;
-                }
-                case GL_FLOAT:
-                {
-                    switch (internalFormat)
-                    {
                         case GL_ALPHA:
-                        case GL_ALPHA32F_EXT:
                             return true;
                         default:
                             break;
@@ -1045,12 +1033,24 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                     }
                     break;
                 }
-                case GL_HALF_FLOAT_OES:
+                case GL_FLOAT:
                 {
                     switch (internalFormat)
                     {
                         case GL_ALPHA:
+                        case GL_ALPHA32F_EXT:
+                            return true;
+                        default:
+                            break;
+                    }
+                    break;
+                }
+                case GL_HALF_FLOAT_OES:
+                {
+                    switch (internalFormat)
+                    {
                         case GL_ALPHA16F_EXT:
+                        case GL_ALPHA:
                             return true;
                         default:
                             break;
@@ -1112,15 +1112,13 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                     }
                     break;
                 }
-                case GL_UNSIGNED_BYTE:
+                case GL_FLOAT:
                 {
                     switch (internalFormat)
                     {
                         case GL_RGBA:
-                        case GL_RGBA8:
-                        case GL_RGB5_A1:
-                        case GL_RGBA4:
-                        case GL_SRGB8_ALPHA8:
+                        case GL_RGBA32F:
+                        case GL_RGBA16F:
                             return true;
                         default:
                             break;
@@ -1150,13 +1148,15 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                     }
                     break;
                 }
-                case GL_FLOAT:
+                case GL_UNSIGNED_BYTE:
                 {
                     switch (internalFormat)
                     {
                         case GL_RGBA:
-                        case GL_RGBA32F:
-                        case GL_RGBA16F:
+                        case GL_RGBA8:
+                        case GL_RGB5_A1:
+                        case GL_RGBA4:
+                        case GL_SRGB8_ALPHA8:
                             return true;
                         default:
                             break;
@@ -1198,20 +1198,8 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                 {
                     switch (internalFormat)
                     {
-                        case GL_LUMINANCE:
                         case GL_LUMINANCE16F_EXT:
-                            return true;
-                        default:
-                            break;
-                    }
-                    break;
-                }
-                case GL_FLOAT:
-                {
-                    switch (internalFormat)
-                    {
                         case GL_LUMINANCE:
-                        case GL_LUMINANCE32F_EXT:
                             return true;
                         default:
                             break;
@@ -1230,12 +1218,24 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                     }
                     break;
                 }
-                case GL_HALF_FLOAT_OES:
+                case GL_FLOAT:
                 {
                     switch (internalFormat)
                     {
                         case GL_LUMINANCE:
+                        case GL_LUMINANCE32F_EXT:
+                            return true;
+                        default:
+                            break;
+                    }
+                    break;
+                }
+                case GL_HALF_FLOAT_OES:
+                {
+                    switch (internalFormat)
+                    {
                         case GL_LUMINANCE16F_EXT:
+                        case GL_LUMINANCE:
                             return true;
                         default:
                             break;
@@ -1462,6 +1462,7 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                     switch (internalFormat)
                     {
                         case GL_RED:
+                        case GL_SR8_EXT:
                         case GL_R8:
                             return true;
                         default:

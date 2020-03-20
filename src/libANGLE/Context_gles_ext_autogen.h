@@ -359,6 +359,7 @@
     /* GL_EXT_texture_compression_s3tc_srgb */                                                     \
     /* GL_EXT_texture_filter_anisotropic */                                                        \
     /* GL_EXT_texture_format_BGRA8888 */                                                           \
+    /* GL_EXT_texture_sRGB_R8 */                                                                   \
     /* GL_EXT_texture_storage */                                                                   \
     void texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width);        \
     /* GL_KHR_debug */                                                                             \
