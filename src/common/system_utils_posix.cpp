@@ -9,6 +9,7 @@
 #include "system_utils.h"
 
 #include <array>
+#include <iostream>
 
 #include <dlfcn.h>
 #include <sys/stat.h>
@@ -81,6 +82,10 @@ class PosixLibrary : public Library
 
         std::string fullPath = directory + libraryName + "." + GetSharedLibraryExtension();
         mModule              = dlopen(fullPath.c_str(), RTLD_NOW);
+        if (!mModule)
+        {
+            std::cerr << "Failed to load " << libraryName << ": " << dlerror() << std::endl;
+        }
     }
 
     ~PosixLibrary() override

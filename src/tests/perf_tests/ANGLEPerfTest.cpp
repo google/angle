@@ -189,7 +189,6 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
       mBackend(backend),
       mStory(story),
       mGPUTimeNs(0),
-      mIgnoreErrors(false),
       mSkipTest(false),
       mStepsToRun(std::numeric_limits<unsigned int>::max()),
       mNumStepsPerformed(0),
@@ -649,11 +648,7 @@ void ANGLERenderTest::step()
         mOSWindow->messageLoop();
 
 #if defined(ANGLE_ENABLE_ASSERTS)
-        // Some gfxbench tests have expected errors that don't affect replay
-        if (!mIgnoreErrors)
-        {
-            EXPECT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError());
-        }
+        EXPECT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError());
 #endif  // defined(ANGLE_ENABLE_ASSERTS)
     }
 

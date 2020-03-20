@@ -7,9 +7,10 @@
 
 import("../../../../gni/angle.gni")
 
-# TODO: anglebug.com/4496
-# Temporarily limit the data uploaded to a single trace to get the bots going
-_tests = [ "trex_200" ]
+_tests = [
+  "manhattan_10",
+  "trex_200",
+]
 
 angle_trace_perf_sources = [ "perf_tests/TracePerfTest.cpp" ]
 

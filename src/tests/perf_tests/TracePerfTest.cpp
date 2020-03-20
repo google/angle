@@ -14,6 +14,7 @@
 #include "tests/perf_tests/DrawCallPerfParams.h"
 #include "util/egl_loader_autogen.h"
 
+#include "restricted_traces/manhattan_10/manhattan_10_capture_context1.h"
 #include "restricted_traces/trex_200/trex_200_capture_context1.h"
 
 #include <cassert>
@@ -50,10 +51,9 @@ ANGLE_MAYBE_UNUSED uint8_t *DecompressBinaryData(const std::vector<uint8_t> &com
     return uncompressedData.release();
 }
 
-// TODO (anglebug.com/4496)
-// Temporarily limit the tests to a single trace to get the bots going
 enum class TracePerfTestID
 {
+    Manhattan10,
     TRex200,
     InvalidEnum,
 };
@@ -81,6 +81,9 @@ struct TracePerfParams final : public RenderTestParams
 
         switch (testID)
         {
+            case TracePerfTestID::Manhattan10:
+                strstr << "_manhattan_10";
+                break;
             case TracePerfTestID::TRex200:
                 strstr << "_trex_200";
                 break;
@@ -138,6 +141,8 @@ class TracePerfTest : public ANGLERenderTest, public ::testing::WithParamInterfa
     QueryInfo mCurrentQuery = {};
     std::vector<QueryInfo> mRunningQueries;
     std::vector<TimeSample> mTimeline;
+
+    std::string mStartingDirectory;
 };
 
 TracePerfTest::TracePerfTest()
@@ -145,16 +150,19 @@ TracePerfTest::TracePerfTest()
 {}
 
 // TODO(jmadill/cnorthrop): Use decompression path. http://anglebug.com/3630
-#define TRACE_TEST_CASE(NAME)                            \
-    mStartFrame = NAME::kReplayFrameStart;               \
-    mEndFrame   = NAME::kReplayFrameEnd;                 \
-    mReplayFunc = NAME::ReplayContext1Frame;             \
-    NAME::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_##NAME); \
+#define TRACE_TEST_CASE(NAME)                                    \
+    mStartFrame = NAME::kReplayFrameStart;                       \
+    mEndFrame   = NAME::kReplayFrameEnd;                         \
+    mReplayFunc = NAME::ReplayContext1Frame;                     \
+    NAME::SetBinaryDataDecompressCallback(DecompressBinaryData); \
+    NAME::SetBinaryDataDir(ANGLE_TRACE_DATA_DIR_##NAME);         \
     NAME::SetupContext1Replay()
 
 void TracePerfTest::initializeBenchmark()
 {
     const auto &params = GetParam();
+
+    mStartingDirectory = angle::GetCWD().value();
 
     // To load the trace data path correctly we set the CWD to the executable dir.
     if (!IsAndroid())
@@ -165,8 +173,10 @@ void TracePerfTest::initializeBenchmark()
 
     switch (params.testID)
     {
+        case TracePerfTestID::Manhattan10:
+            TRACE_TEST_CASE(manhattan_10);
+            break;
         case TracePerfTestID::TRex200:
-            trex_200::SetBinaryDataDecompressCallback(DecompressBinaryData);
             TRACE_TEST_CASE(trex_200);
             break;
         default:
@@ -177,13 +187,15 @@ void TracePerfTest::initializeBenchmark()
     ASSERT_TRUE(mEndFrame > mStartFrame);
 
     getWindow()->setVisible(true);
-
-    mIgnoreErrors = true;
 }
 
 #undef TRACE_TEST_CASE
 
-void TracePerfTest::destroyBenchmark() {}
+void TracePerfTest::destroyBenchmark()
+{
+    // In order for the next test to load, restore the working directory
+    angle::SetCWD(mStartingDirectory.c_str());
+}
 
 void TracePerfTest::sampleTime()
 {

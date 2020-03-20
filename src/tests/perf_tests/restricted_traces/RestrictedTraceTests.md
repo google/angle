@@ -33,13 +33,9 @@ Build the angle_perftests:
 ```
 autoninja -C out/Release angle_perftests
 ```
-On desktop, run them like so:
+Run them like so:
 ```
 out/Release/angle_perftests --gtest_filter=TracePerfTest*
-```
-On Android, run them like so:
-```
-out/Release/bin/run_angle_perftests --gtest_filter=TracePerfTest*
 ```
 
 ## Updating traces
@@ -56,6 +52,7 @@ python ..\..\..\..\scripts\refresh_angle_libs.py --verbose
 set TFW_PACKAGE_DIR=../../../build/vs2017-x64/testfw/tfw-dev
 set ANGLE_DEFAULT_PLATFORM=vulkan
 
+# TRex
 set START=200
 set END=210
 set LABEL=trex
@@ -65,6 +62,17 @@ set ANGLE_CAPTURE_FRAME_START=%START%
 set ANGLE_CAPTURE_FRAME_END=%END%
 set ANGLE_CAPTURE_OUT_DIR=..\..\..\..\..\angle\src\tests\perf_tests\restricted_traces\%LABEL%_%START%
 ..\bin\testfw_app.exe -b ../../../build/vs2017-x64/testfw/tfw-dev --gfx egl -w 1920 -h 1080 -t gl_trex --ei -frame_step_time=40
+
+# Manhattan
+set START=10
+set END=20
+set LABEL=manhattan
+mkdir ..\..\..\..\..\angle\src\tests\perf_tests\restricted_traces\%LABEL%_%START%
+set ANGLE_CAPTURE_LABEL=%LABEL%_%START%
+set ANGLE_CAPTURE_FRAME_START=%START%
+set ANGLE_CAPTURE_FRAME_END=%END%
+set ANGLE_CAPTURE_OUT_DIR=..\..\..\..\..\angle\src\tests\perf_tests\restricted_traces\%LABEL%_%START%
+..\bin\testfw_app.exe -b ../../../build/vs2017-x64/testfw/tfw-dev --gfx egl -w 1920 -h 1080 -t gl_manhattan --ei -frame_step_time=40
 ```
 
 ### Linux
@@ -87,6 +95,17 @@ export ANGLE_CAPTURE_FRAME_START=$START
 export ANGLE_CAPTURE_FRAME_END=$END
 export ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}
 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_trex --ei -frame_step_time=40
+
+# Manhattan
+export START=10
+export END=20
+export LABEL=manhattan
+mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}
+export ANGLE_CAPTURE_LABEL=${LABEL}_${START}
+export ANGLE_CAPTURE_FRAME_START=$START
+export ANGLE_CAPTURE_FRAME_END=$END
+export ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}
+../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_manhattan --ei -frame_step_time=40
 ```
 
 ## Upload to the cloud
@@ -94,6 +113,7 @@ export ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricte
 ```
 cd ~/chromium/src/third_party/angle/src/tests/perf_tests/restricted_traces
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive trex_200
+upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive manhattan_10
 ```
 
 ## Adding new tests
