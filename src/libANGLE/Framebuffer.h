@@ -123,6 +123,11 @@ class FramebufferState final : angle::NonCopyable
 
     bool isDefault() const;
 
+    bool hasDepthStencilFeedbackLoop() const
+    {
+        return mDepthBufferFeedbackLoop || mStencilBufferFeedbackLoop;
+    }
+
   private:
     const FramebufferAttachment *getWebGLDepthStencilAttachment() const;
     const FramebufferAttachment *getWebGLDepthAttachment() const;

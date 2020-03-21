@@ -447,7 +447,7 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
 
 RenderTargetVk *FramebufferVk::getDepthStencilRenderTarget() const
 {
-    return mRenderTargetCache.getDepthStencil();
+    return mRenderTargetCache.getDepthStencil(true);
 }
 
 RenderTargetVk *FramebufferVk::getColorDrawRenderTarget(size_t colorIndex) const
@@ -737,7 +737,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     if (blitDepthBuffer || blitStencilBuffer)
     {
         RenderTargetVk *readRenderTarget = srcFramebufferVk->getDepthStencilRenderTarget();
-        RenderTargetVk *drawRenderTarget = mRenderTargetCache.getDepthStencil();
+        RenderTargetVk *drawRenderTarget = mRenderTargetCache.getDepthStencil(true);
         params.srcLayer                  = readRenderTarget->getLayerIndex();
 
         // Multisampled images are not allowed to have mips.
@@ -947,7 +947,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
         ++attachmentIndexVk;
     }
 
-    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil(true);
     if (depthStencilRenderTarget)
     {
         if (invalidateDepthBuffer)
@@ -983,11 +983,12 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
 
 void FramebufferVk::updateDepthStencilAttachmentSerial(ContextVk *contextVk)
 {
-    if (mRenderTargetCache.getDepthStencil() != nullptr)
+    RenderTargetVk *depthStencilRT = mRenderTargetCache.getDepthStencil(true);
+
+    if (depthStencilRT != nullptr)
     {
-        mCurrentFramebufferDesc.update(
-            vk::kFramebufferDescDepthStencilIndex,
-            mRenderTargetCache.getDepthStencil()->getAssignSerial(contextVk));
+        mCurrentFramebufferDesc.update(vk::kFramebufferDescDepthStencilIndex,
+                                       depthStencilRT->getAssignSerial(contextVk));
     }
     else
     {
@@ -1018,19 +1019,15 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 updateDepthStencilAttachmentSerial(contextVk);
                 break;
             case gl::Framebuffer::DIRTY_BIT_DEPTH_BUFFER_CONTENTS:
-                ANGLE_TRY(mRenderTargetCache.getDepthStencil()->flushStagedUpdates(contextVk));
-                ASSERT(mRenderTargetCache.getDepthStencil() != nullptr);
-                mCurrentFramebufferDesc.update(
-                    vk::kFramebufferDescDepthStencilIndex,
-                    mRenderTargetCache.getDepthStencil()->getAssignSerial(contextVk));
-                break;
             case gl::Framebuffer::DIRTY_BIT_STENCIL_BUFFER_CONTENTS:
-                ANGLE_TRY(mRenderTargetCache.getDepthStencil()->flushStagedUpdates(contextVk));
-                ASSERT(mRenderTargetCache.getDepthStencil() != nullptr);
-                mCurrentFramebufferDesc.update(
-                    vk::kFramebufferDescDepthStencilIndex,
-                    mRenderTargetCache.getDepthStencil()->getAssignSerial(contextVk));
+            {
+                RenderTargetVk *depthStencilRT = mRenderTargetCache.getDepthStencil(true);
+                ASSERT(depthStencilRT != nullptr);
+                ANGLE_TRY(depthStencilRT->flushStagedUpdates(contextVk));
+                mCurrentFramebufferDesc.update(vk::kFramebufferDescDepthStencilIndex,
+                                               depthStencilRT->getAssignSerial(contextVk));
                 break;
+            }
             case gl::Framebuffer::DIRTY_BIT_READ_BUFFER:
                 ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
                 break;
@@ -1144,7 +1141,7 @@ void FramebufferVk::updateRenderPassDesc()
         }
     }
 
-    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil(true);
     if (depthStencilRenderTarget)
     {
         mRenderPassDesc.packDepthStencilAttachment(
@@ -1203,7 +1200,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
         attachmentsSize = colorRenderTarget->getExtents();
     }
 
-    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil(true);
     if (depthStencilRenderTarget)
     {
         const vk::ImageView *imageView = nullptr;
@@ -1327,7 +1324,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
 
-    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil(true);
     if (depthStencilRenderTarget)
     {
         ANGLE_TRY(depthStencilRenderTarget->onDepthStencilDraw(contextVk));
@@ -1405,7 +1402,7 @@ RenderTargetVk *FramebufferVk::getFirstRenderTarget() const
         }
     }
 
-    return mRenderTargetCache.getDepthStencil();
+    return mRenderTargetCache.getDepthStencil(true);
 }
 
 GLint FramebufferVk::getSamples() const
