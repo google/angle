@@ -1455,6 +1455,9 @@ void State::invalidateTexture(TextureType type)
 
 void State::setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler)
 {
+    if (mSamplers[textureUnit].get() == sampler)
+        return;
+
     mSamplers[textureUnit].set(context, sampler);
     mDirtyBits.set(DIRTY_BIT_SAMPLER_BINDINGS);
     // This is overly conservative as it assumes the sampler has never been bound.

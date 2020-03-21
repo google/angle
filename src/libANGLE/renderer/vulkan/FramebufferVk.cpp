@@ -1001,6 +1001,8 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    vk::FramebufferDesc priorFramebufferDesc = mCurrentFramebufferDesc;
+
     // For any updated attachments we'll update their Serials below
     ASSERT(dirtyBits.any());
     for (size_t dirtyBit : dirtyBits)
@@ -1088,6 +1090,12 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 }
             }
         }
+    }
+
+    // No-op redundant changes to prevent closing the RenderPass.
+    if (mCurrentFramebufferDesc == priorFramebufferDesc)
+    {
+        return angle::Result::Continue;
     }
 
     // The FBO's new attachment may have changed the renderable area
