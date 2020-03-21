@@ -1721,11 +1721,6 @@ void main()
 // order of multiple shader invocations in compute shader.
 TEST_P(ComputeShaderTest, groupMemoryBarrierAndBarrierTest)
 {
-    // Crashes on Windows 32-bit SwiftShader Subzero. http://anglebug.com/4482
-#if defined(ANGLE_IS_32_BIT_CPU)
-    ANGLE_SKIP_TEST_IF(isSwiftshader() && IsWindows());
-#endif
-
     // TODO(xinghua.cao@intel.com): Figure out why we get this error message
     // that shader uses features not recognized by this D3D version.
     ANGLE_SKIP_TEST_IF((IsAMD() || IsNVIDIA()) && IsD3D11());
@@ -1887,11 +1882,6 @@ void main()
 // Verify shared non-array variables can work correctly.
 TEST_P(ComputeShaderTest, NonArraySharedVariable)
 {
-    // Crashes on Windows 32-bit SwiftShader Subzero. http://anglebug.com/4482
-#if defined(ANGLE_IS_32_BIT_CPU)
-    ANGLE_SKIP_TEST_IF(isSwiftshader() && IsWindows());
-#endif
-
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 2, local_size_y = 2, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -1925,11 +1915,6 @@ void main()
 // Verify shared non-struct array variables can work correctly.
 TEST_P(ComputeShaderTest, NonStructArrayAsSharedVariable)
 {
-    // Crashes on Windows 32-bit SwiftShader Subzero. http://anglebug.com/4482
-#if defined(ANGLE_IS_32_BIT_CPU)
-    ANGLE_SKIP_TEST_IF(isSwiftshader() && IsWindows());
-#endif
-
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 2, local_size_y = 2, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -1954,11 +1939,6 @@ void main()
 // Verify shared struct array variables work correctly.
 TEST_P(ComputeShaderTest, StructArrayAsSharedVariable)
 {
-    // Crashes on Windows 32-bit SwiftShader Subzero. http://anglebug.com/4482
-#if defined(ANGLE_IS_32_BIT_CPU)
-    ANGLE_SKIP_TEST_IF(isSwiftshader() && IsWindows());
-#endif
-
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 2, local_size_y = 2, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -1987,11 +1967,6 @@ void main()
 // Verify using atomic functions without return value can work correctly.
 TEST_P(ComputeShaderTest, AtomicFunctionsNoReturnValue)
 {
-    // Crashes on Windows 32-bit SwiftShader Subzero. http://anglebug.com/4482
-#if defined(ANGLE_IS_32_BIT_CPU)
-    ANGLE_SKIP_TEST_IF(isSwiftshader() && IsWindows());
-#endif
-
     // Fails on AMD windows drivers.  http://anglebug.com/3872
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
@@ -2058,11 +2033,6 @@ void main()
 // Verify using atomic functions in a non-initializer single assignment can work correctly.
 TEST_P(ComputeShaderTest, AtomicFunctionsInNonInitializerSingleAssignment)
 {
-    // Crashes on Windows 32-bit SwiftShader Subzero. http://anglebug.com/4482
-#if defined(ANGLE_IS_32_BIT_CPU)
-    ANGLE_SKIP_TEST_IF(isSwiftshader() && IsWindows());
-#endif
-
     // Fails on AMD windows drivers.  http://anglebug.com/3872
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
@@ -2112,11 +2082,6 @@ void main()
 // Verify using atomic functions in an initializers and using unsigned int works correctly.
 TEST_P(ComputeShaderTest, AtomicFunctionsInitializerWithUnsigned)
 {
-    // Crashes on Windows 32-bit SwiftShader Subzero. http://anglebug.com/4482
-#if defined(ANGLE_IS_32_BIT_CPU)
-    ANGLE_SKIP_TEST_IF(isSwiftshader() && IsWindows());
-#endif
-
     // Fails on AMD windows drivers.  http://anglebug.com/3872
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
@@ -2177,11 +2142,6 @@ void main()
 // Verify using atomic functions inside expressions as unsigned int.
 TEST_P(ComputeShaderTest, AtomicFunctionsReturnWithUnsigned)
 {
-    // Crashes on Windows 32-bit SwiftShader Subzero. http://anglebug.com/4482
-#if defined(ANGLE_IS_32_BIT_CPU)
-    ANGLE_SKIP_TEST_IF(isSwiftshader() && IsWindows());
-#endif
-
     // Fails on AMD windows drivers.  http://anglebug.com/3872
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
@@ -2232,11 +2192,6 @@ void main()
 // Verify using nested atomic functions in expressions.
 TEST_P(ComputeShaderTest, AtomicFunctionsReturnWithMultipleTypes)
 {
-    // Crashes on Windows 32-bit SwiftShader Subzero. http://anglebug.com/4482
-#if defined(ANGLE_IS_32_BIT_CPU)
-    ANGLE_SKIP_TEST_IF(isSwiftshader() && IsWindows());
-#endif
-
     constexpr char kCShader[] = R"(#version 310 es
 layout (local_size_x = 4, local_size_y = 1, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;

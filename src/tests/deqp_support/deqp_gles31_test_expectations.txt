@@ -191,19 +191,6 @@
 3881 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.location.default_block.array.array.image_2d = SKIP
 3881 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.location.default_block.array.array.iimage_2d_array = SKIP
 
-// Crashes in Windows x86 Subzero Reactor
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.compute.basic.shared_atomic_op_* = SKIP
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.compute.basic.shared_var_* = SKIP
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.compute.basic.ssbo_local_barrier_* = SKIP
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.compute.shared_var.* = SKIP
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.image_load_store.2d.qualifiers.* = SKIP
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.image_load_store.2d_array.qualifiers.* = SKIP
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.image_load_store.3d.qualifiers.* = SKIP
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.image_load_store.cube.qualifiers.* = SKIP
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.ssbo.atomic.compswap.* = SKIP
-4482 WIN SWIFTSHADER : dEQP-GLES31.functional.synchronization.inter_invocation.* = SKIP
-
-
 ////
 //// General Vulkan expectations
 ////
