@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
 
+#include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
@@ -119,6 +120,77 @@ class DynamicBuffer : angle::NonCopyable
 
     std::vector<BufferHelper *> mInFlightBuffers;
     std::vector<BufferHelper *> mBufferFreeList;
+};
+
+// Based off of the DynamicBuffer class, DynamicShadowBuffer provides
+// a similar conceptually infinitely long buffer that will only be written
+// to and read by the CPU. This can be used to provide CPU cached copies of
+// GPU-read only buffers. The value add here is that when an app requests
+// CPU access to a buffer we can fullfil such a request in O(1) time since
+// we don't need to wait for GPU to be done with in-flight commands.
+//
+// The hidden cost here is that any operation that updates a buffer, either
+// through a buffer sub data update or a buffer-to-buffer copy will have an
+// additional overhead of having to update its CPU only buffer
+class DynamicShadowBuffer : public angle::NonCopyable
+{
+  public:
+    DynamicShadowBuffer();
+    DynamicShadowBuffer(DynamicShadowBuffer &&other);
+    ~DynamicShadowBuffer();
+
+    // Initialize the DynamicShadowBuffer.
+    void init(size_t initialSize);
+
+    // Returns whether this DynamicShadowBuffer is active
+    ANGLE_INLINE bool valid() { return (mSize != 0); }
+
+    // This call will actually allocate a new CPU only memory from the heap.
+    // The size can be different than the one specified during `init`.
+    angle::Result allocate(size_t sizeInBytes);
+
+    ANGLE_INLINE void updateData(const uint8_t *data, size_t size, size_t offset)
+    {
+        ASSERT(!mBuffer.empty());
+        // Memcopy data into the buffer
+        memcpy((mBuffer.data() + offset), data, size);
+    }
+
+    // Map the CPU only buffer and return the pointer. We map the entire buffer for now.
+    ANGLE_INLINE void map(size_t offset, void **mapPtr)
+    {
+        ASSERT(mapPtr);
+        ASSERT(!mBuffer.empty());
+        *mapPtr = mBuffer.data() + offset;
+    }
+
+    // Unmap the CPU only buffer, NOOP for now
+    ANGLE_INLINE void unmap() {}
+
+    // This releases resources when they might currently be in use.
+    void release();
+
+    // This frees resources immediately.
+    void destroy(VkDevice device);
+
+    ANGLE_INLINE uint8_t *getCurrentBuffer()
+    {
+        ASSERT(!mBuffer.empty());
+        return mBuffer.data();
+    }
+
+    ANGLE_INLINE const uint8_t *getCurrentBuffer() const
+    {
+        ASSERT(!mBuffer.empty());
+        return mBuffer.data();
+    }
+
+  private:
+    void reset();
+
+    size_t mInitialSize;
+    size_t mSize;
+    angle::MemoryBuffer mBuffer;
 };
 
 // Uses DescriptorPool to allocate descriptor sets as needed. If a descriptor pool becomes full, we

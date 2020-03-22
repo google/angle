@@ -744,6 +744,69 @@ void DynamicBuffer::reset()
     mLastFlushOrInvalidateOffset = 0;
 }
 
+// DynamicShadowBuffer implementation.
+DynamicShadowBuffer::DynamicShadowBuffer() : mInitialSize(0), mSize(0) {}
+
+DynamicShadowBuffer::DynamicShadowBuffer(DynamicShadowBuffer &&other)
+    : mInitialSize(other.mInitialSize), mSize(other.mSize), mBuffer(std::move(other.mBuffer))
+{}
+
+void DynamicShadowBuffer::init(size_t initialSize)
+{
+    mInitialSize = initialSize;
+}
+
+DynamicShadowBuffer::~DynamicShadowBuffer()
+{
+    ASSERT(mBuffer.empty());
+}
+
+angle::Result DynamicShadowBuffer::allocate(size_t sizeInBytes)
+{
+    bool result = true;
+
+    // Delete the current buffer, if any
+    if (!mBuffer.empty())
+    {
+        result &= mBuffer.resize(0);
+    }
+
+    // Cache the new size
+    mSize = std::max(mInitialSize, sizeInBytes);
+
+    // Allocate the buffer
+    result &= mBuffer.resize(mSize);
+
+    // If allocation failed, release the buffer and return error.
+    if (!result)
+    {
+        release();
+        return angle::Result::Stop;
+    }
+
+    return angle::Result::Continue;
+}
+
+void DynamicShadowBuffer::release()
+{
+    reset();
+
+    if (!mBuffer.empty())
+    {
+        (void)mBuffer.resize(0);
+    }
+}
+
+void DynamicShadowBuffer::destroy(VkDevice device)
+{
+    release();
+}
+
+void DynamicShadowBuffer::reset()
+{
+    mSize = 0;
+}
+
 // DescriptorPoolHelper implementation.
 DescriptorPoolHelper::DescriptorPoolHelper() : mFreeDescriptorSets(0) {}
 
@@ -1371,7 +1434,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
         ANGLE_TRY(streamIndices(contextVk, glIndexType, indexCount,
                                 static_cast<const uint8_t *>(srcDataMapping) + elementArrayOffset,
                                 bufferOut, bufferOffsetOut, indexCountOut));
-        elementArrayBufferVk->unmapImpl(contextVk);
+        ANGLE_TRY(elementArrayBufferVk->unmapImpl(contextVk));
         return angle::Result::Continue;
     }
 
@@ -1396,7 +1459,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
     if (contextVk->getRenderer()->getFeatures().extraCopyBufferRegion.enabled)
         copies.push_back({sourceOffset, *bufferOffsetOut + (unitCount + 1) * unitSize, 1});
 
-    ANGLE_TRY(elementArrayBufferVk->copyToBuffer(
+    ANGLE_TRY(elementArrayBufferVk->copyToBufferImpl(
         contextVk, *bufferOut, static_cast<uint32_t>(copies.size()), copies.data()));
     ANGLE_TRY(mDynamicIndexBuffer.flush(contextVk));
     return angle::Result::Continue;
@@ -3594,7 +3657,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
         uint8_t *dest = static_cast<uint8_t *>(mapPtr) + reinterpret_cast<ptrdiff_t>(pixels);
         PackPixels(packPixelsParams, *readFormat, area.width * readFormat->pixelBytes,
                    readPixelBuffer, static_cast<uint8_t *>(dest));
-        packBufferVk->unmapImpl(contextVk);
+        ANGLE_TRY(packBufferVk->unmapImpl(contextVk));
     }
     else
     {

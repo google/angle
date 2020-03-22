@@ -31,6 +31,25 @@ angle::Result Resource::finishRunningCommands(ContextVk *contextVk)
     return contextVk->finishToSerial(mUse.getSerial());
 }
 
+angle::Result Resource::waitForIdle(ContextVk *contextVk)
+{
+    // If there are pending commands for the resource, flush them.
+    if (usedInRecordedCommands())
+    {
+        ANGLE_TRY(contextVk->flushImpl(nullptr));
+    }
+
+    // Make sure the driver is done with the resource.
+    if (usedInRunningCommands(contextVk->getLastCompletedQueueSerial()))
+    {
+        ANGLE_TRY(finishRunningCommands(contextVk));
+    }
+
+    ASSERT(!isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()));
+
+    return angle::Result::Continue;
+}
+
 // SharedGarbage implementation.
 SharedGarbage::SharedGarbage() = default;
 

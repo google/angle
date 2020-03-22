@@ -1000,7 +1000,7 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
                 const size_t byteCount = static_cast<size_t>(elementArrayBuffer->getSize()) -
                                          reinterpret_cast<uintptr_t>(indices);
                 ANGLE_TRY(mVertexArray->convertIndexBufferCPU(this, indexType, byteCount, src));
-                bufferVk->unmapImpl(this);
+                ANGLE_TRY(bufferVk->unmapImpl(this));
             }
             else
             {

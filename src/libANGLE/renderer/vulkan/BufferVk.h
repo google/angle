@@ -100,13 +100,13 @@ class BufferVk : public BufferImpl
                                VkDeviceSize length,
                                GLbitfield access,
                                void **mapPtr);
-    void unmapImpl(ContextVk *contextVk);
+    angle::Result unmapImpl(ContextVk *contextVk);
 
     // Calls copyBuffer internally.
-    angle::Result copyToBuffer(ContextVk *contextVk,
-                               vk::BufferHelper *destBuffer,
-                               uint32_t copyCount,
-                               const VkBufferCopy *copies);
+    angle::Result copyToBufferImpl(ContextVk *contextVk,
+                                   vk::BufferHelper *destBuffer,
+                                   uint32_t copyCount,
+                                   const VkBufferCopy *copies);
 
     ConversionBuffer *getVertexConversionBuffer(RendererVk *renderer,
                                                 angle::FormatID formatID,
@@ -116,6 +116,29 @@ class BufferVk : public BufferImpl
 
   private:
     void initializeStagingBuffer(ContextVk *contextVk, gl::BufferBinding target, size_t size);
+    angle::Result initializeShadowBuffer(ContextVk *contextVk,
+                                         gl::BufferBinding target,
+                                         size_t size);
+
+    ANGLE_INLINE uint8_t *getShadowBuffer(size_t offset)
+    {
+        return (mShadowBuffer.getCurrentBuffer() + offset);
+    }
+
+    ANGLE_INLINE const uint8_t *getShadowBuffer(size_t offset) const
+    {
+        return (mShadowBuffer.getCurrentBuffer() + offset);
+    }
+
+    void updateShadowBuffer(const uint8_t *data, size_t size, size_t offset);
+    angle::Result directUpdate(ContextVk *contextVk,
+                               const uint8_t *data,
+                               size_t size,
+                               size_t offset);
+    angle::Result stagedUpdate(ContextVk *contextVk,
+                               const uint8_t *data,
+                               size_t size,
+                               size_t offset);
     angle::Result setDataImpl(ContextVk *contextVk,
                               const uint8_t *data,
                               size_t size,
@@ -144,6 +167,13 @@ class BufferVk : public BufferImpl
 
     // All staging buffer support is provided by a DynamicBuffer.
     vk::DynamicBuffer mStagingBuffer;
+
+    // For GPU-read only buffers glMap* latency is reduced by maintaining a copy
+    // of the buffer which is writeable only by the CPU. The contents are updated on all
+    // glData/glSubData/glCopy calls. With this, a glMap* call becomes a non-blocking
+    // operation by elimnating the need to wait on any recorded or in-flight GPU commands.
+    // We use DynamicShadowBuffer class to encapsulate all the bookeeping logic.
+    vk::DynamicShadowBuffer mShadowBuffer;
 
     // A cache of converted vertex data.
     std::vector<VertexConversionBuffer> mVertexConversionBuffers;

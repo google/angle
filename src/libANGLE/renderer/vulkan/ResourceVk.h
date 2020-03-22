@@ -179,6 +179,9 @@ class Resource : angle::NonCopyable
     // Ensures the driver is caught up to this resource and it is only in use by ANGLE.
     angle::Result finishRunningCommands(ContextVk *contextVk);
 
+    // Complete all recorded and in-flight commands involving this resource
+    angle::Result waitForIdle(ContextVk *contextVk);
+
     // Adds the resource to a resource use list.
     void retain(ResourceUseList *resourceUseList);
 
