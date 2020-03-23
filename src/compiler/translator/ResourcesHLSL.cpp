@@ -656,16 +656,29 @@ TString ResourcesHLSL::uniformBlocksHeader(
 
         // In order to avoid compile performance issue, translate uniform block to structured
         // buffer. anglebug.com/3682.
-        // TODO(anglebug.com/4205): Support uniform block with an instance name.
-        if (instanceVariable == nullptr &&
-            shouldTranslateUniformBlockToStructuredBuffer(interfaceBlock))
+        if (shouldTranslateUniformBlockToStructuredBuffer(interfaceBlock))
         {
             unsigned int structuredBufferRegister = mSRVRegister;
-            interfaceBlocks +=
-                uniformBlockWithOneLargeArrayMemberString(interfaceBlock, structuredBufferRegister);
+            if (instanceVariable != nullptr && instanceVariable->getType().isArray())
+            {
+                unsigned int instanceArraySize =
+                    instanceVariable->getType().getOutermostArraySize();
+                for (unsigned int arrayIndex = 0; arrayIndex < instanceArraySize; arrayIndex++)
+                {
+                    interfaceBlocks += uniformBlockWithOneLargeArrayMemberString(
+                        interfaceBlock, instanceVariable, structuredBufferRegister + arrayIndex,
+                        arrayIndex);
+                }
+                mSRVRegister += instanceArraySize;
+            }
+            else
+            {
+                interfaceBlocks += uniformBlockWithOneLargeArrayMemberString(
+                    interfaceBlock, instanceVariable, structuredBufferRegister, GL_INVALID_INDEX);
+                mSRVRegister += 1u;
+            }
             mUniformBlockRegisterMap[interfaceBlock.name().data()] = structuredBufferRegister;
             mUniformBlockUseStructuredBufferMap[interfaceBlock.name().data()] = true;
-            mSRVRegister += 1u;
             continue;
         }
 
@@ -758,7 +771,9 @@ TString ResourcesHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
 
 TString ResourcesHLSL::uniformBlockWithOneLargeArrayMemberString(
     const TInterfaceBlock &interfaceBlock,
-    unsigned int registerIndex)
+    const TVariable *instanceVariable,
+    unsigned int registerIndex,
+    unsigned int arrayIndex)
 {
     TString hlsl, typeString;
 
@@ -766,8 +781,18 @@ TString ResourcesHLSL::uniformBlockWithOneLargeArrayMemberString(
     const TLayoutBlockStorage blockStorage = interfaceBlock.blockStorage();
     typeString = InterfaceBlockFieldTypeString(field, blockStorage, true);
 
-    hlsl += "StructuredBuffer <" + typeString + "> " + Decorate(field.name()) + " : register(t" +
-            str(registerIndex) + ");\n";
+    if (instanceVariable != nullptr)
+    {
+
+        hlsl += "StructuredBuffer <" + typeString + "> " +
+                InterfaceBlockInstanceString(instanceVariable->name(), arrayIndex) + "_" +
+                Decorate(field.name()) + +" : register(t" + str(registerIndex) + ");\n";
+    }
+    else
+    {
+        hlsl += "StructuredBuffer <" + typeString + "> " + Decorate(field.name()) +
+                " : register(t" + str(registerIndex) + ");\n";
+    }
 
     return hlsl;
 }
