@@ -279,11 +279,11 @@ GLColor32F ReadColor32F(GLint x, GLint y)
     return actual;
 }
 
-void LoadEntryPointsWithUtilLoader()
+void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driverType)
 {
 #if defined(ANGLE_USE_UTIL_LOADER)
     PFNEGLGETPROCADDRESSPROC getProcAddress;
-    ANGLETestEnvironment::GetEGLLibrary()->getAs("eglGetProcAddress", &getProcAddress);
+    ANGLETestEnvironment::GetDriverLibrary(driverType)->getAs("eglGetProcAddress", &getProcAddress);
     ASSERT_NE(nullptr, getProcAddress);
 
     LoadEGL(getProcAddress);
@@ -454,15 +454,10 @@ void ANGLETestBase::initOSWindow()
     switch (mCurrentParams->driver)
     {
         case GLESDriverType::AngleEGL:
+        case GLESDriverType::SystemEGL:
         {
             mFixture->eglWindow =
                 EGLWindow::New(mCurrentParams->majorVersion, mCurrentParams->minorVersion);
-            break;
-        }
-
-        case GLESDriverType::SystemEGL:
-        {
-            std::cerr << "Unsupported driver." << std::endl;
             break;
         }
 
@@ -536,8 +531,14 @@ void ANGLETestBase::ANGLETestSetUp()
 
     if (mCurrentParams->noFixture)
     {
-        LoadEntryPointsWithUtilLoader();
+        LoadEntryPointsWithUtilLoader(mCurrentParams->driver);
         return;
+    }
+
+    if (mLastLoadedDriver.valid() && mCurrentParams->driver != mLastLoadedDriver.value())
+    {
+        LoadEntryPointsWithUtilLoader(mCurrentParams->driver);
+        mLastLoadedDriver = mCurrentParams->driver;
     }
 
     // Resize the window before creating the context so that the first make current
@@ -559,11 +560,13 @@ void ANGLETestBase::ANGLETestSetUp()
     }
     else
     {
+        Library *driverLib = ANGLETestEnvironment::GetDriverLibrary(mCurrentParams->driver);
+
         if (mForceNewDisplay || !mFixture->eglWindow->isDisplayInitialized())
         {
             mFixture->eglWindow->destroyGL();
-            if (!mFixture->eglWindow->initializeDisplay(mFixture->osWindow,
-                                                        ANGLETestEnvironment::GetEGLLibrary(),
+            if (!mFixture->eglWindow->initializeDisplay(mFixture->osWindow, driverLib,
+                                                        mCurrentParams->driver,
                                                         mCurrentParams->eglParameters))
             {
                 FAIL() << "EGL Display init failed.";
@@ -574,8 +577,8 @@ void ANGLETestBase::ANGLETestSetUp()
             FAIL() << "Internal parameter conflict error.";
         }
 
-        if (!mFixture->eglWindow->initializeSurface(
-                mFixture->osWindow, ANGLETestEnvironment::GetEGLLibrary(), mFixture->configParams))
+        if (!mFixture->eglWindow->initializeSurface(mFixture->osWindow, driverLib,
+                                                    mFixture->configParams))
         {
             FAIL() << "egl surface init failed.";
         }
@@ -1286,9 +1289,11 @@ ANGLETestBase::ScopedIgnorePlatformMessages::~ScopedIgnorePlatformMessages()
 OSWindow *ANGLETestBase::mOSWindowSingleton = nullptr;
 std::map<angle::PlatformParameters, ANGLETestBase::TestFixture> ANGLETestBase::gFixtures;
 Optional<EGLint> ANGLETestBase::mLastRendererType;
+Optional<angle::GLESDriverType> ANGLETestBase::mLastLoadedDriver;
 
-std::unique_ptr<Library> ANGLETestEnvironment::gEGLLibrary;
-std::unique_ptr<Library> ANGLETestEnvironment::gWGLLibrary;
+std::unique_ptr<Library> ANGLETestEnvironment::gAngleEGLLibrary;
+std::unique_ptr<Library> ANGLETestEnvironment::gSystemEGLLibrary;
+std::unique_ptr<Library> ANGLETestEnvironment::gSystemWGLLibrary;
 
 void ANGLETestEnvironment::SetUp() {}
 
@@ -1297,26 +1302,58 @@ void ANGLETestEnvironment::TearDown()
     ANGLETestBase::ReleaseFixtures();
 }
 
-Library *ANGLETestEnvironment::GetEGLLibrary()
+// static
+Library *ANGLETestEnvironment::GetDriverLibrary(angle::GLESDriverType driver)
 {
-#if defined(ANGLE_USE_UTIL_LOADER)
-    if (!gEGLLibrary)
+    switch (driver)
     {
-        gEGLLibrary.reset(OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, SearchType::ApplicationDir));
+        case angle::GLESDriverType::AngleEGL:
+            return GetAngleEGLLibrary();
+        case angle::GLESDriverType::SystemEGL:
+            return GetSystemEGLLibrary();
+        case angle::GLESDriverType::SystemWGL:
+            return GetSystemWGLLibrary();
+        default:
+            return nullptr;
     }
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
-    return gEGLLibrary.get();
 }
 
-Library *ANGLETestEnvironment::GetWGLLibrary()
+// static
+Library *ANGLETestEnvironment::GetAngleEGLLibrary()
+{
+#if defined(ANGLE_USE_UTIL_LOADER)
+    if (!gAngleEGLLibrary)
+    {
+        gAngleEGLLibrary.reset(
+            OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, SearchType::ApplicationDir));
+    }
+#endif  // defined(ANGLE_USE_UTIL_LOADER)
+    return gAngleEGLLibrary.get();
+}
+
+// static
+Library *ANGLETestEnvironment::GetSystemEGLLibrary()
+{
+#if defined(ANGLE_USE_UTIL_LOADER)
+    if (!gSystemEGLLibrary)
+    {
+        gSystemEGLLibrary.reset(
+            OpenSharedLibraryWithExtension(GetNativeEGLLibraryNameWithExtension()));
+    }
+#endif  // defined(ANGLE_USE_UTIL_LOADER)
+    return gSystemEGLLibrary.get();
+}
+
+// static
+Library *ANGLETestEnvironment::GetSystemWGLLibrary()
 {
 #if defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
-    if (!gWGLLibrary)
+    if (!gSystemWGLLibrary)
     {
-        gWGLLibrary.reset(OpenSharedLibrary("opengl32", SearchType::SystemDir));
+        gSystemWGLLibrary.reset(OpenSharedLibrary("opengl32", SearchType::SystemDir));
     }
 #endif  // defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
-    return gWGLLibrary.get();
+    return gSystemWGLLibrary.get();
 }
 
 void ANGLEProcessTestArgs(int *argc, char *argv[])

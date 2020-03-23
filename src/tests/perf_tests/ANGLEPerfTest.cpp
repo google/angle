@@ -422,8 +422,14 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
                                                            angle::SearchType::ApplicationDir));
             break;
         case angle::GLESDriverType::SystemEGL:
+#if defined(ANGLE_USE_UTIL_LOADER) && !defined(ANGLE_PLATFORM_WINDOWS)
+            mGLWindow = EGLWindow::New(testParams.majorVersion, testParams.minorVersion);
+            mEntryPointsLib.reset(
+                angle::OpenSharedLibraryWithExtension(GetNativeEGLLibraryNameWithExtension()));
+#else
             std::cerr << "Not implemented." << std::endl;
             mSkipTest = true;
+#endif  // defined(ANGLE_USE_UTIL_LOADER) && !defined(ANGLE_PLATFORM_WINDOWS)
             break;
         case angle::GLESDriverType::SystemWGL:
 #if defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
@@ -494,7 +500,8 @@ void ANGLERenderTest::SetUp()
     EGLPlatformParameters withMethods = mTestParams.eglParameters;
     withMethods.platformMethods       = &mPlatformMethods;
 
-    if (!mGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), withMethods, mConfigParams))
+    if (!mGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), mTestParams.driver, withMethods,
+                                 mConfigParams))
     {
         mSkipTest = true;
         FAIL() << "Failed initializing GL Window";

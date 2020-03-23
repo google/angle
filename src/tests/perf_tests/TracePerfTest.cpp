@@ -314,7 +314,7 @@ using P = TracePerfParams;
 
 std::vector<P> gTestsWithID =
     CombineWithValues({P()}, AllEnums<RestrictedTraceID>(), CombineTestID);
-std::vector<P> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {Vulkan<P>});
+std::vector<P> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {Vulkan<P>, EGL<P>});
 ANGLE_INSTANTIATE_TEST_ARRAY(TracePerfTest, gTestsWithRenderer);
 
 }  // anonymous namespace
