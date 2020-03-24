@@ -291,6 +291,8 @@ class RobustResourceInitTest : public ANGLETest
 
     template <typename ClearFunc>
     void maskedStencilClear(ClearFunc clearFunc);
+
+    void copyTexSubImage2DCustomFBOTest(int offsetX, int offsetY);
 };
 
 class RobustResourceInitTestES3 : public RobustResourceInitTest
@@ -1529,6 +1531,60 @@ TEST_P(RobustResourceInitTest, CopyTexSubImage2D)
     auto destInitTest = [srcInitTest](int x, int y) { return !srcInitTest(x, y); };
 
     VerifyRGBA8PixelRect<kDestSize>(destInitTest);
+}
+
+void RobustResourceInitTest::copyTexSubImage2DCustomFBOTest(int offsetX, int offsetY)
+{
+    const int texSize = 512;
+    const int fboSize = 16;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texSize, texSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer.get());
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, fboSize, fboSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                              renderbuffer.get());
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, offsetX, offsetY, texSize, texSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer readbackFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, readbackFBO.get());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.get(), 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    checkCustomFramebufferNonZeroPixels(texSize, texSize, -offsetX, -offsetY, fboSize, fboSize,
+                                        GLColor::red);
+}
+
+// Test CopyTexSubImage2D clipped to size of custom FBO, zero x/y source offset.
+TEST_P(RobustResourceInitTest, CopyTexSubImage2DCustomFBOZeroOffsets)
+{
+    // TODO(anglebug.com/4507): pass this test on the Metal backend.
+    ANGLE_SKIP_TEST_IF(IsMetal());
+    copyTexSubImage2DCustomFBOTest(0, 0);
+}
+
+// Test CopyTexSubImage2D clipped to size of custom FBO, negative x/y source offset.
+TEST_P(RobustResourceInitTest, CopyTexSubImage2DCustomFBONegativeOffsets)
+{
+    // TODO(anglebug.com/4507): pass this test on the Metal backend.
+    ANGLE_SKIP_TEST_IF(IsMetal());
+    copyTexSubImage2DCustomFBOTest(-8, -8);
 }
 
 // Tests that calling CopyTexSubImage3D will initialize the source & destination.
