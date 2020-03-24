@@ -63,6 +63,23 @@ using TextureBindingVector = std::vector<BindingPointer<Texture>>;
 using TextureBindingMap    = angle::PackedEnumMap<TextureType, TextureBindingVector>;
 using ActiveQueryMap       = angle::PackedEnumMap<QueryType, BindingPointer<Query>>;
 
+class ActiveTexturesCache final : angle::NonCopyable
+{
+  public:
+    ActiveTexturesCache();
+    ~ActiveTexturesCache();
+
+    Texture *operator[](size_t textureIndex) const { return mTextures[textureIndex]; }
+
+    void clear();
+    void set(size_t textureIndex, Texture *texture);
+    void reset(size_t textureIndex);
+    bool empty() const;
+
+  private:
+    ActiveTextureArray<Texture *> mTextures;
+};
+
 class State : angle::NonCopyable
 {
   public:
@@ -661,7 +678,7 @@ class State : angle::NonCopyable
                       GLenum format);
 
     const ImageUnit &getImageUnit(size_t unit) const { return mImageUnits[unit]; }
-    const ActiveTexturePointerArray &getActiveTexturesCache() const { return mActiveTexturesCache; }
+    const ActiveTexturesCache &getActiveTexturesCache() const { return mActiveTexturesCache; }
     ComponentTypeMask getCurrentValuesTypeMask() const { return mCurrentValuesTypeMask; }
 
     // "onActiveTextureChange" is called when a texture binding changes.
@@ -749,9 +766,7 @@ class State : angle::NonCopyable
   private:
     friend class Context;
 
-    void unsetActiveTexture(size_t textureIndex);
     void unsetActiveTextures(ActiveTextureMask textureMask);
-    void setActiveTexture(size_t textureIndex, Texture *texture);
     void updateActiveTexture(const Context *context, size_t textureIndex, Texture *texture);
     void updateActiveTextureState(const Context *context,
                                   size_t textureIndex,
@@ -900,7 +915,7 @@ class State : angle::NonCopyable
     // A cache of complete textures. nullptr indicates unbound or incomplete.
     // Don't use BindingPointer because this cache is only valid within a draw call.
     // Also stores a notification channel to the texture itself to handle texture change events.
-    ActiveTexturePointerArray mActiveTexturesCache;
+    ActiveTexturesCache mActiveTexturesCache;
     std::vector<angle::ObserverBinding> mCompleteTextureBindings;
 
     ActiveTextureMask mTexturesIncompatibleWithSamplers;

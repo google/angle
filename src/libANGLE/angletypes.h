@@ -487,8 +487,7 @@ using ActiveTextureMask = angle::BitSet<IMPLEMENTATION_MAX_ACTIVE_TEXTURES>;
 template <typename T>
 using ActiveTextureArray = std::array<T, IMPLEMENTATION_MAX_ACTIVE_TEXTURES>;
 
-using ActiveTexturePointerArray = ActiveTextureArray<Texture *>;
-using ActiveTextureTypeArray    = ActiveTextureArray<TextureType>;
+using ActiveTextureTypeArray = ActiveTextureArray<TextureType>;
 
 template <typename T>
 using UniformBuffersArray = std::array<T, IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS>;

@@ -869,7 +869,7 @@ angle::Result ProgramMtl::updateTextures(const gl::Context *glContext,
 {
     const auto &glState = glContext->getState();
 
-    const gl::ActiveTexturePointerArray &completeTextures = glState.getActiveTexturesCache();
+    const gl::ActiveTexturesCache &completeTextures = glState.getActiveTexturesCache();
 
     for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
     {

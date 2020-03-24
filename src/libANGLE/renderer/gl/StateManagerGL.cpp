@@ -817,7 +817,7 @@ void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
-    const gl::ActiveTexturePointerArray &textures  = glState.getActiveTexturesCache();
+    const gl::ActiveTexturesCache &textures        = glState.getActiveTexturesCache();
     const gl::ActiveTextureMask &activeTextures    = program->getActiveSamplersMask();
     const gl::ActiveTextureTypeArray &textureTypes = program->getActiveSamplerTypes();
 

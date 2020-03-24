@@ -428,6 +428,7 @@ class Texture final : public RefCountObject<TextureID>,
 
     ANGLE_INLINE void onBindAsSamplerTexture()
     {
+        ASSERT(mState.mSamplerBindingCount < std::numeric_limits<uint32_t>::max());
         mState.mSamplerBindingCount++;
         if (mState.mSamplerBindingCount == 1)
         {
