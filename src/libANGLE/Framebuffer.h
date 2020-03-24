@@ -128,6 +128,7 @@ class FramebufferState final : angle::NonCopyable
     const FramebufferAttachment *getWebGLDepthAttachment() const;
     const FramebufferAttachment *getWebGLStencilAttachment() const;
     bool updateAttachmentFeedbackLoop(size_t dirtyBit);
+    void updateHasRenderingFeedbackLoop();
 
     friend class Framebuffer;
 
@@ -160,6 +161,7 @@ class FramebufferState final : angle::NonCopyable
     DrawBufferMask mDrawBufferFeedbackLoops;
     bool mDepthBufferFeedbackLoop;
     bool mStencilBufferFeedbackLoop;
+    bool mHasRenderingFeedbackLoop;
 
     // Tracks if we need to initialize the resources for each attachment.
     angle::BitSet<IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS + 2> mResourceNeedsInit;
@@ -381,7 +383,7 @@ class Framebuffer final : public angle::ObserverInterface,
     // Observer implementation
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
-    bool formsRenderingFeedbackLoopWith(const Context *context) const;
+    bool hasRenderingFeedbackLoop() const { return mState.mHasRenderingFeedbackLoop; }
     bool formsCopyingFeedbackLoopWith(TextureID copyTextureID,
                                       GLint copyTextureLevel,
                                       GLint copyTextureLayer) const;
