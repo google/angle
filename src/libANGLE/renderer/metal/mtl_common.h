@@ -31,6 +31,10 @@
 #    endif
 #endif
 
+#if !defined(TARGET_OS_MACCATALYST)
+#    define TARGET_OS_MACCATALYST 0
+#endif
+
 #define ANGLE_MTL_OBJC_SCOPE @autoreleasepool
 
 #if !__has_feature(objc_arc)
@@ -325,6 +329,15 @@ class AutoObjCPtr : public WrappedObject<T>
 
 template <typename T>
 using AutoObjCObj = AutoObjCPtr<T *>;
+
+// NOTE: SharedEvent is only declared on iOS 12.0+ or mac 10.14+
+#if defined(__IPHONE_12_0) || defined(__MAC_10_14)
+#    define ANGLE_MTL_EVENT_AVAILABLE 1
+using SharedEventRef = AutoObjCPtr<id<MTLSharedEvent>>;
+#else
+#    define ANGLE_MTL_EVENT_AVAILABLE 0
+using SharedEventRef                                       = AutoObjCObj<NSObject>;
+#endif
 
 struct ClearOptions
 {

@@ -33,6 +33,8 @@ _metal_backend_sources = [
   "ShaderMtl.mm",
   "SurfaceMtl.h",
   "SurfaceMtl.mm",
+  "SyncMtl.h",
+  "SyncMtl.mm",
   "TextureMtl.h",
   "TextureMtl.mm",
   "TransformFeedbackMtl.h",

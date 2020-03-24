@@ -48,6 +48,9 @@ struct FeaturesMtl : FeatureSetBase
         "has_msaa_stencil_auto_resolve", FeatureCategory::MetalFeatures,
         "The renderer supports MSAA stencil auto resolve at the end of render pass", &members};
 
+    Feature hasEvents = {"has_mtl_events", FeatureCategory::MetalFeatures,
+                         "The renderer supports MTL(Shared)Event", &members};
+
     // On macos, separate depth & stencil buffers are not supproted. However, on iOS devices,
     // they are supproted:
     Feature allowSeparatedDepthStencilBuffers = {

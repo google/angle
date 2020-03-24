@@ -113,6 +113,9 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     void setReadDependency(const ResourceRef &resource);
     void setReadDependency(Resource *resourcePtr);
 
+    void queueEventSignal(const mtl::SharedEventRef &event, uint64_t value);
+    void serverWaitEvent(const mtl::SharedEventRef &event, uint64_t value);
+
     CommandQueue &cmdQueue() { return mCmdQueue; }
 
     // Private use only
@@ -127,6 +130,10 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     void commitImpl();
     void forceEndingCurrentEncoder();
 
+    void setPendingEvents();
+    void setEventImpl(const mtl::SharedEventRef &event, uint64_t value);
+    void waitEventImpl(const mtl::SharedEventRef &event, uint64_t value);
+
     using ParentClass = WrappedObject<id<MTLCommandBuffer>>;
 
     CommandQueue &mCmdQueue;
@@ -136,6 +143,8 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     uint64_t mQueueSerial = 0;
 
     mutable std::mutex mLock;
+
+    std::vector<std::pair<mtl::SharedEventRef, uint64_t>> mPendingSignalEvents;
 
     bool mCommitted = false;
 };

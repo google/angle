@@ -596,6 +596,32 @@ void CommandBuffer::restart()
     ASSERT(metalCmdBuffer);
 }
 
+void CommandBuffer::queueEventSignal(const mtl::SharedEventRef &event, uint64_t value)
+{
+    std::lock_guard<std::mutex> lg(mLock);
+
+    ASSERT(readyImpl());
+
+    if (mActiveCommandEncoder && mActiveCommandEncoder->getType() == CommandEncoder::RENDER)
+    {
+        // We cannot set event when there is an active render pass, defer the setting until the
+        // pass end.
+        mPendingSignalEvents.push_back({event, value});
+    }
+    else
+    {
+        setEventImpl(event, value);
+    }
+}
+
+void CommandBuffer::serverWaitEvent(const mtl::SharedEventRef &event, uint64_t value)
+{
+    std::lock_guard<std::mutex> lg(mLock);
+    ASSERT(readyImpl());
+
+    waitEventImpl(event, value);
+}
+
 /** private use only */
 void CommandBuffer::set(id<MTLCommandBuffer> metalBuffer)
 {
@@ -612,6 +638,9 @@ void CommandBuffer::invalidateActiveCommandEncoder(CommandEncoder *encoder)
     if (mActiveCommandEncoder == encoder)
     {
         mActiveCommandEncoder = nullptr;
+
+        // No active command encoder, we can safely encode event signalling now.
+        setPendingEvents();
     }
 }
 
@@ -642,6 +671,9 @@ void CommandBuffer::commitImpl()
     // End the current encoder
     forceEndingCurrentEncoder();
 
+    // Encoding any pending event's signalling.
+    setPendingEvents();
+
     // Notify command queue
     mCmdQueue.onCommandBufferCommitted(get(), mQueueSerial);
 
@@ -658,6 +690,47 @@ void CommandBuffer::forceEndingCurrentEncoder()
         mActiveCommandEncoder->endEncoding();
         mActiveCommandEncoder = nullptr;
     }
+}
+
+void CommandBuffer::setPendingEvents()
+{
+    for (const std::pair<mtl::SharedEventRef, uint64_t> &eventEntry : mPendingSignalEvents)
+    {
+        setEventImpl(eventEntry.first, eventEntry.second);
+    }
+    mPendingSignalEvents.clear();
+}
+
+void CommandBuffer::setEventImpl(const mtl::SharedEventRef &event, uint64_t value)
+{
+#if ANGLE_MTL_EVENT_AVAILABLE
+    ASSERT(!mActiveCommandEncoder || mActiveCommandEncoder->getType() != CommandEncoder::RENDER);
+    // For non-render command encoder, we can safely end it, so that we can encode a signal
+    // event.
+    forceEndingCurrentEncoder();
+
+    [get() encodeSignalEvent:event value:value];
+#else
+    UNIMPLEMENTED();
+    UNREACHABLE();
+#endif  // #if ANGLE_MTL_EVENT_AVAILABLE
+}
+
+void CommandBuffer::waitEventImpl(const mtl::SharedEventRef &event, uint64_t value)
+{
+#if ANGLE_MTL_EVENT_AVAILABLE
+    ASSERT(!mActiveCommandEncoder || mActiveCommandEncoder->getType() != CommandEncoder::RENDER);
+
+    forceEndingCurrentEncoder();
+
+    // Encoding any pending event's signalling.
+    setPendingEvents();
+
+    [get() encodeWaitForEvent:event value:value];
+#else
+    UNIMPLEMENTED();
+    UNREACHABLE();
+#endif  // #if ANGLE_MTL_EVENT_AVAILABLE
 }
 
 // CommandEncoder implementation

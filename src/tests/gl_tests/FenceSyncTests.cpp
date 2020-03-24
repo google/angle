@@ -262,4 +262,4 @@ TEST_P(FenceSyncTest, BasicOperations)
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FenceNVTest);
-ANGLE_INSTANTIATE_TEST_ES3(FenceSyncTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(FenceSyncTest, ES3_METAL());
