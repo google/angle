@@ -400,7 +400,10 @@ if (build_angle_gles1_conform_tests) {
     defines = [
       "COMMON",
       "CONFORM_ALTERNATE_MAIN",
-      "NULLWS",
+
+      # NULLWS defines is only used in covegl/native.h, remove here.
+      # if needed please add it in angle_test("angle_gles1_covegl_no_gtest") defines.
+      #"NULLWS",
     ]
 
     # This is used by the tests to typedef uint32_t. For some reason only needed on mac.
@@ -756,6 +759,80 @@ if (build_angle_gles1_conform_tests) {
       "${angle_root}:libANGLE_config",
       "${angle_root}:angle_backend_config",
     ]
+  }
+  source_set("angle_gles1_covegl_no_gtest_source") {
+    configs += [
+      ":angle_gles1_conform_support",
+      "$angle_root:internal_config",
+    ]
+
+    public_configs = [
+      "$angle_root/util:angle_util_config",
+      "$angle_root:angle_static",
+      "$angle_root:gl_prototypes",
+    ]
+
+    testonly = true
+
+    public_deps = [
+      "$angle_root:angle_common",
+      "$angle_root:libEGL_static",
+      "$angle_root:libGLESv1_CM_static",
+      "$angle_root:libGLESv2_static",
+      "$angle_root:preprocessor",
+      "$angle_root:translator",
+      "$angle_root/util:angle_util_static",
+    ]
+
+    sources = [
+      "$gles1_conform_root/conform/covegl/enum.c",
+      "$gles1_conform_root/conform/covegl/native.h",
+      "$gles1_conform_root/conform/covegl/test.c",
+    ]
+
+    sources += angle_gles1_conform_common_source
+
+    if (!is_win && !is_linux) {
+      defines = [ "NULLWS" ]
+    }
+  }
+
+  angle_test("angle_gles1_covegl_no_gtest") {
+    deps = [ ":angle_gles1_covegl_no_gtest_source" ]
+
+    include_dirs = [ "$gles1_conform_root" ]
+
+    sources = [ "$gles1_conform_root/conform/covegl/shell.c" ]
+
+    if (is_win) {
+      sources += [ "$gles1_conform_root/conform/covegl/native_w32.c" ]
+    } else if (is_linux) {
+      sources += [ "$gles1_conform_root/conform/covegl/native.c" ]
+    } else {
+      sources += [ "$gles1_conform_root/conform/covegl/native_nws.c" ]
+      defines += [ "NULLWS" ]
+    }
+
+    configs += [
+      "${angle_root}:libANGLE_config",
+      "${angle_root}:angle_backend_config",
+    ]
+
+    defines += [ "COMMON" ]
+
+    if (is_win) {
+      if (is_clang) {
+        cflags = [ "-Wno-incompatible-pointer-types" ]
+      } else {
+        cflags = [ "/wd4133" ]  # 'function': incompatible types
+      }
+
+      suppressed_configs += [
+        "//build/config/win:lean_and_mean",
+        "//build/config/win:nominmax",
+        "//build/config/win:unicode",
+      ]
+    }
   }
 }
 
@@ -1274,6 +1351,7 @@ group("angle_tests") {
   if (build_angle_gles1_conform_tests) {
     deps += [
       ":angle_gles1_conformance_tests",
+      ":angle_gles1_covegl_no_gtest",
       ":angle_gles1_primtest_tests",
     ]
     if (!is_win && !is_mac) {
