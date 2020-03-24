@@ -58,9 +58,10 @@ template("angle_sample") {
                            [
                              "cflags",
                              "defines",
+                             "deps",
                              "sources",
                            ])
-    deps = [ ":sample_util" ]
+    deps += [ ":sample_util" ]
     if (defined(invoker.data)) {
       deps += [ ":${target_name}_data" ]
     }
@@ -69,6 +70,10 @@ template("angle_sample") {
       suppressed_configs += invoker.suppressed_configs
     }
   }
+}
+
+set_defaults("angle_sample") {
+  deps = []
 }
 
 angle_sample("hello_triangle") {
@@ -187,6 +192,8 @@ if (angle_build_capture_replay_sample) {
           "capture_replay/angle_capture_context${_contextid}.cpp",
           "capture_replay/angle_capture_context${_contextid}.h",
         ]
+
+    deps = [ "$angle_root:angle_compression" ]
 
     _data_path = rebase_path("capture_replay", root_out_dir)
     defines = [

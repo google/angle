@@ -15,6 +15,7 @@ _util_sources = [
   "OSWindow.cpp",
   "OSWindow.h",
   "com_utils.h",
+  "frame_capture_utils.h",
   "geometry_utils.cpp",
   "geometry_utils.h",
   "keyboard.h",
