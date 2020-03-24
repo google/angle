@@ -950,6 +950,9 @@ struct DisplayExtensions
     // EGL_CHROMIUM_sync_control
     bool syncControlCHROMIUM = false;
 
+    // EGL_ANGLE_sync_control_rate
+    bool syncControlRateANGLE = false;
+
     // EGL_KHR_swap_buffers_with_damage
     bool swapBuffersWithDamage = false;
 

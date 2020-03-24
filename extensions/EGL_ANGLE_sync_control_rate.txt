@@ -1,14 +1,14 @@
 ﻿Name
 
-   CHROMIUM_sync_control
+   ANGLE_sync_control_rate
 
 Name Strings
 
-   EGL_CHROMIUM_sync_control
+   EGL_ANGLE_sync_control_rate
 
 Contact
 
-   Stéphane Marchesin, Google (marcheu 'at' google.com)
+   Jonah Ryan-Davis, Google (jonahr 'at' google.com)
 
 Status
 
@@ -16,7 +16,7 @@ Status
 
 Version
 
-   Version 2, 2015-05-05
+   Version 1, 2020-03-24
 
    Based on GLX_OML_sync_control Revision 6.0
 
@@ -64,39 +64,16 @@ IP Status
 
 New Procedures and Functions
 
-   Bool eglGetSyncValuesCHROMIUM(EGLDisplay dpy,
-                                 EGLSurface surface,
-                                 int64_t* ust,
-                                 int64_t* msc,
-                                 int64_t* sbc)
+   Bool eglGetMscRateANGLE(EGLDisplay* dpy,
+                           EGLSurface surface,
+                           int32_t* numerator,
+                           int32_t* denominator)
 
 New Tokens
 
    None
 
 Additions to the EGL 1.3 Specification
-
-   eglGetSyncValuesCHROMIUM returns the current UST/MSC/SBC triple. A UST
-   timestamp is obtained each time the graphics MSC is incremented.
-   If this value does not reflect the value of the UST at the time the
-   first scan line of the display begins passing through the video
-   output port, it will be adjusted by the graphics driver to do so
-   prior to being returned by any of the functions defined by this
-   extension.
-
-   This UST timestamp, together with the current graphics MSC and the
-   current SBC, comprise the current UST/MSC/SBC triple. The UST,
-   graphics MSC, and SBC values are not part of the render context
-   state. These values cannot be pushed or popped. The graphics MSC
-   value is initialized to 0 when the graphics device is initialized.
-   The SBC is per-surface state and is initialized to 0 when the
-   EGLSurface data structure is initialized.
-
-   The SBC value is incremented by the graphics driver at the completion
-   of each buffer swap (e.g., the pixel copy has been completed or the
-   hardware register that swaps memory banks has been written). For pixel
-   formats that do not contain a back buffer, the SBC will always be
-   returned as 0.
 
    The graphics MSC value is incremented once for each screen refresh.
    For a non-interlaced display, this means that the graphics MSC value
@@ -106,7 +83,13 @@ Additions to the EGL 1.3 Specification
    is located. If the surface spans multiple monitors, the monitor used
    to determine MSC is the one with the biggest coverage in pixels.
 
-   The function eglGetSyncValuesCHROMIUM will return TRUE if the function
+   eglGetMscRateANGLE returns the rate at which the MSC will be incremented
+   for the display associated with <hdc>. The rate is expressed in Hertz
+   as <numerator> / <denominator>. If the MSC rate in Hertz is an
+   integer, then <denominator> will be 1 and <numerator> will be
+   the MSC rate.
+
+   The function eglGetMscRateANGLE will return TRUE if the function
    completed successfully, FALSE otherwise.
 
    Each time eglSwapBuffer succeeds, the SBC will be increased within a
@@ -114,17 +97,8 @@ Additions to the EGL 1.3 Specification
 
 Errors
 
-   The function eglGetSyncValuesCHROMIUM will return FALSE if there is no
+   The function eglGetMscRateANGLE will return FALSE if there is no
    current EGLContext.
-
-
-New State
-
-   Get Value                 Get Command            Type    Initial Value
-   ---------                 -----------            ----    -------------
-     [UST]             eglGetSyncValuesCHROMIUM      Z      unspecified
-     [MSC]             eglGetSyncValuesCHROMIUM      Z                  0
-     [SBC]             eglGetSyncValuesCHROMIUM      Z                  0
 
 New Implementation Dependent State
 
@@ -132,10 +106,5 @@ New Implementation Dependent State
 
 Revision History
 
-    Version 2, 2015-05-05 (Chad Versace)
-       - Rename to EGL_CHROMIUM_sync_control from EGL_CHROMIUM_get_sync_values.
-         EGL_CHROMIUM_sync_control is the de facto extension name because all
-         users query that extension string.
-
-    Version 1, 2014-08-15 (Stéphane Marchesin)
+    Version 1, 2020-03-24 (Jonah Ryan-Davis)
        - Initial draft, based on GLX_OML_sync_control revision 6.0.

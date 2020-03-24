@@ -3147,12 +3147,26 @@ Error ValidateSyncControlCHROMIUM(const Display *display, const Surface *eglSurf
     return NoError();
 }
 
-Error ValidateGetMscRateCHROMIUM(const Display *display,
-                                 const Surface *eglSurface,
-                                 const EGLint *numerator,
-                                 const EGLint *denominator)
+Error ValidateSyncControlRateANGLE(const Display *display, const Surface *eglSurface)
 {
-    ANGLE_TRY(ValidateSyncControlCHROMIUM(display, eglSurface));
+    ANGLE_TRY(ValidateDisplay(display));
+    ANGLE_TRY(ValidateSurface(display, eglSurface));
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    if (!displayExtensions.syncControlRateANGLE)
+    {
+        return EglBadAccess() << "syncControlRateANGLE extension not active";
+    }
+
+    return NoError();
+}
+
+Error ValidateGetMscRateANGLE(const Display *display,
+                              const Surface *eglSurface,
+                              const EGLint *numerator,
+                              const EGLint *denominator)
+{
+    ANGLE_TRY(ValidateSyncControlRateANGLE(display, eglSurface));
 
     if (numerator == nullptr)
     {

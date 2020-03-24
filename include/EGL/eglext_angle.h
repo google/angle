@@ -217,22 +217,28 @@ typedef EGLBoolean (EGLAPIENTRYP PFNEGLGETSYNCVALUESCHROMIUMPROC) (EGLDisplay dp
                                                              EGLuint64KHR *ust,
                                                              EGLuint64KHR *msc,
                                                              EGLuint64KHR *sbc);
-typedef EGLBoolean (EGLAPIENTRYP PFNEGLGETMSCRATECHROMIUMPROC) (EGLDisplay dpy,
-                                                             EGLSurface surface,
-                                                             EGLint *numerator,
-                                                             EGLint *denominator);
 #ifdef EGL_EGLEXT_PROTOTYPES
 EGLAPI EGLBoolean EGLAPIENTRY eglGetSyncValuesCHROMIUM(EGLDisplay dpy,
                                                              EGLSurface surface,
                                                              EGLuint64KHR *ust,
                                                              EGLuint64KHR *msc,
                                                              EGLuint64KHR *sbc);
-EGLAPI EGLBoolean EGLAPIENTRY eglGetMscRateCHROMIUM(EGLDisplay dpy,
+#endif
+#endif /* EGL_CHROMIUM_sync_control */
+
+#ifndef EGL_ANGLE_sync_control_rate
+#define EGL_ANGLE_sync_control_rate 1
+typedef EGLBoolean (EGLAPIENTRYP PFNEGLGETMSCRATEANGLEPROC) (EGLDisplay dpy,
+                                                             EGLSurface surface,
+                                                             EGLint *numerator,
+                                                             EGLint *denominator);
+#ifdef EGL_EGLEXT_PROTOTYPES
+EGLAPI EGLBoolean EGLAPIENTRY eglGetMscRateANGLE(EGLDisplay dpy,
                                                              EGLSurface surface,
                                                              EGLint *numerator,
                                                              EGLint *denominator);
 #endif
-#endif /* EGL_CHROMIUM_sync_control */
+#endif /* EGL_ANGLE_sync_control_rate */
 
 #ifndef EGL_ANGLE_power_preference
 #define EGL_ANGLE_power_preference 1

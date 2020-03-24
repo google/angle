@@ -1672,8 +1672,10 @@ EXPORTS
     ; EGL_ANGLE_swap_with_frame_token
     EGL_SwapBuffersWithFrameTokenANGLE
 
+    ; EGL_ANGLE_sync_control_rate
+    EGL_GetMscRateANGLE
+
     ; EGL_CHROMIUM_sync_control
-    EGL_GetMscRateCHROMIUM
     EGL_GetSyncValuesCHROMIUM
 
     ; EGL_EXT_device_query

@@ -129,6 +129,7 @@ supported_egl_extensions = [
     "EGL_ANGLE_swap_with_frame_token",
     "EGL_ANGLE_window_fixed_size",
     "EGL_CHROMIUM_sync_control",
+    "EGL_ANGLE_sync_control_rate",
     "EGL_EXT_create_context_robustness",
     "EGL_EXT_device_query",
     "EGL_EXT_pixel_format_float",
