@@ -648,6 +648,7 @@ class ContextVk : public ContextImpl, public vk::Context
     }
 
     egl::ContextPriority getContextPriority() const override { return mContextPriority; }
+    angle::Result startRenderPass(gl::Rectangle renderArea);
     angle::Result endRenderPass();
 
     angle::Result syncExternalMemory();
@@ -662,6 +663,10 @@ class ContextVk : public ContextImpl, public vk::Context
     ProgramExecutableVk *getExecutable() { return mExecutable; }
 
     ProgramVk *getShaderProgram(const gl::State &glState, gl::ShaderType shaderType) const;
+
+    // occlusion query
+    void beginOcclusionQuery(QueryVk *queryVk);
+    void endOcclusionQuery(QueryVk *queryVk);
 
   private:
     // Dirty bits.
@@ -957,6 +962,10 @@ class ContextVk : public ContextImpl, public vk::Context
     FramebufferVk *mDrawFramebuffer;
     ProgramVk *mProgram;
     ProgramExecutableVk *mExecutable;
+
+    // occlusion query
+    QueryVk *mActiveQueryAnySamples;
+    QueryVk *mActiveQueryAnySamplesConservative;
 
     // Graph resource used to record dispatch commands and hold resource dependencies.
     vk::DispatchHelper mDispatcher;

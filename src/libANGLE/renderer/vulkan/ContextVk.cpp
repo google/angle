@@ -599,6 +599,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mDrawFramebuffer(nullptr),
       mProgram(nullptr),
       mExecutable(nullptr),
+      mActiveQueryAnySamples(nullptr),
+      mActiveQueryAnySamplesConservative(nullptr),
       mLastIndexBufferOffset(0),
       mCurrentDrawElementsType(gl::DrawElementsType::InvalidEnum),
       mXfbBaseVertex(0),
@@ -899,11 +901,8 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // TODO(jmadill): Use dirty bit. http://anglebug.com/3014
     if (!mRenderPassCommandBuffer)
     {
-        mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
-
         gl::Rectangle scissoredRenderArea = mDrawFramebuffer->getScissoredRenderArea(this);
-        ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, scissoredRenderArea,
-                                                       &mRenderPassCommandBuffer));
+        ANGLE_TRY(startRenderPass(scissoredRenderArea));
     }
 
     // We keep a local copy of the command buffer. It's possible that some state changes could
@@ -1629,7 +1628,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         commandBuffer.waitEvents(1, cpuReady.get().ptr(), VK_PIPELINE_STAGE_HOST_BIT,
                                  VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, nullptr, 0, nullptr, 0,
                                  nullptr);
-        timestampQuery.writeTimestamp(&commandBuffer);
+        timestampQuery.writeTimestamp(this, &commandBuffer);
         commandBuffer.setEvent(gpuDone.get().getHandle(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
 
         ANGLE_VK_TRY(this, commandBuffer.end());
@@ -1719,7 +1718,7 @@ angle::Result ContextVk::traceGpuEventImpl(vk::PrimaryCommandBuffer *commandBuff
     gpuEvent.phase = phase;
     ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &gpuEvent.queryHelper));
 
-    gpuEvent.queryHelper.writeTimestamp(commandBuffer);
+    gpuEvent.queryHelper.writeTimestamp(this, commandBuffer);
 
     mInFlightGpuEventQueries.push_back(std::move(gpuEvent));
     return angle::Result::Continue;
@@ -2220,8 +2219,7 @@ angle::Result ContextVk::clearWithRenderPassOp(
         (mRenderPassCommands.started() && !mRenderPassCommands.empty()) ||
         mRenderPassCommands.getRenderArea() != clearArea)
     {
-        mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
-        ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, clearArea, &mRenderPassCommandBuffer));
+        ANGLE_TRY(startRenderPass(clearArea));
     }
     else
     {
@@ -3861,7 +3859,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     beginInfo.pInheritanceInfo         = nullptr;
 
     ANGLE_VK_TRY(this, commandBuffer.begin(beginInfo));
-    timestampQuery.writeTimestamp(&commandBuffer);
+    timestampQuery.writeTimestamp(this, &commandBuffer);
     ANGLE_VK_TRY(this, commandBuffer.end());
 
     // Create fence for the submission
@@ -4072,13 +4070,44 @@ angle::Result ContextVk::flushAndBeginRenderPass(
     return angle::Result::Continue;
 }
 
+ANGLE_INLINE angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea)
+{
+    mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
+    ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, renderArea, &mRenderPassCommandBuffer));
+    if (mActiveQueryAnySamples)
+    {
+        mActiveQueryAnySamples->getQueryHelper()->beginOcclusionQuery(this, &mPrimaryCommands,
+                                                                      mRenderPassCommandBuffer);
+    }
+    if (mActiveQueryAnySamplesConservative)
+    {
+        mActiveQueryAnySamplesConservative->getQueryHelper()->beginOcclusionQuery(
+            this, &mPrimaryCommands, mRenderPassCommandBuffer);
+    }
+    return angle::Result::Continue;
+}
+
 angle::Result ContextVk::endRenderPass()
 {
-    onRenderPassFinished();
     if (mRenderPassCommands.empty())
     {
+        onRenderPassFinished();
         return angle::Result::Continue;
     }
+
+    if (mActiveQueryAnySamples)
+    {
+        mActiveQueryAnySamples->getQueryHelper()->endOcclusionQuery(this, mRenderPassCommandBuffer);
+        ANGLE_TRY(mActiveQueryAnySamples->stashQueryHelper(this));
+    }
+    if (mActiveQueryAnySamplesConservative)
+    {
+        mActiveQueryAnySamplesConservative->getQueryHelper()->endOcclusionQuery(
+            this, mRenderPassCommandBuffer);
+        ANGLE_TRY(mActiveQueryAnySamplesConservative->stashQueryHelper(this));
+    }
+
+    onRenderPassFinished();
 
     if (mGpuEventsEnabled)
     {
@@ -4190,6 +4219,53 @@ void ContextVk::flushOutsideRenderPassCommands()
     {
         mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
         mHasPrimaryCommands = true;
+    }
+}
+
+void ContextVk::beginOcclusionQuery(QueryVk *queryVk)
+{
+    // To avoid complexity, we always start and end occlusion query inside renderpass. if renderpass
+    // not yet started, we just remember it and defer the start call.
+    if (mRenderPassCommands.started())
+    {
+        queryVk->getQueryHelper()->beginOcclusionQuery(this, &mPrimaryCommands,
+                                                       mRenderPassCommandBuffer);
+    }
+    if (queryVk->isAnySamplesQuery())
+    {
+        ASSERT(mActiveQueryAnySamples == nullptr);
+        mActiveQueryAnySamples = queryVk;
+    }
+    else if (queryVk->isAnySamplesConservativeQuery())
+    {
+        ASSERT(mActiveQueryAnySamplesConservative == nullptr);
+        mActiveQueryAnySamplesConservative = queryVk;
+    }
+    else
+    {
+        UNREACHABLE();
+    }
+}
+
+void ContextVk::endOcclusionQuery(QueryVk *queryVk)
+{
+    if (mRenderPassCommands.started())
+    {
+        queryVk->getQueryHelper()->endOcclusionQuery(this, mRenderPassCommandBuffer);
+    }
+    if (queryVk->isAnySamplesQuery())
+    {
+        ASSERT(mActiveQueryAnySamples == queryVk);
+        mActiveQueryAnySamples = nullptr;
+    }
+    else if (queryVk->isAnySamplesConservativeQuery())
+    {
+        ASSERT(mActiveQueryAnySamplesConservative == queryVk);
+        mActiveQueryAnySamplesConservative = nullptr;
+    }
+    else
+    {
+        UNREACHABLE();
     }
 }
 
