@@ -596,11 +596,4 @@
 4016 SWIFTSHADER : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.80 = FAIL
 
 // Fails on SwANGLE bots
-4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.r11f_g11f_b10f_to_r16f = FAIL
-4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.r11f_g11f_b10f_to_rg16f = FAIL
-4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.r11f_g11f_b10f_to_rgba16f = FAIL
-4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.r16f_to_r11f_g11f_b10f = FAIL
-4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.rg16f_to_r11f_g11f_b10f = FAIL
-4416 SWIFTSHADER : dEQP-GLES3.functional.fbo.blit.conversion.rgba16f_to_r11f_g11f_b10f = FAIL
-
 4418 SWIFTSHADER : dEQP-GLES3.functional.negative_api.buffer.framebuffer_texture_layer = FAIL
