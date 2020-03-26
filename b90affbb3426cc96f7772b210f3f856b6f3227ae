@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f552399_5c2c6b4f",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3320,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-03-26T14:33:28Z",
+      "side": 1,
+      "message": "Should be able to do: newStr.resize(limit);\ninstead of the loop.",
+      "revId": "b90affbb3426cc96f7772b210f3f856b6f3227ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
