@@ -679,31 +679,35 @@ bool FramebufferState::isDefault() const
     return mId == Framebuffer::kDefaultDrawFramebufferHandle;
 }
 
-bool FramebufferState::updateAttachmentFeedbackLoop(size_t dirtyBit)
+bool FramebufferState::updateAttachmentFeedbackLoopAndReturnIfChanged(size_t dirtyBit)
 {
+    bool previous;
     bool loop;
 
     switch (dirtyBit)
     {
         case Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT:
+            previous                 = mDepthBufferFeedbackLoop;
             loop                     = mDepthAttachment.isBoundAsSamplerOrImage();
             mDepthBufferFeedbackLoop = loop;
             break;
 
         case Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT:
+            previous                   = mStencilBufferFeedbackLoop;
             loop                       = mStencilAttachment.isBoundAsSamplerOrImage();
             mStencilBufferFeedbackLoop = loop;
             break;
 
         default:
             ASSERT(dirtyBit <= Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX);
-            loop = mColorAttachments[dirtyBit].isBoundAsSamplerOrImage();
+            previous = mDrawBufferFeedbackLoops.test(dirtyBit);
+            loop     = mColorAttachments[dirtyBit].isBoundAsSamplerOrImage();
             mDrawBufferFeedbackLoops[dirtyBit] = loop;
             break;
     }
 
     updateHasRenderingFeedbackLoop();
-    return loop;
+    return previous != loop;
 }
 
 void FramebufferState::updateHasRenderingFeedbackLoop()
@@ -1942,7 +1946,7 @@ void Framebuffer::updateAttachment(const Context *context,
     mState.mResourceNeedsInit.set(dirtyBit, attachment->initState() == InitState::MayNeedInit);
     onDirtyBinding->bind(resource);
 
-    mState.updateAttachmentFeedbackLoop(dirtyBit);
+    mState.updateAttachmentFeedbackLoopAndReturnIfChanged(dirtyBit);
     invalidateCompletenessCache();
 }
 
@@ -1978,7 +1982,7 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
         // Triggered by changes to Texture feedback loops.
         if (message == angle::SubjectMessage::BindingChanged)
         {
-            if (mState.updateAttachmentFeedbackLoop(index))
+            if (mState.updateAttachmentFeedbackLoopAndReturnIfChanged(index))
             {
                 mDirtyBits.set(index);
                 onStateChange(angle::SubjectMessage::DirtyBitsFlagged);

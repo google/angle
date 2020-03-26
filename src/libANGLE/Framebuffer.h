@@ -132,7 +132,9 @@ class FramebufferState final : angle::NonCopyable
     const FramebufferAttachment *getWebGLDepthStencilAttachment() const;
     const FramebufferAttachment *getWebGLDepthAttachment() const;
     const FramebufferAttachment *getWebGLStencilAttachment() const;
-    bool updateAttachmentFeedbackLoop(size_t dirtyBit);
+
+    // Returns true if there was a change in this attachments feedback-loop-ness.
+    bool updateAttachmentFeedbackLoopAndReturnIfChanged(size_t dirtyBit);
     void updateHasRenderingFeedbackLoop();
 
     friend class Framebuffer;
