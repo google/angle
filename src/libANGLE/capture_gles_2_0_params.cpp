@@ -240,7 +240,7 @@ void CaptureGetActiveAttrib_name(const State &glState,
                                  GLchar *name,
                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureStringLimit(name, bufSize, paramCapture);
 }
 
 void CaptureGetActiveUniform_length(const State &glState,
@@ -254,7 +254,7 @@ void CaptureGetActiveUniform_length(const State &glState,
                                     GLchar *name,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetActiveUniform_size(const State &glState,
@@ -268,7 +268,7 @@ void CaptureGetActiveUniform_size(const State &glState,
                                   GLchar *name,
                                   ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetActiveUniform_type(const State &glState,
@@ -282,7 +282,7 @@ void CaptureGetActiveUniform_type(const State &glState,
                                   GLchar *name,
                                   ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLenum);
 }
 
 void CaptureGetActiveUniform_name(const State &glState,
@@ -296,7 +296,7 @@ void CaptureGetActiveUniform_name(const State &glState,
                                   GLchar *name,
                                   ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureStringLimit(name, bufSize, paramCapture);
 }
 
 void CaptureGetAttachedShaders_count(const State &glState,
@@ -458,7 +458,8 @@ void CaptureGetShaderPrecisionFormat_range(const State &glState,
                                            GLint *precision,
                                            ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // range specifies a pointer to two-element array containing log2 of min and max
+    paramCapture->readBufferSizeBytes = 2 * sizeof(GLint);
 }
 
 void CaptureGetShaderPrecisionFormat_precision(const State &glState,
@@ -469,7 +470,7 @@ void CaptureGetShaderPrecisionFormat_precision(const State &glState,
                                                GLint *precision,
                                                ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetShaderSource_length(const State &glState,
@@ -859,7 +860,7 @@ void CaptureVertexAttrib1fv_v(const State &glState,
                               const GLfloat *v,
                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(v, sizeof(GLfloat), paramCapture);
 }
 
 void CaptureVertexAttrib2fv_v(const State &glState,
@@ -868,7 +869,7 @@ void CaptureVertexAttrib2fv_v(const State &glState,
                               const GLfloat *v,
                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(v, sizeof(GLfloat) * 2, paramCapture);
 }
 
 void CaptureVertexAttrib3fv_v(const State &glState,
@@ -877,7 +878,7 @@ void CaptureVertexAttrib3fv_v(const State &glState,
                               const GLfloat *v,
                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(v, sizeof(GLfloat) * 3, paramCapture);
 }
 
 void CaptureVertexAttrib4fv_v(const State &glState,
@@ -886,7 +887,7 @@ void CaptureVertexAttrib4fv_v(const State &glState,
                               const GLfloat *v,
                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(v, sizeof(GLfloat) * 4, paramCapture);
 }
 
 void CaptureVertexAttribPointer_pointer(const State &glState,

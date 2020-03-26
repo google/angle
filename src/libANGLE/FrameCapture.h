@@ -283,6 +283,7 @@ std::ostream &operator<<(std::ostream &os, const ParamCapture &capture);
 // Pointer capture helpers.
 void CaptureMemory(const void *source, size_t size, ParamCapture *paramCapture);
 void CaptureString(const GLchar *str, ParamCapture *paramCapture);
+void CaptureStringLimit(const GLchar *str, uint32_t limit, ParamCapture *paramCapture);
 
 gl::Program *GetLinkedProgramForCapture(const gl::State &glState, gl::ShaderProgramID handle);
 

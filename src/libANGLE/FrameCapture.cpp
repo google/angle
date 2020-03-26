@@ -299,6 +299,30 @@ void WriteInlineData<GLfloat>(const std::vector<uint8_t> &vec, std::ostream &out
     }
 }
 
+template <>
+void WriteInlineData<GLchar>(const std::vector<uint8_t> &vec, std::ostream &out)
+{
+    const GLchar *data = reinterpret_cast<const GLchar *>(vec.data());
+    size_t count       = vec.size() / sizeof(GLchar);
+
+    if (data == nullptr || data[0] == '\0')
+    {
+        return;
+    }
+
+    out << "\"";
+
+    for (size_t dataIndex = 0; dataIndex < count; ++dataIndex)
+    {
+        if (data[dataIndex] == '\0')
+            break;
+
+        out << static_cast<GLchar>(data[dataIndex]);
+    }
+
+    out << "\"";
+}
+
 constexpr size_t kInlineDataThreshold = 128;
 
 void WriteStringParamReplay(std::ostream &out, const ParamCapture &param)
@@ -429,7 +453,12 @@ void WriteBinaryParamReplay(DataCounters *counters,
             case ParamType::TGLenumConstPointer:
                 WriteInlineData<GLuint>(data, header);
                 break;
+            case ParamType::TGLcharPointer:
+                WriteInlineData<GLchar>(data, header);
+                break;
             default:
+                INFO() << "Unhandled ParamType: " << angle::ParamTypeToString(overrideType)
+                       << " in " << call.name();
                 UNIMPLEMENTED();
                 break;
         }
@@ -3288,6 +3317,24 @@ void CaptureString(const GLchar *str, ParamCapture *paramCapture)
 {
     // include the '\0' suffix
     CaptureMemory(str, strlen(str) + 1, paramCapture);
+}
+
+void CaptureStringLimit(const GLchar *str, uint32_t limit, ParamCapture *paramCapture)
+{
+    // Write the incoming string up to limit, including null terminator
+    size_t length = strlen(str) + 1;
+
+    if (length > limit)
+    {
+        // If too many characters, resize the string to fit in the limit
+        std::string newStr = str;
+        newStr.resize(limit - 1);
+        CaptureString(newStr.c_str(), paramCapture);
+    }
+    else
+    {
+        CaptureMemory(str, length, paramCapture);
+    }
 }
 
 gl::Program *GetLinkedProgramForCapture(const gl::State &glState, gl::ShaderProgramID handle)

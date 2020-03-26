@@ -418,7 +418,7 @@ void CaptureRequestExtensionANGLE_name(const State &glState,
                                        const GLchar *name,
                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureDisableExtensionANGLE_name(const State &glState,
@@ -426,7 +426,7 @@ void CaptureDisableExtensionANGLE_name(const State &glState,
                                        const GLchar *name,
                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureGetBooleanvRobustANGLE_length(const State &glState,
@@ -1968,7 +1968,7 @@ void CaptureBindUniformLocationCHROMIUM_name(const State &glState,
                                              const GLchar *name,
                                              ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureMatrixLoadfCHROMIUM_matrix(const State &glState,
@@ -2215,7 +2215,7 @@ void CaptureBindFragmentInputLocationCHROMIUM_name(const State &glState,
                                                    const GLchar *name,
                                                    ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureProgramPathFragmentInputGenCHROMIUM_coeffs(const State &glState,
@@ -2237,7 +2237,7 @@ void CaptureBindFragDataLocationEXT_name(const State &glState,
                                          const GLchar *name,
                                          ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureBindFragDataLocationIndexedEXT_name(const State &glState,
@@ -2248,7 +2248,7 @@ void CaptureBindFragDataLocationIndexedEXT_name(const State &glState,
                                                 const GLchar *name,
                                                 ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureGetFragDataIndexEXT_name(const State &glState,
@@ -2257,7 +2257,7 @@ void CaptureGetFragDataIndexEXT_name(const State &glState,
                                      const GLchar *name,
                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureGetProgramResourceLocationIndexEXT_name(const State &glState,
@@ -2267,7 +2267,7 @@ void CaptureGetProgramResourceLocationIndexEXT_name(const State &glState,
                                                     const GLchar *name,
                                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureInsertEventMarkerEXT_marker(const State &glState,
