@@ -61,14 +61,9 @@ ANGLE_INLINE void MarkShaderStorageBufferUsage(const Context *context)
 // Return true if the draw is a no-op, else return false.
 //  A no-op draw occurs if the count of vertices is less than the minimum required to
 //  have a valid primitive for this mode (0 for points, 0-1 for lines, 0-2 for tris).
-//  We also no-op draws that have rendering feedback loops. This is spec:
-//   "In this scenario, the framebuffer will be considered framebuffer complete
-//    but the values of fragments rendered while in this state will be undefined."
-//  From 3.2 spec: 9.3.1 Rendering Feedback Loops
 ANGLE_INLINE bool Context::noopDraw(PrimitiveMode mode, GLsizei count)
 {
-    return count < kMinimumPrimitiveCounts[mode] ||
-           mState.mDrawFramebuffer->hasRenderingFeedbackLoop();
+    return count < kMinimumPrimitiveCounts[mode];
 }
 
 ANGLE_INLINE angle::Result Context::syncDirtyBits()

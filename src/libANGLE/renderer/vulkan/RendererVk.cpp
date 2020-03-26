@@ -767,7 +767,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     if (ExtensionFound(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME, instanceExtensionNames))
     {
         enabledInstanceExtensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
-        ANGLE_FEATURE_CONDITION((&mFeatures), supportsSwapchainColorspace, true);
+        ANGLE_FEATURE_CONDITION(&mFeatures, supportsSwapchainColorspace, true);
     }
 
     // Verify the required extensions are in the extension names set. Fail if not.
@@ -1543,35 +1543,35 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     {
         ASSERT(mLineRasterizationFeatures.sType ==
                VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT);
-        ANGLE_FEATURE_CONDITION((&mFeatures), bresenhamLineRasterization, true);
+        ANGLE_FEATURE_CONDITION(&mFeatures, bresenhamLineRasterization, true);
     }
     else
     {
         // Use OpenGL line rasterization rules if extension not available by default.
         // TODO(jmadill): Fix Android support. http://anglebug.com/2830
-        ANGLE_FEATURE_CONDITION((&mFeatures), basicGLLineRasterization, !IsAndroid());
+        ANGLE_FEATURE_CONDITION(&mFeatures, basicGLLineRasterization, !IsAndroid());
     }
 
     if (mProvokingVertexFeatures.provokingVertexLast == VK_TRUE)
     {
         ASSERT(mProvokingVertexFeatures.sType ==
                VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_FEATURES_EXT);
-        ANGLE_FEATURE_CONDITION((&mFeatures), provokingVertex, true);
+        ANGLE_FEATURE_CONDITION(&mFeatures, provokingVertex, true);
     }
 
     // TODO(lucferron): Currently disabled on Intel only since many tests are failing and need
     // investigation. http://anglebug.com/2728
     ANGLE_FEATURE_CONDITION(
-        (&mFeatures), flipViewportY,
+        &mFeatures, flipViewportY,
         !IsIntel(mPhysicalDeviceProperties.vendorID) &&
                 (mPhysicalDeviceProperties.apiVersion >= VK_MAKE_VERSION(1, 1, 0)) ||
             ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionNames));
 
     // http://anglebug.com/2838
-    ANGLE_FEATURE_CONDITION((&mFeatures), extraCopyBufferRegion, IsWindows() && isIntel);
+    ANGLE_FEATURE_CONDITION(&mFeatures, extraCopyBufferRegion, IsWindows() && isIntel);
 
     // http://anglebug.com/3055
-    ANGLE_FEATURE_CONDITION((&mFeatures), forceCPUPathForCubeMapCopy, IsWindows() && isIntel);
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceCPUPathForCubeMapCopy, IsWindows() && isIntel);
 
     // Work around incorrect NVIDIA point size range clamping.
     // http://anglebug.com/2970#c10
@@ -1584,23 +1584,23 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
         nvidiaVersion =
             angle::ParseNvidiaDriverVersion(this->mPhysicalDeviceProperties.driverVersion);
     }
-    ANGLE_FEATURE_CONDITION((&mFeatures), clampPointSize,
+    ANGLE_FEATURE_CONDITION(&mFeatures, clampPointSize,
                             isNvidia && nvidiaVersion.major < uint32_t(IsWindows() ? 430 : 421));
 
     // Work around ineffective compute-graphics barriers on Nexus 5X.
     // TODO(syoussefi): Figure out which other vendors and driver versions are affected.
     // http://anglebug.com/3019
-    ANGLE_FEATURE_CONDITION((&mFeatures), flushAfterVertexConversion,
+    ANGLE_FEATURE_CONDITION(&mFeatures, flushAfterVertexConversion,
                             IsAndroid() && IsNexus5X(mPhysicalDeviceProperties.vendorID,
                                                      mPhysicalDeviceProperties.deviceID));
 
     ANGLE_FEATURE_CONDITION(
-        (&mFeatures), supportsIncrementalPresent,
+        &mFeatures, supportsIncrementalPresent,
         ExtensionFound(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME, deviceExtensionNames));
 
 #if defined(ANGLE_PLATFORM_ANDROID)
     ANGLE_FEATURE_CONDITION(
-        (&mFeatures), supportsAndroidHardwareBuffer,
+        &mFeatures, supportsAndroidHardwareBuffer,
         IsAndroid() &&
             ExtensionFound(VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME,
                            deviceExtensionNames) &&
@@ -1608,73 +1608,74 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
 #endif
 
     ANGLE_FEATURE_CONDITION(
-        (&mFeatures), supportsExternalMemoryFd,
+        &mFeatures, supportsExternalMemoryFd,
         ExtensionFound(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
-        (&mFeatures), supportsExternalMemoryFuchsia,
+        &mFeatures, supportsExternalMemoryFuchsia,
         ExtensionFound(VK_FUCHSIA_EXTERNAL_MEMORY_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
-        (&mFeatures), supportsExternalSemaphoreFd,
+        &mFeatures, supportsExternalSemaphoreFd,
         ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
-        (&mFeatures), supportsExternalSemaphoreFuchsia,
+        &mFeatures, supportsExternalSemaphoreFuchsia,
         ExtensionFound(VK_FUCHSIA_EXTERNAL_SEMAPHORE_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
-        (&mFeatures), supportsShaderStencilExport,
+        &mFeatures, supportsShaderStencilExport,
         ExtensionFound(VK_EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME, deviceExtensionNames));
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), supportsTransformFeedbackExtension,
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsTransformFeedbackExtension,
                             mTransformFeedbackFeatures.transformFeedback == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), supportsIndexTypeUint8,
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsIndexTypeUint8,
                             mIndexTypeUint8Features.indexTypeUint8 == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), emulateTransformFeedback,
+    ANGLE_FEATURE_CONDITION(&mFeatures, emulateTransformFeedback,
                             (mFeatures.supportsTransformFeedbackExtension.enabled == VK_FALSE &&
                              mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE));
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), disableFifoPresentMode, IsLinux() && isIntel);
+    ANGLE_FEATURE_CONDITION(&mFeatures, disableFifoPresentMode, IsLinux() && isIntel);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), bindEmptyForUnusedDescriptorSets,
+    ANGLE_FEATURE_CONDITION(&mFeatures, bindEmptyForUnusedDescriptorSets,
                             IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), forceOldRewriteStructSamplers, IsAndroid() && !isSwS);
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceOldRewriteStructSamplers, IsAndroid() && !isSwS);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), perFrameWindowSizeQuery,
+    ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery,
                             isIntel || (IsWindows() && isAMD) || IsFuchsia());
 
     // Disabled on AMD/windows due to buggy behavior.
-    ANGLE_FEATURE_CONDITION((&mFeatures), disallowSeamfulCubeMapEmulation, IsWindows() && isAMD);
+    ANGLE_FEATURE_CONDITION(&mFeatures, disallowSeamfulCubeMapEmulation, IsWindows() && isAMD);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), padBuffersToMaxVertexAttribStride, isAMD);
+    ANGLE_FEATURE_CONDITION(&mFeatures, padBuffersToMaxVertexAttribStride, isAMD);
     mMaxVertexAttribStride = std::min(static_cast<uint32_t>(gl::limits::kMaxVertexAttribStride),
                                       mPhysicalDeviceProperties.limits.maxVertexInputBindingStride);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), forceD16TexFilter, IsAndroid() && isQualcomm);
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceD16TexFilter, IsAndroid() && isQualcomm);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), disableFlippingBlitWithCommand,
-                            IsAndroid() && isQualcomm);
+    ANGLE_FEATURE_CONDITION(&mFeatures, disableFlippingBlitWithCommand, IsAndroid() && isQualcomm);
 
     // Allocation sanitization disabled by default because of a heaveyweight implementation
     // that can cause OOM and timeouts.
-    ANGLE_FEATURE_CONDITION((&mFeatures), allocateNonZeroMemory, false);
+    ANGLE_FEATURE_CONDITION(&mFeatures, allocateNonZeroMemory, false);
 
     ANGLE_FEATURE_CONDITION(
-        (&mFeatures), supportsExternalMemoryHost,
+        &mFeatures, supportsExternalMemoryHost,
         ExtensionFound(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME, deviceExtensionNames));
 
     // Pre-rotation support is not fully ready to be enabled.
-    ANGLE_FEATURE_CONDITION((&mFeatures), enablePreRotateSurfaces, false);
+    ANGLE_FEATURE_CONDITION(&mFeatures, enablePreRotateSurfaces, false);
 
     // Currently disable FramebufferVk cache on Apple: http://anglebug.com/4442
-    ANGLE_FEATURE_CONDITION((&mFeatures), enableFramebufferVkCache, !IsApple());
+    ANGLE_FEATURE_CONDITION(&mFeatures, enableFramebufferVkCache, !IsApple());
 
     // Currently disabled by default: http://anglebug.com/3078
-    ANGLE_FEATURE_CONDITION((&mFeatures), enablePrecisionQualifiers, false);
+    ANGLE_FEATURE_CONDITION(&mFeatures, enablePrecisionQualifiers, false);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportDepthStencilRenderingFeedbackLoops, true);
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);

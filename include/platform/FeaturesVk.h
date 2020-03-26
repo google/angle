@@ -268,6 +268,12 @@ struct FeaturesVk : FeatureSetBase
     Feature enablePrecisionQualifiers = {
         "enable_precision_qualifiers", FeatureCategory::VulkanFeatures,
         "Enable precision qualifiers in shaders", &members, "http://anglebug.com/3078"};
+
+    // Support Depth/Stencil rendering feedback loops by masking out the depth/stencil buffer.
+    // Manhattan uses this feature in a few draw calls.
+    Feature supportDepthStencilRenderingFeedbackLoops = {
+        "support_depth_stencil_rendering_feedback_loops", FeatureCategory::VulkanFeatures,
+        "Suport depth/stencil rendering feedback loops", &members, "http://anglebug.com/4490"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
