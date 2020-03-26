@@ -25,7 +25,7 @@ vars = {
   'vk_gl_cts_revision': 'a6b249819f7177821d4b7eefff36af07fef71825',
 
   # Current revision of glslang, the Khronos SPIRV compiler.
-  'glslang_revision': '4b2483ee88ab2ce904f6bac27c7796823c45564c',
+  'glslang_revision': '2df8c71258dea6cf57aa69ba846f8601f61f6f81',
 
   # Current revision of googletest.
   # Note: this dep cannot be auto-rolled b/c of nesting.
@@ -58,7 +58,7 @@ vars = {
   'vulkan_tools_revision': 'bec7b6e29260caa9348b1fd42b5d65443d512748',
 
   # Current revision of Khronos Vulkan-ValidationLayers.
-  'vulkan_validation_revision': 'e2bf0e6a7d9faf260e5ac5f364adaca29dd6bffe',
+  'vulkan_validation_revision': '443c2caa1714d73693cbb0924b524f0fa7558efd',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
