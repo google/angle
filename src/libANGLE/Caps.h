@@ -226,6 +226,9 @@ struct Extensions
     // Implies that TextureCaps for GL_ETC1_RGB8_OES exist
     bool compressedETC1RGB8TextureOES = false;
 
+    // GL_EXT_compressed_ETC1_RGB8_sub_texture
+    bool compressedETC1RGB8SubTexture = false;
+
     // OES_compressed_ETC2_RGB8_texture
     bool compressedETC2RGB8TextureOES = false;
 

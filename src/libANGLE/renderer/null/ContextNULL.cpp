@@ -92,6 +92,7 @@ ContextNULL::ContextNULL(const gl::State &state,
     mExtensions.textureCompressionASTCLDRKHR = true;
     mExtensions.textureCompressionASTCOES    = true;
     mExtensions.compressedETC1RGB8TextureOES = true;
+    mExtensions.compressedETC1RGB8SubTexture = true;
     mExtensions.lossyETCDecode               = true;
     mExtensions.geometryShader               = true;
 

@@ -877,6 +877,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_compression_bptc"] = enableableExtension(&Extensions::textureCompressionBPTC);
         map["GL_EXT_texture_compression_rgtc"] = enableableExtension(&Extensions::textureCompressionRGTC);
         map["GL_OES_compressed_ETC1_RGB8_texture"] = enableableExtension(&Extensions::compressedETC1RGB8TextureOES);
+        map["GL_EXT_compressed_ETC1_RGB8_sub_texture"] = enableableExtension(&Extensions::compressedETC1RGB8SubTexture);
         map["GL_OES_compressed_ETC2_RGB8_texture"] = enableableExtension(&Extensions::compressedETC2RGB8TextureOES);
         map["GL_OES_compressed_ETC2_sRGB8_texture"] = enableableExtension(&Extensions::compressedETC2sRGB8TextureOES);
         map["GL_OES_compressed_ETC2_punchthroughA_RGBA8_texture"] = enableableExtension(&Extensions::compressedETC2PunchthroughARGB8TextureOES);

@@ -92,6 +92,7 @@ gles_extensions = [
     "GL_KHR_parallel_shader_compile",
     "GL_NV_fence",
     "GL_OES_compressed_ETC1_RGB8_texture",
+    "GL_EXT_compressed_ETC1_RGB8_sub_texture",
     "GL_OES_depth32",
     "GL_OES_draw_buffers_indexed",
     "GL_OES_draw_elements_base_vertex",

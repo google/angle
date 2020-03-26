@@ -66,6 +66,9 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.textureCompressionSliced3dASTCKHR =
         mNativeExtensions.textureCompressionASTCLDRKHR;
 
+    // Enable EXT_compressed_ETC1_RGB8_sub_texture
+    mNativeExtensions.compressedETC1RGB8SubTexture = mNativeExtensions.compressedETC1RGB8TextureOES;
+
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.
     mNativeExtensions.mapBufferOES           = true;

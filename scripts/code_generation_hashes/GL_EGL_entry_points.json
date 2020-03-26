@@ -12,7 +12,7 @@
   "scripts/gl_angle_ext.xml":
     "079cc4829de7ce638faf7bbf66e141ad",
   "scripts/registry_xml.py":
-    "06c837b395c8cd0c4fc937b193365042",
+    "439dd95a9f118a64e8745f97963efa4a",
   "scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "src/libANGLE/Context_gl_1_0_autogen.h":
@@ -64,7 +64,7 @@
   "src/libANGLE/Context_gles_3_2_autogen.h":
     "e26f7ee7b59a89a4f5337171816b8336",
   "src/libANGLE/Context_gles_ext_autogen.h":
-    "572006fa4493a901e879f6df3cb4eee8",
+    "470d459798aff6d0315a0c95134d9524",
   "src/libANGLE/capture_gles_1_0_autogen.cpp":
     "96fc0f501e2e696ab911dad8b400dfb2",
   "src/libANGLE/capture_gles_1_0_autogen.h":

@@ -4669,8 +4669,9 @@ TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionDXT5SRGBA)
 // Test enabling GL_OES_compressed_ETC1_RGB8_texture
 TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionETC1)
 {
-    validateCompressedTexImageExtensionFormat(GL_ETC1_RGB8_OES, 4, 4, 8,
-                                              "GL_OES_compressed_ETC1_RGB8_texture", false);
+    validateCompressedTexImageExtensionFormat(
+        GL_ETC1_RGB8_OES, 4, 4, 8, "GL_OES_compressed_ETC1_RGB8_texture",
+        IsGLExtensionEnabled("GL_EXT_compressed_ETC1_RGB8_sub_texture"));
 }
 
 // Test enabling GL_ANGLE_lossy_etc_decode

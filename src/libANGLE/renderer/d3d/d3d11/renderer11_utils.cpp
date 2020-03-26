@@ -1569,6 +1569,7 @@ void GenerateCaps(ID3D11Device *device,
     // Explicitly disable GL_OES_compressed_ETC1_RGB8_texture because it's emulated and never
     // becomes core. WebGL doesn't want to expose it unless there is native support.
     extensions->compressedETC1RGB8TextureOES = false;
+    extensions->compressedETC1RGB8SubTexture = false;
 
     extensions->elementIndexUintOES = true;
     extensions->getProgramBinaryOES = true;

@@ -280,6 +280,7 @@
     GLint getFragDataIndex(ShaderProgramID programPacked, const GLchar *name);                     \
     GLint getProgramResourceLocationIndex(ShaderProgramID programPacked, GLenum programInterface,  \
                                           const GLchar *name);                                     \
+    /* GL_EXT_compressed_ETC1_RGB8_sub_texture */                                                  \
     /* GL_EXT_debug_marker */                                                                      \
     void insertEventMarker(GLsizei length, const GLchar *marker);                                  \
     void popGroupMarker();                                                                         \
