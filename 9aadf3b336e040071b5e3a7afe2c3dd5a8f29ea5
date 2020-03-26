@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9471d20_3597d89c",
+        "filename": "src/libANGLE/capture_gles_3_0_params.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-03-26T19:06:53Z",
+      "side": 1,
+      "message": "I get a bit uneasy about program binary stuff with replay. We should probably look at implementing a filter to disable the binary formats when capture is active.",
+      "range": {
+        "startLine": 354,
+        "startChar": 0,
+        "endLine": 406,
+        "endChar": 1
+      },
+      "revId": "9aadf3b336e040071b5e3a7afe2c3dd5a8f29ea5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "219ffcde_b9b6b963",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-03-26T19:06:53Z",
+      "side": 1,
+      "message": "where were these coming from? Chrome somehow?",
+      "range": {
+        "startLine": 421,
+        "startChar": 4,
+        "endLine": 421,
+        "endChar": 17
+      },
+      "revId": "9aadf3b336e040071b5e3a7afe2c3dd5a8f29ea5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
