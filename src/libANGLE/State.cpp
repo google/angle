@@ -1386,13 +1386,13 @@ void State::setActiveSampler(unsigned int active)
 
 void State::setSamplerTexture(const Context *context, TextureType type, Texture *texture)
 {
-    mSamplerTextures[type][mActiveSampler].set(context, texture);
-
     if (mExecutable && mExecutable->getActiveSamplersMask()[mActiveSampler] &&
         IsTextureCompatibleWithSampler(type, mExecutable->getActiveSamplerTypes()[mActiveSampler]))
     {
         updateActiveTexture(context, mActiveSampler, texture);
     }
+
+    mSamplerTextures[type][mActiveSampler].set(context, texture);
 
     mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
 }
