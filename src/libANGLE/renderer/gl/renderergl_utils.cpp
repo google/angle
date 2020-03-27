@@ -1621,7 +1621,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     bool limitMaxTextureSize = isIntel && IsLinux() && GetLinuxOSVersion() < OSVersion(5, 0, 0);
     ANGLE_FEATURE_CONDITION(features, limitMaxTextureSizeTo4096,
                             IsAndroid() || limitMaxTextureSize);
-    ANGLE_FEATURE_CONDITION(features, limitMaxMSAASamplesTo4, IsAndroid());
+    // On Apple switchable graphics, GL_MAX_SAMPLES may differ between the GPUs.
+    // 4 is a lowest common denominator that is always supported.
+    ANGLE_FEATURE_CONDITION(features, limitMaxMSAASamplesTo4,
+                            IsAndroid() || (IsApple() && (isIntel || isAMD || isNvidia)));
     ANGLE_FEATURE_CONDITION(features, limitMax3dArrayTextureSizeTo1024, limitMaxTextureSize);
 
     ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, IsApple());
