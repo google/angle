@@ -69,8 +69,8 @@
 4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-largeStrideAndOffsetsNewAndLegacyAPI = FAIL
 
 // Failing on SwiftShader
-4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-cs = FAIL
-4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-fs = FAIL
+4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-cs = SKIP
+4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-fs = SKIP
 
 ////
 //// General Vulkan expectations
