@@ -98,6 +98,9 @@ bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock);
 void WriteBlockMemberInfo(BinaryOutputStream *stream, const sh::BlockMemberInfo &var);
 void LoadBlockMemberInfo(BinaryInputStream *stream, sh::BlockMemberInfo *var);
 
+void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var);
+void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var);
+
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct VariableLocation
 {
