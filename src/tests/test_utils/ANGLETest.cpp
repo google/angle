@@ -420,8 +420,9 @@ void ANGLETestBase::initOSWindow()
     windowNameStream << "ANGLE Tests - " << *mCurrentParams;
     std::string windowName = windowNameStream.str();
 
-    if (mAlwaysForceNewDisplay)
+    if (IsAndroid())
     {
+        // Only one window per test application on Android, shared among all fixtures
         mFixture->osWindow = mOSWindowSingleton;
     }
 
@@ -433,11 +434,15 @@ void ANGLETestBase::initOSWindow()
             std::cerr << "Failed to initialize OS Window.";
         }
 
-        mOSWindowSingleton = mFixture->osWindow;
+        if (IsAndroid())
+        {
+            // Initialize the single window on Andoird only once
+            mOSWindowSingleton = mFixture->osWindow;
+        }
     }
 
     // On Linux we must keep the test windows visible. On Windows it doesn't seem to need it.
-    mFixture->osWindow->setVisible(!IsWindows());
+    setWindowVisible(getOSWindow(), !IsWindows());
 
     switch (mCurrentParams->driver)
     {
@@ -1226,9 +1231,15 @@ bool ANGLETestBase::isMultisampleEnabled() const
     return mFixture->eglWindow->isMultisample();
 }
 
-void ANGLETestBase::setWindowVisible(bool isVisible)
+void ANGLETestBase::setWindowVisible(OSWindow *osWindow, bool isVisible)
 {
-    mFixture->osWindow->setVisible(isVisible);
+    // SwiftShader windows are not required to be visible for test correctness,
+    // moreover, making a SwiftShader window visible flaky hangs on Xvfb, so we keep them hidden.
+    if (isSwiftshader())
+    {
+        return;
+    }
+    osWindow->setVisible(isVisible);
 }
 
 ANGLETestBase::TestFixture::TestFixture()  = default;

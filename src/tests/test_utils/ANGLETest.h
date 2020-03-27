@@ -322,7 +322,7 @@ class ANGLETestBase
     virtual ~ANGLETestBase();
 
   public:
-    void setWindowVisible(bool isVisible);
+    void setWindowVisible(OSWindow *osWindow, bool isVisible);
 
     virtual void overrideWorkaroundsD3D(angle::FeaturesD3D *featuresD3D) {}
     virtual void overrideFeaturesVk(angle::FeaturesVk *featuresVulkan) {}
@@ -526,9 +526,14 @@ class ANGLETestBase
     bool mSetUpCalled;
     bool mTearDownCalled;
 
-    // On most systems we force a new display on every test instance. For these configs we can
-    // share a single OSWindow instance. With display reuse we need a separate OSWindow for each
-    // different config. This OSWindow sharing seemed to lead to driver bugs on some platforms.
+    // Usually, we use an OS Window per "fixture" (a frontend and backend combination).
+    // This allows:
+    // 1. Reusing EGL Display on Windows.
+    //    Other platforms have issues with display reuse even if a window per fixture is used.
+    // 2. Hiding only SwiftShader OS Window on Linux.
+    //    OS Windows for other backends must be visible, to allow driver to communicate with X11.
+    // However, we must use a single OS Window for all backends on Android,
+    // since test Application can have only one window.
     static OSWindow *mOSWindowSingleton;
 
     static std::map<angle::PlatformParameters, TestFixture> gFixtures;
