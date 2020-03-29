@@ -169,6 +169,30 @@
     },
     {
       "key": {
+        "uuid": "80970483_58b45b86",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-03-29T03:46:10Z",
+      "side": 1,
+      "message": "Huh, I recall having heard that it was shared and packed that were considered always active...",
+      "parentUuid": "3f85e7e3_2a813b2f",
+      "range": {
+        "startLine": 733,
+        "startChar": 22,
+        "endLine": 733,
+        "endChar": 39
+      },
+      "revId": "b4385330b2101553569563c376690562c9a37056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "576e2480_7cc67f62",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 42
