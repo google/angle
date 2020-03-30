@@ -3111,7 +3111,8 @@ void CaptureTexImage3DOES_pixels(const State &glState,
                                  const void *pixels,
                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureTexImage3D_pixels(glState, isCallValid, targetPacked, level, internalformat, width,
+                             height, depth, border, format, type, pixels, paramCapture);
 }
 
 void CaptureTexSubImage3DOES_pixels(const State &glState,
@@ -3129,7 +3130,8 @@ void CaptureTexSubImage3DOES_pixels(const State &glState,
                                     const void *pixels,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureTexSubImage3D_pixels(glState, isCallValid, targetPacked, level, xoffset, yoffset,
+                                zoffset, width, height, depth, format, type, pixels, paramCapture);
 }
 
 void CaptureGetSamplerParameterIivOES_params(const State &glState,

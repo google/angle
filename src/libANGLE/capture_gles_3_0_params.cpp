@@ -845,7 +845,8 @@ void CaptureVertexAttribIPointer_pointer(const State &glState,
                                          const void *pointer,
                                          ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureVertexAttribPointer_pointer(glState, isCallValid, index, size, typePacked, false, stride,
+                                       pointer, paramCapture);
 }
 
 }  // namespace gl

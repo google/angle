@@ -484,7 +484,8 @@ void WriteCppReplayForCall(const CallCapture &call,
         callOut << "gShaderProgramMap[" << id << "] = ";
     }
 
-    if (call.entryPoint == gl::EntryPoint::MapBufferRange)
+    if (call.entryPoint == gl::EntryPoint::MapBufferRange ||
+        call.entryPoint == gl::EntryPoint::MapBufferRangeEXT)
     {
         GLbitfield access =
             call.params.getParam("access", ParamType::TGLbitfield, 3).value.GLbitfieldVal;
@@ -3023,9 +3024,15 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, CallCaptur
         }
 
         case gl::EntryPoint::MapBuffer:
+        {
+            UNIMPLEMENTED();
+            break;
+        }
         case gl::EntryPoint::MapBufferOES:
-        case gl::EntryPoint::MapBufferRangeEXT:
-        case gl::EntryPoint::UnmapBufferOES:
+        {
+            UNIMPLEMENTED();
+            break;
+        }
         case gl::EntryPoint::UnmapNamedBuffer:
         {
             UNIMPLEMENTED();
@@ -3033,6 +3040,7 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, CallCaptur
         }
 
         case gl::EntryPoint::MapBufferRange:
+        case gl::EntryPoint::MapBufferRangeEXT:
         {
             // Use the access bits to see if contents may be modified
             GLbitfield access =
@@ -3062,6 +3070,7 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, CallCaptur
         }
 
         case gl::EntryPoint::UnmapBuffer:
+        case gl::EntryPoint::UnmapBufferOES:
         {
             // See if we need to capture the buffer contents
             captureMappedBufferSnapshot(context, call);
