@@ -39,6 +39,8 @@ constexpr VkImageUsageFlags kTransferStagingImageFlags =
 constexpr VkFormatFeatureFlags kBlitFeatureFlags =
     VK_FORMAT_FEATURE_BLIT_SRC_BIT | VK_FORMAT_FEATURE_BLIT_DST_BIT;
 
+constexpr angle::SubjectIndex kStagingBufferSubjectIndex = 0;
+
 bool CanCopyWithTransfer(RendererVk *renderer,
                          const vk::Format &srcFormat,
                          const vk::Format &destFormat)
@@ -111,7 +113,8 @@ TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
       mImageLevelOffset(0),
       mImage(nullptr),
       mStagingBufferInitialSize(vk::kStagingBufferSize),
-      mImageUsageFlags(0)
+      mImageUsageFlags(0),
+      mStagingBufferObserverBinding(this, kStagingBufferSubjectIndex)
 {}
 
 TextureVk::~TextureVk() = default;
@@ -280,7 +283,6 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
                 inputRowPitch, inputDepthPitch, inputSkipBytes));
 
             unpackBufferVk->unmapImpl(contextVk);
-            onStagingBufferChange();
         }
     }
     else if (pixels)
@@ -288,7 +290,6 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
         ANGLE_TRY(mImage->stageSubresourceUpdate(
             contextVk, getNativeImageIndex(index), gl::Extents(area.width, area.height, area.depth),
             gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels, vkFormat));
-        onStagingBufferChange();
     }
 
     return angle::Result::Continue;
@@ -460,7 +461,6 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         context, offsetImageIndex, clippedSourceArea, modifiedDestOffset,
         gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
         framebufferVk));
-    onStagingBufferChange();
 
     return angle::Result::Continue;
 }
@@ -526,7 +526,6 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
         contextVk, destinationAllocationSize, offsetImageIndex,
         gl::Extents(sourceArea.width, sourceArea.height, 1), destOffset, &destData));
-    onStagingBufferChange();
 
     // Source and dest data is tightly packed
     GLuint sourceDataRowPitch = sourceArea.width * sourceTextureFormat.pixelBytes;
@@ -635,7 +634,6 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
         VkImageType imageType = gl_vk::GetImageType(mState.getType());
         mImage->stageSubresourceUpdateFromImage(stagingImage.release(), index, destOffset, extents,
                                                 imageType);
-        onStagingBufferChange();
     }
 
     return angle::Result::Continue;
@@ -731,7 +729,6 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
         mImage->stageSubresourceUpdateFromImage(stagingImage.release(), index, destOffset,
                                                 gl::Extents(sourceArea.width, sourceArea.height, 1),
                                                 imageType);
-        onStagingBufferChange();
     }
 
     return angle::Result::Continue;
@@ -877,6 +874,7 @@ void TextureVk::releaseAndDeleteImage(ContextVk *contextVk)
     {
         releaseImage(contextVk);
         releaseStagingBuffer(contextVk);
+        mStagingBufferObserverBinding.bind(nullptr);
         SafeDelete(mImage);
     }
 }
@@ -920,6 +918,8 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
                                bool selfOwned)
 {
     ASSERT(mImage == nullptr);
+
+    mStagingBufferObserverBinding.bind(imageHelper);
 
     mOwnsImage        = selfOwned;
     mImageNativeType  = imageType;
@@ -1151,7 +1151,6 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         ANGLE_TRY(copyAndStageImageSubresource(contextVk, baseLevelDesc, false,
                                                getNativeImageLayer(0), 0, mImage->getBaseLevel()));
 
-        onStagingBufferChange();
         // Release the origin image and recreate it with new mipmap counts.
         releaseImage(contextVk);
 
@@ -1312,8 +1311,6 @@ angle::Result TextureVk::changeLevels(ContextVk *contextVk,
         }
     }
 
-    // Inform the front end that we've updated the staging buffer
-    onStagingBufferChange();
     // Now that we've staged all the updates, release the current image so that it will be
     // recreated with the correct number of mip levels, base level, and max level.
     releaseImage(contextVk);
@@ -1552,7 +1549,6 @@ angle::Result TextureVk::initializeContents(const gl::Context *context,
         vk::GetImpl(context)->getRenderer()->getFormat(desc.format.info->sizedInternalFormat);
 
     mImage->stageSubresourceRobustClear(imageIndex, format);
-    onStagingBufferChange();
 
     // Note that we cannot ensure the image is initialized because we might be calling subImage
     // on a non-complete cube map.
@@ -1658,7 +1654,6 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         {
             gl::ImageIndex index = gl::ImageIndex::Make2DArrayRange(level, 0, layerCount);
             mImage->stageSubresourceRobustClear(index, format);
-            onStagingBufferChange();
         }
     }
 
@@ -1698,6 +1693,7 @@ void TextureVk::releaseImage(ContextVk *contextVk)
         }
         else
         {
+            mStagingBufferObserverBinding.bind(nullptr);
             mImage = nullptr;
         }
     }
@@ -1712,7 +1708,7 @@ void TextureVk::releaseImage(ContextVk *contextVk)
     // Then clear the levels
     mRenderTargets.clear();
 
-    onStagingBufferChange();
+    onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
 void TextureVk::releaseStagingBuffer(ContextVk *contextVk)
@@ -1783,7 +1779,6 @@ angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
             contextVk, mipAllocationSize,
             gl::ImageIndex::MakeFromType(mState.getType(), currentMipLevel, layer), mipLevelExtents,
             gl::Offset(), &destData));
-        onStagingBufferChange();
 
         // Generate the mipmap into that new buffer
         sourceFormat.mipGenerationFunction(
@@ -1860,5 +1855,13 @@ const vk::Format &TextureVk::getBaseLevelFormat(RendererVk *renderer) const
 {
     const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
     return renderer->getFormat(baseLevelDesc.format.info->sizedInternalFormat);
+}
+
+void TextureVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
+{
+    ASSERT(index == kStagingBufferSubjectIndex && message == angle::SubjectMessage::SubjectChanged);
+
+    // Forward the notification to vk::Texture that the staging buffer changed.
+    onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 }  // namespace rx

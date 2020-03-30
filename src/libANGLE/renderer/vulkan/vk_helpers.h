@@ -627,7 +627,7 @@ enum class ImageLayout
     EnumCount   = 13,
 };
 
-class ImageHelper final : public Resource
+class ImageHelper final : public Resource, public angle::Subject
 {
   public:
     ImageHelper();
@@ -937,36 +937,6 @@ class ImageHelper final : public Resource
                                       GLuint *inputSkipBytes);
 
   private:
-    // Generalized to accept both "primary" and "secondary" command buffers.
-    template <typename CommandBufferT>
-    void forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
-                                   ImageLayout newLayout,
-                                   uint32_t newQueueFamilyIndex,
-                                   CommandBufferT *commandBuffer);
-
-    void stageSubresourceClear(const gl::ImageIndex &index,
-                               const angle::Format &format,
-                               const VkClearColorValue &colorValue,
-                               const VkClearDepthStencilValue &depthStencilValue);
-
-    void clearColor(const VkClearColorValue &color,
-                    uint32_t baseMipLevel,
-                    uint32_t levelCount,
-                    uint32_t baseArrayLayer,
-                    uint32_t layerCount,
-                    CommandBuffer *commandBuffer);
-
-    void clearDepthStencil(VkImageAspectFlags imageAspectFlags,
-                           VkImageAspectFlags clearAspectFlags,
-                           const VkClearDepthStencilValue &depthStencil,
-                           uint32_t baseMipLevel,
-                           uint32_t levelCount,
-                           uint32_t baseArrayLayer,
-                           uint32_t layerCount,
-                           CommandBuffer *commandBuffer);
-
-    angle::Result initializeNonZeroMemory(Context *context, VkDeviceSize size);
-
     enum class UpdateSource
     {
         Clear,
@@ -1017,6 +987,38 @@ class ImageHelper final : public Resource
             ImageUpdate image;
         };
     };
+
+    // Generalized to accept both "primary" and "secondary" command buffers.
+    template <typename CommandBufferT>
+    void forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
+                                   ImageLayout newLayout,
+                                   uint32_t newQueueFamilyIndex,
+                                   CommandBufferT *commandBuffer);
+
+    void stageSubresourceClear(const gl::ImageIndex &index,
+                               const angle::Format &format,
+                               const VkClearColorValue &colorValue,
+                               const VkClearDepthStencilValue &depthStencilValue);
+
+    void clearColor(const VkClearColorValue &color,
+                    uint32_t baseMipLevel,
+                    uint32_t levelCount,
+                    uint32_t baseArrayLayer,
+                    uint32_t layerCount,
+                    CommandBuffer *commandBuffer);
+
+    void clearDepthStencil(VkImageAspectFlags imageAspectFlags,
+                           VkImageAspectFlags clearAspectFlags,
+                           const VkClearDepthStencilValue &depthStencil,
+                           uint32_t baseMipLevel,
+                           uint32_t levelCount,
+                           uint32_t baseArrayLayer,
+                           uint32_t layerCount,
+                           CommandBuffer *commandBuffer);
+
+    angle::Result initializeNonZeroMemory(Context *context, VkDeviceSize size);
+
+    void appendSubresourceUpdate(SubresourceUpdate &&update);
 
     // Vulkan objects.
     Image mImage;

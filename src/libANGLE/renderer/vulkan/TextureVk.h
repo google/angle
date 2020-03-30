@@ -30,7 +30,7 @@ enum class ImageMipLevels
 // vkCmdCopyBufferToImage buffer offset multiple
 constexpr VkDeviceSize kBufferOffsetMultiple = 4;
 
-class TextureVk : public TextureImpl
+class TextureVk : public TextureImpl, public angle::ObserverInterface
 {
   public:
     TextureVk(const gl::TextureState &state, RendererVk *renderer);
@@ -371,8 +371,6 @@ class TextureVk : public TextureImpl
                                              uint32_t levelCount,
                                              const vk::Format &format);
 
-    void onStagingBufferChange() { onStateChange(angle::SubjectMessage::SubjectChanged); }
-
     const gl::InternalFormat &getImplementationSizedFormat(const gl::Context *context) const;
     const vk::Format &getBaseLevelFormat(RendererVk *renderer) const;
     // Re-create the image.
@@ -383,6 +381,10 @@ class TextureVk : public TextureImpl
 
     // Update base and max levels, and re-create image if needed.
     angle::Result updateBaseMaxLevels(ContextVk *contextVk, GLuint baseLevel, GLuint maxLevel);
+
+    // We monitor the staging buffer and set dirty bits if the staging buffer changes. Note that we
+    // support changes in the staging buffer even outside the TextureVk class.
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
     bool mOwnsImage;
 
@@ -422,6 +424,8 @@ class TextureVk : public TextureImpl
 
     // The created vkImage usage flag.
     VkImageUsageFlags mImageUsageFlags;
+
+    angle::ObserverBinding mStagingBufferObserverBinding;
 };
 
 }  // namespace rx

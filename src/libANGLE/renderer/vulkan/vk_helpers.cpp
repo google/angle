@@ -1736,7 +1736,8 @@ void BufferHelper::updateWriteBarrier(VkAccessFlags writeAccessType,
 
 // ImageHelper implementation.
 ImageHelper::ImageHelper()
-    : mFormat(nullptr),
+    : mExtents{},
+      mFormat(nullptr),
       mSamples(1),
       mSerial(rx::kZeroSerial),
       mCurrentLayout(ImageLayout::Undefined),
@@ -2594,7 +2595,7 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
         stencilCopy.imageOffset                     = copy.imageOffset;
         stencilCopy.imageExtent                     = copy.imageExtent;
         stencilCopy.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_STENCIL_BIT;
-        mSubresourceUpdates.emplace_back(mStagingBuffer.getCurrentBuffer(), stencilCopy);
+        appendSubresourceUpdate(SubresourceUpdate(mStagingBuffer.getCurrentBuffer(), stencilCopy));
 
         aspectFlags &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
     }
@@ -2618,7 +2619,7 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     if (aspectFlags)
     {
         copy.imageSubresource.aspectMask = aspectFlags;
-        mSubresourceUpdates.emplace_back(mStagingBuffer.getCurrentBuffer(), copy);
+        appendSubresourceUpdate(SubresourceUpdate(mStagingBuffer.getCurrentBuffer(), copy));
     }
 
     return angle::Result::Continue;
@@ -2699,7 +2700,7 @@ angle::Result ImageHelper::stageSubresourceUpdateAndGetData(ContextVk *contextVk
     gl_vk::GetOffset(offset, &copy.imageOffset);
     gl_vk::GetExtent(glExtents, &copy.imageExtent);
 
-    mSubresourceUpdates.emplace_back(mStagingBuffer.getCurrentBuffer(), copy);
+    appendSubresourceUpdate(SubresourceUpdate(mStagingBuffer.getCurrentBuffer(), copy));
 
     return angle::Result::Continue;
 }
@@ -2742,10 +2743,10 @@ angle::Result ImageHelper::stageSubresourceUpdateFromBuffer(ContextVk *contextVk
         copy[1].imageSubresource.layerCount     = layerCount;
         copy[1].imageOffset                     = offset;
         copy[1].imageExtent                     = extent;
-        mSubresourceUpdates.emplace_back(bufferHelper, copy[1]);
+        appendSubresourceUpdate(SubresourceUpdate(bufferHelper, copy[1]));
     }
 
-    mSubresourceUpdates.emplace_back(bufferHelper, copy[0]);
+    appendSubresourceUpdate(SubresourceUpdate(bufferHelper, copy[0]));
 
     return angle::Result::Continue;
 }
@@ -2845,7 +2846,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     gl_vk::GetExtent(dstExtent, &copyToImage.imageExtent);
 
     // 3- enqueue the destination image subresource update
-    mSubresourceUpdates.emplace_back(mStagingBuffer.getCurrentBuffer(), copyToImage);
+    appendSubresourceUpdate(SubresourceUpdate(mStagingBuffer.getCurrentBuffer(), copyToImage));
     return angle::Result::Continue;
 }
 
@@ -2882,7 +2883,7 @@ void ImageHelper::stageSubresourceUpdateFromImage(ImageHelper *image,
     gl_vk::GetOffset(destOffset, &copyToImage.dstOffset);
     gl_vk::GetExtent(glExtents, &copyToImage.extent);
 
-    mSubresourceUpdates.emplace_back(image, copyToImage);
+    appendSubresourceUpdate(SubresourceUpdate(image, copyToImage));
 }
 
 void ImageHelper::stageSubresourceRobustClear(const gl::ImageIndex &index, const Format &format)
@@ -2926,6 +2927,7 @@ void ImageHelper::stageSubresourceClear(const gl::ImageIndex &index,
     // Note that clears can arrive out of order from the front-end with respect to staged changes,
     // but they are intended to be done first.
     mSubresourceUpdates.emplace(mSubresourceUpdates.begin(), clearValue, index);
+    onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
 angle::Result ImageHelper::allocateStagingMemory(ContextVk *contextVk,
@@ -3549,6 +3551,12 @@ bool ImageHelper::SubresourceUpdate::isUpdateToLayerLevel(uint32_t layerIndex,
 
     const VkImageSubresourceLayers &dst = dstSubresource();
     return dst.baseArrayLayer == layerIndex && dst.mipLevel == levelIndex;
+}
+
+void ImageHelper::appendSubresourceUpdate(SubresourceUpdate &&update)
+{
+    mSubresourceUpdates.emplace_back(std::move(update));
+    onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
 // FramebufferHelper implementation.
