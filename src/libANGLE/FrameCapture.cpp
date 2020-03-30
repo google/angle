@@ -3252,7 +3252,7 @@ int DataCounters::getAndIncrement(gl::EntryPoint entryPoint, const std::string &
     return mData[counterKey]++;
 }
 
-bool FrameCapture::enabled() const
+bool FrameCapture::isCapturing() const
 {
     // Currently we will always do a capture up until the last frame. In the future we could improve
     // mid execution capture by only capturing between the start and end frames. The only necessary

@@ -195,7 +195,9 @@ class FrameCapture final : angle::NonCopyable
 
     void captureCall(const gl::Context *context, CallCapture &&call);
     void onEndFrame(const gl::Context *context);
-    bool enabled() const;
+    bool enabled() const { return mEnabled; }
+
+    bool isCapturing() const;
     void replay(gl::Context *context);
 
   private:
@@ -222,7 +224,7 @@ class FrameCapture final : angle::NonCopyable
     // This simplifies a lot of file management.
     std::vector<uint8_t> mBinaryData;
 
-    bool mEnabled;
+    bool mEnabled = false;
     std::string mOutDirectory;
     std::string mCaptureLabel;
     bool mCompression;
@@ -251,7 +253,7 @@ void CaptureCallToFrameCapture(CaptureFuncT captureFunc,
                                ArgsT... captureParams)
 {
     FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
+    if (!frameCapture->isCapturing())
         return;
 
     CallCapture call = captureFunc(context->getState(), isCallValid, captureParams...);
