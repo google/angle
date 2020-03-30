@@ -78,11 +78,18 @@ class ParamBuffer final : angle::NonCopyable
 
     const std::vector<ParamCapture> &getParamCaptures() const { return mParamCaptures; }
 
+    // These helpers allow us to track the ID of the buffer that was active when
+    // MapBufferRange was called.  We'll use it during replay to track the
+    // buffer's contents, as they can be modified by the host.
+    void setMappedBufferID(gl::BufferID bufferID) { mMappedBufferID = bufferID; }
+    gl::BufferID getMappedBufferID() const { return mMappedBufferID; }
+
   private:
     std::vector<ParamCapture> mParamCaptures;
     ParamCapture mReturnValueCapture;
     int mClientArrayDataParam = -1;
     size_t mReadBufferSize    = 0;
+    gl::BufferID mMappedBufferID;
 };
 
 struct CallCapture
@@ -173,8 +180,8 @@ class DataCounters final : angle::NonCopyable
 // Used by the CPP replay to filter out unnecessary code.
 using HasResourceTypeMap = angle::PackedEnumBitSet<ResourceIDType>;
 
-// Map of buffing bindings to offset and size used when mapped
-using BufferDataMap = std::map<gl::BufferBinding, std::pair<GLintptr, GLsizeiptr>>;
+// Map of buffer ID to offset and size used when mapped
+using BufferDataMap = std::map<gl::BufferID, std::pair<GLintptr, GLsizeiptr>>;
 
 // A dictionary of sources indexed by shader type.
 using ProgramSources = gl::ShaderMap<std::string>;
@@ -209,7 +216,7 @@ class FrameCapture final : angle::NonCopyable
     void captureCompressedTextureData(const gl::Context *context, const CallCapture &call);
 
     void reset();
-    void maybeCaptureClientData(const gl::Context *context, const CallCapture &call);
+    void maybeCaptureClientData(const gl::Context *context, CallCapture &call);
     void maybeCapturePostCallUpdates(const gl::Context *context);
 
     static void ReplayCall(gl::Context *context,
