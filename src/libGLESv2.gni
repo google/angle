@@ -820,6 +820,8 @@ libangle_gl_egl_sources = [
   "src/libANGLE/renderer/gl/egl/ContextEGL.h",
   "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
   "src/libANGLE/renderer/gl/egl/DisplayEGL.h",
+  "src/libANGLE/renderer/gl/egl/DmaBufImageSiblingEGL.cpp",
+  "src/libANGLE/renderer/gl/egl/DmaBufImageSiblingEGL.h",
   "src/libANGLE/renderer/gl/egl/ExternalImageSiblingEGL.h",
   "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
   "src/libANGLE/renderer/gl/egl/FunctionsEGL.h",

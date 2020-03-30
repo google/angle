@@ -1385,6 +1385,9 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_no_config_context",                           noConfigContext,                    &extensionStrings);
     InsertExtensionString("EGL_IMG_context_priority",                            contextPriority,                    &extensionStrings);
     InsertExtensionString("EGL_KHR_create_context_no_error",                     createContextNoError,               &extensionStrings);
+    InsertExtensionString("EGL_EXT_image_dma_buf_import",                        imageDmaBufImportEXT,               &extensionStrings);
+    InsertExtensionString("EGL_EXT_image_dma_buf_import_modifiers",              imageDmaBufImportModifiersEXT,               &extensionStrings);
+
     // clang-format on
 
     return extensionStrings;

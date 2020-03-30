@@ -1057,6 +1057,12 @@ struct DisplayExtensions
 
     // EGL_EXT_image_gl_colorspace
     bool imageGlColorspace = false;
+
+    // EGL_EXT_image_dma_buf_import
+    bool imageDmaBufImportEXT = false;
+
+    // EGL_EXT_image_dma_buf_import_modifiers
+    bool imageDmaBufImportModifiersEXT = false;
 };
 
 struct DeviceExtensions
