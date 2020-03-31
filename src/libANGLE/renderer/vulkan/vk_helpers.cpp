@@ -27,13 +27,13 @@ namespace vk
 {
 namespace
 {
-// WebGL requires color textures to be initialized to transparent black.
-constexpr VkClearColorValue kWebGLInitColorValue = {{0, 0, 0, 0}};
+// ANGLE_robust_resource_initialization requires color textures to be initialized to zero.
+constexpr VkClearColorValue kRobustInitColorValue = {{0, 0, 0, 0}};
 // When emulating a texture, we want the emulated channels to be 0, with alpha 1.
 constexpr VkClearColorValue kEmulatedInitColorValue = {{0, 0, 0, 1.0f}};
-// WebGL requires depth/stencil textures to be initialized to depth=1, stencil=0.  We are fine with
-// these values for emulated depth/stencil textures too.
-constexpr VkClearDepthStencilValue kWebGLInitDepthStencilValue = {1.0f, 0};
+// ANGLE_robust_resource_initialization requires depth to be initialized to 1 and stencil to 0.
+// We are fine with these values for emulated depth/stencil textures too.
+constexpr VkClearDepthStencilValue kRobustInitDepthStencilValue = {1.0f, 0};
 
 constexpr VkBufferUsageFlags kLineLoopDynamicBufferUsage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT |
                                                            VK_BUFFER_USAGE_TRANSFER_DST_BIT |
@@ -430,6 +430,21 @@ const angle::Format &GetDepthStencilImageToBufferFormat(const angle::Format &ima
             UNREACHABLE();
             return imageFormat;
     }
+}
+
+VkClearValue GetClearValue(const vk::Format &format)
+{
+    VkClearValue clearValue;
+    if (format.intendedFormat().hasDepthOrStencilBits())
+    {
+        clearValue.depthStencil = kRobustInitDepthStencilValue;
+    }
+    else
+    {
+        clearValue.color =
+            format.hasEmulatedImageChannels() ? kEmulatedInitColorValue : kRobustInitColorValue;
+    }
+    return clearValue;
 }
 }  // anonymous namespace
 
@@ -2035,6 +2050,8 @@ angle::Result ImageHelper::initExternal(Context *context,
 
     ANGLE_VK_TRY(context, mImage.init(context->getDevice(), imageInfo));
 
+    stageClearIfEmulatedFormat(context);
+
     return angle::Result::Continue;
 }
 
@@ -2206,7 +2223,8 @@ void ImageHelper::destroy(RendererVk *renderer)
     mSerial        = rx::kZeroSerial;
 }
 
-void ImageHelper::init2DWeakReference(VkImage handle,
+void ImageHelper::init2DWeakReference(Context *context,
+                                      VkImage handle,
                                       const gl::Extents &glExtents,
                                       const Format &format,
                                       GLint samples)
@@ -2221,6 +2239,8 @@ void ImageHelper::init2DWeakReference(VkImage handle,
     mLevelCount    = 1;
 
     mImage.setHandle(handle);
+
+    stageClearIfEmulatedFormat(context);
 }
 
 angle::Result ImageHelper::init2DStaging(Context *context,
@@ -3068,48 +3088,45 @@ void ImageHelper::stageSubresourceUpdateFromImage(ImageHelper *image,
     appendSubresourceUpdate(SubresourceUpdate(image, copyToImage));
 }
 
-void ImageHelper::stageSubresourceRobustClear(const gl::ImageIndex &index, const Format &format)
+void ImageHelper::stageSubresourceClear(const gl::ImageIndex &index)
 {
-    VkClearColorValue initValue =
-        format.hasEmulatedImageChannels() ? kEmulatedInitColorValue : kWebGLInitColorValue;
-    stageSubresourceClear(index, format.intendedFormat(), initValue, kWebGLInitDepthStencilValue);
+    ASSERT(mFormat);
+    VkClearValue clearValue = GetClearValue(*mFormat);
+    appendSubresourceUpdate(SubresourceUpdate(clearValue, index));
 }
 
-void ImageHelper::stageSubresourceEmulatedClear(const gl::ImageIndex &index,
-                                                const angle::Format &format)
+void ImageHelper::stageRobustResourceClear(const gl::ImageIndex &index, const vk::Format &format)
 {
-    stageSubresourceClear(index, format, kEmulatedInitColorValue, kWebGLInitDepthStencilValue);
+    // Robust clears must only be staged if we do not have any prior data for this subresource.
+    ASSERT(!isUpdateStaged(index.getLevelIndex(), index.getLayerIndex()));
+    VkClearValue clearValue = GetClearValue(format);
+    appendSubresourceUpdate(SubresourceUpdate(clearValue, index));
 }
 
-void ImageHelper::stageClearIfEmulatedFormat(const gl::ImageIndex &index, const Format &format)
+void ImageHelper::stageClearIfEmulatedFormat(Context *context)
 {
-    if (format.hasEmulatedImageChannels())
-    {
-        stageSubresourceEmulatedClear(index, format.intendedFormat());
-    }
-}
+    // Skip staging extra clears if robust resource init is enabled.
+    if (!mFormat->hasEmulatedImageChannels() || context->isRobustResourceInitEnabled())
+        return;
 
-void ImageHelper::stageSubresourceClear(const gl::ImageIndex &index,
-                                        const angle::Format &format,
-                                        const VkClearColorValue &colorValue,
-                                        const VkClearDepthStencilValue &depthStencilValue)
-{
     VkClearValue clearValue;
-
-    bool isDepthStencil = format.depthBits > 0 || format.stencilBits > 0;
-    if (isDepthStencil)
+    if (mFormat->intendedFormat().hasDepthOrStencilBits())
     {
-        clearValue.depthStencil = depthStencilValue;
+        clearValue.depthStencil = kRobustInitDepthStencilValue;
     }
     else
     {
-        clearValue.color = colorValue;
+        clearValue.color = kEmulatedInitColorValue;
     }
 
-    // Note that clears can arrive out of order from the front-end with respect to staged changes,
-    // but they are intended to be done first.
-    mSubresourceUpdates.emplace(mSubresourceUpdates.begin(), clearValue, index);
-    onStateChange(angle::SubjectMessage::SubjectChanged);
+    // If the image has an emulated channel and robust resource init is not enabled, always clear
+    // it. These channels will be masked out in future writes, and shouldn't contain uninitialized
+    // values.
+    for (uint32_t level = 0; level < mLevelCount; ++level)
+    {
+        gl::ImageIndex index = gl::ImageIndex::Make2DArrayRange(level, 0, mLayerCount);
+        prependSubresourceUpdate(SubresourceUpdate(clearValue, index));
+    }
 }
 
 angle::Result ImageHelper::allocateStagingMemory(ContextVk *contextVk,
@@ -3738,6 +3755,12 @@ bool ImageHelper::SubresourceUpdate::isUpdateToLayerLevel(uint32_t layerIndex,
 void ImageHelper::appendSubresourceUpdate(SubresourceUpdate &&update)
 {
     mSubresourceUpdates.emplace_back(std::move(update));
+    onStateChange(angle::SubjectMessage::SubjectChanged);
+}
+
+void ImageHelper::prependSubresourceUpdate(SubresourceUpdate &&update)
+{
+    mSubresourceUpdates.insert(mSubresourceUpdates.begin(), std::move(update));
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 

@@ -162,9 +162,6 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(image.initMemory(displayVk, renderer->getMemoryProperties(), flags));
 
-    // Clear the image if it has emulated channels.
-    image.stageClearIfEmulatedFormat(gl::ImageIndex::Make2D(0), vkFormat);
-
     return angle::Result::Continue;
 }
 
@@ -204,9 +201,6 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initializeWithExternalMemory(
     ANGLE_TRY(image.initExternalMemory(displayVk, renderer->getMemoryProperties(),
                                        externalMemoryRequirements, &importMemoryHostPointerInfo,
                                        VK_QUEUE_FAMILY_EXTERNAL, flags));
-
-    // Clear the image if it has emulated channels.
-    image.stageClearIfEmulatedFormat(gl::ImageIndex::Make2D(0), vkFormat);
 
     return angle::Result::Continue;
 }
@@ -357,15 +351,13 @@ angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
 
     if (mColorAttachment.image.valid())
     {
-        mColorAttachment.image.stageSubresourceRobustClear(imageIndex,
-                                                           mColorAttachment.image.getFormat());
+        mColorAttachment.image.stageSubresourceClear(imageIndex);
         ANGLE_TRY(mColorAttachment.image.flushAllStagedUpdates(contextVk));
     }
 
     if (mDepthStencilAttachment.image.valid())
     {
-        mDepthStencilAttachment.image.stageSubresourceRobustClear(
-            imageIndex, mDepthStencilAttachment.image.getFormat());
+        mDepthStencilAttachment.image.stageSubresourceClear(imageIndex);
         ANGLE_TRY(mDepthStencilAttachment.image.flushAllStagedUpdates(contextVk));
     }
     return angle::Result::Continue;
@@ -899,9 +891,6 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         // Initialize the color render target with the multisampled targets.  If not multisampled,
         // the render target will be updated to refer to a swapchain image on every acquire.
         mColorRenderTarget.init(&mColorImageMS, &mColorImageMSViews, 0, 0);
-
-        // Clear the image if it has emulated channels.
-        mColorImageMS.stageClearIfEmulatedFormat(gl::ImageIndex::Make2D(0), format);
     }
 
     ANGLE_TRY(resizeSwapchainImages(context, imageCount));
@@ -909,15 +898,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     for (uint32_t imageIndex = 0; imageIndex < imageCount; ++imageIndex)
     {
         SwapchainImage &member = mSwapchainImages[imageIndex];
-        member.image.init2DWeakReference(swapchainImages[imageIndex], extents, format, 1);
-
-        if (!mColorImageMS.valid())
-        {
-            // Clear the image if it has emulated channels.  If a multisampled image exists, this
-            // image will be unused until a pre-present resolve, at which point it will be fully
-            // initialized and wouldn't need a clear.
-            member.image.stageClearIfEmulatedFormat(gl::ImageIndex::Make2D(0), format);
-        }
+        member.image.init2DWeakReference(context, swapchainImages[imageIndex], extents, format, 1);
     }
 
     // Initialize depth/stencil if requested.
@@ -935,9 +916,6 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageViews, 0, 0);
 
         // We will need to pass depth/stencil image views to the RenderTargetVk in the future.
-
-        // Clear the image if it has emulated channels.
-        mDepthStencilImage.stageClearIfEmulatedFormat(gl::ImageIndex::Make2D(0), dsFormat);
     }
 
     return angle::Result::Continue;
@@ -1504,13 +1482,12 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
 
     vk::ImageHelper *image =
         isMultiSampled() ? &mColorImageMS : &mSwapchainImages[mCurrentSwapchainImageIndex].image;
-    image->stageSubresourceRobustClear(imageIndex, image->getFormat());
+    image->stageSubresourceClear(imageIndex);
     ANGLE_TRY(image->flushAllStagedUpdates(contextVk));
 
     if (mDepthStencilImage.valid())
     {
-        mDepthStencilImage.stageSubresourceRobustClear(gl::ImageIndex::Make2D(0),
-                                                       mDepthStencilImage.getFormat());
+        mDepthStencilImage.stageSubresourceClear(gl::ImageIndex::Make2D(0));
         ANGLE_TRY(mDepthStencilImage.flushAllStagedUpdates(contextVk));
     }
 

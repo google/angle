@@ -4316,6 +4316,11 @@ void ContextVk::endOcclusionQuery(QueryVk *queryVk)
     }
 }
 
+bool ContextVk::isRobustResourceInitEnabled() const
+{
+    return mState.isRobustResourceInitEnabled();
+}
+
 CommandBufferHelper::CommandBufferHelper()
     : mImageBarrierSrcStageMask(0),
       mImageBarrierDstStageMask(0),

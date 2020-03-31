@@ -78,9 +78,6 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
 
-        // Clear the renderbuffer if it has emulated channels.
-        mImage->stageClearIfEmulatedFormat(gl::ImageIndex::Make2D(0), vkFormat);
-
         mRenderTarget.init(mImage, &mImageViews, 0, 0);
     }
 
@@ -160,7 +157,7 @@ angle::Result RenderbufferVk::initializeContents(const gl::Context *context,
                                                  const gl::ImageIndex &imageIndex)
 {
     // Note: stageSubresourceRobustClear only uses the intended format to count channels.
-    mImage->stageSubresourceRobustClear(imageIndex, mImage->getFormat());
+    mImage->stageSubresourceClear(imageIndex);
     return mImage->flushAllStagedUpdates(vk::GetImpl(context));
 }
 

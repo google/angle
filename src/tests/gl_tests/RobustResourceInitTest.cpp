@@ -2000,6 +2000,58 @@ TEST_P(RobustResourceInitTestES3, InitializeMultisampledDepthRenderbufferAfterCo
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Corner case for robust resource init: CopyTexImage to a cube map.
+TEST_P(RobustResourceInitTest, CopyTexImageToOffsetCubeMap)
+{
+    // http://anglebug.com/4549
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
+    constexpr GLuint kSize = 2;
+
+    std::vector<GLColor> redPixels(kSize * kSize, GLColor::red);
+
+    GLTexture srcTex;
+    glBindTexture(GL_TEXTURE_2D, srcTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 redPixels.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcTex, 0);
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    GLTexture dstTex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, dstTex);
+    glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, 1, 1, kSize, kSize, 0);
+    glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, -1, -1, kSize, kSize, 0);
+    glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, 2, 2, kSize, kSize, 0);
+    glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, -2, -2, kSize, kSize, 0);
+    glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the offset attachments.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                           dstTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::transparentBlack);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+                           dstTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(RobustResourceInitTest,
                                        WithAllocateNonZeroMemory(ES2_VULKAN()));
 

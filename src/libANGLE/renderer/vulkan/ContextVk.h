@@ -662,7 +662,7 @@ class ContextVk : public ContextImpl, public vk::Context
     const ProgramExecutableVk *getExecutable() const { return mExecutable; }
     ProgramExecutableVk *getExecutable() { return mExecutable; }
 
-    ProgramVk *getShaderProgram(const gl::State &glState, gl::ShaderType shaderType) const;
+    bool isRobustResourceInitEnabled() const override;
 
     // occlusion query
     void beginOcclusionQuery(QueryVk *queryVk);

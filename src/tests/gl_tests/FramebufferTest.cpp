@@ -1486,6 +1486,26 @@ void main() {
     eglDestroyContext(display, context2);
 }
 
+// Ensure cube-incomplete attachments cause incomplete Framebuffers.
+TEST_P(FramebufferTest, IncompleteCubeMap)
+{
+    constexpr GLuint kSize = 2;
+
+    GLTexture srcTex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, srcTex);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                           srcTex, 0);
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER),
+                     GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2(AddDummyTextureNoRenderTargetTest);
 ANGLE_INSTANTIATE_TEST_ES2(FramebufferTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
