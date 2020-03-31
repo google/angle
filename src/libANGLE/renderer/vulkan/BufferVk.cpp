@@ -294,13 +294,12 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
 
         // Update the shadow buffer
         uint8_t *srcPtr;
-        ANGLE_VK_TRY(contextVk, sourceBuffer->getBuffer().getDeviceMemory().map(
-                                    contextVk->getDevice(), sourceOffset, size, 0, &srcPtr));
+        ANGLE_TRY(sourceBuffer->getBuffer().mapWithOffset(contextVk, &srcPtr, sourceOffset));
 
         updateShadowBuffer(srcPtr, size, destOffset);
 
         // Unmap the source buffer
-        sourceBuffer->getBuffer().getDeviceMemory().unmap(contextVk->getDevice());
+        sourceBuffer->getBuffer().unmap(contextVk->getRenderer());
     }
 
     vk::CommandBuffer *commandBuffer = nullptr;
@@ -359,9 +358,8 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
             ANGLE_TRY(mBuffer.waitForIdle(contextVk));
         }
 
-        ANGLE_VK_TRY(contextVk,
-                     mBuffer.getDeviceMemory().map(contextVk->getDevice(), offset, length, 0,
-                                                   reinterpret_cast<uint8_t **>(mapPtr)));
+        ANGLE_TRY(mBuffer.mapWithOffset(contextVk, reinterpret_cast<uint8_t **>(mapPtr),
+                                        static_cast<size_t>(offset)));
     }
     else
     {
@@ -394,7 +392,7 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
 
     if (!mShadowBuffer.valid())
     {
-        mBuffer.getDeviceMemory().unmap(contextVk->getDevice());
+        mBuffer.unmap(contextVk->getRenderer());
         mBuffer.onExternalWrite(VK_ACCESS_HOST_WRITE_BIT);
     }
     else
@@ -450,10 +448,7 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
 
         ASSERT(mBuffer.valid());
 
-        const GLuint &typeBytes = gl::GetDrawElementsTypeSize(type);
-
-        ANGLE_VK_TRY(contextVk, mBuffer.getDeviceMemory().map(contextVk->getDevice(), offset,
-                                                              typeBytes * count, 0, &mapPointer));
+        ANGLE_TRY(mBuffer.mapWithOffset(contextVk, &mapPointer, offset));
     }
     else
     {
@@ -462,7 +457,7 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
 
     *outRange = gl::ComputeIndexRange(type, mapPointer, count, primitiveRestartEnabled);
 
-    mBuffer.getDeviceMemory().unmap(contextVk->getDevice());
+    mBuffer.unmap(renderer);
     return angle::Result::Continue;
 }
 
@@ -471,15 +466,14 @@ angle::Result BufferVk::directUpdate(ContextVk *contextVk,
                                      size_t size,
                                      size_t offset)
 {
-    VkDevice device     = contextVk->getDevice();
     uint8_t *mapPointer = nullptr;
 
-    ANGLE_VK_TRY(contextVk, mBuffer.getDeviceMemory().map(device, offset, size, 0, &mapPointer));
+    ANGLE_TRY(mBuffer.mapWithOffset(contextVk, &mapPointer, offset));
     ASSERT(mapPointer);
 
     memcpy(mapPointer, data, size);
 
-    mBuffer.getDeviceMemory().unmap(device);
+    mBuffer.unmap(contextVk->getRenderer());
     mBuffer.onExternalWrite(VK_ACCESS_HOST_WRITE_BIT);
 
     return angle::Result::Continue;

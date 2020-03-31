@@ -14,30 +14,70 @@
 
 namespace vma
 {
+VkResult InitAllocator(VkPhysicalDevice physicalDevice,
+                       VkDevice device,
+                       VkInstance instance,
+                       VmaAllocator *pAllocator)
+{
+    VmaVulkanFunctions funcs;
+    funcs.vkGetPhysicalDeviceProperties       = vkGetPhysicalDeviceProperties;
+    funcs.vkGetPhysicalDeviceMemoryProperties = vkGetPhysicalDeviceMemoryProperties;
+    funcs.vkAllocateMemory                    = vkAllocateMemory;
+    funcs.vkFreeMemory                        = vkFreeMemory;
+    funcs.vkMapMemory                         = vkMapMemory;
+    funcs.vkUnmapMemory                       = vkUnmapMemory;
+    funcs.vkFlushMappedMemoryRanges           = vkFlushMappedMemoryRanges;
+    funcs.vkInvalidateMappedMemoryRanges      = vkInvalidateMappedMemoryRanges;
+    funcs.vkBindBufferMemory                  = vkBindBufferMemory;
+    funcs.vkBindImageMemory                   = vkBindImageMemory;
+    funcs.vkGetBufferMemoryRequirements       = vkGetBufferMemoryRequirements;
+    funcs.vkGetImageMemoryRequirements        = vkGetImageMemoryRequirements;
+    funcs.vkCreateBuffer                      = vkCreateBuffer;
+    funcs.vkDestroyBuffer                     = vkDestroyBuffer;
+    funcs.vkCreateImage                       = vkCreateImage;
+    funcs.vkDestroyImage                      = vkDestroyImage;
+    funcs.vkCmdCopyBuffer                     = vkCmdCopyBuffer;
+    funcs.vkGetBufferMemoryRequirements2KHR   = vkGetBufferMemoryRequirements2KHR;
+    funcs.vkGetImageMemoryRequirements2KHR    = vkGetImageMemoryRequirements2KHR;
+
+    VmaAllocatorCreateInfo allocatorInfo = {};
+    allocatorInfo.physicalDevice         = physicalDevice;
+    allocatorInfo.device                 = device;
+    allocatorInfo.instance               = instance;
+    allocatorInfo.pVulkanFunctions       = &funcs;
+
+    return vmaCreateAllocator(&allocatorInfo, pAllocator);
+}
+
+void DestroyAllocator(VmaAllocator allocator)
+{
+    vmaDestroyAllocator(allocator);
+}
+
+void FreeMemory(VmaAllocator allocator, VmaAllocation allocation)
+{
+    vmaFreeMemory(allocator, allocation);
+}
+
 VkResult CreateBuffer(VmaAllocator allocator,
                       const VkBufferCreateInfo *pBufferCreateInfo,
                       VkMemoryPropertyFlags requiredFlags,
                       VkMemoryPropertyFlags preferredFlags,
+                      uint32_t *pMemoryTypeIndexOut,
                       VkBuffer *pBuffer,
                       VmaAllocation *pAllocation)
 {
+    VkResult result;
     VmaAllocationCreateInfo allocationCreateInfo = {};
     allocationCreateInfo.requiredFlags           = requiredFlags;
     allocationCreateInfo.preferredFlags          = preferredFlags;
     VmaAllocationInfo allocationInfo             = {};
-    return vmaCreateBuffer(allocator, pBufferCreateInfo, &allocationCreateInfo, pBuffer,
-                           pAllocation, &allocationInfo);
-}
 
-void DestroyBuffer(VmaAllocator allocator, VkBuffer buffer, VmaAllocation allocation)
-{
-    vmaDestroyBuffer(allocator, buffer, allocation);
-}
+    result = vmaCreateBuffer(allocator, pBufferCreateInfo, &allocationCreateInfo, pBuffer,
+                             pAllocation, &allocationInfo);
+    *pMemoryTypeIndexOut = allocationInfo.memoryType;
 
-void GetMemoryProperties(VmaAllocator allocator,
-                         const VkPhysicalDeviceMemoryProperties **ppPhysicalDeviceMemoryProperties)
-{
-    return vmaGetMemoryProperties(allocator, ppPhysicalDeviceMemoryProperties);
+    return result;
 }
 
 void GetMemoryTypeProperties(VmaAllocator allocator,

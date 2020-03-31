@@ -314,21 +314,25 @@ class StagingBuffer final : angle::NonCopyable
     StagingBuffer();
     void release(ContextVk *contextVk);
     void collectGarbage(RendererVk *renderer, Serial serial);
-    void destroy(VkDevice device);
+    void destroy(RendererVk *renderer);
 
     angle::Result init(Context *context, VkDeviceSize size, StagingUsage usage);
 
     Buffer &getBuffer() { return mBuffer; }
     const Buffer &getBuffer() const { return mBuffer; }
-    DeviceMemory &getDeviceMemory() { return mDeviceMemory; }
-    const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
     size_t getSize() const { return mSize; }
 
   private:
     Buffer mBuffer;
-    DeviceMemory mDeviceMemory;
+    Allocation mAllocation;
     size_t mSize;
 };
+
+angle::Result InitMappableAllocation(VmaAllocator allocator,
+                                     Allocation *allcation,
+                                     VkDeviceSize size,
+                                     int value,
+                                     VkMemoryPropertyFlags memoryPropertyFlags);
 
 angle::Result InitMappableDeviceMemory(vk::Context *context,
                                        vk::DeviceMemory *deviceMemory,

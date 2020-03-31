@@ -2132,7 +2132,7 @@ angle::Result ContextVk::drawArraysIndirect(const gl::Context *context,
         // We have instanced vertex attributes that need to be emulated for Vulkan.
         // invalidate any cache and map the buffer so that we can read the indirect data.
         // Mapping the buffer will cause a flush.
-        ANGLE_TRY(currentIndirectBuf->invalidate(this, 0, sizeof(VkDrawIndirectCommand)));
+        ANGLE_TRY(currentIndirectBuf->invalidate(mRenderer, 0, sizeof(VkDrawIndirectCommand)));
         uint8_t *buffPtr;
         ANGLE_TRY(currentIndirectBuf->map(this, &buffPtr));
         const VkDrawIndirectCommand *indirectData =
@@ -2141,7 +2141,7 @@ angle::Result ContextVk::drawArraysIndirect(const gl::Context *context,
         ANGLE_TRY(drawArraysInstanced(context, mode, indirectData->firstVertex,
                                       indirectData->vertexCount, indirectData->instanceCount));
 
-        currentIndirectBuf->unmap(getDevice());
+        currentIndirectBuf->unmap(mRenderer);
         return angle::Result::Continue;
     }
 
@@ -2186,7 +2186,8 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
         // We have instanced vertex attributes that need to be emulated for Vulkan.
         // invalidate any cache and map the buffer so that we can read the indirect data.
         // Mapping the buffer will cause a flush.
-        ANGLE_TRY(currentIndirectBuf->invalidate(this, 0, sizeof(VkDrawIndexedIndirectCommand)));
+        ANGLE_TRY(
+            currentIndirectBuf->invalidate(mRenderer, 0, sizeof(VkDrawIndexedIndirectCommand)));
         uint8_t *buffPtr;
         ANGLE_TRY(currentIndirectBuf->map(this, &buffPtr));
         const VkDrawIndexedIndirectCommand *indirectData =
@@ -2195,7 +2196,7 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
         ANGLE_TRY(drawElementsInstanced(context, mode, indirectData->indexCount, type, nullptr,
                                         indirectData->instanceCount));
 
-        currentIndirectBuf->unmap(getDevice());
+        currentIndirectBuf->unmap(mRenderer);
         return angle::Result::Continue;
     }
 

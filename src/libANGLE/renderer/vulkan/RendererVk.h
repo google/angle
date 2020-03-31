@@ -28,6 +28,7 @@
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h"
+#include "libANGLE/renderer/vulkan/vk_mem_alloc_wrapper.h"
 
 namespace egl
 {
@@ -99,6 +100,8 @@ class RendererVk : angle::NonCopyable
         return mPhysicalDeviceFeatures;
     }
     VkDevice getDevice() const { return mDevice; }
+
+    const VmaAllocator &getAllocator() const { return mAllocator; }
 
     angle::Result selectPresentQueueForSurface(DisplayVk *displayVk,
                                                VkSurfaceKHR surface,
@@ -355,6 +358,8 @@ class RendererVk : angle::NonCopyable
 
     // track whether we initialized (or released) glslang
     bool mGlslangInitialized;
+
+    VmaAllocator mAllocator;
 };
 
 }  // namespace rx

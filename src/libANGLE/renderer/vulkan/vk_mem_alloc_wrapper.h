@@ -13,26 +13,26 @@
 #include <volk.h>
 
 VK_DEFINE_HANDLE(VmaAllocator)
-VK_DEFINE_HANDLE(VmaPool)
 VK_DEFINE_HANDLE(VmaAllocation)
-VK_DEFINE_HANDLE(VmaDefragmentationContext)
 
 namespace vma
 {
+VkResult InitAllocator(VkPhysicalDevice physicalDevice,
+                       VkDevice device,
+                       VkInstance instance,
+                       VmaAllocator *pAllocator);
 
-// Please add additional functions or parameters here as needed.
+void DestroyAllocator(VmaAllocator allocator);
+
+void FreeMemory(VmaAllocator allocator, VmaAllocation allocation);
 
 VkResult CreateBuffer(VmaAllocator allocator,
                       const VkBufferCreateInfo *pBufferCreateInfo,
                       VkMemoryPropertyFlags requiredFlags,
                       VkMemoryPropertyFlags preferredFlags,
+                      uint32_t *pMemoryTypeIndexOut,
                       VkBuffer *pBuffer,
                       VmaAllocation *pAllocation);
-
-void DestroyBuffer(VmaAllocator allocator, VkBuffer buffer, VmaAllocation allocation);
-
-void GetMemoryProperties(VmaAllocator allocator,
-                         const VkPhysicalDeviceMemoryProperties **ppPhysicalDeviceMemoryProperties);
 
 void GetMemoryTypeProperties(VmaAllocator allocator,
                              uint32_t memoryTypeIndex,
