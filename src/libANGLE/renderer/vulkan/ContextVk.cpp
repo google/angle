@@ -397,7 +397,7 @@ angle::Result CommandQueue::checkCompletedCommands(vk::Context *context)
         {
             for (vk::GarbageObject &garbage : garbageList.get())
             {
-                garbage.destroy(device);
+                garbage.destroy(renderer);
             }
         }
         else
@@ -440,13 +440,13 @@ angle::Result CommandQueue::releaseToCommandBatch(vk::Context *context,
     return angle::Result::Continue;
 }
 
-void CommandQueue::clearAllGarbage(VkDevice device)
+void CommandQueue::clearAllGarbage(RendererVk *renderer)
 {
     for (vk::GarbageAndSerial &garbageList : mGarbageQueue)
     {
         for (vk::GarbageObject &garbage : garbageList.get())
         {
-            garbage.destroy(device);
+            garbage.destroy(renderer);
         }
     }
     mGarbageQueue.clear();
@@ -1857,13 +1857,12 @@ void ContextVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuT
 
 void ContextVk::clearAllGarbage()
 {
-    VkDevice device = getDevice();
     for (vk::GarbageObject &garbage : mCurrentGarbage)
     {
-        garbage.destroy(device);
+        garbage.destroy(mRenderer);
     }
     mCurrentGarbage.clear();
-    mCommandQueue.clearAllGarbage(device);
+    mCommandQueue.clearAllGarbage(mRenderer);
 }
 
 void ContextVk::handleDeviceLost()

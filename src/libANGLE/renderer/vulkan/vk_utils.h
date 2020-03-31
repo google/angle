@@ -250,7 +250,7 @@ class GarbageObject
     GarbageObject &operator=(GarbageObject &&rhs);
 
     bool valid() const { return mHandle != VK_NULL_HANDLE; }
-    void destroy(VkDevice device);
+    void destroy(RendererVk *renderer);
 
     template <typename DerivedT, typename HandleT>
     static GarbageObject Get(WrappedObject<DerivedT, HandleT> *object)

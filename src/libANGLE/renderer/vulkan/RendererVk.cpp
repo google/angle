@@ -592,7 +592,7 @@ RendererVk::~RendererVk()
     ASSERT(mSharedGarbage.empty());
 }
 
-void RendererVk::onDestroy(vk::Context *context)
+void RendererVk::onDestroy()
 {
     // Force all commands to finish by flushing all queues.
     for (VkQueue queue : mQueues)
@@ -605,7 +605,7 @@ void RendererVk::onDestroy(vk::Context *context)
 
     // Then assign an infinite "last completed" serial to force garbage to delete.
     mLastCompletedQueueSerial = Serial::Infinite();
-    (void)cleanupGarbage(context, true);
+    (void)cleanupGarbage(true);
     ASSERT(mSharedGarbage.empty());
 
     for (PendingOneOffCommands &pending : mPendingOneOffCommands)
@@ -1913,7 +1913,7 @@ angle::Result RendererVk::queueSubmit(vk::Context *context,
         ANGLE_VK_TRY(context, vkQueueSubmit(mQueues[priority], 1, &submitInfo, handle));
     }
 
-    ANGLE_TRY(cleanupGarbage(context, false));
+    ANGLE_TRY(cleanupGarbage(false));
 
     *serialOut                = mCurrentQueueSerial;
     mLastSubmittedQueueSerial = mCurrentQueueSerial;
@@ -1946,7 +1946,7 @@ angle::Result RendererVk::queueWaitIdle(vk::Context *context, egl::ContextPriori
         ANGLE_VK_TRY(context, vkQueueWaitIdle(mQueues[priority]));
     }
 
-    ANGLE_TRY(cleanupGarbage(context, false));
+    ANGLE_TRY(cleanupGarbage(false));
 
     return angle::Result::Continue;
 }
@@ -1958,7 +1958,7 @@ angle::Result RendererVk::deviceWaitIdle(vk::Context *context)
         ANGLE_VK_TRY(context, vkDeviceWaitIdle(mDevice));
     }
 
-    ANGLE_TRY(cleanupGarbage(context, false));
+    ANGLE_TRY(cleanupGarbage(false));
 
     return angle::Result::Continue;
 }
@@ -2032,7 +2032,7 @@ bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlag
     return IsMaskFlagSet(getFormatFeatureBits<features>(format, featureBits), featureBits);
 }
 
-angle::Result RendererVk::cleanupGarbage(vk::Context *context, bool block)
+angle::Result RendererVk::cleanupGarbage(bool block)
 {
     std::lock_guard<decltype(mGarbageMutex)> lock(mGarbageMutex);
 
@@ -2040,7 +2040,7 @@ angle::Result RendererVk::cleanupGarbage(vk::Context *context, bool block)
     {
         // Possibly 'counter' should be always zero when we add the object to garbage.
         vk::SharedGarbage &garbage = *garbageIter;
-        if (garbage.destroyIfComplete(mDevice, mLastCompletedQueueSerial))
+        if (garbage.destroyIfComplete(this, mLastCompletedQueueSerial))
         {
             garbageIter = mSharedGarbage.erase(garbageIter);
         }

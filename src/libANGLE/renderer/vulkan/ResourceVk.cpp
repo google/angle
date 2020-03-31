@@ -52,7 +52,7 @@ SharedGarbage &SharedGarbage::operator=(SharedGarbage &&rhs)
     return *this;
 }
 
-bool SharedGarbage::destroyIfComplete(VkDevice device, Serial completedSerial)
+bool SharedGarbage::destroyIfComplete(RendererVk *renderer, Serial completedSerial)
 {
     if (mLifetime.isCurrentlyInUse(completedSerial))
         return false;
@@ -61,7 +61,7 @@ bool SharedGarbage::destroyIfComplete(VkDevice device, Serial completedSerial)
 
     for (GarbageObject &object : mGarbage)
     {
-        object.destroy(device);
+        object.destroy(renderer);
     }
 
     return true;

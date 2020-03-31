@@ -559,8 +559,9 @@ GarbageObject &GarbageObject::operator=(GarbageObject &&rhs)
 // GarbageObject implementation
 // Using c-style casts here to avoid conditional compile for MSVC 32-bit
 //  which fails to compile with reinterpret_cast, requiring static_cast.
-void GarbageObject::destroy(VkDevice device)
+void GarbageObject::destroy(RendererVk *renderer)
 {
+    VkDevice device = renderer->getDevice();
     switch (mHandleType)
     {
         case HandleType::Semaphore:

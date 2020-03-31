@@ -73,7 +73,7 @@ class RendererVk : angle::NonCopyable
                              const char *wsiLayer);
     // Reload volk vk* function ptrs if needed for an already initialized RendererVk
     void reloadVolkIfNeeded() const;
-    void onDestroy(vk::Context *context);
+    void onDestroy();
 
     void notifyDeviceLost();
     bool isDeviceLost() const;
@@ -262,7 +262,7 @@ class RendererVk : angle::NonCopyable
     template <VkFormatFeatureFlags VkFormatProperties::*features>
     bool hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
 
-    angle::Result cleanupGarbage(vk::Context *context, bool block);
+    angle::Result cleanupGarbage(bool block);
 
     egl::Display *mDisplay;
 

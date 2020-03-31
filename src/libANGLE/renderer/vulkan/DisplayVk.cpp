@@ -44,7 +44,7 @@ void DisplayVk::terminate()
     mRenderer->reloadVolkIfNeeded();
 
     ASSERT(mRenderer);
-    mRenderer->onDestroy(this);
+    mRenderer->onDestroy();
 }
 
 egl::Error DisplayVk::makeCurrent(egl::Surface * /*drawSurface*/,
