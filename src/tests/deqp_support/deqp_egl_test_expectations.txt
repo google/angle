@@ -250,3 +250,6 @@
 2546 NEXUS5X : dEQP-EGL.functional.query_context.get_current_display.* = SKIP
 2546 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.r* = FAIL
 2546 NEXUS5X : dEQP-EGL.functional.query_context.query_context.* = SKIP
+
+// SwANGLE bots
+4495 WIN SWIFTSHADER : dEQP-EGL.functional.sharing.gles2.multithread.random_egl_server_sync.shaders.compile.9 = SKIP

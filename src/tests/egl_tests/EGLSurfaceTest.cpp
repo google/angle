@@ -401,6 +401,8 @@ TEST_P(EGLSurfaceTest, ResizeWindow)
 {
     // http://anglebug.com/4453
     ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
+    // Flaky on Linux SwANGLE http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
 
     // Necessary for a window resizing test if there is no per-frame window size query
     mOSWindow->setVisible(true);
