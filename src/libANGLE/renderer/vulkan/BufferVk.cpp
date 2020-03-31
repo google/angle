@@ -72,6 +72,8 @@ ANGLE_INLINE VkMemoryPropertyFlags GetPreferredMemoryType(gl::BufferBinding targ
     constexpr VkMemoryPropertyFlags kHostCachedFlags =
         (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT |
          VK_MEMORY_PROPERTY_HOST_CACHED_BIT);
+    constexpr VkMemoryPropertyFlags kHostUncachedFlags =
+        (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
     if (target == gl::BufferBinding::PixelUnpack)
     {
@@ -85,8 +87,19 @@ ANGLE_INLINE VkMemoryPropertyFlags GetPreferredMemoryType(gl::BufferBinding targ
         case gl::BufferUsage::StaticRead:
             // For static usage, request a device local memory
             return kDeviceLocalFlags;
+        case gl::BufferUsage::DynamicDraw:
+        case gl::BufferUsage::StreamDraw:
+            // For non-static usage where the CPU performs a write-only access, request
+            // a host uncached memory
+            return kHostUncachedFlags;
+        case gl::BufferUsage::DynamicCopy:
+        case gl::BufferUsage::DynamicRead:
+        case gl::BufferUsage::StreamCopy:
+        case gl::BufferUsage::StreamRead:
+            // For all other types of usage, request a host cached memory
+            return kHostCachedFlags;
         default:
-            // For non-static usage, request a host cached memory
+            UNREACHABLE();
             return kHostCachedFlags;
     }
 }
