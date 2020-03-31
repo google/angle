@@ -328,7 +328,8 @@ class StagingBuffer final : angle::NonCopyable
 angle::Result InitMappableDeviceMemory(vk::Context *context,
                                        vk::DeviceMemory *deviceMemory,
                                        VkDeviceSize size,
-                                       int value);
+                                       int value,
+                                       VkMemoryPropertyFlags memoryPropertyFlags);
 
 angle::Result AllocateBufferMemory(Context *context,
                                    VkMemoryPropertyFlags requestedMemoryPropertyFlags,

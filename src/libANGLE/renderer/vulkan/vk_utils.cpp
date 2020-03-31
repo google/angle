@@ -86,7 +86,8 @@ angle::Result FindAndAllocateCompatibleMemory(vk::Context *context,
         {
             // Can map the memory.
             ANGLE_TRY(vk::InitMappableDeviceMemory(context, deviceMemoryOut,
-                                                   memoryRequirements.size, kNonZeroInitValue));
+                                                   memoryRequirements.size, kNonZeroInitValue,
+                                                   *memoryPropertyFlagsOut));
         }
     }
 
@@ -433,7 +434,8 @@ void StagingBuffer::collectGarbage(RendererVk *renderer, Serial serial)
 angle::Result InitMappableDeviceMemory(Context *context,
                                        DeviceMemory *deviceMemory,
                                        VkDeviceSize size,
-                                       int value)
+                                       int value,
+                                       VkMemoryPropertyFlags memoryPropertyFlags)
 {
     VkDevice device = context->getDevice();
 
@@ -441,11 +443,15 @@ angle::Result InitMappableDeviceMemory(Context *context,
     ANGLE_VK_TRY(context, deviceMemory->map(device, 0, VK_WHOLE_SIZE, 0, &mapPointer));
     memset(mapPointer, value, static_cast<size_t>(size));
 
-    VkMappedMemoryRange mappedRange = {};
-    mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-    mappedRange.memory              = deviceMemory->getHandle();
-    mappedRange.size                = VK_WHOLE_SIZE;
-    ANGLE_VK_TRY(context, vkFlushMappedMemoryRanges(device, 1, &mappedRange));
+    // if the memory type is not host coherent, we perform an explicit flush
+    if ((memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) == 0)
+    {
+        VkMappedMemoryRange mappedRange = {};
+        mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        mappedRange.memory              = deviceMemory->getHandle();
+        mappedRange.size                = VK_WHOLE_SIZE;
+        ANGLE_VK_TRY(context, vkFlushMappedMemoryRanges(device, 1, &mappedRange));
+    }
 
     deviceMemory->unmap(device);
 
