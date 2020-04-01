@@ -166,6 +166,8 @@ std::string GetZeroInitializer(size_t size)
     return ss.str();
 }
 
+TIntermSymbol* lastClipDistanceUsage = nullptr;
+
 }  // anonymous namespace
 
 TReferencedBlock::TReferencedBlock(const TInterfaceBlock *aBlock,
@@ -267,6 +269,31 @@ const TConstantUnion *OutputHLSL::writeConstantUnionArray(TInfoSinkBase &out,
             out << ", ";
         }
     }
+    if (size == 1 && lastClipDistanceUsage)
+    {
+        // This constant is an index into gl_ClipDistance[] array
+        lastClipDistanceUsage = nullptr;
+        size_t arrayIdx;
+        switch (constUnion->getType())
+        {
+            case EbtFloat:
+                arrayIdx = static_cast<size_t>(constUnion->getFConst());
+                break;
+            case EbtInt:
+                arrayIdx = static_cast<size_t>(constUnion->getIConst());
+                break;
+            case EbtUInt:
+                arrayIdx = static_cast<size_t>(constUnion->getUConst());
+                break;
+            case EbtBool:
+                arrayIdx = constUnion->getBConst() ? 1 : 0;
+                break;
+            default:
+                UNREACHABLE();
+        }
+        ASSERT(arrayIdx < mMaxClipDistances);
+        mUsedClipDistances.push_back(arrayIdx);
+    }
     return constUnionIterated;
 }
 
@@ -277,6 +304,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
                        const char *sourcePath,
                        ShShaderOutput outputType,
                        int numRenderTargets,
+                       int maxClipDistances,
                        int maxDualSourceDrawBuffers,
                        const std::vector<ShaderVariable> &uniforms,
                        ShCompileOptions compileOptions,
@@ -295,6 +323,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
       mInsideFunction(false),
       mInsideMain(false),
       mNumRenderTargets(numRenderTargets),
+      mMaxClipDistances(maxClipDistances),
       mMaxDualSourceDrawBuffers(maxDualSourceDrawBuffers),
       mCurrentFunctionMetadata(nullptr),
       mWorkGroupSize(workGroupSize),
@@ -455,6 +484,11 @@ unsigned int OutputHLSL::getImage2DRegisterIndex() const
 const std::set<std::string> &OutputHLSL::getUsedImage2DFunctionNames() const
 {
     return mImageFunctionHLSL->getUsedImage2DFunctionNames();
+}
+
+const std::vector<int> &OutputHLSL::getUsedClipDistances() const
+{
+    return mUsedClipDistances;
 }
 
 TString OutputHLSL::structInitializerString(int indent,
@@ -885,6 +919,18 @@ void OutputHLSL::header(TInfoSinkBase &out,
             out << "static float gl_PointSize = float(1);\n";
         }
 
+        if (!mUsedClipDistances.empty())
+        {
+            out << "static float gl_ClipDistance[" << mMaxClipDistances << "] = {";
+            for (size_t i = 0; i < mMaxClipDistances; i++)
+            {
+                out << 1;
+                if (i < mMaxClipDistances - 1)
+                    out << ',';
+            }
+            out << "};\n";
+        }
+
         if (mUsesInstanceID)
         {
             out << "static int gl_InstanceID;";
@@ -1114,6 +1160,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
 void OutputHLSL::visitSymbol(TIntermSymbol *node)
 {
     const TVariable &variable = node->variable();
+    lastClipDistanceUsage     = nullptr;
 
     // Empty symbols can only appear in declarations and function arguments, and in either of those
     // cases the symbol nodes are not visited.
@@ -1249,6 +1296,11 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         else if (qualifier == EvqPointSize)
         {
             mUsesPointSize = true;
+            out << name;
+        }
+        else if (qualifier == EvqClipDistance)
+        {
+            lastClipDistanceUsage = node;
             out << name;
         }
         else if (qualifier == EvqInstanceID)

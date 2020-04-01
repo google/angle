@@ -1870,7 +1870,12 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             *params = mState.mCaps.maxLights;
             break;
         case GL_MAX_CLIP_PLANES:
-            *params = mState.mCaps.maxClipPlanes;
+            static_assert(GL_MAX_CLIP_PLANES == GL_MAX_CLIP_DISTANCES_APPLE,
+                          "GL_APPLE_clip_distance extension is broken");
+            if (mState.getClientVersion() < Version(2, 0))
+                *params = mState.mCaps.maxClipPlanes;
+            else
+                *params = mState.mCaps.maxClipDistances;
             break;
         // GLES1 emulation: Vertex attribute queries
         case GL_VERTEX_ARRAY_BUFFER_BINDING:
@@ -3566,6 +3571,11 @@ void Context::initCaps()
         mState.mCaps.maxSmoothPointSize            = 1.0f;
         mState.mCaps.minSmoothLineWidth            = 1.0f;
         mState.mCaps.maxSmoothLineWidth            = 1.0f;
+    }
+
+    if (getClientType() == EGL_OPENGL_API || getClientVersion() >= Version(2, 0))
+    {
+        mState.mCaps.maxClipDistances = 8;
     }
 
 #if 0

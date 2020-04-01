@@ -940,6 +940,7 @@ enum TQualifier
     // built-ins written by vertex shader
     EvqPosition,
     EvqPointSize,
+    EvqClipDistance,
 
     EvqDrawID,  // ANGLE_multi_draw
 

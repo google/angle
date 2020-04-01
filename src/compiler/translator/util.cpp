@@ -684,6 +684,7 @@ bool IsBuiltinOutputVariable(TQualifier qualifier)
     {
         case EvqPosition:
         case EvqPointSize:
+        case EvqClipDistance:
         case EvqFragDepth:
         case EvqFragDepthEXT:
         case EvqFragColor:

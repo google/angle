@@ -59,6 +59,7 @@ void GenerateResources(ShBuiltInResources *resources)
     resources->MaxTextureImageUnits         = 8;
     resources->MaxFragmentUniformVectors    = 16;
     resources->MaxDrawBuffers               = 1;
+    resources->MaxClipDistances             = 1;
     resources->MaxDualSourceDrawBuffers     = 1;
 
     resources->OES_standard_derivatives  = 0;

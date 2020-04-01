@@ -77,6 +77,7 @@ class ShaderD3D : public ShaderImpl
     bool usesVertexID() const { return mUsesVertexID; }
     bool usesViewID() const { return mUsesViewID; }
     bool hasANGLEMultiviewEnabled() const { return mHasANGLEMultiviewEnabled; }
+    const std::vector<int> &usedClipDistances() const { return mUsedClipDistances; }
 
     ShShaderOutput getCompilerOutputType() const;
 
@@ -98,6 +99,7 @@ class ShaderD3D : public ShaderImpl
     bool mUsesDiscardRewriting;
     bool mUsesNestedBreak;
     bool mRequiresIEEEStrictCompiling;
+    std::vector<int> mUsedClipDistances;
 
     ShShaderOutput mCompilerOutputType;
     mutable std::string mDebugInfo;
