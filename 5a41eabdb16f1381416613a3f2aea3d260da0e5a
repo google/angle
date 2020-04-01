@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be36daf9_1d806195",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-04-01T21:09:40Z",
+      "side": 1,
+      "message": "mState.mAttachedShadersMarkedForDetach[shaderType] \u003d false;\nfor consistency?",
+      "range": {
+        "startLine": 1370,
+        "startChar": 0,
+        "endLine": 1370,
+        "endChar": 50
+      },
+      "revId": "5a41eabdb16f1381416613a3f2aea3d260da0e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "041865c2_356e78ec",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 44
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-04-01T21:09:40Z",
+      "side": 1,
+      "message": "This doesn\u0027t appear to be used.\nNor do we ever look at mAttachedShadersMarkedForDetach. Maybe we don\u0027t need any of that? Just hold the shader if isSeparable() and release the next time something is attached.",
+      "revId": "5a41eabdb16f1381416613a3f2aea3d260da0e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
