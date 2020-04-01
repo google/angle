@@ -273,17 +273,17 @@ const TConstantUnion *OutputHLSL::writeConstantUnionArray(TInfoSinkBase &out,
     {
         // This constant is an index into gl_ClipDistance[] array
         lastClipDistanceUsage = nullptr;
-        size_t arrayIdx;
+        int arrayIdx;
         switch (constUnion->getType())
         {
             case EbtFloat:
-                arrayIdx = static_cast<size_t>(constUnion->getFConst());
+                arrayIdx = static_cast<int>(constUnion->getFConst());
                 break;
             case EbtInt:
-                arrayIdx = static_cast<size_t>(constUnion->getIConst());
+                arrayIdx = constUnion->getIConst();
                 break;
             case EbtUInt:
-                arrayIdx = static_cast<size_t>(constUnion->getUConst());
+                arrayIdx = static_cast<int>(constUnion->getUConst());
                 break;
             case EbtBool:
                 arrayIdx = constUnion->getBConst() ? 1 : 0;
@@ -922,7 +922,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
         if (!mUsedClipDistances.empty())
         {
             out << "static float gl_ClipDistance[" << mMaxClipDistances << "] = {";
-            for (size_t i = 0; i < mMaxClipDistances; i++)
+            for (int i = 0; i < mMaxClipDistances; i++)
             {
                 out << 1;
                 if (i < mMaxClipDistances - 1)
