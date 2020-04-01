@@ -807,6 +807,8 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     const ProgramBindings &getAttributeBindings() const;
     const ProgramAliasedBindings &getUniformLocationBindings() const;
+    const ProgramAliasedBindings &getFragmentOutputLocations() const;
+    const ProgramAliasedBindings &getFragmentOutputIndexes() const;
 
     int getNumViews() const
     {

@@ -2371,6 +2371,18 @@ const ProgramAliasedBindings &Program::getUniformLocationBindings() const
     return mState.mUniformLocationBindings;
 }
 
+const gl::ProgramAliasedBindings &Program::getFragmentOutputLocations() const
+{
+    ASSERT(mLinkResolved);
+    return mFragmentOutputLocations;
+}
+
+const gl::ProgramAliasedBindings &Program::getFragmentOutputIndexes() const
+{
+    ASSERT(mLinkResolved);
+    return mFragmentOutputIndexes;
+}
+
 ComponentTypeMask Program::getDrawBufferTypeMask() const
 {
     ASSERT(mLinkResolved);
