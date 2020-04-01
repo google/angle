@@ -9,6 +9,8 @@ As an ANGLE Sheriff. Your job is to:
     and respond to ANGLE bugs.
  1. Control and monitor the [ANGLE auto-rollers](#task-3_the-auto_rollers).
  1. Keep the [ANGLE Standalone Testers](README.md) in good working order.
+ 1. Keep the [SwANGLE Try Waterfall](https://luci-milo.appspot.com/p/chromium/g/tryserver.chromium.swangle/builders) in good
+    working order.
 
 If you're not an ANGLE team member, you can contact us on the public ANGLE project
 [Google group](https://groups.google.com/forum/#!forum/angleproject).
@@ -99,3 +101,31 @@ in the [autoroll/config](https://skia.googlesource.com/buildbot/+/master/autorol
 ## Task 4: ANGLE Standalone Testing
 
 See more detailed instructions on by following [this link](README.md).
+
+## Task 5: Monitor SwANGLE CI and Try Testers
+
+Most important task here is to keep healthy the 2 SwANGLE bots on ANGLE CQ,
+[linux-swangle-try-tot-angle-x64](https://luci-milo.appspot.com/p/chromium/builders/try/linux-swangle-try-tot-angle-x64)
+and
+[win-swangle-try-tot-angle-x86](https://luci-milo.appspot.com/p/chromium/builders/try/win-swangle-try-tot-angle-x86).
+As well as the 2 SwANGLE bots used for ANGLE rolls on Chromium CQ,
+[linux-swangle-try-x64](https://luci-milo.appspot.com/p/chromium/builders/try/linux-swangle-try-x64)
+and
+[win-swangle-try-x86](https://luci-milo.appspot.com/p/chromium/builders/try/win-swangle-try-x86).
+
+Same instructions as for [Task 1](#task-1_monitor-angle-ci-and-try-testers) apply here.
+Some failures on these bots may be due to SwiftShader changes, however.
+The possible ways to handle these failures are:
+1. If possible, suppress the failing tests in ANGLE, opening a bug to investigate these later.
+1. If it is clear that an ANGLE CL caused a regression,
+   consider whether reverting it or suppressing the failures is a better course of action.
+1. If a SwiftShader CL is suspected, and the breakage is too severe to be suppressed,
+   (a lot of tests fail in multiple suites),
+   it is possible to revert the responsible SwiftShader roll into Chromium
+   and open a SwiftShader [bug](http://go/swiftshaderbugs). SwiftShader rolls into Chromium
+   should fail afterwards, but if the bad roll manages to reland,
+   the [autoroller](https://autoroll.skia.org/r/swiftshader-chromium-autoroll) needs to be stopped.
+
+A lower priority task here is to keep healthy all the SwANGLE
+[CI](https://luci-milo.appspot.com/p/chromium/g/chromium.swangle/builders) and
+[Try](https://luci-milo.appspot.com/p/chromium/g/tryserver.chromium.swangle/builders) bots.
