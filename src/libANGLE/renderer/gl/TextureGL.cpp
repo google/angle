@@ -164,12 +164,10 @@ angle::Result TextureGL::setImage(const gl::Context *context,
                                   GLenum format,
                                   GLenum type,
                                   const gl::PixelUnpackState &unpack,
+                                  gl::Buffer *unpackBuffer,
                                   const uint8_t *pixels)
 {
     const angle::FeaturesGL &features = GetFeaturesGL(context);
-
-    const gl::Buffer *unpackBuffer =
-        context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
     gl::TextureTarget target = index.getTarget();
     size_t level             = static_cast<size_t>(index.getLevelIndex());

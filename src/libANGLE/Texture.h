@@ -317,6 +317,7 @@ class Texture final : public RefCountObject<TextureID>,
 
     angle::Result setImage(Context *context,
                            const PixelUnpackState &unpackState,
+                           Buffer *unpackBuffer,
                            TextureTarget target,
                            GLint level,
                            GLenum internalFormat,

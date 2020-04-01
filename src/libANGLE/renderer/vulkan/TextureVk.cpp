@@ -135,11 +135,12 @@ angle::Result TextureVk::setImage(const gl::Context *context,
                                   GLenum format,
                                   GLenum type,
                                   const gl::PixelUnpackState &unpack,
+                                  gl::Buffer *unpackBuffer,
                                   const uint8_t *pixels)
 {
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
 
-    return setImageImpl(context, index, formatInfo, size, type, unpack, pixels);
+    return setImageImpl(context, index, formatInfo, size, type, unpack, unpackBuffer, pixels);
 }
 
 angle::Result TextureVk::setSubImage(const gl::Context *context,
@@ -171,7 +172,11 @@ angle::Result TextureVk::setCompressedImage(const gl::Context *context,
 {
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
 
-    return setImageImpl(context, index, formatInfo, size, GL_UNSIGNED_BYTE, unpack, pixels);
+    const gl::State &glState = context->getState();
+    gl::Buffer *unpackBuffer = glState.getTargetBuffer(gl::BufferBinding::PixelUnpack);
+
+    return setImageImpl(context, index, formatInfo, size, GL_UNSIGNED_BYTE, unpack, unpackBuffer,
+                        pixels);
 }
 
 angle::Result TextureVk::setCompressedSubImage(const gl::Context *context,
@@ -201,6 +206,7 @@ angle::Result TextureVk::setImageImpl(const gl::Context *context,
                                       const gl::Extents &size,
                                       GLenum type,
                                       const gl::PixelUnpackState &unpack,
+                                      gl::Buffer *unpackBuffer,
                                       const uint8_t *pixels)
 {
     ContextVk *contextVk = vk::GetImpl(context);
@@ -215,8 +221,6 @@ angle::Result TextureVk::setImageImpl(const gl::Context *context,
     {
         return angle::Result::Continue;
     }
-    const gl::State &glState = contextVk->getState();
-    gl::Buffer *unpackBuffer = glState.getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
     return setSubImageImpl(context, index, gl::Box(0, 0, 0, size.width, size.height, size.depth),
                            formatInfo, type, unpack, unpackBuffer, pixels, vkFormat);

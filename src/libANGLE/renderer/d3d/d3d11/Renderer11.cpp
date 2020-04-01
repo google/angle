@@ -3104,6 +3104,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
 
 angle::Result Renderer11::fastCopyBufferToTexture(const gl::Context *context,
                                                   const gl::PixelUnpackState &unpack,
+                                                  gl::Buffer *unpackBuffer,
                                                   unsigned int offset,
                                                   RenderTargetD3D *destRenderTarget,
                                                   GLenum destinationFormat,
@@ -3111,8 +3112,9 @@ angle::Result Renderer11::fastCopyBufferToTexture(const gl::Context *context,
                                                   const gl::Box &destArea)
 {
     ASSERT(supportsFastCopyBufferToTexture(destinationFormat));
-    return mPixelTransfer->copyBufferToTexture(context, unpack, offset, destRenderTarget,
-                                               destinationFormat, sourcePixelsType, destArea);
+    return mPixelTransfer->copyBufferToTexture(context, unpack, unpackBuffer, offset,
+                                               destRenderTarget, destinationFormat,
+                                               sourcePixelsType, destArea);
 }
 
 ImageD3D *Renderer11::createImage()

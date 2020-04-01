@@ -949,6 +949,7 @@ bool Renderer9::supportsFastCopyBufferToTexture(GLenum internalFormat) const
 
 angle::Result Renderer9::fastCopyBufferToTexture(const gl::Context *context,
                                                  const gl::PixelUnpackState &unpack,
+                                                 gl::Buffer *unpackBuffer,
                                                  unsigned int offset,
                                                  RenderTargetD3D *destRenderTarget,
                                                  GLenum destinationFormat,
