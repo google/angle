@@ -374,11 +374,7 @@ GLenum InternalFormat::getReadPixelsFormat(const Extensions &extensions) const
             {
                 return GL_RGBA;
             }
-            else
-            {
-                return GL_BGRA_EXT;
-            }
-            break;
+            return GL_BGRA_EXT;
 
         default:
             return format;
@@ -399,10 +395,7 @@ GLenum InternalFormat::getReadPixelsType(const Version &version) const
                 // as an IMPLEMENTATION_READ_TYPE.
                 return GL_HALF_FLOAT_OES;
             }
-            else
-            {
-                return GL_HALF_FLOAT;
-            }
+            return GL_HALF_FLOAT;
 
         default:
             return type;

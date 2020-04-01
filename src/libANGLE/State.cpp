@@ -1337,7 +1337,6 @@ bool State::getEnableFeatureIndexed(GLenum feature, GLuint index) const
     {
         case GL_BLEND:
             return isBlendEnabledIndexed(index);
-            break;
         default:
             UNREACHABLE();
             return false;
