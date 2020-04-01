@@ -614,7 +614,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Caps &caps,
     }
 
     const auto &usedClipDistances = programMetadata.usedClipDistances();
-    for (int i = 0; i < usedClipDistances.size(); i++)
+    for (size_t i = 0; i < usedClipDistances.size(); i++)
     {
         const auto semanticIdx  = i / 4;
         const auto idxInOutput  = i % 4;
