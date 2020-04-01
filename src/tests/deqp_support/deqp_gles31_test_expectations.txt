@@ -191,6 +191,9 @@
 3881 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.location.default_block.array.array.image_2d = SKIP
 3881 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.location.default_block.array.array.iimage_2d_array = SKIP
 
+// Flaky crashes in Windows x86 Subzero Reactor
+4482 WIN SWIFTSHADER : dEQP-GLES31.functional.synchronization.inter_invocation.* = SKIP
+
 ////
 //// General Vulkan expectations
 ////
