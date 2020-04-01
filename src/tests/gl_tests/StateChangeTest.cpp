@@ -3981,6 +3981,9 @@ TEST_P(WebGL2ValidationStateChangeTest, TransformFeedbackNegativeAPI)
 {
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOSX());
 
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
 uniform block { vec4 color; };
