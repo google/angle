@@ -46,6 +46,30 @@
       "revId": "fa0139eb6fc79c8f70036ae2b7489066bbb0029e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a835e747_24937d0c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-04-01T21:57:19Z",
+      "side": 1,
+      "message": "Charlie: I think you missed this. Can you make a follow-up to fix it?",
+      "parentUuid": "b2a37a7d_86e6e7ee",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 184,
+        "endChar": 48
+      },
+      "revId": "fa0139eb6fc79c8f70036ae2b7489066bbb0029e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
