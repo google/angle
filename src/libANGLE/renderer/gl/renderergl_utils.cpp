@@ -1126,6 +1126,22 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
     }
 
+    // GL_OES_texture_cube_map_array
+    if (functions->isAtLeastGL(gl::Version(4, 0)) ||
+        functions->hasGLESExtension("GL_OES_texture_cube_map_array") ||
+        functions->hasGLESExtension("GL_EXT_texture_cube_map_array") ||
+        functions->hasGLExtension("GL_ARB_texture_cube_map_array") ||
+        functions->isAtLeastGLES(gl::Version(3, 2)))
+    {
+        extensions->textureCubeMapArrayOES = true;
+        extensions->textureCubeMapArrayEXT = true;
+    }
+    else
+    {
+        // Can't support ES3.2 without cube map array textures
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 1));
+    }
+
     // Extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->textureCompressionASTCHDRKHR =

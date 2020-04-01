@@ -147,6 +147,8 @@
 1442 OPENGL : dEQP-GLES31.functional.state_query.program_pipeline.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.state_query.program_pipeline.* = SKIP
 
+3584 OPENGL : dEQP-GLES31.functional.shaders.opaque_type_indexing.sampler.*samplercubearray* = PASS
+
 // These tests are failing because of compile errors with SSBOs in compute shaders.
 
 1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
