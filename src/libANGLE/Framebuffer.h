@@ -340,9 +340,8 @@ class Framebuffer final : public angle::ObserverInterface,
                                 GLfloat depth,
                                 GLint stencil);
 
-    // These two methods call syncState() internally.
-    angle::Result getImplementationColorReadFormat(const Context *context, GLenum *formatOut);
-    angle::Result getImplementationColorReadType(const Context *context, GLenum *typeOut);
+    GLenum getImplementationColorReadFormat(const Context *context);
+    GLenum getImplementationColorReadType(const Context *context);
 
     angle::Result readPixels(const Context *context,
                              const Rectangle &area,

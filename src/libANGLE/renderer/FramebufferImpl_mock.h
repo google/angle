@@ -34,8 +34,6 @@ class MockFramebufferImpl : public rx::FramebufferImpl
     MOCK_METHOD4(clearBufferiv, angle::Result(const gl::Context *, GLenum, GLint, const GLint *));
     MOCK_METHOD5(clearBufferfi, angle::Result(const gl::Context *, GLenum, GLint, GLfloat, GLint));
 
-    MOCK_CONST_METHOD1(getImplementationColorReadFormat, GLenum(const gl::Context *));
-    MOCK_CONST_METHOD1(getImplementationColorReadType, GLenum(const gl::Context *));
     MOCK_METHOD5(readPixels,
                  angle::Result(const gl::Context *, const gl::Rectangle &, GLenum, GLenum, void *));
 

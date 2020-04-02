@@ -2432,12 +2432,10 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             *params = mStencilClearValue;
             break;
         case GL_IMPLEMENTATION_COLOR_READ_TYPE:
-            ANGLE_TRY(mReadFramebuffer->getImplementationColorReadType(
-                context, reinterpret_cast<GLenum *>(params)));
+            *params = mReadFramebuffer->getImplementationColorReadType(context);
             break;
         case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
-            ANGLE_TRY(mReadFramebuffer->getImplementationColorReadFormat(
-                context, reinterpret_cast<GLenum *>(params)));
+            *params = mReadFramebuffer->getImplementationColorReadFormat(context);
             break;
         case GL_SAMPLE_BUFFERS:
         case GL_SAMPLES:

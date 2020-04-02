@@ -81,8 +81,6 @@ class FramebufferD3D : public FramebufferImpl
                                 GLfloat depth,
                                 GLint stencil) override;
 
-    GLenum getImplementationColorReadFormat(const gl::Context *context) const override;
-    GLenum getImplementationColorReadType(const gl::Context *context) const override;
     angle::Result readPixels(const gl::Context *context,
                              const gl::Rectangle &area,
                              GLenum format,
@@ -130,8 +128,6 @@ class FramebufferD3D : public FramebufferImpl
                                    bool blitStencil,
                                    GLenum filter,
                                    const gl::Framebuffer *sourceFramebuffer) = 0;
-
-    virtual GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const = 0;
 
     RendererD3D *mRenderer;
     Optional<gl::AttachmentList> mColorAttachmentsForRender;

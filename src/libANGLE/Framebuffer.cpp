@@ -1607,19 +1607,16 @@ angle::Result Framebuffer::clearBufferfi(const Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Framebuffer::getImplementationColorReadFormat(const Context *context,
-                                                            GLenum *formatOut)
+GLenum Framebuffer::getImplementationColorReadFormat(const Context *context)
 {
-    ANGLE_TRY(syncState(context));
-    *formatOut = mImpl->getImplementationColorReadFormat(context);
-    return angle::Result::Continue;
+    const gl::InternalFormat &format = mImpl->getImplementationColorReadFormat(context);
+    return format.getReadPixelsFormat(context->getExtensions());
 }
 
-angle::Result Framebuffer::getImplementationColorReadType(const Context *context, GLenum *typeOut)
+GLenum Framebuffer::getImplementationColorReadType(const Context *context)
 {
-    ANGLE_TRY(syncState(context));
-    *typeOut = mImpl->getImplementationColorReadType(context);
-    return angle::Result::Continue;
+    const gl::InternalFormat &format = mImpl->getImplementationColorReadFormat(context);
+    return format.getReadPixelsType(context->getClientVersion());
 }
 
 angle::Result Framebuffer::readPixels(const Context *context,

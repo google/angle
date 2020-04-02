@@ -5733,10 +5733,8 @@ bool ValidateReadPixelsBase(const Context *context,
             // Only rely on ValidReadPixelsFormatType for depth/stencil formats
             break;
         default:
-            ANGLE_VALIDATION_TRY(
-                readFramebuffer->getImplementationColorReadFormat(context, &currentFormat));
-            ANGLE_VALIDATION_TRY(
-                readFramebuffer->getImplementationColorReadType(context, &currentType));
+            currentFormat = readFramebuffer->getImplementationColorReadFormat(context);
+            currentType   = readFramebuffer->getImplementationColorReadType(context);
             break;
     }
 

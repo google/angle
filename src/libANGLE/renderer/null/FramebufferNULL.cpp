@@ -82,32 +82,6 @@ angle::Result FramebufferNULL::clearBufferfi(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-GLenum FramebufferNULL::getImplementationColorReadFormat(const gl::Context *context) const
-{
-    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
-    if (readAttachment == nullptr)
-    {
-        return GL_NONE;
-    }
-
-    const gl::Format &format = readAttachment->getFormat();
-    ASSERT(format.info != nullptr);
-    return format.info->getReadPixelsFormat(context->getExtensions());
-}
-
-GLenum FramebufferNULL::getImplementationColorReadType(const gl::Context *context) const
-{
-    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
-    if (readAttachment == nullptr)
-    {
-        return GL_NONE;
-    }
-
-    const gl::Format &format = readAttachment->getFormat();
-    ASSERT(format.info != nullptr);
-    return format.info->getReadPixelsType(context->getClientVersion());
-}
-
 angle::Result FramebufferNULL::readPixels(const gl::Context *context,
                                           const gl::Rectangle &origArea,
                                           GLenum format,

@@ -69,8 +69,8 @@ class FramebufferVk : public FramebufferImpl
                                 GLfloat depth,
                                 GLint stencil) override;
 
-    GLenum getImplementationColorReadFormat(const gl::Context *context) const override;
-    GLenum getImplementationColorReadType(const gl::Context *context) const override;
+    const gl::InternalFormat &getImplementationColorReadFormat(
+        const gl::Context *context) const override;
     angle::Result readPixels(const gl::Context *context,
                              const gl::Rectangle &area,
                              GLenum format,

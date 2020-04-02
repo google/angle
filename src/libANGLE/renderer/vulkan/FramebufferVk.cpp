@@ -43,14 +43,6 @@ constexpr size_t kReadPixelsBufferAlignment = 32 * 3;
 // in case of a bug.
 constexpr VkClearValue kUninitializedClearValue = {{{0.95, 0.05, 0.95, 0.95}}};
 
-const gl::InternalFormat &GetReadAttachmentInfo(const gl::Context *context,
-                                                RenderTargetVk *renderTarget)
-{
-    GLenum implFormat =
-        renderTarget->getImageFormat().actualImageFormat().fboImplementationInternalFormat;
-    return gl::GetSizedInternalFormatInfo(implFormat);
-}
-
 bool HasSrcBlitFeature(RendererVk *renderer, RenderTargetVk *srcRenderTarget)
 {
     const VkFormat srcFormat = srcRenderTarget->getImageFormat().vkImageFormat;
@@ -420,21 +412,14 @@ angle::Result FramebufferVk::clearBufferfi(const gl::Context *context,
                      clearValue.depthStencil);
 }
 
-GLenum FramebufferVk::getImplementationColorReadFormat(const gl::Context *context) const
+const gl::InternalFormat &FramebufferVk::getImplementationColorReadFormat(
+    const gl::Context *context) const
 {
-    return GetReadAttachmentInfo(context, mRenderTargetCache.getColorRead(mState)).format;
-}
-
-GLenum FramebufferVk::getImplementationColorReadType(const gl::Context *context) const
-{
-    GLenum readType = GetReadAttachmentInfo(context, mRenderTargetCache.getColorRead(mState)).type;
-    if (context->getClientMajorVersion() < 3 && readType == GL_HALF_FLOAT)
-    {
-        // GL_HALF_FLOAT was not introduced until GLES 3.0, and has a different value from
-        // GL_HALF_FLOAT_OES
-        readType = GL_HALF_FLOAT_OES;
-    }
-    return readType;
+    ContextVk *contextVk       = vk::GetImpl(context);
+    GLenum sizedFormat         = mState.getReadAttachment()->getFormat().info->sizedInternalFormat;
+    const vk::Format &vkFormat = contextVk->getRenderer()->getFormat(sizedFormat);
+    GLenum implFormat          = vkFormat.actualImageFormat().fboImplementationInternalFormat;
+    return gl::GetSizedInternalFormatInfo(implFormat);
 }
 
 angle::Result FramebufferVk::readPixels(const gl::Context *context,

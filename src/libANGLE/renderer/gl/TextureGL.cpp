@@ -617,8 +617,7 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
 
     gl::TextureTarget target = index.getTarget();
     size_t level             = static_cast<size_t>(index.getLevelIndex());
-    GLenum type              = GL_NONE;
-    ANGLE_TRY(source->getImplementationColorReadType(context, &type));
+    GLenum type              = source->getImplementationColorReadType(context);
     nativegl::CopyTexImageImageFormat copyTexImageFormat =
         nativegl::GetCopyTexImageImageFormat(functions, features, internalFormat, type);
 

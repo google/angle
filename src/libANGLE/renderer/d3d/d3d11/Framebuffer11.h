@@ -56,6 +56,9 @@ class Framebuffer11 : public FramebufferD3D
                                     size_t index,
                                     GLfloat *xy) const override;
 
+    const gl::InternalFormat &getImplementationColorReadFormat(
+        const gl::Context *context) const override;
+
   private:
     angle::Result clearImpl(const gl::Context *context,
                             const ClearParameters &clearParams) override;
@@ -84,8 +87,6 @@ class Framebuffer11 : public FramebufferD3D
                                  bool useEXTBehavior) const;
     angle::Result invalidateAttachment(const gl::Context *context,
                                        const gl::FramebufferAttachment *attachment) const;
-
-    GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const override;
 
     Renderer11 *const mRenderer;
     RenderTargetCache<RenderTarget11> mRenderTargetCache;

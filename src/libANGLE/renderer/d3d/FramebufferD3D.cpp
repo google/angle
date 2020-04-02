@@ -184,54 +184,6 @@ angle::Result FramebufferD3D::clearBufferfi(const gl::Context *context,
     return clearImpl(context, clearParams);
 }
 
-GLenum FramebufferD3D::getImplementationColorReadFormat(const gl::Context *context) const
-{
-    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
-
-    if (readAttachment == nullptr)
-    {
-        return GL_NONE;
-    }
-
-    RenderTargetD3D *attachmentRenderTarget = nullptr;
-    angle::Result error                     = readAttachment->getRenderTarget(
-        context, readAttachment->getRenderToTextureSamples(), &attachmentRenderTarget);
-    if (error != angle::Result::Continue)
-    {
-        return GL_NONE;
-    }
-
-    GLenum implementationFormat = getRenderTargetImplementationFormat(attachmentRenderTarget);
-    const gl::InternalFormat &implementationFormatInfo =
-        gl::GetSizedInternalFormatInfo(implementationFormat);
-
-    return implementationFormatInfo.getReadPixelsFormat(context->getExtensions());
-}
-
-GLenum FramebufferD3D::getImplementationColorReadType(const gl::Context *context) const
-{
-    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
-
-    if (readAttachment == nullptr)
-    {
-        return GL_NONE;
-    }
-
-    RenderTargetD3D *attachmentRenderTarget = nullptr;
-    angle::Result error                     = readAttachment->getRenderTarget(
-        context, readAttachment->getRenderToTextureSamples(), &attachmentRenderTarget);
-    if (error != angle::Result::Continue)
-    {
-        return GL_NONE;
-    }
-
-    GLenum implementationFormat = getRenderTargetImplementationFormat(attachmentRenderTarget);
-    const gl::InternalFormat &implementationFormatInfo =
-        gl::GetSizedInternalFormatInfo(implementationFormat);
-
-    return implementationFormatInfo.getReadPixelsType(context->getClientVersion());
-}
-
 angle::Result FramebufferD3D::readPixels(const gl::Context *context,
                                          const gl::Rectangle &area,
                                          GLenum format,

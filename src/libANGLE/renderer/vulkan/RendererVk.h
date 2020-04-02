@@ -117,7 +117,6 @@ class RendererVk : angle::NonCopyable
 
     const vk::MemoryProperties &getMemoryProperties() const { return mMemoryProperties; }
 
-    // TODO(jmadill): We could pass angle::FormatID here.
     const vk::Format &getFormat(GLenum internalFormat) const
     {
         return mFormatTable[internalFormat];

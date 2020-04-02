@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/d3d/TextureD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Clear11.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
@@ -374,10 +375,14 @@ angle::Result Framebuffer11::blitImpl(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-GLenum Framebuffer11::getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const
+const gl::InternalFormat &Framebuffer11::getImplementationColorReadFormat(
+    const gl::Context *context) const
 {
-    RenderTarget11 *renderTarget11 = GetAs<RenderTarget11>(renderTarget);
-    return renderTarget11->getFormatSet().format().fboImplementationInternalFormat;
+    Context11 *context11             = GetImplAs<Context11>(context);
+    const Renderer11DeviceCaps &caps = context11->getRenderer()->getRenderer11DeviceCaps();
+    GLenum sizedFormat = mState.getReadAttachment()->getFormat().info->sizedInternalFormat;
+    const angle::Format &angleFormat = d3d11::Format::Get(sizedFormat, caps).format();
+    return gl::GetSizedInternalFormatInfo(angleFormat.fboImplementationInternalFormat);
 }
 
 angle::Result Framebuffer11::syncState(const gl::Context *context,
