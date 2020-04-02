@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d752e9a7_9cb160cd",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1264,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-04-02T03:50:56Z",
+      "side": 1,
+      "message": "Is it possible for this to be false? We are iterating over active textures, so presumably every texture is active in some stage, right?\n\nMaybe could be turned into an ASSERT? Same with images.",
+      "range": {
+        "startLine": 1264,
+        "startChar": 12,
+        "endLine": 1264,
+        "endChar": 33
+      },
+      "revId": "20e375eb527c91fa2ff132fe8244f65ee88aa6eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ad119c4_b7383789",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-04-02T03:50:56Z",
+      "side": 1,
+      "message": "Probably should remove this #include",
+      "revId": "20e375eb527c91fa2ff132fe8244f65ee88aa6eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
