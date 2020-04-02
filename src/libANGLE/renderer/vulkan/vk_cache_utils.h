@@ -750,6 +750,8 @@ class FramebufferDesc
 
     bool operator==(const FramebufferDesc &other) const;
 
+    uint32_t attachmentCount() const;
+
   private:
     gl::AttachmentArray<AttachmentSerial> mSerials;
 };

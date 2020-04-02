@@ -1079,14 +1079,8 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 break;
             case gl::Framebuffer::DIRTY_BIT_DEPTH_BUFFER_CONTENTS:
             case gl::Framebuffer::DIRTY_BIT_STENCIL_BUFFER_CONTENTS:
-            {
-                RenderTargetVk *depthStencilRT = getDepthStencilRenderTarget();
-                ASSERT(depthStencilRT != nullptr);
-                ANGLE_TRY(depthStencilRT->flushStagedUpdates(contextVk));
-                mCurrentFramebufferDesc.update(vk::kFramebufferDescDepthStencilIndex,
-                                               depthStencilRT->getAssignSerial(contextVk));
+                updateDepthStencilAttachmentSerial(contextVk);
                 break;
-            }
             case gl::Framebuffer::DIRTY_BIT_READ_BUFFER:
                 ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
                 break;
@@ -1112,38 +1106,35 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
             default:
             {
                 static_assert(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0, "FB dirty bits");
+                uint32_t colorIndexGL;
                 if (dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX)
                 {
-                    size_t colorIndexGL = static_cast<size_t>(
+                    colorIndexGL = static_cast<uint32_t>(
                         dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
                     ANGLE_TRY(updateColorAttachment(context, colorIndexGL));
-                    if (mRenderTargetCache.getColors()[colorIndexGL] != nullptr &&
-                        mState.getEnabledDrawBuffers()[colorIndexGL])
-                    {
-                        mCurrentFramebufferDesc.update(
-                            static_cast<uint32_t>(colorIndexGL),
-                            mRenderTargetCache.getColors()[colorIndexGL]->getAssignSerial(
-                                contextVk));
-                    }
-                    else
-                    {
-                        mCurrentFramebufferDesc.update(static_cast<uint32_t>(colorIndexGL),
-                                                       vk::kZeroAttachmentSerial);
-                    }
                 }
                 else
                 {
                     ASSERT(dirtyBit >= gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 &&
                            dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_MAX);
-                    size_t colorIndexGL = static_cast<size_t>(
+                    colorIndexGL = static_cast<uint32_t>(
                         dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0);
                     ANGLE_TRY(mRenderTargetCache.getColors()[colorIndexGL]->flushStagedUpdates(
                         contextVk));
-                    ASSERT(mRenderTargetCache.getColors()[colorIndexGL] != nullptr);
-                    mCurrentFramebufferDesc.update(
-                        static_cast<uint32_t>(colorIndexGL),
-                        mRenderTargetCache.getColors()[colorIndexGL]->getAssignSerial(contextVk));
                 }
+
+                RenderTargetVk *renderTarget = mRenderTargetCache.getColors()[colorIndexGL];
+
+                if (renderTarget && mState.getEnabledDrawBuffers()[colorIndexGL])
+                {
+                    mCurrentFramebufferDesc.update(colorIndexGL,
+                                                   renderTarget->getAssignSerial(contextVk));
+                }
+                else
+                {
+                    mCurrentFramebufferDesc.update(colorIndexGL, vk::kZeroAttachmentSerial);
+                }
+                break;
             }
         }
     }
@@ -1292,6 +1283,9 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
 
     vk::FramebufferHelper newFramebuffer;
     ANGLE_TRY(newFramebuffer.init(contextVk, framebufferInfo));
+
+    // Sanity check that our description matches our attachments. Can catch implementation bugs.
+    ASSERT(static_cast<uint32_t>(attachments.size()) == mCurrentFramebufferDesc.attachmentCount());
 
     mFramebufferCache[mCurrentFramebufferDesc] = std::move(newFramebuffer);
     mFramebuffer                               = &mFramebufferCache[mCurrentFramebufferDesc];

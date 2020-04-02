@@ -1645,6 +1645,8 @@ bool TextureDescriptorDesc::operator==(const TextureDescriptorDesc &other) const
     return memcmp(mSerials.data(), other.mSerials.data(), sizeof(TexUnitSerials) * mMaxIndex) == 0;
 }
 
+// FramebufferDesc implementation.
+
 FramebufferDesc::FramebufferDesc()
 {
     reset();
@@ -1676,6 +1678,18 @@ bool FramebufferDesc::operator==(const FramebufferDesc &other) const
     return memcmp(&mSerials, &other.mSerials, sizeof(Serial) * kMaxFramebufferAttachments) == 0;
 }
 
+uint32_t FramebufferDesc::attachmentCount() const
+{
+    uint32_t count = 0;
+    for (const AttachmentSerial &serial : mSerials)
+    {
+        if (serial.imageSerial != 0)
+        {
+            count++;
+        }
+    }
+    return count;
+}
 }  // namespace vk
 
 // RenderPassCache implementation.
