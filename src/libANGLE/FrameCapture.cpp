@@ -171,10 +171,10 @@ std::string GetDefaultOutDirectory()
 
 struct FmtCapturePrefix
 {
-    FmtCapturePrefix(int contextIdIn, const std::string &captureLabelIn)
+    FmtCapturePrefix(gl::ContextID contextIdIn, const std::string &captureLabelIn)
         : contextId(contextIdIn), captureLabel(captureLabelIn)
     {}
-    int contextId;
+    gl::ContextID contextId;
     const std::string &captureLabel;
 };
 
@@ -188,26 +188,26 @@ std::ostream &operator<<(std::ostream &os, const FmtCapturePrefix &fmt)
     {
         os << fmt.captureLabel;
     }
-    os << "_capture_context" << fmt.contextId;
+    os << "_capture_context" << static_cast<int>(fmt.contextId);
     return os;
 }
 
 struct FmtReplayFunction
 {
-    FmtReplayFunction(int contextIdIn, uint32_t frameIndexIn)
+    FmtReplayFunction(gl::ContextID contextIdIn, uint32_t frameIndexIn)
         : contextId(contextIdIn), frameIndex(frameIndexIn)
     {}
-    int contextId;
+    gl::ContextID contextId;
     uint32_t frameIndex;
 };
 
 std::ostream &operator<<(std::ostream &os, const FmtReplayFunction &fmt)
 {
-    os << "ReplayContext" << fmt.contextId << "Frame" << fmt.frameIndex << "()";
+    os << "ReplayContext" << static_cast<int>(fmt.contextId) << "Frame" << fmt.frameIndex << "()";
     return os;
 }
 
-std::string GetCaptureFileName(int contextId,
+std::string GetCaptureFileName(gl::ContextID contextId,
                                const std::string &captureLabel,
                                uint32_t frameIndex,
                                const char *suffix)
@@ -219,7 +219,7 @@ std::string GetCaptureFileName(int contextId,
 }
 
 std::string GetCaptureFilePath(const std::string &outDir,
-                               int contextId,
+                               gl::ContextID contextId,
                                const std::string &captureLabel,
                                uint32_t frameIndex,
                                const char *suffix)
@@ -645,7 +645,9 @@ struct SaveFileHelper
     std::string filePath;
 };
 
-std::string GetBinaryDataFilePath(bool compression, int contextId, const std::string &captureLabel)
+std::string GetBinaryDataFilePath(bool compression,
+                                  gl::ContextID contextId,
+                                  const std::string &captureLabel)
 {
     std::stringstream fnameStream;
     fnameStream << FmtCapturePrefix(contextId, captureLabel) << ".angledata";
@@ -658,7 +660,7 @@ std::string GetBinaryDataFilePath(bool compression, int contextId, const std::st
 
 void SaveBinaryData(bool compression,
                     const std::string &outDir,
-                    int contextId,
+                    gl::ContextID contextId,
                     const std::string &captureLabel,
                     const std::vector<uint8_t> &binaryData)
 {
@@ -695,7 +697,7 @@ void SaveBinaryData(bool compression,
 
 void WriteLoadBinaryDataCall(bool compression,
                              std::ostream &out,
-                             int contextId,
+                             gl::ContextID contextId,
                              const std::string &captureLabel)
 {
     std::string binaryDataFileName = GetBinaryDataFilePath(compression, contextId, captureLabel);
@@ -704,7 +706,7 @@ void WriteLoadBinaryDataCall(bool compression,
 
 void WriteCppReplay(bool compression,
                     const std::string &outDir,
-                    int contextId,
+                    gl::ContextID contextId,
                     const std::string &captureLabel,
                     uint32_t frameIndex,
                     const std::vector<CallCapture> &frameCalls,
@@ -730,7 +732,7 @@ void WriteCppReplay(bool compression,
 
     if (frameIndex == 0 || !setupCalls.empty())
     {
-        out << "void SetupContext" << Str(contextId) << "Replay()\n";
+        out << "void SetupContext" << Str(static_cast<int>(contextId)) << "Replay()\n";
         out << "{\n";
 
         std::stringstream setupCallStream;
@@ -786,7 +788,7 @@ void WriteCppReplay(bool compression,
 
 void WriteCppReplayIndexFiles(bool compression,
                               const std::string &outDir,
-                              int contextId,
+                              gl::ContextID contextId,
                               const std::string &captureLabel,
                               uint32_t frameStart,
                               uint32_t frameEnd,
@@ -834,8 +836,9 @@ void WriteCppReplayIndexFiles(bool compression,
     header << "constexpr uint32_t kReplayFrameStart = " << frameStart << ";\n";
     header << "constexpr uint32_t kReplayFrameEnd = " << frameEnd << ";\n";
     header << "\n";
-    header << "void SetupContext" << contextId << "Replay();\n";
-    header << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex);\n";
+    header << "void SetupContext" << static_cast<int>(contextId) << "Replay();\n";
+    header << "void ReplayContext" << static_cast<int>(contextId)
+           << "Frame(uint32_t frameIndex);\n";
     header << "\n";
     header << "using FramebufferChangeCallback = void(*)(void *userData, GLenum target, GLuint "
               "framebuffer);\n";
@@ -946,14 +949,15 @@ void WriteCppReplayIndexFiles(bool compression,
     source << "}\n";
 
     source << "\n";
-    source << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex)\n";
+    source << "void ReplayContext" << static_cast<int>(contextId) << "Frame(uint32_t frameIndex)\n";
     source << "{\n";
     source << "    switch (frameIndex)\n";
     source << "    {\n";
     for (uint32_t frameIndex = frameStart; frameIndex < frameEnd; ++frameIndex)
     {
         source << "        case " << frameIndex << ":\n";
-        source << "            ReplayContext" << contextId << "Frame" << frameIndex << "();\n";
+        source << "            ReplayContext" << static_cast<int>(contextId) << "Frame"
+               << frameIndex << "();\n";
         source << "            break;\n";
     }
     source << "        default:\n";
@@ -1413,9 +1417,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                               const TextureLevelDataMap &cachedTextureLevelData)
 {
     const gl::State &apiState = context->getState();
-    gl::State replayState(0, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
-                          apiState.getClientVersion(), false, true, true, true, false,
-                          EGL_CONTEXT_PRIORITY_MEDIUM_IMG);
+    gl::State replayState(nullptr, nullptr, nullptr, EGL_OPENGL_ES_API, apiState.getClientVersion(),
+                          false, true, true, true, false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG);
 
     // Small helper function to make the code more readable.
     auto cap = [setupCalls](CallCapture &&call) { setupCalls->emplace_back(std::move(call)); };

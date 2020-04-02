@@ -344,7 +344,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
             const egl::ClientExtensions &clientExtensions);
 
     // Use for debugging.
-    int id() const { return mState.mID; }
+    ContextID id() const { return mState.getContextID(); }
 
     egl::Error onDestroy(const egl::Display *display);
     ~Context() override;

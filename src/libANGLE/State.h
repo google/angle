@@ -84,8 +84,7 @@ class ActiveTexturesCache final : angle::NonCopyable
 class State : angle::NonCopyable
 {
   public:
-    State(ContextID contextIn,
-          const State *shareContextState,
+    State(const State *shareContextState,
           TextureManager *shareTextures,
           const OverlayType *overlay,
           const EGLenum clientType,
@@ -98,13 +97,11 @@ class State : angle::NonCopyable
           EGLenum contextPriority);
     ~State();
 
-    int id() const { return mID; }
-
     void initialize(Context *context);
     void reset(const Context *context);
 
     // Getters
-    ContextID getContextID() const { return mContext; }
+    ContextID getContextID() const { return mID; }
     EGLenum getClientType() const { return mClientType; }
     EGLenum getContextPriority() const { return mContextPriority; }
     GLint getClientMajorVersion() const { return mClientVersion.major; }
@@ -824,12 +821,11 @@ class State : angle::NonCopyable
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;
 
-    int mID;
+    ContextID mID;
 
     EGLenum mClientType;
     EGLenum mContextPriority;
     Version mClientVersion;
-    ContextID mContext;
 
     // Caps to use for validation
     Caps mCaps;
