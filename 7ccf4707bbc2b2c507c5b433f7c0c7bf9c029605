@@ -22,6 +22,30 @@
       "revId": "7ccf4707bbc2b2c507c5b433f7c0c7bf9c029605",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0eb3b30_5df311a7",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 1179,
+      "author": {
+        "id": 1383035
+      },
+      "writtenOn": "2020-04-02T01:28:36Z",
+      "side": 1,
+      "message": "because ninja build failed on windows and mac, they\u0027re not case sensitive, so platform.h is refer to include/platform/Platform.h(as mentioned in commit-msg, it works well on linux/android), I don\u0027t find a clear fix.",
+      "parentUuid": "9722d48f_b1e49bdc",
+      "range": {
+        "startLine": 1179,
+        "startChar": 9,
+        "endLine": 1179,
+        "endChar": 16
+      },
+      "revId": "7ccf4707bbc2b2c507c5b433f7c0c7bf9c029605",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
