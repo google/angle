@@ -22,6 +22,30 @@
       "revId": "d30da07270b6a1d0d68ce45d8728dd838fa9ae98",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d48d03e_0576047b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-04-02T18:10:42Z",
+      "side": 1,
+      "message": "so the cache here refers to CPU cache, not GPU cache or a shared cache by CPU/GPU\n\nthe way i look at it is - given that the CPU performs a write-only access to the buffer and that the CPU cache is going to be overwritten by data from other CPU threads, having a cached write will result in cache thrashing. write-through operations can be batched independent of cache related ops",
+      "parentUuid": "feed9263_9f17562a",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 33
+      },
+      "revId": "d30da07270b6a1d0d68ce45d8728dd838fa9ae98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
