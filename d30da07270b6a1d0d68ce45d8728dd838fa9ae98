@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "feed9263_9f17562a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-04-02T03:28:04Z",
+      "side": 1,
+      "message": "Is this true with both shared and dedicated GPU memory? Would it be more efficient with dedicated GPU memory to flush cached dirty pages instead?\n\nI actually don\u0027t know how host-visible works with dedicated memory in hardware. Does PCIe get involved? Would every uncached write become a small PCIe message or DMA operation of some sort? That\u0027s the kind of thing I\u0027m curious about here, and I worry uncached writes may be slower with dedicated GPU.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 33
+      },
+      "revId": "d30da07270b6a1d0d68ce45d8728dd838fa9ae98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
