@@ -318,8 +318,11 @@ angle::Result FramebufferAttachmentObject::initializeContents(const Context *con
     // initializing entire mip levels for 2D array textures.
     if (imageIndex.getType() == TextureType::_2DArray && imageIndex.hasLayer())
     {
-        ImageIndex fullMipIndex =
-            ImageIndex::Make2DArray(imageIndex.getLevelIndex(), ImageIndex::kEntireLevel);
+        // Compute the layer count so we get a correct 2D array index.
+        const gl::Extents &size = getAttachmentSize(imageIndex);
+
+        ImageIndex fullMipIndex = ImageIndex::Make2DArrayRange(
+            imageIndex.getLevelIndex(), ImageIndex::kEntireLevel, size.depth);
         return getAttachmentImpl()->initializeContents(context, fullMipIndex);
     }
     else if (imageIndex.getType() == TextureType::_2DMultisampleArray && imageIndex.hasLayer())
