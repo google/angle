@@ -72,9 +72,9 @@ class ActiveTexturesCache final : angle::NonCopyable
 
     Texture *operator[](size_t textureIndex) const { return mTextures[textureIndex]; }
 
-    void clear();
-    void set(size_t textureIndex, Texture *texture);
-    void reset(size_t textureIndex);
+    void clear(ContextID contextID);
+    void set(ContextID contextID, size_t textureIndex, Texture *texture);
+    void reset(ContextID contextID, size_t textureIndex);
     bool empty() const;
 
   private:

@@ -281,7 +281,7 @@ void FramebufferAttachment::setInitState(InitState initState) const
     mResource->setInitState(mTarget.textureIndex(), initState);
 }
 
-bool FramebufferAttachment::isBoundAsSamplerOrImage() const
+bool FramebufferAttachment::isBoundAsSamplerOrImage(ContextID contextID) const
 {
     if (mType != GL_TEXTURE)
     {
@@ -289,7 +289,8 @@ bool FramebufferAttachment::isBoundAsSamplerOrImage() const
     }
 
     const gl::TextureState &textureState = getTexture()->getTextureState();
-    return textureState.isBoundAsImageTexture() || textureState.isBoundAsSamplerTexture();
+    return textureState.isBoundAsImageTexture(contextID) ||
+           textureState.isBoundAsSamplerTexture(contextID);
 }
 
 ////// FramebufferAttachmentObject Implementation //////

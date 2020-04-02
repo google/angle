@@ -227,7 +227,10 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                               GLenum type,
                               void *pixels) override;
 
-    ANGLE_INLINE bool isBoundAsImageTexture() const { return mState.isBoundAsImageTexture(); }
+    ANGLE_INLINE bool isBoundAsImageTexture(gl::ContextID contextID) const
+    {
+        return mState.isBoundAsImageTexture(contextID);
+    }
 
   private:
     // Transform an image index from the frontend into one that can be used on the backing

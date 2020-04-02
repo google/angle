@@ -1369,7 +1369,125 @@ TEST_P(FramebufferTest_ES3, DisabledAttachmentRedefinition)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+class FramebufferTest : public ANGLETest
+{};
+
+template <typename T>
+void FillTexture2D(GLuint texture,
+                   GLsizei width,
+                   GLsizei height,
+                   const T &onePixelData,
+                   GLint level,
+                   GLint internalFormat,
+                   GLenum format,
+                   GLenum type)
+{
+    std::vector<T> allPixelsData(width * height, onePixelData);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, 0, format, type,
+                 allPixelsData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
+// Multi-context uses of textures should not cause rendering feedback loops.
+TEST_P(FramebufferTest, MultiContextNoRenderingFeedbackLoops)
+{
+    constexpr char kTextureVS[] =
+        R"(attribute vec4 a_position;
+varying vec2 v_texCoord;
+void main() {
+    gl_Position = a_position;
+    v_texCoord = (a_position.xy * 0.5) + 0.5;
+})";
+
+    constexpr char kTextureFS[] =
+        R"(precision mediump float;
+varying vec2 v_texCoord;
+uniform sampler2D u_texture;
+void main() {
+    gl_FragColor = texture2D(u_texture, v_texCoord).rgba;
+})";
+
+    ANGLE_GL_PROGRAM(textureProgram, kTextureVS, kTextureFS);
+
+    glUseProgram(textureProgram.get());
+    GLint uniformLoc = glGetUniformLocation(textureProgram.get(), "u_texture");
+    ASSERT_NE(-1, uniformLoc);
+    glUniform1i(uniformLoc, 0);
+
+    GLTexture texture;
+    FillTexture2D(texture.get(), 1, 1, GLColor::red, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    // Note that _texture_ is still bound to GL_TEXTURE_2D in this context at this point.
+
+    EGLWindow *window          = getEGLWindow();
+    EGLDisplay display         = window->getDisplay();
+    EGLConfig config           = window->getConfig();
+    EGLSurface surface         = window->getSurface();
+    EGLint contextAttributes[] = {
+        EGL_CONTEXT_MAJOR_VERSION_KHR,
+        GetParam().majorVersion,
+        EGL_CONTEXT_MINOR_VERSION_KHR,
+        GetParam().minorVersion,
+        EGL_NONE,
+    };
+    EGLContext context1 = eglGetCurrentContext();
+    // Create context2, sharing resources with context1.
+    EGLContext context2 = eglCreateContext(display, config, context1, contextAttributes);
+    ASSERT_NE(context2, EGL_NO_CONTEXT);
+    eglMakeCurrent(display, surface, surface, context2);
+
+    constexpr char kVS[] =
+        R"(attribute vec4 a_position;
+void main() {
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] =
+        R"(precision mediump float;
+void main() {
+    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program.get());
+
+    ASSERT_GL_NO_ERROR();
+
+    // Render to the texture in context2.
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+    // Texture is still a valid name in context2.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.get(), 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    // There is no rendering feedback loop at this point.
+
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    // If draw is no-op'ed, texture will not be filled appropriately.
+    drawQuad(program.get(), "a_position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Make context1 current again.
+    eglMakeCurrent(display, surface, surface, context1);
+
+    // Render texture to screen.
+    drawQuad(textureProgram.get(), "a_position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    eglDestroyContext(display, context2);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2(AddDummyTextureNoRenderTargetTest);
+ANGLE_INSTANTIATE_TEST_ES2(FramebufferTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
 ANGLE_INSTANTIATE_TEST_ES3(FramebufferTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31);

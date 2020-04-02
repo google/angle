@@ -61,8 +61,8 @@ enum class AttachmentSampleType
 class FramebufferState final : angle::NonCopyable
 {
   public:
-    FramebufferState();
-    explicit FramebufferState(const Caps &caps, FramebufferID id);
+    explicit FramebufferState(ContextID owningContextID);
+    FramebufferState(const Caps &caps, FramebufferID id, ContextID owningContextID);
     ~FramebufferState();
 
     const std::string &getLabel();
@@ -141,6 +141,7 @@ class FramebufferState final : angle::NonCopyable
     friend class Framebuffer;
 
     FramebufferID mId;
+    ContextID mOwningContextID;
     std::string mLabel;
 
     std::vector<FramebufferAttachment> mColorAttachments;
@@ -184,7 +185,10 @@ class Framebuffer final : public angle::ObserverInterface,
 {
   public:
     // Constructor to build application-defined framebuffers
-    Framebuffer(const Caps &caps, rx::GLImplFactory *factory, FramebufferID id);
+    Framebuffer(const Caps &caps,
+                rx::GLImplFactory *factory,
+                FramebufferID id,
+                ContextID owningContextID);
     // Constructor to build default framebuffers for a surface and context pair
     Framebuffer(const Context *context, egl::Surface *surface, egl::Surface *readSurface);
     // Constructor to build a fake default framebuffer when surfaceless
