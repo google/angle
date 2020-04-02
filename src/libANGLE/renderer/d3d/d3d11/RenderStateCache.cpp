@@ -70,15 +70,15 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *conte
         // enforcing default values.
         keyBlendState = gl::BlendState();
 
-        if (blendState.blend)
+        ASSERT(keyBlendIndex < colorbuffers.size());
+        const gl::FramebufferAttachment *attachment = colorbuffers[keyBlendIndex];
+
+        // Do not set blend state for null attachments that may be present when
+        // mrt_perf_workaround is disabled.
+        if (attachment == nullptr)
         {
-            keyBlendState.blend              = true;
-            keyBlendState.sourceBlendRGB     = blendState.sourceBlendRGB;
-            keyBlendState.sourceBlendAlpha   = blendState.sourceBlendAlpha;
-            keyBlendState.destBlendRGB       = blendState.destBlendRGB;
-            keyBlendState.destBlendAlpha     = blendState.destBlendAlpha;
-            keyBlendState.blendEquationRGB   = blendState.blendEquationRGB;
-            keyBlendState.blendEquationAlpha = blendState.blendEquationAlpha;
+            keyBlendIndex++;
+            continue;
         }
 
         // These values are used only for caching (hash calculation) purposes.
@@ -88,16 +88,26 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *conte
         keyBlendState.colorMaskBlue  = blendState.colorMaskBlue;
         keyBlendState.colorMaskAlpha = blendState.colorMaskAlpha;
 
-        ASSERT(keyBlendIndex < colorbuffers.size());
-        const gl::FramebufferAttachment *attachment = colorbuffers[keyBlendIndex];
+        const gl::InternalFormat &internalFormat = *attachment->getFormat().info;
 
-        if (attachment)  // when mrt_perf_workaround is disabled, nullptr attachments may exist
+        key.rtvMax = static_cast<uint16_t>(keyBlendIndex) + 1;
+        key.rtvMasks[keyBlendIndex] =
+            gl_d3d11::GetColorMask(internalFormat) &
+            gl_d3d11::ConvertColorMask(blendState.colorMaskRed, blendState.colorMaskGreen,
+                                       blendState.colorMaskBlue, blendState.colorMaskAlpha);
+
+        // Some D3D11 drivers produce unexpected results when blending is enabled for integer
+        // attachments. Per OpenGL ES spec, it must be ignored anyway. When blending is disabled,
+        // the state remains default to reduce the number of unique keys.
+        if (blendState.blend && !internalFormat.isInt())
         {
-            key.rtvMax = static_cast<uint16_t>(keyBlendIndex) + 1;
-            key.rtvMasks[keyBlendIndex] =
-                (gl_d3d11::GetColorMask(*attachment->getFormat().info)) &
-                gl_d3d11::ConvertColorMask(blendState.colorMaskRed, blendState.colorMaskGreen,
-                                           blendState.colorMaskBlue, blendState.colorMaskAlpha);
+            keyBlendState.blend              = true;
+            keyBlendState.sourceBlendRGB     = blendState.sourceBlendRGB;
+            keyBlendState.sourceBlendAlpha   = blendState.sourceBlendAlpha;
+            keyBlendState.destBlendRGB       = blendState.destBlendRGB;
+            keyBlendState.destBlendAlpha     = blendState.destBlendAlpha;
+            keyBlendState.blendEquationRGB   = blendState.blendEquationRGB;
+            keyBlendState.blendEquationAlpha = blendState.blendEquationAlpha;
         }
         keyBlendIndex++;
     }
