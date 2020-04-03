@@ -155,8 +155,8 @@ class TextureState final : private angle::NonCopyable
     const ImageDesc &getBaseLevelDesc() const;
 
     // GLES1 emulation: For GL_OES_draw_texture
-    void setCrop(const gl::Rectangle &rect);
-    const gl::Rectangle &getCrop() const;
+    void setCrop(const Rectangle &rect);
+    const Rectangle &getCrop() const;
 
     // GLES1 emulation: Auto-mipmap generation is a texparameter
     void setGenerateMipmapHint(GLenum hint);
@@ -233,7 +233,7 @@ class TextureState final : private angle::NonCopyable
 
     // GLES1 emulation: Texture crop rectangle
     // For GL_OES_draw_texture
-    gl::Rectangle mCropRect;
+    Rectangle mCropRect;
 
     // GLES1 emulation: Generate-mipmap hint per texture
     GLenum mGenerateMipmapHint;
@@ -331,7 +331,7 @@ class Texture final : public RefCountObject<TextureID>,
 
     const TextureState &getTextureState() const;
 
-    const gl::Extents &getExtents(TextureTarget target, size_t level) const;
+    const Extents &getExtents(TextureTarget target, size_t level) const;
     size_t getWidth(TextureTarget target, size_t level) const;
     size_t getHeight(TextureTarget target, size_t level) const;
     size_t getDepth(TextureTarget target, size_t level) const;
@@ -516,8 +516,8 @@ class Texture final : public RefCountObject<TextureID>,
     bool getAttachmentFixedSampleLocations(const ImageIndex &imageIndex) const;
 
     // GLES1 emulation
-    void setCrop(const gl::Rectangle &rect);
-    const gl::Rectangle &getCrop() const;
+    void setCrop(const Rectangle &rect);
+    const Rectangle &getCrop() const;
     void setGenerateMipmapHint(GLenum generate);
     GLenum getGenerateMipmapHint() const;
 
@@ -597,10 +597,12 @@ class Texture final : public RefCountObject<TextureID>,
     void invalidateCompletenessCache() const;
     angle::Result releaseTexImageInternal(Context *context);
 
+    bool doesSubImageNeedInit(const Context *context,
+                              const ImageIndex &imageIndex,
+                              const Box &area) const;
     angle::Result ensureSubImageInitialized(const Context *context,
-                                            TextureTarget target,
-                                            size_t level,
-                                            const gl::Box &area);
+                                            const ImageIndex &imageIndex,
+                                            const Box &area);
 
     angle::Result handleMipmapGenerationHint(Context *context, int level);
 
