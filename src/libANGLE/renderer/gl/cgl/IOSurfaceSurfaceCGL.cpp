@@ -160,7 +160,8 @@ egl::Error IOSurfaceSurfaceCGL::bindTexImage(const gl::Context *context,
 
     const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
     GLuint textureID           = textureGL->getTextureID();
-    stateManager->bindTexture(gl::TextureType::Rectangle, textureID);
+    ANGLE_TRY(angle::ResultToEGL(
+        stateManager->bindTexture(context, gl::TextureType::Rectangle, textureID)));
 
     const auto &format = kIOSurfaceFormats[mFormatIndex];
     CGLError error     = CGLTexImageIOSurface2D(
@@ -291,7 +292,7 @@ FramebufferImpl *IOSurfaceSurfaceCGL::createDefaultFramebuffer(const gl::Context
     GLuint texture = 0;
     functions->genTextures(1, &texture);
     const auto &format = kIOSurfaceFormats[mFormatIndex];
-    stateManager->bindTexture(gl::TextureType::Rectangle, texture);
+    ANGLE_SWALLOW_ERR(stateManager->bindTexture(context, gl::TextureType::Rectangle, texture));
     CGLError error = CGLTexImageIOSurface2D(
         mCGLContext, GL_TEXTURE_RECTANGLE, format.nativeInternalFormat, mWidth, mHeight,
         format.nativeFormat, format.nativeType, mIOSurface, mPlane);
@@ -308,8 +309,8 @@ FramebufferImpl *IOSurfaceSurfaceCGL::createDefaultFramebuffer(const gl::Context
 
     GLuint framebuffer = 0;
     functions->genFramebuffers(1, &framebuffer);
-    stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    stateManager->bindTexture(gl::TextureType::Rectangle, texture);
+    ANGLE_SWALLOW_ERR(stateManager->bindFramebuffer(context, GL_FRAMEBUFFER, framebuffer));
+    ANGLE_SWALLOW_ERR(stateManager->bindTexture(context, gl::TextureType::Rectangle, texture));
     functions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_RECTANGLE,
                                     texture, 0);
 

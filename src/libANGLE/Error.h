@@ -172,6 +172,9 @@ enum class ANGLE_NO_DISCARD Result
 
 // TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/3041
 egl::Error ResultToEGL(Result result);
+
+std::ostream &operator<<(std::ostream &os, Result result);
+
 }  // namespace angle
 
 // TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/3041

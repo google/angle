@@ -36,10 +36,10 @@ class TransformFeedbackGL : public TransformFeedbackImpl
 
     GLuint getTransformFeedbackID() const;
 
-    void syncActiveState(const gl::Context *context,
-                         bool active,
-                         gl::PrimitiveMode primitiveMode) const;
-    void syncPausedState(bool paused) const;
+    angle::Result syncActiveState(const gl::Context *context,
+                                  bool active,
+                                  gl::PrimitiveMode primitiveMode) const;
+    angle::Result syncPausedState(const gl::Context *context, bool paused) const;
 
   private:
     const FunctionsGL *mFunctions;

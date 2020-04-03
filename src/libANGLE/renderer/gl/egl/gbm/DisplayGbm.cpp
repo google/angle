@@ -212,12 +212,12 @@ bool DisplayGbm::Buffer::resize(int32_t width, int32_t height)
 
     // Update the storage of the renderbuffers but don't generate new IDs. This will update all
     // framebuffers they are bound to.
-    sm->bindRenderbuffer(GL_RENDERBUFFER, mColorBuffer);
+    ANGLE_SWALLOW_ERR(sm->bindRenderbuffer(nullptr, GL_RENDERBUFFER, mColorBuffer));
     gl->eGLImageTargetRenderbufferStorageOES(GL_RENDERBUFFER, mImage);
 
     if (mDepthBits || mStencilBits)
     {
-        sm->bindRenderbuffer(GL_RENDERBUFFER, mDSBuffer);
+        ANGLE_SWALLOW_ERR(sm->bindRenderbuffer(nullptr, GL_RENDERBUFFER, mDSBuffer));
         gl->renderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, width, height);
     }
 
@@ -251,7 +251,7 @@ GLuint DisplayGbm::Buffer::getTexture()
     StateManagerGL *sm    = mDisplay->mRenderer->getStateManager();
 
     gl->genTextures(1, &mTexture);
-    sm->bindTexture(gl::TextureType::_2D, mTexture);
+    ANGLE_SWALLOW_ERR(sm->bindTexture(nullptr, gl::TextureType::_2D, mTexture));
     gl->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     gl->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     gl->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -289,7 +289,7 @@ GLuint DisplayGbm::Buffer::createGLFB(const gl::Context *context)
 
     GLuint framebuffer = 0;
     functions->genFramebuffers(1, &framebuffer);
-    stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    ANGLE_SWALLOW_ERR(stateManager->bindFramebuffer(nullptr, GL_FRAMEBUFFER, framebuffer));
 
     functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER,
                                        mColorBuffer);
@@ -333,12 +333,12 @@ bool DisplayGbm::Buffer::createRenderbuffers()
     StateManagerGL *sm    = mDisplay->mRenderer->getStateManager();
 
     gl->genRenderbuffers(1, &mColorBuffer);
-    sm->bindRenderbuffer(GL_RENDERBUFFER, mColorBuffer);
+    ANGLE_SWALLOW_ERR(sm->bindRenderbuffer(nullptr, GL_RENDERBUFFER, mColorBuffer));
 
     if (mDepthBits || mStencilBits)
     {
         gl->genRenderbuffers(1, &mDSBuffer);
-        sm->bindRenderbuffer(GL_RENDERBUFFER, mDSBuffer);
+        ANGLE_SWALLOW_ERR(sm->bindRenderbuffer(nullptr, GL_RENDERBUFFER, mDSBuffer));
     }
 
     return true;
@@ -689,7 +689,7 @@ void DisplayGbm::drawWithTexture(const gl::Context *context, Buffer *buffer)
         mBorderSizeUniform = gl->getUniformLocation(mProgram, "borderSize");
         mDepthUniform      = gl->getUniformLocation(mProgram, "depth");
         GLint texUniform   = gl->getUniformLocation(mProgram, "tex");
-        sm->useProgram(mProgram);
+        ANGLE_SWALLOW_ERR(sm->useProgram(context, mProgram));
         gl->uniform1i(texUniform, 0);
 
         // clang-format off
@@ -708,21 +708,21 @@ void DisplayGbm::drawWithTexture(const gl::Context *context, Buffer *buffer)
         };
         // clang-format on
         gl->genBuffers(1, &mVertexBuffer);
-        sm->bindBuffer(gl::BufferBinding::Array, mVertexBuffer);
+        ANGLE_SWALLOW_ERR(sm->bindBuffer(context, gl::BufferBinding::Array, mVertexBuffer));
         gl->bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         // window border triangle strip
         const GLuint borderStrip[] = {5, 0, 4, 2, 6, 3, 7, 1, 5, 0};
 
         gl->genBuffers(1, &mIndexBuffer);
-        sm->bindBuffer(gl::BufferBinding::ElementArray, mIndexBuffer);
+        ANGLE_SWALLOW_ERR(sm->bindBuffer(context, gl::BufferBinding::ElementArray, mIndexBuffer));
         gl->bufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(borderStrip), borderStrip, GL_STATIC_DRAW);
     }
     else
     {
-        sm->useProgram(mProgram);
-        sm->bindBuffer(gl::BufferBinding::Array, mVertexBuffer);
-        sm->bindBuffer(gl::BufferBinding::ElementArray, mIndexBuffer);
+        ANGLE_SWALLOW_ERR(sm->useProgram(context, mProgram));
+        ANGLE_SWALLOW_ERR(sm->bindBuffer(context, gl::BufferBinding::Array, mVertexBuffer));
+        ANGLE_SWALLOW_ERR(sm->bindBuffer(context, gl::BufferBinding::ElementArray, mIndexBuffer));
     }
 
     // convert from pixels to "-1 to 1" space
@@ -749,17 +749,17 @@ void DisplayGbm::drawWithTexture(const gl::Context *context, Buffer *buffer)
     sm->setDepthRange(0, 1);
     sm->setDepthFunc(GL_LESS);
     sm->setViewport(gl::Rectangle(0, 0, mWidth, mHeight));
-    sm->activeTexture(0);
+    ANGLE_SWALLOW_ERR(sm->activeTexture(context, 0));
     GLuint tex = buffer->getTexture();
-    sm->bindTexture(gl::TextureType::_2D, tex);
+    ANGLE_SWALLOW_ERR(sm->bindTexture(context, gl::TextureType::_2D, tex));
     gl->vertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     gl->enableVertexAttribArray(0);
     GLuint fbo = mDrawing->createGLFB(context);
-    sm->bindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    ANGLE_SWALLOW_ERR(sm->bindFramebuffer(context, GL_DRAW_FRAMEBUFFER, fbo));
     gl->drawArrays(GL_TRIANGLE_STRIP, 0, 4);
     gl->drawElements(GL_TRIANGLE_STRIP, 10, GL_UNSIGNED_INT, 0);
-    sm->deleteTexture(tex);
-    sm->deleteFramebuffer(fbo);
+    ANGLE_SWALLOW_ERR(sm->deleteTexture(context, tex));
+    ANGLE_SWALLOW_ERR(sm->deleteFramebuffer(context, fbo));
 }
 
 void DisplayGbm::drawBuffer(const gl::Context *context, Buffer *buffer)
@@ -787,14 +787,14 @@ void DisplayGbm::drawBuffer(const gl::Context *context, Buffer *buffer)
         StateManagerGL *sm    = mRenderer->getStateManager();
 
         GLuint fbo = mDrawing->createGLFB(context);
-        sm->bindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+        ANGLE_SWALLOW_ERR(sm->bindFramebuffer(context, GL_DRAW_FRAMEBUFFER, fbo));
         sm->setClearColor(gl::ColorF(0, 0, 0, 1));
         sm->setClearDepth(1);
         sm->setScissorTestEnabled(false);
         sm->setColorMask(true, true, true, true);
         sm->setDepthMask(true);
         gl->clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        sm->deleteFramebuffer(fbo);
+        ANGLE_SWALLOW_ERR(sm->deleteFramebuffer(context, fbo));
     }
 
     drawWithTexture(context, buffer);

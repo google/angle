@@ -35,7 +35,7 @@ RenderbufferGL::~RenderbufferGL()
 void RenderbufferGL::onDestroy(const gl::Context *context)
 {
     StateManagerGL *stateManager = GetStateManagerGL(context);
-    stateManager->deleteRenderbuffer(mRenderbufferID);
+    (void)stateManager->deleteRenderbuffer(context, mRenderbufferID);
     mRenderbufferID = 0;
 }
 
@@ -48,7 +48,7 @@ angle::Result RenderbufferGL::setStorage(const gl::Context *context,
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
-    stateManager->bindRenderbuffer(GL_RENDERBUFFER, mRenderbufferID);
+    ANGLE_TRY(stateManager->bindRenderbuffer(context, GL_RENDERBUFFER, mRenderbufferID));
 
     nativegl::RenderbufferFormat renderbufferFormat =
         nativegl::GetRenderbufferFormat(functions, features, internalformat);
@@ -72,7 +72,7 @@ angle::Result RenderbufferGL::setStorageMultisample(const gl::Context *context,
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
-    stateManager->bindRenderbuffer(GL_RENDERBUFFER, mRenderbufferID);
+    ANGLE_TRY(stateManager->bindRenderbuffer(context, GL_RENDERBUFFER, mRenderbufferID));
 
     nativegl::RenderbufferFormat renderbufferFormat =
         nativegl::GetRenderbufferFormat(functions, features, internalformat);

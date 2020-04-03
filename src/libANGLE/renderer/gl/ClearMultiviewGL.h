@@ -46,35 +46,40 @@ class ClearMultiviewGL : angle::NonCopyable
     ClearMultiviewGL(ClearMultiviewGL &&rht)                 = delete;
     ClearMultiviewGL &operator=(ClearMultiviewGL &&rht) = delete;
 
-    void clearMultiviewFBO(const gl::FramebufferState &state,
-                           const gl::Rectangle &scissorBase,
-                           ClearCommandType clearCommandType,
-                           GLbitfield mask,
-                           GLenum buffer,
-                           GLint drawbuffer,
-                           const uint8_t *values,
-                           GLfloat depth,
-                           GLint stencil);
-    void initializeResources();
+    angle::Result clearMultiviewFBO(const gl::Context *context,
+                                    const gl::FramebufferState &state,
+                                    const gl::Rectangle &scissorBase,
+                                    ClearCommandType clearCommandType,
+                                    GLbitfield mask,
+                                    GLenum buffer,
+                                    GLint drawbuffer,
+                                    const uint8_t *values,
+                                    GLfloat depth,
+                                    GLint stencil);
+    angle::Result initializeResources(const gl::Context *context);
 
   private:
-    void attachTextures(const gl::FramebufferState &state, int layer);
-    void detachTextures(const gl::FramebufferState &state);
-    void clearLayeredFBO(const gl::FramebufferState &state,
-                         ClearCommandType clearCommandType,
-                         GLbitfield mask,
-                         GLenum buffer,
-                         GLint drawbuffer,
-                         const uint8_t *values,
-                         GLfloat depth,
-                         GLint stencil);
-    void genericClear(ClearCommandType clearCommandType,
-                      GLbitfield mask,
-                      GLenum buffer,
-                      GLint drawbuffer,
-                      const uint8_t *values,
-                      GLfloat depth,
-                      GLint stencil);
+    angle::Result attachTextures(const gl::Context *context,
+                                 const gl::FramebufferState &state,
+                                 int layer);
+    angle::Result detachTextures(const gl::Context *context, const gl::FramebufferState &state);
+    angle::Result clearLayeredFBO(const gl::Context *context,
+                                  const gl::FramebufferState &state,
+                                  ClearCommandType clearCommandType,
+                                  GLbitfield mask,
+                                  GLenum buffer,
+                                  GLint drawbuffer,
+                                  const uint8_t *values,
+                                  GLfloat depth,
+                                  GLint stencil);
+    angle::Result genericClear(const gl::Context *context,
+                               ClearCommandType clearCommandType,
+                               GLbitfield mask,
+                               GLenum buffer,
+                               GLint drawbuffer,
+                               const uint8_t *values,
+                               GLfloat depth,
+                               GLint stencil);
 
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;

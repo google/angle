@@ -116,10 +116,10 @@ angle::Result ImageEGL::setTexture2D(const gl::Context *context,
     StateManagerGL *stateManager   = GetStateManagerGL(context);
 
     // Make sure this texture is bound
-    stateManager->bindTexture(type, texture->getTextureID());
+    ANGLE_TRY(stateManager->bindTexture(context, type, texture->getTextureID()));
 
     // Bind the image to the texture
-    functionsGL->eGLImageTargetTexture2DOES(ToGLenum(type), mImage);
+    ANGLE_GL_TRY(context, functionsGL->eGLImageTargetTexture2DOES(ToGLenum(type), mImage));
     *outInternalFormat = mNativeInternalFormat;
 
     return angle::Result::Continue;
@@ -133,10 +133,12 @@ angle::Result ImageEGL::setRenderbufferStorage(const gl::Context *context,
     StateManagerGL *stateManager   = GetStateManagerGL(context);
 
     // Make sure this renderbuffer is bound
-    stateManager->bindRenderbuffer(GL_RENDERBUFFER, renderbuffer->getRenderbufferID());
+    ANGLE_TRY(stateManager->bindRenderbuffer(context, GL_RENDERBUFFER,
+                                             renderbuffer->getRenderbufferID()));
 
     // Bind the image to the renderbuffer
-    functionsGL->eGLImageTargetRenderbufferStorageOES(GL_RENDERBUFFER, mImage);
+    ANGLE_GL_TRY(context,
+                 functionsGL->eGLImageTargetRenderbufferStorageOES(GL_RENDERBUFFER, mImage));
     *outInternalFormat = mNativeInternalFormat;
 
     return angle::Result::Continue;

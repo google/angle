@@ -216,32 +216,36 @@ StateManagerGL::~StateManagerGL()
     }
 }
 
-void StateManagerGL::deleteProgram(GLuint program)
+angle::Result StateManagerGL::deleteProgram(const gl::Context *context, GLuint program)
 {
     if (program != 0)
     {
         if (mProgram == program)
         {
-            useProgram(0);
+            ANGLE_TRY(useProgram(context, 0));
         }
 
-        mFunctions->deleteProgram(program);
+        ANGLE_GL_TRY(context, mFunctions->deleteProgram(program));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::deleteVertexArray(GLuint vao)
+angle::Result StateManagerGL::deleteVertexArray(const gl::Context *context, GLuint vao)
 {
     if (vao != 0)
     {
         if (mVAO == vao)
         {
-            bindVertexArray(0, &mDefaultVAOState);
+            ANGLE_TRY(bindVertexArray(context, 0, &mDefaultVAOState));
         }
-        mFunctions->deleteVertexArrays(1, &vao);
+        ANGLE_GL_TRY(context, mFunctions->deleteVertexArrays(1, &vao));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::deleteTexture(GLuint texture)
+angle::Result StateManagerGL::deleteTexture(const gl::Context *context, GLuint texture)
 {
     if (texture != 0)
     {
@@ -253,8 +257,8 @@ void StateManagerGL::deleteTexture(GLuint texture)
             {
                 if (textureVector[textureUnitIndex] == texture)
                 {
-                    activeTexture(textureUnitIndex);
-                    bindTexture(type, 0);
+                    ANGLE_TRY(activeTexture(context, textureUnitIndex));
+                    ANGLE_TRY(bindTexture(context, type, 0));
                 }
             }
         }
@@ -263,15 +267,18 @@ void StateManagerGL::deleteTexture(GLuint texture)
         {
             if (mImages[imageUnitIndex].texture == texture)
             {
-                bindImageTexture(imageUnitIndex, 0, 0, false, 0, GL_READ_ONLY, GL_R32UI);
+                ANGLE_TRY(bindImageTexture(context, imageUnitIndex, 0, 0, false, 0, GL_READ_ONLY,
+                                           GL_R32UI));
             }
         }
 
-        mFunctions->deleteTextures(1, &texture);
+        ANGLE_GL_TRY(context, mFunctions->deleteTextures(1, &texture));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::deleteSampler(GLuint sampler)
+angle::Result StateManagerGL::deleteSampler(const gl::Context *context, GLuint sampler)
 {
     if (sampler != 0)
     {
@@ -279,26 +286,28 @@ void StateManagerGL::deleteSampler(GLuint sampler)
         {
             if (mSamplers[unit] == sampler)
             {
-                bindSampler(unit, 0);
+                ANGLE_TRY(bindSampler(context, unit, 0));
             }
         }
 
-        mFunctions->deleteSamplers(1, &sampler);
+        ANGLE_GL_TRY(context, mFunctions->deleteSamplers(1, &sampler));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::deleteBuffer(GLuint buffer)
+angle::Result StateManagerGL::deleteBuffer(const gl::Context *context, GLuint buffer)
 {
     if (buffer == 0)
     {
-        return;
+        return angle::Result::Continue;
     }
 
     for (auto target : angle::AllEnums<gl::BufferBinding>())
     {
         if (mBuffers[target] == buffer)
         {
-            bindBuffer(target, 0);
+            ANGLE_TRY(bindBuffer(context, target, 0));
         }
 
         auto &indexedTarget = mIndexedBuffers[target];
@@ -306,7 +315,7 @@ void StateManagerGL::deleteBuffer(GLuint buffer)
         {
             if (indexedTarget[bindIndex].buffer == buffer)
             {
-                bindBufferBase(target, bindIndex, 0);
+                ANGLE_TRY(bindBufferBase(context, target, bindIndex, 0));
             }
         }
     }
@@ -327,10 +336,12 @@ void StateManagerGL::deleteBuffer(GLuint buffer)
         }
     }
 
-    mFunctions->deleteBuffers(1, &buffer);
+    ANGLE_GL_TRY(context, mFunctions->deleteBuffers(1, &buffer));
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::deleteFramebuffer(GLuint fbo)
+angle::Result StateManagerGL::deleteFramebuffer(const gl::Context *context, GLuint fbo)
 {
     if (fbo != 0)
     {
@@ -342,7 +353,7 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
                 {
                     GLenum enumValue = angle::FramebufferBindingToEnum(
                         static_cast<angle::FramebufferBinding>(binding));
-                    bindFramebuffer(enumValue, 0);
+                    ANGLE_TRY(bindFramebuffer(context, enumValue, 0));
                 }
             }
         }
@@ -352,33 +363,38 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
                    mFramebuffers[angle::FramebufferBindingDraw]);
             if (mFramebuffers[angle::FramebufferBindingRead] == fbo)
             {
-                bindFramebuffer(GL_FRAMEBUFFER, 0);
+                ANGLE_TRY(bindFramebuffer(context, GL_FRAMEBUFFER, 0));
             }
         }
-        mFunctions->deleteFramebuffers(1, &fbo);
+        ANGLE_GL_TRY(context, mFunctions->deleteFramebuffers(1, &fbo));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::deleteRenderbuffer(GLuint rbo)
+angle::Result StateManagerGL::deleteRenderbuffer(const gl::Context *context, GLuint rbo)
 {
     if (rbo != 0)
     {
         if (mRenderbuffer == rbo)
         {
-            bindRenderbuffer(GL_RENDERBUFFER, 0);
+            ANGLE_TRY(bindRenderbuffer(context, GL_RENDERBUFFER, 0));
         }
 
-        mFunctions->deleteRenderbuffers(1, &rbo);
+        ANGLE_GL_TRY(context, mFunctions->deleteRenderbuffers(1, &rbo));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::deleteTransformFeedback(GLuint transformFeedback)
+angle::Result StateManagerGL::deleteTransformFeedback(const gl::Context *context,
+                                                      GLuint transformFeedback)
 {
     if (transformFeedback != 0)
     {
         if (mTransformFeedback == transformFeedback)
         {
-            bindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+            ANGLE_TRY(bindTransformFeedback(context, GL_TRANSFORM_FEEDBACK, 0));
         }
 
         if (mCurrentTransformFeedback != nullptr &&
@@ -387,26 +403,34 @@ void StateManagerGL::deleteTransformFeedback(GLuint transformFeedback)
             mCurrentTransformFeedback = nullptr;
         }
 
-        mFunctions->deleteTransformFeedbacks(1, &transformFeedback);
+        ANGLE_GL_TRY(context, mFunctions->deleteTransformFeedbacks(1, &transformFeedback));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::useProgram(GLuint program)
+angle::Result StateManagerGL::useProgram(const gl::Context *context, GLuint program)
 {
     if (mProgram != program)
     {
-        forceUseProgram(program);
+        ANGLE_TRY(forceUseProgram(context, program));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::forceUseProgram(GLuint program)
+angle::Result StateManagerGL::forceUseProgram(const gl::Context *context, GLuint program)
 {
+    ANGLE_GL_TRY(context, mFunctions->useProgram(program));
     mProgram = program;
-    mFunctions->useProgram(mProgram);
     mLocalDirtyBits.set(gl::State::DIRTY_BIT_PROGRAM_BINDING);
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::bindVertexArray(GLuint vao, VertexArrayStateGL *vaoState)
+angle::Result StateManagerGL::bindVertexArray(const gl::Context *context,
+                                              GLuint vao,
+                                              VertexArrayStateGL *vaoState)
 {
     ASSERT(vaoState);
     if (mVAO != vao)
@@ -417,13 +441,17 @@ void StateManagerGL::bindVertexArray(GLuint vao, VertexArrayStateGL *vaoState)
         mVAOState                                 = vaoState;
         mBuffers[gl::BufferBinding::ElementArray] = vaoState ? vaoState->elementArrayBuffer : 0;
 
-        mFunctions->bindVertexArray(vao);
+        ANGLE_GL_TRY(context, mFunctions->bindVertexArray(vao));
 
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING);
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::bindBuffer(gl::BufferBinding target, GLuint buffer)
+angle::Result StateManagerGL::bindBuffer(const gl::Context *context,
+                                         gl::BufferBinding target,
+                                         GLuint buffer)
 {
     // GL drivers differ in whether the transform feedback bind point is modified when
     // glBindTransformFeedback is called. To avoid these behavior differences we shouldn't try to
@@ -431,12 +459,17 @@ void StateManagerGL::bindBuffer(gl::BufferBinding target, GLuint buffer)
     ASSERT(target != gl::BufferBinding::TransformFeedback);
     if (mBuffers[target] != buffer)
     {
+        ANGLE_GL_TRY(context, mFunctions->bindBuffer(gl::ToGLenum(target), buffer));
         mBuffers[target] = buffer;
-        mFunctions->bindBuffer(gl::ToGLenum(target), buffer);
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::bindBufferBase(gl::BufferBinding target, size_t index, GLuint buffer)
+angle::Result StateManagerGL::bindBufferBase(const gl::Context *context,
+                                             gl::BufferBinding target,
+                                             size_t index,
+                                             GLuint buffer)
 {
     // Transform feedback buffer bindings are tracked in TransformFeedbackGL
     ASSERT(target != gl::BufferBinding::TransformFeedback);
@@ -446,19 +479,23 @@ void StateManagerGL::bindBufferBase(gl::BufferBinding target, size_t index, GLui
     if (binding.buffer != buffer || binding.offset != static_cast<size_t>(-1) ||
         binding.size != static_cast<size_t>(-1))
     {
+        ANGLE_GL_TRY(context, mFunctions->bindBufferBase(gl::ToGLenum(target),
+                                                         static_cast<GLuint>(index), buffer));
         binding.buffer   = buffer;
         binding.offset   = static_cast<size_t>(-1);
         binding.size     = static_cast<size_t>(-1);
         mBuffers[target] = buffer;
-        mFunctions->bindBufferBase(gl::ToGLenum(target), static_cast<GLuint>(index), buffer);
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::bindBufferRange(gl::BufferBinding target,
-                                     size_t index,
-                                     GLuint buffer,
-                                     size_t offset,
-                                     size_t size)
+angle::Result StateManagerGL::bindBufferRange(const gl::Context *context,
+                                              gl::BufferBinding target,
+                                              size_t index,
+                                              GLuint buffer,
+                                              size_t offset,
+                                              size_t size)
 {
     // Transform feedback buffer bindings are tracked in TransformFeedbackGL
     ASSERT(target != gl::BufferBinding::TransformFeedback);
@@ -466,75 +503,94 @@ void StateManagerGL::bindBufferRange(gl::BufferBinding target,
     auto &binding = mIndexedBuffers[target][index];
     if (binding.buffer != buffer || binding.offset != offset || binding.size != size)
     {
+        ANGLE_GL_TRY(context,
+                     mFunctions->bindBufferRange(gl::ToGLenum(target), static_cast<GLuint>(index),
+                                                 buffer, offset, size));
         binding.buffer   = buffer;
         binding.offset   = offset;
         binding.size     = size;
         mBuffers[target] = buffer;
-        mFunctions->bindBufferRange(gl::ToGLenum(target), static_cast<GLuint>(index), buffer,
-                                    offset, size);
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::activeTexture(size_t unit)
+angle::Result StateManagerGL::activeTexture(const gl::Context *context, size_t unit)
 {
     if (mTextureUnitIndex != unit)
     {
+        ANGLE_GL_TRY(context, mFunctions->activeTexture(GL_TEXTURE0 + static_cast<GLenum>(unit)));
         mTextureUnitIndex = unit;
-        mFunctions->activeTexture(GL_TEXTURE0 + static_cast<GLenum>(mTextureUnitIndex));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::bindTexture(gl::TextureType type, GLuint texture)
+angle::Result StateManagerGL::bindTexture(const gl::Context *context,
+                                          gl::TextureType type,
+                                          GLuint texture)
 {
     gl::TextureType nativeType = nativegl::GetNativeTextureType(type);
     if (mTextures[nativeType][mTextureUnitIndex] != texture)
     {
+        ANGLE_GL_TRY(context,
+                     mFunctions->bindTexture(nativegl::GetTextureBindingTarget(type), texture));
         mTextures[nativeType][mTextureUnitIndex] = texture;
-        mFunctions->bindTexture(nativegl::GetTextureBindingTarget(type), texture);
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::invalidateTexture(gl::TextureType type)
+angle::Result StateManagerGL::invalidateTexture(const gl::Context *context, gl::TextureType type)
 {
     // Assume the tracked texture binding is incorrect, query the real bound texture from GL.
     GLint boundTexture = 0;
-    mFunctions->getIntegerv(nativegl::GetTextureBindingQuery(type), &boundTexture);
+    ANGLE_GL_TRY(context,
+                 mFunctions->getIntegerv(nativegl::GetTextureBindingQuery(type), &boundTexture));
     mTextures[type][mTextureUnitIndex] = static_cast<GLuint>(boundTexture);
     mLocalDirtyBits.set(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::bindSampler(size_t unit, GLuint sampler)
+angle::Result StateManagerGL::bindSampler(const gl::Context *context, size_t unit, GLuint sampler)
 {
     if (mSamplers[unit] != sampler)
     {
+        ANGLE_GL_TRY(context, mFunctions->bindSampler(static_cast<GLuint>(unit), sampler));
         mSamplers[unit] = sampler;
-        mFunctions->bindSampler(static_cast<GLuint>(unit), sampler);
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_SAMPLER_BINDINGS);
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::bindImageTexture(size_t unit,
-                                      GLuint texture,
-                                      GLint level,
-                                      GLboolean layered,
-                                      GLint layer,
-                                      GLenum access,
-                                      GLenum format)
+angle::Result StateManagerGL::bindImageTexture(const gl::Context *context,
+                                               size_t unit,
+                                               GLuint texture,
+                                               GLint level,
+                                               GLboolean layered,
+                                               GLint layer,
+                                               GLenum access,
+                                               GLenum format)
 {
     auto &binding = mImages[unit];
     if (binding.texture != texture || binding.level != level || binding.layered != layered ||
         binding.layer != layer || binding.access != access || binding.format != format)
     {
+        ANGLE_GL_TRY(context,
+                     mFunctions->bindImageTexture(angle::base::checked_cast<GLuint>(unit), texture,
+                                                  level, layered, layer, access, format));
         binding.texture = texture;
         binding.level   = level;
         binding.layered = layered;
         binding.layer   = layer;
         binding.access  = access;
         binding.format  = format;
-        mFunctions->bindImageTexture(angle::base::checked_cast<GLuint>(unit), texture, level,
-                                     layered, layer, access, format);
     }
+
+    return angle::Result::Continue;
 }
 
 angle::Result StateManagerGL::setPixelUnpackState(const gl::Context *context,
@@ -599,7 +655,7 @@ angle::Result StateManagerGL::setPixelUnpackBuffer(const gl::Context *context,
     {
         bufferID = GetImplAs<BufferGL>(pixelBuffer)->getBufferID();
     }
-    bindBuffer(gl::BufferBinding::PixelUnpack, bufferID);
+    ANGLE_TRY(bindBuffer(context, gl::BufferBinding::PixelUnpack, bufferID));
 
     return angle::Result::Continue;
 }
@@ -650,12 +706,14 @@ angle::Result StateManagerGL::setPixelPackBuffer(const gl::Context *context,
     {
         bufferID = GetImplAs<BufferGL>(pixelBuffer)->getBufferID();
     }
-    bindBuffer(gl::BufferBinding::PixelPack, bufferID);
+    ANGLE_TRY(bindBuffer(context, gl::BufferBinding::PixelPack, bufferID));
 
     return angle::Result::Continue;
 }
 
-void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
+angle::Result StateManagerGL::bindFramebuffer(const gl::Context *context,
+                                              GLenum type,
+                                              GLuint framebuffer)
 {
     bool framebufferChanged = false;
     switch (type)
@@ -664,9 +722,9 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
             if (mFramebuffers[angle::FramebufferBindingRead] != framebuffer ||
                 mFramebuffers[angle::FramebufferBindingDraw] != framebuffer)
             {
+                ANGLE_GL_TRY(context, mFunctions->bindFramebuffer(GL_FRAMEBUFFER, framebuffer));
                 mFramebuffers[angle::FramebufferBindingRead] = framebuffer;
                 mFramebuffers[angle::FramebufferBindingDraw] = framebuffer;
-                mFunctions->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
                 mLocalDirtyBits.set(gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
@@ -679,8 +737,9 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
             ASSERT(mHasSeparateFramebufferBindings);
             if (mFramebuffers[angle::FramebufferBindingRead] != framebuffer)
             {
+                ANGLE_GL_TRY(context,
+                             mFunctions->bindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer));
                 mFramebuffers[angle::FramebufferBindingRead] = framebuffer;
-                mFunctions->bindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
 
@@ -692,8 +751,9 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
             ASSERT(mHasSeparateFramebufferBindings);
             if (mFramebuffers[angle::FramebufferBindingDraw] != framebuffer)
             {
+                ANGLE_GL_TRY(context,
+                             mFunctions->bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer));
                 mFramebuffers[angle::FramebufferBindingDraw] = framebuffer;
-                mFunctions->bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
 
@@ -708,21 +768,29 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 
     if (framebufferChanged && mFeatures.flushOnFramebufferChange.enabled)
     {
-        mFunctions->flush();
+        ANGLE_GL_TRY(context, mFunctions->flush());
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::bindRenderbuffer(GLenum type, GLuint renderbuffer)
+angle::Result StateManagerGL::bindRenderbuffer(const gl::Context *context,
+                                               GLenum type,
+                                               GLuint renderbuffer)
 {
     ASSERT(type == GL_RENDERBUFFER);
     if (mRenderbuffer != renderbuffer)
     {
+        ANGLE_GL_TRY(context, mFunctions->bindRenderbuffer(type, renderbuffer));
         mRenderbuffer = renderbuffer;
-        mFunctions->bindRenderbuffer(type, mRenderbuffer);
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::bindTransformFeedback(GLenum type, GLuint transformFeedback)
+angle::Result StateManagerGL::bindTransformFeedback(const gl::Context *context,
+                                                    GLenum type,
+                                                    GLuint transformFeedback)
 {
     ASSERT(type == GL_TRANSFORM_FEEDBACK);
     if (mTransformFeedback != transformFeedback)
@@ -733,14 +801,16 @@ void StateManagerGL::bindTransformFeedback(GLenum type, GLuint transformFeedback
         if (mCurrentTransformFeedback != nullptr &&
             mCurrentTransformFeedback->getTransformFeedbackID() != transformFeedback)
         {
-            mCurrentTransformFeedback->syncPausedState(true);
+            ANGLE_TRY(mCurrentTransformFeedback->syncPausedState(context, true));
             mCurrentTransformFeedback = nullptr;
         }
 
+        ANGLE_GL_TRY(context, mFunctions->bindTransformFeedback(type, transformFeedback));
         mTransformFeedback = transformFeedback;
-        mFunctions->bindTransformFeedback(type, mTransformFeedback);
         onTransformFeedbackStateChange();
     }
+
+    return angle::Result::Continue;
 }
 
 void StateManagerGL::onTransformFeedbackStateChange()
@@ -748,53 +818,70 @@ void StateManagerGL::onTransformFeedbackStateChange()
     mLocalDirtyBits.set(gl::State::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING);
 }
 
-void StateManagerGL::beginQuery(gl::QueryType type, QueryGL *queryObject, GLuint queryId)
+angle::Result StateManagerGL::beginQuery(const gl::Context *context,
+                                         gl::QueryType type,
+                                         QueryGL *queryObject,
+                                         GLuint queryId)
 {
     // Make sure this is a valid query type and there is no current active query of this type
     ASSERT(mQueries[type] == nullptr);
     ASSERT(queryId != 0);
 
+    ANGLE_GL_TRY(context, mFunctions->beginQuery(ToGLenum(type), queryId));
     mQueries[type] = queryObject;
-    mFunctions->beginQuery(ToGLenum(type), queryId);
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::endQuery(gl::QueryType type, QueryGL *queryObject, GLuint queryId)
+angle::Result StateManagerGL::endQuery(const gl::Context *context,
+                                       gl::QueryType type,
+                                       QueryGL *queryObject,
+                                       GLuint queryId)
 {
     ASSERT(queryObject != nullptr);
     ASSERT(mQueries[type] == queryObject);
+
+    ANGLE_GL_TRY(context, mFunctions->endQuery(ToGLenum(type)));
     mQueries[type] = nullptr;
-    mFunctions->endQuery(ToGLenum(type));
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::updateDrawIndirectBufferBinding(const gl::Context *context)
+angle::Result StateManagerGL::updateDrawIndirectBufferBinding(const gl::Context *context)
 {
     gl::Buffer *drawIndirectBuffer =
         context->getState().getTargetBuffer(gl::BufferBinding::DrawIndirect);
     if (drawIndirectBuffer != nullptr)
     {
         const BufferGL *bufferGL = GetImplAs<BufferGL>(drawIndirectBuffer);
-        bindBuffer(gl::BufferBinding::DrawIndirect, bufferGL->getBufferID());
+        ANGLE_TRY(bindBuffer(context, gl::BufferBinding::DrawIndirect, bufferGL->getBufferID()));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::updateDispatchIndirectBufferBinding(const gl::Context *context)
+angle::Result StateManagerGL::updateDispatchIndirectBufferBinding(const gl::Context *context)
 {
     gl::Buffer *dispatchIndirectBuffer =
         context->getState().getTargetBuffer(gl::BufferBinding::DispatchIndirect);
     if (dispatchIndirectBuffer != nullptr)
     {
         const BufferGL *bufferGL = GetImplAs<BufferGL>(dispatchIndirectBuffer);
-        bindBuffer(gl::BufferBinding::DispatchIndirect, bufferGL->getBufferID());
+        ANGLE_TRY(
+            bindBuffer(context, gl::BufferBinding::DispatchIndirect, bufferGL->getBufferID()));
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::pauseTransformFeedback()
+angle::Result StateManagerGL::pauseTransformFeedback(const gl::Context *context)
 {
     if (mCurrentTransformFeedback != nullptr)
     {
-        mCurrentTransformFeedback->syncPausedState(true);
+        ANGLE_TRY(mCurrentTransformFeedback->syncPausedState(context, true));
         onTransformFeedbackStateChange();
     }
+    return angle::Result::Continue;
 }
 
 angle::Result StateManagerGL::pauseAllQueries(const gl::Context *context)
@@ -903,14 +990,16 @@ angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
     return angle::Result::Continue;
 }
 
-void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
+angle::Result StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
 {
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
 
     // It is possible there is no active program during a path operation.
     if (!executable)
-        return;
+    {
+        return angle::Result::Continue;
+    }
 
     const gl::ActiveTexturesCache &textures        = glState.getActiveTexturesCache();
     const gl::ActiveTextureMask &activeTextures    = executable->getActiveSamplersMask();
@@ -928,18 +1017,20 @@ void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
             ASSERT(!texture->hasAnyDirtyBit());
             ASSERT(!textureGL->hasAnyDirtyBit());
 
-            activeTexture(textureUnitIndex);
-            bindTexture(textureType, textureGL->getTextureID());
+            ANGLE_TRY(activeTexture(context, textureUnitIndex));
+            ANGLE_TRY(bindTexture(context, textureType, textureGL->getTextureID()));
         }
         else
         {
-            activeTexture(textureUnitIndex);
-            bindTexture(textureType, 0);
+            ANGLE_TRY(activeTexture(context, textureUnitIndex));
+            ANGLE_TRY(bindTexture(context, textureType, 0));
         }
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *context)
+angle::Result StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *context)
 {
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
@@ -956,18 +1047,22 @@ void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *conte
 
             if (shaderStorageBuffer.getSize() == 0)
             {
-                bindBufferBase(gl::BufferBinding::ShaderStorage, binding, bufferGL->getBufferID());
+                ANGLE_TRY(bindBufferBase(context, gl::BufferBinding::ShaderStorage, binding,
+                                         bufferGL->getBufferID()));
             }
             else
             {
-                bindBufferRange(gl::BufferBinding::ShaderStorage, binding, bufferGL->getBufferID(),
-                                shaderStorageBuffer.getOffset(), shaderStorageBuffer.getSize());
+                ANGLE_TRY(bindBufferRange(context, gl::BufferBinding::ShaderStorage, binding,
+                                          bufferGL->getBufferID(), shaderStorageBuffer.getOffset(),
+                                          shaderStorageBuffer.getSize()));
             }
         }
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *context)
+angle::Result StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *context)
 {
     // Sync the current program state
     const gl::State &glState   = context->getState();
@@ -985,18 +1080,22 @@ void StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *conte
 
             if (uniformBuffer.getSize() == 0)
             {
-                bindBufferBase(gl::BufferBinding::Uniform, binding, bufferGL->getBufferID());
+                ANGLE_TRY(bindBufferBase(context, gl::BufferBinding::Uniform, binding,
+                                         bufferGL->getBufferID()));
             }
             else
             {
-                bindBufferRange(gl::BufferBinding::Uniform, binding, bufferGL->getBufferID(),
-                                uniformBuffer.getOffset(), uniformBuffer.getSize());
+                ANGLE_TRY(bindBufferRange(context, gl::BufferBinding::Uniform, binding,
+                                          bufferGL->getBufferID(), uniformBuffer.getOffset(),
+                                          uniformBuffer.getSize()));
             }
         }
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context *context)
+angle::Result StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context *context)
 {
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
@@ -1012,18 +1111,22 @@ void StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context 
 
             if (buffer.getSize() == 0)
             {
-                bindBufferBase(gl::BufferBinding::AtomicCounter, binding, bufferGL->getBufferID());
+                ANGLE_TRY(bindBufferBase(context, gl::BufferBinding::AtomicCounter, binding,
+                                         bufferGL->getBufferID()));
             }
             else
             {
-                bindBufferRange(gl::BufferBinding::AtomicCounter, binding, bufferGL->getBufferID(),
-                                buffer.getOffset(), buffer.getSize());
+                ANGLE_TRY(bindBufferRange(context, gl::BufferBinding::AtomicCounter, binding,
+                                          bufferGL->getBufferID(), buffer.getOffset(),
+                                          buffer.getSize()));
             }
         }
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
+angle::Result StateManagerGL::updateProgramImageBindings(const gl::Context *context)
 {
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
@@ -1031,7 +1134,9 @@ void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
 
     // It is possible there is no active program during a path operation.
     if (!executable || !program)
-        return;
+    {
+        return angle::Result::Continue;
+    }
 
     ASSERT(context->getClientVersion() >= gl::ES_3_1 || program->getImageBindings().empty());
     for (size_t imageUnitIndex : executable->getActiveImagesMask())
@@ -1040,16 +1145,19 @@ void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
         const TextureGL *textureGL     = SafeGetImplAs<TextureGL>(imageUnit.texture.get());
         if (textureGL)
         {
-            bindImageTexture(imageUnitIndex, textureGL->getTextureID(), imageUnit.level,
-                             imageUnit.layered, imageUnit.layer, imageUnit.access,
-                             imageUnit.format);
+            ANGLE_TRY(bindImageTexture(context, imageUnitIndex, textureGL->getTextureID(),
+                                       imageUnit.level, imageUnit.layered, imageUnit.layer,
+                                       imageUnit.access, imageUnit.format));
         }
         else
         {
-            bindImageTexture(imageUnitIndex, 0, imageUnit.level, imageUnit.layered, imageUnit.layer,
-                             imageUnit.access, imageUnit.format);
+            ANGLE_TRY(bindImageTexture(context, imageUnitIndex, 0, imageUnit.level,
+                                       imageUnit.layered, imageUnit.layer, imageUnit.access,
+                                       imageUnit.format));
         }
     }
+
+    return angle::Result::Continue;
 }
 
 void StateManagerGL::setAttributeCurrentData(size_t index,
@@ -1980,9 +2088,9 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                     continue;
 
                 FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
-                bindFramebuffer(
-                    mHasSeparateFramebufferBindings ? GL_READ_FRAMEBUFFER : GL_FRAMEBUFFER,
-                    framebufferGL->getFramebufferID());
+                ANGLE_TRY(bindFramebuffer(
+                    context, mHasSeparateFramebufferBindings ? GL_READ_FRAMEBUFFER : GL_FRAMEBUFFER,
+                    framebufferGL->getFramebufferID()));
                 break;
             }
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
@@ -1994,9 +2102,9 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                     continue;
 
                 FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
-                bindFramebuffer(
-                    mHasSeparateFramebufferBindings ? GL_DRAW_FRAMEBUFFER : GL_FRAMEBUFFER,
-                    framebufferGL->getFramebufferID());
+                ANGLE_TRY(bindFramebuffer(
+                    context, mHasSeparateFramebufferBindings ? GL_DRAW_FRAMEBUFFER : GL_FRAMEBUFFER,
+                    framebufferGL->getFramebufferID()));
 
                 const gl::Program *program = state.getProgram();
                 if (program)
@@ -2018,7 +2126,8 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
                 VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(state.getVertexArray());
-                bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getNativeState());
+                ANGLE_TRY(
+                    bindVertexArray(context, vaoGL->getVertexArrayID(), vaoGL->getNativeState()));
 
                 ANGLE_TRY(propagateProgramToVAO(context, state.getProgram(),
                                                 GetImplAs<VertexArrayGL>(state.getVertexArray())));
@@ -2051,17 +2160,17 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 break;
             }
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
-                updateDrawIndirectBufferBinding(context);
+                ANGLE_TRY(updateDrawIndirectBufferBinding(context));
                 break;
             case gl::State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING:
-                updateDispatchIndirectBufferBinding(context);
+                ANGLE_TRY(updateDispatchIndirectBufferBinding(context));
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
             {
                 gl::Program *program = state.getProgram();
                 if (program != nullptr)
                 {
-                    useProgram(GetImplAs<ProgramGL>(program)->getProgramID());
+                    ANGLE_TRY(useProgram(context, GetImplAs<ProgramGL>(program)->getProgramID()));
                 }
                 break;
             }
@@ -2110,25 +2219,25 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 break;
             }
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
-                updateProgramTextureBindings(context);
+                ANGLE_TRY(updateProgramTextureBindings(context));
                 break;
             case gl::State::DIRTY_BIT_SAMPLER_BINDINGS:
-                syncSamplersState(context);
+                ANGLE_TRY(syncSamplersState(context));
                 break;
             case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
-                updateProgramImageBindings(context);
+                ANGLE_TRY(updateProgramImageBindings(context));
                 break;
             case gl::State::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING:
-                syncTransformFeedbackState(context);
+                ANGLE_TRY(syncTransformFeedbackState(context));
                 break;
             case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
-                updateProgramStorageBufferBindings(context);
+                ANGLE_TRY(updateProgramStorageBufferBindings(context));
                 break;
             case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
-                updateProgramUniformBufferBindings(context);
+                ANGLE_TRY(updateProgramUniformBufferBindings(context));
                 break;
             case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
-                updateProgramAtomicCounterBufferBindings(context);
+                ANGLE_TRY(updateProgramAtomicCounterBufferBindings(context));
                 break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
                 setMultisamplingStateEnabled(state.isMultisamplingEnabled());
@@ -2469,7 +2578,7 @@ void StateManagerGL::updateMultiviewBaseViewLayerIndexUniformImpl(
     }
 }
 
-void StateManagerGL::syncSamplersState(const gl::Context *context)
+angle::Result StateManagerGL::syncSamplersState(const gl::Context *context)
 {
     const gl::SamplerBindingVector &samplers = context->getState().getSamplers();
 
@@ -2480,16 +2589,18 @@ void StateManagerGL::syncSamplersState(const gl::Context *context)
         if (sampler != nullptr)
         {
             SamplerGL *samplerGL = GetImplAs<SamplerGL>(sampler);
-            bindSampler(samplerIndex, samplerGL->getSamplerID());
+            ANGLE_TRY(bindSampler(context, samplerIndex, samplerGL->getSamplerID()));
         }
         else
         {
-            bindSampler(samplerIndex, 0);
+            ANGLE_TRY(bindSampler(context, samplerIndex, 0));
         }
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::syncTransformFeedbackState(const gl::Context *context)
+angle::Result StateManagerGL::syncTransformFeedbackState(const gl::Context *context)
 {
     // Set the current transform feedback state
     gl::TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
@@ -2497,17 +2608,20 @@ void StateManagerGL::syncTransformFeedbackState(const gl::Context *context)
     {
         TransformFeedbackGL *transformFeedbackGL =
             GetImplAs<TransformFeedbackGL>(transformFeedback);
-        bindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedbackGL->getTransformFeedbackID());
-        transformFeedbackGL->syncActiveState(context, transformFeedback->isActive(),
-                                             transformFeedback->getPrimitiveMode());
-        transformFeedbackGL->syncPausedState(transformFeedback->isPaused());
+        ANGLE_TRY(bindTransformFeedback(context, GL_TRANSFORM_FEEDBACK,
+                                        transformFeedbackGL->getTransformFeedbackID()));
+        ANGLE_TRY(transformFeedbackGL->syncActiveState(context, transformFeedback->isActive(),
+                                                       transformFeedback->getPrimitiveMode()));
+        ANGLE_TRY(transformFeedbackGL->syncPausedState(context, transformFeedback->isPaused()));
         mCurrentTransformFeedback = transformFeedbackGL;
     }
     else
     {
-        bindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+        ANGLE_TRY(bindTransformFeedback(context, GL_TRANSFORM_FEEDBACK, 0));
         mCurrentTransformFeedback = nullptr;
     }
+
+    return angle::Result::Continue;
 }
 
 GLuint StateManagerGL::getDefaultVAO() const
@@ -2617,8 +2731,9 @@ void StateManagerGL::get(GLenum name, gl::ColorF *color)
     *color = gl::ColorF(v[0], v[1], v[2], v[3]);
 }
 
-void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
-                                           ExternalContextState *state)
+angle::Result StateManagerGL::syncFromNativeContext(const gl::Context *context,
+                                                    const gl::Extensions &extensions,
+                                                    ExternalContextState *state)
 {
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 
@@ -2794,13 +2909,15 @@ void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
     syncStencilFromNativeContext(extensions, state);
     syncVertexArraysFromNativeContext(extensions, state);
     syncBufferBindingsFromNativeContext(extensions, state);
-    syncTextureUnitsFromNativeContext(extensions, state);
+    ANGLE_TRY(syncTextureUnitsFromNativeContext(context, extensions, state));
 
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::restoreNativeContext(const gl::Extensions &extensions,
-                                          const ExternalContextState *state)
+angle::Result StateManagerGL::restoreNativeContext(const gl::Context *context,
+                                                   const gl::Extensions &extensions,
+                                                   const ExternalContextState *state)
 {
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 
@@ -2817,7 +2934,7 @@ void StateManagerGL::restoreNativeContext(const gl::Extensions &extensions,
     setColorMask(state->colorMask[0], state->colorMask[1], state->colorMask[2],
                  state->colorMask[3]);
 
-    forceUseProgram(state->currentProgram);
+    ANGLE_TRY(forceUseProgram(context, state->currentProgram));
 
     setClearColor(state->colorClear);
 
@@ -2846,17 +2963,18 @@ void StateManagerGL::restoreNativeContext(const gl::Extensions &extensions,
         setMultisamplingStateEnabled(state->multisampleEnabled);
 
     restoreBlendNativeContext(extensions, state);
-    restoreFramebufferNativeContext(extensions, state);
+    ANGLE_TRY(restoreFramebufferNativeContext(context, extensions, state));
     restorePixelPackUnpackNativeContext(extensions, state);
     restoreStencilNativeContext(extensions, state);
-    restoreVertexArraysNativeContext(extensions, state);
-    restoreBufferBindingsNativeContext(extensions, state);
-    restoreTextureUnitsNativeContext(extensions, state);
+    ANGLE_TRY(restoreVertexArraysNativeContext(context, extensions, state));
+    ANGLE_TRY(restoreBufferBindingsNativeContext(context, extensions, state));
+    ANGLE_TRY(restoreTextureUnitsNativeContext(context, extensions, state));
 
     // if (mFunctions->coverageModulationNV) ?
     setCoverageModulation(GL_NONE);
 
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
+    return angle::Result::Continue;
 }
 
 void StateManagerGL::syncBlendFromNativeContext(const gl::Extensions &extensions,
@@ -2940,10 +3058,11 @@ void StateManagerGL::syncFramebufferFromNativeContext(const gl::Extensions &exte
     }
 }
 
-void StateManagerGL::restoreFramebufferNativeContext(const gl::Extensions &extensions,
-                                                     const ExternalContextState *state)
+angle::Result StateManagerGL::restoreFramebufferNativeContext(const gl::Context *context,
+                                                              const gl::Extensions &extensions,
+                                                              const ExternalContextState *state)
 {
-    bindFramebuffer(GL_FRAMEBUFFER, state->framebufferBinding);
+    return bindFramebuffer(context, GL_FRAMEBUFFER, state->framebufferBinding);
 }
 
 void StateManagerGL::syncPixelPackUnpackFromNativeContext(const gl::Extensions &extensions,
@@ -3102,22 +3221,27 @@ void StateManagerGL::syncBufferBindingsFromNativeContext(const gl::Extensions &e
     mBuffers[gl::BufferBinding::ElementArray] = state->elementArrayBufferBinding;
 }
 
-void StateManagerGL::restoreBufferBindingsNativeContext(const gl::Extensions &extensions,
-                                                        const ExternalContextState *state)
+angle::Result StateManagerGL::restoreBufferBindingsNativeContext(const gl::Context *context,
+                                                                 const gl::Extensions &extensions,
+                                                                 const ExternalContextState *state)
 {
-    bindBuffer(gl::BufferBinding::Array, state->vertexArrayBufferBinding);
-    bindBuffer(gl::BufferBinding::ElementArray, state->elementArrayBufferBinding);
+    ANGLE_TRY(bindBuffer(context, gl::BufferBinding::Array, state->vertexArrayBufferBinding));
+    ANGLE_TRY(
+        bindBuffer(context, gl::BufferBinding::ElementArray, state->elementArrayBufferBinding));
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::syncTextureUnitsFromNativeContext(const gl::Extensions &extensions,
-                                                       ExternalContextState *state)
+angle::Result StateManagerGL::syncTextureUnitsFromNativeContext(const gl::Context *context,
+                                                                const gl::Extensions &extensions,
+                                                                ExternalContextState *state)
 {
     get(GL_ACTIVE_TEXTURE, &state->activeTexture);
 
     for (size_t i = 0; i < state->textureBindings.size(); ++i)
     {
         auto &bindings = state->textureBindings[i];
-        activeTexture(i);
+        ANGLE_TRY(activeTexture(context, i));
         get(GL_TEXTURE_BINDING_2D, &bindings.texture2d);
         get(GL_TEXTURE_BINDING_CUBE_MAP, &bindings.textureCubeMap);
         get(GL_TEXTURE_BINDING_EXTERNAL_OES, &bindings.textureExternalOES);
@@ -3133,21 +3257,26 @@ void StateManagerGL::syncTextureUnitsFromNativeContext(const gl::Extensions &ext
             mLocalDirtyBits.set(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
         }
     }
+
+    return angle::Result::Continue;
 }
 
-void StateManagerGL::restoreTextureUnitsNativeContext(const gl::Extensions &extensions,
-                                                      const ExternalContextState *state)
+angle::Result StateManagerGL::restoreTextureUnitsNativeContext(const gl::Context *context,
+                                                               const gl::Extensions &extensions,
+                                                               const ExternalContextState *state)
 {
     for (size_t i = 0; i < state->textureBindings.size(); ++i)
     {
         const auto &bindings = state->textureBindings[i];
-        activeTexture(i);
-        bindTexture(gl::TextureType::_2D, bindings.texture2d);
-        bindTexture(gl::TextureType::CubeMap, bindings.textureCubeMap);
-        bindTexture(gl::TextureType::External, bindings.textureExternalOES);
-        bindSampler(i, 0);
+        ANGLE_TRY(activeTexture(context, i));
+        ANGLE_TRY(bindTexture(context, gl::TextureType::_2D, bindings.texture2d));
+        ANGLE_TRY(bindTexture(context, gl::TextureType::CubeMap, bindings.textureCubeMap));
+        ANGLE_TRY(bindTexture(context, gl::TextureType::External, bindings.textureExternalOES));
+        ANGLE_TRY(bindSampler(context, i, 0));
     }
-    activeTexture(state->activeTexture - GL_TEXTURE0);
+    ANGLE_TRY(activeTexture(context, state->activeTexture - GL_TEXTURE0));
+
+    return angle::Result::Continue;
 }
 
 void StateManagerGL::syncVertexArraysFromNativeContext(const gl::Extensions &extensions,
@@ -3162,10 +3291,11 @@ void StateManagerGL::syncVertexArraysFromNativeContext(const gl::Extensions &ext
     }
 }
 
-void StateManagerGL::restoreVertexArraysNativeContext(const gl::Extensions &extensions,
-                                                      const ExternalContextState *state)
+angle::Result StateManagerGL::restoreVertexArraysNativeContext(const gl::Context *context,
+                                                               const gl::Extensions &extensions,
+                                                               const ExternalContextState *state)
 {
-    bindVertexArray(state->vertexArrayBinding, 0);
+    return bindVertexArray(context, state->vertexArrayBinding, nullptr);
 }
 
 void StateManagerGL::setDefaultVAOStateDirty()
