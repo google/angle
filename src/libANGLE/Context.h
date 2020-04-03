@@ -599,6 +599,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     void onPostSwap() const;
 
+    Program *getActiveLinkedProgram() const;
+
   private:
     void initialize();
 

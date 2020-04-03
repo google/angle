@@ -6455,15 +6455,21 @@ void Context::patchParameteri(GLenum pname, GLint value)
     UNIMPLEMENTED();
 }
 
+Program *Context::getActiveLinkedProgram() const
+{
+    Program *program = mState.getLinkedProgram(this);
+    return program;
+}
+
 void Context::uniform1f(UniformLocation location, GLfloat x)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform1fv(location, 1, &x);
 }
 
 void Context::uniform1fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform1fv(location, count, v);
 }
 
@@ -6483,89 +6489,91 @@ void Context::onSamplerUniformChange(size_t textureUnitIndex)
 
 void Context::uniform1i(UniformLocation location, GLint x)
 {
-    setUniform1iImpl(mState.getProgram(), location, 1, &x);
+    Program *program = getActiveLinkedProgram();
+    setUniform1iImpl(program, location, 1, &x);
 }
 
 void Context::uniform1iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    setUniform1iImpl(mState.getProgram(), location, count, v);
+    Program *program = getActiveLinkedProgram();
+    setUniform1iImpl(program, location, count, v);
 }
 
 void Context::uniform2f(UniformLocation location, GLfloat x, GLfloat y)
 {
     GLfloat xy[2]    = {x, y};
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform2fv(location, 1, xy);
 }
 
 void Context::uniform2fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform2fv(location, count, v);
 }
 
 void Context::uniform2i(UniformLocation location, GLint x, GLint y)
 {
     GLint xy[2]      = {x, y};
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform2iv(location, 1, xy);
 }
 
 void Context::uniform2iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform2iv(location, count, v);
 }
 
 void Context::uniform3f(UniformLocation location, GLfloat x, GLfloat y, GLfloat z)
 {
     GLfloat xyz[3]   = {x, y, z};
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform3fv(location, 1, xyz);
 }
 
 void Context::uniform3fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform3fv(location, count, v);
 }
 
 void Context::uniform3i(UniformLocation location, GLint x, GLint y, GLint z)
 {
     GLint xyz[3]     = {x, y, z};
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform3iv(location, 1, xyz);
 }
 
 void Context::uniform3iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform3iv(location, count, v);
 }
 
 void Context::uniform4f(UniformLocation location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
     GLfloat xyzw[4]  = {x, y, z, w};
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform4fv(location, 1, xyzw);
 }
 
 void Context::uniform4fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform4fv(location, count, v);
 }
 
 void Context::uniform4i(UniformLocation location, GLint x, GLint y, GLint z, GLint w)
 {
     GLint xyzw[4]    = {x, y, z, w};
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform4iv(location, 1, xyzw);
 }
 
 void Context::uniform4iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform4iv(location, count, v);
 }
 
@@ -6574,7 +6582,7 @@ void Context::uniformMatrix2fv(UniformLocation location,
                                GLboolean transpose,
                                const GLfloat *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniformMatrix2fv(location, count, transpose, value);
 }
 
@@ -6583,7 +6591,7 @@ void Context::uniformMatrix3fv(UniformLocation location,
                                GLboolean transpose,
                                const GLfloat *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniformMatrix3fv(location, count, transpose, value);
 }
 
@@ -6592,7 +6600,7 @@ void Context::uniformMatrix4fv(UniformLocation location,
                                GLboolean transpose,
                                const GLfloat *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniformMatrix4fv(location, count, transpose, value);
 }
 
@@ -6634,51 +6642,51 @@ void Context::programBinary(ShaderProgramID program,
 
 void Context::uniform1ui(UniformLocation location, GLuint v0)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform1uiv(location, 1, &v0);
 }
 
 void Context::uniform2ui(UniformLocation location, GLuint v0, GLuint v1)
 {
-    Program *program  = mState.getProgram();
+    Program *program  = getActiveLinkedProgram();
     const GLuint xy[] = {v0, v1};
     program->setUniform2uiv(location, 1, xy);
 }
 
 void Context::uniform3ui(UniformLocation location, GLuint v0, GLuint v1, GLuint v2)
 {
-    Program *program   = mState.getProgram();
+    Program *program   = getActiveLinkedProgram();
     const GLuint xyz[] = {v0, v1, v2};
     program->setUniform3uiv(location, 1, xyz);
 }
 
 void Context::uniform4ui(UniformLocation location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
-    Program *program    = mState.getProgram();
+    Program *program    = getActiveLinkedProgram();
     const GLuint xyzw[] = {v0, v1, v2, v3};
     program->setUniform4uiv(location, 1, xyzw);
 }
 
 void Context::uniform1uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform1uiv(location, count, value);
 }
 void Context::uniform2uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform2uiv(location, count, value);
 }
 
 void Context::uniform3uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform3uiv(location, count, value);
 }
 
 void Context::uniform4uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniform4uiv(location, count, value);
 }
 
@@ -6725,7 +6733,7 @@ void Context::uniformMatrix2x3fv(UniformLocation location,
                                  GLboolean transpose,
                                  const GLfloat *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniformMatrix2x3fv(location, count, transpose, value);
 }
 
@@ -6734,7 +6742,7 @@ void Context::uniformMatrix3x2fv(UniformLocation location,
                                  GLboolean transpose,
                                  const GLfloat *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniformMatrix3x2fv(location, count, transpose, value);
 }
 
@@ -6743,7 +6751,7 @@ void Context::uniformMatrix2x4fv(UniformLocation location,
                                  GLboolean transpose,
                                  const GLfloat *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniformMatrix2x4fv(location, count, transpose, value);
 }
 
@@ -6752,7 +6760,7 @@ void Context::uniformMatrix4x2fv(UniformLocation location,
                                  GLboolean transpose,
                                  const GLfloat *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniformMatrix4x2fv(location, count, transpose, value);
 }
 
@@ -6761,7 +6769,7 @@ void Context::uniformMatrix3x4fv(UniformLocation location,
                                  GLboolean transpose,
                                  const GLfloat *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniformMatrix3x4fv(location, count, transpose, value);
 }
 
@@ -6770,7 +6778,7 @@ void Context::uniformMatrix4x3fv(UniformLocation location,
                                  GLboolean transpose,
                                  const GLfloat *value)
 {
-    Program *program = mState.getProgram();
+    Program *program = getActiveLinkedProgram();
     program->setUniformMatrix4x3fv(location, count, transpose, value);
 }
 

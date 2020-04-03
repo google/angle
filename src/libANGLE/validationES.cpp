@@ -425,7 +425,7 @@ bool ValidateTextureMaxAnisotropyValue(const Context *context, GLfloat paramValu
 
 bool ValidateFragmentShaderColorBufferMaskMatch(const Context *context)
 {
-    const Program *program         = context->getState().getLinkedProgram(context);
+    const Program *program         = context->getActiveLinkedProgram();
     const Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
 
     auto drawBufferMask     = framebuffer->getDrawBufferMask().to_ulong();
@@ -436,7 +436,7 @@ bool ValidateFragmentShaderColorBufferMaskMatch(const Context *context)
 
 bool ValidateFragmentShaderColorBufferTypeMatch(const Context *context)
 {
-    const Program *program         = context->getState().getLinkedProgram(context);
+    const Program *program         = context->getActiveLinkedProgram();
     const Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
 
     return ValidateComponentTypeMasks(program->getDrawBufferTypeMask().to_ulong(),
@@ -448,7 +448,7 @@ bool ValidateFragmentShaderColorBufferTypeMatch(const Context *context)
 bool ValidateVertexShaderAttributeTypeMatch(const Context *context)
 {
     const auto &glState    = context->getState();
-    const Program *program = context->getState().getLinkedProgram(context);
+    const Program *program = context->getActiveLinkedProgram();
     const VertexArray *vao = context->getState().getVertexArray();
 
     unsigned long stateCurrentValuesTypeBits = glState.getCurrentValuesTypeMask().to_ulong();
@@ -2268,7 +2268,7 @@ bool ValidateUniform(const Context *context,
                      GLsizei count)
 {
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = context->getState().getLinkedProgram(context);
+    Program *programObject       = context->getActiveLinkedProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformValue(context, valueType, uniform->type);
 }
@@ -2279,7 +2279,7 @@ bool ValidateUniform1iv(const Context *context,
                         const GLint *value)
 {
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = context->getState().getLinkedProgram(context);
+    Program *programObject       = context->getActiveLinkedProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniform1ivValue(context, uniform->type, count, value);
 }
@@ -2297,7 +2297,7 @@ bool ValidateUniformMatrix(const Context *context,
     }
 
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = context->getState().getLinkedProgram(context);
+    Program *programObject       = context->getActiveLinkedProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformMatrixValue(context, valueType, uniform->type);
 }
@@ -2976,7 +2976,7 @@ void RecordDrawModeError(const Context *context, PrimitiveMode mode)
     // If we are running GLES1, there is no current program.
     if (context->getClientVersion() >= Version(2, 0))
     {
-        Program *program = state.getLinkedProgram(context);
+        Program *program = context->getActiveLinkedProgram();
         ASSERT(program);
 
         // Do geometry shader specific validations
