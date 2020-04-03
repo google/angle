@@ -1910,9 +1910,9 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
             // Texture will signal dirty storage to invalidate its own cache and the
             // attached framebuffer's cache.
             signalDirtyStorage(InitState::Initialized);
-            return;
+            break;
+        case angle::SubjectMessage::DirtyBitsFlagged:
         case angle::SubjectMessage::SubjectChanged:
-            mDirtyBits.set(DIRTY_BIT_IMPLEMENTATION);
             signalDirtyState(DIRTY_BIT_IMPLEMENTATION);
 
             // Notify siblings that we are dirty.
@@ -1920,9 +1920,10 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
             {
                 notifySiblings(message);
             }
-            return;
+            break;
         default:
-            return;
+            UNREACHABLE();
+            break;
     }
 }
 
