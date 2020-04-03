@@ -950,6 +950,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_semaphore"] = enableableExtension(&Extensions::semaphore);
         map["GL_EXT_semaphore_fd"] = enableableExtension(&Extensions::semaphoreFd);
         map["GL_NV_EGL_stream_consumer_external"] = enableableExtension(&Extensions::eglStreamConsumerExternalNV);
+        map["GL_NV_shader_noperspective_interpolation"] = enableableExtension(&Extensions::noperspectiveInterpolationNV);
         map["GL_ANGLE_semaphore_fuchsia"] = enableableExtension(&Extensions::semaphoreFuchsiaANGLE);
         map["GL_EXT_unpack_subimage"] = enableableExtension(&Extensions::unpackSubimage);
         map["GL_NV_pack_subimage"] = enableableExtension(&Extensions::packSubimage);

@@ -530,6 +530,7 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         case EvqVertexIn:
         case EvqGeometryIn:
         case EvqFlatIn:
+        case EvqNoPerspectiveIn:
         case EvqSmoothIn:
         case EvqCentroidIn:
             message = "can't modify an input";

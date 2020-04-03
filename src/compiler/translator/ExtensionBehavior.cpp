@@ -25,6 +25,7 @@
     OP(EXT_shader_texture_lod)                      \
     OP(EXT_YUV_target)                              \
     OP(EXT_shader_non_constant_global_initializers) \
+    OP(NV_shader_noperspective_interpolation)       \
     OP(NV_EGL_stream_consumer_external)             \
     OP(NV_shader_framebuffer_fetch)                 \
     OP(OES_EGL_image_external)                      \

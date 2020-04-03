@@ -970,14 +970,17 @@ enum TQualifier
     EvqLastFragData,
 
     // GLSL ES 3.0 vertex output and fragment input
-    EvqSmooth,    // Incomplete qualifier, smooth is the default
-    EvqFlat,      // Incomplete qualifier
-    EvqCentroid,  // Incomplete qualifier
+    EvqSmooth,         // Incomplete qualifier, smooth is the default
+    EvqFlat,           // Incomplete qualifier
+    EvqNoPerspective,  // Incomplete qualifier
+    EvqCentroid,       // Incomplete qualifier
     EvqSmoothOut,
     EvqFlatOut,
+    EvqNoPerspectiveOut,
     EvqCentroidOut,  // Implies smooth
     EvqSmoothIn,
     EvqFlatIn,
+    EvqNoPerspectiveIn,
     EvqCentroidIn,  // Implies smooth
 
     // GLSL ES 3.1 compute shader special variables
@@ -1034,6 +1037,7 @@ inline bool IsShaderIn(TQualifier qualifier)
         case EvqVaryingIn:
         case EvqSmoothIn:
         case EvqFlatIn:
+        case EvqNoPerspectiveIn:
         case EvqCentroidIn:
             return true;
         default:
@@ -1051,6 +1055,7 @@ inline bool IsShaderOut(TQualifier qualifier)
         case EvqVaryingOut:
         case EvqSmoothOut:
         case EvqFlatOut:
+        case EvqNoPerspectiveOut:
         case EvqCentroidOut:
             return true;
         default:
@@ -1301,11 +1306,14 @@ inline const char *getQualifierString(TQualifier q)
     case EvqSmoothOut:              return "smooth out";
     case EvqCentroidOut:            return "smooth centroid out";
     case EvqFlatOut:                return "flat out";
+    case EvqNoPerspectiveOut:       return "noperspective out";
     case EvqSmoothIn:               return "smooth in";
     case EvqFlatIn:                 return "flat in";
+    case EvqNoPerspectiveIn:        return "noperspective in";
     case EvqCentroidIn:             return "smooth centroid in";
     case EvqCentroid:               return "centroid";
     case EvqFlat:                   return "flat";
+    case EvqNoPerspective:          return "noperspective";
     case EvqSmooth:                 return "smooth";
     case EvqShared:                 return "shared";
     case EvqComputeIn:              return "in";
