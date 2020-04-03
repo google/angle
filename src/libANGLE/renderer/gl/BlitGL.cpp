@@ -280,9 +280,9 @@ angle::Result BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *contex
     GLenum readType = source->getImplementationColorReadType(context);
 
     gl::PixelUnpackState unpack;
-    mStateManager->setPixelUnpackState(unpack);
-    mStateManager->setPixelUnpackBuffer(
-        context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack));
+    ANGLE_TRY(mStateManager->setPixelUnpackState(context, unpack));
+    ANGLE_TRY(mStateManager->setPixelUnpackBuffer(
+        context, context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack)));
     ANGLE_GL_TRY_ALWAYS_CHECK(
         context,
         mFunctions->texImage2D(ToGLenum(target), static_cast<GLint>(level), internalFormat,
@@ -779,8 +779,8 @@ angle::Result BlitGL::copySubTextureCPUReadback(const gl::Context *context,
 
     gl::PixelUnpackState unpack;
     unpack.alignment = 1;
-    mStateManager->setPixelUnpackState(unpack);
-    mStateManager->setPixelUnpackBuffer(nullptr);
+    ANGLE_TRY(mStateManager->setPixelUnpackState(context, unpack));
+    ANGLE_TRY(mStateManager->setPixelUnpackBuffer(context, nullptr));
     ANGLE_GL_TRY(context, mFunctions->readPixels(readPixelsArea.x, readPixelsArea.y,
                                                  readPixelsArea.width, readPixelsArea.height,
                                                  readPixelsFormat, GL_UNSIGNED_BYTE, sourceMemory));
@@ -797,8 +797,8 @@ angle::Result BlitGL::copySubTextureCPUReadback(const gl::Context *context,
 
     gl::PixelPackState pack;
     pack.alignment = 1;
-    mStateManager->setPixelPackState(pack);
-    mStateManager->setPixelPackBuffer(nullptr);
+    ANGLE_TRY(mStateManager->setPixelPackState(context, pack));
+    ANGLE_TRY(mStateManager->setPixelPackBuffer(context, nullptr));
 
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(mFunctions, mFeatures, destFormat, destType);
@@ -1181,8 +1181,8 @@ angle::Result BlitGL::orphanScratchTextures(const gl::Context *context)
     {
         mStateManager->bindTexture(gl::TextureType::_2D, texture);
         gl::PixelUnpackState unpack;
-        mStateManager->setPixelUnpackState(unpack);
-        mStateManager->setPixelUnpackBuffer(nullptr);
+        ANGLE_TRY(mStateManager->setPixelUnpackState(context, unpack));
+        ANGLE_TRY(mStateManager->setPixelUnpackBuffer(context, nullptr));
         if (mFunctions->isAtLeastGL(gl::Version(3, 3)))
         {
             constexpr GLint swizzle[4] = {GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA};
