@@ -11,6 +11,7 @@
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 
 #include "libANGLE/Framebuffer.h"
 
@@ -29,87 +30,104 @@ ClearMultiviewGL::~ClearMultiviewGL()
     }
 }
 
-void ClearMultiviewGL::clearMultiviewFBO(const gl::FramebufferState &state,
-                                         const gl::Rectangle &scissorBase,
-                                         ClearCommandType clearCommandType,
-                                         GLbitfield mask,
-                                         GLenum buffer,
-                                         GLint drawbuffer,
-                                         const uint8_t *values,
-                                         GLfloat depth,
-                                         GLint stencil)
+angle::Result ClearMultiviewGL::clearMultiviewFBO(const gl::Context *context,
+                                                  const gl::FramebufferState &state,
+                                                  const gl::Rectangle &scissorBase,
+                                                  ClearCommandType clearCommandType,
+                                                  GLbitfield mask,
+                                                  GLenum buffer,
+                                                  GLint drawbuffer,
+                                                  const uint8_t *values,
+                                                  GLfloat depth,
+                                                  GLint stencil)
 {
     const gl::FramebufferAttachment *firstAttachment = state.getFirstNonNullAttachment();
     if (firstAttachment->isMultiview())
     {
-        clearLayeredFBO(state, clearCommandType, mask, buffer, drawbuffer, values, depth, stencil);
+        ANGLE_TRY(clearLayeredFBO(context, state, clearCommandType, mask, buffer, drawbuffer,
+                                  values, depth, stencil));
     }
+
+    return angle::Result::Continue;
 }
 
-void ClearMultiviewGL::clearLayeredFBO(const gl::FramebufferState &state,
-                                       ClearCommandType clearCommandType,
-                                       GLbitfield mask,
-                                       GLenum buffer,
-                                       GLint drawbuffer,
-                                       const uint8_t *values,
-                                       GLfloat depth,
-                                       GLint stencil)
+angle::Result ClearMultiviewGL::clearLayeredFBO(const gl::Context *context,
+                                                const gl::FramebufferState &state,
+                                                ClearCommandType clearCommandType,
+                                                GLbitfield mask,
+                                                GLenum buffer,
+                                                GLint drawbuffer,
+                                                const uint8_t *values,
+                                                GLfloat depth,
+                                                GLint stencil)
 {
-    initializeResources();
+    ANGLE_TRY(initializeResources(context));
 
-    mStateManager->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
+    ANGLE_TRY(mStateManager->bindFramebuffer(context, GL_DRAW_FRAMEBUFFER, mFramebuffer));
 
     const gl::FramebufferAttachment *firstAttachment = state.getFirstNonNullAttachment();
     ASSERT(firstAttachment->isMultiview());
 
     const auto &drawBuffers = state.getDrawBufferStates();
-    mFunctions->drawBuffers(static_cast<GLsizei>(drawBuffers.size()), drawBuffers.data());
+    ANGLE_GL_TRY(context, mFunctions->drawBuffers(static_cast<GLsizei>(drawBuffers.size()),
+                                                  drawBuffers.data()));
 
     // Attach the new attachments and clear.
     int numViews      = firstAttachment->getNumViews();
     int baseViewIndex = firstAttachment->getBaseViewIndex();
     for (int i = 0; i < numViews; ++i)
     {
-        attachTextures(state, baseViewIndex + i);
-        genericClear(clearCommandType, mask, buffer, drawbuffer, values, depth, stencil);
+        ANGLE_TRY(attachTextures(context, state, baseViewIndex + i));
+        ANGLE_TRY(genericClear(context, clearCommandType, mask, buffer, drawbuffer, values, depth,
+                               stencil));
     }
 
-    detachTextures(state);
+    ANGLE_TRY(detachTextures(context, state));
+
+    return angle::Result::Continue;
 }
 
-void ClearMultiviewGL::genericClear(ClearCommandType clearCommandType,
-                                    GLbitfield mask,
-                                    GLenum buffer,
-                                    GLint drawbuffer,
-                                    const uint8_t *values,
-                                    GLfloat depth,
-                                    GLint stencil)
+angle::Result ClearMultiviewGL::genericClear(const gl::Context *context,
+                                             ClearCommandType clearCommandType,
+                                             GLbitfield mask,
+                                             GLenum buffer,
+                                             GLint drawbuffer,
+                                             const uint8_t *values,
+                                             GLfloat depth,
+                                             GLint stencil)
 {
     switch (clearCommandType)
     {
         case ClearCommandType::Clear:
-            mFunctions->clear(mask);
+            ANGLE_GL_TRY(context, mFunctions->clear(mask));
             break;
         case ClearCommandType::ClearBufferfv:
-            mFunctions->clearBufferfv(buffer, drawbuffer,
-                                      reinterpret_cast<const GLfloat *>(values));
+            ANGLE_GL_TRY(context,
+                         mFunctions->clearBufferfv(buffer, drawbuffer,
+                                                   reinterpret_cast<const GLfloat *>(values)));
             break;
         case ClearCommandType::ClearBufferuiv:
-            mFunctions->clearBufferuiv(buffer, drawbuffer,
-                                       reinterpret_cast<const GLuint *>(values));
+            ANGLE_GL_TRY(context,
+                         mFunctions->clearBufferuiv(buffer, drawbuffer,
+                                                    reinterpret_cast<const GLuint *>(values)));
             break;
         case ClearCommandType::ClearBufferiv:
-            mFunctions->clearBufferiv(buffer, drawbuffer, reinterpret_cast<const GLint *>(values));
+            ANGLE_GL_TRY(context, mFunctions->clearBufferiv(
+                                      buffer, drawbuffer, reinterpret_cast<const GLint *>(values)));
             break;
         case ClearCommandType::ClearBufferfi:
-            mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil);
+            ANGLE_GL_TRY(context, mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil));
             break;
         default:
             UNREACHABLE();
     }
+
+    return angle::Result::Continue;
 }
 
-void ClearMultiviewGL::attachTextures(const gl::FramebufferState &state, int layer)
+angle::Result ClearMultiviewGL::attachTextures(const gl::Context *context,
+                                               const gl::FramebufferState &state,
+                                               int layer)
 {
     for (auto drawBufferId : state.getEnabledDrawBuffers())
     {
@@ -125,9 +143,9 @@ void ClearMultiviewGL::attachTextures(const gl::FramebufferState &state, int lay
         GLenum colorAttachment =
             static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + static_cast<int>(drawBufferId));
         const TextureGL *textureGL = GetImplAs<TextureGL>(attachment->getTexture());
-        mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, colorAttachment,
-                                            textureGL->getTextureID(), imageIndex.getLevelIndex(),
-                                            layer);
+        ANGLE_GL_TRY(context, mFunctions->framebufferTextureLayer(
+                                  GL_DRAW_FRAMEBUFFER, colorAttachment, textureGL->getTextureID(),
+                                  imageIndex.getLevelIndex(), layer));
     }
 
     const gl::FramebufferAttachment *depthStencilAttachment = state.getDepthStencilAttachment();
@@ -139,9 +157,9 @@ void ClearMultiviewGL::attachTextures(const gl::FramebufferState &state, int lay
         ASSERT(imageIndex.getType() == gl::TextureType::_2DArray);
 
         const TextureGL *textureGL = GetImplAs<TextureGL>(depthStencilAttachment->getTexture());
-        mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                                            textureGL->getTextureID(), imageIndex.getLevelIndex(),
-                                            layer);
+        ANGLE_GL_TRY(context, mFunctions->framebufferTextureLayer(
+                                  GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                  textureGL->getTextureID(), imageIndex.getLevelIndex(), layer));
     }
     else if (depthAttachment != nullptr)
     {
@@ -149,9 +167,9 @@ void ClearMultiviewGL::attachTextures(const gl::FramebufferState &state, int lay
         ASSERT(imageIndex.getType() == gl::TextureType::_2DArray);
 
         const TextureGL *textureGL = GetImplAs<TextureGL>(depthAttachment->getTexture());
-        mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                            textureGL->getTextureID(), imageIndex.getLevelIndex(),
-                                            layer);
+        ANGLE_GL_TRY(context, mFunctions->framebufferTextureLayer(
+                                  GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                  textureGL->getTextureID(), imageIndex.getLevelIndex(), layer));
     }
     else if (stencilAttachment != nullptr)
     {
@@ -159,13 +177,16 @@ void ClearMultiviewGL::attachTextures(const gl::FramebufferState &state, int lay
         ASSERT(imageIndex.getType() == gl::TextureType::_2DArray);
 
         const TextureGL *textureGL = GetImplAs<TextureGL>(stencilAttachment->getTexture());
-        mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
-                                            textureGL->getTextureID(), imageIndex.getLevelIndex(),
-                                            layer);
+        ANGLE_GL_TRY(context, mFunctions->framebufferTextureLayer(
+                                  GL_DRAW_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+                                  textureGL->getTextureID(), imageIndex.getLevelIndex(), layer));
     }
+
+    return angle::Result::Continue;
 }
 
-void ClearMultiviewGL::detachTextures(const gl::FramebufferState &state)
+angle::Result ClearMultiviewGL::detachTextures(const gl::Context *context,
+                                               const gl::FramebufferState &state)
 {
     for (auto drawBufferId : state.getEnabledDrawBuffers())
     {
@@ -177,7 +198,8 @@ void ClearMultiviewGL::detachTextures(const gl::FramebufferState &state)
 
         GLenum colorAttachment =
             static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + static_cast<int>(drawBufferId));
-        mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, colorAttachment, 0, 0, 0);
+        ANGLE_GL_TRY(context, mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER,
+                                                                  colorAttachment, 0, 0, 0));
     }
 
     const gl::FramebufferAttachment *depthStencilAttachment = state.getDepthStencilAttachment();
@@ -185,26 +207,32 @@ void ClearMultiviewGL::detachTextures(const gl::FramebufferState &state)
     const gl::FramebufferAttachment *stencilAttachment      = state.getStencilAttachment();
     if (depthStencilAttachment != nullptr)
     {
-        mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, 0, 0,
-                                            0);
+        ANGLE_GL_TRY(context, mFunctions->framebufferTextureLayer(
+                                  GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, 0, 0, 0));
     }
     else if (depthAttachment != nullptr)
     {
-        mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, 0, 0, 0);
+        ANGLE_GL_TRY(context, mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER,
+                                                                  GL_DEPTH_ATTACHMENT, 0, 0, 0));
     }
     else if (stencilAttachment != nullptr)
     {
-        mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, 0, 0, 0);
+        ANGLE_GL_TRY(context, mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER,
+                                                                  GL_STENCIL_ATTACHMENT, 0, 0, 0));
     }
+
+    return angle::Result::Continue;
 }
 
-void ClearMultiviewGL::initializeResources()
+angle::Result ClearMultiviewGL::initializeResources(const gl::Context *context)
 {
     if (mFramebuffer == 0u)
     {
-        mFunctions->genFramebuffers(1, &mFramebuffer);
+        ANGLE_GL_TRY(context, mFunctions->genFramebuffers(1, &mFramebuffer));
     }
     ASSERT(mFramebuffer != 0u);
+
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

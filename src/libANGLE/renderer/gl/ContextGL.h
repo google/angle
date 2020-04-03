@@ -286,9 +286,11 @@ class ContextGL : public ContextImpl
                                        GLsizei instanceCount,
                                        const void **outIndices);
 
-    gl::AttributesMask updateAttributesForBaseInstance(const gl::Program *program,
-                                                       GLuint baseInstance);
-    void resetUpdatedAttributes(gl::AttributesMask attribMask);
+    angle::Result updateAttributesForBaseInstance(const gl::Context *context,
+                                                  const gl::Program *program,
+                                                  GLuint baseInstance,
+                                                  gl::AttributesMask *outAttribUpdateMask);
+    angle::Result resetUpdatedAttributes(const gl::Context *context, gl::AttributesMask attribMask);
 
   protected:
     std::shared_ptr<RendererGL> mRenderer;

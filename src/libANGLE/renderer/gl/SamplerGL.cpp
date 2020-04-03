@@ -79,7 +79,7 @@ SamplerGL::SamplerGL(const gl::SamplerState &state,
 
 SamplerGL::~SamplerGL()
 {
-    mStateManager->deleteSampler(mSamplerID);
+    (void)mStateManager->deleteSampler(nullptr, mSamplerID);
     mSamplerID = 0;
 }
 

@@ -41,6 +41,8 @@ class StandardQueryGL : public QueryGL
     StandardQueryGL(gl::QueryType type, const FunctionsGL *functions, StateManagerGL *stateManager);
     ~StandardQueryGL() override;
 
+    void onDestroy(const gl::Context *context) override;
+
     angle::Result begin(const gl::Context *context) override;
     angle::Result end(const gl::Context *context) override;
     angle::Result queryCounter(const gl::Context *context) override;

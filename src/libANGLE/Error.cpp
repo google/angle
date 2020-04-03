@@ -64,4 +64,25 @@ egl::Error ResultToEGL(Result result)
 
     return egl::Error(EGL_BAD_ACCESS);
 }
+
+std::ostream &operator<<(std::ostream &os, Result result)
+{
+    switch (result)
+    {
+        case Result::Continue:
+            os << "Continue";
+            break;
+        case Result::Stop:
+            os << "Stop";
+            break;
+        case Result::Incomplete:
+            os << "Incomplete";
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    return os;
+}
 }  // namespace angle
