@@ -5464,6 +5464,7 @@ angle::Result Program::deserialize(const Context *context,
     mState.mExecutable.load(&stream);
 
     postResolveLink(context);
+    mState.mExecutable.updateCanDrawWith();
 
     return angle::Result::Continue;
 }

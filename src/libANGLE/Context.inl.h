@@ -66,6 +66,11 @@ ANGLE_INLINE void MarkShaderStorageBufferUsage(const Context *context)
 //  have a valid primitive for this mode (0 for points, 0-1 for lines, 0-2 for tris).
 ANGLE_INLINE bool Context::noopDraw(PrimitiveMode mode, GLsizei count)
 {
+    if (!mStateCache.getCanDraw())
+    {
+        return true;
+    }
+
     return count < kMinimumPrimitiveCounts[mode];
 }
 

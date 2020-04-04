@@ -257,6 +257,10 @@ class StateCache final : angle::NonCopyable
         return mCachedActiveShaderStorageBufferIndices;
     }
 
+    // Places that can trigger updateCanDraw:
+    // 1. onProgramExecutableChange.
+    bool getCanDraw() const { return mCachedCanDraw; }
+
     // State change notifications.
     void onVertexArrayBindingChange(Context *context);
     void onProgramExecutableChange(Context *context);
@@ -290,6 +294,7 @@ class StateCache final : angle::NonCopyable
     void updateTransformFeedbackActiveUnpaused(Context *context);
     void updateVertexAttribTypesValidation(Context *context);
     void updateActiveShaderStorageBufferIndices(Context *context);
+    void updateCanDraw(Context *context);
 
     void setValidDrawModes(bool pointsOK, bool linesOK, bool trisOK, bool lineAdjOK, bool triAdjOK);
 
@@ -324,6 +329,8 @@ class StateCache final : angle::NonCopyable
                          VertexAttribTypeCase,
                          angle::EnumSize<VertexAttribType>() + 1>
         mCachedIntegerVertexAttribTypesValidation;
+
+    bool mCachedCanDraw;
 };
 
 using VertexArrayMap       = ResourceMap<VertexArray, VertexArrayID>;
