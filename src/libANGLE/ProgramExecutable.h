@@ -94,6 +94,8 @@ class ProgramExecutable
         {
             mLinkedGraphicsShaderStages.set(shaderType);
         }
+
+        updateCanDrawWith();
     }
     bool hasLinkedShaderStage(ShaderType shaderType) const
     {
@@ -165,6 +167,9 @@ class ProgramExecutable
 
     void setIsCompute(bool isComputeIn);
 
+    void updateCanDrawWith();
+    bool hasVertexAndFragmentShader() const { return mCanDrawWith; }
+
   private:
     // TODO(timvp): http://anglebug.com/3570: Investigate removing these friend
     // class declarations and accessing the necessary members with getters/setters.
@@ -204,6 +209,8 @@ class ProgramExecutable
     // Cached mask of active images.
     ActiveTextureMask mActiveImagesMask;
     ActiveTextureArray<ShaderBitSet> mActiveImageShaderBits;
+
+    bool mCanDrawWith;
 };
 
 }  // namespace gl

@@ -459,9 +459,10 @@ bool ValidateVertexShaderAttributeTypeMatch(const Context *context)
     vaoAttribTypeBits = (vaoAttribEnabledMask & vaoAttribTypeBits);
     vaoAttribTypeBits |= (~vaoAttribEnabledMask & stateCurrentValuesTypeBits);
 
-    return ValidateComponentTypeMasks(
-        program->getExecutable().getAttributesTypeMask().to_ulong(), vaoAttribTypeBits,
-        program->getExecutable().getAttributesMask().to_ulong(), 0xFFFF);
+    return program &&
+           ValidateComponentTypeMasks(
+               program->getExecutable().getAttributesTypeMask().to_ulong(), vaoAttribTypeBits,
+               program->getExecutable().getAttributesMask().to_ulong(), 0xFFFF);
 }
 
 bool IsCompatibleDrawModeWithGeometryShader(PrimitiveMode drawMode,
@@ -2916,16 +2917,6 @@ const char *ValidateDrawStates(const Context *context)
 
         if (program)
         {
-            // In OpenGL ES spec for UseProgram at section 7.3, trying to render without
-            // vertex shader stage or fragment shader stage is a undefined behaviour.
-            // But ANGLE should clearly generate an INVALID_OPERATION error instead of
-            // produce undefined result.
-            if (!program->getExecutable().hasLinkedShaderStage(ShaderType::Vertex) ||
-                !program->getExecutable().hasLinkedShaderStage(ShaderType::Fragment))
-            {
-                return kNoActiveGraphicsShaderStage;
-            }
-
             if (!program->validateSamplers(nullptr, context->getCaps()))
             {
                 return kTextureTypeConflict;
@@ -2939,16 +2930,6 @@ const char *ValidateDrawStates(const Context *context)
         }
         else if (programPipeline)
         {
-            // In OpenGL ES spec for UseProgram at section 7.3, trying to render without
-            // vertex shader stage or fragment shader stage is a undefined behaviour.
-            // But ANGLE should clearly generate an INVALID_OPERATION error instead of
-            // produce undefined result.
-            if (!programPipeline->getExecutable().hasLinkedShaderStage(ShaderType::Vertex) ||
-                !programPipeline->getExecutable().hasLinkedShaderStage(ShaderType::Fragment))
-            {
-                return kNoActiveGraphicsShaderStage;
-            }
-
             const char *errorMsg = ValidateProgramPipelineAttachedPrograms(programPipeline);
             if (errorMsg)
             {
@@ -2965,10 +2946,6 @@ const char *ValidateDrawStates(const Context *context)
             {
                 return errorMsg;
             }
-        }
-        else
-        {
-            return kProgramNotBound;
         }
 
         // Do some additional WebGL-specific validation
