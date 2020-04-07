@@ -653,6 +653,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     if (getFeatures().supportsTransformFeedbackExtension.enabled)
     {
         mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_STATE);
+        mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_RESUME);
     }
     mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
@@ -662,6 +663,12 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
     mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
+
+    mNewGraphicsPipelineDirtyBits.set(DIRTY_BIT_PIPELINE);
+    if (getFeatures().supportsTransformFeedbackExtension.enabled)
+    {
+        mNewGraphicsPipelineDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_RESUME);
+    }
 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DEFAULT_ATTRIBS] =
         &ContextVk::handleDirtyGraphicsDefaultAttribs;
@@ -682,6 +689,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
             &ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension;
         mGraphicsDirtyBitHandlers[DIRTY_BIT_TRANSFORM_FEEDBACK_STATE] =
             &ContextVk::handleDirtyGraphicsTransformFeedbackState;
+        mGraphicsDirtyBitHandlers[DIRTY_BIT_TRANSFORM_FEEDBACK_RESUME] =
+            &ContextVk::handleDirtyGraphicsTransformFeedbackResume;
     }
     else if (getFeatures().emulateTransformFeedback.enabled)
     {
@@ -1221,6 +1230,7 @@ angle::Result ContextVk::handleDirtyGraphicsPipeline(const gl::Context *context,
 
         mGraphicsPipelineTransition.reset();
     }
+    mRenderPassCommands.pauseTransformFeedbackIfStarted();
     commandBuffer->bindGraphicsPipeline(mCurrentGraphicsPipeline->getPipeline());
     // Update the queue serial for the pipeline object.
     ASSERT(mCurrentGraphicsPipeline && mCurrentGraphicsPipeline->valid());
@@ -1504,6 +1514,14 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackState(const gl::Con
 
     transformFeedbackVk->unsetTransformFeedbackBufferRebindState();
 
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackResume(
+    const gl::Context *context,
+    vk::CommandBuffer *commandBuffer)
+{
+    mRenderPassCommands.resumeTransformFeedbackIfStarted();
     return angle::Result::Continue;
 }
 
@@ -4212,6 +4230,8 @@ angle::Result ContextVk::endRenderPass()
         ANGLE_TRY(traceGpuEvent(&mPrimaryCommands, TRACE_EVENT_PHASE_BEGIN, eventName));
     }
 
+    mRenderPassCommands.pauseTransformFeedbackIfStarted();
+
     ANGLE_TRY(mRenderPassCommands.flushToPrimary(this, &mPrimaryCommands));
 
     if (mGpuEventsEnabled)
@@ -4598,15 +4618,7 @@ angle::Result RenderPassCommandBuffer::flushToPrimary(ContextVk *contextVk,
     }
     else
     {
-        uint32_t numCounterBuffers =
-            (mRebindTransformFeedbackBuffers) ? 0 : mValidTransformFeedbackBufferCount;
-
-        primary->beginTransformFeedbackEXT(0, numCounterBuffers,
-                                           mTransformFeedbackCounterBuffers.data(), nullptr);
         mCommandBuffer.executeCommands(primary->getHandle());
-        primary->endTransformFeedbackEXT(0, mValidTransformFeedbackBufferCount,
-                                         mTransformFeedbackCounterBuffers.data(), nullptr);
-
         primary->endRenderPass();
 
         // Would be better to accumulate this barrier using the command APIs.
@@ -4691,6 +4703,33 @@ void RenderPassCommandBuffer::reset()
     mRenderPassStarted                 = false;
     mValidTransformFeedbackBufferCount = 0;
     mRebindTransformFeedbackBuffers    = false;
+}
+
+void RenderPassCommandBuffer::resumeTransformFeedbackIfStarted()
+{
+    if (mValidTransformFeedbackBufferCount == 0)
+    {
+        return;
+    }
+
+    uint32_t numCounterBuffers =
+        mRebindTransformFeedbackBuffers ? 0 : mValidTransformFeedbackBufferCount;
+
+    mRebindTransformFeedbackBuffers = false;
+
+    mCommandBuffer.beginTransformFeedback(numCounterBuffers,
+                                          mTransformFeedbackCounterBuffers.data());
+}
+
+void RenderPassCommandBuffer::pauseTransformFeedbackIfStarted()
+{
+    if (mValidTransformFeedbackBufferCount == 0)
+    {
+        return;
+    }
+
+    mCommandBuffer.endTransformFeedback(mValidTransformFeedbackBufferCount,
+                                        mTransformFeedbackCounterBuffers.data());
 }
 
 }  // namespace rx

@@ -70,6 +70,8 @@ enum class CommandID : uint16_t
     SetEvent,
     WaitEvents,
     WriteTimestamp,
+    BeginTransformFeedback,
+    EndTransformFeedback,
 };
 
 #define VERIFY_4_BYTE_ALIGNMENT(StructName) \
@@ -401,6 +403,18 @@ struct WriteTimestampParams
 };
 VERIFY_4_BYTE_ALIGNMENT(WriteTimestampParams)
 
+struct BeginTransformFeedbackParams
+{
+    uint32_t bufferCount;
+};
+VERIFY_4_BYTE_ALIGNMENT(BeginTransformFeedbackParams)
+
+struct EndTransformFeedbackParams
+{
+    uint32_t bufferCount;
+};
+VERIFY_4_BYTE_ALIGNMENT(EndTransformFeedbackParams)
+
 // Header for every cmd in custom cmd buffer
 struct CommandHeader
 {
@@ -608,6 +622,11 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void writeTimestamp(VkPipelineStageFlagBits pipelineStage,
                         VkQueryPool queryPool,
                         uint32_t query);
+
+    void beginTransformFeedback(uint32_t counterBufferCount, const VkBuffer *pCounterBuffers);
+
+    void endTransformFeedback(uint32_t counterBufferCount, const VkBuffer *pCounterBuffers);
+
     // No-op for compatibility
     VkResult end() { return VK_SUCCESS; }
 
@@ -1279,6 +1298,28 @@ ANGLE_INLINE void SecondaryCommandBuffer::writeTimestamp(VkPipelineStageFlagBits
     paramStruct->pipelineStage = pipelineStage;
     paramStruct->queryPool     = queryPool;
     paramStruct->query         = query;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::beginTransformFeedback(uint32_t bufferCount,
+                                                                 const VkBuffer *counterBuffers)
+{
+    uint8_t *writePtr;
+    size_t bufferSize                         = bufferCount * sizeof(VkBuffer);
+    BeginTransformFeedbackParams *paramStruct = initCommand<BeginTransformFeedbackParams>(
+        CommandID::BeginTransformFeedback, bufferSize, &writePtr);
+    paramStruct->bufferCount = bufferCount;
+    storePointerParameter(writePtr, counterBuffers, bufferSize);
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::endTransformFeedback(uint32_t bufferCount,
+                                                               const VkBuffer *counterBuffers)
+{
+    uint8_t *writePtr;
+    size_t bufferSize                       = bufferCount * sizeof(VkBuffer);
+    EndTransformFeedbackParams *paramStruct = initCommand<EndTransformFeedbackParams>(
+        CommandID::EndTransformFeedback, bufferSize, &writePtr);
+    paramStruct->bufferCount = bufferCount;
+    storePointerParameter(writePtr, counterBuffers, bufferSize);
 }
 }  // namespace priv
 }  // namespace vk

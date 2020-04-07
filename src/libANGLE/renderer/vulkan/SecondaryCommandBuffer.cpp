@@ -107,6 +107,10 @@ const char *GetCommandString(CommandID id)
             return "WaitEvents";
         case CommandID::WriteTimestamp:
             return "WriteTimestamp";
+        case CommandID::BeginTransformFeedback:
+            return "BeginTransformFeedback";
+        case CommandID::EndTransformFeedback:
+            return "EndTransformFeedback";
         default:
             // Need this to work around MSVC warning 4715.
             UNREACHABLE();
@@ -481,6 +485,26 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                         getParamPtr<WriteTimestampParams>(currentCommand);
                     vkCmdWriteTimestamp(cmdBuffer, params->pipelineStage, params->queryPool,
                                         params->query);
+                    break;
+                }
+                case CommandID::BeginTransformFeedback:
+                {
+                    const BeginTransformFeedbackParams *params =
+                        getParamPtr<BeginTransformFeedbackParams>(currentCommand);
+                    const VkBuffer *counterBuffers =
+                        Offset<VkBuffer>(params, sizeof(BeginTransformFeedbackParams));
+                    vkCmdBeginTransformFeedbackEXT(cmdBuffer, 0, params->bufferCount,
+                                                   counterBuffers, nullptr);
+                    break;
+                }
+                case CommandID::EndTransformFeedback:
+                {
+                    const EndTransformFeedbackParams *params =
+                        getParamPtr<EndTransformFeedbackParams>(currentCommand);
+                    const VkBuffer *counterBuffers =
+                        Offset<VkBuffer>(params, sizeof(EndTransformFeedbackParams));
+                    vkCmdEndTransformFeedbackEXT(cmdBuffer, 0, params->bufferCount, counterBuffers,
+                                                 nullptr);
                     break;
                 }
                 default:
