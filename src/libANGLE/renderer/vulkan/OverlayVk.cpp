@@ -70,12 +70,13 @@ angle::Result OverlayVk::init(const gl::Context *context)
 
 void OverlayVk::onDestroy(const gl::Context *context)
 {
-    VkDevice device = vk::GetImpl(context)->getDevice();
+    RendererVk *renderer = vk::GetImpl(context)->getRenderer();
+    VkDevice device      = renderer->getDevice();
 
-    mCulledWidgets.destroy(device);
+    mCulledWidgets.destroy(renderer);
     mCulledWidgetsView.destroy(device);
 
-    mFontImage.destroy(device);
+    mFontImage.destroy(renderer);
     mFontImageView.destroy(device);
 }
 

@@ -302,11 +302,11 @@ void ContextVk::DriverUniformsDescriptorSet::init(RendererVk *rendererVk)
                        kDriverUniformsAllocatorPageSize, true);
 }
 
-void ContextVk::DriverUniformsDescriptorSet::destroy(VkDevice device)
+void ContextVk::DriverUniformsDescriptorSet::destroy(RendererVk *renderer)
 {
     descriptorSetLayout.reset();
     descriptorPoolBinding.reset();
-    dynamicBuffer.destroy(device);
+    dynamicBuffer.destroy(renderer);
 }
 
 // CommandBatch implementation.
@@ -725,14 +725,14 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     for (DriverUniformsDescriptorSet &driverUniforms : mDriverUniforms)
     {
-        driverUniforms.destroy(device);
+        driverUniforms.destroy(mRenderer);
     }
 
     mDriverUniformsDescriptorPool.destroy(device);
 
     for (vk::DynamicBuffer &defaultBuffer : mDefaultAttribBuffers)
     {
-        defaultBuffer.destroy(device);
+        defaultBuffer.destroy(mRenderer);
     }
 
     for (vk::DynamicQueryPool &queryPool : mQueryPools)

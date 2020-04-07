@@ -633,11 +633,11 @@ void DynamicBuffer::releaseBufferListToRenderer(RendererVk *renderer,
     buffers->clear();
 }
 
-void DynamicBuffer::destroyBufferList(VkDevice device, std::vector<BufferHelper *> *buffers)
+void DynamicBuffer::destroyBufferList(RendererVk *renderer, std::vector<BufferHelper *> *buffers)
 {
     for (BufferHelper *toFree : *buffers)
     {
-        toFree->destroy(device);
+        toFree->destroy(renderer);
         delete toFree;
     }
 
@@ -676,17 +676,17 @@ void DynamicBuffer::releaseInFlightBuffers(ContextVk *contextVk)
     mInFlightBuffers.clear();
 }
 
-void DynamicBuffer::destroy(VkDevice device)
+void DynamicBuffer::destroy(RendererVk *renderer)
 {
     reset();
 
-    destroyBufferList(device, &mInFlightBuffers);
-    destroyBufferList(device, &mBufferFreeList);
+    destroyBufferList(renderer, &mInFlightBuffers);
+    destroyBufferList(renderer, &mBufferFreeList);
 
     if (mBuffer)
     {
-        mBuffer->unmap(device);
-        mBuffer->destroy(device);
+        mBuffer->unmap(renderer->getDevice());
+        mBuffer->destroy(renderer);
         delete mBuffer;
         mBuffer = nullptr;
     }
@@ -1620,10 +1620,10 @@ void LineLoopHelper::release(ContextVk *contextVk)
     mDynamicIndirectBuffer.release(contextVk->getRenderer());
 }
 
-void LineLoopHelper::destroy(VkDevice device)
+void LineLoopHelper::destroy(RendererVk *renderer)
 {
-    mDynamicIndexBuffer.destroy(device);
-    mDynamicIndirectBuffer.destroy(device);
+    mDynamicIndexBuffer.destroy(renderer);
+    mDynamicIndirectBuffer.destroy(renderer);
 }
 
 // static
@@ -1727,8 +1727,10 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context, VkDeviceSi
     return angle::Result::Continue;
 }
 
-void BufferHelper::destroy(VkDevice device)
+void BufferHelper::destroy(RendererVk *renderer)
 {
+    VkDevice device = renderer->getDevice();
+
     unmap(device);
     mSize       = 0;
     mViewFormat = nullptr;
@@ -2191,11 +2193,13 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
     return angle::Result::Continue;
 }
 
-void ImageHelper::destroy(VkDevice device)
+void ImageHelper::destroy(RendererVk *renderer)
 {
+    VkDevice device = renderer->getDevice();
+
     mImage.destroy(device);
     mDeviceMemory.destroy(device);
-    mStagingBuffer.destroy(device);
+    mStagingBuffer.destroy(renderer);
     mCurrentLayout = ImageLayout::Undefined;
     mLayerCount    = 0;
     mLevelCount    = 0;
@@ -3539,7 +3543,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     // If the source image is multisampled, we need to resolve it into a temporary image before
     // performing a readback.
     bool isMultisampled = mSamples > 1;
-    DeviceScoped<ImageHelper> resolvedImage(contextVk->getDevice());
+    RendererScoped<ImageHelper> resolvedImage(contextVk->getRenderer());
 
     ImageHelper *src = this;
 

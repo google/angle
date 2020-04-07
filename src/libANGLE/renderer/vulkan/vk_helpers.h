@@ -94,7 +94,7 @@ class DynamicBuffer : angle::NonCopyable
     void releaseInFlightBuffers(ContextVk *contextVk);
 
     // This frees resources immediately.
-    void destroy(VkDevice device);
+    void destroy(RendererVk *renderer);
 
     BufferHelper *getCurrentBuffer() { return mBuffer; }
 
@@ -107,7 +107,7 @@ class DynamicBuffer : angle::NonCopyable
     void reset();
     angle::Result allocateNewBuffer(ContextVk *contextVk);
     void releaseBufferListToRenderer(RendererVk *renderer, std::vector<BufferHelper *> *buffers);
-    void destroyBufferList(VkDevice device, std::vector<BufferHelper *> *buffers);
+    void destroyBufferList(RendererVk *renderer, std::vector<BufferHelper *> *buffers);
 
     VkBufferUsageFlags mUsage;
     bool mHostVisible;
@@ -527,7 +527,7 @@ class LineLoopHelper final : angle::NonCopyable
                                       VkDeviceSize *indexIndirectBufferOffsetOut);
 
     void release(ContextVk *contextVk);
-    void destroy(VkDevice device);
+    void destroy(RendererVk *renderer);
 
     static void Draw(uint32_t count, uint32_t baseVertex, CommandBuffer *commandBuffer);
 
@@ -547,7 +547,7 @@ class BufferHelper final : public Resource
     angle::Result init(ContextVk *contextVk,
                        const VkBufferCreateInfo &createInfo,
                        VkMemoryPropertyFlags memoryPropertyFlags);
-    void destroy(VkDevice device);
+    void destroy(RendererVk *renderer);
 
     void release(RendererVk *renderer);
 
@@ -790,7 +790,8 @@ class ImageHelper final : public Resource, public angle::Subject
     VkImageAspectFlags getAspectFlags() const;
     // True if image contains both depth & stencil aspects
     bool isCombinedDepthStencilFormat() const;
-    void destroy(VkDevice device);
+    void destroy(RendererVk *renderer);
+    void release(RendererVk *renderer) { destroy(renderer); }
 
     void init2DWeakReference(VkImage handle,
                              const gl::Extents &glExtents,

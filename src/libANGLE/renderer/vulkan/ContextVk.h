@@ -703,7 +703,7 @@ class ContextVk : public ContextImpl, public vk::Context
         ~DriverUniformsDescriptorSet();
 
         void init(RendererVk *rendererVk);
-        void destroy(VkDevice device);
+        void destroy(RendererVk *rendererVk);
     };
 
     enum class PipelineType

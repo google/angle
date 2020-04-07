@@ -1022,7 +1022,7 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
     {
         // We don't own the swapchain image handles, so we just remove our reference to it.
         swapchainImage.image.resetImageWeakReference();
-        swapchainImage.image.destroy(contextVk->getDevice());
+        swapchainImage.image.destroy(renderer);
 
         swapchainImage.imageViews.release(renderer);
         contextVk->addGarbage(&swapchainImage.framebuffer);
@@ -1040,11 +1040,12 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
 
 void WindowSurfaceVk::destroySwapChainImages(DisplayVk *displayVk)
 {
-    VkDevice device = displayVk->getDevice();
+    RendererVk *renderer = displayVk->getRenderer();
+    VkDevice device      = displayVk->getDevice();
 
-    mDepthStencilImage.destroy(device);
+    mDepthStencilImage.destroy(renderer);
     mDepthStencilImageViews.destroy(device);
-    mColorImageMS.destroy(device);
+    mColorImageMS.destroy(renderer);
     mColorImageMSViews.destroy(device);
     mFramebufferMS.destroy(device);
 
@@ -1052,7 +1053,7 @@ void WindowSurfaceVk::destroySwapChainImages(DisplayVk *displayVk)
     {
         // We don't own the swapchain image handles, so we just remove our reference to it.
         swapchainImage.image.resetImageWeakReference();
-        swapchainImage.image.destroy(device);
+        swapchainImage.image.destroy(renderer);
         swapchainImage.imageViews.destroy(device);
         swapchainImage.framebuffer.destroy(device);
 
