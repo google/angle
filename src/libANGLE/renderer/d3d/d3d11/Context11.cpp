@@ -341,9 +341,7 @@ angle::Result Context11::drawElementsBaseVertex(const gl::Context *context,
                                                 const void *indices,
                                                 GLint baseVertex)
 {
-    // TODO: angleproject:3402
-    UNIMPLEMENTED();
-    return angle::Result::Stop;
+    return drawElementsImpl(context, mode, count, type, indices, 0, baseVertex, 0);
 }
 
 angle::Result Context11::drawElementsInstanced(const gl::Context *context,
@@ -364,9 +362,7 @@ angle::Result Context11::drawElementsInstancedBaseVertex(const gl::Context *cont
                                                          GLsizei instances,
                                                          GLint baseVertex)
 {
-    // TODO: angleproject:3402
-    UNIMPLEMENTED();
-    return angle::Result::Stop;
+    return drawElementsImpl(context, mode, count, type, indices, instances, baseVertex, 0);
 }
 
 angle::Result Context11::drawElementsInstancedBaseVertexBaseInstance(const gl::Context *context,
@@ -402,9 +398,7 @@ angle::Result Context11::drawRangeElementsBaseVertex(const gl::Context *context,
                                                      const void *indices,
                                                      GLint baseVertex)
 {
-    // TODO: angleproject:3402
-    UNIMPLEMENTED();
-    return angle::Result::Stop;
+    return drawElementsImpl(context, mode, count, type, indices, 0, baseVertex, 0);
 }
 
 angle::Result Context11::drawArraysIndirect(const gl::Context *context,
