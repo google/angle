@@ -39,6 +39,7 @@ class Framebuffer9 : public FramebufferD3D
                                     GLfloat *xy) const override;
 
     angle::Result syncState(const gl::Context *context,
+                            GLenum binding,
                             const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     const gl::AttachmentArray<RenderTarget9 *> &getCachedColorRenderTargets() const

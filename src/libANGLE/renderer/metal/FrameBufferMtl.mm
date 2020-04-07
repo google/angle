@@ -225,6 +225,7 @@ bool FramebufferMtl::checkStatus(const gl::Context *context) const
 }
 
 angle::Result FramebufferMtl::syncState(const gl::Context *context,
+                                        GLenum binding,
                                         const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);

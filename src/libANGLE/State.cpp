@@ -3008,13 +3008,13 @@ angle::Result State::syncDrawAttachments(const Context *context)
 angle::Result State::syncReadFramebuffer(const Context *context)
 {
     ASSERT(mReadFramebuffer);
-    return mReadFramebuffer->syncState(context);
+    return mReadFramebuffer->syncState(context, GL_READ_FRAMEBUFFER);
 }
 
 angle::Result State::syncDrawFramebuffer(const Context *context)
 {
     ASSERT(mDrawFramebuffer);
-    return mDrawFramebuffer->syncState(context);
+    return mDrawFramebuffer->syncState(context, GL_DRAW_FRAMEBUFFER);
 }
 
 angle::Result State::syncTextures(const Context *context)

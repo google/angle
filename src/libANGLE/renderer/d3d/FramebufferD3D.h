@@ -96,6 +96,7 @@ class FramebufferD3D : public FramebufferImpl
     bool checkStatus(const gl::Context *context) const override;
 
     angle::Result syncState(const gl::Context *context,
+                            GLenum binding,
                             const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     const gl::AttachmentList &getColorAttachmentsForRender(const gl::Context *context);

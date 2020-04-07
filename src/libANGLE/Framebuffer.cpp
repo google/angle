@@ -1140,7 +1140,9 @@ GLenum Framebuffer::checkStatusImpl(const Context *context) const
         // We can skip syncState on several back-ends.
         if (mImpl->shouldSyncStateBeforeCheckStatus())
         {
-            angle::Result err = syncState(context);
+            // This binding is not totally correct. It is ok because the parameter isn't used in
+            // the GL back-end and the GL back-end is the only user of syncStateBeforeCheckStatus.
+            angle::Result err = syncState(context, GL_FRAMEBUFFER);
             if (err != angle::Result::Continue)
             {
                 return 0;
@@ -1972,12 +1974,12 @@ void Framebuffer::resetAttachment(const Context *context, GLenum binding)
     setAttachment(context, GL_NONE, binding, ImageIndex(), nullptr);
 }
 
-angle::Result Framebuffer::syncState(const Context *context) const
+angle::Result Framebuffer::syncState(const Context *context, GLenum framebufferBinding) const
 {
     if (mDirtyBits.any())
     {
         mDirtyBitsGuard = mDirtyBits;
-        ANGLE_TRY(mImpl->syncState(context, mDirtyBits));
+        ANGLE_TRY(mImpl->syncState(context, framebufferBinding, mDirtyBits));
         mDirtyBits.reset();
         mDirtyBitsGuard.reset();
     }

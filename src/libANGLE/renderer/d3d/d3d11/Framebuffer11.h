@@ -39,6 +39,7 @@ class Framebuffer11 : public FramebufferD3D
     angle::Result markAttachmentsDirty(const gl::Context *context) const;
 
     angle::Result syncState(const gl::Context *context,
+                            GLenum binding,
                             const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     const gl::AttachmentArray<RenderTarget11 *> &getCachedColorRenderTargets() const

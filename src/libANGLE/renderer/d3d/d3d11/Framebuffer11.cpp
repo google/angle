@@ -386,10 +386,11 @@ const gl::InternalFormat &Framebuffer11::getImplementationColorReadFormat(
 }
 
 angle::Result Framebuffer11::syncState(const gl::Context *context,
+                                       GLenum binding,
                                        const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
-    ANGLE_TRY(FramebufferD3D::syncState(context, dirtyBits));
+    ANGLE_TRY(FramebufferD3D::syncState(context, binding, dirtyBits));
 
     // Call this last to allow the state manager to take advantage of the cached render targets.
     mRenderer->getStateManager()->invalidateRenderTarget();

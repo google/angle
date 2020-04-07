@@ -268,6 +268,7 @@ bool FramebufferD3D::checkStatus(const gl::Context *context) const
 }
 
 angle::Result FramebufferD3D::syncState(const gl::Context *context,
+                                        GLenum binding,
                                         const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     if (!mColorAttachmentsForRender.valid())

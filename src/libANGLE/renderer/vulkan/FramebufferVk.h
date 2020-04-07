@@ -86,6 +86,7 @@ class FramebufferVk : public FramebufferImpl
     bool checkStatus(const gl::Context *context) const override;
 
     angle::Result syncState(const gl::Context *context,
+                            GLenum binding,
                             const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     angle::Result getSamplePosition(const gl::Context *context,

@@ -404,9 +404,10 @@ angle::Result Framebuffer9::getSamplePosition(const gl::Context *context,
 }
 
 angle::Result Framebuffer9::syncState(const gl::Context *context,
+                                      GLenum binding,
                                       const gl::Framebuffer::DirtyBits &dirtyBits)
 {
-    ANGLE_TRY(FramebufferD3D::syncState(context, dirtyBits));
+    ANGLE_TRY(FramebufferD3D::syncState(context, binding, dirtyBits));
     ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
     return angle::Result::Continue;
 }

@@ -389,7 +389,7 @@ class Framebuffer final : public angle::ObserverInterface,
 
     bool hasResourceThatNeedsInit() const { return mState.mResourceNeedsInit.any(); }
 
-    angle::Result syncState(const Context *context) const;
+    angle::Result syncState(const Context *context, GLenum framebufferBinding) const;
 
     // Observer implementation
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
