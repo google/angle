@@ -163,10 +163,7 @@ config("angle_vulkan_lib_android") {
 
 group("angle_vulkan_entry_points") {
   public_configs = [ ":angle_vulkan_lib_android" ]
-  public_deps = [
-    "$angle_root/src/third_party/volk:volk",
-    "$angle_root/third_party/vulkan-headers/src:vulkan_headers",
-  ]
+  public_deps = [ "$angle_root/src/third_party/volk" ]
   if (is_fuchsia) {
     public_deps += [
       "$angle_root/src/common/fuchsia_egl",
@@ -192,10 +189,27 @@ config("angle_vulkan_backend_config") {
   }
 }
 
+angle_source_set("angle_vk_mem_alloc_wrapper") {
+  deps = [
+    "$angle_root/third_party/VulkanMemoryAllocator:vulkan_memory_allocator",
+  ]
+  sources = [
+    "vk_mem_alloc_wrapper.cpp",
+    "vk_mem_alloc_wrapper.h",
+  ]
+  if (is_clang) {
+    cflags_cc = [
+      "-Wno-extra-semi-stmt",
+      "-Wno-missing-field-initializers",
+    ]
+  }
+}
+
 angle_source_set("angle_vulkan_backend") {
   sources = _vulkan_backend_sources
   libs = []
   deps = [
+    ":angle_vk_mem_alloc_wrapper",
     ":angle_vulkan_entry_points",
     "$angle_root:angle_gpu_info_util",
     "$angle_root:angle_image_util",
