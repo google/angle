@@ -364,6 +364,12 @@ struct FeaturesGL : FeatureSetBase
         "GL_PRIMITIVE_RESTART and glPrimitiveRestartIndex.",
         &members, "http://anglebug.com/3997"};
 
+    Feature setPrimitiveRestartFixedIndexForDrawArrays = {
+        "set_primitive_restart_fixed_index_for_draw_arrays", FeatureCategory::OpenGLWorkarounds,
+        "Some drivers discard vertex data in DrawArrays calls when the fixed primitive restart "
+        "index is within the number of primitives being drawn.",
+        &members, "http://anglebug.com/3997"};
+
     // Dynamic indexing of swizzled l-values doesn't work correctly on various platforms.
     Feature removeDynamicIndexingOfSwizzledVector = {
         "remove_dynamic_indexing_of_swizzled_vector", FeatureCategory::OpenGLWorkarounds,
