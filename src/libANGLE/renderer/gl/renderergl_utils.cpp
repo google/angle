@@ -1965,9 +1965,11 @@ angle::Result CheckError(const gl::Context *context,
         ERR() << "GL call " << call << " generated error " << gl::FmtHex(error) << " in " << file
               << ", " << function << ":" << line << ". ";
 
-        // Check that only one GL error was generated, ClearErrors should have been called first
+        // Check that only one GL error was generated, ClearErrors should have been called first.
+        // Skip GL_CONTEXT_LOST errors, they will be generated continuously and result in an
+        // infinite loop.
         GLenum nextError = functions->getError();
-        while (nextError != GL_NO_ERROR)
+        while (nextError != GL_NO_ERROR && nextError != GL_CONTEXT_LOST)
         {
             ERR() << "Additional GL error " << gl::FmtHex(nextError) << " generated.";
             nextError = functions->getError();
