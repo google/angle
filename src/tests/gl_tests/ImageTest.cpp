@@ -15,15 +15,24 @@ namespace angle
 {
 namespace
 {
-constexpr char kOESExt[]           = "GL_OES_EGL_image";
-constexpr char kExternalExt[]      = "GL_OES_EGL_image_external";
-constexpr char kExternalESSL3Ext[] = "GL_OES_EGL_image_external_essl3";
-constexpr char kBaseExt[]          = "EGL_KHR_image_base";
-constexpr char k2DTextureExt[]     = "EGL_KHR_gl_texture_2D_image";
-constexpr char k3DTextureExt[]     = "EGL_KHR_gl_texture_3D_image";
-constexpr char kPixmapExt[]        = "EGL_KHR_image_pixmap";
-constexpr char kRenderbufferExt[]  = "EGL_KHR_gl_renderbuffer_image";
-constexpr char kCubemapExt[]       = "EGL_KHR_gl_texture_cubemap_image";
+constexpr char kOESExt[]               = "GL_OES_EGL_image";
+constexpr char kExternalExt[]          = "GL_OES_EGL_image_external";
+constexpr char kExternalESSL3Ext[]     = "GL_OES_EGL_image_external_essl3";
+constexpr char kBaseExt[]              = "EGL_KHR_image_base";
+constexpr char k2DTextureExt[]         = "EGL_KHR_gl_texture_2D_image";
+constexpr char k3DTextureExt[]         = "EGL_KHR_gl_texture_3D_image";
+constexpr char kPixmapExt[]            = "EGL_KHR_image_pixmap";
+constexpr char kRenderbufferExt[]      = "EGL_KHR_gl_renderbuffer_image";
+constexpr char kCubemapExt[]           = "EGL_KHR_gl_texture_cubemap_image";
+constexpr char kImageGLColorspaceExt[] = "EGL_EXT_image_gl_colorspace";
+constexpr EGLint kDefaultAttribs[]     = {
+    EGL_IMAGE_PRESERVED,
+    EGL_TRUE,
+    EGL_NONE,
+};
+constexpr EGLint kColorspaceAttribs[] = {
+    EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_SRGB_KHR, EGL_NONE,
+};
 }  // anonymous namespace
 
 class ImageTest : public ANGLETest
@@ -137,6 +146,7 @@ class ImageTest : public ANGLETest
                                        size_t height,
                                        GLenum format,
                                        GLenum type,
+                                       const EGLint *attribs,
                                        void *data,
                                        GLuint *outSourceTexture,
                                        EGLImageKHR *outSourceImage)
@@ -158,12 +168,6 @@ class ImageTest : public ANGLETest
         // Create an image from the source texture
         EGLWindow *window = getEGLWindow();
 
-        EGLint attribs[] = {
-            EGL_IMAGE_PRESERVED,
-            EGL_TRUE,
-            EGL_NONE,
-        };
-
         EGLImageKHR image =
             eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_2D_KHR,
                               reinterpretHelper<EGLClientBuffer>(source), attribs);
@@ -178,6 +182,7 @@ class ImageTest : public ANGLETest
                                             size_t height,
                                             GLenum format,
                                             GLenum type,
+                                            const EGLint *attribs,
                                             uint8_t *data,
                                             size_t dataStride,
                                             EGLenum imageTarget,
@@ -205,12 +210,6 @@ class ImageTest : public ANGLETest
         // Create an image from the source texture
         EGLWindow *window = getEGLWindow();
 
-        EGLint attribs[] = {
-            EGL_IMAGE_PRESERVED,
-            EGL_TRUE,
-            EGL_NONE,
-        };
-
         EGLImageKHR image =
             eglCreateImageKHR(window->getDisplay(), window->getContext(), imageTarget,
                               reinterpretHelper<EGLClientBuffer>(source), attribs);
@@ -226,8 +225,8 @@ class ImageTest : public ANGLETest
                                        size_t depth,
                                        GLenum format,
                                        GLenum type,
+                                       const EGLint *attribs,
                                        void *data,
-                                       size_t imageLayer,
                                        GLuint *outSourceTexture,
                                        EGLImageKHR *outSourceImage)
     {
@@ -249,13 +248,6 @@ class ImageTest : public ANGLETest
         // Create an image from the source texture
         EGLWindow *window = getEGLWindow();
 
-        EGLint attribs[] = {
-            EGL_GL_TEXTURE_ZOFFSET_KHR,
-            static_cast<EGLint>(imageLayer),
-            EGL_IMAGE_PRESERVED,
-            EGL_TRUE,
-            EGL_NONE,
-        };
         EGLImageKHR image =
             eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_3D_KHR,
                               reinterpretHelper<EGLClientBuffer>(source), attribs);
@@ -269,6 +261,7 @@ class ImageTest : public ANGLETest
     void createEGLImageRenderbufferSource(size_t width,
                                           size_t height,
                                           GLenum internalFormat,
+                                          const EGLint *attribs,
                                           GLubyte data[4],
                                           GLuint *outSourceRenderbuffer,
                                           EGLImageKHR *outSourceImage)
@@ -295,12 +288,6 @@ class ImageTest : public ANGLETest
 
         // Create an image from the source renderbuffer
         EGLWindow *window = getEGLWindow();
-
-        EGLint attribs[] = {
-            EGL_IMAGE_PRESERVED,
-            EGL_TRUE,
-            EGL_NONE,
-        };
 
         EGLImageKHR image =
             eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_RENDERBUFFER_KHR,
@@ -358,6 +345,24 @@ class ImageTest : public ANGLETest
 
         *outTargetRenderbuffer = target;
     }
+
+    void ValidationGLEGLImage_helper(const EGLint *attribs);
+    void Source2DTarget2D_helper(const EGLint *attribs);
+    void Source2DTargetRenderbuffer_helper(const EGLint *attribs);
+    void Source2DTargetExternal_helper(const EGLint *attribs);
+    void Source2DTargetExternalESSL3_helper(const EGLint *attribs);
+    void SourceCubeTarget2D_helper(const EGLint *attribs);
+    void SourceCubeTargetRenderbuffer_helper(const EGLint *attribs);
+    void SourceCubeTargetExternal_helper(const EGLint *attribs);
+    void SourceCubeTargetExternalESSL3_helper(const EGLint *attribs);
+    void Source3DTargetTexture_helper(const bool withColorspace);
+    void Source3DTargetRenderbuffer_helper(const bool withColorspace);
+    void Source3DTargetExternal_helper(const bool withColorspace);
+    void Source3DTargetExternalESSL3_helper(const bool withColorspace);
+    void SourceRenderbufferTargetTexture_helper(const EGLint *attribs);
+    void SourceRenderbufferTargetTextureExternal_helper(const EGLint *attribs);
+    void SourceRenderbufferTargetRenderbuffer_helper(const EGLint *attribs);
+    void SourceRenderbufferTargetTextureExternalESSL3_helper(const EGLint *attribs);
 
     void verifyResultsTexture(GLuint texture,
                               GLubyte data[4],
@@ -418,6 +423,11 @@ class ImageTest : public ANGLETest
         return reinterpret_cast<destType>(sourceSizeT);
     }
 
+    bool hasImageGLColorspaceExt() const
+    {
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kImageGLColorspaceExt);
+    }
+
     bool hasOESExt() const { return IsGLExtensionEnabled(kOESExt); }
 
     bool hasExternalExt() const { return IsGLExtensionEnabled(kExternalExt); }
@@ -454,6 +464,30 @@ class ImageTest : public ANGLETest
         return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kCubemapExt);
     }
 
+    EGLint *get3DAttributes(const bool withColorspace = false, EGLint layer = 0)
+    {
+        if (!withColorspace)
+        {
+            default3DAttribs[1] = static_cast<EGLint>(layer);
+            return default3DAttribs;
+        }
+
+        colorspace3DAttribs[1] = static_cast<EGLint>(layer);
+        return colorspace3DAttribs;
+    }
+
+    EGLint default3DAttribs[5] = {
+        EGL_GL_TEXTURE_ZOFFSET_KHR, static_cast<EGLint>(0), EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE,
+    };
+    EGLint colorspace3DAttribs[7] = {
+        EGL_GL_TEXTURE_ZOFFSET_KHR,
+        static_cast<EGLint>(0),
+        EGL_IMAGE_PRESERVED,
+        EGL_TRUE,
+        EGL_GL_COLORSPACE,
+        EGL_GL_COLORSPACE_SRGB_KHR,
+        EGL_NONE,
+    };
     GLuint mTextureProgram;
     GLint mTextureUniformLocation;
 
@@ -922,6 +956,18 @@ TEST_P(ImageTest, ValidationGLImage)
 // Check validation from the GL_OES_EGL_image extension
 TEST_P(ImageTest, ValidationGLEGLImage)
 {
+    ValidationGLEGLImage_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, ValidationGLEGLImage_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    ValidationGLEGLImage_helper(kColorspaceAttribs);
+}
+
+void ImageTest::ValidationGLEGLImage_helper(const EGLint *attribs)
+{
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLubyte data[4] = {255, 0, 255, 255};
@@ -929,7 +975,7 @@ TEST_P(ImageTest, ValidationGLEGLImage)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, data, &source, &image);
 
     // If <target> is not TEXTURE_2D, the error INVALID_ENUM is generated.
     glEGLImageTargetTexture2DOES(GL_TEXTURE_CUBE_MAP_POSITIVE_X, image);
@@ -1088,6 +1134,18 @@ TEST_P(ImageTest, ValidationGLEGLImageExternalESSL3)
 
 TEST_P(ImageTest, Source2DTarget2D)
 {
+    Source2DTarget2D_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, Source2DTarget2D_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    Source2DTarget2D_helper(kColorspaceAttribs);
+}
+
+void ImageTest::Source2DTarget2D_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
@@ -1096,7 +1154,7 @@ TEST_P(ImageTest, Source2DTarget2D)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, data, &source, &image);
 
     // Create the target
     GLuint target;
@@ -1113,6 +1171,19 @@ TEST_P(ImageTest, Source2DTarget2D)
 
 TEST_P(ImageTest, Source2DTargetRenderbuffer)
 {
+    Source2DTargetRenderbuffer_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, Source2DTargetRenderbuffer_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    Source2DTargetRenderbuffer_helper(kColorspaceAttribs);
+}
+
+void ImageTest::Source2DTargetRenderbuffer_helper(const EGLint *attribs)
+{
+
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
@@ -1121,7 +1192,7 @@ TEST_P(ImageTest, Source2DTargetRenderbuffer)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, data, &source, &image);
 
     // Create the target
     GLuint target;
@@ -1138,6 +1209,18 @@ TEST_P(ImageTest, Source2DTargetRenderbuffer)
 
 TEST_P(ImageTest, Source2DTargetExternal)
 {
+    Source2DTargetExternal_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, Source2DTargetExternal_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    Source2DTargetExternal_helper(kColorspaceAttribs);
+}
+
+void ImageTest::Source2DTargetExternal_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasExternalExt());
 
@@ -1149,7 +1232,7 @@ TEST_P(ImageTest, Source2DTargetExternal)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, data, &source, &image);
 
     // Create the target
     GLuint target;
@@ -1166,6 +1249,18 @@ TEST_P(ImageTest, Source2DTargetExternal)
 
 TEST_P(ImageTestES3, Source2DTargetExternalESSL3)
 {
+    Source2DTargetExternalESSL3_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTestES3, Source2DTargetExternalESSL3_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    Source2DTargetExternalESSL3_helper(kColorspaceAttribs);
+}
+
+void ImageTest::Source2DTargetExternalESSL3_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() ||
                        !hasExternalESSL3Ext());
@@ -1175,7 +1270,7 @@ TEST_P(ImageTestES3, Source2DTargetExternalESSL3)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, data, &source, &image);
 
     // Create the target
     GLuint target;
@@ -1192,6 +1287,18 @@ TEST_P(ImageTestES3, Source2DTargetExternalESSL3)
 
 TEST_P(ImageTest, SourceCubeTarget2D)
 {
+    SourceCubeTarget2D_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, SourceCubeTarget2D_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceCubeTarget2D_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceCubeTarget2D_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasCubemapExt());
 
@@ -1206,8 +1313,8 @@ TEST_P(ImageTest, SourceCubeTarget2D)
         GLuint source;
         EGLImageKHR image;
         createEGLImageCubemapTextureSource(
-            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<uint8_t *>(data), sizeof(GLubyte) * 4,
-            EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, &source, &image);
+            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, reinterpret_cast<uint8_t *>(data),
+            sizeof(GLubyte) * 4, EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, &source, &image);
 
         // Create the target
         GLuint target;
@@ -1224,6 +1331,18 @@ TEST_P(ImageTest, SourceCubeTarget2D)
 }
 
 TEST_P(ImageTest, SourceCubeTargetRenderbuffer)
+{
+    SourceCubeTargetRenderbuffer_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, SourceCubeTargetRenderbuffer_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceCubeTargetRenderbuffer_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceCubeTargetRenderbuffer_helper(const EGLint *attribs)
 {
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasCubemapExt());
@@ -1242,8 +1361,8 @@ TEST_P(ImageTest, SourceCubeTargetRenderbuffer)
         GLuint source;
         EGLImageKHR image;
         createEGLImageCubemapTextureSource(
-            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<uint8_t *>(data), sizeof(GLubyte) * 4,
-            EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, &source, &image);
+            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, reinterpret_cast<uint8_t *>(data),
+            sizeof(GLubyte) * 4, EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, &source, &image);
 
         // Create the target
         GLuint target;
@@ -1262,6 +1381,18 @@ TEST_P(ImageTest, SourceCubeTargetRenderbuffer)
 // Test cubemap -> external texture EGL images.
 TEST_P(ImageTest, SourceCubeTargetExternal)
 {
+    SourceCubeTargetExternal_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, SourceCubeTargetExternal_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceCubeTargetExternal_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceCubeTargetExternal_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasCubemapExt() || !hasExternalExt());
 
@@ -1279,8 +1410,8 @@ TEST_P(ImageTest, SourceCubeTargetExternal)
         GLuint source;
         EGLImageKHR image;
         createEGLImageCubemapTextureSource(
-            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<uint8_t *>(data), sizeof(GLubyte) * 4,
-            EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, &source, &image);
+            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, reinterpret_cast<uint8_t *>(data),
+            sizeof(GLubyte) * 4, EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, &source, &image);
 
         // Create the target
         GLuint target;
@@ -1299,6 +1430,18 @@ TEST_P(ImageTest, SourceCubeTargetExternal)
 // Test cubemap -> external texture EGL images using ESSL3 shaders.
 TEST_P(ImageTestES3, SourceCubeTargetExternalESSL3)
 {
+    SourceCubeTargetExternalESSL3_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTestES3, SourceCubeTargetExternalESSL3_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceCubeTargetExternalESSL3_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceCubeTargetExternalESSL3_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalESSL3Ext() || !hasBaseExt() || !hasCubemapExt());
 
@@ -1313,8 +1456,8 @@ TEST_P(ImageTestES3, SourceCubeTargetExternalESSL3)
         GLuint source;
         EGLImageKHR image;
         createEGLImageCubemapTextureSource(
-            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<uint8_t *>(data), sizeof(GLubyte) * 4,
-            EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, &source, &image);
+            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, reinterpret_cast<uint8_t *>(data),
+            sizeof(GLubyte) * 4, EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, &source, &image);
 
         // Create the target
         GLuint target;
@@ -1332,6 +1475,18 @@ TEST_P(ImageTestES3, SourceCubeTargetExternalESSL3)
 
 TEST_P(ImageTest, Source3DTargetTexture)
 {
+    Source3DTargetTexture_helper(false);
+}
+
+TEST_P(ImageTest, Source3DTargetTexture_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    Source3DTargetTexture_helper(true);
+}
+
+void ImageTest::Source3DTargetTexture_helper(const bool withColorspace)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has3DTextureExt());
 
@@ -1347,7 +1502,8 @@ TEST_P(ImageTest, Source3DTargetTexture)
         // Create the Image
         GLuint source;
         EGLImageKHR image;
-        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, data, layer, &source,
+        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE,
+                                      get3DAttributes(withColorspace, layer), data, &source,
                                       &image);
 
         // Create the target
@@ -1366,8 +1522,21 @@ TEST_P(ImageTest, Source3DTargetTexture)
 
 TEST_P(ImageTest, Source3DTargetRenderbuffer)
 {
-    // Qualcom drivers appear to always bind the 0 layer of the source 3D texture when the target is
-    // a renderbuffer. They work correctly when the target is a 2D texture. http://anglebug.com/2745
+    Source3DTargetRenderbuffer_helper(false);
+}
+
+TEST_P(ImageTest, Source3DTargetRenderbuffer_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    Source3DTargetRenderbuffer_helper(true);
+}
+
+void ImageTest::Source3DTargetRenderbuffer_helper(const bool withColorspace)
+{
+    // Qualcom drivers appear to always bind the 0 layer of the source 3D texture when the
+    // target is a renderbuffer. They work correctly when the target is a 2D texture.
+    // http://anglebug.com/2745
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
     EGLWindow *window = getEGLWindow();
@@ -1385,7 +1554,9 @@ TEST_P(ImageTest, Source3DTargetRenderbuffer)
         // Create the Image
         GLuint source;
         EGLImageKHR image;
-        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, data, layer, &source,
+
+        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE,
+                                      get3DAttributes(withColorspace, layer), data, &source,
                                       &image);
 
         // Create the target
@@ -1405,6 +1576,18 @@ TEST_P(ImageTest, Source3DTargetRenderbuffer)
 // Test 3D -> external texture EGL images.
 TEST_P(ImageTest, Source3DTargetExternal)
 {
+    Source3DTargetExternal_helper(false);
+}
+
+TEST_P(ImageTest, Source3DTargetExternal_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    Source3DTargetExternal_helper(true);
+}
+
+void ImageTest::Source3DTargetExternal_helper(const bool withColorspace)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalExt() || !hasBaseExt() || !has3DTextureExt());
 
@@ -1423,7 +1606,8 @@ TEST_P(ImageTest, Source3DTargetExternal)
         // Create the Image
         GLuint source;
         EGLImageKHR image;
-        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, data, layer, &source,
+        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE,
+                                      get3DAttributes(withColorspace, layer), data, &source,
                                       &image);
 
         // Create the target
@@ -1443,6 +1627,18 @@ TEST_P(ImageTest, Source3DTargetExternal)
 // Test 3D -> external texture EGL images using ESSL3 shaders.
 TEST_P(ImageTestES3, Source3DTargetExternalESSL3)
 {
+    Source3DTargetExternalESSL3_helper(false);
+}
+
+TEST_P(ImageTestES3, Source3DTargetExternalESSL3_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    Source3DTargetExternalESSL3_helper(true);
+}
+
+void ImageTest::Source3DTargetExternalESSL3_helper(const bool withColorspace)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalESSL3Ext() || !hasBaseExt() ||
                        !has3DTextureExt());
@@ -1459,7 +1655,9 @@ TEST_P(ImageTestES3, Source3DTargetExternalESSL3)
         // Create the Image
         GLuint source;
         EGLImageKHR image;
-        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, data, layer, &source,
+
+        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE,
+                                      get3DAttributes(withColorspace, layer), data, &source,
                                       &image);
 
         // Create the target
@@ -1478,6 +1676,18 @@ TEST_P(ImageTestES3, Source3DTargetExternalESSL3)
 
 TEST_P(ImageTest, SourceRenderbufferTargetTexture)
 {
+    SourceRenderbufferTargetTexture_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, SourceRenderbufferTargetTexture_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceRenderbufferTargetTexture_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceRenderbufferTargetTexture_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasRenderbufferExt());
 
@@ -1486,7 +1696,7 @@ TEST_P(ImageTest, SourceRenderbufferTargetTexture)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, data, &source, &image);
+    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, data, &source, &image);
 
     // Create the target
     GLuint target;
@@ -1504,6 +1714,18 @@ TEST_P(ImageTest, SourceRenderbufferTargetTexture)
 // Test renderbuffer -> external texture EGL images.
 TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal)
 {
+    SourceRenderbufferTargetTextureExternal_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceRenderbufferTargetTextureExternal_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceRenderbufferTargetTextureExternal_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalExt() || !hasBaseExt() || !hasRenderbufferExt());
 
@@ -1515,7 +1737,7 @@ TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, data, &source, &image);
+    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, data, &source, &image);
 
     // Create the target
     GLuint target;
@@ -1533,6 +1755,18 @@ TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal)
 // Test renderbuffer -> external texture EGL images using ESSL3 shaders.
 TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3)
 {
+    SourceRenderbufferTargetTextureExternalESSL3_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceRenderbufferTargetTextureExternalESSL3_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceRenderbufferTargetTextureExternalESSL3_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalESSL3Ext() || !hasBaseExt() ||
                        !hasRenderbufferExt());
@@ -1542,7 +1776,7 @@ TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, data, &source, &image);
+    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, data, &source, &image);
 
     // Create the target
     GLuint target;
@@ -1559,6 +1793,18 @@ TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3)
 
 TEST_P(ImageTest, SourceRenderbufferTargetRenderbuffer)
 {
+    SourceRenderbufferTargetRenderbuffer_helper(kDefaultAttribs);
+}
+
+TEST_P(ImageTest, SourceRenderbufferTargetRenderbuffer_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceRenderbufferTargetRenderbuffer_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceRenderbufferTargetRenderbuffer_helper(const EGLint *attribs)
+{
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasRenderbufferExt());
 
@@ -1567,7 +1813,7 @@ TEST_P(ImageTest, SourceRenderbufferTargetRenderbuffer)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, data, &source, &image);
+    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, data, &source, &image);
 
     // Create the target
     GLuint target;
@@ -1596,7 +1842,8 @@ TEST_P(ImageTest, Deletion)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, originalData, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, originalData,
+                                  &source, &image);
 
     // Create multiple targets
     GLuint targetTexture;
@@ -1762,7 +2009,8 @@ TEST_P(ImageTest, Respecification)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, originalData, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, originalData,
+                                  &source, &image);
 
     // Create the target
     GLuint target;
@@ -1797,7 +2045,8 @@ TEST_P(ImageTest, RespecificationDifferentSize)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, originalData, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, originalData,
+                                  &source, &image);
 
     // Create the target
     GLuint target;
@@ -1835,7 +2084,8 @@ TEST_P(ImageTest, RespecificationWithFBO)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, originalData, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, originalData,
+                                  &source, &image);
 
     // Create the target
     GLuint target;
@@ -1894,7 +2144,8 @@ TEST_P(ImageTest, RespecificationOfOtherLevel)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(2, 2, GL_RGBA, GL_UNSIGNED_BYTE, originalData, &source, &image);
+    createEGLImage2DTextureSource(2, 2, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, originalData,
+                                  &source, &image);
 
     // Create the target
     GLuint target;
@@ -1939,7 +2190,8 @@ TEST_P(ImageTest, UpdatedData)
     // Create the Image
     GLuint source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, originalData, &source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, originalData,
+                                  &source, &image);
 
     // Create multiple targets
     GLuint targetTexture;

@@ -135,6 +135,7 @@ struct ImageState : private angle::NonCopyable
     gl::Extents size;
     size_t samples;
     EGLenum sourceType;
+    EGLenum colorspace;
 };
 
 class Image final : public RefCountObject, public LabeledObject

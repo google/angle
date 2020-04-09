@@ -1338,6 +1338,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_image",                                       image,                              &extensionStrings);
     InsertExtensionString("EGL_KHR_image_base",                                  imageBase,                          &extensionStrings);
     InsertExtensionString("EGL_KHR_image_pixmap",                                imagePixmap,                        &extensionStrings);
+    InsertExtensionString("EGL_EXT_image_gl_colorspace",                         imageGlColorspace,                  &extensionStrings);
     InsertExtensionString("EGL_KHR_gl_colorspace",                               glColorspace,                       &extensionStrings);
     InsertExtensionString("EGL_EXT_gl_colorspace_scrgb",                         glColorspaceScrgb,                  &extensionStrings);
     InsertExtensionString("EGL_EXT_gl_colorspace_scrgb_linear",                  glColorspaceScrgbLinear,            &extensionStrings);

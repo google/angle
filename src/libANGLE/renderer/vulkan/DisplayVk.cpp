@@ -211,6 +211,7 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
         getRenderer()->getFeatures().supportsAndroidHardwareBuffer.enabled;
     outExtensions->surfacelessContext = true;
     outExtensions->glColorspace = getRenderer()->getFeatures().supportsSwapchainColorspace.enabled;
+    outExtensions->imageGlColorspace = outExtensions->glColorspace;
 
 #if defined(ANGLE_PLATFORM_ANDROID)
     outExtensions->framebufferTargetANDROID = true;

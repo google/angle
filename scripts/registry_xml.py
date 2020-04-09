@@ -133,6 +133,7 @@ supported_egl_extensions = [
     "EGL_ANGLE_sync_control_rate",
     "EGL_EXT_create_context_robustness",
     "EGL_EXT_device_query",
+    "EGL_EXT_image_gl_colorspace",
     "EGL_EXT_pixel_format_float",
     "EGL_EXT_platform_base",
     "EGL_EXT_platform_device",

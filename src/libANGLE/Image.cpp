@@ -225,7 +225,9 @@ ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap 
       format(GL_NONE),
       size(),
       samples(),
-      sourceType(target)
+      sourceType(target),
+      colorspace(
+          static_cast<EGLenum>(attribs.get(EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_DEFAULT_EXT)))
 {}
 
 ImageState::~ImageState() {}
@@ -392,7 +394,19 @@ Error Image::initialize(const Display *display)
         ANGLE_TRY(rx::GetAs<ExternalImageSibling>(mState.source)->initialize(display));
     }
 
-    mState.format  = mState.source->getAttachmentFormat(GL_NONE, mState.imageIndex);
+    mState.format = mState.source->getAttachmentFormat(GL_NONE, mState.imageIndex);
+
+    if (mState.colorspace != EGL_GL_COLORSPACE_DEFAULT_EXT)
+    {
+        GLenum nonLinearFormat = mState.format.info->sizedInternalFormat;
+        if (!gl::ColorspaceFormatOverride(mState.colorspace, &nonLinearFormat))
+        {
+            // the colorspace format is not supported
+            return egl::EglBadMatch();
+        }
+        mState.format = gl::Format(nonLinearFormat);
+    }
+
     mState.size    = mState.source->getAttachmentSize(mState.imageIndex);
     mState.samples = mState.source->getAttachmentSamples(mState.imageIndex);
 
