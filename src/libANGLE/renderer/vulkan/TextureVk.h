@@ -430,7 +430,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // The created vkImage usage flag.
     VkImageUsageFlags mImageUsageFlags;
 
-    angle::ObserverBinding mStagingBufferObserverBinding;
+    angle::ObserverBinding mImageObserverBinding;
 };
 
 }  // namespace rx

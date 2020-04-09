@@ -24,6 +24,10 @@
 
 namespace egl
 {
+namespace
+{
+angle::SubjectIndex kSurfaceImplSubjectIndex = 0;
+}  // namespace
 
 SurfaceState::SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn)
     : label(nullptr),
@@ -74,7 +78,8 @@ Surface::Surface(EGLint surfaceType,
       mTexture(nullptr),
       mColorFormat(config->renderTargetFormat),
       mDSFormat(config->depthStencilFormat),
-      mInitState(gl::InitState::Initialized)
+      mInitState(gl::InitState::Initialized),
+      mImplObserverBinding(this, kSurfaceImplSubjectIndex)
 {
     mPostSubBufferRequested =
         (attributes.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE) == EGL_TRUE);
@@ -204,6 +209,8 @@ Error Surface::initialize(const Display *display)
         mState.supportedCompositorTimings = mImplementation->getSupportedCompositorTimings();
         mState.supportedTimestamps        = mImplementation->getSupportedTimestamps();
     }
+
+    mImplObserverBinding.bind(mImplementation);
 
     return NoError();
 }
@@ -577,6 +584,12 @@ Error Surface::getFrameTimestamps(EGLuint64KHR frameId,
                                   EGLnsecsANDROID *values) const
 {
     return mImplementation->getFrameTimestamps(frameId, numTimestamps, timestamps, values);
+}
+
+void Surface::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
+{
+    ASSERT(message == angle::SubjectMessage::SubjectChanged && index == kSurfaceImplSubjectIndex);
+    onStateChange(angle::SubjectMessage::ContentsChanged);
 }
 
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,

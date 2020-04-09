@@ -20,7 +20,7 @@ namespace rx
 {
 class RendererVk;
 
-class SurfaceVk : public SurfaceImpl
+class SurfaceVk : public SurfaceImpl, public angle::ObserverInterface
 {
   public:
     angle::Result getAttachmentRenderTarget(const gl::Context *context,
@@ -32,6 +32,9 @@ class SurfaceVk : public SurfaceImpl
   protected:
     SurfaceVk(const egl::SurfaceState &surfaceState);
     ~SurfaceVk() override;
+
+    // We monitor the staging buffer for changes. This handles staged data from outside this class.
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
     RenderTargetVk mColorRenderTarget;
     RenderTargetVk mDepthStencilRenderTarget;
@@ -78,7 +81,7 @@ class OffscreenSurfaceVk : public SurfaceVk
   protected:
     struct AttachmentImage final : angle::NonCopyable
     {
-        AttachmentImage();
+        AttachmentImage(SurfaceVk *surfaceVk);
         ~AttachmentImage();
 
         angle::Result initialize(DisplayVk *displayVk,
@@ -98,6 +101,7 @@ class OffscreenSurfaceVk : public SurfaceVk
 
         vk::ImageHelper image;
         vk::ImageViewHelper imageViews;
+        angle::ObserverBinding imageObserverBinding;
     };
 
     virtual angle::Result initializeImpl(DisplayVk *displayVk);
@@ -291,6 +295,7 @@ class WindowSurfaceVk : public SurfaceVk
     std::vector<impl::SwapchainCleanupData> mOldSwapchains;
 
     std::vector<impl::SwapchainImage> mSwapchainImages;
+    std::vector<angle::ObserverBinding> mSwapchainImageBindings;
     vk::Semaphore mAcquireImageSemaphore;
     uint32_t mCurrentSwapchainImageIndex;
 
@@ -299,10 +304,12 @@ class WindowSurfaceVk : public SurfaceVk
     // Depth/stencil image.  Possibly multisampled.
     vk::ImageHelper mDepthStencilImage;
     vk::ImageViewHelper mDepthStencilImageViews;
+    angle::ObserverBinding mDepthStencilImageBinding;
 
     // Multisample color image, view and framebuffer, if multisampling enabled.
     vk::ImageHelper mColorImageMS;
     vk::ImageViewHelper mColorImageMSViews;
+    angle::ObserverBinding mColorImageMSBinding;
     vk::Framebuffer mFramebufferMS;
 };
 
