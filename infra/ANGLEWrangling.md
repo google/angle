@@ -95,6 +95,14 @@ We also use additional auto-rollers to roll third party libraries into ANGLE onc
 Please ensure these rollers are also healthy and unblocked. You can trigger manual rolls using the dashboards
 to land high-priority changes.
 
+**NOTE: When Vulkan-Headers roll is broken:**
+
+The Vulkan-Tools, Vulkan-Loader, and Vulkan-ValidationLayers repos all depend on the Vulkan-Headers repo.
+When Vulkan-Headers updates, all of those repos have a roll process managed by LunarG to update them for the
+new Vulkan-Headers. This usually takes 2-3 business days after the Vulkan-Headers update.
+If Vulkan-Headers roll fails, pause the roller with a note that it should be re-enabled when the dependent
+repos have been updated for the latest Vulkan-Headers changes.
+
 The autoroller configurations live in the [skia/buildbot repository](https://skia.googlesource.com/buildbot/)
 in the [autoroll/config](https://skia.googlesource.com/buildbot/+/master/autoroll/config) folder.
 
