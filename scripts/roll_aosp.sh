@@ -15,6 +15,7 @@ deps=(
     "third_party/vulkan-headers/src"
     "third_party/jsoncpp"
     "third_party/jsoncpp/source"
+    "third_party/VulkanMemoryAllocator"
 )
 
 # Delete dep directories so that gclient can check them out
