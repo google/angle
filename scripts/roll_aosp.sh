@@ -6,8 +6,6 @@
 #
 # Generates a roll CL within the ANGLE repository of AOSP.
 
-git merge -X theirs aosp/upstream-mirror
-
 deps=(
     "third_party/spirv-tools/src"
     "third_party/glslang/src"
