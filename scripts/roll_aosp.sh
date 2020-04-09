@@ -20,7 +20,7 @@ deps=(
 
 # Delete dep directories so that gclient can check them out
 for dep in ${deps[@]}; do
-    rm -rf --preserve-root $dep
+    rm -rf $dep
 done
 
 # Sync all of ANGLE's deps so that 'gn gen' works
@@ -69,7 +69,7 @@ git add Android.bp
 # Delete the .git files in each dep so that it can be added to this repo. Some deps like jsoncpp
 # have multiple layers of deps so delete everything before adding them.
 for dep in ${deps[@]}; do
-    rm -rf --preserve-root $dep/.git
+    rm -rf $dep/.git
 done
 
 for dep in ${deps[@]}; do
