@@ -1681,7 +1681,6 @@ TEST_P(ImageTest, SourceRenderbufferTargetTexture)
 
 TEST_P(ImageTest, SourceRenderbufferTargetTexture_Colorspace)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
     SourceRenderbufferTargetTexture_helper(kColorspaceAttribs);
 }
@@ -1719,7 +1718,6 @@ TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal)
 
 TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal_Colorspace)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
     SourceRenderbufferTargetTextureExternal_helper(kColorspaceAttribs);
 }
@@ -1760,7 +1758,6 @@ TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3)
 
 TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3_Colorspace)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
     SourceRenderbufferTargetTextureExternalESSL3_helper(kColorspaceAttribs);
 }
