@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 227
+#define ANGLE_SH_VERSION 228
 
 enum ShShaderSpec
 {
@@ -335,6 +335,9 @@ const ShCompileOptions SH_REWRITE_ROW_MAJOR_MATRICES = UINT64_C(1) << 53;
 
 // Drop any explicit precision qualifiers from shader.
 const ShCompileOptions SH_IGNORE_PRECISION_QUALIFIERS = UINT64_C(1) << 54;
+
+// Allow compiler to do early fragment tests as an optimization.
+const ShCompileOptions SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION = UINT64_C(1) << 55;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
@@ -665,6 +668,8 @@ sh::WorkGroupSize GetComputeShaderLocalGroupSize(const ShHandle handle);
 // Returns the number of views specified through the num_views layout qualifier. If num_views is
 // not set, the function returns -1.
 int GetVertexShaderNumViews(const ShHandle handle);
+// Returns true if compiler has injected instructions for early fragment tests as an optimization
+bool HasEarlyFragmentTestsOptimization(const ShHandle handle);
 
 // Returns true if the passed in variables pack in maxVectors followingthe packing rules from the
 // GLSL 1.017 spec, Appendix A, section 7.

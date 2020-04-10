@@ -126,15 +126,16 @@ class ProgramVk : public ProgramImpl
 
     ANGLE_INLINE angle::Result initGraphicsShaderProgram(ContextVk *contextVk,
                                                          const gl::ShaderType shaderType,
-                                                         bool enableLineRasterEmulation,
+                                                         ProgramTransformOptionBits optionBits,
                                                          ProgramInfo &programInfo)
     {
-        return initProgram(contextVk, shaderType, enableLineRasterEmulation, &programInfo);
+        return initProgram(contextVk, shaderType, optionBits, &programInfo);
     }
 
     ANGLE_INLINE angle::Result initComputeProgram(ContextVk *contextVk, ProgramInfo &programInfo)
     {
-        return initProgram(contextVk, gl::ShaderType::Compute, false, &programInfo);
+        ProgramTransformOptionBits optionBits;
+        return initProgram(contextVk, gl::ShaderType::Compute, optionBits, &programInfo);
     }
 
     ShaderInfo &getShaderInfo() { return mShaderInfo; }
@@ -169,7 +170,7 @@ class ProgramVk : public ProgramImpl
 
     ANGLE_INLINE angle::Result initProgram(ContextVk *contextVk,
                                            const gl::ShaderType shaderType,
-                                           bool enableLineRasterEmulation,
+                                           ProgramTransformOptionBits optionBits,
                                            ProgramInfo *programInfo)
     {
         ASSERT(mShaderInfo.valid());
@@ -179,7 +180,7 @@ class ProgramVk : public ProgramImpl
         if (!programInfo->valid(shaderType))
         {
             ANGLE_TRY(programInfo->initProgram(contextVk, shaderType, mShaderInfo,
-                                               enableLineRasterEmulation));
+                                               mExecutable.mVariableInfoMap, optionBits));
         }
         ASSERT(programInfo->valid(shaderType));
 

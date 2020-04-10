@@ -26,6 +26,7 @@
 #include "compiler/translator/tree_ops/ClampPointSize.h"
 #include "compiler/translator/tree_ops/DeclareAndInitBuiltinsForInstancedMultiview.h"
 #include "compiler/translator/tree_ops/DeferGlobalInitializers.h"
+#include "compiler/translator/tree_ops/EarlyFragmentTestsOptimization.h"
 #include "compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h"
 #include "compiler/translator/tree_ops/EmulatePrecision.h"
@@ -930,6 +931,16 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
+    mEarlyFragmentTestsOptimized = false;
+    if (compileOptions & SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION)
+    {
+        if (mShaderVersion <= 300 && mShaderType == GL_FRAGMENT_SHADER &&
+            !isEarlyFragmentTestsSpecified())
+        {
+            mEarlyFragmentTestsOptimized = CheckEarlyFragmentTestsFeasible(this, root);
+        }
+    }
+
     return true;
 }
 
@@ -1492,7 +1503,7 @@ bool TCompiler::isVaryingDefined(const char *varyingName)
 
 void EmitEarlyFragmentTestsGLSL(const TCompiler &compiler, TInfoSinkBase &sink)
 {
-    if (compiler.isEarlyFragmentTestsSpecified())
+    if (compiler.isEarlyFragmentTestsSpecified() || compiler.isEarlyFragmentTestsOptimized())
     {
         sink << "layout (early_fragment_tests) in;\n";
     }

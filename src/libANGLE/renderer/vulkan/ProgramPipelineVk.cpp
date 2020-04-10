@@ -106,8 +106,10 @@ angle::Result ProgramPipelineVk::transformShaderSpirV(const gl::Context *glConte
                 mExecutable.mVariableInfoMap[shaderType];
             std::vector<uint32_t> transformedSpirvBlob;
 
+            // We skip early fragment tests optimization modification here since we need to keep
+            // original spriv blob here.
             ANGLE_TRY(GlslangWrapperVk::TransformSpirV(
-                contextVk, shaderType, variableInfoMap,
+                contextVk, shaderType, false, variableInfoMap,
                 programVk->getShaderInfo().getSpirvBlobs()[shaderType], &transformedSpirvBlob));
 
             // Save the newly transformed SPIR-V

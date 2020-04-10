@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_PROGRAMEXECUTABLEVK_H_
 #define LIBANGLE_RENDERER_VULKAN_PROGRAMEXECUTABLEVK_H_
 
+#include "common/bitset_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/InfoLog.h"
@@ -45,6 +46,15 @@ class ShaderInfo final : angle::NonCopyable
     bool mIsInitialized = false;
 };
 
+enum class ProgramTransformOption : uint8_t
+{
+    EnableLineRasterEmulation            = 0,
+    RemoveEarlyFragmentTestsOptimization = 1,
+    EnumCount                            = 2,
+    PermutationCount                     = 4,
+};
+using ProgramTransformOptionBits = angle::PackedEnumBitSet<ProgramTransformOption, uint8_t>;
+
 class ProgramInfo final : angle::NonCopyable
 {
   public:
@@ -54,7 +64,8 @@ class ProgramInfo final : angle::NonCopyable
     angle::Result initProgram(ContextVk *contextVk,
                               const gl::ShaderType shaderType,
                               const ShaderInfo &shaderInfo,
-                              bool enableLineRasterEmulation);
+                              const ShaderMapInterfaceVariableInfoMap &variableInfoMap,
+                              ProgramTransformOptionBits optionBits);
     void release(ContextVk *contextVk);
 
     ANGLE_INLINE bool valid(const gl::ShaderType shaderType) const
@@ -108,10 +119,10 @@ class ProgramExecutableVk
                              gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
     const gl::ProgramExecutable &getGlExecutable();
 
-    ProgramInfo &getDefaultProgramInfo() { return mDefaultProgramInfo; }
-    ProgramInfo &getProgramInfo(bool enableLineRasterEmulation)
+    ProgramInfo &getDefaultProgramInfo() { return mProgramInfos[0]; }
+    ProgramInfo &getProgramInfo(ProgramTransformOptionBits optionBits)
     {
-        return enableLineRasterEmulation ? mLineRasterProgramInfo : mDefaultProgramInfo;
+        return mProgramInfos[optionBits.to_ulong()];
     }
 
     angle::Result getGraphicsPipeline(ContextVk *contextVk,
@@ -136,6 +147,8 @@ class ProgramExecutableVk
         ContextVk *contextVk);
 
     angle::Result updateDescriptorSets(ContextVk *contextVk, vk::CommandBuffer *commandBuffer);
+
+    void updateEarlyFragmentTestsOptimization(ContextVk *contextVk);
 
     void setProgram(ProgramVk *program)
     {
@@ -227,8 +240,9 @@ class ProgramExecutableVk
     // since that's slow to calculate.
     ShaderMapInterfaceVariableInfoMap mVariableInfoMap;
 
-    ProgramInfo mDefaultProgramInfo;
-    ProgramInfo mLineRasterProgramInfo;
+    ProgramInfo mProgramInfos[static_cast<int>(ProgramTransformOption::PermutationCount)];
+
+    ProgramTransformOptionBits mTransformOptionBits;
 
     ProgramVk *mProgram;
     ProgramPipelineVk *mProgramPipeline;

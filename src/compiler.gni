@@ -124,6 +124,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/DeclareAndInitBuiltinsForInstancedMultiview.h",
   "src/compiler/translator/tree_ops/DeferGlobalInitializers.cpp",
   "src/compiler/translator/tree_ops/DeferGlobalInitializers.h",
+  "src/compiler/translator/tree_ops/EarlyFragmentTestsOptimization.cpp",
+  "src/compiler/translator/tree_ops/EarlyFragmentTestsOptimization.h",
   "src/compiler/translator/tree_ops/EmulateGLFragColorBroadcast.cpp",
   "src/compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h",
   "src/compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.cpp",

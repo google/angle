@@ -45,9 +45,10 @@ class GlslangWrapperVk
 
     static angle::Result TransformSpirV(vk::Context *context,
                                         const gl::ShaderType shaderType,
+                                        bool removeEarlyFragmentTestsOptimization,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                        std::vector<uint32_t> &initialSpirvBlob,
-                                        std::vector<uint32_t> *shaderCodeOut);
+                                        const SpirvBlob &initialSpirvBlob,
+                                        SpirvBlob *shaderCodeOut);
 };
 }  // namespace rx
 

@@ -499,6 +499,16 @@ int GetVertexShaderNumViews(const ShHandle handle)
     return compiler->getNumViews();
 }
 
+bool HasEarlyFragmentTestsOptimization(const ShHandle handle)
+{
+    TCompiler *compiler = GetCompilerFromHandle(handle);
+    if (compiler == nullptr)
+    {
+        return false;
+    }
+    return compiler->isEarlyFragmentTestsOptimized();
+}
+
 bool CheckVariablesWithinPackingLimits(int maxVectors, const std::vector<ShaderVariable> &variables)
 {
     return CheckVariablesInPackingLimits(maxVectors, variables);

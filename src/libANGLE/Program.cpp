@@ -1569,6 +1569,13 @@ angle::Result Program::link(const Context *context)
             mState.mNumViews = vertexShader->getNumViews();
         }
 
+        gl::Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
+        if (fragmentShader)
+        {
+            mState.mEarlyFramentTestsOptimization =
+                fragmentShader->hasEarlyFragmentTestsOptimization();
+        }
+
         InitUniformBlockLinker(mState, &mResources->uniformBlockLinker);
         InitShaderStorageBlockLinker(mState, &mResources->shaderStorageBlockLinker);
 
@@ -1824,6 +1831,7 @@ void Program::unlink()
     mState.mBaseInstanceLocation              = -1;
     mState.mCachedBaseVertex                  = 0;
     mState.mCachedBaseInstance                = 0;
+    mState.mEarlyFramentTestsOptimization     = false;
 
     mValidated = false;
 
@@ -5054,6 +5062,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeInt(mState.mGeometryShaderMaxVertices);
 
     stream.writeInt(mState.mNumViews);
+    stream.writeInt(mState.mEarlyFramentTestsOptimization);
 
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
@@ -5253,7 +5262,8 @@ angle::Result Program::deserialize(const Context *context,
     mState.mGeometryShaderInvocations         = stream.readInt<int>();
     mState.mGeometryShaderMaxVertices         = stream.readInt<int>();
 
-    mState.mNumViews = stream.readInt<int>();
+    mState.mNumViews                      = stream.readInt<int>();
+    mState.mEarlyFramentTestsOptimization = stream.readInt<bool>();
 
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "Too many vertex attribs for mask: All bits of mAttributesTypeMask types and "

@@ -1189,6 +1189,7 @@ angle::Result ContextVk::handleDirtyGraphicsPipeline(const gl::Context *context,
                                                      vk::CommandBuffer *commandBuffer)
 {
     ASSERT(mExecutable);
+    mExecutable->updateEarlyFragmentTestsOptimization(this);
 
     if (!mCurrentGraphicsPipeline)
     {
@@ -2706,6 +2707,9 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
                 mGraphicsPipelineDesc->updateAlphaToCoverageEnable(
                     &mGraphicsPipelineTransition, glState.isSampleAlphaToCoverageEnabled());
+                ASSERT(gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE >
+                       gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED);
+                iter.setLaterBit(gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE);
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
                 updateSampleMask(glState);

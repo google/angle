@@ -978,6 +978,7 @@ class SpirvTransformer final : angle::NonCopyable
 {
   public:
     SpirvTransformer(const std::vector<uint32_t> &spirvBlobIn,
+                     bool removeEarlyFragmentTestsOptimization,
                      const ShaderInterfaceVariableInfoMap &variableInfoMap,
                      gl::ShaderType shaderType,
                      SpirvBlob *spirvBlobOut)
@@ -989,8 +990,8 @@ class SpirvTransformer final : angle::NonCopyable
     {
         gl::ShaderBitSet allStages;
         allStages.set();
-
-        mBuiltinVariableInfo.activeStages = allStages;
+        mRemoveEarlyFragmentTestsOptimization = removeEarlyFragmentTestsOptimization;
+        mBuiltinVariableInfo.activeStages     = allStages;
     }
 
     bool transform();
@@ -1028,6 +1029,7 @@ class SpirvTransformer final : angle::NonCopyable
     bool transformDecorate(const uint32_t *instruction, size_t wordCount);
     bool transformTypePointer(const uint32_t *instruction, size_t wordCount);
     bool transformVariable(const uint32_t *instruction, size_t wordCount);
+    bool transformExecutionMode(const uint32_t *instruction, size_t wordCount);
 
     // Any other instructions:
     size_t copyInstruction(const uint32_t *instruction, size_t wordCount);
@@ -1037,6 +1039,8 @@ class SpirvTransformer final : angle::NonCopyable
     const std::vector<uint32_t> &mSpirvBlobIn;
     const gl::ShaderType mShaderType;
     bool mHasTransformFeedbackOutput;
+
+    bool mRemoveEarlyFragmentTestsOptimization;
 
     // Input shader variable info map:
     const ShaderInterfaceVariableInfoMap &mVariableInfoMap;
@@ -1236,6 +1240,9 @@ void SpirvTransformer::transformInstruction()
                 break;
             case spv::OpVariable:
                 transformed = transformVariable(instruction, wordCount);
+                break;
+            case spv::OpExecutionMode:
+                transformed = transformExecutionMode(instruction, wordCount);
                 break;
             default:
                 break;
@@ -1714,6 +1721,22 @@ bool SpirvTransformer::transformAccessChain(const uint32_t *instruction, size_t 
     return true;
 }
 
+bool SpirvTransformer::transformExecutionMode(const uint32_t *instruction, size_t wordCount)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpAccessChain, OpInBoundsAccessChain, OpPtrAccessChain,
+    // OpInBoundsPtrAccessChain
+    constexpr size_t kModeIndex  = 2;
+    const uint32_t executionMode = instruction[kModeIndex];
+
+    if (executionMode == spv::ExecutionModeEarlyFragmentTests &&
+        mRemoveEarlyFragmentTestsOptimization)
+    {
+        // skip the copy
+        return true;
+    }
+    return false;
+}
+
 size_t SpirvTransformer::copyInstruction(const uint32_t *instruction, size_t wordCount)
 {
     size_t instructionOffset = mSpirvBlobOut->size();
@@ -1921,6 +1944,7 @@ void GlslangGetShaderSource(GlslangSourceOptions &options,
 
 angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
                                         const gl::ShaderType shaderType,
+                                        bool removeEarlyFragmentTestsOptimization,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const SpirvBlob &initialSpirvBlob,
                                         SpirvBlob *spirvBlobOut)
@@ -1931,7 +1955,8 @@ angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
     }
 
     // Transform the SPIR-V code by assigning location/set/binding values.
-    SpirvTransformer transformer(initialSpirvBlob, variableInfoMap, shaderType, spirvBlobOut);
+    SpirvTransformer transformer(initialSpirvBlob, removeEarlyFragmentTestsOptimization,
+                                 variableInfoMap, shaderType, spirvBlobOut);
     ANGLE_GLSLANG_CHECK(callback, transformer.transform(), GlslangError::InvalidSpirv);
 
     ASSERT(ValidateSpirv(*spirvBlobOut));
@@ -1950,8 +1975,12 @@ angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
 
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
+        // we pass in false here to skip modifications related to  early fragment tests
+        // optimizations and line rasterization. These are done in the initProgram time since they
+        // are related to context state. We must keep original untouched spriv blobs here because we
+        // do not have ability to add back in at initProgram time.
         angle::Result status =
-            GlslangTransformSpirvCode(callback, shaderType, variableInfoMap[shaderType],
+            GlslangTransformSpirvCode(callback, shaderType, false, variableInfoMap[shaderType],
                                       initialSpirvBlobs[shaderType], &(*spirvBlobsOut)[shaderType]);
         if (status != angle::Result::Continue)
         {
