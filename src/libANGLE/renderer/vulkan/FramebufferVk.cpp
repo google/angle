@@ -1357,20 +1357,34 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
         ANGLE_TRY(colorRenderTarget->onColorDraw(contextVk));
 
-        renderPassAttachmentOps.initWithLoadStore(attachmentClearValues.size(),
-                                                  vk::ImageLayout::ColorAttachment,
-                                                  vk::ImageLayout::ColorAttachment);
+        renderPassAttachmentOps.initWithStore(
+            attachmentClearValues.size(), VK_ATTACHMENT_LOAD_OP_LOAD,
+            vk::ImageLayout::ColorAttachment, vk::ImageLayout::ColorAttachment);
         attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
 
     RenderTargetVk *depthStencilRenderTarget = getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
+        VkAttachmentLoadOp loadOp;
+        if (depthStencilRenderTarget->hasDefinedContent())
+        {
+            loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+        }
+        else
+        {
+            loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        }
+        renderPassAttachmentOps.initWithStore(attachmentClearValues.size(), loadOp,
+                                              vk::ImageLayout::DepthStencilAttachment,
+                                              vk::ImageLayout::DepthStencilAttachment);
+
+        // This must be called after hasDefinedContent() since it will set content to valid. We are
+        // tracking content valid very loosely here that as long as it is attached, it assumes will
+        // have valid content. The only time it has undefined content is between swap and
+        // startNewRenderPass
         ANGLE_TRY(depthStencilRenderTarget->onDepthStencilDraw(contextVk));
 
-        renderPassAttachmentOps.initWithLoadStore(attachmentClearValues.size(),
-                                                  vk::ImageLayout::DepthStencilAttachment,
-                                                  vk::ImageLayout::DepthStencilAttachment);
         attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
 

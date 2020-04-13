@@ -1456,16 +1456,17 @@ void AttachmentOpsArray::initDummyOp(size_t index,
     SetBitField(ops.stencilStoreOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
 }
 
-void AttachmentOpsArray::initWithLoadStore(size_t index,
-                                           ImageLayout initialLayout,
-                                           ImageLayout finalLayout)
+void AttachmentOpsArray::initWithStore(size_t index,
+                                       VkAttachmentLoadOp loadOp,
+                                       ImageLayout initialLayout,
+                                       ImageLayout finalLayout)
 {
     PackedAttachmentOpsDesc &ops = mOps[index];
 
     SetBitField(ops.initialLayout, initialLayout);
     SetBitField(ops.finalLayout, finalLayout);
-    SetBitField(ops.loadOp, VK_ATTACHMENT_LOAD_OP_LOAD);
-    SetBitField(ops.stencilLoadOp, VK_ATTACHMENT_LOAD_OP_LOAD);
+    SetBitField(ops.loadOp, loadOp);
+    SetBitField(ops.stencilLoadOp, loadOp);
     SetBitField(ops.storeOp, VK_ATTACHMENT_STORE_OP_STORE);
     SetBitField(ops.stencilStoreOp, VK_ATTACHMENT_STORE_OP_STORE);
 }

@@ -2389,6 +2389,8 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
         // Change depthstencil attachment storeOp to DONT_CARE
         mRenderPassCommands.invalidateRenderPassStencilAttachment(depthStencilAttachmentIndexVk);
         mRenderPassCommands.invalidateRenderPassDepthAttachment(depthStencilAttachmentIndexVk);
+        // Mark content as invalid so that we will not load them in next renderpass
+        depthStencilRenderTarget->invalidateContent();
     }
 
     // Use finalLayout instead of extra barrier for layout change to present
