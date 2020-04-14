@@ -2465,9 +2465,9 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
     ANGLE_FEATURE_CONDITION(features, selectViewInGeometryShader,
                             !deviceCaps.supportsVpRtIndexWriteFromVertexShader);
 
-    // Intel and AMD drivers have trouble clearing textures without causing corruption. NVidia,
-    // on the other hand, can handle.
-    ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, isNvidia);
+    // NVidia drivers have no trouble clearing textures without showing corruption. AMD ones do.
+    // Intel drivers that have trouble have been blocklisted to the DX9 runtime by Chromium.
+    ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, isNvidia || isIntel);
 
     // Don't translate uniform block to StructuredBuffer on Windows 7 and earlier. This is targeted
     // to work around a bug that fails to allocate ShaderResourceView for StructuredBuffer.
