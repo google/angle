@@ -392,6 +392,150 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::yellow);
 }
 
+// Test modifying a shader after it has been detached from a pipeline
+TEST_P(ProgramPipelineTest31, DetachAndModifyShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    // TODO (timvp): Fix this test for Vulkan with PPO
+    // http://anglebug.com/3570
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    const GLchar *vertString = essl31_shaders::vs::Simple();
+    const GLchar *fragString = essl31_shaders::fs::Green();
+
+    GLShader vertShader(GL_VERTEX_SHADER);
+    GLShader fragShader(GL_FRAGMENT_SHADER);
+    mVertProg = glCreateProgram();
+    mFragProg = glCreateProgram();
+
+    // Compile and link a separable vertex shader
+    glShaderSource(vertShader, 1, &vertString, nullptr);
+    glCompileShader(vertShader);
+    glProgramParameteri(mVertProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(mVertProg, vertShader);
+    glLinkProgram(mVertProg);
+    EXPECT_GL_NO_ERROR();
+
+    // Compile and link a separable fragment shader
+    glShaderSource(fragShader, 1, &fragString, nullptr);
+    glCompileShader(fragShader);
+    glProgramParameteri(mFragProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(mFragProg, fragShader);
+    glLinkProgram(mFragProg);
+    EXPECT_GL_NO_ERROR();
+
+    // Generate a program pipeline and attach the programs
+    glGenProgramPipelines(1, &mPipeline);
+    glUseProgramStages(mPipeline, GL_VERTEX_SHADER_BIT, mVertProg);
+    glUseProgramStages(mPipeline, GL_FRAGMENT_SHADER_BIT, mFragProg);
+    glBindProgramPipeline(mPipeline);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw once to ensure this worked fine
+    ProgramPipelineTest31::drawQuad("a_position", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Detach the fragment shader and modify it such that it no longer fits with this pipeline
+    glDetachShader(mFragProg, fragShader);
+
+    // Add an input to the fragment shader, which will make it incompatible
+    const GLchar *fragString2 = R"(#version 310 es
+precision highp float;
+in vec4 color;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = color;
+})";
+    glShaderSource(fragShader, 1, &fragString2, nullptr);
+    glCompileShader(fragShader);
+
+    // Link and draw with the program again, which should be fine since the shader was detached
+    glLinkProgram(mFragProg);
+
+    ProgramPipelineTest31::drawQuad("a_position", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test binding two programs that use a texture as different types
+TEST_P(ProgramPipelineTest31, DifferentTextureTypes)
+{
+    // Only the Vulkan backend supports PPO
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    // TODO (timvp): Fix this test for Vulkan with PPO
+    // http://anglebug.com/3570
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    // Per the OpenGL ES 3.1 spec:
+    //
+    // It is not allowed to have variables of different sampler types pointing to the same texture
+    // image unit within a program object. This situation can only be detected at the next rendering
+    // command issued which triggers shader invocations, and an INVALID_OPERATION error will then
+    // be generated
+    //
+
+    // Create a vertex shader that uses the texture as 2D
+    const GLchar *vertString = R"(#version 310 es
+precision highp float;
+in vec4 a_position;
+uniform sampler2D tex2D;
+layout(location = 0) out vec4 texColorOut;
+layout(location = 1) out vec2 texCoordOut;
+void main()
+{
+    gl_Position = a_position;
+    vec2 texCoord = vec2(a_position.x, a_position.y) * 0.5 + vec2(0.5);
+    texColorOut = textureLod(tex2D, texCoord, 0.0);
+    texCoordOut = texCoord;
+})";
+
+    // Create a fragment shader that uses the texture as Cube
+    const GLchar *fragString = R"(#version 310 es
+precision highp float;
+layout(location = 0) in vec4 texColor;
+layout(location = 1) in vec2 texCoord;
+uniform samplerCube texCube;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = texture(texCube, vec3(texCoord.x, texCoord.y, 0.0));
+})";
+
+    // Create and populate the 2D texture
+    std::array<GLColor, 4> colors = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Create a pipeline that uses the bad combination.  This should fail to link the pipeline.
+    bindProgramPipeline(vertString, fragString);
+    ProgramPipelineTest31::drawQuad("a_position", 0.5f, 1.0f);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Update the fragment shader to correctly use 2D texture
+    const GLchar *fragString2 = R"(#version 310 es
+precision highp float;
+layout(location = 0) in vec4 texColor;
+layout(location = 1) in vec2 texCoord;
+uniform sampler2D tex2D;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = texture(tex2D, texCoord);
+})";
+
+    // Bind the pipeline again, which should succeed.
+    bindProgramPipeline(vertString, fragString2);
+    ProgramPipelineTest31::drawQuad("a_position", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(ProgramPipelineTest);
 ANGLE_INSTANTIATE_TEST_ES31(ProgramPipelineTest31);
 

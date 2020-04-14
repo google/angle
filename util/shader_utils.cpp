@@ -574,6 +574,18 @@ void main()
 })";
 }
 
+// A shader that fills with 100% opaque green.
+const char *Green()
+{
+    return R"(#version 310 es
+precision highp float;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+}
+
 }  // namespace fs
 }  // namespace essl31_shaders
 }  // namespace angle
