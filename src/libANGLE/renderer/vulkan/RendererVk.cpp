@@ -1537,6 +1537,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     bool isIntel    = IsIntel(mPhysicalDeviceProperties.vendorID);
     bool isNvidia   = IsNvidia(mPhysicalDeviceProperties.vendorID);
     bool isQualcomm = IsQualcomm(mPhysicalDeviceProperties.vendorID);
+    bool isARM      = IsARM(mPhysicalDeviceProperties.vendorID);
     bool isSwS =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
 
@@ -1646,7 +1647,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     ANGLE_FEATURE_CONDITION(&mFeatures, forceOldRewriteStructSamplers, IsAndroid() && !isSwS);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery,
-                            isIntel || (IsWindows() && isAMD) || IsFuchsia());
+                            isIntel || (IsWindows() && isAMD) || IsFuchsia() || isARM);
 
     // Disabled on AMD/windows due to buggy behavior.
     ANGLE_FEATURE_CONDITION(&mFeatures, disallowSeamfulCubeMapEmulation, IsWindows() && isAMD);
