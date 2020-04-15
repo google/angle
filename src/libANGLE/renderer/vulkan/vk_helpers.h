@@ -825,7 +825,8 @@ class ImageHelper final : public Resource, public angle::Subject
     gl::Extents getLevelExtents2D(uint32_t level) const;
 
     // Clear either color or depth/stencil based on image format.
-    void clear(const VkClearValue &value,
+    void clear(VkImageAspectFlags aspectFlags,
+               const VkClearValue &value,
                uint32_t mipLevel,
                uint32_t baseArrayLayer,
                uint32_t layerCount,
@@ -1031,6 +1032,7 @@ class ImageHelper final : public Resource, public angle::Subject
     };
     struct ClearUpdate
     {
+        VkImageAspectFlags aspectFlags;
         VkClearValue value;
         uint32_t levelIndex;
         uint32_t layerIndex;
@@ -1052,7 +1054,9 @@ class ImageHelper final : public Resource, public angle::Subject
         SubresourceUpdate();
         SubresourceUpdate(BufferHelper *bufferHelperIn, const VkBufferImageCopy &copyRegion);
         SubresourceUpdate(ImageHelper *image, const VkImageCopy &copyRegion);
-        SubresourceUpdate(const VkClearValue &clearValue, const gl::ImageIndex &imageIndex);
+        SubresourceUpdate(VkImageAspectFlags aspectFlags,
+                          const VkClearValue &clearValue,
+                          const gl::ImageIndex &imageIndex);
         SubresourceUpdate(const SubresourceUpdate &other);
 
         void release(RendererVk *renderer);
@@ -1092,8 +1096,7 @@ class ImageHelper final : public Resource, public angle::Subject
                     uint32_t layerCount,
                     CommandBuffer *commandBuffer);
 
-    void clearDepthStencil(VkImageAspectFlags imageAspectFlags,
-                           VkImageAspectFlags clearAspectFlags,
+    void clearDepthStencil(VkImageAspectFlags clearAspectFlags,
                            const VkClearDepthStencilValue &depthStencil,
                            uint32_t baseMipLevel,
                            uint32_t levelCount,

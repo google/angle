@@ -2413,8 +2413,7 @@ void ImageHelper::clearColor(const VkClearColorValue &color,
     commandBuffer->clearColorImage(mImage, getCurrentLayout(), color, 1, &range);
 }
 
-void ImageHelper::clearDepthStencil(VkImageAspectFlags imageAspectFlags,
-                                    VkImageAspectFlags clearAspectFlags,
+void ImageHelper::clearDepthStencil(VkImageAspectFlags clearAspectFlags,
                                     const VkClearDepthStencilValue &depthStencil,
                                     uint32_t baseMipLevel,
                                     uint32_t levelCount,
@@ -2437,7 +2436,8 @@ void ImageHelper::clearDepthStencil(VkImageAspectFlags imageAspectFlags,
     commandBuffer->clearDepthStencilImage(mImage, getCurrentLayout(), depthStencil, 1, &clearRange);
 }
 
-void ImageHelper::clear(const VkClearValue &value,
+void ImageHelper::clear(VkImageAspectFlags aspectFlags,
+                        const VkClearValue &value,
                         uint32_t mipLevel,
                         uint32_t baseArrayLayer,
                         uint32_t layerCount,
@@ -2448,9 +2448,8 @@ void ImageHelper::clear(const VkClearValue &value,
 
     if (isDepthStencil)
     {
-        const VkImageAspectFlags aspect = GetDepthStencilAspectFlags(mFormat->actualImageFormat());
-        clearDepthStencil(aspect, aspect, value.depthStencil, mipLevel, 1, baseArrayLayer,
-                          layerCount, commandBuffer);
+        clearDepthStencil(aspectFlags, value.depthStencil, mipLevel, 1, baseArrayLayer, layerCount,
+                          commandBuffer);
     }
     else
     {
@@ -3092,17 +3091,21 @@ void ImageHelper::stageSubresourceUpdateFromImage(ImageHelper *image,
 
 void ImageHelper::stageSubresourceClear(const gl::ImageIndex &index)
 {
+    const VkImageAspectFlags aspectFlags = getAspectFlags();
+
     ASSERT(mFormat);
     VkClearValue clearValue = GetClearValue(*mFormat);
-    appendSubresourceUpdate(SubresourceUpdate(clearValue, index));
+    appendSubresourceUpdate(SubresourceUpdate(aspectFlags, clearValue, index));
 }
 
 void ImageHelper::stageRobustResourceClear(const gl::ImageIndex &index, const vk::Format &format)
 {
+    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(format.actualImageFormat());
+
     // Robust clears must only be staged if we do not have any prior data for this subresource.
     ASSERT(!isUpdateStaged(index.getLevelIndex(), index.getLayerIndex()));
     VkClearValue clearValue = GetClearValue(format);
-    appendSubresourceUpdate(SubresourceUpdate(clearValue, index));
+    appendSubresourceUpdate(SubresourceUpdate(aspectFlags, clearValue, index));
 }
 
 void ImageHelper::stageClearIfEmulatedFormat(Context *context)
@@ -3121,13 +3124,15 @@ void ImageHelper::stageClearIfEmulatedFormat(Context *context)
         clearValue.color = kEmulatedInitColorValue;
     }
 
+    const VkImageAspectFlags aspectFlags = getAspectFlags();
+
     // If the image has an emulated channel and robust resource init is not enabled, always clear
     // it. These channels will be masked out in future writes, and shouldn't contain uninitialized
     // values.
     for (uint32_t level = 0; level < mLevelCount; ++level)
     {
         gl::ImageIndex index = gl::ImageIndex::Make2DArrayRange(level, 0, mLayerCount);
-        prependSubresourceUpdate(SubresourceUpdate(clearValue, index));
+        prependSubresourceUpdate(SubresourceUpdate(aspectFlags, clearValue, index));
     }
 }
 
@@ -3259,8 +3264,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
         if (update.updateSource == UpdateSource::Clear)
         {
-            clear(update.clear.value, updateMipLevel, updateBaseLayer, updateLayerCount,
-                  commandBuffer);
+            clear(update.clear.aspectFlags, update.clear.value, updateMipLevel, updateBaseLayer,
+                  updateLayerCount, commandBuffer);
         }
         else if (update.updateSource == UpdateSource::Buffer)
         {
@@ -3705,14 +3710,16 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(ImageHelper *imageIn,
     : updateSource(UpdateSource::Image), image{imageIn, copyRegionIn}
 {}
 
-ImageHelper::SubresourceUpdate::SubresourceUpdate(const VkClearValue &clearValue,
+ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags,
+                                                  const VkClearValue &clearValue,
                                                   const gl::ImageIndex &imageIndex)
     : updateSource(UpdateSource::Clear)
 {
-    clear.value      = clearValue;
-    clear.levelIndex = imageIndex.getLevelIndex();
-    clear.layerIndex = imageIndex.hasLayer() ? imageIndex.getLayerIndex() : 0;
-    clear.layerCount = imageIndex.getLayerCount();
+    clear.aspectFlags = aspectFlags;
+    clear.value       = clearValue;
+    clear.levelIndex  = imageIndex.getLevelIndex();
+    clear.layerIndex  = imageIndex.hasLayer() ? imageIndex.getLayerIndex() : 0;
+    clear.layerCount  = imageIndex.getLayerCount();
 }
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other)
