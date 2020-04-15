@@ -4380,13 +4380,13 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
         GLFramebuffer readFBO;
         glBindFramebuffer(GL_FRAMEBUFFER, readFBO);
 
-        for (int i = 0; i < 4; ++i)
+        for (int attachmentIndex = 0; attachmentIndex < 4; ++attachmentIndex)
         {
-            if (mask & (1 << i))
+            if (mask & (1 << attachmentIndex))
             {
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
-                                          renderbuffers[i]);
-                EXPECT_PIXEL_COLOR_EQ(0, 0, color);
+                                          renderbuffers[attachmentIndex]);
+                EXPECT_PIXEL_COLOR_EQ(0, 0, color) << "attachment " << attachmentIndex;
             }
         }
         ASSERT_GL_NO_ERROR();

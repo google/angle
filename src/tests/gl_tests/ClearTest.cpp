@@ -215,7 +215,7 @@ class MaskedScissoredClearTestBase
         setConfigStencilBits(8);
     }
 
-    void MaskedScissoredColorDepthStencilClear(
+    void maskedScissoredColorDepthStencilClear(
         const MaskedScissoredClearVariationsTestParams &params);
 
     bool mHasDepth   = true;
@@ -1268,7 +1268,7 @@ TEST_P(ClearTestES3, RepeatedClear)
     ASSERT_GL_NO_ERROR();
 }
 
-void MaskedScissoredClearTestBase::MaskedScissoredColorDepthStencilClear(
+void MaskedScissoredClearTestBase::maskedScissoredColorDepthStencilClear(
     const MaskedScissoredClearVariationsTestParams &params)
 {
     // Flaky on Android Nexus 5x and Pixel 2, possible Qualcomm driver bug.
@@ -1449,7 +1449,7 @@ void MaskedScissoredClearTestBase::MaskedScissoredColorDepthStencilClear(
 // Tests combinations of color, depth, stencil clears with or without masks or scissor.
 TEST_P(MaskedScissoredClearTest, Test)
 {
-    MaskedScissoredColorDepthStencilClear(GetParam());
+    maskedScissoredColorDepthStencilClear(GetParam());
 }
 
 // Tests combinations of color, depth, stencil clears with or without masks or scissor.
@@ -1483,7 +1483,7 @@ TEST_P(VulkanClearTest, Test)
         bindColorStencilFBO();
     }
 
-    MaskedScissoredColorDepthStencilClear(GetParam());
+    maskedScissoredColorDepthStencilClear(GetParam());
 }
 
 // Test that just clearing a nonexistent drawbuffer of the default framebuffer doesn't cause an
