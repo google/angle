@@ -813,6 +813,7 @@ class ImageHelper final : public Resource, public angle::Subject
     const Image &getImage() const { return mImage; }
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
 
+    VkImageType getType() const { return mImageType; }
     const VkExtent3D &getExtents() const { return mExtents; }
     uint32_t getLayerCount() const { return mLayerCount; }
     uint32_t getLevelCount() const { return mLevelCount; }
@@ -1110,12 +1111,14 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void appendSubresourceUpdate(SubresourceUpdate &&update);
     void prependSubresourceUpdate(SubresourceUpdate &&update);
+    void resetCachedProperties();
 
     // Vulkan objects.
     Image mImage;
     DeviceMemory mDeviceMemory;
 
     // Image properties.
+    VkImageType mImageType;
     VkExtent3D mExtents;
     const Format *mFormat;
     GLint mSamples;

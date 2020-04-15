@@ -1938,21 +1938,14 @@ void BufferHelper::updateWriteBarrier(VkAccessFlags writeAccessType,
 
 // ImageHelper implementation.
 ImageHelper::ImageHelper()
-    : mExtents{},
-      mFormat(nullptr),
-      mSamples(1),
-      mSerial(rx::kZeroSerial),
-      mCurrentLayout(ImageLayout::Undefined),
-      mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
-      mBaseLevel(0),
-      mMaxLevel(0),
-      mLayerCount(0),
-      mLevelCount(0)
-{}
+{
+    resetCachedProperties();
+}
 
 ImageHelper::ImageHelper(ImageHelper &&other)
     : mImage(std::move(other.mImage)),
       mDeviceMemory(std::move(other.mDeviceMemory)),
+      mImageType(other.mImageType),
       mExtents(other.mExtents),
       mFormat(other.mFormat),
       mSamples(other.mSamples),
@@ -1967,17 +1960,27 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mSubresourceUpdates(std::move(other.mSubresourceUpdates))
 {
     ASSERT(this != &other);
-    other.mCurrentLayout = ImageLayout::Undefined;
-    other.mBaseLevel     = 0;
-    other.mMaxLevel      = 0;
-    other.mLayerCount    = 0;
-    other.mLevelCount    = 0;
-    other.mSerial        = rx::kZeroSerial;
+    other.resetCachedProperties();
 }
 
 ImageHelper::~ImageHelper()
 {
     ASSERT(!valid());
+}
+
+void ImageHelper::resetCachedProperties()
+{
+    mImageType               = VK_IMAGE_TYPE_2D;
+    mExtents                 = {};
+    mFormat                  = nullptr;
+    mSamples                 = 1;
+    mSerial                  = rx::kZeroSerial;
+    mCurrentLayout           = ImageLayout::Undefined;
+    mCurrentQueueFamilyIndex = std::numeric_limits<uint32_t>::max();
+    mBaseLevel               = 0;
+    mMaxLevel                = 0;
+    mLayerCount              = 0;
+    mLevelCount              = 0;
 }
 
 void ImageHelper::initStagingBuffer(RendererVk *renderer,
@@ -2021,6 +2024,7 @@ angle::Result ImageHelper::initExternal(Context *context,
 {
     ASSERT(!valid());
 
+    mImageType  = gl_vk::GetImageType(textureType);
     mExtents    = extents;
     mFormat     = &format;
     mSamples    = samples;
@@ -2040,7 +2044,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.pNext                 = externalImageCreateInfo;
     imageInfo.flags                 = GetImageCreateFlags(textureType);
-    imageInfo.imageType             = gl_vk::GetImageType(textureType);
+    imageInfo.imageType             = mImageType;
     imageInfo.format                = format.vkImageFormat;
     imageInfo.extent                = mExtents;
     imageInfo.mipLevels             = mipLevels;
@@ -2225,6 +2229,7 @@ void ImageHelper::destroy(RendererVk *renderer)
     mDeviceMemory.destroy(device);
     mStagingBuffer.destroy(renderer);
     mCurrentLayout = ImageLayout::Undefined;
+    mImageType     = VK_IMAGE_TYPE_2D;
     mLayerCount    = 0;
     mLevelCount    = 0;
     mSerial        = rx::kZeroSerial;
@@ -2260,6 +2265,7 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     ASSERT(!valid());
 
     gl_vk::GetExtent(glExtents, &mExtents);
+    mImageType  = VK_IMAGE_TYPE_2D;
     mFormat     = &format;
     mSamples    = 1;
     mLayerCount = layerCount;
@@ -2270,7 +2276,7 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     VkImageCreateInfo imageInfo     = {};
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.flags                 = 0;
-    imageInfo.imageType             = VK_IMAGE_TYPE_2D;
+    imageInfo.imageType             = mImageType;
     imageInfo.format                = format.vkImageFormat;
     imageInfo.extent                = mExtents;
     imageInfo.mipLevels             = 1;
