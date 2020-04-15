@@ -59,14 +59,15 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
 }
 
 angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
+                                        const gl::ShaderBitSet &linkedShaderStages,
                                         const gl::Caps &glCaps,
                                         const gl::ShaderMap<std::string> &shaderSources,
                                         const ShaderMapInterfaceVariableInfoMap &variableInfoMap,
                                         gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
     return rx::GlslangGetShaderSpirvCode(
-        [context](GlslangError error) { return HandleError(context, error); }, glCaps,
-        shaderSources, variableInfoMap, shaderCodeOut);
+        [context](GlslangError error) { return HandleError(context, error); }, linkedShaderStages,
+        glCaps, shaderSources, variableInfoMap, shaderCodeOut);
 }
 }  // namespace mtl
 }  // namespace rx

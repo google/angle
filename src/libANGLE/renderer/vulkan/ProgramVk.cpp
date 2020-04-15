@@ -302,7 +302,8 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
 
     // Compile the shaders.
     angle::Result status =
-        mShaderInfo.initShaders(contextVk, shaderSources, mExecutable.mVariableInfoMap);
+        mShaderInfo.initShaders(contextVk, mState.getProgramExecutable().getLinkedShaderStages(),
+                                shaderSources, mExecutable.mVariableInfoMap);
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);

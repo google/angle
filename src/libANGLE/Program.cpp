@@ -1211,20 +1211,12 @@ bool ProgramState::hasAttachedShader() const
 
 ShaderType ProgramState::getFirstAttachedShaderStageType() const
 {
-    for (const gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
+    if (mExecutable.getLinkedShaderStages().none())
     {
-        if (mExecutable.hasLinkedShaderStage(shaderType))
-        {
-            return shaderType;
-        }
+        return ShaderType::InvalidEnum;
     }
 
-    if (mExecutable.hasLinkedShaderStage(ShaderType::Compute))
-    {
-        return ShaderType::Compute;
-    }
-
-    return ShaderType::InvalidEnum;
+    return *mExecutable.getLinkedShaderStages().begin();
 }
 
 ShaderType ProgramState::getLastAttachedShaderStageType() const
@@ -1665,13 +1657,13 @@ void Program::resolveLinkImpl(const Context *context)
 
 void Program::updateLinkedShaderStages()
 {
-    mState.mExecutable.getLinkedShaderStages().reset();
+    mState.mExecutable.resetLinkedShaderStages();
 
     for (const Shader *shader : mState.mAttachedShaders)
     {
         if (shader)
         {
-            mState.mExecutable.getLinkedShaderStages().set(shader->getType());
+            mState.mExecutable.setLinkedShaderStages(shader->getType());
         }
     }
 }
@@ -5064,13 +5056,6 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeInt(mState.mNumViews);
     stream.writeInt(mState.mEarlyFramentTestsOptimization);
 
-    static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
-                  "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
-    stream.writeInt(static_cast<int>(mState.mExecutable.mAttributesTypeMask.to_ulong()));
-    stream.writeInt(static_cast<int>(mState.mExecutable.mAttributesMask.to_ulong()));
-    stream.writeInt(mState.mExecutable.getActiveAttribLocationsMask().to_ulong());
-    stream.writeInt(mState.mExecutable.mMaxActiveAttribLocation);
-
     stream.writeInt(mState.getProgramInputs().size());
     for (const sh::ShaderVariable &attrib : mState.getProgramInputs())
     {
@@ -5216,7 +5201,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeInt(mState.getAtomicCounterUniformRange().low());
     stream.writeInt(mState.getAtomicCounterUniformRange().high());
 
-    stream.writeInt(mState.mExecutable.getLinkedShaderStages().to_ulong());
+    mState.mExecutable.save(&stream);
 
     mProgram->save(context, &stream);
 
@@ -5264,14 +5249,6 @@ angle::Result Program::deserialize(const Context *context,
 
     mState.mNumViews                      = stream.readInt<int>();
     mState.mEarlyFramentTestsOptimization = stream.readInt<bool>();
-
-    static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
-                  "Too many vertex attribs for mask: All bits of mAttributesTypeMask types and "
-                  "mask fit into 32 bits each");
-    mState.mExecutable.mAttributesTypeMask = gl::ComponentTypeMask(stream.readInt<uint32_t>());
-    mState.mExecutable.mAttributesMask     = stream.readInt<gl::AttributesMask>();
-    mState.mExecutable.mActiveAttribLocationsMask = stream.readInt<gl::AttributesMask>();
-    mState.mExecutable.mMaxActiveAttribLocation   = stream.readInt<unsigned int>();
 
     unsigned int attribCount = stream.readInt<unsigned int>();
     ASSERT(mState.mProgramInputs.empty());
@@ -5470,12 +5447,13 @@ angle::Result Program::deserialize(const Context *context,
 
     static_assert(static_cast<unsigned long>(ShaderType::EnumCount) <= sizeof(unsigned long) * 8,
                   "Too many shader types");
-    mState.mExecutable.getLinkedShaderStages() = ShaderBitSet(stream.readInt<uint8_t>());
 
     if (!mState.mAttachedShaders[ShaderType::Compute])
     {
         mState.updateTransformFeedbackStrides();
     }
+
+    mState.mExecutable.load(&stream);
 
     postResolveLink(context);
 

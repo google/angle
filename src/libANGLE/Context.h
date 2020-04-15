@@ -651,6 +651,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                           GLsizei count,
                           const GLint *v);
 
+    void convertPpoToComputeOrDraw(bool isCompute);
+
     State mState;
     bool mShared;
     bool mSkipValidation;

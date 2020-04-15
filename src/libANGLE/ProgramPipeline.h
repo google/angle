@@ -38,6 +38,12 @@ class ProgramPipelineState final : angle::NonCopyable
 
     const std::string &getLabel() const;
 
+    // A PPO can have both graphics and compute programs attached, so
+    // we don't know if the PPO is a 'graphics' or 'compute' PPO until the
+    // actual draw/dispatch call.
+    bool isCompute() const { return mIsCompute; }
+    void setIsCompute(bool isCompute) { mIsCompute = isCompute; }
+
     const ProgramExecutable &getProgramExecutable() const { return mExecutable; }
     ProgramExecutable &getProgramExecutable() { return mExecutable; }
 
@@ -66,6 +72,8 @@ class ProgramPipelineState final : angle::NonCopyable
     friend class ProgramPipeline;
 
     std::string mLabel;
+
+    bool mIsCompute;
 
     // The active shader program
     Program *mActiveShaderProgram;
@@ -140,9 +148,9 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public L
     {
         // One of the program stages in the PPO changed.
         DIRTY_BIT_PROGRAM_STAGE,
-        DIRTY_BIT_DUMMY,  // Used to make DIRTY_BIT_COUNT > 0
+        DIRTY_BIT_DRAW_DISPATCH_CHANGE,
 
-        DIRTY_BIT_COUNT = DIRTY_BIT_DUMMY,
+        DIRTY_BIT_COUNT = DIRTY_BIT_DRAW_DISPATCH_CHANGE + 1,
     };
 
     using DirtyBits = angle::BitSet<DIRTY_BIT_COUNT>;

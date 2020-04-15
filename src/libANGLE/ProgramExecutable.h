@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_PROGRAMEXECUTABLE_H_
 #define LIBANGLE_PROGRAMEXECUTABLE_H_
 
+#include "BinaryStream.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/InfoLog.h"
 #include "libANGLE/VaryingPacking.h"
@@ -63,6 +64,9 @@ class ProgramExecutable
 
     void reset();
 
+    void save(gl::BinaryOutputStream *stream) const;
+    void load(gl::BinaryInputStream *stream);
+
     const ProgramState *getProgramState(ShaderType shaderType) const;
 
     int getInfoLogLength() const;
@@ -71,15 +75,38 @@ class ProgramExecutable
     std::string getInfoLogString() const;
     void resetInfoLog() { mInfoLog.reset(); }
 
-    const ShaderBitSet &getLinkedShaderStages() const { return mLinkedShaderStages; }
-    ShaderBitSet &getLinkedShaderStages() { return mLinkedShaderStages; }
+    void resetLinkedShaderStages()
+    {
+        mLinkedComputeShaderStages.reset();
+        mLinkedGraphicsShaderStages.reset();
+    }
+    const ShaderBitSet &getLinkedShaderStages() const
+    {
+        return isCompute() ? mLinkedComputeShaderStages : mLinkedGraphicsShaderStages;
+    }
+    void setLinkedShaderStages(ShaderType shaderType)
+    {
+        if (shaderType == ShaderType::Compute)
+        {
+            mLinkedComputeShaderStages.set(ShaderType::Compute);
+        }
+        else
+        {
+            mLinkedGraphicsShaderStages.set(shaderType);
+        }
+    }
     bool hasLinkedShaderStage(ShaderType shaderType) const
     {
         ASSERT(shaderType != ShaderType::InvalidEnum);
-        return mLinkedShaderStages[shaderType];
+        return (shaderType == ShaderType::Compute) ? mLinkedComputeShaderStages[shaderType]
+                                                   : mLinkedGraphicsShaderStages[shaderType];
     }
-    size_t getLinkedShaderStageCount() const { return mLinkedShaderStages.count(); }
-    bool isCompute() const { return hasLinkedShaderStage(ShaderType::Compute); }
+    size_t getLinkedShaderStageCount() const
+    {
+        return isCompute() ? mLinkedComputeShaderStages.count()
+                           : mLinkedGraphicsShaderStages.count();
+    }
+    bool isCompute() const;
 
     const AttributesMask &getActiveAttribLocationsMask() const
     {
@@ -136,6 +163,8 @@ class ProgramExecutable
         mProgramPipelineState = state;
     }
 
+    void setIsCompute(bool isComputeIn);
+
   private:
     // TODO(timvp): http://anglebug.com/3570: Investigate removing these friend
     // class declarations and accessing the necessary members with getters/setters.
@@ -156,7 +185,8 @@ class ProgramExecutable
 
     InfoLog mInfoLog;
 
-    ShaderBitSet mLinkedShaderStages;
+    ShaderBitSet mLinkedGraphicsShaderStages;
+    ShaderBitSet mLinkedComputeShaderStages;
 
     angle::BitSet<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
     unsigned int mMaxActiveAttribLocation;

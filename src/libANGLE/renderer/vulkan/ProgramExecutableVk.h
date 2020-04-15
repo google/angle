@@ -28,6 +28,7 @@ class ShaderInfo final : angle::NonCopyable
     ~ShaderInfo();
 
     angle::Result initShaders(ContextVk *contextVk,
+                              const gl::ShaderBitSet &linkedShaderStages,
                               const gl::ShaderMap<std::string> &shaderSources,
                               const ShaderMapInterfaceVariableInfoMap &variableInfoMap);
     void release(ContextVk *contextVk);
@@ -119,11 +120,12 @@ class ProgramExecutableVk
                              gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
     const gl::ProgramExecutable &getGlExecutable();
 
-    ProgramInfo &getDefaultProgramInfo() { return mProgramInfos[0]; }
-    ProgramInfo &getProgramInfo(ProgramTransformOptionBits optionBits)
+    ProgramInfo &getGraphicsDefaultProgramInfo() { return mGraphicsProgramInfos[0]; }
+    ProgramInfo &getGraphicsProgramInfo(ProgramTransformOptionBits optionBits)
     {
-        return mProgramInfos[optionBits.to_ulong()];
+        return mGraphicsProgramInfos[optionBits.to_ulong()];
     }
+    ProgramInfo &getComputeProgramInfo() { return mComputeProgramInfo; }
 
     angle::Result getGraphicsPipeline(ContextVk *contextVk,
                                       gl::PrimitiveMode mode,
@@ -223,7 +225,6 @@ class ProgramExecutableVk
     // deleted while this program is in use.
     vk::BindingPointer<vk::PipelineLayout> mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
-    bool mPipelineLayoutCreated;
 
     // Keep bindings to the descriptor pools. This ensures the pools stay valid while the Program
     // is in use.
@@ -240,7 +241,8 @@ class ProgramExecutableVk
     // since that's slow to calculate.
     ShaderMapInterfaceVariableInfoMap mVariableInfoMap;
 
-    ProgramInfo mProgramInfos[static_cast<int>(ProgramTransformOption::PermutationCount)];
+    ProgramInfo mGraphicsProgramInfos[static_cast<int>(ProgramTransformOption::PermutationCount)];
+    ProgramInfo mComputeProgramInfo;
 
     ProgramTransformOptionBits mTransformOptionBits;
 

@@ -2659,17 +2659,14 @@ angle::Result ContextVk::updateScissor(const gl::State &glState)
 
 void ContextVk::invalidateProgramBindingHelper(const gl::State &glState)
 {
-    mExecutable = nullptr;
+    mProgram         = nullptr;
+    mProgramPipeline = nullptr;
+    mExecutable      = nullptr;
 
     if (glState.getProgram())
     {
         mProgram    = vk::GetImpl(glState.getProgram());
         mExecutable = &mProgram->getExecutable();
-    }
-    else
-    {
-        mProgram    = nullptr;
-        mExecutable = nullptr;
     }
 
     if (glState.getProgramPipeline())
@@ -2680,10 +2677,6 @@ void ContextVk::invalidateProgramBindingHelper(const gl::State &glState)
             // A bound program always overrides a program pipeline
             mExecutable = &mProgramPipeline->getExecutable();
         }
-    }
-    else
-    {
-        mProgramPipeline = nullptr;
     }
 }
 

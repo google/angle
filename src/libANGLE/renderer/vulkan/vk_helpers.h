@@ -1278,14 +1278,6 @@ class ShaderProgramHelper : angle::NonCopyable
     void destroy(VkDevice device);
     void release(ContextVk *contextVk);
 
-    bool isGraphicsProgram() const
-    {
-        ASSERT((mShaders[gl::ShaderType::Vertex].valid() ||
-                mShaders[gl::ShaderType::Fragment].valid()) !=
-               mShaders[gl::ShaderType::Compute].valid());
-        return !mShaders[gl::ShaderType::Compute].valid();
-    }
-
     ShaderAndSerial &getShader(gl::ShaderType shaderType) { return mShaders[shaderType].get(); }
 
     void setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader);

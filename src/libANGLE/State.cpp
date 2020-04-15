@@ -1817,7 +1817,6 @@ angle::Result State::useProgramStages(const Context *context,
 {
     programPipeline->useProgramStages(context, stages, shaderProgram);
     ANGLE_TRY(onProgramPipelineExecutableChange(context, programPipeline));
-    mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_PIPELINE);
 
     return angle::Result::Continue;
 }
@@ -3273,7 +3272,7 @@ angle::Result State::onProgramPipelineExecutableChange(const Context *context,
 
     if (programPipeline->hasAnyDirtyBit())
     {
-        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
+        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_PIPELINE);
     }
 
     // Set any bound textures.

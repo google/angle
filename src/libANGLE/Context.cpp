@@ -3579,6 +3579,10 @@ ANGLE_INLINE angle::Result Context::prepareForCopyImage()
 
 ANGLE_INLINE angle::Result Context::prepareForDispatch()
 {
+    // We always assume PPOs are used for draws, until they aren't. If we are executing a dispatch
+    // with a PPO, we need to convert it from a "draw"-type to "dispatch"-type.
+    convertPpoToComputeOrDraw(true);
+
     ANGLE_TRY(syncDirtyObjects(mComputeDirtyObjects));
     return syncDirtyBits(mComputeDirtyBits);
 }
@@ -5516,9 +5520,33 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
     }
 
     ANGLE_CONTEXT_TRY(prepareForDispatch());
-    ANGLE_CONTEXT_TRY(mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ));
+
+    angle::Result result =
+        mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ);
+
+    // We always assume PPOs are used for draws, until they aren't. If we just executed a dispatch
+    // with a PPO, we need to convert it back to a "draw"-type.
+    convertPpoToComputeOrDraw(false);
+
+    if (ANGLE_UNLIKELY(IsError(result)))
+    {
+        return;
+    }
 
     MarkShaderStorageBufferUsage(this);
+}
+
+void Context::convertPpoToComputeOrDraw(bool isCompute)
+{
+    Program *program          = mState.getProgram();
+    ProgramPipeline *pipeline = mState.getProgramPipeline();
+    if (!program && pipeline)
+    {
+        pipeline->getExecutable().setIsCompute(isCompute);
+        pipeline->setDirtyBit(ProgramPipeline::DirtyBitType::DIRTY_BIT_DRAW_DISPATCH_CHANGE);
+        mState.mDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM_PIPELINE);
+        mState.mDirtyBits.set(State::DirtyBitType::DIRTY_BIT_PROGRAM_EXECUTABLE);
+    }
 }
 
 void Context::dispatchComputeIndirect(GLintptr indirect)

@@ -48,6 +48,33 @@ void ProgramExecutable::reset()
     mActiveImagesMask.reset();
 }
 
+void ProgramExecutable::load(gl::BinaryInputStream *stream)
+{
+    static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
+                  "Too many vertex attribs for mask: All bits of mAttributesTypeMask types and "
+                  "mask fit into 32 bits each");
+    mAttributesTypeMask        = gl::ComponentTypeMask(stream->readInt<uint32_t>());
+    mAttributesMask            = stream->readInt<gl::AttributesMask>();
+    mActiveAttribLocationsMask = stream->readInt<gl::AttributesMask>();
+    mMaxActiveAttribLocation   = stream->readInt<unsigned int>();
+
+    mLinkedGraphicsShaderStages = ShaderBitSet(stream->readInt<uint8_t>());
+    mLinkedComputeShaderStages  = ShaderBitSet(stream->readInt<uint8_t>());
+}
+
+void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
+{
+    static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
+                  "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
+    stream->writeInt(static_cast<int>(mAttributesTypeMask.to_ulong()));
+    stream->writeInt(static_cast<int>(mAttributesMask.to_ulong()));
+    stream->writeInt(mActiveAttribLocationsMask.to_ulong());
+    stream->writeInt(mMaxActiveAttribLocation);
+
+    stream->writeInt(mLinkedGraphicsShaderStages.bits());
+    stream->writeInt(mLinkedComputeShaderStages.bits());
+}
+
 const ProgramState *ProgramExecutable::getProgramState(ShaderType shaderType) const
 {
     if (mProgramState &&
@@ -62,6 +89,30 @@ const ProgramState *ProgramExecutable::getProgramState(ShaderType shaderType) co
     }
 
     return nullptr;
+}
+
+bool ProgramExecutable::isCompute() const
+{
+    ASSERT(mProgramState || mProgramPipelineState);
+
+    if (mProgramState)
+    {
+        return mProgramState->isCompute();
+    }
+
+    return mProgramPipelineState->isCompute();
+}
+
+void ProgramExecutable::setIsCompute(bool isComputeIn)
+{
+    // A Program can only either be graphics or compute, but never both, so it can answer
+    // isCompute() based on which shaders it has. However, a PPO can have both graphics and compute
+    // programs attached, so we don't know if the PPO is a 'graphics' or 'compute' PPO until the
+    // actual draw/dispatch call, which is why only PPOs need to record the type of call here.
+    if (mProgramPipelineState)
+    {
+        mProgramPipelineState->setIsCompute(isComputeIn);
+    }
 }
 
 int ProgramExecutable::getInfoLogLength() const
