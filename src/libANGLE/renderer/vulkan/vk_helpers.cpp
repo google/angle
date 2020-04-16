@@ -448,6 +448,11 @@ VkClearValue GetClearValue(const vk::Format &format)
 }
 }  // anonymous namespace
 
+VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout)
+{
+    return kImageMemoryBarrierData[imageLayout].layout;
+}
+
 // DynamicBuffer implementation.
 DynamicBuffer::DynamicBuffer()
     : mUsage(0),

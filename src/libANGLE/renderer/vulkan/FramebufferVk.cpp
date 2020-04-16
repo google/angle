@@ -1358,8 +1358,8 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         ANGLE_TRY(colorRenderTarget->onColorDraw(contextVk));
 
         renderPassAttachmentOps.initWithLoadStore(attachmentClearValues.size(),
-                                                  VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                                                  VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+                                                  vk::ImageLayout::ColorAttachment,
+                                                  vk::ImageLayout::ColorAttachment);
         attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
 
@@ -1369,8 +1369,8 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         ANGLE_TRY(depthStencilRenderTarget->onDepthStencilDraw(contextVk));
 
         renderPassAttachmentOps.initWithLoadStore(attachmentClearValues.size(),
-                                                  VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-                                                  VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+                                                  vk::ImageLayout::DepthStencilAttachment,
+                                                  vk::ImageLayout::DepthStencilAttachment);
         attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
 
