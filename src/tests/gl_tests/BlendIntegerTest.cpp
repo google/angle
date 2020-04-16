@@ -114,97 +114,135 @@ class BlendIntegerTest : public ANGLETest
 // Test that blending is not applied to signed integer attachments.
 TEST_P(BlendIntegerTest, R8I)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_R8I, 1, true>();
 }
 
 TEST_P(BlendIntegerTest, R16I)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_R16I, 1, true>();
 }
 
 TEST_P(BlendIntegerTest, R32I)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_R32I, 1, true>();
 }
 
 TEST_P(BlendIntegerTest, RG8I)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RG8I, 2, true>();
 }
 
 TEST_P(BlendIntegerTest, RG16I)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RG16I, 2, true>();
 }
 
 TEST_P(BlendIntegerTest, RG32I)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RG32I, 2, true>();
 }
 
 TEST_P(BlendIntegerTest, RGBA8I)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RGBA8I, 4, true>();
 }
 
 TEST_P(BlendIntegerTest, RGBA16I)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RGBA16I, 4, true>();
 }
 
 TEST_P(BlendIntegerTest, RGBA32I)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RGBA32I, 4, true>();
 }
 
 // Test that blending is not applied to unsigned integer attachments.
 TEST_P(BlendIntegerTest, R8UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_R8UI, 1, false>();
 }
 
 TEST_P(BlendIntegerTest, R16UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_R16UI, 1, false>();
 }
 
 TEST_P(BlendIntegerTest, R32UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_R32UI, 1, false>();
 }
 
 TEST_P(BlendIntegerTest, RG8UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RG8UI, 2, false>();
 }
 
 TEST_P(BlendIntegerTest, RG16UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RG16UI, 2, false>();
 }
 
 TEST_P(BlendIntegerTest, RG32UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RG32UI, 2, false>();
 }
 
 TEST_P(BlendIntegerTest, RGBA8UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RGBA8UI, 4, false>();
 }
 
 TEST_P(BlendIntegerTest, RGBA16UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RGBA16UI, 4, false>();
 }
 
 TEST_P(BlendIntegerTest, RGBA32UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RGBA32UI, 4, false>();
 }
 
 TEST_P(BlendIntegerTest, RGB10_A2UI)
 {
+    // TODO(http://anglebug.com/4571)
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
     runTest<GL_RGB10_A2UI, 4, false>();
 }
 
