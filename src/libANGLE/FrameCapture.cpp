@@ -1416,6 +1416,133 @@ void CaptureVertexArrayData(std::vector<CallCapture> *setupCalls,
     }
 }
 
+void CaptureTextureStorage(std::vector<CallCapture> *setupCalls,
+                           gl::State *replayState,
+                           const gl::Texture *texture)
+{
+    // Use mip-level 0 for the base dimensions
+    gl::ImageIndex imageIndex = gl::ImageIndex::MakeFromType(texture->getType(), 0);
+    const gl::ImageDesc &desc = texture->getTextureState().getImageDesc(imageIndex);
+
+    switch (texture->getType())
+    {
+        case gl::TextureType::_2D:
+        case gl::TextureType::CubeMap:
+        {
+            Capture(setupCalls, CaptureTexStorage2D(*replayState, true, texture->getType(),
+                                                    texture->getImmutableLevels(),
+                                                    desc.format.info->internalFormat,
+                                                    desc.size.width, desc.size.height));
+            break;
+        }
+        case gl::TextureType::_3D:
+        case gl::TextureType::_2DArray:
+        {
+            Capture(setupCalls, CaptureTexStorage3D(
+                                    *replayState, true, texture->getType(),
+                                    texture->getImmutableLevels(), desc.format.info->internalFormat,
+                                    desc.size.width, desc.size.height, desc.size.depth));
+            break;
+        }
+        default:
+            UNIMPLEMENTED();
+            break;
+    }
+}
+
+void CaptureTextureContents(std::vector<CallCapture> *setupCalls,
+                            gl::State *replayState,
+                            const gl::Texture *texture,
+                            const gl::ImageIndex &index,
+                            const gl::ImageDesc &desc,
+                            GLuint size,
+                            const void *data)
+{
+    const gl::InternalFormat &format = *desc.format.info;
+
+    bool is3D =
+        (index.getType() == gl::TextureType::_3D || index.getType() == gl::TextureType::_2DArray);
+
+    if (format.compressed)
+    {
+        if (is3D)
+        {
+            if (texture->getImmutableFormat())
+            {
+                Capture(setupCalls,
+                        CaptureCompressedTexSubImage3D(
+                            *replayState, true, index.getTarget(), index.getLevelIndex(), 0, 0, 0,
+                            desc.size.width, desc.size.height, desc.size.depth,
+                            format.internalFormat, size, data));
+            }
+            else
+            {
+                Capture(setupCalls,
+                        CaptureCompressedTexImage3D(*replayState, true, index.getTarget(),
+                                                    index.getLevelIndex(), format.internalFormat,
+                                                    desc.size.width, desc.size.height,
+                                                    desc.size.depth, 0, size, data));
+            }
+        }
+        else
+        {
+            if (texture->getImmutableFormat())
+            {
+                Capture(setupCalls,
+                        CaptureCompressedTexSubImage2D(
+                            *replayState, true, index.getTarget(), index.getLevelIndex(), 0, 0,
+                            desc.size.width, desc.size.height, format.internalFormat, size, data));
+            }
+            else
+            {
+                Capture(setupCalls, CaptureCompressedTexImage2D(
+                                        *replayState, true, index.getTarget(),
+                                        index.getLevelIndex(), format.internalFormat,
+                                        desc.size.width, desc.size.height, 0, size, data));
+            }
+        }
+    }
+    else
+    {
+        if (is3D)
+        {
+            if (texture->getImmutableFormat())
+            {
+                Capture(setupCalls,
+                        CaptureTexSubImage3D(*replayState, true, index.getTarget(),
+                                             index.getLevelIndex(), 0, 0, 0, desc.size.width,
+                                             desc.size.height, desc.size.depth, format.format,
+                                             format.type, data));
+            }
+            else
+            {
+                Capture(
+                    setupCalls,
+                    CaptureTexImage3D(*replayState, true, index.getTarget(), index.getLevelIndex(),
+                                      format.internalFormat, desc.size.width, desc.size.height,
+                                      desc.size.depth, 0, format.format, format.type, data));
+            }
+        }
+        else
+        {
+            if (texture->getImmutableFormat())
+            {
+                Capture(setupCalls,
+                        CaptureTexSubImage2D(*replayState, true, index.getTarget(),
+                                             index.getLevelIndex(), 0, 0, desc.size.width,
+                                             desc.size.height, format.format, format.type, data));
+            }
+            else
+            {
+                Capture(setupCalls, CaptureTexImage2D(*replayState, true, index.getTarget(),
+                                                      index.getLevelIndex(), format.internalFormat,
+                                                      desc.size.width, desc.size.height, 0,
+                                                      format.format, format.type, data));
+            }
+        }
+    }
+}
+
 void CaptureMidExecutionSetup(const gl::Context *context,
                               std::vector<CallCapture> *setupCalls,
                               const ShaderSourceMap &cachedShaderSources,
@@ -1631,7 +1758,6 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         }
 
         // Texture parameters
-        // TODO: Add immutable and base/max when TexStorage is handled (http://anglebug.com/3662)
         if (texture->getSwizzleRed() != GL_RED)
         {
             capTexParam(GL_TEXTURE_SWIZZLE_R, texture->getSwizzleRed());
@@ -1650,6 +1776,22 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         if (texture->getSwizzleAlpha() != GL_ALPHA)
         {
             capTexParam(GL_TEXTURE_SWIZZLE_A, texture->getSwizzleAlpha());
+        }
+
+        if (texture->getBaseLevel() != 0)
+        {
+            capTexParam(GL_TEXTURE_BASE_LEVEL, texture->getBaseLevel());
+        }
+
+        if (texture->getMaxLevel() != 1000)
+        {
+            capTexParam(GL_TEXTURE_MAX_LEVEL, texture->getMaxLevel());
+        }
+
+        // If the texture is immutable, initialize it with TexStorage
+        if (texture->getImmutableFormat())
+        {
+            CaptureTextureStorage(setupCalls, &replayState, texture);
         }
 
         // Iterate texture levels and layers.
@@ -1673,9 +1815,6 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                    index.getType() == gl::TextureType::_2DArray ||
                    index.getType() == gl::TextureType::CubeMap);
 
-            bool is3D = (index.getType() == gl::TextureType::_3D ||
-                         index.getType() == gl::TextureType::_2DArray);
-
             if (format.compressed)
             {
                 // For compressed images, we've tracked a copy of the incoming data, so we can
@@ -1692,22 +1831,9 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 const std::vector<uint8_t> &capturedTextureLevel = foundTextureLevel->second;
 
                 // Use the shadow copy of the data to populate the call
-                if (is3D)
-                {
-                    cap(CaptureCompressedTexImage3D(
-                        replayState, true, index.getTarget(), index.getLevelIndex(),
-                        format.internalFormat, desc.size.width, desc.size.height, desc.size.depth,
-                        0, static_cast<GLuint>(capturedTextureLevel.size()),
-                        capturedTextureLevel.data()));
-                }
-                else
-                {
-                    cap(CaptureCompressedTexImage2D(
-                        replayState, true, index.getTarget(), index.getLevelIndex(),
-                        format.internalFormat, desc.size.width, desc.size.height, 0,
-                        static_cast<GLuint>(capturedTextureLevel.size()),
-                        capturedTextureLevel.data()));
-                }
+                CaptureTextureContents(setupCalls, &replayState, texture, index, desc,
+                                       static_cast<GLuint>(capturedTextureLevel.size()),
+                                       capturedTextureLevel.data());
             }
             else
             {
@@ -1737,37 +1863,13 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                                                index.getLevelIndex(), getFormat, getType,
                                                data.data());
 
-                    if (is3D)
-                    {
-                        cap(CaptureTexImage3D(replayState, true, index.getTarget(),
-                                              index.getLevelIndex(), format.internalFormat,
-                                              desc.size.width, desc.size.height, desc.size.depth, 0,
-                                              getFormat, getType, data.data()));
-                    }
-                    else
-                    {
-                        cap(CaptureTexImage2D(replayState, true, index.getTarget(),
-                                              index.getLevelIndex(), format.internalFormat,
-                                              desc.size.width, desc.size.height, 0, getFormat,
-                                              getType, data.data()));
-                    }
+                    CaptureTextureContents(setupCalls, &replayState, texture, index, desc,
+                                           static_cast<GLuint>(data.size()), data.data());
                 }
                 else
                 {
-                    if (is3D)
-                    {
-                        cap(CaptureTexImage3D(replayState, true, index.getTarget(),
-                                              index.getLevelIndex(), format.internalFormat,
-                                              desc.size.width, desc.size.height, desc.size.depth, 0,
-                                              format.format, format.type, nullptr));
-                    }
-                    else
-                    {
-                        cap(CaptureTexImage2D(replayState, true, index.getTarget(),
-                                              index.getLevelIndex(), format.internalFormat,
-                                              desc.size.width, desc.size.height, 0, format.format,
-                                              format.type, nullptr));
-                    }
+                    CaptureTextureContents(setupCalls, &replayState, texture, index, desc, 0,
+                                           nullptr);
                 }
             }
         }
