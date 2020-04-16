@@ -1586,6 +1586,13 @@ Error Display::validateImageClientBuffer(const gl::Context *context,
     return mImplementation->validateImageClientBuffer(context, target, clientBuffer, attribs);
 }
 
+Error Display::valdiatePixmap(Config *config,
+                              EGLNativePixmapType pixmap,
+                              const AttributeMap &attributes) const
+{
+    return mImplementation->validatePixmap(config, pixmap, attributes);
+}
+
 bool Display::isValidDisplay(const egl::Display *display)
 {
     const ANGLEPlatformDisplayMap *anglePlatformDisplayMap = GetANGLEPlatformDisplayMap();

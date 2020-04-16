@@ -93,6 +93,7 @@ angle_end2end_tests_sources = [
   "gl_tests/PackUnpackTest.cpp",
   "gl_tests/ParallelShaderCompileTest.cpp",
   "gl_tests/PbufferTest.cpp",
+  "gl_tests/PixmapTest.cpp",
   "gl_tests/PointSpritesTest.cpp",
   "gl_tests/ProgramBinaryTest.cpp",
   "gl_tests/ProgramInterfaceTest.cpp",

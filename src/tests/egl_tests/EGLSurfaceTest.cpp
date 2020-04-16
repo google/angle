@@ -133,24 +133,34 @@ class EGLSurfaceTest : public ANGLETest
     {
         mConfig = config;
 
+        EGLint surfaceType = EGL_NONE;
+        eglGetConfigAttrib(mDisplay, mConfig, EGL_SURFACE_TYPE, &surfaceType);
+
         std::vector<EGLint> windowAttributes;
         windowAttributes.push_back(EGL_NONE);
 
-        // Create first window surface
-        mWindowSurface = eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(),
-                                                windowAttributes.data());
-        ASSERT_EGL_SUCCESS();
+        if (surfaceType & EGL_WINDOW_BIT)
+        {
+            // Create first window surface
+            mWindowSurface = eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(),
+                                                    windowAttributes.data());
+            ASSERT_EGL_SUCCESS();
+        }
 
-        // Give pbuffer non-zero dimensions.
-        std::vector<EGLint> pbufferAttributes;
-        pbufferAttributes.push_back(EGL_WIDTH);
-        pbufferAttributes.push_back(64);
-        pbufferAttributes.push_back(EGL_HEIGHT);
-        pbufferAttributes.push_back(64);
-        pbufferAttributes.push_back(EGL_NONE);
+        if (surfaceType & EGL_PBUFFER_BIT)
+        {
+            // Give pbuffer non-zero dimensions.
+            std::vector<EGLint> pbufferAttributes;
+            pbufferAttributes.push_back(EGL_WIDTH);
+            pbufferAttributes.push_back(64);
+            pbufferAttributes.push_back(EGL_HEIGHT);
+            pbufferAttributes.push_back(64);
+            pbufferAttributes.push_back(EGL_NONE);
 
-        mPbufferSurface = eglCreatePbufferSurface(mDisplay, mConfig, pbufferAttributes.data());
-        ASSERT_EGL_SUCCESS();
+            mPbufferSurface = eglCreatePbufferSurface(mDisplay, mConfig, pbufferAttributes.data());
+            ASSERT_EGL_SUCCESS();
+        }
+
         initializeContext();
     }
 
@@ -378,6 +388,7 @@ TEST_P(EGLSurfaceTest, MessageLoopBugContext)
     initializeDisplay();
     initializeSurfaceWithDefaultConfig();
 
+    ANGLE_SKIP_TEST_IF(!mPbufferSurface);
     runMessageLoopTest(mPbufferSurface, mSecondContext);
 }
 

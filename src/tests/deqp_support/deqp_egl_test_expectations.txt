@@ -106,28 +106,8 @@
 2716 WIN VULKAN : dEQP-EGL.functional.preserve_swap.no_preserve.* = FAIL
 
 // Linux failures
-2546 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1_gles2.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1_gles2_gles3.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles2.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles3.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.color_clears.single_context.gles1.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.color_clears.single_context.gles2.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.color_clears.single_context.gles3.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.create_surface.pixmap.rgba8888_depth_stencil = SKIP
-2546 LINUX : dEQP-EGL.functional.create_surface.pixmap.rgba8888_no_depth_no_stencil = SKIP
 2546 LINUX : dEQP-EGL.functional.negative_api.copy_buffers = SKIP
-2546 LINUX : dEQP-EGL.functional.query_context.get_current_context.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.query_context.get_current_display.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.query_context.get_current_surface.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.query_context.query_context.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.query_surface.set_attribute.pixmap.rgba8888_depth_stencil = SKIP
-2546 LINUX : dEQP-EGL.functional.query_surface.set_attribute.pixmap.rgba8888_no_depth_no_stencil = SKIP
-2546 LINUX : dEQP-EGL.functional.query_surface.simple.pixmap.rgba8888_depth_stencil = SKIP
-2546 LINUX : dEQP-EGL.functional.query_surface.simple.pixmap.rgba8888_no_depth_no_stencil = SKIP
 2546 LINUX : dEQP-EGL.functional.render.multi_context.* = SKIP
-2546 LINUX : dEQP-EGL.functional.render.single_context.gles2.rgba8888_pixmap = SKIP
-2546 LINUX : dEQP-EGL.functional.render.single_context.gles3.rgba8888_pixmap = SKIP
 2546 LINUX : dEQP-EGL.functional.thread_cleanup.* = SKIP
 2546 LINUX : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
 2546 LINUX : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL

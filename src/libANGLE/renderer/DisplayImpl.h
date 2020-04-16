@@ -85,6 +85,9 @@ class DisplayImpl : public EGLImplFactory
                                                  EGLenum target,
                                                  EGLClientBuffer clientBuffer,
                                                  const egl::AttributeMap &attribs) const;
+    virtual egl::Error validatePixmap(egl::Config *config,
+                                      EGLNativePixmapType pixmap,
+                                      const egl::AttributeMap &attributes) const;
 
     virtual std::string getVendorString() const = 0;
 

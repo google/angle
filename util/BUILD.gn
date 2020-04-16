@@ -51,6 +51,8 @@ if (angle_use_x11) {
 
 if (is_fuchsia) {
   _util_sources += [
+    "fuchsia/FuchsiaPixmap.cpp",
+    "fuchsia/FuchsiaPixmap.h",
     "fuchsia/ScenicWindow.cpp",
     "fuchsia/ScenicWindow.h",
   ]

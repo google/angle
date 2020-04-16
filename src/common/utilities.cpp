@@ -1181,6 +1181,8 @@ const char *GetGenericErrorMessage(EGLint error)
             return "Bad match.";
         case EGL_BAD_NATIVE_WINDOW:
             return "Bad native window.";
+        case EGL_BAD_NATIVE_PIXMAP:
+            return "Bad native pixmap.";
         case EGL_BAD_PARAMETER:
             return "Bad parameter.";
         case EGL_BAD_SURFACE:

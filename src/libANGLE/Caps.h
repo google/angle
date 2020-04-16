@@ -1082,6 +1082,9 @@ struct DisplayExtensions
 
     // EGL_EXT_image_dma_buf_import_modifiers
     bool imageDmaBufImportModifiersEXT = false;
+
+    // EGL_NOK_texture_from_pixmap
+    bool textureFromPixmapNOK = false;
 };
 
 struct DeviceExtensions

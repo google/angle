@@ -172,6 +172,9 @@ class Display final : public LabeledObject, angle::NonCopyable
                                     EGLenum target,
                                     EGLClientBuffer clientBuffer,
                                     const egl::AttributeMap &attribs) const;
+    Error valdiatePixmap(Config *config,
+                         EGLNativePixmapType pixmap,
+                         const AttributeMap &attributes) const;
 
     static bool isValidDisplay(const Display *display);
     static bool isValidNativeDisplay(EGLNativeDisplayType display);

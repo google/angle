@@ -91,6 +91,11 @@ Surface::Surface(EGLint surfaceType,
         mLargestPbuffer = (attributes.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
     }
 
+    if (mType == EGL_PIXMAP_BIT)
+    {
+        mRenderBuffer = EGL_SINGLE_BUFFER;
+    }
+
     mGLColorspace =
         static_cast<EGLenum>(attributes.get(EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_LINEAR));
     mVGAlphaFormat =
