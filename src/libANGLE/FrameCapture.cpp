@@ -2698,6 +2698,11 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                            currentScissor.width, currentScissor.height));
     }
 
+    if (apiState.isDitherEnabled())
+    {
+        capCap(GL_DITHER, apiState.isDitherEnabled());
+    }
+
     const gl::SyncManager &syncs = apiState.getSyncManagerForCapture();
     for (const auto &syncIter : syncs)
     {
