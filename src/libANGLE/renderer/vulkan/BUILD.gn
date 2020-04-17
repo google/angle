@@ -197,6 +197,7 @@ angle_source_set("angle_vk_mem_alloc_wrapper") {
     "vk_mem_alloc_wrapper.cpp",
     "vk_mem_alloc_wrapper.h",
   ]
+  defines = [ "VMA_IMPLEMENTATION" ]
   if (is_clang) {
     cflags_cc = [
       "-Wno-extra-semi-stmt",
