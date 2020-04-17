@@ -39,6 +39,7 @@ angle_unittests_sources = [
   "../libANGLE/VaryingPacking_unittest.cpp",
   "../libANGLE/VertexArray_unittest.cpp",
   "../libANGLE/WorkerThread_unittest.cpp",
+  "../libANGLE/angletypes_unittest.cpp",
   "../libANGLE/renderer/BufferImpl_mock.h",
   "../libANGLE/renderer/FramebufferImpl_mock.h",
   "../libANGLE/renderer/ImageImpl_mock.h",
