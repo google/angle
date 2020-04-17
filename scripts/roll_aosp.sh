@@ -70,17 +70,19 @@ for dep in ${deps[@]}; do
     rm -rf $dep/.git
 done
 
-for dep in ${deps[@]}; do
-    git add -f $dep
-done
-
 extra_removal_files=(
-    # The jsoncpp OWNERS file contains users that have not logged into the Android gerrit so it fails to upload.
+    # The jsoncpp OWNERS and VulkanMemoryAllocator file contains users that have not logged into
+    # the Android gerrit so it fails to upload.
     "third_party/jsoncpp/OWNERS"
+    "third_party/VulkanMemoryAllocator/OWNERS"
 )
 
 for removal_file in ${extra_removal_files[@]}; do
-    git rm $removal_file
+    rm $removal_file
+done
+
+for dep in ${deps[@]}; do
+    git add -f $dep
 done
 
 git commit --amend --no-edit
