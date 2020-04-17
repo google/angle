@@ -1368,6 +1368,167 @@ void CaptureFramebufferAttachment(std::vector<CallCapture> *setupCalls,
     }
 }
 
+void CaptureUpdateUniformValues(const gl::State &replayState,
+                                const gl::Context *context,
+                                const gl::Program *program,
+                                std::vector<CallCapture> *callsOut)
+{
+    const std::vector<gl::LinkedUniform> &uniforms     = program->getState().getUniforms();
+    const std::vector<gl::VariableLocation> &locations = program->getUniformLocations();
+
+    for (const gl::VariableLocation &location : locations)
+    {
+        const gl::LinkedUniform &uniform = uniforms[location.index];
+
+        if (!program->isLinked())
+        {
+            // We can't populate uniforms if the program hasn't been linked
+            continue;
+        }
+
+        if (uniform.isArray())
+        {
+            UNIMPLEMENTED();
+        }
+
+        // We need to bind the program and update its uniforms
+        // TODO (http://anglebug.com/3662): Only bind if different from currently bound
+        Capture(callsOut, CaptureUseProgram(replayState, true, program->id()));
+        CaptureUpdateCurrentProgram(callsOut->back(), callsOut);
+
+        const gl::UniformTypeInfo *typeInfo = uniform.typeInfo;
+        gl::UniformLocation uniformLoc      = {static_cast<int>(location.index)};
+
+        switch (typeInfo->componentType)
+        {
+            case GL_FLOAT:
+            {
+                std::vector<GLfloat> components(typeInfo->componentCount);
+                program->getUniformfv(context, uniformLoc, components.data());
+                switch (typeInfo->type)
+                {
+                    // Note: All matrix uniforms are populated without transpose
+                    case GL_FLOAT_MAT4x3:
+                        Capture(callsOut, CaptureUniformMatrix4x3fv(replayState, true, uniformLoc,
+                                                                    1, false, components.data()));
+                        break;
+                    case GL_FLOAT_MAT4x2:
+                        Capture(callsOut, CaptureUniformMatrix4x2fv(replayState, true, uniformLoc,
+                                                                    1, false, components.data()));
+                        break;
+                    case GL_FLOAT_MAT4:
+                        Capture(callsOut, CaptureUniformMatrix4fv(replayState, true, uniformLoc, 1,
+                                                                  false, components.data()));
+                        break;
+                    case GL_FLOAT_MAT3x4:
+                        Capture(callsOut, CaptureUniformMatrix3x4fv(replayState, true, uniformLoc,
+                                                                    1, false, components.data()));
+                        break;
+                    case GL_FLOAT_MAT3x2:
+                        Capture(callsOut, CaptureUniformMatrix3x2fv(replayState, true, uniformLoc,
+                                                                    1, false, components.data()));
+                        break;
+                    case GL_FLOAT_MAT3:
+                        Capture(callsOut, CaptureUniformMatrix3fv(replayState, true, uniformLoc, 1,
+                                                                  false, components.data()));
+                        break;
+                    case GL_FLOAT_MAT2x4:
+                        Capture(callsOut, CaptureUniformMatrix2x4fv(replayState, true, uniformLoc,
+                                                                    1, false, components.data()));
+                        break;
+                    case GL_FLOAT_MAT2x3:
+                        Capture(callsOut, CaptureUniformMatrix2x3fv(replayState, true, uniformLoc,
+                                                                    1, false, components.data()));
+                        break;
+                    case GL_FLOAT_MAT2:
+                        Capture(callsOut, CaptureUniformMatrix2fv(replayState, true, uniformLoc, 1,
+                                                                  false, components.data()));
+                        break;
+                    case GL_FLOAT_VEC4:
+                        Capture(callsOut, CaptureUniform4fv(replayState, true, uniformLoc, 1,
+                                                            components.data()));
+                        break;
+                    case GL_FLOAT_VEC3:
+                        Capture(callsOut, CaptureUniform3fv(replayState, true, uniformLoc, 1,
+                                                            components.data()));
+                        break;
+                    case GL_FLOAT_VEC2:
+                        Capture(callsOut, CaptureUniform2fv(replayState, true, uniformLoc, 1,
+                                                            components.data()));
+                        break;
+                    case GL_FLOAT:
+                        Capture(callsOut, CaptureUniform1fv(replayState, true, uniformLoc, 1,
+                                                            components.data()));
+                        break;
+                    default:
+                        UNIMPLEMENTED();
+                        break;
+                }
+                break;
+            }
+            case GL_INT:
+            {
+                std::vector<GLint> components(typeInfo->componentCount);
+                program->getUniformiv(context, uniformLoc, components.data());
+                switch (typeInfo->componentCount)
+                {
+                    case 4:
+                        Capture(callsOut, CaptureUniform4iv(replayState, true, uniformLoc, 1,
+                                                            components.data()));
+                        break;
+                    case 3:
+                        Capture(callsOut, CaptureUniform3iv(replayState, true, uniformLoc, 1,
+                                                            components.data()));
+                        break;
+                    case 2:
+                        Capture(callsOut, CaptureUniform2iv(replayState, true, uniformLoc, 1,
+                                                            components.data()));
+                        break;
+                    case 1:
+                        Capture(callsOut, CaptureUniform1iv(replayState, true, uniformLoc, 1,
+                                                            components.data()));
+                        break;
+                    default:
+                        UNIMPLEMENTED();
+                        break;
+                }
+                break;
+            }
+            case GL_UNSIGNED_INT:
+            {
+                std::vector<GLuint> components(typeInfo->componentCount);
+                program->getUniformuiv(context, uniformLoc, components.data());
+                switch (typeInfo->componentCount)
+                {
+                    case 4:
+                        Capture(callsOut, CaptureUniform4uiv(replayState, true, uniformLoc, 1,
+                                                             components.data()));
+                        break;
+                    case 3:
+                        Capture(callsOut, CaptureUniform3uiv(replayState, true, uniformLoc, 1,
+                                                             components.data()));
+                        break;
+                    case 2:
+                        Capture(callsOut, CaptureUniform2uiv(replayState, true, uniformLoc, 1,
+                                                             components.data()));
+                        break;
+                    case 1:
+                        Capture(callsOut, CaptureUniform1uiv(replayState, true, uniformLoc, 1,
+                                                             components.data()));
+                        break;
+                    default:
+                        UNIMPLEMENTED();
+                        break;
+                }
+                break;
+            }
+            default:
+                UNIMPLEMENTED();
+                break;
+        }
+    }
+}
+
 void CaptureVertexArrayData(std::vector<CallCapture> *setupCalls,
                             const gl::Context *context,
                             const gl::VertexArray *vertexArray,
@@ -2094,6 +2255,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
         cap(CaptureLinkProgram(replayState, true, id));
         CaptureUpdateUniformLocations(program, setupCalls);
+        CaptureUpdateUniformValues(replayState, context, program, setupCalls);
     }
 
     // Handle shaders.
