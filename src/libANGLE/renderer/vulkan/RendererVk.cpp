@@ -129,6 +129,8 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-CoreValidation-Shader-InterfaceTypeMismatch",
     // http://anglebug.com/4510
     "VUID-vkQueuePresentKHR-pWaitSemaphores-03268",
+    // http://anglebug.com/4572
+    "VUID-vkCmdCopyImageToBuffer-srcImage-01998",
 };
 
 // Suppress validation errors that are known
