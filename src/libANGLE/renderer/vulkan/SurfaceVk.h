@@ -264,7 +264,9 @@ class WindowSurfaceVk : public SurfaceVk
                           const void *pNextChain,
                           bool *presentOutOfDate);
 
-    angle::Result updateAndDrawOverlay(ContextVk *contextVk, impl::SwapchainImage *image) const;
+    void updateOverlay(ContextVk *contextVk) const;
+    bool overlayHasEnabledWidget(ContextVk *contextVk) const;
+    angle::Result drawOverlay(ContextVk *contextVk, impl::SwapchainImage *image) const;
 
     angle::Result newPresentSemaphore(vk::Context *context, vk::Semaphore *semaphoreOut);
 

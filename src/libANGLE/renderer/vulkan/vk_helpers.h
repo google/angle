@@ -820,6 +820,7 @@ class ImageHelper final : public Resource, public angle::Subject
     const Format &getFormat() const { return *mFormat; }
     GLint getSamples() const { return mSamples; }
 
+    void setCurrentImageLayout(ImageLayout newLayout) { mCurrentLayout = newLayout; }
     ImageLayout getCurrentImageLayout() const { return mCurrentLayout; }
     VkImageLayout getCurrentLayout() const;
 

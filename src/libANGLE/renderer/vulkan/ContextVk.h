@@ -187,35 +187,41 @@ class RenderPassCommandBuffer final : public CommandBufferHelper
 
     void clearRenderPassColorAttachment(size_t attachmentIndex, const VkClearColorValue &clearValue)
     {
-        mAttachmentOps[attachmentIndex].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        mClearValues[attachmentIndex].color    = clearValue;
+        SetBitField(mAttachmentOps[attachmentIndex].loadOp, VK_ATTACHMENT_LOAD_OP_CLEAR);
+        mClearValues[attachmentIndex].color = clearValue;
     }
 
     void clearRenderPassDepthAttachment(size_t attachmentIndex, float depth)
     {
-        mAttachmentOps[attachmentIndex].loadOp           = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        mClearValues[attachmentIndex].depthStencil.depth = depth;
+        SetBitField(mAttachmentOps[attachmentIndex].loadOp, VK_ATTACHMENT_LOAD_OP_CLEAR);
+        SetBitField(mClearValues[attachmentIndex].depthStencil.depth, depth);
     }
 
     void clearRenderPassStencilAttachment(size_t attachmentIndex, uint32_t stencil)
     {
-        mAttachmentOps[attachmentIndex].stencilLoadOp      = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        mClearValues[attachmentIndex].depthStencil.stencil = stencil;
+        SetBitField(mAttachmentOps[attachmentIndex].stencilLoadOp, VK_ATTACHMENT_LOAD_OP_CLEAR);
+        SetBitField(mClearValues[attachmentIndex].depthStencil.stencil, stencil);
     }
 
     void invalidateRenderPassColorAttachment(size_t attachmentIndex)
     {
-        mAttachmentOps[attachmentIndex].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
     }
 
     void invalidateRenderPassDepthAttachment(size_t attachmentIndex)
     {
-        mAttachmentOps[attachmentIndex].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
     }
 
     void invalidateRenderPassStencilAttachment(size_t attachmentIndex)
     {
-        mAttachmentOps[attachmentIndex].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        SetBitField(mAttachmentOps[attachmentIndex].stencilStoreOp,
+                    VK_ATTACHMENT_STORE_OP_DONT_CARE);
+    }
+
+    void updateRenderPassAttachmentFinalLayout(size_t attachmentIndex, vk::ImageLayout finalLayout)
+    {
+        SetBitField(mAttachmentOps[attachmentIndex].finalLayout, finalLayout);
     }
 
     const gl::Rectangle &getRenderArea() const { return mRenderArea; }
@@ -235,6 +241,8 @@ class RenderPassCommandBuffer final : public CommandBufferHelper
         mCounter       = 0;
         return count;
     }
+
+    VkFramebuffer getFramebufferHandle() const { return mFramebuffer.getHandle(); }
 
   private:
     void addRenderPassCommandDiagnostics(ContextVk *contextVk);
@@ -496,6 +504,8 @@ class ContextVk : public ContextImpl, public vk::Context
     // for the next application draw/dispatch call.
     void invalidateGraphicsDescriptorSet(uint32_t usedDescriptorSet);
     void invalidateComputeDescriptorSet(uint32_t usedDescriptorSet);
+
+    void optimizeRenderPassForPresent(VkFramebuffer framebufferHandle);
 
     vk::DynamicQueryPool *getQueryPool(gl::QueryType queryType);
 

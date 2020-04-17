@@ -2362,6 +2362,30 @@ angle::Result ContextVk::clearWithRenderPassOp(
     return angle::Result::Continue;
 }
 
+void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
+{
+    if (!mRenderPassCommands.started())
+    {
+        return;
+    }
+
+    if (framebufferHandle != mRenderPassCommands.getFramebufferHandle())
+    {
+        return;
+    }
+
+    RenderTargetVk *color0RenderTarget = mDrawFramebuffer->getColorDrawRenderTarget(0);
+    if (!color0RenderTarget)
+    {
+        return;
+    }
+
+    // Use finalLayout instead of extra barrier for layout change to present
+    vk::ImageHelper &image = color0RenderTarget->getImage();
+    image.setCurrentImageLayout(vk::ImageLayout::Present);
+    mRenderPassCommands.updateRenderPassAttachmentFinalLayout(0, image.getCurrentImageLayout());
+}
+
 gl::GraphicsResetStatus ContextVk::getResetStatus()
 {
     if (mRenderer->isDeviceLost())
