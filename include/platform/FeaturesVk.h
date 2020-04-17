@@ -251,6 +251,13 @@ struct FeaturesVk : FeatureSetBase
         "Fill new allocations with non-zero values to flush out errors.", &members,
         "http://anglebug.com/4384"};
 
+    // Persistently map buffer memory until destroy, saves on map/unmap IOCTL overhead
+    // for buffers that are updated frequently.
+    Feature persistentlyMappedBuffers = {
+        "persistently_mapped_buffers", FeatureCategory::VulkanFeatures,
+        "Persistently map buffer memory to reduce map/unmap IOCTL overhead.", &members,
+        "http://anglebug.com/2162"};
+
     // Android needs to pre-rotate surfaces that are not oriented per the native device's
     // orientation (e.g. a landscape application on a Pixel phone).  This feature works for
     // full-screen applications. http://anglebug.com/3502

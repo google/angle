@@ -62,6 +62,7 @@ VkResult CreateBuffer(VmaAllocator allocator,
                       const VkBufferCreateInfo *pBufferCreateInfo,
                       VkMemoryPropertyFlags requiredFlags,
                       VkMemoryPropertyFlags preferredFlags,
+                      bool persistentlyMappedBuffers,
                       uint32_t *pMemoryTypeIndexOut,
                       VkBuffer *pBuffer,
                       VmaAllocation *pAllocation)
@@ -70,7 +71,8 @@ VkResult CreateBuffer(VmaAllocator allocator,
     VmaAllocationCreateInfo allocationCreateInfo = {};
     allocationCreateInfo.requiredFlags           = requiredFlags;
     allocationCreateInfo.preferredFlags          = preferredFlags;
-    VmaAllocationInfo allocationInfo             = {};
+    allocationCreateInfo.flags = (persistentlyMappedBuffers) ? VMA_ALLOCATION_CREATE_MAPPED_BIT : 0;
+    VmaAllocationInfo allocationInfo = {};
 
     result = vmaCreateBuffer(allocator, pBufferCreateInfo, &allocationCreateInfo, pBuffer,
                              pAllocation, &allocationInfo);

@@ -1699,8 +1699,9 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
     VkMemoryPropertyFlags preferredFlags =
         (memoryPropertyFlags & (~VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
 
-    mAllocation.createBufferAndMemory(renderer->getAllocator(), createInfo, requiredFlags,
-                                      preferredFlags, &mBuffer, &mMemoryPropertyFlags);
+    mAllocation.createBufferAndMemory(
+        renderer->getAllocator(), createInfo, requiredFlags, preferredFlags,
+        renderer->getFeatures().persistentlyMappedBuffers.enabled, &mBuffer, &mMemoryPropertyFlags);
 
     mCurrentQueueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
 

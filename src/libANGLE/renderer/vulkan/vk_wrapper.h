@@ -466,6 +466,7 @@ class Allocation final : public WrappedObject<Allocation, VmaAllocation>
                                    const VkBufferCreateInfo *pBufferCreateInfo,
                                    VkMemoryPropertyFlags requiredFlags,
                                    VkMemoryPropertyFlags preferredFlags,
+                                   bool persistentlyMappedBuffers,
                                    Buffer *buffer,
                                    VkMemoryPropertyFlags *pMemPropertyOut);
     VkResult map(VmaAllocator allocator, uint8_t **mapPointer) const;
@@ -1329,6 +1330,7 @@ ANGLE_INLINE VkResult Allocation::createBufferAndMemory(VmaAllocator allocator,
                                                         const VkBufferCreateInfo *pBufferCreateInfo,
                                                         VkMemoryPropertyFlags requiredFlags,
                                                         VkMemoryPropertyFlags preferredFlags,
+                                                        bool persistentlyMappedBuffers,
                                                         Buffer *buffer,
                                                         VkMemoryPropertyFlags *pMemPropertyOut)
 {
@@ -1336,8 +1338,9 @@ ANGLE_INLINE VkResult Allocation::createBufferAndMemory(VmaAllocator allocator,
     VkResult result;
     uint32_t memoryTypeIndex;
     VkBuffer bufferHandle;
-    result = vma::CreateBuffer(allocator, pBufferCreateInfo, requiredFlags, preferredFlags,
-                               &memoryTypeIndex, &bufferHandle, &mHandle);
+    result =
+        vma::CreateBuffer(allocator, pBufferCreateInfo, requiredFlags, preferredFlags,
+                          persistentlyMappedBuffers, &memoryTypeIndex, &bufferHandle, &mHandle);
     vma::GetMemoryTypeProperties(allocator, memoryTypeIndex, pMemPropertyOut);
     buffer->setHandle(bufferHandle);
 

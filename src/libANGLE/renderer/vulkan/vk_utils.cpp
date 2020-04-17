@@ -408,9 +408,10 @@ angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUs
     VkMemoryPropertyFlags requiredFlags =
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
-    mAllocation.createBufferAndMemory(context->getRenderer()->getAllocator(), &createInfo,
-                                      requiredFlags, preferredFlags, &mBuffer,
-                                      &memoryPropertyOutFlags);
+    mAllocation.createBufferAndMemory(
+        context->getRenderer()->getAllocator(), &createInfo, requiredFlags, preferredFlags,
+        context->getRenderer()->getFeatures().persistentlyMappedBuffers.enabled, &mBuffer,
+        &memoryPropertyOutFlags);
 
     mSize = static_cast<size_t>(size);
     return angle::Result::Continue;

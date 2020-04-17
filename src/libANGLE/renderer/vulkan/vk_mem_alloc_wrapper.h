@@ -30,6 +30,7 @@ VkResult CreateBuffer(VmaAllocator allocator,
                       const VkBufferCreateInfo *pBufferCreateInfo,
                       VkMemoryPropertyFlags requiredFlags,
                       VkMemoryPropertyFlags preferredFlags,
+                      bool persistentlyMappedBuffers,
                       uint32_t *pMemoryTypeIndexOut,
                       VkBuffer *pBuffer,
                       VmaAllocation *pAllocation);
