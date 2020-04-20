@@ -2901,6 +2901,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mVertexArray = vk::GetImpl(glState.getVertexArray());
                 invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
                 mVertexArray->updateActiveAttribInfo(this);
+                setIndexBufferDirty();
                 break;
             }
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
