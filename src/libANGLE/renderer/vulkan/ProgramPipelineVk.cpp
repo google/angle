@@ -140,7 +140,10 @@ angle::Result ProgramPipelineVk::updateUniforms(ContextVk *contextVk)
         ++offsetIndex;
     }
 
-    if (anyNewBufferAllocated)
+    // The PPO's list of descriptor sets being empty without a new buffer being allocated indicates
+    // a Program that was already used in a draw command (and thus already allocated uniform
+    // buffers) has been bound to this PPO.
+    if (anyNewBufferAllocated || mExecutable.mDescriptorSets.empty())
     {
         // We need to reinitialize the descriptor sets if we newly allocated buffers since we can't
         // modify the descriptor sets once initialized.
