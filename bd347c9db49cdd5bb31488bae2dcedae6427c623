@@ -94,6 +94,30 @@
       "revId": "bd347c9db49cdd5bb31488bae2dcedae6427c623",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb68859f_44ff30b5",
+        "filename": "src/tests/gl_tests/DrawElementsTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-04-20T16:44:04Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "c809785b_2c4b07f2",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 275,
+        "endChar": 49
+      },
+      "revId": "bd347c9db49cdd5bb31488bae2dcedae6427c623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
