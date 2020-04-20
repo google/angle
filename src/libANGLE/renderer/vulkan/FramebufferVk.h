@@ -119,6 +119,12 @@ class FramebufferVk : public FramebufferImpl
 
     const vk::RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
     const vk::FramebufferDesc &getFramebufferDesc() const { return mCurrentFramebufferDesc; }
+    // We only support depth/stencil packed format and depthstencil attachment always follow all
+    // color attachments
+    size_t getDepthStencilAttachmentIndexVk() const
+    {
+        return getState().getEnabledDrawBuffers().count();
+    }
 
   private:
     FramebufferVk(RendererVk *renderer,
