@@ -394,7 +394,10 @@ class QueryHelper final
     void endOcclusionQuery(ContextVk *contextVk, CommandBuffer *renderPassCommandBuffer);
 
     angle::Result flushAndWriteTimestamp(ContextVk *contextVk);
+    // When syncing gpu/cpu time, main thread accesses primary directly
     void writeTimestamp(ContextVk *contextVk, PrimaryCommandBuffer *primary);
+    // All other timestamp accesses should be made on outsideRenderPassCommandBuffer
+    void writeTimestamp(ContextVk *contextVk, CommandBuffer *outsideRenderPassCommandBuffer);
 
     Serial getStoredQueueSerial() { return mMostRecentSerial; }
     bool hasPendingWork(ContextVk *contextVk);
