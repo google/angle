@@ -12,7 +12,7 @@ Also see the documentation on [ANGLE Wrangling][Wrangling] for more info.
 
 See the pre-commit try waterfall here:
 
-[`https://ci.chromium.org/p/chromium/g/angle.try/builders`](https://ci.chromium.org/p/chromium/g/angle.try/builders)
+[`https://ci.chromium.org/p/angle/g/try/builders`](https://ci.chromium.org/p/angle/g/try/builders)
 
 We currently run pre-commit tests on:
 

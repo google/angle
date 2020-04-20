@@ -2,7 +2,7 @@
 
 As an ANGLE Sheriff. Your job is to:
 
- 1. Keep the [ANGLE Try Waterfall](https://ci.chromium.org/p/chromium/g/angle.try/builders) in good
+ 1. Keep the [ANGLE Try Waterfall](https://ci.chromium.org/p/chromium/g/tryserver.chromium.angle/builders) in good
     working order.
  1. Monitor the
     [Chromium GPU FYI Waterfall](https://ci.chromium.org/p/chromium/g/chromium.gpu.fyi/console)
@@ -23,7 +23,7 @@ extension for inspecting bot builds. It'll save you a lot of time.
 ## Task 1: Monitor ANGLE CI and Try Testers
 
 Your first job is to keep the
-[ANGLE Try Waterfall](https://ci.chromium.org/p/chromium/g/angle.try/builders) healthy.  Some
+[ANGLE Try Waterfall](https://ci.chromium.org/p/chromium/g/tryserver.chromium.angle/builders) healthy.  Some
 failures are expected on this waterfall. Developers might be testing expectedly buggy code. But
 persistent flakiness and failures should be reported and reverted.
 
