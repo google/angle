@@ -1750,8 +1750,18 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
         case GL_MAX_LIGHTS:
             *params = mState.mCaps.maxLights;
             break;
+
+        // case GL_MAX_CLIP_DISTANCES_EXT:  Conflict enum value
         case GL_MAX_CLIP_PLANES:
-            *params = mState.mCaps.maxClipPlanes;
+            if (getClientVersion().major >= 2)
+            {
+                // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+                *params = mState.mCaps.maxClipDistances;
+            }
+            else
+            {
+                *params = mState.mCaps.maxClipPlanes;
+            }
             break;
         // GLES1 emulation: Vertex attribute queries
         case GL_VERTEX_ARRAY_BUFFER_BINDING:

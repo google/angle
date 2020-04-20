@@ -175,8 +175,11 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->ANGLE_multi_draw                            = 0;
     resources->ANGLE_base_vertex_base_instance             = 0;
     resources->WEBGL_video_texture                         = 0;
+    resources->APPLE_clip_distance                         = 0;
 
     resources->NV_draw_buffers = 0;
+
+    resources->MaxClipDistances = 0;
 
     // Disable highp precision in fragment shader by default.
     resources->FragmentPrecisionHigh = 0;

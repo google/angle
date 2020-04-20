@@ -611,6 +611,9 @@ struct Extensions
     bool gpuShader5EXT = false;
     // WEBGL_video_texture
     bool webglVideoTexture = false;
+
+    // GL_APPLE_clip_distance
+    bool clipDistanceAPPLE = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct
@@ -824,6 +827,9 @@ struct Caps
     GLint maxGeometryShaderInvocations     = 0;
 
     GLuint subPixelBits = 4;
+
+    // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+    GLuint maxClipDistances = 0;
 
     // GLES1 emulation: Caps for ES 1.1. Taken from Table 6.20 / 6.22 in the OpenGL ES 1.1 spec.
     GLuint maxMultitextureUnits                 = 0;

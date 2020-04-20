@@ -113,6 +113,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::WEBGL_video_texture] = EBhUndefined;
     }
+    if (resources.APPLE_clip_distance)
+    {
+        extBehavior[TExtension::APPLE_clip_distance] = EBhUndefined;
+    }
 }
 
 void ResetExtensionBehavior(const ShBuiltInResources &resources,

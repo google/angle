@@ -59,10 +59,14 @@ struct GraphicsDriverUniforms
     float halfRenderAreaHeight;
     float viewportYScale;
     float negViewportYScale;
+
+    // 32 bits for 32 clip planes
+    uint32_t enabledClipPlanes;
+
     uint32_t xfbActiveUnpaused;
     uint32_t xfbVerticesPerDraw;
     // NOTE: Explicit padding. Fill in with useful data when needed in the future.
-    std::array<int32_t, 3> padding;
+    std::array<int32_t, 2> padding;
 
     std::array<int32_t, 4> xfbBufferOffsets;
 
@@ -2884,10 +2888,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_DITHER_ENABLED:
                 break;
-            case gl::State::DIRTY_BIT_GENERATE_MIPMAP_HINT:
-                break;
-            case gl::State::DIRTY_BIT_SHADER_DERIVATIVE_HINT:
-                break;
             case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
                 updateFlipViewportReadFramebuffer(context->getState());
                 updateSurfaceRotationReadFramebuffer(glState);
@@ -3007,6 +3007,11 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             }
             case gl::State::DIRTY_BIT_PROVOKING_VERTEX:
+                break;
+            case gl::State::DIRTY_BIT_EXTENDED:
+                // Handling clip distance enabled flags, mipmap generation hint & shader derivative
+                // hint.
+                invalidateGraphicsDriverUniforms();
                 break;
             default:
                 UNREACHABLE();
@@ -3509,6 +3514,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
         halfRenderAreaHeight,
         scaleY,
         -scaleY,
+        mState.getEnabledClipDistances().bits(),
         xfbActiveUnpaused,
         mXfbVertexCountPerInstance,
         {},

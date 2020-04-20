@@ -150,6 +150,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mCoverageModulation(GL_NONE),
       mIsMultiviewEnabled(extensions.multiview || extensions.multiview2),
       mProvokingVertex(GL_LAST_VERTEX_CONVENTION),
+      mMaxClipDistances(rendererCaps.maxClipDistances),
       mLocalDirtyBits()
 {
     ASSERT(mFunctions);
@@ -1699,12 +1700,6 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_DITHER_ENABLED:
                 setDitherEnabled(state.isDitherEnabled());
                 break;
-            case gl::State::DIRTY_BIT_GENERATE_MIPMAP_HINT:
-                // TODO(jmadill): implement this
-                break;
-            case gl::State::DIRTY_BIT_SHADER_DERIVATIVE_HINT:
-                // TODO(jmadill): implement this
-                break;
             case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
             {
                 gl::Framebuffer *framebuffer = state.getReadFramebuffer();
@@ -1879,6 +1874,12 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_PROVOKING_VERTEX:
                 setProvokingVertex(ToGLenum(state.getProvokingVertex()));
                 break;
+            case gl::State::DIRTY_BIT_EXTENDED:
+                // Handling clip distance enabled flags:
+                setClipDistancesEnable(state.getEnabledClipDistances());
+                // TODO(jmadill): handle mipmap generation hint
+                // TODO(jmadill): handle shader derivative hint
+                break;
             default:
                 UNREACHABLE();
                 break;
@@ -2015,6 +2016,31 @@ void StateManagerGL::setProvokingVertex(GLenum mode)
 
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_PROVOKING_VERTEX);
     }
+}
+
+void StateManagerGL::setClipDistancesEnable(const gl::State::ClipDistanceEnableBits &enables)
+{
+    if (enables == mEnabledClipDistances)
+    {
+        return;
+    }
+    ASSERT(mMaxClipDistances <= gl::IMPLEMENTATION_MAX_CLIP_DISTANCES);
+
+    gl::State::ClipDistanceEnableBits diff = enables ^ mEnabledClipDistances;
+    for (size_t i : diff)
+    {
+        if (enables.test(i))
+        {
+            mFunctions->enable(GL_CLIP_DISTANCE0_EXT + static_cast<uint32_t>(i));
+        }
+        else
+        {
+            mFunctions->disable(GL_CLIP_DISTANCE0_EXT + static_cast<uint32_t>(i));
+        }
+    }
+
+    mEnabledClipDistances = enables;
+    mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);
 }
 
 void StateManagerGL::setTextureCubemapSeamlessEnabled(bool enabled)

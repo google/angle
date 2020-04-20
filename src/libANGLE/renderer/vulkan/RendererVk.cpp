@@ -1244,6 +1244,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     // Used to support atomic counter emulation:
     enabledFeatures.features.shaderStorageBufferArrayDynamicIndexing =
         mPhysicalDeviceFeatures.shaderStorageBufferArrayDynamicIndexing;
+    // Used to support APPLE_clip_distance
+    enabledFeatures.features.shaderClipDistance = mPhysicalDeviceFeatures.shaderClipDistance;
 
     if (!vk::CommandBuffer::ExecutesInline())
     {

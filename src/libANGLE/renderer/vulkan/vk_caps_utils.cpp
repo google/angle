@@ -538,6 +538,14 @@ void RendererVk::ensureCapsInitialized() const
         mNativeCaps.maxGeometryShaderInvocations =
             LimitToInt(limitsVk.maxGeometryShaderInvocations);
     }
+
+    // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+    if (mPhysicalDeviceFeatures.shaderClipDistance && limitsVk.maxClipDistances >= 8)
+    {
+        mNativeExtensions.clipDistanceAPPLE = true;
+        mNativeCaps.maxClipDistances =
+            std::min<GLuint>(limitsVk.maxClipDistances, gl::IMPLEMENTATION_MAX_CLIP_DISTANCES);
+    }
 }
 
 namespace vk

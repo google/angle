@@ -96,6 +96,7 @@ void GetBuiltInResourcesFromCaps(const gl::Caps &caps, TBuiltInResource *outBuil
     outBuiltInResources->maxVertexAttribs                 = caps.maxVertexAttributes;
     outBuiltInResources->maxVertexOutputComponents        = caps.maxVertexOutputComponents;
     outBuiltInResources->maxVertexUniformVectors          = caps.maxVertexUniformVectors;
+    outBuiltInResources->maxClipDistances                 = caps.maxClipDistances;
 }
 
 // Test if there are non-zero indices in the uniform name, returning false in that case.  This

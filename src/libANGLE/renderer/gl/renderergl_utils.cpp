@@ -1503,6 +1503,17 @@ void GenerateCaps(const FunctionsGL *functions,
                                 functions->isAtLeastGLES(gl::Version(3, 2)) ||
                                 functions->hasGLExtension("GL_ARB_gpu_shader5") ||
                                 functions->hasGLESExtension("GL_EXT_gpu_shader5");
+
+    // GL_APPLE_clip_distance
+    extensions->clipDistanceAPPLE = functions->isAtLeastGL(gl::Version(3, 0));
+    if (extensions->clipDistanceAPPLE)
+    {
+        caps->maxClipDistances = QuerySingleGLInt(functions, GL_MAX_CLIP_DISTANCES_EXT);
+    }
+    else
+    {
+        caps->maxClipDistances = 0;
+    }
 }
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)

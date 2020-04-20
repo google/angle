@@ -3155,6 +3155,20 @@ bool GetQueryParameterInfo(const State &glState,
             *type      = GL_INT;
             *numParams = 1;
             return true;
+        case GL_MAX_CLIP_DISTANCES_EXT:  // case GL_MAX_CLIP_PLANES
+            if (clientMajorVersion < 2)
+            {
+                break;
+            }
+            if (!extensions.clipDistanceAPPLE)
+            {
+                // NOTE(hqle): if client version is 1. GL_MAX_CLIP_DISTANCES_EXT is equal
+                // to GL_MAX_CLIP_PLANES which is a valid enum.
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
     }
 
     if (glState.getClientType() == EGL_OPENGL_API)
