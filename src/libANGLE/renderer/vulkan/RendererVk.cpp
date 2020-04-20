@@ -133,6 +133,13 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdCopyImageToBuffer-srcImage-01998",
     // http://anglebug.com/4577
     "VUID-vkCmdClearColorImage-image-01993",
+    // http://anglebug.com/4578 for next two
+    "VUID-vkCmdBlitImage-srcImage-01999",
+    "VUID-vkCmdBlitImage-filter-02001",
+    // http://anglebug.com/4579
+    "VUID-vkCmdBlitImage-dstImage-02000",
+    // http://anglebug.com/4580
+    "VUID-vkCmdResolveImage-dstImage-02003",
 };
 
 // Suppress validation errors that are known
