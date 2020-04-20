@@ -131,6 +131,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkQueuePresentKHR-pWaitSemaphores-03268",
     // http://anglebug.com/4572
     "VUID-vkCmdCopyImageToBuffer-srcImage-01998",
+    // http://anglebug.com/4577
+    "VUID-vkCmdClearColorImage-image-01993",
 };
 
 // Suppress validation errors that are known
