@@ -699,7 +699,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
         constexpr size_t fixedAllocationSize = sizeof(StructType) + sizeof(CommandHeader);
         const size_t allocationSize          = fixedAllocationSize + variableSize;
         // Make sure we have enough room to mark follow-on header "Invalid"
-        if (mCurrentBytesRemaining <= (allocationSize + sizeof(CommandHeader)))
+        if (mCurrentBytesRemaining < (allocationSize + sizeof(CommandHeader)))
         {
             allocateNewBlock();
         }
@@ -713,7 +713,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     {
         constexpr size_t allocationSize = sizeof(StructType) + sizeof(CommandHeader);
         // Make sure we have enough room to mark follow-on header "Invalid"
-        if (mCurrentBytesRemaining <= (allocationSize + sizeof(CommandHeader)))
+        if (mCurrentBytesRemaining < (allocationSize + sizeof(CommandHeader)))
         {
             allocateNewBlock();
         }
