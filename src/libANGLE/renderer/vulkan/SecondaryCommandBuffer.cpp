@@ -27,6 +27,8 @@ const char *GetCommandString(CommandID id)
             return "--Invalid--";
         case CommandID::BeginQuery:
             return "BeginQuery";
+        case CommandID::BeginTransformFeedback:
+            return "BeginTransformFeedback";
         case CommandID::BindComputePipeline:
             return "BindComputePipeline";
         case CommandID::BindDescriptorSets:
@@ -35,10 +37,10 @@ const char *GetCommandString(CommandID id)
             return "BindGraphicsPipeline";
         case CommandID::BindIndexBuffer:
             return "BindIndexBuffer";
-        case CommandID::BindVertexBuffers:
-            return "BindVertexBuffers";
         case CommandID::BindTransformFeedbackBuffers:
             return "BindTransformFeedbackBuffers";
+        case CommandID::BindVertexBuffers:
+            return "BindVertexBuffers";
         case CommandID::BlitImage:
             return "BlitImage";
         case CommandID::BufferBarrier:
@@ -67,22 +69,24 @@ const char *GetCommandString(CommandID id)
             return "DrawIndexed";
         case CommandID::DrawIndexedBaseVertex:
             return "DrawIndexedBaseVertex";
+        case CommandID::DrawIndexedIndirect:
+            return "DrawIndexedIndirect";
         case CommandID::DrawIndexedInstanced:
             return "DrawIndexedInstanced";
         case CommandID::DrawIndexedInstancedBaseVertex:
             return "DrawIndexedInstancedBaseVertex";
         case CommandID::DrawIndexedInstancedBaseVertexBaseInstance:
             return "DrawIndexedInstancedBaseVertexBaseInstance";
+        case CommandID::DrawIndirect:
+            return "DrawIndirect";
         case CommandID::DrawInstanced:
             return "DrawInstanced";
         case CommandID::DrawInstancedBaseInstance:
             return "DrawInstancedBaseInstance";
-        case CommandID::DrawIndexedIndirect:
-            return "DrawIndexedIndirect";
-        case CommandID::DrawIndirect:
-            return "DrawIndirect";
         case CommandID::EndQuery:
             return "EndQuery";
+        case CommandID::EndTransformFeedback:
+            return "EndTransformFeedback";
         case CommandID::ExecutionBarrier:
             return "ExecutionBarrier";
         case CommandID::FillBuffer:
@@ -107,10 +111,6 @@ const char *GetCommandString(CommandID id)
             return "WaitEvents";
         case CommandID::WriteTimestamp:
             return "WriteTimestamp";
-        case CommandID::BeginTransformFeedback:
-            return "BeginTransformFeedback";
-        case CommandID::EndTransformFeedback:
-            return "EndTransformFeedback";
         default:
             // Need this to work around MSVC warning 4715.
             UNREACHABLE();
@@ -139,6 +139,20 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                 {
                     const BeginQueryParams *params = getParamPtr<BeginQueryParams>(currentCommand);
                     vkCmdBeginQuery(cmdBuffer, params->queryPool, params->query, params->flags);
+                    break;
+                }
+                case CommandID::BeginTransformFeedback:
+                {
+                    const BeginTransformFeedbackParams *params =
+                        getParamPtr<BeginTransformFeedbackParams>(currentCommand);
+                    const VkBuffer *counterBuffers =
+                        Offset<VkBuffer>(params, sizeof(BeginTransformFeedbackParams));
+                    // Workaround for AMD driver bug where it expects the offsets array to be
+                    // non-null
+                    gl::TransformFeedbackBuffersArray<VkDeviceSize> offsets;
+                    offsets.fill(0);
+                    vkCmdBeginTransformFeedbackEXT(cmdBuffer, 0, params->bufferCount,
+                                                   counterBuffers, offsets.data());
                     break;
                 }
                 case CommandID::BindComputePipeline:
@@ -311,6 +325,13 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                     vkCmdDrawIndexed(cmdBuffer, params->indexCount, 1, 0, params->vertexOffset, 0);
                     break;
                 }
+                case CommandID::DrawIndexedIndirect:
+                {
+                    const DrawIndexedIndirectParams *params =
+                        getParamPtr<DrawIndexedIndirectParams>(currentCommand);
+                    vkCmdDrawIndexedIndirect(cmdBuffer, params->buffer, params->offset, 1, 0);
+                    break;
+                }
                 case CommandID::DrawIndexedInstanced:
                 {
                     const DrawIndexedInstancedParams *params =
@@ -336,6 +357,13 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                                      params->firstInstance);
                     break;
                 }
+                case CommandID::DrawIndirect:
+                {
+                    const DrawIndirectParams *params =
+                        getParamPtr<DrawIndirectParams>(currentCommand);
+                    vkCmdDrawIndirect(cmdBuffer, params->buffer, params->offset, 1, 0);
+                    break;
+                }
                 case CommandID::DrawInstanced:
                 {
                     const DrawInstancedParams *params =
@@ -352,24 +380,24 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                               params->firstVertex, params->firstInstance);
                     break;
                 }
-                case CommandID::DrawIndirect:
-                {
-                    const DrawIndirectParams *params =
-                        getParamPtr<DrawIndirectParams>(currentCommand);
-                    vkCmdDrawIndirect(cmdBuffer, params->buffer, params->offset, 1, 0);
-                    break;
-                }
-                case CommandID::DrawIndexedIndirect:
-                {
-                    const DrawIndexedIndirectParams *params =
-                        getParamPtr<DrawIndexedIndirectParams>(currentCommand);
-                    vkCmdDrawIndexedIndirect(cmdBuffer, params->buffer, params->offset, 1, 0);
-                    break;
-                }
                 case CommandID::EndQuery:
                 {
                     const EndQueryParams *params = getParamPtr<EndQueryParams>(currentCommand);
                     vkCmdEndQuery(cmdBuffer, params->queryPool, params->query);
+                    break;
+                }
+                case CommandID::EndTransformFeedback:
+                {
+                    const EndTransformFeedbackParams *params =
+                        getParamPtr<EndTransformFeedbackParams>(currentCommand);
+                    const VkBuffer *counterBuffers =
+                        Offset<VkBuffer>(params, sizeof(EndTransformFeedbackParams));
+                    // Workaround for AMD driver bug where it expects the offsets array to be
+                    // non-null
+                    gl::TransformFeedbackBuffersArray<VkDeviceSize> offsets;
+                    offsets.fill(0);
+                    vkCmdEndTransformFeedbackEXT(cmdBuffer, 0, params->bufferCount, counterBuffers,
+                                                 offsets.data());
                     break;
                 }
                 case CommandID::ExecutionBarrier:
@@ -485,34 +513,6 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                         getParamPtr<WriteTimestampParams>(currentCommand);
                     vkCmdWriteTimestamp(cmdBuffer, params->pipelineStage, params->queryPool,
                                         params->query);
-                    break;
-                }
-                case CommandID::BeginTransformFeedback:
-                {
-                    const BeginTransformFeedbackParams *params =
-                        getParamPtr<BeginTransformFeedbackParams>(currentCommand);
-                    const VkBuffer *counterBuffers =
-                        Offset<VkBuffer>(params, sizeof(BeginTransformFeedbackParams));
-                    // Workaround for AMD driver bug where it expects the offsets array to be
-                    // non-null
-                    gl::TransformFeedbackBuffersArray<VkDeviceSize> offsets;
-                    offsets.fill(0);
-                    vkCmdBeginTransformFeedbackEXT(cmdBuffer, 0, params->bufferCount,
-                                                   counterBuffers, offsets.data());
-                    break;
-                }
-                case CommandID::EndTransformFeedback:
-                {
-                    const EndTransformFeedbackParams *params =
-                        getParamPtr<EndTransformFeedbackParams>(currentCommand);
-                    const VkBuffer *counterBuffers =
-                        Offset<VkBuffer>(params, sizeof(EndTransformFeedbackParams));
-                    // Workaround for AMD driver bug where it expects the offsets array to be
-                    // non-null
-                    gl::TransformFeedbackBuffersArray<VkDeviceSize> offsets;
-                    offsets.fill(0);
-                    vkCmdEndTransformFeedbackEXT(cmdBuffer, 0, params->bufferCount, counterBuffers,
-                                                 offsets.data());
                     break;
                 }
                 default:
