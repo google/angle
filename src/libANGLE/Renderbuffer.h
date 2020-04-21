@@ -127,16 +127,12 @@ class Renderbuffer final : public RefCountObject<RenderbufferID>,
                                        void *pixels) const;
 
   private:
-    // ObserverInterface implementation.
-    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
-
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override;
 
     RenderbufferState mState;
     std::unique_ptr<rx::RenderbufferImpl> mImplementation;
 
     std::string mLabel;
-    angle::ObserverBinding mImplObserverBinding;
 };
 
 }  // namespace gl

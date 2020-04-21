@@ -23,11 +23,11 @@ namespace rx
 {
 class FramebufferAttachmentRenderTarget;
 
-class FramebufferAttachmentObjectImpl : public angle::Subject
+class FramebufferAttachmentObjectImpl : angle::NonCopyable
 {
   public:
     FramebufferAttachmentObjectImpl() {}
-    ~FramebufferAttachmentObjectImpl() override {}
+    virtual ~FramebufferAttachmentObjectImpl() {}
 
     virtual angle::Result getAttachmentRenderTarget(const gl::Context *context,
                                                     GLenum binding,

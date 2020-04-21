@@ -232,11 +232,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     void postSwap(const gl::Context *context);
     Error releaseRef(const Display *display);
 
-    // ObserverInterface implementation.
-    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
-
     gl::InitState mInitState;
-    angle::ObserverBinding mImplObserverBinding;
 };
 
 class WindowSurface final : public Surface

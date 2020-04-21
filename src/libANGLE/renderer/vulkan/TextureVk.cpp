@@ -40,7 +40,7 @@ constexpr VkImageUsageFlags kTransferStagingImageFlags =
 constexpr VkFormatFeatureFlags kBlitFeatureFlags =
     VK_FORMAT_FEATURE_BLIT_SRC_BIT | VK_FORMAT_FEATURE_BLIT_DST_BIT;
 
-constexpr angle::SubjectIndex kTextureImageSubjectIndex = 0;
+constexpr angle::SubjectIndex kStagingBufferSubjectIndex = 0;
 
 bool CanCopyWithTransfer(RendererVk *renderer,
                          const vk::Format &srcFormat,
@@ -115,7 +115,7 @@ TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
       mImage(nullptr),
       mStagingBufferInitialSize(vk::kStagingBufferSize),
       mImageUsageFlags(0),
-      mImageObserverBinding(this, kTextureImageSubjectIndex)
+      mStagingBufferObserverBinding(this, kStagingBufferSubjectIndex)
 {}
 
 TextureVk::~TextureVk() = default;
@@ -879,7 +879,7 @@ void TextureVk::releaseAndDeleteImage(ContextVk *contextVk)
     {
         releaseImage(contextVk);
         releaseStagingBuffer(contextVk);
-        mImageObserverBinding.bind(nullptr);
+        mStagingBufferObserverBinding.bind(nullptr);
         SafeDelete(mImage);
     }
 }
@@ -924,7 +924,7 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
 {
     ASSERT(mImage == nullptr);
 
-    mImageObserverBinding.bind(imageHelper);
+    mStagingBufferObserverBinding.bind(imageHelper);
 
     mOwnsImage        = selfOwned;
     mImageNativeType  = imageType;
@@ -1686,7 +1686,7 @@ void TextureVk::releaseImage(ContextVk *contextVk)
         }
         else
         {
-            mImageObserverBinding.bind(nullptr);
+            mStagingBufferObserverBinding.bind(nullptr);
             mImage = nullptr;
         }
     }
@@ -1852,9 +1852,9 @@ const vk::Format &TextureVk::getBaseLevelFormat(RendererVk *renderer) const
 
 void TextureVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
-    ASSERT(index == kTextureImageSubjectIndex && message == angle::SubjectMessage::SubjectChanged);
+    ASSERT(index == kStagingBufferSubjectIndex && message == angle::SubjectMessage::SubjectChanged);
 
-    // Forward the notification to the parent that the staging buffer changed.
+    // Forward the notification to vk::Texture that the staging buffer changed.
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 }  // namespace rx

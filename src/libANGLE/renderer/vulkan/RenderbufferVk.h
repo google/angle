@@ -17,7 +17,7 @@
 namespace rx
 {
 
-class RenderbufferVk : public RenderbufferImpl, public angle::ObserverInterface
+class RenderbufferVk : public RenderbufferImpl
 {
   public:
     RenderbufferVk(const gl::RenderbufferState &state);
@@ -70,15 +70,10 @@ class RenderbufferVk : public RenderbufferImpl, public angle::ObserverInterface
 
     const gl::InternalFormat &getImplementationSizedFormat() const;
 
-    // We monitor the staging buffer for changes. This handles staged data from outside this class.
-    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
-
     bool mOwnsImage;
     vk::ImageHelper *mImage;
     vk::ImageViewHelper mImageViews;
     RenderTargetVk mRenderTarget;
-
-    angle::ObserverBinding mImageObserverBinding;
 };
 
 }  // namespace rx
