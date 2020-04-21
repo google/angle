@@ -19,8 +19,8 @@
   # Please keep alphabetical
   ##############################################################################
   'WATCHLISTS': {
-    'vulkan': ['cclao+angleWatchVk@google.com,
-                jmadill+watch@chromium.org,
-                timvp+angleWatchVk@google.com'],
+    'vulkan': ['cclao+angleWatchVk@google.com',
+               'jmadill+watch@chromium.org',
+               'timvp+angleWatchVk@google.com'],
   },
 }
