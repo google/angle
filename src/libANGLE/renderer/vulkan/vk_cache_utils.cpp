@@ -1693,6 +1693,115 @@ uint32_t FramebufferDesc::attachmentCount() const
     }
     return count;
 }
+
+// SamplerDesc implementation.
+SamplerDesc::SamplerDesc()
+{
+    reset();
+}
+
+SamplerDesc::~SamplerDesc() = default;
+
+SamplerDesc::SamplerDesc(const SamplerDesc &other) = default;
+
+SamplerDesc &SamplerDesc::operator=(const SamplerDesc &rhs) = default;
+
+SamplerDesc::SamplerDesc(const gl::SamplerState &samplerState, bool stencilMode)
+{
+    update(samplerState, stencilMode);
+}
+
+void SamplerDesc::reset()
+{
+    mMipLodBias     = 0.0f;
+    mMaxAnisotropy  = 0.0f;
+    mMinLod         = 0.0f;
+    mMaxLod         = 0.0f;
+    mMagFilter      = 0;
+    mMinFilter      = 0;
+    mMipmapMode     = 0;
+    mAddressModeU   = 0;
+    mAddressModeV   = 0;
+    mAddressModeW   = 0;
+    mCompareEnabled = 0;
+    mCompareOp      = 0;
+    mReserved       = 0;
+}
+
+void SamplerDesc::update(const gl::SamplerState &samplerState, bool stencilMode)
+{
+    mMipLodBias    = 0.0f;
+    mMaxAnisotropy = samplerState.getMaxAnisotropy();
+    mMinLod        = samplerState.getMinLod();
+    mMaxLod        = samplerState.getMaxLod();
+
+    bool compareEnable    = samplerState.getCompareMode() == GL_COMPARE_REF_TO_TEXTURE;
+    VkCompareOp compareOp = gl_vk::GetCompareOp(samplerState.getCompareFunc());
+    // When sampling from stencil, deqp tests expect texture compare to have no effect
+    // dEQP - GLES31.functional.stencil_texturing.misc.compare_mode_effect
+    // states: NOTE: Texture compare mode has no effect when reading stencil values.
+    if (stencilMode)
+    {
+        compareEnable = VK_FALSE;
+        compareOp     = VK_COMPARE_OP_ALWAYS;
+    }
+
+    SetBitField(mMagFilter, gl_vk::GetFilter(samplerState.getMagFilter()));
+    SetBitField(mMinFilter, gl_vk::GetFilter(samplerState.getMinFilter()));
+    SetBitField(mMipmapMode, gl_vk::GetSamplerMipmapMode(samplerState.getMinFilter()));
+    SetBitField(mAddressModeU, gl_vk::GetSamplerAddressMode(samplerState.getWrapS()));
+    SetBitField(mAddressModeV, gl_vk::GetSamplerAddressMode(samplerState.getWrapT()));
+    SetBitField(mAddressModeW, gl_vk::GetSamplerAddressMode(samplerState.getWrapR()));
+    SetBitField(mCompareEnabled, compareEnable);
+    SetBitField(mCompareOp, compareOp);
+
+    if (!gl::IsMipmapFiltered(samplerState))
+    {
+        // Per the Vulkan spec, GL_NEAREST and GL_LINEAR do not map directly to Vulkan, so
+        // they must be emulated (See "Mapping of OpenGL to Vulkan filter modes")
+        SetBitField(mMipmapMode, VK_SAMPLER_MIPMAP_MODE_NEAREST);
+        mMinLod = 0.0f;
+        mMaxLod = 0.25f;
+    }
+}
+
+VkSamplerCreateInfo SamplerDesc::unpack(ContextVk *contextVk) const
+{
+    const gl::Extensions &extensions = contextVk->getExtensions();
+
+    bool anisotropyEnable = extensions.textureFilterAnisotropic && mMaxAnisotropy > 1.0f;
+
+    VkSamplerCreateInfo createInfo     = {};
+    createInfo.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    createInfo.flags                   = 0;
+    createInfo.magFilter               = static_cast<VkFilter>(mMagFilter);
+    createInfo.minFilter               = static_cast<VkFilter>(mMinFilter);
+    createInfo.mipmapMode              = static_cast<VkSamplerMipmapMode>(mMipmapMode);
+    createInfo.addressModeU            = static_cast<VkSamplerAddressMode>(mAddressModeU);
+    createInfo.addressModeV            = static_cast<VkSamplerAddressMode>(mAddressModeV);
+    createInfo.addressModeW            = static_cast<VkSamplerAddressMode>(mAddressModeW);
+    createInfo.mipLodBias              = 0.0f;
+    createInfo.anisotropyEnable        = anisotropyEnable;
+    createInfo.maxAnisotropy           = mMaxAnisotropy;
+    createInfo.compareEnable           = mCompareEnabled ? VK_TRUE : VK_FALSE;
+    createInfo.compareOp               = static_cast<VkCompareOp>(mCompareOp);
+    createInfo.minLod                  = mMinLod;
+    createInfo.maxLod                  = mMaxLod;
+    createInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
+    createInfo.unnormalizedCoordinates = VK_FALSE;
+
+    return createInfo;
+}
+
+size_t SamplerDesc::hash() const
+{
+    return angle::ComputeGenericHash(*this);
+}
+
+bool SamplerDesc::operator==(const SamplerDesc &other) const
+{
+    return (memcmp(this, &other, sizeof(SamplerDesc)) == 0);
+}
 }  // namespace vk
 
 // RenderPassCache implementation.
@@ -2000,6 +2109,50 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     auto insertedItem = mPayload.emplace(desc, vk::RefCountedPipelineLayout(std::move(newLayout)));
     vk::RefCountedPipelineLayout &insertedLayout = insertedItem.first->second;
     pipelineLayoutOut->set(&insertedLayout);
+
+    return angle::Result::Continue;
+}
+
+// SamplerCache implementation.
+SamplerCache::SamplerCache() = default;
+
+SamplerCache::~SamplerCache()
+{
+    ASSERT(mPayload.empty());
+}
+
+void SamplerCache::destroy(VkDevice device)
+{
+    for (auto &iter : mPayload)
+    {
+        vk::RefCountedSampler &sampler = iter.second;
+        ASSERT(!sampler.isReferenced());
+        sampler.get().destroy(device);
+    }
+
+    mPayload.clear();
+}
+
+angle::Result SamplerCache::getSampler(ContextVk *contextVk,
+                                       const vk::SamplerDesc &desc,
+                                       vk::BindingPointer<vk::Sampler> *samplerOut)
+{
+    auto iter = mPayload.find(desc);
+    if (iter != mPayload.end())
+    {
+        vk::RefCountedSampler &sampler = iter->second;
+        samplerOut->set(&sampler);
+        return angle::Result::Continue;
+    }
+
+    VkSamplerCreateInfo createInfo = desc.unpack(contextVk);
+
+    vk::Sampler sampler;
+    ANGLE_VK_TRY(contextVk, sampler.init(contextVk->getDevice(), createInfo));
+
+    auto insertedItem = mPayload.emplace(desc, vk::RefCountedSampler(std::move(sampler)));
+    vk::RefCountedSampler &insertedSampler = insertedItem.first->second;
+    samplerOut->set(&insertedSampler);
 
     return angle::Result::Continue;
 }

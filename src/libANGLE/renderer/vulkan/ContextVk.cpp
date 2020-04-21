@@ -1312,15 +1312,6 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
                                        &image);
 
         textureVk->retainImageViews(&mResourceUseList);
-
-        if (unit.sampler)
-        {
-            unit.sampler->retain(&mResourceUseList);
-        }
-        else
-        {
-            textureVk->retainSampler(&mResourceUseList);
-        }
     }
 
     if (executable->hasTextures())

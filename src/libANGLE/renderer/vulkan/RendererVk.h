@@ -245,6 +245,8 @@ class RendererVk : angle::NonCopyable
 
     bool enableDebugUtils() const { return mEnableDebugUtils; }
 
+    SamplerCache &getSamplerCache() { return mSamplerCache; }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -360,6 +362,7 @@ class RendererVk : angle::NonCopyable
     bool mGlslangInitialized;
 
     VmaAllocator mAllocator;
+    SamplerCache mSamplerCache;
 };
 
 }  // namespace rx

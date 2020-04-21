@@ -125,7 +125,7 @@ void TextureVk::onDestroy(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
 
     releaseAndDeleteImage(contextVk);
-    mSampler.release(contextVk->getRenderer());
+    mSampler.reset();
 }
 
 angle::Result TextureVk::setImage(const gl::Context *context,
@@ -1469,7 +1469,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     RendererVk *renderer = contextVk->getRenderer();
     if (mSampler.valid())
     {
-        mSampler.release(renderer);
+        mSampler.reset();
     }
 
     if (dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
@@ -1493,52 +1493,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         }
     }
 
-    const gl::Extensions &extensions     = renderer->getNativeExtensions();
-    const gl::SamplerState &samplerState = mState.getSamplerState();
-
-    float maxAnisotropy   = samplerState.getMaxAnisotropy();
-    bool anisotropyEnable = extensions.textureFilterAnisotropic && maxAnisotropy > 1.0f;
-    bool compareEnable    = samplerState.getCompareMode() == GL_COMPARE_REF_TO_TEXTURE;
-    VkCompareOp compareOp = gl_vk::GetCompareOp(samplerState.getCompareFunc());
-    // When sampling from stencil, deqp tests expect texture compare to have no effect
-    // dEQP - GLES31.functional.stencil_texturing.misc.compare_mode_effect
-    // states: NOTE: Texture compare mode has no effect when reading stencil values.
-    if (mState.isStencilMode())
-    {
-        compareEnable = VK_FALSE;
-        compareOp     = VK_COMPARE_OP_ALWAYS;
-    }
-
-    // Create a simple sampler. Force basic parameter settings.
-    VkSamplerCreateInfo samplerInfo     = {};
-    samplerInfo.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-    samplerInfo.flags                   = 0;
-    samplerInfo.magFilter               = gl_vk::GetFilter(samplerState.getMagFilter());
-    samplerInfo.minFilter               = gl_vk::GetFilter(samplerState.getMinFilter());
-    samplerInfo.mipmapMode              = gl_vk::GetSamplerMipmapMode(samplerState.getMinFilter());
-    samplerInfo.addressModeU            = gl_vk::GetSamplerAddressMode(samplerState.getWrapS());
-    samplerInfo.addressModeV            = gl_vk::GetSamplerAddressMode(samplerState.getWrapT());
-    samplerInfo.addressModeW            = gl_vk::GetSamplerAddressMode(samplerState.getWrapR());
-    samplerInfo.mipLodBias              = 0.0f;
-    samplerInfo.anisotropyEnable        = anisotropyEnable;
-    samplerInfo.maxAnisotropy           = maxAnisotropy;
-    samplerInfo.compareEnable           = compareEnable;
-    samplerInfo.compareOp               = compareOp;
-    samplerInfo.minLod                  = samplerState.getMinLod();
-    samplerInfo.maxLod                  = samplerState.getMaxLod();
-    samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
-    samplerInfo.unnormalizedCoordinates = VK_FALSE;
-
-    if (!gl::IsMipmapFiltered(samplerState))
-    {
-        // Per the Vulkan spec, GL_NEAREST and GL_LINEAR do not map directly to Vulkan, so
-        // they must be emulated (See "Mapping of OpenGL to Vulkan filter modes")
-        samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-        samplerInfo.minLod     = 0.0f;
-        samplerInfo.maxLod     = 0.25f;
-    }
-
-    ANGLE_VK_TRY(contextVk, mSampler.get().init(contextVk->getDevice(), samplerInfo));
+    vk::SamplerDesc samplerDesc(mState.getSamplerState(), mState.isStencilMode());
+    ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDesc, &mSampler));
 
     // Regenerate the serial on a sampler change.
     mSerial = contextVk->generateTextureSerial();

@@ -185,8 +185,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         mImageViews.retain(resourceUseList);
     }
 
-    void retainSampler(vk::ResourceUseList *resourceUseList) { mSampler.retain(resourceUseList); }
-
     void releaseOwnershipOfImage(const gl::Context *context);
 
     const vk::ImageView &getReadImageViewAndRecordUse(ContextVk *contextVk) const;
@@ -415,7 +413,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     // |mSampler| contains the relevant Vulkan sampler states reprensenting the OpenGL Texture
     // sampling states for the Texture.
-    vk::SamplerHelper mSampler;
+    vk::BindingPointer<vk::Sampler> mSampler;
 
     // Render targets stored as vector of vectors
     // Level is first dimension, layer is second

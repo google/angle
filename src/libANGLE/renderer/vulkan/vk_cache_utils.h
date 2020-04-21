@@ -28,6 +28,7 @@ using PipelineAndSerial   = ObjectAndSerial<Pipeline>;
 
 using RefCountedDescriptorSetLayout = RefCounted<DescriptorSetLayout>;
 using RefCountedPipelineLayout      = RefCounted<PipelineLayout>;
+using RefCountedSampler             = RefCounted<Sampler>;
 
 // Helper macro that casts to a bitfield type then verifies no bits were dropped.
 #define SetBitField(lhs, rhs)                                         \
@@ -596,6 +597,58 @@ static_assert(sizeof(PipelineLayoutDesc) ==
                    sizeof(gl::ShaderMap<PackedPushConstantRange>)),
               "Unexpected Size");
 
+// Packed sampler description for the sampler cache.
+class SamplerDesc final
+{
+  public:
+    SamplerDesc();
+    explicit SamplerDesc(const gl::SamplerState &samplerState, bool stencilMode);
+    ~SamplerDesc();
+
+    SamplerDesc(const SamplerDesc &other);
+    SamplerDesc &operator=(const SamplerDesc &rhs);
+
+    void update(const gl::SamplerState &samplerState, bool stencilMode);
+    void reset();
+    VkSamplerCreateInfo unpack(ContextVk *contextVk) const;
+
+    size_t hash() const;
+    bool operator==(const SamplerDesc &other) const;
+
+  private:
+    // 32*4 bits for floating point data.
+    // Note: anisotropy enabled is implicitly determined by maxAnisotropy and caps.
+    float mMipLodBias;
+    float mMaxAnisotropy;
+    float mMinLod;
+    float mMaxLod;
+
+    // 16 bits for modes + states.
+    // 1 bit per filter (only 2 possible values in GL: linear/nearest)
+    uint16_t mMagFilter : 1;
+    uint16_t mMinFilter : 1;
+    uint16_t mMipmapMode : 1;
+
+    // 3 bits per address mode (5 possible values)
+    uint16_t mAddressModeU : 3;
+    uint16_t mAddressModeV : 3;
+    uint16_t mAddressModeW : 3;
+
+    // 1 bit for compare enabled (2 possible values)
+    uint16_t mCompareEnabled : 1;
+
+    // 3 bits for compare op. (8 possible values)
+    uint16_t mCompareOp : 3;
+
+    // Border color and unnormalized coordinates implicitly set to contants.
+
+    // 16 extra bits reserved for future use.
+    uint16_t mReserved;
+};
+
+// Total size: 160 bits == 20 bytes.
+static_assert(sizeof(SamplerDesc) == 20, "Unexpected SamplerDesc size");
+
 // Disable warnings about struct padding.
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
@@ -806,6 +859,12 @@ struct hash<rx::vk::FramebufferDesc>
 {
     size_t operator()(const rx::vk::FramebufferDesc &key) const { return key.hash(); }
 };
+
+template <>
+struct hash<rx::vk::SamplerDesc>
+{
+    size_t operator()(const rx::vk::SamplerDesc &key) const { return key.hash(); }
+};
 }  // namespace std
 
 namespace rx
@@ -949,6 +1008,22 @@ class PipelineLayoutCache final : angle::NonCopyable
 
   private:
     std::unordered_map<vk::PipelineLayoutDesc, vk::RefCountedPipelineLayout> mPayload;
+};
+
+class SamplerCache final : angle::NonCopyable
+{
+  public:
+    SamplerCache();
+    ~SamplerCache();
+
+    void destroy(VkDevice device);
+
+    angle::Result getSampler(ContextVk *contextVk,
+                             const vk::SamplerDesc &desc,
+                             vk::BindingPointer<vk::Sampler> *samplerOut);
+
+  private:
+    std::unordered_map<vk::SamplerDesc, vk::RefCountedSampler> mPayload;
 };
 
 // Some descriptor set and pipeline layout constants.
