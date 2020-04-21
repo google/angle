@@ -8,6 +8,7 @@
 
 #include "libANGLE/capture_gles_ext_autogen.h"
 
+#include "libANGLE/capture_gles_2_0_autogen.h"
 #include "libANGLE/capture_gles_3_0_autogen.h"
 
 using namespace angle;
@@ -262,7 +263,8 @@ void CaptureDrawElementsBaseVertexOES_indices(const State &glState,
                                               GLint basevertex,
                                               ParamCapture *indicesParam)
 {
-    UNIMPLEMENTED();
+    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
+                                indicesParam);
 }
 
 void CaptureDrawElementsInstancedBaseVertexOES_indices(const State &glState,

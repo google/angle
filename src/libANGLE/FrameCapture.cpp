@@ -469,6 +469,11 @@ void WriteBinaryParamReplay(DataCounters *counters,
     }
 }
 
+uintptr_t SyncIndexValue(GLsync sync)
+{
+    return reinterpret_cast<uintptr_t>(sync);
+}
+
 void WriteCppReplayForCall(const CallCapture &call,
                            DataCounters *counters,
                            std::ostream &out,
@@ -482,6 +487,12 @@ void WriteCppReplayForCall(const CallCapture &call,
     {
         GLuint id = call.params.getReturnValue().value.GLuintVal;
         callOut << "gShaderProgramMap[" << id << "] = ";
+    }
+
+    if (call.entryPoint == gl::EntryPoint::FenceSync)
+    {
+        GLsync sync = call.params.getReturnValue().value.GLsyncVal;
+        callOut << "gSyncMap[" << SyncIndexValue(sync) << "] = ";
     }
 
     if (call.entryPoint == gl::EntryPoint::MapBufferRange ||
@@ -531,6 +542,21 @@ void WriteCppReplayForCall(const CallCapture &call,
             else if (param.type == ParamType::TGLfloat)
             {
                 WriteGLFloatValue(callOut, param.value.GLfloatVal);
+            }
+            else if (param.type == ParamType::TGLsync)
+            {
+                callOut << "gSyncMap[" << SyncIndexValue(param.value.GLsyncVal) << "]";
+            }
+            else if (param.type == ParamType::TGLuint64 && param.name == "timeout")
+            {
+                if (param.value.GLuint64Val == GL_TIMEOUT_IGNORED)
+                {
+                    callOut << "GL_TIMEOUT_IGNORED";
+                }
+                else
+                {
+                    WriteParamCaptureReplay(callOut, call, param);
+                }
             }
             else
             {
@@ -932,6 +958,10 @@ void WriteCppReplayIndexFiles(bool compression,
         header << "extern ResourceMap g" << name << "Map;\n";
         source << "ResourceMap g" << name << "Map;\n";
     }
+
+    header << "using SyncResourceMap = std::unordered_map<uintptr_t, GLsync>;\n";
+    header << "extern SyncResourceMap gSyncMap;\n";
+    source << "SyncResourceMap gSyncMap;\n";
 
     header << "\n";
 
@@ -3807,6 +3837,14 @@ void WriteParamValueReplay<ParamType::TShaderProgramID>(std::ostream &os,
                                                         gl::ShaderProgramID value)
 {
     os << "gShaderProgramMap[" << value.value << "]";
+}
+
+template <>
+void WriteParamValueReplay<ParamType::TGLsync>(std::ostream &os,
+                                               const CallCapture &call,
+                                               GLsync value)
+{
+    os << "gSyncMap[" << SyncIndexValue(value) << "]";
 }
 
 template <>
