@@ -659,6 +659,8 @@ void GarbageObject::destroy(RendererVk *renderer)
             UNREACHABLE();
             break;
     }
+
+    renderer->getActiveHandleCounts().onDeallocate(mHandleType);
 }
 
 void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label)

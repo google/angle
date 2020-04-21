@@ -4018,6 +4018,14 @@ void SamplerHelper::release(RendererVk *renderer)
     renderer->collectGarbageAndReinit(&mUse, &mSampler);
 }
 
+angle::Result SamplerHelper::init(Context *context, const VkSamplerCreateInfo &createInfo)
+{
+    RendererVk *renderer = context->getRenderer();
+    ANGLE_VK_TRY(context, mSampler.init(renderer->getDevice(), createInfo));
+    renderer->getActiveHandleCounts().onAllocate(HandleType::Sampler);
+    return angle::Result::Continue;
+}
+
 // DispatchHelper implementation.
 DispatchHelper::DispatchHelper() = default;
 
@@ -4102,5 +4110,11 @@ angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
     *pipelineOut = &mComputePipeline;
     return angle::Result::Continue;
 }
+
+// ActiveHandleCounter implementation.
+ActiveHandleCounter::ActiveHandleCounter() : mActiveCounts{}, mAllocatedCounts{} {}
+
+ActiveHandleCounter::~ActiveHandleCounter() = default;
+
 }  // namespace vk
 }  // namespace rx

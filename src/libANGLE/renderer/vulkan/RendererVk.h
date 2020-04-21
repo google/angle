@@ -246,6 +246,7 @@ class RendererVk : angle::NonCopyable
     bool enableDebugUtils() const { return mEnableDebugUtils; }
 
     SamplerCache &getSamplerCache() { return mSamplerCache; }
+    vk::ActiveHandleCounter &getActiveHandleCounts() { return mActiveHandleCounts; }
 
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
@@ -363,6 +364,7 @@ class RendererVk : angle::NonCopyable
 
     VmaAllocator mAllocator;
     SamplerCache mSamplerCache;
+    vk::ActiveHandleCounter mActiveHandleCounts;
 };
 
 }  // namespace rx

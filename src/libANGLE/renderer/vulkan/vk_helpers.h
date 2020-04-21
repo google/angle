@@ -1215,10 +1215,10 @@ class SamplerHelper final : angle::NonCopyable
     SamplerHelper();
     ~SamplerHelper();
 
+    angle::Result init(Context *context, const VkSamplerCreateInfo &createInfo);
     void release(RendererVk *renderer);
 
     bool valid() const { return mSampler.valid(); }
-    Sampler &get() { return mSampler; }
     const Sampler &get() const { return mSampler; }
 
     void retain(ResourceUseList *resourceUseList) { resourceUseList->add(mUse); }
@@ -1329,6 +1329,30 @@ class ShaderProgramHelper : angle::NonCopyable
 
     // Specialization constants, currently only used by the graphics queue.
     vk::SpecializationConstantBitSet mSpecializationConstants;
+};
+
+// Tracks current handle allocation counts in the back-end. Useful for debugging and profiling.
+// Note: not all handle types are currently implemented.
+class ActiveHandleCounter final : angle::NonCopyable
+{
+  public:
+    ActiveHandleCounter();
+    ~ActiveHandleCounter();
+
+    void onAllocate(HandleType handleType)
+    {
+        mActiveCounts[handleType]++;
+        mAllocatedCounts[handleType]++;
+    }
+
+    void onDeallocate(HandleType handleType) { mActiveCounts[handleType]--; }
+
+    uint32_t getActive(HandleType handleType) const { return mActiveCounts[handleType]; }
+    uint32_t getAllocated(HandleType handleType) const { return mAllocatedCounts[handleType]; }
+
+  private:
+    angle::PackedEnumMap<HandleType, uint32_t> mActiveCounts;
+    angle::PackedEnumMap<HandleType, uint32_t> mAllocatedCounts;
 };
 }  // namespace vk
 }  // namespace rx

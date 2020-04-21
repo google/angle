@@ -56,7 +56,7 @@ enum class HandleType
 {
     Invalid,
     CommandBuffer,
-    ANGLE_HANDLE_TYPES_X(ANGLE_COMMA_SEP_FUNC)
+    ANGLE_HANDLE_TYPES_X(ANGLE_COMMA_SEP_FUNC) EnumCount
 };
 
 #undef ANGLE_COMMA_SEP_FUNC

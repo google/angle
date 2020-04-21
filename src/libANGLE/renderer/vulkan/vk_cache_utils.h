@@ -1016,7 +1016,7 @@ class SamplerCache final : angle::NonCopyable
     SamplerCache();
     ~SamplerCache();
 
-    void destroy(VkDevice device);
+    void destroy(RendererVk *renderer);
 
     angle::Result getSampler(ContextVk *contextVk,
                              const vk::SamplerDesc &desc,

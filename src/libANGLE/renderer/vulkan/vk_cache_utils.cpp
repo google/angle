@@ -2121,13 +2121,17 @@ SamplerCache::~SamplerCache()
     ASSERT(mPayload.empty());
 }
 
-void SamplerCache::destroy(VkDevice device)
+void SamplerCache::destroy(RendererVk *renderer)
 {
+    VkDevice device = renderer->getDevice();
+
     for (auto &iter : mPayload)
     {
         vk::RefCountedSampler &sampler = iter.second;
         ASSERT(!sampler.isReferenced());
         sampler.get().destroy(device);
+
+        renderer->getActiveHandleCounts().onDeallocate(vk::HandleType::Sampler);
     }
 
     mPayload.clear();
@@ -2153,6 +2157,8 @@ angle::Result SamplerCache::getSampler(ContextVk *contextVk,
     auto insertedItem = mPayload.emplace(desc, vk::RefCountedSampler(std::move(sampler)));
     vk::RefCountedSampler &insertedSampler = insertedItem.first->second;
     samplerOut->set(&insertedSampler);
+
+    contextVk->getRenderer()->getActiveHandleCounts().onAllocate(vk::HandleType::Sampler);
 
     return angle::Result::Continue;
 }

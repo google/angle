@@ -632,7 +632,7 @@ void RendererVk::onDestroy()
     mDescriptorSetLayoutCache.destroy(mDevice);
 
     mPipelineCache.destroy(mDevice);
-    mSamplerCache.destroy(mDevice);
+    mSamplerCache.destroy(this);
 
     vma::DestroyAllocator(mAllocator);
 
