@@ -1657,11 +1657,13 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     ANGLE_FEATURE_CONDITION(features, unfoldShortCircuits, IsApple());
 
+    ANGLE_FEATURE_CONDITION(features, emulatePrimitiveRestartFixedIndex,
+                            functions->standard == STANDARD_GL_DESKTOP &&
+                                functions->isAtLeastGL(gl::Version(3, 1)) &&
+                                !functions->isAtLeastGL(gl::Version(4, 3)));
     ANGLE_FEATURE_CONDITION(
-        features, emulatePrimitiveRestartFixedIndex,
-        functions->standard == STANDARD_GL_DESKTOP && !functions->isAtLeastGL(gl::Version(4, 3)));
-    ANGLE_FEATURE_CONDITION(features, setPrimitiveRestartFixedIndexForDrawArrays,
-                            IsApple() && isIntel);
+        features, setPrimitiveRestartFixedIndexForDrawArrays,
+        features->emulatePrimitiveRestartFixedIndex.enabled && IsApple() && isIntel);
 
     ANGLE_FEATURE_CONDITION(features, removeDynamicIndexingOfSwizzledVector,
                             IsApple() || IsAndroid() || IsWindows());
