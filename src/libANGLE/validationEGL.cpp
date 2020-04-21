@@ -4221,12 +4221,6 @@ Error ValidateDupNativeFenceFDANDROID(const Display *display, const Sync *sync)
 
     ANGLE_TRY(ValidateSync(display, sync));
 
-    if (sync->getNativeFenceFD() == EGL_NO_NATIVE_FENCE_FD_ANDROID)
-    {
-        return EglBadParameter() << "EGL_NATIVE_FENCE_FD_ANDROID attribute of sync is "
-                                    "EGL_NO_NATIVE_FENCE_FD_ANDROID";
-    }
-
     return NoError();
 }
 
