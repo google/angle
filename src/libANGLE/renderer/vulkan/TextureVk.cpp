@@ -1461,7 +1461,11 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     // Initialize the image storage and flush the pixel buffer.
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
-    if (dirtyBits.none() && mSampler.valid())
+    // Mask out the IMPLEMENTATION dirty bit to avoid unnecessary syncs.
+    gl::Texture::DirtyBits localBits = dirtyBits;
+    localBits.reset(gl::Texture::DIRTY_BIT_IMPLEMENTATION);
+
+    if (localBits.none() && mSampler.valid())
     {
         return angle::Result::Continue;
     }
@@ -1472,10 +1476,10 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         mSampler.reset();
     }
 
-    if (dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
-        dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_GREEN) ||
-        dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_BLUE) ||
-        dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA))
+    if (localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
+        localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_GREEN) ||
+        localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_BLUE) ||
+        localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA))
     {
         if (mImage && mImage->valid())
         {
