@@ -39,9 +39,6 @@
 // Separate shader objects:
 3570 VULKAN : KHR-GLES31.core.sepshaderobjs.StateInteraction = SKIP
 
-// Program interface query.
-3596 VULKAN : KHR-GLES31.core.program_interface_query.* = FAIL
-
 // Image related failures
 
 4315 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-memory-order-vsfs = FAIL

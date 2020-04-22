@@ -947,6 +947,13 @@ unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutA
                 indexIsValidDecimalNumber = false;
                 break;
             }
+
+            // Leading zeroes are invalid
+            if ((i == (open + 1)) && (name[i] == '0') && (name[i + 1] != ']'))
+            {
+                indexIsValidDecimalNumber = false;
+                break;
+            }
         }
         if (indexIsValidDecimalNumber)
         {

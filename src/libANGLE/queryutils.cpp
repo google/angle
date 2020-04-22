@@ -676,7 +676,7 @@ GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop
             return clampCast<GLint>(program->getInputResourceName(index).size() + 1u);
 
         case GL_LOCATION:
-            return variable.location;
+            return variable.isBuiltIn() ? GL_INVALID_INDEX : variable.location;
 
         // The query is targeted at the set of active input variables used by the first shader stage
         // of program. If program contains multiple shader stages then input variables from any
