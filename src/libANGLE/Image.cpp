@@ -49,6 +49,8 @@ const Display *DisplayFromContext(const gl::Context *context)
 {
     return (context ? context->getDisplay() : nullptr);
 }
+
+angle::SubjectIndex kExternalImageImplSubjectIndex = 0;
 }  // anonymous namespace
 
 ImageSibling::ImageSibling() : FramebufferAttachmentObject(), mSourcesOf(), mTargetOf() {}
@@ -145,8 +147,11 @@ ExternalImageSibling::ExternalImageSibling(rx::EGLImplFactory *factory,
                                            EGLenum target,
                                            EGLClientBuffer buffer,
                                            const AttributeMap &attribs)
-    : mImplementation(factory->createExternalImageSibling(context, target, buffer, attribs))
-{}
+    : mImplementation(factory->createExternalImageSibling(context, target, buffer, attribs)),
+      mImplObserverBinding(this, kExternalImageImplSubjectIndex)
+{
+    mImplObserverBinding.bind(mImplementation.get());
+}
 
 ExternalImageSibling::~ExternalImageSibling() = default;
 
@@ -209,6 +214,12 @@ void ExternalImageSibling::setInitState(const gl::ImageIndex &imageIndex, gl::In
 rx::ExternalImageSiblingImpl *ExternalImageSibling::getImplementation() const
 {
     return mImplementation.get();
+}
+
+void ExternalImageSibling::onSubjectStateChange(angle::SubjectIndex index,
+                                                angle::SubjectMessage message)
+{
+    onStateChange(message);
 }
 
 rx::FramebufferAttachmentObjectImpl *ExternalImageSibling::getAttachmentImpl() const

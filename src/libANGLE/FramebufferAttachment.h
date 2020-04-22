@@ -195,7 +195,7 @@ class FramebufferAttachment final
 };
 
 // A base class for objects that FBO Attachments may point to.
-class FramebufferAttachmentObject : public angle::Subject
+class FramebufferAttachmentObject : public angle::Subject, public angle::ObserverInterface
 {
   public:
     FramebufferAttachmentObject();
