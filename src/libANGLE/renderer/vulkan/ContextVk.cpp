@@ -3654,7 +3654,8 @@ void ContextVk::handleError(VkResult errorCode,
     GLenum glErrorCode = DefaultGLErrorCode(errorCode);
 
     std::stringstream errorStream;
-    errorStream << "Internal Vulkan error: " << VulkanResultString(errorCode) << ".";
+    errorStream << "Internal Vulkan error (" << errorCode << "): " << VulkanResultString(errorCode)
+                << ".";
 
     if (errorCode == VK_ERROR_DEVICE_LOST)
     {

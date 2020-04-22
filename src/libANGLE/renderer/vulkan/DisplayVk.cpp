@@ -251,8 +251,8 @@ void DisplayVk::handleError(VkResult result,
     ASSERT(result != VK_SUCCESS);
 
     std::stringstream errorStream;
-    errorStream << "Internal Vulkan error: " << VulkanResultString(result) << ", in " << file
-                << ", " << function << ":" << line << ".";
+    errorStream << "Internal Vulkan error (" << result << "): " << VulkanResultString(result)
+                << ", in " << file << ", " << function << ":" << line << ".";
     mStoredErrorString = errorStream.str();
 
     if (result == VK_ERROR_DEVICE_LOST)
