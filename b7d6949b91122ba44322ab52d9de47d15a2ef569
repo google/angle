@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "598e3b75_3b2e5b0f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1682,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-04-22T14:35:34Z",
+      "side": 1,
+      "message": "the point was that we could not anticipate which devices/GPUs would throw a tantrum. The feature was so that vendors could control if they wanted the feature enabled or not based on their memory provisioning",
+      "parentUuid": "3d7441e3_cc584148",
+      "range": {
+        "startLine": 1682,
+        "startChar": 4,
+        "endLine": 1682,
+        "endChar": 73
+      },
+      "revId": "b7d6949b91122ba44322ab52d9de47d15a2ef569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30ce0730_9ca8b980",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "b7d6949b91122ba44322ab52d9de47d15a2ef569",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ce1412f_801db5f3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-04-22T14:35:34Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "30ce0730_9ca8b980",
+      "range": {
+        "startLine": 412,
+        "startChar": 8,
+        "endLine": 412,
+        "endChar": 30
+      },
+      "revId": "b7d6949b91122ba44322ab52d9de47d15a2ef569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
