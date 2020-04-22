@@ -48,6 +48,11 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.setTextureExtensionSupport(mNativeTextureCaps);
 
+    // TODO: http://anglebug.com/3609
+    // Due to a dEQP bug, this extension cannot be exposed until EXT_texture_sRGB_decode is
+    // implemented
+    mNativeExtensions.sRGBR8EXT = false;
+
     // To ensure that ETC2/EAC formats are enabled only on hardware that supports them natively,
     // this flag is not set by the function above and must be set explicitly. It exposes
     // ANGLE_compressed_texture_etc extension string.
