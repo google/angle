@@ -631,6 +631,8 @@ class ContextVk : public ContextImpl, public vk::Context
 
     angle::Result endRenderPassAndGetCommandBuffer(vk::CommandBuffer **commandBufferOut)
     {
+        // Only one command buffer should be active at a time
+        ASSERT(mOutsideRenderPassCommands.empty() || mRenderPassCommands.empty());
         ANGLE_TRY(endRenderPass());
         *commandBufferOut = &mOutsideRenderPassCommands.getCommandBuffer();
         return angle::Result::Continue;
@@ -757,17 +759,6 @@ class ContextVk : public ContextImpl, public vk::Context
         double gpuTimestampS;
         double cpuTimestampS;
     };
-
-    angle::Result flushAndGetPrimaryCommandBuffer(vk::PrimaryCommandBuffer **primaryCommands)
-    {
-        flushOutsideRenderPassCommands();
-        ANGLE_TRY(endRenderPass());
-        *primaryCommands = &mPrimaryCommands;
-
-        // We assume any calling code is going to record primary commands.
-        mHasPrimaryCommands = true;
-        return angle::Result::Continue;
-    }
 
     angle::Result setupDraw(const gl::Context *context,
                             gl::PrimitiveMode mode,
