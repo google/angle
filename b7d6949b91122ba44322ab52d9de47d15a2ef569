@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d7441e3_cc584148",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1682,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-04-22T04:53:04Z",
+      "side": 1,
+      "message": "Too late to the party, but if there are no devices we want to make an exception for, creating a feature could have been delayed until necessary.\n\nThen this change could have been a single line to the same effect:\n\n    allocationCreateInfo.flags \u003d VMA_ALLOCATION_CREATE_MAPPED_BIT;\n\n---\n\nCould be nice to get rid of this to simplify the code in my opinion, if others agree.",
+      "range": {
+        "startLine": 1682,
+        "startChar": 4,
+        "endLine": 1682,
+        "endChar": 73
+      },
+      "revId": "b7d6949b91122ba44322ab52d9de47d15a2ef569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30ce0730_9ca8b980",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-04-22T04:53:04Z",
+      "side": 1,
+      "message": "`RendererVk *renderer \u003d contextVk-\u003egetRenderer();` on top for less annoyance.",
+      "range": {
+        "startLine": 412,
+        "startChar": 8,
+        "endLine": 412,
+        "endChar": 30
+      },
+      "revId": "b7d6949b91122ba44322ab52d9de47d15a2ef569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
