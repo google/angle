@@ -309,12 +309,13 @@ ANGLE_INLINE angle::Result Context11::drawElementsImpl(const gl::Context *contex
         gl::IndexRange indexRange;
         ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(
             context, indexType, indexCount, indices, &indexRange));
+        GLint startVertex;
+        ANGLE_TRY(ComputeStartVertex(GetImplAs<Context11>(context), indexRange, baseVertex,
+                                     &startVertex));
         ANGLE_TRY(mRenderer->getStateManager()->updateState(
-            context, mode, static_cast<GLint>(indexRange.start), indexCount, indexType, indices,
-            instanceCount, baseVertex));
-        return mRenderer->drawElements(context, mode, static_cast<GLint>(indexRange.start),
-                                       indexCount, indexType, indices, instanceCount, baseVertex,
-                                       baseInstance);
+            context, mode, startVertex, indexCount, indexType, indices, instanceCount, baseVertex));
+        return mRenderer->drawElements(context, mode, startVertex, indexCount, indexType, indices,
+                                       instanceCount, baseVertex, baseInstance);
     }
     else
     {
