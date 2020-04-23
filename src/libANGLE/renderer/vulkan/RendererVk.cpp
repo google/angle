@@ -140,6 +140,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdBlitImage-dstImage-02000",
     // http://anglebug.com/4580
     "VUID-vkCmdResolveImage-dstImage-02003",
+    // http://anglebug.com/4583
+    "VUID-VkGraphicsPipelineCreateInfo-blendEnable-02023",
 };
 
 // Suppress validation errors that are known
