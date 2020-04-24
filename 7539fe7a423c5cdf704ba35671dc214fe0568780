@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cf0fc60_dceb4308",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3206,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-04-24T04:30:12Z",
+      "side": 1,
+      "message": "Could this call possibly need to be done twice, because maybe there are two staged clears, one for depth and one for stencil?",
+      "range": {
+        "startLine": 3206,
+        "startChar": 31,
+        "endLine": 3206,
+        "endChar": 49
+      },
+      "revId": "7539fe7a423c5cdf704ba35671dc214fe0568780",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
