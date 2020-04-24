@@ -44,8 +44,16 @@ class ProgramPipelineState final : angle::NonCopyable
     bool isCompute() const { return mIsCompute; }
     void setIsCompute(bool isCompute) { mIsCompute = isCompute; }
 
-    const ProgramExecutable &getProgramExecutable() const { return mExecutable; }
-    ProgramExecutable &getProgramExecutable() { return mExecutable; }
+    const ProgramExecutable &getProgramExecutable() const
+    {
+        ASSERT(mExecutable);
+        return *mExecutable;
+    }
+    ProgramExecutable &getProgramExecutable()
+    {
+        ASSERT(mExecutable);
+        return *mExecutable;
+    }
 
     void activeShaderProgram(Program *shaderProgram);
     void useProgramStages(const Context *context, GLbitfield stages, Program *shaderProgram);
@@ -84,7 +92,7 @@ class ProgramPipelineState final : angle::NonCopyable
 
     GLboolean mHasBeenBound;
 
-    ProgramExecutable mExecutable;
+    ProgramExecutable *mExecutable;
 };
 
 class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public LabeledObject

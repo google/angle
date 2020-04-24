@@ -333,8 +333,16 @@ class ProgramState final : angle::NonCopyable
         return mUniformLocationBindings;
     }
 
-    const ProgramExecutable &getProgramExecutable() const { return mExecutable; }
-    ProgramExecutable &getProgramExecutable() { return mExecutable; }
+    const ProgramExecutable &getProgramExecutable() const
+    {
+        ASSERT(mExecutable);
+        return *mExecutable;
+    }
+    ProgramExecutable &getProgramExecutable()
+    {
+        ASSERT(mExecutable);
+        return *mExecutable;
+    }
 
     bool hasDefaultUniforms() const { return !getDefaultUniformRange().empty(); }
     bool hasTextures() const { return !getSamplerBindings().empty(); }
@@ -355,7 +363,7 @@ class ProgramState final : angle::NonCopyable
 
     // A Program can only either be graphics or compute, but never both, so it
     // can answer isCompute() based on which shaders it has.
-    bool isCompute() const { return mExecutable.hasLinkedShaderStage(ShaderType::Compute); }
+    bool isCompute() const { return mExecutable->hasLinkedShaderStage(ShaderType::Compute); }
 
   private:
     friend class MemoryProgramCache;
@@ -462,7 +470,7 @@ class ProgramState final : angle::NonCopyable
     // uniforms in GLES3.1+. It is used to pre-set the location of uniforms.
     ProgramAliasedBindings mUniformLocationBindings;
 
-    ProgramExecutable mExecutable;
+    ProgramExecutable *mExecutable;
 };
 
 struct ProgramVaryingRef

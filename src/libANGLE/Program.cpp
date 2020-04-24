@@ -1096,15 +1096,18 @@ ProgramState::ProgramState()
       mBaseVertexLocation(-1),
       mBaseInstanceLocation(-1),
       mCachedBaseVertex(0),
-      mCachedBaseInstance(0)
+      mCachedBaseInstance(0),
+      mExecutable(new ProgramExecutable())
 {
     mComputeShaderLocalSize.fill(1);
-    mExecutable.setProgramState(this);
+
+    mExecutable->setProgramState(this);
 }
 
 ProgramState::~ProgramState()
 {
     ASSERT(!hasAttachedShader());
+    SafeDelete(mExecutable);
 }
 
 const std::string &ProgramState::getLabel()
@@ -1211,12 +1214,12 @@ bool ProgramState::hasAttachedShader() const
 
 ShaderType ProgramState::getFirstAttachedShaderStageType() const
 {
-    if (mExecutable.getLinkedShaderStages().none())
+    if (mExecutable->getLinkedShaderStages().none())
     {
         return ShaderType::InvalidEnum;
     }
 
-    return *mExecutable.getLinkedShaderStages().begin();
+    return *mExecutable->getLinkedShaderStages().begin();
 }
 
 ShaderType ProgramState::getLastAttachedShaderStageType() const
@@ -1225,13 +1228,13 @@ ShaderType ProgramState::getLastAttachedShaderStageType() const
     {
         const gl::ShaderType shaderType = gl::kAllGraphicsShaderTypes[i];
 
-        if (mExecutable.hasLinkedShaderStage(shaderType))
+        if (mExecutable->hasLinkedShaderStage(shaderType))
         {
             return shaderType;
         }
     }
 
-    if (mExecutable.hasLinkedShaderStage(ShaderType::Compute))
+    if (mExecutable->hasLinkedShaderStage(ShaderType::Compute))
     {
         return ShaderType::Compute;
     }
@@ -1414,7 +1417,7 @@ angle::Result Program::link(const Context *context)
 {
     ASSERT(mLinkResolved);
     const auto &data = context->getState();
-    InfoLog &infoLog = mState.mExecutable.getInfoLog();
+    InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
     auto *platform   = ANGLEPlatformCurrent();
     double startTime = platform->currentTime(platform);
@@ -1546,7 +1549,7 @@ angle::Result Program::link(const Context *context)
             return angle::Result::Continue;
         }
 
-        if (!mState.mExecutable.linkValidateGlobalNames(infoLog))
+        if (!mState.mExecutable->linkValidateGlobalNames(infoLog))
         {
             return angle::Result::Continue;
         }
@@ -1660,13 +1663,13 @@ void Program::resolveLinkImpl(const Context *context)
 
 void Program::updateLinkedShaderStages()
 {
-    mState.mExecutable.resetLinkedShaderStages();
+    mState.mExecutable->resetLinkedShaderStages();
 
     for (const Shader *shader : mState.mAttachedShaders)
     {
         if (shader)
         {
-            mState.mExecutable.setLinkedShaderStages(shader->getType());
+            mState.mExecutable->setLinkedShaderStages(shader->getType());
         }
     }
 }
@@ -1697,13 +1700,13 @@ void ProgramState::updateTransformFeedbackStrides()
 
 void ProgramState::updateActiveSamplers()
 {
-    mExecutable.mActiveSamplerRefCounts.fill(0);
-    mExecutable.updateActiveSamplers(*this);
+    mExecutable->mActiveSamplerRefCounts.fill(0);
+    mExecutable->updateActiveSamplers(*this);
 }
 
 void ProgramState::updateActiveImages()
 {
-    mExecutable.updateActiveImages(mImageBindings);
+    mExecutable->updateActiveImages(mImageBindings);
 }
 
 void ProgramState::updateProgramInterfaceInputs()
@@ -1832,7 +1835,7 @@ void Program::unlink()
 
     mLinked = false;
 
-    mState.mExecutable.reset();
+    mState.mExecutable->reset();
 }
 
 angle::Result Program::loadBinary(const Context *context,
@@ -1840,7 +1843,7 @@ angle::Result Program::loadBinary(const Context *context,
                                   const void *binary,
                                   GLsizei length)
 {
-    InfoLog &infoLog = mState.mExecutable.getInfoLog();
+    InfoLog &infoLog = mState.mExecutable->getInfoLog();
     ASSERT(mLinkResolved);
     unlink();
 
@@ -2971,8 +2974,8 @@ bool Program::isFlaggedForDeletion() const
 void Program::validate(const Caps &caps)
 {
     ASSERT(mLinkResolved);
-    mState.mExecutable.resetInfoLog();
-    InfoLog &infoLog = mState.mExecutable.getInfoLog();
+    mState.mExecutable->resetInfoLog();
+    InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
     if (mLinked)
     {
@@ -2986,15 +2989,15 @@ void Program::validate(const Caps &caps)
 
 bool Program::validateSamplersImpl(InfoLog *infoLog, const Caps &caps)
 {
-    const ProgramExecutable &executable = mState.mExecutable;
+    const ProgramExecutable *executable = mState.mExecutable;
     ASSERT(mLinkResolved);
 
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
-    for (size_t textureUnit : executable.mActiveSamplersMask)
+    for (size_t textureUnit : executable->mActiveSamplersMask)
     {
-        if (executable.mActiveSamplerTypes[textureUnit] == TextureType::InvalidEnum)
+        if (executable->mActiveSamplerTypes[textureUnit] == TextureType::InvalidEnum)
         {
             if (infoLog)
             {
@@ -3835,8 +3838,8 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
         }
     }
 
-    ASSERT(mState.mExecutable.mAttributesTypeMask.none());
-    ASSERT(mState.mExecutable.mAttributesMask.none());
+    ASSERT(mState.mExecutable->mAttributesTypeMask.none());
+    ASSERT(mState.mExecutable->mAttributesMask.none());
 
     // Prune inactive attributes. This step is only needed on shaderVersion >= 300 since on earlier
     // shader versions we're only processing active attributes to begin with.
@@ -3868,16 +3871,16 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
             // Built-in active program inputs don't have a bound attribute.
             if (!attribute.isBuiltIn())
             {
-                mState.mExecutable.mActiveAttribLocationsMask.set(location);
-                mState.mExecutable.mMaxActiveAttribLocation =
-                    std::max(mState.mExecutable.mMaxActiveAttribLocation, location + 1);
+                mState.mExecutable->mActiveAttribLocationsMask.set(location);
+                mState.mExecutable->mMaxActiveAttribLocation =
+                    std::max(mState.mExecutable->mMaxActiveAttribLocation, location + 1);
 
                 ComponentType componentType =
                     GLenumToComponentType(VariableComponentType(attribute.type));
 
                 SetComponentTypeMask(componentType, location,
-                                     &mState.mExecutable.mAttributesTypeMask);
-                mState.mExecutable.mAttributesMask.set(location);
+                                     &mState.mExecutable->mAttributesTypeMask);
+                mState.mExecutable->mAttributesMask.set(location);
 
                 location++;
             }
@@ -4545,7 +4548,7 @@ bool Program::linkOutputVariables(const Caps &caps,
                                   GLuint combinedImageUniformsCount,
                                   GLuint combinedShaderStorageBlocksCount)
 {
-    InfoLog &infoLog       = mState.mExecutable.getInfoLog();
+    InfoLog &infoLog       = mState.mExecutable->getInfoLog();
     Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
 
     ASSERT(mState.mOutputVariableTypes.empty());
@@ -4853,25 +4856,25 @@ void Program::updateSamplerUniform(Context *context,
         boundTextureUnits[arrayIndex + locationInfo.arrayIndex] = newTextureUnit;
 
         // Update the reference counts.
-        uint32_t &oldRefCount = mState.mExecutable.mActiveSamplerRefCounts[oldTextureUnit];
-        uint32_t &newRefCount = mState.mExecutable.mActiveSamplerRefCounts[newTextureUnit];
+        uint32_t &oldRefCount = mState.mExecutable->mActiveSamplerRefCounts[oldTextureUnit];
+        uint32_t &newRefCount = mState.mExecutable->mActiveSamplerRefCounts[newTextureUnit];
         ASSERT(oldRefCount > 0);
         ASSERT(newRefCount < std::numeric_limits<uint32_t>::max());
         oldRefCount--;
         newRefCount++;
 
         // Check for binding type change.
-        TextureType &newSamplerType     = mState.mExecutable.mActiveSamplerTypes[newTextureUnit];
-        TextureType &oldSamplerType     = mState.mExecutable.mActiveSamplerTypes[oldTextureUnit];
-        SamplerFormat &newSamplerFormat = mState.mExecutable.mActiveSamplerFormats[newTextureUnit];
-        SamplerFormat &oldSamplerFormat = mState.mExecutable.mActiveSamplerFormats[oldTextureUnit];
+        TextureType &newSamplerType     = mState.mExecutable->mActiveSamplerTypes[newTextureUnit];
+        TextureType &oldSamplerType     = mState.mExecutable->mActiveSamplerTypes[oldTextureUnit];
+        SamplerFormat &newSamplerFormat = mState.mExecutable->mActiveSamplerFormats[newTextureUnit];
+        SamplerFormat &oldSamplerFormat = mState.mExecutable->mActiveSamplerFormats[oldTextureUnit];
 
         if (newRefCount == 1)
         {
             newSamplerType   = samplerBinding.textureType;
             newSamplerFormat = samplerBinding.format;
-            mState.mExecutable.mActiveSamplersMask.set(newTextureUnit);
-            mState.mExecutable.mActiveSamplerShaderBits[newTextureUnit] =
+            mState.mExecutable->mActiveSamplersMask.set(newTextureUnit);
+            mState.mExecutable->mActiveSamplerShaderBits[newTextureUnit] =
                 mState.mUniforms[locationInfo.index].activeShaders();
         }
         else
@@ -4892,7 +4895,7 @@ void Program::updateSamplerUniform(Context *context,
         {
             oldSamplerType   = TextureType::InvalidEnum;
             oldSamplerFormat = SamplerFormat::InvalidEnum;
-            mState.mExecutable.mActiveSamplersMask.reset(oldTextureUnit);
+            mState.mExecutable->mActiveSamplersMask.reset(oldTextureUnit);
         }
         else
         {
@@ -4918,7 +4921,7 @@ void Program::updateSamplerUniform(Context *context,
 
 void ProgramState::setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex)
 {
-    mExecutable.setSamplerUniformTextureTypeAndFormat(textureUnitIndex, mSamplerBindings);
+    mExecutable->setSamplerUniformTextureTypeAndFormat(textureUnitIndex, mSamplerBindings);
 }
 
 template <typename T>
@@ -5209,7 +5212,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeInt(mState.getAtomicCounterUniformRange().low());
     stream.writeInt(mState.getAtomicCounterUniformRange().high());
 
-    mState.mExecutable.save(&stream);
+    mState.mExecutable->save(&stream);
 
     mProgram->save(context, &stream);
 
@@ -5461,10 +5464,10 @@ angle::Result Program::deserialize(const Context *context,
         mState.updateTransformFeedbackStrides();
     }
 
-    mState.mExecutable.load(&stream);
+    mState.mExecutable->load(&stream);
 
     postResolveLink(context);
-    mState.mExecutable.updateCanDrawWith();
+    mState.mExecutable->updateCanDrawWith();
 
     return angle::Result::Continue;
 }
