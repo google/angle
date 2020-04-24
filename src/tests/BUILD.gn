@@ -1177,6 +1177,11 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
     # This is a bit of a hack so one test can capture memory limits.
     include_dirs = [ "$deqp_path/external/vulkancts/framework/vulkan" ]
+
+    # TODO(https://crbug.com/1054220): remove once deqp in Angle contains https://github.com/KhronosGroup/VK-GL-CTS/pull/199
+    if (is_clang) {
+      cflags += [ "-Wno-pointer-to-int-cast" ]
+    }
   }
 
   template("angle_deqp_khr_gtest") {
