@@ -241,7 +241,7 @@ const char *VulkanResultString(VkResult result)
         case VK_ERROR_OUT_OF_POOL_MEMORY:
             return "A pool memory allocation has failed";
         case VK_ERROR_FRAGMENTED_POOL:
-            return "A pool allocation has failed due to fragmentation of the pool’s memory";
+            return "A pool allocation has failed due to fragmentation of the pool's memory";
         case VK_ERROR_INVALID_EXTERNAL_HANDLE:
             return "An external handle is not a valid handle of the specified type";
         default:

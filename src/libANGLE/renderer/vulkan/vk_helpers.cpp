@@ -3090,7 +3090,7 @@ void ImageHelper::stageSubresourceUpdateFromImage(ImageHelper *image,
     {
         // These values must be set explicitly to follow the Vulkan spec:
         // https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkImageCopy.html
-        // If either of the calling command’s srcImage or dstImage parameters are of VkImageType
+        // If either of the calling command's srcImage or dstImage parameters are of VkImageType
         // VK_IMAGE_TYPE_3D, the baseArrayLayer and layerCount members of the corresponding
         // subresource must be 0 and 1, respectively
         copyToImage.dstSubresource.baseArrayLayer = 0;
