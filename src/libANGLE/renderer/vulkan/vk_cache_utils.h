@@ -153,13 +153,12 @@ class AttachmentOpsArray final
     const PackedAttachmentOpsDesc &operator[](size_t index) const;
     PackedAttachmentOpsDesc &operator[](size_t index);
 
-    // Initializes an attachment op with whatever values. Used for compatible RenderPass checks.
-    void initDummyOp(size_t index, ImageLayout initialLayout, ImageLayout finalLayout);
-    // Initialize an attachment op with store operations.
-    void initWithStore(size_t index,
-                       VkAttachmentLoadOp loadOp,
-                       ImageLayout initialLayout,
-                       ImageLayout finalLayout);
+    // Initialize an attachment op with all load and store operations.
+    void initWithLoadStore(size_t index, ImageLayout initialLayout, ImageLayout finalLayout);
+
+    void setLayouts(size_t index, ImageLayout initialLayout, ImageLayout finalLayout);
+    void setOps(size_t index, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp);
+    void setStencilOps(size_t index, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp);
 
     size_t hash() const;
 

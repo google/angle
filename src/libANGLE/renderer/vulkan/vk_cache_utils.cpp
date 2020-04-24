@@ -1442,33 +1442,40 @@ PackedAttachmentOpsDesc &AttachmentOpsArray::operator[](size_t index)
     return mOps[index];
 }
 
-void AttachmentOpsArray::initDummyOp(size_t index,
-                                     ImageLayout initialLayout,
-                                     ImageLayout finalLayout)
+void AttachmentOpsArray::initWithLoadStore(size_t index,
+                                           ImageLayout initialLayout,
+                                           ImageLayout finalLayout)
 {
-    PackedAttachmentOpsDesc &ops = mOps[index];
-
-    SetBitField(ops.initialLayout, initialLayout);
-    SetBitField(ops.finalLayout, finalLayout);
-    SetBitField(ops.loadOp, VK_ATTACHMENT_LOAD_OP_LOAD);
-    SetBitField(ops.stencilLoadOp, VK_ATTACHMENT_LOAD_OP_DONT_CARE);
-    SetBitField(ops.storeOp, VK_ATTACHMENT_STORE_OP_STORE);
-    SetBitField(ops.stencilStoreOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
+    setLayouts(index, initialLayout, finalLayout);
+    setOps(index, VK_ATTACHMENT_LOAD_OP_LOAD, VK_ATTACHMENT_STORE_OP_STORE);
+    setStencilOps(index, VK_ATTACHMENT_LOAD_OP_LOAD, VK_ATTACHMENT_STORE_OP_STORE);
 }
 
-void AttachmentOpsArray::initWithStore(size_t index,
-                                       VkAttachmentLoadOp loadOp,
-                                       ImageLayout initialLayout,
-                                       ImageLayout finalLayout)
+void AttachmentOpsArray::setLayouts(size_t index,
+                                    ImageLayout initialLayout,
+                                    ImageLayout finalLayout)
 {
     PackedAttachmentOpsDesc &ops = mOps[index];
-
     SetBitField(ops.initialLayout, initialLayout);
     SetBitField(ops.finalLayout, finalLayout);
+}
+
+void AttachmentOpsArray::setOps(size_t index,
+                                VkAttachmentLoadOp loadOp,
+                                VkAttachmentStoreOp storeOp)
+{
+    PackedAttachmentOpsDesc &ops = mOps[index];
     SetBitField(ops.loadOp, loadOp);
+    SetBitField(ops.storeOp, storeOp);
+}
+
+void AttachmentOpsArray::setStencilOps(size_t index,
+                                       VkAttachmentLoadOp loadOp,
+                                       VkAttachmentStoreOp storeOp)
+{
+    PackedAttachmentOpsDesc &ops = mOps[index];
     SetBitField(ops.stencilLoadOp, loadOp);
-    SetBitField(ops.storeOp, VK_ATTACHMENT_STORE_OP_STORE);
-    SetBitField(ops.stencilStoreOp, VK_ATTACHMENT_STORE_OP_STORE);
+    SetBitField(ops.stencilStoreOp, storeOp);
 }
 
 size_t AttachmentOpsArray::hash() const
@@ -1830,7 +1837,7 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
                                              vk::RenderPass **renderPassOut)
 {
     // Insert some dummy attachment ops.  Note that render passes with different ops are still
-    // compatible.
+    // compatible. The load/store values are not important as they are aren't used for real RPs.
     //
     // It would be nice to pre-populate the cache in the Renderer so we rarely miss here.
     vk::AttachmentOpsArray ops;
@@ -1844,15 +1851,15 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
         }
 
         uint32_t colorIndexVk = colorAttachmentCount++;
-        ops.initDummyOp(colorIndexVk, vk::ImageLayout::ColorAttachment,
-                        vk::ImageLayout::ColorAttachment);
+        ops.initWithLoadStore(colorIndexVk, vk::ImageLayout::ColorAttachment,
+                              vk::ImageLayout::ColorAttachment);
     }
 
     if (desc.hasDepthStencilAttachment())
     {
         uint32_t depthStencilIndexVk = colorAttachmentCount;
-        ops.initDummyOp(depthStencilIndexVk, vk::ImageLayout::DepthStencilAttachment,
-                        vk::ImageLayout::DepthStencilAttachment);
+        ops.initWithLoadStore(depthStencilIndexVk, vk::ImageLayout::DepthStencilAttachment,
+                              vk::ImageLayout::DepthStencilAttachment);
     }
 
     return getRenderPassWithOps(contextVk, serial, desc, ops, renderPassOut);

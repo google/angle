@@ -1357,9 +1357,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
         ANGLE_TRY(colorRenderTarget->onColorDraw(contextVk));
 
-        renderPassAttachmentOps.initWithStore(
-            attachmentClearValues.size(), VK_ATTACHMENT_LOAD_OP_LOAD,
-            vk::ImageLayout::ColorAttachment, vk::ImageLayout::ColorAttachment);
+        renderPassAttachmentOps.initWithLoadStore(attachmentClearValues.size(),
+                                                  vk::ImageLayout::ColorAttachment,
+                                                  vk::ImageLayout::ColorAttachment);
         attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
 
@@ -1375,9 +1375,13 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         {
             loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         }
-        renderPassAttachmentOps.initWithStore(attachmentClearValues.size(), loadOp,
-                                              vk::ImageLayout::DepthStencilAttachment,
-                                              vk::ImageLayout::DepthStencilAttachment);
+
+        size_t index = attachmentClearValues.size();
+
+        renderPassAttachmentOps.setLayouts(index, vk::ImageLayout::DepthStencilAttachment,
+                                           vk::ImageLayout::DepthStencilAttachment);
+        renderPassAttachmentOps.setOps(index, loadOp, VK_ATTACHMENT_STORE_OP_STORE);
+        renderPassAttachmentOps.setStencilOps(index, loadOp, VK_ATTACHMENT_STORE_OP_STORE);
 
         // This must be called after hasDefinedContent() since it will set content to valid. We are
         // tracking content valid very loosely here that as long as it is attached, it assumes will
