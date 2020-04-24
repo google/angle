@@ -1515,11 +1515,10 @@ angle::Result TextureVk::initializeContents(const gl::Context *context,
         contextVk->getRenderer()->getFormat(desc.format.info->sizedInternalFormat);
 
     ASSERT(mImage);
-    mImage->stageRobustResourceClear(imageIndex, format);
 
     // Note that we cannot ensure the image is initialized because we might be calling subImage
     // on a non-complete cube map.
-    return angle::Result::Continue;
+    return mImage->stageRobustResourceClear(contextVk, desc.size, imageIndex, format);
 }
 
 void TextureVk::releaseOwnershipOfImage(const gl::Context *context)

@@ -918,7 +918,10 @@ class ImageHelper final : public Resource, public angle::Subject
                                          const VkImageType imageType);
 
     // Stage a clear based on robust resource init.
-    void stageRobustResourceClear(const gl::ImageIndex &index, const vk::Format &format);
+    angle::Result stageRobustResourceClear(ContextVk *contextVk,
+                                           const gl::Extents &glExtents,
+                                           const gl::ImageIndex &index,
+                                           const vk::Format &format);
     void stageSubresourceClear(const gl::ImageIndex &index);
 
     // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
