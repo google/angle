@@ -13,6 +13,7 @@
 #include "gpu_info_util/SystemInfo.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
+#include "util/random_utils.h"
 #include "util/test_utils.h"
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
@@ -219,6 +220,12 @@ void CreatePixelCenterWindowCoords(const std::vector<Vector2> &pixelPoints,
 Vector4 GLColor::toNormalizedVector() const
 {
     return Vector4(ColorNorm(R), ColorNorm(G), ColorNorm(B), ColorNorm(A));
+}
+
+GLColor RandomColor(angle::RNG *rng)
+{
+    return GLColor(rng->randomIntBetween(0, 255), rng->randomIntBetween(0, 255),
+                   rng->randomIntBetween(0, 255), rng->randomIntBetween(0, 255));
 }
 
 GLColor ReadColor(GLint x, GLint y)

@@ -1186,8 +1186,8 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
     ANGLE_VK_TRY(contextVk, framebuffer.init(contextVk->getDevice(), framebufferInfo));
 
     vk::AttachmentOpsArray renderPassAttachmentOps;
-    std::vector<VkClearValue> clearValues = {{}};
-    ASSERT(clearValues.size() == 1);
+    vk::ClearValuesArray clearValues;
+    clearValues.store(0, VK_IMAGE_ASPECT_COLOR_BIT, {});
 
     renderPassAttachmentOps.initWithLoadStore(0, vk::ImageLayout::ColorAttachment,
                                               vk::ImageLayout::ColorAttachment);
@@ -1210,7 +1210,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     const gl::Rectangle &scissoredRenderArea = params.clearArea;
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, scissoredRenderArea, &commandBuffer));
+    ANGLE_TRY(contextVk->startRenderPass(scissoredRenderArea, &commandBuffer));
 
     ImageClearShaderParams shaderParams;
     shaderParams.clearValue = params.colorClearValue;

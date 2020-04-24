@@ -122,17 +122,13 @@ angle::Result SurfaceVk::getAttachmentRenderTarget(const gl::Context *context,
                                                    GLsizei samples,
                                                    FramebufferAttachmentRenderTarget **rtOut)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
-
     if (binding == GL_BACK)
     {
-        ANGLE_TRY(mColorRenderTarget.flushStagedUpdates(contextVk));
         *rtOut = &mColorRenderTarget;
     }
     else
     {
         ASSERT(binding == GL_DEPTH || binding == GL_STENCIL || binding == GL_DEPTH_STENCIL);
-        ANGLE_TRY(mDepthStencilRenderTarget.flushStagedUpdates(contextVk));
         *rtOut = &mDepthStencilRenderTarget;
     }
 
@@ -365,13 +361,13 @@ angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
 
     if (mColorAttachment.image.valid())
     {
-        mColorAttachment.image.stageSubresourceClear(imageIndex);
+        mColorAttachment.image.stageRobustResourceClear(imageIndex);
         ANGLE_TRY(mColorAttachment.image.flushAllStagedUpdates(contextVk));
     }
 
     if (mDepthStencilAttachment.image.valid())
     {
-        mDepthStencilAttachment.image.stageSubresourceClear(imageIndex);
+        mDepthStencilAttachment.image.stageRobustResourceClear(imageIndex);
         ANGLE_TRY(mDepthStencilAttachment.image.flushAllStagedUpdates(contextVk));
     }
     return angle::Result::Continue;
@@ -1353,6 +1349,12 @@ VkResult WindowSurfaceVk::nextSwapchainImage(vk::Context *context)
         mColorRenderTarget.updateSwapchainImage(&image.image, &image.imageViews);
     }
 
+    // Notify the owning framebuffer there may be staged updates.
+    if (image.image.hasStagedUpdates())
+    {
+        onStateChange(angle::SubjectMessage::SubjectChanged);
+    }
+
     return VK_SUCCESS;
 }
 
@@ -1574,12 +1576,12 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
 
     vk::ImageHelper *image =
         isMultiSampled() ? &mColorImageMS : &mSwapchainImages[mCurrentSwapchainImageIndex].image;
-    image->stageSubresourceClear(imageIndex);
+    image->stageRobustResourceClear(imageIndex);
     ANGLE_TRY(image->flushAllStagedUpdates(contextVk));
 
     if (mDepthStencilImage.valid())
     {
-        mDepthStencilImage.stageSubresourceClear(gl::ImageIndex::Make2D(0));
+        mDepthStencilImage.stageRobustResourceClear(gl::ImageIndex::Make2D(0));
         ANGLE_TRY(mDepthStencilImage.flushAllStagedUpdates(contextVk));
     }
 

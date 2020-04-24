@@ -47,10 +47,6 @@ namespace rx
 
 namespace
 {
-// The value to assign an alpha channel that's emulated.  The type is unsigned int, though it will
-// automatically convert to the actual data type.
-constexpr unsigned int kEmulatedAlphaValue = 1;
-
 // For shader uniforms such as gl_DepthRange and the viewport size.
 struct GraphicsDriverUniforms
 {
@@ -972,7 +968,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     if (!mRenderPassCommandBuffer)
     {
         gl::Rectangle scissoredRenderArea = mDrawFramebuffer->getScissoredRenderArea(this);
-        ANGLE_TRY(startRenderPass(scissoredRenderArea));
+        ANGLE_TRY(startRenderPass(scissoredRenderArea, nullptr));
     }
 
     // We keep a local copy of the command buffer. It's possible that some state changes could
@@ -2295,112 +2291,6 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
 
     commandBuffer->drawIndexedIndirect(currentIndirectBuf->getBuffer(), currentIndirectBufOffset, 1,
                                        0);
-    return angle::Result::Continue;
-}
-
-angle::Result ContextVk::clearWithRenderPassOp(
-    const gl::Rectangle &clearArea,
-    gl::DrawBufferMask clearColorBuffers,
-    bool clearDepth,
-    bool clearStencil,
-    const VkClearColorValue &clearColorValue,
-    const VkClearDepthStencilValue &clearDepthStencilValue)
-{
-    // Validate cache variable is in sync.
-    ASSERT(mDrawFramebuffer == vk::GetImpl(mState.getDrawFramebuffer()));
-
-    // Start a new render pass if:
-    //
-    // - no render pass has started,
-    // - there is a render pass started but it contains commands; we cannot modify its ops, so new
-    // render pass is needed,
-    // - the current render area doesn't match the clear area.  We need the render area to be
-    // exactly as specified by the scissor for the loadOp to clear only that area.  See
-    // ContextVk::updateScissor for more information.
-    if (!mRenderPassCommands.started() ||
-        (mRenderPassCommands.started() && !mRenderPassCommands.empty()) ||
-        mRenderPassCommands.getRenderArea() != clearArea)
-    {
-        ANGLE_TRY(startRenderPass(clearArea));
-    }
-    else
-    {
-        flushOutsideRenderPassCommands();
-    }
-
-    size_t attachmentIndexVk = 0;
-
-    // Go through clearColorBuffers and set the appropriate loadOp and clear values.
-    for (size_t colorIndexGL : mDrawFramebuffer->getState().getEnabledDrawBuffers())
-    {
-        if (clearColorBuffers.test(colorIndexGL))
-        {
-            RenderTargetVk *renderTarget = mDrawFramebuffer->getColorDrawRenderTarget(colorIndexGL);
-
-            // If the render target doesn't have alpha, but its emulated format has it, clear the
-            // alpha to 1.
-            VkClearColorValue value = clearColorValue;
-            if (mDrawFramebuffer->getEmulatedAlphaAttachmentMask()[colorIndexGL])
-            {
-                const vk::Format &format = renderTarget->getImageFormat();
-                if (format.vkFormatIsInt)
-                {
-                    if (format.vkFormatIsUnsigned)
-                    {
-                        value.uint32[3] = kEmulatedAlphaValue;
-                    }
-                    else
-                    {
-                        value.int32[3] = kEmulatedAlphaValue;
-                    }
-                }
-                else
-                {
-                    value.float32[3] = kEmulatedAlphaValue;
-                }
-            }
-
-            mRenderPassCommands.clearRenderPassColorAttachment(attachmentIndexVk, value);
-        }
-        ++attachmentIndexVk;
-    }
-
-    // Set the appropriate loadOp and clear values for depth and stencil.
-    RenderTargetVk *depthStencilRenderTarget = mDrawFramebuffer->getDepthStencilRenderTarget();
-    if (depthStencilRenderTarget)
-    {
-        const vk::Format &format = depthStencilRenderTarget->getImageFormat();
-        if (format.hasEmulatedImageChannels())
-        {
-            if (format.intendedFormat().stencilBits == 0)
-            {
-                // If the format we picked has stencil but user did not ask for
-                // it due to hardware limitation, force clear the stencil so
-                // that no load will happen. Also don't try to store stencil
-                // value as well. Same logic for depth bits bellow.
-                mRenderPassCommands.invalidateRenderPassStencilAttachment(attachmentIndexVk);
-                clearStencil = true;
-            }
-            if (format.intendedFormat().depthBits == 0)
-            {
-                mRenderPassCommands.invalidateRenderPassDepthAttachment(attachmentIndexVk);
-                clearDepth = true;
-            }
-        }
-
-        if (clearDepth)
-        {
-            mRenderPassCommands.clearRenderPassDepthAttachment(attachmentIndexVk,
-                                                               clearDepthStencilValue.depth);
-        }
-
-        if (clearStencil)
-        {
-            mRenderPassCommands.clearRenderPassStencilAttachment(attachmentIndexVk,
-                                                                 clearDepthStencilValue.stencil);
-        }
-    }
-
     return angle::Result::Continue;
 }
 
@@ -4244,7 +4134,7 @@ angle::Result ContextVk::flushAndBeginRenderPass(
     const gl::Rectangle &renderArea,
     const vk::RenderPassDesc &renderPassDesc,
     const vk::AttachmentOpsArray &renderPassAttachmentOps,
-    const std::vector<VkClearValue> &clearValues,
+    const vk::ClearValuesArray &clearValues,
     vk::CommandBuffer **commandBufferOut)
 {
     // Flush any outside renderPass commands first
@@ -4267,7 +4157,8 @@ angle::Result ContextVk::flushAndBeginRenderPass(
     return angle::Result::Continue;
 }
 
-ANGLE_INLINE angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea)
+angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
+                                         vk::CommandBuffer **commandBufferOut)
 {
     mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
     ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, renderArea, &mRenderPassCommandBuffer));
@@ -4281,6 +4172,12 @@ ANGLE_INLINE angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea)
         mActiveQueryAnySamplesConservative->getQueryHelper()->beginOcclusionQuery(
             this, mRenderPassCommandBuffer);
     }
+
+    if (commandBufferOut)
+    {
+        *commandBufferOut = mRenderPassCommandBuffer;
+    }
+
     return angle::Result::Continue;
 }
 
@@ -4639,7 +4536,7 @@ void RenderPassCommandBuffer::beginRenderPass(const vk::Framebuffer &framebuffer
                                               const gl::Rectangle &renderArea,
                                               const vk::RenderPassDesc &renderPassDesc,
                                               const vk::AttachmentOpsArray &renderPassAttachmentOps,
-                                              const std::vector<VkClearValue> &clearValues,
+                                              const vk::ClearValuesArray &clearValues,
                                               vk::CommandBuffer **commandBufferOut)
 {
     ASSERT(empty());
@@ -4647,8 +4544,8 @@ void RenderPassCommandBuffer::beginRenderPass(const vk::Framebuffer &framebuffer
     mRenderPassDesc = renderPassDesc;
     mAttachmentOps  = renderPassAttachmentOps;
     mFramebuffer.setHandle(framebuffer.getHandle());
-    mRenderArea = renderArea;
-    std::copy(clearValues.begin(), clearValues.end(), mClearValues.begin());
+    mRenderArea  = renderArea;
+    mClearValues = clearValues;
 
     *commandBufferOut = &mCommandBuffer;
 

@@ -682,6 +682,37 @@ void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT
     label->pLabelName = marker;
     kLabelColors[colorIndex].writeData(label->color);
 }
+
+// ClearValuesArray implementation.
+ClearValuesArray::ClearValuesArray() : mValues{}, mEnabled{} {}
+
+ClearValuesArray::~ClearValuesArray() = default;
+
+ClearValuesArray::ClearValuesArray(const ClearValuesArray &other) = default;
+
+ClearValuesArray &ClearValuesArray::operator=(const ClearValuesArray &rhs) = default;
+
+void ClearValuesArray::store(uint32_t index,
+                             VkImageAspectFlags aspectFlags,
+                             const VkClearValue &clearValue)
+{
+    ASSERT(aspectFlags != 0);
+
+    // We do this double if to handle the packed depth-stencil case.
+    if ((aspectFlags & VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
+    {
+        // Special case for stencil.
+        ASSERT(index == kClearValueDepthIndex);
+        mValues[kClearValueStencilIndex] = clearValue;
+        mEnabled.set(kClearValueStencilIndex);
+    }
+
+    if (aspectFlags != VK_IMAGE_ASPECT_STENCIL_BIT)
+    {
+        mValues[index] = clearValue;
+        mEnabled.set(index);
+    }
+}
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)

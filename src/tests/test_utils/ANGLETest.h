@@ -27,6 +27,7 @@
 namespace angle
 {
 struct SystemInfo;
+class RNG;
 }  // namespace angle
 
 #define ASSERT_GL_TRUE(a) ASSERT_EQ(static_cast<GLboolean>(GL_TRUE), (a))
@@ -160,6 +161,8 @@ GLColor MakeGLColor(TR r, TG g, TB b, TA a)
     return GLColor(static_cast<GLubyte>(r), static_cast<GLubyte>(g), static_cast<GLubyte>(b),
                    static_cast<GLubyte>(a));
 }
+
+GLColor RandomColor(angle::RNG *rng);
 
 bool operator==(const GLColor &a, const GLColor &b);
 bool operator!=(const GLColor &a, const GLColor &b);

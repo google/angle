@@ -711,6 +711,8 @@ using ShaderVector = angle::FixedVector<T, static_cast<size_t>(ShaderType::EnumC
 template <typename T>
 using AttachmentArray = std::array<T, IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS>;
 
+using AttachmentsMask = angle::BitSet<IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS>;
+
 template <typename T>
 using DrawBuffersArray = std::array<T, IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 

@@ -432,7 +432,7 @@ const angle::Format &GetDepthStencilImageToBufferFormat(const angle::Format &ima
     }
 }
 
-VkClearValue GetClearValue(const vk::Format &format)
+VkClearValue GetRobustResourceClearValue(const vk::Format &format)
 {
     VkClearValue clearValue;
     if (format.intendedFormat().hasDepthOrStencilBits())
@@ -2646,12 +2646,11 @@ void ImageHelper::resolve(ImageHelper *dest,
                                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 }
 
-void ImageHelper::removeStagedUpdates(ContextVk *contextVk, const gl::ImageIndex &index)
+void ImageHelper::removeStagedUpdates(ContextVk *contextVk,
+                                      uint32_t levelIndex,
+                                      uint32_t layerIndex)
 {
     // Find any staged updates for this index and removes them from the pending list.
-    uint32_t levelIndex = index.getLevelIndex();
-    uint32_t layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
-
     for (size_t index = 0; index < mSubresourceUpdates.size();)
     {
         auto update = mSubresourceUpdates.begin() + index;
@@ -3139,26 +3138,34 @@ void ImageHelper::stageSubresourceUpdateFromImage(ImageHelper *image,
     appendSubresourceUpdate(SubresourceUpdate(image, copyToImage));
 }
 
-void ImageHelper::stageSubresourceClear(const gl::ImageIndex &index)
+void ImageHelper::stageClear(const gl::ImageIndex &index,
+                             VkImageAspectFlags aspectFlags,
+                             const VkClearValue &clearValue)
+{
+    appendSubresourceUpdate(SubresourceUpdate(aspectFlags, clearValue, index));
+}
+
+void ImageHelper::stageRobustResourceClear(const gl::ImageIndex &index)
 {
     const VkImageAspectFlags aspectFlags = getAspectFlags();
 
     ASSERT(mFormat);
-    VkClearValue clearValue = GetClearValue(*mFormat);
+    VkClearValue clearValue = GetRobustResourceClearValue(*mFormat);
     appendSubresourceUpdate(SubresourceUpdate(aspectFlags, clearValue, index));
 }
 
-angle::Result ImageHelper::stageRobustResourceClear(ContextVk *contextVk,
-                                                    const gl::Extents &glExtents,
-                                                    const gl::ImageIndex &index,
-                                                    const vk::Format &format)
+angle::Result ImageHelper::stageRobustResourceClearWithFormat(ContextVk *contextVk,
+                                                              const gl::ImageIndex &index,
+                                                              const gl::Extents &glExtents,
+                                                              const vk::Format &format)
 {
     const angle::Format &imageFormat     = format.actualImageFormat();
     const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(imageFormat);
 
     // Robust clears must only be staged if we do not have any prior data for this subresource.
     ASSERT(!isUpdateStaged(index.getLevelIndex(), index.getLayerIndex()));
-    VkClearValue clearValue = GetClearValue(format);
+
+    VkClearValue clearValue = GetRobustResourceClearValue(format);
 
     if (imageFormat.isBlock)
     {
@@ -3238,6 +3245,56 @@ angle::Result ImageHelper::allocateStagingMemory(ContextVk *contextVk,
                                       newBufferAllocatedOut));
     *bufferOut = mStagingBuffer.getCurrentBuffer();
     return angle::Result::Continue;
+}
+
+angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
+                                                               uint32_t level,
+                                                               uint32_t layer,
+                                                               CommandBuffer *commandBuffer,
+                                                               ClearValuesArray *deferredClears,
+                                                               uint32_t deferredClearIndex)
+{
+    // Handle deferred clears. Search the updates list for a matching clear index.
+    if (deferredClears)
+    {
+        Optional<size_t> foundClear;
+
+        for (size_t updateIndex = 0; updateIndex < mSubresourceUpdates.size(); ++updateIndex)
+        {
+            SubresourceUpdate &update = mSubresourceUpdates[updateIndex];
+
+            if (update.isUpdateToLayerLevel(layer, level))
+            {
+                // On any data update, exit out. We'll need to do a full upload.
+                if (update.updateSource != UpdateSource::Clear || update.clear.layerCount != 1)
+                {
+                    foundClear.reset();
+                    break;
+                }
+
+                // Otherwise track the latest clear update index.
+                foundClear = updateIndex;
+            }
+        }
+
+        // If we have a valid index we defer the clear using the clear reference.
+        if (foundClear.valid())
+        {
+            size_t foundIndex         = foundClear.value();
+            const ClearUpdate &update = mSubresourceUpdates[foundIndex].clear;
+
+            // Note that this set command handles combined or separate depth/stencil clears.
+            deferredClears->store(deferredClearIndex, update.aspectFlags, update.value);
+
+            // We process the updates again to erase any clears for this level.
+            removeStagedUpdates(contextVk, level, layer);
+            return angle::Result::Continue;
+        }
+
+        // Otherwise we proceed with a normal update.
+    }
+
+    return flushStagedUpdates(contextVk, level, level + 1, layer, layer + 1, commandBuffer);
 }
 
 angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
@@ -3660,6 +3717,8 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     RendererScoped<ImageHelper> resolvedImage(contextVk->getRenderer());
 
     ImageHelper *src = this;
+
+    ASSERT(!isUpdateStaged(level, layer));
 
     if (isMultisampled)
     {

@@ -1500,6 +1500,53 @@ TEST_P(ClearTestES3, ClearBuffer1OnDefaultFramebufferNoAssert)
     EXPECT_GL_NO_ERROR();
 }
 
+// Clears many small concentric rectangles using scissor regions.
+TEST_P(ClearTest, InceptionScissorClears)
+{
+    angle::RNG rng;
+
+    constexpr GLuint kSize = 16;
+
+    // Create a square user FBO so we have more control over the dimensions.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSize, kSize);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glViewport(0, 0, kSize, kSize);
+
+    // Draw small concentric squares using scissor.
+    std::vector<GLColor> expectedColors;
+    for (GLuint index = 0; index < (kSize - 1) / 2; index++)
+    {
+        // Do the first clear without the scissor.
+        if (index > 0)
+        {
+            glEnable(GL_SCISSOR_TEST);
+            glScissor(index, index, kSize - (index * 2), kSize - (index * 2));
+        }
+
+        GLColor color = RandomColor(&rng);
+        expectedColors.push_back(color);
+        Vector4 floatColor = color.toNormalizedVector();
+        glClearColor(floatColor[0], floatColor[1], floatColor[2], floatColor[3]);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLColor> actualColors(expectedColors.size());
+    glReadPixels(0, kSize / 2, actualColors.size(), 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                 actualColors.data());
+
+    EXPECT_EQ(expectedColors, actualColors);
+}
+
 #ifdef Bool
 // X11 craziness.
 #    undef Bool

@@ -967,7 +967,9 @@ angle::Result TextureVk::redefineImage(const gl::Context *context,
     {
         // If there is any staged changes for this index, we can remove them since we're going to
         // override them with this call.
-        mImage->removeStagedUpdates(contextVk, index);
+        uint32_t levelIndex = index.getLevelIndex();
+        uint32_t layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
+        mImage->removeStagedUpdates(contextVk, levelIndex, layerIndex);
 
         if (mImage->valid())
         {
@@ -1370,7 +1372,19 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
     ASSERT(imageIndex.getLevelIndex() >= 0);
 
     ContextVk *contextVk = vk::GetImpl(context);
-    ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+
+    if (!mImage->valid())
+    {
+        const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
+        const gl::Extents &baseLevelExtents = baseLevelDesc.size;
+        const uint32_t levelCount           = getMipLevelCount(ImageMipLevels::EnabledLevels);
+        const vk::Format &format            = getBaseLevelFormat(contextVk->getRenderer());
+
+        ANGLE_TRY(initImage(contextVk, format, baseLevelDesc.format.info->sized, baseLevelExtents,
+                            levelCount));
+    }
+
+    // Don't flush staged updates here. We'll handle that in FramebufferVk so it can defer clears.
 
     GLuint layerIndex = 0, layerCount = 0;
     GetRenderTargetLayerCountAndIndex(mImage, imageIndex, &layerCount, &layerIndex);
@@ -1522,10 +1536,9 @@ angle::Result TextureVk::initializeContents(const gl::Context *context,
         contextVk->getRenderer()->getFormat(desc.format.info->sizedInternalFormat);
 
     ASSERT(mImage);
-
     // Note that we cannot ensure the image is initialized because we might be calling subImage
     // on a non-complete cube map.
-    return mImage->stageRobustResourceClear(contextVk, desc.size, imageIndex, format);
+    return mImage->stageRobustResourceClearWithFormat(contextVk, imageIndex, desc.size, format);
 }
 
 void TextureVk::releaseOwnershipOfImage(const gl::Context *context)
