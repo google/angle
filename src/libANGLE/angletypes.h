@@ -171,8 +171,6 @@ struct BlendState final
 bool operator==(const BlendState &a, const BlendState &b);
 bool operator!=(const BlendState &a, const BlendState &b);
 
-using BlendStateArray = std::array<BlendState, IMPLEMENTATION_MAX_DRAW_BUFFERS>;
-
 struct DepthStencilState final
 {
     // This will zero-initialize the struct, including padding.
