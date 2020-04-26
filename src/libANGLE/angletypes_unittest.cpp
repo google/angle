@@ -99,6 +99,12 @@ TEST(BlendStateExt, ColorMask)
     blendStateExt.setColorMaskIndexed(3, false, true, false, true);
     ASSERT_EQ(blendStateExt.mColorMask, is64Bit ? 0x050A050505u : 0x5A555u);
 
+    blendStateExt.setColorMaskIndexed(3, 0xF);
+    ASSERT_EQ(blendStateExt.getColorMaskIndexed(3), 0xF);
+
+    blendStateExt.setColorMaskIndexed(3, 0xA);
+    ASSERT_EQ(blendStateExt.getColorMaskIndexed(3), 0xA);
+
     bool r, g, b, a;
     blendStateExt.getColorMaskIndexed(3, &r, &g, &b, &a);
     ASSERT_FALSE(r);
@@ -141,6 +147,16 @@ TEST(BlendStateExt, BlendEquations)
     const gl::DrawBufferMask diff =
         blendStateExt.compareEquations(otherEquationColor, otherEquationAlpha);
     ASSERT_EQ(diff.to_ulong(), 40u);
+
+    // Copy buffer 3 to buffer 0
+    blendStateExt.setEquationsIndexed(0, 3, blendStateExt);
+    ASSERT_EQ(blendStateExt.getEquationColorIndexed(0), static_cast<GLenum>(GL_MAX));
+    ASSERT_EQ(blendStateExt.getEquationAlphaIndexed(0), static_cast<GLenum>(GL_FUNC_SUBTRACT));
+
+    // Copy buffer 5 to buffer 0
+    blendStateExt.setEquationsIndexed(0, 5, blendStateExt);
+    ASSERT_EQ(blendStateExt.getEquationColorIndexed(0), static_cast<GLenum>(GL_MIN));
+    ASSERT_EQ(blendStateExt.getEquationAlphaIndexed(0), static_cast<GLenum>(GL_FUNC_ADD));
 }
 
 // Test blend factors manipulations
@@ -181,6 +197,34 @@ TEST(BlendStateExt, BlendFactors)
     const gl::DrawBufferMask diff =
         blendStateExt.compareFactors(otherSrcColor, otherDstColor, otherSrcAlpha, otherDstAlpha);
     ASSERT_EQ(diff.to_ulong(), 169u);
+
+    // Copy buffer 0 to buffer 1
+    blendStateExt.setFactorsIndexed(1, 0, blendStateExt);
+    ASSERT_EQ(blendStateExt.getSrcColorIndexed(1), static_cast<GLenum>(GL_ONE));
+    ASSERT_EQ(blendStateExt.getDstColorIndexed(1), static_cast<GLenum>(GL_DST_COLOR));
+    ASSERT_EQ(blendStateExt.getSrcAlphaIndexed(1), static_cast<GLenum>(GL_SRC_ALPHA));
+    ASSERT_EQ(blendStateExt.getDstAlphaIndexed(1), static_cast<GLenum>(GL_DST_ALPHA));
+
+    // Copy buffer 3 to buffer 1
+    blendStateExt.setFactorsIndexed(1, 3, blendStateExt);
+    ASSERT_EQ(blendStateExt.getSrcColorIndexed(1), static_cast<GLenum>(GL_SRC_COLOR));
+    ASSERT_EQ(blendStateExt.getDstColorIndexed(1), static_cast<GLenum>(GL_ONE));
+    ASSERT_EQ(blendStateExt.getSrcAlphaIndexed(1), static_cast<GLenum>(GL_SRC_ALPHA));
+    ASSERT_EQ(blendStateExt.getDstAlphaIndexed(1), static_cast<GLenum>(GL_DST_ALPHA));
+
+    // Copy buffer 5 to buffer 1
+    blendStateExt.setFactorsIndexed(1, 5, blendStateExt);
+    ASSERT_EQ(blendStateExt.getSrcColorIndexed(1), static_cast<GLenum>(GL_SRC_COLOR));
+    ASSERT_EQ(blendStateExt.getDstColorIndexed(1), static_cast<GLenum>(GL_DST_COLOR));
+    ASSERT_EQ(blendStateExt.getSrcAlphaIndexed(1), static_cast<GLenum>(GL_ONE));
+    ASSERT_EQ(blendStateExt.getDstAlphaIndexed(1), static_cast<GLenum>(GL_DST_ALPHA));
+
+    // Copy buffer 7 to buffer 1
+    blendStateExt.setFactorsIndexed(1, 7, blendStateExt);
+    ASSERT_EQ(blendStateExt.getSrcColorIndexed(1), static_cast<GLenum>(GL_SRC_COLOR));
+    ASSERT_EQ(blendStateExt.getDstColorIndexed(1), static_cast<GLenum>(GL_DST_COLOR));
+    ASSERT_EQ(blendStateExt.getSrcAlphaIndexed(1), static_cast<GLenum>(GL_SRC_ALPHA));
+    ASSERT_EQ(blendStateExt.getDstAlphaIndexed(1), static_cast<GLenum>(GL_ONE));
 }
 
 }  // namespace angle

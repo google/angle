@@ -34,8 +34,6 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
     ClearParameters clearParams;
     memset(&clearParams, 0, sizeof(ClearParameters));
 
-    const auto &blendStateArray = state.getBlendStateArray();
-
     clearParams.colorF           = state.getColorClearValue();
     clearParams.colorType        = GL_FLOAT;
     clearParams.clearDepth       = false;
@@ -49,15 +47,15 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
     const gl::Framebuffer *framebufferObject = state.getDrawFramebuffer();
     const bool clearColor =
         (mask & GL_COLOR_BUFFER_BIT) && framebufferObject->hasEnabledDrawBuffer();
-    ASSERT(blendStateArray.size() == gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    for (size_t i = 0; i < blendStateArray.size(); i++)
+    if (clearColor)
     {
-        clearParams.clearColor[i]     = clearColor;
-        clearParams.colorMaskRed[i]   = blendStateArray[i].colorMaskRed;
-        clearParams.colorMaskGreen[i] = blendStateArray[i].colorMaskGreen;
-        clearParams.colorMaskBlue[i]  = blendStateArray[i].colorMaskBlue;
-        clearParams.colorMaskAlpha[i] = blendStateArray[i].colorMaskAlpha;
+        clearParams.clearColor.set();
     }
+    else
+    {
+        clearParams.clearColor.reset();
+    }
+    clearParams.colorMask = state.getBlendStateExt().mColorMask;
 
     if (mask & GL_DEPTH_BUFFER_BIT)
     {

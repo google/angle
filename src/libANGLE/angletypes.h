@@ -554,11 +554,13 @@ class BlendStateExt final
                                                 const bool alpha) const;
     ColorMaskStorage::Type expandColorMaskIndexed(const size_t index) const;
     void setColorMask(const bool red, const bool green, const bool blue, const bool alpha);
+    void setColorMaskIndexed(const size_t index, const uint8_t value);
     void setColorMaskIndexed(const size_t index,
                              const bool red,
                              const bool green,
                              const bool blue,
                              const bool alpha);
+    uint8_t getColorMaskIndexed(const size_t index) const;
     void getColorMaskIndexed(const size_t index,
                              bool *red,
                              bool *green,
@@ -573,6 +575,9 @@ class BlendStateExt final
     EquationStorage::Type expandEquationAlphaIndexed(const size_t index) const;
     void setEquations(const GLenum modeColor, const GLenum modeAlpha);
     void setEquationsIndexed(const size_t index, const GLenum modeColor, const GLenum modeAlpha);
+    void setEquationsIndexed(const size_t index,
+                             const size_t otherIndex,
+                             const BlendStateExt &other);
     GLenum getEquationColorIndexed(size_t index) const;
     GLenum getEquationAlphaIndexed(size_t index) const;
     DrawBufferMask compareEquations(const EquationStorage::Type color,
@@ -594,6 +599,7 @@ class BlendStateExt final
                            const GLenum dstColor,
                            const GLenum srcAlpha,
                            const GLenum dstAlpha);
+    void setFactorsIndexed(const size_t index, const size_t otherIndex, const BlendStateExt &other);
     GLenum getSrcColorIndexed(size_t index) const;
     GLenum getDstColorIndexed(size_t index) const;
     GLenum getSrcAlphaIndexed(size_t index) const;

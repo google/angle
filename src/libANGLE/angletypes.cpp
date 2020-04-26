@@ -288,6 +288,13 @@ void BlendStateExt::setColorMask(const bool red,
     mColorMask = expandColorMaskValue(red, green, blue, alpha);
 }
 
+void BlendStateExt::setColorMaskIndexed(const size_t index, const uint8_t value)
+{
+    ASSERT(index < mMaxDrawBuffers);
+    ASSERT(value <= 0xF);
+    ColorMaskStorage::SetValueIndexed(index, value, &mColorMask);
+}
+
 void BlendStateExt::setColorMaskIndexed(const size_t index,
                                         const bool red,
                                         const bool green,
@@ -296,6 +303,12 @@ void BlendStateExt::setColorMaskIndexed(const size_t index,
 {
     ASSERT(index < mMaxDrawBuffers);
     ColorMaskStorage::SetValueIndexed(index, PackColorMask(red, green, blue, alpha), &mColorMask);
+}
+
+uint8_t BlendStateExt::getColorMaskIndexed(const size_t index) const
+{
+    ASSERT(index < mMaxDrawBuffers);
+    return ColorMaskStorage::GetValueIndexed(index, mColorMask);
 }
 
 void BlendStateExt::getColorMaskIndexed(const size_t index,
@@ -348,6 +361,20 @@ void BlendStateExt::setEquationsIndexed(const size_t index,
                                      &mEquationColor);
     EquationStorage::SetValueIndexed(index, FromGLenum<BlendEquationType>(modeAlpha),
                                      &mEquationAlpha);
+}
+
+void BlendStateExt::setEquationsIndexed(const size_t index,
+                                        const size_t sourceIndex,
+                                        const BlendStateExt &source)
+{
+    ASSERT(index < mMaxDrawBuffers);
+    ASSERT(sourceIndex < source.mMaxDrawBuffers);
+    EquationStorage::SetValueIndexed(
+        index, EquationStorage::GetValueIndexed(sourceIndex, source.mEquationColor),
+        &mEquationColor);
+    EquationStorage::SetValueIndexed(
+        index, EquationStorage::GetValueIndexed(sourceIndex, source.mEquationAlpha),
+        &mEquationAlpha);
 }
 
 GLenum BlendStateExt::getEquationColorIndexed(size_t index) const
@@ -424,6 +451,22 @@ void BlendStateExt::setFactorsIndexed(const size_t index,
     FactorStorage::SetValueIndexed(index, FromGLenum<BlendFactorType>(dstColor), &mDstColor);
     FactorStorage::SetValueIndexed(index, FromGLenum<BlendFactorType>(srcAlpha), &mSrcAlpha);
     FactorStorage::SetValueIndexed(index, FromGLenum<BlendFactorType>(dstAlpha), &mDstAlpha);
+}
+
+void BlendStateExt::setFactorsIndexed(const size_t index,
+                                      const size_t sourceIndex,
+                                      const BlendStateExt &source)
+{
+    ASSERT(index < mMaxDrawBuffers);
+    ASSERT(sourceIndex < source.mMaxDrawBuffers);
+    FactorStorage::SetValueIndexed(
+        index, FactorStorage::GetValueIndexed(sourceIndex, source.mSrcColor), &mSrcColor);
+    FactorStorage::SetValueIndexed(
+        index, FactorStorage::GetValueIndexed(sourceIndex, source.mDstColor), &mDstColor);
+    FactorStorage::SetValueIndexed(
+        index, FactorStorage::GetValueIndexed(sourceIndex, source.mSrcAlpha), &mSrcAlpha);
+    FactorStorage::SetValueIndexed(
+        index, FactorStorage::GetValueIndexed(sourceIndex, source.mDstAlpha), &mDstAlpha);
 }
 
 GLenum BlendStateExt::getSrcColorIndexed(size_t index) const

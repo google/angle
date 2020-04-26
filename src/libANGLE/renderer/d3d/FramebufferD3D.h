@@ -40,10 +40,7 @@ struct ClearParameters
     gl::ColorI colorI;
     gl::ColorUI colorUI;
     GLenum colorType;
-    gl::DrawBufferMask colorMaskRed;
-    gl::DrawBufferMask colorMaskGreen;
-    gl::DrawBufferMask colorMaskBlue;
-    gl::DrawBufferMask colorMaskAlpha;
+    gl::BlendStateExt::ColorMaskStorage::Type colorMask;
 
     bool clearDepth;
     float depthValue;
