@@ -103,6 +103,14 @@ void GetRenderTargetLayerCountAndIndex(vk::ImageHelper *image,
             UNREACHABLE();
     }
 }
+
+void Set3DBaseArrayLayerAndLayerCount(VkImageSubresourceLayers *Subresource)
+{
+    // If the srcImage/dstImage parameters are of VkImageType VK_IMAGE_TYPE_3D, the baseArrayLayer
+    // and layerCount members of the corresponding subresource must be 0 and 1, respectively.
+    Subresource->baseArrayLayer = 0;
+    Subresource->layerCount     = 1;
+}
 }  // anonymous namespace
 
 // TextureVk implementation.
@@ -587,6 +595,12 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
     srcSubresource.baseArrayLayer           = static_cast<uint32_t>(sourceLayer);
     srcSubresource.layerCount               = layerCount;
 
+    if (srcImage->getExtents().depth > 1)
+    {
+        srcOffset.z = srcSubresource.baseArrayLayer;
+        Set3DBaseArrayLayerAndLayerCount(&srcSubresource);
+    }
+
     // If destination is valid, copy the source directly into it.
     if (mImage->valid())
     {
@@ -605,8 +619,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
         VkImageType imageType = gl_vk::GetImageType(mState.getType());
         if (imageType == VK_IMAGE_TYPE_3D)
         {
-            destSubresource.baseArrayLayer = 0;
-            destSubresource.layerCount     = 1;
+            Set3DBaseArrayLayerAndLayerCount(&destSubresource);
         }
 
         vk::ImageHelper::Copy(srcImage, mImage, srcOffset, destOffset, extents, srcSubresource,
