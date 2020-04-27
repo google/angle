@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b8c1f3a_faecacce",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-04-27T19:46:46Z",
+      "side": 1,
+      "message": "If scissor rect is the same, shouldn\u0027t we able to skip prior clear?",
+      "range": {
+        "startLine": 205,
+        "startChar": 14,
+        "endLine": 205,
+        "endChar": 33
+      },
+      "revId": "6b24abf771a7253d0fc3dbd35ebab10eebd0739c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "852965dd_4d64db0a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-04-27T19:46:46Z",
+      "side": 1,
+      "message": "To clarify, is there a behavior change here that scissoredClear was using RP before this CL and will be using draw call after this CL?",
+      "range": {
+        "startLine": 234,
+        "startChar": 9,
+        "endLine": 234,
+        "endChar": 23
+      },
+      "revId": "6b24abf771a7253d0fc3dbd35ebab10eebd0739c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
