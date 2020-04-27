@@ -1687,7 +1687,9 @@ BufferHelper::BufferHelper()
       mViewFormat(nullptr),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mCurrentWriteAccess(0),
-      mCurrentReadAccess(0)
+      mCurrentReadAccess(0),
+      mCurrentWriteStages(0),
+      mCurrentReadStages(0)
 {}
 
 BufferHelper::~BufferHelper() = default;
@@ -1806,31 +1808,15 @@ void BufferHelper::release(RendererVk *renderer)
     renderer->collectGarbageAndReinit(&mUse, &mBuffer, &mBufferView, &mAllocation);
 }
 
-bool BufferHelper::needsOnWriteBarrier(VkAccessFlags writeAccessType,
-                                       VkAccessFlags *barrierSrcOut,
-                                       VkAccessFlags *barrierDstOut)
-{
-    bool needsBarrier = mCurrentReadAccess != 0 || mCurrentWriteAccess != 0;
-
-    // Note: mCurrentReadAccess is not part of barrier src flags as "anything-after-read" is
-    // satisified by execution barriers alone.
-    *barrierSrcOut = mCurrentWriteAccess;
-    *barrierDstOut = writeAccessType;
-
-    mCurrentWriteAccess = writeAccessType;
-    mCurrentReadAccess  = 0;
-
-    return needsBarrier;
-}
-
 angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
                                            BufferHelper *srcBuffer,
-                                           VkAccessFlags bufferAccessType,
                                            const VkBufferCopy &copyRegion)
 {
     CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->onBufferWrite(bufferAccessType, this));
-    ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, srcBuffer));
+    ANGLE_TRY(contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                       this));
+    ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                      srcBuffer));
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     commandBuffer->copyBuffer(srcBuffer->getBuffer(), mBuffer, 1, &copyRegion);
@@ -1936,31 +1922,49 @@ bool BufferHelper::canAccumulateWrite(ContextVk *contextVk, VkAccessFlags writeA
 
 void BufferHelper::updateReadBarrier(VkAccessFlags readAccessType,
                                      VkAccessFlags *barrierSrcOut,
-                                     VkAccessFlags *barrierDstOut)
+                                     VkAccessFlags *barrierDstOut,
+                                     VkPipelineStageFlags readStage,
+                                     VkPipelineStageFlags *barrierSrcStageOut,
+                                     VkPipelineStageFlags *barrierDstStageOut)
 {
-    if (mCurrentWriteAccess != 0 && (mCurrentReadAccess & readAccessType) != readAccessType)
+    // If there was a prior write and we are making a read that is either a new access type or from
+    // a new stage, we need a barrier
+    if (mCurrentWriteAccess != 0 && (((mCurrentReadAccess & readAccessType) != readAccessType) ||
+                                     ((mCurrentReadStages & readStage) != readStage)))
     {
         *barrierSrcOut |= mCurrentWriteAccess;
         *barrierDstOut |= readAccessType;
+        *barrierSrcStageOut |= mCurrentWriteStages;
+        *barrierDstStageOut |= readStage;
     }
 
     // Accumulate new read usage.
     mCurrentReadAccess |= readAccessType;
+    mCurrentReadStages |= readStage;
 }
 
 void BufferHelper::updateWriteBarrier(VkAccessFlags writeAccessType,
                                       VkAccessFlags *barrierSrcOut,
-                                      VkAccessFlags *barrierDstOut)
+                                      VkAccessFlags *barrierDstOut,
+                                      VkPipelineStageFlags writeStage,
+                                      VkPipelineStageFlags *barrierSrcStageOut,
+                                      VkPipelineStageFlags *barrierDstStageOut)
 {
+    // We don't need to check mCurrentReadStages here since if it is not zero, mCurrentReadAccess
+    // must not be zero as well. stage is finer grain than accessType.
     if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
     {
         *barrierSrcOut |= mCurrentWriteAccess;
         *barrierDstOut |= writeAccessType;
+        *barrierSrcStageOut |= mCurrentWriteStages | mCurrentReadStages;
+        *barrierDstStageOut |= writeStage;
     }
 
     // Reset usages on the new write.
     mCurrentWriteAccess = writeAccessType;
     mCurrentReadAccess  = 0;
+    mCurrentWriteStages = writeStage;
+    mCurrentReadStages  = 0;
 }
 
 // ImageHelper implementation.
@@ -3354,7 +3358,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             BufferHelper *currentBuffer = bufferUpdate.bufferHelper;
             ASSERT(currentBuffer && currentBuffer->valid());
 
-            ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, currentBuffer));
+            ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT,
+                                              VK_PIPELINE_STAGE_TRANSFER_BIT, currentBuffer));
 
             commandBuffer->copyBufferToImage(currentBuffer->getBuffer().getHandle(), mImage,
                                              getCurrentLayout(), 1, &update.buffer.copyRegion);
@@ -3472,7 +3477,8 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 
     CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->onImageRead(aspectFlags, ImageLayout::TransferSrc, this));
-    ANGLE_TRY(contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, *bufferOut));
+    ANGLE_TRY(contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                       *bufferOut));
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     VkBufferImageCopy regions[2] = {};

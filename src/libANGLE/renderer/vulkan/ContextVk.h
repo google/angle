@@ -117,9 +117,11 @@ struct CommandBufferHelper : angle::NonCopyable
   public:
     void bufferRead(vk::ResourceUseList *resourceUseList,
                     VkAccessFlags readAccessType,
+                    VkPipelineStageFlags readStage,
                     vk::BufferHelper *buffer);
     void bufferWrite(vk::ResourceUseList *resourceUseList,
                      VkAccessFlags writeAccessType,
+                     VkPipelineStageFlags writeStage,
                      vk::BufferHelper *buffer);
 
     void imageRead(vk::ResourceUseList *resourceUseList,
@@ -149,7 +151,8 @@ struct CommandBufferHelper : angle::NonCopyable
     std::vector<VkImageMemoryBarrier> mImageMemoryBarriers;
     VkFlags mGlobalMemoryBarrierSrcAccess;
     VkFlags mGlobalMemoryBarrierDstAccess;
-    VkPipelineStageFlags mGlobalMemoryBarrierStages;
+    VkPipelineStageFlags mGlobalMemoryBarrierSrcStages;
+    VkPipelineStageFlags mGlobalMemoryBarrierDstStages;
     vk::CommandBuffer mCommandBuffer;
 };
 
@@ -614,8 +617,12 @@ class ContextVk : public ContextImpl, public vk::Context
 
     vk::ResourceUseList &getResourceUseList() { return mResourceUseList; }
 
-    angle::Result onBufferRead(VkAccessFlags readAccessType, vk::BufferHelper *buffer);
-    angle::Result onBufferWrite(VkAccessFlags writeAccessType, vk::BufferHelper *buffer);
+    angle::Result onBufferRead(VkAccessFlags readAccessType,
+                               VkPipelineStageFlags readStage,
+                               vk::BufferHelper *buffer);
+    angle::Result onBufferWrite(VkAccessFlags writeAccessType,
+                                VkPipelineStageFlags writeStage,
+                                vk::BufferHelper *buffer);
 
     angle::Result onImageRead(VkImageAspectFlags aspectFlags,
                               vk::ImageLayout imageLayout,

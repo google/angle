@@ -572,12 +572,16 @@ class BufferHelper final : public Resource
 
     // Set write access mask when the buffer is modified externally, e.g. by host.  There is no
     // graph resource to create a dependency to.
-    void onExternalWrite(VkAccessFlags writeAccessType) { mCurrentWriteAccess |= writeAccessType; }
+    void onExternalWrite(VkAccessFlags writeAccessType)
+    {
+        ASSERT(writeAccessType == VK_ACCESS_HOST_WRITE_BIT);
+        mCurrentWriteAccess |= writeAccessType;
+        mCurrentWriteStages |= VK_PIPELINE_STAGE_HOST_BIT;
+    }
 
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(ContextVk *contextVk,
                                  BufferHelper *srcBuffer,
-                                 VkAccessFlags bufferAccessType,
                                  const VkBufferCopy &copyRegion);
 
     // Note: currently only one view is allowed.  If needs be, multiple views can be created
@@ -630,31 +634,20 @@ class BufferHelper final : public Resource
 
     void updateReadBarrier(VkAccessFlags readAccessType,
                            VkAccessFlags *barrierSrcOut,
-                           VkAccessFlags *barrierDstOut);
+                           VkAccessFlags *barrierDstOut,
+                           VkPipelineStageFlags readStage,
+                           VkPipelineStageFlags *barrierSrcStageOut,
+                           VkPipelineStageFlags *barrierDstStageOut);
 
     void updateWriteBarrier(VkAccessFlags writeAccessType,
                             VkAccessFlags *barrierSrcOut,
-                            VkAccessFlags *barrierDstOut);
+                            VkAccessFlags *barrierDstOut,
+                            VkPipelineStageFlags writeStage,
+                            VkPipelineStageFlags *barrierSrcStageOut,
+                            VkPipelineStageFlags *barrierDstStageOut);
 
   private:
     angle::Result mapImpl(ContextVk *contextVk);
-    bool needsOnReadBarrier(VkAccessFlags readAccessType,
-                            VkAccessFlags *barrierSrcOut,
-                            VkAccessFlags *barrierDstOut)
-    {
-        bool needsBarrier =
-            mCurrentWriteAccess != 0 && (mCurrentReadAccess & readAccessType) != readAccessType;
-
-        *barrierSrcOut = mCurrentWriteAccess;
-        *barrierDstOut = readAccessType;
-
-        mCurrentReadAccess |= readAccessType;
-        return needsBarrier;
-    }
-    bool needsOnWriteBarrier(VkAccessFlags writeAccessType,
-                             VkAccessFlags *barrierSrcOut,
-                             VkAccessFlags *barrierDstOut);
-
     angle::Result initializeNonZeroMemory(Context *context, VkDeviceSize size);
 
     // Vulkan objects.
@@ -672,6 +665,8 @@ class BufferHelper final : public Resource
     // For memory barriers.
     VkFlags mCurrentWriteAccess;
     VkFlags mCurrentReadAccess;
+    VkPipelineStageFlags mCurrentWriteStages;
+    VkPipelineStageFlags mCurrentReadStages;
 };
 
 // Imagine an image going through a few layout transitions:
