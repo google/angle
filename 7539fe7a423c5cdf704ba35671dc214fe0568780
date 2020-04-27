@@ -22,6 +22,30 @@
       "revId": "7539fe7a423c5cdf704ba35671dc214fe0568780",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af9b3b70_1f98cfad",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3206,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-04-27T15:41:46Z",
+      "side": 1,
+      "message": "If you look at ClearValueReference::set you can see internally it handles any valid combination of aspects flags. I left a comment here for future readers.",
+      "parentUuid": "9cf0fc60_dceb4308",
+      "range": {
+        "startLine": 3206,
+        "startChar": 31,
+        "endLine": 3206,
+        "endChar": 49
+      },
+      "revId": "7539fe7a423c5cdf704ba35671dc214fe0568780",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
