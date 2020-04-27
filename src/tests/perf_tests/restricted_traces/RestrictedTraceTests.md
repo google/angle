@@ -116,10 +116,14 @@ upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive tre
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive manhattan_10
 ```
 
-## Adding new tests
-Once you are able to capture a set of frames from an application using the steps above, you'll need to:
+After uploading, add the sha1 files created by the upload and submit them with your changes.
 
-* Add the tests to restricted_traces/angle_trace_perf_tests.gni
-* Update TracePerfTest.cpp to include the headers from the test, add it to the list of TracePerfTestID, and support it throughout the file using the namespace created in the trace.
-* Upload the traces to the cloud using the steps above.
-* Add the sha1 files created by the upload and submit them with your changes.
+## Adding new tests
+
+After you capture and upload a set of frames from an application using the steps above you'll need to:
+
+ * Add the new traces to [`restricted_traces/restricted_traces.json`](restricted_traces.json).
+ * Re-run code generation with [`scripts/run_code_generation.py`][run_code_generation].
+ * Update your CL to include the new generated code. Your trace tests should now be turned on.
+
+[run_code_generation]: ../../../../scripts/run_code_generation.py

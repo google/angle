@@ -286,10 +286,20 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     testonly = true
     if (build_angle_trace_perf_tests) {
       # Imports "angle_restricted_traces"
-      import("perf_tests/restricted_traces/restricted_traces.gni")
-      sources = [ "perf_tests/TracePerfTest.cpp" ]
+      import("perf_tests/restricted_traces/restricted_traces_autogen.gni")
+      sources = [
+        "perf_tests/TracePerfTest.cpp",
+        "perf_tests/restricted_traces/restricted_traces_autogen.h",
+      ]
 
-      defines = []
+      if (is_android) {
+        _trace_data_path = "/sdcard/chromium_tests_root/third_party/angle/src/tests/perf_tests/restricted_traces"
+      } else {
+        _trace_data_path =
+            rebase_path("perf_tests/restricted_traces", root_out_dir)
+      }
+
+      defines = [ "ANGLE_TRACE_DATA_DIR=\"${_trace_data_path}\"" ]
       data = []
 
       foreach(_test, angle_restricted_traces) {
@@ -306,14 +316,8 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
               "${_test_ctx}.h",
             ]
 
-        if (is_android) {
-          _test_data_path = "/sdcard/chromium_tests_root/third_party/angle/src/tests/perf_tests/restricted_traces/${_test}"
-        } else {
-          _test_data_path = rebase_path("${_test_dir}", root_out_dir)
-        }
-
-        defines += [ "ANGLE_TRACE_DATA_DIR_${_test}=\"${_test_data_path}\"" ]
-
+        defines +=
+            [ "ANGLE_TRACE_DATA_DIR_${_test}=\"${_trace_data_path}/${_test}\"" ]
         data += [ "${_test_dir}/${_test}_capture_context1.angledata.gz" ]
       }
 
