@@ -177,6 +177,44 @@ class DataCounters final : angle::NonCopyable
     std::map<Counter, int> mData;
 };
 
+using BufferSet   = std::set<gl::BufferID>;
+using BufferCalls = std::map<gl::BufferID, std::vector<CallCapture>>;
+
+// Helper to track resource changes during the capture
+class ResourceTracker final : angle::NonCopyable
+{
+  public:
+    ResourceTracker();
+    ~ResourceTracker();
+
+    BufferCalls &getBufferRegenCalls() { return mBufferRegenCalls; }
+    BufferCalls &getBufferRestoreCalls() { return mBufferRestoreCalls; }
+
+    BufferSet &getStartingBuffers() { return mStartingBuffers; }
+    BufferSet &getNewBuffers() { return mNewBuffers; }
+    BufferSet &getBuffersToRegen() { return mBuffersToRegen; }
+    BufferSet &getBuffersToRestore() { return mBuffersToRestore; }
+
+    void setGennedBuffer(gl::BufferID id);
+    void setDeletedBuffer(gl::BufferID id);
+    void setBufferModified(gl::BufferID id);
+
+  private:
+    // Buffer regen calls will delete and gen a buffer
+    BufferCalls mBufferRegenCalls;
+    // Buffer restore calls will restore the contents of a buffer
+    BufferCalls mBufferRestoreCalls;
+
+    // Starting buffers include all the buffers created during setup for MEC
+    BufferSet mStartingBuffers;
+    // New buffers are those generated while capturing
+    BufferSet mNewBuffers;
+    // Buffers to regen are a list of starting buffers that need to be deleted and genned
+    BufferSet mBuffersToRegen;
+    // Buffers to restore include any starting buffers with contents modified during the run
+    BufferSet mBuffersToRestore;
+};
+
 // Used by the CPP replay to filter out unnecessary code.
 using HasResourceTypeMap = angle::PackedEnumBitSet<ResourceIDType>;
 
@@ -225,7 +263,6 @@ class FrameCapture final : angle::NonCopyable
 
     std::vector<CallCapture> mSetupCalls;
     std::vector<CallCapture> mFrameCalls;
-    std::vector<CallCapture> mTearDownCalls;
 
     // We save one large buffer of binary data for the whole CPP replay.
     // This simplifies a lot of file management.
@@ -243,6 +280,8 @@ class FrameCapture final : angle::NonCopyable
     size_t mReadBufferSize;
     HasResourceTypeMap mHasResourceType;
     BufferDataMap mBufferDataMap;
+
+    ResourceTracker mResourceTracker;
 
     // Cache most recently compiled and linked sources.
     ShaderSourceMap mCachedShaderSources;
