@@ -20,6 +20,23 @@
 
 namespace rx
 {
+namespace
+{
+VkDeviceSize GetShaderBufferBindingSize(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding)
+{
+    if (bufferBinding.getSize() != 0)
+    {
+        return bufferBinding.getSize();
+    }
+    // If size is 0, we can't always use VK_WHOLE_SIZE (or bufferHelper.getSize()), as the
+    // backing buffer may be larger than max*BufferRange.  In that case, we use the backing
+    // buffer size (what's left after offset).
+    const gl::Buffer *bufferGL = bufferBinding.get();
+    ASSERT(bufferGL);
+    ASSERT(bufferGL->getSize() >= bufferBinding.getOffset());
+    return bufferGL->getSize() - bufferBinding.getOffset();
+}
+}  // namespace
 
 DefaultUniformBlock::DefaultUniformBlock() = default;
 
@@ -485,8 +502,9 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(const gl::ProgramState &pr
     }
 }
 
-void WriteBufferDescriptorSetBinding(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
-                                     VkDeviceSize maxSize,
+void WriteBufferDescriptorSetBinding(const vk::BufferHelper &buffer,
+                                     VkDeviceSize offset,
+                                     VkDeviceSize size,
                                      VkDescriptorSet descSet,
                                      VkDescriptorType descType,
                                      uint32_t bindingIndex,
@@ -495,29 +513,6 @@ void WriteBufferDescriptorSetBinding(const gl::OffsetBindingPointer<gl::Buffer> 
                                      VkDescriptorBufferInfo *bufferInfoOut,
                                      VkWriteDescriptorSet *writeInfoOut)
 {
-    gl::Buffer *buffer = bufferBinding.get();
-    ASSERT(buffer != nullptr);
-
-    // Make sure there's no possible under/overflow with binding size.
-    static_assert(sizeof(VkDeviceSize) >= sizeof(bufferBinding.getSize()),
-                  "VkDeviceSize too small");
-    ASSERT(bufferBinding.getSize() >= 0);
-
-    BufferVk *bufferVk             = vk::GetImpl(buffer);
-    VkDeviceSize offset            = bufferBinding.getOffset();
-    VkDeviceSize size              = bufferBinding.getSize();
-    vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
-
-    // If size is 0, we can't always use VK_WHOLE_SIZE (or bufferHelper.getSize()), as the
-    // backing buffer may be larger than max*BufferRange.  In that case, we use the minimum of
-    // the backing buffer size (what's left after offset) and the buffer size as defined by the
-    // shader.  That latter is only valid for UBOs, as SSBOs may have variable length arrays.
-    size = size > 0 ? size : (bufferHelper.getSize() - offset);
-    if (maxSize > 0)
-    {
-        size = std::min(size, maxSize);
-    }
-
     // If requiredOffsetAlignment is 0, the buffer offset is guaranteed to have the necessary
     // alignment through other means (the backend specifying the alignment through a GLES limit that
     // the frontend then enforces).  If it's not 0, we need to bind the buffer at an offset that's
@@ -531,7 +526,7 @@ void WriteBufferDescriptorSetBinding(const gl::OffsetBindingPointer<gl::Buffer> 
         size += offsetDiff;
     }
 
-    bufferInfoOut->buffer = bufferHelper.getBuffer().getHandle();
+    bufferInfoOut->buffer = buffer.getBuffer().getHandle();
     bufferInfoOut->offset = offset;
     bufferInfoOut->range  = size;
 
@@ -916,16 +911,31 @@ void ProgramExecutableVk::updateBuffersDescriptorSet(ContextVk *contextVk,
         ShaderInterfaceVariableInfo info = mVariableInfoMap[shaderType][block.mappedName];
         uint32_t binding                 = info.binding;
         uint32_t arrayElement            = block.isArray ? block.arrayElement : 0;
-        VkDeviceSize maxBlockSize        = isStorageBuffer ? 0 : block.dataSize;
+
+        VkDeviceSize size;
+        if (!isStorageBuffer)
+        {
+            size = block.dataSize;
+        }
+        else
+        {
+            size = GetShaderBufferBindingSize(bufferBinding);
+        }
+
+        // Make sure there's no possible under/overflow with binding size.
+        static_assert(sizeof(VkDeviceSize) >= sizeof(bufferBinding.getSize()),
+                      "VkDeviceSize too small");
+        ASSERT(bufferBinding.getSize() >= 0);
 
         VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[writeCount];
         VkWriteDescriptorSet &writeInfo    = writeDescriptorInfo[writeCount];
 
-        WriteBufferDescriptorSetBinding(bufferBinding, maxBlockSize, descriptorSet, descriptorType,
-                                        binding, arrayElement, 0, &bufferInfo, &writeInfo);
-
         BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
+
+        WriteBufferDescriptorSetBinding(bufferHelper, bufferBinding.getOffset(), size,
+                                        descriptorSet, descriptorType, binding, arrayElement, 0,
+                                        &bufferInfo, &writeInfo);
 
         if (isStorageBuffer)
         {
@@ -997,12 +1007,14 @@ void ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
         VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[binding];
         VkWriteDescriptorSet &writeInfo    = writeDescriptorInfo[binding];
 
-        WriteBufferDescriptorSetBinding(bufferBinding, 0, descriptorSet,
-                                        VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, info.binding, binding,
-                                        requiredOffsetAlignment, &bufferInfo, &writeInfo);
-
         BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
+
+        VkDeviceSize size = GetShaderBufferBindingSize(bufferBinding);
+        WriteBufferDescriptorSetBinding(bufferHelper, bufferBinding.getOffset(), size,
+                                        descriptorSet, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                                        info.binding, binding, requiredOffsetAlignment, &bufferInfo,
+                                        &writeInfo);
 
         // We set SHADER_READ_BIT to be conservative.
         commandBufferHelper->bufferWrite(
