@@ -992,6 +992,27 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     sources = deqp_framework_decpp_sources
   }
 
+  config("angle_deqp_framework_xexml_config") {
+    include_dirs = [ "$deqp_path/framework/xexml" ]
+  }
+
+  angle_deqp_source_set("angle_deqp_framework_xexml") {
+    public_configs += [
+      ":angle_deqp_support",
+      ":angle_deqp_framework_decpp_config",
+      ":angle_deqp_framework_delibs_config",
+      "//build/config/compiler:exceptions",
+      "//build/config/compiler:no_chromium_code",
+    ]
+
+    public_deps = [
+      ":angle_deqp_framework_debase",
+      ":angle_deqp_framework_decpp",
+      ":angle_deqp_framework_delibs",
+    ]
+    sources = deqp_framework_xexml_sources
+  }
+
   config("angle_deqp_libtester_config") {
     defines = [ "ANGLE_DEQP_LIBTESTER_IMPLEMENTATION" ]
 
@@ -1050,6 +1071,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     public_deps = [
       ":angle_deqp_framework_decpp",
       ":angle_deqp_framework_qphelper",
+      ":angle_deqp_framework_xexml",
     ]
   }
 

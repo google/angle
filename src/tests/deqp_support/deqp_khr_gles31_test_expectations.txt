@@ -127,3 +127,6 @@
 
 // Crashing on Android with SwiftShader
 4240 SWIFTSHADER ANDROID : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.blitting_multisampled_depth_attachment = SKIP
+
+// New failures with latest dEQP roll (2020-04-28)
+4593 SWIFTSHADER : KHR-GLES31.core.nearest_edge.offset_left = FAIL
