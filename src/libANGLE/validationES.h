@@ -983,7 +983,9 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(const Context *context,
             return false;
         }
 
-        if (elementDataSizeWithOffset > static_cast<uint64_t>(elementArrayBuffer->getSize()))
+        // Related to possible test bug: https://github.com/KhronosGroup/WebGL/issues/3064
+        if ((elementDataSizeWithOffset > static_cast<uint64_t>(elementArrayBuffer->getSize())) &&
+            (primcount > 0))
         {
             context->validationError(GL_INVALID_OPERATION, err::kInsufficientBufferSize);
             return false;
