@@ -585,7 +585,7 @@ class ContextVk : public ContextImpl, public vk::Context
     // Create Begin/End/Instant GPU trace events, which take their timestamps from GPU queries.
     // The events are queued until the query results are available.  Possible values for `phase`
     // are TRACE_EVENT_PHASE_*
-    ANGLE_INLINE angle::Result traceGpuEvent(vk::PrimaryCommandBuffer *commandBuffer,
+    ANGLE_INLINE angle::Result traceGpuEvent(vk::CommandBuffer *commandBuffer,
                                              char phase,
                                              const EventName &name)
     {
@@ -935,7 +935,7 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result memoryBarrierImpl(GLbitfield barriers, VkPipelineStageFlags stageMask);
 
     angle::Result synchronizeCpuGpuTime();
-    angle::Result traceGpuEventImpl(vk::PrimaryCommandBuffer *commandBuffer,
+    angle::Result traceGpuEventImpl(vk::CommandBuffer *commandBuffer,
                                     char phase,
                                     const EventName &name);
     angle::Result checkCompletedGpuEvents();
