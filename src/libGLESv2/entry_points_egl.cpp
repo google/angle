@@ -353,7 +353,8 @@ EGLBoolean EGLAPIENTRY EGL_QuerySurface(EGLDisplay dpy,
     ANGLE_EGL_TRY_RETURN(thread, ValidateQuerySurface(display, eglSurface, attribute, value),
                          "eglQuerySurface", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
-    QuerySurfaceAttrib(eglSurface, attribute, value);
+    ANGLE_EGL_TRY_RETURN(thread, QuerySurfaceAttrib(display, eglSurface, attribute, value),
+                         "eglQuerySurface", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;

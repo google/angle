@@ -1441,6 +1441,45 @@ EGLint WindowSurfaceVk::getHeight() const
     return static_cast<EGLint>(mColorRenderTarget.getExtents().height);
 }
 
+egl::Error WindowSurfaceVk::getUserWidth(const egl::Display *display, EGLint *value) const
+{
+    DisplayVk *displayVk = vk::GetImpl(display);
+    VkSurfaceCapabilitiesKHR surfaceCaps;
+
+    angle::Result result = getUserExtentsImpl(displayVk, &surfaceCaps);
+    if (result == angle::Result::Continue)
+    {
+        // The EGL spec states that value is not written if there is an error
+        *value = static_cast<EGLint>(surfaceCaps.currentExtent.width);
+    }
+    return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+}
+
+egl::Error WindowSurfaceVk::getUserHeight(const egl::Display *display, EGLint *value) const
+{
+    DisplayVk *displayVk = vk::GetImpl(display);
+    VkSurfaceCapabilitiesKHR surfaceCaps;
+
+    angle::Result result = getUserExtentsImpl(displayVk, &surfaceCaps);
+    if (result == angle::Result::Continue)
+    {
+        // The EGL spec states that value is not written if there is an error
+        *value = static_cast<EGLint>(surfaceCaps.currentExtent.height);
+    }
+    return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+}
+
+angle::Result WindowSurfaceVk::getUserExtentsImpl(DisplayVk *displayVk,
+                                                  VkSurfaceCapabilitiesKHR *surfaceCaps) const
+{
+    const VkPhysicalDevice &physicalDevice = displayVk->getRenderer()->getPhysicalDevice();
+
+    ANGLE_VK_TRY(displayVk,
+                 vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface, surfaceCaps));
+
+    return angle::Result::Continue;
+}
+
 EGLint WindowSurfaceVk::isPostSubBufferSupported() const
 {
     // TODO(jmadill)

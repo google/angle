@@ -3964,7 +3964,10 @@ void QueryContextAttrib(const gl::Context *context, EGLint attribute, EGLint *va
     }
 }
 
-void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
+egl::Error QuerySurfaceAttrib(const Display *display,
+                              const Surface *surface,
+                              EGLint attribute,
+                              EGLint *value)
 {
     switch (attribute)
     {
@@ -3981,7 +3984,7 @@ void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
             *value = surface->getConfig()->configID;
             break;
         case EGL_HEIGHT:
-            *value = surface->getHeight();
+            ANGLE_TRY(surface->getUserHeight(display, value));
             break;
         case EGL_HORIZONTAL_RESOLUTION:
             *value = surface->getHorizontalResolution();
@@ -4037,7 +4040,7 @@ void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
             *value = surface->getVerticalResolution();
             break;
         case EGL_WIDTH:
-            *value = surface->getWidth();
+            ANGLE_TRY(surface->getUserWidth(display, value));
             break;
         case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
             *value = surface->isPostSubBufferSupported();
@@ -4064,6 +4067,7 @@ void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
             UNREACHABLE();
             break;
     }
+    return NoError();
 }
 
 void SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value)
