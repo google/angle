@@ -31,13 +31,16 @@ def write_header(data_source_name,
         return prefix + cmd[len(api):]
 
     with open(header_path, "w") as out:
+        defines = ["#define %s%s ANGLE_%s%s" % (ns, pre(cmd), ns, pre(cmd)) for cmd in all_cmds]
         var_protos = [
-            "%sextern PFN%sPROC %s%s;" % (export, cmd.upper(), ns, pre(cmd)) for cmd in all_cmds
+            "%sextern PFN%sPROC ANGLE_%s%s;" % (export, cmd.upper(), ns, pre(cmd))
+            for cmd in all_cmds
         ]
         loader_header = template_loader_h.format(
             script_name=os.path.basename(sys.argv[0]),
             data_source_name=data_source_name,
             year=date.today().year,
+            defines="\n".join(defines),
             function_pointers="\n".join(var_protos),
             api_upper=api.upper(),
             api_lower=api,
@@ -60,9 +63,11 @@ def write_source(data_source_name, all_cmds, api, path, ns="", prefix=None, expo
         return prefix + cmd[len(api):]
 
     with open(source_path, "w") as out:
-        var_defs = ["%sPFN%sPROC %s%s;" % (export, cmd.upper(), ns, pre(cmd)) for cmd in all_cmds]
+        var_defs = [
+            "%sPFN%sPROC ANGLE_%s%s;" % (export, cmd.upper(), ns, pre(cmd)) for cmd in all_cmds
+        ]
 
-        setter = "    %s%s = reinterpret_cast<PFN%sPROC>(loadProc(\"%s\"));"
+        setter = "    ANGLE_%s%s = reinterpret_cast<PFN%sPROC>(loadProc(\"%s\"));"
         setters = [setter % (ns, pre(cmd), cmd.upper(), pre(cmd)) for cmd in all_cmds]
 
         loader_source = template_loader_cpp.format(
@@ -266,6 +271,7 @@ template_loader_h = """// GENERATED FILE - DO NOT EDIT.
 #define {lib}_{api_upper}_LOADER_AUTOGEN_H_
 
 {preamble}
+{defines}
 {function_pointers}
 
 namespace angle
