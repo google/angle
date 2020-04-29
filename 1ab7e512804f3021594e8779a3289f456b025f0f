@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "2813b1ec_38311f07",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2427,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-04-29T17:57:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6294dc9b_a1bca04b",
+      "revId": "1ab7e512804f3021594e8779a3289f456b025f0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa0cfe6_7ef2ca96",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 20
@@ -69,6 +87,24 @@
       "revId": "1ab7e512804f3021594e8779a3289f456b025f0f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dae156a_707ecd33",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2442,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-04-29T17:57:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "917f88d2_19a2e0c4",
+      "revId": "1ab7e512804f3021594e8779a3289f456b025f0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -107,6 +143,30 @@
       "side": 1,
       "message": "Why do you suspect that? Note that this change is just replicating the previous code. It\u0027s not attempting to change any functionality. This code as-is passes current debug label tests. If we want to change this functionality and add tests to verify that we should do that in a different CL.",
       "parentUuid": "926250cf_36e62041",
+      "range": {
+        "startLine": 2476,
+        "startChar": 36,
+        "endLine": 2476,
+        "endChar": 60
+      },
+      "revId": "1ab7e512804f3021594e8779a3289f456b025f0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e53e4cc_a505f412",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2476,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-04-29T17:57:15Z",
+      "side": 1,
+      "message": "I suspect this is a bug in the existing code.\npush is matched by pop. Corresponding VK commands should probably be beginDebugUtilsLabelEXT and endDebugUtilsLabelEXT.",
+      "parentUuid": "aa498a7b_40d418d1",
       "range": {
         "startLine": 2476,
         "startChar": 36,
