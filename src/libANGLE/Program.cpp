@@ -1184,17 +1184,17 @@ GLuint ProgramState::getUniformIndexFromImageIndex(GLuint imageIndex) const
     return imageIndex + mImageUniformRange.low();
 }
 
-GLuint ProgramState::getAttributeLocation(const std::string &name) const
+AttributeLocation ProgramState::getAttributeLocation(const std::string &name) const
 {
     for (const sh::ShaderVariable &attribute : mProgramInputs)
     {
         if (attribute.name == name)
         {
-            return attribute.location;
+            return {static_cast<uint32_t>(attribute.location)};
         }
     }
 
-    return static_cast<GLuint>(-1);
+    return {static_cast<uint32_t>(-1)};
 }
 
 bool ProgramState::hasAttachedShader() const
@@ -2002,7 +2002,7 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, ShaderProgram
     }
 }
 
-GLuint Program::getAttributeLocation(const std::string &name) const
+AttributeLocation Program::getAttributeLocation(const std::string &name) const
 {
     ASSERT(mLinkResolved);
     return mState.getAttributeLocation(name);

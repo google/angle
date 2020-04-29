@@ -500,13 +500,13 @@ AttributesMask GLES1State::getVertexArraysAttributeMask() const
 
     for (const ClientVertexArrayType attrib : nonTexcoordArrays)
     {
-        attribsMask.set(GLES1Renderer::VertexArrayIndex(attrib, *this),
+        attribsMask.set(GLES1Renderer::VertexArrayIndex(attrib, *this).value,
                         isClientStateEnabled(attrib));
     }
 
     for (unsigned int i = 0; i < GLES1Renderer::kTexUnitCount; i++)
     {
-        attribsMask.set(GLES1Renderer::TexCoordArrayIndex(i), isTexCoordArrayEnabled(i));
+        attribsMask.set(GLES1Renderer::TexCoordArrayIndex(i).value, isTexCoordArrayEnabled(i));
     }
 
     return attribsMask;

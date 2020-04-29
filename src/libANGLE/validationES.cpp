@@ -666,7 +666,7 @@ bool ValidateDrawElementsInstancedBase(const Context *context,
                                        PrimitiveMode mode,
                                        GLsizei count,
                                        DrawElementsType type,
-                                       const GLvoid *indices,
+                                       const void *indices,
                                        GLsizei primcount)
 {
     if (primcount <= 0)
@@ -4903,7 +4903,7 @@ bool ValidateSamplerParameterIuivRobustANGLE(const Context *context,
 }
 
 bool ValidateGetVertexAttribfvRobustANGLE(const Context *context,
-                                          GLuint index,
+                                          AttributeLocation index,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           const GLsizei *length,
@@ -4931,7 +4931,7 @@ bool ValidateGetVertexAttribfvRobustANGLE(const Context *context,
 }
 
 bool ValidateGetVertexAttribivRobustANGLE(const Context *context,
-                                          GLuint index,
+                                          AttributeLocation index,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           const GLsizei *length,
@@ -4960,7 +4960,7 @@ bool ValidateGetVertexAttribivRobustANGLE(const Context *context,
 }
 
 bool ValidateGetVertexAttribPointervRobustANGLE(const Context *context,
-                                                GLuint index,
+                                                AttributeLocation index,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 const GLsizei *length,
@@ -4989,7 +4989,7 @@ bool ValidateGetVertexAttribPointervRobustANGLE(const Context *context,
 }
 
 bool ValidateGetVertexAttribIivRobustANGLE(const Context *context,
-                                           GLuint index,
+                                           AttributeLocation index,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            const GLsizei *length,
@@ -5018,7 +5018,7 @@ bool ValidateGetVertexAttribIivRobustANGLE(const Context *context,
 }
 
 bool ValidateGetVertexAttribIuivRobustANGLE(const Context *context,
-                                            GLuint index,
+                                            AttributeLocation index,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             const GLsizei *length,
@@ -5538,7 +5538,7 @@ bool ValidateGetTexParameterBase(const Context *context,
 }
 
 bool ValidateGetVertexAttribBase(const Context *context,
-                                 GLuint index,
+                                 AttributeLocation index,
                                  GLenum pname,
                                  GLsizei *length,
                                  bool pointer,
@@ -5555,7 +5555,7 @@ bool ValidateGetVertexAttribBase(const Context *context,
         return false;
     }
 
-    if (index >= static_cast<GLuint>(context->getCaps().maxVertexAttributes))
+    if (index.value >= static_cast<uint32_t>(context->getCaps().maxVertexAttributes))
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
         return false;
@@ -6222,9 +6222,9 @@ template bool ValidateTexParameterBase(const Context *,
                                        bool,
                                        const GLuint *);
 
-bool ValidateVertexAttribIndex(const Context *context, GLuint index)
+bool ValidateVertexAttribIndex(const Context *context, AttributeLocation index)
 {
-    if (index >= MAX_VERTEX_ATTRIBS)
+    if (index.value >= MAX_VERTEX_ATTRIBS)
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
         return false;

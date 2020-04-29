@@ -393,12 +393,12 @@ CallCapture CaptureDrawElementsInstancedANGLE(const State &glState,
 
 CallCapture CaptureVertexAttribDivisorANGLE(const State &glState,
                                             bool isCallValid,
-                                            GLuint index,
+                                            AttributeLocation indexPacked,
                                             GLuint divisor)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addValueParam("divisor", ParamType::TGLuint, divisor);
 
     return CallCapture(gl::EntryPoint::VertexAttribDivisorANGLE, std::move(paramBuffer));
@@ -941,7 +941,7 @@ CallCapture CaptureGetUniformivRobustANGLE(const State &glState,
 
 CallCapture CaptureGetVertexAttribfvRobustANGLE(const State &glState,
                                                 bool isCallValid,
-                                                GLuint index,
+                                                AttributeLocation indexPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
@@ -949,20 +949,20 @@ CallCapture CaptureGetVertexAttribfvRobustANGLE(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetVertexAttribfvRobustANGLE_length(glState, isCallValid, index, pname, bufSize, length,
-                                               params, &lengthParam);
+    CaptureGetVertexAttribfvRobustANGLE_length(glState, isCallValid, indexPacked, pname, bufSize,
+                                               length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-    CaptureGetVertexAttribfvRobustANGLE_params(glState, isCallValid, index, pname, bufSize, length,
-                                               params, &paramsParam);
+    CaptureGetVertexAttribfvRobustANGLE_params(glState, isCallValid, indexPacked, pname, bufSize,
+                                               length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetVertexAttribfvRobustANGLE, std::move(paramBuffer));
@@ -970,7 +970,7 @@ CallCapture CaptureGetVertexAttribfvRobustANGLE(const State &glState,
 
 CallCapture CaptureGetVertexAttribivRobustANGLE(const State &glState,
                                                 bool isCallValid,
-                                                GLuint index,
+                                                AttributeLocation indexPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
@@ -978,20 +978,20 @@ CallCapture CaptureGetVertexAttribivRobustANGLE(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetVertexAttribivRobustANGLE_length(glState, isCallValid, index, pname, bufSize, length,
-                                               params, &lengthParam);
+    CaptureGetVertexAttribivRobustANGLE_length(glState, isCallValid, indexPacked, pname, bufSize,
+                                               length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetVertexAttribivRobustANGLE_params(glState, isCallValid, index, pname, bufSize, length,
-                                               params, &paramsParam);
+    CaptureGetVertexAttribivRobustANGLE_params(glState, isCallValid, indexPacked, pname, bufSize,
+                                               length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetVertexAttribivRobustANGLE, std::move(paramBuffer));
@@ -999,7 +999,7 @@ CallCapture CaptureGetVertexAttribivRobustANGLE(const State &glState,
 
 CallCapture CaptureGetVertexAttribPointervRobustANGLE(const State &glState,
                                                       bool isCallValid,
-                                                      GLuint index,
+                                                      AttributeLocation indexPacked,
                                                       GLenum pname,
                                                       GLsizei bufSize,
                                                       GLsizei *length,
@@ -1007,20 +1007,20 @@ CallCapture CaptureGetVertexAttribPointervRobustANGLE(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetVertexAttribPointervRobustANGLE_length(glState, isCallValid, index, pname, bufSize,
-                                                     length, pointer, &lengthParam);
+    CaptureGetVertexAttribPointervRobustANGLE_length(glState, isCallValid, indexPacked, pname,
+                                                     bufSize, length, pointer, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture pointerParam("pointer", ParamType::TvoidPointerPointer);
     InitParamValue(ParamType::TvoidPointerPointer, pointer, &pointerParam.value);
-    CaptureGetVertexAttribPointervRobustANGLE_pointer(glState, isCallValid, index, pname, bufSize,
-                                                      length, pointer, &pointerParam);
+    CaptureGetVertexAttribPointervRobustANGLE_pointer(glState, isCallValid, indexPacked, pname,
+                                                      bufSize, length, pointer, &pointerParam);
     paramBuffer.addParam(std::move(pointerParam));
 
     return CallCapture(gl::EntryPoint::GetVertexAttribPointervRobustANGLE, std::move(paramBuffer));
@@ -1561,7 +1561,7 @@ CallCapture CaptureGetInternalformativRobustANGLE(const State &glState,
 
 CallCapture CaptureGetVertexAttribIivRobustANGLE(const State &glState,
                                                  bool isCallValid,
-                                                 GLuint index,
+                                                 AttributeLocation indexPacked,
                                                  GLenum pname,
                                                  GLsizei bufSize,
                                                  GLsizei *length,
@@ -1569,20 +1569,20 @@ CallCapture CaptureGetVertexAttribIivRobustANGLE(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetVertexAttribIivRobustANGLE_length(glState, isCallValid, index, pname, bufSize, length,
-                                                params, &lengthParam);
+    CaptureGetVertexAttribIivRobustANGLE_length(glState, isCallValid, indexPacked, pname, bufSize,
+                                                length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetVertexAttribIivRobustANGLE_params(glState, isCallValid, index, pname, bufSize, length,
-                                                params, &paramsParam);
+    CaptureGetVertexAttribIivRobustANGLE_params(glState, isCallValid, indexPacked, pname, bufSize,
+                                                length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetVertexAttribIivRobustANGLE, std::move(paramBuffer));
@@ -1590,7 +1590,7 @@ CallCapture CaptureGetVertexAttribIivRobustANGLE(const State &glState,
 
 CallCapture CaptureGetVertexAttribIuivRobustANGLE(const State &glState,
                                                   bool isCallValid,
-                                                  GLuint index,
+                                                  AttributeLocation indexPacked,
                                                   GLenum pname,
                                                   GLsizei bufSize,
                                                   GLsizei *length,
@@ -1598,19 +1598,19 @@ CallCapture CaptureGetVertexAttribIuivRobustANGLE(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetVertexAttribIuivRobustANGLE_length(glState, isCallValid, index, pname, bufSize,
+    CaptureGetVertexAttribIuivRobustANGLE_length(glState, isCallValid, indexPacked, pname, bufSize,
                                                  length, params, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetVertexAttribIuivRobustANGLE_params(glState, isCallValid, index, pname, bufSize,
+    CaptureGetVertexAttribIuivRobustANGLE_params(glState, isCallValid, indexPacked, pname, bufSize,
                                                  length, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
@@ -3487,12 +3487,12 @@ CallCapture CaptureDrawElementsInstancedEXT(const State &glState,
 
 CallCapture CaptureVertexAttribDivisorEXT(const State &glState,
                                           bool isCallValid,
-                                          GLuint index,
+                                          AttributeLocation indexPacked,
                                           GLuint divisor)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addValueParam("divisor", ParamType::TGLuint, divisor);
 
     return CallCapture(gl::EntryPoint::VertexAttribDivisorEXT, std::move(paramBuffer));

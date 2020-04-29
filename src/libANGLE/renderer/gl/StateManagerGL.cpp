@@ -2042,10 +2042,10 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                     (state.getAndResetDirtyCurrentValues() | mLocalDirtyCurrentValues);
                 mLocalDirtyCurrentValues.reset();
 
-                for (auto attribIndex : combinedMask)
+                for (size_t attribIndex : combinedMask)
                 {
-                    setAttributeCurrentData(attribIndex,
-                                            state.getVertexAttribCurrentValue(attribIndex));
+                    setAttributeCurrentData(attribIndex, state.getVertexAttribCurrentValue(
+                                                             {static_cast<uint32_t>(attribIndex)}));
                 }
                 break;
             }

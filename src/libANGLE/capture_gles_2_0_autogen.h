@@ -179,7 +179,7 @@ angle::CallCapture CaptureDetachShader(const State &glState,
 angle::CallCapture CaptureDisable(const State &glState, bool isCallValid, GLenum cap);
 angle::CallCapture CaptureDisableVertexAttribArray(const State &glState,
                                                    bool isCallValid,
-                                                   GLuint index);
+                                                   AttributeLocation indexPacked);
 angle::CallCapture CaptureDrawArrays(const State &glState,
                                      bool isCallValid,
                                      PrimitiveMode modePacked,
@@ -194,7 +194,7 @@ angle::CallCapture CaptureDrawElements(const State &glState,
 angle::CallCapture CaptureEnable(const State &glState, bool isCallValid, GLenum cap);
 angle::CallCapture CaptureEnableVertexAttribArray(const State &glState,
                                                   bool isCallValid,
-                                                  GLuint index);
+                                                  AttributeLocation indexPacked);
 angle::CallCapture CaptureFinish(const State &glState, bool isCallValid);
 angle::CallCapture CaptureFlush(const State &glState, bool isCallValid);
 angle::CallCapture CaptureFramebufferRenderbuffer(const State &glState,
@@ -353,17 +353,17 @@ angle::CallCapture CaptureGetUniformiv(const State &glState,
                                        GLint *params);
 angle::CallCapture CaptureGetVertexAttribPointerv(const State &glState,
                                                   bool isCallValid,
-                                                  GLuint index,
+                                                  AttributeLocation indexPacked,
                                                   GLenum pname,
                                                   void **pointer);
 angle::CallCapture CaptureGetVertexAttribfv(const State &glState,
                                             bool isCallValid,
-                                            GLuint index,
+                                            AttributeLocation indexPacked,
                                             GLenum pname,
                                             GLfloat *params);
 angle::CallCapture CaptureGetVertexAttribiv(const State &glState,
                                             bool isCallValid,
-                                            GLuint index,
+                                            AttributeLocation indexPacked,
                                             GLenum pname,
                                             GLint *params);
 angle::CallCapture CaptureHint(const State &glState, bool isCallValid, GLenum target, GLenum mode);
@@ -625,45 +625,45 @@ angle::CallCapture CaptureValidateProgram(const State &glState,
                                           ShaderProgramID programPacked);
 angle::CallCapture CaptureVertexAttrib1f(const State &glState,
                                          bool isCallValid,
-                                         GLuint index,
+                                         AttributeLocation indexPacked,
                                          GLfloat x);
 angle::CallCapture CaptureVertexAttrib1fv(const State &glState,
                                           bool isCallValid,
-                                          GLuint index,
+                                          AttributeLocation indexPacked,
                                           const GLfloat *v);
 angle::CallCapture CaptureVertexAttrib2f(const State &glState,
                                          bool isCallValid,
-                                         GLuint index,
+                                         AttributeLocation indexPacked,
                                          GLfloat x,
                                          GLfloat y);
 angle::CallCapture CaptureVertexAttrib2fv(const State &glState,
                                           bool isCallValid,
-                                          GLuint index,
+                                          AttributeLocation indexPacked,
                                           const GLfloat *v);
 angle::CallCapture CaptureVertexAttrib3f(const State &glState,
                                          bool isCallValid,
-                                         GLuint index,
+                                         AttributeLocation indexPacked,
                                          GLfloat x,
                                          GLfloat y,
                                          GLfloat z);
 angle::CallCapture CaptureVertexAttrib3fv(const State &glState,
                                           bool isCallValid,
-                                          GLuint index,
+                                          AttributeLocation indexPacked,
                                           const GLfloat *v);
 angle::CallCapture CaptureVertexAttrib4f(const State &glState,
                                          bool isCallValid,
-                                         GLuint index,
+                                         AttributeLocation indexPacked,
                                          GLfloat x,
                                          GLfloat y,
                                          GLfloat z,
                                          GLfloat w);
 angle::CallCapture CaptureVertexAttrib4fv(const State &glState,
                                           bool isCallValid,
-                                          GLuint index,
+                                          AttributeLocation indexPacked,
                                           const GLfloat *v);
 angle::CallCapture CaptureVertexAttribPointer(const State &glState,
                                               bool isCallValid,
-                                              GLuint index,
+                                              AttributeLocation indexPacked,
                                               GLint size,
                                               VertexAttribType typePacked,
                                               GLboolean normalized,
@@ -1000,19 +1000,19 @@ void CaptureGetUniformiv_params(const State &glState,
                                 angle::ParamCapture *paramCapture);
 void CaptureGetVertexAttribPointerv_pointer(const State &glState,
                                             bool isCallValid,
-                                            GLuint index,
+                                            AttributeLocation indexPacked,
                                             GLenum pname,
                                             void **pointer,
                                             angle::ParamCapture *paramCapture);
 void CaptureGetVertexAttribfv_params(const State &glState,
                                      bool isCallValid,
-                                     GLuint index,
+                                     AttributeLocation indexPacked,
                                      GLenum pname,
                                      GLfloat *params,
                                      angle::ParamCapture *paramCapture);
 void CaptureGetVertexAttribiv_params(const State &glState,
                                      bool isCallValid,
-                                     GLuint index,
+                                     AttributeLocation indexPacked,
                                      GLenum pname,
                                      GLint *params,
                                      angle::ParamCapture *paramCapture);
@@ -1163,27 +1163,27 @@ void CaptureUniformMatrix4fv_value(const State &glState,
                                    angle::ParamCapture *paramCapture);
 void CaptureVertexAttrib1fv_v(const State &glState,
                               bool isCallValid,
-                              GLuint index,
+                              AttributeLocation indexPacked,
                               const GLfloat *v,
                               angle::ParamCapture *paramCapture);
 void CaptureVertexAttrib2fv_v(const State &glState,
                               bool isCallValid,
-                              GLuint index,
+                              AttributeLocation indexPacked,
                               const GLfloat *v,
                               angle::ParamCapture *paramCapture);
 void CaptureVertexAttrib3fv_v(const State &glState,
                               bool isCallValid,
-                              GLuint index,
+                              AttributeLocation indexPacked,
                               const GLfloat *v,
                               angle::ParamCapture *paramCapture);
 void CaptureVertexAttrib4fv_v(const State &glState,
                               bool isCallValid,
-                              GLuint index,
+                              AttributeLocation indexPacked,
                               const GLfloat *v,
                               angle::ParamCapture *paramCapture);
 void CaptureVertexAttribPointer_pointer(const State &glState,
                                         bool isCallValid,
-                                        GLuint index,
+                                        AttributeLocation indexPacked,
                                         GLint size,
                                         VertexAttribType typePacked,
                                         GLboolean normalized,

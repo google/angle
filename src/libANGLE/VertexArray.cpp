@@ -60,12 +60,12 @@ AttributesMask VertexArrayState::getBindingToAttributesMask(GLuint bindingIndex)
 
 // Set an attribute using a new binding.
 void VertexArrayState::setAttribBinding(const Context *context,
-                                        size_t attribIndex,
+                                        AttributeLocation attribIndex,
                                         GLuint newBindingIndex)
 {
-    ASSERT(attribIndex < MAX_VERTEX_ATTRIBS && newBindingIndex < MAX_VERTEX_ATTRIB_BINDINGS);
+    ASSERT(attribIndex.value < MAX_VERTEX_ATTRIBS && newBindingIndex < MAX_VERTEX_ATTRIB_BINDINGS);
 
-    VertexAttribute &attrib = mVertexAttributes[attribIndex];
+    VertexAttribute &attrib = mVertexAttributes[attribIndex.value];
 
     // Update the binding-attribute map.
     const GLuint oldBindingIndex = attrib.bindingIndex;
@@ -74,11 +74,11 @@ void VertexArrayState::setAttribBinding(const Context *context,
     VertexBinding &oldBinding = mVertexBindings[oldBindingIndex];
     VertexBinding &newBinding = mVertexBindings[newBindingIndex];
 
-    ASSERT(oldBinding.getBoundAttributesMask().test(attribIndex) &&
-           !newBinding.getBoundAttributesMask().test(attribIndex));
+    ASSERT(oldBinding.getBoundAttributesMask().test(attribIndex.value) &&
+           !newBinding.getBoundAttributesMask().test(attribIndex.value));
 
-    oldBinding.resetBoundAttribute(attribIndex);
-    newBinding.setBoundAttribute(attribIndex);
+    oldBinding.resetBoundAttribute(attribIndex.value);
+    newBinding.setBoundAttribute(attribIndex.value);
 
     // Set the attribute using the new binding.
     attrib.bindingIndex = newBindingIndex;
@@ -89,8 +89,8 @@ void VertexArrayState::setAttribBinding(const Context *context,
     }
 
     bool isMapped = newBinding.getBuffer().get() && newBinding.getBuffer()->isMapped();
-    mCachedMappedArrayBuffers.set(attribIndex, isMapped);
-    mCachedEnabledMappedArrayBuffers.set(attribIndex, isMapped && attrib.enabled);
+    mCachedMappedArrayBuffers.set(attribIndex.value, isMapped);
+    mCachedEnabledMappedArrayBuffers.set(attribIndex.value, isMapped && attrib.enabled);
 }
 
 // VertexArray implementation.
@@ -172,7 +172,7 @@ bool VertexArray::detachBuffer(const Context *context, BufferID bufferID)
                 // The redundant uint32_t cast here is required to avoid a warning on MSVC.
                 ASSERT(binding.getBoundAttributesMask() ==
                        AttributesMask(static_cast<uint32_t>(1 << bindingIndex)));
-                setDirtyAttribBit(bindingIndex, DIRTY_ATTRIB_POINTER);
+                setDirtyAttribBit({bindingIndex}, DIRTY_ATTRIB_POINTER);
             }
 
             anyBufferDetached = true;
@@ -192,10 +192,10 @@ bool VertexArray::detachBuffer(const Context *context, BufferID bufferID)
     return anyBufferDetached;
 }
 
-const VertexAttribute &VertexArray::getVertexAttribute(size_t attribIndex) const
+const VertexAttribute &VertexArray::getVertexAttribute(AttributeLocation attribIndex) const
 {
-    ASSERT(attribIndex < getMaxAttribs());
-    return mState.mVertexAttributes[attribIndex];
+    ASSERT(attribIndex.value < getMaxAttribs());
+    return mState.mVertexAttributes[attribIndex.value];
 }
 
 const VertexBinding &VertexArray::getVertexBinding(size_t bindingIndex) const
@@ -212,11 +212,11 @@ size_t VertexArray::GetVertexIndexFromDirtyBit(size_t dirtyBit)
     return (dirtyBit - DIRTY_BIT_ATTRIB_0) % gl::MAX_VERTEX_ATTRIBS;
 }
 
-ANGLE_INLINE void VertexArray::setDirtyAttribBit(size_t attribIndex,
+ANGLE_INLINE void VertexArray::setDirtyAttribBit(AttributeLocation attribIndex,
                                                  DirtyAttribBitType dirtyAttribBit)
 {
-    mDirtyBits.set(DIRTY_BIT_ATTRIB_0 + attribIndex);
-    mDirtyAttribBits[attribIndex].set(dirtyAttribBit);
+    mDirtyBits.set(DIRTY_BIT_ATTRIB_0 + attribIndex.value);
+    mDirtyAttribBits[attribIndex.value].set(dirtyAttribBit);
 }
 
 ANGLE_INLINE void VertexArray::setDirtyBindingBit(size_t bindingIndex,
@@ -341,12 +341,12 @@ void VertexArray::bindVertexBuffer(const Context *context,
 }
 
 void VertexArray::setVertexAttribBinding(const Context *context,
-                                         size_t attribIndex,
+                                         AttributeLocation attribIndex,
                                          GLuint bindingIndex)
 {
-    ASSERT(attribIndex < getMaxAttribs() && bindingIndex < getMaxBindings());
+    ASSERT(attribIndex.value < getMaxAttribs() && bindingIndex < getMaxBindings());
 
-    if (mState.mVertexAttributes[attribIndex].bindingIndex != bindingIndex)
+    if (mState.mVertexAttributes[attribIndex.value].bindingIndex != bindingIndex)
     {
         // In ES 3.0 contexts, the binding cannot change, hence the code below is unreachable.
         ASSERT(context->getClientVersion() >= ES_3_1);
@@ -357,7 +357,7 @@ void VertexArray::setVertexAttribBinding(const Context *context,
 
         // Update client attribs mask.
         bool hasBuffer = mState.mVertexBindings[bindingIndex].getBuffer().get() != nullptr;
-        mState.mClientMemoryAttribsMask.set(attribIndex, !hasBuffer);
+        mState.mClientMemoryAttribsMask.set(attribIndex.value, !hasBuffer);
     }
 }
 
@@ -396,17 +396,17 @@ ANGLE_INLINE bool VertexArray::setVertexAttribFormatImpl(VertexAttribute *attrib
     return false;
 }
 
-void VertexArray::setVertexAttribFormat(size_t attribIndex,
+void VertexArray::setVertexAttribFormat(AttributeLocation attribIndex,
                                         GLint size,
                                         VertexAttribType type,
                                         bool normalized,
                                         bool pureInteger,
                                         GLuint relativeOffset)
 {
-    VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
+    VertexAttribute &attrib = mState.mVertexAttributes[attribIndex.value];
 
     ComponentType componentType = GetVertexAttributeComponentType(pureInteger, type);
-    SetComponentTypeMask(componentType, attribIndex, &mState.mVertexAttributesTypeMask);
+    SetComponentTypeMask(componentType, attribIndex.value, &mState.mVertexAttributesTypeMask);
 
     if (setVertexAttribFormatImpl(&attrib, size, type, normalized, pureInteger, relativeOffset))
     {
@@ -416,21 +416,23 @@ void VertexArray::setVertexAttribFormat(size_t attribIndex,
     attrib.updateCachedElementLimit(mState.mVertexBindings[attrib.bindingIndex]);
 }
 
-void VertexArray::setVertexAttribDivisor(const Context *context, size_t attribIndex, GLuint divisor)
+void VertexArray::setVertexAttribDivisor(const Context *context,
+                                         AttributeLocation attribIndex,
+                                         GLuint divisor)
 {
-    ASSERT(attribIndex < getMaxAttribs());
+    ASSERT(attribIndex.value < getMaxAttribs());
 
-    setVertexAttribBinding(context, attribIndex, static_cast<GLuint>(attribIndex));
-    setVertexBindingDivisor(attribIndex, divisor);
+    setVertexAttribBinding(context, attribIndex, static_cast<GLuint>(attribIndex.value));
+    setVertexBindingDivisor(attribIndex.value, divisor);
 }
 
-void VertexArray::enableAttribute(size_t attribIndex, bool enabledState)
+void VertexArray::enableAttribute(AttributeLocation attribIndex, bool enabledState)
 {
-    ASSERT(attribIndex < getMaxAttribs());
+    ASSERT(attribIndex.value < getMaxAttribs());
 
-    VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
+    VertexAttribute &attrib = mState.mVertexAttributes[attribIndex.value];
 
-    if (mState.mEnabledAttributesMask.test(attribIndex) == enabledState)
+    if (mState.mEnabledAttributesMask.test(attribIndex.value) == enabledState)
     {
         return;
     }
@@ -440,7 +442,7 @@ void VertexArray::enableAttribute(size_t attribIndex, bool enabledState)
     setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_ENABLED);
 
     // Update state cache
-    mState.mEnabledAttributesMask.set(attribIndex, enabledState);
+    mState.mEnabledAttributesMask.set(attribIndex.value, enabledState);
     mState.mCachedEnabledMappedArrayBuffers =
         mState.mCachedMappedArrayBuffers & mState.mEnabledAttributesMask;
 }
@@ -448,7 +450,7 @@ void VertexArray::enableAttribute(size_t attribIndex, bool enabledState)
 ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context,
                                                           ComponentType componentType,
                                                           bool pureInteger,
-                                                          size_t attribIndex,
+                                                          AttributeLocation attribIndex,
                                                           Buffer *boundBuffer,
                                                           GLint size,
                                                           VertexAttribType type,
@@ -456,17 +458,17 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
                                                           GLsizei stride,
                                                           const void *pointer)
 {
-    ASSERT(attribIndex < getMaxAttribs());
+    ASSERT(attribIndex.value < getMaxAttribs());
 
-    VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
+    VertexAttribute &attrib = mState.mVertexAttributes[attribIndex.value];
 
-    SetComponentTypeMask(componentType, attribIndex, &mState.mVertexAttributesTypeMask);
+    SetComponentTypeMask(componentType, attribIndex.value, &mState.mVertexAttributesTypeMask);
 
     bool attribDirty = setVertexAttribFormatImpl(&attrib, size, type, normalized, pureInteger, 0);
 
-    if (attrib.bindingIndex != attribIndex)
+    if (attrib.bindingIndex != static_cast<GLuint>(attribIndex.value))
     {
-        setVertexAttribBinding(context, attribIndex, static_cast<GLuint>(attribIndex));
+        setVertexAttribBinding(context, attribIndex, static_cast<GLuint>(attribIndex.value));
     }
 
     GLsizei effectiveStride =
@@ -480,7 +482,7 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
 
     // If we switch from an array buffer to a client pointer(or vice-versa), we set the whole
     // attribute dirty. This notifies the Vulkan back-end to update all its caches.
-    const VertexBinding &binding = mState.mVertexBindings[attribIndex];
+    const VertexBinding &binding = mState.mVertexBindings[attribIndex.value];
     if ((boundBuffer == nullptr) != (binding.getBuffer().get() == nullptr))
     {
         attribDirty = true;
@@ -491,7 +493,7 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
     attrib.pointer  = pointer;
     GLintptr offset = boundBuffer ? reinterpret_cast<GLintptr>(pointer) : 0;
     const bool bufferDirty =
-        bindVertexBufferImpl(context, attribIndex, boundBuffer, offset, effectiveStride);
+        bindVertexBufferImpl(context, attribIndex.value, boundBuffer, offset, effectiveStride);
 
     if (attribDirty)
     {
@@ -502,12 +504,12 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
         setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER_BUFFER);
     }
 
-    mState.mNullPointerClientMemoryAttribsMask.set(attribIndex,
+    mState.mNullPointerClientMemoryAttribsMask.set(attribIndex.value,
                                                    boundBuffer == nullptr && pointer == nullptr);
 }
 
 void VertexArray::setVertexAttribPointer(const Context *context,
-                                         size_t attribIndex,
+                                         AttributeLocation attribIndex,
                                          gl::Buffer *boundBuffer,
                                          GLint size,
                                          VertexAttribType type,
@@ -520,7 +522,7 @@ void VertexArray::setVertexAttribPointer(const Context *context,
 }
 
 void VertexArray::setVertexAttribIPointer(const Context *context,
-                                          size_t attribIndex,
+                                          AttributeLocation attribIndex,
                                           gl::Buffer *boundBuffer,
                                           GLint size,
                                           VertexAttribType type,

@@ -89,8 +89,8 @@
                            const GLchar *const *uniformNames, GLuint *uniformIndices);             \
     void getUniformuiv(ShaderProgramID programPacked, UniformLocation locationPacked,              \
                        GLuint *params);                                                            \
-    void getVertexAttribIiv(GLuint index, GLenum pname, GLint *params);                            \
-    void getVertexAttribIuiv(GLuint index, GLenum pname, GLuint *params);                          \
+    void getVertexAttribIiv(AttributeLocation indexPacked, GLenum pname, GLint *params);           \
+    void getVertexAttribIuiv(AttributeLocation indexPacked, GLenum pname, GLuint *params);         \
     void invalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum *attachments);  \
     void invalidateSubFramebuffer(GLenum target, GLsizei numAttachments,                           \
                                   const GLenum *attachments, GLint x, GLint y, GLsizei width,      \
@@ -149,13 +149,13 @@
     void uniformMatrix4x3fv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,    \
                             const GLfloat *value);                                                 \
     GLboolean unmapBuffer(BufferBinding targetPacked);                                             \
-    void vertexAttribDivisor(GLuint index, GLuint divisor);                                        \
-    void vertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w);                        \
-    void vertexAttribI4iv(GLuint index, const GLint *v);                                           \
-    void vertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w);                   \
-    void vertexAttribI4uiv(GLuint index, const GLuint *v);                                         \
-    void vertexAttribIPointer(GLuint index, GLint size, VertexAttribType typePacked,               \
-                              GLsizei stride, const void *pointer);                                \
+    void vertexAttribDivisor(AttributeLocation indexPacked, GLuint divisor);                       \
+    void vertexAttribI4i(AttributeLocation indexPacked, GLint x, GLint y, GLint z, GLint w);       \
+    void vertexAttribI4iv(AttributeLocation indexPacked, const GLint *v);                          \
+    void vertexAttribI4ui(AttributeLocation indexPacked, GLuint x, GLuint y, GLuint z, GLuint w);  \
+    void vertexAttribI4uiv(AttributeLocation indexPacked, const GLuint *v);                        \
+    void vertexAttribIPointer(AttributeLocation indexPacked, GLint size,                           \
+                              VertexAttribType typePacked, GLsizei stride, const void *pointer);   \
     void waitSync(GLsync sync, GLbitfield flags, GLuint64 timeout);
 
 #endif  // ANGLE_CONTEXT_API_3_0_AUTOGEN_H_

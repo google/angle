@@ -37,8 +37,8 @@ class GLES1Renderer final : angle::NonCopyable
 
     angle::Result prepareForDraw(PrimitiveMode mode, Context *context, State *glState);
 
-    static int VertexArrayIndex(ClientVertexArrayType type, const GLES1State &gles1);
-    static int TexCoordArrayIndex(unsigned int unit);
+    static AttributeLocation VertexArrayIndex(ClientVertexArrayType type, const GLES1State &gles1);
+    static AttributeLocation TexCoordArrayIndex(unsigned int unit);
 
     void drawTexture(Context *context,
                      State *glState,
@@ -66,7 +66,7 @@ class GLES1Renderer final : angle::NonCopyable
                               State *glState,
                               ShaderProgramID vshader,
                               ShaderProgramID fshader,
-                              const std::unordered_map<GLint, std::string> &attribLocs,
+                              const std::unordered_map<uint32_t, std::string> &attribLocs,
                               ShaderProgramID *programOut);
     angle::Result initializeRendererProgram(Context *context, State *glState);
 
@@ -106,12 +106,6 @@ class GLES1Renderer final : angle::NonCopyable
 
     static constexpr int kLightCount     = 8;
     static constexpr int kClipPlaneCount = 6;
-
-    static constexpr int kVertexAttribIndex           = 0;
-    static constexpr int kNormalAttribIndex           = 1;
-    static constexpr int kColorAttribIndex            = 2;
-    static constexpr int kPointSizeAttribIndex        = 3;
-    static constexpr int kTextureCoordAttribIndexBase = 4;
 
     bool mRendererProgramInitialized;
     ShaderProgramManager *mShaderPrograms;

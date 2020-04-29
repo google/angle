@@ -1809,8 +1809,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
 
 void Context::getIntegerVertexAttribImpl(GLenum pname, GLenum attribpname, GLint *params) const
 {
-    getVertexAttribivImpl(static_cast<GLuint>(vertexArrayIndex(ParamToVertexArrayType(pname))),
-                          attribpname, params);
+    getVertexAttribivImpl(vertexArrayIndex(ParamToVertexArrayType(pname)), attribpname, params);
 }
 
 void Context::getInteger64vImpl(GLenum pname, GLint64 *params) const
@@ -2689,7 +2688,7 @@ void Context::detachProgramPipeline(ProgramPipelineID pipeline)
     mState.detachProgramPipeline(this, pipeline);
 }
 
-void Context::vertexAttribDivisor(GLuint index, GLuint divisor)
+void Context::vertexAttribDivisor(AttributeLocation index, GLuint divisor)
 {
     mState.setVertexAttribDivisor(this, index, divisor);
     mStateCache.onVertexArrayStateChange(this);
@@ -4733,7 +4732,7 @@ void Context::disablei(GLenum target, GLuint index)
     mStateCache.onContextCapChange(this);
 }
 
-void Context::disableVertexAttribArray(GLuint index)
+void Context::disableVertexAttribArray(AttributeLocation index)
 {
     mState.setEnableVertexAttribArray(index, false);
     mStateCache.onVertexArrayStateChange(this);
@@ -4751,7 +4750,7 @@ void Context::enablei(GLenum target, GLuint index)
     mStateCache.onContextCapChange(this);
 }
 
-void Context::enableVertexAttribArray(GLuint index)
+void Context::enableVertexAttribArray(AttributeLocation index)
 {
     mState.setEnableVertexAttribArray(index, true);
     mStateCache.onVertexArrayStateChange(this);
@@ -4917,62 +4916,62 @@ void Context::stencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenum z
     }
 }
 
-void Context::vertexAttrib1f(GLuint index, GLfloat x)
+void Context::vertexAttrib1f(AttributeLocation index, GLfloat x)
 {
     GLfloat vals[4] = {x, 0, 0, 1};
     mState.setVertexAttribf(index, vals);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttrib1fv(GLuint index, const GLfloat *values)
+void Context::vertexAttrib1fv(AttributeLocation index, const GLfloat *values)
 {
     GLfloat vals[4] = {values[0], 0, 0, 1};
     mState.setVertexAttribf(index, vals);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttrib2f(GLuint index, GLfloat x, GLfloat y)
+void Context::vertexAttrib2f(AttributeLocation index, GLfloat x, GLfloat y)
 {
     GLfloat vals[4] = {x, y, 0, 1};
     mState.setVertexAttribf(index, vals);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttrib2fv(GLuint index, const GLfloat *values)
+void Context::vertexAttrib2fv(AttributeLocation index, const GLfloat *values)
 {
     GLfloat vals[4] = {values[0], values[1], 0, 1};
     mState.setVertexAttribf(index, vals);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z)
+void Context::vertexAttrib3f(AttributeLocation index, GLfloat x, GLfloat y, GLfloat z)
 {
     GLfloat vals[4] = {x, y, z, 1};
     mState.setVertexAttribf(index, vals);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttrib3fv(GLuint index, const GLfloat *values)
+void Context::vertexAttrib3fv(AttributeLocation index, const GLfloat *values)
 {
     GLfloat vals[4] = {values[0], values[1], values[2], 1};
     mState.setVertexAttribf(index, vals);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+void Context::vertexAttrib4f(AttributeLocation index, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
     GLfloat vals[4] = {x, y, z, w};
     mState.setVertexAttribf(index, vals);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttrib4fv(GLuint index, const GLfloat *values)
+void Context::vertexAttrib4fv(AttributeLocation index, const GLfloat *values)
 {
     mState.setVertexAttribf(index, values);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttribPointer(GLuint index,
+void Context::vertexAttribPointer(AttributeLocation index,
                                   GLint size,
                                   VertexAttribType type,
                                   GLboolean normalized,
@@ -4984,7 +4983,7 @@ void Context::vertexAttribPointer(GLuint index,
     mStateCache.onVertexArrayStateChange(this);
 }
 
-void Context::vertexAttribFormat(GLuint attribIndex,
+void Context::vertexAttribFormat(AttributeLocation attribIndex,
                                  GLint size,
                                  VertexAttribType type,
                                  GLboolean normalized,
@@ -4995,7 +4994,7 @@ void Context::vertexAttribFormat(GLuint attribIndex,
     mStateCache.onVertexArrayFormatChange(this);
 }
 
-void Context::vertexAttribIFormat(GLuint attribIndex,
+void Context::vertexAttribIFormat(AttributeLocation attribIndex,
                                   GLint size,
                                   VertexAttribType type,
                                   GLuint relativeOffset)
@@ -5004,7 +5003,7 @@ void Context::vertexAttribIFormat(GLuint attribIndex,
     mStateCache.onVertexArrayFormatChange(this);
 }
 
-void Context::vertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
+void Context::vertexAttribBinding(AttributeLocation attribIndex, GLuint bindingIndex)
 {
     mState.setVertexAttribBinding(this, attribIndex, bindingIndex);
     mStateCache.onVertexArrayStateChange(this);
@@ -5021,7 +5020,7 @@ void Context::viewport(GLint x, GLint y, GLsizei width, GLsizei height)
     mState.setViewportParams(x, y, width, height);
 }
 
-void Context::vertexAttribIPointer(GLuint index,
+void Context::vertexAttribIPointer(AttributeLocation index,
                                    GLint size,
                                    VertexAttribType type,
                                    GLsizei stride,
@@ -5032,33 +5031,33 @@ void Context::vertexAttribIPointer(GLuint index,
     mStateCache.onVertexArrayStateChange(this);
 }
 
-void Context::vertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w)
+void Context::vertexAttribI4i(AttributeLocation index, GLint x, GLint y, GLint z, GLint w)
 {
     GLint vals[4] = {x, y, z, w};
     mState.setVertexAttribi(index, vals);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
+void Context::vertexAttribI4ui(AttributeLocation index, GLuint x, GLuint y, GLuint z, GLuint w)
 {
     GLuint vals[4] = {x, y, z, w};
     mState.setVertexAttribu(index, vals);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttribI4iv(GLuint index, const GLint *v)
+void Context::vertexAttribI4iv(AttributeLocation index, const GLint *v)
 {
     mState.setVertexAttribi(index, v);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::vertexAttribI4uiv(GLuint index, const GLuint *v)
+void Context::vertexAttribI4uiv(AttributeLocation index, const GLuint *v)
 {
     mState.setVertexAttribu(index, v);
     mStateCache.onDefaultVertexAttributeChange(this);
 }
 
-void Context::getVertexAttribivImpl(GLuint index, GLenum pname, GLint *params) const
+void Context::getVertexAttribivImpl(AttributeLocation index, GLenum pname, GLint *params) const
 {
     const VertexAttribCurrentValueData &currentValues =
         getState().getVertexAttribCurrentValue(index);
@@ -5067,12 +5066,12 @@ void Context::getVertexAttribivImpl(GLuint index, GLenum pname, GLint *params) c
                         currentValues, pname, params);
 }
 
-void Context::getVertexAttribiv(GLuint index, GLenum pname, GLint *params)
+void Context::getVertexAttribiv(AttributeLocation index, GLenum pname, GLint *params)
 {
     return getVertexAttribivImpl(index, pname, params);
 }
 
-void Context::getVertexAttribivRobust(GLuint index,
+void Context::getVertexAttribivRobust(AttributeLocation index,
                                       GLenum pname,
                                       GLsizei bufSize,
                                       GLsizei *length,
@@ -5081,7 +5080,7 @@ void Context::getVertexAttribivRobust(GLuint index,
     getVertexAttribiv(index, pname, params);
 }
 
-void Context::getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
+void Context::getVertexAttribfv(AttributeLocation index, GLenum pname, GLfloat *params)
 {
     const VertexAttribCurrentValueData &currentValues =
         getState().getVertexAttribCurrentValue(index);
@@ -5090,7 +5089,7 @@ void Context::getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
                         currentValues, pname, params);
 }
 
-void Context::getVertexAttribfvRobust(GLuint index,
+void Context::getVertexAttribfvRobust(AttributeLocation index,
                                       GLenum pname,
                                       GLsizei bufSize,
                                       GLsizei *length,
@@ -5099,7 +5098,7 @@ void Context::getVertexAttribfvRobust(GLuint index,
     getVertexAttribfv(index, pname, params);
 }
 
-void Context::getVertexAttribIiv(GLuint index, GLenum pname, GLint *params)
+void Context::getVertexAttribIiv(AttributeLocation index, GLenum pname, GLint *params)
 {
     const VertexAttribCurrentValueData &currentValues =
         getState().getVertexAttribCurrentValue(index);
@@ -5108,7 +5107,7 @@ void Context::getVertexAttribIiv(GLuint index, GLenum pname, GLint *params)
                          currentValues, pname, params);
 }
 
-void Context::getVertexAttribIivRobust(GLuint index,
+void Context::getVertexAttribIivRobust(AttributeLocation index,
                                        GLenum pname,
                                        GLsizei bufSize,
                                        GLsizei *length,
@@ -5117,7 +5116,7 @@ void Context::getVertexAttribIivRobust(GLuint index,
     getVertexAttribIiv(index, pname, params);
 }
 
-void Context::getVertexAttribIuiv(GLuint index, GLenum pname, GLuint *params)
+void Context::getVertexAttribIuiv(AttributeLocation index, GLenum pname, GLuint *params)
 {
     const VertexAttribCurrentValueData &currentValues =
         getState().getVertexAttribCurrentValue(index);
@@ -5126,7 +5125,7 @@ void Context::getVertexAttribIuiv(GLuint index, GLenum pname, GLuint *params)
                           currentValues, pname, params);
 }
 
-void Context::getVertexAttribIuivRobust(GLuint index,
+void Context::getVertexAttribIuivRobust(AttributeLocation index,
                                         GLenum pname,
                                         GLsizei bufSize,
                                         GLsizei *length,
@@ -5135,13 +5134,13 @@ void Context::getVertexAttribIuivRobust(GLuint index,
     getVertexAttribIuiv(index, pname, params);
 }
 
-void Context::getVertexAttribPointerv(GLuint index, GLenum pname, void **pointer)
+void Context::getVertexAttribPointerv(AttributeLocation index, GLenum pname, void **pointer)
 {
     const VertexAttribute &attrib = getState().getVertexArray()->getVertexAttribute(index);
     QueryVertexAttribPointerv(attrib, pname, pointer);
 }
 
-void Context::getVertexAttribPointervRobust(GLuint index,
+void Context::getVertexAttribPointervRobust(AttributeLocation index,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             GLsizei *length,
@@ -5809,7 +5808,7 @@ void Context::drawArraysInstancedBaseInstance(PrimitiveMode mode,
     ResetBaseVertexBaseInstance resetUniforms(programObject, false, hasBaseInstance);
 
     // The input gl_InstanceID does not follow the baseinstance. gl_InstanceID always falls on
-    // the half-open range [0, instancecount​). No need to set other stuff. Except for Vulkan.
+    // the half-open range [0, instanceCount). No need to set other stuff. Except for Vulkan.
 
     ANGLE_CONTEXT_TRY(mImplementation->drawArraysInstancedBaseInstance(
         this, mode, first, count, instanceCount, baseInstance));
@@ -6140,7 +6139,7 @@ GLint Context::getAttribLocation(ShaderProgramID program, const GLchar *name)
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    return programObject->getAttributeLocation(name);
+    return programObject->getAttributeLocation(name).value;
 }
 
 void Context::getBooleanv(GLenum pname, GLboolean *params)

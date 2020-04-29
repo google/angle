@@ -22,6 +22,10 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TAlphaTestFunc>(os, call,
                                                              param.value.AlphaTestFuncVal);
             break;
+        case ParamType::TAttributeLocation:
+            WriteParamValueReplay<ParamType::TAttributeLocation>(os, call,
+                                                                 param.value.AttributeLocationVal);
+            break;
         case ParamType::TBufferBinding:
             WriteParamValueReplay<ParamType::TBufferBinding>(os, call,
                                                              param.value.BufferBindingVal);
@@ -474,6 +478,8 @@ const char *ParamTypeToString(ParamType paramType)
     switch (paramType)
     {
         case ParamType::TAlphaTestFunc:
+            return "GLenum";
+        case ParamType::TAttributeLocation:
             return "GLenum";
         case ParamType::TBufferBinding:
             return "GLenum";

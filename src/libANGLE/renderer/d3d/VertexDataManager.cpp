@@ -258,7 +258,8 @@ angle::Result VertexDataManager::prepareVertexData(
 
     translatedAttribs->clear();
 
-    for (size_t attribIndex = 0; attribIndex < vertexAttributes.size(); ++attribIndex)
+    for (uint32_t attribIndex = 0; attribIndex < static_cast<uint32_t>(vertexAttributes.size());
+         ++attribIndex)
     {
         // Skip attrib locations the program doesn't use.
         if (!executable->isAttribLocationActive(attribIndex))
@@ -271,7 +272,7 @@ angle::Result VertexDataManager::prepareVertexData(
         translatedAttribs->resize(attribIndex + 1);
 
         TranslatedAttribute *translated = &(*translatedAttribs)[attribIndex];
-        auto currentValueData           = state.getVertexAttribCurrentValue(attribIndex);
+        auto currentValueData           = state.getVertexAttribCurrentValue({attribIndex});
 
         // Record the attribute now
         translated->active           = true;

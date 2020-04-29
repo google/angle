@@ -421,13 +421,13 @@ class State : angle::NonCopyable
     angle::Result detachBuffer(Context *context, const Buffer *buffer);
 
     // Vertex attrib manipulation
-    void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);
-    void setVertexAttribf(GLuint index, const GLfloat values[4]);
-    void setVertexAttribu(GLuint index, const GLuint values[4]);
-    void setVertexAttribi(GLuint index, const GLint values[4]);
+    void setEnableVertexAttribArray(AttributeLocation attribNum, bool enabled);
+    void setVertexAttribf(AttributeLocation index, const GLfloat values[4]);
+    void setVertexAttribu(AttributeLocation index, const GLuint values[4]);
+    void setVertexAttribi(AttributeLocation index, const GLint values[4]);
 
     ANGLE_INLINE void setVertexAttribPointer(const Context *context,
-                                             unsigned int attribNum,
+                                             AttributeLocation attribNum,
                                              Buffer *boundBuffer,
                                              GLint size,
                                              VertexAttribType type,
@@ -441,7 +441,7 @@ class State : angle::NonCopyable
     }
 
     ANGLE_INLINE void setVertexAttribIPointer(const Context *context,
-                                              unsigned int attribNum,
+                                              AttributeLocation attribNum,
                                               Buffer *boundBuffer,
                                               GLint size,
                                               VertexAttribType type,
@@ -453,11 +453,12 @@ class State : angle::NonCopyable
         mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
     }
 
-    void setVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor);
-    const VertexAttribCurrentValueData &getVertexAttribCurrentValue(size_t attribNum) const
+    void setVertexAttribDivisor(const Context *context, AttributeLocation index, GLuint divisor);
+    const VertexAttribCurrentValueData &getVertexAttribCurrentValue(
+        AttributeLocation attribNum) const
     {
-        ASSERT(attribNum < mVertexAttribCurrentValues.size());
-        return mVertexAttribCurrentValues[attribNum];
+        ASSERT(attribNum.value < mVertexAttribCurrentValues.size());
+        return mVertexAttribCurrentValues[attribNum.value];
     }
 
     const std::vector<VertexAttribCurrentValueData> &getVertexAttribCurrentValues() const
@@ -465,21 +466,23 @@ class State : angle::NonCopyable
         return mVertexAttribCurrentValues;
     }
 
-    const void *getVertexAttribPointer(unsigned int attribNum) const;
+    const void *getVertexAttribPointer(AttributeLocation attribNum) const;
 
     void bindVertexBuffer(const Context *context,
                           GLuint bindingIndex,
                           Buffer *boundBuffer,
                           GLintptr offset,
                           GLsizei stride);
-    void setVertexAttribFormat(GLuint attribIndex,
+    void setVertexAttribFormat(AttributeLocation attribIndex,
                                GLint size,
                                VertexAttribType type,
                                bool normalized,
                                bool pureInteger,
                                GLuint relativeOffset);
 
-    void setVertexAttribBinding(const Context *context, GLuint attribIndex, GLuint bindingIndex)
+    void setVertexAttribBinding(const Context *context,
+                                AttributeLocation attribIndex,
+                                GLuint bindingIndex)
     {
         mVertexArray->setVertexAttribBinding(context, attribIndex, bindingIndex);
         mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);

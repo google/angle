@@ -390,7 +390,6 @@ bool ValidateDrawElementsInstancedEXT(const Context *context,
                                       GLsizei primcount);
 
 bool ValidateDrawInstancedANGLE(const Context *context);
-bool ValidateDrawInstancedEXT(const Context *context);
 
 bool ValidateFramebufferTextureBase(const Context *context,
                                     GLenum target,
@@ -542,19 +541,19 @@ bool ValidateTexParameterBase(const Context *context,
                               const ParamType *params);
 
 bool ValidateGetVertexAttribBase(const Context *context,
-                                 GLuint index,
+                                 AttributeLocation index,
                                  GLenum pname,
                                  GLsizei *length,
                                  bool pointer,
                                  bool pureIntegerEntryPoint);
 
 ANGLE_INLINE bool ValidateVertexFormat(const Context *context,
-                                       GLuint index,
+                                       AttributeLocation index,
                                        GLint size,
                                        VertexAttribTypeCase validation)
 {
     const Caps &caps = context->getCaps();
-    if (index >= static_cast<GLuint>(caps.maxVertexAttributes))
+    if (index.value >= static_cast<uint32_t>(caps.maxVertexAttributes))
     {
         context->validationError(GL_INVALID_VALUE, err::kIndexExceedsMaxVertexAttribute);
         return false;
@@ -595,7 +594,7 @@ ANGLE_INLINE bool ValidateVertexFormat(const Context *context,
 
 // Note: These byte, short, and int types are all converted to float for the shader.
 ANGLE_INLINE bool ValidateFloatVertexFormat(const Context *context,
-                                            GLuint index,
+                                            AttributeLocation index,
                                             GLint size,
                                             VertexAttribType type)
 {
@@ -604,7 +603,7 @@ ANGLE_INLINE bool ValidateFloatVertexFormat(const Context *context,
 }
 
 ANGLE_INLINE bool ValidateIntegerVertexFormat(const Context *context,
-                                              GLuint index,
+                                              AttributeLocation index,
                                               GLint size,
                                               VertexAttribType type)
 {
@@ -621,7 +620,7 @@ bool ValidateRobustCompressedTexImageBase(const Context *context,
                                           GLsizei imageSize,
                                           GLsizei dataSize);
 
-bool ValidateVertexAttribIndex(const Context *context, GLuint index);
+bool ValidateVertexAttribIndex(const Context *context, AttributeLocation index);
 
 bool ValidateGetActiveUniformBlockivBase(const Context *context,
                                          ShaderProgramID program,

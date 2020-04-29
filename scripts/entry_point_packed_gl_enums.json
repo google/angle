@@ -34,7 +34,8 @@
         "primitiveMode": "PrimitiveMode"
     },
     "glBindAttribLocation": {
-        "program": "ShaderProgramID"
+        "program": "ShaderProgramID",
+        "location": "AttributeLocation"
     },
     "glBindBuffer": {
         "buffer": "BufferID",
@@ -315,8 +316,12 @@
     "glDisableClientState": {
         "array": "ClientVertexArrayType"
     },
+    "glDisableVertexAttribArray": {
+        "index": "AttributeLocation"
+    },
     "glDisableVertexArrayAttrib": {
-        "vaobj": "VertexArrayID"
+        "vaobj": "VertexArrayID",
+        "index": "AttributeLocation"
     },
     "glDrawArrays": {
         "mode": "PrimitiveMode"
@@ -380,8 +385,12 @@
     "glEnableClientState": {
         "array": "ClientVertexArrayType"
     },
+    "glEnableVertexAttribArray": {
+        "index": "AttributeLocation"
+    },
     "glEnableVertexArrayAttrib": {
-        "vaobj": "VertexArrayID"
+        "vaobj": "VertexArrayID",
+        "index": "AttributeLocation"
     },
     "glEndQuery": {
         "target": "QueryType"
@@ -881,13 +890,49 @@
         "location": "UniformLocation"
     },
     "glGetVertexArrayIndexed64iv": {
-        "vaobj": "VertexArrayID"
+        "vaobj": "VertexArrayID",
+        "index": "AttributeLocation"
     },
     "glGetVertexArrayIndexediv": {
-        "vaobj": "VertexArrayID"
+        "vaobj": "VertexArrayID",
+        "index": "AttributeLocation"
     },
     "glGetVertexArrayiv": {
-        "vaobj": "VertexArrayID"
+        "vaobj": "VertexArrayID",
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribPointerv": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribPointervRobust": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribdv": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribfv": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribfvRobust": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribiv": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribivRobust": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribIiv": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribIivRobust": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribIuiv": {
+        "index": "AttributeLocation"
+    },
+    "glGetVertexAttribIuivRobust": {
+        "index": "AttributeLocation"
     },
     "glImportMemoryFd": {
         "handleType": "HandleType",
@@ -1818,16 +1863,20 @@
         "pipeline": "ProgramPipelineID"
     },
     "glVertexArrayAttribBinding": {
-        "vaobj": "VertexArrayID"
+        "vaobj": "VertexArrayID",
+        "attribindex": "AttributeLocation"
     },
     "glVertexArrayAttribFormat": {
-        "vaobj": "VertexArrayID"
+        "vaobj": "VertexArrayID",
+        "attribindex": "AttributeLocation"
     },
     "glVertexArrayAttribIFormat": {
-        "vaobj": "VertexArrayID"
+        "vaobj": "VertexArrayID",
+        "attribindex": "AttributeLocation"
     },
     "glVertexArrayAttribLFormat": {
-        "vaobj": "VertexArrayID"
+        "vaobj": "VertexArrayID",
+        "attribindex": "AttributeLocation"
     },
     "glVertexArrayBindingDivisor": {
         "vaobj": "VertexArrayID"
@@ -1844,16 +1893,122 @@
         "buffers": "const BufferID *",
         "vaobj": "VertexArrayID"
     },
+    "glVertexAttrib1d": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib1dv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib1f": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib1fv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib2d": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib2dv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib2f": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib2fv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib3d": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib3dv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib3f": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib3fv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib4d": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib4dv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib4f": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttrib4fv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI1i": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI1iv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI1ui": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI1uiv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI2i": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI2iv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI2ui": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI2uiv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI3i": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI3iv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI3ui": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI3uiv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI4i": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI4iv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI4ui": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribI4uiv": {
+        "index": "AttributeLocation"
+    },
+    "glVertexAttribBinding": {
+        "attribindex": "AttributeLocation"
+    },
+    "glVertexAttribDivisor": {
+        "index": "AttributeLocation"
+    },
     "glVertexAttribFormat": {
+        "attribindex": "AttributeLocation",
         "type": "VertexAttribType"
     },
     "glVertexAttribIFormat": {
+        "attribindex": "AttributeLocation",
         "type": "VertexAttribType"
     },
     "glVertexAttribIPointer": {
+        "index": "AttributeLocation",
         "type": "VertexAttribType"
     },
     "glVertexAttribPointer": {
+        "index": "AttributeLocation",
         "type": "VertexAttribType"
     },
     "glVertexPointer": {

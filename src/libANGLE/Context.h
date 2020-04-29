@@ -409,7 +409,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void getIntegervImpl(GLenum pname, GLint *params) const;
     void getInteger64vImpl(GLenum pname, GLint64 *params) const;
     void getIntegerVertexAttribImpl(GLenum pname, GLenum attribpname, GLint *params) const;
-    void getVertexAttribivImpl(GLuint index, GLenum pname, GLint *params) const;
+    void getVertexAttribivImpl(AttributeLocation index, GLenum pname, GLint *params) const;
 
     // Framebuffers are owned by the Context, so these methods do not pass through
     FramebufferID createFramebuffer();
@@ -571,8 +571,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool isValidBufferBinding(BufferBinding binding) const { return mValidBufferBindings[binding]; }
 
     // GLES1 emulation: Renderer level (for validation)
-    int vertexArrayIndex(ClientVertexArrayType type) const;
-    static int TexCoordArrayIndex(unsigned int unit);
+    AttributeLocation vertexArrayIndex(ClientVertexArrayType type) const;
+    static AttributeLocation TexCoordArrayIndex(unsigned int unit);
 
     // GL_KHR_parallel_shader_compile
     std::shared_ptr<angle::WorkerThreadPool> getWorkerThreadPool() const { return mThreadPool; }

@@ -61,7 +61,7 @@ class VertexArray11 : public VertexArrayImpl
   private:
     void updateVertexAttribStorage(const gl::Context *context,
                                    StateManager11 *stateManager,
-                                   size_t attribIndex);
+                                   gl::AttributeLocation attribLocation);
     angle::Result updateDirtyAttribs(const gl::Context *context,
                                      const gl::AttributesMask &activeDirtyAttribs);
     angle::Result updateDynamicAttribs(const gl::Context *context,

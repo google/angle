@@ -24,10 +24,18 @@
 namespace
 {
 #include "libANGLE/GLES1Shaders.inc"
-}  // anonymous namespace
+}  // namespace
 
 namespace gl
 {
+namespace
+{
+static constexpr AttributeLocation kVertexAttribIndex           = {0};
+static constexpr AttributeLocation kNormalAttribIndex           = {1};
+static constexpr AttributeLocation kColorAttribIndex            = {2};
+static constexpr AttributeLocation kPointSizeAttribIndex        = {3};
+static constexpr AttributeLocation kTextureCoordAttribIndexBase = {4};
+}  // namespace
 
 GLES1Renderer::GLES1Renderer() : mRendererProgramInitialized(false) {}
 
@@ -180,8 +188,8 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
             if (!gles1State.mTexCoordArrayEnabled[i])
             {
                 const TextureCoordF texcoord = gles1State.getCurrentTextureCoords(i);
-                context->vertexAttrib4f(kTextureCoordAttribIndexBase + i, texcoord.s, texcoord.t,
-                                        texcoord.r, texcoord.q);
+                context->vertexAttrib4f({kTextureCoordAttribIndexBase.value + i}, texcoord.s,
+                                        texcoord.t, texcoord.r, texcoord.q);
             }
         }
     }
@@ -434,7 +442,8 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
 }
 
 // static
-int GLES1Renderer::VertexArrayIndex(ClientVertexArrayType type, const GLES1State &gles1)
+AttributeLocation GLES1Renderer::VertexArrayIndex(ClientVertexArrayType type,
+                                                  const GLES1State &gles1)
 {
     switch (type)
     {
@@ -447,17 +456,18 @@ int GLES1Renderer::VertexArrayIndex(ClientVertexArrayType type, const GLES1State
         case ClientVertexArrayType::PointSize:
             return kPointSizeAttribIndex;
         case ClientVertexArrayType::TextureCoord:
-            return kTextureCoordAttribIndexBase + gles1.getClientTextureUnit();
+            return {kTextureCoordAttribIndexBase.value +
+                    static_cast<int>(gles1.getClientTextureUnit())};
         default:
             UNREACHABLE();
-            return 0;
+            return {0};
     }
 }
 
 // static
-int GLES1Renderer::TexCoordArrayIndex(unsigned int unit)
+AttributeLocation GLES1Renderer::TexCoordArrayIndex(unsigned int unit)
 {
-    return kTextureCoordAttribIndexBase + unit;
+    return {kTextureCoordAttribIndexBase.value + static_cast<int>(unit)};
 }
 
 void GLES1Renderer::drawTexture(Context *context,
@@ -545,12 +555,13 @@ angle::Result GLES1Renderer::compileShader(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result GLES1Renderer::linkProgram(Context *context,
-                                         State *glState,
-                                         ShaderProgramID vertexShader,
-                                         ShaderProgramID fragmentShader,
-                                         const std::unordered_map<GLint, std::string> &attribLocs,
-                                         ShaderProgramID *programOut)
+angle::Result GLES1Renderer::linkProgram(
+    Context *context,
+    State *glState,
+    ShaderProgramID vertexShader,
+    ShaderProgramID fragmentShader,
+    const std::unordered_map<uint32_t, std::string> &attribLocs,
+    ShaderProgramID *programOut)
 {
     ShaderProgramID program = mShaderPrograms->createProgram(context->getImplementation());
 
@@ -564,7 +575,7 @@ angle::Result GLES1Renderer::linkProgram(Context *context,
 
     for (auto it : attribLocs)
     {
-        GLint index             = it.first;
+        uint32_t index          = it.first;
         const std::string &name = it.second;
         programObject->bindAttributeLocation(index, name.c_str());
     }
@@ -615,18 +626,18 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
     ANGLE_TRY(compileShader(context, ShaderType::Fragment, fragmentStream.str().c_str(),
                             &fragmentShader));
 
-    std::unordered_map<GLint, std::string> attribLocs;
+    std::unordered_map<uint32_t, std::string> attribLocs;
 
-    attribLocs[(GLint)kVertexAttribIndex]    = "pos";
-    attribLocs[(GLint)kNormalAttribIndex]    = "normal";
-    attribLocs[(GLint)kColorAttribIndex]     = "color";
-    attribLocs[(GLint)kPointSizeAttribIndex] = "pointsize";
+    attribLocs[kVertexAttribIndex.value]    = "pos";
+    attribLocs[kNormalAttribIndex.value]    = "normal";
+    attribLocs[kColorAttribIndex.value]     = "color";
+    attribLocs[kPointSizeAttribIndex.value] = "pointsize";
 
-    for (int i = 0; i < kTexUnitCount; i++)
+    for (uint32_t i = 0; i < kTexUnitCount; i++)
     {
         std::stringstream ss;
         ss << "texcoord" << i;
-        attribLocs[kTextureCoordAttribIndexBase + i] = ss.str();
+        attribLocs[{kTextureCoordAttribIndexBase.value + i}] = ss.str();
     }
 
     ANGLE_TRY(linkProgram(context, glState, vertexShader, fragmentShader, attribLocs,
@@ -853,9 +864,9 @@ void GLES1Renderer::setAttributesEnabled(Context *context, State *glState, Attri
 
     for (const ClientVertexArrayType attrib : nonTexcoordArrays)
     {
-        int index = VertexArrayIndex(attrib, glState->gles1());
+        AttributeLocation index = VertexArrayIndex(attrib, glState->gles1());
 
-        if (mask.test(index))
+        if (mask.test(index.value))
         {
             gles1.setClientStateEnabled(attrib, true);
             context->enableVertexAttribArray(index);
@@ -869,9 +880,9 @@ void GLES1Renderer::setAttributesEnabled(Context *context, State *glState, Attri
 
     for (unsigned int i = 0; i < kTexUnitCount; i++)
     {
-        int index = TexCoordArrayIndex(i);
+        AttributeLocation index = TexCoordArrayIndex(i);
 
-        if (mask.test(index))
+        if (mask.test(index.value))
         {
             gles1.setTexCoordArrayEnabled(i, true);
             context->enableVertexAttribArray(index);

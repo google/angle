@@ -396,18 +396,18 @@ angle::CallCapture CaptureValidateProgramPipeline(const State &glState,
                                                   ProgramPipelineID pipelinePacked);
 angle::CallCapture CaptureVertexAttribBinding(const State &glState,
                                               bool isCallValid,
-                                              GLuint attribindex,
+                                              AttributeLocation attribindexPacked,
                                               GLuint bindingindex);
 angle::CallCapture CaptureVertexAttribFormat(const State &glState,
                                              bool isCallValid,
-                                             GLuint attribindex,
+                                             AttributeLocation attribindexPacked,
                                              GLint size,
                                              VertexAttribType typePacked,
                                              GLboolean normalized,
                                              GLuint relativeoffset);
 angle::CallCapture CaptureVertexAttribIFormat(const State &glState,
                                               bool isCallValid,
-                                              GLuint attribindex,
+                                              AttributeLocation attribindexPacked,
                                               GLint size,
                                               VertexAttribType typePacked,
                                               GLuint relativeoffset);

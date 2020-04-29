@@ -18,6 +18,7 @@ namespace angle
 enum class ParamType
 {
     TAlphaTestFunc,
+    TAttributeLocation,
     TBufferBinding,
     TBufferID,
     TBufferIDConstPointer,
@@ -139,11 +140,12 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 120;
+constexpr uint32_t kParamTypeCount = 121;
 
 union ParamValue
 {
     gl::AlphaTestFunc AlphaTestFuncVal;
+    gl::AttributeLocation AttributeLocationVal;
     gl::BufferBinding BufferBindingVal;
     gl::BufferID BufferIDVal;
     const gl::BufferID *BufferIDConstPointerVal;
@@ -273,6 +275,13 @@ inline gl::AlphaTestFunc GetParamVal<ParamType::TAlphaTestFunc, gl::AlphaTestFun
     const ParamValue &value)
 {
     return value.AlphaTestFuncVal;
+}
+
+template <>
+inline gl::AttributeLocation GetParamVal<ParamType::TAttributeLocation, gl::AttributeLocation>(
+    const ParamValue &value)
+{
+    return value.AttributeLocationVal;
 }
 
 template <>
@@ -1079,6 +1088,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
     {
         case ParamType::TAlphaTestFunc:
             return GetParamVal<ParamType::TAlphaTestFunc, T>(value);
+        case ParamType::TAttributeLocation:
+            return GetParamVal<ParamType::TAttributeLocation, T>(value);
         case ParamType::TBufferBinding:
             return GetParamVal<ParamType::TBufferBinding, T>(value);
         case ParamType::TBufferID:
@@ -1327,6 +1338,13 @@ template <>
 inline void SetParamVal<ParamType::TAlphaTestFunc>(gl::AlphaTestFunc valueIn, ParamValue *valueOut)
 {
     valueOut->AlphaTestFuncVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TAttributeLocation>(gl::AttributeLocation valueIn,
+                                                       ParamValue *valueOut)
+{
+    valueOut->AttributeLocationVal = valueIn;
 }
 
 template <>
@@ -2111,6 +2129,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
     {
         case ParamType::TAlphaTestFunc:
             SetParamVal<ParamType::TAlphaTestFunc>(valueIn, valueOut);
+            break;
+        case ParamType::TAttributeLocation:
+            SetParamVal<ParamType::TAttributeLocation>(valueIn, valueOut);
             break;
         case ParamType::TBufferBinding:
             SetParamVal<ParamType::TBufferBinding>(valueIn, valueOut);

@@ -1156,18 +1156,19 @@ CallCapture CaptureGetUniformuiv(const State &glState,
 
 CallCapture CaptureGetVertexAttribIiv(const State &glState,
                                       bool isCallValid,
-                                      GLuint index,
+                                      AttributeLocation indexPacked,
                                       GLenum pname,
                                       GLint *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::VertexAttribEnum, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetVertexAttribIiv_params(glState, isCallValid, index, pname, params, &paramsParam);
+    CaptureGetVertexAttribIiv_params(glState, isCallValid, indexPacked, pname, params,
+                                     &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetVertexAttribIiv, std::move(paramBuffer));
@@ -1175,18 +1176,19 @@ CallCapture CaptureGetVertexAttribIiv(const State &glState,
 
 CallCapture CaptureGetVertexAttribIuiv(const State &glState,
                                        bool isCallValid,
-                                       GLuint index,
+                                       AttributeLocation indexPacked,
                                        GLenum pname,
                                        GLuint *params)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::VertexAttribEnum, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetVertexAttribIuiv_params(glState, isCallValid, index, pname, params, &paramsParam);
+    CaptureGetVertexAttribIuiv_params(glState, isCallValid, indexPacked, pname, params,
+                                      &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetVertexAttribIuiv, std::move(paramBuffer));
@@ -1937,12 +1939,12 @@ CallCapture CaptureUnmapBuffer(const State &glState,
 
 CallCapture CaptureVertexAttribDivisor(const State &glState,
                                        bool isCallValid,
-                                       GLuint index,
+                                       AttributeLocation indexPacked,
                                        GLuint divisor)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addValueParam("divisor", ParamType::TGLuint, divisor);
 
     return CallCapture(gl::EntryPoint::VertexAttribDivisor, std::move(paramBuffer));
@@ -1950,7 +1952,7 @@ CallCapture CaptureVertexAttribDivisor(const State &glState,
 
 CallCapture CaptureVertexAttribI4i(const State &glState,
                                    bool isCallValid,
-                                   GLuint index,
+                                   AttributeLocation indexPacked,
                                    GLint x,
                                    GLint y,
                                    GLint z,
@@ -1958,7 +1960,7 @@ CallCapture CaptureVertexAttribI4i(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addValueParam("x", ParamType::TGLint, x);
     paramBuffer.addValueParam("y", ParamType::TGLint, y);
     paramBuffer.addValueParam("z", ParamType::TGLint, z);
@@ -1969,16 +1971,16 @@ CallCapture CaptureVertexAttribI4i(const State &glState,
 
 CallCapture CaptureVertexAttribI4iv(const State &glState,
                                     bool isCallValid,
-                                    GLuint index,
+                                    AttributeLocation indexPacked,
                                     const GLint *v)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
 
     ParamCapture vParam("v", ParamType::TGLintConstPointer);
     InitParamValue(ParamType::TGLintConstPointer, v, &vParam.value);
-    CaptureVertexAttribI4iv_v(glState, isCallValid, index, v, &vParam);
+    CaptureVertexAttribI4iv_v(glState, isCallValid, indexPacked, v, &vParam);
     paramBuffer.addParam(std::move(vParam));
 
     return CallCapture(gl::EntryPoint::VertexAttribI4iv, std::move(paramBuffer));
@@ -1986,7 +1988,7 @@ CallCapture CaptureVertexAttribI4iv(const State &glState,
 
 CallCapture CaptureVertexAttribI4ui(const State &glState,
                                     bool isCallValid,
-                                    GLuint index,
+                                    AttributeLocation indexPacked,
                                     GLuint x,
                                     GLuint y,
                                     GLuint z,
@@ -1994,7 +1996,7 @@ CallCapture CaptureVertexAttribI4ui(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addValueParam("x", ParamType::TGLuint, x);
     paramBuffer.addValueParam("y", ParamType::TGLuint, y);
     paramBuffer.addValueParam("z", ParamType::TGLuint, z);
@@ -2005,16 +2007,16 @@ CallCapture CaptureVertexAttribI4ui(const State &glState,
 
 CallCapture CaptureVertexAttribI4uiv(const State &glState,
                                      bool isCallValid,
-                                     GLuint index,
+                                     AttributeLocation indexPacked,
                                      const GLuint *v)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
 
     ParamCapture vParam("v", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, v, &vParam.value);
-    CaptureVertexAttribI4uiv_v(glState, isCallValid, index, v, &vParam);
+    CaptureVertexAttribI4uiv_v(glState, isCallValid, indexPacked, v, &vParam);
     paramBuffer.addParam(std::move(vParam));
 
     return CallCapture(gl::EntryPoint::VertexAttribI4uiv, std::move(paramBuffer));
@@ -2022,7 +2024,7 @@ CallCapture CaptureVertexAttribI4uiv(const State &glState,
 
 CallCapture CaptureVertexAttribIPointer(const State &glState,
                                         bool isCallValid,
-                                        GLuint index,
+                                        AttributeLocation indexPacked,
                                         GLint size,
                                         VertexAttribType typePacked,
                                         GLsizei stride,
@@ -2030,14 +2032,14 @@ CallCapture CaptureVertexAttribIPointer(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("index", ParamType::TGLuint, index);
+    paramBuffer.addValueParam("indexPacked", ParamType::TAttributeLocation, indexPacked);
     paramBuffer.addValueParam("size", ParamType::TGLint, size);
     paramBuffer.addValueParam("typePacked", ParamType::TVertexAttribType, typePacked);
     paramBuffer.addValueParam("stride", ParamType::TGLsizei, stride);
 
     ParamCapture pointerParam("pointer", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, pointer, &pointerParam.value);
-    CaptureVertexAttribIPointer_pointer(glState, isCallValid, index, size, typePacked, stride,
+    CaptureVertexAttribIPointer_pointer(glState, isCallValid, indexPacked, size, typePacked, stride,
                                         pointer, &pointerParam);
     paramBuffer.addParam(std::move(pointerParam));
 

@@ -4725,9 +4725,9 @@ bool ValidateDetachShader(const Context *context, ShaderProgramID program, Shade
     return true;
 }
 
-bool ValidateDisableVertexAttribArray(const Context *context, GLuint index)
+bool ValidateDisableVertexAttribArray(const Context *context, AttributeLocation index)
 {
-    if (index >= MAX_VERTEX_ATTRIBS)
+    if (index.value >= MAX_VERTEX_ATTRIBS)
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
         return false;
@@ -4736,9 +4736,9 @@ bool ValidateDisableVertexAttribArray(const Context *context, GLuint index)
     return true;
 }
 
-bool ValidateEnableVertexAttribArray(const Context *context, GLuint index)
+bool ValidateEnableVertexAttribArray(const Context *context, AttributeLocation index)
 {
-    if (index >= MAX_VERTEX_ATTRIBS)
+    if (index.value >= MAX_VERTEX_ATTRIBS)
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
         return false;
@@ -5513,38 +5513,42 @@ bool ValidateValidateProgram(const Context *context, ShaderProgramID program)
     return true;
 }
 
-bool ValidateVertexAttrib1f(const Context *context, GLuint index, GLfloat x)
+bool ValidateVertexAttrib1f(const Context *context, AttributeLocation index, GLfloat x)
 {
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateVertexAttrib1fv(const Context *context, GLuint index, const GLfloat *values)
+bool ValidateVertexAttrib1fv(const Context *context, AttributeLocation index, const GLfloat *values)
 {
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateVertexAttrib2f(const Context *context, GLuint index, GLfloat x, GLfloat y)
+bool ValidateVertexAttrib2f(const Context *context, AttributeLocation index, GLfloat x, GLfloat y)
 {
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateVertexAttrib2fv(const Context *context, GLuint index, const GLfloat *values)
+bool ValidateVertexAttrib2fv(const Context *context, AttributeLocation index, const GLfloat *values)
 {
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateVertexAttrib3f(const Context *context, GLuint index, GLfloat x, GLfloat y, GLfloat z)
+bool ValidateVertexAttrib3f(const Context *context,
+                            AttributeLocation index,
+                            GLfloat x,
+                            GLfloat y,
+                            GLfloat z)
 {
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateVertexAttrib3fv(const Context *context, GLuint index, const GLfloat *values)
+bool ValidateVertexAttrib3fv(const Context *context, AttributeLocation index, const GLfloat *values)
 {
     return ValidateVertexAttribIndex(context, index);
 }
 
 bool ValidateVertexAttrib4f(const Context *context,
-                            GLuint index,
+                            AttributeLocation index,
                             GLfloat x,
                             GLfloat y,
                             GLfloat z,
@@ -5553,7 +5557,7 @@ bool ValidateVertexAttrib4f(const Context *context,
     return ValidateVertexAttribIndex(context, index);
 }
 
-bool ValidateVertexAttrib4fv(const Context *context, GLuint index, const GLfloat *values)
+bool ValidateVertexAttrib4fv(const Context *context, AttributeLocation index, const GLfloat *values)
 {
     return ValidateVertexAttribIndex(context, index);
 }
@@ -5643,24 +5647,26 @@ bool ValidateCopyTexSubImage3DOES(const Context *context,
                                      height);
 }
 
-bool ValidateDeleteBuffers(const Context *context, GLint n, const BufferID *buffers)
+bool ValidateDeleteBuffers(const Context *context, GLsizei n, const BufferID *buffersPacked)
 {
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateDeleteFramebuffers(const Context *context, GLint n, const FramebufferID *framebuffers)
+bool ValidateDeleteFramebuffers(const Context *context,
+                                GLsizei n,
+                                const FramebufferID *framebuffers)
 {
     return ValidateGenOrDelete(context, n);
 }
 
 bool ValidateDeleteRenderbuffers(const Context *context,
-                                 GLint n,
+                                 GLsizei n,
                                  const RenderbufferID *renderbuffers)
 {
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateDeleteTextures(const Context *context, GLint n, const TextureID *textures)
+bool ValidateDeleteTextures(const Context *context, GLsizei n, const TextureID *textures)
 {
     return ValidateGenOrDelete(context, n);
 }
@@ -5901,22 +5907,24 @@ bool ValidateFramebufferTexture3DOES(const Context *context,
     return true;
 }
 
-bool ValidateGenBuffers(const Context *context, GLint n, const BufferID *buffers)
+bool ValidateGenBuffers(const Context *context, GLsizei n, const BufferID *buffers)
 {
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateGenFramebuffers(const Context *context, GLint n, const FramebufferID *framebuffers)
+bool ValidateGenFramebuffers(const Context *context, GLsizei n, const FramebufferID *framebuffers)
 {
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateGenRenderbuffers(const Context *context, GLint n, const RenderbufferID *renderbuffers)
+bool ValidateGenRenderbuffers(const Context *context,
+                              GLsizei n,
+                              const RenderbufferID *renderbuffers)
 {
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateGenTextures(const Context *context, GLint n, const TextureID *textures)
+bool ValidateGenTextures(const Context *context, GLsizei n, const TextureID *textures)
 {
     return ValidateGenOrDelete(context, n);
 }
@@ -6097,7 +6105,7 @@ bool ValidateGetUniformiv(const Context *context,
 }
 
 bool ValidateGetVertexAttribfv(const Context *context,
-                               GLuint index,
+                               AttributeLocation index,
                                GLenum pname,
                                const GLfloat *params)
 {
@@ -6105,7 +6113,7 @@ bool ValidateGetVertexAttribfv(const Context *context,
 }
 
 bool ValidateGetVertexAttribiv(const Context *context,
-                               GLuint index,
+                               AttributeLocation index,
                                GLenum pname,
                                const GLint *params)
 {
@@ -6113,7 +6121,7 @@ bool ValidateGetVertexAttribiv(const Context *context,
 }
 
 bool ValidateGetVertexAttribPointerv(const Context *context,
-                                     GLuint index,
+                                     AttributeLocation index,
                                      GLenum pname,
                                      void *const *pointer)
 {
@@ -6472,7 +6480,9 @@ bool ValidateTexStorage2DEXT(const Context *context,
                                              1);
 }
 
-bool ValidateVertexAttribDivisorANGLE(const Context *context, GLuint index, GLuint divisor)
+bool ValidateVertexAttribDivisorANGLE(const Context *context,
+                                      AttributeLocation index,
+                                      GLuint divisor)
 {
     if (!context->getExtensions().instancedArraysANGLE)
     {
@@ -6480,7 +6490,7 @@ bool ValidateVertexAttribDivisorANGLE(const Context *context, GLuint index, GLui
         return false;
     }
 
-    if (index >= MAX_VERTEX_ATTRIBS)
+    if (index.value >= MAX_VERTEX_ATTRIBS)
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
         return false;
@@ -6488,7 +6498,7 @@ bool ValidateVertexAttribDivisorANGLE(const Context *context, GLuint index, GLui
 
     if (context->getLimitations().attributeZeroRequiresZeroDivisorInEXT)
     {
-        if (index == 0 && divisor != 0)
+        if (index.value == 0 && divisor != 0)
         {
             context->validationError(GL_INVALID_OPERATION, kAttributeZeroRequiresDivisorLimitation);
 
@@ -6502,7 +6512,7 @@ bool ValidateVertexAttribDivisorANGLE(const Context *context, GLuint index, GLui
     return true;
 }
 
-bool ValidateVertexAttribDivisorEXT(const Context *context, GLuint index, GLuint divisor)
+bool ValidateVertexAttribDivisorEXT(const Context *context, AttributeLocation index, GLuint divisor)
 {
     if (!context->getExtensions().instancedArraysEXT)
     {
@@ -6510,7 +6520,7 @@ bool ValidateVertexAttribDivisorEXT(const Context *context, GLuint index, GLuint
         return false;
     }
 
-    if (index >= MAX_VERTEX_ATTRIBS)
+    if (index.value >= MAX_VERTEX_ATTRIBS)
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
         return false;

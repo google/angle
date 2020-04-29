@@ -93,19 +93,19 @@ class VertexArrayGL : public VertexArrayImpl
                                    GLsizei instanceCount,
                                    const gl::IndexRange &indexRange) const;
     void syncDirtyAttrib(const gl::Context *context,
-                         size_t attribIndex,
+                         gl::AttributeLocation attribLocation,
                          const gl::VertexArray::DirtyAttribBits &dirtyAttribBits);
     void syncDirtyBinding(const gl::Context *context,
                           size_t bindingIndex,
                           const gl::VertexArray::DirtyBindingBits &dirtyBindingBits);
 
-    void updateAttribEnabled(size_t attribIndex);
-    void updateAttribPointer(const gl::Context *context, size_t attribIndex);
+    void updateAttribEnabled(gl::AttributeLocation attribIndex);
+    void updateAttribPointer(const gl::Context *context, gl::AttributeLocation attribLocation);
 
     bool supportVertexAttribBinding() const;
 
-    void updateAttribFormat(size_t attribIndex);
-    void updateAttribBinding(size_t attribIndex);
+    void updateAttribFormat(gl::AttributeLocation attribLocation);
+    void updateAttribBinding(gl::AttributeLocation attribLocation);
     void updateBindingBuffer(const gl::Context *context, size_t bindingIndex);
     void updateBindingDivisor(size_t bindingIndex);
 

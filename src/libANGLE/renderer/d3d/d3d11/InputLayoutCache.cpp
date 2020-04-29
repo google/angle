@@ -160,7 +160,7 @@ angle::Result InputLayoutCache::getInputLayout(
         int d3dSemantic     = locationToSemantic[attribIndex];
 
         const auto &currentValue =
-            state.getVertexAttribCurrentValue(static_cast<unsigned int>(attribIndex));
+            state.getVertexAttribCurrentValue({static_cast<uint32_t>(attribIndex)});
         angle::FormatID vertexFormatID = gl::GetVertexFormatID(attrib, currentValue.Type);
 
         layout.addAttributeData(glslElementType, d3dSemantic, vertexFormatID,
