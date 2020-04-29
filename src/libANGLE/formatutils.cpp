@@ -324,7 +324,9 @@ static bool SizedFloatRGBARenderableSupport(const Version &clientVersion,
 
 static bool Float32BlendableSupport(const Version &clientVersion, const Extensions &extensions)
 {
-    return extensions.colorBufferFloat && extensions.floatBlend;
+    // EXT_float_blend may be exposed on ES2 client contexts. Ensure that RGBA32F is renderable.
+    return (extensions.colorBufferFloatRGBA || extensions.colorBufferFloat) &&
+           extensions.floatBlend;
 }
 
 InternalFormat::InternalFormat()
