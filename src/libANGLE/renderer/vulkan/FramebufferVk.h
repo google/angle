@@ -187,7 +187,7 @@ class FramebufferVk : public FramebufferImpl
                                 gl::DrawBufferMask clearColorBuffers,
                                 bool clearDepth,
                                 bool clearStencil,
-                                VkColorComponentFlags colorMaskFlags,
+                                gl::BlendStateExt::ColorMaskStorage::Type colorMasks,
                                 uint8_t stencilMask,
                                 const VkClearColorValue &clearColorValue,
                                 const VkClearDepthStencilValue &clearDepthStencilValue);
@@ -235,11 +235,10 @@ class FramebufferVk : public FramebufferImpl
     vk::FramebufferHelper *mFramebuffer;
     RenderTargetCache<RenderTargetVk> mRenderTargetCache;
 
-    // These two variables are used to quickly compute if we need to do a masked clear. If a color
+    // This variable is used to quickly compute if we need to do a masked clear. If a color
     // channel is masked out, we check against the Framebuffer Attachments (RenderTargets) to see
     // if the masked out channel is present in any of the attachments.
-    VkColorComponentFlags mActiveColorComponents;
-    gl::DrawBufferMask mActiveColorComponentMasksForClear[4];
+    gl::BlendStateExt::ColorMaskStorage::Type mActiveColorComponentMasksForClear;
     vk::DynamicBuffer mReadPixelBuffer;
 
     // When we draw to the framebuffer, and the real format has an alpha channel but the format of

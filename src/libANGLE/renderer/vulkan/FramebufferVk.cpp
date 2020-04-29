@@ -308,7 +308,7 @@ FramebufferVk::FramebufferVk(RendererVk *renderer,
     : FramebufferImpl(state),
       mBackbuffer(backbuffer),
       mFramebuffer(nullptr),
-      mActiveColorComponents(0),
+      mActiveColorComponentMasksForClear(0),
       mReadOnlyDepthFeedbackLoopMode(false)
 {
     mReadPixelBuffer.init(renderer, VK_BUFFER_USAGE_TRANSFER_DST_BIT, kReadPixelsBufferAlignment,
@@ -433,8 +433,8 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     // Adjust clear behavior based on whether the respective attachments are present; if asked to
     // clear a non-existent attachment, don't attempt to clear it.
 
-    VkColorComponentFlags colorMaskFlags = contextVk->getClearColorMask();
-    bool clearColor                      = clearColorBuffers.any();
+    gl::BlendStateExt::ColorMaskStorage::Type colorMasks = contextVk->getClearColorMasks();
+    bool clearColor                                      = clearColorBuffers.any();
 
     const gl::FramebufferAttachment *depthAttachment = mState.getDepthAttachment();
     clearDepth                                       = clearDepth && depthAttachment;
@@ -448,7 +448,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         static_cast<uint8_t>(contextVk->getState().getDepthStencilState().stencilWritemask);
 
     // The front-end should ensure we don't attempt to clear color if all channels are masked.
-    ASSERT(!clearColor || colorMaskFlags != 0);
+    ASSERT(!clearColor || colorMasks != 0);
     // The front-end should ensure we don't attempt to clear depth if depth write is disabled.
     ASSERT(!clearDepth || contextVk->getState().getDepthStencilState().depthMask);
     // The front-end should ensure we don't attempt to clear stencil if all bits are masked.
@@ -465,8 +465,8 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
 
     // We can use render pass load ops if clearing depth, unmasked color or unmasked stencil.  If
     // there's a depth mask, depth clearing is already disabled.
-    bool maskedClearColor =
-        clearColor && (mActiveColorComponents & colorMaskFlags) != mActiveColorComponents;
+    bool maskedClearColor = clearColor && (mActiveColorComponentMasksForClear & colorMasks) !=
+                                              mActiveColorComponentMasksForClear;
     bool maskedClearStencil = clearStencil && stencilMask != 0xFF;
 
     bool clearColorWithRenderPassLoadOp   = clearColor && !maskedClearColor && !scissoredClear;
@@ -559,7 +559,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     // The most costly clear mode is when we need to mask out specific color channels or stencil
     // bits. This can only be done with a draw call.
     return clearWithDraw(contextVk, scissoredRenderArea, clearColorBuffers, clearDepth,
-                         clearStencil, colorMaskFlags, stencilMask, clearColorValue,
+                         clearStencil, colorMasks, stencilMask, clearColorValue,
                          clearDepthStencilValue);
 }
 
@@ -1551,7 +1551,7 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
         mEmulatedAlphaAttachmentMask.set(colorIndexGL,
                                          sourceFormat.alphaBits == 0 && actualFormat.alphaBits > 0);
 
-        contextVk->updateColorMask(context->getState().getBlendState());
+        contextVk->updateColorMasks(context->getState().getBlendStateExt());
 
         if (deferClears && mState.getEnabledDrawBuffers().test(colorIndexGL))
         {
@@ -1722,7 +1722,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 
     if (shouldUpdateColorMask)
     {
-        contextVk->updateColorMask(context->getState().getBlendState());
+        contextVk->updateColorMasks(context->getState().getBlendStateExt());
     }
 
     // In some cases we'll need to force a flush of deferred clears. When we're syncing the read
@@ -1751,10 +1751,6 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     // The FBO's new attachment may have changed the renderable area
     const gl::State &glState = context->getState();
     ANGLE_TRY(contextVk->updateScissor(glState));
-
-    mActiveColorComponents = gl_vk::GetColorComponentFlags(
-        mActiveColorComponentMasksForClear[0].any(), mActiveColorComponentMasksForClear[1].any(),
-        mActiveColorComponentMasksForClear[2].any(), mActiveColorComponentMasksForClear[3].any());
 
     if (command != gl::Command::Blit)
     {
@@ -2011,7 +2007,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
                                            gl::DrawBufferMask clearColorBuffers,
                                            bool clearDepth,
                                            bool clearStencil,
-                                           VkColorComponentFlags colorMaskFlags,
+                                           gl::BlendStateExt::ColorMaskStorage::Type colorMasks,
                                            uint8_t stencilMask,
                                            const VkClearColorValue &clearColorValue,
                                            const VkClearDepthStencilValue &clearDepthStencilValue)
@@ -2048,7 +2044,8 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
         params.colorFormat =
             &colorRenderTarget->getImageForRenderPass().getFormat().actualImageFormat();
         params.colorAttachmentIndexGL = static_cast<uint32_t>(colorIndexGL);
-        params.colorMaskFlags         = colorMaskFlags;
+        params.colorMaskFlags =
+            gl::BlendStateExt::ColorMaskStorage::GetValueIndexed(colorIndexGL, colorMasks);
         if (mEmulatedAlphaAttachmentMask[colorIndexGL])
         {
             params.colorMaskFlags &= ~VK_COLOR_COMPONENT_A_BIT;
@@ -2535,10 +2532,9 @@ void FramebufferVk::restoreDepthStencilDefinedContents()
 
 void FramebufferVk::updateActiveColorMasks(size_t colorIndexGL, bool r, bool g, bool b, bool a)
 {
-    mActiveColorComponentMasksForClear[0].set(colorIndexGL, r);
-    mActiveColorComponentMasksForClear[1].set(colorIndexGL, g);
-    mActiveColorComponentMasksForClear[2].set(colorIndexGL, b);
-    mActiveColorComponentMasksForClear[3].set(colorIndexGL, a);
+    gl::BlendStateExt::ColorMaskStorage::SetValueIndexed(
+        colorIndexGL, gl::BlendStateExt::PackColorMask(r, g, b, a),
+        &mActiveColorComponentMasksForClear);
 }
 
 const gl::DrawBufferMask &FramebufferVk::getEmulatedAlphaAttachmentMask() const

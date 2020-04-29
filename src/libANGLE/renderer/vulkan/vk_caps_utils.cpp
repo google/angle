@@ -116,6 +116,10 @@ void RendererVk::ensureCapsInitialized() const
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinMax = true;
 
+    // Enable OES/EXT_draw_buffers_indexed
+    mNativeExtensions.drawBuffersIndexedOES = mPhysicalDeviceFeatures.independentBlend == VK_TRUE;
+    mNativeExtensions.drawBuffersIndexedEXT = mNativeExtensions.drawBuffersIndexedOES;
+
     mNativeExtensions.eglImageOES                  = true;
     mNativeExtensions.eglImageExternalOES          = true;
     mNativeExtensions.eglImageExternalWrapModesEXT = true;

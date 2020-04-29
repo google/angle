@@ -382,11 +382,11 @@ class ContextVk : public ContextImpl, public vk::Context
 
     const VkClearValue &getClearColorValue() const;
     const VkClearValue &getClearDepthStencilValue() const;
-    VkColorComponentFlags getClearColorMask() const;
+    gl::BlendStateExt::ColorMaskStorage::Type getClearColorMasks() const;
     angle::Result getIncompleteTexture(const gl::Context *context,
                                        gl::TextureType type,
                                        gl::Texture **textureOut);
-    void updateColorMask(const gl::BlendState &blendState);
+    void updateColorMasks(const gl::BlendStateExt &blendStateExt);
     void updateSampleMask(const gl::State &glState);
 
     void handleError(VkResult errorCode,
@@ -1021,7 +1021,7 @@ class ContextVk : public ContextImpl, public vk::Context
     // Cached clear value/mask for color and depth/stencil.
     VkClearValue mClearColorValue;
     VkClearValue mClearDepthStencilValue;
-    VkColorComponentFlags mClearColorMask;
+    gl::BlendStateExt::ColorMaskStorage::Type mClearColorMasks;
 
     IncompleteTextureSet mIncompleteTextures;
 

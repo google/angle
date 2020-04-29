@@ -243,3 +243,21 @@
 4371 VULKAN ANDROID : dEQP-GLES31.functional.shaders.implicit_conversions.es31.arithmetic.input_before_literal.add.int_to_vec3_vertex = FAIL
 4371 VULKAN ANDROID : dEQP-GLES31.functional.shaders.implicit_conversions.es31.arithmetic.input_before_literal.add.int_to_uvec3_vertex = FAIL
 4371 SWIFTSHADER : dEQP-GLES31.functional.shaders.implicit_conversions.* = FAIL
+
+// Unexpected crashes on Android 64-bit, some also fail on Android 32-bit
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.1 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.3 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.5 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.9 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.10 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.12 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.13 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.14 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.15 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.17 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.18 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.0 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.2 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.10 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.11 = SKIP
+4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.17 = SKIP

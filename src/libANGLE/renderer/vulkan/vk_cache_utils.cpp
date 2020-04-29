@@ -1903,62 +1903,67 @@ void GraphicsPipelineDesc::updateBlendColor(GraphicsPipelineTransitionBits *tran
 }
 
 void GraphicsPipelineDesc::updateBlendEnabled(GraphicsPipelineTransitionBits *transition,
-                                              bool isBlendEnabled)
+                                              gl::DrawBufferMask blendEnabledMask)
 {
-    gl::DrawBufferMask blendEnabled;
-    if (isBlendEnabled)
-        blendEnabled.set();
     mInputAssemblyAndColorBlendStateInfo.blendEnableMask =
-        static_cast<uint8_t>(blendEnabled.bits());
+        static_cast<uint8_t>(blendEnabledMask.bits());
     transition->set(
         ANGLE_GET_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo, blendEnableMask));
 }
 
 void GraphicsPipelineDesc::updateBlendEquations(GraphicsPipelineTransitionBits *transition,
-                                                const gl::BlendState &blendState)
+                                                const gl::BlendStateExt &blendStateExt)
 {
     constexpr size_t kSize = sizeof(PackedColorBlendAttachmentState) * 8;
 
-    for (size_t attachmentIndex = 0; attachmentIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+    for (size_t attachmentIndex = 0; attachmentIndex < blendStateExt.mMaxDrawBuffers;
          ++attachmentIndex)
     {
         PackedColorBlendAttachmentState &blendAttachmentState =
             mInputAssemblyAndColorBlendStateInfo.attachments[attachmentIndex];
-        blendAttachmentState.colorBlendOp = PackGLBlendOp(blendState.blendEquationRGB);
-        blendAttachmentState.alphaBlendOp = PackGLBlendOp(blendState.blendEquationAlpha);
+        blendAttachmentState.colorBlendOp =
+            PackGLBlendOp(blendStateExt.getEquationColorIndexed(attachmentIndex));
+        blendAttachmentState.alphaBlendOp =
+            PackGLBlendOp(blendStateExt.getEquationAlphaIndexed(attachmentIndex));
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
                                                          attachments, attachmentIndex, kSize));
     }
 }
 
 void GraphicsPipelineDesc::updateBlendFuncs(GraphicsPipelineTransitionBits *transition,
-                                            const gl::BlendState &blendState)
+                                            const gl::BlendStateExt &blendStateExt)
 {
     constexpr size_t kSize = sizeof(PackedColorBlendAttachmentState) * 8;
-    for (size_t attachmentIndex = 0; attachmentIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+    for (size_t attachmentIndex = 0; attachmentIndex < blendStateExt.mMaxDrawBuffers;
          ++attachmentIndex)
     {
         PackedColorBlendAttachmentState &blendAttachmentState =
             mInputAssemblyAndColorBlendStateInfo.attachments[attachmentIndex];
-        blendAttachmentState.srcColorBlendFactor = PackGLBlendFactor(blendState.sourceBlendRGB);
-        blendAttachmentState.dstColorBlendFactor = PackGLBlendFactor(blendState.destBlendRGB);
-        blendAttachmentState.srcAlphaBlendFactor = PackGLBlendFactor(blendState.sourceBlendAlpha);
-        blendAttachmentState.dstAlphaBlendFactor = PackGLBlendFactor(blendState.destBlendAlpha);
+        blendAttachmentState.srcColorBlendFactor =
+            PackGLBlendFactor(blendStateExt.getSrcColorIndexed(attachmentIndex));
+        blendAttachmentState.dstColorBlendFactor =
+            PackGLBlendFactor(blendStateExt.getDstColorIndexed(attachmentIndex));
+        blendAttachmentState.srcAlphaBlendFactor =
+            PackGLBlendFactor(blendStateExt.getSrcAlphaIndexed(attachmentIndex));
+        blendAttachmentState.dstAlphaBlendFactor =
+            PackGLBlendFactor(blendStateExt.getDstAlphaIndexed(attachmentIndex));
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
                                                          attachments, attachmentIndex, kSize));
     }
 }
 
-void GraphicsPipelineDesc::setColorWriteMask(VkColorComponentFlags colorComponentFlags,
-                                             const gl::DrawBufferMask &alphaMask,
-                                             const gl::DrawBufferMask &enabledDrawBuffers)
+void GraphicsPipelineDesc::setColorWriteMasks(gl::BlendStateExt::ColorMaskStorage::Type colorMasks,
+                                              const gl::DrawBufferMask &alphaMask,
+                                              const gl::DrawBufferMask &enabledDrawBuffers)
 {
     PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend = mInputAssemblyAndColorBlendStateInfo;
-    uint8_t colorMask = static_cast<uint8_t>(colorComponentFlags);
 
     for (uint32_t colorIndexGL = 0; colorIndexGL < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
          colorIndexGL++)
     {
+        uint8_t colorMask =
+            gl::BlendStateExt::ColorMaskStorage::GetValueIndexed(colorIndexGL, colorMasks);
+
         uint8_t mask = 0;
         if (enabledDrawBuffers.test(colorIndexGL))
         {
@@ -1976,12 +1981,13 @@ void GraphicsPipelineDesc::setSingleColorWriteMask(uint32_t colorIndexGL,
     Int4Array_Set(inputAndBlend.colorWriteMaskBits, colorIndexGL, colorMask);
 }
 
-void GraphicsPipelineDesc::updateColorWriteMask(GraphicsPipelineTransitionBits *transition,
-                                                VkColorComponentFlags colorComponentFlags,
-                                                const gl::DrawBufferMask &alphaMask,
-                                                const gl::DrawBufferMask &enabledDrawBuffers)
+void GraphicsPipelineDesc::updateColorWriteMasks(
+    GraphicsPipelineTransitionBits *transition,
+    gl::BlendStateExt::ColorMaskStorage::Type colorMasks,
+    const gl::DrawBufferMask &alphaMask,
+    const gl::DrawBufferMask &enabledDrawBuffers)
 {
-    setColorWriteMask(colorComponentFlags, alphaMask, enabledDrawBuffers);
+    setColorWriteMasks(colorMasks, alphaMask, enabledDrawBuffers);
 
     for (size_t colorIndexGL = 0; colorIndexGL < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
          colorIndexGL++)

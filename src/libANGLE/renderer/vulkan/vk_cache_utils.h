@@ -604,20 +604,21 @@ class GraphicsPipelineDesc final
                               const RenderPassDesc &renderPassDesc);
 
     // Blend states
-    void updateBlendEnabled(GraphicsPipelineTransitionBits *transition, bool isBlendEnabled);
+    void updateBlendEnabled(GraphicsPipelineTransitionBits *transition,
+                            gl::DrawBufferMask blendEnabledMask);
     void updateBlendColor(GraphicsPipelineTransitionBits *transition, const gl::ColorF &color);
     void updateBlendFuncs(GraphicsPipelineTransitionBits *transition,
-                          const gl::BlendState &blendState);
+                          const gl::BlendStateExt &blendStateExt);
     void updateBlendEquations(GraphicsPipelineTransitionBits *transition,
-                              const gl::BlendState &blendState);
-    void setColorWriteMask(VkColorComponentFlags colorComponentFlags,
-                           const gl::DrawBufferMask &alphaMask,
-                           const gl::DrawBufferMask &enabledDrawBuffers);
+                              const gl::BlendStateExt &blendStateExt);
+    void setColorWriteMasks(gl::BlendStateExt::ColorMaskStorage::Type colorMasks,
+                            const gl::DrawBufferMask &alphaMask,
+                            const gl::DrawBufferMask &enabledDrawBuffers);
     void setSingleColorWriteMask(uint32_t colorIndexGL, VkColorComponentFlags colorComponentFlags);
-    void updateColorWriteMask(GraphicsPipelineTransitionBits *transition,
-                              VkColorComponentFlags colorComponentFlags,
-                              const gl::DrawBufferMask &alphaMask,
-                              const gl::DrawBufferMask &enabledDrawBuffers);
+    void updateColorWriteMasks(GraphicsPipelineTransitionBits *transition,
+                               gl::BlendStateExt::ColorMaskStorage::Type colorMasks,
+                               const gl::DrawBufferMask &alphaMask,
+                               const gl::DrawBufferMask &enabledDrawBuffers);
 
     // Depth/stencil states.
     void setDepthTestEnabled(bool enabled);
