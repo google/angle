@@ -15,6 +15,7 @@
 #include "util/util_gl.h"
 
 ANGLE_UTIL_EXPORT GLuint CheckLinkStatusAndReturnProgram(GLuint program, bool outputErrorMessages);
+ANGLE_UTIL_EXPORT GLuint GetProgramShader(GLuint program, GLint requestedType);
 ANGLE_UTIL_EXPORT GLuint CompileShader(GLenum type, const char *source);
 ANGLE_UTIL_EXPORT GLuint CompileShaderFromFile(GLenum type, const std::string &sourcePath);
 

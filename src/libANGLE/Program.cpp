@@ -1419,7 +1419,10 @@ angle::Result Program::link(const Context *context)
     auto *platform   = ANGLEPlatformCurrent();
     double startTime = platform->currentTime(platform);
 
-    unlink();
+    // Unlink the program, but do not clear the validation-related caching yet, since we can still
+    // use the previously linked program if linking the shaders fails
+    mLinked = false;
+
     infoLog.reset();
 
     // Validate we have properly attached shaders before checking the cache.
