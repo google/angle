@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "e16da03f_fe27fb7a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2427,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-04-30T01:45:30Z",
+      "side": 1,
+      "message": "FYI, these functions used to close the RP in the command graph era because they needed to ensure no reordering is done around them, hence every node was made dependent to the node that recorded them. The behavior was maintained during the rework.",
+      "parentUuid": "2813b1ec_38311f07",
+      "revId": "1ab7e512804f3021594e8779a3289f456b025f0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa0cfe6_7ef2ca96",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 20
@@ -167,6 +185,30 @@
       "side": 1,
       "message": "I suspect this is a bug in the existing code.\npush is matched by pop. Corresponding VK commands should probably be beginDebugUtilsLabelEXT and endDebugUtilsLabelEXT.",
       "parentUuid": "aa498a7b_40d418d1",
+      "range": {
+        "startLine": 2476,
+        "startChar": 36,
+        "endLine": 2476,
+        "endChar": 60
+      },
+      "revId": "1ab7e512804f3021594e8779a3289f456b025f0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd9851ed_6c081394",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2476,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-04-30T01:45:30Z",
+      "side": 1,
+      "message": "Good catch. The Command Graph implementation had it right (https://chromium-review.googlesource.com/c/angle/angle/+/2055554/5/src/libANGLE/renderer/vulkan/CommandGraph.cpp#725), but there seems to be a copy-paste error during linearization (https://chromium-review.googlesource.com/c/angle/angle/+/2040197/14/src/libANGLE/renderer/vulkan/ContextVk.cpp#1247)\n\nTobin, would you mind fixing it please?",
+      "parentUuid": "3e53e4cc_a505f412",
       "range": {
         "startLine": 2476,
         "startChar": 36,
