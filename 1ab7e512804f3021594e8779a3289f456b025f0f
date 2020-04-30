@@ -221,6 +221,30 @@
     },
     {
       "key": {
+        "uuid": "95056d17_3457ce77",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2476,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-04-30T14:49:38Z",
+      "side": 1,
+      "message": "Shabi: if you look closely you\u0027ll see I copied the existing error 1:1 as a refactor.",
+      "parentUuid": "cd9851ed_6c081394",
+      "range": {
+        "startLine": 2476,
+        "startChar": 36,
+        "endLine": 2476,
+        "endChar": 60
+      },
+      "revId": "1ab7e512804f3021594e8779a3289f456b025f0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "acef0eb2_362daa23",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 20
