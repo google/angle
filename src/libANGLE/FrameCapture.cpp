@@ -3180,15 +3180,17 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, CallCaptur
         case gl::EntryPoint::VertexAttribPointer:
         {
             // Get array location
-            GLuint index = call.params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal;
+            gl::AttributeLocation attribLoc =
+                call.params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
+                    .value.AttributeLocationVal;
 
             if (call.params.hasClientArrayData())
             {
-                mClientVertexArrayMap[index] = static_cast<int>(mFrameCalls.size());
+                mClientVertexArrayMap[attribLoc.value] = static_cast<int>(mFrameCalls.size());
             }
             else
             {
-                mClientVertexArrayMap[index] = -1;
+                mClientVertexArrayMap[attribLoc.value] = -1;
             }
             break;
         }
