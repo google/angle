@@ -666,7 +666,7 @@ bool ValidateDrawElementsInstancedBase(const Context *context,
                                        PrimitiveMode mode,
                                        GLsizei count,
                                        DrawElementsType type,
-                                       const GLvoid *indices,
+                                       const void *indices,
                                        GLsizei primcount)
 {
     if (primcount <= 0)

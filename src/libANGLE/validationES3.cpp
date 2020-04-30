@@ -1851,7 +1851,7 @@ bool ValidateProgramBinary(const Context *context,
                            ShaderProgramID program,
                            GLenum binaryFormat,
                            const void *binary,
-                           GLint length)
+                           GLsizei length)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2452,33 +2452,35 @@ bool ValidateCompressedTexSubImage3DRobustANGLE(const Context *context,
                                            height, depth, format, imageSize, data);
 }
 
-bool ValidateGenQueries(const Context *context, GLint n, const QueryID *queries)
+bool ValidateGenQueries(const Context *context, GLsizei n, const QueryID *queries)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateDeleteQueries(const Context *context, GLint n, const QueryID *queries)
+bool ValidateDeleteQueries(const Context *context, GLsizei n, const QueryID *queries)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateGenSamplers(const Context *context, GLint count, const SamplerID *samplers)
+bool ValidateGenSamplers(const Context *context, GLsizei count, const SamplerID *samplers)
 {
     return ValidateGenOrDeleteCountES3(context, count);
 }
 
-bool ValidateDeleteSamplers(const Context *context, GLint count, const SamplerID *samplers)
+bool ValidateDeleteSamplers(const Context *context, GLsizei count, const SamplerID *samplers)
 {
     return ValidateGenOrDeleteCountES3(context, count);
 }
 
-bool ValidateGenTransformFeedbacks(const Context *context, GLint n, const TransformFeedbackID *ids)
+bool ValidateGenTransformFeedbacks(const Context *context,
+                                   GLsizei n,
+                                   const TransformFeedbackID *ids)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
 bool ValidateDeleteTransformFeedbacks(const Context *context,
-                                      GLint n,
+                                      GLsizei n,
                                       const TransformFeedbackID *ids)
 {
     if (!ValidateGenOrDeleteES3(context, n))
@@ -2498,12 +2500,12 @@ bool ValidateDeleteTransformFeedbacks(const Context *context,
     return true;
 }
 
-bool ValidateGenVertexArrays(const Context *context, GLint n, const VertexArrayID *arrays)
+bool ValidateGenVertexArrays(const Context *context, GLsizei n, const VertexArrayID *arrays)
 {
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateDeleteVertexArrays(const Context *context, GLint n, const VertexArrayID *arrays)
+bool ValidateDeleteVertexArrays(const Context *context, GLsizei n, const VertexArrayID *arrays)
 {
     return ValidateGenOrDeleteES3(context, n);
 }

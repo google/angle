@@ -390,7 +390,6 @@ bool ValidateDrawElementsInstancedEXT(const Context *context,
                                       GLsizei primcount);
 
 bool ValidateDrawInstancedANGLE(const Context *context);
-bool ValidateDrawInstancedEXT(const Context *context);
 
 bool ValidateFramebufferTextureBase(const Context *context,
                                     GLenum target,

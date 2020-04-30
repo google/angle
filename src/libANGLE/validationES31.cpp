@@ -1684,14 +1684,14 @@ static bool ValidateGenOrDeleteES31(const Context *context, GLint n)
 }
 
 bool ValidateGenProgramPipelines(const Context *context,
-                                 GLint n,
+                                 GLsizei n,
                                  const ProgramPipelineID *pipelines)
 {
     return ValidateGenOrDeleteES31(context, n);
 }
 
 bool ValidateDeleteProgramPipelines(const Context *context,
-                                    GLint n,
+                                    GLsizei n,
                                     const ProgramPipelineID *pipelines)
 {
     return ValidateGenOrDeleteES31(context, n);
