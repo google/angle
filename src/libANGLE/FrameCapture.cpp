@@ -1418,7 +1418,10 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
 
         if (uniform.isArray())
         {
+            // TODO (cnorthrop): http://anglebug.com/3662
+            // Add support for array uniforms
             UNIMPLEMENTED();
+            return;
         }
 
         // We need to bind the program and update its uniforms
