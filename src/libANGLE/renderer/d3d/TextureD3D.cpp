@@ -653,6 +653,27 @@ angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLe
          newStorageDepth != oldStorageDepth || newStorageFormat != oldStorageFormat))
     {
         markAllImagesDirty();
+
+        // Iterate over all images, and backup the content if it's been used as a render target. The
+        // D3D11 backend can automatically restore images on storage destroy, but it only works for
+        // images that have been associated with the texture storage before, which is insufficient
+        // here.
+        if (mTexStorage->isRenderTarget())
+        {
+            gl::ImageIndexIterator iterator = imageIterator();
+            while (iterator.hasNext())
+            {
+                const gl::ImageIndex index    = iterator.next();
+                const GLsizei samples         = getRenderToTextureSamples();
+                RenderTargetD3D *renderTarget = nullptr;
+                ANGLE_TRY(mTexStorage->findRenderTarget(context, index, samples, &renderTarget));
+                if (renderTarget)
+                {
+                    ANGLE_TRY(getImage(index)->copyFromTexStorage(context, index, mTexStorage));
+                }
+            }
+        }
+
         ANGLE_TRY(releaseTexStorage(context));
     }
 

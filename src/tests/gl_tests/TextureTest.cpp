@@ -2208,9 +2208,6 @@ TEST_P(Texture2DTestES3, TextureImplPropogatesDirtyBits)
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance2/rendering/framebuffer-texture-changing-base-level.html
 TEST_P(Texture2DTestES3, FramebufferTextureChangingBaselevel)
 {
-    // TODO(geofflang): Investigate on D3D11. http://anglebug.com/2291
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     // TODO(cnorthrop): Failing on Vulkan/Windows/AMD. http://anglebug.com/3996
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsAMD());
 
