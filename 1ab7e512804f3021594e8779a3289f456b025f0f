@@ -245,6 +245,30 @@
     },
     {
       "key": {
+        "uuid": "4db23497_902e684c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2476,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-04-30T18:49:16Z",
+      "side": 1,
+      "message": "Jamie, if you look even more closely:\n\n        case CommandGraphNodeFunction::PushDebugMarker:\n            ...\n                primaryCommandBuffer-\u003ebeginDebugUtilsLabelEXT(label);\n\n(from the link https://chromium-review.googlesource.com/c/angle/angle/+/2055554/5/src/libANGLE/renderer/vulkan/CommandGraph.cpp#725)\n\nNot blaming or anything",
+      "parentUuid": "95056d17_3457ce77",
+      "range": {
+        "startLine": 2476,
+        "startChar": 36,
+        "endLine": 2476,
+        "endChar": 60
+      },
+      "revId": "1ab7e512804f3021594e8779a3289f456b025f0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "acef0eb2_362daa23",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 20
