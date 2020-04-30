@@ -3807,7 +3807,8 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags
     clear.value       = clearValue;
     clear.levelIndex  = imageIndex.getLevelIndex();
     clear.layerIndex  = imageIndex.hasLayer() ? imageIndex.getLayerIndex() : 0;
-    clear.layerCount  = imageIndex.getLayerCount();
+    clear.layerCount =
+        imageIndex.hasLayer() ? imageIndex.getLayerCount() : VK_REMAINING_ARRAY_LAYERS;
 }
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other)

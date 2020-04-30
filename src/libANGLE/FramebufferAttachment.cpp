@@ -316,19 +316,14 @@ angle::Result FramebufferAttachmentObject::initializeContents(const Context *con
     ASSERT(context->isRobustResourceInitEnabled());
 
     // Because gl::Texture cannot support tracking individual layer dirtiness, we only handle
-    // initializing entire mip levels for 2D array textures.
-    if (imageIndex.getType() == TextureType::_2DArray && imageIndex.hasLayer())
+    // initializing entire mip levels for textures with layers
+    if (imageIndex.usesTex3D() && imageIndex.hasLayer())
     {
-        // Compute the layer count so we get a correct 2D array index.
+        // Compute the layer count so we get a correct layer index.
         const gl::Extents &size = getAttachmentSize(imageIndex);
 
-        ImageIndex fullMipIndex = ImageIndex::Make2DArrayRange(
-            imageIndex.getLevelIndex(), ImageIndex::kEntireLevel, size.depth);
-        return getAttachmentImpl()->initializeContents(context, fullMipIndex);
-    }
-    else if (imageIndex.getType() == TextureType::_2DMultisampleArray && imageIndex.hasLayer())
-    {
-        ImageIndex fullMipIndex = ImageIndex::Make2DMultisampleArray(ImageIndex::kEntireLevel);
+        ImageIndex fullMipIndex = ImageIndex::MakeFromType(
+            imageIndex.getType(), imageIndex.getLevelIndex(), ImageIndex::kEntireLevel, size.depth);
         return getAttachmentImpl()->initializeContents(context, fullMipIndex);
     }
     else
