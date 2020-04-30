@@ -261,6 +261,30 @@
     },
     {
       "key": {
+        "uuid": "888cefe2_24f3979c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4140,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-04-30T14:23:18Z",
+      "side": 1,
+      "message": "Yeah, ideally we could combine multiple barriers into one barrier command. There\u0027s some additional complexity needed to solve this because of the special way we handle buffer barriers at the top of the command buffer.",
+      "parentUuid": "0eaf659d_194457a5",
+      "range": {
+        "startLine": 4137,
+        "startChar": 0,
+        "endLine": 4140,
+        "endChar": 5
+      },
+      "revId": "8bce9adf6a3f8b6c785dce2f7b1ff4c9c58105ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "94eb6f69_f15c2b27",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 10
