@@ -214,7 +214,7 @@ def _CheckNonAsciiInSourceFiles(input_api, output_api):
     for f in input_api.AffectedSourceFiles(implementation_and_headers):
         for (num, line) in f.ChangedContents():
             if not is_ascii(line):
-                files_with_non_ascii.append(f)
+                files_with_non_ascii.append("%s: %s" % (f, line))
                 break
 
     if files_with_non_ascii:
@@ -244,12 +244,4 @@ def CheckChangeOnUpload(input_api, output_api):
 
 
 def CheckChangeOnCommit(input_api, output_api):
-    results = []
-    results.extend(_CheckCodeGeneration(input_api, output_api))
-    results.extend(
-        input_api.canned_checks.CheckPatchFormatted(
-            input_api, output_api, result_factory=output_api.PresubmitError))
-    results.extend(_CheckChangeHasBugField(input_api, output_api))
-    results.extend(_CheckExportValidity(input_api, output_api))
-    results.extend(input_api.canned_checks.CheckChangeHasDescription(input_api, output_api))
-    return results
+    return CheckChangeOnUpload(input_api, output_api)
