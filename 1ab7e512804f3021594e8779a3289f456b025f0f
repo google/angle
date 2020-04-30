@@ -269,6 +269,30 @@
     },
     {
       "key": {
+        "uuid": "dbc44e14_0aedd21c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2476,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-04-30T19:08:39Z",
+      "side": 1,
+      "message": "Right. The original code didn\u0027t call that.",
+      "parentUuid": "4db23497_902e684c",
+      "range": {
+        "startLine": 2476,
+        "startChar": 36,
+        "endLine": 2476,
+        "endChar": 60
+      },
+      "revId": "1ab7e512804f3021594e8779a3289f456b025f0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "acef0eb2_362daa23",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 20
