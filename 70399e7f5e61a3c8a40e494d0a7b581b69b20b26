@@ -1,0 +1,387 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a18e47b_dbbfefda",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 21
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "nit:\noccurrence",
+      "range": {
+        "startLine": 17,
+        "startChar": 50,
+        "endLine": 17,
+        "endChar": 60
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "409dfe78_51575d7c",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Will scissoredRenderArea be correct for those previous clears?   What if they are clearing a scissored rect inside of a larger rect with an emulated format?\n\nShould ContextVk::updateScissor() call flushDeferredClears() also or is that case handled another way?",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dda13b64_5e381f2b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Is \u0027scissor with clear\u0027 common enough that this change will hurt more than the reduction of render passes gains?",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91dea3c1_50aa9be3",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "While it\u0027s true the only way to get in here is if !scissoredClear, so clearDepthWithRenderPassLoadOp \u003d\u003d clearDepth, I think it would still be better to use clearDepthWithRenderPassLoadOp here also in case anything else gets added onto that conditional in the future.",
+      "range": {
+        "startLine": 300,
+        "startChar": 64,
+        "endLine": 300,
+        "endChar": 74
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60558b52_4b9ae189",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Similar to the previous comment, I think this should follow the same convention as the others and reset clearDepth if clearDepthWithRenderPassLoadOp \u003d\u003d true to avoid hiding/relying that everyone has the same dependency on scissoredClear.",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a98c3abf_297da4cb",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1111,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "This part doesn\u0027t look true, since if they have the scissor set to the same size as the render area, the clear can still be deferred.",
+      "range": {
+        "startLine": 1111,
+        "startChar": 57,
+        "endLine": 1111,
+        "endChar": 94
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afa52a94_ec1fc2b3",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1111,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Ah, ok, so this explains my earlier question about the scissor area not matching if they changed it.   We don\u0027t support deferring clears of rects smaller than the render area.",
+      "range": {
+        "startLine": 1111,
+        "startChar": 0,
+        "endLine": 1111,
+        "endChar": 55
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3fae42f_f67f2e05",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1486,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "nit:\nThis might be better named as \u0027currAttachment\u0027 or \u0027attachmentIndex\u0027 or something similar, since \u0027numAttachments\u0027 sounds like it\u0027s accumulating a count that\u0027s used at the end for something rather than the current attachment index being worked on.",
+      "range": {
+        "startLine": 1486,
+        "startChar": 13,
+        "endLine": 1486,
+        "endChar": 27
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "925d3832_c85b54e7",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1524,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Why can\u0027t this be VK_ATTACHMENT_LOAD_OP_DONT_CARE also?",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2622deb2_bcfd0087",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1574,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "This portion looks unrelated and may be worth splitting out.",
+      "range": {
+        "startLine": 1556,
+        "startChar": 0,
+        "endLine": 1574,
+        "endChar": 93
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad8e315e_7d8bc33a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "No one calls this, so it can be removed.",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5bb34df_3b9d1d2b",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Why is VK_IMAGE_TYPE_3D treated special here?",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 5
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3dda766_5f22b4e4",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "I\u0027m not sure this comment should stay, since it could easily get stale without any indication is needs to be updated as part of any change in FramebufferVk.",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77466ed1_4ed6686a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 3227,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Oh, this name works well too and should match the prototype.",
+      "range": {
+        "startLine": 3227,
+        "startChar": 84,
+        "endLine": 3227,
+        "endChar": 97
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3abaf3d_b46476a5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 3232,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Do we not support c++17 so we can get std::optional natively?",
+      "range": {
+        "startLine": 3232,
+        "startChar": 8,
+        "endLine": 3232,
+        "endChar": 16
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff7e5309_4ca81cb7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "nit:\nI think this should have \u0027defer\u0027 somewhere in the name to make it clearer that any clear value here will be deferred.   Something like: deferredClearValueRef",
+      "range": {
+        "startLine": 947,
+        "startChar": 75,
+        "endLine": 947,
+        "endChar": 88
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d9c8bf9_4a1bc98e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Is there any concern that multiple clears could overwrite each other in the wrong order?",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8ab6236_c9894b58",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 683,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "I don\u0027t understand why this class is necessary.\n\nThe fact that mIndex is set by the constructor means that each mIndex value can have a different ClearValuesArray associated with it (though it doesn\u0027t appear that\u0027s ever actually done).   But since ClearValuesArray already have a gl::AttachmentArray of values, why do we need the extra layer of indexing that this class is providing?   It looks like ClearValueReference::set() can be moved into ClearValuesArray and this class can be removed.\n\nIs there something else this class is providing that I\u0027m missing?",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "add42f03_aeb3a487",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-04-30T03:27:12Z",
+      "side": 1,
+      "message": "Nobody reads this value or calls wasSet() so it can be removed.",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
