@@ -110,6 +110,11 @@ class DynamicBuffer : angle::NonCopyable
     // For testing only!
     void setMinimumSizeForTesting(size_t minSize);
 
+    bool isCoherent() const
+    {
+        return (mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0;
+    }
+
   private:
     void reset();
     angle::Result allocateNewBuffer(ContextVk *contextVk);
@@ -568,6 +573,10 @@ class BufferHelper final : public Resource
     bool isHostVisible() const
     {
         return (mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0;
+    }
+    bool isCoherent() const
+    {
+        return (mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0;
     }
 
     // Set write access mask when the buffer is modified externally, e.g. by host.  There is no
