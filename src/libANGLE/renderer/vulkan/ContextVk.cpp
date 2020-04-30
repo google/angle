@@ -2476,7 +2476,7 @@ angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
 
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(source, message.c_str(), &label);
-    outsideRenderPassCommandBuffer->insertDebugUtilsLabelEXT(label);
+    outsideRenderPassCommandBuffer->beginDebugUtilsLabelEXT(label);
 
     return angle::Result::Continue;
 }
