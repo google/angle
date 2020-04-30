@@ -1813,10 +1813,8 @@ angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
                                            const VkBufferCopy &copyRegion)
 {
     CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                       this));
-    ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                      srcBuffer));
+    ANGLE_TRY(contextVk->onBufferTransferRead(srcBuffer));
+    ANGLE_TRY(contextVk->onBufferTransferWrite(this));
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     commandBuffer->copyBuffer(srcBuffer->getBuffer(), mBuffer, 1, &copyRegion);
@@ -1952,6 +1950,8 @@ void BufferHelper::updateWriteBarrier(VkAccessFlags writeAccessType,
 {
     // We don't need to check mCurrentReadStages here since if it is not zero, mCurrentReadAccess
     // must not be zero as well. stage is finer grain than accessType.
+    ASSERT((!mCurrentReadStages && !mCurrentReadAccess) ||
+           (mCurrentReadStages && mCurrentReadAccess));
     if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
     {
         *barrierSrcOut |= mCurrentWriteAccess;
@@ -3358,8 +3358,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             BufferHelper *currentBuffer = bufferUpdate.bufferHelper;
             ASSERT(currentBuffer && currentBuffer->valid());
 
-            ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT,
-                                              VK_PIPELINE_STAGE_TRANSFER_BIT, currentBuffer));
+            ANGLE_TRY(contextVk->onBufferTransferRead(currentBuffer));
 
             commandBuffer->copyBufferToImage(currentBuffer->getBuffer().getHandle(), mImage,
                                              getCurrentLayout(), 1, &update.buffer.copyRegion);
@@ -3477,8 +3476,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 
     CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->onImageRead(aspectFlags, ImageLayout::TransferSrc, this));
-    ANGLE_TRY(contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                       *bufferOut));
+    ANGLE_TRY(contextVk->onBufferTransferWrite(*bufferOut));
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     VkBufferImageCopy regions[2] = {};

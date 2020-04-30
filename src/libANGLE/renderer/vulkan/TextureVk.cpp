@@ -1035,8 +1035,7 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                      srcBuffer));
+    ANGLE_TRY(contextVk->onBufferTransferRead(srcBuffer));
     ANGLE_TRY(
         contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst, mImage));
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));

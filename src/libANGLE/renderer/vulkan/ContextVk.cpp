@@ -1433,9 +1433,8 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
             BufferVk *bufferVk             = vk::GetImpl(buffer);
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-            mRenderPassCommands.bufferWrite(
-                &mResourceUseList, VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT,
-                VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT, &bufferHelper);
+            mRenderPassCommands.bufferWrite(&mResourceUseList, VK_ACCESS_SHADER_WRITE_BIT,
+                                            VK_PIPELINE_STAGE_VERTEX_SHADER_BIT, &bufferHelper);
         }
 
         // TODO(http://anglebug.com/3570): Need to update to handle Program Pipelines

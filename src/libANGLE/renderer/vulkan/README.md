@@ -42,7 +42,7 @@ the primary command buffer.
 
 The back-end usually records Image and Buffer barriers through additional `ContextVk` APIs:
 
- * `onBufferRead` and `onBufferWrite` accumulate `VkBuffer` barriers.
+ * `onBufferTransferRead/onBufferComputeShaderRead` and `onBufferTransferWrite/onBufferComputeShaderWrite` accumulate `VkBuffer` barriers.
  * `onImageRead` and `onImageWrite` accumulate `VkImage` barriers.
  * `onRenderPassImageWrite` is a special API for write barriers inside a RenderPass instance.
 
@@ -57,8 +57,8 @@ In this example we'll be recording a buffer copy command:
 
 ```
     # Ensure that ANGLE sets proper read and write barriers for the Buffers.
-    ANGLE_TRY(contextVk->onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, destBuffer));
-    ANGLE_TRY(contextVk->onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, srcBuffer));
+    ANGLE_TRY(contextVk->onBufferTransferWrite(destBuffer));
+    ANGLE_TRY(contextVk->onBufferTransferRead(srcBuffer));
 
     # Get a pointer to a secondary command buffer for command recording. May "flush" the RP.
     vk::CommandBuffer *commandBuffer;
