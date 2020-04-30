@@ -59,12 +59,12 @@
     void depthRangef(GLfloat n, GLfloat f);                                                        \
     void detachShader(ShaderProgramID programPacked, ShaderProgramID shaderPacked);                \
     void disable(GLenum cap);                                                                      \
-    void disableVertexAttribArray(AttributeLocation indexPacked);                                  \
+    void disableVertexAttribArray(GLuint index);                                                   \
     void drawArrays(PrimitiveMode modePacked, GLint first, GLsizei count);                         \
     void drawElements(PrimitiveMode modePacked, GLsizei count, DrawElementsType typePacked,        \
                       const void *indices);                                                        \
     void enable(GLenum cap);                                                                       \
-    void enableVertexAttribArray(AttributeLocation indexPacked);                                   \
+    void enableVertexAttribArray(GLuint index);                                                    \
     void finish();                                                                                 \
     void flush();                                                                                  \
     void framebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget,      \
@@ -110,9 +110,9 @@
                       GLfloat *params);                                                            \
     void getUniformiv(ShaderProgramID programPacked, UniformLocation locationPacked,               \
                       GLint *params);                                                              \
-    void getVertexAttribPointerv(AttributeLocation indexPacked, GLenum pname, void **pointer);     \
-    void getVertexAttribfv(AttributeLocation indexPacked, GLenum pname, GLfloat *params);          \
-    void getVertexAttribiv(AttributeLocation indexPacked, GLenum pname, GLint *params);            \
+    void getVertexAttribPointerv(GLuint index, GLenum pname, void **pointer);                      \
+    void getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params);                           \
+    void getVertexAttribiv(GLuint index, GLenum pname, GLint *params);                             \
     void hint(GLenum target, GLenum mode);                                                         \
     GLboolean isBuffer(BufferID bufferPacked) const;                                               \
     GLboolean isEnabled(GLenum cap) const;                                                         \
@@ -175,18 +175,16 @@
                           const GLfloat *value);                                                   \
     void useProgram(ShaderProgramID programPacked);                                                \
     void validateProgram(ShaderProgramID programPacked);                                           \
-    void vertexAttrib1f(AttributeLocation indexPacked, GLfloat x);                                 \
-    void vertexAttrib1fv(AttributeLocation indexPacked, const GLfloat *v);                         \
-    void vertexAttrib2f(AttributeLocation indexPacked, GLfloat x, GLfloat y);                      \
-    void vertexAttrib2fv(AttributeLocation indexPacked, const GLfloat *v);                         \
-    void vertexAttrib3f(AttributeLocation indexPacked, GLfloat x, GLfloat y, GLfloat z);           \
-    void vertexAttrib3fv(AttributeLocation indexPacked, const GLfloat *v);                         \
-    void vertexAttrib4f(AttributeLocation indexPacked, GLfloat x, GLfloat y, GLfloat z,            \
-                        GLfloat w);                                                                \
-    void vertexAttrib4fv(AttributeLocation indexPacked, const GLfloat *v);                         \
-    void vertexAttribPointer(AttributeLocation indexPacked, GLint size,                            \
-                             VertexAttribType typePacked, GLboolean normalized, GLsizei stride,    \
-                             const void *pointer);                                                 \
+    void vertexAttrib1f(GLuint index, GLfloat x);                                                  \
+    void vertexAttrib1fv(GLuint index, const GLfloat *v);                                          \
+    void vertexAttrib2f(GLuint index, GLfloat x, GLfloat y);                                       \
+    void vertexAttrib2fv(GLuint index, const GLfloat *v);                                          \
+    void vertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z);                            \
+    void vertexAttrib3fv(GLuint index, const GLfloat *v);                                          \
+    void vertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);                 \
+    void vertexAttrib4fv(GLuint index, const GLfloat *v);                                          \
+    void vertexAttribPointer(GLuint index, GLint size, VertexAttribType typePacked,                \
+                             GLboolean normalized, GLsizei stride, const void *pointer);           \
     void viewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 #endif  // ANGLE_CONTEXT_API_2_0_AUTOGEN_H_

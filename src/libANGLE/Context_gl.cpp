@@ -215,17 +215,17 @@ void Context::multiTexCoord4sv(GLenum target, const GLshort *v)
     UNIMPLEMENTED();
 }
 
-void Context::getVertexAttribdv(AttributeLocation index, GLenum pname, GLdouble *params)
+void Context::getVertexAttribdv(GLuint index, GLenum pname, GLdouble *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttrib1d(AttributeLocation index, GLdouble x)
+void Context::vertexAttrib1d(GLuint index, GLdouble x)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttrib1dv(AttributeLocation index, const GLdouble *v)
+void Context::vertexAttrib1dv(GLuint index, const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
@@ -240,12 +240,12 @@ void Context::vertexAttrib1sv(GLuint index, const GLshort *v)
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttrib2d(AttributeLocation index, GLdouble x, GLdouble y)
+void Context::vertexAttrib2d(GLuint index, GLdouble x, GLdouble y)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttrib2dv(AttributeLocation index, const GLdouble *v)
+void Context::vertexAttrib2dv(GLuint index, const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
@@ -260,12 +260,12 @@ void Context::vertexAttrib2sv(GLuint index, const GLshort *v)
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttrib3d(AttributeLocation index, GLdouble x, GLdouble y, GLdouble z)
+void Context::vertexAttrib3d(GLuint index, GLdouble x, GLdouble y, GLdouble z)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttrib3dv(AttributeLocation index, const GLdouble *v)
+void Context::vertexAttrib3dv(GLuint index, const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
@@ -320,16 +320,12 @@ void Context::vertexAttrib4bv(GLuint index, const GLbyte *v)
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttrib4d(AttributeLocation index,
-                             GLdouble x,
-                             GLdouble y,
-                             GLdouble z,
-                             GLdouble w)
+void Context::vertexAttrib4d(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttrib4dv(AttributeLocation index, const GLdouble *v)
+void Context::vertexAttrib4dv(GLuint index, const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
@@ -388,62 +384,62 @@ void Context::framebufferTexture1D(GLenum target,
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI1i(AttributeLocation index, GLint x)
+void Context::vertexAttribI1i(GLuint index, GLint x)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI1iv(AttributeLocation index, const GLint *v)
+void Context::vertexAttribI1iv(GLuint index, const GLint *v)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI1ui(AttributeLocation index, GLuint x)
+void Context::vertexAttribI1ui(GLuint index, GLuint x)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI1uiv(AttributeLocation index, const GLuint *v)
+void Context::vertexAttribI1uiv(GLuint index, const GLuint *v)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI2i(AttributeLocation index, GLint x, GLint y)
+void Context::vertexAttribI2i(GLuint index, GLint x, GLint y)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI2iv(AttributeLocation index, const GLint *v)
+void Context::vertexAttribI2iv(GLuint index, const GLint *v)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI2ui(AttributeLocation index, GLuint x, GLuint y)
+void Context::vertexAttribI2ui(GLuint index, GLuint x, GLuint y)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI2uiv(AttributeLocation index, const GLuint *v)
+void Context::vertexAttribI2uiv(GLuint index, const GLuint *v)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI3i(AttributeLocation index, GLint x, GLint y, GLint z)
+void Context::vertexAttribI3i(GLuint index, GLint x, GLint y, GLint z)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI3iv(AttributeLocation index, const GLint *v)
+void Context::vertexAttribI3iv(GLuint index, const GLint *v)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI3ui(AttributeLocation index, GLuint x, GLuint y, GLuint z)
+void Context::vertexAttribI3ui(GLuint index, GLuint x, GLuint y, GLuint z)
 {
     UNIMPLEMENTED();
 }
 
-void Context::vertexAttribI3uiv(AttributeLocation index, const GLuint *v)
+void Context::vertexAttribI3uiv(GLuint index, const GLuint *v)
 {
     UNIMPLEMENTED();
 }
@@ -3077,12 +3073,12 @@ void Context::createVertexArrays(GLsizei n, VertexArrayID *arrays)
     UNIMPLEMENTED();
 }
 
-void Context::disableVertexArrayAttrib(VertexArrayID vaobj, AttributeLocation index)
+void Context::disableVertexArrayAttrib(VertexArrayID vaobj, GLuint index)
 {
     UNIMPLEMENTED();
 }
 
-void Context::enableVertexArrayAttrib(VertexArrayID vaobj, AttributeLocation index)
+void Context::enableVertexArrayAttrib(VertexArrayID vaobj, GLuint index)
 {
     UNIMPLEMENTED();
 }
@@ -3257,17 +3253,14 @@ void Context::getTransformFeedbackiv(GLuint xfb, GLenum pname, GLint *param)
 }
 
 void Context::getVertexArrayIndexed64iv(VertexArrayID vaobj,
-                                        AttributeLocation index,
+                                        GLuint index,
                                         GLenum pname,
                                         GLint64 *param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getVertexArrayIndexediv(VertexArrayID vaobj,
-                                      AttributeLocation index,
-                                      GLenum pname,
-                                      GLint *param)
+void Context::getVertexArrayIndexediv(VertexArrayID vaobj, GLuint index, GLenum pname, GLint *param)
 {
     UNIMPLEMENTED();
 }
@@ -3665,15 +3658,13 @@ GLboolean Context::unmapNamedBuffer(BufferID buffer)
     return false;
 }
 
-void Context::vertexArrayAttribBinding(VertexArrayID vaobj,
-                                       AttributeLocation attribindex,
-                                       GLuint bindingindex)
+void Context::vertexArrayAttribBinding(VertexArrayID vaobj, GLuint attribindex, GLuint bindingindex)
 {
     UNIMPLEMENTED();
 }
 
 void Context::vertexArrayAttribFormat(VertexArrayID vaobj,
-                                      AttributeLocation attribindex,
+                                      GLuint attribindex,
                                       GLint size,
                                       GLenum type,
                                       GLboolean normalized,
@@ -3683,7 +3674,7 @@ void Context::vertexArrayAttribFormat(VertexArrayID vaobj,
 }
 
 void Context::vertexArrayAttribIFormat(VertexArrayID vaobj,
-                                       AttributeLocation attribindex,
+                                       GLuint attribindex,
                                        GLint size,
                                        GLenum type,
                                        GLuint relativeoffset)
@@ -3692,7 +3683,7 @@ void Context::vertexArrayAttribIFormat(VertexArrayID vaobj,
 }
 
 void Context::vertexArrayAttribLFormat(VertexArrayID vaobj,
-                                       AttributeLocation attribindex,
+                                       GLuint attribindex,
                                        GLint size,
                                        GLenum type,
                                        GLuint relativeoffset)

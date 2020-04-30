@@ -1040,15 +1040,14 @@ void GL_APIENTRY GetVertexAttribIiv(GLuint index, GLenum pname, GLint *params)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetVertexAttribIiv(context, indexPacked, pname, params));
+                            ValidateGetVertexAttribIiv(context, index, pname, params));
         if (isCallValid)
         {
-            context->getVertexAttribIiv(indexPacked, pname, params);
+            context->getVertexAttribIiv(index, pname, params);
         }
-        ANGLE_CAPTURE(GetVertexAttribIiv, isCallValid, context, indexPacked, pname, params);
+        ANGLE_CAPTURE(GetVertexAttribIiv, isCallValid, context, index, pname, params);
     }
 }
 
@@ -1062,15 +1061,14 @@ void GL_APIENTRY GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint *params)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetVertexAttribIuiv(context, indexPacked, pname, params));
+                            ValidateGetVertexAttribIuiv(context, index, pname, params));
         if (isCallValid)
         {
-            context->getVertexAttribIuiv(indexPacked, pname, params);
+            context->getVertexAttribIuiv(index, pname, params);
         }
-        ANGLE_CAPTURE(GetVertexAttribIuiv, isCallValid, context, indexPacked, pname, params);
+        ANGLE_CAPTURE(GetVertexAttribIuiv, isCallValid, context, index, pname, params);
     }
 }
 
@@ -1538,15 +1536,14 @@ void GL_APIENTRY VertexAttribI1i(GLuint index, GLint x)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI1i(context, indexPacked, x));
+            (context->skipValidation() || ValidateVertexAttribI1i(context, index, x));
         if (isCallValid)
         {
-            context->vertexAttribI1i(indexPacked, x);
+            context->vertexAttribI1i(index, x);
         }
-        ANGLE_CAPTURE(VertexAttribI1i, isCallValid, context, indexPacked, x);
+        ANGLE_CAPTURE(VertexAttribI1i, isCallValid, context, index, x);
     }
 }
 
@@ -1559,15 +1556,14 @@ void GL_APIENTRY VertexAttribI1iv(GLuint index, const GLint *v)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI1iv(context, indexPacked, v));
+            (context->skipValidation() || ValidateVertexAttribI1iv(context, index, v));
         if (isCallValid)
         {
-            context->vertexAttribI1iv(indexPacked, v);
+            context->vertexAttribI1iv(index, v);
         }
-        ANGLE_CAPTURE(VertexAttribI1iv, isCallValid, context, indexPacked, v);
+        ANGLE_CAPTURE(VertexAttribI1iv, isCallValid, context, index, v);
     }
 }
 
@@ -1579,15 +1575,14 @@ void GL_APIENTRY VertexAttribI1ui(GLuint index, GLuint x)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI1ui(context, indexPacked, x));
+            (context->skipValidation() || ValidateVertexAttribI1ui(context, index, x));
         if (isCallValid)
         {
-            context->vertexAttribI1ui(indexPacked, x);
+            context->vertexAttribI1ui(index, x);
         }
-        ANGLE_CAPTURE(VertexAttribI1ui, isCallValid, context, indexPacked, x);
+        ANGLE_CAPTURE(VertexAttribI1ui, isCallValid, context, index, x);
     }
 }
 
@@ -1600,15 +1595,14 @@ void GL_APIENTRY VertexAttribI1uiv(GLuint index, const GLuint *v)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI1uiv(context, indexPacked, v));
+            (context->skipValidation() || ValidateVertexAttribI1uiv(context, index, v));
         if (isCallValid)
         {
-            context->vertexAttribI1uiv(indexPacked, v);
+            context->vertexAttribI1uiv(index, v);
         }
-        ANGLE_CAPTURE(VertexAttribI1uiv, isCallValid, context, indexPacked, v);
+        ANGLE_CAPTURE(VertexAttribI1uiv, isCallValid, context, index, v);
     }
 }
 
@@ -1620,15 +1614,14 @@ void GL_APIENTRY VertexAttribI2i(GLuint index, GLint x, GLint y)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI2i(context, indexPacked, x, y));
+            (context->skipValidation() || ValidateVertexAttribI2i(context, index, x, y));
         if (isCallValid)
         {
-            context->vertexAttribI2i(indexPacked, x, y);
+            context->vertexAttribI2i(index, x, y);
         }
-        ANGLE_CAPTURE(VertexAttribI2i, isCallValid, context, indexPacked, x, y);
+        ANGLE_CAPTURE(VertexAttribI2i, isCallValid, context, index, x, y);
     }
 }
 
@@ -1641,15 +1634,14 @@ void GL_APIENTRY VertexAttribI2iv(GLuint index, const GLint *v)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI2iv(context, indexPacked, v));
+            (context->skipValidation() || ValidateVertexAttribI2iv(context, index, v));
         if (isCallValid)
         {
-            context->vertexAttribI2iv(indexPacked, v);
+            context->vertexAttribI2iv(index, v);
         }
-        ANGLE_CAPTURE(VertexAttribI2iv, isCallValid, context, indexPacked, v);
+        ANGLE_CAPTURE(VertexAttribI2iv, isCallValid, context, index, v);
     }
 }
 
@@ -1661,15 +1653,14 @@ void GL_APIENTRY VertexAttribI2ui(GLuint index, GLuint x, GLuint y)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI2ui(context, indexPacked, x, y));
+            (context->skipValidation() || ValidateVertexAttribI2ui(context, index, x, y));
         if (isCallValid)
         {
-            context->vertexAttribI2ui(indexPacked, x, y);
+            context->vertexAttribI2ui(index, x, y);
         }
-        ANGLE_CAPTURE(VertexAttribI2ui, isCallValid, context, indexPacked, x, y);
+        ANGLE_CAPTURE(VertexAttribI2ui, isCallValid, context, index, x, y);
     }
 }
 
@@ -1682,15 +1673,14 @@ void GL_APIENTRY VertexAttribI2uiv(GLuint index, const GLuint *v)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI2uiv(context, indexPacked, v));
+            (context->skipValidation() || ValidateVertexAttribI2uiv(context, index, v));
         if (isCallValid)
         {
-            context->vertexAttribI2uiv(indexPacked, v);
+            context->vertexAttribI2uiv(index, v);
         }
-        ANGLE_CAPTURE(VertexAttribI2uiv, isCallValid, context, indexPacked, v);
+        ANGLE_CAPTURE(VertexAttribI2uiv, isCallValid, context, index, v);
     }
 }
 
@@ -1703,15 +1693,14 @@ void GL_APIENTRY VertexAttribI3i(GLuint index, GLint x, GLint y, GLint z)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI3i(context, indexPacked, x, y, z));
+            (context->skipValidation() || ValidateVertexAttribI3i(context, index, x, y, z));
         if (isCallValid)
         {
-            context->vertexAttribI3i(indexPacked, x, y, z);
+            context->vertexAttribI3i(index, x, y, z);
         }
-        ANGLE_CAPTURE(VertexAttribI3i, isCallValid, context, indexPacked, x, y, z);
+        ANGLE_CAPTURE(VertexAttribI3i, isCallValid, context, index, x, y, z);
     }
 }
 
@@ -1724,15 +1713,14 @@ void GL_APIENTRY VertexAttribI3iv(GLuint index, const GLint *v)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI3iv(context, indexPacked, v));
+            (context->skipValidation() || ValidateVertexAttribI3iv(context, index, v));
         if (isCallValid)
         {
-            context->vertexAttribI3iv(indexPacked, v);
+            context->vertexAttribI3iv(index, v);
         }
-        ANGLE_CAPTURE(VertexAttribI3iv, isCallValid, context, indexPacked, v);
+        ANGLE_CAPTURE(VertexAttribI3iv, isCallValid, context, index, v);
     }
 }
 
@@ -1745,15 +1733,14 @@ void GL_APIENTRY VertexAttribI3ui(GLuint index, GLuint x, GLuint y, GLuint z)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI3ui(context, indexPacked, x, y, z));
+            (context->skipValidation() || ValidateVertexAttribI3ui(context, index, x, y, z));
         if (isCallValid)
         {
-            context->vertexAttribI3ui(indexPacked, x, y, z);
+            context->vertexAttribI3ui(index, x, y, z);
         }
-        ANGLE_CAPTURE(VertexAttribI3ui, isCallValid, context, indexPacked, x, y, z);
+        ANGLE_CAPTURE(VertexAttribI3ui, isCallValid, context, index, x, y, z);
     }
 }
 
@@ -1766,15 +1753,14 @@ void GL_APIENTRY VertexAttribI3uiv(GLuint index, const GLuint *v)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI3uiv(context, indexPacked, v));
+            (context->skipValidation() || ValidateVertexAttribI3uiv(context, index, v));
         if (isCallValid)
         {
-            context->vertexAttribI3uiv(indexPacked, v);
+            context->vertexAttribI3uiv(index, v);
         }
-        ANGLE_CAPTURE(VertexAttribI3uiv, isCallValid, context, indexPacked, v);
+        ANGLE_CAPTURE(VertexAttribI3uiv, isCallValid, context, index, v);
     }
 }
 
@@ -1807,15 +1793,14 @@ void GL_APIENTRY VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint 
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexAttribI4i(context, indexPacked, x, y, z, w));
+        bool isCallValid =
+            (context->skipValidation() || ValidateVertexAttribI4i(context, index, x, y, z, w));
         if (isCallValid)
         {
-            context->vertexAttribI4i(indexPacked, x, y, z, w);
+            context->vertexAttribI4i(index, x, y, z, w);
         }
-        ANGLE_CAPTURE(VertexAttribI4i, isCallValid, context, indexPacked, x, y, z, w);
+        ANGLE_CAPTURE(VertexAttribI4i, isCallValid, context, index, x, y, z, w);
     }
 }
 
@@ -1828,15 +1813,14 @@ void GL_APIENTRY VertexAttribI4iv(GLuint index, const GLint *v)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI4iv(context, indexPacked, v));
+            (context->skipValidation() || ValidateVertexAttribI4iv(context, index, v));
         if (isCallValid)
         {
-            context->vertexAttribI4iv(indexPacked, v);
+            context->vertexAttribI4iv(index, v);
         }
-        ANGLE_CAPTURE(VertexAttribI4iv, isCallValid, context, indexPacked, v);
+        ANGLE_CAPTURE(VertexAttribI4iv, isCallValid, context, index, v);
     }
 }
 
@@ -1890,15 +1874,14 @@ void GL_APIENTRY VertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GL
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexAttribI4ui(context, indexPacked, x, y, z, w));
+        bool isCallValid =
+            (context->skipValidation() || ValidateVertexAttribI4ui(context, index, x, y, z, w));
         if (isCallValid)
         {
-            context->vertexAttribI4ui(indexPacked, x, y, z, w);
+            context->vertexAttribI4ui(index, x, y, z, w);
         }
-        ANGLE_CAPTURE(VertexAttribI4ui, isCallValid, context, indexPacked, x, y, z, w);
+        ANGLE_CAPTURE(VertexAttribI4ui, isCallValid, context, index, x, y, z, w);
     }
 }
 
@@ -1911,15 +1894,14 @@ void GL_APIENTRY VertexAttribI4uiv(GLuint index, const GLuint *v)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribI4uiv(context, indexPacked, v));
+            (context->skipValidation() || ValidateVertexAttribI4uiv(context, index, v));
         if (isCallValid)
         {
-            context->vertexAttribI4uiv(indexPacked, v);
+            context->vertexAttribI4uiv(index, v);
         }
-        ANGLE_CAPTURE(VertexAttribI4uiv, isCallValid, context, indexPacked, v);
+        ANGLE_CAPTURE(VertexAttribI4uiv, isCallValid, context, index, v);
     }
 }
 
@@ -1955,18 +1937,17 @@ VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, cons
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttribIPointer(context, indexPacked, size, typePacked, stride, pointer));
+             ValidateVertexAttribIPointer(context, index, size, typePacked, stride, pointer));
         if (isCallValid)
         {
-            context->vertexAttribIPointer(indexPacked, size, typePacked, stride, pointer);
+            context->vertexAttribIPointer(index, size, typePacked, stride, pointer);
         }
-        ANGLE_CAPTURE(VertexAttribIPointer, isCallValid, context, indexPacked, size, typePacked,
-                      stride, pointer);
+        ANGLE_CAPTURE(VertexAttribIPointer, isCallValid, context, index, size, typePacked, stride,
+                      pointer);
     }
 }
 }  // namespace gl

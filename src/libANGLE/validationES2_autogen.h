@@ -128,7 +128,7 @@ bool ValidateDetachShader(const Context *context,
                           ShaderProgramID programPacked,
                           ShaderProgramID shaderPacked);
 bool ValidateDisable(const Context *context, GLenum cap);
-bool ValidateDisableVertexAttribArray(const Context *context, AttributeLocation indexPacked);
+bool ValidateDisableVertexAttribArray(const Context *context, GLuint index);
 bool ValidateDrawArrays(const Context *context,
                         PrimitiveMode modePacked,
                         GLint first,
@@ -139,7 +139,7 @@ bool ValidateDrawElements(const Context *context,
                           DrawElementsType typePacked,
                           const void *indices);
 bool ValidateEnable(const Context *context, GLenum cap);
-bool ValidateEnableVertexAttribArray(const Context *context, AttributeLocation indexPacked);
+bool ValidateEnableVertexAttribArray(const Context *context, GLuint index);
 bool ValidateFinish(const Context *context);
 bool ValidateFlush(const Context *context);
 bool ValidateFramebufferRenderbuffer(const Context *context,
@@ -253,15 +253,15 @@ bool ValidateGetUniformiv(const Context *context,
                           UniformLocation locationPacked,
                           const GLint *params);
 bool ValidateGetVertexAttribPointerv(const Context *context,
-                                     AttributeLocation indexPacked,
+                                     GLuint index,
                                      GLenum pname,
                                      void *const *pointer);
 bool ValidateGetVertexAttribfv(const Context *context,
-                               AttributeLocation indexPacked,
+                               GLuint index,
                                GLenum pname,
                                const GLfloat *params);
 bool ValidateGetVertexAttribiv(const Context *context,
-                               AttributeLocation indexPacked,
+                               GLuint index,
                                GLenum pname,
                                const GLint *params);
 bool ValidateHint(const Context *context, GLenum target, GLenum mode);
@@ -431,36 +431,21 @@ bool ValidateUniformMatrix4fv(const Context *context,
                               const GLfloat *value);
 bool ValidateUseProgram(const Context *context, ShaderProgramID programPacked);
 bool ValidateValidateProgram(const Context *context, ShaderProgramID programPacked);
-bool ValidateVertexAttrib1f(const Context *context, AttributeLocation indexPacked, GLfloat x);
-bool ValidateVertexAttrib1fv(const Context *context,
-                             AttributeLocation indexPacked,
-                             const GLfloat *v);
-bool ValidateVertexAttrib2f(const Context *context,
-                            AttributeLocation indexPacked,
-                            GLfloat x,
-                            GLfloat y);
-bool ValidateVertexAttrib2fv(const Context *context,
-                             AttributeLocation indexPacked,
-                             const GLfloat *v);
-bool ValidateVertexAttrib3f(const Context *context,
-                            AttributeLocation indexPacked,
-                            GLfloat x,
-                            GLfloat y,
-                            GLfloat z);
-bool ValidateVertexAttrib3fv(const Context *context,
-                             AttributeLocation indexPacked,
-                             const GLfloat *v);
+bool ValidateVertexAttrib1f(const Context *context, GLuint index, GLfloat x);
+bool ValidateVertexAttrib1fv(const Context *context, GLuint index, const GLfloat *v);
+bool ValidateVertexAttrib2f(const Context *context, GLuint index, GLfloat x, GLfloat y);
+bool ValidateVertexAttrib2fv(const Context *context, GLuint index, const GLfloat *v);
+bool ValidateVertexAttrib3f(const Context *context, GLuint index, GLfloat x, GLfloat y, GLfloat z);
+bool ValidateVertexAttrib3fv(const Context *context, GLuint index, const GLfloat *v);
 bool ValidateVertexAttrib4f(const Context *context,
-                            AttributeLocation indexPacked,
+                            GLuint index,
                             GLfloat x,
                             GLfloat y,
                             GLfloat z,
                             GLfloat w);
-bool ValidateVertexAttrib4fv(const Context *context,
-                             AttributeLocation indexPacked,
-                             const GLfloat *v);
+bool ValidateVertexAttrib4fv(const Context *context, GLuint index, const GLfloat *v);
 bool ValidateVertexAttribPointer(const Context *context,
-                                 AttributeLocation indexPacked,
+                                 GLuint index,
                                  GLint size,
                                  VertexAttribType typePacked,
                                  GLboolean normalized,

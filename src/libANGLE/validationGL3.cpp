@@ -54,70 +54,62 @@ bool ValidateFramebufferTexture3D(const Context *context,
     return true;
 }
 
-bool ValidateVertexAttribI1i(const Context *context, AttributeLocation index, GLint x)
+bool ValidateVertexAttribI1i(const Context *context, GLuint index, GLint x)
 {
     return true;
 }
 
-bool ValidateVertexAttribI1iv(const Context *context, AttributeLocation index, const GLint *v)
+bool ValidateVertexAttribI1iv(const Context *context, GLuint index, const GLint *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribI1ui(const Context *context, AttributeLocation index, GLuint x)
+bool ValidateVertexAttribI1ui(const Context *context, GLuint index, GLuint x)
 {
     return true;
 }
 
-bool ValidateVertexAttribI1uiv(const Context *context, AttributeLocation index, const GLuint *v)
+bool ValidateVertexAttribI1uiv(const Context *context, GLuint index, const GLuint *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribI2i(const Context *context, AttributeLocation index, GLint x, GLint y)
+bool ValidateVertexAttribI2i(const Context *context, GLuint index, GLint x, GLint y)
 {
     return true;
 }
 
-bool ValidateVertexAttribI2iv(const Context *context, AttributeLocation index, const GLint *v)
+bool ValidateVertexAttribI2iv(const Context *context, GLuint index, const GLint *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribI2ui(const Context *context, AttributeLocation index, GLuint x, GLuint y)
+bool ValidateVertexAttribI2ui(const Context *context, GLuint index, GLuint x, GLuint y)
 {
     return true;
 }
 
-bool ValidateVertexAttribI2uiv(const Context *context, AttributeLocation index, const GLuint *v)
+bool ValidateVertexAttribI2uiv(const Context *context, GLuint index, const GLuint *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribI3i(const Context *context,
-                             AttributeLocation index,
-                             GLint x,
-                             GLint y,
-                             GLint z)
+bool ValidateVertexAttribI3i(const Context *context, GLuint index, GLint x, GLint y, GLint z)
 {
     return true;
 }
 
-bool ValidateVertexAttribI3iv(const Context *context, AttributeLocation index, const GLint *v)
+bool ValidateVertexAttribI3iv(const Context *context, GLuint index, const GLint *v)
 {
     return true;
 }
 
-bool ValidateVertexAttribI3ui(const Context *context,
-                              AttributeLocation index,
-                              GLuint x,
-                              GLuint y,
-                              GLuint z)
+bool ValidateVertexAttribI3ui(const Context *context, GLuint index, GLuint x, GLuint y, GLuint z)
 {
     return true;
 }
 
-bool ValidateVertexAttribI3uiv(const Context *context, AttributeLocation index, const GLuint *v)
+bool ValidateVertexAttribI3uiv(const Context *context, GLuint index, const GLuint *v)
 {
     return true;
 }

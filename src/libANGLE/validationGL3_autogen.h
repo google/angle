@@ -37,44 +37,18 @@ bool ValidateFramebufferTexture3D(const Context *context,
                                   TextureID texturePacked,
                                   GLint level,
                                   GLint zoffset);
-bool ValidateVertexAttribI1i(const Context *context, AttributeLocation indexPacked, GLint x);
-bool ValidateVertexAttribI1iv(const Context *context,
-                              AttributeLocation indexPacked,
-                              const GLint *v);
-bool ValidateVertexAttribI1ui(const Context *context, AttributeLocation indexPacked, GLuint x);
-bool ValidateVertexAttribI1uiv(const Context *context,
-                               AttributeLocation indexPacked,
-                               const GLuint *v);
-bool ValidateVertexAttribI2i(const Context *context,
-                             AttributeLocation indexPacked,
-                             GLint x,
-                             GLint y);
-bool ValidateVertexAttribI2iv(const Context *context,
-                              AttributeLocation indexPacked,
-                              const GLint *v);
-bool ValidateVertexAttribI2ui(const Context *context,
-                              AttributeLocation indexPacked,
-                              GLuint x,
-                              GLuint y);
-bool ValidateVertexAttribI2uiv(const Context *context,
-                               AttributeLocation indexPacked,
-                               const GLuint *v);
-bool ValidateVertexAttribI3i(const Context *context,
-                             AttributeLocation indexPacked,
-                             GLint x,
-                             GLint y,
-                             GLint z);
-bool ValidateVertexAttribI3iv(const Context *context,
-                              AttributeLocation indexPacked,
-                              const GLint *v);
-bool ValidateVertexAttribI3ui(const Context *context,
-                              AttributeLocation indexPacked,
-                              GLuint x,
-                              GLuint y,
-                              GLuint z);
-bool ValidateVertexAttribI3uiv(const Context *context,
-                               AttributeLocation indexPacked,
-                               const GLuint *v);
+bool ValidateVertexAttribI1i(const Context *context, GLuint index, GLint x);
+bool ValidateVertexAttribI1iv(const Context *context, GLuint index, const GLint *v);
+bool ValidateVertexAttribI1ui(const Context *context, GLuint index, GLuint x);
+bool ValidateVertexAttribI1uiv(const Context *context, GLuint index, const GLuint *v);
+bool ValidateVertexAttribI2i(const Context *context, GLuint index, GLint x, GLint y);
+bool ValidateVertexAttribI2iv(const Context *context, GLuint index, const GLint *v);
+bool ValidateVertexAttribI2ui(const Context *context, GLuint index, GLuint x, GLuint y);
+bool ValidateVertexAttribI2uiv(const Context *context, GLuint index, const GLuint *v);
+bool ValidateVertexAttribI3i(const Context *context, GLuint index, GLint x, GLint y, GLint z);
+bool ValidateVertexAttribI3iv(const Context *context, GLuint index, const GLint *v);
+bool ValidateVertexAttribI3ui(const Context *context, GLuint index, GLuint x, GLuint y, GLuint z);
+bool ValidateVertexAttribI3uiv(const Context *context, GLuint index, const GLuint *v);
 bool ValidateVertexAttribI4bv(const Context *context, GLuint index, const GLbyte *v);
 bool ValidateVertexAttribI4sv(const Context *context, GLuint index, const GLshort *v);
 bool ValidateVertexAttribI4ubv(const Context *context, GLuint index, const GLubyte *v);

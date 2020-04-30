@@ -59,7 +59,7 @@ ANGLE_INLINE bool ValidateDrawElements(const Context *context,
 }
 
 ANGLE_INLINE bool ValidateVertexAttribPointer(const Context *context,
-                                              AttributeLocation index,
+                                              GLuint index,
                                               GLint size,
                                               VertexAttribType type,
                                               GLboolean normalized,
@@ -86,7 +86,7 @@ ANGLE_INLINE bool ValidateVertexAttribPointer(const Context *context,
             return false;
         }
 
-        if (index.value >= static_cast<uint32_t>(caps.maxVertexAttribBindings))
+        if (index >= static_cast<GLuint>(caps.maxVertexAttribBindings))
         {
             context->validationError(GL_INVALID_VALUE, err::kExceedsMaxVertexAttribBindings);
             return false;

@@ -109,7 +109,7 @@ angle::Result VertexArray11::syncState(const gl::Context *context,
 
     for (size_t attribIndex : attributesToUpdate)
     {
-        updateVertexAttribStorage(context, stateManager, {static_cast<uint32_t>(attribIndex)});
+        updateVertexAttribStorage(context, stateManager, attribIndex);
     }
 
     if (invalidateVertexBuffer)
@@ -211,25 +211,25 @@ angle::Result VertexArray11::updateElementArrayStorage(const gl::Context *contex
 
 void VertexArray11::updateVertexAttribStorage(const gl::Context *context,
                                               StateManager11 *stateManager,
-                                              gl::AttributeLocation attribLocation)
+                                              size_t attribIndex)
 {
-    const gl::VertexAttribute &attrib = mState.getVertexAttribute(attribLocation);
-    const gl::VertexBinding &binding  = mState.getBindingFromAttribIndex(attribLocation);
+    const gl::VertexAttribute &attrib = mState.getVertexAttribute(attribIndex);
+    const gl::VertexBinding &binding  = mState.getBindingFromAttribIndex(attribIndex);
 
     VertexStorageType newStorageType = ClassifyAttributeStorage(context, attrib, binding);
 
     // Note: having an unchanged storage type doesn't mean the attribute is clean.
-    mAttribsToTranslate.set(attribLocation.value, newStorageType != VertexStorageType::DYNAMIC);
+    mAttribsToTranslate.set(attribIndex, newStorageType != VertexStorageType::DYNAMIC);
 
-    if (mAttributeStorageTypes[attribLocation.value] == newStorageType)
+    if (mAttributeStorageTypes[attribIndex] == newStorageType)
         return;
 
-    mAttributeStorageTypes[attribLocation.value] = newStorageType;
-    mDynamicAttribsMask.set(attribLocation.value, newStorageType == VertexStorageType::DYNAMIC);
+    mAttributeStorageTypes[attribIndex] = newStorageType;
+    mDynamicAttribsMask.set(attribIndex, newStorageType == VertexStorageType::DYNAMIC);
 
     if (newStorageType == VertexStorageType::CURRENT_VALUE)
     {
-        stateManager->invalidateCurrentValueAttrib(attribLocation.value);
+        stateManager->invalidateCurrentValueAttrib(attribIndex);
     }
 }
 
@@ -252,9 +252,8 @@ angle::Result VertexArray11::updateDirtyAttribs(const gl::Context *context,
     {
         mAttribsToTranslate.reset(dirtyAttribIndex);
 
-        auto *translatedAttrib = &mTranslatedAttribs[dirtyAttribIndex];
-        const auto &currentValue =
-            glState.getVertexAttribCurrentValue({static_cast<uint32_t>(dirtyAttribIndex)});
+        auto *translatedAttrib   = &mTranslatedAttribs[dirtyAttribIndex];
+        const auto &currentValue = glState.getVertexAttribCurrentValue(dirtyAttribIndex);
 
         // Record basic attrib info
         translatedAttrib->attribute        = &attribs[dirtyAttribIndex];
@@ -306,9 +305,8 @@ angle::Result VertexArray11::updateDynamicAttribs(const gl::Context *context,
 
     for (size_t dynamicAttribIndex : activeDynamicAttribs)
     {
-        auto *dynamicAttrib = &mTranslatedAttribs[dynamicAttribIndex];
-        const auto &currentValue =
-            glState.getVertexAttribCurrentValue({static_cast<uint32_t>(dynamicAttribIndex)});
+        auto *dynamicAttrib      = &mTranslatedAttribs[dynamicAttribIndex];
+        const auto &currentValue = glState.getVertexAttribCurrentValue(dynamicAttribIndex);
 
         // Record basic attrib info
         dynamicAttrib->attribute        = &attribs[dynamicAttribIndex];

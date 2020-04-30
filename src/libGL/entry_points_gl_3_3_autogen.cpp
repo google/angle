@@ -955,15 +955,14 @@ void GL_APIENTRY VertexAttribDivisor(GLuint index, GLuint divisor)
 
     if (context)
     {
-        AttributeLocation indexPacked                         = FromGL<AttributeLocation>(index);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexAttribDivisor(context, indexPacked, divisor));
+        bool isCallValid =
+            (context->skipValidation() || ValidateVertexAttribDivisor(context, index, divisor));
         if (isCallValid)
         {
-            context->vertexAttribDivisor(indexPacked, divisor);
+            context->vertexAttribDivisor(index, divisor);
         }
-        ANGLE_CAPTURE(VertexAttribDivisor, isCallValid, context, indexPacked, divisor);
+        ANGLE_CAPTURE(VertexAttribDivisor, isCallValid, context, index, divisor);
     }
 }
 

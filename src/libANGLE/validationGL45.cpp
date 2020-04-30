@@ -244,16 +244,12 @@ bool ValidateCreateVertexArrays(const Context *context, GLsizei n, const VertexA
     return true;
 }
 
-bool ValidateDisableVertexArrayAttrib(const Context *context,
-                                      VertexArrayID vaobj,
-                                      AttributeLocation index)
+bool ValidateDisableVertexArrayAttrib(const Context *context, VertexArrayID vaobj, GLuint index)
 {
     return true;
 }
 
-bool ValidateEnableVertexArrayAttrib(const Context *context,
-                                     VertexArrayID vaobj,
-                                     AttributeLocation index)
+bool ValidateEnableVertexArrayAttrib(const Context *context, VertexArrayID vaobj, GLuint index)
 {
     return true;
 }
@@ -495,7 +491,7 @@ bool ValidateGetTransformFeedbackiv(const Context *context,
 
 bool ValidateGetVertexArrayIndexed64iv(const Context *context,
                                        VertexArrayID vaobj,
-                                       AttributeLocation index,
+                                       GLuint index,
                                        GLenum pname,
                                        const GLint64 *param)
 {
@@ -504,7 +500,7 @@ bool ValidateGetVertexArrayIndexed64iv(const Context *context,
 
 bool ValidateGetVertexArrayIndexediv(const Context *context,
                                      VertexArrayID vaobj,
-                                     AttributeLocation index,
+                                     GLuint index,
                                      GLenum pname,
                                      const GLint *param)
 {
@@ -985,7 +981,7 @@ bool ValidateUnmapNamedBuffer(const Context *context, BufferID buffer)
 
 bool ValidateVertexArrayAttribBinding(const Context *context,
                                       VertexArrayID vaobj,
-                                      AttributeLocation attribindex,
+                                      GLuint attribindex,
                                       GLuint bindingindex)
 {
     return true;
@@ -993,7 +989,7 @@ bool ValidateVertexArrayAttribBinding(const Context *context,
 
 bool ValidateVertexArrayAttribFormat(const Context *context,
                                      VertexArrayID vaobj,
-                                     AttributeLocation attribindex,
+                                     GLuint attribindex,
                                      GLint size,
                                      GLenum type,
                                      GLboolean normalized,
@@ -1004,7 +1000,7 @@ bool ValidateVertexArrayAttribFormat(const Context *context,
 
 bool ValidateVertexArrayAttribIFormat(const Context *context,
                                       VertexArrayID vaobj,
-                                      AttributeLocation attribindex,
+                                      GLuint attribindex,
                                       GLint size,
                                       GLenum type,
                                       GLuint relativeoffset)
@@ -1014,7 +1010,7 @@ bool ValidateVertexArrayAttribIFormat(const Context *context,
 
 bool ValidateVertexArrayAttribLFormat(const Context *context,
                                       VertexArrayID vaobj,
-                                      AttributeLocation attribindex,
+                                      GLuint attribindex,
                                       GLint size,
                                       GLenum type,
                                       GLuint relativeoffset)

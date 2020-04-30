@@ -636,8 +636,7 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::DisableVertexAttribArray:
             context->disableVertexAttribArray(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal);
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal);
             break;
         case gl::EntryPoint::Disablei:
             context->disablei(params.getParam("target", ParamType::TGLenum, 0).value.GLenumVal,
@@ -778,8 +777,7 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::EnableVertexAttribArray:
             context->enableVertexAttribArray(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal);
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal);
             break;
         case gl::EntryPoint::Enablei:
             context->enablei(params.getParam("target", ParamType::TGLenum, 0).value.GLenumVal,
@@ -1634,40 +1632,35 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::GetVertexAttribIiv:
             context->getVertexAttribIiv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLint *>(
                     params.getParam("params", ParamType::TGLintPointer, 2)));
             break;
         case gl::EntryPoint::GetVertexAttribIuiv:
             context->getVertexAttribIuiv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLuint *>(
                     params.getParam("params", ParamType::TGLuintPointer, 2)));
             break;
         case gl::EntryPoint::GetVertexAttribPointerv:
             context->getVertexAttribPointerv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<void **>(
                     params.getParam("pointer", ParamType::TvoidPointerPointer, 2)));
             break;
         case gl::EntryPoint::GetVertexAttribfv:
             context->getVertexAttribfv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLfloat *>(
                     params.getParam("params", ParamType::TGLfloatPointer, 2)));
             break;
         case gl::EntryPoint::GetVertexAttribiv:
             context->getVertexAttribiv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("pname", ParamType::TGLenum, 1).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLint *>(
                     params.getParam("params", ParamType::TGLintPointer, 2)));
@@ -3194,47 +3187,40 @@ void FrameCapture::ReplayCall(gl::Context *context,
                     .value.ProgramPipelineIDVal);
             break;
         case gl::EntryPoint::VertexAttrib1f:
-            context->vertexAttrib1f(params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                                        .value.AttributeLocationVal,
+            context->vertexAttrib1f(params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                                     params.getParam("x", ParamType::TGLfloat, 1).value.GLfloatVal);
             break;
         case gl::EntryPoint::VertexAttrib1fv:
             context->vertexAttrib1fv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 replayContext->getAsConstPointer<const GLfloat *>(
                     params.getParam("v", ParamType::TGLfloatConstPointer, 1)));
             break;
         case gl::EntryPoint::VertexAttrib2f:
-            context->vertexAttrib2f(params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                                        .value.AttributeLocationVal,
+            context->vertexAttrib2f(params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                                     params.getParam("x", ParamType::TGLfloat, 1).value.GLfloatVal,
                                     params.getParam("y", ParamType::TGLfloat, 2).value.GLfloatVal);
             break;
         case gl::EntryPoint::VertexAttrib2fv:
             context->vertexAttrib2fv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 replayContext->getAsConstPointer<const GLfloat *>(
                     params.getParam("v", ParamType::TGLfloatConstPointer, 1)));
             break;
         case gl::EntryPoint::VertexAttrib3f:
-            context->vertexAttrib3f(params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                                        .value.AttributeLocationVal,
+            context->vertexAttrib3f(params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                                     params.getParam("x", ParamType::TGLfloat, 1).value.GLfloatVal,
                                     params.getParam("y", ParamType::TGLfloat, 2).value.GLfloatVal,
                                     params.getParam("z", ParamType::TGLfloat, 3).value.GLfloatVal);
             break;
         case gl::EntryPoint::VertexAttrib3fv:
             context->vertexAttrib3fv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 replayContext->getAsConstPointer<const GLfloat *>(
                     params.getParam("v", ParamType::TGLfloatConstPointer, 1)));
             break;
         case gl::EntryPoint::VertexAttrib4f:
-            context->vertexAttrib4f(params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                                        .value.AttributeLocationVal,
+            context->vertexAttrib4f(params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                                     params.getParam("x", ParamType::TGLfloat, 1).value.GLfloatVal,
                                     params.getParam("y", ParamType::TGLfloat, 2).value.GLfloatVal,
                                     params.getParam("z", ParamType::TGLfloat, 3).value.GLfloatVal,
@@ -3242,27 +3228,23 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::VertexAttrib4fv:
             context->vertexAttrib4fv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 replayContext->getAsConstPointer<const GLfloat *>(
                     params.getParam("v", ParamType::TGLfloatConstPointer, 1)));
             break;
         case gl::EntryPoint::VertexAttribBinding:
             context->vertexAttribBinding(
-                params.getParam("attribindexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("attribindex", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("bindingindex", ParamType::TGLuint, 1).value.GLuintVal);
             break;
         case gl::EntryPoint::VertexAttribDivisor:
             context->vertexAttribDivisor(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("divisor", ParamType::TGLuint, 1).value.GLuintVal);
             break;
         case gl::EntryPoint::VertexAttribFormat:
             context->vertexAttribFormat(
-                params.getParam("attribindexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("attribindex", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("size", ParamType::TGLint, 1).value.GLintVal,
                 params.getParam("typePacked", ParamType::TVertexAttribType, 2)
                     .value.VertexAttribTypeVal,
@@ -3271,8 +3253,7 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::VertexAttribI4i:
             context->vertexAttribI4i(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("x", ParamType::TGLint, 1).value.GLintVal,
                 params.getParam("y", ParamType::TGLint, 2).value.GLintVal,
                 params.getParam("z", ParamType::TGLint, 3).value.GLintVal,
@@ -3280,15 +3261,13 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::VertexAttribI4iv:
             context->vertexAttribI4iv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 replayContext->getAsConstPointer<const GLint *>(
                     params.getParam("v", ParamType::TGLintConstPointer, 1)));
             break;
         case gl::EntryPoint::VertexAttribI4ui:
             context->vertexAttribI4ui(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("x", ParamType::TGLuint, 1).value.GLuintVal,
                 params.getParam("y", ParamType::TGLuint, 2).value.GLuintVal,
                 params.getParam("z", ParamType::TGLuint, 3).value.GLuintVal,
@@ -3296,15 +3275,13 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::VertexAttribI4uiv:
             context->vertexAttribI4uiv(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 replayContext->getAsConstPointer<const GLuint *>(
                     params.getParam("v", ParamType::TGLuintConstPointer, 1)));
             break;
         case gl::EntryPoint::VertexAttribIFormat:
             context->vertexAttribIFormat(
-                params.getParam("attribindexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("attribindex", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("size", ParamType::TGLint, 1).value.GLintVal,
                 params.getParam("typePacked", ParamType::TVertexAttribType, 2)
                     .value.VertexAttribTypeVal,
@@ -3312,8 +3289,7 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::VertexAttribIPointer:
             context->vertexAttribIPointer(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("size", ParamType::TGLint, 1).value.GLintVal,
                 params.getParam("typePacked", ParamType::TVertexAttribType, 2)
                     .value.VertexAttribTypeVal,
@@ -3323,8 +3299,7 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::VertexAttribPointer:
             context->vertexAttribPointer(
-                params.getParam("indexPacked", ParamType::TAttributeLocation, 0)
-                    .value.AttributeLocationVal,
+                params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal,
                 params.getParam("size", ParamType::TGLint, 1).value.GLintVal,
                 params.getParam("typePacked", ParamType::TVertexAttribType, 2)
                     .value.VertexAttribTypeVal,

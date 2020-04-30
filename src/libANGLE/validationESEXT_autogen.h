@@ -126,9 +126,7 @@ bool ValidateDrawElementsInstancedANGLE(const Context *context,
                                         DrawElementsType typePacked,
                                         const void *indices,
                                         GLsizei primcount);
-bool ValidateVertexAttribDivisorANGLE(const Context *context,
-                                      AttributeLocation indexPacked,
-                                      GLuint divisor);
+bool ValidateVertexAttribDivisorANGLE(const Context *context, GLuint index, GLuint divisor);
 
 // GL_ANGLE_memory_object_fuchsia
 bool ValidateImportMemoryZirconHandleANGLE(const Context *context,
@@ -244,19 +242,19 @@ bool ValidateGetUniformivRobustANGLE(const Context *context,
                                      const GLsizei *length,
                                      const GLint *params);
 bool ValidateGetVertexAttribfvRobustANGLE(const Context *context,
-                                          AttributeLocation indexPacked,
+                                          GLuint index,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           const GLsizei *length,
                                           const GLfloat *params);
 bool ValidateGetVertexAttribivRobustANGLE(const Context *context,
-                                          AttributeLocation indexPacked,
+                                          GLuint index,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           const GLsizei *length,
                                           const GLint *params);
 bool ValidateGetVertexAttribPointervRobustANGLE(const Context *context,
-                                                AttributeLocation indexPacked,
+                                                GLuint index,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 const GLsizei *length,
@@ -407,13 +405,13 @@ bool ValidateGetInternalformativRobustANGLE(const Context *context,
                                             const GLsizei *length,
                                             const GLint *params);
 bool ValidateGetVertexAttribIivRobustANGLE(const Context *context,
-                                           AttributeLocation indexPacked,
+                                           GLuint index,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            const GLsizei *length,
                                            const GLint *params);
 bool ValidateGetVertexAttribIuivRobustANGLE(const Context *context,
-                                            AttributeLocation indexPacked,
+                                            GLuint index,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             const GLsizei *length,
@@ -836,9 +834,7 @@ bool ValidateDrawElementsInstancedEXT(const Context *context,
                                       DrawElementsType typePacked,
                                       const void *indices,
                                       GLsizei primcount);
-bool ValidateVertexAttribDivisorEXT(const Context *context,
-                                    AttributeLocation indexPacked,
-                                    GLuint divisor);
+bool ValidateVertexAttribDivisorEXT(const Context *context, GLuint index, GLuint divisor);
 
 // GL_EXT_map_buffer_range
 bool ValidateFlushMappedBufferRangeEXT(const Context *context,

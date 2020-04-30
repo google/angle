@@ -150,10 +150,10 @@ bool ValidateCreateVertexArrays(const Context *context,
                                 const VertexArrayID *arraysPacked);
 bool ValidateDisableVertexArrayAttrib(const Context *context,
                                       VertexArrayID vaobjPacked,
-                                      AttributeLocation indexPacked);
+                                      GLuint index);
 bool ValidateEnableVertexArrayAttrib(const Context *context,
                                      VertexArrayID vaobjPacked,
-                                     AttributeLocation indexPacked);
+                                     GLuint index);
 bool ValidateFlushMappedNamedBufferRange(const Context *context,
                                          BufferID bufferPacked,
                                          GLintptr offset,
@@ -287,12 +287,12 @@ bool ValidateGetTransformFeedbackiv(const Context *context,
                                     const GLint *param);
 bool ValidateGetVertexArrayIndexed64iv(const Context *context,
                                        VertexArrayID vaobjPacked,
-                                       AttributeLocation indexPacked,
+                                       GLuint index,
                                        GLenum pname,
                                        const GLint64 *param);
 bool ValidateGetVertexArrayIndexediv(const Context *context,
                                      VertexArrayID vaobjPacked,
-                                     AttributeLocation indexPacked,
+                                     GLuint index,
                                      GLenum pname,
                                      const GLint *param);
 bool ValidateGetVertexArrayiv(const Context *context,
@@ -564,24 +564,24 @@ bool ValidateTransformFeedbackBufferRange(const Context *context,
 bool ValidateUnmapNamedBuffer(const Context *context, BufferID bufferPacked);
 bool ValidateVertexArrayAttribBinding(const Context *context,
                                       VertexArrayID vaobjPacked,
-                                      AttributeLocation attribindexPacked,
+                                      GLuint attribindex,
                                       GLuint bindingindex);
 bool ValidateVertexArrayAttribFormat(const Context *context,
                                      VertexArrayID vaobjPacked,
-                                     AttributeLocation attribindexPacked,
+                                     GLuint attribindex,
                                      GLint size,
                                      GLenum type,
                                      GLboolean normalized,
                                      GLuint relativeoffset);
 bool ValidateVertexArrayAttribIFormat(const Context *context,
                                       VertexArrayID vaobjPacked,
-                                      AttributeLocation attribindexPacked,
+                                      GLuint attribindex,
                                       GLint size,
                                       GLenum type,
                                       GLuint relativeoffset);
 bool ValidateVertexArrayAttribLFormat(const Context *context,
                                       VertexArrayID vaobjPacked,
-                                      AttributeLocation attribindexPacked,
+                                      GLuint attribindex,
                                       GLint size,
                                       GLenum type,
                                       GLuint relativeoffset);

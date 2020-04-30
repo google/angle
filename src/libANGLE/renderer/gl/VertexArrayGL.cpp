@@ -439,32 +439,30 @@ GLuint VertexArrayGL::getAppliedElementArrayBufferID() const
     return GetImplAs<BufferGL>(mAppliedElementArrayBuffer.get())->getBufferID();
 }
 
-void VertexArrayGL::updateAttribEnabled(gl::AttributeLocation attribIndex)
+void VertexArrayGL::updateAttribEnabled(size_t attribIndex)
 {
     const bool enabled = mState.getVertexAttribute(attribIndex).enabled &
-                         mProgramActiveAttribLocationsMask.test(attribIndex.value);
-    if (mAppliedAttributes[attribIndex.value].enabled == enabled)
+                         mProgramActiveAttribLocationsMask.test(attribIndex);
+    if (mAppliedAttributes[attribIndex].enabled == enabled)
     {
         return;
     }
 
     if (enabled)
     {
-        mFunctions->enableVertexAttribArray(static_cast<GLuint>(attribIndex.value));
+        mFunctions->enableVertexAttribArray(static_cast<GLuint>(attribIndex));
     }
     else
     {
-        mFunctions->disableVertexAttribArray(static_cast<GLuint>(attribIndex.value));
+        mFunctions->disableVertexAttribArray(static_cast<GLuint>(attribIndex));
     }
 
-    mAppliedAttributes[attribIndex.value].enabled = enabled;
+    mAppliedAttributes[attribIndex].enabled = enabled;
 }
 
-void VertexArrayGL::updateAttribPointer(const gl::Context *context,
-                                        gl::AttributeLocation attribLocation)
+void VertexArrayGL::updateAttribPointer(const gl::Context *context, size_t attribIndex)
 {
-    int attribIndex               = attribLocation.value;
-    const VertexAttribute &attrib = mState.getVertexAttribute(attribLocation);
+    const VertexAttribute &attrib = mState.getVertexAttribute(attribIndex);
 
     // According to SPEC, VertexAttribPointer should update the binding indexed attribIndex instead
     // of the binding indexed attrib.bindingIndex (unless attribIndex == attrib.bindingIndex).
@@ -547,13 +545,11 @@ bool VertexArrayGL::supportVertexAttribBinding() const
     return (mFunctions->vertexAttribBinding != nullptr);
 }
 
-void VertexArrayGL::updateAttribFormat(gl::AttributeLocation attribLocation)
+void VertexArrayGL::updateAttribFormat(size_t attribIndex)
 {
-    int attribIndex = attribLocation.value;
-
     ASSERT(supportVertexAttribBinding());
 
-    const VertexAttribute &attrib = mState.getVertexAttribute(attribLocation);
+    const VertexAttribute &attrib = mState.getVertexAttribute(attribIndex);
     if (SameVertexAttribFormat(mAppliedAttributes[attribIndex], attrib))
     {
         return;
@@ -578,12 +574,11 @@ void VertexArrayGL::updateAttribFormat(gl::AttributeLocation attribLocation)
     mAppliedAttributes[attribIndex].relativeOffset = attrib.relativeOffset;
 }
 
-void VertexArrayGL::updateAttribBinding(gl::AttributeLocation attribLocation)
+void VertexArrayGL::updateAttribBinding(size_t attribIndex)
 {
-    int attribIndex = attribLocation.value;
     ASSERT(supportVertexAttribBinding());
 
-    GLuint bindingIndex = mState.getVertexAttribute(attribLocation).bindingIndex;
+    GLuint bindingIndex = mState.getVertexAttribute(attribIndex).bindingIndex;
     if (mAppliedAttributes[attribIndex].bindingIndex == bindingIndex)
     {
         return;
@@ -643,7 +638,7 @@ void VertexArrayGL::updateBindingDivisor(size_t bindingIndex)
 }
 
 void VertexArrayGL::syncDirtyAttrib(const gl::Context *context,
-                                    gl::AttributeLocation attribLocation,
+                                    size_t attribIndex,
                                     const gl::VertexArray::DirtyAttribBits &dirtyAttribBits)
 {
     ASSERT(dirtyAttribBits.any());
@@ -653,22 +648,22 @@ void VertexArrayGL::syncDirtyAttrib(const gl::Context *context,
         switch (dirtyBit)
         {
             case VertexArray::DIRTY_ATTRIB_ENABLED:
-                updateAttribEnabled(attribLocation);
+                updateAttribEnabled(attribIndex);
                 break;
 
             case VertexArray::DIRTY_ATTRIB_POINTER_BUFFER:
             case VertexArray::DIRTY_ATTRIB_POINTER:
-                updateAttribPointer(context, attribLocation);
+                updateAttribPointer(context, attribIndex);
                 break;
 
             case VertexArray::DIRTY_ATTRIB_FORMAT:
                 ASSERT(supportVertexAttribBinding());
-                updateAttribFormat(attribLocation);
+                updateAttribFormat(attribIndex);
                 break;
 
             case VertexArray::DIRTY_ATTRIB_BINDING:
                 ASSERT(supportVertexAttribBinding());
-                updateAttribBinding(attribLocation);
+                updateAttribBinding(attribIndex);
                 break;
 
             default:
@@ -704,10 +699,10 @@ void VertexArrayGL::syncDirtyBinding(const gl::Context *context,
     }
 }
 
-#define ANGLE_DIRTY_ATTRIB_FUNC(INDEX)                           \
-    case VertexArray::DIRTY_BIT_ATTRIB_0 + INDEX:                \
-        syncDirtyAttrib(context, {INDEX}, (*attribBits)[INDEX]); \
-        (*attribBits)[INDEX].reset();                            \
+#define ANGLE_DIRTY_ATTRIB_FUNC(INDEX)                         \
+    case VertexArray::DIRTY_BIT_ATTRIB_0 + INDEX:              \
+        syncDirtyAttrib(context, INDEX, (*attribBits)[INDEX]); \
+        (*attribBits)[INDEX].reset();                          \
         break;
 
 #define ANGLE_DIRTY_BINDING_FUNC(INDEX)                          \
@@ -776,7 +771,7 @@ void VertexArrayGL::applyActiveAttribLocationsMask(const gl::AttributesMask &act
 
     for (size_t attribIndex : updateMask)
     {
-        updateAttribEnabled({static_cast<uint32_t>(attribIndex)});
+        updateAttribEnabled(attribIndex);
     }
 }
 

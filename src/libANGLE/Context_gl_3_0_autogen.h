@@ -16,18 +16,18 @@
     void endConditionalRender();                                                               \
     void framebufferTexture1D(GLenum target, GLenum attachment, TextureTarget textargetPacked, \
                               TextureID texturePacked, GLint level);                           \
-    void vertexAttribI1i(AttributeLocation indexPacked, GLint x);                              \
-    void vertexAttribI1iv(AttributeLocation indexPacked, const GLint *v);                      \
-    void vertexAttribI1ui(AttributeLocation indexPacked, GLuint x);                            \
-    void vertexAttribI1uiv(AttributeLocation indexPacked, const GLuint *v);                    \
-    void vertexAttribI2i(AttributeLocation indexPacked, GLint x, GLint y);                     \
-    void vertexAttribI2iv(AttributeLocation indexPacked, const GLint *v);                      \
-    void vertexAttribI2ui(AttributeLocation indexPacked, GLuint x, GLuint y);                  \
-    void vertexAttribI2uiv(AttributeLocation indexPacked, const GLuint *v);                    \
-    void vertexAttribI3i(AttributeLocation indexPacked, GLint x, GLint y, GLint z);            \
-    void vertexAttribI3iv(AttributeLocation indexPacked, const GLint *v);                      \
-    void vertexAttribI3ui(AttributeLocation indexPacked, GLuint x, GLuint y, GLuint z);        \
-    void vertexAttribI3uiv(AttributeLocation indexPacked, const GLuint *v);                    \
+    void vertexAttribI1i(GLuint index, GLint x);                                               \
+    void vertexAttribI1iv(GLuint index, const GLint *v);                                       \
+    void vertexAttribI1ui(GLuint index, GLuint x);                                             \
+    void vertexAttribI1uiv(GLuint index, const GLuint *v);                                     \
+    void vertexAttribI2i(GLuint index, GLint x, GLint y);                                      \
+    void vertexAttribI2iv(GLuint index, const GLint *v);                                       \
+    void vertexAttribI2ui(GLuint index, GLuint x, GLuint y);                                   \
+    void vertexAttribI2uiv(GLuint index, const GLuint *v);                                     \
+    void vertexAttribI3i(GLuint index, GLint x, GLint y, GLint z);                             \
+    void vertexAttribI3iv(GLuint index, const GLint *v);                                       \
+    void vertexAttribI3ui(GLuint index, GLuint x, GLuint y, GLuint z);                         \
+    void vertexAttribI3uiv(GLuint index, const GLuint *v);                                     \
     void vertexAttribI4bv(GLuint index, const GLbyte *v);                                      \
     void vertexAttribI4sv(GLuint index, const GLshort *v);                                     \
     void vertexAttribI4ubv(GLuint index, const GLubyte *v);                                    \

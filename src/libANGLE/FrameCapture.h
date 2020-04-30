@@ -314,11 +314,6 @@ template <ParamType ParamT, typename T>
 void WriteParamValueReplay(std::ostream &os, const CallCapture &call, T value);
 
 template <>
-void WriteParamValueReplay<ParamType::TAttributeLocation>(std::ostream &os,
-                                                          const CallCapture &call,
-                                                          gl::AttributeLocation value);
-
-template <>
 void WriteParamValueReplay<ParamType::TGLboolean>(std::ostream &os,
                                                   const CallCapture &call,
                                                   GLboolean value);
@@ -352,11 +347,6 @@ template <>
 void WriteParamValueReplay<ParamType::TFramebufferID>(std::ostream &os,
                                                       const CallCapture &call,
                                                       gl::FramebufferID value);
-
-template <>
-void WriteParamValueReplay<ParamType::TGLsync>(std::ostream &os,
-                                               const CallCapture &call,
-                                               GLsync value);
 
 template <>
 void WriteParamValueReplay<ParamType::TMemoryObjectID>(std::ostream &os,
@@ -412,6 +402,11 @@ template <>
 void WriteParamValueReplay<ParamType::TUniformLocation>(std::ostream &os,
                                                         const CallCapture &call,
                                                         gl::UniformLocation value);
+
+template <>
+void WriteParamValueReplay<ParamType::TGLsync>(std::ostream &os,
+                                               const CallCapture &call,
+                                               GLsync value);
 
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>

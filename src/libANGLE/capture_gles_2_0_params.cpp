@@ -562,7 +562,7 @@ void CaptureGetUniformiv_params(const State &glState,
 
 void CaptureGetVertexAttribPointerv_pointer(const State &glState,
                                             bool isCallValid,
-                                            AttributeLocation index,
+                                            GLuint index,
                                             GLenum pname,
                                             void **pointer,
                                             ParamCapture *paramCapture)
@@ -572,7 +572,7 @@ void CaptureGetVertexAttribPointerv_pointer(const State &glState,
 
 void CaptureGetVertexAttribfv_params(const State &glState,
                                      bool isCallValid,
-                                     AttributeLocation index,
+                                     GLuint index,
                                      GLenum pname,
                                      GLfloat *params,
                                      ParamCapture *paramCapture)
@@ -583,7 +583,7 @@ void CaptureGetVertexAttribfv_params(const State &glState,
 
 void CaptureGetVertexAttribiv_params(const State &glState,
                                      bool isCallValid,
-                                     AttributeLocation index,
+                                     GLuint index,
                                      GLenum pname,
                                      GLint *params,
                                      ParamCapture *paramCapture)
@@ -859,7 +859,7 @@ void CaptureUniformMatrix4fv_value(const State &glState,
 
 void CaptureVertexAttrib1fv_v(const State &glState,
                               bool isCallValid,
-                              AttributeLocation index,
+                              GLuint index,
                               const GLfloat *v,
                               ParamCapture *paramCapture)
 {
@@ -868,7 +868,7 @@ void CaptureVertexAttrib1fv_v(const State &glState,
 
 void CaptureVertexAttrib2fv_v(const State &glState,
                               bool isCallValid,
-                              AttributeLocation index,
+                              GLuint index,
                               const GLfloat *v,
                               ParamCapture *paramCapture)
 {
@@ -877,7 +877,7 @@ void CaptureVertexAttrib2fv_v(const State &glState,
 
 void CaptureVertexAttrib3fv_v(const State &glState,
                               bool isCallValid,
-                              AttributeLocation index,
+                              GLuint index,
                               const GLfloat *v,
                               ParamCapture *paramCapture)
 {
@@ -886,7 +886,7 @@ void CaptureVertexAttrib3fv_v(const State &glState,
 
 void CaptureVertexAttrib4fv_v(const State &glState,
                               bool isCallValid,
-                              AttributeLocation index,
+                              GLuint index,
                               const GLfloat *v,
                               ParamCapture *paramCapture)
 {
@@ -895,7 +895,7 @@ void CaptureVertexAttrib4fv_v(const State &glState,
 
 void CaptureVertexAttribPointer_pointer(const State &glState,
                                         bool isCallValid,
-                                        AttributeLocation index,
+                                        GLuint index,
                                         GLint size,
                                         VertexAttribType typePacked,
                                         GLboolean normalized,
@@ -906,7 +906,7 @@ void CaptureVertexAttribPointer_pointer(const State &glState,
     paramCapture->value.voidConstPointerVal = pointer;
     if (!glState.getTargetBuffer(gl::BufferBinding::Array))
     {
-        paramCapture->arrayClientPointerIndex = index.value;
+        paramCapture->arrayClientPointerIndex = index;
     }
 }
 }  // namespace gl

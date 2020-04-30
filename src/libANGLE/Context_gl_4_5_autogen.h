@@ -56,8 +56,8 @@
     void createTextures(GLenum target, GLsizei n, GLuint *textures);                               \
     void createTransformFeedbacks(GLsizei n, GLuint *ids);                                         \
     void createVertexArrays(GLsizei n, VertexArrayID *arraysPacked);                               \
-    void disableVertexArrayAttrib(VertexArrayID vaobjPacked, AttributeLocation indexPacked);       \
-    void enableVertexArrayAttrib(VertexArrayID vaobjPacked, AttributeLocation indexPacked);        \
+    void disableVertexArrayAttrib(VertexArrayID vaobjPacked, GLuint index);                        \
+    void enableVertexArrayAttrib(VertexArrayID vaobjPacked, GLuint index);                         \
     void flushMappedNamedBufferRange(BufferID bufferPacked, GLintptr offset, GLsizeiptr length);   \
     void generateTextureMipmap(TextureID texturePacked);                                           \
     void getCompressedTextureImage(TextureID texturePacked, GLint level, GLsizei bufSize,          \
@@ -98,10 +98,10 @@
     void getTransformFeedbacki64_v(GLuint xfb, GLenum pname, GLuint index, GLint64 *param);        \
     void getTransformFeedbacki_v(GLuint xfb, GLenum pname, GLuint index, GLint *param);            \
     void getTransformFeedbackiv(GLuint xfb, GLenum pname, GLint *param);                           \
-    void getVertexArrayIndexed64iv(VertexArrayID vaobjPacked, AttributeLocation indexPacked,       \
-                                   GLenum pname, GLint64 *param);                                  \
-    void getVertexArrayIndexediv(VertexArrayID vaobjPacked, AttributeLocation indexPacked,         \
-                                 GLenum pname, GLint *param);                                      \
+    void getVertexArrayIndexed64iv(VertexArrayID vaobjPacked, GLuint index, GLenum pname,          \
+                                   GLint64 *param);                                                \
+    void getVertexArrayIndexediv(VertexArrayID vaobjPacked, GLuint index, GLenum pname,            \
+                                 GLint *param);                                                    \
     void getVertexArrayiv(VertexArrayID vaobjPacked, GLenum pname, GLint *param);                  \
     void getnColorTable(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void *table);  \
     void getnCompressedTexImage(GLenum target, GLint lod, GLsizei bufSize, void *pixels);          \
@@ -188,15 +188,14 @@
     void transformFeedbackBufferRange(GLuint xfb, GLuint index, BufferID bufferPacked,             \
                                       GLintptr offset, GLsizeiptr size);                           \
     GLboolean unmapNamedBuffer(BufferID bufferPacked);                                             \
-    void vertexArrayAttribBinding(VertexArrayID vaobjPacked, AttributeLocation attribindexPacked,  \
+    void vertexArrayAttribBinding(VertexArrayID vaobjPacked, GLuint attribindex,                   \
                                   GLuint bindingindex);                                            \
-    void vertexArrayAttribFormat(VertexArrayID vaobjPacked, AttributeLocation attribindexPacked,   \
-                                 GLint size, GLenum type, GLboolean normalized,                    \
-                                 GLuint relativeoffset);                                           \
-    void vertexArrayAttribIFormat(VertexArrayID vaobjPacked, AttributeLocation attribindexPacked,  \
-                                  GLint size, GLenum type, GLuint relativeoffset);                 \
-    void vertexArrayAttribLFormat(VertexArrayID vaobjPacked, AttributeLocation attribindexPacked,  \
-                                  GLint size, GLenum type, GLuint relativeoffset);                 \
+    void vertexArrayAttribFormat(VertexArrayID vaobjPacked, GLuint attribindex, GLint size,        \
+                                 GLenum type, GLboolean normalized, GLuint relativeoffset);        \
+    void vertexArrayAttribIFormat(VertexArrayID vaobjPacked, GLuint attribindex, GLint size,       \
+                                  GLenum type, GLuint relativeoffset);                             \
+    void vertexArrayAttribLFormat(VertexArrayID vaobjPacked, GLuint attribindex, GLint size,       \
+                                  GLenum type, GLuint relativeoffset);                             \
     void vertexArrayBindingDivisor(VertexArrayID vaobjPacked, GLuint bindingindex,                 \
                                    GLuint divisor);                                                \
     void vertexArrayElementBuffer(VertexArrayID vaobjPacked, BufferID bufferPacked);               \

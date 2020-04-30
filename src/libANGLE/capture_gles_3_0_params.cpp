@@ -581,7 +581,7 @@ void CaptureGetUniformuiv_params(const State &glState,
 
 void CaptureGetVertexAttribIiv_params(const State &glState,
                                       bool isCallValid,
-                                      AttributeLocation index,
+                                      GLuint index,
                                       GLenum pname,
                                       GLint *params,
                                       ParamCapture *paramCapture)
@@ -591,7 +591,7 @@ void CaptureGetVertexAttribIiv_params(const State &glState,
 
 void CaptureGetVertexAttribIuiv_params(const State &glState,
                                        bool isCallValid,
-                                       AttributeLocation index,
+                                       GLuint index,
                                        GLenum pname,
                                        GLuint *params,
                                        ParamCapture *paramCapture)
@@ -833,7 +833,7 @@ void CaptureUniformMatrix4x3fv_value(const State &glState,
 
 void CaptureVertexAttribI4iv_v(const State &glState,
                                bool isCallValid,
-                               AttributeLocation index,
+                               GLuint index,
                                const GLint *v,
                                ParamCapture *paramCapture)
 {
@@ -842,7 +842,7 @@ void CaptureVertexAttribI4iv_v(const State &glState,
 
 void CaptureVertexAttribI4uiv_v(const State &glState,
                                 bool isCallValid,
-                                AttributeLocation index,
+                                GLuint index,
                                 const GLuint *v,
                                 ParamCapture *paramCapture)
 {
@@ -851,7 +851,7 @@ void CaptureVertexAttribI4uiv_v(const State &glState,
 
 void CaptureVertexAttribIPointer_pointer(const State &glState,
                                          bool isCallValid,
-                                         AttributeLocation index,
+                                         GLuint index,
                                          GLint size,
                                          VertexAttribType typePacked,
                                          GLsizei stride,

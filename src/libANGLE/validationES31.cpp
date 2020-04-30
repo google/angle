@@ -1248,7 +1248,7 @@ bool ValidateVertexBindingDivisor(const Context *context, GLuint bindingIndex, G
 }
 
 bool ValidateVertexAttribFormat(const Context *context,
-                                AttributeLocation attribindex,
+                                GLuint attribindex,
                                 GLint size,
                                 VertexAttribType type,
                                 GLboolean normalized,
@@ -1263,7 +1263,7 @@ bool ValidateVertexAttribFormat(const Context *context,
 }
 
 bool ValidateVertexAttribIFormat(const Context *context,
-                                 AttributeLocation attribindex,
+                                 GLuint attribindex,
                                  GLint size,
                                  VertexAttribType type,
                                  GLuint relativeoffset)
@@ -1276,9 +1276,7 @@ bool ValidateVertexAttribIFormat(const Context *context,
     return ValidateIntegerVertexFormat(context, attribindex, size, type);
 }
 
-bool ValidateVertexAttribBinding(const Context *context,
-                                 AttributeLocation attribIndex,
-                                 GLuint bindingIndex)
+bool ValidateVertexAttribBinding(const Context *context, GLuint attribIndex, GLuint bindingIndex)
 {
     if (context->getClientVersion() < ES_3_1)
     {
@@ -1295,7 +1293,7 @@ bool ValidateVertexAttribBinding(const Context *context,
     }
 
     const Caps &caps = context->getCaps();
-    if (attribIndex.value >= static_cast<uint32_t>(caps.maxVertexAttributes))
+    if (attribIndex >= static_cast<GLuint>(caps.maxVertexAttributes))
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
         return false;
@@ -1686,14 +1684,14 @@ static bool ValidateGenOrDeleteES31(const Context *context, GLint n)
 }
 
 bool ValidateGenProgramPipelines(const Context *context,
-                                 GLsizei n,
+                                 GLint n,
                                  const ProgramPipelineID *pipelines)
 {
     return ValidateGenOrDeleteES31(context, n);
 }
 
 bool ValidateDeleteProgramPipelines(const Context *context,
-                                    GLsizei n,
+                                    GLint n,
                                     const ProgramPipelineID *pipelines)
 {
     return ValidateGenOrDeleteES31(context, n);

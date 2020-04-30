@@ -1325,13 +1325,12 @@ CallCapture CaptureValidateProgramPipeline(const State &glState,
 
 CallCapture CaptureVertexAttribBinding(const State &glState,
                                        bool isCallValid,
-                                       AttributeLocation attribindexPacked,
+                                       GLuint attribindex,
                                        GLuint bindingindex)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("attribindexPacked", ParamType::TAttributeLocation,
-                              attribindexPacked);
+    paramBuffer.addValueParam("attribindex", ParamType::TGLuint, attribindex);
     paramBuffer.addValueParam("bindingindex", ParamType::TGLuint, bindingindex);
 
     return CallCapture(gl::EntryPoint::VertexAttribBinding, std::move(paramBuffer));
@@ -1339,7 +1338,7 @@ CallCapture CaptureVertexAttribBinding(const State &glState,
 
 CallCapture CaptureVertexAttribFormat(const State &glState,
                                       bool isCallValid,
-                                      AttributeLocation attribindexPacked,
+                                      GLuint attribindex,
                                       GLint size,
                                       VertexAttribType typePacked,
                                       GLboolean normalized,
@@ -1347,8 +1346,7 @@ CallCapture CaptureVertexAttribFormat(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("attribindexPacked", ParamType::TAttributeLocation,
-                              attribindexPacked);
+    paramBuffer.addValueParam("attribindex", ParamType::TGLuint, attribindex);
     paramBuffer.addValueParam("size", ParamType::TGLint, size);
     paramBuffer.addValueParam("typePacked", ParamType::TVertexAttribType, typePacked);
     paramBuffer.addValueParam("normalized", ParamType::TGLboolean, normalized);
@@ -1359,15 +1357,14 @@ CallCapture CaptureVertexAttribFormat(const State &glState,
 
 CallCapture CaptureVertexAttribIFormat(const State &glState,
                                        bool isCallValid,
-                                       AttributeLocation attribindexPacked,
+                                       GLuint attribindex,
                                        GLint size,
                                        VertexAttribType typePacked,
                                        GLuint relativeoffset)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("attribindexPacked", ParamType::TAttributeLocation,
-                              attribindexPacked);
+    paramBuffer.addValueParam("attribindex", ParamType::TGLuint, attribindex);
     paramBuffer.addValueParam("size", ParamType::TGLint, size);
     paramBuffer.addValueParam("typePacked", ParamType::TVertexAttribType, typePacked);
     paramBuffer.addValueParam("relativeoffset", ParamType::TGLuint, relativeoffset);

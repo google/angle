@@ -45,27 +45,25 @@ class VertexArrayState final : angle::NonCopyable
     size_t getMaxBindings() const { return mVertexBindings.size(); }
     const AttributesMask &getEnabledAttributesMask() const { return mEnabledAttributesMask; }
     const std::vector<VertexAttribute> &getVertexAttributes() const { return mVertexAttributes; }
-    const VertexAttribute &getVertexAttribute(AttributeLocation attribIndex) const
+    const VertexAttribute &getVertexAttribute(size_t attribIndex) const
     {
-        return mVertexAttributes[attribIndex.value];
+        return mVertexAttributes[attribIndex];
     }
     const std::vector<VertexBinding> &getVertexBindings() const { return mVertexBindings; }
     const VertexBinding &getVertexBinding(size_t bindingIndex) const
     {
         return mVertexBindings[bindingIndex];
     }
-    const VertexBinding &getBindingFromAttribIndex(AttributeLocation attribIndex) const
+    const VertexBinding &getBindingFromAttribIndex(size_t attribIndex) const
     {
-        return mVertexBindings[mVertexAttributes[attribIndex.value].bindingIndex];
+        return mVertexBindings[mVertexAttributes[attribIndex].bindingIndex];
     }
-    size_t getBindingIndexFromAttribIndex(AttributeLocation attribIndex) const
+    size_t getBindingIndexFromAttribIndex(size_t attribIndex) const
     {
-        return mVertexAttributes[attribIndex.value].bindingIndex;
+        return mVertexAttributes[attribIndex].bindingIndex;
     }
 
-    void setAttribBinding(const Context *context,
-                          AttributeLocation attribIndex,
-                          GLuint newBindingIndex);
+    void setAttribBinding(const Context *context, size_t attribIndex, GLuint newBindingIndex);
 
     // Extra validation performed on the Vertex Array.
     bool hasEnabledNullPointerClientArray() const;
@@ -174,8 +172,8 @@ class VertexArray final : public angle::ObserverInterface,
     const std::string &getLabel() const override;
 
     const VertexBinding &getVertexBinding(size_t bindingIndex) const;
-    const VertexAttribute &getVertexAttribute(AttributeLocation attribIndex) const;
-    const VertexBinding &getBindingFromAttribIndex(AttributeLocation attribIndex) const
+    const VertexAttribute &getVertexAttribute(size_t attribIndex) const;
+    const VertexBinding &getBindingFromAttribIndex(size_t attribIndex) const
     {
         return mState.getBindingFromAttribIndex(attribIndex);
     }
@@ -183,11 +181,11 @@ class VertexArray final : public angle::ObserverInterface,
     // Returns true if the function finds and detaches a bound buffer.
     bool detachBuffer(const Context *context, BufferID bufferID);
 
-    void setVertexAttribDivisor(const Context *context, AttributeLocation index, GLuint divisor);
-    void enableAttribute(AttributeLocation attribIndex, bool enabledState);
+    void setVertexAttribDivisor(const Context *context, size_t index, GLuint divisor);
+    void enableAttribute(size_t attribIndex, bool enabledState);
 
     void setVertexAttribPointer(const Context *context,
-                                AttributeLocation attribIndex,
+                                size_t attribIndex,
                                 Buffer *boundBuffer,
                                 GLint size,
                                 VertexAttribType type,
@@ -196,14 +194,14 @@ class VertexArray final : public angle::ObserverInterface,
                                 const void *pointer);
 
     void setVertexAttribIPointer(const Context *context,
-                                 AttributeLocation attribIndex,
+                                 size_t attribIndex,
                                  Buffer *boundBuffer,
                                  GLint size,
                                  VertexAttribType type,
                                  GLsizei stride,
                                  const void *pointer);
 
-    void setVertexAttribFormat(AttributeLocation attribIndex,
+    void setVertexAttribFormat(size_t attribIndex,
                                GLint size,
                                VertexAttribType type,
                                bool normalized,
@@ -214,9 +212,7 @@ class VertexArray final : public angle::ObserverInterface,
                           Buffer *boundBuffer,
                           GLintptr offset,
                           GLsizei stride);
-    void setVertexAttribBinding(const Context *context,
-                                AttributeLocation attribIndex,
-                                GLuint bindingIndex);
+    void setVertexAttribBinding(const Context *context, size_t attribIndex, GLuint bindingIndex);
     void setVertexBindingDivisor(size_t bindingIndex, GLuint divisor);
 
     Buffer *getElementArrayBuffer() const { return mState.getElementArrayBuffer(); }
@@ -291,7 +287,7 @@ class VertexArray final : public angle::ObserverInterface,
     // This is a performance optimization for buffer binding. Allows element array buffer updates.
     friend class State;
 
-    void setDirtyAttribBit(AttributeLocation attribIndex, DirtyAttribBitType dirtyAttribBit);
+    void setDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit);
     void setDirtyBindingBit(size_t bindingIndex, DirtyBindingBitType dirtyBindingBit);
 
     DirtyBitType getDirtyBitFromIndex(bool contentsChanged, angle::SubjectIndex index) const;
@@ -312,7 +308,7 @@ class VertexArray final : public angle::ObserverInterface,
     void setVertexAttribPointerImpl(const Context *context,
                                     ComponentType componentType,
                                     bool pureInteger,
-                                    AttributeLocation attribIndex,
+                                    size_t attribIndex,
                                     Buffer *boundBuffer,
                                     GLint size,
                                     VertexAttribType type,

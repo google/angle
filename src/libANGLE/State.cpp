@@ -1745,7 +1745,7 @@ void State::bindVertexBuffer(const Context *context,
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::setVertexAttribFormat(AttributeLocation attribIndex,
+void State::setVertexAttribFormat(GLuint attribIndex,
                                   GLint size,
                                   VertexAttribType type,
                                   bool normalized,
@@ -2047,46 +2047,46 @@ angle::Result State::detachBuffer(Context *context, const Buffer *buffer)
     return angle::Result::Continue;
 }
 
-void State::setEnableVertexAttribArray(AttributeLocation attribNum, bool enabled)
+void State::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
 {
     getVertexArray()->enableAttribute(attribNum, enabled);
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::setVertexAttribf(AttributeLocation index, const GLfloat values[4])
+void State::setVertexAttribf(GLuint index, const GLfloat values[4])
 {
-    ASSERT(static_cast<size_t>(index.value) < mVertexAttribCurrentValues.size());
-    mVertexAttribCurrentValues[index.value].setFloatValues(values);
+    ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
+    mVertexAttribCurrentValues[index].setFloatValues(values);
     mDirtyBits.set(DIRTY_BIT_CURRENT_VALUES);
-    mDirtyCurrentValues.set(index.value);
-    SetComponentTypeMask(ComponentType::Float, index.value, &mCurrentValuesTypeMask);
+    mDirtyCurrentValues.set(index);
+    SetComponentTypeMask(ComponentType::Float, index, &mCurrentValuesTypeMask);
 }
 
-void State::setVertexAttribu(AttributeLocation index, const GLuint values[4])
+void State::setVertexAttribu(GLuint index, const GLuint values[4])
 {
-    ASSERT(static_cast<size_t>(index.value) < mVertexAttribCurrentValues.size());
-    mVertexAttribCurrentValues[index.value].setUnsignedIntValues(values);
+    ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
+    mVertexAttribCurrentValues[index].setUnsignedIntValues(values);
     mDirtyBits.set(DIRTY_BIT_CURRENT_VALUES);
-    mDirtyCurrentValues.set(index.value);
-    SetComponentTypeMask(ComponentType::UnsignedInt, index.value, &mCurrentValuesTypeMask);
+    mDirtyCurrentValues.set(index);
+    SetComponentTypeMask(ComponentType::UnsignedInt, index, &mCurrentValuesTypeMask);
 }
 
-void State::setVertexAttribi(AttributeLocation index, const GLint values[4])
+void State::setVertexAttribi(GLuint index, const GLint values[4])
 {
-    ASSERT(static_cast<size_t>(index.value) < mVertexAttribCurrentValues.size());
-    mVertexAttribCurrentValues[index.value].setIntValues(values);
+    ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
+    mVertexAttribCurrentValues[index].setIntValues(values);
     mDirtyBits.set(DIRTY_BIT_CURRENT_VALUES);
-    mDirtyCurrentValues.set(index.value);
-    SetComponentTypeMask(ComponentType::Int, index.value, &mCurrentValuesTypeMask);
+    mDirtyCurrentValues.set(index);
+    SetComponentTypeMask(ComponentType::Int, index, &mCurrentValuesTypeMask);
 }
 
-void State::setVertexAttribDivisor(const Context *context, AttributeLocation index, GLuint divisor)
+void State::setVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor)
 {
     getVertexArray()->setVertexAttribDivisor(context, index, divisor);
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-const void *State::getVertexAttribPointer(AttributeLocation attribNum) const
+const void *State::getVertexAttribPointer(unsigned int attribNum) const
 {
     return getVertexArray()->getVertexAttribute(attribNum).pointer;
 }
@@ -2845,12 +2845,10 @@ void State::getPointerv(const Context *context, GLenum pname, void **params) con
         case GL_COLOR_ARRAY_POINTER:
         case GL_TEXTURE_COORD_ARRAY_POINTER:
         case GL_POINT_SIZE_ARRAY_POINTER_OES:
-        {
-            AttributeLocation index = {context->vertexArrayIndex(ParamToVertexArrayType(pname))};
-            QueryVertexAttribPointerv(getVertexArray()->getVertexAttribute(index),
+            QueryVertexAttribPointerv(getVertexArray()->getVertexAttribute(
+                                          context->vertexArrayIndex(ParamToVertexArrayType(pname))),
                                       GL_VERTEX_ATTRIB_ARRAY_POINTER, params);
             return;
-        }
         default:
             UNREACHABLE();
             break;

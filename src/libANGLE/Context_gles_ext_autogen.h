@@ -87,12 +87,12 @@
                             GLsizei bufSize, GLsizei *length, GLfloat *params);                    \
     void getUniformivRobust(ShaderProgramID programPacked, UniformLocation locationPacked,         \
                             GLsizei bufSize, GLsizei *length, GLint *params);                      \
-    void getVertexAttribfvRobust(AttributeLocation indexPacked, GLenum pname, GLsizei bufSize,     \
-                                 GLsizei *length, GLfloat *params);                                \
-    void getVertexAttribivRobust(AttributeLocation indexPacked, GLenum pname, GLsizei bufSize,     \
-                                 GLsizei *length, GLint *params);                                  \
-    void getVertexAttribPointervRobust(AttributeLocation indexPacked, GLenum pname,                \
-                                       GLsizei bufSize, GLsizei *length, void **pointer);          \
+    void getVertexAttribfvRobust(GLuint index, GLenum pname, GLsizei bufSize, GLsizei *length,     \
+                                 GLfloat *params);                                                 \
+    void getVertexAttribivRobust(GLuint index, GLenum pname, GLsizei bufSize, GLsizei *length,     \
+                                 GLint *params);                                                   \
+    void getVertexAttribPointervRobust(GLuint index, GLenum pname, GLsizei bufSize,                \
+                                       GLsizei *length, void **pointer);                           \
     void readPixelsRobust(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,          \
                           GLenum type, GLsizei bufSize, GLsizei *length, GLsizei *columns,         \
                           GLsizei *rows, void *pixels);                                            \
@@ -137,10 +137,10 @@
                              GLint *data);                                                         \
     void getInternalformativRobust(GLenum target, GLenum internalformat, GLenum pname,             \
                                    GLsizei bufSize, GLsizei *length, GLint *params);               \
-    void getVertexAttribIivRobust(AttributeLocation indexPacked, GLenum pname, GLsizei bufSize,    \
-                                  GLsizei *length, GLint *params);                                 \
-    void getVertexAttribIuivRobust(AttributeLocation indexPacked, GLenum pname, GLsizei bufSize,   \
-                                   GLsizei *length, GLuint *params);                               \
+    void getVertexAttribIivRobust(GLuint index, GLenum pname, GLsizei bufSize, GLsizei *length,    \
+                                  GLint *params);                                                  \
+    void getVertexAttribIuivRobust(GLuint index, GLenum pname, GLsizei bufSize, GLsizei *length,   \
+                                   GLuint *params);                                                \
     void getUniformuivRobust(ShaderProgramID programPacked, UniformLocation locationPacked,        \
                              GLsizei bufSize, GLsizei *length, GLuint *params);                    \
     void getActiveUniformBlockivRobust(ShaderProgramID programPacked, GLuint uniformBlockIndex,    \

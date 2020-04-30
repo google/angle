@@ -3026,13 +3026,13 @@ void ProgramD3D::initAttribLocationsToD3DSemantic()
     int semanticIndex = 0;
     for (const sh::ShaderVariable &attribute : vertexShader->getActiveAttributes())
     {
-        int regCount                   = gl::VariableRegisterCount(attribute.type);
-        gl::AttributeLocation location = mState.getAttributeLocation(attribute.name);
-        ASSERT(location.value != std::numeric_limits<uint32_t>::max());
+        int regCount    = gl::VariableRegisterCount(attribute.type);
+        GLuint location = mState.getAttributeLocation(attribute.name);
+        ASSERT(location != std::numeric_limits<GLuint>::max());
 
         for (int reg = 0; reg < regCount; ++reg)
         {
-            mAttribLocationToD3DSemantic[location.value + reg] = semanticIndex++;
+            mAttribLocationToD3DSemantic[location + reg] = semanticIndex++;
         }
     }
 }
@@ -3061,9 +3061,9 @@ void ProgramD3D::updateCachedInputLayout(Serial associatedSerial, const gl::Stat
             {
                 mCachedInputLayout.resize(d3dSemantic + 1, angle::FormatID::NONE);
             }
-            mCachedInputLayout[d3dSemantic] = GetVertexFormatID(
-                vertexAttributes[locationIndex],
-                state.getVertexAttribCurrentValue({static_cast<uint32_t>(locationIndex)}).Type);
+            mCachedInputLayout[d3dSemantic] =
+                GetVertexFormatID(vertexAttributes[locationIndex],
+                                  state.getVertexAttribCurrentValue(locationIndex).Type);
         }
     }
 

@@ -241,11 +241,11 @@ bool ValidateGetUniformuiv(const Context *context,
                            UniformLocation locationPacked,
                            const GLuint *params);
 bool ValidateGetVertexAttribIiv(const Context *context,
-                                AttributeLocation indexPacked,
+                                GLuint index,
                                 GLenum pname,
                                 const GLint *params);
 bool ValidateGetVertexAttribIuiv(const Context *context,
-                                 AttributeLocation indexPacked,
+                                 GLuint index,
                                  GLenum pname,
                                  const GLuint *params);
 bool ValidateInvalidateFramebuffer(const Context *context,
@@ -412,29 +412,23 @@ bool ValidateUniformMatrix4x3fv(const Context *context,
                                 GLboolean transpose,
                                 const GLfloat *value);
 bool ValidateUnmapBuffer(const Context *context, BufferBinding targetPacked);
-bool ValidateVertexAttribDivisor(const Context *context,
-                                 AttributeLocation indexPacked,
-                                 GLuint divisor);
+bool ValidateVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor);
 bool ValidateVertexAttribI4i(const Context *context,
-                             AttributeLocation indexPacked,
+                             GLuint index,
                              GLint x,
                              GLint y,
                              GLint z,
                              GLint w);
-bool ValidateVertexAttribI4iv(const Context *context,
-                              AttributeLocation indexPacked,
-                              const GLint *v);
+bool ValidateVertexAttribI4iv(const Context *context, GLuint index, const GLint *v);
 bool ValidateVertexAttribI4ui(const Context *context,
-                              AttributeLocation indexPacked,
+                              GLuint index,
                               GLuint x,
                               GLuint y,
                               GLuint z,
                               GLuint w);
-bool ValidateVertexAttribI4uiv(const Context *context,
-                               AttributeLocation indexPacked,
-                               const GLuint *v);
+bool ValidateVertexAttribI4uiv(const Context *context, GLuint index, const GLuint *v);
 bool ValidateVertexAttribIPointer(const Context *context,
-                                  AttributeLocation indexPacked,
+                                  GLuint index,
                                   GLint size,
                                   VertexAttribType typePacked,
                                   GLsizei stride,

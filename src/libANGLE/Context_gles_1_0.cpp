@@ -731,13 +731,13 @@ void Context::texGenxv(GLenum coord, GLenum pname, const GLint *params)
     UNIMPLEMENTED();
 }
 
-AttributeLocation Context::vertexArrayIndex(ClientVertexArrayType type) const
+int Context::vertexArrayIndex(ClientVertexArrayType type) const
 {
-    return {GLES1Renderer::VertexArrayIndex(type, mState.gles1())};
+    return GLES1Renderer::VertexArrayIndex(type, mState.gles1());
 }
 
 // static
-AttributeLocation Context::TexCoordArrayIndex(unsigned int unit)
+int Context::TexCoordArrayIndex(unsigned int unit)
 {
     return GLES1Renderer::TexCoordArrayIndex(unit);
 }

@@ -316,7 +316,7 @@ class ProgramState final : angle::NonCopyable
     bool isImageUniformIndex(GLuint index) const;
     GLuint getImageIndexFromUniformIndex(GLuint uniformIndex) const;
     GLuint getUniformIndexFromImageIndex(GLuint imageIndex) const;
-    AttributeLocation getAttributeLocation(const std::string &name) const;
+    GLuint getAttributeLocation(const std::string &name) const;
 
     GLuint getBufferVariableIndexFromName(const std::string &name) const;
 
@@ -548,7 +548,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, ShaderProgramID *shaders) const;
 
-    AttributeLocation getAttributeLocation(const std::string &name) const;
+    GLuint getAttributeLocation(const std::string &name) const;
 
     void getActiveAttribute(GLuint index,
                             GLsizei bufsize,

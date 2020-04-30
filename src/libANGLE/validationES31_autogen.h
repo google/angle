@@ -316,17 +316,15 @@ bool ValidateUseProgramStages(const Context *context,
                               GLbitfield stages,
                               ShaderProgramID programPacked);
 bool ValidateValidateProgramPipeline(const Context *context, ProgramPipelineID pipelinePacked);
-bool ValidateVertexAttribBinding(const Context *context,
-                                 AttributeLocation attribindexPacked,
-                                 GLuint bindingindex);
+bool ValidateVertexAttribBinding(const Context *context, GLuint attribindex, GLuint bindingindex);
 bool ValidateVertexAttribFormat(const Context *context,
-                                AttributeLocation attribindexPacked,
+                                GLuint attribindex,
                                 GLint size,
                                 VertexAttribType typePacked,
                                 GLboolean normalized,
                                 GLuint relativeoffset);
 bool ValidateVertexAttribIFormat(const Context *context,
-                                 AttributeLocation attribindexPacked,
+                                 GLuint attribindex,
                                  GLint size,
                                  VertexAttribType typePacked,
                                  GLuint relativeoffset);
