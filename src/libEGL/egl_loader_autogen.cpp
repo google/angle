@@ -10,277 +10,268 @@
 
 #include "egl_loader_autogen.h"
 
-PFNEGLCHOOSECONFIGPROC ANGLE_EGL_ChooseConfig;
-PFNEGLCOPYBUFFERSPROC ANGLE_EGL_CopyBuffers;
-PFNEGLCREATECONTEXTPROC ANGLE_EGL_CreateContext;
-PFNEGLCREATEPBUFFERSURFACEPROC ANGLE_EGL_CreatePbufferSurface;
-PFNEGLCREATEPIXMAPSURFACEPROC ANGLE_EGL_CreatePixmapSurface;
-PFNEGLCREATEWINDOWSURFACEPROC ANGLE_EGL_CreateWindowSurface;
-PFNEGLDESTROYCONTEXTPROC ANGLE_EGL_DestroyContext;
-PFNEGLDESTROYSURFACEPROC ANGLE_EGL_DestroySurface;
-PFNEGLGETCONFIGATTRIBPROC ANGLE_EGL_GetConfigAttrib;
-PFNEGLGETCONFIGSPROC ANGLE_EGL_GetConfigs;
-PFNEGLGETCURRENTDISPLAYPROC ANGLE_EGL_GetCurrentDisplay;
-PFNEGLGETCURRENTSURFACEPROC ANGLE_EGL_GetCurrentSurface;
-PFNEGLGETDISPLAYPROC ANGLE_EGL_GetDisplay;
-PFNEGLGETERRORPROC ANGLE_EGL_GetError;
-PFNEGLGETPROCADDRESSPROC ANGLE_EGL_GetProcAddress;
-PFNEGLINITIALIZEPROC ANGLE_EGL_Initialize;
-PFNEGLMAKECURRENTPROC ANGLE_EGL_MakeCurrent;
-PFNEGLQUERYCONTEXTPROC ANGLE_EGL_QueryContext;
-PFNEGLQUERYSTRINGPROC ANGLE_EGL_QueryString;
-PFNEGLQUERYSURFACEPROC ANGLE_EGL_QuerySurface;
-PFNEGLSWAPBUFFERSPROC ANGLE_EGL_SwapBuffers;
-PFNEGLTERMINATEPROC ANGLE_EGL_Terminate;
-PFNEGLWAITGLPROC ANGLE_EGL_WaitGL;
-PFNEGLWAITNATIVEPROC ANGLE_EGL_WaitNative;
-PFNEGLBINDTEXIMAGEPROC ANGLE_EGL_BindTexImage;
-PFNEGLRELEASETEXIMAGEPROC ANGLE_EGL_ReleaseTexImage;
-PFNEGLSURFACEATTRIBPROC ANGLE_EGL_SurfaceAttrib;
-PFNEGLSWAPINTERVALPROC ANGLE_EGL_SwapInterval;
-PFNEGLBINDAPIPROC ANGLE_EGL_BindAPI;
-PFNEGLQUERYAPIPROC ANGLE_EGL_QueryAPI;
-PFNEGLCREATEPBUFFERFROMCLIENTBUFFERPROC ANGLE_EGL_CreatePbufferFromClientBuffer;
-PFNEGLRELEASETHREADPROC ANGLE_EGL_ReleaseThread;
-PFNEGLWAITCLIENTPROC ANGLE_EGL_WaitClient;
-PFNEGLGETCURRENTCONTEXTPROC ANGLE_EGL_GetCurrentContext;
-PFNEGLCREATESYNCPROC ANGLE_EGL_CreateSync;
-PFNEGLDESTROYSYNCPROC ANGLE_EGL_DestroySync;
-PFNEGLCLIENTWAITSYNCPROC ANGLE_EGL_ClientWaitSync;
-PFNEGLGETSYNCATTRIBPROC ANGLE_EGL_GetSyncAttrib;
-PFNEGLCREATEIMAGEPROC ANGLE_EGL_CreateImage;
-PFNEGLDESTROYIMAGEPROC ANGLE_EGL_DestroyImage;
-PFNEGLGETPLATFORMDISPLAYPROC ANGLE_EGL_GetPlatformDisplay;
-PFNEGLCREATEPLATFORMWINDOWSURFACEPROC ANGLE_EGL_CreatePlatformWindowSurface;
-PFNEGLCREATEPLATFORMPIXMAPSURFACEPROC ANGLE_EGL_CreatePlatformPixmapSurface;
-PFNEGLWAITSYNCPROC ANGLE_EGL_WaitSync;
-PFNEGLSETBLOBCACHEFUNCSANDROIDPROC ANGLE_EGL_SetBlobCacheFuncsANDROID;
-PFNEGLGETCOMPOSITORTIMINGANDROIDPROC ANGLE_EGL_GetCompositorTimingANDROID;
-PFNEGLGETCOMPOSITORTIMINGSUPPORTEDANDROIDPROC ANGLE_EGL_GetCompositorTimingSupportedANDROID;
-PFNEGLGETFRAMETIMESTAMPSUPPORTEDANDROIDPROC ANGLE_EGL_GetFrameTimestampSupportedANDROID;
-PFNEGLGETFRAMETIMESTAMPSANDROIDPROC ANGLE_EGL_GetFrameTimestampsANDROID;
-PFNEGLGETNEXTFRAMEIDANDROIDPROC ANGLE_EGL_GetNextFrameIdANDROID;
-PFNEGLGETNATIVECLIENTBUFFERANDROIDPROC ANGLE_EGL_GetNativeClientBufferANDROID;
-PFNEGLDUPNATIVEFENCEFDANDROIDPROC ANGLE_EGL_DupNativeFenceFDANDROID;
-PFNEGLPRESENTATIONTIMEANDROIDPROC ANGLE_EGL_PresentationTimeANDROID;
-PFNEGLCREATEDEVICEANGLEPROC ANGLE_EGL_CreateDeviceANGLE;
-PFNEGLRELEASEDEVICEANGLEPROC ANGLE_EGL_ReleaseDeviceANGLE;
-PFNEGLQUERYDISPLAYATTRIBANGLEPROC ANGLE_EGL_QueryDisplayAttribANGLE;
-PFNEGLQUERYSTRINGIANGLEPROC ANGLE_EGL_QueryStringiANGLE;
-PFNEGLPROGRAMCACHEGETATTRIBANGLEPROC ANGLE_EGL_ProgramCacheGetAttribANGLE;
-PFNEGLPROGRAMCACHEPOPULATEANGLEPROC ANGLE_EGL_ProgramCachePopulateANGLE;
-PFNEGLPROGRAMCACHEQUERYANGLEPROC ANGLE_EGL_ProgramCacheQueryANGLE;
-PFNEGLPROGRAMCACHERESIZEANGLEPROC ANGLE_EGL_ProgramCacheResizeANGLE;
-PFNEGLQUERYSURFACEPOINTERANGLEPROC ANGLE_EGL_QuerySurfacePointerANGLE;
-PFNEGLCREATESTREAMPRODUCERD3DTEXTUREANGLEPROC ANGLE_EGL_CreateStreamProducerD3DTextureANGLE;
-PFNEGLSTREAMPOSTD3DTEXTUREANGLEPROC ANGLE_EGL_StreamPostD3DTextureANGLE;
-PFNEGLSWAPBUFFERSWITHFRAMETOKENANGLEPROC ANGLE_EGL_SwapBuffersWithFrameTokenANGLE;
-PFNEGLGETMSCRATEANGLEPROC ANGLE_EGL_GetMscRateANGLE;
-PFNEGLGETSYNCVALUESCHROMIUMPROC ANGLE_EGL_GetSyncValuesCHROMIUM;
-PFNEGLQUERYDEVICEATTRIBEXTPROC ANGLE_EGL_QueryDeviceAttribEXT;
-PFNEGLQUERYDEVICESTRINGEXTPROC ANGLE_EGL_QueryDeviceStringEXT;
-PFNEGLQUERYDISPLAYATTRIBEXTPROC ANGLE_EGL_QueryDisplayAttribEXT;
-PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC ANGLE_EGL_CreatePlatformPixmapSurfaceEXT;
-PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC ANGLE_EGL_CreatePlatformWindowSurfaceEXT;
-PFNEGLGETPLATFORMDISPLAYEXTPROC ANGLE_EGL_GetPlatformDisplayEXT;
-PFNEGLDEBUGMESSAGECONTROLKHRPROC ANGLE_EGL_DebugMessageControlKHR;
-PFNEGLLABELOBJECTKHRPROC ANGLE_EGL_LabelObjectKHR;
-PFNEGLQUERYDEBUGKHRPROC ANGLE_EGL_QueryDebugKHR;
-PFNEGLCLIENTWAITSYNCKHRPROC ANGLE_EGL_ClientWaitSyncKHR;
-PFNEGLCREATESYNCKHRPROC ANGLE_EGL_CreateSyncKHR;
-PFNEGLDESTROYSYNCKHRPROC ANGLE_EGL_DestroySyncKHR;
-PFNEGLGETSYNCATTRIBKHRPROC ANGLE_EGL_GetSyncAttribKHR;
-PFNEGLCREATEIMAGEKHRPROC ANGLE_EGL_CreateImageKHR;
-PFNEGLDESTROYIMAGEKHRPROC ANGLE_EGL_DestroyImageKHR;
-PFNEGLCREATESTREAMKHRPROC ANGLE_EGL_CreateStreamKHR;
-PFNEGLDESTROYSTREAMKHRPROC ANGLE_EGL_DestroyStreamKHR;
-PFNEGLQUERYSTREAMKHRPROC ANGLE_EGL_QueryStreamKHR;
-PFNEGLQUERYSTREAMU64KHRPROC ANGLE_EGL_QueryStreamu64KHR;
-PFNEGLSTREAMATTRIBKHRPROC ANGLE_EGL_StreamAttribKHR;
-PFNEGLSTREAMCONSUMERACQUIREKHRPROC ANGLE_EGL_StreamConsumerAcquireKHR;
-PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALKHRPROC ANGLE_EGL_StreamConsumerGLTextureExternalKHR;
-PFNEGLSTREAMCONSUMERRELEASEKHRPROC ANGLE_EGL_StreamConsumerReleaseKHR;
-PFNEGLSWAPBUFFERSWITHDAMAGEKHRPROC ANGLE_EGL_SwapBuffersWithDamageKHR;
-PFNEGLWAITSYNCKHRPROC ANGLE_EGL_WaitSyncKHR;
-PFNEGLPOSTSUBBUFFERNVPROC ANGLE_EGL_PostSubBufferNV;
-PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC
-ANGLE_EGL_StreamConsumerGLTextureExternalAttribsNV;
+PFNEGLCHOOSECONFIGPROC l_EGL_ChooseConfig;
+PFNEGLCOPYBUFFERSPROC l_EGL_CopyBuffers;
+PFNEGLCREATECONTEXTPROC l_EGL_CreateContext;
+PFNEGLCREATEPBUFFERSURFACEPROC l_EGL_CreatePbufferSurface;
+PFNEGLCREATEPIXMAPSURFACEPROC l_EGL_CreatePixmapSurface;
+PFNEGLCREATEWINDOWSURFACEPROC l_EGL_CreateWindowSurface;
+PFNEGLDESTROYCONTEXTPROC l_EGL_DestroyContext;
+PFNEGLDESTROYSURFACEPROC l_EGL_DestroySurface;
+PFNEGLGETCONFIGATTRIBPROC l_EGL_GetConfigAttrib;
+PFNEGLGETCONFIGSPROC l_EGL_GetConfigs;
+PFNEGLGETCURRENTDISPLAYPROC l_EGL_GetCurrentDisplay;
+PFNEGLGETCURRENTSURFACEPROC l_EGL_GetCurrentSurface;
+PFNEGLGETDISPLAYPROC l_EGL_GetDisplay;
+PFNEGLGETERRORPROC l_EGL_GetError;
+PFNEGLGETPROCADDRESSPROC l_EGL_GetProcAddress;
+PFNEGLINITIALIZEPROC l_EGL_Initialize;
+PFNEGLMAKECURRENTPROC l_EGL_MakeCurrent;
+PFNEGLQUERYCONTEXTPROC l_EGL_QueryContext;
+PFNEGLQUERYSTRINGPROC l_EGL_QueryString;
+PFNEGLQUERYSURFACEPROC l_EGL_QuerySurface;
+PFNEGLSWAPBUFFERSPROC l_EGL_SwapBuffers;
+PFNEGLTERMINATEPROC l_EGL_Terminate;
+PFNEGLWAITGLPROC l_EGL_WaitGL;
+PFNEGLWAITNATIVEPROC l_EGL_WaitNative;
+PFNEGLBINDTEXIMAGEPROC l_EGL_BindTexImage;
+PFNEGLRELEASETEXIMAGEPROC l_EGL_ReleaseTexImage;
+PFNEGLSURFACEATTRIBPROC l_EGL_SurfaceAttrib;
+PFNEGLSWAPINTERVALPROC l_EGL_SwapInterval;
+PFNEGLBINDAPIPROC l_EGL_BindAPI;
+PFNEGLQUERYAPIPROC l_EGL_QueryAPI;
+PFNEGLCREATEPBUFFERFROMCLIENTBUFFERPROC l_EGL_CreatePbufferFromClientBuffer;
+PFNEGLRELEASETHREADPROC l_EGL_ReleaseThread;
+PFNEGLWAITCLIENTPROC l_EGL_WaitClient;
+PFNEGLGETCURRENTCONTEXTPROC l_EGL_GetCurrentContext;
+PFNEGLCREATESYNCPROC l_EGL_CreateSync;
+PFNEGLDESTROYSYNCPROC l_EGL_DestroySync;
+PFNEGLCLIENTWAITSYNCPROC l_EGL_ClientWaitSync;
+PFNEGLGETSYNCATTRIBPROC l_EGL_GetSyncAttrib;
+PFNEGLCREATEIMAGEPROC l_EGL_CreateImage;
+PFNEGLDESTROYIMAGEPROC l_EGL_DestroyImage;
+PFNEGLGETPLATFORMDISPLAYPROC l_EGL_GetPlatformDisplay;
+PFNEGLCREATEPLATFORMWINDOWSURFACEPROC l_EGL_CreatePlatformWindowSurface;
+PFNEGLCREATEPLATFORMPIXMAPSURFACEPROC l_EGL_CreatePlatformPixmapSurface;
+PFNEGLWAITSYNCPROC l_EGL_WaitSync;
+PFNEGLSETBLOBCACHEFUNCSANDROIDPROC l_EGL_SetBlobCacheFuncsANDROID;
+PFNEGLGETCOMPOSITORTIMINGANDROIDPROC l_EGL_GetCompositorTimingANDROID;
+PFNEGLGETCOMPOSITORTIMINGSUPPORTEDANDROIDPROC l_EGL_GetCompositorTimingSupportedANDROID;
+PFNEGLGETFRAMETIMESTAMPSUPPORTEDANDROIDPROC l_EGL_GetFrameTimestampSupportedANDROID;
+PFNEGLGETFRAMETIMESTAMPSANDROIDPROC l_EGL_GetFrameTimestampsANDROID;
+PFNEGLGETNEXTFRAMEIDANDROIDPROC l_EGL_GetNextFrameIdANDROID;
+PFNEGLGETNATIVECLIENTBUFFERANDROIDPROC l_EGL_GetNativeClientBufferANDROID;
+PFNEGLDUPNATIVEFENCEFDANDROIDPROC l_EGL_DupNativeFenceFDANDROID;
+PFNEGLPRESENTATIONTIMEANDROIDPROC l_EGL_PresentationTimeANDROID;
+PFNEGLCREATEDEVICEANGLEPROC l_EGL_CreateDeviceANGLE;
+PFNEGLRELEASEDEVICEANGLEPROC l_EGL_ReleaseDeviceANGLE;
+PFNEGLQUERYDISPLAYATTRIBANGLEPROC l_EGL_QueryDisplayAttribANGLE;
+PFNEGLQUERYSTRINGIANGLEPROC l_EGL_QueryStringiANGLE;
+PFNEGLPROGRAMCACHEGETATTRIBANGLEPROC l_EGL_ProgramCacheGetAttribANGLE;
+PFNEGLPROGRAMCACHEPOPULATEANGLEPROC l_EGL_ProgramCachePopulateANGLE;
+PFNEGLPROGRAMCACHEQUERYANGLEPROC l_EGL_ProgramCacheQueryANGLE;
+PFNEGLPROGRAMCACHERESIZEANGLEPROC l_EGL_ProgramCacheResizeANGLE;
+PFNEGLQUERYSURFACEPOINTERANGLEPROC l_EGL_QuerySurfacePointerANGLE;
+PFNEGLCREATESTREAMPRODUCERD3DTEXTUREANGLEPROC l_EGL_CreateStreamProducerD3DTextureANGLE;
+PFNEGLSTREAMPOSTD3DTEXTUREANGLEPROC l_EGL_StreamPostD3DTextureANGLE;
+PFNEGLSWAPBUFFERSWITHFRAMETOKENANGLEPROC l_EGL_SwapBuffersWithFrameTokenANGLE;
+PFNEGLGETMSCRATEANGLEPROC l_EGL_GetMscRateANGLE;
+PFNEGLGETSYNCVALUESCHROMIUMPROC l_EGL_GetSyncValuesCHROMIUM;
+PFNEGLQUERYDEVICEATTRIBEXTPROC l_EGL_QueryDeviceAttribEXT;
+PFNEGLQUERYDEVICESTRINGEXTPROC l_EGL_QueryDeviceStringEXT;
+PFNEGLQUERYDISPLAYATTRIBEXTPROC l_EGL_QueryDisplayAttribEXT;
+PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC l_EGL_CreatePlatformPixmapSurfaceEXT;
+PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC l_EGL_CreatePlatformWindowSurfaceEXT;
+PFNEGLGETPLATFORMDISPLAYEXTPROC l_EGL_GetPlatformDisplayEXT;
+PFNEGLDEBUGMESSAGECONTROLKHRPROC l_EGL_DebugMessageControlKHR;
+PFNEGLLABELOBJECTKHRPROC l_EGL_LabelObjectKHR;
+PFNEGLQUERYDEBUGKHRPROC l_EGL_QueryDebugKHR;
+PFNEGLCLIENTWAITSYNCKHRPROC l_EGL_ClientWaitSyncKHR;
+PFNEGLCREATESYNCKHRPROC l_EGL_CreateSyncKHR;
+PFNEGLDESTROYSYNCKHRPROC l_EGL_DestroySyncKHR;
+PFNEGLGETSYNCATTRIBKHRPROC l_EGL_GetSyncAttribKHR;
+PFNEGLCREATEIMAGEKHRPROC l_EGL_CreateImageKHR;
+PFNEGLDESTROYIMAGEKHRPROC l_EGL_DestroyImageKHR;
+PFNEGLCREATESTREAMKHRPROC l_EGL_CreateStreamKHR;
+PFNEGLDESTROYSTREAMKHRPROC l_EGL_DestroyStreamKHR;
+PFNEGLQUERYSTREAMKHRPROC l_EGL_QueryStreamKHR;
+PFNEGLQUERYSTREAMU64KHRPROC l_EGL_QueryStreamu64KHR;
+PFNEGLSTREAMATTRIBKHRPROC l_EGL_StreamAttribKHR;
+PFNEGLSTREAMCONSUMERACQUIREKHRPROC l_EGL_StreamConsumerAcquireKHR;
+PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALKHRPROC l_EGL_StreamConsumerGLTextureExternalKHR;
+PFNEGLSTREAMCONSUMERRELEASEKHRPROC l_EGL_StreamConsumerReleaseKHR;
+PFNEGLSWAPBUFFERSWITHDAMAGEKHRPROC l_EGL_SwapBuffersWithDamageKHR;
+PFNEGLWAITSYNCKHRPROC l_EGL_WaitSyncKHR;
+PFNEGLPOSTSUBBUFFERNVPROC l_EGL_PostSubBufferNV;
+PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC l_EGL_StreamConsumerGLTextureExternalAttribsNV;
 
 namespace angle
 {
 void LoadEGL_EGL(LoadProc loadProc)
 {
-    ANGLE_EGL_ChooseConfig = reinterpret_cast<PFNEGLCHOOSECONFIGPROC>(loadProc("EGL_ChooseConfig"));
-    ANGLE_EGL_CopyBuffers  = reinterpret_cast<PFNEGLCOPYBUFFERSPROC>(loadProc("EGL_CopyBuffers"));
-    ANGLE_EGL_CreateContext =
-        reinterpret_cast<PFNEGLCREATECONTEXTPROC>(loadProc("EGL_CreateContext"));
-    ANGLE_EGL_CreatePbufferSurface =
+    l_EGL_ChooseConfig  = reinterpret_cast<PFNEGLCHOOSECONFIGPROC>(loadProc("EGL_ChooseConfig"));
+    l_EGL_CopyBuffers   = reinterpret_cast<PFNEGLCOPYBUFFERSPROC>(loadProc("EGL_CopyBuffers"));
+    l_EGL_CreateContext = reinterpret_cast<PFNEGLCREATECONTEXTPROC>(loadProc("EGL_CreateContext"));
+    l_EGL_CreatePbufferSurface =
         reinterpret_cast<PFNEGLCREATEPBUFFERSURFACEPROC>(loadProc("EGL_CreatePbufferSurface"));
-    ANGLE_EGL_CreatePixmapSurface =
+    l_EGL_CreatePixmapSurface =
         reinterpret_cast<PFNEGLCREATEPIXMAPSURFACEPROC>(loadProc("EGL_CreatePixmapSurface"));
-    ANGLE_EGL_CreateWindowSurface =
+    l_EGL_CreateWindowSurface =
         reinterpret_cast<PFNEGLCREATEWINDOWSURFACEPROC>(loadProc("EGL_CreateWindowSurface"));
-    ANGLE_EGL_DestroyContext =
+    l_EGL_DestroyContext =
         reinterpret_cast<PFNEGLDESTROYCONTEXTPROC>(loadProc("EGL_DestroyContext"));
-    ANGLE_EGL_DestroySurface =
+    l_EGL_DestroySurface =
         reinterpret_cast<PFNEGLDESTROYSURFACEPROC>(loadProc("EGL_DestroySurface"));
-    ANGLE_EGL_GetConfigAttrib =
+    l_EGL_GetConfigAttrib =
         reinterpret_cast<PFNEGLGETCONFIGATTRIBPROC>(loadProc("EGL_GetConfigAttrib"));
-    ANGLE_EGL_GetConfigs = reinterpret_cast<PFNEGLGETCONFIGSPROC>(loadProc("EGL_GetConfigs"));
-    ANGLE_EGL_GetCurrentDisplay =
+    l_EGL_GetConfigs = reinterpret_cast<PFNEGLGETCONFIGSPROC>(loadProc("EGL_GetConfigs"));
+    l_EGL_GetCurrentDisplay =
         reinterpret_cast<PFNEGLGETCURRENTDISPLAYPROC>(loadProc("EGL_GetCurrentDisplay"));
-    ANGLE_EGL_GetCurrentSurface =
+    l_EGL_GetCurrentSurface =
         reinterpret_cast<PFNEGLGETCURRENTSURFACEPROC>(loadProc("EGL_GetCurrentSurface"));
-    ANGLE_EGL_GetDisplay = reinterpret_cast<PFNEGLGETDISPLAYPROC>(loadProc("EGL_GetDisplay"));
-    ANGLE_EGL_GetError   = reinterpret_cast<PFNEGLGETERRORPROC>(loadProc("EGL_GetError"));
-    ANGLE_EGL_GetProcAddress =
+    l_EGL_GetDisplay = reinterpret_cast<PFNEGLGETDISPLAYPROC>(loadProc("EGL_GetDisplay"));
+    l_EGL_GetError   = reinterpret_cast<PFNEGLGETERRORPROC>(loadProc("EGL_GetError"));
+    l_EGL_GetProcAddress =
         reinterpret_cast<PFNEGLGETPROCADDRESSPROC>(loadProc("EGL_GetProcAddress"));
-    ANGLE_EGL_Initialize   = reinterpret_cast<PFNEGLINITIALIZEPROC>(loadProc("EGL_Initialize"));
-    ANGLE_EGL_MakeCurrent  = reinterpret_cast<PFNEGLMAKECURRENTPROC>(loadProc("EGL_MakeCurrent"));
-    ANGLE_EGL_QueryContext = reinterpret_cast<PFNEGLQUERYCONTEXTPROC>(loadProc("EGL_QueryContext"));
-    ANGLE_EGL_QueryString  = reinterpret_cast<PFNEGLQUERYSTRINGPROC>(loadProc("EGL_QueryString"));
-    ANGLE_EGL_QuerySurface = reinterpret_cast<PFNEGLQUERYSURFACEPROC>(loadProc("EGL_QuerySurface"));
-    ANGLE_EGL_SwapBuffers  = reinterpret_cast<PFNEGLSWAPBUFFERSPROC>(loadProc("EGL_SwapBuffers"));
-    ANGLE_EGL_Terminate    = reinterpret_cast<PFNEGLTERMINATEPROC>(loadProc("EGL_Terminate"));
-    ANGLE_EGL_WaitGL       = reinterpret_cast<PFNEGLWAITGLPROC>(loadProc("EGL_WaitGL"));
-    ANGLE_EGL_WaitNative   = reinterpret_cast<PFNEGLWAITNATIVEPROC>(loadProc("EGL_WaitNative"));
-    ANGLE_EGL_BindTexImage = reinterpret_cast<PFNEGLBINDTEXIMAGEPROC>(loadProc("EGL_BindTexImage"));
-    ANGLE_EGL_ReleaseTexImage =
+    l_EGL_Initialize   = reinterpret_cast<PFNEGLINITIALIZEPROC>(loadProc("EGL_Initialize"));
+    l_EGL_MakeCurrent  = reinterpret_cast<PFNEGLMAKECURRENTPROC>(loadProc("EGL_MakeCurrent"));
+    l_EGL_QueryContext = reinterpret_cast<PFNEGLQUERYCONTEXTPROC>(loadProc("EGL_QueryContext"));
+    l_EGL_QueryString  = reinterpret_cast<PFNEGLQUERYSTRINGPROC>(loadProc("EGL_QueryString"));
+    l_EGL_QuerySurface = reinterpret_cast<PFNEGLQUERYSURFACEPROC>(loadProc("EGL_QuerySurface"));
+    l_EGL_SwapBuffers  = reinterpret_cast<PFNEGLSWAPBUFFERSPROC>(loadProc("EGL_SwapBuffers"));
+    l_EGL_Terminate    = reinterpret_cast<PFNEGLTERMINATEPROC>(loadProc("EGL_Terminate"));
+    l_EGL_WaitGL       = reinterpret_cast<PFNEGLWAITGLPROC>(loadProc("EGL_WaitGL"));
+    l_EGL_WaitNative   = reinterpret_cast<PFNEGLWAITNATIVEPROC>(loadProc("EGL_WaitNative"));
+    l_EGL_BindTexImage = reinterpret_cast<PFNEGLBINDTEXIMAGEPROC>(loadProc("EGL_BindTexImage"));
+    l_EGL_ReleaseTexImage =
         reinterpret_cast<PFNEGLRELEASETEXIMAGEPROC>(loadProc("EGL_ReleaseTexImage"));
-    ANGLE_EGL_SurfaceAttrib =
-        reinterpret_cast<PFNEGLSURFACEATTRIBPROC>(loadProc("EGL_SurfaceAttrib"));
-    ANGLE_EGL_SwapInterval = reinterpret_cast<PFNEGLSWAPINTERVALPROC>(loadProc("EGL_SwapInterval"));
-    ANGLE_EGL_BindAPI      = reinterpret_cast<PFNEGLBINDAPIPROC>(loadProc("EGL_BindAPI"));
-    ANGLE_EGL_QueryAPI     = reinterpret_cast<PFNEGLQUERYAPIPROC>(loadProc("EGL_QueryAPI"));
-    ANGLE_EGL_CreatePbufferFromClientBuffer =
-        reinterpret_cast<PFNEGLCREATEPBUFFERFROMCLIENTBUFFERPROC>(
-            loadProc("EGL_CreatePbufferFromClientBuffer"));
-    ANGLE_EGL_ReleaseThread =
-        reinterpret_cast<PFNEGLRELEASETHREADPROC>(loadProc("EGL_ReleaseThread"));
-    ANGLE_EGL_WaitClient = reinterpret_cast<PFNEGLWAITCLIENTPROC>(loadProc("EGL_WaitClient"));
-    ANGLE_EGL_GetCurrentContext =
+    l_EGL_SurfaceAttrib = reinterpret_cast<PFNEGLSURFACEATTRIBPROC>(loadProc("EGL_SurfaceAttrib"));
+    l_EGL_SwapInterval  = reinterpret_cast<PFNEGLSWAPINTERVALPROC>(loadProc("EGL_SwapInterval"));
+    l_EGL_BindAPI       = reinterpret_cast<PFNEGLBINDAPIPROC>(loadProc("EGL_BindAPI"));
+    l_EGL_QueryAPI      = reinterpret_cast<PFNEGLQUERYAPIPROC>(loadProc("EGL_QueryAPI"));
+    l_EGL_CreatePbufferFromClientBuffer = reinterpret_cast<PFNEGLCREATEPBUFFERFROMCLIENTBUFFERPROC>(
+        loadProc("EGL_CreatePbufferFromClientBuffer"));
+    l_EGL_ReleaseThread = reinterpret_cast<PFNEGLRELEASETHREADPROC>(loadProc("EGL_ReleaseThread"));
+    l_EGL_WaitClient    = reinterpret_cast<PFNEGLWAITCLIENTPROC>(loadProc("EGL_WaitClient"));
+    l_EGL_GetCurrentContext =
         reinterpret_cast<PFNEGLGETCURRENTCONTEXTPROC>(loadProc("EGL_GetCurrentContext"));
-    ANGLE_EGL_CreateSync  = reinterpret_cast<PFNEGLCREATESYNCPROC>(loadProc("EGL_CreateSync"));
-    ANGLE_EGL_DestroySync = reinterpret_cast<PFNEGLDESTROYSYNCPROC>(loadProc("EGL_DestroySync"));
-    ANGLE_EGL_ClientWaitSync =
+    l_EGL_CreateSync  = reinterpret_cast<PFNEGLCREATESYNCPROC>(loadProc("EGL_CreateSync"));
+    l_EGL_DestroySync = reinterpret_cast<PFNEGLDESTROYSYNCPROC>(loadProc("EGL_DestroySync"));
+    l_EGL_ClientWaitSync =
         reinterpret_cast<PFNEGLCLIENTWAITSYNCPROC>(loadProc("EGL_ClientWaitSync"));
-    ANGLE_EGL_GetSyncAttrib =
-        reinterpret_cast<PFNEGLGETSYNCATTRIBPROC>(loadProc("EGL_GetSyncAttrib"));
-    ANGLE_EGL_CreateImage  = reinterpret_cast<PFNEGLCREATEIMAGEPROC>(loadProc("EGL_CreateImage"));
-    ANGLE_EGL_DestroyImage = reinterpret_cast<PFNEGLDESTROYIMAGEPROC>(loadProc("EGL_DestroyImage"));
-    ANGLE_EGL_GetPlatformDisplay =
+    l_EGL_GetSyncAttrib = reinterpret_cast<PFNEGLGETSYNCATTRIBPROC>(loadProc("EGL_GetSyncAttrib"));
+    l_EGL_CreateImage   = reinterpret_cast<PFNEGLCREATEIMAGEPROC>(loadProc("EGL_CreateImage"));
+    l_EGL_DestroyImage  = reinterpret_cast<PFNEGLDESTROYIMAGEPROC>(loadProc("EGL_DestroyImage"));
+    l_EGL_GetPlatformDisplay =
         reinterpret_cast<PFNEGLGETPLATFORMDISPLAYPROC>(loadProc("EGL_GetPlatformDisplay"));
-    ANGLE_EGL_CreatePlatformWindowSurface = reinterpret_cast<PFNEGLCREATEPLATFORMWINDOWSURFACEPROC>(
+    l_EGL_CreatePlatformWindowSurface = reinterpret_cast<PFNEGLCREATEPLATFORMWINDOWSURFACEPROC>(
         loadProc("EGL_CreatePlatformWindowSurface"));
-    ANGLE_EGL_CreatePlatformPixmapSurface = reinterpret_cast<PFNEGLCREATEPLATFORMPIXMAPSURFACEPROC>(
+    l_EGL_CreatePlatformPixmapSurface = reinterpret_cast<PFNEGLCREATEPLATFORMPIXMAPSURFACEPROC>(
         loadProc("EGL_CreatePlatformPixmapSurface"));
-    ANGLE_EGL_WaitSync = reinterpret_cast<PFNEGLWAITSYNCPROC>(loadProc("EGL_WaitSync"));
-    ANGLE_EGL_SetBlobCacheFuncsANDROID = reinterpret_cast<PFNEGLSETBLOBCACHEFUNCSANDROIDPROC>(
+    l_EGL_WaitSync                 = reinterpret_cast<PFNEGLWAITSYNCPROC>(loadProc("EGL_WaitSync"));
+    l_EGL_SetBlobCacheFuncsANDROID = reinterpret_cast<PFNEGLSETBLOBCACHEFUNCSANDROIDPROC>(
         loadProc("EGL_SetBlobCacheFuncsANDROID"));
-    ANGLE_EGL_GetCompositorTimingANDROID = reinterpret_cast<PFNEGLGETCOMPOSITORTIMINGANDROIDPROC>(
+    l_EGL_GetCompositorTimingANDROID = reinterpret_cast<PFNEGLGETCOMPOSITORTIMINGANDROIDPROC>(
         loadProc("EGL_GetCompositorTimingANDROID"));
-    ANGLE_EGL_GetCompositorTimingSupportedANDROID =
+    l_EGL_GetCompositorTimingSupportedANDROID =
         reinterpret_cast<PFNEGLGETCOMPOSITORTIMINGSUPPORTEDANDROIDPROC>(
             loadProc("EGL_GetCompositorTimingSupportedANDROID"));
-    ANGLE_EGL_GetFrameTimestampSupportedANDROID =
+    l_EGL_GetFrameTimestampSupportedANDROID =
         reinterpret_cast<PFNEGLGETFRAMETIMESTAMPSUPPORTEDANDROIDPROC>(
             loadProc("EGL_GetFrameTimestampSupportedANDROID"));
-    ANGLE_EGL_GetFrameTimestampsANDROID = reinterpret_cast<PFNEGLGETFRAMETIMESTAMPSANDROIDPROC>(
+    l_EGL_GetFrameTimestampsANDROID = reinterpret_cast<PFNEGLGETFRAMETIMESTAMPSANDROIDPROC>(
         loadProc("EGL_GetFrameTimestampsANDROID"));
-    ANGLE_EGL_GetNextFrameIdANDROID =
+    l_EGL_GetNextFrameIdANDROID =
         reinterpret_cast<PFNEGLGETNEXTFRAMEIDANDROIDPROC>(loadProc("EGL_GetNextFrameIdANDROID"));
-    ANGLE_EGL_GetNativeClientBufferANDROID =
-        reinterpret_cast<PFNEGLGETNATIVECLIENTBUFFERANDROIDPROC>(
-            loadProc("EGL_GetNativeClientBufferANDROID"));
-    ANGLE_EGL_DupNativeFenceFDANDROID = reinterpret_cast<PFNEGLDUPNATIVEFENCEFDANDROIDPROC>(
+    l_EGL_GetNativeClientBufferANDROID = reinterpret_cast<PFNEGLGETNATIVECLIENTBUFFERANDROIDPROC>(
+        loadProc("EGL_GetNativeClientBufferANDROID"));
+    l_EGL_DupNativeFenceFDANDROID = reinterpret_cast<PFNEGLDUPNATIVEFENCEFDANDROIDPROC>(
         loadProc("EGL_DupNativeFenceFDANDROID"));
-    ANGLE_EGL_PresentationTimeANDROID = reinterpret_cast<PFNEGLPRESENTATIONTIMEANDROIDPROC>(
+    l_EGL_PresentationTimeANDROID = reinterpret_cast<PFNEGLPRESENTATIONTIMEANDROIDPROC>(
         loadProc("EGL_PresentationTimeANDROID"));
-    ANGLE_EGL_CreateDeviceANGLE =
+    l_EGL_CreateDeviceANGLE =
         reinterpret_cast<PFNEGLCREATEDEVICEANGLEPROC>(loadProc("EGL_CreateDeviceANGLE"));
-    ANGLE_EGL_ReleaseDeviceANGLE =
+    l_EGL_ReleaseDeviceANGLE =
         reinterpret_cast<PFNEGLRELEASEDEVICEANGLEPROC>(loadProc("EGL_ReleaseDeviceANGLE"));
-    ANGLE_EGL_QueryDisplayAttribANGLE = reinterpret_cast<PFNEGLQUERYDISPLAYATTRIBANGLEPROC>(
+    l_EGL_QueryDisplayAttribANGLE = reinterpret_cast<PFNEGLQUERYDISPLAYATTRIBANGLEPROC>(
         loadProc("EGL_QueryDisplayAttribANGLE"));
-    ANGLE_EGL_QueryStringiANGLE =
+    l_EGL_QueryStringiANGLE =
         reinterpret_cast<PFNEGLQUERYSTRINGIANGLEPROC>(loadProc("EGL_QueryStringiANGLE"));
-    ANGLE_EGL_ProgramCacheGetAttribANGLE = reinterpret_cast<PFNEGLPROGRAMCACHEGETATTRIBANGLEPROC>(
+    l_EGL_ProgramCacheGetAttribANGLE = reinterpret_cast<PFNEGLPROGRAMCACHEGETATTRIBANGLEPROC>(
         loadProc("EGL_ProgramCacheGetAttribANGLE"));
-    ANGLE_EGL_ProgramCachePopulateANGLE = reinterpret_cast<PFNEGLPROGRAMCACHEPOPULATEANGLEPROC>(
+    l_EGL_ProgramCachePopulateANGLE = reinterpret_cast<PFNEGLPROGRAMCACHEPOPULATEANGLEPROC>(
         loadProc("EGL_ProgramCachePopulateANGLE"));
-    ANGLE_EGL_ProgramCacheQueryANGLE =
+    l_EGL_ProgramCacheQueryANGLE =
         reinterpret_cast<PFNEGLPROGRAMCACHEQUERYANGLEPROC>(loadProc("EGL_ProgramCacheQueryANGLE"));
-    ANGLE_EGL_ProgramCacheResizeANGLE = reinterpret_cast<PFNEGLPROGRAMCACHERESIZEANGLEPROC>(
+    l_EGL_ProgramCacheResizeANGLE = reinterpret_cast<PFNEGLPROGRAMCACHERESIZEANGLEPROC>(
         loadProc("EGL_ProgramCacheResizeANGLE"));
-    ANGLE_EGL_QuerySurfacePointerANGLE = reinterpret_cast<PFNEGLQUERYSURFACEPOINTERANGLEPROC>(
+    l_EGL_QuerySurfacePointerANGLE = reinterpret_cast<PFNEGLQUERYSURFACEPOINTERANGLEPROC>(
         loadProc("EGL_QuerySurfacePointerANGLE"));
-    ANGLE_EGL_CreateStreamProducerD3DTextureANGLE =
+    l_EGL_CreateStreamProducerD3DTextureANGLE =
         reinterpret_cast<PFNEGLCREATESTREAMPRODUCERD3DTEXTUREANGLEPROC>(
             loadProc("EGL_CreateStreamProducerD3DTextureANGLE"));
-    ANGLE_EGL_StreamPostD3DTextureANGLE = reinterpret_cast<PFNEGLSTREAMPOSTD3DTEXTUREANGLEPROC>(
+    l_EGL_StreamPostD3DTextureANGLE = reinterpret_cast<PFNEGLSTREAMPOSTD3DTEXTUREANGLEPROC>(
         loadProc("EGL_StreamPostD3DTextureANGLE"));
-    ANGLE_EGL_SwapBuffersWithFrameTokenANGLE =
+    l_EGL_SwapBuffersWithFrameTokenANGLE =
         reinterpret_cast<PFNEGLSWAPBUFFERSWITHFRAMETOKENANGLEPROC>(
             loadProc("EGL_SwapBuffersWithFrameTokenANGLE"));
-    ANGLE_EGL_GetMscRateANGLE =
+    l_EGL_GetMscRateANGLE =
         reinterpret_cast<PFNEGLGETMSCRATEANGLEPROC>(loadProc("EGL_GetMscRateANGLE"));
-    ANGLE_EGL_GetSyncValuesCHROMIUM =
+    l_EGL_GetSyncValuesCHROMIUM =
         reinterpret_cast<PFNEGLGETSYNCVALUESCHROMIUMPROC>(loadProc("EGL_GetSyncValuesCHROMIUM"));
-    ANGLE_EGL_QueryDeviceAttribEXT =
+    l_EGL_QueryDeviceAttribEXT =
         reinterpret_cast<PFNEGLQUERYDEVICEATTRIBEXTPROC>(loadProc("EGL_QueryDeviceAttribEXT"));
-    ANGLE_EGL_QueryDeviceStringEXT =
+    l_EGL_QueryDeviceStringEXT =
         reinterpret_cast<PFNEGLQUERYDEVICESTRINGEXTPROC>(loadProc("EGL_QueryDeviceStringEXT"));
-    ANGLE_EGL_QueryDisplayAttribEXT =
+    l_EGL_QueryDisplayAttribEXT =
         reinterpret_cast<PFNEGLQUERYDISPLAYATTRIBEXTPROC>(loadProc("EGL_QueryDisplayAttribEXT"));
-    ANGLE_EGL_CreatePlatformPixmapSurfaceEXT =
+    l_EGL_CreatePlatformPixmapSurfaceEXT =
         reinterpret_cast<PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC>(
             loadProc("EGL_CreatePlatformPixmapSurfaceEXT"));
-    ANGLE_EGL_CreatePlatformWindowSurfaceEXT =
+    l_EGL_CreatePlatformWindowSurfaceEXT =
         reinterpret_cast<PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC>(
             loadProc("EGL_CreatePlatformWindowSurfaceEXT"));
-    ANGLE_EGL_GetPlatformDisplayEXT =
+    l_EGL_GetPlatformDisplayEXT =
         reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(loadProc("EGL_GetPlatformDisplayEXT"));
-    ANGLE_EGL_DebugMessageControlKHR =
+    l_EGL_DebugMessageControlKHR =
         reinterpret_cast<PFNEGLDEBUGMESSAGECONTROLKHRPROC>(loadProc("EGL_DebugMessageControlKHR"));
-    ANGLE_EGL_LabelObjectKHR =
+    l_EGL_LabelObjectKHR =
         reinterpret_cast<PFNEGLLABELOBJECTKHRPROC>(loadProc("EGL_LabelObjectKHR"));
-    ANGLE_EGL_QueryDebugKHR =
-        reinterpret_cast<PFNEGLQUERYDEBUGKHRPROC>(loadProc("EGL_QueryDebugKHR"));
-    ANGLE_EGL_ClientWaitSyncKHR =
+    l_EGL_QueryDebugKHR = reinterpret_cast<PFNEGLQUERYDEBUGKHRPROC>(loadProc("EGL_QueryDebugKHR"));
+    l_EGL_ClientWaitSyncKHR =
         reinterpret_cast<PFNEGLCLIENTWAITSYNCKHRPROC>(loadProc("EGL_ClientWaitSyncKHR"));
-    ANGLE_EGL_CreateSyncKHR =
-        reinterpret_cast<PFNEGLCREATESYNCKHRPROC>(loadProc("EGL_CreateSyncKHR"));
-    ANGLE_EGL_DestroySyncKHR =
+    l_EGL_CreateSyncKHR = reinterpret_cast<PFNEGLCREATESYNCKHRPROC>(loadProc("EGL_CreateSyncKHR"));
+    l_EGL_DestroySyncKHR =
         reinterpret_cast<PFNEGLDESTROYSYNCKHRPROC>(loadProc("EGL_DestroySyncKHR"));
-    ANGLE_EGL_GetSyncAttribKHR =
+    l_EGL_GetSyncAttribKHR =
         reinterpret_cast<PFNEGLGETSYNCATTRIBKHRPROC>(loadProc("EGL_GetSyncAttribKHR"));
-    ANGLE_EGL_CreateImageKHR =
+    l_EGL_CreateImageKHR =
         reinterpret_cast<PFNEGLCREATEIMAGEKHRPROC>(loadProc("EGL_CreateImageKHR"));
-    ANGLE_EGL_DestroyImageKHR =
+    l_EGL_DestroyImageKHR =
         reinterpret_cast<PFNEGLDESTROYIMAGEKHRPROC>(loadProc("EGL_DestroyImageKHR"));
-    ANGLE_EGL_CreateStreamKHR =
+    l_EGL_CreateStreamKHR =
         reinterpret_cast<PFNEGLCREATESTREAMKHRPROC>(loadProc("EGL_CreateStreamKHR"));
-    ANGLE_EGL_DestroyStreamKHR =
+    l_EGL_DestroyStreamKHR =
         reinterpret_cast<PFNEGLDESTROYSTREAMKHRPROC>(loadProc("EGL_DestroyStreamKHR"));
-    ANGLE_EGL_QueryStreamKHR =
+    l_EGL_QueryStreamKHR =
         reinterpret_cast<PFNEGLQUERYSTREAMKHRPROC>(loadProc("EGL_QueryStreamKHR"));
-    ANGLE_EGL_QueryStreamu64KHR =
+    l_EGL_QueryStreamu64KHR =
         reinterpret_cast<PFNEGLQUERYSTREAMU64KHRPROC>(loadProc("EGL_QueryStreamu64KHR"));
-    ANGLE_EGL_StreamAttribKHR =
+    l_EGL_StreamAttribKHR =
         reinterpret_cast<PFNEGLSTREAMATTRIBKHRPROC>(loadProc("EGL_StreamAttribKHR"));
-    ANGLE_EGL_StreamConsumerAcquireKHR = reinterpret_cast<PFNEGLSTREAMCONSUMERACQUIREKHRPROC>(
+    l_EGL_StreamConsumerAcquireKHR = reinterpret_cast<PFNEGLSTREAMCONSUMERACQUIREKHRPROC>(
         loadProc("EGL_StreamConsumerAcquireKHR"));
-    ANGLE_EGL_StreamConsumerGLTextureExternalKHR =
+    l_EGL_StreamConsumerGLTextureExternalKHR =
         reinterpret_cast<PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALKHRPROC>(
             loadProc("EGL_StreamConsumerGLTextureExternalKHR"));
-    ANGLE_EGL_StreamConsumerReleaseKHR = reinterpret_cast<PFNEGLSTREAMCONSUMERRELEASEKHRPROC>(
+    l_EGL_StreamConsumerReleaseKHR = reinterpret_cast<PFNEGLSTREAMCONSUMERRELEASEKHRPROC>(
         loadProc("EGL_StreamConsumerReleaseKHR"));
-    ANGLE_EGL_SwapBuffersWithDamageKHR = reinterpret_cast<PFNEGLSWAPBUFFERSWITHDAMAGEKHRPROC>(
+    l_EGL_SwapBuffersWithDamageKHR = reinterpret_cast<PFNEGLSWAPBUFFERSWITHDAMAGEKHRPROC>(
         loadProc("EGL_SwapBuffersWithDamageKHR"));
-    ANGLE_EGL_WaitSyncKHR = reinterpret_cast<PFNEGLWAITSYNCKHRPROC>(loadProc("EGL_WaitSyncKHR"));
-    ANGLE_EGL_PostSubBufferNV =
+    l_EGL_WaitSyncKHR = reinterpret_cast<PFNEGLWAITSYNCKHRPROC>(loadProc("EGL_WaitSyncKHR"));
+    l_EGL_PostSubBufferNV =
         reinterpret_cast<PFNEGLPOSTSUBBUFFERNVPROC>(loadProc("EGL_PostSubBufferNV"));
-    ANGLE_EGL_StreamConsumerGLTextureExternalAttribsNV =
+    l_EGL_StreamConsumerGLTextureExternalAttribsNV =
         reinterpret_cast<PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC>(
             loadProc("EGL_StreamConsumerGLTextureExternalAttribsNV"));
 }

@@ -13,6 +13,9 @@ from datetime import date
 import registry_xml
 
 
+internal_prefix = "l_"
+
+
 def write_header(data_source_name,
                  all_cmds,
                  api,
@@ -31,9 +34,12 @@ def write_header(data_source_name,
         return prefix + cmd[len(api):]
 
     with open(header_path, "w") as out:
-        defines = ["#define %s%s ANGLE_%s%s" % (ns, pre(cmd), ns, pre(cmd)) for cmd in all_cmds]
+        defines = [
+            "#define %s%s %s%s%s" % (ns, pre(cmd), internal_prefix, ns, pre(cmd))
+            for cmd in all_cmds
+        ]
         var_protos = [
-            "%sextern PFN%sPROC ANGLE_%s%s;" % (export, cmd.upper(), ns, pre(cmd))
+            "%sextern PFN%sPROC %s%s%s;" % (export, cmd.upper(), internal_prefix, ns, pre(cmd))
             for cmd in all_cmds
         ]
         loader_header = template_loader_h.format(
@@ -64,11 +70,14 @@ def write_source(data_source_name, all_cmds, api, path, ns="", prefix=None, expo
 
     with open(source_path, "w") as out:
         var_defs = [
-            "%sPFN%sPROC ANGLE_%s%s;" % (export, cmd.upper(), ns, pre(cmd)) for cmd in all_cmds
+            "%sPFN%sPROC %s%s%s;" % (export, cmd.upper(), internal_prefix, ns, pre(cmd))
+            for cmd in all_cmds
         ]
 
-        setter = "    ANGLE_%s%s = reinterpret_cast<PFN%sPROC>(loadProc(\"%s\"));"
-        setters = [setter % (ns, pre(cmd), cmd.upper(), pre(cmd)) for cmd in all_cmds]
+        setter = "    %s%s%s = reinterpret_cast<PFN%sPROC>(loadProc(\"%s\"));"
+        setters = [
+            setter % (internal_prefix, ns, pre(cmd), cmd.upper(), pre(cmd)) for cmd in all_cmds
+        ]
 
         loader_source = template_loader_cpp.format(
             script_name=os.path.basename(sys.argv[0]),
@@ -102,9 +111,16 @@ def gen_libegl_loader():
     all_cmds = xml.all_cmd_names.get_all_commands()
 
     path = os.path.join("..", "src", "libEGL")
-    write_header(data_source_name, all_cmds, "egl", libegl_preamble, path, "LIBEGL", "", "EGL_",
-                 "ANGLE_NO_EXPORT ")
-    write_source(data_source_name, all_cmds, "egl", path, "", "EGL_")
+    write_header(
+        data_source_name,
+        all_cmds,
+        "egl",
+        libegl_preamble,
+        path,
+        "LIBEGL",
+        prefix="EGL_",
+        export="ANGLE_NO_EXPORT ")
+    write_source(data_source_name, all_cmds, "egl", path, prefix="EGL_")
 
 
 def gen_gl_loader():

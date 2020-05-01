@@ -18,3126 +18,2999 @@
 #include "angle_gl.h"
 #include "util/util_export.h"
 
-#define glAlphaFunc ANGLE_glAlphaFunc
-#define glClipPlanef ANGLE_glClipPlanef
-#define glColor4f ANGLE_glColor4f
-#define glFogf ANGLE_glFogf
-#define glFogfv ANGLE_glFogfv
-#define glFrustumf ANGLE_glFrustumf
-#define glGetClipPlanef ANGLE_glGetClipPlanef
-#define glGetLightfv ANGLE_glGetLightfv
-#define glGetMaterialfv ANGLE_glGetMaterialfv
-#define glGetTexEnvfv ANGLE_glGetTexEnvfv
-#define glLightModelf ANGLE_glLightModelf
-#define glLightModelfv ANGLE_glLightModelfv
-#define glLightf ANGLE_glLightf
-#define glLightfv ANGLE_glLightfv
-#define glLoadMatrixf ANGLE_glLoadMatrixf
-#define glMaterialf ANGLE_glMaterialf
-#define glMaterialfv ANGLE_glMaterialfv
-#define glMultMatrixf ANGLE_glMultMatrixf
-#define glMultiTexCoord4f ANGLE_glMultiTexCoord4f
-#define glNormal3f ANGLE_glNormal3f
-#define glOrthof ANGLE_glOrthof
-#define glPointParameterf ANGLE_glPointParameterf
-#define glPointParameterfv ANGLE_glPointParameterfv
-#define glPointSize ANGLE_glPointSize
-#define glRotatef ANGLE_glRotatef
-#define glScalef ANGLE_glScalef
-#define glTexEnvf ANGLE_glTexEnvf
-#define glTexEnvfv ANGLE_glTexEnvfv
-#define glTranslatef ANGLE_glTranslatef
-#define glAlphaFuncx ANGLE_glAlphaFuncx
-#define glClearColorx ANGLE_glClearColorx
-#define glClearDepthx ANGLE_glClearDepthx
-#define glClientActiveTexture ANGLE_glClientActiveTexture
-#define glClipPlanex ANGLE_glClipPlanex
-#define glColor4ub ANGLE_glColor4ub
-#define glColor4x ANGLE_glColor4x
-#define glColorPointer ANGLE_glColorPointer
-#define glDepthRangex ANGLE_glDepthRangex
-#define glDisableClientState ANGLE_glDisableClientState
-#define glEnableClientState ANGLE_glEnableClientState
-#define glFogx ANGLE_glFogx
-#define glFogxv ANGLE_glFogxv
-#define glFrustumx ANGLE_glFrustumx
-#define glGetClipPlanex ANGLE_glGetClipPlanex
-#define glGetFixedv ANGLE_glGetFixedv
-#define glGetLightxv ANGLE_glGetLightxv
-#define glGetMaterialxv ANGLE_glGetMaterialxv
-#define glGetPointerv ANGLE_glGetPointerv
-#define glGetTexEnviv ANGLE_glGetTexEnviv
-#define glGetTexEnvxv ANGLE_glGetTexEnvxv
-#define glGetTexParameterxv ANGLE_glGetTexParameterxv
-#define glLightModelx ANGLE_glLightModelx
-#define glLightModelxv ANGLE_glLightModelxv
-#define glLightx ANGLE_glLightx
-#define glLightxv ANGLE_glLightxv
-#define glLineWidthx ANGLE_glLineWidthx
-#define glLoadIdentity ANGLE_glLoadIdentity
-#define glLoadMatrixx ANGLE_glLoadMatrixx
-#define glLogicOp ANGLE_glLogicOp
-#define glMaterialx ANGLE_glMaterialx
-#define glMaterialxv ANGLE_glMaterialxv
-#define glMatrixMode ANGLE_glMatrixMode
-#define glMultMatrixx ANGLE_glMultMatrixx
-#define glMultiTexCoord4x ANGLE_glMultiTexCoord4x
-#define glNormal3x ANGLE_glNormal3x
-#define glNormalPointer ANGLE_glNormalPointer
-#define glOrthox ANGLE_glOrthox
-#define glPointParameterx ANGLE_glPointParameterx
-#define glPointParameterxv ANGLE_glPointParameterxv
-#define glPointSizex ANGLE_glPointSizex
-#define glPolygonOffsetx ANGLE_glPolygonOffsetx
-#define glPopMatrix ANGLE_glPopMatrix
-#define glPushMatrix ANGLE_glPushMatrix
-#define glRotatex ANGLE_glRotatex
-#define glSampleCoveragex ANGLE_glSampleCoveragex
-#define glScalex ANGLE_glScalex
-#define glShadeModel ANGLE_glShadeModel
-#define glTexCoordPointer ANGLE_glTexCoordPointer
-#define glTexEnvi ANGLE_glTexEnvi
-#define glTexEnvx ANGLE_glTexEnvx
-#define glTexEnviv ANGLE_glTexEnviv
-#define glTexEnvxv ANGLE_glTexEnvxv
-#define glTexParameterx ANGLE_glTexParameterx
-#define glTexParameterxv ANGLE_glTexParameterxv
-#define glTranslatex ANGLE_glTranslatex
-#define glVertexPointer ANGLE_glVertexPointer
-#define glActiveTexture ANGLE_glActiveTexture
-#define glAttachShader ANGLE_glAttachShader
-#define glBindAttribLocation ANGLE_glBindAttribLocation
-#define glBindBuffer ANGLE_glBindBuffer
-#define glBindFramebuffer ANGLE_glBindFramebuffer
-#define glBindRenderbuffer ANGLE_glBindRenderbuffer
-#define glBindTexture ANGLE_glBindTexture
-#define glBlendColor ANGLE_glBlendColor
-#define glBlendEquation ANGLE_glBlendEquation
-#define glBlendEquationSeparate ANGLE_glBlendEquationSeparate
-#define glBlendFunc ANGLE_glBlendFunc
-#define glBlendFuncSeparate ANGLE_glBlendFuncSeparate
-#define glBufferData ANGLE_glBufferData
-#define glBufferSubData ANGLE_glBufferSubData
-#define glCheckFramebufferStatus ANGLE_glCheckFramebufferStatus
-#define glClear ANGLE_glClear
-#define glClearColor ANGLE_glClearColor
-#define glClearDepthf ANGLE_glClearDepthf
-#define glClearStencil ANGLE_glClearStencil
-#define glColorMask ANGLE_glColorMask
-#define glCompileShader ANGLE_glCompileShader
-#define glCompressedTexImage2D ANGLE_glCompressedTexImage2D
-#define glCompressedTexSubImage2D ANGLE_glCompressedTexSubImage2D
-#define glCopyTexImage2D ANGLE_glCopyTexImage2D
-#define glCopyTexSubImage2D ANGLE_glCopyTexSubImage2D
-#define glCreateProgram ANGLE_glCreateProgram
-#define glCreateShader ANGLE_glCreateShader
-#define glCullFace ANGLE_glCullFace
-#define glDeleteBuffers ANGLE_glDeleteBuffers
-#define glDeleteFramebuffers ANGLE_glDeleteFramebuffers
-#define glDeleteProgram ANGLE_glDeleteProgram
-#define glDeleteRenderbuffers ANGLE_glDeleteRenderbuffers
-#define glDeleteShader ANGLE_glDeleteShader
-#define glDeleteTextures ANGLE_glDeleteTextures
-#define glDepthFunc ANGLE_glDepthFunc
-#define glDepthMask ANGLE_glDepthMask
-#define glDepthRangef ANGLE_glDepthRangef
-#define glDetachShader ANGLE_glDetachShader
-#define glDisable ANGLE_glDisable
-#define glDisableVertexAttribArray ANGLE_glDisableVertexAttribArray
-#define glDrawArrays ANGLE_glDrawArrays
-#define glDrawElements ANGLE_glDrawElements
-#define glEnable ANGLE_glEnable
-#define glEnableVertexAttribArray ANGLE_glEnableVertexAttribArray
-#define glFinish ANGLE_glFinish
-#define glFlush ANGLE_glFlush
-#define glFramebufferRenderbuffer ANGLE_glFramebufferRenderbuffer
-#define glFramebufferTexture2D ANGLE_glFramebufferTexture2D
-#define glFrontFace ANGLE_glFrontFace
-#define glGenBuffers ANGLE_glGenBuffers
-#define glGenerateMipmap ANGLE_glGenerateMipmap
-#define glGenFramebuffers ANGLE_glGenFramebuffers
-#define glGenRenderbuffers ANGLE_glGenRenderbuffers
-#define glGenTextures ANGLE_glGenTextures
-#define glGetActiveAttrib ANGLE_glGetActiveAttrib
-#define glGetActiveUniform ANGLE_glGetActiveUniform
-#define glGetAttachedShaders ANGLE_glGetAttachedShaders
-#define glGetAttribLocation ANGLE_glGetAttribLocation
-#define glGetBooleanv ANGLE_glGetBooleanv
-#define glGetBufferParameteriv ANGLE_glGetBufferParameteriv
-#define glGetError ANGLE_glGetError
-#define glGetFloatv ANGLE_glGetFloatv
-#define glGetFramebufferAttachmentParameteriv ANGLE_glGetFramebufferAttachmentParameteriv
-#define glGetIntegerv ANGLE_glGetIntegerv
-#define glGetProgramiv ANGLE_glGetProgramiv
-#define glGetProgramInfoLog ANGLE_glGetProgramInfoLog
-#define glGetRenderbufferParameteriv ANGLE_glGetRenderbufferParameteriv
-#define glGetShaderiv ANGLE_glGetShaderiv
-#define glGetShaderInfoLog ANGLE_glGetShaderInfoLog
-#define glGetShaderPrecisionFormat ANGLE_glGetShaderPrecisionFormat
-#define glGetShaderSource ANGLE_glGetShaderSource
-#define glGetString ANGLE_glGetString
-#define glGetTexParameterfv ANGLE_glGetTexParameterfv
-#define glGetTexParameteriv ANGLE_glGetTexParameteriv
-#define glGetUniformfv ANGLE_glGetUniformfv
-#define glGetUniformiv ANGLE_glGetUniformiv
-#define glGetUniformLocation ANGLE_glGetUniformLocation
-#define glGetVertexAttribfv ANGLE_glGetVertexAttribfv
-#define glGetVertexAttribiv ANGLE_glGetVertexAttribiv
-#define glGetVertexAttribPointerv ANGLE_glGetVertexAttribPointerv
-#define glHint ANGLE_glHint
-#define glIsBuffer ANGLE_glIsBuffer
-#define glIsEnabled ANGLE_glIsEnabled
-#define glIsFramebuffer ANGLE_glIsFramebuffer
-#define glIsProgram ANGLE_glIsProgram
-#define glIsRenderbuffer ANGLE_glIsRenderbuffer
-#define glIsShader ANGLE_glIsShader
-#define glIsTexture ANGLE_glIsTexture
-#define glLineWidth ANGLE_glLineWidth
-#define glLinkProgram ANGLE_glLinkProgram
-#define glPixelStorei ANGLE_glPixelStorei
-#define glPolygonOffset ANGLE_glPolygonOffset
-#define glReadPixels ANGLE_glReadPixels
-#define glReleaseShaderCompiler ANGLE_glReleaseShaderCompiler
-#define glRenderbufferStorage ANGLE_glRenderbufferStorage
-#define glSampleCoverage ANGLE_glSampleCoverage
-#define glScissor ANGLE_glScissor
-#define glShaderBinary ANGLE_glShaderBinary
-#define glShaderSource ANGLE_glShaderSource
-#define glStencilFunc ANGLE_glStencilFunc
-#define glStencilFuncSeparate ANGLE_glStencilFuncSeparate
-#define glStencilMask ANGLE_glStencilMask
-#define glStencilMaskSeparate ANGLE_glStencilMaskSeparate
-#define glStencilOp ANGLE_glStencilOp
-#define glStencilOpSeparate ANGLE_glStencilOpSeparate
-#define glTexImage2D ANGLE_glTexImage2D
-#define glTexParameterf ANGLE_glTexParameterf
-#define glTexParameterfv ANGLE_glTexParameterfv
-#define glTexParameteri ANGLE_glTexParameteri
-#define glTexParameteriv ANGLE_glTexParameteriv
-#define glTexSubImage2D ANGLE_glTexSubImage2D
-#define glUniform1f ANGLE_glUniform1f
-#define glUniform1fv ANGLE_glUniform1fv
-#define glUniform1i ANGLE_glUniform1i
-#define glUniform1iv ANGLE_glUniform1iv
-#define glUniform2f ANGLE_glUniform2f
-#define glUniform2fv ANGLE_glUniform2fv
-#define glUniform2i ANGLE_glUniform2i
-#define glUniform2iv ANGLE_glUniform2iv
-#define glUniform3f ANGLE_glUniform3f
-#define glUniform3fv ANGLE_glUniform3fv
-#define glUniform3i ANGLE_glUniform3i
-#define glUniform3iv ANGLE_glUniform3iv
-#define glUniform4f ANGLE_glUniform4f
-#define glUniform4fv ANGLE_glUniform4fv
-#define glUniform4i ANGLE_glUniform4i
-#define glUniform4iv ANGLE_glUniform4iv
-#define glUniformMatrix2fv ANGLE_glUniformMatrix2fv
-#define glUniformMatrix3fv ANGLE_glUniformMatrix3fv
-#define glUniformMatrix4fv ANGLE_glUniformMatrix4fv
-#define glUseProgram ANGLE_glUseProgram
-#define glValidateProgram ANGLE_glValidateProgram
-#define glVertexAttrib1f ANGLE_glVertexAttrib1f
-#define glVertexAttrib1fv ANGLE_glVertexAttrib1fv
-#define glVertexAttrib2f ANGLE_glVertexAttrib2f
-#define glVertexAttrib2fv ANGLE_glVertexAttrib2fv
-#define glVertexAttrib3f ANGLE_glVertexAttrib3f
-#define glVertexAttrib3fv ANGLE_glVertexAttrib3fv
-#define glVertexAttrib4f ANGLE_glVertexAttrib4f
-#define glVertexAttrib4fv ANGLE_glVertexAttrib4fv
-#define glVertexAttribPointer ANGLE_glVertexAttribPointer
-#define glViewport ANGLE_glViewport
-#define glReadBuffer ANGLE_glReadBuffer
-#define glDrawRangeElements ANGLE_glDrawRangeElements
-#define glTexImage3D ANGLE_glTexImage3D
-#define glTexSubImage3D ANGLE_glTexSubImage3D
-#define glCopyTexSubImage3D ANGLE_glCopyTexSubImage3D
-#define glCompressedTexImage3D ANGLE_glCompressedTexImage3D
-#define glCompressedTexSubImage3D ANGLE_glCompressedTexSubImage3D
-#define glGenQueries ANGLE_glGenQueries
-#define glDeleteQueries ANGLE_glDeleteQueries
-#define glIsQuery ANGLE_glIsQuery
-#define glBeginQuery ANGLE_glBeginQuery
-#define glEndQuery ANGLE_glEndQuery
-#define glGetQueryiv ANGLE_glGetQueryiv
-#define glGetQueryObjectuiv ANGLE_glGetQueryObjectuiv
-#define glUnmapBuffer ANGLE_glUnmapBuffer
-#define glGetBufferPointerv ANGLE_glGetBufferPointerv
-#define glDrawBuffers ANGLE_glDrawBuffers
-#define glUniformMatrix2x3fv ANGLE_glUniformMatrix2x3fv
-#define glUniformMatrix3x2fv ANGLE_glUniformMatrix3x2fv
-#define glUniformMatrix2x4fv ANGLE_glUniformMatrix2x4fv
-#define glUniformMatrix4x2fv ANGLE_glUniformMatrix4x2fv
-#define glUniformMatrix3x4fv ANGLE_glUniformMatrix3x4fv
-#define glUniformMatrix4x3fv ANGLE_glUniformMatrix4x3fv
-#define glBlitFramebuffer ANGLE_glBlitFramebuffer
-#define glRenderbufferStorageMultisample ANGLE_glRenderbufferStorageMultisample
-#define glFramebufferTextureLayer ANGLE_glFramebufferTextureLayer
-#define glMapBufferRange ANGLE_glMapBufferRange
-#define glFlushMappedBufferRange ANGLE_glFlushMappedBufferRange
-#define glBindVertexArray ANGLE_glBindVertexArray
-#define glDeleteVertexArrays ANGLE_glDeleteVertexArrays
-#define glGenVertexArrays ANGLE_glGenVertexArrays
-#define glIsVertexArray ANGLE_glIsVertexArray
-#define glGetIntegeri_v ANGLE_glGetIntegeri_v
-#define glBeginTransformFeedback ANGLE_glBeginTransformFeedback
-#define glEndTransformFeedback ANGLE_glEndTransformFeedback
-#define glBindBufferRange ANGLE_glBindBufferRange
-#define glBindBufferBase ANGLE_glBindBufferBase
-#define glTransformFeedbackVaryings ANGLE_glTransformFeedbackVaryings
-#define glGetTransformFeedbackVarying ANGLE_glGetTransformFeedbackVarying
-#define glVertexAttribIPointer ANGLE_glVertexAttribIPointer
-#define glGetVertexAttribIiv ANGLE_glGetVertexAttribIiv
-#define glGetVertexAttribIuiv ANGLE_glGetVertexAttribIuiv
-#define glVertexAttribI4i ANGLE_glVertexAttribI4i
-#define glVertexAttribI4ui ANGLE_glVertexAttribI4ui
-#define glVertexAttribI4iv ANGLE_glVertexAttribI4iv
-#define glVertexAttribI4uiv ANGLE_glVertexAttribI4uiv
-#define glGetUniformuiv ANGLE_glGetUniformuiv
-#define glGetFragDataLocation ANGLE_glGetFragDataLocation
-#define glUniform1ui ANGLE_glUniform1ui
-#define glUniform2ui ANGLE_glUniform2ui
-#define glUniform3ui ANGLE_glUniform3ui
-#define glUniform4ui ANGLE_glUniform4ui
-#define glUniform1uiv ANGLE_glUniform1uiv
-#define glUniform2uiv ANGLE_glUniform2uiv
-#define glUniform3uiv ANGLE_glUniform3uiv
-#define glUniform4uiv ANGLE_glUniform4uiv
-#define glClearBufferiv ANGLE_glClearBufferiv
-#define glClearBufferuiv ANGLE_glClearBufferuiv
-#define glClearBufferfv ANGLE_glClearBufferfv
-#define glClearBufferfi ANGLE_glClearBufferfi
-#define glGetStringi ANGLE_glGetStringi
-#define glCopyBufferSubData ANGLE_glCopyBufferSubData
-#define glGetUniformIndices ANGLE_glGetUniformIndices
-#define glGetActiveUniformsiv ANGLE_glGetActiveUniformsiv
-#define glGetUniformBlockIndex ANGLE_glGetUniformBlockIndex
-#define glGetActiveUniformBlockiv ANGLE_glGetActiveUniformBlockiv
-#define glGetActiveUniformBlockName ANGLE_glGetActiveUniformBlockName
-#define glUniformBlockBinding ANGLE_glUniformBlockBinding
-#define glDrawArraysInstanced ANGLE_glDrawArraysInstanced
-#define glDrawElementsInstanced ANGLE_glDrawElementsInstanced
-#define glFenceSync ANGLE_glFenceSync
-#define glIsSync ANGLE_glIsSync
-#define glDeleteSync ANGLE_glDeleteSync
-#define glClientWaitSync ANGLE_glClientWaitSync
-#define glWaitSync ANGLE_glWaitSync
-#define glGetInteger64v ANGLE_glGetInteger64v
-#define glGetSynciv ANGLE_glGetSynciv
-#define glGetInteger64i_v ANGLE_glGetInteger64i_v
-#define glGetBufferParameteri64v ANGLE_glGetBufferParameteri64v
-#define glGenSamplers ANGLE_glGenSamplers
-#define glDeleteSamplers ANGLE_glDeleteSamplers
-#define glIsSampler ANGLE_glIsSampler
-#define glBindSampler ANGLE_glBindSampler
-#define glSamplerParameteri ANGLE_glSamplerParameteri
-#define glSamplerParameteriv ANGLE_glSamplerParameteriv
-#define glSamplerParameterf ANGLE_glSamplerParameterf
-#define glSamplerParameterfv ANGLE_glSamplerParameterfv
-#define glGetSamplerParameteriv ANGLE_glGetSamplerParameteriv
-#define glGetSamplerParameterfv ANGLE_glGetSamplerParameterfv
-#define glVertexAttribDivisor ANGLE_glVertexAttribDivisor
-#define glBindTransformFeedback ANGLE_glBindTransformFeedback
-#define glDeleteTransformFeedbacks ANGLE_glDeleteTransformFeedbacks
-#define glGenTransformFeedbacks ANGLE_glGenTransformFeedbacks
-#define glIsTransformFeedback ANGLE_glIsTransformFeedback
-#define glPauseTransformFeedback ANGLE_glPauseTransformFeedback
-#define glResumeTransformFeedback ANGLE_glResumeTransformFeedback
-#define glGetProgramBinary ANGLE_glGetProgramBinary
-#define glProgramBinary ANGLE_glProgramBinary
-#define glProgramParameteri ANGLE_glProgramParameteri
-#define glInvalidateFramebuffer ANGLE_glInvalidateFramebuffer
-#define glInvalidateSubFramebuffer ANGLE_glInvalidateSubFramebuffer
-#define glTexStorage2D ANGLE_glTexStorage2D
-#define glTexStorage3D ANGLE_glTexStorage3D
-#define glGetInternalformativ ANGLE_glGetInternalformativ
-#define glDispatchCompute ANGLE_glDispatchCompute
-#define glDispatchComputeIndirect ANGLE_glDispatchComputeIndirect
-#define glDrawArraysIndirect ANGLE_glDrawArraysIndirect
-#define glDrawElementsIndirect ANGLE_glDrawElementsIndirect
-#define glFramebufferParameteri ANGLE_glFramebufferParameteri
-#define glGetFramebufferParameteriv ANGLE_glGetFramebufferParameteriv
-#define glGetProgramInterfaceiv ANGLE_glGetProgramInterfaceiv
-#define glGetProgramResourceIndex ANGLE_glGetProgramResourceIndex
-#define glGetProgramResourceName ANGLE_glGetProgramResourceName
-#define glGetProgramResourceiv ANGLE_glGetProgramResourceiv
-#define glGetProgramResourceLocation ANGLE_glGetProgramResourceLocation
-#define glUseProgramStages ANGLE_glUseProgramStages
-#define glActiveShaderProgram ANGLE_glActiveShaderProgram
-#define glCreateShaderProgramv ANGLE_glCreateShaderProgramv
-#define glBindProgramPipeline ANGLE_glBindProgramPipeline
-#define glDeleteProgramPipelines ANGLE_glDeleteProgramPipelines
-#define glGenProgramPipelines ANGLE_glGenProgramPipelines
-#define glIsProgramPipeline ANGLE_glIsProgramPipeline
-#define glGetProgramPipelineiv ANGLE_glGetProgramPipelineiv
-#define glProgramUniform1i ANGLE_glProgramUniform1i
-#define glProgramUniform2i ANGLE_glProgramUniform2i
-#define glProgramUniform3i ANGLE_glProgramUniform3i
-#define glProgramUniform4i ANGLE_glProgramUniform4i
-#define glProgramUniform1ui ANGLE_glProgramUniform1ui
-#define glProgramUniform2ui ANGLE_glProgramUniform2ui
-#define glProgramUniform3ui ANGLE_glProgramUniform3ui
-#define glProgramUniform4ui ANGLE_glProgramUniform4ui
-#define glProgramUniform1f ANGLE_glProgramUniform1f
-#define glProgramUniform2f ANGLE_glProgramUniform2f
-#define glProgramUniform3f ANGLE_glProgramUniform3f
-#define glProgramUniform4f ANGLE_glProgramUniform4f
-#define glProgramUniform1iv ANGLE_glProgramUniform1iv
-#define glProgramUniform2iv ANGLE_glProgramUniform2iv
-#define glProgramUniform3iv ANGLE_glProgramUniform3iv
-#define glProgramUniform4iv ANGLE_glProgramUniform4iv
-#define glProgramUniform1uiv ANGLE_glProgramUniform1uiv
-#define glProgramUniform2uiv ANGLE_glProgramUniform2uiv
-#define glProgramUniform3uiv ANGLE_glProgramUniform3uiv
-#define glProgramUniform4uiv ANGLE_glProgramUniform4uiv
-#define glProgramUniform1fv ANGLE_glProgramUniform1fv
-#define glProgramUniform2fv ANGLE_glProgramUniform2fv
-#define glProgramUniform3fv ANGLE_glProgramUniform3fv
-#define glProgramUniform4fv ANGLE_glProgramUniform4fv
-#define glProgramUniformMatrix2fv ANGLE_glProgramUniformMatrix2fv
-#define glProgramUniformMatrix3fv ANGLE_glProgramUniformMatrix3fv
-#define glProgramUniformMatrix4fv ANGLE_glProgramUniformMatrix4fv
-#define glProgramUniformMatrix2x3fv ANGLE_glProgramUniformMatrix2x3fv
-#define glProgramUniformMatrix3x2fv ANGLE_glProgramUniformMatrix3x2fv
-#define glProgramUniformMatrix2x4fv ANGLE_glProgramUniformMatrix2x4fv
-#define glProgramUniformMatrix4x2fv ANGLE_glProgramUniformMatrix4x2fv
-#define glProgramUniformMatrix3x4fv ANGLE_glProgramUniformMatrix3x4fv
-#define glProgramUniformMatrix4x3fv ANGLE_glProgramUniformMatrix4x3fv
-#define glValidateProgramPipeline ANGLE_glValidateProgramPipeline
-#define glGetProgramPipelineInfoLog ANGLE_glGetProgramPipelineInfoLog
-#define glBindImageTexture ANGLE_glBindImageTexture
-#define glGetBooleani_v ANGLE_glGetBooleani_v
-#define glMemoryBarrier ANGLE_glMemoryBarrier
-#define glMemoryBarrierByRegion ANGLE_glMemoryBarrierByRegion
-#define glTexStorage2DMultisample ANGLE_glTexStorage2DMultisample
-#define glGetMultisamplefv ANGLE_glGetMultisamplefv
-#define glSampleMaski ANGLE_glSampleMaski
-#define glGetTexLevelParameteriv ANGLE_glGetTexLevelParameteriv
-#define glGetTexLevelParameterfv ANGLE_glGetTexLevelParameterfv
-#define glBindVertexBuffer ANGLE_glBindVertexBuffer
-#define glVertexAttribFormat ANGLE_glVertexAttribFormat
-#define glVertexAttribIFormat ANGLE_glVertexAttribIFormat
-#define glVertexAttribBinding ANGLE_glVertexAttribBinding
-#define glVertexBindingDivisor ANGLE_glVertexBindingDivisor
-#define glDrawArraysInstancedBaseInstanceANGLE ANGLE_glDrawArraysInstancedBaseInstanceANGLE
+#define glAlphaFunc l_glAlphaFunc
+#define glClipPlanef l_glClipPlanef
+#define glColor4f l_glColor4f
+#define glFogf l_glFogf
+#define glFogfv l_glFogfv
+#define glFrustumf l_glFrustumf
+#define glGetClipPlanef l_glGetClipPlanef
+#define glGetLightfv l_glGetLightfv
+#define glGetMaterialfv l_glGetMaterialfv
+#define glGetTexEnvfv l_glGetTexEnvfv
+#define glLightModelf l_glLightModelf
+#define glLightModelfv l_glLightModelfv
+#define glLightf l_glLightf
+#define glLightfv l_glLightfv
+#define glLoadMatrixf l_glLoadMatrixf
+#define glMaterialf l_glMaterialf
+#define glMaterialfv l_glMaterialfv
+#define glMultMatrixf l_glMultMatrixf
+#define glMultiTexCoord4f l_glMultiTexCoord4f
+#define glNormal3f l_glNormal3f
+#define glOrthof l_glOrthof
+#define glPointParameterf l_glPointParameterf
+#define glPointParameterfv l_glPointParameterfv
+#define glPointSize l_glPointSize
+#define glRotatef l_glRotatef
+#define glScalef l_glScalef
+#define glTexEnvf l_glTexEnvf
+#define glTexEnvfv l_glTexEnvfv
+#define glTranslatef l_glTranslatef
+#define glAlphaFuncx l_glAlphaFuncx
+#define glClearColorx l_glClearColorx
+#define glClearDepthx l_glClearDepthx
+#define glClientActiveTexture l_glClientActiveTexture
+#define glClipPlanex l_glClipPlanex
+#define glColor4ub l_glColor4ub
+#define glColor4x l_glColor4x
+#define glColorPointer l_glColorPointer
+#define glDepthRangex l_glDepthRangex
+#define glDisableClientState l_glDisableClientState
+#define glEnableClientState l_glEnableClientState
+#define glFogx l_glFogx
+#define glFogxv l_glFogxv
+#define glFrustumx l_glFrustumx
+#define glGetClipPlanex l_glGetClipPlanex
+#define glGetFixedv l_glGetFixedv
+#define glGetLightxv l_glGetLightxv
+#define glGetMaterialxv l_glGetMaterialxv
+#define glGetPointerv l_glGetPointerv
+#define glGetTexEnviv l_glGetTexEnviv
+#define glGetTexEnvxv l_glGetTexEnvxv
+#define glGetTexParameterxv l_glGetTexParameterxv
+#define glLightModelx l_glLightModelx
+#define glLightModelxv l_glLightModelxv
+#define glLightx l_glLightx
+#define glLightxv l_glLightxv
+#define glLineWidthx l_glLineWidthx
+#define glLoadIdentity l_glLoadIdentity
+#define glLoadMatrixx l_glLoadMatrixx
+#define glLogicOp l_glLogicOp
+#define glMaterialx l_glMaterialx
+#define glMaterialxv l_glMaterialxv
+#define glMatrixMode l_glMatrixMode
+#define glMultMatrixx l_glMultMatrixx
+#define glMultiTexCoord4x l_glMultiTexCoord4x
+#define glNormal3x l_glNormal3x
+#define glNormalPointer l_glNormalPointer
+#define glOrthox l_glOrthox
+#define glPointParameterx l_glPointParameterx
+#define glPointParameterxv l_glPointParameterxv
+#define glPointSizex l_glPointSizex
+#define glPolygonOffsetx l_glPolygonOffsetx
+#define glPopMatrix l_glPopMatrix
+#define glPushMatrix l_glPushMatrix
+#define glRotatex l_glRotatex
+#define glSampleCoveragex l_glSampleCoveragex
+#define glScalex l_glScalex
+#define glShadeModel l_glShadeModel
+#define glTexCoordPointer l_glTexCoordPointer
+#define glTexEnvi l_glTexEnvi
+#define glTexEnvx l_glTexEnvx
+#define glTexEnviv l_glTexEnviv
+#define glTexEnvxv l_glTexEnvxv
+#define glTexParameterx l_glTexParameterx
+#define glTexParameterxv l_glTexParameterxv
+#define glTranslatex l_glTranslatex
+#define glVertexPointer l_glVertexPointer
+#define glActiveTexture l_glActiveTexture
+#define glAttachShader l_glAttachShader
+#define glBindAttribLocation l_glBindAttribLocation
+#define glBindBuffer l_glBindBuffer
+#define glBindFramebuffer l_glBindFramebuffer
+#define glBindRenderbuffer l_glBindRenderbuffer
+#define glBindTexture l_glBindTexture
+#define glBlendColor l_glBlendColor
+#define glBlendEquation l_glBlendEquation
+#define glBlendEquationSeparate l_glBlendEquationSeparate
+#define glBlendFunc l_glBlendFunc
+#define glBlendFuncSeparate l_glBlendFuncSeparate
+#define glBufferData l_glBufferData
+#define glBufferSubData l_glBufferSubData
+#define glCheckFramebufferStatus l_glCheckFramebufferStatus
+#define glClear l_glClear
+#define glClearColor l_glClearColor
+#define glClearDepthf l_glClearDepthf
+#define glClearStencil l_glClearStencil
+#define glColorMask l_glColorMask
+#define glCompileShader l_glCompileShader
+#define glCompressedTexImage2D l_glCompressedTexImage2D
+#define glCompressedTexSubImage2D l_glCompressedTexSubImage2D
+#define glCopyTexImage2D l_glCopyTexImage2D
+#define glCopyTexSubImage2D l_glCopyTexSubImage2D
+#define glCreateProgram l_glCreateProgram
+#define glCreateShader l_glCreateShader
+#define glCullFace l_glCullFace
+#define glDeleteBuffers l_glDeleteBuffers
+#define glDeleteFramebuffers l_glDeleteFramebuffers
+#define glDeleteProgram l_glDeleteProgram
+#define glDeleteRenderbuffers l_glDeleteRenderbuffers
+#define glDeleteShader l_glDeleteShader
+#define glDeleteTextures l_glDeleteTextures
+#define glDepthFunc l_glDepthFunc
+#define glDepthMask l_glDepthMask
+#define glDepthRangef l_glDepthRangef
+#define glDetachShader l_glDetachShader
+#define glDisable l_glDisable
+#define glDisableVertexAttribArray l_glDisableVertexAttribArray
+#define glDrawArrays l_glDrawArrays
+#define glDrawElements l_glDrawElements
+#define glEnable l_glEnable
+#define glEnableVertexAttribArray l_glEnableVertexAttribArray
+#define glFinish l_glFinish
+#define glFlush l_glFlush
+#define glFramebufferRenderbuffer l_glFramebufferRenderbuffer
+#define glFramebufferTexture2D l_glFramebufferTexture2D
+#define glFrontFace l_glFrontFace
+#define glGenBuffers l_glGenBuffers
+#define glGenerateMipmap l_glGenerateMipmap
+#define glGenFramebuffers l_glGenFramebuffers
+#define glGenRenderbuffers l_glGenRenderbuffers
+#define glGenTextures l_glGenTextures
+#define glGetActiveAttrib l_glGetActiveAttrib
+#define glGetActiveUniform l_glGetActiveUniform
+#define glGetAttachedShaders l_glGetAttachedShaders
+#define glGetAttribLocation l_glGetAttribLocation
+#define glGetBooleanv l_glGetBooleanv
+#define glGetBufferParameteriv l_glGetBufferParameteriv
+#define glGetError l_glGetError
+#define glGetFloatv l_glGetFloatv
+#define glGetFramebufferAttachmentParameteriv l_glGetFramebufferAttachmentParameteriv
+#define glGetIntegerv l_glGetIntegerv
+#define glGetProgramiv l_glGetProgramiv
+#define glGetProgramInfoLog l_glGetProgramInfoLog
+#define glGetRenderbufferParameteriv l_glGetRenderbufferParameteriv
+#define glGetShaderiv l_glGetShaderiv
+#define glGetShaderInfoLog l_glGetShaderInfoLog
+#define glGetShaderPrecisionFormat l_glGetShaderPrecisionFormat
+#define glGetShaderSource l_glGetShaderSource
+#define glGetString l_glGetString
+#define glGetTexParameterfv l_glGetTexParameterfv
+#define glGetTexParameteriv l_glGetTexParameteriv
+#define glGetUniformfv l_glGetUniformfv
+#define glGetUniformiv l_glGetUniformiv
+#define glGetUniformLocation l_glGetUniformLocation
+#define glGetVertexAttribfv l_glGetVertexAttribfv
+#define glGetVertexAttribiv l_glGetVertexAttribiv
+#define glGetVertexAttribPointerv l_glGetVertexAttribPointerv
+#define glHint l_glHint
+#define glIsBuffer l_glIsBuffer
+#define glIsEnabled l_glIsEnabled
+#define glIsFramebuffer l_glIsFramebuffer
+#define glIsProgram l_glIsProgram
+#define glIsRenderbuffer l_glIsRenderbuffer
+#define glIsShader l_glIsShader
+#define glIsTexture l_glIsTexture
+#define glLineWidth l_glLineWidth
+#define glLinkProgram l_glLinkProgram
+#define glPixelStorei l_glPixelStorei
+#define glPolygonOffset l_glPolygonOffset
+#define glReadPixels l_glReadPixels
+#define glReleaseShaderCompiler l_glReleaseShaderCompiler
+#define glRenderbufferStorage l_glRenderbufferStorage
+#define glSampleCoverage l_glSampleCoverage
+#define glScissor l_glScissor
+#define glShaderBinary l_glShaderBinary
+#define glShaderSource l_glShaderSource
+#define glStencilFunc l_glStencilFunc
+#define glStencilFuncSeparate l_glStencilFuncSeparate
+#define glStencilMask l_glStencilMask
+#define glStencilMaskSeparate l_glStencilMaskSeparate
+#define glStencilOp l_glStencilOp
+#define glStencilOpSeparate l_glStencilOpSeparate
+#define glTexImage2D l_glTexImage2D
+#define glTexParameterf l_glTexParameterf
+#define glTexParameterfv l_glTexParameterfv
+#define glTexParameteri l_glTexParameteri
+#define glTexParameteriv l_glTexParameteriv
+#define glTexSubImage2D l_glTexSubImage2D
+#define glUniform1f l_glUniform1f
+#define glUniform1fv l_glUniform1fv
+#define glUniform1i l_glUniform1i
+#define glUniform1iv l_glUniform1iv
+#define glUniform2f l_glUniform2f
+#define glUniform2fv l_glUniform2fv
+#define glUniform2i l_glUniform2i
+#define glUniform2iv l_glUniform2iv
+#define glUniform3f l_glUniform3f
+#define glUniform3fv l_glUniform3fv
+#define glUniform3i l_glUniform3i
+#define glUniform3iv l_glUniform3iv
+#define glUniform4f l_glUniform4f
+#define glUniform4fv l_glUniform4fv
+#define glUniform4i l_glUniform4i
+#define glUniform4iv l_glUniform4iv
+#define glUniformMatrix2fv l_glUniformMatrix2fv
+#define glUniformMatrix3fv l_glUniformMatrix3fv
+#define glUniformMatrix4fv l_glUniformMatrix4fv
+#define glUseProgram l_glUseProgram
+#define glValidateProgram l_glValidateProgram
+#define glVertexAttrib1f l_glVertexAttrib1f
+#define glVertexAttrib1fv l_glVertexAttrib1fv
+#define glVertexAttrib2f l_glVertexAttrib2f
+#define glVertexAttrib2fv l_glVertexAttrib2fv
+#define glVertexAttrib3f l_glVertexAttrib3f
+#define glVertexAttrib3fv l_glVertexAttrib3fv
+#define glVertexAttrib4f l_glVertexAttrib4f
+#define glVertexAttrib4fv l_glVertexAttrib4fv
+#define glVertexAttribPointer l_glVertexAttribPointer
+#define glViewport l_glViewport
+#define glReadBuffer l_glReadBuffer
+#define glDrawRangeElements l_glDrawRangeElements
+#define glTexImage3D l_glTexImage3D
+#define glTexSubImage3D l_glTexSubImage3D
+#define glCopyTexSubImage3D l_glCopyTexSubImage3D
+#define glCompressedTexImage3D l_glCompressedTexImage3D
+#define glCompressedTexSubImage3D l_glCompressedTexSubImage3D
+#define glGenQueries l_glGenQueries
+#define glDeleteQueries l_glDeleteQueries
+#define glIsQuery l_glIsQuery
+#define glBeginQuery l_glBeginQuery
+#define glEndQuery l_glEndQuery
+#define glGetQueryiv l_glGetQueryiv
+#define glGetQueryObjectuiv l_glGetQueryObjectuiv
+#define glUnmapBuffer l_glUnmapBuffer
+#define glGetBufferPointerv l_glGetBufferPointerv
+#define glDrawBuffers l_glDrawBuffers
+#define glUniformMatrix2x3fv l_glUniformMatrix2x3fv
+#define glUniformMatrix3x2fv l_glUniformMatrix3x2fv
+#define glUniformMatrix2x4fv l_glUniformMatrix2x4fv
+#define glUniformMatrix4x2fv l_glUniformMatrix4x2fv
+#define glUniformMatrix3x4fv l_glUniformMatrix3x4fv
+#define glUniformMatrix4x3fv l_glUniformMatrix4x3fv
+#define glBlitFramebuffer l_glBlitFramebuffer
+#define glRenderbufferStorageMultisample l_glRenderbufferStorageMultisample
+#define glFramebufferTextureLayer l_glFramebufferTextureLayer
+#define glMapBufferRange l_glMapBufferRange
+#define glFlushMappedBufferRange l_glFlushMappedBufferRange
+#define glBindVertexArray l_glBindVertexArray
+#define glDeleteVertexArrays l_glDeleteVertexArrays
+#define glGenVertexArrays l_glGenVertexArrays
+#define glIsVertexArray l_glIsVertexArray
+#define glGetIntegeri_v l_glGetIntegeri_v
+#define glBeginTransformFeedback l_glBeginTransformFeedback
+#define glEndTransformFeedback l_glEndTransformFeedback
+#define glBindBufferRange l_glBindBufferRange
+#define glBindBufferBase l_glBindBufferBase
+#define glTransformFeedbackVaryings l_glTransformFeedbackVaryings
+#define glGetTransformFeedbackVarying l_glGetTransformFeedbackVarying
+#define glVertexAttribIPointer l_glVertexAttribIPointer
+#define glGetVertexAttribIiv l_glGetVertexAttribIiv
+#define glGetVertexAttribIuiv l_glGetVertexAttribIuiv
+#define glVertexAttribI4i l_glVertexAttribI4i
+#define glVertexAttribI4ui l_glVertexAttribI4ui
+#define glVertexAttribI4iv l_glVertexAttribI4iv
+#define glVertexAttribI4uiv l_glVertexAttribI4uiv
+#define glGetUniformuiv l_glGetUniformuiv
+#define glGetFragDataLocation l_glGetFragDataLocation
+#define glUniform1ui l_glUniform1ui
+#define glUniform2ui l_glUniform2ui
+#define glUniform3ui l_glUniform3ui
+#define glUniform4ui l_glUniform4ui
+#define glUniform1uiv l_glUniform1uiv
+#define glUniform2uiv l_glUniform2uiv
+#define glUniform3uiv l_glUniform3uiv
+#define glUniform4uiv l_glUniform4uiv
+#define glClearBufferiv l_glClearBufferiv
+#define glClearBufferuiv l_glClearBufferuiv
+#define glClearBufferfv l_glClearBufferfv
+#define glClearBufferfi l_glClearBufferfi
+#define glGetStringi l_glGetStringi
+#define glCopyBufferSubData l_glCopyBufferSubData
+#define glGetUniformIndices l_glGetUniformIndices
+#define glGetActiveUniformsiv l_glGetActiveUniformsiv
+#define glGetUniformBlockIndex l_glGetUniformBlockIndex
+#define glGetActiveUniformBlockiv l_glGetActiveUniformBlockiv
+#define glGetActiveUniformBlockName l_glGetActiveUniformBlockName
+#define glUniformBlockBinding l_glUniformBlockBinding
+#define glDrawArraysInstanced l_glDrawArraysInstanced
+#define glDrawElementsInstanced l_glDrawElementsInstanced
+#define glFenceSync l_glFenceSync
+#define glIsSync l_glIsSync
+#define glDeleteSync l_glDeleteSync
+#define glClientWaitSync l_glClientWaitSync
+#define glWaitSync l_glWaitSync
+#define glGetInteger64v l_glGetInteger64v
+#define glGetSynciv l_glGetSynciv
+#define glGetInteger64i_v l_glGetInteger64i_v
+#define glGetBufferParameteri64v l_glGetBufferParameteri64v
+#define glGenSamplers l_glGenSamplers
+#define glDeleteSamplers l_glDeleteSamplers
+#define glIsSampler l_glIsSampler
+#define glBindSampler l_glBindSampler
+#define glSamplerParameteri l_glSamplerParameteri
+#define glSamplerParameteriv l_glSamplerParameteriv
+#define glSamplerParameterf l_glSamplerParameterf
+#define glSamplerParameterfv l_glSamplerParameterfv
+#define glGetSamplerParameteriv l_glGetSamplerParameteriv
+#define glGetSamplerParameterfv l_glGetSamplerParameterfv
+#define glVertexAttribDivisor l_glVertexAttribDivisor
+#define glBindTransformFeedback l_glBindTransformFeedback
+#define glDeleteTransformFeedbacks l_glDeleteTransformFeedbacks
+#define glGenTransformFeedbacks l_glGenTransformFeedbacks
+#define glIsTransformFeedback l_glIsTransformFeedback
+#define glPauseTransformFeedback l_glPauseTransformFeedback
+#define glResumeTransformFeedback l_glResumeTransformFeedback
+#define glGetProgramBinary l_glGetProgramBinary
+#define glProgramBinary l_glProgramBinary
+#define glProgramParameteri l_glProgramParameteri
+#define glInvalidateFramebuffer l_glInvalidateFramebuffer
+#define glInvalidateSubFramebuffer l_glInvalidateSubFramebuffer
+#define glTexStorage2D l_glTexStorage2D
+#define glTexStorage3D l_glTexStorage3D
+#define glGetInternalformativ l_glGetInternalformativ
+#define glDispatchCompute l_glDispatchCompute
+#define glDispatchComputeIndirect l_glDispatchComputeIndirect
+#define glDrawArraysIndirect l_glDrawArraysIndirect
+#define glDrawElementsIndirect l_glDrawElementsIndirect
+#define glFramebufferParameteri l_glFramebufferParameteri
+#define glGetFramebufferParameteriv l_glGetFramebufferParameteriv
+#define glGetProgramInterfaceiv l_glGetProgramInterfaceiv
+#define glGetProgramResourceIndex l_glGetProgramResourceIndex
+#define glGetProgramResourceName l_glGetProgramResourceName
+#define glGetProgramResourceiv l_glGetProgramResourceiv
+#define glGetProgramResourceLocation l_glGetProgramResourceLocation
+#define glUseProgramStages l_glUseProgramStages
+#define glActiveShaderProgram l_glActiveShaderProgram
+#define glCreateShaderProgramv l_glCreateShaderProgramv
+#define glBindProgramPipeline l_glBindProgramPipeline
+#define glDeleteProgramPipelines l_glDeleteProgramPipelines
+#define glGenProgramPipelines l_glGenProgramPipelines
+#define glIsProgramPipeline l_glIsProgramPipeline
+#define glGetProgramPipelineiv l_glGetProgramPipelineiv
+#define glProgramUniform1i l_glProgramUniform1i
+#define glProgramUniform2i l_glProgramUniform2i
+#define glProgramUniform3i l_glProgramUniform3i
+#define glProgramUniform4i l_glProgramUniform4i
+#define glProgramUniform1ui l_glProgramUniform1ui
+#define glProgramUniform2ui l_glProgramUniform2ui
+#define glProgramUniform3ui l_glProgramUniform3ui
+#define glProgramUniform4ui l_glProgramUniform4ui
+#define glProgramUniform1f l_glProgramUniform1f
+#define glProgramUniform2f l_glProgramUniform2f
+#define glProgramUniform3f l_glProgramUniform3f
+#define glProgramUniform4f l_glProgramUniform4f
+#define glProgramUniform1iv l_glProgramUniform1iv
+#define glProgramUniform2iv l_glProgramUniform2iv
+#define glProgramUniform3iv l_glProgramUniform3iv
+#define glProgramUniform4iv l_glProgramUniform4iv
+#define glProgramUniform1uiv l_glProgramUniform1uiv
+#define glProgramUniform2uiv l_glProgramUniform2uiv
+#define glProgramUniform3uiv l_glProgramUniform3uiv
+#define glProgramUniform4uiv l_glProgramUniform4uiv
+#define glProgramUniform1fv l_glProgramUniform1fv
+#define glProgramUniform2fv l_glProgramUniform2fv
+#define glProgramUniform3fv l_glProgramUniform3fv
+#define glProgramUniform4fv l_glProgramUniform4fv
+#define glProgramUniformMatrix2fv l_glProgramUniformMatrix2fv
+#define glProgramUniformMatrix3fv l_glProgramUniformMatrix3fv
+#define glProgramUniformMatrix4fv l_glProgramUniformMatrix4fv
+#define glProgramUniformMatrix2x3fv l_glProgramUniformMatrix2x3fv
+#define glProgramUniformMatrix3x2fv l_glProgramUniformMatrix3x2fv
+#define glProgramUniformMatrix2x4fv l_glProgramUniformMatrix2x4fv
+#define glProgramUniformMatrix4x2fv l_glProgramUniformMatrix4x2fv
+#define glProgramUniformMatrix3x4fv l_glProgramUniformMatrix3x4fv
+#define glProgramUniformMatrix4x3fv l_glProgramUniformMatrix4x3fv
+#define glValidateProgramPipeline l_glValidateProgramPipeline
+#define glGetProgramPipelineInfoLog l_glGetProgramPipelineInfoLog
+#define glBindImageTexture l_glBindImageTexture
+#define glGetBooleani_v l_glGetBooleani_v
+#define glMemoryBarrier l_glMemoryBarrier
+#define glMemoryBarrierByRegion l_glMemoryBarrierByRegion
+#define glTexStorage2DMultisample l_glTexStorage2DMultisample
+#define glGetMultisamplefv l_glGetMultisamplefv
+#define glSampleMaski l_glSampleMaski
+#define glGetTexLevelParameteriv l_glGetTexLevelParameteriv
+#define glGetTexLevelParameterfv l_glGetTexLevelParameterfv
+#define glBindVertexBuffer l_glBindVertexBuffer
+#define glVertexAttribFormat l_glVertexAttribFormat
+#define glVertexAttribIFormat l_glVertexAttribIFormat
+#define glVertexAttribBinding l_glVertexAttribBinding
+#define glVertexBindingDivisor l_glVertexBindingDivisor
+#define glDrawArraysInstancedBaseInstanceANGLE l_glDrawArraysInstancedBaseInstanceANGLE
 #define glDrawElementsInstancedBaseVertexBaseInstanceANGLE \
-    ANGLE_glDrawElementsInstancedBaseVertexBaseInstanceANGLE
-#define glMultiDrawArraysInstancedBaseInstanceANGLE \
-    ANGLE_glMultiDrawArraysInstancedBaseInstanceANGLE
+    l_glDrawElementsInstancedBaseVertexBaseInstanceANGLE
+#define glMultiDrawArraysInstancedBaseInstanceANGLE l_glMultiDrawArraysInstancedBaseInstanceANGLE
 #define glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE \
-    ANGLE_glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE
-#define glCopySubTexture3DANGLE ANGLE_glCopySubTexture3DANGLE
-#define glCopyTexture3DANGLE ANGLE_glCopyTexture3DANGLE
-#define glBlitFramebufferANGLE ANGLE_glBlitFramebufferANGLE
-#define glRenderbufferStorageMultisampleANGLE ANGLE_glRenderbufferStorageMultisampleANGLE
-#define glGetRenderbufferImageANGLE ANGLE_glGetRenderbufferImageANGLE
-#define glGetTexImageANGLE ANGLE_glGetTexImageANGLE
-#define glDrawArraysInstancedANGLE ANGLE_glDrawArraysInstancedANGLE
-#define glDrawElementsInstancedANGLE ANGLE_glDrawElementsInstancedANGLE
-#define glVertexAttribDivisorANGLE ANGLE_glVertexAttribDivisorANGLE
-#define glImportMemoryZirconHandleANGLE ANGLE_glImportMemoryZirconHandleANGLE
-#define glMultiDrawArraysANGLE ANGLE_glMultiDrawArraysANGLE
-#define glMultiDrawArraysInstancedANGLE ANGLE_glMultiDrawArraysInstancedANGLE
-#define glMultiDrawElementsANGLE ANGLE_glMultiDrawElementsANGLE
-#define glMultiDrawElementsInstancedANGLE ANGLE_glMultiDrawElementsInstancedANGLE
-#define glProvokingVertexANGLE ANGLE_glProvokingVertexANGLE
-#define glDisableExtensionANGLE ANGLE_glDisableExtensionANGLE
-#define glRequestExtensionANGLE ANGLE_glRequestExtensionANGLE
-#define glCompressedTexImage2DRobustANGLE ANGLE_glCompressedTexImage2DRobustANGLE
-#define glCompressedTexImage3DRobustANGLE ANGLE_glCompressedTexImage3DRobustANGLE
-#define glCompressedTexSubImage2DRobustANGLE ANGLE_glCompressedTexSubImage2DRobustANGLE
-#define glCompressedTexSubImage3DRobustANGLE ANGLE_glCompressedTexSubImage3DRobustANGLE
-#define glGetActiveUniformBlockivRobustANGLE ANGLE_glGetActiveUniformBlockivRobustANGLE
-#define glGetBooleani_vRobustANGLE ANGLE_glGetBooleani_vRobustANGLE
-#define glGetBooleanvRobustANGLE ANGLE_glGetBooleanvRobustANGLE
-#define glGetBufferParameteri64vRobustANGLE ANGLE_glGetBufferParameteri64vRobustANGLE
-#define glGetBufferParameterivRobustANGLE ANGLE_glGetBufferParameterivRobustANGLE
-#define glGetBufferPointervRobustANGLE ANGLE_glGetBufferPointervRobustANGLE
-#define glGetFloatvRobustANGLE ANGLE_glGetFloatvRobustANGLE
+    l_glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE
+#define glCopySubTexture3DANGLE l_glCopySubTexture3DANGLE
+#define glCopyTexture3DANGLE l_glCopyTexture3DANGLE
+#define glBlitFramebufferANGLE l_glBlitFramebufferANGLE
+#define glRenderbufferStorageMultisampleANGLE l_glRenderbufferStorageMultisampleANGLE
+#define glGetRenderbufferImageANGLE l_glGetRenderbufferImageANGLE
+#define glGetTexImageANGLE l_glGetTexImageANGLE
+#define glDrawArraysInstancedANGLE l_glDrawArraysInstancedANGLE
+#define glDrawElementsInstancedANGLE l_glDrawElementsInstancedANGLE
+#define glVertexAttribDivisorANGLE l_glVertexAttribDivisorANGLE
+#define glImportMemoryZirconHandleANGLE l_glImportMemoryZirconHandleANGLE
+#define glMultiDrawArraysANGLE l_glMultiDrawArraysANGLE
+#define glMultiDrawArraysInstancedANGLE l_glMultiDrawArraysInstancedANGLE
+#define glMultiDrawElementsANGLE l_glMultiDrawElementsANGLE
+#define glMultiDrawElementsInstancedANGLE l_glMultiDrawElementsInstancedANGLE
+#define glProvokingVertexANGLE l_glProvokingVertexANGLE
+#define glDisableExtensionANGLE l_glDisableExtensionANGLE
+#define glRequestExtensionANGLE l_glRequestExtensionANGLE
+#define glCompressedTexImage2DRobustANGLE l_glCompressedTexImage2DRobustANGLE
+#define glCompressedTexImage3DRobustANGLE l_glCompressedTexImage3DRobustANGLE
+#define glCompressedTexSubImage2DRobustANGLE l_glCompressedTexSubImage2DRobustANGLE
+#define glCompressedTexSubImage3DRobustANGLE l_glCompressedTexSubImage3DRobustANGLE
+#define glGetActiveUniformBlockivRobustANGLE l_glGetActiveUniformBlockivRobustANGLE
+#define glGetBooleani_vRobustANGLE l_glGetBooleani_vRobustANGLE
+#define glGetBooleanvRobustANGLE l_glGetBooleanvRobustANGLE
+#define glGetBufferParameteri64vRobustANGLE l_glGetBufferParameteri64vRobustANGLE
+#define glGetBufferParameterivRobustANGLE l_glGetBufferParameterivRobustANGLE
+#define glGetBufferPointervRobustANGLE l_glGetBufferPointervRobustANGLE
+#define glGetFloatvRobustANGLE l_glGetFloatvRobustANGLE
 #define glGetFramebufferAttachmentParameterivRobustANGLE \
-    ANGLE_glGetFramebufferAttachmentParameterivRobustANGLE
-#define glGetFramebufferParameterivRobustANGLE ANGLE_glGetFramebufferParameterivRobustANGLE
-#define glGetInteger64i_vRobustANGLE ANGLE_glGetInteger64i_vRobustANGLE
-#define glGetInteger64vRobustANGLE ANGLE_glGetInteger64vRobustANGLE
-#define glGetIntegeri_vRobustANGLE ANGLE_glGetIntegeri_vRobustANGLE
-#define glGetIntegervRobustANGLE ANGLE_glGetIntegervRobustANGLE
-#define glGetInternalformativRobustANGLE ANGLE_glGetInternalformativRobustANGLE
-#define glGetMultisamplefvRobustANGLE ANGLE_glGetMultisamplefvRobustANGLE
-#define glGetPointervRobustANGLERobustANGLE ANGLE_glGetPointervRobustANGLERobustANGLE
-#define glGetProgramInterfaceivRobustANGLE ANGLE_glGetProgramInterfaceivRobustANGLE
-#define glGetProgramivRobustANGLE ANGLE_glGetProgramivRobustANGLE
-#define glGetQueryObjecti64vRobustANGLE ANGLE_glGetQueryObjecti64vRobustANGLE
-#define glGetQueryObjectivRobustANGLE ANGLE_glGetQueryObjectivRobustANGLE
-#define glGetQueryObjectui64vRobustANGLE ANGLE_glGetQueryObjectui64vRobustANGLE
-#define glGetQueryObjectuivRobustANGLE ANGLE_glGetQueryObjectuivRobustANGLE
-#define glGetQueryivRobustANGLE ANGLE_glGetQueryivRobustANGLE
-#define glGetRenderbufferParameterivRobustANGLE ANGLE_glGetRenderbufferParameterivRobustANGLE
-#define glGetSamplerParameterIivRobustANGLE ANGLE_glGetSamplerParameterIivRobustANGLE
-#define glGetSamplerParameterIuivRobustANGLE ANGLE_glGetSamplerParameterIuivRobustANGLE
-#define glGetSamplerParameterfvRobustANGLE ANGLE_glGetSamplerParameterfvRobustANGLE
-#define glGetSamplerParameterivRobustANGLE ANGLE_glGetSamplerParameterivRobustANGLE
-#define glGetShaderivRobustANGLE ANGLE_glGetShaderivRobustANGLE
-#define glGetTexLevelParameterfvRobustANGLE ANGLE_glGetTexLevelParameterfvRobustANGLE
-#define glGetTexLevelParameterivRobustANGLE ANGLE_glGetTexLevelParameterivRobustANGLE
-#define glGetTexParameterIivRobustANGLE ANGLE_glGetTexParameterIivRobustANGLE
-#define glGetTexParameterIuivRobustANGLE ANGLE_glGetTexParameterIuivRobustANGLE
-#define glGetTexParameterfvRobustANGLE ANGLE_glGetTexParameterfvRobustANGLE
-#define glGetTexParameterivRobustANGLE ANGLE_glGetTexParameterivRobustANGLE
-#define glGetUniformfvRobustANGLE ANGLE_glGetUniformfvRobustANGLE
-#define glGetUniformivRobustANGLE ANGLE_glGetUniformivRobustANGLE
-#define glGetUniformuivRobustANGLE ANGLE_glGetUniformuivRobustANGLE
-#define glGetVertexAttribIivRobustANGLE ANGLE_glGetVertexAttribIivRobustANGLE
-#define glGetVertexAttribIuivRobustANGLE ANGLE_glGetVertexAttribIuivRobustANGLE
-#define glGetVertexAttribPointervRobustANGLE ANGLE_glGetVertexAttribPointervRobustANGLE
-#define glGetVertexAttribfvRobustANGLE ANGLE_glGetVertexAttribfvRobustANGLE
-#define glGetVertexAttribivRobustANGLE ANGLE_glGetVertexAttribivRobustANGLE
-#define glGetnUniformfvRobustANGLE ANGLE_glGetnUniformfvRobustANGLE
-#define glGetnUniformivRobustANGLE ANGLE_glGetnUniformivRobustANGLE
-#define glGetnUniformuivRobustANGLE ANGLE_glGetnUniformuivRobustANGLE
-#define glReadPixelsRobustANGLE ANGLE_glReadPixelsRobustANGLE
-#define glReadnPixelsRobustANGLE ANGLE_glReadnPixelsRobustANGLE
-#define glSamplerParameterIivRobustANGLE ANGLE_glSamplerParameterIivRobustANGLE
-#define glSamplerParameterIuivRobustANGLE ANGLE_glSamplerParameterIuivRobustANGLE
-#define glSamplerParameterfvRobustANGLE ANGLE_glSamplerParameterfvRobustANGLE
-#define glSamplerParameterivRobustANGLE ANGLE_glSamplerParameterivRobustANGLE
-#define glTexImage2DRobustANGLE ANGLE_glTexImage2DRobustANGLE
-#define glTexImage3DRobustANGLE ANGLE_glTexImage3DRobustANGLE
-#define glTexParameterIivRobustANGLE ANGLE_glTexParameterIivRobustANGLE
-#define glTexParameterIuivRobustANGLE ANGLE_glTexParameterIuivRobustANGLE
-#define glTexParameterfvRobustANGLE ANGLE_glTexParameterfvRobustANGLE
-#define glTexParameterivRobustANGLE ANGLE_glTexParameterivRobustANGLE
-#define glTexSubImage2DRobustANGLE ANGLE_glTexSubImage2DRobustANGLE
-#define glTexSubImage3DRobustANGLE ANGLE_glTexSubImage3DRobustANGLE
-#define glImportSemaphoreZirconHandleANGLE ANGLE_glImportSemaphoreZirconHandleANGLE
-#define glInvalidateTextureANGLE ANGLE_glInvalidateTextureANGLE
-#define glTexImage2DExternalANGLE ANGLE_glTexImage2DExternalANGLE
-#define glGetMultisamplefvANGLE ANGLE_glGetMultisamplefvANGLE
-#define glGetTexLevelParameterfvANGLE ANGLE_glGetTexLevelParameterfvANGLE
-#define glGetTexLevelParameterivANGLE ANGLE_glGetTexLevelParameterivANGLE
-#define glSampleMaskiANGLE ANGLE_glSampleMaskiANGLE
-#define glTexStorage2DMultisampleANGLE ANGLE_glTexStorage2DMultisampleANGLE
-#define glGetTranslatedShaderSourceANGLE ANGLE_glGetTranslatedShaderSourceANGLE
-#define glBindUniformLocationCHROMIUM ANGLE_glBindUniformLocationCHROMIUM
-#define glCompressedCopyTextureCHROMIUM ANGLE_glCompressedCopyTextureCHROMIUM
-#define glCopySubTextureCHROMIUM ANGLE_glCopySubTextureCHROMIUM
-#define glCopyTextureCHROMIUM ANGLE_glCopyTextureCHROMIUM
-#define glCoverageModulationCHROMIUM ANGLE_glCoverageModulationCHROMIUM
-#define glLoseContextCHROMIUM ANGLE_glLoseContextCHROMIUM
-#define glBindFragDataLocationEXT ANGLE_glBindFragDataLocationEXT
-#define glBindFragDataLocationIndexedEXT ANGLE_glBindFragDataLocationIndexedEXT
-#define glGetFragDataIndexEXT ANGLE_glGetFragDataIndexEXT
-#define glGetProgramResourceLocationIndexEXT ANGLE_glGetProgramResourceLocationIndexEXT
-#define glInsertEventMarkerEXT ANGLE_glInsertEventMarkerEXT
-#define glPopGroupMarkerEXT ANGLE_glPopGroupMarkerEXT
-#define glPushGroupMarkerEXT ANGLE_glPushGroupMarkerEXT
-#define glDiscardFramebufferEXT ANGLE_glDiscardFramebufferEXT
-#define glBeginQueryEXT ANGLE_glBeginQueryEXT
-#define glDeleteQueriesEXT ANGLE_glDeleteQueriesEXT
-#define glEndQueryEXT ANGLE_glEndQueryEXT
-#define glGenQueriesEXT ANGLE_glGenQueriesEXT
-#define glGetInteger64vEXT ANGLE_glGetInteger64vEXT
-#define glGetQueryObjecti64vEXT ANGLE_glGetQueryObjecti64vEXT
-#define glGetQueryObjectivEXT ANGLE_glGetQueryObjectivEXT
-#define glGetQueryObjectui64vEXT ANGLE_glGetQueryObjectui64vEXT
-#define glGetQueryObjectuivEXT ANGLE_glGetQueryObjectuivEXT
-#define glGetQueryivEXT ANGLE_glGetQueryivEXT
-#define glIsQueryEXT ANGLE_glIsQueryEXT
-#define glQueryCounterEXT ANGLE_glQueryCounterEXT
-#define glDrawBuffersEXT ANGLE_glDrawBuffersEXT
-#define glBlendEquationSeparateiEXT ANGLE_glBlendEquationSeparateiEXT
-#define glBlendEquationiEXT ANGLE_glBlendEquationiEXT
-#define glBlendFuncSeparateiEXT ANGLE_glBlendFuncSeparateiEXT
-#define glBlendFunciEXT ANGLE_glBlendFunciEXT
-#define glColorMaskiEXT ANGLE_glColorMaskiEXT
-#define glDisableiEXT ANGLE_glDisableiEXT
-#define glEnableiEXT ANGLE_glEnableiEXT
-#define glIsEnablediEXT ANGLE_glIsEnablediEXT
-#define glDrawElementsBaseVertexEXT ANGLE_glDrawElementsBaseVertexEXT
-#define glDrawElementsInstancedBaseVertexEXT ANGLE_glDrawElementsInstancedBaseVertexEXT
-#define glDrawRangeElementsBaseVertexEXT ANGLE_glDrawRangeElementsBaseVertexEXT
-#define glMultiDrawElementsBaseVertexEXT ANGLE_glMultiDrawElementsBaseVertexEXT
-#define glFramebufferTextureEXT ANGLE_glFramebufferTextureEXT
-#define glDrawArraysInstancedEXT ANGLE_glDrawArraysInstancedEXT
-#define glDrawElementsInstancedEXT ANGLE_glDrawElementsInstancedEXT
-#define glVertexAttribDivisorEXT ANGLE_glVertexAttribDivisorEXT
-#define glFlushMappedBufferRangeEXT ANGLE_glFlushMappedBufferRangeEXT
-#define glMapBufferRangeEXT ANGLE_glMapBufferRangeEXT
-#define glBufferStorageMemEXT ANGLE_glBufferStorageMemEXT
-#define glCreateMemoryObjectsEXT ANGLE_glCreateMemoryObjectsEXT
-#define glDeleteMemoryObjectsEXT ANGLE_glDeleteMemoryObjectsEXT
-#define glGetMemoryObjectParameterivEXT ANGLE_glGetMemoryObjectParameterivEXT
-#define glGetUnsignedBytei_vEXT ANGLE_glGetUnsignedBytei_vEXT
-#define glGetUnsignedBytevEXT ANGLE_glGetUnsignedBytevEXT
-#define glIsMemoryObjectEXT ANGLE_glIsMemoryObjectEXT
-#define glMemoryObjectParameterivEXT ANGLE_glMemoryObjectParameterivEXT
-#define glTexStorageMem2DEXT ANGLE_glTexStorageMem2DEXT
-#define glTexStorageMem2DMultisampleEXT ANGLE_glTexStorageMem2DMultisampleEXT
-#define glTexStorageMem3DEXT ANGLE_glTexStorageMem3DEXT
-#define glTexStorageMem3DMultisampleEXT ANGLE_glTexStorageMem3DMultisampleEXT
-#define glImportMemoryFdEXT ANGLE_glImportMemoryFdEXT
-#define glFramebufferTexture2DMultisampleEXT ANGLE_glFramebufferTexture2DMultisampleEXT
-#define glRenderbufferStorageMultisampleEXT ANGLE_glRenderbufferStorageMultisampleEXT
-#define glGetGraphicsResetStatusEXT ANGLE_glGetGraphicsResetStatusEXT
-#define glGetnUniformfvEXT ANGLE_glGetnUniformfvEXT
-#define glGetnUniformivEXT ANGLE_glGetnUniformivEXT
-#define glReadnPixelsEXT ANGLE_glReadnPixelsEXT
-#define glDeleteSemaphoresEXT ANGLE_glDeleteSemaphoresEXT
-#define glGenSemaphoresEXT ANGLE_glGenSemaphoresEXT
-#define glGetSemaphoreParameterui64vEXT ANGLE_glGetSemaphoreParameterui64vEXT
-#define glIsSemaphoreEXT ANGLE_glIsSemaphoreEXT
-#define glSemaphoreParameterui64vEXT ANGLE_glSemaphoreParameterui64vEXT
-#define glSignalSemaphoreEXT ANGLE_glSignalSemaphoreEXT
-#define glWaitSemaphoreEXT ANGLE_glWaitSemaphoreEXT
-#define glImportSemaphoreFdEXT ANGLE_glImportSemaphoreFdEXT
-#define glTexStorage1DEXT ANGLE_glTexStorage1DEXT
-#define glTexStorage2DEXT ANGLE_glTexStorage2DEXT
-#define glTexStorage3DEXT ANGLE_glTexStorage3DEXT
-#define glDebugMessageCallbackKHR ANGLE_glDebugMessageCallbackKHR
-#define glDebugMessageControlKHR ANGLE_glDebugMessageControlKHR
-#define glDebugMessageInsertKHR ANGLE_glDebugMessageInsertKHR
-#define glGetDebugMessageLogKHR ANGLE_glGetDebugMessageLogKHR
-#define glGetObjectLabelKHR ANGLE_glGetObjectLabelKHR
-#define glGetObjectPtrLabelKHR ANGLE_glGetObjectPtrLabelKHR
-#define glGetPointervKHR ANGLE_glGetPointervKHR
-#define glObjectLabelKHR ANGLE_glObjectLabelKHR
-#define glObjectPtrLabelKHR ANGLE_glObjectPtrLabelKHR
-#define glPopDebugGroupKHR ANGLE_glPopDebugGroupKHR
-#define glPushDebugGroupKHR ANGLE_glPushDebugGroupKHR
-#define glMaxShaderCompilerThreadsKHR ANGLE_glMaxShaderCompilerThreadsKHR
-#define glDeleteFencesNV ANGLE_glDeleteFencesNV
-#define glFinishFenceNV ANGLE_glFinishFenceNV
-#define glGenFencesNV ANGLE_glGenFencesNV
-#define glGetFenceivNV ANGLE_glGetFenceivNV
-#define glIsFenceNV ANGLE_glIsFenceNV
-#define glSetFenceNV ANGLE_glSetFenceNV
-#define glTestFenceNV ANGLE_glTestFenceNV
-#define glEGLImageTargetRenderbufferStorageOES ANGLE_glEGLImageTargetRenderbufferStorageOES
-#define glEGLImageTargetTexture2DOES ANGLE_glEGLImageTargetTexture2DOES
-#define glBlendEquationSeparateiOES ANGLE_glBlendEquationSeparateiOES
-#define glBlendEquationiOES ANGLE_glBlendEquationiOES
-#define glBlendFuncSeparateiOES ANGLE_glBlendFuncSeparateiOES
-#define glBlendFunciOES ANGLE_glBlendFunciOES
-#define glColorMaskiOES ANGLE_glColorMaskiOES
-#define glDisableiOES ANGLE_glDisableiOES
-#define glEnableiOES ANGLE_glEnableiOES
-#define glIsEnablediOES ANGLE_glIsEnablediOES
-#define glDrawElementsBaseVertexOES ANGLE_glDrawElementsBaseVertexOES
-#define glDrawElementsInstancedBaseVertexOES ANGLE_glDrawElementsInstancedBaseVertexOES
-#define glDrawRangeElementsBaseVertexOES ANGLE_glDrawRangeElementsBaseVertexOES
-#define glGetProgramBinaryOES ANGLE_glGetProgramBinaryOES
-#define glProgramBinaryOES ANGLE_glProgramBinaryOES
-#define glGetBufferPointervOES ANGLE_glGetBufferPointervOES
-#define glMapBufferOES ANGLE_glMapBufferOES
-#define glUnmapBufferOES ANGLE_glUnmapBufferOES
-#define glCompressedTexImage3DOES ANGLE_glCompressedTexImage3DOES
-#define glCompressedTexSubImage3DOES ANGLE_glCompressedTexSubImage3DOES
-#define glCopyTexSubImage3DOES ANGLE_glCopyTexSubImage3DOES
-#define glFramebufferTexture3DOES ANGLE_glFramebufferTexture3DOES
-#define glTexImage3DOES ANGLE_glTexImage3DOES
-#define glTexSubImage3DOES ANGLE_glTexSubImage3DOES
-#define glGetSamplerParameterIivOES ANGLE_glGetSamplerParameterIivOES
-#define glGetSamplerParameterIuivOES ANGLE_glGetSamplerParameterIuivOES
-#define glGetTexParameterIivOES ANGLE_glGetTexParameterIivOES
-#define glGetTexParameterIuivOES ANGLE_glGetTexParameterIuivOES
-#define glSamplerParameterIivOES ANGLE_glSamplerParameterIivOES
-#define glSamplerParameterIuivOES ANGLE_glSamplerParameterIuivOES
-#define glTexParameterIivOES ANGLE_glTexParameterIivOES
-#define glTexParameterIuivOES ANGLE_glTexParameterIuivOES
-#define glTexStorage3DMultisampleOES ANGLE_glTexStorage3DMultisampleOES
-#define glBindVertexArrayOES ANGLE_glBindVertexArrayOES
-#define glDeleteVertexArraysOES ANGLE_glDeleteVertexArraysOES
-#define glGenVertexArraysOES ANGLE_glGenVertexArraysOES
-#define glIsVertexArrayOES ANGLE_glIsVertexArrayOES
-#define glFramebufferTextureMultiviewOVR ANGLE_glFramebufferTextureMultiviewOVR
-#define glDrawTexfOES ANGLE_glDrawTexfOES
-#define glDrawTexfvOES ANGLE_glDrawTexfvOES
-#define glDrawTexiOES ANGLE_glDrawTexiOES
-#define glDrawTexivOES ANGLE_glDrawTexivOES
-#define glDrawTexsOES ANGLE_glDrawTexsOES
-#define glDrawTexsvOES ANGLE_glDrawTexsvOES
-#define glDrawTexxOES ANGLE_glDrawTexxOES
-#define glDrawTexxvOES ANGLE_glDrawTexxvOES
-#define glBindFramebufferOES ANGLE_glBindFramebufferOES
-#define glBindRenderbufferOES ANGLE_glBindRenderbufferOES
-#define glCheckFramebufferStatusOES ANGLE_glCheckFramebufferStatusOES
-#define glDeleteFramebuffersOES ANGLE_glDeleteFramebuffersOES
-#define glDeleteRenderbuffersOES ANGLE_glDeleteRenderbuffersOES
-#define glFramebufferRenderbufferOES ANGLE_glFramebufferRenderbufferOES
-#define glFramebufferTexture2DOES ANGLE_glFramebufferTexture2DOES
-#define glGenFramebuffersOES ANGLE_glGenFramebuffersOES
-#define glGenRenderbuffersOES ANGLE_glGenRenderbuffersOES
-#define glGenerateMipmapOES ANGLE_glGenerateMipmapOES
-#define glGetFramebufferAttachmentParameterivOES ANGLE_glGetFramebufferAttachmentParameterivOES
-#define glGetRenderbufferParameterivOES ANGLE_glGetRenderbufferParameterivOES
-#define glIsFramebufferOES ANGLE_glIsFramebufferOES
-#define glIsRenderbufferOES ANGLE_glIsRenderbufferOES
-#define glRenderbufferStorageOES ANGLE_glRenderbufferStorageOES
-#define glCurrentPaletteMatrixOES ANGLE_glCurrentPaletteMatrixOES
-#define glLoadPaletteFromModelViewMatrixOES ANGLE_glLoadPaletteFromModelViewMatrixOES
-#define glMatrixIndexPointerOES ANGLE_glMatrixIndexPointerOES
-#define glWeightPointerOES ANGLE_glWeightPointerOES
-#define glPointSizePointerOES ANGLE_glPointSizePointerOES
-#define glQueryMatrixxOES ANGLE_glQueryMatrixxOES
-#define glGetTexGenfvOES ANGLE_glGetTexGenfvOES
-#define glGetTexGenivOES ANGLE_glGetTexGenivOES
-#define glGetTexGenxvOES ANGLE_glGetTexGenxvOES
-#define glTexGenfOES ANGLE_glTexGenfOES
-#define glTexGenfvOES ANGLE_glTexGenfvOES
-#define glTexGeniOES ANGLE_glTexGeniOES
-#define glTexGenivOES ANGLE_glTexGenivOES
-#define glTexGenxOES ANGLE_glTexGenxOES
-#define glTexGenxvOES ANGLE_glTexGenxvOES
-#define glAlphaFuncContextANGLE ANGLE_glAlphaFuncContextANGLE
-#define glClipPlanefContextANGLE ANGLE_glClipPlanefContextANGLE
-#define glColor4fContextANGLE ANGLE_glColor4fContextANGLE
-#define glFogfContextANGLE ANGLE_glFogfContextANGLE
-#define glFogfvContextANGLE ANGLE_glFogfvContextANGLE
-#define glFrustumfContextANGLE ANGLE_glFrustumfContextANGLE
-#define glGetClipPlanefContextANGLE ANGLE_glGetClipPlanefContextANGLE
-#define glGetLightfvContextANGLE ANGLE_glGetLightfvContextANGLE
-#define glGetMaterialfvContextANGLE ANGLE_glGetMaterialfvContextANGLE
-#define glGetTexEnvfvContextANGLE ANGLE_glGetTexEnvfvContextANGLE
-#define glLightModelfContextANGLE ANGLE_glLightModelfContextANGLE
-#define glLightModelfvContextANGLE ANGLE_glLightModelfvContextANGLE
-#define glLightfContextANGLE ANGLE_glLightfContextANGLE
-#define glLightfvContextANGLE ANGLE_glLightfvContextANGLE
-#define glLoadMatrixfContextANGLE ANGLE_glLoadMatrixfContextANGLE
-#define glMaterialfContextANGLE ANGLE_glMaterialfContextANGLE
-#define glMaterialfvContextANGLE ANGLE_glMaterialfvContextANGLE
-#define glMultMatrixfContextANGLE ANGLE_glMultMatrixfContextANGLE
-#define glMultiTexCoord4fContextANGLE ANGLE_glMultiTexCoord4fContextANGLE
-#define glNormal3fContextANGLE ANGLE_glNormal3fContextANGLE
-#define glOrthofContextANGLE ANGLE_glOrthofContextANGLE
-#define glPointParameterfContextANGLE ANGLE_glPointParameterfContextANGLE
-#define glPointParameterfvContextANGLE ANGLE_glPointParameterfvContextANGLE
-#define glPointSizeContextANGLE ANGLE_glPointSizeContextANGLE
-#define glRotatefContextANGLE ANGLE_glRotatefContextANGLE
-#define glScalefContextANGLE ANGLE_glScalefContextANGLE
-#define glTexEnvfContextANGLE ANGLE_glTexEnvfContextANGLE
-#define glTexEnvfvContextANGLE ANGLE_glTexEnvfvContextANGLE
-#define glTranslatefContextANGLE ANGLE_glTranslatefContextANGLE
-#define glAlphaFuncxContextANGLE ANGLE_glAlphaFuncxContextANGLE
-#define glClearColorxContextANGLE ANGLE_glClearColorxContextANGLE
-#define glClearDepthxContextANGLE ANGLE_glClearDepthxContextANGLE
-#define glClientActiveTextureContextANGLE ANGLE_glClientActiveTextureContextANGLE
-#define glClipPlanexContextANGLE ANGLE_glClipPlanexContextANGLE
-#define glColor4ubContextANGLE ANGLE_glColor4ubContextANGLE
-#define glColor4xContextANGLE ANGLE_glColor4xContextANGLE
-#define glColorPointerContextANGLE ANGLE_glColorPointerContextANGLE
-#define glDepthRangexContextANGLE ANGLE_glDepthRangexContextANGLE
-#define glDisableClientStateContextANGLE ANGLE_glDisableClientStateContextANGLE
-#define glEnableClientStateContextANGLE ANGLE_glEnableClientStateContextANGLE
-#define glFogxContextANGLE ANGLE_glFogxContextANGLE
-#define glFogxvContextANGLE ANGLE_glFogxvContextANGLE
-#define glFrustumxContextANGLE ANGLE_glFrustumxContextANGLE
-#define glGetClipPlanexContextANGLE ANGLE_glGetClipPlanexContextANGLE
-#define glGetFixedvContextANGLE ANGLE_glGetFixedvContextANGLE
-#define glGetLightxvContextANGLE ANGLE_glGetLightxvContextANGLE
-#define glGetMaterialxvContextANGLE ANGLE_glGetMaterialxvContextANGLE
-#define glGetPointervContextANGLE ANGLE_glGetPointervContextANGLE
-#define glGetTexEnvivContextANGLE ANGLE_glGetTexEnvivContextANGLE
-#define glGetTexEnvxvContextANGLE ANGLE_glGetTexEnvxvContextANGLE
-#define glGetTexParameterxvContextANGLE ANGLE_glGetTexParameterxvContextANGLE
-#define glLightModelxContextANGLE ANGLE_glLightModelxContextANGLE
-#define glLightModelxvContextANGLE ANGLE_glLightModelxvContextANGLE
-#define glLightxContextANGLE ANGLE_glLightxContextANGLE
-#define glLightxvContextANGLE ANGLE_glLightxvContextANGLE
-#define glLineWidthxContextANGLE ANGLE_glLineWidthxContextANGLE
-#define glLoadIdentityContextANGLE ANGLE_glLoadIdentityContextANGLE
-#define glLoadMatrixxContextANGLE ANGLE_glLoadMatrixxContextANGLE
-#define glLogicOpContextANGLE ANGLE_glLogicOpContextANGLE
-#define glMaterialxContextANGLE ANGLE_glMaterialxContextANGLE
-#define glMaterialxvContextANGLE ANGLE_glMaterialxvContextANGLE
-#define glMatrixModeContextANGLE ANGLE_glMatrixModeContextANGLE
-#define glMultMatrixxContextANGLE ANGLE_glMultMatrixxContextANGLE
-#define glMultiTexCoord4xContextANGLE ANGLE_glMultiTexCoord4xContextANGLE
-#define glNormal3xContextANGLE ANGLE_glNormal3xContextANGLE
-#define glNormalPointerContextANGLE ANGLE_glNormalPointerContextANGLE
-#define glOrthoxContextANGLE ANGLE_glOrthoxContextANGLE
-#define glPointParameterxContextANGLE ANGLE_glPointParameterxContextANGLE
-#define glPointParameterxvContextANGLE ANGLE_glPointParameterxvContextANGLE
-#define glPointSizexContextANGLE ANGLE_glPointSizexContextANGLE
-#define glPolygonOffsetxContextANGLE ANGLE_glPolygonOffsetxContextANGLE
-#define glPopMatrixContextANGLE ANGLE_glPopMatrixContextANGLE
-#define glPushMatrixContextANGLE ANGLE_glPushMatrixContextANGLE
-#define glRotatexContextANGLE ANGLE_glRotatexContextANGLE
-#define glSampleCoveragexContextANGLE ANGLE_glSampleCoveragexContextANGLE
-#define glScalexContextANGLE ANGLE_glScalexContextANGLE
-#define glShadeModelContextANGLE ANGLE_glShadeModelContextANGLE
-#define glTexCoordPointerContextANGLE ANGLE_glTexCoordPointerContextANGLE
-#define glTexEnviContextANGLE ANGLE_glTexEnviContextANGLE
-#define glTexEnvxContextANGLE ANGLE_glTexEnvxContextANGLE
-#define glTexEnvivContextANGLE ANGLE_glTexEnvivContextANGLE
-#define glTexEnvxvContextANGLE ANGLE_glTexEnvxvContextANGLE
-#define glTexParameterxContextANGLE ANGLE_glTexParameterxContextANGLE
-#define glTexParameterxvContextANGLE ANGLE_glTexParameterxvContextANGLE
-#define glTranslatexContextANGLE ANGLE_glTranslatexContextANGLE
-#define glVertexPointerContextANGLE ANGLE_glVertexPointerContextANGLE
-#define glActiveTextureContextANGLE ANGLE_glActiveTextureContextANGLE
-#define glAttachShaderContextANGLE ANGLE_glAttachShaderContextANGLE
-#define glBindAttribLocationContextANGLE ANGLE_glBindAttribLocationContextANGLE
-#define glBindBufferContextANGLE ANGLE_glBindBufferContextANGLE
-#define glBindFramebufferContextANGLE ANGLE_glBindFramebufferContextANGLE
-#define glBindRenderbufferContextANGLE ANGLE_glBindRenderbufferContextANGLE
-#define glBindTextureContextANGLE ANGLE_glBindTextureContextANGLE
-#define glBlendColorContextANGLE ANGLE_glBlendColorContextANGLE
-#define glBlendEquationContextANGLE ANGLE_glBlendEquationContextANGLE
-#define glBlendEquationSeparateContextANGLE ANGLE_glBlendEquationSeparateContextANGLE
-#define glBlendFuncContextANGLE ANGLE_glBlendFuncContextANGLE
-#define glBlendFuncSeparateContextANGLE ANGLE_glBlendFuncSeparateContextANGLE
-#define glBufferDataContextANGLE ANGLE_glBufferDataContextANGLE
-#define glBufferSubDataContextANGLE ANGLE_glBufferSubDataContextANGLE
-#define glCheckFramebufferStatusContextANGLE ANGLE_glCheckFramebufferStatusContextANGLE
-#define glClearContextANGLE ANGLE_glClearContextANGLE
-#define glClearColorContextANGLE ANGLE_glClearColorContextANGLE
-#define glClearDepthfContextANGLE ANGLE_glClearDepthfContextANGLE
-#define glClearStencilContextANGLE ANGLE_glClearStencilContextANGLE
-#define glColorMaskContextANGLE ANGLE_glColorMaskContextANGLE
-#define glCompileShaderContextANGLE ANGLE_glCompileShaderContextANGLE
-#define glCompressedTexImage2DContextANGLE ANGLE_glCompressedTexImage2DContextANGLE
-#define glCompressedTexSubImage2DContextANGLE ANGLE_glCompressedTexSubImage2DContextANGLE
-#define glCopyTexImage2DContextANGLE ANGLE_glCopyTexImage2DContextANGLE
-#define glCopyTexSubImage2DContextANGLE ANGLE_glCopyTexSubImage2DContextANGLE
-#define glCreateProgramContextANGLE ANGLE_glCreateProgramContextANGLE
-#define glCreateShaderContextANGLE ANGLE_glCreateShaderContextANGLE
-#define glCullFaceContextANGLE ANGLE_glCullFaceContextANGLE
-#define glDeleteBuffersContextANGLE ANGLE_glDeleteBuffersContextANGLE
-#define glDeleteFramebuffersContextANGLE ANGLE_glDeleteFramebuffersContextANGLE
-#define glDeleteProgramContextANGLE ANGLE_glDeleteProgramContextANGLE
-#define glDeleteRenderbuffersContextANGLE ANGLE_glDeleteRenderbuffersContextANGLE
-#define glDeleteShaderContextANGLE ANGLE_glDeleteShaderContextANGLE
-#define glDeleteTexturesContextANGLE ANGLE_glDeleteTexturesContextANGLE
-#define glDepthFuncContextANGLE ANGLE_glDepthFuncContextANGLE
-#define glDepthMaskContextANGLE ANGLE_glDepthMaskContextANGLE
-#define glDepthRangefContextANGLE ANGLE_glDepthRangefContextANGLE
-#define glDetachShaderContextANGLE ANGLE_glDetachShaderContextANGLE
-#define glDisableContextANGLE ANGLE_glDisableContextANGLE
-#define glDisableVertexAttribArrayContextANGLE ANGLE_glDisableVertexAttribArrayContextANGLE
-#define glDrawArraysContextANGLE ANGLE_glDrawArraysContextANGLE
-#define glDrawElementsContextANGLE ANGLE_glDrawElementsContextANGLE
-#define glEnableContextANGLE ANGLE_glEnableContextANGLE
-#define glEnableVertexAttribArrayContextANGLE ANGLE_glEnableVertexAttribArrayContextANGLE
-#define glFinishContextANGLE ANGLE_glFinishContextANGLE
-#define glFlushContextANGLE ANGLE_glFlushContextANGLE
-#define glFramebufferRenderbufferContextANGLE ANGLE_glFramebufferRenderbufferContextANGLE
-#define glFramebufferTexture2DContextANGLE ANGLE_glFramebufferTexture2DContextANGLE
-#define glFrontFaceContextANGLE ANGLE_glFrontFaceContextANGLE
-#define glGenBuffersContextANGLE ANGLE_glGenBuffersContextANGLE
-#define glGenerateMipmapContextANGLE ANGLE_glGenerateMipmapContextANGLE
-#define glGenFramebuffersContextANGLE ANGLE_glGenFramebuffersContextANGLE
-#define glGenRenderbuffersContextANGLE ANGLE_glGenRenderbuffersContextANGLE
-#define glGenTexturesContextANGLE ANGLE_glGenTexturesContextANGLE
-#define glGetActiveAttribContextANGLE ANGLE_glGetActiveAttribContextANGLE
-#define glGetActiveUniformContextANGLE ANGLE_glGetActiveUniformContextANGLE
-#define glGetAttachedShadersContextANGLE ANGLE_glGetAttachedShadersContextANGLE
-#define glGetAttribLocationContextANGLE ANGLE_glGetAttribLocationContextANGLE
-#define glGetBooleanvContextANGLE ANGLE_glGetBooleanvContextANGLE
-#define glGetBufferParameterivContextANGLE ANGLE_glGetBufferParameterivContextANGLE
-#define glGetErrorContextANGLE ANGLE_glGetErrorContextANGLE
-#define glGetFloatvContextANGLE ANGLE_glGetFloatvContextANGLE
+    l_glGetFramebufferAttachmentParameterivRobustANGLE
+#define glGetFramebufferParameterivRobustANGLE l_glGetFramebufferParameterivRobustANGLE
+#define glGetInteger64i_vRobustANGLE l_glGetInteger64i_vRobustANGLE
+#define glGetInteger64vRobustANGLE l_glGetInteger64vRobustANGLE
+#define glGetIntegeri_vRobustANGLE l_glGetIntegeri_vRobustANGLE
+#define glGetIntegervRobustANGLE l_glGetIntegervRobustANGLE
+#define glGetInternalformativRobustANGLE l_glGetInternalformativRobustANGLE
+#define glGetMultisamplefvRobustANGLE l_glGetMultisamplefvRobustANGLE
+#define glGetPointervRobustANGLERobustANGLE l_glGetPointervRobustANGLERobustANGLE
+#define glGetProgramInterfaceivRobustANGLE l_glGetProgramInterfaceivRobustANGLE
+#define glGetProgramivRobustANGLE l_glGetProgramivRobustANGLE
+#define glGetQueryObjecti64vRobustANGLE l_glGetQueryObjecti64vRobustANGLE
+#define glGetQueryObjectivRobustANGLE l_glGetQueryObjectivRobustANGLE
+#define glGetQueryObjectui64vRobustANGLE l_glGetQueryObjectui64vRobustANGLE
+#define glGetQueryObjectuivRobustANGLE l_glGetQueryObjectuivRobustANGLE
+#define glGetQueryivRobustANGLE l_glGetQueryivRobustANGLE
+#define glGetRenderbufferParameterivRobustANGLE l_glGetRenderbufferParameterivRobustANGLE
+#define glGetSamplerParameterIivRobustANGLE l_glGetSamplerParameterIivRobustANGLE
+#define glGetSamplerParameterIuivRobustANGLE l_glGetSamplerParameterIuivRobustANGLE
+#define glGetSamplerParameterfvRobustANGLE l_glGetSamplerParameterfvRobustANGLE
+#define glGetSamplerParameterivRobustANGLE l_glGetSamplerParameterivRobustANGLE
+#define glGetShaderivRobustANGLE l_glGetShaderivRobustANGLE
+#define glGetTexLevelParameterfvRobustANGLE l_glGetTexLevelParameterfvRobustANGLE
+#define glGetTexLevelParameterivRobustANGLE l_glGetTexLevelParameterivRobustANGLE
+#define glGetTexParameterIivRobustANGLE l_glGetTexParameterIivRobustANGLE
+#define glGetTexParameterIuivRobustANGLE l_glGetTexParameterIuivRobustANGLE
+#define glGetTexParameterfvRobustANGLE l_glGetTexParameterfvRobustANGLE
+#define glGetTexParameterivRobustANGLE l_glGetTexParameterivRobustANGLE
+#define glGetUniformfvRobustANGLE l_glGetUniformfvRobustANGLE
+#define glGetUniformivRobustANGLE l_glGetUniformivRobustANGLE
+#define glGetUniformuivRobustANGLE l_glGetUniformuivRobustANGLE
+#define glGetVertexAttribIivRobustANGLE l_glGetVertexAttribIivRobustANGLE
+#define glGetVertexAttribIuivRobustANGLE l_glGetVertexAttribIuivRobustANGLE
+#define glGetVertexAttribPointervRobustANGLE l_glGetVertexAttribPointervRobustANGLE
+#define glGetVertexAttribfvRobustANGLE l_glGetVertexAttribfvRobustANGLE
+#define glGetVertexAttribivRobustANGLE l_glGetVertexAttribivRobustANGLE
+#define glGetnUniformfvRobustANGLE l_glGetnUniformfvRobustANGLE
+#define glGetnUniformivRobustANGLE l_glGetnUniformivRobustANGLE
+#define glGetnUniformuivRobustANGLE l_glGetnUniformuivRobustANGLE
+#define glReadPixelsRobustANGLE l_glReadPixelsRobustANGLE
+#define glReadnPixelsRobustANGLE l_glReadnPixelsRobustANGLE
+#define glSamplerParameterIivRobustANGLE l_glSamplerParameterIivRobustANGLE
+#define glSamplerParameterIuivRobustANGLE l_glSamplerParameterIuivRobustANGLE
+#define glSamplerParameterfvRobustANGLE l_glSamplerParameterfvRobustANGLE
+#define glSamplerParameterivRobustANGLE l_glSamplerParameterivRobustANGLE
+#define glTexImage2DRobustANGLE l_glTexImage2DRobustANGLE
+#define glTexImage3DRobustANGLE l_glTexImage3DRobustANGLE
+#define glTexParameterIivRobustANGLE l_glTexParameterIivRobustANGLE
+#define glTexParameterIuivRobustANGLE l_glTexParameterIuivRobustANGLE
+#define glTexParameterfvRobustANGLE l_glTexParameterfvRobustANGLE
+#define glTexParameterivRobustANGLE l_glTexParameterivRobustANGLE
+#define glTexSubImage2DRobustANGLE l_glTexSubImage2DRobustANGLE
+#define glTexSubImage3DRobustANGLE l_glTexSubImage3DRobustANGLE
+#define glImportSemaphoreZirconHandleANGLE l_glImportSemaphoreZirconHandleANGLE
+#define glInvalidateTextureANGLE l_glInvalidateTextureANGLE
+#define glTexImage2DExternalANGLE l_glTexImage2DExternalANGLE
+#define glGetMultisamplefvANGLE l_glGetMultisamplefvANGLE
+#define glGetTexLevelParameterfvANGLE l_glGetTexLevelParameterfvANGLE
+#define glGetTexLevelParameterivANGLE l_glGetTexLevelParameterivANGLE
+#define glSampleMaskiANGLE l_glSampleMaskiANGLE
+#define glTexStorage2DMultisampleANGLE l_glTexStorage2DMultisampleANGLE
+#define glGetTranslatedShaderSourceANGLE l_glGetTranslatedShaderSourceANGLE
+#define glBindUniformLocationCHROMIUM l_glBindUniformLocationCHROMIUM
+#define glCompressedCopyTextureCHROMIUM l_glCompressedCopyTextureCHROMIUM
+#define glCopySubTextureCHROMIUM l_glCopySubTextureCHROMIUM
+#define glCopyTextureCHROMIUM l_glCopyTextureCHROMIUM
+#define glCoverageModulationCHROMIUM l_glCoverageModulationCHROMIUM
+#define glLoseContextCHROMIUM l_glLoseContextCHROMIUM
+#define glBindFragDataLocationEXT l_glBindFragDataLocationEXT
+#define glBindFragDataLocationIndexedEXT l_glBindFragDataLocationIndexedEXT
+#define glGetFragDataIndexEXT l_glGetFragDataIndexEXT
+#define glGetProgramResourceLocationIndexEXT l_glGetProgramResourceLocationIndexEXT
+#define glInsertEventMarkerEXT l_glInsertEventMarkerEXT
+#define glPopGroupMarkerEXT l_glPopGroupMarkerEXT
+#define glPushGroupMarkerEXT l_glPushGroupMarkerEXT
+#define glDiscardFramebufferEXT l_glDiscardFramebufferEXT
+#define glBeginQueryEXT l_glBeginQueryEXT
+#define glDeleteQueriesEXT l_glDeleteQueriesEXT
+#define glEndQueryEXT l_glEndQueryEXT
+#define glGenQueriesEXT l_glGenQueriesEXT
+#define glGetInteger64vEXT l_glGetInteger64vEXT
+#define glGetQueryObjecti64vEXT l_glGetQueryObjecti64vEXT
+#define glGetQueryObjectivEXT l_glGetQueryObjectivEXT
+#define glGetQueryObjectui64vEXT l_glGetQueryObjectui64vEXT
+#define glGetQueryObjectuivEXT l_glGetQueryObjectuivEXT
+#define glGetQueryivEXT l_glGetQueryivEXT
+#define glIsQueryEXT l_glIsQueryEXT
+#define glQueryCounterEXT l_glQueryCounterEXT
+#define glDrawBuffersEXT l_glDrawBuffersEXT
+#define glBlendEquationSeparateiEXT l_glBlendEquationSeparateiEXT
+#define glBlendEquationiEXT l_glBlendEquationiEXT
+#define glBlendFuncSeparateiEXT l_glBlendFuncSeparateiEXT
+#define glBlendFunciEXT l_glBlendFunciEXT
+#define glColorMaskiEXT l_glColorMaskiEXT
+#define glDisableiEXT l_glDisableiEXT
+#define glEnableiEXT l_glEnableiEXT
+#define glIsEnablediEXT l_glIsEnablediEXT
+#define glDrawElementsBaseVertexEXT l_glDrawElementsBaseVertexEXT
+#define glDrawElementsInstancedBaseVertexEXT l_glDrawElementsInstancedBaseVertexEXT
+#define glDrawRangeElementsBaseVertexEXT l_glDrawRangeElementsBaseVertexEXT
+#define glMultiDrawElementsBaseVertexEXT l_glMultiDrawElementsBaseVertexEXT
+#define glFramebufferTextureEXT l_glFramebufferTextureEXT
+#define glDrawArraysInstancedEXT l_glDrawArraysInstancedEXT
+#define glDrawElementsInstancedEXT l_glDrawElementsInstancedEXT
+#define glVertexAttribDivisorEXT l_glVertexAttribDivisorEXT
+#define glFlushMappedBufferRangeEXT l_glFlushMappedBufferRangeEXT
+#define glMapBufferRangeEXT l_glMapBufferRangeEXT
+#define glBufferStorageMemEXT l_glBufferStorageMemEXT
+#define glCreateMemoryObjectsEXT l_glCreateMemoryObjectsEXT
+#define glDeleteMemoryObjectsEXT l_glDeleteMemoryObjectsEXT
+#define glGetMemoryObjectParameterivEXT l_glGetMemoryObjectParameterivEXT
+#define glGetUnsignedBytei_vEXT l_glGetUnsignedBytei_vEXT
+#define glGetUnsignedBytevEXT l_glGetUnsignedBytevEXT
+#define glIsMemoryObjectEXT l_glIsMemoryObjectEXT
+#define glMemoryObjectParameterivEXT l_glMemoryObjectParameterivEXT
+#define glTexStorageMem2DEXT l_glTexStorageMem2DEXT
+#define glTexStorageMem2DMultisampleEXT l_glTexStorageMem2DMultisampleEXT
+#define glTexStorageMem3DEXT l_glTexStorageMem3DEXT
+#define glTexStorageMem3DMultisampleEXT l_glTexStorageMem3DMultisampleEXT
+#define glImportMemoryFdEXT l_glImportMemoryFdEXT
+#define glFramebufferTexture2DMultisampleEXT l_glFramebufferTexture2DMultisampleEXT
+#define glRenderbufferStorageMultisampleEXT l_glRenderbufferStorageMultisampleEXT
+#define glGetGraphicsResetStatusEXT l_glGetGraphicsResetStatusEXT
+#define glGetnUniformfvEXT l_glGetnUniformfvEXT
+#define glGetnUniformivEXT l_glGetnUniformivEXT
+#define glReadnPixelsEXT l_glReadnPixelsEXT
+#define glDeleteSemaphoresEXT l_glDeleteSemaphoresEXT
+#define glGenSemaphoresEXT l_glGenSemaphoresEXT
+#define glGetSemaphoreParameterui64vEXT l_glGetSemaphoreParameterui64vEXT
+#define glIsSemaphoreEXT l_glIsSemaphoreEXT
+#define glSemaphoreParameterui64vEXT l_glSemaphoreParameterui64vEXT
+#define glSignalSemaphoreEXT l_glSignalSemaphoreEXT
+#define glWaitSemaphoreEXT l_glWaitSemaphoreEXT
+#define glImportSemaphoreFdEXT l_glImportSemaphoreFdEXT
+#define glTexStorage1DEXT l_glTexStorage1DEXT
+#define glTexStorage2DEXT l_glTexStorage2DEXT
+#define glTexStorage3DEXT l_glTexStorage3DEXT
+#define glDebugMessageCallbackKHR l_glDebugMessageCallbackKHR
+#define glDebugMessageControlKHR l_glDebugMessageControlKHR
+#define glDebugMessageInsertKHR l_glDebugMessageInsertKHR
+#define glGetDebugMessageLogKHR l_glGetDebugMessageLogKHR
+#define glGetObjectLabelKHR l_glGetObjectLabelKHR
+#define glGetObjectPtrLabelKHR l_glGetObjectPtrLabelKHR
+#define glGetPointervKHR l_glGetPointervKHR
+#define glObjectLabelKHR l_glObjectLabelKHR
+#define glObjectPtrLabelKHR l_glObjectPtrLabelKHR
+#define glPopDebugGroupKHR l_glPopDebugGroupKHR
+#define glPushDebugGroupKHR l_glPushDebugGroupKHR
+#define glMaxShaderCompilerThreadsKHR l_glMaxShaderCompilerThreadsKHR
+#define glDeleteFencesNV l_glDeleteFencesNV
+#define glFinishFenceNV l_glFinishFenceNV
+#define glGenFencesNV l_glGenFencesNV
+#define glGetFenceivNV l_glGetFenceivNV
+#define glIsFenceNV l_glIsFenceNV
+#define glSetFenceNV l_glSetFenceNV
+#define glTestFenceNV l_glTestFenceNV
+#define glEGLImageTargetRenderbufferStorageOES l_glEGLImageTargetRenderbufferStorageOES
+#define glEGLImageTargetTexture2DOES l_glEGLImageTargetTexture2DOES
+#define glBlendEquationSeparateiOES l_glBlendEquationSeparateiOES
+#define glBlendEquationiOES l_glBlendEquationiOES
+#define glBlendFuncSeparateiOES l_glBlendFuncSeparateiOES
+#define glBlendFunciOES l_glBlendFunciOES
+#define glColorMaskiOES l_glColorMaskiOES
+#define glDisableiOES l_glDisableiOES
+#define glEnableiOES l_glEnableiOES
+#define glIsEnablediOES l_glIsEnablediOES
+#define glDrawElementsBaseVertexOES l_glDrawElementsBaseVertexOES
+#define glDrawElementsInstancedBaseVertexOES l_glDrawElementsInstancedBaseVertexOES
+#define glDrawRangeElementsBaseVertexOES l_glDrawRangeElementsBaseVertexOES
+#define glGetProgramBinaryOES l_glGetProgramBinaryOES
+#define glProgramBinaryOES l_glProgramBinaryOES
+#define glGetBufferPointervOES l_glGetBufferPointervOES
+#define glMapBufferOES l_glMapBufferOES
+#define glUnmapBufferOES l_glUnmapBufferOES
+#define glCompressedTexImage3DOES l_glCompressedTexImage3DOES
+#define glCompressedTexSubImage3DOES l_glCompressedTexSubImage3DOES
+#define glCopyTexSubImage3DOES l_glCopyTexSubImage3DOES
+#define glFramebufferTexture3DOES l_glFramebufferTexture3DOES
+#define glTexImage3DOES l_glTexImage3DOES
+#define glTexSubImage3DOES l_glTexSubImage3DOES
+#define glGetSamplerParameterIivOES l_glGetSamplerParameterIivOES
+#define glGetSamplerParameterIuivOES l_glGetSamplerParameterIuivOES
+#define glGetTexParameterIivOES l_glGetTexParameterIivOES
+#define glGetTexParameterIuivOES l_glGetTexParameterIuivOES
+#define glSamplerParameterIivOES l_glSamplerParameterIivOES
+#define glSamplerParameterIuivOES l_glSamplerParameterIuivOES
+#define glTexParameterIivOES l_glTexParameterIivOES
+#define glTexParameterIuivOES l_glTexParameterIuivOES
+#define glTexStorage3DMultisampleOES l_glTexStorage3DMultisampleOES
+#define glBindVertexArrayOES l_glBindVertexArrayOES
+#define glDeleteVertexArraysOES l_glDeleteVertexArraysOES
+#define glGenVertexArraysOES l_glGenVertexArraysOES
+#define glIsVertexArrayOES l_glIsVertexArrayOES
+#define glFramebufferTextureMultiviewOVR l_glFramebufferTextureMultiviewOVR
+#define glDrawTexfOES l_glDrawTexfOES
+#define glDrawTexfvOES l_glDrawTexfvOES
+#define glDrawTexiOES l_glDrawTexiOES
+#define glDrawTexivOES l_glDrawTexivOES
+#define glDrawTexsOES l_glDrawTexsOES
+#define glDrawTexsvOES l_glDrawTexsvOES
+#define glDrawTexxOES l_glDrawTexxOES
+#define glDrawTexxvOES l_glDrawTexxvOES
+#define glBindFramebufferOES l_glBindFramebufferOES
+#define glBindRenderbufferOES l_glBindRenderbufferOES
+#define glCheckFramebufferStatusOES l_glCheckFramebufferStatusOES
+#define glDeleteFramebuffersOES l_glDeleteFramebuffersOES
+#define glDeleteRenderbuffersOES l_glDeleteRenderbuffersOES
+#define glFramebufferRenderbufferOES l_glFramebufferRenderbufferOES
+#define glFramebufferTexture2DOES l_glFramebufferTexture2DOES
+#define glGenFramebuffersOES l_glGenFramebuffersOES
+#define glGenRenderbuffersOES l_glGenRenderbuffersOES
+#define glGenerateMipmapOES l_glGenerateMipmapOES
+#define glGetFramebufferAttachmentParameterivOES l_glGetFramebufferAttachmentParameterivOES
+#define glGetRenderbufferParameterivOES l_glGetRenderbufferParameterivOES
+#define glIsFramebufferOES l_glIsFramebufferOES
+#define glIsRenderbufferOES l_glIsRenderbufferOES
+#define glRenderbufferStorageOES l_glRenderbufferStorageOES
+#define glCurrentPaletteMatrixOES l_glCurrentPaletteMatrixOES
+#define glLoadPaletteFromModelViewMatrixOES l_glLoadPaletteFromModelViewMatrixOES
+#define glMatrixIndexPointerOES l_glMatrixIndexPointerOES
+#define glWeightPointerOES l_glWeightPointerOES
+#define glPointSizePointerOES l_glPointSizePointerOES
+#define glQueryMatrixxOES l_glQueryMatrixxOES
+#define glGetTexGenfvOES l_glGetTexGenfvOES
+#define glGetTexGenivOES l_glGetTexGenivOES
+#define glGetTexGenxvOES l_glGetTexGenxvOES
+#define glTexGenfOES l_glTexGenfOES
+#define glTexGenfvOES l_glTexGenfvOES
+#define glTexGeniOES l_glTexGeniOES
+#define glTexGenivOES l_glTexGenivOES
+#define glTexGenxOES l_glTexGenxOES
+#define glTexGenxvOES l_glTexGenxvOES
+#define glAlphaFuncContextANGLE l_glAlphaFuncContextANGLE
+#define glClipPlanefContextANGLE l_glClipPlanefContextANGLE
+#define glColor4fContextANGLE l_glColor4fContextANGLE
+#define glFogfContextANGLE l_glFogfContextANGLE
+#define glFogfvContextANGLE l_glFogfvContextANGLE
+#define glFrustumfContextANGLE l_glFrustumfContextANGLE
+#define glGetClipPlanefContextANGLE l_glGetClipPlanefContextANGLE
+#define glGetLightfvContextANGLE l_glGetLightfvContextANGLE
+#define glGetMaterialfvContextANGLE l_glGetMaterialfvContextANGLE
+#define glGetTexEnvfvContextANGLE l_glGetTexEnvfvContextANGLE
+#define glLightModelfContextANGLE l_glLightModelfContextANGLE
+#define glLightModelfvContextANGLE l_glLightModelfvContextANGLE
+#define glLightfContextANGLE l_glLightfContextANGLE
+#define glLightfvContextANGLE l_glLightfvContextANGLE
+#define glLoadMatrixfContextANGLE l_glLoadMatrixfContextANGLE
+#define glMaterialfContextANGLE l_glMaterialfContextANGLE
+#define glMaterialfvContextANGLE l_glMaterialfvContextANGLE
+#define glMultMatrixfContextANGLE l_glMultMatrixfContextANGLE
+#define glMultiTexCoord4fContextANGLE l_glMultiTexCoord4fContextANGLE
+#define glNormal3fContextANGLE l_glNormal3fContextANGLE
+#define glOrthofContextANGLE l_glOrthofContextANGLE
+#define glPointParameterfContextANGLE l_glPointParameterfContextANGLE
+#define glPointParameterfvContextANGLE l_glPointParameterfvContextANGLE
+#define glPointSizeContextANGLE l_glPointSizeContextANGLE
+#define glRotatefContextANGLE l_glRotatefContextANGLE
+#define glScalefContextANGLE l_glScalefContextANGLE
+#define glTexEnvfContextANGLE l_glTexEnvfContextANGLE
+#define glTexEnvfvContextANGLE l_glTexEnvfvContextANGLE
+#define glTranslatefContextANGLE l_glTranslatefContextANGLE
+#define glAlphaFuncxContextANGLE l_glAlphaFuncxContextANGLE
+#define glClearColorxContextANGLE l_glClearColorxContextANGLE
+#define glClearDepthxContextANGLE l_glClearDepthxContextANGLE
+#define glClientActiveTextureContextANGLE l_glClientActiveTextureContextANGLE
+#define glClipPlanexContextANGLE l_glClipPlanexContextANGLE
+#define glColor4ubContextANGLE l_glColor4ubContextANGLE
+#define glColor4xContextANGLE l_glColor4xContextANGLE
+#define glColorPointerContextANGLE l_glColorPointerContextANGLE
+#define glDepthRangexContextANGLE l_glDepthRangexContextANGLE
+#define glDisableClientStateContextANGLE l_glDisableClientStateContextANGLE
+#define glEnableClientStateContextANGLE l_glEnableClientStateContextANGLE
+#define glFogxContextANGLE l_glFogxContextANGLE
+#define glFogxvContextANGLE l_glFogxvContextANGLE
+#define glFrustumxContextANGLE l_glFrustumxContextANGLE
+#define glGetClipPlanexContextANGLE l_glGetClipPlanexContextANGLE
+#define glGetFixedvContextANGLE l_glGetFixedvContextANGLE
+#define glGetLightxvContextANGLE l_glGetLightxvContextANGLE
+#define glGetMaterialxvContextANGLE l_glGetMaterialxvContextANGLE
+#define glGetPointervContextANGLE l_glGetPointervContextANGLE
+#define glGetTexEnvivContextANGLE l_glGetTexEnvivContextANGLE
+#define glGetTexEnvxvContextANGLE l_glGetTexEnvxvContextANGLE
+#define glGetTexParameterxvContextANGLE l_glGetTexParameterxvContextANGLE
+#define glLightModelxContextANGLE l_glLightModelxContextANGLE
+#define glLightModelxvContextANGLE l_glLightModelxvContextANGLE
+#define glLightxContextANGLE l_glLightxContextANGLE
+#define glLightxvContextANGLE l_glLightxvContextANGLE
+#define glLineWidthxContextANGLE l_glLineWidthxContextANGLE
+#define glLoadIdentityContextANGLE l_glLoadIdentityContextANGLE
+#define glLoadMatrixxContextANGLE l_glLoadMatrixxContextANGLE
+#define glLogicOpContextANGLE l_glLogicOpContextANGLE
+#define glMaterialxContextANGLE l_glMaterialxContextANGLE
+#define glMaterialxvContextANGLE l_glMaterialxvContextANGLE
+#define glMatrixModeContextANGLE l_glMatrixModeContextANGLE
+#define glMultMatrixxContextANGLE l_glMultMatrixxContextANGLE
+#define glMultiTexCoord4xContextANGLE l_glMultiTexCoord4xContextANGLE
+#define glNormal3xContextANGLE l_glNormal3xContextANGLE
+#define glNormalPointerContextANGLE l_glNormalPointerContextANGLE
+#define glOrthoxContextANGLE l_glOrthoxContextANGLE
+#define glPointParameterxContextANGLE l_glPointParameterxContextANGLE
+#define glPointParameterxvContextANGLE l_glPointParameterxvContextANGLE
+#define glPointSizexContextANGLE l_glPointSizexContextANGLE
+#define glPolygonOffsetxContextANGLE l_glPolygonOffsetxContextANGLE
+#define glPopMatrixContextANGLE l_glPopMatrixContextANGLE
+#define glPushMatrixContextANGLE l_glPushMatrixContextANGLE
+#define glRotatexContextANGLE l_glRotatexContextANGLE
+#define glSampleCoveragexContextANGLE l_glSampleCoveragexContextANGLE
+#define glScalexContextANGLE l_glScalexContextANGLE
+#define glShadeModelContextANGLE l_glShadeModelContextANGLE
+#define glTexCoordPointerContextANGLE l_glTexCoordPointerContextANGLE
+#define glTexEnviContextANGLE l_glTexEnviContextANGLE
+#define glTexEnvxContextANGLE l_glTexEnvxContextANGLE
+#define glTexEnvivContextANGLE l_glTexEnvivContextANGLE
+#define glTexEnvxvContextANGLE l_glTexEnvxvContextANGLE
+#define glTexParameterxContextANGLE l_glTexParameterxContextANGLE
+#define glTexParameterxvContextANGLE l_glTexParameterxvContextANGLE
+#define glTranslatexContextANGLE l_glTranslatexContextANGLE
+#define glVertexPointerContextANGLE l_glVertexPointerContextANGLE
+#define glActiveTextureContextANGLE l_glActiveTextureContextANGLE
+#define glAttachShaderContextANGLE l_glAttachShaderContextANGLE
+#define glBindAttribLocationContextANGLE l_glBindAttribLocationContextANGLE
+#define glBindBufferContextANGLE l_glBindBufferContextANGLE
+#define glBindFramebufferContextANGLE l_glBindFramebufferContextANGLE
+#define glBindRenderbufferContextANGLE l_glBindRenderbufferContextANGLE
+#define glBindTextureContextANGLE l_glBindTextureContextANGLE
+#define glBlendColorContextANGLE l_glBlendColorContextANGLE
+#define glBlendEquationContextANGLE l_glBlendEquationContextANGLE
+#define glBlendEquationSeparateContextANGLE l_glBlendEquationSeparateContextANGLE
+#define glBlendFuncContextANGLE l_glBlendFuncContextANGLE
+#define glBlendFuncSeparateContextANGLE l_glBlendFuncSeparateContextANGLE
+#define glBufferDataContextANGLE l_glBufferDataContextANGLE
+#define glBufferSubDataContextANGLE l_glBufferSubDataContextANGLE
+#define glCheckFramebufferStatusContextANGLE l_glCheckFramebufferStatusContextANGLE
+#define glClearContextANGLE l_glClearContextANGLE
+#define glClearColorContextANGLE l_glClearColorContextANGLE
+#define glClearDepthfContextANGLE l_glClearDepthfContextANGLE
+#define glClearStencilContextANGLE l_glClearStencilContextANGLE
+#define glColorMaskContextANGLE l_glColorMaskContextANGLE
+#define glCompileShaderContextANGLE l_glCompileShaderContextANGLE
+#define glCompressedTexImage2DContextANGLE l_glCompressedTexImage2DContextANGLE
+#define glCompressedTexSubImage2DContextANGLE l_glCompressedTexSubImage2DContextANGLE
+#define glCopyTexImage2DContextANGLE l_glCopyTexImage2DContextANGLE
+#define glCopyTexSubImage2DContextANGLE l_glCopyTexSubImage2DContextANGLE
+#define glCreateProgramContextANGLE l_glCreateProgramContextANGLE
+#define glCreateShaderContextANGLE l_glCreateShaderContextANGLE
+#define glCullFaceContextANGLE l_glCullFaceContextANGLE
+#define glDeleteBuffersContextANGLE l_glDeleteBuffersContextANGLE
+#define glDeleteFramebuffersContextANGLE l_glDeleteFramebuffersContextANGLE
+#define glDeleteProgramContextANGLE l_glDeleteProgramContextANGLE
+#define glDeleteRenderbuffersContextANGLE l_glDeleteRenderbuffersContextANGLE
+#define glDeleteShaderContextANGLE l_glDeleteShaderContextANGLE
+#define glDeleteTexturesContextANGLE l_glDeleteTexturesContextANGLE
+#define glDepthFuncContextANGLE l_glDepthFuncContextANGLE
+#define glDepthMaskContextANGLE l_glDepthMaskContextANGLE
+#define glDepthRangefContextANGLE l_glDepthRangefContextANGLE
+#define glDetachShaderContextANGLE l_glDetachShaderContextANGLE
+#define glDisableContextANGLE l_glDisableContextANGLE
+#define glDisableVertexAttribArrayContextANGLE l_glDisableVertexAttribArrayContextANGLE
+#define glDrawArraysContextANGLE l_glDrawArraysContextANGLE
+#define glDrawElementsContextANGLE l_glDrawElementsContextANGLE
+#define glEnableContextANGLE l_glEnableContextANGLE
+#define glEnableVertexAttribArrayContextANGLE l_glEnableVertexAttribArrayContextANGLE
+#define glFinishContextANGLE l_glFinishContextANGLE
+#define glFlushContextANGLE l_glFlushContextANGLE
+#define glFramebufferRenderbufferContextANGLE l_glFramebufferRenderbufferContextANGLE
+#define glFramebufferTexture2DContextANGLE l_glFramebufferTexture2DContextANGLE
+#define glFrontFaceContextANGLE l_glFrontFaceContextANGLE
+#define glGenBuffersContextANGLE l_glGenBuffersContextANGLE
+#define glGenerateMipmapContextANGLE l_glGenerateMipmapContextANGLE
+#define glGenFramebuffersContextANGLE l_glGenFramebuffersContextANGLE
+#define glGenRenderbuffersContextANGLE l_glGenRenderbuffersContextANGLE
+#define glGenTexturesContextANGLE l_glGenTexturesContextANGLE
+#define glGetActiveAttribContextANGLE l_glGetActiveAttribContextANGLE
+#define glGetActiveUniformContextANGLE l_glGetActiveUniformContextANGLE
+#define glGetAttachedShadersContextANGLE l_glGetAttachedShadersContextANGLE
+#define glGetAttribLocationContextANGLE l_glGetAttribLocationContextANGLE
+#define glGetBooleanvContextANGLE l_glGetBooleanvContextANGLE
+#define glGetBufferParameterivContextANGLE l_glGetBufferParameterivContextANGLE
+#define glGetErrorContextANGLE l_glGetErrorContextANGLE
+#define glGetFloatvContextANGLE l_glGetFloatvContextANGLE
 #define glGetFramebufferAttachmentParameterivContextANGLE \
-    ANGLE_glGetFramebufferAttachmentParameterivContextANGLE
-#define glGetIntegervContextANGLE ANGLE_glGetIntegervContextANGLE
-#define glGetProgramivContextANGLE ANGLE_glGetProgramivContextANGLE
-#define glGetProgramInfoLogContextANGLE ANGLE_glGetProgramInfoLogContextANGLE
-#define glGetRenderbufferParameterivContextANGLE ANGLE_glGetRenderbufferParameterivContextANGLE
-#define glGetShaderivContextANGLE ANGLE_glGetShaderivContextANGLE
-#define glGetShaderInfoLogContextANGLE ANGLE_glGetShaderInfoLogContextANGLE
-#define glGetShaderPrecisionFormatContextANGLE ANGLE_glGetShaderPrecisionFormatContextANGLE
-#define glGetShaderSourceContextANGLE ANGLE_glGetShaderSourceContextANGLE
-#define glGetStringContextANGLE ANGLE_glGetStringContextANGLE
-#define glGetTexParameterfvContextANGLE ANGLE_glGetTexParameterfvContextANGLE
-#define glGetTexParameterivContextANGLE ANGLE_glGetTexParameterivContextANGLE
-#define glGetUniformfvContextANGLE ANGLE_glGetUniformfvContextANGLE
-#define glGetUniformivContextANGLE ANGLE_glGetUniformivContextANGLE
-#define glGetUniformLocationContextANGLE ANGLE_glGetUniformLocationContextANGLE
-#define glGetVertexAttribfvContextANGLE ANGLE_glGetVertexAttribfvContextANGLE
-#define glGetVertexAttribivContextANGLE ANGLE_glGetVertexAttribivContextANGLE
-#define glGetVertexAttribPointervContextANGLE ANGLE_glGetVertexAttribPointervContextANGLE
-#define glHintContextANGLE ANGLE_glHintContextANGLE
-#define glIsBufferContextANGLE ANGLE_glIsBufferContextANGLE
-#define glIsEnabledContextANGLE ANGLE_glIsEnabledContextANGLE
-#define glIsFramebufferContextANGLE ANGLE_glIsFramebufferContextANGLE
-#define glIsProgramContextANGLE ANGLE_glIsProgramContextANGLE
-#define glIsRenderbufferContextANGLE ANGLE_glIsRenderbufferContextANGLE
-#define glIsShaderContextANGLE ANGLE_glIsShaderContextANGLE
-#define glIsTextureContextANGLE ANGLE_glIsTextureContextANGLE
-#define glLineWidthContextANGLE ANGLE_glLineWidthContextANGLE
-#define glLinkProgramContextANGLE ANGLE_glLinkProgramContextANGLE
-#define glPixelStoreiContextANGLE ANGLE_glPixelStoreiContextANGLE
-#define glPolygonOffsetContextANGLE ANGLE_glPolygonOffsetContextANGLE
-#define glReadPixelsContextANGLE ANGLE_glReadPixelsContextANGLE
-#define glReleaseShaderCompilerContextANGLE ANGLE_glReleaseShaderCompilerContextANGLE
-#define glRenderbufferStorageContextANGLE ANGLE_glRenderbufferStorageContextANGLE
-#define glSampleCoverageContextANGLE ANGLE_glSampleCoverageContextANGLE
-#define glScissorContextANGLE ANGLE_glScissorContextANGLE
-#define glShaderBinaryContextANGLE ANGLE_glShaderBinaryContextANGLE
-#define glShaderSourceContextANGLE ANGLE_glShaderSourceContextANGLE
-#define glStencilFuncContextANGLE ANGLE_glStencilFuncContextANGLE
-#define glStencilFuncSeparateContextANGLE ANGLE_glStencilFuncSeparateContextANGLE
-#define glStencilMaskContextANGLE ANGLE_glStencilMaskContextANGLE
-#define glStencilMaskSeparateContextANGLE ANGLE_glStencilMaskSeparateContextANGLE
-#define glStencilOpContextANGLE ANGLE_glStencilOpContextANGLE
-#define glStencilOpSeparateContextANGLE ANGLE_glStencilOpSeparateContextANGLE
-#define glTexImage2DContextANGLE ANGLE_glTexImage2DContextANGLE
-#define glTexParameterfContextANGLE ANGLE_glTexParameterfContextANGLE
-#define glTexParameterfvContextANGLE ANGLE_glTexParameterfvContextANGLE
-#define glTexParameteriContextANGLE ANGLE_glTexParameteriContextANGLE
-#define glTexParameterivContextANGLE ANGLE_glTexParameterivContextANGLE
-#define glTexSubImage2DContextANGLE ANGLE_glTexSubImage2DContextANGLE
-#define glUniform1fContextANGLE ANGLE_glUniform1fContextANGLE
-#define glUniform1fvContextANGLE ANGLE_glUniform1fvContextANGLE
-#define glUniform1iContextANGLE ANGLE_glUniform1iContextANGLE
-#define glUniform1ivContextANGLE ANGLE_glUniform1ivContextANGLE
-#define glUniform2fContextANGLE ANGLE_glUniform2fContextANGLE
-#define glUniform2fvContextANGLE ANGLE_glUniform2fvContextANGLE
-#define glUniform2iContextANGLE ANGLE_glUniform2iContextANGLE
-#define glUniform2ivContextANGLE ANGLE_glUniform2ivContextANGLE
-#define glUniform3fContextANGLE ANGLE_glUniform3fContextANGLE
-#define glUniform3fvContextANGLE ANGLE_glUniform3fvContextANGLE
-#define glUniform3iContextANGLE ANGLE_glUniform3iContextANGLE
-#define glUniform3ivContextANGLE ANGLE_glUniform3ivContextANGLE
-#define glUniform4fContextANGLE ANGLE_glUniform4fContextANGLE
-#define glUniform4fvContextANGLE ANGLE_glUniform4fvContextANGLE
-#define glUniform4iContextANGLE ANGLE_glUniform4iContextANGLE
-#define glUniform4ivContextANGLE ANGLE_glUniform4ivContextANGLE
-#define glUniformMatrix2fvContextANGLE ANGLE_glUniformMatrix2fvContextANGLE
-#define glUniformMatrix3fvContextANGLE ANGLE_glUniformMatrix3fvContextANGLE
-#define glUniformMatrix4fvContextANGLE ANGLE_glUniformMatrix4fvContextANGLE
-#define glUseProgramContextANGLE ANGLE_glUseProgramContextANGLE
-#define glValidateProgramContextANGLE ANGLE_glValidateProgramContextANGLE
-#define glVertexAttrib1fContextANGLE ANGLE_glVertexAttrib1fContextANGLE
-#define glVertexAttrib1fvContextANGLE ANGLE_glVertexAttrib1fvContextANGLE
-#define glVertexAttrib2fContextANGLE ANGLE_glVertexAttrib2fContextANGLE
-#define glVertexAttrib2fvContextANGLE ANGLE_glVertexAttrib2fvContextANGLE
-#define glVertexAttrib3fContextANGLE ANGLE_glVertexAttrib3fContextANGLE
-#define glVertexAttrib3fvContextANGLE ANGLE_glVertexAttrib3fvContextANGLE
-#define glVertexAttrib4fContextANGLE ANGLE_glVertexAttrib4fContextANGLE
-#define glVertexAttrib4fvContextANGLE ANGLE_glVertexAttrib4fvContextANGLE
-#define glVertexAttribPointerContextANGLE ANGLE_glVertexAttribPointerContextANGLE
-#define glViewportContextANGLE ANGLE_glViewportContextANGLE
-#define glReadBufferContextANGLE ANGLE_glReadBufferContextANGLE
-#define glDrawRangeElementsContextANGLE ANGLE_glDrawRangeElementsContextANGLE
-#define glTexImage3DContextANGLE ANGLE_glTexImage3DContextANGLE
-#define glTexSubImage3DContextANGLE ANGLE_glTexSubImage3DContextANGLE
-#define glCopyTexSubImage3DContextANGLE ANGLE_glCopyTexSubImage3DContextANGLE
-#define glCompressedTexImage3DContextANGLE ANGLE_glCompressedTexImage3DContextANGLE
-#define glCompressedTexSubImage3DContextANGLE ANGLE_glCompressedTexSubImage3DContextANGLE
-#define glGenQueriesContextANGLE ANGLE_glGenQueriesContextANGLE
-#define glDeleteQueriesContextANGLE ANGLE_glDeleteQueriesContextANGLE
-#define glIsQueryContextANGLE ANGLE_glIsQueryContextANGLE
-#define glBeginQueryContextANGLE ANGLE_glBeginQueryContextANGLE
-#define glEndQueryContextANGLE ANGLE_glEndQueryContextANGLE
-#define glGetQueryivContextANGLE ANGLE_glGetQueryivContextANGLE
-#define glGetQueryObjectuivContextANGLE ANGLE_glGetQueryObjectuivContextANGLE
-#define glUnmapBufferContextANGLE ANGLE_glUnmapBufferContextANGLE
-#define glGetBufferPointervContextANGLE ANGLE_glGetBufferPointervContextANGLE
-#define glDrawBuffersContextANGLE ANGLE_glDrawBuffersContextANGLE
-#define glUniformMatrix2x3fvContextANGLE ANGLE_glUniformMatrix2x3fvContextANGLE
-#define glUniformMatrix3x2fvContextANGLE ANGLE_glUniformMatrix3x2fvContextANGLE
-#define glUniformMatrix2x4fvContextANGLE ANGLE_glUniformMatrix2x4fvContextANGLE
-#define glUniformMatrix4x2fvContextANGLE ANGLE_glUniformMatrix4x2fvContextANGLE
-#define glUniformMatrix3x4fvContextANGLE ANGLE_glUniformMatrix3x4fvContextANGLE
-#define glUniformMatrix4x3fvContextANGLE ANGLE_glUniformMatrix4x3fvContextANGLE
-#define glBlitFramebufferContextANGLE ANGLE_glBlitFramebufferContextANGLE
-#define glRenderbufferStorageMultisampleContextANGLE \
-    ANGLE_glRenderbufferStorageMultisampleContextANGLE
-#define glFramebufferTextureLayerContextANGLE ANGLE_glFramebufferTextureLayerContextANGLE
-#define glMapBufferRangeContextANGLE ANGLE_glMapBufferRangeContextANGLE
-#define glFlushMappedBufferRangeContextANGLE ANGLE_glFlushMappedBufferRangeContextANGLE
-#define glBindVertexArrayContextANGLE ANGLE_glBindVertexArrayContextANGLE
-#define glDeleteVertexArraysContextANGLE ANGLE_glDeleteVertexArraysContextANGLE
-#define glGenVertexArraysContextANGLE ANGLE_glGenVertexArraysContextANGLE
-#define glIsVertexArrayContextANGLE ANGLE_glIsVertexArrayContextANGLE
-#define glGetIntegeri_vContextANGLE ANGLE_glGetIntegeri_vContextANGLE
-#define glBeginTransformFeedbackContextANGLE ANGLE_glBeginTransformFeedbackContextANGLE
-#define glEndTransformFeedbackContextANGLE ANGLE_glEndTransformFeedbackContextANGLE
-#define glBindBufferRangeContextANGLE ANGLE_glBindBufferRangeContextANGLE
-#define glBindBufferBaseContextANGLE ANGLE_glBindBufferBaseContextANGLE
-#define glTransformFeedbackVaryingsContextANGLE ANGLE_glTransformFeedbackVaryingsContextANGLE
-#define glGetTransformFeedbackVaryingContextANGLE ANGLE_glGetTransformFeedbackVaryingContextANGLE
-#define glVertexAttribIPointerContextANGLE ANGLE_glVertexAttribIPointerContextANGLE
-#define glGetVertexAttribIivContextANGLE ANGLE_glGetVertexAttribIivContextANGLE
-#define glGetVertexAttribIuivContextANGLE ANGLE_glGetVertexAttribIuivContextANGLE
-#define glVertexAttribI4iContextANGLE ANGLE_glVertexAttribI4iContextANGLE
-#define glVertexAttribI4uiContextANGLE ANGLE_glVertexAttribI4uiContextANGLE
-#define glVertexAttribI4ivContextANGLE ANGLE_glVertexAttribI4ivContextANGLE
-#define glVertexAttribI4uivContextANGLE ANGLE_glVertexAttribI4uivContextANGLE
-#define glGetUniformuivContextANGLE ANGLE_glGetUniformuivContextANGLE
-#define glGetFragDataLocationContextANGLE ANGLE_glGetFragDataLocationContextANGLE
-#define glUniform1uiContextANGLE ANGLE_glUniform1uiContextANGLE
-#define glUniform2uiContextANGLE ANGLE_glUniform2uiContextANGLE
-#define glUniform3uiContextANGLE ANGLE_glUniform3uiContextANGLE
-#define glUniform4uiContextANGLE ANGLE_glUniform4uiContextANGLE
-#define glUniform1uivContextANGLE ANGLE_glUniform1uivContextANGLE
-#define glUniform2uivContextANGLE ANGLE_glUniform2uivContextANGLE
-#define glUniform3uivContextANGLE ANGLE_glUniform3uivContextANGLE
-#define glUniform4uivContextANGLE ANGLE_glUniform4uivContextANGLE
-#define glClearBufferivContextANGLE ANGLE_glClearBufferivContextANGLE
-#define glClearBufferuivContextANGLE ANGLE_glClearBufferuivContextANGLE
-#define glClearBufferfvContextANGLE ANGLE_glClearBufferfvContextANGLE
-#define glClearBufferfiContextANGLE ANGLE_glClearBufferfiContextANGLE
-#define glGetStringiContextANGLE ANGLE_glGetStringiContextANGLE
-#define glCopyBufferSubDataContextANGLE ANGLE_glCopyBufferSubDataContextANGLE
-#define glGetUniformIndicesContextANGLE ANGLE_glGetUniformIndicesContextANGLE
-#define glGetActiveUniformsivContextANGLE ANGLE_glGetActiveUniformsivContextANGLE
-#define glGetUniformBlockIndexContextANGLE ANGLE_glGetUniformBlockIndexContextANGLE
-#define glGetActiveUniformBlockivContextANGLE ANGLE_glGetActiveUniformBlockivContextANGLE
-#define glGetActiveUniformBlockNameContextANGLE ANGLE_glGetActiveUniformBlockNameContextANGLE
-#define glUniformBlockBindingContextANGLE ANGLE_glUniformBlockBindingContextANGLE
-#define glDrawArraysInstancedContextANGLE ANGLE_glDrawArraysInstancedContextANGLE
-#define glDrawElementsInstancedContextANGLE ANGLE_glDrawElementsInstancedContextANGLE
-#define glFenceSyncContextANGLE ANGLE_glFenceSyncContextANGLE
-#define glIsSyncContextANGLE ANGLE_glIsSyncContextANGLE
-#define glDeleteSyncContextANGLE ANGLE_glDeleteSyncContextANGLE
-#define glClientWaitSyncContextANGLE ANGLE_glClientWaitSyncContextANGLE
-#define glWaitSyncContextANGLE ANGLE_glWaitSyncContextANGLE
-#define glGetInteger64vContextANGLE ANGLE_glGetInteger64vContextANGLE
-#define glGetSyncivContextANGLE ANGLE_glGetSyncivContextANGLE
-#define glGetInteger64i_vContextANGLE ANGLE_glGetInteger64i_vContextANGLE
-#define glGetBufferParameteri64vContextANGLE ANGLE_glGetBufferParameteri64vContextANGLE
-#define glGenSamplersContextANGLE ANGLE_glGenSamplersContextANGLE
-#define glDeleteSamplersContextANGLE ANGLE_glDeleteSamplersContextANGLE
-#define glIsSamplerContextANGLE ANGLE_glIsSamplerContextANGLE
-#define glBindSamplerContextANGLE ANGLE_glBindSamplerContextANGLE
-#define glSamplerParameteriContextANGLE ANGLE_glSamplerParameteriContextANGLE
-#define glSamplerParameterivContextANGLE ANGLE_glSamplerParameterivContextANGLE
-#define glSamplerParameterfContextANGLE ANGLE_glSamplerParameterfContextANGLE
-#define glSamplerParameterfvContextANGLE ANGLE_glSamplerParameterfvContextANGLE
-#define glGetSamplerParameterivContextANGLE ANGLE_glGetSamplerParameterivContextANGLE
-#define glGetSamplerParameterfvContextANGLE ANGLE_glGetSamplerParameterfvContextANGLE
-#define glVertexAttribDivisorContextANGLE ANGLE_glVertexAttribDivisorContextANGLE
-#define glBindTransformFeedbackContextANGLE ANGLE_glBindTransformFeedbackContextANGLE
-#define glDeleteTransformFeedbacksContextANGLE ANGLE_glDeleteTransformFeedbacksContextANGLE
-#define glGenTransformFeedbacksContextANGLE ANGLE_glGenTransformFeedbacksContextANGLE
-#define glIsTransformFeedbackContextANGLE ANGLE_glIsTransformFeedbackContextANGLE
-#define glPauseTransformFeedbackContextANGLE ANGLE_glPauseTransformFeedbackContextANGLE
-#define glResumeTransformFeedbackContextANGLE ANGLE_glResumeTransformFeedbackContextANGLE
-#define glGetProgramBinaryContextANGLE ANGLE_glGetProgramBinaryContextANGLE
-#define glProgramBinaryContextANGLE ANGLE_glProgramBinaryContextANGLE
-#define glProgramParameteriContextANGLE ANGLE_glProgramParameteriContextANGLE
-#define glInvalidateFramebufferContextANGLE ANGLE_glInvalidateFramebufferContextANGLE
-#define glInvalidateSubFramebufferContextANGLE ANGLE_glInvalidateSubFramebufferContextANGLE
-#define glTexStorage2DContextANGLE ANGLE_glTexStorage2DContextANGLE
-#define glTexStorage3DContextANGLE ANGLE_glTexStorage3DContextANGLE
-#define glGetInternalformativContextANGLE ANGLE_glGetInternalformativContextANGLE
-#define glDispatchComputeContextANGLE ANGLE_glDispatchComputeContextANGLE
-#define glDispatchComputeIndirectContextANGLE ANGLE_glDispatchComputeIndirectContextANGLE
-#define glDrawArraysIndirectContextANGLE ANGLE_glDrawArraysIndirectContextANGLE
-#define glDrawElementsIndirectContextANGLE ANGLE_glDrawElementsIndirectContextANGLE
-#define glFramebufferParameteriContextANGLE ANGLE_glFramebufferParameteriContextANGLE
-#define glGetFramebufferParameterivContextANGLE ANGLE_glGetFramebufferParameterivContextANGLE
-#define glGetProgramInterfaceivContextANGLE ANGLE_glGetProgramInterfaceivContextANGLE
-#define glGetProgramResourceIndexContextANGLE ANGLE_glGetProgramResourceIndexContextANGLE
-#define glGetProgramResourceNameContextANGLE ANGLE_glGetProgramResourceNameContextANGLE
-#define glGetProgramResourceivContextANGLE ANGLE_glGetProgramResourceivContextANGLE
-#define glGetProgramResourceLocationContextANGLE ANGLE_glGetProgramResourceLocationContextANGLE
-#define glUseProgramStagesContextANGLE ANGLE_glUseProgramStagesContextANGLE
-#define glActiveShaderProgramContextANGLE ANGLE_glActiveShaderProgramContextANGLE
-#define glCreateShaderProgramvContextANGLE ANGLE_glCreateShaderProgramvContextANGLE
-#define glBindProgramPipelineContextANGLE ANGLE_glBindProgramPipelineContextANGLE
-#define glDeleteProgramPipelinesContextANGLE ANGLE_glDeleteProgramPipelinesContextANGLE
-#define glGenProgramPipelinesContextANGLE ANGLE_glGenProgramPipelinesContextANGLE
-#define glIsProgramPipelineContextANGLE ANGLE_glIsProgramPipelineContextANGLE
-#define glGetProgramPipelineivContextANGLE ANGLE_glGetProgramPipelineivContextANGLE
-#define glProgramUniform1iContextANGLE ANGLE_glProgramUniform1iContextANGLE
-#define glProgramUniform2iContextANGLE ANGLE_glProgramUniform2iContextANGLE
-#define glProgramUniform3iContextANGLE ANGLE_glProgramUniform3iContextANGLE
-#define glProgramUniform4iContextANGLE ANGLE_glProgramUniform4iContextANGLE
-#define glProgramUniform1uiContextANGLE ANGLE_glProgramUniform1uiContextANGLE
-#define glProgramUniform2uiContextANGLE ANGLE_glProgramUniform2uiContextANGLE
-#define glProgramUniform3uiContextANGLE ANGLE_glProgramUniform3uiContextANGLE
-#define glProgramUniform4uiContextANGLE ANGLE_glProgramUniform4uiContextANGLE
-#define glProgramUniform1fContextANGLE ANGLE_glProgramUniform1fContextANGLE
-#define glProgramUniform2fContextANGLE ANGLE_glProgramUniform2fContextANGLE
-#define glProgramUniform3fContextANGLE ANGLE_glProgramUniform3fContextANGLE
-#define glProgramUniform4fContextANGLE ANGLE_glProgramUniform4fContextANGLE
-#define glProgramUniform1ivContextANGLE ANGLE_glProgramUniform1ivContextANGLE
-#define glProgramUniform2ivContextANGLE ANGLE_glProgramUniform2ivContextANGLE
-#define glProgramUniform3ivContextANGLE ANGLE_glProgramUniform3ivContextANGLE
-#define glProgramUniform4ivContextANGLE ANGLE_glProgramUniform4ivContextANGLE
-#define glProgramUniform1uivContextANGLE ANGLE_glProgramUniform1uivContextANGLE
-#define glProgramUniform2uivContextANGLE ANGLE_glProgramUniform2uivContextANGLE
-#define glProgramUniform3uivContextANGLE ANGLE_glProgramUniform3uivContextANGLE
-#define glProgramUniform4uivContextANGLE ANGLE_glProgramUniform4uivContextANGLE
-#define glProgramUniform1fvContextANGLE ANGLE_glProgramUniform1fvContextANGLE
-#define glProgramUniform2fvContextANGLE ANGLE_glProgramUniform2fvContextANGLE
-#define glProgramUniform3fvContextANGLE ANGLE_glProgramUniform3fvContextANGLE
-#define glProgramUniform4fvContextANGLE ANGLE_glProgramUniform4fvContextANGLE
-#define glProgramUniformMatrix2fvContextANGLE ANGLE_glProgramUniformMatrix2fvContextANGLE
-#define glProgramUniformMatrix3fvContextANGLE ANGLE_glProgramUniformMatrix3fvContextANGLE
-#define glProgramUniformMatrix4fvContextANGLE ANGLE_glProgramUniformMatrix4fvContextANGLE
-#define glProgramUniformMatrix2x3fvContextANGLE ANGLE_glProgramUniformMatrix2x3fvContextANGLE
-#define glProgramUniformMatrix3x2fvContextANGLE ANGLE_glProgramUniformMatrix3x2fvContextANGLE
-#define glProgramUniformMatrix2x4fvContextANGLE ANGLE_glProgramUniformMatrix2x4fvContextANGLE
-#define glProgramUniformMatrix4x2fvContextANGLE ANGLE_glProgramUniformMatrix4x2fvContextANGLE
-#define glProgramUniformMatrix3x4fvContextANGLE ANGLE_glProgramUniformMatrix3x4fvContextANGLE
-#define glProgramUniformMatrix4x3fvContextANGLE ANGLE_glProgramUniformMatrix4x3fvContextANGLE
-#define glValidateProgramPipelineContextANGLE ANGLE_glValidateProgramPipelineContextANGLE
-#define glGetProgramPipelineInfoLogContextANGLE ANGLE_glGetProgramPipelineInfoLogContextANGLE
-#define glBindImageTextureContextANGLE ANGLE_glBindImageTextureContextANGLE
-#define glGetBooleani_vContextANGLE ANGLE_glGetBooleani_vContextANGLE
-#define glMemoryBarrierContextANGLE ANGLE_glMemoryBarrierContextANGLE
-#define glMemoryBarrierByRegionContextANGLE ANGLE_glMemoryBarrierByRegionContextANGLE
-#define glTexStorage2DMultisampleContextANGLE ANGLE_glTexStorage2DMultisampleContextANGLE
-#define glGetMultisamplefvContextANGLE ANGLE_glGetMultisamplefvContextANGLE
-#define glSampleMaskiContextANGLE ANGLE_glSampleMaskiContextANGLE
-#define glGetTexLevelParameterivContextANGLE ANGLE_glGetTexLevelParameterivContextANGLE
-#define glGetTexLevelParameterfvContextANGLE ANGLE_glGetTexLevelParameterfvContextANGLE
-#define glBindVertexBufferContextANGLE ANGLE_glBindVertexBufferContextANGLE
-#define glVertexAttribFormatContextANGLE ANGLE_glVertexAttribFormatContextANGLE
-#define glVertexAttribIFormatContextANGLE ANGLE_glVertexAttribIFormatContextANGLE
-#define glVertexAttribBindingContextANGLE ANGLE_glVertexAttribBindingContextANGLE
-#define glVertexBindingDivisorContextANGLE ANGLE_glVertexBindingDivisorContextANGLE
+    l_glGetFramebufferAttachmentParameterivContextANGLE
+#define glGetIntegervContextANGLE l_glGetIntegervContextANGLE
+#define glGetProgramivContextANGLE l_glGetProgramivContextANGLE
+#define glGetProgramInfoLogContextANGLE l_glGetProgramInfoLogContextANGLE
+#define glGetRenderbufferParameterivContextANGLE l_glGetRenderbufferParameterivContextANGLE
+#define glGetShaderivContextANGLE l_glGetShaderivContextANGLE
+#define glGetShaderInfoLogContextANGLE l_glGetShaderInfoLogContextANGLE
+#define glGetShaderPrecisionFormatContextANGLE l_glGetShaderPrecisionFormatContextANGLE
+#define glGetShaderSourceContextANGLE l_glGetShaderSourceContextANGLE
+#define glGetStringContextANGLE l_glGetStringContextANGLE
+#define glGetTexParameterfvContextANGLE l_glGetTexParameterfvContextANGLE
+#define glGetTexParameterivContextANGLE l_glGetTexParameterivContextANGLE
+#define glGetUniformfvContextANGLE l_glGetUniformfvContextANGLE
+#define glGetUniformivContextANGLE l_glGetUniformivContextANGLE
+#define glGetUniformLocationContextANGLE l_glGetUniformLocationContextANGLE
+#define glGetVertexAttribfvContextANGLE l_glGetVertexAttribfvContextANGLE
+#define glGetVertexAttribivContextANGLE l_glGetVertexAttribivContextANGLE
+#define glGetVertexAttribPointervContextANGLE l_glGetVertexAttribPointervContextANGLE
+#define glHintContextANGLE l_glHintContextANGLE
+#define glIsBufferContextANGLE l_glIsBufferContextANGLE
+#define glIsEnabledContextANGLE l_glIsEnabledContextANGLE
+#define glIsFramebufferContextANGLE l_glIsFramebufferContextANGLE
+#define glIsProgramContextANGLE l_glIsProgramContextANGLE
+#define glIsRenderbufferContextANGLE l_glIsRenderbufferContextANGLE
+#define glIsShaderContextANGLE l_glIsShaderContextANGLE
+#define glIsTextureContextANGLE l_glIsTextureContextANGLE
+#define glLineWidthContextANGLE l_glLineWidthContextANGLE
+#define glLinkProgramContextANGLE l_glLinkProgramContextANGLE
+#define glPixelStoreiContextANGLE l_glPixelStoreiContextANGLE
+#define glPolygonOffsetContextANGLE l_glPolygonOffsetContextANGLE
+#define glReadPixelsContextANGLE l_glReadPixelsContextANGLE
+#define glReleaseShaderCompilerContextANGLE l_glReleaseShaderCompilerContextANGLE
+#define glRenderbufferStorageContextANGLE l_glRenderbufferStorageContextANGLE
+#define glSampleCoverageContextANGLE l_glSampleCoverageContextANGLE
+#define glScissorContextANGLE l_glScissorContextANGLE
+#define glShaderBinaryContextANGLE l_glShaderBinaryContextANGLE
+#define glShaderSourceContextANGLE l_glShaderSourceContextANGLE
+#define glStencilFuncContextANGLE l_glStencilFuncContextANGLE
+#define glStencilFuncSeparateContextANGLE l_glStencilFuncSeparateContextANGLE
+#define glStencilMaskContextANGLE l_glStencilMaskContextANGLE
+#define glStencilMaskSeparateContextANGLE l_glStencilMaskSeparateContextANGLE
+#define glStencilOpContextANGLE l_glStencilOpContextANGLE
+#define glStencilOpSeparateContextANGLE l_glStencilOpSeparateContextANGLE
+#define glTexImage2DContextANGLE l_glTexImage2DContextANGLE
+#define glTexParameterfContextANGLE l_glTexParameterfContextANGLE
+#define glTexParameterfvContextANGLE l_glTexParameterfvContextANGLE
+#define glTexParameteriContextANGLE l_glTexParameteriContextANGLE
+#define glTexParameterivContextANGLE l_glTexParameterivContextANGLE
+#define glTexSubImage2DContextANGLE l_glTexSubImage2DContextANGLE
+#define glUniform1fContextANGLE l_glUniform1fContextANGLE
+#define glUniform1fvContextANGLE l_glUniform1fvContextANGLE
+#define glUniform1iContextANGLE l_glUniform1iContextANGLE
+#define glUniform1ivContextANGLE l_glUniform1ivContextANGLE
+#define glUniform2fContextANGLE l_glUniform2fContextANGLE
+#define glUniform2fvContextANGLE l_glUniform2fvContextANGLE
+#define glUniform2iContextANGLE l_glUniform2iContextANGLE
+#define glUniform2ivContextANGLE l_glUniform2ivContextANGLE
+#define glUniform3fContextANGLE l_glUniform3fContextANGLE
+#define glUniform3fvContextANGLE l_glUniform3fvContextANGLE
+#define glUniform3iContextANGLE l_glUniform3iContextANGLE
+#define glUniform3ivContextANGLE l_glUniform3ivContextANGLE
+#define glUniform4fContextANGLE l_glUniform4fContextANGLE
+#define glUniform4fvContextANGLE l_glUniform4fvContextANGLE
+#define glUniform4iContextANGLE l_glUniform4iContextANGLE
+#define glUniform4ivContextANGLE l_glUniform4ivContextANGLE
+#define glUniformMatrix2fvContextANGLE l_glUniformMatrix2fvContextANGLE
+#define glUniformMatrix3fvContextANGLE l_glUniformMatrix3fvContextANGLE
+#define glUniformMatrix4fvContextANGLE l_glUniformMatrix4fvContextANGLE
+#define glUseProgramContextANGLE l_glUseProgramContextANGLE
+#define glValidateProgramContextANGLE l_glValidateProgramContextANGLE
+#define glVertexAttrib1fContextANGLE l_glVertexAttrib1fContextANGLE
+#define glVertexAttrib1fvContextANGLE l_glVertexAttrib1fvContextANGLE
+#define glVertexAttrib2fContextANGLE l_glVertexAttrib2fContextANGLE
+#define glVertexAttrib2fvContextANGLE l_glVertexAttrib2fvContextANGLE
+#define glVertexAttrib3fContextANGLE l_glVertexAttrib3fContextANGLE
+#define glVertexAttrib3fvContextANGLE l_glVertexAttrib3fvContextANGLE
+#define glVertexAttrib4fContextANGLE l_glVertexAttrib4fContextANGLE
+#define glVertexAttrib4fvContextANGLE l_glVertexAttrib4fvContextANGLE
+#define glVertexAttribPointerContextANGLE l_glVertexAttribPointerContextANGLE
+#define glViewportContextANGLE l_glViewportContextANGLE
+#define glReadBufferContextANGLE l_glReadBufferContextANGLE
+#define glDrawRangeElementsContextANGLE l_glDrawRangeElementsContextANGLE
+#define glTexImage3DContextANGLE l_glTexImage3DContextANGLE
+#define glTexSubImage3DContextANGLE l_glTexSubImage3DContextANGLE
+#define glCopyTexSubImage3DContextANGLE l_glCopyTexSubImage3DContextANGLE
+#define glCompressedTexImage3DContextANGLE l_glCompressedTexImage3DContextANGLE
+#define glCompressedTexSubImage3DContextANGLE l_glCompressedTexSubImage3DContextANGLE
+#define glGenQueriesContextANGLE l_glGenQueriesContextANGLE
+#define glDeleteQueriesContextANGLE l_glDeleteQueriesContextANGLE
+#define glIsQueryContextANGLE l_glIsQueryContextANGLE
+#define glBeginQueryContextANGLE l_glBeginQueryContextANGLE
+#define glEndQueryContextANGLE l_glEndQueryContextANGLE
+#define glGetQueryivContextANGLE l_glGetQueryivContextANGLE
+#define glGetQueryObjectuivContextANGLE l_glGetQueryObjectuivContextANGLE
+#define glUnmapBufferContextANGLE l_glUnmapBufferContextANGLE
+#define glGetBufferPointervContextANGLE l_glGetBufferPointervContextANGLE
+#define glDrawBuffersContextANGLE l_glDrawBuffersContextANGLE
+#define glUniformMatrix2x3fvContextANGLE l_glUniformMatrix2x3fvContextANGLE
+#define glUniformMatrix3x2fvContextANGLE l_glUniformMatrix3x2fvContextANGLE
+#define glUniformMatrix2x4fvContextANGLE l_glUniformMatrix2x4fvContextANGLE
+#define glUniformMatrix4x2fvContextANGLE l_glUniformMatrix4x2fvContextANGLE
+#define glUniformMatrix3x4fvContextANGLE l_glUniformMatrix3x4fvContextANGLE
+#define glUniformMatrix4x3fvContextANGLE l_glUniformMatrix4x3fvContextANGLE
+#define glBlitFramebufferContextANGLE l_glBlitFramebufferContextANGLE
+#define glRenderbufferStorageMultisampleContextANGLE l_glRenderbufferStorageMultisampleContextANGLE
+#define glFramebufferTextureLayerContextANGLE l_glFramebufferTextureLayerContextANGLE
+#define glMapBufferRangeContextANGLE l_glMapBufferRangeContextANGLE
+#define glFlushMappedBufferRangeContextANGLE l_glFlushMappedBufferRangeContextANGLE
+#define glBindVertexArrayContextANGLE l_glBindVertexArrayContextANGLE
+#define glDeleteVertexArraysContextANGLE l_glDeleteVertexArraysContextANGLE
+#define glGenVertexArraysContextANGLE l_glGenVertexArraysContextANGLE
+#define glIsVertexArrayContextANGLE l_glIsVertexArrayContextANGLE
+#define glGetIntegeri_vContextANGLE l_glGetIntegeri_vContextANGLE
+#define glBeginTransformFeedbackContextANGLE l_glBeginTransformFeedbackContextANGLE
+#define glEndTransformFeedbackContextANGLE l_glEndTransformFeedbackContextANGLE
+#define glBindBufferRangeContextANGLE l_glBindBufferRangeContextANGLE
+#define glBindBufferBaseContextANGLE l_glBindBufferBaseContextANGLE
+#define glTransformFeedbackVaryingsContextANGLE l_glTransformFeedbackVaryingsContextANGLE
+#define glGetTransformFeedbackVaryingContextANGLE l_glGetTransformFeedbackVaryingContextANGLE
+#define glVertexAttribIPointerContextANGLE l_glVertexAttribIPointerContextANGLE
+#define glGetVertexAttribIivContextANGLE l_glGetVertexAttribIivContextANGLE
+#define glGetVertexAttribIuivContextANGLE l_glGetVertexAttribIuivContextANGLE
+#define glVertexAttribI4iContextANGLE l_glVertexAttribI4iContextANGLE
+#define glVertexAttribI4uiContextANGLE l_glVertexAttribI4uiContextANGLE
+#define glVertexAttribI4ivContextANGLE l_glVertexAttribI4ivContextANGLE
+#define glVertexAttribI4uivContextANGLE l_glVertexAttribI4uivContextANGLE
+#define glGetUniformuivContextANGLE l_glGetUniformuivContextANGLE
+#define glGetFragDataLocationContextANGLE l_glGetFragDataLocationContextANGLE
+#define glUniform1uiContextANGLE l_glUniform1uiContextANGLE
+#define glUniform2uiContextANGLE l_glUniform2uiContextANGLE
+#define glUniform3uiContextANGLE l_glUniform3uiContextANGLE
+#define glUniform4uiContextANGLE l_glUniform4uiContextANGLE
+#define glUniform1uivContextANGLE l_glUniform1uivContextANGLE
+#define glUniform2uivContextANGLE l_glUniform2uivContextANGLE
+#define glUniform3uivContextANGLE l_glUniform3uivContextANGLE
+#define glUniform4uivContextANGLE l_glUniform4uivContextANGLE
+#define glClearBufferivContextANGLE l_glClearBufferivContextANGLE
+#define glClearBufferuivContextANGLE l_glClearBufferuivContextANGLE
+#define glClearBufferfvContextANGLE l_glClearBufferfvContextANGLE
+#define glClearBufferfiContextANGLE l_glClearBufferfiContextANGLE
+#define glGetStringiContextANGLE l_glGetStringiContextANGLE
+#define glCopyBufferSubDataContextANGLE l_glCopyBufferSubDataContextANGLE
+#define glGetUniformIndicesContextANGLE l_glGetUniformIndicesContextANGLE
+#define glGetActiveUniformsivContextANGLE l_glGetActiveUniformsivContextANGLE
+#define glGetUniformBlockIndexContextANGLE l_glGetUniformBlockIndexContextANGLE
+#define glGetActiveUniformBlockivContextANGLE l_glGetActiveUniformBlockivContextANGLE
+#define glGetActiveUniformBlockNameContextANGLE l_glGetActiveUniformBlockNameContextANGLE
+#define glUniformBlockBindingContextANGLE l_glUniformBlockBindingContextANGLE
+#define glDrawArraysInstancedContextANGLE l_glDrawArraysInstancedContextANGLE
+#define glDrawElementsInstancedContextANGLE l_glDrawElementsInstancedContextANGLE
+#define glFenceSyncContextANGLE l_glFenceSyncContextANGLE
+#define glIsSyncContextANGLE l_glIsSyncContextANGLE
+#define glDeleteSyncContextANGLE l_glDeleteSyncContextANGLE
+#define glClientWaitSyncContextANGLE l_glClientWaitSyncContextANGLE
+#define glWaitSyncContextANGLE l_glWaitSyncContextANGLE
+#define glGetInteger64vContextANGLE l_glGetInteger64vContextANGLE
+#define glGetSyncivContextANGLE l_glGetSyncivContextANGLE
+#define glGetInteger64i_vContextANGLE l_glGetInteger64i_vContextANGLE
+#define glGetBufferParameteri64vContextANGLE l_glGetBufferParameteri64vContextANGLE
+#define glGenSamplersContextANGLE l_glGenSamplersContextANGLE
+#define glDeleteSamplersContextANGLE l_glDeleteSamplersContextANGLE
+#define glIsSamplerContextANGLE l_glIsSamplerContextANGLE
+#define glBindSamplerContextANGLE l_glBindSamplerContextANGLE
+#define glSamplerParameteriContextANGLE l_glSamplerParameteriContextANGLE
+#define glSamplerParameterivContextANGLE l_glSamplerParameterivContextANGLE
+#define glSamplerParameterfContextANGLE l_glSamplerParameterfContextANGLE
+#define glSamplerParameterfvContextANGLE l_glSamplerParameterfvContextANGLE
+#define glGetSamplerParameterivContextANGLE l_glGetSamplerParameterivContextANGLE
+#define glGetSamplerParameterfvContextANGLE l_glGetSamplerParameterfvContextANGLE
+#define glVertexAttribDivisorContextANGLE l_glVertexAttribDivisorContextANGLE
+#define glBindTransformFeedbackContextANGLE l_glBindTransformFeedbackContextANGLE
+#define glDeleteTransformFeedbacksContextANGLE l_glDeleteTransformFeedbacksContextANGLE
+#define glGenTransformFeedbacksContextANGLE l_glGenTransformFeedbacksContextANGLE
+#define glIsTransformFeedbackContextANGLE l_glIsTransformFeedbackContextANGLE
+#define glPauseTransformFeedbackContextANGLE l_glPauseTransformFeedbackContextANGLE
+#define glResumeTransformFeedbackContextANGLE l_glResumeTransformFeedbackContextANGLE
+#define glGetProgramBinaryContextANGLE l_glGetProgramBinaryContextANGLE
+#define glProgramBinaryContextANGLE l_glProgramBinaryContextANGLE
+#define glProgramParameteriContextANGLE l_glProgramParameteriContextANGLE
+#define glInvalidateFramebufferContextANGLE l_glInvalidateFramebufferContextANGLE
+#define glInvalidateSubFramebufferContextANGLE l_glInvalidateSubFramebufferContextANGLE
+#define glTexStorage2DContextANGLE l_glTexStorage2DContextANGLE
+#define glTexStorage3DContextANGLE l_glTexStorage3DContextANGLE
+#define glGetInternalformativContextANGLE l_glGetInternalformativContextANGLE
+#define glDispatchComputeContextANGLE l_glDispatchComputeContextANGLE
+#define glDispatchComputeIndirectContextANGLE l_glDispatchComputeIndirectContextANGLE
+#define glDrawArraysIndirectContextANGLE l_glDrawArraysIndirectContextANGLE
+#define glDrawElementsIndirectContextANGLE l_glDrawElementsIndirectContextANGLE
+#define glFramebufferParameteriContextANGLE l_glFramebufferParameteriContextANGLE
+#define glGetFramebufferParameterivContextANGLE l_glGetFramebufferParameterivContextANGLE
+#define glGetProgramInterfaceivContextANGLE l_glGetProgramInterfaceivContextANGLE
+#define glGetProgramResourceIndexContextANGLE l_glGetProgramResourceIndexContextANGLE
+#define glGetProgramResourceNameContextANGLE l_glGetProgramResourceNameContextANGLE
+#define glGetProgramResourceivContextANGLE l_glGetProgramResourceivContextANGLE
+#define glGetProgramResourceLocationContextANGLE l_glGetProgramResourceLocationContextANGLE
+#define glUseProgramStagesContextANGLE l_glUseProgramStagesContextANGLE
+#define glActiveShaderProgramContextANGLE l_glActiveShaderProgramContextANGLE
+#define glCreateShaderProgramvContextANGLE l_glCreateShaderProgramvContextANGLE
+#define glBindProgramPipelineContextANGLE l_glBindProgramPipelineContextANGLE
+#define glDeleteProgramPipelinesContextANGLE l_glDeleteProgramPipelinesContextANGLE
+#define glGenProgramPipelinesContextANGLE l_glGenProgramPipelinesContextANGLE
+#define glIsProgramPipelineContextANGLE l_glIsProgramPipelineContextANGLE
+#define glGetProgramPipelineivContextANGLE l_glGetProgramPipelineivContextANGLE
+#define glProgramUniform1iContextANGLE l_glProgramUniform1iContextANGLE
+#define glProgramUniform2iContextANGLE l_glProgramUniform2iContextANGLE
+#define glProgramUniform3iContextANGLE l_glProgramUniform3iContextANGLE
+#define glProgramUniform4iContextANGLE l_glProgramUniform4iContextANGLE
+#define glProgramUniform1uiContextANGLE l_glProgramUniform1uiContextANGLE
+#define glProgramUniform2uiContextANGLE l_glProgramUniform2uiContextANGLE
+#define glProgramUniform3uiContextANGLE l_glProgramUniform3uiContextANGLE
+#define glProgramUniform4uiContextANGLE l_glProgramUniform4uiContextANGLE
+#define glProgramUniform1fContextANGLE l_glProgramUniform1fContextANGLE
+#define glProgramUniform2fContextANGLE l_glProgramUniform2fContextANGLE
+#define glProgramUniform3fContextANGLE l_glProgramUniform3fContextANGLE
+#define glProgramUniform4fContextANGLE l_glProgramUniform4fContextANGLE
+#define glProgramUniform1ivContextANGLE l_glProgramUniform1ivContextANGLE
+#define glProgramUniform2ivContextANGLE l_glProgramUniform2ivContextANGLE
+#define glProgramUniform3ivContextANGLE l_glProgramUniform3ivContextANGLE
+#define glProgramUniform4ivContextANGLE l_glProgramUniform4ivContextANGLE
+#define glProgramUniform1uivContextANGLE l_glProgramUniform1uivContextANGLE
+#define glProgramUniform2uivContextANGLE l_glProgramUniform2uivContextANGLE
+#define glProgramUniform3uivContextANGLE l_glProgramUniform3uivContextANGLE
+#define glProgramUniform4uivContextANGLE l_glProgramUniform4uivContextANGLE
+#define glProgramUniform1fvContextANGLE l_glProgramUniform1fvContextANGLE
+#define glProgramUniform2fvContextANGLE l_glProgramUniform2fvContextANGLE
+#define glProgramUniform3fvContextANGLE l_glProgramUniform3fvContextANGLE
+#define glProgramUniform4fvContextANGLE l_glProgramUniform4fvContextANGLE
+#define glProgramUniformMatrix2fvContextANGLE l_glProgramUniformMatrix2fvContextANGLE
+#define glProgramUniformMatrix3fvContextANGLE l_glProgramUniformMatrix3fvContextANGLE
+#define glProgramUniformMatrix4fvContextANGLE l_glProgramUniformMatrix4fvContextANGLE
+#define glProgramUniformMatrix2x3fvContextANGLE l_glProgramUniformMatrix2x3fvContextANGLE
+#define glProgramUniformMatrix3x2fvContextANGLE l_glProgramUniformMatrix3x2fvContextANGLE
+#define glProgramUniformMatrix2x4fvContextANGLE l_glProgramUniformMatrix2x4fvContextANGLE
+#define glProgramUniformMatrix4x2fvContextANGLE l_glProgramUniformMatrix4x2fvContextANGLE
+#define glProgramUniformMatrix3x4fvContextANGLE l_glProgramUniformMatrix3x4fvContextANGLE
+#define glProgramUniformMatrix4x3fvContextANGLE l_glProgramUniformMatrix4x3fvContextANGLE
+#define glValidateProgramPipelineContextANGLE l_glValidateProgramPipelineContextANGLE
+#define glGetProgramPipelineInfoLogContextANGLE l_glGetProgramPipelineInfoLogContextANGLE
+#define glBindImageTextureContextANGLE l_glBindImageTextureContextANGLE
+#define glGetBooleani_vContextANGLE l_glGetBooleani_vContextANGLE
+#define glMemoryBarrierContextANGLE l_glMemoryBarrierContextANGLE
+#define glMemoryBarrierByRegionContextANGLE l_glMemoryBarrierByRegionContextANGLE
+#define glTexStorage2DMultisampleContextANGLE l_glTexStorage2DMultisampleContextANGLE
+#define glGetMultisamplefvContextANGLE l_glGetMultisamplefvContextANGLE
+#define glSampleMaskiContextANGLE l_glSampleMaskiContextANGLE
+#define glGetTexLevelParameterivContextANGLE l_glGetTexLevelParameterivContextANGLE
+#define glGetTexLevelParameterfvContextANGLE l_glGetTexLevelParameterfvContextANGLE
+#define glBindVertexBufferContextANGLE l_glBindVertexBufferContextANGLE
+#define glVertexAttribFormatContextANGLE l_glVertexAttribFormatContextANGLE
+#define glVertexAttribIFormatContextANGLE l_glVertexAttribIFormatContextANGLE
+#define glVertexAttribBindingContextANGLE l_glVertexAttribBindingContextANGLE
+#define glVertexBindingDivisorContextANGLE l_glVertexBindingDivisorContextANGLE
 #define glDrawArraysInstancedBaseInstanceANGLEContextANGLE \
-    ANGLE_glDrawArraysInstancedBaseInstanceANGLEContextANGLE
+    l_glDrawArraysInstancedBaseInstanceANGLEContextANGLE
 #define glDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE \
-    ANGLE_glDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE
+    l_glDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE
 #define glMultiDrawArraysInstancedBaseInstanceANGLEContextANGLE \
-    ANGLE_glMultiDrawArraysInstancedBaseInstanceANGLEContextANGLE
+    l_glMultiDrawArraysInstancedBaseInstanceANGLEContextANGLE
 #define glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE \
-    ANGLE_glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE
-#define glCopySubTexture3DANGLEContextANGLE ANGLE_glCopySubTexture3DANGLEContextANGLE
-#define glCopyTexture3DANGLEContextANGLE ANGLE_glCopyTexture3DANGLEContextANGLE
-#define glBlitFramebufferANGLEContextANGLE ANGLE_glBlitFramebufferANGLEContextANGLE
+    l_glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE
+#define glCopySubTexture3DANGLEContextANGLE l_glCopySubTexture3DANGLEContextANGLE
+#define glCopyTexture3DANGLEContextANGLE l_glCopyTexture3DANGLEContextANGLE
+#define glBlitFramebufferANGLEContextANGLE l_glBlitFramebufferANGLEContextANGLE
 #define glRenderbufferStorageMultisampleANGLEContextANGLE \
-    ANGLE_glRenderbufferStorageMultisampleANGLEContextANGLE
-#define glGetRenderbufferImageANGLEContextANGLE ANGLE_glGetRenderbufferImageANGLEContextANGLE
-#define glGetTexImageANGLEContextANGLE ANGLE_glGetTexImageANGLEContextANGLE
-#define glDrawArraysInstancedANGLEContextANGLE ANGLE_glDrawArraysInstancedANGLEContextANGLE
-#define glDrawElementsInstancedANGLEContextANGLE ANGLE_glDrawElementsInstancedANGLEContextANGLE
-#define glVertexAttribDivisorANGLEContextANGLE ANGLE_glVertexAttribDivisorANGLEContextANGLE
-#define glImportMemoryZirconHandleANGLEContextANGLE \
-    ANGLE_glImportMemoryZirconHandleANGLEContextANGLE
-#define glMultiDrawArraysANGLEContextANGLE ANGLE_glMultiDrawArraysANGLEContextANGLE
-#define glMultiDrawArraysInstancedANGLEContextANGLE \
-    ANGLE_glMultiDrawArraysInstancedANGLEContextANGLE
-#define glMultiDrawElementsANGLEContextANGLE ANGLE_glMultiDrawElementsANGLEContextANGLE
+    l_glRenderbufferStorageMultisampleANGLEContextANGLE
+#define glGetRenderbufferImageANGLEContextANGLE l_glGetRenderbufferImageANGLEContextANGLE
+#define glGetTexImageANGLEContextANGLE l_glGetTexImageANGLEContextANGLE
+#define glDrawArraysInstancedANGLEContextANGLE l_glDrawArraysInstancedANGLEContextANGLE
+#define glDrawElementsInstancedANGLEContextANGLE l_glDrawElementsInstancedANGLEContextANGLE
+#define glVertexAttribDivisorANGLEContextANGLE l_glVertexAttribDivisorANGLEContextANGLE
+#define glImportMemoryZirconHandleANGLEContextANGLE l_glImportMemoryZirconHandleANGLEContextANGLE
+#define glMultiDrawArraysANGLEContextANGLE l_glMultiDrawArraysANGLEContextANGLE
+#define glMultiDrawArraysInstancedANGLEContextANGLE l_glMultiDrawArraysInstancedANGLEContextANGLE
+#define glMultiDrawElementsANGLEContextANGLE l_glMultiDrawElementsANGLEContextANGLE
 #define glMultiDrawElementsInstancedANGLEContextANGLE \
-    ANGLE_glMultiDrawElementsInstancedANGLEContextANGLE
-#define glProvokingVertexANGLEContextANGLE ANGLE_glProvokingVertexANGLEContextANGLE
-#define glDisableExtensionANGLEContextANGLE ANGLE_glDisableExtensionANGLEContextANGLE
-#define glRequestExtensionANGLEContextANGLE ANGLE_glRequestExtensionANGLEContextANGLE
+    l_glMultiDrawElementsInstancedANGLEContextANGLE
+#define glProvokingVertexANGLEContextANGLE l_glProvokingVertexANGLEContextANGLE
+#define glDisableExtensionANGLEContextANGLE l_glDisableExtensionANGLEContextANGLE
+#define glRequestExtensionANGLEContextANGLE l_glRequestExtensionANGLEContextANGLE
 #define glCompressedTexImage2DRobustANGLEContextANGLE \
-    ANGLE_glCompressedTexImage2DRobustANGLEContextANGLE
+    l_glCompressedTexImage2DRobustANGLEContextANGLE
 #define glCompressedTexImage3DRobustANGLEContextANGLE \
-    ANGLE_glCompressedTexImage3DRobustANGLEContextANGLE
+    l_glCompressedTexImage3DRobustANGLEContextANGLE
 #define glCompressedTexSubImage2DRobustANGLEContextANGLE \
-    ANGLE_glCompressedTexSubImage2DRobustANGLEContextANGLE
+    l_glCompressedTexSubImage2DRobustANGLEContextANGLE
 #define glCompressedTexSubImage3DRobustANGLEContextANGLE \
-    ANGLE_glCompressedTexSubImage3DRobustANGLEContextANGLE
+    l_glCompressedTexSubImage3DRobustANGLEContextANGLE
 #define glGetActiveUniformBlockivRobustANGLEContextANGLE \
-    ANGLE_glGetActiveUniformBlockivRobustANGLEContextANGLE
-#define glGetBooleani_vRobustANGLEContextANGLE ANGLE_glGetBooleani_vRobustANGLEContextANGLE
-#define glGetBooleanvRobustANGLEContextANGLE ANGLE_glGetBooleanvRobustANGLEContextANGLE
+    l_glGetActiveUniformBlockivRobustANGLEContextANGLE
+#define glGetBooleani_vRobustANGLEContextANGLE l_glGetBooleani_vRobustANGLEContextANGLE
+#define glGetBooleanvRobustANGLEContextANGLE l_glGetBooleanvRobustANGLEContextANGLE
 #define glGetBufferParameteri64vRobustANGLEContextANGLE \
-    ANGLE_glGetBufferParameteri64vRobustANGLEContextANGLE
+    l_glGetBufferParameteri64vRobustANGLEContextANGLE
 #define glGetBufferParameterivRobustANGLEContextANGLE \
-    ANGLE_glGetBufferParameterivRobustANGLEContextANGLE
-#define glGetBufferPointervRobustANGLEContextANGLE ANGLE_glGetBufferPointervRobustANGLEContextANGLE
-#define glGetFloatvRobustANGLEContextANGLE ANGLE_glGetFloatvRobustANGLEContextANGLE
+    l_glGetBufferParameterivRobustANGLEContextANGLE
+#define glGetBufferPointervRobustANGLEContextANGLE l_glGetBufferPointervRobustANGLEContextANGLE
+#define glGetFloatvRobustANGLEContextANGLE l_glGetFloatvRobustANGLEContextANGLE
 #define glGetFramebufferAttachmentParameterivRobustANGLEContextANGLE \
-    ANGLE_glGetFramebufferAttachmentParameterivRobustANGLEContextANGLE
+    l_glGetFramebufferAttachmentParameterivRobustANGLEContextANGLE
 #define glGetFramebufferParameterivRobustANGLEContextANGLE \
-    ANGLE_glGetFramebufferParameterivRobustANGLEContextANGLE
-#define glGetInteger64i_vRobustANGLEContextANGLE ANGLE_glGetInteger64i_vRobustANGLEContextANGLE
-#define glGetInteger64vRobustANGLEContextANGLE ANGLE_glGetInteger64vRobustANGLEContextANGLE
-#define glGetIntegeri_vRobustANGLEContextANGLE ANGLE_glGetIntegeri_vRobustANGLEContextANGLE
-#define glGetIntegervRobustANGLEContextANGLE ANGLE_glGetIntegervRobustANGLEContextANGLE
-#define glGetInternalformativRobustANGLEContextANGLE \
-    ANGLE_glGetInternalformativRobustANGLEContextANGLE
-#define glGetMultisamplefvRobustANGLEContextANGLE ANGLE_glGetMultisamplefvRobustANGLEContextANGLE
+    l_glGetFramebufferParameterivRobustANGLEContextANGLE
+#define glGetInteger64i_vRobustANGLEContextANGLE l_glGetInteger64i_vRobustANGLEContextANGLE
+#define glGetInteger64vRobustANGLEContextANGLE l_glGetInteger64vRobustANGLEContextANGLE
+#define glGetIntegeri_vRobustANGLEContextANGLE l_glGetIntegeri_vRobustANGLEContextANGLE
+#define glGetIntegervRobustANGLEContextANGLE l_glGetIntegervRobustANGLEContextANGLE
+#define glGetInternalformativRobustANGLEContextANGLE l_glGetInternalformativRobustANGLEContextANGLE
+#define glGetMultisamplefvRobustANGLEContextANGLE l_glGetMultisamplefvRobustANGLEContextANGLE
 #define glGetPointervRobustANGLERobustANGLEContextANGLE \
-    ANGLE_glGetPointervRobustANGLERobustANGLEContextANGLE
+    l_glGetPointervRobustANGLERobustANGLEContextANGLE
 #define glGetProgramInterfaceivRobustANGLEContextANGLE \
-    ANGLE_glGetProgramInterfaceivRobustANGLEContextANGLE
-#define glGetProgramivRobustANGLEContextANGLE ANGLE_glGetProgramivRobustANGLEContextANGLE
-#define glGetQueryObjecti64vRobustANGLEContextANGLE \
-    ANGLE_glGetQueryObjecti64vRobustANGLEContextANGLE
-#define glGetQueryObjectivRobustANGLEContextANGLE ANGLE_glGetQueryObjectivRobustANGLEContextANGLE
-#define glGetQueryObjectui64vRobustANGLEContextANGLE \
-    ANGLE_glGetQueryObjectui64vRobustANGLEContextANGLE
-#define glGetQueryObjectuivRobustANGLEContextANGLE ANGLE_glGetQueryObjectuivRobustANGLEContextANGLE
-#define glGetQueryivRobustANGLEContextANGLE ANGLE_glGetQueryivRobustANGLEContextANGLE
+    l_glGetProgramInterfaceivRobustANGLEContextANGLE
+#define glGetProgramivRobustANGLEContextANGLE l_glGetProgramivRobustANGLEContextANGLE
+#define glGetQueryObjecti64vRobustANGLEContextANGLE l_glGetQueryObjecti64vRobustANGLEContextANGLE
+#define glGetQueryObjectivRobustANGLEContextANGLE l_glGetQueryObjectivRobustANGLEContextANGLE
+#define glGetQueryObjectui64vRobustANGLEContextANGLE l_glGetQueryObjectui64vRobustANGLEContextANGLE
+#define glGetQueryObjectuivRobustANGLEContextANGLE l_glGetQueryObjectuivRobustANGLEContextANGLE
+#define glGetQueryivRobustANGLEContextANGLE l_glGetQueryivRobustANGLEContextANGLE
 #define glGetRenderbufferParameterivRobustANGLEContextANGLE \
-    ANGLE_glGetRenderbufferParameterivRobustANGLEContextANGLE
+    l_glGetRenderbufferParameterivRobustANGLEContextANGLE
 #define glGetSamplerParameterIivRobustANGLEContextANGLE \
-    ANGLE_glGetSamplerParameterIivRobustANGLEContextANGLE
+    l_glGetSamplerParameterIivRobustANGLEContextANGLE
 #define glGetSamplerParameterIuivRobustANGLEContextANGLE \
-    ANGLE_glGetSamplerParameterIuivRobustANGLEContextANGLE
+    l_glGetSamplerParameterIuivRobustANGLEContextANGLE
 #define glGetSamplerParameterfvRobustANGLEContextANGLE \
-    ANGLE_glGetSamplerParameterfvRobustANGLEContextANGLE
+    l_glGetSamplerParameterfvRobustANGLEContextANGLE
 #define glGetSamplerParameterivRobustANGLEContextANGLE \
-    ANGLE_glGetSamplerParameterivRobustANGLEContextANGLE
-#define glGetShaderivRobustANGLEContextANGLE ANGLE_glGetShaderivRobustANGLEContextANGLE
+    l_glGetSamplerParameterivRobustANGLEContextANGLE
+#define glGetShaderivRobustANGLEContextANGLE l_glGetShaderivRobustANGLEContextANGLE
 #define glGetTexLevelParameterfvRobustANGLEContextANGLE \
-    ANGLE_glGetTexLevelParameterfvRobustANGLEContextANGLE
+    l_glGetTexLevelParameterfvRobustANGLEContextANGLE
 #define glGetTexLevelParameterivRobustANGLEContextANGLE \
-    ANGLE_glGetTexLevelParameterivRobustANGLEContextANGLE
-#define glGetTexParameterIivRobustANGLEContextANGLE \
-    ANGLE_glGetTexParameterIivRobustANGLEContextANGLE
-#define glGetTexParameterIuivRobustANGLEContextANGLE \
-    ANGLE_glGetTexParameterIuivRobustANGLEContextANGLE
-#define glGetTexParameterfvRobustANGLEContextANGLE ANGLE_glGetTexParameterfvRobustANGLEContextANGLE
-#define glGetTexParameterivRobustANGLEContextANGLE ANGLE_glGetTexParameterivRobustANGLEContextANGLE
-#define glGetUniformfvRobustANGLEContextANGLE ANGLE_glGetUniformfvRobustANGLEContextANGLE
-#define glGetUniformivRobustANGLEContextANGLE ANGLE_glGetUniformivRobustANGLEContextANGLE
-#define glGetUniformuivRobustANGLEContextANGLE ANGLE_glGetUniformuivRobustANGLEContextANGLE
-#define glGetVertexAttribIivRobustANGLEContextANGLE \
-    ANGLE_glGetVertexAttribIivRobustANGLEContextANGLE
-#define glGetVertexAttribIuivRobustANGLEContextANGLE \
-    ANGLE_glGetVertexAttribIuivRobustANGLEContextANGLE
+    l_glGetTexLevelParameterivRobustANGLEContextANGLE
+#define glGetTexParameterIivRobustANGLEContextANGLE l_glGetTexParameterIivRobustANGLEContextANGLE
+#define glGetTexParameterIuivRobustANGLEContextANGLE l_glGetTexParameterIuivRobustANGLEContextANGLE
+#define glGetTexParameterfvRobustANGLEContextANGLE l_glGetTexParameterfvRobustANGLEContextANGLE
+#define glGetTexParameterivRobustANGLEContextANGLE l_glGetTexParameterivRobustANGLEContextANGLE
+#define glGetUniformfvRobustANGLEContextANGLE l_glGetUniformfvRobustANGLEContextANGLE
+#define glGetUniformivRobustANGLEContextANGLE l_glGetUniformivRobustANGLEContextANGLE
+#define glGetUniformuivRobustANGLEContextANGLE l_glGetUniformuivRobustANGLEContextANGLE
+#define glGetVertexAttribIivRobustANGLEContextANGLE l_glGetVertexAttribIivRobustANGLEContextANGLE
+#define glGetVertexAttribIuivRobustANGLEContextANGLE l_glGetVertexAttribIuivRobustANGLEContextANGLE
 #define glGetVertexAttribPointervRobustANGLEContextANGLE \
-    ANGLE_glGetVertexAttribPointervRobustANGLEContextANGLE
-#define glGetVertexAttribfvRobustANGLEContextANGLE ANGLE_glGetVertexAttribfvRobustANGLEContextANGLE
-#define glGetVertexAttribivRobustANGLEContextANGLE ANGLE_glGetVertexAttribivRobustANGLEContextANGLE
-#define glGetnUniformfvRobustANGLEContextANGLE ANGLE_glGetnUniformfvRobustANGLEContextANGLE
-#define glGetnUniformivRobustANGLEContextANGLE ANGLE_glGetnUniformivRobustANGLEContextANGLE
-#define glGetnUniformuivRobustANGLEContextANGLE ANGLE_glGetnUniformuivRobustANGLEContextANGLE
-#define glReadPixelsRobustANGLEContextANGLE ANGLE_glReadPixelsRobustANGLEContextANGLE
-#define glReadnPixelsRobustANGLEContextANGLE ANGLE_glReadnPixelsRobustANGLEContextANGLE
-#define glSamplerParameterIivRobustANGLEContextANGLE \
-    ANGLE_glSamplerParameterIivRobustANGLEContextANGLE
+    l_glGetVertexAttribPointervRobustANGLEContextANGLE
+#define glGetVertexAttribfvRobustANGLEContextANGLE l_glGetVertexAttribfvRobustANGLEContextANGLE
+#define glGetVertexAttribivRobustANGLEContextANGLE l_glGetVertexAttribivRobustANGLEContextANGLE
+#define glGetnUniformfvRobustANGLEContextANGLE l_glGetnUniformfvRobustANGLEContextANGLE
+#define glGetnUniformivRobustANGLEContextANGLE l_glGetnUniformivRobustANGLEContextANGLE
+#define glGetnUniformuivRobustANGLEContextANGLE l_glGetnUniformuivRobustANGLEContextANGLE
+#define glReadPixelsRobustANGLEContextANGLE l_glReadPixelsRobustANGLEContextANGLE
+#define glReadnPixelsRobustANGLEContextANGLE l_glReadnPixelsRobustANGLEContextANGLE
+#define glSamplerParameterIivRobustANGLEContextANGLE l_glSamplerParameterIivRobustANGLEContextANGLE
 #define glSamplerParameterIuivRobustANGLEContextANGLE \
-    ANGLE_glSamplerParameterIuivRobustANGLEContextANGLE
-#define glSamplerParameterfvRobustANGLEContextANGLE \
-    ANGLE_glSamplerParameterfvRobustANGLEContextANGLE
-#define glSamplerParameterivRobustANGLEContextANGLE \
-    ANGLE_glSamplerParameterivRobustANGLEContextANGLE
-#define glTexImage2DRobustANGLEContextANGLE ANGLE_glTexImage2DRobustANGLEContextANGLE
-#define glTexImage3DRobustANGLEContextANGLE ANGLE_glTexImage3DRobustANGLEContextANGLE
-#define glTexParameterIivRobustANGLEContextANGLE ANGLE_glTexParameterIivRobustANGLEContextANGLE
-#define glTexParameterIuivRobustANGLEContextANGLE ANGLE_glTexParameterIuivRobustANGLEContextANGLE
-#define glTexParameterfvRobustANGLEContextANGLE ANGLE_glTexParameterfvRobustANGLEContextANGLE
-#define glTexParameterivRobustANGLEContextANGLE ANGLE_glTexParameterivRobustANGLEContextANGLE
-#define glTexSubImage2DRobustANGLEContextANGLE ANGLE_glTexSubImage2DRobustANGLEContextANGLE
-#define glTexSubImage3DRobustANGLEContextANGLE ANGLE_glTexSubImage3DRobustANGLEContextANGLE
+    l_glSamplerParameterIuivRobustANGLEContextANGLE
+#define glSamplerParameterfvRobustANGLEContextANGLE l_glSamplerParameterfvRobustANGLEContextANGLE
+#define glSamplerParameterivRobustANGLEContextANGLE l_glSamplerParameterivRobustANGLEContextANGLE
+#define glTexImage2DRobustANGLEContextANGLE l_glTexImage2DRobustANGLEContextANGLE
+#define glTexImage3DRobustANGLEContextANGLE l_glTexImage3DRobustANGLEContextANGLE
+#define glTexParameterIivRobustANGLEContextANGLE l_glTexParameterIivRobustANGLEContextANGLE
+#define glTexParameterIuivRobustANGLEContextANGLE l_glTexParameterIuivRobustANGLEContextANGLE
+#define glTexParameterfvRobustANGLEContextANGLE l_glTexParameterfvRobustANGLEContextANGLE
+#define glTexParameterivRobustANGLEContextANGLE l_glTexParameterivRobustANGLEContextANGLE
+#define glTexSubImage2DRobustANGLEContextANGLE l_glTexSubImage2DRobustANGLEContextANGLE
+#define glTexSubImage3DRobustANGLEContextANGLE l_glTexSubImage3DRobustANGLEContextANGLE
 #define glImportSemaphoreZirconHandleANGLEContextANGLE \
-    ANGLE_glImportSemaphoreZirconHandleANGLEContextANGLE
-#define glInvalidateTextureANGLEContextANGLE ANGLE_glInvalidateTextureANGLEContextANGLE
-#define glTexImage2DExternalANGLEContextANGLE ANGLE_glTexImage2DExternalANGLEContextANGLE
-#define glGetMultisamplefvANGLEContextANGLE ANGLE_glGetMultisamplefvANGLEContextANGLE
-#define glGetTexLevelParameterfvANGLEContextANGLE ANGLE_glGetTexLevelParameterfvANGLEContextANGLE
-#define glGetTexLevelParameterivANGLEContextANGLE ANGLE_glGetTexLevelParameterivANGLEContextANGLE
-#define glSampleMaskiANGLEContextANGLE ANGLE_glSampleMaskiANGLEContextANGLE
-#define glTexStorage2DMultisampleANGLEContextANGLE ANGLE_glTexStorage2DMultisampleANGLEContextANGLE
-#define glGetTranslatedShaderSourceANGLEContextANGLE \
-    ANGLE_glGetTranslatedShaderSourceANGLEContextANGLE
-#define glBindUniformLocationCHROMIUMContextANGLE ANGLE_glBindUniformLocationCHROMIUMContextANGLE
-#define glCompressedCopyTextureCHROMIUMContextANGLE \
-    ANGLE_glCompressedCopyTextureCHROMIUMContextANGLE
-#define glCopySubTextureCHROMIUMContextANGLE ANGLE_glCopySubTextureCHROMIUMContextANGLE
-#define glCopyTextureCHROMIUMContextANGLE ANGLE_glCopyTextureCHROMIUMContextANGLE
-#define glCoverageModulationCHROMIUMContextANGLE ANGLE_glCoverageModulationCHROMIUMContextANGLE
-#define glLoseContextCHROMIUMContextANGLE ANGLE_glLoseContextCHROMIUMContextANGLE
-#define glBindFragDataLocationEXTContextANGLE ANGLE_glBindFragDataLocationEXTContextANGLE
-#define glBindFragDataLocationIndexedEXTContextANGLE \
-    ANGLE_glBindFragDataLocationIndexedEXTContextANGLE
-#define glGetFragDataIndexEXTContextANGLE ANGLE_glGetFragDataIndexEXTContextANGLE
+    l_glImportSemaphoreZirconHandleANGLEContextANGLE
+#define glInvalidateTextureANGLEContextANGLE l_glInvalidateTextureANGLEContextANGLE
+#define glTexImage2DExternalANGLEContextANGLE l_glTexImage2DExternalANGLEContextANGLE
+#define glGetMultisamplefvANGLEContextANGLE l_glGetMultisamplefvANGLEContextANGLE
+#define glGetTexLevelParameterfvANGLEContextANGLE l_glGetTexLevelParameterfvANGLEContextANGLE
+#define glGetTexLevelParameterivANGLEContextANGLE l_glGetTexLevelParameterivANGLEContextANGLE
+#define glSampleMaskiANGLEContextANGLE l_glSampleMaskiANGLEContextANGLE
+#define glTexStorage2DMultisampleANGLEContextANGLE l_glTexStorage2DMultisampleANGLEContextANGLE
+#define glGetTranslatedShaderSourceANGLEContextANGLE l_glGetTranslatedShaderSourceANGLEContextANGLE
+#define glBindUniformLocationCHROMIUMContextANGLE l_glBindUniformLocationCHROMIUMContextANGLE
+#define glCompressedCopyTextureCHROMIUMContextANGLE l_glCompressedCopyTextureCHROMIUMContextANGLE
+#define glCopySubTextureCHROMIUMContextANGLE l_glCopySubTextureCHROMIUMContextANGLE
+#define glCopyTextureCHROMIUMContextANGLE l_glCopyTextureCHROMIUMContextANGLE
+#define glCoverageModulationCHROMIUMContextANGLE l_glCoverageModulationCHROMIUMContextANGLE
+#define glLoseContextCHROMIUMContextANGLE l_glLoseContextCHROMIUMContextANGLE
+#define glBindFragDataLocationEXTContextANGLE l_glBindFragDataLocationEXTContextANGLE
+#define glBindFragDataLocationIndexedEXTContextANGLE l_glBindFragDataLocationIndexedEXTContextANGLE
+#define glGetFragDataIndexEXTContextANGLE l_glGetFragDataIndexEXTContextANGLE
 #define glGetProgramResourceLocationIndexEXTContextANGLE \
-    ANGLE_glGetProgramResourceLocationIndexEXTContextANGLE
-#define glInsertEventMarkerEXTContextANGLE ANGLE_glInsertEventMarkerEXTContextANGLE
-#define glPopGroupMarkerEXTContextANGLE ANGLE_glPopGroupMarkerEXTContextANGLE
-#define glPushGroupMarkerEXTContextANGLE ANGLE_glPushGroupMarkerEXTContextANGLE
-#define glDiscardFramebufferEXTContextANGLE ANGLE_glDiscardFramebufferEXTContextANGLE
-#define glBeginQueryEXTContextANGLE ANGLE_glBeginQueryEXTContextANGLE
-#define glDeleteQueriesEXTContextANGLE ANGLE_glDeleteQueriesEXTContextANGLE
-#define glEndQueryEXTContextANGLE ANGLE_glEndQueryEXTContextANGLE
-#define glGenQueriesEXTContextANGLE ANGLE_glGenQueriesEXTContextANGLE
-#define glGetInteger64vEXTContextANGLE ANGLE_glGetInteger64vEXTContextANGLE
-#define glGetQueryObjecti64vEXTContextANGLE ANGLE_glGetQueryObjecti64vEXTContextANGLE
-#define glGetQueryObjectivEXTContextANGLE ANGLE_glGetQueryObjectivEXTContextANGLE
-#define glGetQueryObjectui64vEXTContextANGLE ANGLE_glGetQueryObjectui64vEXTContextANGLE
-#define glGetQueryObjectuivEXTContextANGLE ANGLE_glGetQueryObjectuivEXTContextANGLE
-#define glGetQueryivEXTContextANGLE ANGLE_glGetQueryivEXTContextANGLE
-#define glIsQueryEXTContextANGLE ANGLE_glIsQueryEXTContextANGLE
-#define glQueryCounterEXTContextANGLE ANGLE_glQueryCounterEXTContextANGLE
-#define glDrawBuffersEXTContextANGLE ANGLE_glDrawBuffersEXTContextANGLE
-#define glBlendEquationSeparateiEXTContextANGLE ANGLE_glBlendEquationSeparateiEXTContextANGLE
-#define glBlendEquationiEXTContextANGLE ANGLE_glBlendEquationiEXTContextANGLE
-#define glBlendFuncSeparateiEXTContextANGLE ANGLE_glBlendFuncSeparateiEXTContextANGLE
-#define glBlendFunciEXTContextANGLE ANGLE_glBlendFunciEXTContextANGLE
-#define glColorMaskiEXTContextANGLE ANGLE_glColorMaskiEXTContextANGLE
-#define glDisableiEXTContextANGLE ANGLE_glDisableiEXTContextANGLE
-#define glEnableiEXTContextANGLE ANGLE_glEnableiEXTContextANGLE
-#define glIsEnablediEXTContextANGLE ANGLE_glIsEnablediEXTContextANGLE
-#define glDrawElementsBaseVertexEXTContextANGLE ANGLE_glDrawElementsBaseVertexEXTContextANGLE
+    l_glGetProgramResourceLocationIndexEXTContextANGLE
+#define glInsertEventMarkerEXTContextANGLE l_glInsertEventMarkerEXTContextANGLE
+#define glPopGroupMarkerEXTContextANGLE l_glPopGroupMarkerEXTContextANGLE
+#define glPushGroupMarkerEXTContextANGLE l_glPushGroupMarkerEXTContextANGLE
+#define glDiscardFramebufferEXTContextANGLE l_glDiscardFramebufferEXTContextANGLE
+#define glBeginQueryEXTContextANGLE l_glBeginQueryEXTContextANGLE
+#define glDeleteQueriesEXTContextANGLE l_glDeleteQueriesEXTContextANGLE
+#define glEndQueryEXTContextANGLE l_glEndQueryEXTContextANGLE
+#define glGenQueriesEXTContextANGLE l_glGenQueriesEXTContextANGLE
+#define glGetInteger64vEXTContextANGLE l_glGetInteger64vEXTContextANGLE
+#define glGetQueryObjecti64vEXTContextANGLE l_glGetQueryObjecti64vEXTContextANGLE
+#define glGetQueryObjectivEXTContextANGLE l_glGetQueryObjectivEXTContextANGLE
+#define glGetQueryObjectui64vEXTContextANGLE l_glGetQueryObjectui64vEXTContextANGLE
+#define glGetQueryObjectuivEXTContextANGLE l_glGetQueryObjectuivEXTContextANGLE
+#define glGetQueryivEXTContextANGLE l_glGetQueryivEXTContextANGLE
+#define glIsQueryEXTContextANGLE l_glIsQueryEXTContextANGLE
+#define glQueryCounterEXTContextANGLE l_glQueryCounterEXTContextANGLE
+#define glDrawBuffersEXTContextANGLE l_glDrawBuffersEXTContextANGLE
+#define glBlendEquationSeparateiEXTContextANGLE l_glBlendEquationSeparateiEXTContextANGLE
+#define glBlendEquationiEXTContextANGLE l_glBlendEquationiEXTContextANGLE
+#define glBlendFuncSeparateiEXTContextANGLE l_glBlendFuncSeparateiEXTContextANGLE
+#define glBlendFunciEXTContextANGLE l_glBlendFunciEXTContextANGLE
+#define glColorMaskiEXTContextANGLE l_glColorMaskiEXTContextANGLE
+#define glDisableiEXTContextANGLE l_glDisableiEXTContextANGLE
+#define glEnableiEXTContextANGLE l_glEnableiEXTContextANGLE
+#define glIsEnablediEXTContextANGLE l_glIsEnablediEXTContextANGLE
+#define glDrawElementsBaseVertexEXTContextANGLE l_glDrawElementsBaseVertexEXTContextANGLE
 #define glDrawElementsInstancedBaseVertexEXTContextANGLE \
-    ANGLE_glDrawElementsInstancedBaseVertexEXTContextANGLE
-#define glDrawRangeElementsBaseVertexEXTContextANGLE \
-    ANGLE_glDrawRangeElementsBaseVertexEXTContextANGLE
-#define glMultiDrawElementsBaseVertexEXTContextANGLE \
-    ANGLE_glMultiDrawElementsBaseVertexEXTContextANGLE
-#define glFramebufferTextureEXTContextANGLE ANGLE_glFramebufferTextureEXTContextANGLE
-#define glDrawArraysInstancedEXTContextANGLE ANGLE_glDrawArraysInstancedEXTContextANGLE
-#define glDrawElementsInstancedEXTContextANGLE ANGLE_glDrawElementsInstancedEXTContextANGLE
-#define glVertexAttribDivisorEXTContextANGLE ANGLE_glVertexAttribDivisorEXTContextANGLE
-#define glFlushMappedBufferRangeEXTContextANGLE ANGLE_glFlushMappedBufferRangeEXTContextANGLE
-#define glMapBufferRangeEXTContextANGLE ANGLE_glMapBufferRangeEXTContextANGLE
-#define glBufferStorageMemEXTContextANGLE ANGLE_glBufferStorageMemEXTContextANGLE
-#define glCreateMemoryObjectsEXTContextANGLE ANGLE_glCreateMemoryObjectsEXTContextANGLE
-#define glDeleteMemoryObjectsEXTContextANGLE ANGLE_glDeleteMemoryObjectsEXTContextANGLE
-#define glGetMemoryObjectParameterivEXTContextANGLE \
-    ANGLE_glGetMemoryObjectParameterivEXTContextANGLE
-#define glGetUnsignedBytei_vEXTContextANGLE ANGLE_glGetUnsignedBytei_vEXTContextANGLE
-#define glGetUnsignedBytevEXTContextANGLE ANGLE_glGetUnsignedBytevEXTContextANGLE
-#define glIsMemoryObjectEXTContextANGLE ANGLE_glIsMemoryObjectEXTContextANGLE
-#define glMemoryObjectParameterivEXTContextANGLE ANGLE_glMemoryObjectParameterivEXTContextANGLE
-#define glTexStorageMem2DEXTContextANGLE ANGLE_glTexStorageMem2DEXTContextANGLE
-#define glTexStorageMem2DMultisampleEXTContextANGLE \
-    ANGLE_glTexStorageMem2DMultisampleEXTContextANGLE
-#define glTexStorageMem3DEXTContextANGLE ANGLE_glTexStorageMem3DEXTContextANGLE
-#define glTexStorageMem3DMultisampleEXTContextANGLE \
-    ANGLE_glTexStorageMem3DMultisampleEXTContextANGLE
-#define glImportMemoryFdEXTContextANGLE ANGLE_glImportMemoryFdEXTContextANGLE
+    l_glDrawElementsInstancedBaseVertexEXTContextANGLE
+#define glDrawRangeElementsBaseVertexEXTContextANGLE l_glDrawRangeElementsBaseVertexEXTContextANGLE
+#define glMultiDrawElementsBaseVertexEXTContextANGLE l_glMultiDrawElementsBaseVertexEXTContextANGLE
+#define glFramebufferTextureEXTContextANGLE l_glFramebufferTextureEXTContextANGLE
+#define glDrawArraysInstancedEXTContextANGLE l_glDrawArraysInstancedEXTContextANGLE
+#define glDrawElementsInstancedEXTContextANGLE l_glDrawElementsInstancedEXTContextANGLE
+#define glVertexAttribDivisorEXTContextANGLE l_glVertexAttribDivisorEXTContextANGLE
+#define glFlushMappedBufferRangeEXTContextANGLE l_glFlushMappedBufferRangeEXTContextANGLE
+#define glMapBufferRangeEXTContextANGLE l_glMapBufferRangeEXTContextANGLE
+#define glBufferStorageMemEXTContextANGLE l_glBufferStorageMemEXTContextANGLE
+#define glCreateMemoryObjectsEXTContextANGLE l_glCreateMemoryObjectsEXTContextANGLE
+#define glDeleteMemoryObjectsEXTContextANGLE l_glDeleteMemoryObjectsEXTContextANGLE
+#define glGetMemoryObjectParameterivEXTContextANGLE l_glGetMemoryObjectParameterivEXTContextANGLE
+#define glGetUnsignedBytei_vEXTContextANGLE l_glGetUnsignedBytei_vEXTContextANGLE
+#define glGetUnsignedBytevEXTContextANGLE l_glGetUnsignedBytevEXTContextANGLE
+#define glIsMemoryObjectEXTContextANGLE l_glIsMemoryObjectEXTContextANGLE
+#define glMemoryObjectParameterivEXTContextANGLE l_glMemoryObjectParameterivEXTContextANGLE
+#define glTexStorageMem2DEXTContextANGLE l_glTexStorageMem2DEXTContextANGLE
+#define glTexStorageMem2DMultisampleEXTContextANGLE l_glTexStorageMem2DMultisampleEXTContextANGLE
+#define glTexStorageMem3DEXTContextANGLE l_glTexStorageMem3DEXTContextANGLE
+#define glTexStorageMem3DMultisampleEXTContextANGLE l_glTexStorageMem3DMultisampleEXTContextANGLE
+#define glImportMemoryFdEXTContextANGLE l_glImportMemoryFdEXTContextANGLE
 #define glFramebufferTexture2DMultisampleEXTContextANGLE \
-    ANGLE_glFramebufferTexture2DMultisampleEXTContextANGLE
+    l_glFramebufferTexture2DMultisampleEXTContextANGLE
 #define glRenderbufferStorageMultisampleEXTContextANGLE \
-    ANGLE_glRenderbufferStorageMultisampleEXTContextANGLE
-#define glGetGraphicsResetStatusEXTContextANGLE ANGLE_glGetGraphicsResetStatusEXTContextANGLE
-#define glGetnUniformfvEXTContextANGLE ANGLE_glGetnUniformfvEXTContextANGLE
-#define glGetnUniformivEXTContextANGLE ANGLE_glGetnUniformivEXTContextANGLE
-#define glReadnPixelsEXTContextANGLE ANGLE_glReadnPixelsEXTContextANGLE
-#define glDeleteSemaphoresEXTContextANGLE ANGLE_glDeleteSemaphoresEXTContextANGLE
-#define glGenSemaphoresEXTContextANGLE ANGLE_glGenSemaphoresEXTContextANGLE
-#define glGetSemaphoreParameterui64vEXTContextANGLE \
-    ANGLE_glGetSemaphoreParameterui64vEXTContextANGLE
-#define glIsSemaphoreEXTContextANGLE ANGLE_glIsSemaphoreEXTContextANGLE
-#define glSemaphoreParameterui64vEXTContextANGLE ANGLE_glSemaphoreParameterui64vEXTContextANGLE
-#define glSignalSemaphoreEXTContextANGLE ANGLE_glSignalSemaphoreEXTContextANGLE
-#define glWaitSemaphoreEXTContextANGLE ANGLE_glWaitSemaphoreEXTContextANGLE
-#define glImportSemaphoreFdEXTContextANGLE ANGLE_glImportSemaphoreFdEXTContextANGLE
-#define glTexStorage1DEXTContextANGLE ANGLE_glTexStorage1DEXTContextANGLE
-#define glTexStorage2DEXTContextANGLE ANGLE_glTexStorage2DEXTContextANGLE
-#define glTexStorage3DEXTContextANGLE ANGLE_glTexStorage3DEXTContextANGLE
-#define glDebugMessageCallbackKHRContextANGLE ANGLE_glDebugMessageCallbackKHRContextANGLE
-#define glDebugMessageControlKHRContextANGLE ANGLE_glDebugMessageControlKHRContextANGLE
-#define glDebugMessageInsertKHRContextANGLE ANGLE_glDebugMessageInsertKHRContextANGLE
-#define glGetDebugMessageLogKHRContextANGLE ANGLE_glGetDebugMessageLogKHRContextANGLE
-#define glGetObjectLabelKHRContextANGLE ANGLE_glGetObjectLabelKHRContextANGLE
-#define glGetObjectPtrLabelKHRContextANGLE ANGLE_glGetObjectPtrLabelKHRContextANGLE
-#define glGetPointervKHRContextANGLE ANGLE_glGetPointervKHRContextANGLE
-#define glObjectLabelKHRContextANGLE ANGLE_glObjectLabelKHRContextANGLE
-#define glObjectPtrLabelKHRContextANGLE ANGLE_glObjectPtrLabelKHRContextANGLE
-#define glPopDebugGroupKHRContextANGLE ANGLE_glPopDebugGroupKHRContextANGLE
-#define glPushDebugGroupKHRContextANGLE ANGLE_glPushDebugGroupKHRContextANGLE
-#define glMaxShaderCompilerThreadsKHRContextANGLE ANGLE_glMaxShaderCompilerThreadsKHRContextANGLE
-#define glDeleteFencesNVContextANGLE ANGLE_glDeleteFencesNVContextANGLE
-#define glFinishFenceNVContextANGLE ANGLE_glFinishFenceNVContextANGLE
-#define glGenFencesNVContextANGLE ANGLE_glGenFencesNVContextANGLE
-#define glGetFenceivNVContextANGLE ANGLE_glGetFenceivNVContextANGLE
-#define glIsFenceNVContextANGLE ANGLE_glIsFenceNVContextANGLE
-#define glSetFenceNVContextANGLE ANGLE_glSetFenceNVContextANGLE
-#define glTestFenceNVContextANGLE ANGLE_glTestFenceNVContextANGLE
+    l_glRenderbufferStorageMultisampleEXTContextANGLE
+#define glGetGraphicsResetStatusEXTContextANGLE l_glGetGraphicsResetStatusEXTContextANGLE
+#define glGetnUniformfvEXTContextANGLE l_glGetnUniformfvEXTContextANGLE
+#define glGetnUniformivEXTContextANGLE l_glGetnUniformivEXTContextANGLE
+#define glReadnPixelsEXTContextANGLE l_glReadnPixelsEXTContextANGLE
+#define glDeleteSemaphoresEXTContextANGLE l_glDeleteSemaphoresEXTContextANGLE
+#define glGenSemaphoresEXTContextANGLE l_glGenSemaphoresEXTContextANGLE
+#define glGetSemaphoreParameterui64vEXTContextANGLE l_glGetSemaphoreParameterui64vEXTContextANGLE
+#define glIsSemaphoreEXTContextANGLE l_glIsSemaphoreEXTContextANGLE
+#define glSemaphoreParameterui64vEXTContextANGLE l_glSemaphoreParameterui64vEXTContextANGLE
+#define glSignalSemaphoreEXTContextANGLE l_glSignalSemaphoreEXTContextANGLE
+#define glWaitSemaphoreEXTContextANGLE l_glWaitSemaphoreEXTContextANGLE
+#define glImportSemaphoreFdEXTContextANGLE l_glImportSemaphoreFdEXTContextANGLE
+#define glTexStorage1DEXTContextANGLE l_glTexStorage1DEXTContextANGLE
+#define glTexStorage2DEXTContextANGLE l_glTexStorage2DEXTContextANGLE
+#define glTexStorage3DEXTContextANGLE l_glTexStorage3DEXTContextANGLE
+#define glDebugMessageCallbackKHRContextANGLE l_glDebugMessageCallbackKHRContextANGLE
+#define glDebugMessageControlKHRContextANGLE l_glDebugMessageControlKHRContextANGLE
+#define glDebugMessageInsertKHRContextANGLE l_glDebugMessageInsertKHRContextANGLE
+#define glGetDebugMessageLogKHRContextANGLE l_glGetDebugMessageLogKHRContextANGLE
+#define glGetObjectLabelKHRContextANGLE l_glGetObjectLabelKHRContextANGLE
+#define glGetObjectPtrLabelKHRContextANGLE l_glGetObjectPtrLabelKHRContextANGLE
+#define glGetPointervKHRContextANGLE l_glGetPointervKHRContextANGLE
+#define glObjectLabelKHRContextANGLE l_glObjectLabelKHRContextANGLE
+#define glObjectPtrLabelKHRContextANGLE l_glObjectPtrLabelKHRContextANGLE
+#define glPopDebugGroupKHRContextANGLE l_glPopDebugGroupKHRContextANGLE
+#define glPushDebugGroupKHRContextANGLE l_glPushDebugGroupKHRContextANGLE
+#define glMaxShaderCompilerThreadsKHRContextANGLE l_glMaxShaderCompilerThreadsKHRContextANGLE
+#define glDeleteFencesNVContextANGLE l_glDeleteFencesNVContextANGLE
+#define glFinishFenceNVContextANGLE l_glFinishFenceNVContextANGLE
+#define glGenFencesNVContextANGLE l_glGenFencesNVContextANGLE
+#define glGetFenceivNVContextANGLE l_glGetFenceivNVContextANGLE
+#define glIsFenceNVContextANGLE l_glIsFenceNVContextANGLE
+#define glSetFenceNVContextANGLE l_glSetFenceNVContextANGLE
+#define glTestFenceNVContextANGLE l_glTestFenceNVContextANGLE
 #define glEGLImageTargetRenderbufferStorageOESContextANGLE \
-    ANGLE_glEGLImageTargetRenderbufferStorageOESContextANGLE
-#define glEGLImageTargetTexture2DOESContextANGLE ANGLE_glEGLImageTargetTexture2DOESContextANGLE
-#define glBlendEquationSeparateiOESContextANGLE ANGLE_glBlendEquationSeparateiOESContextANGLE
-#define glBlendEquationiOESContextANGLE ANGLE_glBlendEquationiOESContextANGLE
-#define glBlendFuncSeparateiOESContextANGLE ANGLE_glBlendFuncSeparateiOESContextANGLE
-#define glBlendFunciOESContextANGLE ANGLE_glBlendFunciOESContextANGLE
-#define glColorMaskiOESContextANGLE ANGLE_glColorMaskiOESContextANGLE
-#define glDisableiOESContextANGLE ANGLE_glDisableiOESContextANGLE
-#define glEnableiOESContextANGLE ANGLE_glEnableiOESContextANGLE
-#define glIsEnablediOESContextANGLE ANGLE_glIsEnablediOESContextANGLE
-#define glDrawElementsBaseVertexOESContextANGLE ANGLE_glDrawElementsBaseVertexOESContextANGLE
+    l_glEGLImageTargetRenderbufferStorageOESContextANGLE
+#define glEGLImageTargetTexture2DOESContextANGLE l_glEGLImageTargetTexture2DOESContextANGLE
+#define glBlendEquationSeparateiOESContextANGLE l_glBlendEquationSeparateiOESContextANGLE
+#define glBlendEquationiOESContextANGLE l_glBlendEquationiOESContextANGLE
+#define glBlendFuncSeparateiOESContextANGLE l_glBlendFuncSeparateiOESContextANGLE
+#define glBlendFunciOESContextANGLE l_glBlendFunciOESContextANGLE
+#define glColorMaskiOESContextANGLE l_glColorMaskiOESContextANGLE
+#define glDisableiOESContextANGLE l_glDisableiOESContextANGLE
+#define glEnableiOESContextANGLE l_glEnableiOESContextANGLE
+#define glIsEnablediOESContextANGLE l_glIsEnablediOESContextANGLE
+#define glDrawElementsBaseVertexOESContextANGLE l_glDrawElementsBaseVertexOESContextANGLE
 #define glDrawElementsInstancedBaseVertexOESContextANGLE \
-    ANGLE_glDrawElementsInstancedBaseVertexOESContextANGLE
-#define glDrawRangeElementsBaseVertexOESContextANGLE \
-    ANGLE_glDrawRangeElementsBaseVertexOESContextANGLE
-#define glGetProgramBinaryOESContextANGLE ANGLE_glGetProgramBinaryOESContextANGLE
-#define glProgramBinaryOESContextANGLE ANGLE_glProgramBinaryOESContextANGLE
-#define glGetBufferPointervOESContextANGLE ANGLE_glGetBufferPointervOESContextANGLE
-#define glMapBufferOESContextANGLE ANGLE_glMapBufferOESContextANGLE
-#define glUnmapBufferOESContextANGLE ANGLE_glUnmapBufferOESContextANGLE
-#define glCompressedTexImage3DOESContextANGLE ANGLE_glCompressedTexImage3DOESContextANGLE
-#define glCompressedTexSubImage3DOESContextANGLE ANGLE_glCompressedTexSubImage3DOESContextANGLE
-#define glCopyTexSubImage3DOESContextANGLE ANGLE_glCopyTexSubImage3DOESContextANGLE
-#define glFramebufferTexture3DOESContextANGLE ANGLE_glFramebufferTexture3DOESContextANGLE
-#define glTexImage3DOESContextANGLE ANGLE_glTexImage3DOESContextANGLE
-#define glTexSubImage3DOESContextANGLE ANGLE_glTexSubImage3DOESContextANGLE
-#define glGetSamplerParameterIivOESContextANGLE ANGLE_glGetSamplerParameterIivOESContextANGLE
-#define glGetSamplerParameterIuivOESContextANGLE ANGLE_glGetSamplerParameterIuivOESContextANGLE
-#define glGetTexParameterIivOESContextANGLE ANGLE_glGetTexParameterIivOESContextANGLE
-#define glGetTexParameterIuivOESContextANGLE ANGLE_glGetTexParameterIuivOESContextANGLE
-#define glSamplerParameterIivOESContextANGLE ANGLE_glSamplerParameterIivOESContextANGLE
-#define glSamplerParameterIuivOESContextANGLE ANGLE_glSamplerParameterIuivOESContextANGLE
-#define glTexParameterIivOESContextANGLE ANGLE_glTexParameterIivOESContextANGLE
-#define glTexParameterIuivOESContextANGLE ANGLE_glTexParameterIuivOESContextANGLE
-#define glTexStorage3DMultisampleOESContextANGLE ANGLE_glTexStorage3DMultisampleOESContextANGLE
-#define glBindVertexArrayOESContextANGLE ANGLE_glBindVertexArrayOESContextANGLE
-#define glDeleteVertexArraysOESContextANGLE ANGLE_glDeleteVertexArraysOESContextANGLE
-#define glGenVertexArraysOESContextANGLE ANGLE_glGenVertexArraysOESContextANGLE
-#define glIsVertexArrayOESContextANGLE ANGLE_glIsVertexArrayOESContextANGLE
-#define glFramebufferTextureMultiviewOVRContextANGLE \
-    ANGLE_glFramebufferTextureMultiviewOVRContextANGLE
-#define glDrawTexfOESContextANGLE ANGLE_glDrawTexfOESContextANGLE
-#define glDrawTexfvOESContextANGLE ANGLE_glDrawTexfvOESContextANGLE
-#define glDrawTexiOESContextANGLE ANGLE_glDrawTexiOESContextANGLE
-#define glDrawTexivOESContextANGLE ANGLE_glDrawTexivOESContextANGLE
-#define glDrawTexsOESContextANGLE ANGLE_glDrawTexsOESContextANGLE
-#define glDrawTexsvOESContextANGLE ANGLE_glDrawTexsvOESContextANGLE
-#define glDrawTexxOESContextANGLE ANGLE_glDrawTexxOESContextANGLE
-#define glDrawTexxvOESContextANGLE ANGLE_glDrawTexxvOESContextANGLE
-#define glBindFramebufferOESContextANGLE ANGLE_glBindFramebufferOESContextANGLE
-#define glBindRenderbufferOESContextANGLE ANGLE_glBindRenderbufferOESContextANGLE
-#define glCheckFramebufferStatusOESContextANGLE ANGLE_glCheckFramebufferStatusOESContextANGLE
-#define glDeleteFramebuffersOESContextANGLE ANGLE_glDeleteFramebuffersOESContextANGLE
-#define glDeleteRenderbuffersOESContextANGLE ANGLE_glDeleteRenderbuffersOESContextANGLE
-#define glFramebufferRenderbufferOESContextANGLE ANGLE_glFramebufferRenderbufferOESContextANGLE
-#define glFramebufferTexture2DOESContextANGLE ANGLE_glFramebufferTexture2DOESContextANGLE
-#define glGenFramebuffersOESContextANGLE ANGLE_glGenFramebuffersOESContextANGLE
-#define glGenRenderbuffersOESContextANGLE ANGLE_glGenRenderbuffersOESContextANGLE
-#define glGenerateMipmapOESContextANGLE ANGLE_glGenerateMipmapOESContextANGLE
+    l_glDrawElementsInstancedBaseVertexOESContextANGLE
+#define glDrawRangeElementsBaseVertexOESContextANGLE l_glDrawRangeElementsBaseVertexOESContextANGLE
+#define glGetProgramBinaryOESContextANGLE l_glGetProgramBinaryOESContextANGLE
+#define glProgramBinaryOESContextANGLE l_glProgramBinaryOESContextANGLE
+#define glGetBufferPointervOESContextANGLE l_glGetBufferPointervOESContextANGLE
+#define glMapBufferOESContextANGLE l_glMapBufferOESContextANGLE
+#define glUnmapBufferOESContextANGLE l_glUnmapBufferOESContextANGLE
+#define glCompressedTexImage3DOESContextANGLE l_glCompressedTexImage3DOESContextANGLE
+#define glCompressedTexSubImage3DOESContextANGLE l_glCompressedTexSubImage3DOESContextANGLE
+#define glCopyTexSubImage3DOESContextANGLE l_glCopyTexSubImage3DOESContextANGLE
+#define glFramebufferTexture3DOESContextANGLE l_glFramebufferTexture3DOESContextANGLE
+#define glTexImage3DOESContextANGLE l_glTexImage3DOESContextANGLE
+#define glTexSubImage3DOESContextANGLE l_glTexSubImage3DOESContextANGLE
+#define glGetSamplerParameterIivOESContextANGLE l_glGetSamplerParameterIivOESContextANGLE
+#define glGetSamplerParameterIuivOESContextANGLE l_glGetSamplerParameterIuivOESContextANGLE
+#define glGetTexParameterIivOESContextANGLE l_glGetTexParameterIivOESContextANGLE
+#define glGetTexParameterIuivOESContextANGLE l_glGetTexParameterIuivOESContextANGLE
+#define glSamplerParameterIivOESContextANGLE l_glSamplerParameterIivOESContextANGLE
+#define glSamplerParameterIuivOESContextANGLE l_glSamplerParameterIuivOESContextANGLE
+#define glTexParameterIivOESContextANGLE l_glTexParameterIivOESContextANGLE
+#define glTexParameterIuivOESContextANGLE l_glTexParameterIuivOESContextANGLE
+#define glTexStorage3DMultisampleOESContextANGLE l_glTexStorage3DMultisampleOESContextANGLE
+#define glBindVertexArrayOESContextANGLE l_glBindVertexArrayOESContextANGLE
+#define glDeleteVertexArraysOESContextANGLE l_glDeleteVertexArraysOESContextANGLE
+#define glGenVertexArraysOESContextANGLE l_glGenVertexArraysOESContextANGLE
+#define glIsVertexArrayOESContextANGLE l_glIsVertexArrayOESContextANGLE
+#define glFramebufferTextureMultiviewOVRContextANGLE l_glFramebufferTextureMultiviewOVRContextANGLE
+#define glDrawTexfOESContextANGLE l_glDrawTexfOESContextANGLE
+#define glDrawTexfvOESContextANGLE l_glDrawTexfvOESContextANGLE
+#define glDrawTexiOESContextANGLE l_glDrawTexiOESContextANGLE
+#define glDrawTexivOESContextANGLE l_glDrawTexivOESContextANGLE
+#define glDrawTexsOESContextANGLE l_glDrawTexsOESContextANGLE
+#define glDrawTexsvOESContextANGLE l_glDrawTexsvOESContextANGLE
+#define glDrawTexxOESContextANGLE l_glDrawTexxOESContextANGLE
+#define glDrawTexxvOESContextANGLE l_glDrawTexxvOESContextANGLE
+#define glBindFramebufferOESContextANGLE l_glBindFramebufferOESContextANGLE
+#define glBindRenderbufferOESContextANGLE l_glBindRenderbufferOESContextANGLE
+#define glCheckFramebufferStatusOESContextANGLE l_glCheckFramebufferStatusOESContextANGLE
+#define glDeleteFramebuffersOESContextANGLE l_glDeleteFramebuffersOESContextANGLE
+#define glDeleteRenderbuffersOESContextANGLE l_glDeleteRenderbuffersOESContextANGLE
+#define glFramebufferRenderbufferOESContextANGLE l_glFramebufferRenderbufferOESContextANGLE
+#define glFramebufferTexture2DOESContextANGLE l_glFramebufferTexture2DOESContextANGLE
+#define glGenFramebuffersOESContextANGLE l_glGenFramebuffersOESContextANGLE
+#define glGenRenderbuffersOESContextANGLE l_glGenRenderbuffersOESContextANGLE
+#define glGenerateMipmapOESContextANGLE l_glGenerateMipmapOESContextANGLE
 #define glGetFramebufferAttachmentParameterivOESContextANGLE \
-    ANGLE_glGetFramebufferAttachmentParameterivOESContextANGLE
-#define glGetRenderbufferParameterivOESContextANGLE \
-    ANGLE_glGetRenderbufferParameterivOESContextANGLE
-#define glIsFramebufferOESContextANGLE ANGLE_glIsFramebufferOESContextANGLE
-#define glIsRenderbufferOESContextANGLE ANGLE_glIsRenderbufferOESContextANGLE
-#define glRenderbufferStorageOESContextANGLE ANGLE_glRenderbufferStorageOESContextANGLE
-#define glCurrentPaletteMatrixOESContextANGLE ANGLE_glCurrentPaletteMatrixOESContextANGLE
+    l_glGetFramebufferAttachmentParameterivOESContextANGLE
+#define glGetRenderbufferParameterivOESContextANGLE l_glGetRenderbufferParameterivOESContextANGLE
+#define glIsFramebufferOESContextANGLE l_glIsFramebufferOESContextANGLE
+#define glIsRenderbufferOESContextANGLE l_glIsRenderbufferOESContextANGLE
+#define glRenderbufferStorageOESContextANGLE l_glRenderbufferStorageOESContextANGLE
+#define glCurrentPaletteMatrixOESContextANGLE l_glCurrentPaletteMatrixOESContextANGLE
 #define glLoadPaletteFromModelViewMatrixOESContextANGLE \
-    ANGLE_glLoadPaletteFromModelViewMatrixOESContextANGLE
-#define glMatrixIndexPointerOESContextANGLE ANGLE_glMatrixIndexPointerOESContextANGLE
-#define glWeightPointerOESContextANGLE ANGLE_glWeightPointerOESContextANGLE
-#define glPointSizePointerOESContextANGLE ANGLE_glPointSizePointerOESContextANGLE
-#define glQueryMatrixxOESContextANGLE ANGLE_glQueryMatrixxOESContextANGLE
-#define glGetTexGenfvOESContextANGLE ANGLE_glGetTexGenfvOESContextANGLE
-#define glGetTexGenivOESContextANGLE ANGLE_glGetTexGenivOESContextANGLE
-#define glGetTexGenxvOESContextANGLE ANGLE_glGetTexGenxvOESContextANGLE
-#define glTexGenfOESContextANGLE ANGLE_glTexGenfOESContextANGLE
-#define glTexGenfvOESContextANGLE ANGLE_glTexGenfvOESContextANGLE
-#define glTexGeniOESContextANGLE ANGLE_glTexGeniOESContextANGLE
-#define glTexGenivOESContextANGLE ANGLE_glTexGenivOESContextANGLE
-#define glTexGenxOESContextANGLE ANGLE_glTexGenxOESContextANGLE
-#define glTexGenxvOESContextANGLE ANGLE_glTexGenxvOESContextANGLE
-ANGLE_UTIL_EXPORT extern PFNGLALPHAFUNCPROC ANGLE_glAlphaFunc;
-ANGLE_UTIL_EXPORT extern PFNGLCLIPPLANEFPROC ANGLE_glClipPlanef;
-ANGLE_UTIL_EXPORT extern PFNGLCOLOR4FPROC ANGLE_glColor4f;
-ANGLE_UTIL_EXPORT extern PFNGLFOGFPROC ANGLE_glFogf;
-ANGLE_UTIL_EXPORT extern PFNGLFOGFVPROC ANGLE_glFogfv;
-ANGLE_UTIL_EXPORT extern PFNGLFRUSTUMFPROC ANGLE_glFrustumf;
-ANGLE_UTIL_EXPORT extern PFNGLGETCLIPPLANEFPROC ANGLE_glGetClipPlanef;
-ANGLE_UTIL_EXPORT extern PFNGLGETLIGHTFVPROC ANGLE_glGetLightfv;
-ANGLE_UTIL_EXPORT extern PFNGLGETMATERIALFVPROC ANGLE_glGetMaterialfv;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVFVPROC ANGLE_glGetTexEnvfv;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELFPROC ANGLE_glLightModelf;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELFVPROC ANGLE_glLightModelfv;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTFPROC ANGLE_glLightf;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTFVPROC ANGLE_glLightfv;
-ANGLE_UTIL_EXPORT extern PFNGLLOADMATRIXFPROC ANGLE_glLoadMatrixf;
-ANGLE_UTIL_EXPORT extern PFNGLMATERIALFPROC ANGLE_glMaterialf;
-ANGLE_UTIL_EXPORT extern PFNGLMATERIALFVPROC ANGLE_glMaterialfv;
-ANGLE_UTIL_EXPORT extern PFNGLMULTMATRIXFPROC ANGLE_glMultMatrixf;
-ANGLE_UTIL_EXPORT extern PFNGLMULTITEXCOORD4FPROC ANGLE_glMultiTexCoord4f;
-ANGLE_UTIL_EXPORT extern PFNGLNORMAL3FPROC ANGLE_glNormal3f;
-ANGLE_UTIL_EXPORT extern PFNGLORTHOFPROC ANGLE_glOrthof;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERFPROC ANGLE_glPointParameterf;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERFVPROC ANGLE_glPointParameterfv;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZEPROC ANGLE_glPointSize;
-ANGLE_UTIL_EXPORT extern PFNGLROTATEFPROC ANGLE_glRotatef;
-ANGLE_UTIL_EXPORT extern PFNGLSCALEFPROC ANGLE_glScalef;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVFPROC ANGLE_glTexEnvf;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVFVPROC ANGLE_glTexEnvfv;
-ANGLE_UTIL_EXPORT extern PFNGLTRANSLATEFPROC ANGLE_glTranslatef;
-ANGLE_UTIL_EXPORT extern PFNGLALPHAFUNCXPROC ANGLE_glAlphaFuncx;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARCOLORXPROC ANGLE_glClearColorx;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARDEPTHXPROC ANGLE_glClearDepthx;
-ANGLE_UTIL_EXPORT extern PFNGLCLIENTACTIVETEXTUREPROC ANGLE_glClientActiveTexture;
-ANGLE_UTIL_EXPORT extern PFNGLCLIPPLANEXPROC ANGLE_glClipPlanex;
-ANGLE_UTIL_EXPORT extern PFNGLCOLOR4UBPROC ANGLE_glColor4ub;
-ANGLE_UTIL_EXPORT extern PFNGLCOLOR4XPROC ANGLE_glColor4x;
-ANGLE_UTIL_EXPORT extern PFNGLCOLORPOINTERPROC ANGLE_glColorPointer;
-ANGLE_UTIL_EXPORT extern PFNGLDEPTHRANGEXPROC ANGLE_glDepthRangex;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLECLIENTSTATEPROC ANGLE_glDisableClientState;
-ANGLE_UTIL_EXPORT extern PFNGLENABLECLIENTSTATEPROC ANGLE_glEnableClientState;
-ANGLE_UTIL_EXPORT extern PFNGLFOGXPROC ANGLE_glFogx;
-ANGLE_UTIL_EXPORT extern PFNGLFOGXVPROC ANGLE_glFogxv;
-ANGLE_UTIL_EXPORT extern PFNGLFRUSTUMXPROC ANGLE_glFrustumx;
-ANGLE_UTIL_EXPORT extern PFNGLGETCLIPPLANEXPROC ANGLE_glGetClipPlanex;
-ANGLE_UTIL_EXPORT extern PFNGLGETFIXEDVPROC ANGLE_glGetFixedv;
-ANGLE_UTIL_EXPORT extern PFNGLGETLIGHTXVPROC ANGLE_glGetLightxv;
-ANGLE_UTIL_EXPORT extern PFNGLGETMATERIALXVPROC ANGLE_glGetMaterialxv;
-ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVPROC ANGLE_glGetPointerv;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVIVPROC ANGLE_glGetTexEnviv;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVXVPROC ANGLE_glGetTexEnvxv;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERXVPROC ANGLE_glGetTexParameterxv;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELXPROC ANGLE_glLightModelx;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELXVPROC ANGLE_glLightModelxv;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTXPROC ANGLE_glLightx;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTXVPROC ANGLE_glLightxv;
-ANGLE_UTIL_EXPORT extern PFNGLLINEWIDTHXPROC ANGLE_glLineWidthx;
-ANGLE_UTIL_EXPORT extern PFNGLLOADIDENTITYPROC ANGLE_glLoadIdentity;
-ANGLE_UTIL_EXPORT extern PFNGLLOADMATRIXXPROC ANGLE_glLoadMatrixx;
-ANGLE_UTIL_EXPORT extern PFNGLLOGICOPPROC ANGLE_glLogicOp;
-ANGLE_UTIL_EXPORT extern PFNGLMATERIALXPROC ANGLE_glMaterialx;
-ANGLE_UTIL_EXPORT extern PFNGLMATERIALXVPROC ANGLE_glMaterialxv;
-ANGLE_UTIL_EXPORT extern PFNGLMATRIXMODEPROC ANGLE_glMatrixMode;
-ANGLE_UTIL_EXPORT extern PFNGLMULTMATRIXXPROC ANGLE_glMultMatrixx;
-ANGLE_UTIL_EXPORT extern PFNGLMULTITEXCOORD4XPROC ANGLE_glMultiTexCoord4x;
-ANGLE_UTIL_EXPORT extern PFNGLNORMAL3XPROC ANGLE_glNormal3x;
-ANGLE_UTIL_EXPORT extern PFNGLNORMALPOINTERPROC ANGLE_glNormalPointer;
-ANGLE_UTIL_EXPORT extern PFNGLORTHOXPROC ANGLE_glOrthox;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERXPROC ANGLE_glPointParameterx;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERXVPROC ANGLE_glPointParameterxv;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZEXPROC ANGLE_glPointSizex;
-ANGLE_UTIL_EXPORT extern PFNGLPOLYGONOFFSETXPROC ANGLE_glPolygonOffsetx;
-ANGLE_UTIL_EXPORT extern PFNGLPOPMATRIXPROC ANGLE_glPopMatrix;
-ANGLE_UTIL_EXPORT extern PFNGLPUSHMATRIXPROC ANGLE_glPushMatrix;
-ANGLE_UTIL_EXPORT extern PFNGLROTATEXPROC ANGLE_glRotatex;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLECOVERAGEXPROC ANGLE_glSampleCoveragex;
-ANGLE_UTIL_EXPORT extern PFNGLSCALEXPROC ANGLE_glScalex;
-ANGLE_UTIL_EXPORT extern PFNGLSHADEMODELPROC ANGLE_glShadeModel;
-ANGLE_UTIL_EXPORT extern PFNGLTEXCOORDPOINTERPROC ANGLE_glTexCoordPointer;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVIPROC ANGLE_glTexEnvi;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVXPROC ANGLE_glTexEnvx;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVIVPROC ANGLE_glTexEnviv;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVXVPROC ANGLE_glTexEnvxv;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERXPROC ANGLE_glTexParameterx;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERXVPROC ANGLE_glTexParameterxv;
-ANGLE_UTIL_EXPORT extern PFNGLTRANSLATEXPROC ANGLE_glTranslatex;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXPOINTERPROC ANGLE_glVertexPointer;
-ANGLE_UTIL_EXPORT extern PFNGLACTIVETEXTUREPROC ANGLE_glActiveTexture;
-ANGLE_UTIL_EXPORT extern PFNGLATTACHSHADERPROC ANGLE_glAttachShader;
-ANGLE_UTIL_EXPORT extern PFNGLBINDATTRIBLOCATIONPROC ANGLE_glBindAttribLocation;
-ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERPROC ANGLE_glBindBuffer;
-ANGLE_UTIL_EXPORT extern PFNGLBINDFRAMEBUFFERPROC ANGLE_glBindFramebuffer;
-ANGLE_UTIL_EXPORT extern PFNGLBINDRENDERBUFFERPROC ANGLE_glBindRenderbuffer;
-ANGLE_UTIL_EXPORT extern PFNGLBINDTEXTUREPROC ANGLE_glBindTexture;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDCOLORPROC ANGLE_glBlendColor;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONPROC ANGLE_glBlendEquation;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONSEPARATEPROC ANGLE_glBlendEquationSeparate;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCPROC ANGLE_glBlendFunc;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATEPROC ANGLE_glBlendFuncSeparate;
-ANGLE_UTIL_EXPORT extern PFNGLBUFFERDATAPROC ANGLE_glBufferData;
-ANGLE_UTIL_EXPORT extern PFNGLBUFFERSUBDATAPROC ANGLE_glBufferSubData;
-ANGLE_UTIL_EXPORT extern PFNGLCHECKFRAMEBUFFERSTATUSPROC ANGLE_glCheckFramebufferStatus;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARPROC ANGLE_glClear;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARCOLORPROC ANGLE_glClearColor;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARDEPTHFPROC ANGLE_glClearDepthf;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARSTENCILPROC ANGLE_glClearStencil;
-ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKPROC ANGLE_glColorMask;
-ANGLE_UTIL_EXPORT extern PFNGLCOMPILESHADERPROC ANGLE_glCompileShader;
-ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE2DPROC ANGLE_glCompressedTexImage2D;
-ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC ANGLE_glCompressedTexSubImage2D;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXIMAGE2DPROC ANGLE_glCopyTexImage2D;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE2DPROC ANGLE_glCopyTexSubImage2D;
-ANGLE_UTIL_EXPORT extern PFNGLCREATEPROGRAMPROC ANGLE_glCreateProgram;
-ANGLE_UTIL_EXPORT extern PFNGLCREATESHADERPROC ANGLE_glCreateShader;
-ANGLE_UTIL_EXPORT extern PFNGLCULLFACEPROC ANGLE_glCullFace;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEBUFFERSPROC ANGLE_glDeleteBuffers;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEFRAMEBUFFERSPROC ANGLE_glDeleteFramebuffers;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEPROGRAMPROC ANGLE_glDeleteProgram;
-ANGLE_UTIL_EXPORT extern PFNGLDELETERENDERBUFFERSPROC ANGLE_glDeleteRenderbuffers;
-ANGLE_UTIL_EXPORT extern PFNGLDELETESHADERPROC ANGLE_glDeleteShader;
-ANGLE_UTIL_EXPORT extern PFNGLDELETETEXTURESPROC ANGLE_glDeleteTextures;
-ANGLE_UTIL_EXPORT extern PFNGLDEPTHFUNCPROC ANGLE_glDepthFunc;
-ANGLE_UTIL_EXPORT extern PFNGLDEPTHMASKPROC ANGLE_glDepthMask;
-ANGLE_UTIL_EXPORT extern PFNGLDEPTHRANGEFPROC ANGLE_glDepthRangef;
-ANGLE_UTIL_EXPORT extern PFNGLDETACHSHADERPROC ANGLE_glDetachShader;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLEPROC ANGLE_glDisable;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLEVERTEXATTRIBARRAYPROC ANGLE_glDisableVertexAttribArray;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSPROC ANGLE_glDrawArrays;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSPROC ANGLE_glDrawElements;
-ANGLE_UTIL_EXPORT extern PFNGLENABLEPROC ANGLE_glEnable;
-ANGLE_UTIL_EXPORT extern PFNGLENABLEVERTEXATTRIBARRAYPROC ANGLE_glEnableVertexAttribArray;
-ANGLE_UTIL_EXPORT extern PFNGLFINISHPROC ANGLE_glFinish;
-ANGLE_UTIL_EXPORT extern PFNGLFLUSHPROC ANGLE_glFlush;
-ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERRENDERBUFFERPROC ANGLE_glFramebufferRenderbuffer;
-ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE2DPROC ANGLE_glFramebufferTexture2D;
-ANGLE_UTIL_EXPORT extern PFNGLFRONTFACEPROC ANGLE_glFrontFace;
-ANGLE_UTIL_EXPORT extern PFNGLGENBUFFERSPROC ANGLE_glGenBuffers;
-ANGLE_UTIL_EXPORT extern PFNGLGENERATEMIPMAPPROC ANGLE_glGenerateMipmap;
-ANGLE_UTIL_EXPORT extern PFNGLGENFRAMEBUFFERSPROC ANGLE_glGenFramebuffers;
-ANGLE_UTIL_EXPORT extern PFNGLGENRENDERBUFFERSPROC ANGLE_glGenRenderbuffers;
-ANGLE_UTIL_EXPORT extern PFNGLGENTEXTURESPROC ANGLE_glGenTextures;
-ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEATTRIBPROC ANGLE_glGetActiveAttrib;
-ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMPROC ANGLE_glGetActiveUniform;
-ANGLE_UTIL_EXPORT extern PFNGLGETATTACHEDSHADERSPROC ANGLE_glGetAttachedShaders;
-ANGLE_UTIL_EXPORT extern PFNGLGETATTRIBLOCATIONPROC ANGLE_glGetAttribLocation;
-ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANVPROC ANGLE_glGetBooleanv;
-ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERIVPROC ANGLE_glGetBufferParameteriv;
-ANGLE_UTIL_EXPORT extern PFNGLGETERRORPROC ANGLE_glGetError;
-ANGLE_UTIL_EXPORT extern PFNGLGETFLOATVPROC ANGLE_glGetFloatv;
+    l_glLoadPaletteFromModelViewMatrixOESContextANGLE
+#define glMatrixIndexPointerOESContextANGLE l_glMatrixIndexPointerOESContextANGLE
+#define glWeightPointerOESContextANGLE l_glWeightPointerOESContextANGLE
+#define glPointSizePointerOESContextANGLE l_glPointSizePointerOESContextANGLE
+#define glQueryMatrixxOESContextANGLE l_glQueryMatrixxOESContextANGLE
+#define glGetTexGenfvOESContextANGLE l_glGetTexGenfvOESContextANGLE
+#define glGetTexGenivOESContextANGLE l_glGetTexGenivOESContextANGLE
+#define glGetTexGenxvOESContextANGLE l_glGetTexGenxvOESContextANGLE
+#define glTexGenfOESContextANGLE l_glTexGenfOESContextANGLE
+#define glTexGenfvOESContextANGLE l_glTexGenfvOESContextANGLE
+#define glTexGeniOESContextANGLE l_glTexGeniOESContextANGLE
+#define glTexGenivOESContextANGLE l_glTexGenivOESContextANGLE
+#define glTexGenxOESContextANGLE l_glTexGenxOESContextANGLE
+#define glTexGenxvOESContextANGLE l_glTexGenxvOESContextANGLE
+ANGLE_UTIL_EXPORT extern PFNGLALPHAFUNCPROC l_glAlphaFunc;
+ANGLE_UTIL_EXPORT extern PFNGLCLIPPLANEFPROC l_glClipPlanef;
+ANGLE_UTIL_EXPORT extern PFNGLCOLOR4FPROC l_glColor4f;
+ANGLE_UTIL_EXPORT extern PFNGLFOGFPROC l_glFogf;
+ANGLE_UTIL_EXPORT extern PFNGLFOGFVPROC l_glFogfv;
+ANGLE_UTIL_EXPORT extern PFNGLFRUSTUMFPROC l_glFrustumf;
+ANGLE_UTIL_EXPORT extern PFNGLGETCLIPPLANEFPROC l_glGetClipPlanef;
+ANGLE_UTIL_EXPORT extern PFNGLGETLIGHTFVPROC l_glGetLightfv;
+ANGLE_UTIL_EXPORT extern PFNGLGETMATERIALFVPROC l_glGetMaterialfv;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVFVPROC l_glGetTexEnvfv;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELFPROC l_glLightModelf;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELFVPROC l_glLightModelfv;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTFPROC l_glLightf;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTFVPROC l_glLightfv;
+ANGLE_UTIL_EXPORT extern PFNGLLOADMATRIXFPROC l_glLoadMatrixf;
+ANGLE_UTIL_EXPORT extern PFNGLMATERIALFPROC l_glMaterialf;
+ANGLE_UTIL_EXPORT extern PFNGLMATERIALFVPROC l_glMaterialfv;
+ANGLE_UTIL_EXPORT extern PFNGLMULTMATRIXFPROC l_glMultMatrixf;
+ANGLE_UTIL_EXPORT extern PFNGLMULTITEXCOORD4FPROC l_glMultiTexCoord4f;
+ANGLE_UTIL_EXPORT extern PFNGLNORMAL3FPROC l_glNormal3f;
+ANGLE_UTIL_EXPORT extern PFNGLORTHOFPROC l_glOrthof;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERFPROC l_glPointParameterf;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERFVPROC l_glPointParameterfv;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZEPROC l_glPointSize;
+ANGLE_UTIL_EXPORT extern PFNGLROTATEFPROC l_glRotatef;
+ANGLE_UTIL_EXPORT extern PFNGLSCALEFPROC l_glScalef;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVFPROC l_glTexEnvf;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVFVPROC l_glTexEnvfv;
+ANGLE_UTIL_EXPORT extern PFNGLTRANSLATEFPROC l_glTranslatef;
+ANGLE_UTIL_EXPORT extern PFNGLALPHAFUNCXPROC l_glAlphaFuncx;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARCOLORXPROC l_glClearColorx;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARDEPTHXPROC l_glClearDepthx;
+ANGLE_UTIL_EXPORT extern PFNGLCLIENTACTIVETEXTUREPROC l_glClientActiveTexture;
+ANGLE_UTIL_EXPORT extern PFNGLCLIPPLANEXPROC l_glClipPlanex;
+ANGLE_UTIL_EXPORT extern PFNGLCOLOR4UBPROC l_glColor4ub;
+ANGLE_UTIL_EXPORT extern PFNGLCOLOR4XPROC l_glColor4x;
+ANGLE_UTIL_EXPORT extern PFNGLCOLORPOINTERPROC l_glColorPointer;
+ANGLE_UTIL_EXPORT extern PFNGLDEPTHRANGEXPROC l_glDepthRangex;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLECLIENTSTATEPROC l_glDisableClientState;
+ANGLE_UTIL_EXPORT extern PFNGLENABLECLIENTSTATEPROC l_glEnableClientState;
+ANGLE_UTIL_EXPORT extern PFNGLFOGXPROC l_glFogx;
+ANGLE_UTIL_EXPORT extern PFNGLFOGXVPROC l_glFogxv;
+ANGLE_UTIL_EXPORT extern PFNGLFRUSTUMXPROC l_glFrustumx;
+ANGLE_UTIL_EXPORT extern PFNGLGETCLIPPLANEXPROC l_glGetClipPlanex;
+ANGLE_UTIL_EXPORT extern PFNGLGETFIXEDVPROC l_glGetFixedv;
+ANGLE_UTIL_EXPORT extern PFNGLGETLIGHTXVPROC l_glGetLightxv;
+ANGLE_UTIL_EXPORT extern PFNGLGETMATERIALXVPROC l_glGetMaterialxv;
+ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVPROC l_glGetPointerv;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVIVPROC l_glGetTexEnviv;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVXVPROC l_glGetTexEnvxv;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERXVPROC l_glGetTexParameterxv;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELXPROC l_glLightModelx;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELXVPROC l_glLightModelxv;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTXPROC l_glLightx;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTXVPROC l_glLightxv;
+ANGLE_UTIL_EXPORT extern PFNGLLINEWIDTHXPROC l_glLineWidthx;
+ANGLE_UTIL_EXPORT extern PFNGLLOADIDENTITYPROC l_glLoadIdentity;
+ANGLE_UTIL_EXPORT extern PFNGLLOADMATRIXXPROC l_glLoadMatrixx;
+ANGLE_UTIL_EXPORT extern PFNGLLOGICOPPROC l_glLogicOp;
+ANGLE_UTIL_EXPORT extern PFNGLMATERIALXPROC l_glMaterialx;
+ANGLE_UTIL_EXPORT extern PFNGLMATERIALXVPROC l_glMaterialxv;
+ANGLE_UTIL_EXPORT extern PFNGLMATRIXMODEPROC l_glMatrixMode;
+ANGLE_UTIL_EXPORT extern PFNGLMULTMATRIXXPROC l_glMultMatrixx;
+ANGLE_UTIL_EXPORT extern PFNGLMULTITEXCOORD4XPROC l_glMultiTexCoord4x;
+ANGLE_UTIL_EXPORT extern PFNGLNORMAL3XPROC l_glNormal3x;
+ANGLE_UTIL_EXPORT extern PFNGLNORMALPOINTERPROC l_glNormalPointer;
+ANGLE_UTIL_EXPORT extern PFNGLORTHOXPROC l_glOrthox;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERXPROC l_glPointParameterx;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERXVPROC l_glPointParameterxv;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZEXPROC l_glPointSizex;
+ANGLE_UTIL_EXPORT extern PFNGLPOLYGONOFFSETXPROC l_glPolygonOffsetx;
+ANGLE_UTIL_EXPORT extern PFNGLPOPMATRIXPROC l_glPopMatrix;
+ANGLE_UTIL_EXPORT extern PFNGLPUSHMATRIXPROC l_glPushMatrix;
+ANGLE_UTIL_EXPORT extern PFNGLROTATEXPROC l_glRotatex;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLECOVERAGEXPROC l_glSampleCoveragex;
+ANGLE_UTIL_EXPORT extern PFNGLSCALEXPROC l_glScalex;
+ANGLE_UTIL_EXPORT extern PFNGLSHADEMODELPROC l_glShadeModel;
+ANGLE_UTIL_EXPORT extern PFNGLTEXCOORDPOINTERPROC l_glTexCoordPointer;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVIPROC l_glTexEnvi;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVXPROC l_glTexEnvx;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVIVPROC l_glTexEnviv;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVXVPROC l_glTexEnvxv;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERXPROC l_glTexParameterx;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERXVPROC l_glTexParameterxv;
+ANGLE_UTIL_EXPORT extern PFNGLTRANSLATEXPROC l_glTranslatex;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXPOINTERPROC l_glVertexPointer;
+ANGLE_UTIL_EXPORT extern PFNGLACTIVETEXTUREPROC l_glActiveTexture;
+ANGLE_UTIL_EXPORT extern PFNGLATTACHSHADERPROC l_glAttachShader;
+ANGLE_UTIL_EXPORT extern PFNGLBINDATTRIBLOCATIONPROC l_glBindAttribLocation;
+ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERPROC l_glBindBuffer;
+ANGLE_UTIL_EXPORT extern PFNGLBINDFRAMEBUFFERPROC l_glBindFramebuffer;
+ANGLE_UTIL_EXPORT extern PFNGLBINDRENDERBUFFERPROC l_glBindRenderbuffer;
+ANGLE_UTIL_EXPORT extern PFNGLBINDTEXTUREPROC l_glBindTexture;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDCOLORPROC l_glBlendColor;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONPROC l_glBlendEquation;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONSEPARATEPROC l_glBlendEquationSeparate;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCPROC l_glBlendFunc;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATEPROC l_glBlendFuncSeparate;
+ANGLE_UTIL_EXPORT extern PFNGLBUFFERDATAPROC l_glBufferData;
+ANGLE_UTIL_EXPORT extern PFNGLBUFFERSUBDATAPROC l_glBufferSubData;
+ANGLE_UTIL_EXPORT extern PFNGLCHECKFRAMEBUFFERSTATUSPROC l_glCheckFramebufferStatus;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARPROC l_glClear;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARCOLORPROC l_glClearColor;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARDEPTHFPROC l_glClearDepthf;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARSTENCILPROC l_glClearStencil;
+ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKPROC l_glColorMask;
+ANGLE_UTIL_EXPORT extern PFNGLCOMPILESHADERPROC l_glCompileShader;
+ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE2DPROC l_glCompressedTexImage2D;
+ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC l_glCompressedTexSubImage2D;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXIMAGE2DPROC l_glCopyTexImage2D;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE2DPROC l_glCopyTexSubImage2D;
+ANGLE_UTIL_EXPORT extern PFNGLCREATEPROGRAMPROC l_glCreateProgram;
+ANGLE_UTIL_EXPORT extern PFNGLCREATESHADERPROC l_glCreateShader;
+ANGLE_UTIL_EXPORT extern PFNGLCULLFACEPROC l_glCullFace;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEBUFFERSPROC l_glDeleteBuffers;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEFRAMEBUFFERSPROC l_glDeleteFramebuffers;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEPROGRAMPROC l_glDeleteProgram;
+ANGLE_UTIL_EXPORT extern PFNGLDELETERENDERBUFFERSPROC l_glDeleteRenderbuffers;
+ANGLE_UTIL_EXPORT extern PFNGLDELETESHADERPROC l_glDeleteShader;
+ANGLE_UTIL_EXPORT extern PFNGLDELETETEXTURESPROC l_glDeleteTextures;
+ANGLE_UTIL_EXPORT extern PFNGLDEPTHFUNCPROC l_glDepthFunc;
+ANGLE_UTIL_EXPORT extern PFNGLDEPTHMASKPROC l_glDepthMask;
+ANGLE_UTIL_EXPORT extern PFNGLDEPTHRANGEFPROC l_glDepthRangef;
+ANGLE_UTIL_EXPORT extern PFNGLDETACHSHADERPROC l_glDetachShader;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLEPROC l_glDisable;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLEVERTEXATTRIBARRAYPROC l_glDisableVertexAttribArray;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSPROC l_glDrawArrays;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSPROC l_glDrawElements;
+ANGLE_UTIL_EXPORT extern PFNGLENABLEPROC l_glEnable;
+ANGLE_UTIL_EXPORT extern PFNGLENABLEVERTEXATTRIBARRAYPROC l_glEnableVertexAttribArray;
+ANGLE_UTIL_EXPORT extern PFNGLFINISHPROC l_glFinish;
+ANGLE_UTIL_EXPORT extern PFNGLFLUSHPROC l_glFlush;
+ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERRENDERBUFFERPROC l_glFramebufferRenderbuffer;
+ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE2DPROC l_glFramebufferTexture2D;
+ANGLE_UTIL_EXPORT extern PFNGLFRONTFACEPROC l_glFrontFace;
+ANGLE_UTIL_EXPORT extern PFNGLGENBUFFERSPROC l_glGenBuffers;
+ANGLE_UTIL_EXPORT extern PFNGLGENERATEMIPMAPPROC l_glGenerateMipmap;
+ANGLE_UTIL_EXPORT extern PFNGLGENFRAMEBUFFERSPROC l_glGenFramebuffers;
+ANGLE_UTIL_EXPORT extern PFNGLGENRENDERBUFFERSPROC l_glGenRenderbuffers;
+ANGLE_UTIL_EXPORT extern PFNGLGENTEXTURESPROC l_glGenTextures;
+ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEATTRIBPROC l_glGetActiveAttrib;
+ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMPROC l_glGetActiveUniform;
+ANGLE_UTIL_EXPORT extern PFNGLGETATTACHEDSHADERSPROC l_glGetAttachedShaders;
+ANGLE_UTIL_EXPORT extern PFNGLGETATTRIBLOCATIONPROC l_glGetAttribLocation;
+ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANVPROC l_glGetBooleanv;
+ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERIVPROC l_glGetBufferParameteriv;
+ANGLE_UTIL_EXPORT extern PFNGLGETERRORPROC l_glGetError;
+ANGLE_UTIL_EXPORT extern PFNGLGETFLOATVPROC l_glGetFloatv;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC
-    ANGLE_glGetFramebufferAttachmentParameteriv;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERVPROC ANGLE_glGetIntegerv;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMIVPROC ANGLE_glGetProgramiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMINFOLOGPROC ANGLE_glGetProgramInfoLog;
-ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERPARAMETERIVPROC ANGLE_glGetRenderbufferParameteriv;
-ANGLE_UTIL_EXPORT extern PFNGLGETSHADERIVPROC ANGLE_glGetShaderiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETSHADERINFOLOGPROC ANGLE_glGetShaderInfoLog;
-ANGLE_UTIL_EXPORT extern PFNGLGETSHADERPRECISIONFORMATPROC ANGLE_glGetShaderPrecisionFormat;
-ANGLE_UTIL_EXPORT extern PFNGLGETSHADERSOURCEPROC ANGLE_glGetShaderSource;
-ANGLE_UTIL_EXPORT extern PFNGLGETSTRINGPROC ANGLE_glGetString;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERFVPROC ANGLE_glGetTexParameterfv;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIVPROC ANGLE_glGetTexParameteriv;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMFVPROC ANGLE_glGetUniformfv;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMIVPROC ANGLE_glGetUniformiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMLOCATIONPROC ANGLE_glGetUniformLocation;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBFVPROC ANGLE_glGetVertexAttribfv;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIVPROC ANGLE_glGetVertexAttribiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBPOINTERVPROC ANGLE_glGetVertexAttribPointerv;
-ANGLE_UTIL_EXPORT extern PFNGLHINTPROC ANGLE_glHint;
-ANGLE_UTIL_EXPORT extern PFNGLISBUFFERPROC ANGLE_glIsBuffer;
-ANGLE_UTIL_EXPORT extern PFNGLISENABLEDPROC ANGLE_glIsEnabled;
-ANGLE_UTIL_EXPORT extern PFNGLISFRAMEBUFFERPROC ANGLE_glIsFramebuffer;
-ANGLE_UTIL_EXPORT extern PFNGLISPROGRAMPROC ANGLE_glIsProgram;
-ANGLE_UTIL_EXPORT extern PFNGLISRENDERBUFFERPROC ANGLE_glIsRenderbuffer;
-ANGLE_UTIL_EXPORT extern PFNGLISSHADERPROC ANGLE_glIsShader;
-ANGLE_UTIL_EXPORT extern PFNGLISTEXTUREPROC ANGLE_glIsTexture;
-ANGLE_UTIL_EXPORT extern PFNGLLINEWIDTHPROC ANGLE_glLineWidth;
-ANGLE_UTIL_EXPORT extern PFNGLLINKPROGRAMPROC ANGLE_glLinkProgram;
-ANGLE_UTIL_EXPORT extern PFNGLPIXELSTOREIPROC ANGLE_glPixelStorei;
-ANGLE_UTIL_EXPORT extern PFNGLPOLYGONOFFSETPROC ANGLE_glPolygonOffset;
-ANGLE_UTIL_EXPORT extern PFNGLREADPIXELSPROC ANGLE_glReadPixels;
-ANGLE_UTIL_EXPORT extern PFNGLRELEASESHADERCOMPILERPROC ANGLE_glReleaseShaderCompiler;
-ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEPROC ANGLE_glRenderbufferStorage;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLECOVERAGEPROC ANGLE_glSampleCoverage;
-ANGLE_UTIL_EXPORT extern PFNGLSCISSORPROC ANGLE_glScissor;
-ANGLE_UTIL_EXPORT extern PFNGLSHADERBINARYPROC ANGLE_glShaderBinary;
-ANGLE_UTIL_EXPORT extern PFNGLSHADERSOURCEPROC ANGLE_glShaderSource;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILFUNCPROC ANGLE_glStencilFunc;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILFUNCSEPARATEPROC ANGLE_glStencilFuncSeparate;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILMASKPROC ANGLE_glStencilMask;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILMASKSEPARATEPROC ANGLE_glStencilMaskSeparate;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILOPPROC ANGLE_glStencilOp;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILOPSEPARATEPROC ANGLE_glStencilOpSeparate;
-ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DPROC ANGLE_glTexImage2D;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFPROC ANGLE_glTexParameterf;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFVPROC ANGLE_glTexParameterfv;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIPROC ANGLE_glTexParameteri;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIVPROC ANGLE_glTexParameteriv;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE2DPROC ANGLE_glTexSubImage2D;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1FPROC ANGLE_glUniform1f;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1FVPROC ANGLE_glUniform1fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1IPROC ANGLE_glUniform1i;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1IVPROC ANGLE_glUniform1iv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2FPROC ANGLE_glUniform2f;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2FVPROC ANGLE_glUniform2fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2IPROC ANGLE_glUniform2i;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2IVPROC ANGLE_glUniform2iv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3FPROC ANGLE_glUniform3f;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3FVPROC ANGLE_glUniform3fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3IPROC ANGLE_glUniform3i;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3IVPROC ANGLE_glUniform3iv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4FPROC ANGLE_glUniform4f;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4FVPROC ANGLE_glUniform4fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4IPROC ANGLE_glUniform4i;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4IVPROC ANGLE_glUniform4iv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2FVPROC ANGLE_glUniformMatrix2fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3FVPROC ANGLE_glUniformMatrix3fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4FVPROC ANGLE_glUniformMatrix4fv;
-ANGLE_UTIL_EXPORT extern PFNGLUSEPROGRAMPROC ANGLE_glUseProgram;
-ANGLE_UTIL_EXPORT extern PFNGLVALIDATEPROGRAMPROC ANGLE_glValidateProgram;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB1FPROC ANGLE_glVertexAttrib1f;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB1FVPROC ANGLE_glVertexAttrib1fv;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB2FPROC ANGLE_glVertexAttrib2f;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB2FVPROC ANGLE_glVertexAttrib2fv;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB3FPROC ANGLE_glVertexAttrib3f;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB3FVPROC ANGLE_glVertexAttrib3fv;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB4FPROC ANGLE_glVertexAttrib4f;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB4FVPROC ANGLE_glVertexAttrib4fv;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBPOINTERPROC ANGLE_glVertexAttribPointer;
-ANGLE_UTIL_EXPORT extern PFNGLVIEWPORTPROC ANGLE_glViewport;
-ANGLE_UTIL_EXPORT extern PFNGLREADBUFFERPROC ANGLE_glReadBuffer;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSPROC ANGLE_glDrawRangeElements;
-ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DPROC ANGLE_glTexImage3D;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DPROC ANGLE_glTexSubImage3D;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE3DPROC ANGLE_glCopyTexSubImage3D;
-ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE3DPROC ANGLE_glCompressedTexImage3D;
-ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC ANGLE_glCompressedTexSubImage3D;
-ANGLE_UTIL_EXPORT extern PFNGLGENQUERIESPROC ANGLE_glGenQueries;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEQUERIESPROC ANGLE_glDeleteQueries;
-ANGLE_UTIL_EXPORT extern PFNGLISQUERYPROC ANGLE_glIsQuery;
-ANGLE_UTIL_EXPORT extern PFNGLBEGINQUERYPROC ANGLE_glBeginQuery;
-ANGLE_UTIL_EXPORT extern PFNGLENDQUERYPROC ANGLE_glEndQuery;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVPROC ANGLE_glGetQueryiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVPROC ANGLE_glGetQueryObjectuiv;
-ANGLE_UTIL_EXPORT extern PFNGLUNMAPBUFFERPROC ANGLE_glUnmapBuffer;
-ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVPROC ANGLE_glGetBufferPointerv;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWBUFFERSPROC ANGLE_glDrawBuffers;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2X3FVPROC ANGLE_glUniformMatrix2x3fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3X2FVPROC ANGLE_glUniformMatrix3x2fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2X4FVPROC ANGLE_glUniformMatrix2x4fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4X2FVPROC ANGLE_glUniformMatrix4x2fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3X4FVPROC ANGLE_glUniformMatrix3x4fv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4X3FVPROC ANGLE_glUniformMatrix4x3fv;
-ANGLE_UTIL_EXPORT extern PFNGLBLITFRAMEBUFFERPROC ANGLE_glBlitFramebuffer;
-ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC
-    ANGLE_glRenderbufferStorageMultisample;
-ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURELAYERPROC ANGLE_glFramebufferTextureLayer;
-ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFERRANGEPROC ANGLE_glMapBufferRange;
-ANGLE_UTIL_EXPORT extern PFNGLFLUSHMAPPEDBUFFERRANGEPROC ANGLE_glFlushMappedBufferRange;
-ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXARRAYPROC ANGLE_glBindVertexArray;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEVERTEXARRAYSPROC ANGLE_glDeleteVertexArrays;
-ANGLE_UTIL_EXPORT extern PFNGLGENVERTEXARRAYSPROC ANGLE_glGenVertexArrays;
-ANGLE_UTIL_EXPORT extern PFNGLISVERTEXARRAYPROC ANGLE_glIsVertexArray;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERI_VPROC ANGLE_glGetIntegeri_v;
-ANGLE_UTIL_EXPORT extern PFNGLBEGINTRANSFORMFEEDBACKPROC ANGLE_glBeginTransformFeedback;
-ANGLE_UTIL_EXPORT extern PFNGLENDTRANSFORMFEEDBACKPROC ANGLE_glEndTransformFeedback;
-ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERRANGEPROC ANGLE_glBindBufferRange;
-ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERBASEPROC ANGLE_glBindBufferBase;
-ANGLE_UTIL_EXPORT extern PFNGLTRANSFORMFEEDBACKVARYINGSPROC ANGLE_glTransformFeedbackVaryings;
-ANGLE_UTIL_EXPORT extern PFNGLGETTRANSFORMFEEDBACKVARYINGPROC ANGLE_glGetTransformFeedbackVarying;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBIPOINTERPROC ANGLE_glVertexAttribIPointer;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIIVPROC ANGLE_glGetVertexAttribIiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIUIVPROC ANGLE_glGetVertexAttribIuiv;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4IPROC ANGLE_glVertexAttribI4i;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4UIPROC ANGLE_glVertexAttribI4ui;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4IVPROC ANGLE_glVertexAttribI4iv;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4UIVPROC ANGLE_glVertexAttribI4uiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMUIVPROC ANGLE_glGetUniformuiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETFRAGDATALOCATIONPROC ANGLE_glGetFragDataLocation;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1UIPROC ANGLE_glUniform1ui;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2UIPROC ANGLE_glUniform2ui;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3UIPROC ANGLE_glUniform3ui;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4UIPROC ANGLE_glUniform4ui;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1UIVPROC ANGLE_glUniform1uiv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2UIVPROC ANGLE_glUniform2uiv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3UIVPROC ANGLE_glUniform3uiv;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4UIVPROC ANGLE_glUniform4uiv;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERIVPROC ANGLE_glClearBufferiv;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERUIVPROC ANGLE_glClearBufferuiv;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERFVPROC ANGLE_glClearBufferfv;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERFIPROC ANGLE_glClearBufferfi;
-ANGLE_UTIL_EXPORT extern PFNGLGETSTRINGIPROC ANGLE_glGetStringi;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYBUFFERSUBDATAPROC ANGLE_glCopyBufferSubData;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMINDICESPROC ANGLE_glGetUniformIndices;
-ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMSIVPROC ANGLE_glGetActiveUniformsiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMBLOCKINDEXPROC ANGLE_glGetUniformBlockIndex;
-ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMBLOCKIVPROC ANGLE_glGetActiveUniformBlockiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC ANGLE_glGetActiveUniformBlockName;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMBLOCKBINDINGPROC ANGLE_glUniformBlockBinding;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDPROC ANGLE_glDrawArraysInstanced;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDPROC ANGLE_glDrawElementsInstanced;
-ANGLE_UTIL_EXPORT extern PFNGLFENCESYNCPROC ANGLE_glFenceSync;
-ANGLE_UTIL_EXPORT extern PFNGLISSYNCPROC ANGLE_glIsSync;
-ANGLE_UTIL_EXPORT extern PFNGLDELETESYNCPROC ANGLE_glDeleteSync;
-ANGLE_UTIL_EXPORT extern PFNGLCLIENTWAITSYNCPROC ANGLE_glClientWaitSync;
-ANGLE_UTIL_EXPORT extern PFNGLWAITSYNCPROC ANGLE_glWaitSync;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VPROC ANGLE_glGetInteger64v;
-ANGLE_UTIL_EXPORT extern PFNGLGETSYNCIVPROC ANGLE_glGetSynciv;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64I_VPROC ANGLE_glGetInteger64i_v;
-ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERI64VPROC ANGLE_glGetBufferParameteri64v;
-ANGLE_UTIL_EXPORT extern PFNGLGENSAMPLERSPROC ANGLE_glGenSamplers;
-ANGLE_UTIL_EXPORT extern PFNGLDELETESAMPLERSPROC ANGLE_glDeleteSamplers;
-ANGLE_UTIL_EXPORT extern PFNGLISSAMPLERPROC ANGLE_glIsSampler;
-ANGLE_UTIL_EXPORT extern PFNGLBINDSAMPLERPROC ANGLE_glBindSampler;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIPROC ANGLE_glSamplerParameteri;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIVPROC ANGLE_glSamplerParameteriv;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFPROC ANGLE_glSamplerParameterf;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFVPROC ANGLE_glSamplerParameterfv;
-ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIVPROC ANGLE_glGetSamplerParameteriv;
-ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERFVPROC ANGLE_glGetSamplerParameterfv;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBDIVISORPROC ANGLE_glVertexAttribDivisor;
-ANGLE_UTIL_EXPORT extern PFNGLBINDTRANSFORMFEEDBACKPROC ANGLE_glBindTransformFeedback;
-ANGLE_UTIL_EXPORT extern PFNGLDELETETRANSFORMFEEDBACKSPROC ANGLE_glDeleteTransformFeedbacks;
-ANGLE_UTIL_EXPORT extern PFNGLGENTRANSFORMFEEDBACKSPROC ANGLE_glGenTransformFeedbacks;
-ANGLE_UTIL_EXPORT extern PFNGLISTRANSFORMFEEDBACKPROC ANGLE_glIsTransformFeedback;
-ANGLE_UTIL_EXPORT extern PFNGLPAUSETRANSFORMFEEDBACKPROC ANGLE_glPauseTransformFeedback;
-ANGLE_UTIL_EXPORT extern PFNGLRESUMETRANSFORMFEEDBACKPROC ANGLE_glResumeTransformFeedback;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMBINARYPROC ANGLE_glGetProgramBinary;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMBINARYPROC ANGLE_glProgramBinary;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMPARAMETERIPROC ANGLE_glProgramParameteri;
-ANGLE_UTIL_EXPORT extern PFNGLINVALIDATEFRAMEBUFFERPROC ANGLE_glInvalidateFramebuffer;
-ANGLE_UTIL_EXPORT extern PFNGLINVALIDATESUBFRAMEBUFFERPROC ANGLE_glInvalidateSubFramebuffer;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DPROC ANGLE_glTexStorage2D;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DPROC ANGLE_glTexStorage3D;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTERNALFORMATIVPROC ANGLE_glGetInternalformativ;
-ANGLE_UTIL_EXPORT extern PFNGLDISPATCHCOMPUTEPROC ANGLE_glDispatchCompute;
-ANGLE_UTIL_EXPORT extern PFNGLDISPATCHCOMPUTEINDIRECTPROC ANGLE_glDispatchComputeIndirect;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINDIRECTPROC ANGLE_glDrawArraysIndirect;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINDIRECTPROC ANGLE_glDrawElementsIndirect;
-ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERPARAMETERIPROC ANGLE_glFramebufferParameteri;
-ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERPARAMETERIVPROC ANGLE_glGetFramebufferParameteriv;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMINTERFACEIVPROC ANGLE_glGetProgramInterfaceiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCEINDEXPROC ANGLE_glGetProgramResourceIndex;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCENAMEPROC ANGLE_glGetProgramResourceName;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCEIVPROC ANGLE_glGetProgramResourceiv;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCELOCATIONPROC ANGLE_glGetProgramResourceLocation;
-ANGLE_UTIL_EXPORT extern PFNGLUSEPROGRAMSTAGESPROC ANGLE_glUseProgramStages;
-ANGLE_UTIL_EXPORT extern PFNGLACTIVESHADERPROGRAMPROC ANGLE_glActiveShaderProgram;
-ANGLE_UTIL_EXPORT extern PFNGLCREATESHADERPROGRAMVPROC ANGLE_glCreateShaderProgramv;
-ANGLE_UTIL_EXPORT extern PFNGLBINDPROGRAMPIPELINEPROC ANGLE_glBindProgramPipeline;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEPROGRAMPIPELINESPROC ANGLE_glDeleteProgramPipelines;
-ANGLE_UTIL_EXPORT extern PFNGLGENPROGRAMPIPELINESPROC ANGLE_glGenProgramPipelines;
-ANGLE_UTIL_EXPORT extern PFNGLISPROGRAMPIPELINEPROC ANGLE_glIsProgramPipeline;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMPIPELINEIVPROC ANGLE_glGetProgramPipelineiv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1IPROC ANGLE_glProgramUniform1i;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2IPROC ANGLE_glProgramUniform2i;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3IPROC ANGLE_glProgramUniform3i;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4IPROC ANGLE_glProgramUniform4i;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1UIPROC ANGLE_glProgramUniform1ui;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2UIPROC ANGLE_glProgramUniform2ui;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3UIPROC ANGLE_glProgramUniform3ui;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4UIPROC ANGLE_glProgramUniform4ui;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1FPROC ANGLE_glProgramUniform1f;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2FPROC ANGLE_glProgramUniform2f;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3FPROC ANGLE_glProgramUniform3f;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4FPROC ANGLE_glProgramUniform4f;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1IVPROC ANGLE_glProgramUniform1iv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2IVPROC ANGLE_glProgramUniform2iv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3IVPROC ANGLE_glProgramUniform3iv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4IVPROC ANGLE_glProgramUniform4iv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1UIVPROC ANGLE_glProgramUniform1uiv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2UIVPROC ANGLE_glProgramUniform2uiv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3UIVPROC ANGLE_glProgramUniform3uiv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4UIVPROC ANGLE_glProgramUniform4uiv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1FVPROC ANGLE_glProgramUniform1fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2FVPROC ANGLE_glProgramUniform2fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3FVPROC ANGLE_glProgramUniform3fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4FVPROC ANGLE_glProgramUniform4fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX2FVPROC ANGLE_glProgramUniformMatrix2fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX3FVPROC ANGLE_glProgramUniformMatrix3fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX4FVPROC ANGLE_glProgramUniformMatrix4fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX2X3FVPROC ANGLE_glProgramUniformMatrix2x3fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX3X2FVPROC ANGLE_glProgramUniformMatrix3x2fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX2X4FVPROC ANGLE_glProgramUniformMatrix2x4fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX4X2FVPROC ANGLE_glProgramUniformMatrix4x2fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX3X4FVPROC ANGLE_glProgramUniformMatrix3x4fv;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX4X3FVPROC ANGLE_glProgramUniformMatrix4x3fv;
-ANGLE_UTIL_EXPORT extern PFNGLVALIDATEPROGRAMPIPELINEPROC ANGLE_glValidateProgramPipeline;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMPIPELINEINFOLOGPROC ANGLE_glGetProgramPipelineInfoLog;
-ANGLE_UTIL_EXPORT extern PFNGLBINDIMAGETEXTUREPROC ANGLE_glBindImageTexture;
-ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANI_VPROC ANGLE_glGetBooleani_v;
-ANGLE_UTIL_EXPORT extern PFNGLMEMORYBARRIERPROC ANGLE_glMemoryBarrier;
-ANGLE_UTIL_EXPORT extern PFNGLMEMORYBARRIERBYREGIONPROC ANGLE_glMemoryBarrierByRegion;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DMULTISAMPLEPROC ANGLE_glTexStorage2DMultisample;
-ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVPROC ANGLE_glGetMultisamplefv;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLEMASKIPROC ANGLE_glSampleMaski;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERIVPROC ANGLE_glGetTexLevelParameteriv;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERFVPROC ANGLE_glGetTexLevelParameterfv;
-ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXBUFFERPROC ANGLE_glBindVertexBuffer;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBFORMATPROC ANGLE_glVertexAttribFormat;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBIFORMATPROC ANGLE_glVertexAttribIFormat;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBBINDINGPROC ANGLE_glVertexAttribBinding;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXBINDINGDIVISORPROC ANGLE_glVertexBindingDivisor;
+    l_glGetFramebufferAttachmentParameteriv;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERVPROC l_glGetIntegerv;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMIVPROC l_glGetProgramiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMINFOLOGPROC l_glGetProgramInfoLog;
+ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERPARAMETERIVPROC l_glGetRenderbufferParameteriv;
+ANGLE_UTIL_EXPORT extern PFNGLGETSHADERIVPROC l_glGetShaderiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETSHADERINFOLOGPROC l_glGetShaderInfoLog;
+ANGLE_UTIL_EXPORT extern PFNGLGETSHADERPRECISIONFORMATPROC l_glGetShaderPrecisionFormat;
+ANGLE_UTIL_EXPORT extern PFNGLGETSHADERSOURCEPROC l_glGetShaderSource;
+ANGLE_UTIL_EXPORT extern PFNGLGETSTRINGPROC l_glGetString;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERFVPROC l_glGetTexParameterfv;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIVPROC l_glGetTexParameteriv;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMFVPROC l_glGetUniformfv;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMIVPROC l_glGetUniformiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMLOCATIONPROC l_glGetUniformLocation;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBFVPROC l_glGetVertexAttribfv;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIVPROC l_glGetVertexAttribiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBPOINTERVPROC l_glGetVertexAttribPointerv;
+ANGLE_UTIL_EXPORT extern PFNGLHINTPROC l_glHint;
+ANGLE_UTIL_EXPORT extern PFNGLISBUFFERPROC l_glIsBuffer;
+ANGLE_UTIL_EXPORT extern PFNGLISENABLEDPROC l_glIsEnabled;
+ANGLE_UTIL_EXPORT extern PFNGLISFRAMEBUFFERPROC l_glIsFramebuffer;
+ANGLE_UTIL_EXPORT extern PFNGLISPROGRAMPROC l_glIsProgram;
+ANGLE_UTIL_EXPORT extern PFNGLISRENDERBUFFERPROC l_glIsRenderbuffer;
+ANGLE_UTIL_EXPORT extern PFNGLISSHADERPROC l_glIsShader;
+ANGLE_UTIL_EXPORT extern PFNGLISTEXTUREPROC l_glIsTexture;
+ANGLE_UTIL_EXPORT extern PFNGLLINEWIDTHPROC l_glLineWidth;
+ANGLE_UTIL_EXPORT extern PFNGLLINKPROGRAMPROC l_glLinkProgram;
+ANGLE_UTIL_EXPORT extern PFNGLPIXELSTOREIPROC l_glPixelStorei;
+ANGLE_UTIL_EXPORT extern PFNGLPOLYGONOFFSETPROC l_glPolygonOffset;
+ANGLE_UTIL_EXPORT extern PFNGLREADPIXELSPROC l_glReadPixels;
+ANGLE_UTIL_EXPORT extern PFNGLRELEASESHADERCOMPILERPROC l_glReleaseShaderCompiler;
+ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEPROC l_glRenderbufferStorage;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLECOVERAGEPROC l_glSampleCoverage;
+ANGLE_UTIL_EXPORT extern PFNGLSCISSORPROC l_glScissor;
+ANGLE_UTIL_EXPORT extern PFNGLSHADERBINARYPROC l_glShaderBinary;
+ANGLE_UTIL_EXPORT extern PFNGLSHADERSOURCEPROC l_glShaderSource;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILFUNCPROC l_glStencilFunc;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILFUNCSEPARATEPROC l_glStencilFuncSeparate;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILMASKPROC l_glStencilMask;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILMASKSEPARATEPROC l_glStencilMaskSeparate;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILOPPROC l_glStencilOp;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILOPSEPARATEPROC l_glStencilOpSeparate;
+ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DPROC l_glTexImage2D;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFPROC l_glTexParameterf;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFVPROC l_glTexParameterfv;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIPROC l_glTexParameteri;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIVPROC l_glTexParameteriv;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE2DPROC l_glTexSubImage2D;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1FPROC l_glUniform1f;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1FVPROC l_glUniform1fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1IPROC l_glUniform1i;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1IVPROC l_glUniform1iv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2FPROC l_glUniform2f;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2FVPROC l_glUniform2fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2IPROC l_glUniform2i;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2IVPROC l_glUniform2iv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3FPROC l_glUniform3f;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3FVPROC l_glUniform3fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3IPROC l_glUniform3i;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3IVPROC l_glUniform3iv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4FPROC l_glUniform4f;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4FVPROC l_glUniform4fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4IPROC l_glUniform4i;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4IVPROC l_glUniform4iv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2FVPROC l_glUniformMatrix2fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3FVPROC l_glUniformMatrix3fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4FVPROC l_glUniformMatrix4fv;
+ANGLE_UTIL_EXPORT extern PFNGLUSEPROGRAMPROC l_glUseProgram;
+ANGLE_UTIL_EXPORT extern PFNGLVALIDATEPROGRAMPROC l_glValidateProgram;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB1FPROC l_glVertexAttrib1f;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB1FVPROC l_glVertexAttrib1fv;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB2FPROC l_glVertexAttrib2f;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB2FVPROC l_glVertexAttrib2fv;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB3FPROC l_glVertexAttrib3f;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB3FVPROC l_glVertexAttrib3fv;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB4FPROC l_glVertexAttrib4f;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB4FVPROC l_glVertexAttrib4fv;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBPOINTERPROC l_glVertexAttribPointer;
+ANGLE_UTIL_EXPORT extern PFNGLVIEWPORTPROC l_glViewport;
+ANGLE_UTIL_EXPORT extern PFNGLREADBUFFERPROC l_glReadBuffer;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSPROC l_glDrawRangeElements;
+ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DPROC l_glTexImage3D;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DPROC l_glTexSubImage3D;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE3DPROC l_glCopyTexSubImage3D;
+ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE3DPROC l_glCompressedTexImage3D;
+ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC l_glCompressedTexSubImage3D;
+ANGLE_UTIL_EXPORT extern PFNGLGENQUERIESPROC l_glGenQueries;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEQUERIESPROC l_glDeleteQueries;
+ANGLE_UTIL_EXPORT extern PFNGLISQUERYPROC l_glIsQuery;
+ANGLE_UTIL_EXPORT extern PFNGLBEGINQUERYPROC l_glBeginQuery;
+ANGLE_UTIL_EXPORT extern PFNGLENDQUERYPROC l_glEndQuery;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVPROC l_glGetQueryiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVPROC l_glGetQueryObjectuiv;
+ANGLE_UTIL_EXPORT extern PFNGLUNMAPBUFFERPROC l_glUnmapBuffer;
+ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVPROC l_glGetBufferPointerv;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWBUFFERSPROC l_glDrawBuffers;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2X3FVPROC l_glUniformMatrix2x3fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3X2FVPROC l_glUniformMatrix3x2fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2X4FVPROC l_glUniformMatrix2x4fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4X2FVPROC l_glUniformMatrix4x2fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3X4FVPROC l_glUniformMatrix3x4fv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4X3FVPROC l_glUniformMatrix4x3fv;
+ANGLE_UTIL_EXPORT extern PFNGLBLITFRAMEBUFFERPROC l_glBlitFramebuffer;
+ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC l_glRenderbufferStorageMultisample;
+ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURELAYERPROC l_glFramebufferTextureLayer;
+ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFERRANGEPROC l_glMapBufferRange;
+ANGLE_UTIL_EXPORT extern PFNGLFLUSHMAPPEDBUFFERRANGEPROC l_glFlushMappedBufferRange;
+ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXARRAYPROC l_glBindVertexArray;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEVERTEXARRAYSPROC l_glDeleteVertexArrays;
+ANGLE_UTIL_EXPORT extern PFNGLGENVERTEXARRAYSPROC l_glGenVertexArrays;
+ANGLE_UTIL_EXPORT extern PFNGLISVERTEXARRAYPROC l_glIsVertexArray;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERI_VPROC l_glGetIntegeri_v;
+ANGLE_UTIL_EXPORT extern PFNGLBEGINTRANSFORMFEEDBACKPROC l_glBeginTransformFeedback;
+ANGLE_UTIL_EXPORT extern PFNGLENDTRANSFORMFEEDBACKPROC l_glEndTransformFeedback;
+ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERRANGEPROC l_glBindBufferRange;
+ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERBASEPROC l_glBindBufferBase;
+ANGLE_UTIL_EXPORT extern PFNGLTRANSFORMFEEDBACKVARYINGSPROC l_glTransformFeedbackVaryings;
+ANGLE_UTIL_EXPORT extern PFNGLGETTRANSFORMFEEDBACKVARYINGPROC l_glGetTransformFeedbackVarying;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBIPOINTERPROC l_glVertexAttribIPointer;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIIVPROC l_glGetVertexAttribIiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIUIVPROC l_glGetVertexAttribIuiv;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4IPROC l_glVertexAttribI4i;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4UIPROC l_glVertexAttribI4ui;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4IVPROC l_glVertexAttribI4iv;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4UIVPROC l_glVertexAttribI4uiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMUIVPROC l_glGetUniformuiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETFRAGDATALOCATIONPROC l_glGetFragDataLocation;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1UIPROC l_glUniform1ui;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2UIPROC l_glUniform2ui;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3UIPROC l_glUniform3ui;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4UIPROC l_glUniform4ui;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1UIVPROC l_glUniform1uiv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2UIVPROC l_glUniform2uiv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3UIVPROC l_glUniform3uiv;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4UIVPROC l_glUniform4uiv;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERIVPROC l_glClearBufferiv;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERUIVPROC l_glClearBufferuiv;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERFVPROC l_glClearBufferfv;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERFIPROC l_glClearBufferfi;
+ANGLE_UTIL_EXPORT extern PFNGLGETSTRINGIPROC l_glGetStringi;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYBUFFERSUBDATAPROC l_glCopyBufferSubData;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMINDICESPROC l_glGetUniformIndices;
+ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMSIVPROC l_glGetActiveUniformsiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMBLOCKINDEXPROC l_glGetUniformBlockIndex;
+ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMBLOCKIVPROC l_glGetActiveUniformBlockiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC l_glGetActiveUniformBlockName;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMBLOCKBINDINGPROC l_glUniformBlockBinding;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDPROC l_glDrawArraysInstanced;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDPROC l_glDrawElementsInstanced;
+ANGLE_UTIL_EXPORT extern PFNGLFENCESYNCPROC l_glFenceSync;
+ANGLE_UTIL_EXPORT extern PFNGLISSYNCPROC l_glIsSync;
+ANGLE_UTIL_EXPORT extern PFNGLDELETESYNCPROC l_glDeleteSync;
+ANGLE_UTIL_EXPORT extern PFNGLCLIENTWAITSYNCPROC l_glClientWaitSync;
+ANGLE_UTIL_EXPORT extern PFNGLWAITSYNCPROC l_glWaitSync;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VPROC l_glGetInteger64v;
+ANGLE_UTIL_EXPORT extern PFNGLGETSYNCIVPROC l_glGetSynciv;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64I_VPROC l_glGetInteger64i_v;
+ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERI64VPROC l_glGetBufferParameteri64v;
+ANGLE_UTIL_EXPORT extern PFNGLGENSAMPLERSPROC l_glGenSamplers;
+ANGLE_UTIL_EXPORT extern PFNGLDELETESAMPLERSPROC l_glDeleteSamplers;
+ANGLE_UTIL_EXPORT extern PFNGLISSAMPLERPROC l_glIsSampler;
+ANGLE_UTIL_EXPORT extern PFNGLBINDSAMPLERPROC l_glBindSampler;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIPROC l_glSamplerParameteri;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIVPROC l_glSamplerParameteriv;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFPROC l_glSamplerParameterf;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFVPROC l_glSamplerParameterfv;
+ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIVPROC l_glGetSamplerParameteriv;
+ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERFVPROC l_glGetSamplerParameterfv;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBDIVISORPROC l_glVertexAttribDivisor;
+ANGLE_UTIL_EXPORT extern PFNGLBINDTRANSFORMFEEDBACKPROC l_glBindTransformFeedback;
+ANGLE_UTIL_EXPORT extern PFNGLDELETETRANSFORMFEEDBACKSPROC l_glDeleteTransformFeedbacks;
+ANGLE_UTIL_EXPORT extern PFNGLGENTRANSFORMFEEDBACKSPROC l_glGenTransformFeedbacks;
+ANGLE_UTIL_EXPORT extern PFNGLISTRANSFORMFEEDBACKPROC l_glIsTransformFeedback;
+ANGLE_UTIL_EXPORT extern PFNGLPAUSETRANSFORMFEEDBACKPROC l_glPauseTransformFeedback;
+ANGLE_UTIL_EXPORT extern PFNGLRESUMETRANSFORMFEEDBACKPROC l_glResumeTransformFeedback;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMBINARYPROC l_glGetProgramBinary;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMBINARYPROC l_glProgramBinary;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMPARAMETERIPROC l_glProgramParameteri;
+ANGLE_UTIL_EXPORT extern PFNGLINVALIDATEFRAMEBUFFERPROC l_glInvalidateFramebuffer;
+ANGLE_UTIL_EXPORT extern PFNGLINVALIDATESUBFRAMEBUFFERPROC l_glInvalidateSubFramebuffer;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DPROC l_glTexStorage2D;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DPROC l_glTexStorage3D;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTERNALFORMATIVPROC l_glGetInternalformativ;
+ANGLE_UTIL_EXPORT extern PFNGLDISPATCHCOMPUTEPROC l_glDispatchCompute;
+ANGLE_UTIL_EXPORT extern PFNGLDISPATCHCOMPUTEINDIRECTPROC l_glDispatchComputeIndirect;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINDIRECTPROC l_glDrawArraysIndirect;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINDIRECTPROC l_glDrawElementsIndirect;
+ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERPARAMETERIPROC l_glFramebufferParameteri;
+ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERPARAMETERIVPROC l_glGetFramebufferParameteriv;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMINTERFACEIVPROC l_glGetProgramInterfaceiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCEINDEXPROC l_glGetProgramResourceIndex;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCENAMEPROC l_glGetProgramResourceName;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCEIVPROC l_glGetProgramResourceiv;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCELOCATIONPROC l_glGetProgramResourceLocation;
+ANGLE_UTIL_EXPORT extern PFNGLUSEPROGRAMSTAGESPROC l_glUseProgramStages;
+ANGLE_UTIL_EXPORT extern PFNGLACTIVESHADERPROGRAMPROC l_glActiveShaderProgram;
+ANGLE_UTIL_EXPORT extern PFNGLCREATESHADERPROGRAMVPROC l_glCreateShaderProgramv;
+ANGLE_UTIL_EXPORT extern PFNGLBINDPROGRAMPIPELINEPROC l_glBindProgramPipeline;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEPROGRAMPIPELINESPROC l_glDeleteProgramPipelines;
+ANGLE_UTIL_EXPORT extern PFNGLGENPROGRAMPIPELINESPROC l_glGenProgramPipelines;
+ANGLE_UTIL_EXPORT extern PFNGLISPROGRAMPIPELINEPROC l_glIsProgramPipeline;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMPIPELINEIVPROC l_glGetProgramPipelineiv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1IPROC l_glProgramUniform1i;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2IPROC l_glProgramUniform2i;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3IPROC l_glProgramUniform3i;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4IPROC l_glProgramUniform4i;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1UIPROC l_glProgramUniform1ui;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2UIPROC l_glProgramUniform2ui;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3UIPROC l_glProgramUniform3ui;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4UIPROC l_glProgramUniform4ui;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1FPROC l_glProgramUniform1f;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2FPROC l_glProgramUniform2f;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3FPROC l_glProgramUniform3f;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4FPROC l_glProgramUniform4f;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1IVPROC l_glProgramUniform1iv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2IVPROC l_glProgramUniform2iv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3IVPROC l_glProgramUniform3iv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4IVPROC l_glProgramUniform4iv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1UIVPROC l_glProgramUniform1uiv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2UIVPROC l_glProgramUniform2uiv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3UIVPROC l_glProgramUniform3uiv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4UIVPROC l_glProgramUniform4uiv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1FVPROC l_glProgramUniform1fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2FVPROC l_glProgramUniform2fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3FVPROC l_glProgramUniform3fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4FVPROC l_glProgramUniform4fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX2FVPROC l_glProgramUniformMatrix2fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX3FVPROC l_glProgramUniformMatrix3fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX4FVPROC l_glProgramUniformMatrix4fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX2X3FVPROC l_glProgramUniformMatrix2x3fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX3X2FVPROC l_glProgramUniformMatrix3x2fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX2X4FVPROC l_glProgramUniformMatrix2x4fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX4X2FVPROC l_glProgramUniformMatrix4x2fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX3X4FVPROC l_glProgramUniformMatrix3x4fv;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX4X3FVPROC l_glProgramUniformMatrix4x3fv;
+ANGLE_UTIL_EXPORT extern PFNGLVALIDATEPROGRAMPIPELINEPROC l_glValidateProgramPipeline;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMPIPELINEINFOLOGPROC l_glGetProgramPipelineInfoLog;
+ANGLE_UTIL_EXPORT extern PFNGLBINDIMAGETEXTUREPROC l_glBindImageTexture;
+ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANI_VPROC l_glGetBooleani_v;
+ANGLE_UTIL_EXPORT extern PFNGLMEMORYBARRIERPROC l_glMemoryBarrier;
+ANGLE_UTIL_EXPORT extern PFNGLMEMORYBARRIERBYREGIONPROC l_glMemoryBarrierByRegion;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DMULTISAMPLEPROC l_glTexStorage2DMultisample;
+ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVPROC l_glGetMultisamplefv;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLEMASKIPROC l_glSampleMaski;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERIVPROC l_glGetTexLevelParameteriv;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERFVPROC l_glGetTexLevelParameterfv;
+ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXBUFFERPROC l_glBindVertexBuffer;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBFORMATPROC l_glVertexAttribFormat;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBIFORMATPROC l_glVertexAttribIFormat;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBBINDINGPROC l_glVertexAttribBinding;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXBINDINGDIVISORPROC l_glVertexBindingDivisor;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEANGLEPROC
-    ANGLE_glDrawArraysInstancedBaseInstanceANGLE;
+    l_glDrawArraysInstancedBaseInstanceANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEANGLEPROC
-    ANGLE_glDrawElementsInstancedBaseVertexBaseInstanceANGLE;
+    l_glDrawElementsInstancedBaseVertexBaseInstanceANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWARRAYSINSTANCEDBASEINSTANCEANGLEPROC
-    ANGLE_glMultiDrawArraysInstancedBaseInstanceANGLE;
+    l_glMultiDrawArraysInstancedBaseInstanceANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEANGLEPROC
-    ANGLE_glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYSUBTEXTURE3DANGLEPROC ANGLE_glCopySubTexture3DANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXTURE3DANGLEPROC ANGLE_glCopyTexture3DANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLITFRAMEBUFFERANGLEPROC ANGLE_glBlitFramebufferANGLE;
+    l_glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYSUBTEXTURE3DANGLEPROC l_glCopySubTexture3DANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXTURE3DANGLEPROC l_glCopyTexture3DANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLITFRAMEBUFFERANGLEPROC l_glBlitFramebufferANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC
-    ANGLE_glRenderbufferStorageMultisampleANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERIMAGEANGLEPROC ANGLE_glGetRenderbufferImageANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXIMAGEANGLEPROC ANGLE_glGetTexImageANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDANGLEPROC ANGLE_glDrawArraysInstancedANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDANGLEPROC ANGLE_glDrawElementsInstancedANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBDIVISORANGLEPROC ANGLE_glVertexAttribDivisorANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLIMPORTMEMORYZIRCONHANDLEANGLEPROC
-    ANGLE_glImportMemoryZirconHandleANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWARRAYSANGLEPROC ANGLE_glMultiDrawArraysANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWARRAYSINSTANCEDANGLEPROC
-    ANGLE_glMultiDrawArraysInstancedANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSANGLEPROC ANGLE_glMultiDrawElementsANGLE;
+    l_glRenderbufferStorageMultisampleANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERIMAGEANGLEPROC l_glGetRenderbufferImageANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXIMAGEANGLEPROC l_glGetTexImageANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDANGLEPROC l_glDrawArraysInstancedANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDANGLEPROC l_glDrawElementsInstancedANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBDIVISORANGLEPROC l_glVertexAttribDivisorANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLIMPORTMEMORYZIRCONHANDLEANGLEPROC l_glImportMemoryZirconHandleANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWARRAYSANGLEPROC l_glMultiDrawArraysANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWARRAYSINSTANCEDANGLEPROC l_glMultiDrawArraysInstancedANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSANGLEPROC l_glMultiDrawElementsANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSINSTANCEDANGLEPROC
-    ANGLE_glMultiDrawElementsInstancedANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROVOKINGVERTEXANGLEPROC ANGLE_glProvokingVertexANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLEEXTENSIONANGLEPROC ANGLE_glDisableExtensionANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLREQUESTEXTENSIONANGLEPROC ANGLE_glRequestExtensionANGLE;
+    l_glMultiDrawElementsInstancedANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROVOKINGVERTEXANGLEPROC l_glProvokingVertexANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLEEXTENSIONANGLEPROC l_glDisableExtensionANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLREQUESTEXTENSIONANGLEPROC l_glRequestExtensionANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE2DROBUSTANGLEPROC
-    ANGLE_glCompressedTexImage2DRobustANGLE;
+    l_glCompressedTexImage2DRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE3DROBUSTANGLEPROC
-    ANGLE_glCompressedTexImage3DRobustANGLE;
+    l_glCompressedTexImage3DRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE2DROBUSTANGLEPROC
-    ANGLE_glCompressedTexSubImage2DRobustANGLE;
+    l_glCompressedTexSubImage2DRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE3DROBUSTANGLEPROC
-    ANGLE_glCompressedTexSubImage3DRobustANGLE;
+    l_glCompressedTexSubImage3DRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMBLOCKIVROBUSTANGLEPROC
-    ANGLE_glGetActiveUniformBlockivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANI_VROBUSTANGLEPROC ANGLE_glGetBooleani_vRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANVROBUSTANGLEPROC ANGLE_glGetBooleanvRobustANGLE;
+    l_glGetActiveUniformBlockivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANI_VROBUSTANGLEPROC l_glGetBooleani_vRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANVROBUSTANGLEPROC l_glGetBooleanvRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERI64VROBUSTANGLEPROC
-    ANGLE_glGetBufferParameteri64vRobustANGLE;
+    l_glGetBufferParameteri64vRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERIVROBUSTANGLEPROC
-    ANGLE_glGetBufferParameterivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVROBUSTANGLEPROC ANGLE_glGetBufferPointervRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETFLOATVROBUSTANGLEPROC ANGLE_glGetFloatvRobustANGLE;
+    l_glGetBufferParameterivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVROBUSTANGLEPROC l_glGetBufferPointervRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETFLOATVROBUSTANGLEPROC l_glGetFloatvRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVROBUSTANGLEPROC
-    ANGLE_glGetFramebufferAttachmentParameterivRobustANGLE;
+    l_glGetFramebufferAttachmentParameterivRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERPARAMETERIVROBUSTANGLEPROC
-    ANGLE_glGetFramebufferParameterivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64I_VROBUSTANGLEPROC ANGLE_glGetInteger64i_vRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VROBUSTANGLEPROC ANGLE_glGetInteger64vRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERI_VROBUSTANGLEPROC ANGLE_glGetIntegeri_vRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERVROBUSTANGLEPROC ANGLE_glGetIntegervRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTERNALFORMATIVROBUSTANGLEPROC
-    ANGLE_glGetInternalformativRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVROBUSTANGLEPROC ANGLE_glGetMultisamplefvRobustANGLE;
+    l_glGetFramebufferParameterivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64I_VROBUSTANGLEPROC l_glGetInteger64i_vRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VROBUSTANGLEPROC l_glGetInteger64vRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERI_VROBUSTANGLEPROC l_glGetIntegeri_vRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERVROBUSTANGLEPROC l_glGetIntegervRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTERNALFORMATIVROBUSTANGLEPROC l_glGetInternalformativRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVROBUSTANGLEPROC l_glGetMultisamplefvRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVROBUSTANGLEROBUSTANGLEPROC
-    ANGLE_glGetPointervRobustANGLERobustANGLE;
+    l_glGetPointervRobustANGLERobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMINTERFACEIVROBUSTANGLEPROC
-    ANGLE_glGetProgramInterfaceivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMIVROBUSTANGLEPROC ANGLE_glGetProgramivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTI64VROBUSTANGLEPROC
-    ANGLE_glGetQueryObjecti64vRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTIVROBUSTANGLEPROC ANGLE_glGetQueryObjectivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUI64VROBUSTANGLEPROC
-    ANGLE_glGetQueryObjectui64vRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVROBUSTANGLEPROC ANGLE_glGetQueryObjectuivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVROBUSTANGLEPROC ANGLE_glGetQueryivRobustANGLE;
+    l_glGetProgramInterfaceivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMIVROBUSTANGLEPROC l_glGetProgramivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTI64VROBUSTANGLEPROC l_glGetQueryObjecti64vRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTIVROBUSTANGLEPROC l_glGetQueryObjectivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUI64VROBUSTANGLEPROC l_glGetQueryObjectui64vRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVROBUSTANGLEPROC l_glGetQueryObjectuivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVROBUSTANGLEPROC l_glGetQueryivRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERPARAMETERIVROBUSTANGLEPROC
-    ANGLE_glGetRenderbufferParameterivRobustANGLE;
+    l_glGetRenderbufferParameterivRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIIVROBUSTANGLEPROC
-    ANGLE_glGetSamplerParameterIivRobustANGLE;
+    l_glGetSamplerParameterIivRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIUIVROBUSTANGLEPROC
-    ANGLE_glGetSamplerParameterIuivRobustANGLE;
+    l_glGetSamplerParameterIuivRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERFVROBUSTANGLEPROC
-    ANGLE_glGetSamplerParameterfvRobustANGLE;
+    l_glGetSamplerParameterfvRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIVROBUSTANGLEPROC
-    ANGLE_glGetSamplerParameterivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETSHADERIVROBUSTANGLEPROC ANGLE_glGetShaderivRobustANGLE;
+    l_glGetSamplerParameterivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETSHADERIVROBUSTANGLEPROC l_glGetShaderivRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERFVROBUSTANGLEPROC
-    ANGLE_glGetTexLevelParameterfvRobustANGLE;
+    l_glGetTexLevelParameterfvRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERIVROBUSTANGLEPROC
-    ANGLE_glGetTexLevelParameterivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIIVROBUSTANGLEPROC
-    ANGLE_glGetTexParameterIivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIUIVROBUSTANGLEPROC
-    ANGLE_glGetTexParameterIuivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERFVROBUSTANGLEPROC ANGLE_glGetTexParameterfvRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIVROBUSTANGLEPROC ANGLE_glGetTexParameterivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMFVROBUSTANGLEPROC ANGLE_glGetUniformfvRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMIVROBUSTANGLEPROC ANGLE_glGetUniformivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMUIVROBUSTANGLEPROC ANGLE_glGetUniformuivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIIVROBUSTANGLEPROC
-    ANGLE_glGetVertexAttribIivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIUIVROBUSTANGLEPROC
-    ANGLE_glGetVertexAttribIuivRobustANGLE;
+    l_glGetTexLevelParameterivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIIVROBUSTANGLEPROC l_glGetTexParameterIivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIUIVROBUSTANGLEPROC l_glGetTexParameterIuivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERFVROBUSTANGLEPROC l_glGetTexParameterfvRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIVROBUSTANGLEPROC l_glGetTexParameterivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMFVROBUSTANGLEPROC l_glGetUniformfvRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMIVROBUSTANGLEPROC l_glGetUniformivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMUIVROBUSTANGLEPROC l_glGetUniformuivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIIVROBUSTANGLEPROC l_glGetVertexAttribIivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIUIVROBUSTANGLEPROC l_glGetVertexAttribIuivRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBPOINTERVROBUSTANGLEPROC
-    ANGLE_glGetVertexAttribPointervRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBFVROBUSTANGLEPROC ANGLE_glGetVertexAttribfvRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIVROBUSTANGLEPROC ANGLE_glGetVertexAttribivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMFVROBUSTANGLEPROC ANGLE_glGetnUniformfvRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMIVROBUSTANGLEPROC ANGLE_glGetnUniformivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMUIVROBUSTANGLEPROC ANGLE_glGetnUniformuivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLREADPIXELSROBUSTANGLEPROC ANGLE_glReadPixelsRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLREADNPIXELSROBUSTANGLEPROC ANGLE_glReadnPixelsRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIIVROBUSTANGLEPROC
-    ANGLE_glSamplerParameterIivRobustANGLE;
+    l_glGetVertexAttribPointervRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBFVROBUSTANGLEPROC l_glGetVertexAttribfvRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIVROBUSTANGLEPROC l_glGetVertexAttribivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMFVROBUSTANGLEPROC l_glGetnUniformfvRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMIVROBUSTANGLEPROC l_glGetnUniformivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMUIVROBUSTANGLEPROC l_glGetnUniformuivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLREADPIXELSROBUSTANGLEPROC l_glReadPixelsRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLREADNPIXELSROBUSTANGLEPROC l_glReadnPixelsRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIIVROBUSTANGLEPROC l_glSamplerParameterIivRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIUIVROBUSTANGLEPROC
-    ANGLE_glSamplerParameterIuivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFVROBUSTANGLEPROC
-    ANGLE_glSamplerParameterfvRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIVROBUSTANGLEPROC
-    ANGLE_glSamplerParameterivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DROBUSTANGLEPROC ANGLE_glTexImage2DRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DROBUSTANGLEPROC ANGLE_glTexImage3DRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIIVROBUSTANGLEPROC ANGLE_glTexParameterIivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIUIVROBUSTANGLEPROC ANGLE_glTexParameterIuivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFVROBUSTANGLEPROC ANGLE_glTexParameterfvRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIVROBUSTANGLEPROC ANGLE_glTexParameterivRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE2DROBUSTANGLEPROC ANGLE_glTexSubImage2DRobustANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DROBUSTANGLEPROC ANGLE_glTexSubImage3DRobustANGLE;
+    l_glSamplerParameterIuivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFVROBUSTANGLEPROC l_glSamplerParameterfvRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIVROBUSTANGLEPROC l_glSamplerParameterivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DROBUSTANGLEPROC l_glTexImage2DRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DROBUSTANGLEPROC l_glTexImage3DRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIIVROBUSTANGLEPROC l_glTexParameterIivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIUIVROBUSTANGLEPROC l_glTexParameterIuivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFVROBUSTANGLEPROC l_glTexParameterfvRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIVROBUSTANGLEPROC l_glTexParameterivRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE2DROBUSTANGLEPROC l_glTexSubImage2DRobustANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DROBUSTANGLEPROC l_glTexSubImage3DRobustANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLIMPORTSEMAPHOREZIRCONHANDLEANGLEPROC
-    ANGLE_glImportSemaphoreZirconHandleANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLINVALIDATETEXTUREANGLEPROC ANGLE_glInvalidateTextureANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DEXTERNALANGLEPROC ANGLE_glTexImage2DExternalANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVANGLEPROC ANGLE_glGetMultisamplefvANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERFVANGLEPROC ANGLE_glGetTexLevelParameterfvANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERIVANGLEPROC ANGLE_glGetTexLevelParameterivANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLEMASKIANGLEPROC ANGLE_glSampleMaskiANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DMULTISAMPLEANGLEPROC ANGLE_glTexStorage2DMultisampleANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTRANSLATEDSHADERSOURCEANGLEPROC
-    ANGLE_glGetTranslatedShaderSourceANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDUNIFORMLOCATIONCHROMIUMPROC ANGLE_glBindUniformLocationCHROMIUM;
-ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDCOPYTEXTURECHROMIUMPROC
-    ANGLE_glCompressedCopyTextureCHROMIUM;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYSUBTEXTURECHROMIUMPROC ANGLE_glCopySubTextureCHROMIUM;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXTURECHROMIUMPROC ANGLE_glCopyTextureCHROMIUM;
-ANGLE_UTIL_EXPORT extern PFNGLCOVERAGEMODULATIONCHROMIUMPROC ANGLE_glCoverageModulationCHROMIUM;
-ANGLE_UTIL_EXPORT extern PFNGLLOSECONTEXTCHROMIUMPROC ANGLE_glLoseContextCHROMIUM;
-ANGLE_UTIL_EXPORT extern PFNGLBINDFRAGDATALOCATIONEXTPROC ANGLE_glBindFragDataLocationEXT;
-ANGLE_UTIL_EXPORT extern PFNGLBINDFRAGDATALOCATIONINDEXEDEXTPROC
-    ANGLE_glBindFragDataLocationIndexedEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETFRAGDATAINDEXEXTPROC ANGLE_glGetFragDataIndexEXT;
+    l_glImportSemaphoreZirconHandleANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLINVALIDATETEXTUREANGLEPROC l_glInvalidateTextureANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DEXTERNALANGLEPROC l_glTexImage2DExternalANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVANGLEPROC l_glGetMultisamplefvANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERFVANGLEPROC l_glGetTexLevelParameterfvANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERIVANGLEPROC l_glGetTexLevelParameterivANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLEMASKIANGLEPROC l_glSampleMaskiANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DMULTISAMPLEANGLEPROC l_glTexStorage2DMultisampleANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTRANSLATEDSHADERSOURCEANGLEPROC l_glGetTranslatedShaderSourceANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDUNIFORMLOCATIONCHROMIUMPROC l_glBindUniformLocationCHROMIUM;
+ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDCOPYTEXTURECHROMIUMPROC l_glCompressedCopyTextureCHROMIUM;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYSUBTEXTURECHROMIUMPROC l_glCopySubTextureCHROMIUM;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXTURECHROMIUMPROC l_glCopyTextureCHROMIUM;
+ANGLE_UTIL_EXPORT extern PFNGLCOVERAGEMODULATIONCHROMIUMPROC l_glCoverageModulationCHROMIUM;
+ANGLE_UTIL_EXPORT extern PFNGLLOSECONTEXTCHROMIUMPROC l_glLoseContextCHROMIUM;
+ANGLE_UTIL_EXPORT extern PFNGLBINDFRAGDATALOCATIONEXTPROC l_glBindFragDataLocationEXT;
+ANGLE_UTIL_EXPORT extern PFNGLBINDFRAGDATALOCATIONINDEXEDEXTPROC l_glBindFragDataLocationIndexedEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETFRAGDATAINDEXEXTPROC l_glGetFragDataIndexEXT;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCELOCATIONINDEXEXTPROC
-    ANGLE_glGetProgramResourceLocationIndexEXT;
-ANGLE_UTIL_EXPORT extern PFNGLINSERTEVENTMARKEREXTPROC ANGLE_glInsertEventMarkerEXT;
-ANGLE_UTIL_EXPORT extern PFNGLPOPGROUPMARKEREXTPROC ANGLE_glPopGroupMarkerEXT;
-ANGLE_UTIL_EXPORT extern PFNGLPUSHGROUPMARKEREXTPROC ANGLE_glPushGroupMarkerEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDISCARDFRAMEBUFFEREXTPROC ANGLE_glDiscardFramebufferEXT;
-ANGLE_UTIL_EXPORT extern PFNGLBEGINQUERYEXTPROC ANGLE_glBeginQueryEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEQUERIESEXTPROC ANGLE_glDeleteQueriesEXT;
-ANGLE_UTIL_EXPORT extern PFNGLENDQUERYEXTPROC ANGLE_glEndQueryEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGENQUERIESEXTPROC ANGLE_glGenQueriesEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VEXTPROC ANGLE_glGetInteger64vEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTI64VEXTPROC ANGLE_glGetQueryObjecti64vEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTIVEXTPROC ANGLE_glGetQueryObjectivEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUI64VEXTPROC ANGLE_glGetQueryObjectui64vEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVEXTPROC ANGLE_glGetQueryObjectuivEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVEXTPROC ANGLE_glGetQueryivEXT;
-ANGLE_UTIL_EXPORT extern PFNGLISQUERYEXTPROC ANGLE_glIsQueryEXT;
-ANGLE_UTIL_EXPORT extern PFNGLQUERYCOUNTEREXTPROC ANGLE_glQueryCounterEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWBUFFERSEXTPROC ANGLE_glDrawBuffersEXT;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONSEPARATEIEXTPROC ANGLE_glBlendEquationSeparateiEXT;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONIEXTPROC ANGLE_glBlendEquationiEXT;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATEIEXTPROC ANGLE_glBlendFuncSeparateiEXT;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCIEXTPROC ANGLE_glBlendFunciEXT;
-ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKIEXTPROC ANGLE_glColorMaskiEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLEIEXTPROC ANGLE_glDisableiEXT;
-ANGLE_UTIL_EXPORT extern PFNGLENABLEIEXTPROC ANGLE_glEnableiEXT;
-ANGLE_UTIL_EXPORT extern PFNGLISENABLEDIEXTPROC ANGLE_glIsEnablediEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSBASEVERTEXEXTPROC ANGLE_glDrawElementsBaseVertexEXT;
+    l_glGetProgramResourceLocationIndexEXT;
+ANGLE_UTIL_EXPORT extern PFNGLINSERTEVENTMARKEREXTPROC l_glInsertEventMarkerEXT;
+ANGLE_UTIL_EXPORT extern PFNGLPOPGROUPMARKEREXTPROC l_glPopGroupMarkerEXT;
+ANGLE_UTIL_EXPORT extern PFNGLPUSHGROUPMARKEREXTPROC l_glPushGroupMarkerEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDISCARDFRAMEBUFFEREXTPROC l_glDiscardFramebufferEXT;
+ANGLE_UTIL_EXPORT extern PFNGLBEGINQUERYEXTPROC l_glBeginQueryEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEQUERIESEXTPROC l_glDeleteQueriesEXT;
+ANGLE_UTIL_EXPORT extern PFNGLENDQUERYEXTPROC l_glEndQueryEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGENQUERIESEXTPROC l_glGenQueriesEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VEXTPROC l_glGetInteger64vEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTI64VEXTPROC l_glGetQueryObjecti64vEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTIVEXTPROC l_glGetQueryObjectivEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUI64VEXTPROC l_glGetQueryObjectui64vEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVEXTPROC l_glGetQueryObjectuivEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVEXTPROC l_glGetQueryivEXT;
+ANGLE_UTIL_EXPORT extern PFNGLISQUERYEXTPROC l_glIsQueryEXT;
+ANGLE_UTIL_EXPORT extern PFNGLQUERYCOUNTEREXTPROC l_glQueryCounterEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWBUFFERSEXTPROC l_glDrawBuffersEXT;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONSEPARATEIEXTPROC l_glBlendEquationSeparateiEXT;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONIEXTPROC l_glBlendEquationiEXT;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATEIEXTPROC l_glBlendFuncSeparateiEXT;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCIEXTPROC l_glBlendFunciEXT;
+ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKIEXTPROC l_glColorMaskiEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLEIEXTPROC l_glDisableiEXT;
+ANGLE_UTIL_EXPORT extern PFNGLENABLEIEXTPROC l_glEnableiEXT;
+ANGLE_UTIL_EXPORT extern PFNGLISENABLEDIEXTPROC l_glIsEnablediEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSBASEVERTEXEXTPROC l_glDrawElementsBaseVertexEXT;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXEXTPROC
-    ANGLE_glDrawElementsInstancedBaseVertexEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSBASEVERTEXEXTPROC
-    ANGLE_glDrawRangeElementsBaseVertexEXT;
-ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTPROC
-    ANGLE_glMultiDrawElementsBaseVertexEXT;
-ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTUREEXTPROC ANGLE_glFramebufferTextureEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDEXTPROC ANGLE_glDrawArraysInstancedEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDEXTPROC ANGLE_glDrawElementsInstancedEXT;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBDIVISOREXTPROC ANGLE_glVertexAttribDivisorEXT;
-ANGLE_UTIL_EXPORT extern PFNGLFLUSHMAPPEDBUFFERRANGEEXTPROC ANGLE_glFlushMappedBufferRangeEXT;
-ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFERRANGEEXTPROC ANGLE_glMapBufferRangeEXT;
-ANGLE_UTIL_EXPORT extern PFNGLBUFFERSTORAGEMEMEXTPROC ANGLE_glBufferStorageMemEXT;
-ANGLE_UTIL_EXPORT extern PFNGLCREATEMEMORYOBJECTSEXTPROC ANGLE_glCreateMemoryObjectsEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEMEMORYOBJECTSEXTPROC ANGLE_glDeleteMemoryObjectsEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETMEMORYOBJECTPARAMETERIVEXTPROC
-    ANGLE_glGetMemoryObjectParameterivEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNSIGNEDBYTEI_VEXTPROC ANGLE_glGetUnsignedBytei_vEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNSIGNEDBYTEVEXTPROC ANGLE_glGetUnsignedBytevEXT;
-ANGLE_UTIL_EXPORT extern PFNGLISMEMORYOBJECTEXTPROC ANGLE_glIsMemoryObjectEXT;
-ANGLE_UTIL_EXPORT extern PFNGLMEMORYOBJECTPARAMETERIVEXTPROC ANGLE_glMemoryObjectParameterivEXT;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM2DEXTPROC ANGLE_glTexStorageMem2DEXT;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM2DMULTISAMPLEEXTPROC
-    ANGLE_glTexStorageMem2DMultisampleEXT;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM3DEXTPROC ANGLE_glTexStorageMem3DEXT;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM3DMULTISAMPLEEXTPROC
-    ANGLE_glTexStorageMem3DMultisampleEXT;
-ANGLE_UTIL_EXPORT extern PFNGLIMPORTMEMORYFDEXTPROC ANGLE_glImportMemoryFdEXT;
+    l_glDrawElementsInstancedBaseVertexEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSBASEVERTEXEXTPROC l_glDrawRangeElementsBaseVertexEXT;
+ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTPROC l_glMultiDrawElementsBaseVertexEXT;
+ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTUREEXTPROC l_glFramebufferTextureEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDEXTPROC l_glDrawArraysInstancedEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDEXTPROC l_glDrawElementsInstancedEXT;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBDIVISOREXTPROC l_glVertexAttribDivisorEXT;
+ANGLE_UTIL_EXPORT extern PFNGLFLUSHMAPPEDBUFFERRANGEEXTPROC l_glFlushMappedBufferRangeEXT;
+ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFERRANGEEXTPROC l_glMapBufferRangeEXT;
+ANGLE_UTIL_EXPORT extern PFNGLBUFFERSTORAGEMEMEXTPROC l_glBufferStorageMemEXT;
+ANGLE_UTIL_EXPORT extern PFNGLCREATEMEMORYOBJECTSEXTPROC l_glCreateMemoryObjectsEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEMEMORYOBJECTSEXTPROC l_glDeleteMemoryObjectsEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETMEMORYOBJECTPARAMETERIVEXTPROC l_glGetMemoryObjectParameterivEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNSIGNEDBYTEI_VEXTPROC l_glGetUnsignedBytei_vEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNSIGNEDBYTEVEXTPROC l_glGetUnsignedBytevEXT;
+ANGLE_UTIL_EXPORT extern PFNGLISMEMORYOBJECTEXTPROC l_glIsMemoryObjectEXT;
+ANGLE_UTIL_EXPORT extern PFNGLMEMORYOBJECTPARAMETERIVEXTPROC l_glMemoryObjectParameterivEXT;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM2DEXTPROC l_glTexStorageMem2DEXT;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM2DMULTISAMPLEEXTPROC l_glTexStorageMem2DMultisampleEXT;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM3DEXTPROC l_glTexStorageMem3DEXT;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM3DMULTISAMPLEEXTPROC l_glTexStorageMem3DMultisampleEXT;
+ANGLE_UTIL_EXPORT extern PFNGLIMPORTMEMORYFDEXTPROC l_glImportMemoryFdEXT;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC
-    ANGLE_glFramebufferTexture2DMultisampleEXT;
+    l_glFramebufferTexture2DMultisampleEXT;
 ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC
-    ANGLE_glRenderbufferStorageMultisampleEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETGRAPHICSRESETSTATUSEXTPROC ANGLE_glGetGraphicsResetStatusEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMFVEXTPROC ANGLE_glGetnUniformfvEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMIVEXTPROC ANGLE_glGetnUniformivEXT;
-ANGLE_UTIL_EXPORT extern PFNGLREADNPIXELSEXTPROC ANGLE_glReadnPixelsEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDELETESEMAPHORESEXTPROC ANGLE_glDeleteSemaphoresEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGENSEMAPHORESEXTPROC ANGLE_glGenSemaphoresEXT;
-ANGLE_UTIL_EXPORT extern PFNGLGETSEMAPHOREPARAMETERUI64VEXTPROC
-    ANGLE_glGetSemaphoreParameterui64vEXT;
-ANGLE_UTIL_EXPORT extern PFNGLISSEMAPHOREEXTPROC ANGLE_glIsSemaphoreEXT;
-ANGLE_UTIL_EXPORT extern PFNGLSEMAPHOREPARAMETERUI64VEXTPROC ANGLE_glSemaphoreParameterui64vEXT;
-ANGLE_UTIL_EXPORT extern PFNGLSIGNALSEMAPHOREEXTPROC ANGLE_glSignalSemaphoreEXT;
-ANGLE_UTIL_EXPORT extern PFNGLWAITSEMAPHOREEXTPROC ANGLE_glWaitSemaphoreEXT;
-ANGLE_UTIL_EXPORT extern PFNGLIMPORTSEMAPHOREFDEXTPROC ANGLE_glImportSemaphoreFdEXT;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE1DEXTPROC ANGLE_glTexStorage1DEXT;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DEXTPROC ANGLE_glTexStorage2DEXT;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DEXTPROC ANGLE_glTexStorage3DEXT;
-ANGLE_UTIL_EXPORT extern PFNGLDEBUGMESSAGECALLBACKKHRPROC ANGLE_glDebugMessageCallbackKHR;
-ANGLE_UTIL_EXPORT extern PFNGLDEBUGMESSAGECONTROLKHRPROC ANGLE_glDebugMessageControlKHR;
-ANGLE_UTIL_EXPORT extern PFNGLDEBUGMESSAGEINSERTKHRPROC ANGLE_glDebugMessageInsertKHR;
-ANGLE_UTIL_EXPORT extern PFNGLGETDEBUGMESSAGELOGKHRPROC ANGLE_glGetDebugMessageLogKHR;
-ANGLE_UTIL_EXPORT extern PFNGLGETOBJECTLABELKHRPROC ANGLE_glGetObjectLabelKHR;
-ANGLE_UTIL_EXPORT extern PFNGLGETOBJECTPTRLABELKHRPROC ANGLE_glGetObjectPtrLabelKHR;
-ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVKHRPROC ANGLE_glGetPointervKHR;
-ANGLE_UTIL_EXPORT extern PFNGLOBJECTLABELKHRPROC ANGLE_glObjectLabelKHR;
-ANGLE_UTIL_EXPORT extern PFNGLOBJECTPTRLABELKHRPROC ANGLE_glObjectPtrLabelKHR;
-ANGLE_UTIL_EXPORT extern PFNGLPOPDEBUGGROUPKHRPROC ANGLE_glPopDebugGroupKHR;
-ANGLE_UTIL_EXPORT extern PFNGLPUSHDEBUGGROUPKHRPROC ANGLE_glPushDebugGroupKHR;
-ANGLE_UTIL_EXPORT extern PFNGLMAXSHADERCOMPILERTHREADSKHRPROC ANGLE_glMaxShaderCompilerThreadsKHR;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEFENCESNVPROC ANGLE_glDeleteFencesNV;
-ANGLE_UTIL_EXPORT extern PFNGLFINISHFENCENVPROC ANGLE_glFinishFenceNV;
-ANGLE_UTIL_EXPORT extern PFNGLGENFENCESNVPROC ANGLE_glGenFencesNV;
-ANGLE_UTIL_EXPORT extern PFNGLGETFENCEIVNVPROC ANGLE_glGetFenceivNV;
-ANGLE_UTIL_EXPORT extern PFNGLISFENCENVPROC ANGLE_glIsFenceNV;
-ANGLE_UTIL_EXPORT extern PFNGLSETFENCENVPROC ANGLE_glSetFenceNV;
-ANGLE_UTIL_EXPORT extern PFNGLTESTFENCENVPROC ANGLE_glTestFenceNV;
+    l_glRenderbufferStorageMultisampleEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETGRAPHICSRESETSTATUSEXTPROC l_glGetGraphicsResetStatusEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMFVEXTPROC l_glGetnUniformfvEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMIVEXTPROC l_glGetnUniformivEXT;
+ANGLE_UTIL_EXPORT extern PFNGLREADNPIXELSEXTPROC l_glReadnPixelsEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDELETESEMAPHORESEXTPROC l_glDeleteSemaphoresEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGENSEMAPHORESEXTPROC l_glGenSemaphoresEXT;
+ANGLE_UTIL_EXPORT extern PFNGLGETSEMAPHOREPARAMETERUI64VEXTPROC l_glGetSemaphoreParameterui64vEXT;
+ANGLE_UTIL_EXPORT extern PFNGLISSEMAPHOREEXTPROC l_glIsSemaphoreEXT;
+ANGLE_UTIL_EXPORT extern PFNGLSEMAPHOREPARAMETERUI64VEXTPROC l_glSemaphoreParameterui64vEXT;
+ANGLE_UTIL_EXPORT extern PFNGLSIGNALSEMAPHOREEXTPROC l_glSignalSemaphoreEXT;
+ANGLE_UTIL_EXPORT extern PFNGLWAITSEMAPHOREEXTPROC l_glWaitSemaphoreEXT;
+ANGLE_UTIL_EXPORT extern PFNGLIMPORTSEMAPHOREFDEXTPROC l_glImportSemaphoreFdEXT;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE1DEXTPROC l_glTexStorage1DEXT;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DEXTPROC l_glTexStorage2DEXT;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DEXTPROC l_glTexStorage3DEXT;
+ANGLE_UTIL_EXPORT extern PFNGLDEBUGMESSAGECALLBACKKHRPROC l_glDebugMessageCallbackKHR;
+ANGLE_UTIL_EXPORT extern PFNGLDEBUGMESSAGECONTROLKHRPROC l_glDebugMessageControlKHR;
+ANGLE_UTIL_EXPORT extern PFNGLDEBUGMESSAGEINSERTKHRPROC l_glDebugMessageInsertKHR;
+ANGLE_UTIL_EXPORT extern PFNGLGETDEBUGMESSAGELOGKHRPROC l_glGetDebugMessageLogKHR;
+ANGLE_UTIL_EXPORT extern PFNGLGETOBJECTLABELKHRPROC l_glGetObjectLabelKHR;
+ANGLE_UTIL_EXPORT extern PFNGLGETOBJECTPTRLABELKHRPROC l_glGetObjectPtrLabelKHR;
+ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVKHRPROC l_glGetPointervKHR;
+ANGLE_UTIL_EXPORT extern PFNGLOBJECTLABELKHRPROC l_glObjectLabelKHR;
+ANGLE_UTIL_EXPORT extern PFNGLOBJECTPTRLABELKHRPROC l_glObjectPtrLabelKHR;
+ANGLE_UTIL_EXPORT extern PFNGLPOPDEBUGGROUPKHRPROC l_glPopDebugGroupKHR;
+ANGLE_UTIL_EXPORT extern PFNGLPUSHDEBUGGROUPKHRPROC l_glPushDebugGroupKHR;
+ANGLE_UTIL_EXPORT extern PFNGLMAXSHADERCOMPILERTHREADSKHRPROC l_glMaxShaderCompilerThreadsKHR;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEFENCESNVPROC l_glDeleteFencesNV;
+ANGLE_UTIL_EXPORT extern PFNGLFINISHFENCENVPROC l_glFinishFenceNV;
+ANGLE_UTIL_EXPORT extern PFNGLGENFENCESNVPROC l_glGenFencesNV;
+ANGLE_UTIL_EXPORT extern PFNGLGETFENCEIVNVPROC l_glGetFenceivNV;
+ANGLE_UTIL_EXPORT extern PFNGLISFENCENVPROC l_glIsFenceNV;
+ANGLE_UTIL_EXPORT extern PFNGLSETFENCENVPROC l_glSetFenceNV;
+ANGLE_UTIL_EXPORT extern PFNGLTESTFENCENVPROC l_glTestFenceNV;
 ANGLE_UTIL_EXPORT extern PFNGLEGLIMAGETARGETRENDERBUFFERSTORAGEOESPROC
-    ANGLE_glEGLImageTargetRenderbufferStorageOES;
-ANGLE_UTIL_EXPORT extern PFNGLEGLIMAGETARGETTEXTURE2DOESPROC ANGLE_glEGLImageTargetTexture2DOES;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONSEPARATEIOESPROC ANGLE_glBlendEquationSeparateiOES;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONIOESPROC ANGLE_glBlendEquationiOES;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATEIOESPROC ANGLE_glBlendFuncSeparateiOES;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCIOESPROC ANGLE_glBlendFunciOES;
-ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKIOESPROC ANGLE_glColorMaskiOES;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLEIOESPROC ANGLE_glDisableiOES;
-ANGLE_UTIL_EXPORT extern PFNGLENABLEIOESPROC ANGLE_glEnableiOES;
-ANGLE_UTIL_EXPORT extern PFNGLISENABLEDIOESPROC ANGLE_glIsEnablediOES;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSBASEVERTEXOESPROC ANGLE_glDrawElementsBaseVertexOES;
+    l_glEGLImageTargetRenderbufferStorageOES;
+ANGLE_UTIL_EXPORT extern PFNGLEGLIMAGETARGETTEXTURE2DOESPROC l_glEGLImageTargetTexture2DOES;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONSEPARATEIOESPROC l_glBlendEquationSeparateiOES;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONIOESPROC l_glBlendEquationiOES;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATEIOESPROC l_glBlendFuncSeparateiOES;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCIOESPROC l_glBlendFunciOES;
+ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKIOESPROC l_glColorMaskiOES;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLEIOESPROC l_glDisableiOES;
+ANGLE_UTIL_EXPORT extern PFNGLENABLEIOESPROC l_glEnableiOES;
+ANGLE_UTIL_EXPORT extern PFNGLISENABLEDIOESPROC l_glIsEnablediOES;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSBASEVERTEXOESPROC l_glDrawElementsBaseVertexOES;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXOESPROC
-    ANGLE_glDrawElementsInstancedBaseVertexOES;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSBASEVERTEXOESPROC
-    ANGLE_glDrawRangeElementsBaseVertexOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMBINARYOESPROC ANGLE_glGetProgramBinaryOES;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMBINARYOESPROC ANGLE_glProgramBinaryOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVOESPROC ANGLE_glGetBufferPointervOES;
-ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFEROESPROC ANGLE_glMapBufferOES;
-ANGLE_UTIL_EXPORT extern PFNGLUNMAPBUFFEROESPROC ANGLE_glUnmapBufferOES;
-ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE3DOESPROC ANGLE_glCompressedTexImage3DOES;
-ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC ANGLE_glCompressedTexSubImage3DOES;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE3DOESPROC ANGLE_glCopyTexSubImage3DOES;
-ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE3DOESPROC ANGLE_glFramebufferTexture3DOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DOESPROC ANGLE_glTexImage3DOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DOESPROC ANGLE_glTexSubImage3DOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIIVOESPROC ANGLE_glGetSamplerParameterIivOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIUIVOESPROC ANGLE_glGetSamplerParameterIuivOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIIVOESPROC ANGLE_glGetTexParameterIivOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIUIVOESPROC ANGLE_glGetTexParameterIuivOES;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIIVOESPROC ANGLE_glSamplerParameterIivOES;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIUIVOESPROC ANGLE_glSamplerParameterIuivOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIIVOESPROC ANGLE_glTexParameterIivOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIUIVOESPROC ANGLE_glTexParameterIuivOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DMULTISAMPLEOESPROC ANGLE_glTexStorage3DMultisampleOES;
-ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXARRAYOESPROC ANGLE_glBindVertexArrayOES;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEVERTEXARRAYSOESPROC ANGLE_glDeleteVertexArraysOES;
-ANGLE_UTIL_EXPORT extern PFNGLGENVERTEXARRAYSOESPROC ANGLE_glGenVertexArraysOES;
-ANGLE_UTIL_EXPORT extern PFNGLISVERTEXARRAYOESPROC ANGLE_glIsVertexArrayOES;
-ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC
-    ANGLE_glFramebufferTextureMultiviewOVR;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXFOESPROC ANGLE_glDrawTexfOES;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXFVOESPROC ANGLE_glDrawTexfvOES;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXIOESPROC ANGLE_glDrawTexiOES;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXIVOESPROC ANGLE_glDrawTexivOES;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXSOESPROC ANGLE_glDrawTexsOES;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXSVOESPROC ANGLE_glDrawTexsvOES;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXXOESPROC ANGLE_glDrawTexxOES;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXXVOESPROC ANGLE_glDrawTexxvOES;
-ANGLE_UTIL_EXPORT extern PFNGLBINDFRAMEBUFFEROESPROC ANGLE_glBindFramebufferOES;
-ANGLE_UTIL_EXPORT extern PFNGLBINDRENDERBUFFEROESPROC ANGLE_glBindRenderbufferOES;
-ANGLE_UTIL_EXPORT extern PFNGLCHECKFRAMEBUFFERSTATUSOESPROC ANGLE_glCheckFramebufferStatusOES;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEFRAMEBUFFERSOESPROC ANGLE_glDeleteFramebuffersOES;
-ANGLE_UTIL_EXPORT extern PFNGLDELETERENDERBUFFERSOESPROC ANGLE_glDeleteRenderbuffersOES;
-ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERRENDERBUFFEROESPROC ANGLE_glFramebufferRenderbufferOES;
-ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE2DOESPROC ANGLE_glFramebufferTexture2DOES;
-ANGLE_UTIL_EXPORT extern PFNGLGENFRAMEBUFFERSOESPROC ANGLE_glGenFramebuffersOES;
-ANGLE_UTIL_EXPORT extern PFNGLGENRENDERBUFFERSOESPROC ANGLE_glGenRenderbuffersOES;
-ANGLE_UTIL_EXPORT extern PFNGLGENERATEMIPMAPOESPROC ANGLE_glGenerateMipmapOES;
+    l_glDrawElementsInstancedBaseVertexOES;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSBASEVERTEXOESPROC l_glDrawRangeElementsBaseVertexOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMBINARYOESPROC l_glGetProgramBinaryOES;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMBINARYOESPROC l_glProgramBinaryOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVOESPROC l_glGetBufferPointervOES;
+ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFEROESPROC l_glMapBufferOES;
+ANGLE_UTIL_EXPORT extern PFNGLUNMAPBUFFEROESPROC l_glUnmapBufferOES;
+ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE3DOESPROC l_glCompressedTexImage3DOES;
+ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC l_glCompressedTexSubImage3DOES;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE3DOESPROC l_glCopyTexSubImage3DOES;
+ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE3DOESPROC l_glFramebufferTexture3DOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DOESPROC l_glTexImage3DOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DOESPROC l_glTexSubImage3DOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIIVOESPROC l_glGetSamplerParameterIivOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIUIVOESPROC l_glGetSamplerParameterIuivOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIIVOESPROC l_glGetTexParameterIivOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIUIVOESPROC l_glGetTexParameterIuivOES;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIIVOESPROC l_glSamplerParameterIivOES;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIUIVOESPROC l_glSamplerParameterIuivOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIIVOESPROC l_glTexParameterIivOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIUIVOESPROC l_glTexParameterIuivOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DMULTISAMPLEOESPROC l_glTexStorage3DMultisampleOES;
+ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXARRAYOESPROC l_glBindVertexArrayOES;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEVERTEXARRAYSOESPROC l_glDeleteVertexArraysOES;
+ANGLE_UTIL_EXPORT extern PFNGLGENVERTEXARRAYSOESPROC l_glGenVertexArraysOES;
+ANGLE_UTIL_EXPORT extern PFNGLISVERTEXARRAYOESPROC l_glIsVertexArrayOES;
+ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC l_glFramebufferTextureMultiviewOVR;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXFOESPROC l_glDrawTexfOES;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXFVOESPROC l_glDrawTexfvOES;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXIOESPROC l_glDrawTexiOES;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXIVOESPROC l_glDrawTexivOES;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXSOESPROC l_glDrawTexsOES;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXSVOESPROC l_glDrawTexsvOES;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXXOESPROC l_glDrawTexxOES;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXXVOESPROC l_glDrawTexxvOES;
+ANGLE_UTIL_EXPORT extern PFNGLBINDFRAMEBUFFEROESPROC l_glBindFramebufferOES;
+ANGLE_UTIL_EXPORT extern PFNGLBINDRENDERBUFFEROESPROC l_glBindRenderbufferOES;
+ANGLE_UTIL_EXPORT extern PFNGLCHECKFRAMEBUFFERSTATUSOESPROC l_glCheckFramebufferStatusOES;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEFRAMEBUFFERSOESPROC l_glDeleteFramebuffersOES;
+ANGLE_UTIL_EXPORT extern PFNGLDELETERENDERBUFFERSOESPROC l_glDeleteRenderbuffersOES;
+ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERRENDERBUFFEROESPROC l_glFramebufferRenderbufferOES;
+ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE2DOESPROC l_glFramebufferTexture2DOES;
+ANGLE_UTIL_EXPORT extern PFNGLGENFRAMEBUFFERSOESPROC l_glGenFramebuffersOES;
+ANGLE_UTIL_EXPORT extern PFNGLGENRENDERBUFFERSOESPROC l_glGenRenderbuffersOES;
+ANGLE_UTIL_EXPORT extern PFNGLGENERATEMIPMAPOESPROC l_glGenerateMipmapOES;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVOESPROC
-    ANGLE_glGetFramebufferAttachmentParameterivOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERPARAMETERIVOESPROC
-    ANGLE_glGetRenderbufferParameterivOES;
-ANGLE_UTIL_EXPORT extern PFNGLISFRAMEBUFFEROESPROC ANGLE_glIsFramebufferOES;
-ANGLE_UTIL_EXPORT extern PFNGLISRENDERBUFFEROESPROC ANGLE_glIsRenderbufferOES;
-ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEOESPROC ANGLE_glRenderbufferStorageOES;
-ANGLE_UTIL_EXPORT extern PFNGLCURRENTPALETTEMATRIXOESPROC ANGLE_glCurrentPaletteMatrixOES;
+    l_glGetFramebufferAttachmentParameterivOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERPARAMETERIVOESPROC l_glGetRenderbufferParameterivOES;
+ANGLE_UTIL_EXPORT extern PFNGLISFRAMEBUFFEROESPROC l_glIsFramebufferOES;
+ANGLE_UTIL_EXPORT extern PFNGLISRENDERBUFFEROESPROC l_glIsRenderbufferOES;
+ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEOESPROC l_glRenderbufferStorageOES;
+ANGLE_UTIL_EXPORT extern PFNGLCURRENTPALETTEMATRIXOESPROC l_glCurrentPaletteMatrixOES;
 ANGLE_UTIL_EXPORT extern PFNGLLOADPALETTEFROMMODELVIEWMATRIXOESPROC
-    ANGLE_glLoadPaletteFromModelViewMatrixOES;
-ANGLE_UTIL_EXPORT extern PFNGLMATRIXINDEXPOINTEROESPROC ANGLE_glMatrixIndexPointerOES;
-ANGLE_UTIL_EXPORT extern PFNGLWEIGHTPOINTEROESPROC ANGLE_glWeightPointerOES;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZEPOINTEROESPROC ANGLE_glPointSizePointerOES;
-ANGLE_UTIL_EXPORT extern PFNGLQUERYMATRIXXOESPROC ANGLE_glQueryMatrixxOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENFVOESPROC ANGLE_glGetTexGenfvOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENIVOESPROC ANGLE_glGetTexGenivOES;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENXVOESPROC ANGLE_glGetTexGenxvOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENFOESPROC ANGLE_glTexGenfOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENFVOESPROC ANGLE_glTexGenfvOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENIOESPROC ANGLE_glTexGeniOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENIVOESPROC ANGLE_glTexGenivOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENXOESPROC ANGLE_glTexGenxOES;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENXVOESPROC ANGLE_glTexGenxvOES;
-ANGLE_UTIL_EXPORT extern PFNGLALPHAFUNCCONTEXTANGLEPROC ANGLE_glAlphaFuncContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLIPPLANEFCONTEXTANGLEPROC ANGLE_glClipPlanefContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOLOR4FCONTEXTANGLEPROC ANGLE_glColor4fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFOGFCONTEXTANGLEPROC ANGLE_glFogfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFOGFVCONTEXTANGLEPROC ANGLE_glFogfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFRUSTUMFCONTEXTANGLEPROC ANGLE_glFrustumfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETCLIPPLANEFCONTEXTANGLEPROC ANGLE_glGetClipPlanefContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETLIGHTFVCONTEXTANGLEPROC ANGLE_glGetLightfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETMATERIALFVCONTEXTANGLEPROC ANGLE_glGetMaterialfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVFVCONTEXTANGLEPROC ANGLE_glGetTexEnvfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELFCONTEXTANGLEPROC ANGLE_glLightModelfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELFVCONTEXTANGLEPROC ANGLE_glLightModelfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTFCONTEXTANGLEPROC ANGLE_glLightfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTFVCONTEXTANGLEPROC ANGLE_glLightfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLOADMATRIXFCONTEXTANGLEPROC ANGLE_glLoadMatrixfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMATERIALFCONTEXTANGLEPROC ANGLE_glMaterialfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMATERIALFVCONTEXTANGLEPROC ANGLE_glMaterialfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMULTMATRIXFCONTEXTANGLEPROC ANGLE_glMultMatrixfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMULTITEXCOORD4FCONTEXTANGLEPROC ANGLE_glMultiTexCoord4fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLNORMAL3FCONTEXTANGLEPROC ANGLE_glNormal3fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLORTHOFCONTEXTANGLEPROC ANGLE_glOrthofContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERFCONTEXTANGLEPROC ANGLE_glPointParameterfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERFVCONTEXTANGLEPROC ANGLE_glPointParameterfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZECONTEXTANGLEPROC ANGLE_glPointSizeContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLROTATEFCONTEXTANGLEPROC ANGLE_glRotatefContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSCALEFCONTEXTANGLEPROC ANGLE_glScalefContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVFCONTEXTANGLEPROC ANGLE_glTexEnvfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVFVCONTEXTANGLEPROC ANGLE_glTexEnvfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTRANSLATEFCONTEXTANGLEPROC ANGLE_glTranslatefContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLALPHAFUNCXCONTEXTANGLEPROC ANGLE_glAlphaFuncxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARCOLORXCONTEXTANGLEPROC ANGLE_glClearColorxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARDEPTHXCONTEXTANGLEPROC ANGLE_glClearDepthxContextANGLE;
+    l_glLoadPaletteFromModelViewMatrixOES;
+ANGLE_UTIL_EXPORT extern PFNGLMATRIXINDEXPOINTEROESPROC l_glMatrixIndexPointerOES;
+ANGLE_UTIL_EXPORT extern PFNGLWEIGHTPOINTEROESPROC l_glWeightPointerOES;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZEPOINTEROESPROC l_glPointSizePointerOES;
+ANGLE_UTIL_EXPORT extern PFNGLQUERYMATRIXXOESPROC l_glQueryMatrixxOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENFVOESPROC l_glGetTexGenfvOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENIVOESPROC l_glGetTexGenivOES;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENXVOESPROC l_glGetTexGenxvOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENFOESPROC l_glTexGenfOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENFVOESPROC l_glTexGenfvOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENIOESPROC l_glTexGeniOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENIVOESPROC l_glTexGenivOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENXOESPROC l_glTexGenxOES;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENXVOESPROC l_glTexGenxvOES;
+ANGLE_UTIL_EXPORT extern PFNGLALPHAFUNCCONTEXTANGLEPROC l_glAlphaFuncContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLIPPLANEFCONTEXTANGLEPROC l_glClipPlanefContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOLOR4FCONTEXTANGLEPROC l_glColor4fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFOGFCONTEXTANGLEPROC l_glFogfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFOGFVCONTEXTANGLEPROC l_glFogfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFRUSTUMFCONTEXTANGLEPROC l_glFrustumfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETCLIPPLANEFCONTEXTANGLEPROC l_glGetClipPlanefContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETLIGHTFVCONTEXTANGLEPROC l_glGetLightfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETMATERIALFVCONTEXTANGLEPROC l_glGetMaterialfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVFVCONTEXTANGLEPROC l_glGetTexEnvfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELFCONTEXTANGLEPROC l_glLightModelfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELFVCONTEXTANGLEPROC l_glLightModelfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTFCONTEXTANGLEPROC l_glLightfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTFVCONTEXTANGLEPROC l_glLightfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLOADMATRIXFCONTEXTANGLEPROC l_glLoadMatrixfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMATERIALFCONTEXTANGLEPROC l_glMaterialfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMATERIALFVCONTEXTANGLEPROC l_glMaterialfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMULTMATRIXFCONTEXTANGLEPROC l_glMultMatrixfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMULTITEXCOORD4FCONTEXTANGLEPROC l_glMultiTexCoord4fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLNORMAL3FCONTEXTANGLEPROC l_glNormal3fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLORTHOFCONTEXTANGLEPROC l_glOrthofContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERFCONTEXTANGLEPROC l_glPointParameterfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERFVCONTEXTANGLEPROC l_glPointParameterfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZECONTEXTANGLEPROC l_glPointSizeContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLROTATEFCONTEXTANGLEPROC l_glRotatefContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSCALEFCONTEXTANGLEPROC l_glScalefContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVFCONTEXTANGLEPROC l_glTexEnvfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVFVCONTEXTANGLEPROC l_glTexEnvfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTRANSLATEFCONTEXTANGLEPROC l_glTranslatefContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLALPHAFUNCXCONTEXTANGLEPROC l_glAlphaFuncxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARCOLORXCONTEXTANGLEPROC l_glClearColorxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARDEPTHXCONTEXTANGLEPROC l_glClearDepthxContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCLIENTACTIVETEXTURECONTEXTANGLEPROC
-    ANGLE_glClientActiveTextureContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLIPPLANEXCONTEXTANGLEPROC ANGLE_glClipPlanexContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOLOR4UBCONTEXTANGLEPROC ANGLE_glColor4ubContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOLOR4XCONTEXTANGLEPROC ANGLE_glColor4xContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOLORPOINTERCONTEXTANGLEPROC ANGLE_glColorPointerContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDEPTHRANGEXCONTEXTANGLEPROC ANGLE_glDepthRangexContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLECLIENTSTATECONTEXTANGLEPROC
-    ANGLE_glDisableClientStateContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLENABLECLIENTSTATECONTEXTANGLEPROC
-    ANGLE_glEnableClientStateContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFOGXCONTEXTANGLEPROC ANGLE_glFogxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFOGXVCONTEXTANGLEPROC ANGLE_glFogxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFRUSTUMXCONTEXTANGLEPROC ANGLE_glFrustumxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETCLIPPLANEXCONTEXTANGLEPROC ANGLE_glGetClipPlanexContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETFIXEDVCONTEXTANGLEPROC ANGLE_glGetFixedvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETLIGHTXVCONTEXTANGLEPROC ANGLE_glGetLightxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETMATERIALXVCONTEXTANGLEPROC ANGLE_glGetMaterialxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVCONTEXTANGLEPROC ANGLE_glGetPointervContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVIVCONTEXTANGLEPROC ANGLE_glGetTexEnvivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVXVCONTEXTANGLEPROC ANGLE_glGetTexEnvxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERXVCONTEXTANGLEPROC
-    ANGLE_glGetTexParameterxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELXCONTEXTANGLEPROC ANGLE_glLightModelxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELXVCONTEXTANGLEPROC ANGLE_glLightModelxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTXCONTEXTANGLEPROC ANGLE_glLightxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLIGHTXVCONTEXTANGLEPROC ANGLE_glLightxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLINEWIDTHXCONTEXTANGLEPROC ANGLE_glLineWidthxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLOADIDENTITYCONTEXTANGLEPROC ANGLE_glLoadIdentityContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLOADMATRIXXCONTEXTANGLEPROC ANGLE_glLoadMatrixxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLOGICOPCONTEXTANGLEPROC ANGLE_glLogicOpContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMATERIALXCONTEXTANGLEPROC ANGLE_glMaterialxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMATERIALXVCONTEXTANGLEPROC ANGLE_glMaterialxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMATRIXMODECONTEXTANGLEPROC ANGLE_glMatrixModeContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMULTMATRIXXCONTEXTANGLEPROC ANGLE_glMultMatrixxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMULTITEXCOORD4XCONTEXTANGLEPROC ANGLE_glMultiTexCoord4xContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLNORMAL3XCONTEXTANGLEPROC ANGLE_glNormal3xContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLNORMALPOINTERCONTEXTANGLEPROC ANGLE_glNormalPointerContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLORTHOXCONTEXTANGLEPROC ANGLE_glOrthoxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERXCONTEXTANGLEPROC ANGLE_glPointParameterxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERXVCONTEXTANGLEPROC ANGLE_glPointParameterxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZEXCONTEXTANGLEPROC ANGLE_glPointSizexContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOLYGONOFFSETXCONTEXTANGLEPROC ANGLE_glPolygonOffsetxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOPMATRIXCONTEXTANGLEPROC ANGLE_glPopMatrixContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPUSHMATRIXCONTEXTANGLEPROC ANGLE_glPushMatrixContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLROTATEXCONTEXTANGLEPROC ANGLE_glRotatexContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLECOVERAGEXCONTEXTANGLEPROC ANGLE_glSampleCoveragexContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSCALEXCONTEXTANGLEPROC ANGLE_glScalexContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSHADEMODELCONTEXTANGLEPROC ANGLE_glShadeModelContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXCOORDPOINTERCONTEXTANGLEPROC ANGLE_glTexCoordPointerContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVICONTEXTANGLEPROC ANGLE_glTexEnviContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVXCONTEXTANGLEPROC ANGLE_glTexEnvxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVIVCONTEXTANGLEPROC ANGLE_glTexEnvivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXENVXVCONTEXTANGLEPROC ANGLE_glTexEnvxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERXCONTEXTANGLEPROC ANGLE_glTexParameterxContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERXVCONTEXTANGLEPROC ANGLE_glTexParameterxvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTRANSLATEXCONTEXTANGLEPROC ANGLE_glTranslatexContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXPOINTERCONTEXTANGLEPROC ANGLE_glVertexPointerContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLACTIVETEXTURECONTEXTANGLEPROC ANGLE_glActiveTextureContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLATTACHSHADERCONTEXTANGLEPROC ANGLE_glAttachShaderContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDATTRIBLOCATIONCONTEXTANGLEPROC
-    ANGLE_glBindAttribLocationContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERCONTEXTANGLEPROC ANGLE_glBindBufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDFRAMEBUFFERCONTEXTANGLEPROC ANGLE_glBindFramebufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDRENDERBUFFERCONTEXTANGLEPROC ANGLE_glBindRenderbufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDTEXTURECONTEXTANGLEPROC ANGLE_glBindTextureContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDCOLORCONTEXTANGLEPROC ANGLE_glBlendColorContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONCONTEXTANGLEPROC ANGLE_glBlendEquationContextANGLE;
+    l_glClientActiveTextureContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLIPPLANEXCONTEXTANGLEPROC l_glClipPlanexContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOLOR4UBCONTEXTANGLEPROC l_glColor4ubContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOLOR4XCONTEXTANGLEPROC l_glColor4xContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOLORPOINTERCONTEXTANGLEPROC l_glColorPointerContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDEPTHRANGEXCONTEXTANGLEPROC l_glDepthRangexContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLECLIENTSTATECONTEXTANGLEPROC l_glDisableClientStateContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLENABLECLIENTSTATECONTEXTANGLEPROC l_glEnableClientStateContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFOGXCONTEXTANGLEPROC l_glFogxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFOGXVCONTEXTANGLEPROC l_glFogxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFRUSTUMXCONTEXTANGLEPROC l_glFrustumxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETCLIPPLANEXCONTEXTANGLEPROC l_glGetClipPlanexContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETFIXEDVCONTEXTANGLEPROC l_glGetFixedvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETLIGHTXVCONTEXTANGLEPROC l_glGetLightxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETMATERIALXVCONTEXTANGLEPROC l_glGetMaterialxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVCONTEXTANGLEPROC l_glGetPointervContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVIVCONTEXTANGLEPROC l_glGetTexEnvivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXENVXVCONTEXTANGLEPROC l_glGetTexEnvxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERXVCONTEXTANGLEPROC l_glGetTexParameterxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELXCONTEXTANGLEPROC l_glLightModelxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTMODELXVCONTEXTANGLEPROC l_glLightModelxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTXCONTEXTANGLEPROC l_glLightxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLIGHTXVCONTEXTANGLEPROC l_glLightxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLINEWIDTHXCONTEXTANGLEPROC l_glLineWidthxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLOADIDENTITYCONTEXTANGLEPROC l_glLoadIdentityContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLOADMATRIXXCONTEXTANGLEPROC l_glLoadMatrixxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLOGICOPCONTEXTANGLEPROC l_glLogicOpContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMATERIALXCONTEXTANGLEPROC l_glMaterialxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMATERIALXVCONTEXTANGLEPROC l_glMaterialxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMATRIXMODECONTEXTANGLEPROC l_glMatrixModeContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMULTMATRIXXCONTEXTANGLEPROC l_glMultMatrixxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMULTITEXCOORD4XCONTEXTANGLEPROC l_glMultiTexCoord4xContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLNORMAL3XCONTEXTANGLEPROC l_glNormal3xContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLNORMALPOINTERCONTEXTANGLEPROC l_glNormalPointerContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLORTHOXCONTEXTANGLEPROC l_glOrthoxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERXCONTEXTANGLEPROC l_glPointParameterxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTPARAMETERXVCONTEXTANGLEPROC l_glPointParameterxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZEXCONTEXTANGLEPROC l_glPointSizexContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOLYGONOFFSETXCONTEXTANGLEPROC l_glPolygonOffsetxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOPMATRIXCONTEXTANGLEPROC l_glPopMatrixContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPUSHMATRIXCONTEXTANGLEPROC l_glPushMatrixContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLROTATEXCONTEXTANGLEPROC l_glRotatexContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLECOVERAGEXCONTEXTANGLEPROC l_glSampleCoveragexContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSCALEXCONTEXTANGLEPROC l_glScalexContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSHADEMODELCONTEXTANGLEPROC l_glShadeModelContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXCOORDPOINTERCONTEXTANGLEPROC l_glTexCoordPointerContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVICONTEXTANGLEPROC l_glTexEnviContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVXCONTEXTANGLEPROC l_glTexEnvxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVIVCONTEXTANGLEPROC l_glTexEnvivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXENVXVCONTEXTANGLEPROC l_glTexEnvxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERXCONTEXTANGLEPROC l_glTexParameterxContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERXVCONTEXTANGLEPROC l_glTexParameterxvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTRANSLATEXCONTEXTANGLEPROC l_glTranslatexContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXPOINTERCONTEXTANGLEPROC l_glVertexPointerContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLACTIVETEXTURECONTEXTANGLEPROC l_glActiveTextureContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLATTACHSHADERCONTEXTANGLEPROC l_glAttachShaderContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDATTRIBLOCATIONCONTEXTANGLEPROC l_glBindAttribLocationContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERCONTEXTANGLEPROC l_glBindBufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDFRAMEBUFFERCONTEXTANGLEPROC l_glBindFramebufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDRENDERBUFFERCONTEXTANGLEPROC l_glBindRenderbufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDTEXTURECONTEXTANGLEPROC l_glBindTextureContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDCOLORCONTEXTANGLEPROC l_glBlendColorContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONCONTEXTANGLEPROC l_glBlendEquationContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONSEPARATECONTEXTANGLEPROC
-    ANGLE_glBlendEquationSeparateContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCCONTEXTANGLEPROC ANGLE_glBlendFuncContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATECONTEXTANGLEPROC
-    ANGLE_glBlendFuncSeparateContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBUFFERDATACONTEXTANGLEPROC ANGLE_glBufferDataContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBUFFERSUBDATACONTEXTANGLEPROC ANGLE_glBufferSubDataContextANGLE;
+    l_glBlendEquationSeparateContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCCONTEXTANGLEPROC l_glBlendFuncContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATECONTEXTANGLEPROC l_glBlendFuncSeparateContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBUFFERDATACONTEXTANGLEPROC l_glBufferDataContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBUFFERSUBDATACONTEXTANGLEPROC l_glBufferSubDataContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCHECKFRAMEBUFFERSTATUSCONTEXTANGLEPROC
-    ANGLE_glCheckFramebufferStatusContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARCONTEXTANGLEPROC ANGLE_glClearContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARCOLORCONTEXTANGLEPROC ANGLE_glClearColorContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARDEPTHFCONTEXTANGLEPROC ANGLE_glClearDepthfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARSTENCILCONTEXTANGLEPROC ANGLE_glClearStencilContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKCONTEXTANGLEPROC ANGLE_glColorMaskContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOMPILESHADERCONTEXTANGLEPROC ANGLE_glCompileShaderContextANGLE;
+    l_glCheckFramebufferStatusContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARCONTEXTANGLEPROC l_glClearContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARCOLORCONTEXTANGLEPROC l_glClearColorContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARDEPTHFCONTEXTANGLEPROC l_glClearDepthfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARSTENCILCONTEXTANGLEPROC l_glClearStencilContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKCONTEXTANGLEPROC l_glColorMaskContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOMPILESHADERCONTEXTANGLEPROC l_glCompileShaderContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE2DCONTEXTANGLEPROC
-    ANGLE_glCompressedTexImage2DContextANGLE;
+    l_glCompressedTexImage2DContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE2DCONTEXTANGLEPROC
-    ANGLE_glCompressedTexSubImage2DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXIMAGE2DCONTEXTANGLEPROC ANGLE_glCopyTexImage2DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE2DCONTEXTANGLEPROC
-    ANGLE_glCopyTexSubImage2DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCREATEPROGRAMCONTEXTANGLEPROC ANGLE_glCreateProgramContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCREATESHADERCONTEXTANGLEPROC ANGLE_glCreateShaderContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCULLFACECONTEXTANGLEPROC ANGLE_glCullFaceContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEBUFFERSCONTEXTANGLEPROC ANGLE_glDeleteBuffersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEFRAMEBUFFERSCONTEXTANGLEPROC
-    ANGLE_glDeleteFramebuffersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEPROGRAMCONTEXTANGLEPROC ANGLE_glDeleteProgramContextANGLE;
+    l_glCompressedTexSubImage2DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXIMAGE2DCONTEXTANGLEPROC l_glCopyTexImage2DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE2DCONTEXTANGLEPROC l_glCopyTexSubImage2DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCREATEPROGRAMCONTEXTANGLEPROC l_glCreateProgramContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCREATESHADERCONTEXTANGLEPROC l_glCreateShaderContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCULLFACECONTEXTANGLEPROC l_glCullFaceContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEBUFFERSCONTEXTANGLEPROC l_glDeleteBuffersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEFRAMEBUFFERSCONTEXTANGLEPROC l_glDeleteFramebuffersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEPROGRAMCONTEXTANGLEPROC l_glDeleteProgramContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDELETERENDERBUFFERSCONTEXTANGLEPROC
-    ANGLE_glDeleteRenderbuffersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETESHADERCONTEXTANGLEPROC ANGLE_glDeleteShaderContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETETEXTURESCONTEXTANGLEPROC ANGLE_glDeleteTexturesContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDEPTHFUNCCONTEXTANGLEPROC ANGLE_glDepthFuncContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDEPTHMASKCONTEXTANGLEPROC ANGLE_glDepthMaskContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDEPTHRANGEFCONTEXTANGLEPROC ANGLE_glDepthRangefContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDETACHSHADERCONTEXTANGLEPROC ANGLE_glDetachShaderContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLECONTEXTANGLEPROC ANGLE_glDisableContextANGLE;
+    l_glDeleteRenderbuffersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETESHADERCONTEXTANGLEPROC l_glDeleteShaderContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETETEXTURESCONTEXTANGLEPROC l_glDeleteTexturesContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDEPTHFUNCCONTEXTANGLEPROC l_glDepthFuncContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDEPTHMASKCONTEXTANGLEPROC l_glDepthMaskContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDEPTHRANGEFCONTEXTANGLEPROC l_glDepthRangefContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDETACHSHADERCONTEXTANGLEPROC l_glDetachShaderContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLECONTEXTANGLEPROC l_glDisableContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDISABLEVERTEXATTRIBARRAYCONTEXTANGLEPROC
-    ANGLE_glDisableVertexAttribArrayContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSCONTEXTANGLEPROC ANGLE_glDrawArraysContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSCONTEXTANGLEPROC ANGLE_glDrawElementsContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLENABLECONTEXTANGLEPROC ANGLE_glEnableContextANGLE;
+    l_glDisableVertexAttribArrayContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSCONTEXTANGLEPROC l_glDrawArraysContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSCONTEXTANGLEPROC l_glDrawElementsContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLENABLECONTEXTANGLEPROC l_glEnableContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLENABLEVERTEXATTRIBARRAYCONTEXTANGLEPROC
-    ANGLE_glEnableVertexAttribArrayContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFINISHCONTEXTANGLEPROC ANGLE_glFinishContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFLUSHCONTEXTANGLEPROC ANGLE_glFlushContextANGLE;
+    l_glEnableVertexAttribArrayContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFINISHCONTEXTANGLEPROC l_glFinishContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFLUSHCONTEXTANGLEPROC l_glFlushContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERRENDERBUFFERCONTEXTANGLEPROC
-    ANGLE_glFramebufferRenderbufferContextANGLE;
+    l_glFramebufferRenderbufferContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE2DCONTEXTANGLEPROC
-    ANGLE_glFramebufferTexture2DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFRONTFACECONTEXTANGLEPROC ANGLE_glFrontFaceContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENBUFFERSCONTEXTANGLEPROC ANGLE_glGenBuffersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENERATEMIPMAPCONTEXTANGLEPROC ANGLE_glGenerateMipmapContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENFRAMEBUFFERSCONTEXTANGLEPROC ANGLE_glGenFramebuffersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENRENDERBUFFERSCONTEXTANGLEPROC ANGLE_glGenRenderbuffersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENTEXTURESCONTEXTANGLEPROC ANGLE_glGenTexturesContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEATTRIBCONTEXTANGLEPROC ANGLE_glGetActiveAttribContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMCONTEXTANGLEPROC ANGLE_glGetActiveUniformContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETATTACHEDSHADERSCONTEXTANGLEPROC
-    ANGLE_glGetAttachedShadersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETATTRIBLOCATIONCONTEXTANGLEPROC
-    ANGLE_glGetAttribLocationContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANVCONTEXTANGLEPROC ANGLE_glGetBooleanvContextANGLE;
+    l_glFramebufferTexture2DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFRONTFACECONTEXTANGLEPROC l_glFrontFaceContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENBUFFERSCONTEXTANGLEPROC l_glGenBuffersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENERATEMIPMAPCONTEXTANGLEPROC l_glGenerateMipmapContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENFRAMEBUFFERSCONTEXTANGLEPROC l_glGenFramebuffersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENRENDERBUFFERSCONTEXTANGLEPROC l_glGenRenderbuffersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENTEXTURESCONTEXTANGLEPROC l_glGenTexturesContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEATTRIBCONTEXTANGLEPROC l_glGetActiveAttribContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMCONTEXTANGLEPROC l_glGetActiveUniformContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETATTACHEDSHADERSCONTEXTANGLEPROC l_glGetAttachedShadersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETATTRIBLOCATIONCONTEXTANGLEPROC l_glGetAttribLocationContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANVCONTEXTANGLEPROC l_glGetBooleanvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERIVCONTEXTANGLEPROC
-    ANGLE_glGetBufferParameterivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETERRORCONTEXTANGLEPROC ANGLE_glGetErrorContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETFLOATVCONTEXTANGLEPROC ANGLE_glGetFloatvContextANGLE;
+    l_glGetBufferParameterivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETERRORCONTEXTANGLEPROC l_glGetErrorContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETFLOATVCONTEXTANGLEPROC l_glGetFloatvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVCONTEXTANGLEPROC
-    ANGLE_glGetFramebufferAttachmentParameterivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERVCONTEXTANGLEPROC ANGLE_glGetIntegervContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMIVCONTEXTANGLEPROC ANGLE_glGetProgramivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMINFOLOGCONTEXTANGLEPROC
-    ANGLE_glGetProgramInfoLogContextANGLE;
+    l_glGetFramebufferAttachmentParameterivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERVCONTEXTANGLEPROC l_glGetIntegervContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMIVCONTEXTANGLEPROC l_glGetProgramivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMINFOLOGCONTEXTANGLEPROC l_glGetProgramInfoLogContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERPARAMETERIVCONTEXTANGLEPROC
-    ANGLE_glGetRenderbufferParameterivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETSHADERIVCONTEXTANGLEPROC ANGLE_glGetShaderivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETSHADERINFOLOGCONTEXTANGLEPROC ANGLE_glGetShaderInfoLogContextANGLE;
+    l_glGetRenderbufferParameterivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETSHADERIVCONTEXTANGLEPROC l_glGetShaderivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETSHADERINFOLOGCONTEXTANGLEPROC l_glGetShaderInfoLogContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSHADERPRECISIONFORMATCONTEXTANGLEPROC
-    ANGLE_glGetShaderPrecisionFormatContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETSHADERSOURCECONTEXTANGLEPROC ANGLE_glGetShaderSourceContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETSTRINGCONTEXTANGLEPROC ANGLE_glGetStringContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERFVCONTEXTANGLEPROC
-    ANGLE_glGetTexParameterfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIVCONTEXTANGLEPROC
-    ANGLE_glGetTexParameterivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMFVCONTEXTANGLEPROC ANGLE_glGetUniformfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMIVCONTEXTANGLEPROC ANGLE_glGetUniformivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMLOCATIONCONTEXTANGLEPROC
-    ANGLE_glGetUniformLocationContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBFVCONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIVCONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribivContextANGLE;
+    l_glGetShaderPrecisionFormatContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETSHADERSOURCECONTEXTANGLEPROC l_glGetShaderSourceContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETSTRINGCONTEXTANGLEPROC l_glGetStringContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERFVCONTEXTANGLEPROC l_glGetTexParameterfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIVCONTEXTANGLEPROC l_glGetTexParameterivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMFVCONTEXTANGLEPROC l_glGetUniformfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMIVCONTEXTANGLEPROC l_glGetUniformivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMLOCATIONCONTEXTANGLEPROC l_glGetUniformLocationContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBFVCONTEXTANGLEPROC l_glGetVertexAttribfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIVCONTEXTANGLEPROC l_glGetVertexAttribivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBPOINTERVCONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribPointervContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLHINTCONTEXTANGLEPROC ANGLE_glHintContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISBUFFERCONTEXTANGLEPROC ANGLE_glIsBufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISENABLEDCONTEXTANGLEPROC ANGLE_glIsEnabledContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISFRAMEBUFFERCONTEXTANGLEPROC ANGLE_glIsFramebufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISPROGRAMCONTEXTANGLEPROC ANGLE_glIsProgramContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISRENDERBUFFERCONTEXTANGLEPROC ANGLE_glIsRenderbufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISSHADERCONTEXTANGLEPROC ANGLE_glIsShaderContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISTEXTURECONTEXTANGLEPROC ANGLE_glIsTextureContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLINEWIDTHCONTEXTANGLEPROC ANGLE_glLineWidthContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLLINKPROGRAMCONTEXTANGLEPROC ANGLE_glLinkProgramContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPIXELSTOREICONTEXTANGLEPROC ANGLE_glPixelStoreiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOLYGONOFFSETCONTEXTANGLEPROC ANGLE_glPolygonOffsetContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLREADPIXELSCONTEXTANGLEPROC ANGLE_glReadPixelsContextANGLE;
+    l_glGetVertexAttribPointervContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLHINTCONTEXTANGLEPROC l_glHintContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISBUFFERCONTEXTANGLEPROC l_glIsBufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISENABLEDCONTEXTANGLEPROC l_glIsEnabledContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISFRAMEBUFFERCONTEXTANGLEPROC l_glIsFramebufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISPROGRAMCONTEXTANGLEPROC l_glIsProgramContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISRENDERBUFFERCONTEXTANGLEPROC l_glIsRenderbufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISSHADERCONTEXTANGLEPROC l_glIsShaderContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISTEXTURECONTEXTANGLEPROC l_glIsTextureContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLINEWIDTHCONTEXTANGLEPROC l_glLineWidthContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLLINKPROGRAMCONTEXTANGLEPROC l_glLinkProgramContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPIXELSTOREICONTEXTANGLEPROC l_glPixelStoreiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOLYGONOFFSETCONTEXTANGLEPROC l_glPolygonOffsetContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLREADPIXELSCONTEXTANGLEPROC l_glReadPixelsContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLRELEASESHADERCOMPILERCONTEXTANGLEPROC
-    ANGLE_glReleaseShaderCompilerContextANGLE;
+    l_glReleaseShaderCompilerContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGECONTEXTANGLEPROC
-    ANGLE_glRenderbufferStorageContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLECOVERAGECONTEXTANGLEPROC ANGLE_glSampleCoverageContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSCISSORCONTEXTANGLEPROC ANGLE_glScissorContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSHADERBINARYCONTEXTANGLEPROC ANGLE_glShaderBinaryContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSHADERSOURCECONTEXTANGLEPROC ANGLE_glShaderSourceContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILFUNCCONTEXTANGLEPROC ANGLE_glStencilFuncContextANGLE;
+    l_glRenderbufferStorageContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLECOVERAGECONTEXTANGLEPROC l_glSampleCoverageContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSCISSORCONTEXTANGLEPROC l_glScissorContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSHADERBINARYCONTEXTANGLEPROC l_glShaderBinaryContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSHADERSOURCECONTEXTANGLEPROC l_glShaderSourceContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILFUNCCONTEXTANGLEPROC l_glStencilFuncContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSTENCILFUNCSEPARATECONTEXTANGLEPROC
-    ANGLE_glStencilFuncSeparateContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILMASKCONTEXTANGLEPROC ANGLE_glStencilMaskContextANGLE;
+    l_glStencilFuncSeparateContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILMASKCONTEXTANGLEPROC l_glStencilMaskContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSTENCILMASKSEPARATECONTEXTANGLEPROC
-    ANGLE_glStencilMaskSeparateContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILOPCONTEXTANGLEPROC ANGLE_glStencilOpContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSTENCILOPSEPARATECONTEXTANGLEPROC
-    ANGLE_glStencilOpSeparateContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DCONTEXTANGLEPROC ANGLE_glTexImage2DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFCONTEXTANGLEPROC ANGLE_glTexParameterfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFVCONTEXTANGLEPROC ANGLE_glTexParameterfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERICONTEXTANGLEPROC ANGLE_glTexParameteriContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIVCONTEXTANGLEPROC ANGLE_glTexParameterivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE2DCONTEXTANGLEPROC ANGLE_glTexSubImage2DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1FCONTEXTANGLEPROC ANGLE_glUniform1fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1FVCONTEXTANGLEPROC ANGLE_glUniform1fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1ICONTEXTANGLEPROC ANGLE_glUniform1iContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1IVCONTEXTANGLEPROC ANGLE_glUniform1ivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2FCONTEXTANGLEPROC ANGLE_glUniform2fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2FVCONTEXTANGLEPROC ANGLE_glUniform2fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2ICONTEXTANGLEPROC ANGLE_glUniform2iContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2IVCONTEXTANGLEPROC ANGLE_glUniform2ivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3FCONTEXTANGLEPROC ANGLE_glUniform3fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3FVCONTEXTANGLEPROC ANGLE_glUniform3fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3ICONTEXTANGLEPROC ANGLE_glUniform3iContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3IVCONTEXTANGLEPROC ANGLE_glUniform3ivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4FCONTEXTANGLEPROC ANGLE_glUniform4fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4FVCONTEXTANGLEPROC ANGLE_glUniform4fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4ICONTEXTANGLEPROC ANGLE_glUniform4iContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4IVCONTEXTANGLEPROC ANGLE_glUniform4ivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2FVCONTEXTANGLEPROC ANGLE_glUniformMatrix2fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3FVCONTEXTANGLEPROC ANGLE_glUniformMatrix3fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4FVCONTEXTANGLEPROC ANGLE_glUniformMatrix4fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUSEPROGRAMCONTEXTANGLEPROC ANGLE_glUseProgramContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVALIDATEPROGRAMCONTEXTANGLEPROC ANGLE_glValidateProgramContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB1FCONTEXTANGLEPROC ANGLE_glVertexAttrib1fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB1FVCONTEXTANGLEPROC ANGLE_glVertexAttrib1fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB2FCONTEXTANGLEPROC ANGLE_glVertexAttrib2fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB2FVCONTEXTANGLEPROC ANGLE_glVertexAttrib2fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB3FCONTEXTANGLEPROC ANGLE_glVertexAttrib3fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB3FVCONTEXTANGLEPROC ANGLE_glVertexAttrib3fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB4FCONTEXTANGLEPROC ANGLE_glVertexAttrib4fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB4FVCONTEXTANGLEPROC ANGLE_glVertexAttrib4fvContextANGLE;
+    l_glStencilMaskSeparateContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILOPCONTEXTANGLEPROC l_glStencilOpContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSTENCILOPSEPARATECONTEXTANGLEPROC l_glStencilOpSeparateContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DCONTEXTANGLEPROC l_glTexImage2DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFCONTEXTANGLEPROC l_glTexParameterfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFVCONTEXTANGLEPROC l_glTexParameterfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERICONTEXTANGLEPROC l_glTexParameteriContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIVCONTEXTANGLEPROC l_glTexParameterivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE2DCONTEXTANGLEPROC l_glTexSubImage2DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1FCONTEXTANGLEPROC l_glUniform1fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1FVCONTEXTANGLEPROC l_glUniform1fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1ICONTEXTANGLEPROC l_glUniform1iContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1IVCONTEXTANGLEPROC l_glUniform1ivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2FCONTEXTANGLEPROC l_glUniform2fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2FVCONTEXTANGLEPROC l_glUniform2fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2ICONTEXTANGLEPROC l_glUniform2iContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2IVCONTEXTANGLEPROC l_glUniform2ivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3FCONTEXTANGLEPROC l_glUniform3fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3FVCONTEXTANGLEPROC l_glUniform3fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3ICONTEXTANGLEPROC l_glUniform3iContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3IVCONTEXTANGLEPROC l_glUniform3ivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4FCONTEXTANGLEPROC l_glUniform4fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4FVCONTEXTANGLEPROC l_glUniform4fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4ICONTEXTANGLEPROC l_glUniform4iContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4IVCONTEXTANGLEPROC l_glUniform4ivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2FVCONTEXTANGLEPROC l_glUniformMatrix2fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3FVCONTEXTANGLEPROC l_glUniformMatrix3fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4FVCONTEXTANGLEPROC l_glUniformMatrix4fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUSEPROGRAMCONTEXTANGLEPROC l_glUseProgramContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVALIDATEPROGRAMCONTEXTANGLEPROC l_glValidateProgramContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB1FCONTEXTANGLEPROC l_glVertexAttrib1fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB1FVCONTEXTANGLEPROC l_glVertexAttrib1fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB2FCONTEXTANGLEPROC l_glVertexAttrib2fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB2FVCONTEXTANGLEPROC l_glVertexAttrib2fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB3FCONTEXTANGLEPROC l_glVertexAttrib3fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB3FVCONTEXTANGLEPROC l_glVertexAttrib3fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB4FCONTEXTANGLEPROC l_glVertexAttrib4fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIB4FVCONTEXTANGLEPROC l_glVertexAttrib4fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBPOINTERCONTEXTANGLEPROC
-    ANGLE_glVertexAttribPointerContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVIEWPORTCONTEXTANGLEPROC ANGLE_glViewportContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLREADBUFFERCONTEXTANGLEPROC ANGLE_glReadBufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSCONTEXTANGLEPROC
-    ANGLE_glDrawRangeElementsContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DCONTEXTANGLEPROC ANGLE_glTexImage3DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DCONTEXTANGLEPROC ANGLE_glTexSubImage3DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE3DCONTEXTANGLEPROC
-    ANGLE_glCopyTexSubImage3DContextANGLE;
+    l_glVertexAttribPointerContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVIEWPORTCONTEXTANGLEPROC l_glViewportContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLREADBUFFERCONTEXTANGLEPROC l_glReadBufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSCONTEXTANGLEPROC l_glDrawRangeElementsContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DCONTEXTANGLEPROC l_glTexImage3DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DCONTEXTANGLEPROC l_glTexSubImage3DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE3DCONTEXTANGLEPROC l_glCopyTexSubImage3DContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE3DCONTEXTANGLEPROC
-    ANGLE_glCompressedTexImage3DContextANGLE;
+    l_glCompressedTexImage3DContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE3DCONTEXTANGLEPROC
-    ANGLE_glCompressedTexSubImage3DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENQUERIESCONTEXTANGLEPROC ANGLE_glGenQueriesContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEQUERIESCONTEXTANGLEPROC ANGLE_glDeleteQueriesContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISQUERYCONTEXTANGLEPROC ANGLE_glIsQueryContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBEGINQUERYCONTEXTANGLEPROC ANGLE_glBeginQueryContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLENDQUERYCONTEXTANGLEPROC ANGLE_glEndQueryContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVCONTEXTANGLEPROC ANGLE_glGetQueryivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVCONTEXTANGLEPROC
-    ANGLE_glGetQueryObjectuivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNMAPBUFFERCONTEXTANGLEPROC ANGLE_glUnmapBufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVCONTEXTANGLEPROC
-    ANGLE_glGetBufferPointervContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWBUFFERSCONTEXTANGLEPROC ANGLE_glDrawBuffersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2X3FVCONTEXTANGLEPROC
-    ANGLE_glUniformMatrix2x3fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3X2FVCONTEXTANGLEPROC
-    ANGLE_glUniformMatrix3x2fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2X4FVCONTEXTANGLEPROC
-    ANGLE_glUniformMatrix2x4fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4X2FVCONTEXTANGLEPROC
-    ANGLE_glUniformMatrix4x2fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3X4FVCONTEXTANGLEPROC
-    ANGLE_glUniformMatrix3x4fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4X3FVCONTEXTANGLEPROC
-    ANGLE_glUniformMatrix4x3fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLITFRAMEBUFFERCONTEXTANGLEPROC ANGLE_glBlitFramebufferContextANGLE;
+    l_glCompressedTexSubImage3DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENQUERIESCONTEXTANGLEPROC l_glGenQueriesContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEQUERIESCONTEXTANGLEPROC l_glDeleteQueriesContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISQUERYCONTEXTANGLEPROC l_glIsQueryContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBEGINQUERYCONTEXTANGLEPROC l_glBeginQueryContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLENDQUERYCONTEXTANGLEPROC l_glEndQueryContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVCONTEXTANGLEPROC l_glGetQueryivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVCONTEXTANGLEPROC l_glGetQueryObjectuivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNMAPBUFFERCONTEXTANGLEPROC l_glUnmapBufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVCONTEXTANGLEPROC l_glGetBufferPointervContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWBUFFERSCONTEXTANGLEPROC l_glDrawBuffersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2X3FVCONTEXTANGLEPROC l_glUniformMatrix2x3fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3X2FVCONTEXTANGLEPROC l_glUniformMatrix3x2fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX2X4FVCONTEXTANGLEPROC l_glUniformMatrix2x4fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4X2FVCONTEXTANGLEPROC l_glUniformMatrix4x2fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX3X4FVCONTEXTANGLEPROC l_glUniformMatrix3x4fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORMMATRIX4X3FVCONTEXTANGLEPROC l_glUniformMatrix4x3fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLITFRAMEBUFFERCONTEXTANGLEPROC l_glBlitFramebufferContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLECONTEXTANGLEPROC
-    ANGLE_glRenderbufferStorageMultisampleContextANGLE;
+    l_glRenderbufferStorageMultisampleContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURELAYERCONTEXTANGLEPROC
-    ANGLE_glFramebufferTextureLayerContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFERRANGECONTEXTANGLEPROC ANGLE_glMapBufferRangeContextANGLE;
+    l_glFramebufferTextureLayerContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFERRANGECONTEXTANGLEPROC l_glMapBufferRangeContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFLUSHMAPPEDBUFFERRANGECONTEXTANGLEPROC
-    ANGLE_glFlushMappedBufferRangeContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXARRAYCONTEXTANGLEPROC ANGLE_glBindVertexArrayContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEVERTEXARRAYSCONTEXTANGLEPROC
-    ANGLE_glDeleteVertexArraysContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENVERTEXARRAYSCONTEXTANGLEPROC ANGLE_glGenVertexArraysContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISVERTEXARRAYCONTEXTANGLEPROC ANGLE_glIsVertexArrayContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERI_VCONTEXTANGLEPROC ANGLE_glGetIntegeri_vContextANGLE;
+    l_glFlushMappedBufferRangeContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXARRAYCONTEXTANGLEPROC l_glBindVertexArrayContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEVERTEXARRAYSCONTEXTANGLEPROC l_glDeleteVertexArraysContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENVERTEXARRAYSCONTEXTANGLEPROC l_glGenVertexArraysContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISVERTEXARRAYCONTEXTANGLEPROC l_glIsVertexArrayContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERI_VCONTEXTANGLEPROC l_glGetIntegeri_vContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBEGINTRANSFORMFEEDBACKCONTEXTANGLEPROC
-    ANGLE_glBeginTransformFeedbackContextANGLE;
+    l_glBeginTransformFeedbackContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLENDTRANSFORMFEEDBACKCONTEXTANGLEPROC
-    ANGLE_glEndTransformFeedbackContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERRANGECONTEXTANGLEPROC ANGLE_glBindBufferRangeContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERBASECONTEXTANGLEPROC ANGLE_glBindBufferBaseContextANGLE;
+    l_glEndTransformFeedbackContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERRANGECONTEXTANGLEPROC l_glBindBufferRangeContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDBUFFERBASECONTEXTANGLEPROC l_glBindBufferBaseContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTRANSFORMFEEDBACKVARYINGSCONTEXTANGLEPROC
-    ANGLE_glTransformFeedbackVaryingsContextANGLE;
+    l_glTransformFeedbackVaryingsContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTRANSFORMFEEDBACKVARYINGCONTEXTANGLEPROC
-    ANGLE_glGetTransformFeedbackVaryingContextANGLE;
+    l_glGetTransformFeedbackVaryingContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBIPOINTERCONTEXTANGLEPROC
-    ANGLE_glVertexAttribIPointerContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIIVCONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribIivContextANGLE;
+    l_glVertexAttribIPointerContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIIVCONTEXTANGLEPROC l_glGetVertexAttribIivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIUIVCONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribIuivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4ICONTEXTANGLEPROC ANGLE_glVertexAttribI4iContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4UICONTEXTANGLEPROC ANGLE_glVertexAttribI4uiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4IVCONTEXTANGLEPROC ANGLE_glVertexAttribI4ivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4UIVCONTEXTANGLEPROC
-    ANGLE_glVertexAttribI4uivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMUIVCONTEXTANGLEPROC ANGLE_glGetUniformuivContextANGLE;
+    l_glGetVertexAttribIuivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4ICONTEXTANGLEPROC l_glVertexAttribI4iContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4UICONTEXTANGLEPROC l_glVertexAttribI4uiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4IVCONTEXTANGLEPROC l_glVertexAttribI4ivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBI4UIVCONTEXTANGLEPROC l_glVertexAttribI4uivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMUIVCONTEXTANGLEPROC l_glGetUniformuivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAGDATALOCATIONCONTEXTANGLEPROC
-    ANGLE_glGetFragDataLocationContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1UICONTEXTANGLEPROC ANGLE_glUniform1uiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2UICONTEXTANGLEPROC ANGLE_glUniform2uiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3UICONTEXTANGLEPROC ANGLE_glUniform3uiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4UICONTEXTANGLEPROC ANGLE_glUniform4uiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1UIVCONTEXTANGLEPROC ANGLE_glUniform1uivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2UIVCONTEXTANGLEPROC ANGLE_glUniform2uivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3UIVCONTEXTANGLEPROC ANGLE_glUniform3uivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4UIVCONTEXTANGLEPROC ANGLE_glUniform4uivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERIVCONTEXTANGLEPROC ANGLE_glClearBufferivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERUIVCONTEXTANGLEPROC ANGLE_glClearBufferuivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERFVCONTEXTANGLEPROC ANGLE_glClearBufferfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERFICONTEXTANGLEPROC ANGLE_glClearBufferfiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETSTRINGICONTEXTANGLEPROC ANGLE_glGetStringiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYBUFFERSUBDATACONTEXTANGLEPROC
-    ANGLE_glCopyBufferSubDataContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMINDICESCONTEXTANGLEPROC
-    ANGLE_glGetUniformIndicesContextANGLE;
+    l_glGetFragDataLocationContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1UICONTEXTANGLEPROC l_glUniform1uiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2UICONTEXTANGLEPROC l_glUniform2uiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3UICONTEXTANGLEPROC l_glUniform3uiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4UICONTEXTANGLEPROC l_glUniform4uiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM1UIVCONTEXTANGLEPROC l_glUniform1uivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM2UIVCONTEXTANGLEPROC l_glUniform2uivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM3UIVCONTEXTANGLEPROC l_glUniform3uivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNIFORM4UIVCONTEXTANGLEPROC l_glUniform4uivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERIVCONTEXTANGLEPROC l_glClearBufferivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERUIVCONTEXTANGLEPROC l_glClearBufferuivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERFVCONTEXTANGLEPROC l_glClearBufferfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARBUFFERFICONTEXTANGLEPROC l_glClearBufferfiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETSTRINGICONTEXTANGLEPROC l_glGetStringiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYBUFFERSUBDATACONTEXTANGLEPROC l_glCopyBufferSubDataContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMINDICESCONTEXTANGLEPROC l_glGetUniformIndicesContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMSIVCONTEXTANGLEPROC
-    ANGLE_glGetActiveUniformsivContextANGLE;
+    l_glGetActiveUniformsivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMBLOCKINDEXCONTEXTANGLEPROC
-    ANGLE_glGetUniformBlockIndexContextANGLE;
+    l_glGetUniformBlockIndexContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMBLOCKIVCONTEXTANGLEPROC
-    ANGLE_glGetActiveUniformBlockivContextANGLE;
+    l_glGetActiveUniformBlockivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMBLOCKNAMECONTEXTANGLEPROC
-    ANGLE_glGetActiveUniformBlockNameContextANGLE;
+    l_glGetActiveUniformBlockNameContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLUNIFORMBLOCKBINDINGCONTEXTANGLEPROC
-    ANGLE_glUniformBlockBindingContextANGLE;
+    l_glUniformBlockBindingContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDCONTEXTANGLEPROC
-    ANGLE_glDrawArraysInstancedContextANGLE;
+    l_glDrawArraysInstancedContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDCONTEXTANGLEPROC
-    ANGLE_glDrawElementsInstancedContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFENCESYNCCONTEXTANGLEPROC ANGLE_glFenceSyncContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISSYNCCONTEXTANGLEPROC ANGLE_glIsSyncContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETESYNCCONTEXTANGLEPROC ANGLE_glDeleteSyncContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCLIENTWAITSYNCCONTEXTANGLEPROC ANGLE_glClientWaitSyncContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLWAITSYNCCONTEXTANGLEPROC ANGLE_glWaitSyncContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VCONTEXTANGLEPROC ANGLE_glGetInteger64vContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETSYNCIVCONTEXTANGLEPROC ANGLE_glGetSyncivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64I_VCONTEXTANGLEPROC ANGLE_glGetInteger64i_vContextANGLE;
+    l_glDrawElementsInstancedContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFENCESYNCCONTEXTANGLEPROC l_glFenceSyncContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISSYNCCONTEXTANGLEPROC l_glIsSyncContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETESYNCCONTEXTANGLEPROC l_glDeleteSyncContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCLIENTWAITSYNCCONTEXTANGLEPROC l_glClientWaitSyncContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLWAITSYNCCONTEXTANGLEPROC l_glWaitSyncContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VCONTEXTANGLEPROC l_glGetInteger64vContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETSYNCIVCONTEXTANGLEPROC l_glGetSyncivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64I_VCONTEXTANGLEPROC l_glGetInteger64i_vContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERI64VCONTEXTANGLEPROC
-    ANGLE_glGetBufferParameteri64vContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENSAMPLERSCONTEXTANGLEPROC ANGLE_glGenSamplersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETESAMPLERSCONTEXTANGLEPROC ANGLE_glDeleteSamplersContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISSAMPLERCONTEXTANGLEPROC ANGLE_glIsSamplerContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDSAMPLERCONTEXTANGLEPROC ANGLE_glBindSamplerContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERICONTEXTANGLEPROC
-    ANGLE_glSamplerParameteriContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIVCONTEXTANGLEPROC
-    ANGLE_glSamplerParameterivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFCONTEXTANGLEPROC
-    ANGLE_glSamplerParameterfContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFVCONTEXTANGLEPROC
-    ANGLE_glSamplerParameterfvContextANGLE;
+    l_glGetBufferParameteri64vContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENSAMPLERSCONTEXTANGLEPROC l_glGenSamplersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETESAMPLERSCONTEXTANGLEPROC l_glDeleteSamplersContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISSAMPLERCONTEXTANGLEPROC l_glIsSamplerContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDSAMPLERCONTEXTANGLEPROC l_glBindSamplerContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERICONTEXTANGLEPROC l_glSamplerParameteriContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIVCONTEXTANGLEPROC l_glSamplerParameterivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFCONTEXTANGLEPROC l_glSamplerParameterfContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFVCONTEXTANGLEPROC l_glSamplerParameterfvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIVCONTEXTANGLEPROC
-    ANGLE_glGetSamplerParameterivContextANGLE;
+    l_glGetSamplerParameterivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERFVCONTEXTANGLEPROC
-    ANGLE_glGetSamplerParameterfvContextANGLE;
+    l_glGetSamplerParameterfvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBDIVISORCONTEXTANGLEPROC
-    ANGLE_glVertexAttribDivisorContextANGLE;
+    l_glVertexAttribDivisorContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBINDTRANSFORMFEEDBACKCONTEXTANGLEPROC
-    ANGLE_glBindTransformFeedbackContextANGLE;
+    l_glBindTransformFeedbackContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDELETETRANSFORMFEEDBACKSCONTEXTANGLEPROC
-    ANGLE_glDeleteTransformFeedbacksContextANGLE;
+    l_glDeleteTransformFeedbacksContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGENTRANSFORMFEEDBACKSCONTEXTANGLEPROC
-    ANGLE_glGenTransformFeedbacksContextANGLE;
+    l_glGenTransformFeedbacksContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLISTRANSFORMFEEDBACKCONTEXTANGLEPROC
-    ANGLE_glIsTransformFeedbackContextANGLE;
+    l_glIsTransformFeedbackContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPAUSETRANSFORMFEEDBACKCONTEXTANGLEPROC
-    ANGLE_glPauseTransformFeedbackContextANGLE;
+    l_glPauseTransformFeedbackContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLRESUMETRANSFORMFEEDBACKCONTEXTANGLEPROC
-    ANGLE_glResumeTransformFeedbackContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMBINARYCONTEXTANGLEPROC ANGLE_glGetProgramBinaryContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMBINARYCONTEXTANGLEPROC ANGLE_glProgramBinaryContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMPARAMETERICONTEXTANGLEPROC
-    ANGLE_glProgramParameteriContextANGLE;
+    l_glResumeTransformFeedbackContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMBINARYCONTEXTANGLEPROC l_glGetProgramBinaryContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMBINARYCONTEXTANGLEPROC l_glProgramBinaryContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMPARAMETERICONTEXTANGLEPROC l_glProgramParameteriContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLINVALIDATEFRAMEBUFFERCONTEXTANGLEPROC
-    ANGLE_glInvalidateFramebufferContextANGLE;
+    l_glInvalidateFramebufferContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLINVALIDATESUBFRAMEBUFFERCONTEXTANGLEPROC
-    ANGLE_glInvalidateSubFramebufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DCONTEXTANGLEPROC ANGLE_glTexStorage2DContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DCONTEXTANGLEPROC ANGLE_glTexStorage3DContextANGLE;
+    l_glInvalidateSubFramebufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DCONTEXTANGLEPROC l_glTexStorage2DContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DCONTEXTANGLEPROC l_glTexStorage3DContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETINTERNALFORMATIVCONTEXTANGLEPROC
-    ANGLE_glGetInternalformativContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDISPATCHCOMPUTECONTEXTANGLEPROC ANGLE_glDispatchComputeContextANGLE;
+    l_glGetInternalformativContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDISPATCHCOMPUTECONTEXTANGLEPROC l_glDispatchComputeContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDISPATCHCOMPUTEINDIRECTCONTEXTANGLEPROC
-    ANGLE_glDispatchComputeIndirectContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINDIRECTCONTEXTANGLEPROC
-    ANGLE_glDrawArraysIndirectContextANGLE;
+    l_glDispatchComputeIndirectContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINDIRECTCONTEXTANGLEPROC l_glDrawArraysIndirectContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINDIRECTCONTEXTANGLEPROC
-    ANGLE_glDrawElementsIndirectContextANGLE;
+    l_glDrawElementsIndirectContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERPARAMETERICONTEXTANGLEPROC
-    ANGLE_glFramebufferParameteriContextANGLE;
+    l_glFramebufferParameteriContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERPARAMETERIVCONTEXTANGLEPROC
-    ANGLE_glGetFramebufferParameterivContextANGLE;
+    l_glGetFramebufferParameterivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMINTERFACEIVCONTEXTANGLEPROC
-    ANGLE_glGetProgramInterfaceivContextANGLE;
+    l_glGetProgramInterfaceivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCEINDEXCONTEXTANGLEPROC
-    ANGLE_glGetProgramResourceIndexContextANGLE;
+    l_glGetProgramResourceIndexContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCENAMECONTEXTANGLEPROC
-    ANGLE_glGetProgramResourceNameContextANGLE;
+    l_glGetProgramResourceNameContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCEIVCONTEXTANGLEPROC
-    ANGLE_glGetProgramResourceivContextANGLE;
+    l_glGetProgramResourceivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCELOCATIONCONTEXTANGLEPROC
-    ANGLE_glGetProgramResourceLocationContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUSEPROGRAMSTAGESCONTEXTANGLEPROC ANGLE_glUseProgramStagesContextANGLE;
+    l_glGetProgramResourceLocationContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUSEPROGRAMSTAGESCONTEXTANGLEPROC l_glUseProgramStagesContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLACTIVESHADERPROGRAMCONTEXTANGLEPROC
-    ANGLE_glActiveShaderProgramContextANGLE;
+    l_glActiveShaderProgramContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCREATESHADERPROGRAMVCONTEXTANGLEPROC
-    ANGLE_glCreateShaderProgramvContextANGLE;
+    l_glCreateShaderProgramvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBINDPROGRAMPIPELINECONTEXTANGLEPROC
-    ANGLE_glBindProgramPipelineContextANGLE;
+    l_glBindProgramPipelineContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDELETEPROGRAMPIPELINESCONTEXTANGLEPROC
-    ANGLE_glDeleteProgramPipelinesContextANGLE;
+    l_glDeleteProgramPipelinesContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGENPROGRAMPIPELINESCONTEXTANGLEPROC
-    ANGLE_glGenProgramPipelinesContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISPROGRAMPIPELINECONTEXTANGLEPROC
-    ANGLE_glIsProgramPipelineContextANGLE;
+    l_glGenProgramPipelinesContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISPROGRAMPIPELINECONTEXTANGLEPROC l_glIsProgramPipelineContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMPIPELINEIVCONTEXTANGLEPROC
-    ANGLE_glGetProgramPipelineivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1ICONTEXTANGLEPROC ANGLE_glProgramUniform1iContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2ICONTEXTANGLEPROC ANGLE_glProgramUniform2iContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3ICONTEXTANGLEPROC ANGLE_glProgramUniform3iContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4ICONTEXTANGLEPROC ANGLE_glProgramUniform4iContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1UICONTEXTANGLEPROC
-    ANGLE_glProgramUniform1uiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2UICONTEXTANGLEPROC
-    ANGLE_glProgramUniform2uiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3UICONTEXTANGLEPROC
-    ANGLE_glProgramUniform3uiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4UICONTEXTANGLEPROC
-    ANGLE_glProgramUniform4uiContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1FCONTEXTANGLEPROC ANGLE_glProgramUniform1fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2FCONTEXTANGLEPROC ANGLE_glProgramUniform2fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3FCONTEXTANGLEPROC ANGLE_glProgramUniform3fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4FCONTEXTANGLEPROC ANGLE_glProgramUniform4fContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1IVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform1ivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2IVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform2ivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3IVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform3ivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4IVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform4ivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1UIVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform1uivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2UIVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform2uivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3UIVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform3uivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4UIVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform4uivContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform1fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform2fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform3fvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniform4fvContextANGLE;
+    l_glGetProgramPipelineivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1ICONTEXTANGLEPROC l_glProgramUniform1iContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2ICONTEXTANGLEPROC l_glProgramUniform2iContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3ICONTEXTANGLEPROC l_glProgramUniform3iContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4ICONTEXTANGLEPROC l_glProgramUniform4iContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1UICONTEXTANGLEPROC l_glProgramUniform1uiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2UICONTEXTANGLEPROC l_glProgramUniform2uiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3UICONTEXTANGLEPROC l_glProgramUniform3uiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4UICONTEXTANGLEPROC l_glProgramUniform4uiContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1FCONTEXTANGLEPROC l_glProgramUniform1fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2FCONTEXTANGLEPROC l_glProgramUniform2fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3FCONTEXTANGLEPROC l_glProgramUniform3fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4FCONTEXTANGLEPROC l_glProgramUniform4fContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1IVCONTEXTANGLEPROC l_glProgramUniform1ivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2IVCONTEXTANGLEPROC l_glProgramUniform2ivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3IVCONTEXTANGLEPROC l_glProgramUniform3ivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4IVCONTEXTANGLEPROC l_glProgramUniform4ivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1UIVCONTEXTANGLEPROC l_glProgramUniform1uivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2UIVCONTEXTANGLEPROC l_glProgramUniform2uivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3UIVCONTEXTANGLEPROC l_glProgramUniform3uivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4UIVCONTEXTANGLEPROC l_glProgramUniform4uivContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM1FVCONTEXTANGLEPROC l_glProgramUniform1fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM2FVCONTEXTANGLEPROC l_glProgramUniform2fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM3FVCONTEXTANGLEPROC l_glProgramUniform3fvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORM4FVCONTEXTANGLEPROC l_glProgramUniform4fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX2FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniformMatrix2fvContextANGLE;
+    l_glProgramUniformMatrix2fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX3FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniformMatrix3fvContextANGLE;
+    l_glProgramUniformMatrix3fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX4FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniformMatrix4fvContextANGLE;
+    l_glProgramUniformMatrix4fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX2X3FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniformMatrix2x3fvContextANGLE;
+    l_glProgramUniformMatrix2x3fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX3X2FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniformMatrix3x2fvContextANGLE;
+    l_glProgramUniformMatrix3x2fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX2X4FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniformMatrix2x4fvContextANGLE;
+    l_glProgramUniformMatrix2x4fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX4X2FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniformMatrix4x2fvContextANGLE;
+    l_glProgramUniformMatrix4x2fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX3X4FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniformMatrix3x4fvContextANGLE;
+    l_glProgramUniformMatrix3x4fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROGRAMUNIFORMMATRIX4X3FVCONTEXTANGLEPROC
-    ANGLE_glProgramUniformMatrix4x3fvContextANGLE;
+    l_glProgramUniformMatrix4x3fvContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLVALIDATEPROGRAMPIPELINECONTEXTANGLEPROC
-    ANGLE_glValidateProgramPipelineContextANGLE;
+    l_glValidateProgramPipelineContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMPIPELINEINFOLOGCONTEXTANGLEPROC
-    ANGLE_glGetProgramPipelineInfoLogContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDIMAGETEXTURECONTEXTANGLEPROC ANGLE_glBindImageTextureContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANI_VCONTEXTANGLEPROC ANGLE_glGetBooleani_vContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMEMORYBARRIERCONTEXTANGLEPROC ANGLE_glMemoryBarrierContextANGLE;
+    l_glGetProgramPipelineInfoLogContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDIMAGETEXTURECONTEXTANGLEPROC l_glBindImageTextureContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANI_VCONTEXTANGLEPROC l_glGetBooleani_vContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMEMORYBARRIERCONTEXTANGLEPROC l_glMemoryBarrierContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMEMORYBARRIERBYREGIONCONTEXTANGLEPROC
-    ANGLE_glMemoryBarrierByRegionContextANGLE;
+    l_glMemoryBarrierByRegionContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DMULTISAMPLECONTEXTANGLEPROC
-    ANGLE_glTexStorage2DMultisampleContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVCONTEXTANGLEPROC ANGLE_glGetMultisamplefvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLEMASKICONTEXTANGLEPROC ANGLE_glSampleMaskiContextANGLE;
+    l_glTexStorage2DMultisampleContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVCONTEXTANGLEPROC l_glGetMultisamplefvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLEMASKICONTEXTANGLEPROC l_glSampleMaskiContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERIVCONTEXTANGLEPROC
-    ANGLE_glGetTexLevelParameterivContextANGLE;
+    l_glGetTexLevelParameterivContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERFVCONTEXTANGLEPROC
-    ANGLE_glGetTexLevelParameterfvContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXBUFFERCONTEXTANGLEPROC ANGLE_glBindVertexBufferContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBFORMATCONTEXTANGLEPROC
-    ANGLE_glVertexAttribFormatContextANGLE;
+    l_glGetTexLevelParameterfvContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXBUFFERCONTEXTANGLEPROC l_glBindVertexBufferContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBFORMATCONTEXTANGLEPROC l_glVertexAttribFormatContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBIFORMATCONTEXTANGLEPROC
-    ANGLE_glVertexAttribIFormatContextANGLE;
+    l_glVertexAttribIFormatContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBBINDINGCONTEXTANGLEPROC
-    ANGLE_glVertexAttribBindingContextANGLE;
+    l_glVertexAttribBindingContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLVERTEXBINDINGDIVISORCONTEXTANGLEPROC
-    ANGLE_glVertexBindingDivisorContextANGLE;
+    l_glVertexBindingDivisorContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEANGLECONTEXTANGLEPROC
-    ANGLE_glDrawArraysInstancedBaseInstanceANGLEContextANGLE;
+    l_glDrawArraysInstancedBaseInstanceANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEANGLECONTEXTANGLEPROC
-    ANGLE_glDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE;
+    l_glDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWARRAYSINSTANCEDBASEINSTANCEANGLECONTEXTANGLEPROC
-    ANGLE_glMultiDrawArraysInstancedBaseInstanceANGLEContextANGLE;
+    l_glMultiDrawArraysInstancedBaseInstanceANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEANGLECONTEXTANGLEPROC
-    ANGLE_glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE;
+    l_glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOPYSUBTEXTURE3DANGLECONTEXTANGLEPROC
-    ANGLE_glCopySubTexture3DANGLEContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXTURE3DANGLECONTEXTANGLEPROC
-    ANGLE_glCopyTexture3DANGLEContextANGLE;
+    l_glCopySubTexture3DANGLEContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXTURE3DANGLECONTEXTANGLEPROC l_glCopyTexture3DANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBLITFRAMEBUFFERANGLECONTEXTANGLEPROC
-    ANGLE_glBlitFramebufferANGLEContextANGLE;
+    l_glBlitFramebufferANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLECONTEXTANGLEPROC
-    ANGLE_glRenderbufferStorageMultisampleANGLEContextANGLE;
+    l_glRenderbufferStorageMultisampleANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERIMAGEANGLECONTEXTANGLEPROC
-    ANGLE_glGetRenderbufferImageANGLEContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXIMAGEANGLECONTEXTANGLEPROC ANGLE_glGetTexImageANGLEContextANGLE;
+    l_glGetRenderbufferImageANGLEContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXIMAGEANGLECONTEXTANGLEPROC l_glGetTexImageANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDANGLECONTEXTANGLEPROC
-    ANGLE_glDrawArraysInstancedANGLEContextANGLE;
+    l_glDrawArraysInstancedANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDANGLECONTEXTANGLEPROC
-    ANGLE_glDrawElementsInstancedANGLEContextANGLE;
+    l_glDrawElementsInstancedANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBDIVISORANGLECONTEXTANGLEPROC
-    ANGLE_glVertexAttribDivisorANGLEContextANGLE;
+    l_glVertexAttribDivisorANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLIMPORTMEMORYZIRCONHANDLEANGLECONTEXTANGLEPROC
-    ANGLE_glImportMemoryZirconHandleANGLEContextANGLE;
+    l_glImportMemoryZirconHandleANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWARRAYSANGLECONTEXTANGLEPROC
-    ANGLE_glMultiDrawArraysANGLEContextANGLE;
+    l_glMultiDrawArraysANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWARRAYSINSTANCEDANGLECONTEXTANGLEPROC
-    ANGLE_glMultiDrawArraysInstancedANGLEContextANGLE;
+    l_glMultiDrawArraysInstancedANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSANGLECONTEXTANGLEPROC
-    ANGLE_glMultiDrawElementsANGLEContextANGLE;
+    l_glMultiDrawElementsANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSINSTANCEDANGLECONTEXTANGLEPROC
-    ANGLE_glMultiDrawElementsInstancedANGLEContextANGLE;
+    l_glMultiDrawElementsInstancedANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROVOKINGVERTEXANGLECONTEXTANGLEPROC
-    ANGLE_glProvokingVertexANGLEContextANGLE;
+    l_glProvokingVertexANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDISABLEEXTENSIONANGLECONTEXTANGLEPROC
-    ANGLE_glDisableExtensionANGLEContextANGLE;
+    l_glDisableExtensionANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLREQUESTEXTENSIONANGLECONTEXTANGLEPROC
-    ANGLE_glRequestExtensionANGLEContextANGLE;
+    l_glRequestExtensionANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE2DROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glCompressedTexImage2DRobustANGLEContextANGLE;
+    l_glCompressedTexImage2DRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE3DROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glCompressedTexImage3DRobustANGLEContextANGLE;
+    l_glCompressedTexImage3DRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE2DROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glCompressedTexSubImage2DRobustANGLEContextANGLE;
+    l_glCompressedTexSubImage2DRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE3DROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glCompressedTexSubImage3DRobustANGLEContextANGLE;
+    l_glCompressedTexSubImage3DRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMBLOCKIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetActiveUniformBlockivRobustANGLEContextANGLE;
+    l_glGetActiveUniformBlockivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANI_VROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetBooleani_vRobustANGLEContextANGLE;
+    l_glGetBooleani_vRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBOOLEANVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetBooleanvRobustANGLEContextANGLE;
+    l_glGetBooleanvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERI64VROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetBufferParameteri64vRobustANGLEContextANGLE;
+    l_glGetBufferParameteri64vRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetBufferParameterivRobustANGLEContextANGLE;
+    l_glGetBufferParameterivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetBufferPointervRobustANGLEContextANGLE;
+    l_glGetBufferPointervRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFLOATVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetFloatvRobustANGLEContextANGLE;
+    l_glGetFloatvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetFramebufferAttachmentParameterivRobustANGLEContextANGLE;
+    l_glGetFramebufferAttachmentParameterivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetFramebufferParameterivRobustANGLEContextANGLE;
+    l_glGetFramebufferParameterivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64I_VROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetInteger64i_vRobustANGLEContextANGLE;
+    l_glGetInteger64i_vRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetInteger64vRobustANGLEContextANGLE;
+    l_glGetInteger64vRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERI_VROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetIntegeri_vRobustANGLEContextANGLE;
+    l_glGetIntegeri_vRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETINTEGERVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetIntegervRobustANGLEContextANGLE;
+    l_glGetIntegervRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETINTERNALFORMATIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetInternalformativRobustANGLEContextANGLE;
+    l_glGetInternalformativRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetMultisamplefvRobustANGLEContextANGLE;
+    l_glGetMultisamplefvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVROBUSTANGLEROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetPointervRobustANGLERobustANGLEContextANGLE;
+    l_glGetPointervRobustANGLERobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMINTERFACEIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetProgramInterfaceivRobustANGLEContextANGLE;
+    l_glGetProgramInterfaceivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetProgramivRobustANGLEContextANGLE;
+    l_glGetProgramivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTI64VROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetQueryObjecti64vRobustANGLEContextANGLE;
+    l_glGetQueryObjecti64vRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetQueryObjectivRobustANGLEContextANGLE;
+    l_glGetQueryObjectivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUI64VROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetQueryObjectui64vRobustANGLEContextANGLE;
+    l_glGetQueryObjectui64vRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetQueryObjectuivRobustANGLEContextANGLE;
+    l_glGetQueryObjectuivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetQueryivRobustANGLEContextANGLE;
+    l_glGetQueryivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetRenderbufferParameterivRobustANGLEContextANGLE;
+    l_glGetRenderbufferParameterivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetSamplerParameterIivRobustANGLEContextANGLE;
+    l_glGetSamplerParameterIivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIUIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetSamplerParameterIuivRobustANGLEContextANGLE;
+    l_glGetSamplerParameterIuivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERFVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetSamplerParameterfvRobustANGLEContextANGLE;
+    l_glGetSamplerParameterfvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetSamplerParameterivRobustANGLEContextANGLE;
+    l_glGetSamplerParameterivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSHADERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetShaderivRobustANGLEContextANGLE;
+    l_glGetShaderivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERFVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetTexLevelParameterfvRobustANGLEContextANGLE;
+    l_glGetTexLevelParameterfvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetTexLevelParameterivRobustANGLEContextANGLE;
+    l_glGetTexLevelParameterivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetTexParameterIivRobustANGLEContextANGLE;
+    l_glGetTexParameterIivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIUIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetTexParameterIuivRobustANGLEContextANGLE;
+    l_glGetTexParameterIuivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERFVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetTexParameterfvRobustANGLEContextANGLE;
+    l_glGetTexParameterfvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetTexParameterivRobustANGLEContextANGLE;
+    l_glGetTexParameterivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMFVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetUniformfvRobustANGLEContextANGLE;
+    l_glGetUniformfvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetUniformivRobustANGLEContextANGLE;
+    l_glGetUniformivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETUNIFORMUIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetUniformuivRobustANGLEContextANGLE;
+    l_glGetUniformuivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribIivRobustANGLEContextANGLE;
+    l_glGetVertexAttribIivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIUIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribIuivRobustANGLEContextANGLE;
+    l_glGetVertexAttribIuivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBPOINTERVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribPointervRobustANGLEContextANGLE;
+    l_glGetVertexAttribPointervRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBFVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribfvRobustANGLEContextANGLE;
+    l_glGetVertexAttribfvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETVERTEXATTRIBIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetVertexAttribivRobustANGLEContextANGLE;
+    l_glGetVertexAttribivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMFVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetnUniformfvRobustANGLEContextANGLE;
+    l_glGetnUniformfvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetnUniformivRobustANGLEContextANGLE;
+    l_glGetnUniformivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMUIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glGetnUniformuivRobustANGLEContextANGLE;
+    l_glGetnUniformuivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLREADPIXELSROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glReadPixelsRobustANGLEContextANGLE;
+    l_glReadPixelsRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLREADNPIXELSROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glReadnPixelsRobustANGLEContextANGLE;
+    l_glReadnPixelsRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glSamplerParameterIivRobustANGLEContextANGLE;
+    l_glSamplerParameterIivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIUIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glSamplerParameterIuivRobustANGLEContextANGLE;
+    l_glSamplerParameterIuivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERFVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glSamplerParameterfvRobustANGLEContextANGLE;
+    l_glSamplerParameterfvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glSamplerParameterivRobustANGLEContextANGLE;
+    l_glSamplerParameterivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glTexImage2DRobustANGLEContextANGLE;
+    l_glTexImage2DRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glTexImage3DRobustANGLEContextANGLE;
+    l_glTexImage3DRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glTexParameterIivRobustANGLEContextANGLE;
+    l_glTexParameterIivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIUIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glTexParameterIuivRobustANGLEContextANGLE;
+    l_glTexParameterIuivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERFVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glTexParameterfvRobustANGLEContextANGLE;
+    l_glTexParameterfvRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIVROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glTexParameterivRobustANGLEContextANGLE;
+    l_glTexParameterivRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE2DROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glTexSubImage2DRobustANGLEContextANGLE;
+    l_glTexSubImage2DRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DROBUSTANGLECONTEXTANGLEPROC
-    ANGLE_glTexSubImage3DRobustANGLEContextANGLE;
+    l_glTexSubImage3DRobustANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLIMPORTSEMAPHOREZIRCONHANDLEANGLECONTEXTANGLEPROC
-    ANGLE_glImportSemaphoreZirconHandleANGLEContextANGLE;
+    l_glImportSemaphoreZirconHandleANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLINVALIDATETEXTUREANGLECONTEXTANGLEPROC
-    ANGLE_glInvalidateTextureANGLEContextANGLE;
+    l_glInvalidateTextureANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE2DEXTERNALANGLECONTEXTANGLEPROC
-    ANGLE_glTexImage2DExternalANGLEContextANGLE;
+    l_glTexImage2DExternalANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETMULTISAMPLEFVANGLECONTEXTANGLEPROC
-    ANGLE_glGetMultisamplefvANGLEContextANGLE;
+    l_glGetMultisamplefvANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERFVANGLECONTEXTANGLEPROC
-    ANGLE_glGetTexLevelParameterfvANGLEContextANGLE;
+    l_glGetTexLevelParameterfvANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXLEVELPARAMETERIVANGLECONTEXTANGLEPROC
-    ANGLE_glGetTexLevelParameterivANGLEContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSAMPLEMASKIANGLECONTEXTANGLEPROC ANGLE_glSampleMaskiANGLEContextANGLE;
+    l_glGetTexLevelParameterivANGLEContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSAMPLEMASKIANGLECONTEXTANGLEPROC l_glSampleMaskiANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DMULTISAMPLEANGLECONTEXTANGLEPROC
-    ANGLE_glTexStorage2DMultisampleANGLEContextANGLE;
+    l_glTexStorage2DMultisampleANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTRANSLATEDSHADERSOURCEANGLECONTEXTANGLEPROC
-    ANGLE_glGetTranslatedShaderSourceANGLEContextANGLE;
+    l_glGetTranslatedShaderSourceANGLEContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBINDUNIFORMLOCATIONCHROMIUMCONTEXTANGLEPROC
-    ANGLE_glBindUniformLocationCHROMIUMContextANGLE;
+    l_glBindUniformLocationCHROMIUMContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDCOPYTEXTURECHROMIUMCONTEXTANGLEPROC
-    ANGLE_glCompressedCopyTextureCHROMIUMContextANGLE;
+    l_glCompressedCopyTextureCHROMIUMContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOPYSUBTEXTURECHROMIUMCONTEXTANGLEPROC
-    ANGLE_glCopySubTextureCHROMIUMContextANGLE;
+    l_glCopySubTextureCHROMIUMContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXTURECHROMIUMCONTEXTANGLEPROC
-    ANGLE_glCopyTextureCHROMIUMContextANGLE;
+    l_glCopyTextureCHROMIUMContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOVERAGEMODULATIONCHROMIUMCONTEXTANGLEPROC
-    ANGLE_glCoverageModulationCHROMIUMContextANGLE;
+    l_glCoverageModulationCHROMIUMContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLLOSECONTEXTCHROMIUMCONTEXTANGLEPROC
-    ANGLE_glLoseContextCHROMIUMContextANGLE;
+    l_glLoseContextCHROMIUMContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBINDFRAGDATALOCATIONEXTCONTEXTANGLEPROC
-    ANGLE_glBindFragDataLocationEXTContextANGLE;
+    l_glBindFragDataLocationEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBINDFRAGDATALOCATIONINDEXEDEXTCONTEXTANGLEPROC
-    ANGLE_glBindFragDataLocationIndexedEXTContextANGLE;
+    l_glBindFragDataLocationIndexedEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAGDATAINDEXEXTCONTEXTANGLEPROC
-    ANGLE_glGetFragDataIndexEXTContextANGLE;
+    l_glGetFragDataIndexEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCELOCATIONINDEXEXTCONTEXTANGLEPROC
-    ANGLE_glGetProgramResourceLocationIndexEXTContextANGLE;
+    l_glGetProgramResourceLocationIndexEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLINSERTEVENTMARKEREXTCONTEXTANGLEPROC
-    ANGLE_glInsertEventMarkerEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOPGROUPMARKEREXTCONTEXTANGLEPROC
-    ANGLE_glPopGroupMarkerEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPUSHGROUPMARKEREXTCONTEXTANGLEPROC
-    ANGLE_glPushGroupMarkerEXTContextANGLE;
+    l_glInsertEventMarkerEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOPGROUPMARKEREXTCONTEXTANGLEPROC l_glPopGroupMarkerEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPUSHGROUPMARKEREXTCONTEXTANGLEPROC l_glPushGroupMarkerEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDISCARDFRAMEBUFFEREXTCONTEXTANGLEPROC
-    ANGLE_glDiscardFramebufferEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBEGINQUERYEXTCONTEXTANGLEPROC ANGLE_glBeginQueryEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEQUERIESEXTCONTEXTANGLEPROC ANGLE_glDeleteQueriesEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLENDQUERYEXTCONTEXTANGLEPROC ANGLE_glEndQueryEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENQUERIESEXTCONTEXTANGLEPROC ANGLE_glGenQueriesEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VEXTCONTEXTANGLEPROC ANGLE_glGetInteger64vEXTContextANGLE;
+    l_glDiscardFramebufferEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBEGINQUERYEXTCONTEXTANGLEPROC l_glBeginQueryEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEQUERIESEXTCONTEXTANGLEPROC l_glDeleteQueriesEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLENDQUERYEXTCONTEXTANGLEPROC l_glEndQueryEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENQUERIESEXTCONTEXTANGLEPROC l_glGenQueriesEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETINTEGER64VEXTCONTEXTANGLEPROC l_glGetInteger64vEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTI64VEXTCONTEXTANGLEPROC
-    ANGLE_glGetQueryObjecti64vEXTContextANGLE;
+    l_glGetQueryObjecti64vEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTIVEXTCONTEXTANGLEPROC
-    ANGLE_glGetQueryObjectivEXTContextANGLE;
+    l_glGetQueryObjectivEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUI64VEXTCONTEXTANGLEPROC
-    ANGLE_glGetQueryObjectui64vEXTContextANGLE;
+    l_glGetQueryObjectui64vEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETQUERYOBJECTUIVEXTCONTEXTANGLEPROC
-    ANGLE_glGetQueryObjectuivEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVEXTCONTEXTANGLEPROC ANGLE_glGetQueryivEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISQUERYEXTCONTEXTANGLEPROC ANGLE_glIsQueryEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLQUERYCOUNTEREXTCONTEXTANGLEPROC ANGLE_glQueryCounterEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWBUFFERSEXTCONTEXTANGLEPROC ANGLE_glDrawBuffersEXTContextANGLE;
+    l_glGetQueryObjectuivEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETQUERYIVEXTCONTEXTANGLEPROC l_glGetQueryivEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISQUERYEXTCONTEXTANGLEPROC l_glIsQueryEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLQUERYCOUNTEREXTCONTEXTANGLEPROC l_glQueryCounterEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWBUFFERSEXTCONTEXTANGLEPROC l_glDrawBuffersEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONSEPARATEIEXTCONTEXTANGLEPROC
-    ANGLE_glBlendEquationSeparateiEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONIEXTCONTEXTANGLEPROC
-    ANGLE_glBlendEquationiEXTContextANGLE;
+    l_glBlendEquationSeparateiEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONIEXTCONTEXTANGLEPROC l_glBlendEquationiEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATEIEXTCONTEXTANGLEPROC
-    ANGLE_glBlendFuncSeparateiEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCIEXTCONTEXTANGLEPROC ANGLE_glBlendFunciEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKIEXTCONTEXTANGLEPROC ANGLE_glColorMaskiEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLEIEXTCONTEXTANGLEPROC ANGLE_glDisableiEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLENABLEIEXTCONTEXTANGLEPROC ANGLE_glEnableiEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISENABLEDIEXTCONTEXTANGLEPROC ANGLE_glIsEnablediEXTContextANGLE;
+    l_glBlendFuncSeparateiEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCIEXTCONTEXTANGLEPROC l_glBlendFunciEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKIEXTCONTEXTANGLEPROC l_glColorMaskiEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLEIEXTCONTEXTANGLEPROC l_glDisableiEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLENABLEIEXTCONTEXTANGLEPROC l_glEnableiEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISENABLEDIEXTCONTEXTANGLEPROC l_glIsEnablediEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSBASEVERTEXEXTCONTEXTANGLEPROC
-    ANGLE_glDrawElementsBaseVertexEXTContextANGLE;
+    l_glDrawElementsBaseVertexEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXEXTCONTEXTANGLEPROC
-    ANGLE_glDrawElementsInstancedBaseVertexEXTContextANGLE;
+    l_glDrawElementsInstancedBaseVertexEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSBASEVERTEXEXTCONTEXTANGLEPROC
-    ANGLE_glDrawRangeElementsBaseVertexEXTContextANGLE;
+    l_glDrawRangeElementsBaseVertexEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTCONTEXTANGLEPROC
-    ANGLE_glMultiDrawElementsBaseVertexEXTContextANGLE;
+    l_glMultiDrawElementsBaseVertexEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTUREEXTCONTEXTANGLEPROC
-    ANGLE_glFramebufferTextureEXTContextANGLE;
+    l_glFramebufferTextureEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWARRAYSINSTANCEDEXTCONTEXTANGLEPROC
-    ANGLE_glDrawArraysInstancedEXTContextANGLE;
+    l_glDrawArraysInstancedEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDEXTCONTEXTANGLEPROC
-    ANGLE_glDrawElementsInstancedEXTContextANGLE;
+    l_glDrawElementsInstancedEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLVERTEXATTRIBDIVISOREXTCONTEXTANGLEPROC
-    ANGLE_glVertexAttribDivisorEXTContextANGLE;
+    l_glVertexAttribDivisorEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFLUSHMAPPEDBUFFERRANGEEXTCONTEXTANGLEPROC
-    ANGLE_glFlushMappedBufferRangeEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFERRANGEEXTCONTEXTANGLEPROC
-    ANGLE_glMapBufferRangeEXTContextANGLE;
+    l_glFlushMappedBufferRangeEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFERRANGEEXTCONTEXTANGLEPROC l_glMapBufferRangeEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBUFFERSTORAGEMEMEXTCONTEXTANGLEPROC
-    ANGLE_glBufferStorageMemEXTContextANGLE;
+    l_glBufferStorageMemEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCREATEMEMORYOBJECTSEXTCONTEXTANGLEPROC
-    ANGLE_glCreateMemoryObjectsEXTContextANGLE;
+    l_glCreateMemoryObjectsEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDELETEMEMORYOBJECTSEXTCONTEXTANGLEPROC
-    ANGLE_glDeleteMemoryObjectsEXTContextANGLE;
+    l_glDeleteMemoryObjectsEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC
-    ANGLE_glGetMemoryObjectParameterivEXTContextANGLE;
+    l_glGetMemoryObjectParameterivEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETUNSIGNEDBYTEI_VEXTCONTEXTANGLEPROC
-    ANGLE_glGetUnsignedBytei_vEXTContextANGLE;
+    l_glGetUnsignedBytei_vEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETUNSIGNEDBYTEVEXTCONTEXTANGLEPROC
-    ANGLE_glGetUnsignedBytevEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISMEMORYOBJECTEXTCONTEXTANGLEPROC
-    ANGLE_glIsMemoryObjectEXTContextANGLE;
+    l_glGetUnsignedBytevEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISMEMORYOBJECTEXTCONTEXTANGLEPROC l_glIsMemoryObjectEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC
-    ANGLE_glMemoryObjectParameterivEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM2DEXTCONTEXTANGLEPROC
-    ANGLE_glTexStorageMem2DEXTContextANGLE;
+    l_glMemoryObjectParameterivEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM2DEXTCONTEXTANGLEPROC l_glTexStorageMem2DEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM2DMULTISAMPLEEXTCONTEXTANGLEPROC
-    ANGLE_glTexStorageMem2DMultisampleEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM3DEXTCONTEXTANGLEPROC
-    ANGLE_glTexStorageMem3DEXTContextANGLE;
+    l_glTexStorageMem2DMultisampleEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM3DEXTCONTEXTANGLEPROC l_glTexStorageMem3DEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGEMEM3DMULTISAMPLEEXTCONTEXTANGLEPROC
-    ANGLE_glTexStorageMem3DMultisampleEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLIMPORTMEMORYFDEXTCONTEXTANGLEPROC
-    ANGLE_glImportMemoryFdEXTContextANGLE;
+    l_glTexStorageMem3DMultisampleEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLIMPORTMEMORYFDEXTCONTEXTANGLEPROC l_glImportMemoryFdEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTCONTEXTANGLEPROC
-    ANGLE_glFramebufferTexture2DMultisampleEXTContextANGLE;
+    l_glFramebufferTexture2DMultisampleEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTCONTEXTANGLEPROC
-    ANGLE_glRenderbufferStorageMultisampleEXTContextANGLE;
+    l_glRenderbufferStorageMultisampleEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETGRAPHICSRESETSTATUSEXTCONTEXTANGLEPROC
-    ANGLE_glGetGraphicsResetStatusEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMFVEXTCONTEXTANGLEPROC ANGLE_glGetnUniformfvEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMIVEXTCONTEXTANGLEPROC ANGLE_glGetnUniformivEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLREADNPIXELSEXTCONTEXTANGLEPROC ANGLE_glReadnPixelsEXTContextANGLE;
+    l_glGetGraphicsResetStatusEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMFVEXTCONTEXTANGLEPROC l_glGetnUniformfvEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETNUNIFORMIVEXTCONTEXTANGLEPROC l_glGetnUniformivEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLREADNPIXELSEXTCONTEXTANGLEPROC l_glReadnPixelsEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDELETESEMAPHORESEXTCONTEXTANGLEPROC
-    ANGLE_glDeleteSemaphoresEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENSEMAPHORESEXTCONTEXTANGLEPROC ANGLE_glGenSemaphoresEXTContextANGLE;
+    l_glDeleteSemaphoresEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENSEMAPHORESEXTCONTEXTANGLEPROC l_glGenSemaphoresEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSEMAPHOREPARAMETERUI64VEXTCONTEXTANGLEPROC
-    ANGLE_glGetSemaphoreParameterui64vEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISSEMAPHOREEXTCONTEXTANGLEPROC ANGLE_glIsSemaphoreEXTContextANGLE;
+    l_glGetSemaphoreParameterui64vEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISSEMAPHOREEXTCONTEXTANGLEPROC l_glIsSemaphoreEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSEMAPHOREPARAMETERUI64VEXTCONTEXTANGLEPROC
-    ANGLE_glSemaphoreParameterui64vEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSIGNALSEMAPHOREEXTCONTEXTANGLEPROC
-    ANGLE_glSignalSemaphoreEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLWAITSEMAPHOREEXTCONTEXTANGLEPROC ANGLE_glWaitSemaphoreEXTContextANGLE;
+    l_glSemaphoreParameterui64vEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSIGNALSEMAPHOREEXTCONTEXTANGLEPROC l_glSignalSemaphoreEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLWAITSEMAPHOREEXTCONTEXTANGLEPROC l_glWaitSemaphoreEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLIMPORTSEMAPHOREFDEXTCONTEXTANGLEPROC
-    ANGLE_glImportSemaphoreFdEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE1DEXTCONTEXTANGLEPROC ANGLE_glTexStorage1DEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DEXTCONTEXTANGLEPROC ANGLE_glTexStorage2DEXTContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DEXTCONTEXTANGLEPROC ANGLE_glTexStorage3DEXTContextANGLE;
+    l_glImportSemaphoreFdEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE1DEXTCONTEXTANGLEPROC l_glTexStorage1DEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE2DEXTCONTEXTANGLEPROC l_glTexStorage2DEXTContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DEXTCONTEXTANGLEPROC l_glTexStorage3DEXTContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDEBUGMESSAGECALLBACKKHRCONTEXTANGLEPROC
-    ANGLE_glDebugMessageCallbackKHRContextANGLE;
+    l_glDebugMessageCallbackKHRContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDEBUGMESSAGECONTROLKHRCONTEXTANGLEPROC
-    ANGLE_glDebugMessageControlKHRContextANGLE;
+    l_glDebugMessageControlKHRContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDEBUGMESSAGEINSERTKHRCONTEXTANGLEPROC
-    ANGLE_glDebugMessageInsertKHRContextANGLE;
+    l_glDebugMessageInsertKHRContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETDEBUGMESSAGELOGKHRCONTEXTANGLEPROC
-    ANGLE_glGetDebugMessageLogKHRContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETOBJECTLABELKHRCONTEXTANGLEPROC
-    ANGLE_glGetObjectLabelKHRContextANGLE;
+    l_glGetDebugMessageLogKHRContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETOBJECTLABELKHRCONTEXTANGLEPROC l_glGetObjectLabelKHRContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETOBJECTPTRLABELKHRCONTEXTANGLEPROC
-    ANGLE_glGetObjectPtrLabelKHRContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVKHRCONTEXTANGLEPROC ANGLE_glGetPointervKHRContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLOBJECTLABELKHRCONTEXTANGLEPROC ANGLE_glObjectLabelKHRContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLOBJECTPTRLABELKHRCONTEXTANGLEPROC
-    ANGLE_glObjectPtrLabelKHRContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPOPDEBUGGROUPKHRCONTEXTANGLEPROC ANGLE_glPopDebugGroupKHRContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPUSHDEBUGGROUPKHRCONTEXTANGLEPROC
-    ANGLE_glPushDebugGroupKHRContextANGLE;
+    l_glGetObjectPtrLabelKHRContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETPOINTERVKHRCONTEXTANGLEPROC l_glGetPointervKHRContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLOBJECTLABELKHRCONTEXTANGLEPROC l_glObjectLabelKHRContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLOBJECTPTRLABELKHRCONTEXTANGLEPROC l_glObjectPtrLabelKHRContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPOPDEBUGGROUPKHRCONTEXTANGLEPROC l_glPopDebugGroupKHRContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPUSHDEBUGGROUPKHRCONTEXTANGLEPROC l_glPushDebugGroupKHRContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMAXSHADERCOMPILERTHREADSKHRCONTEXTANGLEPROC
-    ANGLE_glMaxShaderCompilerThreadsKHRContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDELETEFENCESNVCONTEXTANGLEPROC ANGLE_glDeleteFencesNVContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLFINISHFENCENVCONTEXTANGLEPROC ANGLE_glFinishFenceNVContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENFENCESNVCONTEXTANGLEPROC ANGLE_glGenFencesNVContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETFENCEIVNVCONTEXTANGLEPROC ANGLE_glGetFenceivNVContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISFENCENVCONTEXTANGLEPROC ANGLE_glIsFenceNVContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLSETFENCENVCONTEXTANGLEPROC ANGLE_glSetFenceNVContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTESTFENCENVCONTEXTANGLEPROC ANGLE_glTestFenceNVContextANGLE;
+    l_glMaxShaderCompilerThreadsKHRContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDELETEFENCESNVCONTEXTANGLEPROC l_glDeleteFencesNVContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLFINISHFENCENVCONTEXTANGLEPROC l_glFinishFenceNVContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENFENCESNVCONTEXTANGLEPROC l_glGenFencesNVContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETFENCEIVNVCONTEXTANGLEPROC l_glGetFenceivNVContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISFENCENVCONTEXTANGLEPROC l_glIsFenceNVContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLSETFENCENVCONTEXTANGLEPROC l_glSetFenceNVContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTESTFENCENVCONTEXTANGLEPROC l_glTestFenceNVContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLEGLIMAGETARGETRENDERBUFFERSTORAGEOESCONTEXTANGLEPROC
-    ANGLE_glEGLImageTargetRenderbufferStorageOESContextANGLE;
+    l_glEGLImageTargetRenderbufferStorageOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLEGLIMAGETARGETTEXTURE2DOESCONTEXTANGLEPROC
-    ANGLE_glEGLImageTargetTexture2DOESContextANGLE;
+    l_glEGLImageTargetTexture2DOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONSEPARATEIOESCONTEXTANGLEPROC
-    ANGLE_glBlendEquationSeparateiOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONIOESCONTEXTANGLEPROC
-    ANGLE_glBlendEquationiOESContextANGLE;
+    l_glBlendEquationSeparateiOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDEQUATIONIOESCONTEXTANGLEPROC l_glBlendEquationiOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCSEPARATEIOESCONTEXTANGLEPROC
-    ANGLE_glBlendFuncSeparateiOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCIOESCONTEXTANGLEPROC ANGLE_glBlendFunciOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKIOESCONTEXTANGLEPROC ANGLE_glColorMaskiOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLEIOESCONTEXTANGLEPROC ANGLE_glDisableiOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLENABLEIOESCONTEXTANGLEPROC ANGLE_glEnableiOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISENABLEDIOESCONTEXTANGLEPROC ANGLE_glIsEnablediOESContextANGLE;
+    l_glBlendFuncSeparateiOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBLENDFUNCIOESCONTEXTANGLEPROC l_glBlendFunciOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLCOLORMASKIOESCONTEXTANGLEPROC l_glColorMaskiOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDISABLEIOESCONTEXTANGLEPROC l_glDisableiOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLENABLEIOESCONTEXTANGLEPROC l_glEnableiOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISENABLEDIOESCONTEXTANGLEPROC l_glIsEnablediOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSBASEVERTEXOESCONTEXTANGLEPROC
-    ANGLE_glDrawElementsBaseVertexOESContextANGLE;
+    l_glDrawElementsBaseVertexOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXOESCONTEXTANGLEPROC
-    ANGLE_glDrawElementsInstancedBaseVertexOESContextANGLE;
+    l_glDrawElementsInstancedBaseVertexOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDRAWRANGEELEMENTSBASEVERTEXOESCONTEXTANGLEPROC
-    ANGLE_glDrawRangeElementsBaseVertexOESContextANGLE;
+    l_glDrawRangeElementsBaseVertexOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMBINARYOESCONTEXTANGLEPROC
-    ANGLE_glGetProgramBinaryOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLPROGRAMBINARYOESCONTEXTANGLEPROC ANGLE_glProgramBinaryOESContextANGLE;
+    l_glGetProgramBinaryOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLPROGRAMBINARYOESCONTEXTANGLEPROC l_glProgramBinaryOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETBUFFERPOINTERVOESCONTEXTANGLEPROC
-    ANGLE_glGetBufferPointervOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFEROESCONTEXTANGLEPROC ANGLE_glMapBufferOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLUNMAPBUFFEROESCONTEXTANGLEPROC ANGLE_glUnmapBufferOESContextANGLE;
+    l_glGetBufferPointervOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLMAPBUFFEROESCONTEXTANGLEPROC l_glMapBufferOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLUNMAPBUFFEROESCONTEXTANGLEPROC l_glUnmapBufferOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXIMAGE3DOESCONTEXTANGLEPROC
-    ANGLE_glCompressedTexImage3DOESContextANGLE;
+    l_glCompressedTexImage3DOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOMPRESSEDTEXSUBIMAGE3DOESCONTEXTANGLEPROC
-    ANGLE_glCompressedTexSubImage3DOESContextANGLE;
+    l_glCompressedTexSubImage3DOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCOPYTEXSUBIMAGE3DOESCONTEXTANGLEPROC
-    ANGLE_glCopyTexSubImage3DOESContextANGLE;
+    l_glCopyTexSubImage3DOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE3DOESCONTEXTANGLEPROC
-    ANGLE_glFramebufferTexture3DOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DOESCONTEXTANGLEPROC ANGLE_glTexImage3DOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DOESCONTEXTANGLEPROC ANGLE_glTexSubImage3DOESContextANGLE;
+    l_glFramebufferTexture3DOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXIMAGE3DOESCONTEXTANGLEPROC l_glTexImage3DOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXSUBIMAGE3DOESCONTEXTANGLEPROC l_glTexSubImage3DOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIIVOESCONTEXTANGLEPROC
-    ANGLE_glGetSamplerParameterIivOESContextANGLE;
+    l_glGetSamplerParameterIivOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETSAMPLERPARAMETERIUIVOESCONTEXTANGLEPROC
-    ANGLE_glGetSamplerParameterIuivOESContextANGLE;
+    l_glGetSamplerParameterIuivOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIIVOESCONTEXTANGLEPROC
-    ANGLE_glGetTexParameterIivOESContextANGLE;
+    l_glGetTexParameterIivOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETTEXPARAMETERIUIVOESCONTEXTANGLEPROC
-    ANGLE_glGetTexParameterIuivOESContextANGLE;
+    l_glGetTexParameterIuivOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIIVOESCONTEXTANGLEPROC
-    ANGLE_glSamplerParameterIivOESContextANGLE;
+    l_glSamplerParameterIivOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLSAMPLERPARAMETERIUIVOESCONTEXTANGLEPROC
-    ANGLE_glSamplerParameterIuivOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIIVOESCONTEXTANGLEPROC
-    ANGLE_glTexParameterIivOESContextANGLE;
+    l_glSamplerParameterIuivOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIIVOESCONTEXTANGLEPROC l_glTexParameterIivOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXPARAMETERIUIVOESCONTEXTANGLEPROC
-    ANGLE_glTexParameterIuivOESContextANGLE;
+    l_glTexParameterIuivOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLTEXSTORAGE3DMULTISAMPLEOESCONTEXTANGLEPROC
-    ANGLE_glTexStorage3DMultisampleOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXARRAYOESCONTEXTANGLEPROC
-    ANGLE_glBindVertexArrayOESContextANGLE;
+    l_glTexStorage3DMultisampleOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDVERTEXARRAYOESCONTEXTANGLEPROC l_glBindVertexArrayOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDELETEVERTEXARRAYSOESCONTEXTANGLEPROC
-    ANGLE_glDeleteVertexArraysOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENVERTEXARRAYSOESCONTEXTANGLEPROC
-    ANGLE_glGenVertexArraysOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISVERTEXARRAYOESCONTEXTANGLEPROC ANGLE_glIsVertexArrayOESContextANGLE;
+    l_glDeleteVertexArraysOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENVERTEXARRAYSOESCONTEXTANGLEPROC l_glGenVertexArraysOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISVERTEXARRAYOESCONTEXTANGLEPROC l_glIsVertexArrayOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRCONTEXTANGLEPROC
-    ANGLE_glFramebufferTextureMultiviewOVRContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXFOESCONTEXTANGLEPROC ANGLE_glDrawTexfOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXFVOESCONTEXTANGLEPROC ANGLE_glDrawTexfvOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXIOESCONTEXTANGLEPROC ANGLE_glDrawTexiOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXIVOESCONTEXTANGLEPROC ANGLE_glDrawTexivOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXSOESCONTEXTANGLEPROC ANGLE_glDrawTexsOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXSVOESCONTEXTANGLEPROC ANGLE_glDrawTexsvOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXXOESCONTEXTANGLEPROC ANGLE_glDrawTexxOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXXVOESCONTEXTANGLEPROC ANGLE_glDrawTexxvOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLBINDFRAMEBUFFEROESCONTEXTANGLEPROC
-    ANGLE_glBindFramebufferOESContextANGLE;
+    l_glFramebufferTextureMultiviewOVRContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXFOESCONTEXTANGLEPROC l_glDrawTexfOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXFVOESCONTEXTANGLEPROC l_glDrawTexfvOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXIOESCONTEXTANGLEPROC l_glDrawTexiOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXIVOESCONTEXTANGLEPROC l_glDrawTexivOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXSOESCONTEXTANGLEPROC l_glDrawTexsOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXSVOESCONTEXTANGLEPROC l_glDrawTexsvOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXXOESCONTEXTANGLEPROC l_glDrawTexxOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLDRAWTEXXVOESCONTEXTANGLEPROC l_glDrawTexxvOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLBINDFRAMEBUFFEROESCONTEXTANGLEPROC l_glBindFramebufferOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLBINDRENDERBUFFEROESCONTEXTANGLEPROC
-    ANGLE_glBindRenderbufferOESContextANGLE;
+    l_glBindRenderbufferOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCHECKFRAMEBUFFERSTATUSOESCONTEXTANGLEPROC
-    ANGLE_glCheckFramebufferStatusOESContextANGLE;
+    l_glCheckFramebufferStatusOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDELETEFRAMEBUFFERSOESCONTEXTANGLEPROC
-    ANGLE_glDeleteFramebuffersOESContextANGLE;
+    l_glDeleteFramebuffersOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLDELETERENDERBUFFERSOESCONTEXTANGLEPROC
-    ANGLE_glDeleteRenderbuffersOESContextANGLE;
+    l_glDeleteRenderbuffersOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERRENDERBUFFEROESCONTEXTANGLEPROC
-    ANGLE_glFramebufferRenderbufferOESContextANGLE;
+    l_glFramebufferRenderbufferOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLFRAMEBUFFERTEXTURE2DOESCONTEXTANGLEPROC
-    ANGLE_glFramebufferTexture2DOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENFRAMEBUFFERSOESCONTEXTANGLEPROC
-    ANGLE_glGenFramebuffersOESContextANGLE;
+    l_glFramebufferTexture2DOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENFRAMEBUFFERSOESCONTEXTANGLEPROC l_glGenFramebuffersOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGENRENDERBUFFERSOESCONTEXTANGLEPROC
-    ANGLE_glGenRenderbuffersOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGENERATEMIPMAPOESCONTEXTANGLEPROC
-    ANGLE_glGenerateMipmapOESContextANGLE;
+    l_glGenRenderbuffersOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGENERATEMIPMAPOESCONTEXTANGLEPROC l_glGenerateMipmapOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVOESCONTEXTANGLEPROC
-    ANGLE_glGetFramebufferAttachmentParameterivOESContextANGLE;
+    l_glGetFramebufferAttachmentParameterivOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETRENDERBUFFERPARAMETERIVOESCONTEXTANGLEPROC
-    ANGLE_glGetRenderbufferParameterivOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISFRAMEBUFFEROESCONTEXTANGLEPROC ANGLE_glIsFramebufferOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLISRENDERBUFFEROESCONTEXTANGLEPROC
-    ANGLE_glIsRenderbufferOESContextANGLE;
+    l_glGetRenderbufferParameterivOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISFRAMEBUFFEROESCONTEXTANGLEPROC l_glIsFramebufferOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLISRENDERBUFFEROESCONTEXTANGLEPROC l_glIsRenderbufferOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLRENDERBUFFERSTORAGEOESCONTEXTANGLEPROC
-    ANGLE_glRenderbufferStorageOESContextANGLE;
+    l_glRenderbufferStorageOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLCURRENTPALETTEMATRIXOESCONTEXTANGLEPROC
-    ANGLE_glCurrentPaletteMatrixOESContextANGLE;
+    l_glCurrentPaletteMatrixOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLLOADPALETTEFROMMODELVIEWMATRIXOESCONTEXTANGLEPROC
-    ANGLE_glLoadPaletteFromModelViewMatrixOESContextANGLE;
+    l_glLoadPaletteFromModelViewMatrixOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLMATRIXINDEXPOINTEROESCONTEXTANGLEPROC
-    ANGLE_glMatrixIndexPointerOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLWEIGHTPOINTEROESCONTEXTANGLEPROC ANGLE_glWeightPointerOESContextANGLE;
+    l_glMatrixIndexPointerOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLWEIGHTPOINTEROESCONTEXTANGLEPROC l_glWeightPointerOESContextANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPOINTSIZEPOINTEROESCONTEXTANGLEPROC
-    ANGLE_glPointSizePointerOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLQUERYMATRIXXOESCONTEXTANGLEPROC ANGLE_glQueryMatrixxOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENFVOESCONTEXTANGLEPROC ANGLE_glGetTexGenfvOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENIVOESCONTEXTANGLEPROC ANGLE_glGetTexGenivOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENXVOESCONTEXTANGLEPROC ANGLE_glGetTexGenxvOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENFOESCONTEXTANGLEPROC ANGLE_glTexGenfOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENFVOESCONTEXTANGLEPROC ANGLE_glTexGenfvOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENIOESCONTEXTANGLEPROC ANGLE_glTexGeniOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENIVOESCONTEXTANGLEPROC ANGLE_glTexGenivOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENXOESCONTEXTANGLEPROC ANGLE_glTexGenxOESContextANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLTEXGENXVOESCONTEXTANGLEPROC ANGLE_glTexGenxvOESContextANGLE;
+    l_glPointSizePointerOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLQUERYMATRIXXOESCONTEXTANGLEPROC l_glQueryMatrixxOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENFVOESCONTEXTANGLEPROC l_glGetTexGenfvOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENIVOESCONTEXTANGLEPROC l_glGetTexGenivOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLGETTEXGENXVOESCONTEXTANGLEPROC l_glGetTexGenxvOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENFOESCONTEXTANGLEPROC l_glTexGenfOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENFVOESCONTEXTANGLEPROC l_glTexGenfvOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENIOESCONTEXTANGLEPROC l_glTexGeniOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENIVOESCONTEXTANGLEPROC l_glTexGenivOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENXOESCONTEXTANGLEPROC l_glTexGenxOESContextANGLE;
+ANGLE_UTIL_EXPORT extern PFNGLTEXGENXVOESCONTEXTANGLEPROC l_glTexGenxvOESContextANGLE;
 
 namespace angle
 {

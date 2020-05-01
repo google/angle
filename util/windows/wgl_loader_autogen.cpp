@@ -10,93 +10,91 @@
 
 #include "wgl_loader_autogen.h"
 
-PFNCHOOSEPIXELFORMATPROC ANGLE__ChoosePixelFormat;
-PFNDESCRIBEPIXELFORMATPROC ANGLE__DescribePixelFormat;
-PFNGETENHMETAFILEPIXELFORMATPROC ANGLE__GetEnhMetaFilePixelFormat;
-PFNGETPIXELFORMATPROC ANGLE__GetPixelFormat;
-PFNSETPIXELFORMATPROC ANGLE__SetPixelFormat;
-PFNSWAPBUFFERSPROC ANGLE__SwapBuffers;
-PFNWGLCOPYCONTEXTPROC ANGLE__wglCopyContext;
-PFNWGLCREATECONTEXTPROC ANGLE__wglCreateContext;
-PFNWGLCREATELAYERCONTEXTPROC ANGLE__wglCreateLayerContext;
-PFNWGLDELETECONTEXTPROC ANGLE__wglDeleteContext;
-PFNWGLDESCRIBELAYERPLANEPROC ANGLE__wglDescribeLayerPlane;
-PFNWGLGETCURRENTCONTEXTPROC ANGLE__wglGetCurrentContext;
-PFNWGLGETCURRENTDCPROC ANGLE__wglGetCurrentDC;
-PFNWGLGETLAYERPALETTEENTRIESPROC ANGLE__wglGetLayerPaletteEntries;
-PFNWGLGETPROCADDRESSPROC ANGLE__wglGetProcAddress;
-PFNWGLMAKECURRENTPROC ANGLE__wglMakeCurrent;
-PFNWGLREALIZELAYERPALETTEPROC ANGLE__wglRealizeLayerPalette;
-PFNWGLSETLAYERPALETTEENTRIESPROC ANGLE__wglSetLayerPaletteEntries;
-PFNWGLSHARELISTSPROC ANGLE__wglShareLists;
-PFNWGLSWAPLAYERBUFFERSPROC ANGLE__wglSwapLayerBuffers;
-PFNWGLUSEFONTBITMAPSPROC ANGLE__wglUseFontBitmaps;
-PFNWGLUSEFONTBITMAPSAPROC ANGLE__wglUseFontBitmapsA;
-PFNWGLUSEFONTBITMAPSWPROC ANGLE__wglUseFontBitmapsW;
-PFNWGLUSEFONTOUTLINESPROC ANGLE__wglUseFontOutlines;
-PFNWGLUSEFONTOUTLINESAPROC ANGLE__wglUseFontOutlinesA;
-PFNWGLUSEFONTOUTLINESWPROC ANGLE__wglUseFontOutlinesW;
-PFNWGLCREATECONTEXTATTRIBSARBPROC ANGLE__wglCreateContextAttribsARB;
-PFNWGLGETEXTENSIONSSTRINGARBPROC ANGLE__wglGetExtensionsStringARB;
-PFNWGLGETSWAPINTERVALEXTPROC ANGLE__wglGetSwapIntervalEXT;
-PFNWGLSWAPINTERVALEXTPROC ANGLE__wglSwapIntervalEXT;
+PFNCHOOSEPIXELFORMATPROC l__ChoosePixelFormat;
+PFNDESCRIBEPIXELFORMATPROC l__DescribePixelFormat;
+PFNGETENHMETAFILEPIXELFORMATPROC l__GetEnhMetaFilePixelFormat;
+PFNGETPIXELFORMATPROC l__GetPixelFormat;
+PFNSETPIXELFORMATPROC l__SetPixelFormat;
+PFNSWAPBUFFERSPROC l__SwapBuffers;
+PFNWGLCOPYCONTEXTPROC l__wglCopyContext;
+PFNWGLCREATECONTEXTPROC l__wglCreateContext;
+PFNWGLCREATELAYERCONTEXTPROC l__wglCreateLayerContext;
+PFNWGLDELETECONTEXTPROC l__wglDeleteContext;
+PFNWGLDESCRIBELAYERPLANEPROC l__wglDescribeLayerPlane;
+PFNWGLGETCURRENTCONTEXTPROC l__wglGetCurrentContext;
+PFNWGLGETCURRENTDCPROC l__wglGetCurrentDC;
+PFNWGLGETLAYERPALETTEENTRIESPROC l__wglGetLayerPaletteEntries;
+PFNWGLGETPROCADDRESSPROC l__wglGetProcAddress;
+PFNWGLMAKECURRENTPROC l__wglMakeCurrent;
+PFNWGLREALIZELAYERPALETTEPROC l__wglRealizeLayerPalette;
+PFNWGLSETLAYERPALETTEENTRIESPROC l__wglSetLayerPaletteEntries;
+PFNWGLSHARELISTSPROC l__wglShareLists;
+PFNWGLSWAPLAYERBUFFERSPROC l__wglSwapLayerBuffers;
+PFNWGLUSEFONTBITMAPSPROC l__wglUseFontBitmaps;
+PFNWGLUSEFONTBITMAPSAPROC l__wglUseFontBitmapsA;
+PFNWGLUSEFONTBITMAPSWPROC l__wglUseFontBitmapsW;
+PFNWGLUSEFONTOUTLINESPROC l__wglUseFontOutlines;
+PFNWGLUSEFONTOUTLINESAPROC l__wglUseFontOutlinesA;
+PFNWGLUSEFONTOUTLINESWPROC l__wglUseFontOutlinesW;
+PFNWGLCREATECONTEXTATTRIBSARBPROC l__wglCreateContextAttribsARB;
+PFNWGLGETEXTENSIONSSTRINGARBPROC l__wglGetExtensionsStringARB;
+PFNWGLGETSWAPINTERVALEXTPROC l__wglGetSwapIntervalEXT;
+PFNWGLSWAPINTERVALEXTPROC l__wglSwapIntervalEXT;
 
 namespace angle
 {
 void LoadWGL(LoadProc loadProc)
 {
-    ANGLE__ChoosePixelFormat =
+    l__ChoosePixelFormat =
         reinterpret_cast<PFNCHOOSEPIXELFORMATPROC>(loadProc("ChoosePixelFormat"));
-    ANGLE__DescribePixelFormat =
+    l__DescribePixelFormat =
         reinterpret_cast<PFNDESCRIBEPIXELFORMATPROC>(loadProc("DescribePixelFormat"));
-    ANGLE__GetEnhMetaFilePixelFormat =
+    l__GetEnhMetaFilePixelFormat =
         reinterpret_cast<PFNGETENHMETAFILEPIXELFORMATPROC>(loadProc("GetEnhMetaFilePixelFormat"));
-    ANGLE__GetPixelFormat = reinterpret_cast<PFNGETPIXELFORMATPROC>(loadProc("GetPixelFormat"));
-    ANGLE__SetPixelFormat = reinterpret_cast<PFNSETPIXELFORMATPROC>(loadProc("SetPixelFormat"));
-    ANGLE__SwapBuffers    = reinterpret_cast<PFNSWAPBUFFERSPROC>(loadProc("SwapBuffers"));
-    ANGLE__wglCopyContext = reinterpret_cast<PFNWGLCOPYCONTEXTPROC>(loadProc("wglCopyContext"));
-    ANGLE__wglCreateContext =
-        reinterpret_cast<PFNWGLCREATECONTEXTPROC>(loadProc("wglCreateContext"));
-    ANGLE__wglCreateLayerContext =
+    l__GetPixelFormat   = reinterpret_cast<PFNGETPIXELFORMATPROC>(loadProc("GetPixelFormat"));
+    l__SetPixelFormat   = reinterpret_cast<PFNSETPIXELFORMATPROC>(loadProc("SetPixelFormat"));
+    l__SwapBuffers      = reinterpret_cast<PFNSWAPBUFFERSPROC>(loadProc("SwapBuffers"));
+    l__wglCopyContext   = reinterpret_cast<PFNWGLCOPYCONTEXTPROC>(loadProc("wglCopyContext"));
+    l__wglCreateContext = reinterpret_cast<PFNWGLCREATECONTEXTPROC>(loadProc("wglCreateContext"));
+    l__wglCreateLayerContext =
         reinterpret_cast<PFNWGLCREATELAYERCONTEXTPROC>(loadProc("wglCreateLayerContext"));
-    ANGLE__wglDeleteContext =
-        reinterpret_cast<PFNWGLDELETECONTEXTPROC>(loadProc("wglDeleteContext"));
-    ANGLE__wglDescribeLayerPlane =
+    l__wglDeleteContext = reinterpret_cast<PFNWGLDELETECONTEXTPROC>(loadProc("wglDeleteContext"));
+    l__wglDescribeLayerPlane =
         reinterpret_cast<PFNWGLDESCRIBELAYERPLANEPROC>(loadProc("wglDescribeLayerPlane"));
-    ANGLE__wglGetCurrentContext =
+    l__wglGetCurrentContext =
         reinterpret_cast<PFNWGLGETCURRENTCONTEXTPROC>(loadProc("wglGetCurrentContext"));
-    ANGLE__wglGetCurrentDC = reinterpret_cast<PFNWGLGETCURRENTDCPROC>(loadProc("wglGetCurrentDC"));
-    ANGLE__wglGetLayerPaletteEntries =
+    l__wglGetCurrentDC = reinterpret_cast<PFNWGLGETCURRENTDCPROC>(loadProc("wglGetCurrentDC"));
+    l__wglGetLayerPaletteEntries =
         reinterpret_cast<PFNWGLGETLAYERPALETTEENTRIESPROC>(loadProc("wglGetLayerPaletteEntries"));
-    ANGLE__wglGetProcAddress =
+    l__wglGetProcAddress =
         reinterpret_cast<PFNWGLGETPROCADDRESSPROC>(loadProc("wglGetProcAddress"));
-    ANGLE__wglMakeCurrent = reinterpret_cast<PFNWGLMAKECURRENTPROC>(loadProc("wglMakeCurrent"));
-    ANGLE__wglRealizeLayerPalette =
+    l__wglMakeCurrent = reinterpret_cast<PFNWGLMAKECURRENTPROC>(loadProc("wglMakeCurrent"));
+    l__wglRealizeLayerPalette =
         reinterpret_cast<PFNWGLREALIZELAYERPALETTEPROC>(loadProc("wglRealizeLayerPalette"));
-    ANGLE__wglSetLayerPaletteEntries =
+    l__wglSetLayerPaletteEntries =
         reinterpret_cast<PFNWGLSETLAYERPALETTEENTRIESPROC>(loadProc("wglSetLayerPaletteEntries"));
-    ANGLE__wglShareLists = reinterpret_cast<PFNWGLSHARELISTSPROC>(loadProc("wglShareLists"));
-    ANGLE__wglSwapLayerBuffers =
+    l__wglShareLists = reinterpret_cast<PFNWGLSHARELISTSPROC>(loadProc("wglShareLists"));
+    l__wglSwapLayerBuffers =
         reinterpret_cast<PFNWGLSWAPLAYERBUFFERSPROC>(loadProc("wglSwapLayerBuffers"));
-    ANGLE__wglUseFontBitmaps =
+    l__wglUseFontBitmaps =
         reinterpret_cast<PFNWGLUSEFONTBITMAPSPROC>(loadProc("wglUseFontBitmaps"));
-    ANGLE__wglUseFontBitmapsA =
+    l__wglUseFontBitmapsA =
         reinterpret_cast<PFNWGLUSEFONTBITMAPSAPROC>(loadProc("wglUseFontBitmapsA"));
-    ANGLE__wglUseFontBitmapsW =
+    l__wglUseFontBitmapsW =
         reinterpret_cast<PFNWGLUSEFONTBITMAPSWPROC>(loadProc("wglUseFontBitmapsW"));
-    ANGLE__wglUseFontOutlines =
+    l__wglUseFontOutlines =
         reinterpret_cast<PFNWGLUSEFONTOUTLINESPROC>(loadProc("wglUseFontOutlines"));
-    ANGLE__wglUseFontOutlinesA =
+    l__wglUseFontOutlinesA =
         reinterpret_cast<PFNWGLUSEFONTOUTLINESAPROC>(loadProc("wglUseFontOutlinesA"));
-    ANGLE__wglUseFontOutlinesW =
+    l__wglUseFontOutlinesW =
         reinterpret_cast<PFNWGLUSEFONTOUTLINESWPROC>(loadProc("wglUseFontOutlinesW"));
-    ANGLE__wglCreateContextAttribsARB =
+    l__wglCreateContextAttribsARB =
         reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>(loadProc("wglCreateContextAttribsARB"));
-    ANGLE__wglGetExtensionsStringARB =
+    l__wglGetExtensionsStringARB =
         reinterpret_cast<PFNWGLGETEXTENSIONSSTRINGARBPROC>(loadProc("wglGetExtensionsStringARB"));
-    ANGLE__wglGetSwapIntervalEXT =
+    l__wglGetSwapIntervalEXT =
         reinterpret_cast<PFNWGLGETSWAPINTERVALEXTPROC>(loadProc("wglGetSwapIntervalEXT"));
-    ANGLE__wglSwapIntervalEXT =
+    l__wglSwapIntervalEXT =
         reinterpret_cast<PFNWGLSWAPINTERVALEXTPROC>(loadProc("wglSwapIntervalEXT"));
 }
 }  // namespace angle

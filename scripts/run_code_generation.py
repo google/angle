@@ -230,9 +230,7 @@ def main():
 
     if any_dirty:
         args = ['git.bat'] if os.name == 'nt' else ['git']
-        # The diff can be so large the arguments to clang-format can break the Windows command
-        # line length limits. Work around this by calling git cl format with --full.
-        args += ['cl', 'format', '--full']
+        args += ['cl', 'format']
         print('Calling git cl format')
         if subprocess.call(args) != 0:
             sys.exit(1)
