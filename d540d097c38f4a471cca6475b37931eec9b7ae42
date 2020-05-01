@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0340847b_e6927fd6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-01T19:47:54Z",
+      "side": 1,
+      "message": "Yes. The function names aka function signatures.",
+      "parentUuid": "2c46d50c_41f26a58",
+      "range": {
+        "startLine": 16,
+        "startChar": 37,
+        "endLine": 17,
+        "endChar": 44
+      },
+      "revId": "d540d097c38f4a471cca6475b37931eec9b7ae42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f8794786_29894497",
         "filename": "scripts/generate_loader.py",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2020-05-01T19:36:20Z",
       "side": 1,
       "message": "Does this workaround imply there\u0027s some kind of a word length limit that \u0027git cl format\u0027 can\u0027t handle correctly?",
+      "revId": "d540d097c38f4a471cca6475b37931eec9b7ae42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7baa559_b49802f8",
+        "filename": "scripts/generate_loader.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-01T19:47:54Z",
+      "side": 1,
+      "message": "As said in the message.. no idea.",
+      "parentUuid": "f8794786_29894497",
       "revId": "d540d097c38f4a471cca6475b37931eec9b7ae42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
