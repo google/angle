@@ -115,6 +115,8 @@ class CommandQueue final : angle::NonCopyable
 struct CommandBufferHelper : angle::NonCopyable
 {
   public:
+    void initialize(angle::PoolAllocator *poolAllocator);
+
     void bufferRead(vk::ResourceUseList *resourceUseList,
                     VkAccessFlags readAccessType,
                     VkPipelineStageFlags readStage,
@@ -173,8 +175,6 @@ class RenderPassCommandBuffer final : public CommandBufferHelper
   public:
     RenderPassCommandBuffer();
     ~RenderPassCommandBuffer();
-
-    void initialize(angle::PoolAllocator *poolAllocator);
 
     void beginRenderPass(const vk::Framebuffer &framebuffer,
                          const gl::Rectangle &renderArea,

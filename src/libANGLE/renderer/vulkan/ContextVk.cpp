@@ -889,7 +889,7 @@ angle::Result ContextVk::initialize()
 
     // Push a scope in the pool allocator so we can easily reinitialize on flush.
     mPoolAllocator.push();
-    mOutsideRenderPassCommands.getCommandBuffer().initialize(&mPoolAllocator);
+    mOutsideRenderPassCommands.initialize(&mPoolAllocator);
     mRenderPassCommands.initialize(&mPoolAllocator);
     ANGLE_TRY(startPrimaryCommandBuffer());
 
@@ -4489,6 +4489,11 @@ CommandBufferHelper::CommandBufferHelper()
 
 CommandBufferHelper::~CommandBufferHelper() = default;
 
+void CommandBufferHelper::initialize(angle::PoolAllocator *poolAllocator)
+{
+    mCommandBuffer.initialize(poolAllocator);
+}
+
 void CommandBufferHelper::bufferRead(vk::ResourceUseList *resourceUseList,
                                      VkAccessFlags readAccessType,
                                      VkPipelineStageFlags readStage,
@@ -4630,11 +4635,6 @@ RenderPassCommandBuffer::~RenderPassCommandBuffer()
     mFramebuffer.setHandle(VK_NULL_HANDLE);
 }
 
-void RenderPassCommandBuffer::initialize(angle::PoolAllocator *poolAllocator)
-{
-    mCommandBuffer.initialize(poolAllocator);
-}
-
 void RenderPassCommandBuffer::beginRenderPass(const vk::Framebuffer &framebuffer,
                                               const gl::Rectangle &renderArea,
                                               const vk::RenderPassDesc &renderPassDesc,
@@ -4703,17 +4703,11 @@ angle::Result RenderPassCommandBuffer::flushToPrimary(ContextVk *contextVk,
 
     // Run commands inside the RenderPass.
     primary->beginRenderPass(beginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    mCommandBuffer.executeCommands(primary->getHandle());
+    primary->endRenderPass();
 
-    if (mValidTransformFeedbackBufferCount == 0)
+    if (mValidTransformFeedbackBufferCount != 0)
     {
-        mCommandBuffer.executeCommands(primary->getHandle());
-        primary->endRenderPass();
-    }
-    else
-    {
-        mCommandBuffer.executeCommands(primary->getHandle());
-        primary->endRenderPass();
-
         // Would be better to accumulate this barrier using the command APIs.
         // TODO: Clean thus up before we close http://anglebug.com/3206
         VkBufferMemoryBarrier bufferBarrier = {};
