@@ -178,6 +178,12 @@ angle_source_set("angle_vulkan_headers") {
   public_configs = [ ":angle_vulkan_headers_config" ]
 }
 
+import("$angle_vulkan_memory_allocator_dir/vulkan_memory_allocator.gni")
+vulkan_memory_allocator("angle_vulkan_memory_allocator") {
+  deps = [ ":angle_vulkan_headers" ]
+  vulkan_memory_allocator_dir = "$angle_vulkan_memory_allocator_dir"
+}
+
 group("angle_vulkan_entry_points") {
   public_configs = [ ":angle_vulkan_lib_android" ]
   public_deps = [ ":angle_vulkan_headers" ]
@@ -212,7 +218,7 @@ config("angle_vulkan_backend_config") {
 angle_source_set("angle_vk_mem_alloc_wrapper") {
   deps = [
     ":angle_vulkan_headers",
-    "$angle_root/third_party/VulkanMemoryAllocator:vulkan_memory_allocator",
+    ":angle_vulkan_memory_allocator",
   ]
   sources = [
     "vk_mem_alloc_wrapper.cpp",
