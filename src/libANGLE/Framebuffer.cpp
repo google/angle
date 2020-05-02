@@ -300,6 +300,11 @@ bool IsClearBufferMaskedOut(const Context *context, GLenum buffer, GLint drawbuf
     }
 }
 
+bool IsClearBufferDisabled(const FramebufferState &mState, GLenum buffer, GLint drawbuffer)
+{
+    return buffer == GL_COLOR && !mState.getEnabledDrawBuffers()[drawbuffer];
+}
+
 }  // anonymous namespace
 
 // This constructor is only used for default framebuffers.
@@ -1534,7 +1539,8 @@ angle::Result Framebuffer::clearBufferfv(const Context *context,
                                          GLint drawbuffer,
                                          const GLfloat *values)
 {
-    if (context->getState().isRasterizerDiscardEnabled() ||
+    if (IsClearBufferDisabled(mState, buffer, drawbuffer) ||
+        context->getState().isRasterizerDiscardEnabled() ||
         IsClearBufferMaskedOut(context, buffer, drawbuffer))
     {
         return angle::Result::Continue;
@@ -1550,7 +1556,8 @@ angle::Result Framebuffer::clearBufferuiv(const Context *context,
                                           GLint drawbuffer,
                                           const GLuint *values)
 {
-    if (context->getState().isRasterizerDiscardEnabled() ||
+    if (IsClearBufferDisabled(mState, buffer, drawbuffer) ||
+        context->getState().isRasterizerDiscardEnabled() ||
         IsClearBufferMaskedOut(context, buffer, drawbuffer))
     {
         return angle::Result::Continue;
@@ -1566,7 +1573,8 @@ angle::Result Framebuffer::clearBufferiv(const Context *context,
                                          GLint drawbuffer,
                                          const GLint *values)
 {
-    if (context->getState().isRasterizerDiscardEnabled() ||
+    if (IsClearBufferDisabled(mState, buffer, drawbuffer) ||
+        context->getState().isRasterizerDiscardEnabled() ||
         IsClearBufferMaskedOut(context, buffer, drawbuffer))
     {
         return angle::Result::Continue;
