@@ -1269,6 +1269,42 @@ TEST_P(ClearTestES3, RepeatedClear)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that clearing RGB8 attachments from a 2D texture array does not cause
+// VUID-VkImageMemoryBarrier-oldLayout-01197
+TEST_P(ClearTestES3, TextureArrayRGB8)
+{
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGB8, 1, 1, 2);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 0);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, tex, 0, 1);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLenum bufs[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, &bufs[0]);
+
+    glClearColor(1.0, 0.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fb);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 void MaskedScissoredClearTestBase::maskedScissoredColorDepthStencilClear(
     const MaskedScissoredClearVariationsTestParams &params)
 {
