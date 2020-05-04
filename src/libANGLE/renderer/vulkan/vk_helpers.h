@@ -910,6 +910,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                                    uint32_t mipLevel,
                                                    uint32_t baseArrayLayer,
                                                    uint32_t layerCount,
+                                                   uint32_t bufferRowLength,
+                                                   uint32_t bufferImageHeight,
                                                    const VkExtent3D &extent,
                                                    const VkOffset3D &offset,
                                                    BufferHelper *stagingBuffer,

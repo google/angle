@@ -1210,9 +1210,16 @@ angle::Result TextureVk::copyAndStageImageSubresource(ContextVk *contextVk,
 
     // Stage an update to the new image
     ASSERT(stagingBuffer);
+    uint32_t bufferRowLength   = updatedExtents.width;
+    uint32_t bufferImageHeight = updatedExtents.height;
+    if (desc.format.info->compressed)
+    {
+        bufferRowLength   = std::max(bufferRowLength, desc.format.info->compressedBlockWidth);
+        bufferImageHeight = std::max(bufferImageHeight, desc.format.info->compressedBlockHeight);
+    }
     ANGLE_TRY(mImage->stageSubresourceUpdateFromBuffer(
-        contextVk, bufferSize, stagingDstMipLevel, currentLayer, layerCount, updatedExtents, offset,
-        stagingBuffer, stagingBufferOffsets));
+        contextVk, bufferSize, stagingDstMipLevel, currentLayer, layerCount, bufferRowLength,
+        bufferImageHeight, updatedExtents, offset, stagingBuffer, stagingBufferOffsets));
 
     return angle::Result::Continue;
 }
