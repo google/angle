@@ -3236,6 +3236,13 @@ angle::Result State::onProgramExecutableChange(const Context *context, Program *
     //  generated executable code will be installed as part of the current rendering state."
     ASSERT(program->isLinked());
 
+    // If this Program is currently active, we need to update the State's pointer to the current
+    // ProgramExecutable if we just changed it.
+    if (mProgram == program)
+    {
+        mExecutable = &program->getExecutable();
+    }
+
     mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
 
     if (program->hasAnyDirtyBit())

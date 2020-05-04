@@ -36,9 +36,6 @@
 //// Failures blocking an official GLES 3.1 conformance run on SwiftShader
 ////
 
-// Separate shader objects:
-3570 VULKAN : KHR-GLES31.core.sepshaderobjs.StateInteraction = SKIP
-
 // Image related failures
 
 4315 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-memory-order-vsfs = FAIL

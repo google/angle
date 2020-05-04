@@ -102,6 +102,7 @@ class ProgramExecutable
 {
   public:
     ProgramExecutable();
+    ProgramExecutable(const ProgramExecutable &other);
     virtual ~ProgramExecutable();
 
     void reset();
@@ -273,6 +274,17 @@ class ProgramExecutable
         return *mResources;
     }
 
+    void saveLinkedStateInfo();
+    std::vector<sh::ShaderVariable> getLinkedOutputVaryings(ShaderType shaderType)
+    {
+        return mLinkedOutputVaryings[shaderType];
+    }
+    std::vector<sh::ShaderVariable> getLinkedInputVaryings(ShaderType shaderType)
+    {
+        return mLinkedInputVaryings[shaderType];
+    }
+    int getLinkedShaderVersion(ShaderType shaderType) { return mLinkedShaderVersions[shaderType]; }
+
   private:
     // TODO(timvp): http://anglebug.com/3570: Investigate removing these friend
     // class declarations and accessing the necessary members with getters/setters.
@@ -343,6 +355,9 @@ class ProgramExecutable
     RangeUI mImageUniformRange;
     std::vector<InterfaceBlock> mShaderStorageBlocks;
 
+    ShaderMap<std::vector<sh::ShaderVariable>> mLinkedOutputVaryings;
+    ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;
+    ShaderMap<int> mLinkedShaderVersions;
     // TODO: http://anglebug.com/4514: Remove
     std::unique_ptr<gl::ProgramLinkedResources> mResources;
 };

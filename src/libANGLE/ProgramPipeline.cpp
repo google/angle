@@ -514,31 +514,26 @@ bool ProgramPipeline::linkVaryings(InfoLog &infoLog) const
     ShaderType previousShaderType = ShaderType::InvalidEnum;
     for (ShaderType shaderType : getExecutable().getLinkedShaderStages())
     {
-        Program *currentProgram = mState.mPrograms[shaderType];
-        ASSERT(currentProgram);
-        Shader *currentShader =
-            const_cast<Shader *>(currentProgram->getState().getAttachedShader(shaderType));
-        ASSERT(currentShader);
+        Program *program = getShaderProgram(shaderType);
+        ASSERT(program);
+        ProgramExecutable &executable = program->getExecutable();
 
         if (previousShaderType != ShaderType::InvalidEnum)
         {
-            const Program *previousProgram = mState.mPrograms[previousShaderType];
+            Program *previousProgram = getShaderProgram(previousShaderType);
             ASSERT(previousProgram);
-            Shader *previousShader = const_cast<Shader *>(
-                previousProgram->getState().getAttachedShader(previousShaderType));
-            ASSERT(previousShader);
-            const std::vector<sh::ShaderVariable> &outputVaryings =
-                previousShader->getOutputVaryings();
+            ProgramExecutable &previousExecutable = previousProgram->getExecutable();
 
             if (!Program::linkValidateShaderInterfaceMatching(
-                    outputVaryings, currentShader->getInputVaryings(), previousShaderType,
-                    currentShader->getType(), previousShader->getShaderVersion(),
-                    currentShader->getShaderVersion(), true, infoLog))
+                    previousExecutable.getLinkedOutputVaryings(previousShaderType),
+                    executable.getLinkedInputVaryings(shaderType), previousShaderType, shaderType,
+                    previousExecutable.getLinkedShaderVersion(previousShaderType),
+                    executable.getLinkedShaderVersion(shaderType), true, infoLog))
             {
                 return false;
             }
         }
-        previousShaderType = currentShader->getType();
+        previousShaderType = shaderType;
     }
 
     Program *vertexProgram   = mState.mPrograms[ShaderType::Vertex];
@@ -547,15 +542,12 @@ bool ProgramPipeline::linkVaryings(InfoLog &infoLog) const
     {
         return false;
     }
-    Shader *vertexShader =
-        const_cast<Shader *>(vertexProgram->getState().getAttachedShader(ShaderType::Vertex));
-    Shader *fragmentShader =
-        const_cast<Shader *>(fragmentProgram->getState().getAttachedShader(ShaderType::Fragment));
-    ASSERT(vertexShader);
-    ASSERT(fragmentShader);
-    return Program::linkValidateBuiltInVaryings(vertexShader->getOutputVaryings(),
-                                                fragmentShader->getInputVaryings(),
-                                                vertexShader->getShaderVersion(), infoLog);
+    ProgramExecutable &vertexExecutable   = vertexProgram->getExecutable();
+    ProgramExecutable &fragmentExecutable = fragmentProgram->getExecutable();
+    return Program::linkValidateBuiltInVaryings(
+        vertexExecutable.getLinkedOutputVaryings(ShaderType::Vertex),
+        fragmentExecutable.getLinkedInputVaryings(ShaderType::Fragment),
+        vertexExecutable.getLinkedShaderVersion(ShaderType::Vertex), infoLog);
 }
 
 void ProgramPipeline::validate(const gl::Context *context)

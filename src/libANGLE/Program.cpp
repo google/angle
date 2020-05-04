@@ -737,6 +737,7 @@ void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block)
 // Saves the linking context for later use in resolveLink().
 struct Program::LinkingState
 {
+    std::shared_ptr<ProgramExecutable> linkedExecutable;
     std::unique_ptr<ProgramLinkedResources> resources;
     egl::BlobCache::Key programHash;
     std::unique_ptr<rx::LinkEvent> linkEvent;
@@ -1104,7 +1105,6 @@ ProgramState::ProgramState()
 ProgramState::~ProgramState()
 {
     ASSERT(!hasAttachedShader());
-    SafeDelete(mExecutable);
 }
 
 const std::string &ProgramState::getLabel()
@@ -1408,26 +1408,40 @@ angle::Result Program::linkMergedVaryings(const Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result Program::link(const Context *context)
+{
+    angle::Result result = linkImpl(context);
+
+    // Avoid having two ProgramExecutables if the link failed and the Program had successfully
+    // linked previously.
+    if (mLinkingState && mLinkingState->linkedExecutable)
+    {
+        mState.mExecutable = mLinkingState->linkedExecutable;
+    }
+
+    return result;
+}
+
 // The attached shaders are checked for linking errors by matching up their variables.
 // Uniform, input and output variables get collected.
 // The code gets compiled into binaries.
-angle::Result Program::link(const Context *context)
+angle::Result Program::linkImpl(const Context *context)
 {
     ASSERT(mLinkResolved);
+    // Don't make any local variables pointing to anything within the ProgramExecutable, since
+    // unlink() could make a new ProgramExecutable making any references/pointers invalid.
     const auto &data = context->getState();
-    InfoLog &infoLog = mState.mExecutable->getInfoLog();
-
     auto *platform   = ANGLEPlatformCurrent();
     double startTime = platform->currentTime(platform);
 
     // Unlink the program, but do not clear the validation-related caching yet, since we can still
-    // use the previously linked program if linking the shaders fails
+    // use the previously linked program if linking the shaders fails.
     mLinked = false;
 
-    infoLog.reset();
+    mState.mExecutable->getInfoLog().reset();
 
     // Validate we have properly attached shaders before checking the cache.
-    if (!linkValidateShaders(infoLog))
+    if (!linkValidateShaders(mState.mExecutable->getInfoLog()))
     {
         return angle::Result::Continue;
     }
@@ -1455,6 +1469,7 @@ angle::Result Program::link(const Context *context)
 
     // Cache load failed, fall through to normal linking.
     unlink();
+    InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
     // Re-link shaders after the unlink call.
     bool result = linkValidateShaders(infoLog);
@@ -1604,6 +1619,14 @@ angle::Result Program::link(const Context *context)
     // Must be after mProgram->link() to avoid misleading the linker about output variables.
     mState.updateProgramInterfaceInputs();
     mState.updateProgramInterfaceOutputs();
+
+    // Linking has succeeded, so we need to save some information that may get overwritten by a
+    // later linkProgram() that could fail.
+    if (mState.mSeparable)
+    {
+        mState.mExecutable->saveLinkedStateInfo();
+        mLinkingState->linkedExecutable = mState.mExecutable;
+    }
 
     return angle::Result::Continue;
 }
@@ -1805,6 +1828,14 @@ void ProgramState::updateProgramInterfaceOutputs()
 // Returns the program object to an unlinked state, before re-linking, or at destruction
 void Program::unlink()
 {
+    if (mLinkingState && mLinkingState->linkedExecutable)
+    {
+        // The new ProgramExecutable that we'll attempt to link with needs to start from a copy of
+        // the last successfully linked ProgramExecutable, so we don't lose any state information.
+        mState.mExecutable.reset(new ProgramExecutable(*mLinkingState->linkedExecutable));
+    }
+    mState.mExecutable->reset();
+
     mState.mUniformLocations.clear();
     mState.mBufferVariables.clear();
     mState.mActiveUniformBlockBindings.reset();
@@ -1830,8 +1861,6 @@ void Program::unlink()
     mValidated = false;
 
     mLinked = false;
-
-    mState.mExecutable->reset();
 }
 
 angle::Result Program::loadBinary(const Context *context,
@@ -1839,9 +1868,9 @@ angle::Result Program::loadBinary(const Context *context,
                                   const void *binary,
                                   GLsizei length)
 {
-    InfoLog &infoLog = mState.mExecutable->getInfoLog();
     ASSERT(mLinkResolved);
     unlink();
+    InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
 #if ANGLE_PROGRAM_BINARY_LOAD != ANGLE_ENABLED
     return angle::Result::Continue;
@@ -3017,7 +3046,7 @@ void Program::validate(const Caps &caps)
 
 bool Program::validateSamplersImpl(InfoLog *infoLog, const Caps &caps)
 {
-    const ProgramExecutable *executable = mState.mExecutable;
+    const ProgramExecutable *executable = mState.mExecutable.get();
     ASSERT(mLinkResolved);
 
     // if any two active samplers in a program are of different types, but refer to the same

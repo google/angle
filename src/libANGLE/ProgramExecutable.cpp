@@ -30,8 +30,40 @@ ProgramExecutable::ProgramExecutable()
       mSamplerUniformRange(0, 0),
       mImageUniformRange(0, 0)
 {
-    mActiveSamplerTypes.fill(TextureType::InvalidEnum);
-    mActiveSamplerFormats.fill(SamplerFormat::InvalidEnum);
+    reset();
+}
+
+ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
+    : mProgramState(other.mProgramState),
+      mProgramPipelineState(other.mProgramPipelineState),
+      mLinkedGraphicsShaderStages(other.mLinkedGraphicsShaderStages),
+      mLinkedComputeShaderStages(other.mLinkedComputeShaderStages),
+      mActiveAttribLocationsMask(other.mActiveAttribLocationsMask),
+      mMaxActiveAttribLocation(other.mMaxActiveAttribLocation),
+      mAttributesTypeMask(other.mAttributesTypeMask),
+      mAttributesMask(other.mAttributesMask),
+      mActiveSamplersMask(other.mActiveSamplersMask),
+      mActiveSamplerRefCounts(other.mActiveSamplerRefCounts),
+      mActiveSamplerTypes(other.mActiveSamplerTypes),
+      mActiveSamplerFormats(other.mActiveSamplerFormats),
+      mActiveSamplerShaderBits(other.mActiveSamplerShaderBits),
+      mActiveImagesMask(other.mActiveImagesMask),
+      mActiveImageShaderBits(other.mActiveImageShaderBits),
+      mCanDrawWith(other.mCanDrawWith),
+      mOutputVariables(other.mOutputVariables),
+      mOutputLocations(other.mOutputLocations),
+      mProgramInputs(other.mProgramInputs),
+      mLinkedTransformFeedbackVaryings(other.mLinkedTransformFeedbackVaryings),
+      mTransformFeedbackStrides(other.mTransformFeedbackStrides),
+      mTransformFeedbackBufferMode(other.mTransformFeedbackBufferMode),
+      mUniforms(other.mUniforms),
+      mSamplerUniformRange(other.mSamplerUniformRange),
+      mUniformBlocks(other.mUniformBlocks),
+      mAtomicCounterBuffers(other.mAtomicCounterBuffers),
+      mImageUniformRange(other.mImageUniformRange),
+      mShaderStorageBlocks(other.mShaderStorageBlocks)
+{
+    reset();
 }
 
 ProgramExecutable::~ProgramExecutable() = default;
@@ -475,6 +507,21 @@ void ProgramExecutable::updateCanDrawWith()
 {
     mCanDrawWith =
         (hasLinkedShaderStage(ShaderType::Vertex) && hasLinkedShaderStage(ShaderType::Fragment));
+}
+
+void ProgramExecutable::saveLinkedStateInfo()
+{
+    // Only a Program's linked data needs to be saved, not a ProgramPipeline's
+    ASSERT(mProgramState);
+
+    for (ShaderType shaderType : getLinkedShaderStages())
+    {
+        Shader *shader = mProgramState->getAttachedShader(shaderType);
+        ASSERT(shader);
+        mLinkedOutputVaryings[shaderType] = shader->getOutputVaryings();
+        mLinkedInputVaryings[shaderType]  = shader->getInputVaryings();
+        mLinkedShaderVersions[shaderType] = shader->getShaderVersion();
+    }
 }
 
 }  // namespace gl
