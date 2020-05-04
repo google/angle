@@ -16,6 +16,24 @@
       "revId": "799d22d8ecf25bef5d8e84e955870532cc2f36c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0102333c_f1223d4c",
+        "filename": "src/common/vulkan/vulkan_icd.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1001794
+      },
+      "writtenOn": "2020-05-04T18:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e59a0ba7_228a1553",
+      "revId": "799d22d8ecf25bef5d8e84e955870532cc2f36c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
