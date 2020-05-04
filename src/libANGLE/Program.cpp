@@ -3431,7 +3431,7 @@ void Program::setBaseInstanceUniform(GLuint baseInstance)
 
 bool Program::linkVaryings(InfoLog &infoLog) const
 {
-    Shader *previousShader = nullptr;
+    ShaderType previousShaderType = ShaderType::InvalidEnum;
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {
         Shader *currentShader = mState.mAttachedShaders[shaderType];
@@ -3440,20 +3440,29 @@ bool Program::linkVaryings(InfoLog &infoLog) const
             continue;
         }
 
-        if (previousShader)
+        if (previousShaderType != ShaderType::InvalidEnum)
         {
-            if (!linkValidateShaderInterfaceMatching(previousShader, currentShader, isSeparable(),
-                                                     infoLog))
+            Shader *previousShader = mState.mAttachedShaders[previousShaderType];
+            const std::vector<sh::ShaderVariable> &outputVaryings =
+                previousShader->getOutputVaryings();
+
+            if (!linkValidateShaderInterfaceMatching(
+                    outputVaryings, currentShader->getInputVaryings(), previousShaderType,
+                    currentShader->getType(), previousShader->getShaderVersion(),
+                    currentShader->getShaderVersion(), isSeparable(), infoLog))
             {
                 return false;
             }
         }
-        previousShader = currentShader;
+        previousShaderType = currentShader->getType();
     }
 
     Shader *vertexShader   = mState.mAttachedShaders[ShaderType::Vertex];
     Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
-    if (!linkValidateBuiltInVaryings(vertexShader, fragmentShader, infoLog))
+    if (vertexShader && fragmentShader &&
+        !linkValidateBuiltInVaryings(vertexShader->getOutputVaryings(),
+                                     fragmentShader->getInputVaryings(),
+                                     vertexShader->getShaderVersion(), infoLog))
     {
         return false;
     }
@@ -3476,8 +3485,9 @@ void Program::getFilteredVaryings(const std::vector<sh::ShaderVariable> &varying
     }
 }
 
-bool Program::doShaderVariablesMatch(gl::Shader *generatingShader,
-                                     gl::Shader *consumingShader,
+bool Program::doShaderVariablesMatch(int outputShaderVersion,
+                                     ShaderType outputShaderType,
+                                     ShaderType inputShaderType,
                                      const sh::ShaderVariable &input,
                                      const sh::ShaderVariable &output,
                                      bool validateGeometryShaderInputs,
@@ -3496,13 +3506,13 @@ bool Program::doShaderVariablesMatch(gl::Shader *generatingShader,
     if (namesMatch || locationsMatch)
     {
         std::string mismatchedStructFieldName;
-        LinkMismatchError linkError = LinkValidateVaryings(
-            output, input, generatingShader->getShaderVersion(), validateGeometryShaderInputs,
-            isSeparable, &mismatchedStructFieldName);
+        LinkMismatchError linkError =
+            LinkValidateVaryings(output, input, outputShaderVersion, validateGeometryShaderInputs,
+                                 isSeparable, &mismatchedStructFieldName);
         if (linkError != LinkMismatchError::NO_MISMATCH)
         {
             LogLinkMismatch(infoLog, input.name, "varying", linkError, mismatchedStructFieldName,
-                            generatingShader->getType(), consumingShader->getType());
+                            outputShaderType, inputShaderType);
             return false;
         }
 
@@ -3514,18 +3524,21 @@ bool Program::doShaderVariablesMatch(gl::Shader *generatingShader,
 
 // [OpenGL ES 3.1] Chapter 7.4.1 "Shader Interface Matching" Page 91
 // TODO(jiawei.shao@intel.com): add validation on input/output blocks matching
-bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
-                                                  gl::Shader *consumingShader,
-                                                  bool isSeparable,
-                                                  gl::InfoLog &infoLog)
+bool Program::linkValidateShaderInterfaceMatching(
+    const std::vector<sh::ShaderVariable> &outputVaryings,
+    const std::vector<sh::ShaderVariable> &inputVaryings,
+    ShaderType outputShaderType,
+    ShaderType inputShaderType,
+    int outputShaderVersion,
+    int inputShaderVersion,
+    bool isSeparable,
+    gl::InfoLog &infoLog)
 {
-    ASSERT(generatingShader->getShaderVersion() == consumingShader->getShaderVersion());
+    ASSERT(outputShaderVersion == inputShaderVersion);
 
-    const std::vector<sh::ShaderVariable> &outputVaryings = generatingShader->getOutputVaryings();
-    const std::vector<sh::ShaderVariable> &inputVaryings  = consumingShader->getInputVaryings();
     std::vector<const sh::ShaderVariable *> filteredInputVaryings;
     std::vector<const sh::ShaderVariable *> filteredOutputVaryings;
-    bool validateGeometryShaderInputs = consumingShader->getType() == ShaderType::Geometry;
+    bool validateGeometryShaderInputs = inputShaderType == ShaderType::Geometry;
 
     getFilteredVaryings(inputVaryings, &filteredInputVaryings);
     getFilteredVaryings(outputVaryings, &filteredOutputVaryings);
@@ -3533,16 +3546,16 @@ bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
     // Separable programs require the number of inputs and outputs match
     if (isSeparable && filteredInputVaryings.size() < filteredOutputVaryings.size())
     {
-        infoLog << GetShaderTypeString(consumingShader->getType())
+        infoLog << GetShaderTypeString(inputShaderType)
                 << " does not consume all varyings generated by "
-                << GetShaderTypeString(generatingShader->getType());
+                << GetShaderTypeString(outputShaderType);
         return false;
     }
     if (isSeparable && filteredInputVaryings.size() > filteredOutputVaryings.size())
     {
-        infoLog << GetShaderTypeString(generatingShader->getType())
+        infoLog << GetShaderTypeString(outputShaderType)
                 << " does not generate all varyings consumed by "
-                << GetShaderTypeString(consumingShader->getType());
+                << GetShaderTypeString(inputShaderType);
         return false;
     }
 
@@ -3552,8 +3565,9 @@ bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
         bool match = false;
         for (const sh::ShaderVariable *output : filteredOutputVaryings)
         {
-            if (doShaderVariablesMatch(generatingShader, consumingShader, *input, *output,
-                                       validateGeometryShaderInputs, isSeparable, infoLog))
+            if (doShaderVariablesMatch(outputShaderVersion, outputShaderType, inputShaderType,
+                                       *input, *output, validateGeometryShaderInputs, isSeparable,
+                                       infoLog))
             {
                 match = true;
                 break;
@@ -3565,8 +3579,8 @@ bool Program::linkValidateShaderInterfaceMatching(gl::Shader *generatingShader,
         // if it is not active. GLSL ES 3.00.6 section 4.3.10.
         if (!match && input->staticUse)
         {
-            infoLog << GetShaderTypeString(consumingShader->getType()) << " varying " << input->name
-                    << " does not match any " << GetShaderTypeString(generatingShader->getType())
+            infoLog << GetShaderTypeString(inputShaderType) << " varying " << input->name
+                    << " does not match any " << GetShaderTypeString(outputShaderType)
                     << " varying";
             return false;
         }
@@ -4102,21 +4116,12 @@ LinkMismatchError Program::LinkValidateVaryings(const sh::ShaderVariable &output
     return LinkMismatchError::NO_MISMATCH;
 }
 
-bool Program::linkValidateBuiltInVaryings(Shader *vertexShader,
-                                          Shader *fragmentShader,
+bool Program::linkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &vertexVaryings,
+                                          const std::vector<sh::ShaderVariable> &fragmentVaryings,
+                                          int vertexShaderVersion,
                                           InfoLog &infoLog)
 {
-    if (!vertexShader || !fragmentShader)
-    {
-        // We can't validate an interface if we don't have both a producer and a consumer
-        return true;
-    }
-
-    const auto &vertexVaryings   = vertexShader->getOutputVaryings();
-    const auto &fragmentVaryings = fragmentShader->getInputVaryings();
-    int shaderVersion            = vertexShader->getShaderVersion();
-
-    if (shaderVersion != 100)
+    if (vertexShaderVersion != 100)
     {
         // Only ESSL 1.0 has restrictions on matching input and output invariance
         return true;

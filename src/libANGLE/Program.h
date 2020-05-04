@@ -816,19 +816,26 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     static void getFilteredVaryings(const std::vector<sh::ShaderVariable> &varyings,
                                     std::vector<const sh::ShaderVariable *> *filteredVaryingsOut);
-    static bool doShaderVariablesMatch(gl::Shader *generatingShader,
-                                       gl::Shader *consumingShader,
+    static bool doShaderVariablesMatch(int outputShaderVersion,
+                                       ShaderType outputShaderType,
+                                       ShaderType inputShaderType,
                                        const sh::ShaderVariable &input,
                                        const sh::ShaderVariable &output,
                                        bool validateGeometryShaderInputs,
                                        bool isSeparable,
                                        gl::InfoLog &infoLog);
-    static bool linkValidateShaderInterfaceMatching(Shader *generatingShader,
-                                                    Shader *consumingShader,
-                                                    bool isSeparable,
-                                                    InfoLog &infoLog);
-    static bool linkValidateBuiltInVaryings(Shader *vertexShader,
-                                            Shader *fragmentShader,
+    static bool linkValidateShaderInterfaceMatching(
+        const std::vector<sh::ShaderVariable> &outputVaryings,
+        const std::vector<sh::ShaderVariable> &inputVaryings,
+        ShaderType outputShaderType,
+        ShaderType inputShaderType,
+        int outputShaderVersion,
+        int inputShaderVersion,
+        bool isSeparable,
+        InfoLog &infoLog);
+    static bool linkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &vertexVaryings,
+                                            const std::vector<sh::ShaderVariable> &fragmentVaryings,
+                                            int vertexShaderVersion,
                                             InfoLog &infoLog);
 
   private:
