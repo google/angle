@@ -184,10 +184,22 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
     uint32_t layerCount;
     gl_vk::GetExtentsAndLayerCount(type, size, &vkExtents, &layerCount);
 
-    ANGLE_TRY(image->initExternal(
-        contextVk, type, vkExtents, vkFormat, 1, imageUsageFlags,
-        vk::ImageLayout::ExternalPreInitialized, &externalMemoryImageCreateInfo, 0,
-        static_cast<uint32_t>(levels) - 1, static_cast<uint32_t>(levels), layerCount));
+    // Initialize VkImage with initial layout of VK_IMAGE_LAYOUT_UNDEFINED.
+    //
+    // Binding a VkImage with an initial layout of VK_IMAGE_LAYOUT_UNDEFINED to
+    // external memory whose content has already been defined does not make the
+    // content undefined (see 11.7.1. External Resource Sharing).
+    //
+    // If the content is already defined, the ownership rules imply that the
+    // first operation on the texture must be a call to glWaitSemaphoreEXT that
+    // grants ownership of the image and informs us of the true layout.
+    //
+    // If the content is not already defined, the first operation may not be a
+    // glWaitSemaphore, but in this case undefined layout is appropriate.
+    ANGLE_TRY(image->initExternal(contextVk, type, vkExtents, vkFormat, 1, imageUsageFlags,
+                                  vk::ImageLayout::Undefined, &externalMemoryImageCreateInfo, 0,
+                                  static_cast<uint32_t>(levels) - 1, static_cast<uint32_t>(levels),
+                                  layerCount));
 
     VkMemoryRequirements externalMemoryRequirements;
     image->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);
@@ -224,7 +236,7 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
     VkMemoryPropertyFlags flags = 0;
     ANGLE_TRY(image->initExternalMemory(contextVk, renderer->getMemoryProperties(),
                                         externalMemoryRequirements, importMemoryInfo,
-                                        VK_QUEUE_FAMILY_EXTERNAL, flags));
+                                        renderer->getQueueFamilyIndex(), flags));
 
     return angle::Result::Continue;
 }

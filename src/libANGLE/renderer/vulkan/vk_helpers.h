@@ -637,6 +637,18 @@ class BufferHelper final : public Resource
 
     void changeQueue(uint32_t newQueueFamilyIndex, CommandBuffer *commandBuffer);
 
+    // Performs an ownership transfer from an external instance or API.
+    void acquireFromExternal(ContextVk *contextVk,
+                             uint32_t externalQueueFamilyIndex,
+                             uint32_t rendererQueueFamilyIndex,
+                             CommandBuffer *commandBuffer);
+
+    // Performs an ownership transfer to an external instance or API.
+    void releaseToExternal(ContextVk *contextVk,
+                           uint32_t rendererQueueFamilyIndex,
+                           uint32_t externalQueueFamilyIndex,
+                           CommandBuffer *commandBuffer);
+
     // Currently always returns false. Should be smarter about accumulation.
     bool canAccumulateRead(ContextVk *contextVk, VkAccessFlags readAccessType);
     bool canAccumulateWrite(ContextVk *contextVk, VkAccessFlags writeAccessType);
@@ -1155,6 +1167,20 @@ class ImageHelper final : public Resource, public angle::Subject
                               ImageLayout newLayout,
                               uint32_t newQueueFamilyIndex,
                               CommandBuffer *commandBuffer);
+
+    // Performs an ownership transfer from an external instance or API.
+    void acquireFromExternal(ContextVk *contextVk,
+                             uint32_t externalQueueFamilyIndex,
+                             uint32_t rendererQueueFamilyIndex,
+                             ImageLayout currentLayout,
+                             CommandBuffer *commandBuffer);
+
+    // Performs an ownership transfer to an external instance or API.
+    void releaseToExternal(ContextVk *contextVk,
+                           uint32_t rendererQueueFamilyIndex,
+                           uint32_t externalQueueFamilyIndex,
+                           ImageLayout desiredLayout,
+                           CommandBuffer *commandBuffer);
 
     // If the image is used externally to GL, its layout could be different from ANGLE's internal
     // state.  This function is used to inform ImageHelper of an external layout change.

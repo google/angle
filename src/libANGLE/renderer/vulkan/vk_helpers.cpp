@@ -2252,6 +2252,26 @@ void BufferHelper::changeQueue(uint32_t newQueueFamilyIndex, CommandBuffer *comm
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
 
+void BufferHelper::acquireFromExternal(ContextVk *contextVk,
+                                       uint32_t externalQueueFamilyIndex,
+                                       uint32_t rendererQueueFamilyIndex,
+                                       CommandBuffer *commandBuffer)
+{
+    mCurrentQueueFamilyIndex = externalQueueFamilyIndex;
+
+    changeQueue(rendererQueueFamilyIndex, commandBuffer);
+}
+
+void BufferHelper::releaseToExternal(ContextVk *contextVk,
+                                     uint32_t rendererQueueFamilyIndex,
+                                     uint32_t externalQueueFamilyIndex,
+                                     CommandBuffer *commandBuffer)
+{
+    ASSERT(mCurrentQueueFamilyIndex == rendererQueueFamilyIndex);
+
+    changeQueue(externalQueueFamilyIndex, commandBuffer);
+}
+
 bool BufferHelper::canAccumulateRead(ContextVk *contextVk, VkAccessFlags readAccessType)
 {
     // We only need to start a new command buffer when we need a new barrier.
@@ -2725,13 +2745,33 @@ void ImageHelper::changeLayoutAndQueue(VkImageAspectFlags aspectMask,
     forceChangeLayoutAndQueue(aspectMask, newLayout, newQueueFamilyIndex, commandBuffer);
 }
 
-void ImageHelper::onExternalLayoutChange(ImageLayout newLayout)
+void ImageHelper::acquireFromExternal(ContextVk *contextVk,
+                                      uint32_t externalQueueFamilyIndex,
+                                      uint32_t rendererQueueFamilyIndex,
+                                      ImageLayout currentLayout,
+                                      CommandBuffer *commandBuffer)
 {
-    mCurrentLayout = newLayout;
+    // The image must be newly allocated or have been released to the external
+    // queue. If this is not the case, it's an application bug, so ASSERT might
+    // eventually need to change to a warning.
+    ASSERT(mCurrentLayout == ImageLayout::Undefined ||
+           mCurrentQueueFamilyIndex == externalQueueFamilyIndex);
 
-    // The image must have already been owned by EXTERNAL.  If this is not the case, it's an
-    // application bug, so ASSERT might eventually need to change to a warning.
-    ASSERT(mCurrentQueueFamilyIndex == VK_QUEUE_FAMILY_EXTERNAL);
+    mCurrentLayout           = currentLayout;
+    mCurrentQueueFamilyIndex = externalQueueFamilyIndex;
+
+    changeLayoutAndQueue(getAspectFlags(), mCurrentLayout, rendererQueueFamilyIndex, commandBuffer);
+}
+
+void ImageHelper::releaseToExternal(ContextVk *contextVk,
+                                    uint32_t rendererQueueFamilyIndex,
+                                    uint32_t externalQueueFamilyIndex,
+                                    ImageLayout desiredLayout,
+                                    CommandBuffer *commandBuffer)
+{
+    ASSERT(mCurrentQueueFamilyIndex == rendererQueueFamilyIndex);
+
+    changeLayoutAndQueue(getAspectFlags(), desiredLayout, externalQueueFamilyIndex, commandBuffer);
 }
 
 uint32_t ImageHelper::getBaseLevel()
