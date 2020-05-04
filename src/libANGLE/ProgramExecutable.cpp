@@ -25,7 +25,10 @@ ProgramExecutable::ProgramExecutable()
       mActiveSamplersMask(0),
       mActiveSamplerRefCounts{},
       mActiveImagesMask(0),
-      mCanDrawWith(false)
+      mCanDrawWith(false),
+      mTransformFeedbackBufferMode(GL_INTERLEAVED_ATTRIBS),
+      mSamplerUniformRange(0, 0),
+      mImageUniformRange(0, 0)
 {
     mActiveSamplerTypes.fill(TextureType::InvalidEnum);
     mActiveSamplerFormats.fill(SamplerFormat::InvalidEnum);
@@ -47,6 +50,15 @@ void ProgramExecutable::reset()
     mActiveSamplerFormats.fill(SamplerFormat::InvalidEnum);
 
     mActiveImagesMask.reset();
+
+    mProgramInputs.clear();
+    mLinkedTransformFeedbackVaryings.clear();
+    mUniforms.clear();
+    mUniformBlocks.clear();
+    mShaderStorageBlocks.clear();
+    mAtomicCounterBuffers.clear();
+    mOutputVariables.clear();
+    mOutputLocations.clear();
 }
 
 void ProgramExecutable::load(gl::BinaryInputStream *stream)

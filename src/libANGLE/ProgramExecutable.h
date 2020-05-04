@@ -12,6 +12,9 @@
 #include "BinaryStream.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/InfoLog.h"
+#include "libANGLE/ProgramLinkedResources.h"
+#include "libANGLE/Shader.h"
+#include "libANGLE/Uniform.h"
 #include "libANGLE/VaryingPacking.h"
 #include "libANGLE/angletypes.h"
 
@@ -51,6 +54,45 @@ struct ImageBinding
 
     // A note if this image unit is an unreferenced uniform.
     bool unreferenced;
+};
+
+// A varying with transform feedback enabled. If it's an array, either the whole array or one of its
+// elements specified by 'arrayIndex' can set to be enabled.
+struct TransformFeedbackVarying : public sh::ShaderVariable
+{
+    TransformFeedbackVarying(const sh::ShaderVariable &varyingIn, GLuint arrayIndexIn)
+        : sh::ShaderVariable(varyingIn), arrayIndex(arrayIndexIn)
+    {
+        ASSERT(!isArrayOfArrays());
+    }
+
+    TransformFeedbackVarying(const sh::ShaderVariable &field, const sh::ShaderVariable &parent)
+        : arrayIndex(GL_INVALID_INDEX)
+    {
+        sh::ShaderVariable *thisVar = this;
+        *thisVar                    = field;
+        interpolation               = parent.interpolation;
+        isInvariant                 = parent.isInvariant;
+        name                        = parent.name + "." + name;
+        mappedName                  = parent.mappedName + "." + mappedName;
+    }
+
+    std::string nameWithArrayIndex() const
+    {
+        std::stringstream fullNameStr;
+        fullNameStr << name;
+        if (arrayIndex != GL_INVALID_INDEX)
+        {
+            fullNameStr << "[" << arrayIndex << "]";
+        }
+        return fullNameStr.str();
+    }
+    GLsizei size() const
+    {
+        return (isArray() && arrayIndex == GL_INVALID_INDEX ? getOutermostArraySize() : 1);
+    }
+
+    GLuint arrayIndex;
 };
 
 class ProgramState;
@@ -170,6 +212,67 @@ class ProgramExecutable
     void updateCanDrawWith();
     bool hasVertexAndFragmentShader() const { return mCanDrawWith; }
 
+    const std::vector<sh::ShaderVariable> &getProgramInputs() const { return mProgramInputs; }
+    const std::vector<sh::ShaderVariable> &getOutputVariables() const { return mOutputVariables; }
+    const std::vector<VariableLocation> &getOutputLocations() const { return mOutputLocations; }
+    const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
+    const std::vector<InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
+    const RangeUI &getSamplerUniformRange() const { return mSamplerUniformRange; }
+    const RangeUI &getImageUniformRange() const { return mImageUniformRange; }
+    const std::vector<TransformFeedbackVarying> &getLinkedTransformFeedbackVaryings() const
+    {
+        return mLinkedTransformFeedbackVaryings;
+    }
+    GLint getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }
+    GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const
+    {
+        ASSERT(uniformBlockIndex < mUniformBlocks.size());
+        return mUniformBlocks[uniformBlockIndex].binding;
+    }
+    GLuint getShaderStorageBlockBinding(GLuint blockIndex) const
+    {
+        ASSERT(blockIndex < mShaderStorageBlocks.size());
+        return mShaderStorageBlocks[blockIndex].binding;
+    }
+    const std::vector<GLsizei> &getTransformFeedbackStrides() const
+    {
+        return mTransformFeedbackStrides;
+    }
+    const std::vector<AtomicCounterBuffer> &getAtomicCounterBuffers() const
+    {
+        return mAtomicCounterBuffers;
+    }
+    const std::vector<InterfaceBlock> &getShaderStorageBlocks() const
+    {
+        return mShaderStorageBlocks;
+    }
+    const LinkedUniform &getUniformByIndex(GLuint index) const
+    {
+        ASSERT(index < static_cast<size_t>(mUniforms.size()));
+        return mUniforms[index];
+    }
+
+    ANGLE_INLINE GLuint getActiveUniformBlockCount() const
+    {
+        return static_cast<GLuint>(mUniformBlocks.size());
+    }
+
+    ANGLE_INLINE GLuint getActiveAtomicCounterBufferCount() const
+    {
+        return static_cast<GLuint>(mAtomicCounterBuffers.size());
+    }
+
+    ANGLE_INLINE GLuint getActiveShaderStorageBlockCount() const
+    {
+        return static_cast<GLuint>(mShaderStorageBlocks.size());
+    }
+
+    gl::ProgramLinkedResources &getResources() const
+    {
+        ASSERT(mResources);
+        return *mResources;
+    }
+
   private:
     // TODO(timvp): http://anglebug.com/3570: Investigate removing these friend
     // class declarations and accessing the necessary members with getters/setters.
@@ -211,6 +314,37 @@ class ProgramExecutable
     ActiveTextureArray<ShaderBitSet> mActiveImageShaderBits;
 
     bool mCanDrawWith;
+
+    // Names and mapped names of output variables that are arrays include [0] in the end, similarly
+    // to uniforms.
+    std::vector<sh::ShaderVariable> mOutputVariables;
+    std::vector<VariableLocation> mOutputLocations;
+    // Vertex attributes, Fragment input varyings, etc.
+    std::vector<sh::ShaderVariable> mProgramInputs;
+    std::vector<TransformFeedbackVarying> mLinkedTransformFeedbackVaryings;
+    // The size of the data written to each transform feedback buffer per vertex.
+    std::vector<GLsizei> mTransformFeedbackStrides;
+    GLenum mTransformFeedbackBufferMode;
+    // Uniforms are sorted in order:
+    //  1. Non-opaque uniforms
+    //  2. Sampler uniforms
+    //  3. Image uniforms
+    //  4. Atomic counter uniforms
+    //  5. Uniform block uniforms
+    // This makes opaque uniform validation easier, since we don't need a separate list.
+    // For generating the entries and naming them we follow the spec: GLES 3.1 November 2016 section
+    // 7.3.1.1 Naming Active Resources. There's a separate entry for each struct member and each
+    // inner array of an array of arrays. Names and mapped names of uniforms that are arrays include
+    // [0] in the end. This makes implementation of queries simpler.
+    std::vector<LinkedUniform> mUniforms;
+    RangeUI mSamplerUniformRange;
+    std::vector<InterfaceBlock> mUniformBlocks;
+    std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
+    RangeUI mImageUniformRange;
+    std::vector<InterfaceBlock> mShaderStorageBlocks;
+
+    // TODO: http://anglebug.com/4514: Remove
+    std::unique_ptr<gl::ProgramLinkedResources> mResources;
 };
 
 }  // namespace gl

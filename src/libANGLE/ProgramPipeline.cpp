@@ -498,8 +498,9 @@ angle::Result ProgramPipeline::link(const Context *context)
         {
             Program *program = mState.mPrograms[shaderType];
             ASSERT(program);
-            program->getResources().varyingPacking.reset();
-            ANGLE_TRY(program->linkMergedVaryings(context, mergedVaryings));
+            program->getExecutable().getResources().varyingPacking.reset();
+            ANGLE_TRY(
+                program->linkMergedVaryings(context, program->getExecutable(), mergedVaryings));
         }
     }
 

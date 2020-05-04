@@ -80,7 +80,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext)
             glslangProgramInterfaceInfo.locationsUsedForXfbExtension =
                 programProgramInterfaceInfo.locationsUsedForXfbExtension;
 
-            GlslangAssignLocations(options, glProgram->getState(), glProgram->getResources(),
+            GlslangAssignLocations(options, glProgram->getState().getProgramExecutable(),
                                    shaderType, &glslangProgramInterfaceInfo,
                                    &mExecutable.getShaderInterfaceVariableInfoMap());
         }
