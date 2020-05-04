@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e59a0ba7_228a1553",
+        "filename": "src/common/vulkan/vulkan_icd.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-05-04T14:54:47Z",
+      "side": 1,
+      "message": "This line needs to be updated.",
+      "revId": "799d22d8ecf25bef5d8e84e955870532cc2f36c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
