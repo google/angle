@@ -667,6 +667,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mEmulateSeamfulCubeMapSampling(false),
       mUseOldRewriteStructSamplers(false),
       mPoolAllocator(kDefaultPoolAllocatorPageSize, 1),
+      mOutsideRenderPassCommands(false),
+      mRenderPassCommands(true),
       mHasPrimaryCommands(false),
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
@@ -1196,7 +1198,7 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context,
     // |setupDispatch| and |setupDraw| are special in that they flush dirty bits. Therefore they
     // don't use the same APIs to record commands as the functions outside ContextVk.
     // The following ensures prior commands are flushed before we start processing dirty bits.
-    flushOutsideRenderPassCommands();
+    ANGLE_TRY(flushOutsideRenderPassCommands());
     ANGLE_TRY(endRenderPass());
     *commandBufferOut = &mOutsideRenderPassCommands.getCommandBuffer();
 
@@ -3742,7 +3744,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flush");
 
-    flushOutsideRenderPassCommands();
+    ANGLE_TRY(flushOutsideRenderPassCommands());
     ANGLE_TRY(endRenderPass());
 
     if (mIsAnyHostVisibleBufferWritten)
@@ -3766,7 +3768,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands.getCommandBuffer(),
                                 TRACE_EVENT_PHASE_END, eventName));
     }
-    flushOutsideRenderPassCommands();
+    ANGLE_TRY(flushOutsideRenderPassCommands());
     ANGLE_VK_TRY(this, mPrimaryCommands.end());
 
     // Free secondary command pool allocations and restart command buffers with the new page.
@@ -4071,7 +4073,7 @@ angle::Result ContextVk::onBufferRead(VkAccessFlags readAccessType,
 
     if (!buffer->canAccumulateRead(this, readAccessType))
     {
-        flushOutsideRenderPassCommands();
+        ANGLE_TRY(flushOutsideRenderPassCommands());
     }
 
     mOutsideRenderPassCommands.bufferRead(&mResourceUseList, readAccessType, readStage, buffer);
@@ -4087,7 +4089,7 @@ angle::Result ContextVk::onBufferWrite(VkAccessFlags writeAccessType,
 
     if (!buffer->canAccumulateWrite(this, writeAccessType))
     {
-        flushOutsideRenderPassCommands();
+        ANGLE_TRY(flushOutsideRenderPassCommands());
     }
 
     mOutsideRenderPassCommands.bufferWrite(&mResourceUseList, writeAccessType, writeStage, buffer);
@@ -4138,7 +4140,7 @@ angle::Result ContextVk::flushAndBeginRenderPass(
     vk::CommandBuffer **commandBufferOut)
 {
     // Flush any outside renderPass commands first
-    flushOutsideRenderPassCommands();
+    ANGLE_TRY(flushOutsideRenderPassCommands());
     // Next end any currently outstanding renderPass
     vk::CommandBuffer *outsideRenderPassCommandBuffer;
     ANGLE_TRY(endRenderPassAndGetCommandBuffer(&outsideRenderPassCommandBuffer));
@@ -4211,7 +4213,7 @@ angle::Result ContextVk::endRenderPass()
         EventName eventName = GetTraceEventName("RP", mRenderPassCounter);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands.getCommandBuffer(),
                                 TRACE_EVENT_PHASE_BEGIN, eventName));
-        flushOutsideRenderPassCommands();
+        ANGLE_TRY(flushOutsideRenderPassCommands());
     }
 
     mRenderPassCommands.pauseTransformFeedbackIfStarted();
@@ -4224,7 +4226,7 @@ angle::Result ContextVk::endRenderPass()
         EventName eventName = GetTraceEventName("RP", mRenderPassCounter);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands.getCommandBuffer(),
                                 TRACE_EVENT_PHASE_END, eventName));
-        flushOutsideRenderPassCommands();
+        ANGLE_TRY(flushOutsideRenderPassCommands());
     }
 
     return angle::Result::Continue;
@@ -4315,13 +4317,14 @@ bool ContextVk::shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) 
             !mRenderer->getFeatures().supportsIndexTypeUint8.enabled);
 }
 
-void ContextVk::flushOutsideRenderPassCommands()
+angle::Result ContextVk::flushOutsideRenderPassCommands()
 {
     if (!mOutsideRenderPassCommands.empty())
     {
-        mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands);
+        ANGLE_TRY(mOutsideRenderPassCommands.flushToPrimary(this, &mPrimaryCommands));
         mHasPrimaryCommands = true;
     }
+    return angle::Result::Continue;
 }
 
 void ContextVk::beginOcclusionQuery(QueryVk *queryVk)
@@ -4375,16 +4378,26 @@ bool ContextVk::isRobustResourceInitEnabled() const
     return mState.isRobustResourceInitEnabled();
 }
 
-CommandBufferHelper::CommandBufferHelper()
+CommandBufferHelper::CommandBufferHelper(bool hasRenderPass)
     : mImageBarrierSrcStageMask(0),
       mImageBarrierDstStageMask(0),
       mGlobalMemoryBarrierSrcAccess(0),
       mGlobalMemoryBarrierDstAccess(0),
       mGlobalMemoryBarrierSrcStages(0),
-      mGlobalMemoryBarrierDstStages(0)
+      mGlobalMemoryBarrierDstStages(0),
+      mCounter(0),
+      mClearValues{},
+      mRenderPassStarted(false),
+      mTransformFeedbackCounterBuffers{},
+      mValidTransformFeedbackBufferCount(0),
+      mRebindTransformFeedbackBuffers(false),
+      mIsRenderPassCommandBuffer(hasRenderPass)
 {}
 
-CommandBufferHelper::~CommandBufferHelper() = default;
+CommandBufferHelper::~CommandBufferHelper()
+{
+    mFramebuffer.setHandle(VK_NULL_HANDLE);
+}
 
 void CommandBufferHelper::initialize(angle::PoolAllocator *poolAllocator)
 {
@@ -4483,62 +4496,14 @@ void CommandBufferHelper::executeBarriers(vk::PrimaryCommandBuffer *primary)
     mImageBarrierDstStageMask = 0;
 }
 
-OutsideRenderPassCommandBuffer::OutsideRenderPassCommandBuffer() = default;
-
-OutsideRenderPassCommandBuffer::~OutsideRenderPassCommandBuffer() = default;
-
-void OutsideRenderPassCommandBuffer::flushToPrimary(ContextVk *contextVk,
-                                                    vk::PrimaryCommandBuffer *primary)
+void CommandBufferHelper::beginRenderPass(const vk::Framebuffer &framebuffer,
+                                          const gl::Rectangle &renderArea,
+                                          const vk::RenderPassDesc &renderPassDesc,
+                                          const vk::AttachmentOpsArray &renderPassAttachmentOps,
+                                          const vk::ClearValuesArray &clearValues,
+                                          vk::CommandBuffer **commandBufferOut)
 {
-    if (empty())
-        return;
-
-    if (kEnableCommandStreamDiagnostics)
-    {
-        std::ostringstream out;
-        if (mGlobalMemoryBarrierSrcAccess != 0 || mGlobalMemoryBarrierDstAccess != 0)
-        {
-            out << "Memory Barrier Src: 0x" << std::hex << mGlobalMemoryBarrierSrcAccess
-                << " &rarr; Dst: 0x" << std::hex << mGlobalMemoryBarrierDstAccess << "\\l";
-        }
-
-        out << mCommandBuffer.dumpCommands("\\l");
-        contextVk->addCommandBufferDiagnostics(out.str());
-    }
-
-    executeBarriers(primary);
-    mCommandBuffer.executeCommands(primary->getHandle());
-
-    // Restart secondary buffer.
-    reset();
-}
-
-void OutsideRenderPassCommandBuffer::reset()
-{
-    mCommandBuffer.reset();
-}
-
-RenderPassCommandBuffer::RenderPassCommandBuffer()
-    : mCounter(0),
-      mClearValues{},
-      mRenderPassStarted(false),
-      mTransformFeedbackCounterBuffers{},
-      mValidTransformFeedbackBufferCount(0),
-      mRebindTransformFeedbackBuffers(false)
-{}
-
-RenderPassCommandBuffer::~RenderPassCommandBuffer()
-{
-    mFramebuffer.setHandle(VK_NULL_HANDLE);
-}
-
-void RenderPassCommandBuffer::beginRenderPass(const vk::Framebuffer &framebuffer,
-                                              const gl::Rectangle &renderArea,
-                                              const vk::RenderPassDesc &renderPassDesc,
-                                              const vk::AttachmentOpsArray &renderPassAttachmentOps,
-                                              const vk::ClearValuesArray &clearValues,
-                                              vk::CommandBuffer **commandBufferOut)
-{
+    ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(empty());
 
     mRenderPassDesc = renderPassDesc;
@@ -4553,10 +4518,11 @@ void RenderPassCommandBuffer::beginRenderPass(const vk::Framebuffer &framebuffer
     mCounter++;
 }
 
-void RenderPassCommandBuffer::beginTransformFeedback(size_t validBufferCount,
-                                                     const VkBuffer *counterBuffers,
-                                                     bool rebindBuffer)
+void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
+                                                 const VkBuffer *counterBuffers,
+                                                 bool rebindBuffer)
 {
+    ASSERT(mIsRenderPassCommandBuffer);
     mValidTransformFeedbackBufferCount = static_cast<uint32_t>(validBufferCount);
     mRebindTransformFeedbackBuffers    = rebindBuffer;
 
@@ -4566,70 +4532,76 @@ void RenderPassCommandBuffer::beginTransformFeedback(size_t validBufferCount,
     }
 }
 
-angle::Result RenderPassCommandBuffer::flushToPrimary(ContextVk *contextVk,
-                                                      vk::PrimaryCommandBuffer *primary)
+angle::Result CommandBufferHelper::flushToPrimary(ContextVk *contextVk,
+                                                  vk::PrimaryCommandBuffer *primary)
 {
     ASSERT(!empty());
 
     if (kEnableCommandStreamDiagnostics)
     {
-        addRenderPassCommandDiagnostics(contextVk);
+        addCommandDiagnostics(contextVk);
     }
     // Commands that are added to primary before beginRenderPass command
     executeBarriers(primary);
-    mCommandBuffer.executeQueuedResetQueryPoolCommands(primary->getHandle());
 
-    // Pull a RenderPass from the cache.
-    RenderPassCache &renderPassCache = contextVk->getRenderPassCache();
-    Serial serial                    = contextVk->getCurrentQueueSerial();
-
-    vk::RenderPass *renderPass = nullptr;
-    ANGLE_TRY(renderPassCache.getRenderPassWithOps(contextVk, serial, mRenderPassDesc,
-                                                   mAttachmentOps, &renderPass));
-
-    VkRenderPassBeginInfo beginInfo    = {};
-    beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    beginInfo.renderPass               = renderPass->getHandle();
-    beginInfo.framebuffer              = mFramebuffer.getHandle();
-    beginInfo.renderArea.offset.x      = static_cast<uint32_t>(mRenderArea.x);
-    beginInfo.renderArea.offset.y      = static_cast<uint32_t>(mRenderArea.y);
-    beginInfo.renderArea.extent.width  = static_cast<uint32_t>(mRenderArea.width);
-    beginInfo.renderArea.extent.height = static_cast<uint32_t>(mRenderArea.height);
-    beginInfo.clearValueCount          = static_cast<uint32_t>(mRenderPassDesc.attachmentCount());
-    beginInfo.pClearValues             = mClearValues.data();
-
-    // Run commands inside the RenderPass.
-    primary->beginRenderPass(beginInfo, VK_SUBPASS_CONTENTS_INLINE);
-    mCommandBuffer.executeCommands(primary->getHandle());
-    primary->endRenderPass();
-
-    if (mValidTransformFeedbackBufferCount != 0)
+    if (mIsRenderPassCommandBuffer)
     {
-        // Would be better to accumulate this barrier using the command APIs.
-        // TODO: Clean thus up before we close http://anglebug.com/3206
-        VkBufferMemoryBarrier bufferBarrier = {};
-        bufferBarrier.sType                 = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
-        bufferBarrier.pNext                 = nullptr;
-        bufferBarrier.srcAccessMask         = VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT;
-        bufferBarrier.dstAccessMask         = VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT;
-        bufferBarrier.srcQueueFamilyIndex   = VK_QUEUE_FAMILY_IGNORED;
-        bufferBarrier.dstQueueFamilyIndex   = VK_QUEUE_FAMILY_IGNORED;
-        bufferBarrier.buffer                = mTransformFeedbackCounterBuffers[0];
-        bufferBarrier.offset                = 0;
-        bufferBarrier.size                  = VK_WHOLE_SIZE;
+        mCommandBuffer.executeQueuedResetQueryPoolCommands(primary->getHandle());
+        // Pull a RenderPass from the cache.
+        RenderPassCache &renderPassCache = contextVk->getRenderPassCache();
+        Serial serial                    = contextVk->getCurrentQueueSerial();
 
-        primary->pipelineBarrier(VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT,
-                                 VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT, 0u, 0u, nullptr, 1u,
-                                 &bufferBarrier, 0u, nullptr);
+        vk::RenderPass *renderPass = nullptr;
+        ANGLE_TRY(renderPassCache.getRenderPassWithOps(contextVk, serial, mRenderPassDesc,
+                                                       mAttachmentOps, &renderPass));
+
+        VkRenderPassBeginInfo beginInfo    = {};
+        beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        beginInfo.renderPass               = renderPass->getHandle();
+        beginInfo.framebuffer              = mFramebuffer.getHandle();
+        beginInfo.renderArea.offset.x      = static_cast<uint32_t>(mRenderArea.x);
+        beginInfo.renderArea.offset.y      = static_cast<uint32_t>(mRenderArea.y);
+        beginInfo.renderArea.extent.width  = static_cast<uint32_t>(mRenderArea.width);
+        beginInfo.renderArea.extent.height = static_cast<uint32_t>(mRenderArea.height);
+        beginInfo.clearValueCount = static_cast<uint32_t>(mRenderPassDesc.attachmentCount());
+        beginInfo.pClearValues    = mClearValues.data();
+
+        // Run commands inside the RenderPass.
+        primary->beginRenderPass(beginInfo, VK_SUBPASS_CONTENTS_INLINE);
+        mCommandBuffer.executeCommands(primary->getHandle());
+        primary->endRenderPass();
+
+        if (mValidTransformFeedbackBufferCount != 0)
+        {
+            // Would be better to accumulate this barrier using the command APIs.
+            // TODO: Clean thus up before we close http://anglebug.com/3206
+            VkBufferMemoryBarrier bufferBarrier = {};
+            bufferBarrier.sType                 = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+            bufferBarrier.pNext                 = nullptr;
+            bufferBarrier.srcAccessMask       = VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT;
+            bufferBarrier.dstAccessMask       = VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT;
+            bufferBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+            bufferBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+            bufferBarrier.buffer              = mTransformFeedbackCounterBuffers[0];
+            bufferBarrier.offset              = 0;
+            bufferBarrier.size                = VK_WHOLE_SIZE;
+
+            primary->pipelineBarrier(VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT,
+                                     VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT, 0u, 0u, nullptr, 1u,
+                                     &bufferBarrier, 0u, nullptr);
+        }
     }
-
+    else
+    {
+        mCommandBuffer.executeCommands(primary->getHandle());
+    }
     // Restart the command buffer.
     reset();
 
     return angle::Result::Continue;
 }
 
-void RenderPassCommandBuffer::addRenderPassCommandDiagnostics(ContextVk *contextVk)
+void CommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
 {
     std::ostringstream out;
     if (mGlobalMemoryBarrierSrcAccess != 0 || mGlobalMemoryBarrierDstAccess != 0)
@@ -4637,60 +4609,69 @@ void RenderPassCommandBuffer::addRenderPassCommandDiagnostics(ContextVk *context
         out << "Memory Barrier Src: 0x" << std::hex << mGlobalMemoryBarrierSrcAccess
             << " &rarr; Dst: 0x" << std::hex << mGlobalMemoryBarrierDstAccess << "\\l";
     }
-
-    size_t attachmentCount             = mRenderPassDesc.attachmentCount();
-    size_t depthStencilAttachmentCount = mRenderPassDesc.hasDepthStencilAttachment();
-    size_t colorAttachmentCount        = attachmentCount - depthStencilAttachmentCount;
-
-    std::string loadOps, storeOps;
-
-    if (colorAttachmentCount > 0)
+    if (mIsRenderPassCommandBuffer)
     {
-        loadOps += " Color: ";
-        storeOps += " Color: ";
+        size_t attachmentCount             = mRenderPassDesc.attachmentCount();
+        size_t depthStencilAttachmentCount = mRenderPassDesc.hasDepthStencilAttachment();
+        size_t colorAttachmentCount        = attachmentCount - depthStencilAttachmentCount;
 
-        for (size_t i = 0; i < colorAttachmentCount; ++i)
+        std::string loadOps, storeOps;
+
+        if (colorAttachmentCount > 0)
         {
-            loadOps += GetLoadOpShorthand(mAttachmentOps[i].loadOp);
-            storeOps += GetStoreOpShorthand(mAttachmentOps[i].storeOp);
+            loadOps += " Color: ";
+            storeOps += " Color: ";
+
+            for (size_t i = 0; i < colorAttachmentCount; ++i)
+            {
+                loadOps += GetLoadOpShorthand(mAttachmentOps[i].loadOp);
+                storeOps += GetStoreOpShorthand(mAttachmentOps[i].storeOp);
+            }
+        }
+
+        if (depthStencilAttachmentCount > 0)
+        {
+            ASSERT(depthStencilAttachmentCount == 1);
+
+            loadOps += " Depth/Stencil: ";
+            storeOps += " Depth/Stencil: ";
+            size_t dsIndex = colorAttachmentCount;
+
+            loadOps += GetLoadOpShorthand(mAttachmentOps[dsIndex].loadOp);
+            loadOps += GetLoadOpShorthand(mAttachmentOps[dsIndex].stencilLoadOp);
+
+            storeOps += GetStoreOpShorthand(mAttachmentOps[dsIndex].storeOp);
+            storeOps += GetStoreOpShorthand(mAttachmentOps[dsIndex].stencilStoreOp);
+        }
+
+        if (attachmentCount > 0)
+        {
+            out << "LoadOp:  " << loadOps << "\\l";
+            out << "StoreOp: " << storeOps << "\\l";
         }
     }
-
-    if (depthStencilAttachmentCount > 0)
-    {
-        ASSERT(depthStencilAttachmentCount == 1);
-
-        loadOps += " Depth/Stencil: ";
-        storeOps += " Depth/Stencil: ";
-        size_t dsIndex = colorAttachmentCount;
-
-        loadOps += GetLoadOpShorthand(mAttachmentOps[dsIndex].loadOp);
-        loadOps += GetLoadOpShorthand(mAttachmentOps[dsIndex].stencilLoadOp);
-
-        storeOps += GetStoreOpShorthand(mAttachmentOps[dsIndex].storeOp);
-        storeOps += GetStoreOpShorthand(mAttachmentOps[dsIndex].stencilStoreOp);
-    }
-
-    if (attachmentCount > 0)
-    {
-        out << "LoadOp:  " << loadOps << "\\l";
-        out << "StoreOp: " << storeOps << "\\l";
-    }
-
     out << mCommandBuffer.dumpCommands("\\l");
     contextVk->addCommandBufferDiagnostics(out.str());
 }
 
-void RenderPassCommandBuffer::reset()
+void CommandBufferHelper::reset()
 {
     mCommandBuffer.reset();
-    mRenderPassStarted                 = false;
-    mValidTransformFeedbackBufferCount = 0;
-    mRebindTransformFeedbackBuffers    = false;
+    if (mIsRenderPassCommandBuffer)
+    {
+        mRenderPassStarted                 = false;
+        mValidTransformFeedbackBufferCount = 0;
+        mRebindTransformFeedbackBuffers    = false;
+    }
+    // This state should never change for non-renderPass command buffer
+    ASSERT(mRenderPassStarted == false);
+    ASSERT(mValidTransformFeedbackBufferCount == 0);
+    ASSERT(mRebindTransformFeedbackBuffers == false);
 }
 
-void RenderPassCommandBuffer::resumeTransformFeedbackIfStarted()
+void CommandBufferHelper::resumeTransformFeedbackIfStarted()
 {
+    ASSERT(mIsRenderPassCommandBuffer);
     if (mValidTransformFeedbackBufferCount == 0)
     {
         return;
@@ -4705,8 +4686,9 @@ void RenderPassCommandBuffer::resumeTransformFeedbackIfStarted()
                                           mTransformFeedbackCounterBuffers.data());
 }
 
-void RenderPassCommandBuffer::pauseTransformFeedbackIfStarted()
+void CommandBufferHelper::pauseTransformFeedbackIfStarted()
 {
+    ASSERT(mIsRenderPassCommandBuffer);
     if (mValidTransformFeedbackBufferCount == 0)
     {
         return;
