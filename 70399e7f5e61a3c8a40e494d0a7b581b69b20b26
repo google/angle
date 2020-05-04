@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "07565a2f_acec4a49",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 21
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a18e47b_dbbfefda",
+      "range": {
+        "startLine": 17,
+        "startChar": 50,
+        "endLine": 17,
+        "endChar": 60
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "409dfe78_51575d7c",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 21
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "71f507f1_afc8e45a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Updated comment. I also added a pretty reasonable test for this. Everything seems green. LMK if this is good.",
+      "parentUuid": "409dfe78_51575d7c",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dda13b64_5e381f2b",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 21
@@ -53,6 +95,24 @@
       "writtenOn": "2020-04-30T03:27:12Z",
       "side": 1,
       "message": "Is \u0027scissor with clear\u0027 common enough that this change will hurt more than the reduction of render passes gains?",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a992cd64_2789e908",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "I don\u0027t think so. If it becomes a problem we can always optimize it later. We can expand the staging buffer clears to allow them to record partial surface clears. Let me know if this is satisfactory. At the moment there\u0027s no priority use case for scissored clears.",
+      "parentUuid": "dda13b64_5e381f2b",
       "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "da873184_5d0a83f5",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91dea3c1_50aa9be3",
+      "range": {
+        "startLine": 300,
+        "startChar": 64,
+        "endLine": 300,
+        "endChar": 74
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60558b52_4b9ae189",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 21
@@ -96,6 +180,24 @@
       "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0fb7afd_69053abe",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60558b52_4b9ae189",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -145,6 +247,54 @@
     },
     {
       "key": {
+        "uuid": "68e89534_30474573",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1111,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Updated comment.",
+      "parentUuid": "a98c3abf_297da4cb",
+      "range": {
+        "startLine": 1111,
+        "startChar": 57,
+        "endLine": 1111,
+        "endChar": 94
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a35163a_253c3103",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1111,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "afa52a94_ec1fc2b3",
+      "range": {
+        "startLine": 1111,
+        "startChar": 0,
+        "endLine": 1111,
+        "endChar": 55
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f3fae42f_f67f2e05",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 21
@@ -168,6 +318,30 @@
     },
     {
       "key": {
+        "uuid": "7a607160_1baeb6a3",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1486,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3fae42f_f67f2e05",
+      "range": {
+        "startLine": 1486,
+        "startChar": 13,
+        "endLine": 1486,
+        "endChar": 27
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "925d3832_c85b54e7",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 21
@@ -185,6 +359,24 @@
     },
     {
       "key": {
+        "uuid": "319839e1_a5c969a8",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1524,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Good catch, fixed.",
+      "parentUuid": "925d3832_c85b54e7",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2622deb2_bcfd0087",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 21
@@ -196,6 +388,30 @@
       "writtenOn": "2020-04-30T03:27:12Z",
       "side": 1,
       "message": "This portion looks unrelated and may be worth splitting out.",
+      "range": {
+        "startLine": 1556,
+        "startChar": 0,
+        "endLine": 1574,
+        "endChar": 93
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "881393b2_a7e36c1a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1574,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "It\u0027s refactored code. I started work on splitting out one more partial change and realized this code still would look different. Is it alright if I skip this in the interests of time?",
+      "parentUuid": "2622deb2_bcfd0087",
       "range": {
         "startLine": 1556,
         "startChar": 0,
@@ -225,6 +441,24 @@
     },
     {
       "key": {
+        "uuid": "515de073_f6f3e902",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad8e315e_7d8bc33a",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5bb34df_3b9d1d2b",
         "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
         "patchSetId": 21
@@ -248,6 +482,30 @@
     },
     {
       "key": {
+        "uuid": "01b1ef2a_def3051e",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Because of annoying differences between Vk and GL/ANGLE indexing schemes. Left a comment.",
+      "parentUuid": "e5bb34df_3b9d1d2b",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 5
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3dda766_5f22b4e4",
         "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
         "patchSetId": 21
@@ -262,6 +520,24 @@
       "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1346f8ba_c56c0989",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3dda766_5f22b4e4",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -288,6 +564,30 @@
     },
     {
       "key": {
+        "uuid": "d41254cf_63c31fba",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 3227,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77466ed1_4ed6686a",
+      "range": {
+        "startLine": 3227,
+        "startChar": 84,
+        "endLine": 3227,
+        "endChar": 97
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3abaf3d_b46476a5",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 21
@@ -308,6 +608,30 @@
       "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf4bbbb2_0cb67be0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 3232,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Correct.",
+      "parentUuid": "a3abaf3d_b46476a5",
+      "range": {
+        "startLine": 3232,
+        "startChar": 8,
+        "endLine": 3232,
+        "endChar": 16
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -334,6 +658,30 @@
     },
     {
       "key": {
+        "uuid": "8808d8c1_4e6d3987",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff7e5309_4ca81cb7",
+      "range": {
+        "startLine": 947,
+        "startChar": 75,
+        "endLine": 947,
+        "endChar": 88
+      },
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d9c8bf9_4a1bc98e",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 21
@@ -348,6 +696,24 @@
       "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd7e4696_8d709a20",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "The staging buffer code always keeps thing in the same order as when they recorded. It\u0027s more of a queue in that sense. Should be fine.",
+      "parentUuid": "8d9c8bf9_4a1bc98e",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -368,6 +734,24 @@
     },
     {
       "key": {
+        "uuid": "145c5610_cfd8bc4d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 683,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "OK, removed it. It was mainly to avoid passing multiple arguments. Without wasSet it wasn\u0027t really worth it.",
+      "parentUuid": "d8ab6236_c9894b58",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "add42f03_aeb3a487",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 21
@@ -382,6 +766,24 @@
       "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94a72a5a_4e7ad644",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "add42f03_aeb3a487",
+      "revId": "70399e7f5e61a3c8a40e494d0a7b581b69b20b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

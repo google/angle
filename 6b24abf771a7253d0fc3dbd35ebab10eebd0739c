@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a979c6ac_5e6a3a1d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Technically yes only for the enabled clear buffers. e.g. one clear could clear color buffers 1 , 3 , and the stencil buffer, the other could clear 2, 4 and depth. I left this off for right now with a small comment indicating this suggestion. That ok?",
+      "parentUuid": "1b8c1f3a_faecacce",
+      "range": {
+        "startLine": 205,
+        "startChar": 14,
+        "endLine": 205,
+        "endChar": 33
+      },
+      "revId": "6b24abf771a7253d0fc3dbd35ebab10eebd0739c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "852965dd_4d64db0a",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 20
@@ -36,6 +60,30 @@
       "writtenOn": "2020-04-27T19:46:46Z",
       "side": 1,
       "message": "To clarify, is there a behavior change here that scissoredClear was using RP before this CL and will be using draw call after this CL?",
+      "range": {
+        "startLine": 234,
+        "startChar": 9,
+        "endLine": 234,
+        "endChar": 23
+      },
+      "revId": "6b24abf771a7253d0fc3dbd35ebab10eebd0739c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd331fdd_b9e43856",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-04T21:45:38Z",
+      "side": 1,
+      "message": "Yes. That\u0027s correct. It\u0027s in the commit message. LMK if there\u0027s any additional concerns. As I mentioned to Tim this doesn\u0027t affect perf for our current targets and we can optimize it later if it comes up. That ok?",
+      "parentUuid": "852965dd_4d64db0a",
       "range": {
         "startLine": 234,
         "startChar": 9,
