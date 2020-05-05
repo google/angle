@@ -46,6 +46,30 @@
       "revId": "df31624eaf3df986a0bdf3f58a87b79b0cc8db5c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a50110a_232d402f",
+        "filename": "src/libANGLE/renderer/vulkan/README.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-05T19:04:04Z",
+      "side": 1,
+      "message": "It uses a specific git hash to a version with the right APIs. We only need to update it when the APIs change. Does that make sense to you?",
+      "parentUuid": "992b910f_e4b6037f",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 148
+      },
+      "revId": "df31624eaf3df986a0bdf3f58a87b79b0cc8db5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
