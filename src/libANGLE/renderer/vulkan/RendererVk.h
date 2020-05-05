@@ -10,9 +10,12 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_RENDERERVK_H_
 #define LIBANGLE_RENDERER_VULKAN_RENDERERVK_H_
 
+#include <condition_variable>
 #include <deque>
 #include <memory>
 #include <mutex>
+#include <queue>
+#include <thread>
 
 #include "vk_ext_provoking_vertex.h"
 
@@ -22,6 +25,7 @@
 #include "common/vulkan/vulkan_icd.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/renderer/vulkan/CommandProcessor.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
 #include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/UtilsVk.h"
@@ -250,6 +254,13 @@ class RendererVk : angle::NonCopyable
     SamplerCache &getSamplerCache() { return mSamplerCache; }
     vk::ActiveHandleCounter &getActiveHandleCounts() { return mActiveHandleCounts; }
 
+    // Queue commands to worker thread for processing
+    void queueCommands(const vk::CommandProcessorTask &commands)
+    {
+        mCommandProcessor.queueCommands(commands);
+    }
+    void waitForWorkerThreadIdle() { mCommandProcessor.waitForWorkComplete(); }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -362,6 +373,10 @@ class RendererVk : angle::NonCopyable
         vk::PrimaryCommandBuffer commandBuffer;
     };
     std::deque<PendingOneOffCommands> mPendingOneOffCommands;
+
+    // Worker Thread
+    CommandProcessor mCommandProcessor;
+    std::thread mCommandProcessorThread;
 
     // track whether we initialized (or released) glslang
     bool mGlslangInitialized;

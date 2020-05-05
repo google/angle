@@ -20,6 +20,8 @@ declare_args() {
 _vulkan_backend_sources = [
   "BufferVk.cpp",
   "BufferVk.h",
+  "CommandProcessor.cpp",
+  "CommandProcessor.h",
   "CompilerVk.cpp",
   "CompilerVk.h",
   "ContextVk.cpp",

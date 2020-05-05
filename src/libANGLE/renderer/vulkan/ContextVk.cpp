@@ -130,7 +130,6 @@ constexpr VkColorComponentFlags kAllColorChannelsMask =
 constexpr VkBufferUsageFlags kVertexBufferUsage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 constexpr size_t kDefaultValueSize              = sizeof(gl::VertexAttribCurrentValueData::Values);
 constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
-constexpr size_t kDefaultPoolAllocatorPageSize  = 16 * 1024;
 constexpr size_t kDriverUniformsAllocatorPageSize = 4 * 1024;
 
 constexpr size_t kInFlightCommandsLimit = 100u;
@@ -670,7 +669,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mIsAnyHostVisibleBufferWritten(false),
       mEmulateSeamfulCubeMapSampling(false),
       mUseOldRewriteStructSamplers(false),
-      mPoolAllocator(kDefaultPoolAllocatorPageSize, 1),
       mOutsideRenderPassCommands(nullptr),
       mRenderPassCommands(nullptr),
       mHasPrimaryCommands(false),
@@ -889,15 +887,20 @@ angle::Result ContextVk::initialize()
 
     mUseOldRewriteStructSamplers = shouldUseOldRewriteStructSamplers();
 
-    // Push a scope in the pool allocator so we can easily reinitialize on flush.
-    mPoolAllocator.push();
-    mOutsideRenderPassCommands = &mCommandBuffers[0];
-    mRenderPassCommands        = &mCommandBuffers[1];
+    // Prepare command buffer queue by:
+    //  1. Initializing each command buffer (as non-renderpass initially)
+    //  2. Put a pointer to each command buffer into queue
+    for (vk::CommandBufferHelper &commandBuffer : mCommandBuffers)
+    {
+        // TODO: b/157508684 Don't cache feature in class like this, just check when needed
+        commandBuffer.initialize(false,
+                                 mRenderer->getFeatures().preferAggregateBarrierCalls.enabled);
+        recycleCommandBuffer(&commandBuffer);
+    }
+    // Now assign initial command buffers from queue
+    getNextAvailableCommandBuffer(&mOutsideRenderPassCommands, false);
+    getNextAvailableCommandBuffer(&mRenderPassCommands, true);
 
-    mOutsideRenderPassCommands->initialize(
-        &mPoolAllocator, false, mRenderer->getFeatures().preferAggregateBarrierCalls.enabled);
-    mRenderPassCommands->initialize(&mPoolAllocator, true,
-                                    mRenderer->getFeatures().preferAggregateBarrierCalls.enabled);
     ANGLE_TRY(startPrimaryCommandBuffer());
 
     if (mGpuEventsEnabled)
@@ -3796,13 +3799,15 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
                                 TRACE_EVENT_PHASE_END, eventName));
     }
     ANGLE_TRY(flushOutsideRenderPassCommands());
-    ANGLE_VK_TRY(this, mPrimaryCommands.end());
 
-    // Free secondary command pool allocations and restart command buffers with the new page.
-    mPoolAllocator.pop();
-    mPoolAllocator.push();
-    mOutsideRenderPassCommands->reset();
-    mRenderPassCommands->reset();
+    if (mRenderer->getFeatures().enableCommandProcessingThread.enabled)
+    {
+        // Worker thread must complete adding any commands that were just flushed above to the
+        //  primary command buffer before we can End the primary command buffer below.
+        mRenderer->waitForWorkerThreadIdle();
+    }
+
+    ANGLE_VK_TRY(this, mPrimaryCommands.end());
 
     Serial serial = getCurrentQueueSerial();
     mResourceUseList.releaseResourceUsesAndUpdateSerials(serial);
@@ -4247,7 +4252,17 @@ angle::Result ContextVk::endRenderPass()
 
     mRenderPassCommands->pauseTransformFeedbackIfStarted();
 
-    ANGLE_TRY(mRenderPassCommands->flushToPrimary(this, &mPrimaryCommands));
+    if (mRenderer->getFeatures().enableCommandProcessingThread.enabled)
+    {
+        vk::CommandProcessorTask task = {this, &mPrimaryCommands, mRenderPassCommands};
+        queueCommandsToWorker(task);
+        getNextAvailableCommandBuffer(&mRenderPassCommands, true);
+    }
+    else
+    {
+        ANGLE_TRY(mRenderPassCommands->flushToPrimary(this, &mPrimaryCommands));
+    }
+
     mHasPrimaryCommands = true;
 
     if (mGpuEventsEnabled)
@@ -4266,6 +4281,30 @@ void ContextVk::onRenderPassImageWrite(VkImageAspectFlags aspectFlags,
                                        vk::ImageHelper *image)
 {
     mRenderPassCommands->imageWrite(&mResourceUseList, aspectFlags, imageLayout, image);
+}
+
+void ContextVk::getNextAvailableCommandBuffer(vk::CommandBufferHelper **commandBuffer,
+                                              bool hasRenderPass)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::getNextAvailableCommandBuffer");
+    std::unique_lock<std::mutex> lock(mCommandBufferQueueMutex);
+    // Only wake if notified and command queue is not empty
+    mAvailableCommandBufferCondition.wait(lock,
+                                          [this] { return !mAvailableCommandBuffers.empty(); });
+    *commandBuffer = mAvailableCommandBuffers.front();
+    ASSERT((*commandBuffer)->empty());
+    mAvailableCommandBuffers.pop();
+    lock.unlock();
+    (*commandBuffer)->setHasRenderPass(hasRenderPass);
+}
+
+void ContextVk::recycleCommandBuffer(vk::CommandBufferHelper *commandBuffer)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::waitForWorkerThreadIdle");
+    std::lock_guard<std::mutex> queueLock(mCommandBufferQueueMutex);
+    ASSERT(commandBuffer->empty());
+    mAvailableCommandBuffers.push(commandBuffer);
+    mAvailableCommandBufferCondition.notify_one();
 }
 
 angle::Result ContextVk::syncExternalMemory()
@@ -4350,7 +4389,16 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
 {
     if (!mOutsideRenderPassCommands->empty())
     {
-        ANGLE_TRY(mOutsideRenderPassCommands->flushToPrimary(this, &mPrimaryCommands));
+        if (mRenderer->getFeatures().enableCommandProcessingThread.enabled)
+        {
+            vk::CommandProcessorTask task = {this, &mPrimaryCommands, mOutsideRenderPassCommands};
+            queueCommandsToWorker(task);
+            getNextAvailableCommandBuffer(&mOutsideRenderPassCommands, false);
+        }
+        else
+        {
+            ANGLE_TRY(mOutsideRenderPassCommands->flushToPrimary(this, &mPrimaryCommands));
+        }
         mHasPrimaryCommands = true;
     }
     return angle::Result::Continue;

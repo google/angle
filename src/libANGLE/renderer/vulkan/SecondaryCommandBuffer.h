@@ -669,6 +669,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void initialize(angle::PoolAllocator *allocator)
     {
         ASSERT(allocator);
+        ASSERT(mCommands.empty());
         mAllocator = allocator;
         allocateNewBlock();
         // Set first command to Invalid to start

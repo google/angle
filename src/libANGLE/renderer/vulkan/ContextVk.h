@@ -10,6 +10,8 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_
 
+#include <condition_variable>
+
 #include "common/PackedEnums.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/renderer_utils.h"
@@ -526,6 +528,14 @@ class ContextVk : public ContextImpl, public vk::Context
 
     void updateOverlayOnPresent();
 
+    // Submit commands to worker thread for processing
+    ANGLE_INLINE void queueCommandsToWorker(const vk::CommandProcessorTask &commands)
+    {
+        mRenderer->queueCommands(commands);
+    }
+    // When worker thread completes, it releases command buffers back to context queue
+    void recycleCommandBuffer(vk::CommandBufferHelper *commandBuffer);
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -790,6 +800,9 @@ class ContextVk : public ContextImpl, public vk::Context
 
     void initIndexTypeMap();
 
+    // Pull an available CBH ptr from the CBH queue and set to specified hasRenderPass state
+    void getNextAvailableCommandBuffer(vk::CommandBufferHelper **commandBuffer, bool hasRenderPass);
+
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
 
@@ -906,20 +919,23 @@ class ContextVk : public ContextImpl, public vk::Context
     // http://anglebug.com/2701
     vk::Shared<vk::Fence> mSubmitFence;
 
-    // Pool allocator used for command graph but may be expanded to other allocations
-    angle::PoolAllocator mPoolAllocator;
-
     // When the command graph is disabled we record commands completely linearly. We have plans to
-    // reorder independent draws so that we can create fewer RenderPasses in some scenarios.
-    // Currently we just point the inside/outside RenderPass command buffers to respective fixed
-    //  command buffers in the mCommandBuffers array. In the near future when we move to a worker
-    //  thread there will a larger pool of command buffers and command buffer pointers will be
-    //  assigned from a queue based on availability.
+    //  reorder independent draws so that we can create fewer RenderPasses in some scenarios.
+    // We have a queue of CommandBufferHelpers (CBHs) that is drawn from for the two active command
+    //  buffers in the main thread. The two active command buffers are the inside and outside
+    //  RenderPass command buffers.
     constexpr static size_t kNumCommandBuffers = 2;
     std::array<vk::CommandBufferHelper, kNumCommandBuffers> mCommandBuffers;
+
+    // Lock access to the command buffer queue
+    std::mutex mCommandBufferQueueMutex;
+    std::queue<vk::CommandBufferHelper *> mAvailableCommandBuffers;
+    std::condition_variable mAvailableCommandBufferCondition;
+
     vk::CommandBufferHelper *mOutsideRenderPassCommands;
     vk::CommandBufferHelper *mRenderPassCommands;
     vk::PrimaryCommandBuffer mPrimaryCommands;
+    // Function recycleCommandBuffer() is public above
     bool mHasPrimaryCommands;
 
     // Internal shader library.

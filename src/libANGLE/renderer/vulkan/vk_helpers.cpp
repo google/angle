@@ -63,6 +63,8 @@ constexpr angle::PackedEnumMap<PipelineStage, VkPipelineStageFlagBits> kPipeline
     {PipelineStage::BottomOfPipe, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT},
     {PipelineStage::Host, VK_PIPELINE_STAGE_HOST_BIT}};
 
+constexpr size_t kDefaultPoolAllocatorPageSize = 16 * 1024;
+
 struct ImageMemoryBarrierData
 {
     // The Vk layout corresponding to the ImageLayout key.
@@ -529,11 +531,12 @@ CommandBufferHelper::~CommandBufferHelper()
     mFramebuffer.setHandle(VK_NULL_HANDLE);
 }
 
-void CommandBufferHelper::initialize(angle::PoolAllocator *poolAllocator,
-                                     bool isRenderPassCommandBuffer,
-                                     bool mergeBarriers)
+void CommandBufferHelper::initialize(bool isRenderPassCommandBuffer, bool mergeBarriers)
 {
-    mCommandBuffer.initialize(poolAllocator);
+    mAllocator.initialize(kDefaultPoolAllocatorPageSize, 1);
+    // Push a scope into the pool allocator so we can easily free and re-init on reset()
+    mAllocator.push();
+    mCommandBuffer.initialize(&mAllocator);
     mIsRenderPassCommandBuffer = isRenderPassCommandBuffer;
     mMergeBarriers             = mergeBarriers;
 }
@@ -667,8 +670,8 @@ void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
 angle::Result CommandBufferHelper::flushToPrimary(ContextVk *contextVk,
                                                   vk::PrimaryCommandBuffer *primary)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandBufferHelper::flushToPrimary");
     ASSERT(!empty());
-
     if (kEnableCommandStreamDiagnostics)
     {
         addCommandDiagnostics(contextVk);
@@ -819,6 +822,8 @@ void CommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
 
 void CommandBufferHelper::reset()
 {
+    mAllocator.pop();
+    mAllocator.push();
     mCommandBuffer.reset();
     if (mIsRenderPassCommandBuffer)
     {
@@ -830,6 +835,11 @@ void CommandBufferHelper::reset()
     ASSERT(mRenderPassStarted == false);
     ASSERT(mValidTransformFeedbackBufferCount == 0);
     ASSERT(mRebindTransformFeedbackBuffers == false);
+}
+
+void CommandBufferHelper::releaseToContextQueue(ContextVk *contextVk)
+{
+    contextVk->recycleCommandBuffer(this);
 }
 
 void CommandBufferHelper::resumeTransformFeedbackIfStarted()

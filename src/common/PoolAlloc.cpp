@@ -37,6 +37,13 @@ PoolAllocator::PoolAllocator(int growthIncrement, int allocationAlignment)
 #endif
       mLocked(false)
 {
+    initialize(growthIncrement, allocationAlignment);
+}
+
+void PoolAllocator::initialize(int pageSize, int alignment)
+{
+    mPageSize  = pageSize;
+    mAlignment = alignment;
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
     if (mAlignment == 1)
     {

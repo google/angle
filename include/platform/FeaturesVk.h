@@ -317,6 +317,13 @@ struct FeaturesVk : FeatureSetBase
         "Single barrier call is preferred over multiple calls with "
         "fine grained pipeline stage dependency information",
         &members, "http://anglebug.com/4633"};
+
+    // Enable parallel thread that processes and submits vulkan command buffers.
+    // Currently off by default to enable testing.
+    Feature enableCommandProcessingThread = {
+        "enable_command_processing_thread", FeatureCategory::VulkanFeatures,
+        "Enable parallel processing and submission of Vulkan commands in worker thread", &members,
+        "http://anglebug.com/4324"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
