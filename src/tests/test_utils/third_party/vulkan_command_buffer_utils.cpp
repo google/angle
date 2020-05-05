@@ -1562,12 +1562,11 @@ void init_pipeline(struct sample_info &info, VkBool32 include_depth, VkBool32 in
 {
     VkResult res;
 
-    VkDynamicState dynamicStateEnables[VK_DYNAMIC_STATE_RANGE_SIZE];
+    std::vector<VkDynamicState> dynamicStateEnables;
     VkPipelineDynamicStateCreateInfo dynamicState = {};
-    memset(dynamicStateEnables, 0, sizeof dynamicStateEnables);
     dynamicState.sType             = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
     dynamicState.pNext             = NULL;
-    dynamicState.pDynamicStates    = dynamicStateEnables;
+    dynamicState.pDynamicStates    = NULL;
     dynamicState.dynamicStateCount = 0;
 
     VkPipelineVertexInputStateCreateInfo vi;
@@ -1631,12 +1630,14 @@ void init_pipeline(struct sample_info &info, VkBool32 include_depth, VkBool32 in
     vp.pNext                             = NULL;
     vp.flags                             = 0;
 #ifndef __ANDROID__
-    vp.viewportCount                                      = NUM_VIEWPORTS;
-    dynamicStateEnables[dynamicState.dynamicStateCount++] = VK_DYNAMIC_STATE_VIEWPORT;
-    vp.scissorCount                                       = NUM_SCISSORS;
-    dynamicStateEnables[dynamicState.dynamicStateCount++] = VK_DYNAMIC_STATE_SCISSOR;
-    vp.pScissors                                          = NULL;
-    vp.pViewports                                         = NULL;
+    vp.viewportCount = NUM_VIEWPORTS;
+    dynamicState.dynamicStateCount++;
+    dynamicStateEnables.push_back(VK_DYNAMIC_STATE_VIEWPORT);
+    vp.scissorCount = NUM_SCISSORS;
+    dynamicState.dynamicStateCount++;
+    dynamicStateEnables.push_back(VK_DYNAMIC_STATE_SCISSOR);
+    vp.pScissors  = NULL;
+    vp.pViewports = NULL;
 #else
     // Temporary disabling dynamic viewport on Android because some of drivers doesn't
     // support the feature.
@@ -1709,6 +1710,12 @@ void init_pipeline(struct sample_info &info, VkBool32 include_depth, VkBool32 in
     pipeline.stageCount          = 2;
     pipeline.renderPass          = info.render_pass;
     pipeline.subpass             = 0;
+
+    if (dynamicStateEnables.size() > 0)
+    {
+        dynamicState.pDynamicStates    = dynamicStateEnables.data();
+        dynamicState.dynamicStateCount = dynamicStateEnables.size();
+    }
 
     res = vkCreateGraphicsPipelines(info.device, info.pipelineCache, 1, &pipeline, NULL,
                                     &info.pipeline);
