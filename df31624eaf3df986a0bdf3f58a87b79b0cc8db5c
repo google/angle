@@ -22,6 +22,30 @@
       "revId": "df31624eaf3df986a0bdf3f58a87b79b0cc8db5c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "992b910f_e4b6037f",
+        "filename": "src/libANGLE/renderer/vulkan/README.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-05-05T18:35:22Z",
+      "side": 1,
+      "message": "The header file is continuously evolving, we shouldn\u0027t bake line number in here. If you tell me what this is about, I can cover it in next CL.",
+      "parentUuid": "05dc2939_7855b61d",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 148
+      },
+      "revId": "df31624eaf3df986a0bdf3f58a87b79b0cc8db5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
