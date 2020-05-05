@@ -112,144 +112,6 @@ class CommandQueue final : angle::NonCopyable
     vk::PersistentCommandPool mPrimaryCommandPool;
 };
 
-struct CommandBufferHelper : angle::NonCopyable
-{
-  public:
-    CommandBufferHelper(bool canHaveRenderPass);
-    ~CommandBufferHelper();
-
-    // General Functions (non-renderPass specific)
-    void initialize(angle::PoolAllocator *poolAllocator);
-
-    void bufferRead(vk::ResourceUseList *resourceUseList,
-                    VkAccessFlags readAccessType,
-                    VkPipelineStageFlags readStage,
-                    vk::BufferHelper *buffer);
-    void bufferWrite(vk::ResourceUseList *resourceUseList,
-                     VkAccessFlags writeAccessType,
-                     VkPipelineStageFlags writeStage,
-                     vk::BufferHelper *buffer);
-
-    void imageRead(vk::ResourceUseList *resourceUseList,
-                   VkImageAspectFlags aspectFlags,
-                   vk::ImageLayout imageLayout,
-                   vk::ImageHelper *image);
-
-    void imageWrite(vk::ResourceUseList *resourceUseList,
-                    VkImageAspectFlags aspectFlags,
-                    vk::ImageLayout imageLayout,
-                    vk::ImageHelper *image);
-
-    void imageBarrier(VkPipelineStageFlags srcStageMask,
-                      VkPipelineStageFlags dstStageMask,
-                      const VkImageMemoryBarrier &imageMemoryBarrier);
-
-    vk::CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
-
-    angle::Result flushToPrimary(ContextVk *contextVk, vk::PrimaryCommandBuffer *primary);
-
-    void executeBarriers(vk::PrimaryCommandBuffer *primary);
-
-    bool empty() const { return (!mCommandBuffer.empty() || mRenderPassStarted) ? false : true; }
-
-    void reset();
-
-    // RenderPass related functions
-    bool started() const
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        return mRenderPassStarted;
-    }
-
-    void beginRenderPass(const vk::Framebuffer &framebuffer,
-                         const gl::Rectangle &renderArea,
-                         const vk::RenderPassDesc &renderPassDesc,
-                         const vk::AttachmentOpsArray &renderPassAttachmentOps,
-                         const vk::ClearValuesArray &clearValues,
-                         vk::CommandBuffer **commandBufferOut);
-
-    void beginTransformFeedback(size_t validBufferCount,
-                                const VkBuffer *counterBuffers,
-                                bool rebindBuffer);
-
-    void invalidateRenderPassColorAttachment(size_t attachmentIndex)
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
-    }
-
-    void invalidateRenderPassDepthAttachment(size_t attachmentIndex)
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
-    }
-
-    void invalidateRenderPassStencilAttachment(size_t attachmentIndex)
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        SetBitField(mAttachmentOps[attachmentIndex].stencilStoreOp,
-                    VK_ATTACHMENT_STORE_OP_DONT_CARE);
-    }
-
-    void updateRenderPassAttachmentFinalLayout(size_t attachmentIndex, vk::ImageLayout finalLayout)
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        SetBitField(mAttachmentOps[attachmentIndex].finalLayout, finalLayout);
-    }
-
-    const gl::Rectangle &getRenderArea() const
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        return mRenderArea;
-    }
-
-    void resumeTransformFeedbackIfStarted();
-    void pauseTransformFeedbackIfStarted();
-
-    uint32_t getAndResetCounter()
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        uint32_t count = mCounter;
-        mCounter       = 0;
-        return count;
-    }
-
-    VkFramebuffer getFramebufferHandle() const
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        return mFramebuffer.getHandle();
-    }
-
-  private:
-    void addCommandDiagnostics(ContextVk *contextVk);
-
-    // General state (non-renderPass related)
-    VkPipelineStageFlags mImageBarrierSrcStageMask;
-    VkPipelineStageFlags mImageBarrierDstStageMask;
-    std::vector<VkImageMemoryBarrier> mImageMemoryBarriers;
-    VkFlags mGlobalMemoryBarrierSrcAccess;
-    VkFlags mGlobalMemoryBarrierDstAccess;
-    VkPipelineStageFlags mGlobalMemoryBarrierSrcStages;
-    VkPipelineStageFlags mGlobalMemoryBarrierDstStages;
-    vk::CommandBuffer mCommandBuffer;
-
-    // RenderPass state
-    uint32_t mCounter;
-    vk::RenderPassDesc mRenderPassDesc;
-    vk::AttachmentOpsArray mAttachmentOps;
-    vk::Framebuffer mFramebuffer;
-    gl::Rectangle mRenderArea;
-    vk::ClearValuesArray mClearValues;
-    bool mRenderPassStarted;
-
-    // Transform feedback state
-    gl::TransformFeedbackBuffersArray<VkBuffer> mTransformFeedbackCounterBuffers;
-    uint32_t mValidTransformFeedbackBufferCount;
-    bool mRebindTransformFeedbackBuffers;
-
-    const bool mIsRenderPassCommandBuffer;
-};
-
 static constexpr uint32_t kMaxGpuEventNameLen = 32;
 using EventName                               = std::array<char, kMaxGpuEventNameLen>;
 
@@ -649,7 +511,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     bool hasStartedRenderPass() const { return !mRenderPassCommands.empty(); }
 
-    CommandBufferHelper &getStartedRenderPassCommands()
+    vk::CommandBufferHelper &getStartedRenderPassCommands()
     {
         ASSERT(hasStartedRenderPass());
         return mRenderPassCommands;
@@ -830,7 +692,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateActiveImages(const gl::Context *context,
-                                     CommandBufferHelper *commandBufferHelper);
+                                     vk::CommandBufferHelper *commandBufferHelper);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
     ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
@@ -893,9 +755,9 @@ class ContextVk : public ContextImpl, public vk::Context
                                                     vk::CommandBuffer *commandBuffer);
 
     // Common parts of the common dirty bit handlers.
-    angle::Result handleDirtyTexturesImpl(CommandBufferHelper *commandBufferHelper);
+    angle::Result handleDirtyTexturesImpl(vk::CommandBufferHelper *commandBufferHelper);
     angle::Result handleDirtyShaderResourcesImpl(const gl::Context *context,
-                                                 CommandBufferHelper *commandBufferHelper);
+                                                 vk::CommandBufferHelper *commandBufferHelper);
     void handleDirtyDriverUniformsBindingImpl(vk::CommandBuffer *commandBuffer,
                                               VkPipelineBindPoint bindPoint,
                                               const DriverUniformsDescriptorSet &driverUniforms);
@@ -1066,8 +928,8 @@ class ContextVk : public ContextImpl, public vk::Context
 
     // When the command graph is disabled we record commands completely linearly. We have plans to
     // reorder independent draws so that we can create fewer RenderPasses in some scenarios.
-    CommandBufferHelper mOutsideRenderPassCommands;
-    CommandBufferHelper mRenderPassCommands;
+    vk::CommandBufferHelper mOutsideRenderPassCommands;
+    vk::CommandBufferHelper mRenderPassCommands;
     vk::PrimaryCommandBuffer mPrimaryCommands;
     bool mHasPrimaryCommands;
 

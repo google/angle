@@ -124,9 +124,6 @@ constexpr size_t kDriverUniformsAllocatorPageSize = 4 * 1024;
 
 constexpr size_t kInFlightCommandsLimit = 100u;
 
-// Dumping the command stream is disabled by default.
-constexpr bool kEnableCommandStreamDiagnostics = false;
-
 void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
                           const vk::PrimaryCommandBuffer &commandBuffer,
                           const std::vector<VkSemaphore> &waitSemaphores,
@@ -189,30 +186,6 @@ void ApplySampleCoverage(const gl::State &glState,
     }
 
     *maskOut &= coverageMask;
-}
-
-char GetLoadOpShorthand(uint32_t loadOp)
-{
-    switch (loadOp)
-    {
-        case VK_ATTACHMENT_LOAD_OP_CLEAR:
-            return 'C';
-        case VK_ATTACHMENT_LOAD_OP_LOAD:
-            return 'L';
-        default:
-            return 'D';
-    }
-}
-
-char GetStoreOpShorthand(uint32_t storeOp)
-{
-    switch (storeOp)
-    {
-        case VK_ATTACHMENT_STORE_OP_STORE:
-            return 'S';
-        default:
-            return 'D';
-    }
 }
 
 // When an Android surface is rotated differently than the device's native orientation, ANGLE must
@@ -1301,7 +1274,7 @@ angle::Result ContextVk::handleDirtyComputePipeline(const gl::Context *context,
 }
 
 ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
-    CommandBufferHelper *commandBufferHelper)
+    vk::CommandBufferHelper *commandBufferHelper)
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
@@ -1424,7 +1397,7 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(const gl::Context *conte
 
 ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
     const gl::Context *context,
-    CommandBufferHelper *commandBufferHelper)
+    vk::CommandBufferHelper *commandBufferHelper)
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
@@ -1581,7 +1554,7 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     renderPassCount->add(mRenderPassCommands.getAndResetCounter());
     renderPassCount->next();
 
-    if (kEnableCommandStreamDiagnostics)
+    if (vk::CommandBufferHelper::kEnableCommandStreamDiagnostics)
     {
         dumpCommandStreamDiagnostics();
     }
@@ -3646,7 +3619,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 }
 
 angle::Result ContextVk::updateActiveImages(const gl::Context *context,
-                                            CommandBufferHelper *commandBufferHelper)
+                                            vk::CommandBufferHelper *commandBufferHelper)
 {
     const gl::State &glState                = mState;
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
@@ -4376,326 +4349,6 @@ void ContextVk::endOcclusionQuery(QueryVk *queryVk)
 bool ContextVk::isRobustResourceInitEnabled() const
 {
     return mState.isRobustResourceInitEnabled();
-}
-
-CommandBufferHelper::CommandBufferHelper(bool hasRenderPass)
-    : mImageBarrierSrcStageMask(0),
-      mImageBarrierDstStageMask(0),
-      mGlobalMemoryBarrierSrcAccess(0),
-      mGlobalMemoryBarrierDstAccess(0),
-      mGlobalMemoryBarrierSrcStages(0),
-      mGlobalMemoryBarrierDstStages(0),
-      mCounter(0),
-      mClearValues{},
-      mRenderPassStarted(false),
-      mTransformFeedbackCounterBuffers{},
-      mValidTransformFeedbackBufferCount(0),
-      mRebindTransformFeedbackBuffers(false),
-      mIsRenderPassCommandBuffer(hasRenderPass)
-{}
-
-CommandBufferHelper::~CommandBufferHelper()
-{
-    mFramebuffer.setHandle(VK_NULL_HANDLE);
-}
-
-void CommandBufferHelper::initialize(angle::PoolAllocator *poolAllocator)
-{
-    mCommandBuffer.initialize(poolAllocator);
-}
-
-void CommandBufferHelper::bufferRead(vk::ResourceUseList *resourceUseList,
-                                     VkAccessFlags readAccessType,
-                                     VkPipelineStageFlags readStage,
-                                     vk::BufferHelper *buffer)
-{
-    buffer->retain(resourceUseList);
-    buffer->updateReadBarrier(readAccessType, &mGlobalMemoryBarrierSrcAccess,
-                              &mGlobalMemoryBarrierDstAccess, readStage,
-                              &mGlobalMemoryBarrierSrcStages, &mGlobalMemoryBarrierDstStages);
-}
-
-void CommandBufferHelper::bufferWrite(vk::ResourceUseList *resourceUseList,
-                                      VkAccessFlags writeAccessType,
-                                      VkPipelineStageFlags writeStage,
-                                      vk::BufferHelper *buffer)
-{
-    buffer->retain(resourceUseList);
-    buffer->updateWriteBarrier(writeAccessType, &mGlobalMemoryBarrierSrcAccess,
-                               &mGlobalMemoryBarrierDstAccess, writeStage,
-                               &mGlobalMemoryBarrierSrcStages, &mGlobalMemoryBarrierDstStages);
-}
-
-void CommandBufferHelper::imageBarrier(VkPipelineStageFlags srcStageMask,
-                                       VkPipelineStageFlags dstStageMask,
-                                       const VkImageMemoryBarrier &imageMemoryBarrier)
-{
-    ASSERT(imageMemoryBarrier.pNext == nullptr);
-    mImageBarrierSrcStageMask |= srcStageMask;
-    mImageBarrierDstStageMask |= dstStageMask;
-    mImageMemoryBarriers.push_back(imageMemoryBarrier);
-}
-
-void CommandBufferHelper::imageRead(vk::ResourceUseList *resourceUseList,
-                                    VkImageAspectFlags aspectFlags,
-                                    vk::ImageLayout imageLayout,
-                                    vk::ImageHelper *image)
-{
-    image->retain(resourceUseList);
-    if (image->isLayoutChangeNecessary(imageLayout))
-    {
-        image->changeLayout(aspectFlags, imageLayout, this);
-    }
-}
-
-void CommandBufferHelper::imageWrite(vk::ResourceUseList *resourceUseList,
-                                     VkImageAspectFlags aspectFlags,
-                                     vk::ImageLayout imageLayout,
-                                     vk::ImageHelper *image)
-{
-    image->retain(resourceUseList);
-    image->changeLayout(aspectFlags, imageLayout, this);
-}
-
-void CommandBufferHelper::executeBarriers(vk::PrimaryCommandBuffer *primary)
-{
-    if (mImageMemoryBarriers.empty() && mGlobalMemoryBarrierSrcAccess == 0)
-    {
-        return;
-    }
-
-    VkPipelineStageFlags srcStages = 0;
-    VkPipelineStageFlags dstStages = 0;
-
-    VkMemoryBarrier memoryBarrier = {};
-    uint32_t memoryBarrierCount   = 0;
-
-    if (mGlobalMemoryBarrierSrcAccess != 0)
-    {
-        memoryBarrier.sType         = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
-        memoryBarrier.srcAccessMask = mGlobalMemoryBarrierSrcAccess;
-        memoryBarrier.dstAccessMask = mGlobalMemoryBarrierDstAccess;
-
-        memoryBarrierCount++;
-        srcStages |= mGlobalMemoryBarrierSrcStages;
-        dstStages |= mGlobalMemoryBarrierDstStages;
-
-        mGlobalMemoryBarrierSrcAccess = 0;
-        mGlobalMemoryBarrierDstAccess = 0;
-        mGlobalMemoryBarrierSrcStages = 0;
-        mGlobalMemoryBarrierDstStages = 0;
-    }
-
-    srcStages |= mImageBarrierSrcStageMask;
-    dstStages |= mImageBarrierDstStageMask;
-    primary->pipelineBarrier(srcStages, dstStages, 0, memoryBarrierCount, &memoryBarrier, 0,
-                             nullptr, static_cast<uint32_t>(mImageMemoryBarriers.size()),
-                             mImageMemoryBarriers.data());
-    mImageMemoryBarriers.clear();
-    mImageBarrierSrcStageMask = 0;
-    mImageBarrierDstStageMask = 0;
-}
-
-void CommandBufferHelper::beginRenderPass(const vk::Framebuffer &framebuffer,
-                                          const gl::Rectangle &renderArea,
-                                          const vk::RenderPassDesc &renderPassDesc,
-                                          const vk::AttachmentOpsArray &renderPassAttachmentOps,
-                                          const vk::ClearValuesArray &clearValues,
-                                          vk::CommandBuffer **commandBufferOut)
-{
-    ASSERT(mIsRenderPassCommandBuffer);
-    ASSERT(empty());
-
-    mRenderPassDesc = renderPassDesc;
-    mAttachmentOps  = renderPassAttachmentOps;
-    mFramebuffer.setHandle(framebuffer.getHandle());
-    mRenderArea  = renderArea;
-    mClearValues = clearValues;
-
-    *commandBufferOut = &mCommandBuffer;
-
-    mRenderPassStarted = true;
-    mCounter++;
-}
-
-void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
-                                                 const VkBuffer *counterBuffers,
-                                                 bool rebindBuffer)
-{
-    ASSERT(mIsRenderPassCommandBuffer);
-    mValidTransformFeedbackBufferCount = static_cast<uint32_t>(validBufferCount);
-    mRebindTransformFeedbackBuffers    = rebindBuffer;
-
-    for (size_t index = 0; index < validBufferCount; index++)
-    {
-        mTransformFeedbackCounterBuffers[index] = counterBuffers[index];
-    }
-}
-
-angle::Result CommandBufferHelper::flushToPrimary(ContextVk *contextVk,
-                                                  vk::PrimaryCommandBuffer *primary)
-{
-    ASSERT(!empty());
-
-    if (kEnableCommandStreamDiagnostics)
-    {
-        addCommandDiagnostics(contextVk);
-    }
-    // Commands that are added to primary before beginRenderPass command
-    executeBarriers(primary);
-
-    if (mIsRenderPassCommandBuffer)
-    {
-        mCommandBuffer.executeQueuedResetQueryPoolCommands(primary->getHandle());
-        // Pull a RenderPass from the cache.
-        RenderPassCache &renderPassCache = contextVk->getRenderPassCache();
-        Serial serial                    = contextVk->getCurrentQueueSerial();
-
-        vk::RenderPass *renderPass = nullptr;
-        ANGLE_TRY(renderPassCache.getRenderPassWithOps(contextVk, serial, mRenderPassDesc,
-                                                       mAttachmentOps, &renderPass));
-
-        VkRenderPassBeginInfo beginInfo    = {};
-        beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        beginInfo.renderPass               = renderPass->getHandle();
-        beginInfo.framebuffer              = mFramebuffer.getHandle();
-        beginInfo.renderArea.offset.x      = static_cast<uint32_t>(mRenderArea.x);
-        beginInfo.renderArea.offset.y      = static_cast<uint32_t>(mRenderArea.y);
-        beginInfo.renderArea.extent.width  = static_cast<uint32_t>(mRenderArea.width);
-        beginInfo.renderArea.extent.height = static_cast<uint32_t>(mRenderArea.height);
-        beginInfo.clearValueCount = static_cast<uint32_t>(mRenderPassDesc.attachmentCount());
-        beginInfo.pClearValues    = mClearValues.data();
-
-        // Run commands inside the RenderPass.
-        primary->beginRenderPass(beginInfo, VK_SUBPASS_CONTENTS_INLINE);
-        mCommandBuffer.executeCommands(primary->getHandle());
-        primary->endRenderPass();
-
-        if (mValidTransformFeedbackBufferCount != 0)
-        {
-            // Would be better to accumulate this barrier using the command APIs.
-            // TODO: Clean thus up before we close http://anglebug.com/3206
-            VkBufferMemoryBarrier bufferBarrier = {};
-            bufferBarrier.sType                 = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
-            bufferBarrier.pNext                 = nullptr;
-            bufferBarrier.srcAccessMask       = VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT;
-            bufferBarrier.dstAccessMask       = VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT;
-            bufferBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-            bufferBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-            bufferBarrier.buffer              = mTransformFeedbackCounterBuffers[0];
-            bufferBarrier.offset              = 0;
-            bufferBarrier.size                = VK_WHOLE_SIZE;
-
-            primary->pipelineBarrier(VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT,
-                                     VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT, 0u, 0u, nullptr, 1u,
-                                     &bufferBarrier, 0u, nullptr);
-        }
-    }
-    else
-    {
-        mCommandBuffer.executeCommands(primary->getHandle());
-    }
-    // Restart the command buffer.
-    reset();
-
-    return angle::Result::Continue;
-}
-
-void CommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
-{
-    std::ostringstream out;
-    if (mGlobalMemoryBarrierSrcAccess != 0 || mGlobalMemoryBarrierDstAccess != 0)
-    {
-        out << "Memory Barrier Src: 0x" << std::hex << mGlobalMemoryBarrierSrcAccess
-            << " &rarr; Dst: 0x" << std::hex << mGlobalMemoryBarrierDstAccess << "\\l";
-    }
-    if (mIsRenderPassCommandBuffer)
-    {
-        size_t attachmentCount             = mRenderPassDesc.attachmentCount();
-        size_t depthStencilAttachmentCount = mRenderPassDesc.hasDepthStencilAttachment();
-        size_t colorAttachmentCount        = attachmentCount - depthStencilAttachmentCount;
-
-        std::string loadOps, storeOps;
-
-        if (colorAttachmentCount > 0)
-        {
-            loadOps += " Color: ";
-            storeOps += " Color: ";
-
-            for (size_t i = 0; i < colorAttachmentCount; ++i)
-            {
-                loadOps += GetLoadOpShorthand(mAttachmentOps[i].loadOp);
-                storeOps += GetStoreOpShorthand(mAttachmentOps[i].storeOp);
-            }
-        }
-
-        if (depthStencilAttachmentCount > 0)
-        {
-            ASSERT(depthStencilAttachmentCount == 1);
-
-            loadOps += " Depth/Stencil: ";
-            storeOps += " Depth/Stencil: ";
-            size_t dsIndex = colorAttachmentCount;
-
-            loadOps += GetLoadOpShorthand(mAttachmentOps[dsIndex].loadOp);
-            loadOps += GetLoadOpShorthand(mAttachmentOps[dsIndex].stencilLoadOp);
-
-            storeOps += GetStoreOpShorthand(mAttachmentOps[dsIndex].storeOp);
-            storeOps += GetStoreOpShorthand(mAttachmentOps[dsIndex].stencilStoreOp);
-        }
-
-        if (attachmentCount > 0)
-        {
-            out << "LoadOp:  " << loadOps << "\\l";
-            out << "StoreOp: " << storeOps << "\\l";
-        }
-    }
-    out << mCommandBuffer.dumpCommands("\\l");
-    contextVk->addCommandBufferDiagnostics(out.str());
-}
-
-void CommandBufferHelper::reset()
-{
-    mCommandBuffer.reset();
-    if (mIsRenderPassCommandBuffer)
-    {
-        mRenderPassStarted                 = false;
-        mValidTransformFeedbackBufferCount = 0;
-        mRebindTransformFeedbackBuffers    = false;
-    }
-    // This state should never change for non-renderPass command buffer
-    ASSERT(mRenderPassStarted == false);
-    ASSERT(mValidTransformFeedbackBufferCount == 0);
-    ASSERT(mRebindTransformFeedbackBuffers == false);
-}
-
-void CommandBufferHelper::resumeTransformFeedbackIfStarted()
-{
-    ASSERT(mIsRenderPassCommandBuffer);
-    if (mValidTransformFeedbackBufferCount == 0)
-    {
-        return;
-    }
-
-    uint32_t numCounterBuffers =
-        mRebindTransformFeedbackBuffers ? 0 : mValidTransformFeedbackBufferCount;
-
-    mRebindTransformFeedbackBuffers = false;
-
-    mCommandBuffer.beginTransformFeedback(numCounterBuffers,
-                                          mTransformFeedbackCounterBuffers.data());
-}
-
-void CommandBufferHelper::pauseTransformFeedbackIfStarted()
-{
-    ASSERT(mIsRenderPassCommandBuffer);
-    if (mValidTransformFeedbackBufferCount == 0)
-    {
-        return;
-    }
-
-    mCommandBuffer.endTransformFeedback(mValidTransformFeedbackBufferCount,
-                                        mTransformFeedbackCounterBuffers.data());
 }
 
 }  // namespace rx

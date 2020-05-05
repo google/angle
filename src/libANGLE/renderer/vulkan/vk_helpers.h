@@ -678,6 +678,155 @@ class BufferHelper final : public Resource
     VkPipelineStageFlags mCurrentReadStages;
 };
 
+// CommandBufferHelper (CBH) class wraps ANGLE's custom command buffer
+//  class, SecondaryCommandBuffer. This provides a way to temporarily
+//  store Vulkan commands that be can submitted in-line to a primary
+//  command buffer at a later time.
+// The current plan is for the main ANGLE thread to record commands
+//  into the CBH and then pass the CBH off to a worker thread that will
+//  process the commands into a primary command buffer and then submit
+//  those commands to the queue.
+struct CommandBufferHelper : angle::NonCopyable
+{
+  public:
+    CommandBufferHelper(bool canHaveRenderPass);
+    ~CommandBufferHelper();
+
+    // General Functions (non-renderPass specific)
+    void initialize(angle::PoolAllocator *poolAllocator);
+
+    void bufferRead(vk::ResourceUseList *resourceUseList,
+                    VkAccessFlags readAccessType,
+                    VkPipelineStageFlags readStage,
+                    vk::BufferHelper *buffer);
+    void bufferWrite(vk::ResourceUseList *resourceUseList,
+                     VkAccessFlags writeAccessType,
+                     VkPipelineStageFlags writeStage,
+                     vk::BufferHelper *buffer);
+
+    void imageRead(vk::ResourceUseList *resourceUseList,
+                   VkImageAspectFlags aspectFlags,
+                   vk::ImageLayout imageLayout,
+                   vk::ImageHelper *image);
+
+    void imageWrite(vk::ResourceUseList *resourceUseList,
+                    VkImageAspectFlags aspectFlags,
+                    vk::ImageLayout imageLayout,
+                    vk::ImageHelper *image);
+
+    void imageBarrier(VkPipelineStageFlags srcStageMask,
+                      VkPipelineStageFlags dstStageMask,
+                      const VkImageMemoryBarrier &imageMemoryBarrier);
+
+    vk::CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
+
+    angle::Result flushToPrimary(ContextVk *contextVk, vk::PrimaryCommandBuffer *primary);
+
+    void executeBarriers(vk::PrimaryCommandBuffer *primary);
+
+    bool empty() const { return (!mCommandBuffer.empty() || mRenderPassStarted) ? false : true; }
+
+    void reset();
+
+    // RenderPass related functions
+    bool started() const
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        return mRenderPassStarted;
+    }
+
+    void beginRenderPass(const vk::Framebuffer &framebuffer,
+                         const gl::Rectangle &renderArea,
+                         const vk::RenderPassDesc &renderPassDesc,
+                         const vk::AttachmentOpsArray &renderPassAttachmentOps,
+                         const vk::ClearValuesArray &clearValues,
+                         vk::CommandBuffer **commandBufferOut);
+
+    void beginTransformFeedback(size_t validBufferCount,
+                                const VkBuffer *counterBuffers,
+                                bool rebindBuffer);
+
+    void invalidateRenderPassColorAttachment(size_t attachmentIndex)
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
+    }
+
+    void invalidateRenderPassDepthAttachment(size_t attachmentIndex)
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
+    }
+
+    void invalidateRenderPassStencilAttachment(size_t attachmentIndex)
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        SetBitField(mAttachmentOps[attachmentIndex].stencilStoreOp,
+                    VK_ATTACHMENT_STORE_OP_DONT_CARE);
+    }
+
+    void updateRenderPassAttachmentFinalLayout(size_t attachmentIndex, vk::ImageLayout finalLayout)
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        SetBitField(mAttachmentOps[attachmentIndex].finalLayout, finalLayout);
+    }
+
+    const gl::Rectangle &getRenderArea() const
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        return mRenderArea;
+    }
+
+    void resumeTransformFeedbackIfStarted();
+    void pauseTransformFeedbackIfStarted();
+
+    uint32_t getAndResetCounter()
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        uint32_t count = mCounter;
+        mCounter       = 0;
+        return count;
+    }
+
+    VkFramebuffer getFramebufferHandle() const
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        return mFramebuffer.getHandle();
+    }
+
+    // Dumping the command stream is disabled by default.
+    static constexpr bool kEnableCommandStreamDiagnostics = false;
+
+  private:
+    void addCommandDiagnostics(ContextVk *contextVk);
+
+    // General state (non-renderPass related)
+    VkPipelineStageFlags mImageBarrierSrcStageMask;
+    VkPipelineStageFlags mImageBarrierDstStageMask;
+    std::vector<VkImageMemoryBarrier> mImageMemoryBarriers;
+    VkFlags mGlobalMemoryBarrierSrcAccess;
+    VkFlags mGlobalMemoryBarrierDstAccess;
+    VkPipelineStageFlags mGlobalMemoryBarrierSrcStages;
+    VkPipelineStageFlags mGlobalMemoryBarrierDstStages;
+    vk::CommandBuffer mCommandBuffer;
+
+    // RenderPass state
+    uint32_t mCounter;
+    vk::RenderPassDesc mRenderPassDesc;
+    vk::AttachmentOpsArray mAttachmentOps;
+    vk::Framebuffer mFramebuffer;
+    gl::Rectangle mRenderArea;
+    vk::ClearValuesArray mClearValues;
+    bool mRenderPassStarted;
+
+    // Transform feedback state
+    gl::TransformFeedbackBuffersArray<VkBuffer> mTransformFeedbackCounterBuffers;
+    uint32_t mValidTransformFeedbackBufferCount;
+    bool mRebindTransformFeedbackBuffers;
+
+    const bool mIsRenderPassCommandBuffer;
+};
+
 // Imagine an image going through a few layout transitions:
 //
 //           srcStage 1    dstStage 2          srcStage 2     dstStage 3

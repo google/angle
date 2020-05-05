@@ -865,7 +865,7 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
 void ProgramExecutableVk::updateBuffersDescriptorSet(ContextVk *contextVk,
                                                      const gl::ShaderType shaderType,
                                                      vk::ResourceUseList *resourceUseList,
-                                                     CommandBufferHelper *commandBufferHelper,
+                                                     vk::CommandBufferHelper *commandBufferHelper,
                                                      const std::vector<gl::InterfaceBlock> &blocks,
                                                      VkDescriptorType descriptorType)
 {
@@ -965,7 +965,7 @@ void ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
     const gl::ShaderType shaderType,
     ContextVk *contextVk,
     vk::ResourceUseList *resourceUseList,
-    CommandBufferHelper *commandBufferHelper)
+    vk::CommandBufferHelper *commandBufferHelper)
 {
     const gl::State &glState = contextVk->getState();
     const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers =
@@ -1145,7 +1145,7 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(const gl::ProgramSt
 angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     ContextVk *contextVk,
     vk::ResourceUseList *resourceUseList,
-    CommandBufferHelper *commandBufferHelper)
+    vk::CommandBufferHelper *commandBufferHelper)
 {
     const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
     ASSERT(executable);
