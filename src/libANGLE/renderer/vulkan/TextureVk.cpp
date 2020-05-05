@@ -1216,6 +1216,9 @@ angle::Result TextureVk::copyAndStageImageSubresource(ContextVk *contextVk,
     uint32_t bufferImageHeight = updatedExtents.height;
     if (desc.format.info->compressed)
     {
+        // In the case of a compressed texture, bufferRowLength can never be smaller than the
+        // compressed format's compressed block width, and bufferImageHeight can never be smaller
+        // than the compressed block height.
         bufferRowLength   = std::max(bufferRowLength, desc.format.info->compressedBlockWidth);
         bufferImageHeight = std::max(bufferImageHeight, desc.format.info->compressedBlockHeight);
     }
