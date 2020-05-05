@@ -238,7 +238,10 @@ template("angle_perftests_common") {
       "perf_tests/third_party/perf/perf_test.cc",
       "perf_tests/third_party/perf/perf_test.h",
     ]
-    deps = [ "$angle_jsoncpp_dir:jsoncpp" ]
+    deps = [
+      "$angle_jsoncpp_dir:jsoncpp",
+      "$angle_root/util:angle_png_utils",
+    ]
     public_deps = [ "${invoker.test_utils}" ]
     public_configs += [ "${angle_root}:libANGLE_config" ]
   }

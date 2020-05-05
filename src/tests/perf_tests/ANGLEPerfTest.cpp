@@ -16,6 +16,7 @@
 #include "common/utilities.h"
 #include "third_party/perf/perf_test.h"
 #include "third_party/trace_event/trace_event.h"
+#include "util/png_utils.h"
 #include "util/shader_utils.h"
 #include "util/test_utils.h"
 
@@ -237,6 +238,12 @@ void ANGLEPerfTest::run()
     else
     {
         mStepsToRun = gStepsToRunOverride;
+    }
+
+    // Check again for early exit.
+    if (mSkipTest)
+    {
+        return;
     }
 
     // Do another warmup run. Seems to consistently improve results.
@@ -647,6 +654,10 @@ void ANGLERenderTest::step()
     else
     {
         drawBenchmark();
+
+        // Saves a screenshot. The test will also exit early if we're taking screenshots.
+        saveScreenshotIfEnabled();
+
         // Swap is needed so that the GPU driver will occasionally flush its
         // internal command queue to the GPU. This is enabled for null back-end
         // devices because some back-ends (e.g. Vulkan) also accumulate internal
@@ -745,6 +756,33 @@ void ANGLERenderTest::setRobustResourceInit(bool enabled)
 std::vector<TraceEvent> &ANGLERenderTest::getTraceEventBuffer()
 {
     return mTraceEventBuffer;
+}
+
+void ANGLERenderTest::saveScreenshotIfEnabled()
+{
+    if (gScreenShotDir == nullptr)
+    {
+        return;
+    }
+
+    std::stringstream screenshotNameStr;
+    screenshotNameStr << gScreenShotDir << GetPathSeparator() << "angle" << mBackend << "_"
+                      << mStory << ".png";
+    std::string screenshotName = screenshotNameStr.str();
+
+    // RGBA 4-byte data.
+    std::vector<uint8_t> pixelData(mTestParams.windowWidth * mTestParams.windowHeight * 4);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glReadPixels(0, 0, mTestParams.windowWidth, mTestParams.windowHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelData.data());
+
+    angle::SavePNG(screenshotName.c_str(), "ANGLE Screenshot", mTestParams.windowWidth,
+                   mTestParams.windowHeight, pixelData);
+
+    // Early exit.
+    abortTest();
+    mSkipTest = true;
 }
 
 namespace angle

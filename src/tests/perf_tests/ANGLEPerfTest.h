@@ -69,6 +69,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     virtual void startTest() {}
     // Called right before timer is stopped to let the test wait for asynchronous operations.
     virtual void finishTest() {}
+    virtual void flush() {}
 
   protected:
     void run();
@@ -152,6 +153,8 @@ class ANGLERenderTest : public ANGLEPerfTest
     void endGLTraceEvent(const char *name, double hostTimeSec);
 
     bool mIsTimestampQueryAvailable;
+
+    void saveScreenshotIfEnabled();
 
   private:
     void SetUp() override;
