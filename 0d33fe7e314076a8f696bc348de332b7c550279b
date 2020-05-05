@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "6c1b8575_eef6351c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-05-05T04:53:50Z",
+      "side": 1,
+      "message": "I\u0027m a bit too late, but that explanation could have been good as a comment in the code.",
+      "parentUuid": "a4146a63_325a4619",
+      "range": {
+        "startLine": 1218,
+        "startChar": 28,
+        "endLine": 1218,
+        "endChar": 36
+      },
+      "revId": "0d33fe7e314076a8f696bc348de332b7c550279b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf986c17_74e13026",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 1
