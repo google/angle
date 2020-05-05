@@ -1,10 +1,10 @@
 {
   "src/tests/perf_tests/restricted_traces/gen_restricted_traces.py":
-    "9cd5b4fa06f8d53fc7ae5ce3059efeaa",
+    "fc94f7c9564851007a2cc948ec294763",
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
-    "b73081e6815268e7712599d83f4bfb7c",
+    "2ec0b24146fae188133760e75ed3c2a7",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.gni":
-    "00afbfd7987ff25af045af104477a680",
+    "03132a8daefaad262bb235e3752cea32",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.h":
-    "d0b8cfda99009a6e042989ffa0ea3608"
+    "bd774aa39eccb200671a7ee7a95151a5"
 }

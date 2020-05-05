@@ -11,6 +11,7 @@
 #define ANGLE_RESTRICTED_TRACES_H_
 
 #include "manhattan_10/manhattan_10_capture_context1.h"
+#include "temple_run_300/temple_run_300_capture_context1.h"
 #include "trex_200/trex_200_capture_context1.h"
 
 namespace angle
@@ -18,12 +19,14 @@ namespace angle
 enum class RestrictedTraceID
 {
     manhattan_10,
+    temple_run_300,
     trex_200,
     InvalidEnum,
     EnumCount = InvalidEnum
 };
 
 using ReplayFunc           = void (*)(uint32_t);
+using ResetFunc            = void (*)();
 using SetupFunc            = void (*)();
 using DecompressFunc       = uint8_t *(*)(const std::vector<uint8_t> &);
 using SetBinaryDataDirFunc = void (*)(const char *);
@@ -40,6 +43,8 @@ struct TraceInfo
 constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::manhattan_10,
      {manhattan_10::kReplayFrameStart, manhattan_10::kReplayFrameEnd, "manhattan_10"}},
+    {RestrictedTraceID::temple_run_300,
+     {temple_run_300::kReplayFrameStart, temple_run_300::kReplayFrameEnd, "temple_run_300"}},
     {RestrictedTraceID::trex_200,
      {trex_200::kReplayFrameStart, trex_200::kReplayFrameEnd, "trex_200"}}};
 
@@ -53,8 +58,31 @@ inline void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::temple_run_300:
+            temple_run_300::ReplayContext1Frame(frameIndex);
+            break;
         case RestrictedTraceID::trex_200:
             trex_200::ReplayContext1Frame(frameIndex);
+            break;
+        default:
+            fprintf(stderr, "Error in switch.\n");
+            assert(0);
+            break;
+    }
+}
+
+inline void ResetReplay(RestrictedTraceID traceID)
+{
+    switch (traceID)
+    {
+        case RestrictedTraceID::manhattan_10:
+            manhattan_10::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::temple_run_300:
+            temple_run_300::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::trex_200:
+            trex_200::ResetContext1Replay();
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -69,6 +97,9 @@ inline void SetupReplay(RestrictedTraceID traceID)
     {
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetupContext1Replay();
+            break;
+        case RestrictedTraceID::temple_run_300:
+            temple_run_300::SetupContext1Replay();
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetupContext1Replay();
@@ -87,6 +118,9 @@ inline void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::temple_run_300:
+            temple_run_300::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::trex_200:
             trex_200::SetBinaryDataDir(dataDir);
             break;
@@ -103,6 +137,9 @@ inline void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, Decompres
     {
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::temple_run_300:
+            temple_run_300::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetBinaryDataDecompressCallback(callback);
@@ -122,6 +159,9 @@ inline void SetFramebufferChangeCallback(RestrictedTraceID traceID,
     {
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetFramebufferChangeCallback(userData, callback);
+            break;
+        case RestrictedTraceID::temple_run_300:
+            temple_run_300::SetFramebufferChangeCallback(userData, callback);
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetFramebufferChangeCallback(userData, callback);
