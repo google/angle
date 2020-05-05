@@ -388,6 +388,11 @@ size_t Image::getHeight() const
     return mState.size.height;
 }
 
+bool Image::isLayered() const
+{
+    return mState.imageIndex.isLayered();
+}
+
 size_t Image::getSamples() const
 {
     return mState.samples;

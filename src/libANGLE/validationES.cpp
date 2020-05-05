@@ -3580,6 +3580,13 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
             }
             break;
 
+        case TextureType::_2DArray:
+            if (!context->getExtensions().eglImageArray)
+            {
+                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+            }
+            break;
+
         case TextureType::External:
             if (!context->getExtensions().eglImageExternalOES)
             {
@@ -3610,6 +3617,13 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
     if (!imageObject->isTexturable(context))
     {
         context->validationError(GL_INVALID_OPERATION, kEGLImageTextureFormatNotSupported);
+        return false;
+    }
+
+    if (imageObject->isLayered() && type != TextureType::_2DArray)
+    {
+        context->validationError(GL_INVALID_OPERATION,
+                                 "Image has more than 1 layer, target must be TEXTURE_2D_ARRAY");
         return false;
     }
 

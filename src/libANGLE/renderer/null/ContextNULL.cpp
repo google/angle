@@ -99,6 +99,7 @@ ContextNULL::ContextNULL(const gl::State &state,
     mExtensions.eglImageOES                 = true;
     mExtensions.eglImageExternalOES         = true;
     mExtensions.eglImageExternalEssl3OES    = true;
+    mExtensions.eglImageArray               = true;
     mExtensions.eglStreamConsumerExternalNV = true;
 
     const gl::Version maxClientVersion(3, 1);

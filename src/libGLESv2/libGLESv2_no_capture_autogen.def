@@ -602,6 +602,8 @@ EXPORTS
     ; GL_CHROMIUM_lose_context
     glLoseContextCHROMIUM
 
+    ; GL_EXT_EGL_image_array
+
     ; GL_EXT_blend_func_extended
     glBindFragDataLocationEXT
     glBindFragDataLocationIndexedEXT

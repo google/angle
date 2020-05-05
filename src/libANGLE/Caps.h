@@ -501,6 +501,9 @@ struct Extensions
     // GL_CHROMIUM_color_buffer_float_rgba
     bool colorBufferFloatRGBA = false;
 
+    // GL_EXT_EGL_image_array
+    bool eglImageArray = false;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

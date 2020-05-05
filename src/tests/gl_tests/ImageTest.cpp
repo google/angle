@@ -25,6 +25,7 @@ constexpr char kPixmapExt[]            = "EGL_KHR_image_pixmap";
 constexpr char kRenderbufferExt[]      = "EGL_KHR_gl_renderbuffer_image";
 constexpr char kCubemapExt[]           = "EGL_KHR_gl_texture_cubemap_image";
 constexpr char kImageGLColorspaceExt[] = "EGL_EXT_image_gl_colorspace";
+constexpr char kEGLImageArrayExt[]     = "GL_EXT_EGL_image_array";
 constexpr EGLint kDefaultAttribs[]     = {
     EGL_IMAGE_PRESERVED,
     EGL_TRUE,
@@ -62,6 +63,15 @@ class ImageTest : public ANGLETest
             "    texcoord = (position.xy * 0.5) + 0.5;\n"
             "    texcoord.y = 1.0 - texcoord.y;\n"
             "}\n";
+        constexpr char kVS2DArray[] =
+            "#version 300 es\n"
+            "out vec2 texcoord;\n"
+            "in vec4 position;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+            "    texcoord = (position.xy * 0.5) + 0.5;\n"
+            "}\n";
         constexpr char kVSESSL3[] =
             "#version 300 es\n"
             "precision highp float;\n"
@@ -83,6 +93,16 @@ class ImageTest : public ANGLETest
             "void main()\n"
             "{\n"
             "    gl_FragColor = texture2D(tex, texcoord);\n"
+            "}\n";
+        constexpr char kTexture2DArrayFS[] =
+            "#version 300 es\n"
+            "precision highp float;\n"
+            "uniform highp sampler2DArray tex2DArray;\n"
+            "in vec2 texcoord;\n"
+            "out vec4 fragColor;\n"
+            "void main()\n"
+            "{\n"
+            "    fragColor = texture(tex2DArray, vec3(texcoord.x, texcoord.y, 0.0));\n"
             "}\n";
         constexpr char kTextureExternalFS[] =
             "#extension GL_OES_EGL_image_external : require\n"
@@ -114,6 +134,18 @@ class ImageTest : public ANGLETest
         }
 
         mTextureUniformLocation = glGetUniformLocation(mTextureProgram, "tex");
+
+        if (getClientMajorVersion() >= 3)
+        {
+            m2DArrayTextureProgram = CompileProgram(kVS2DArray, kTexture2DArrayFS);
+            if (m2DArrayTextureProgram == 0)
+            {
+                FAIL() << "shader compilation failed.";
+            }
+
+            m2DArrayTextureUniformLocation =
+                glGetUniformLocation(m2DArrayTextureProgram, "tex2DArray");
+        }
 
         if (IsGLExtensionEnabled("GL_OES_EGL_image_external"))
         {
@@ -316,6 +348,23 @@ class ImageTest : public ANGLETest
         *outTargetTexture = target;
     }
 
+    void createEGLImageTargetTexture2DArray(EGLImageKHR image, GLuint *outTargetTexture)
+    {
+        // Create a target texture from the image
+        GLuint target;
+        glGenTextures(1, &target);
+        glBindTexture(GL_TEXTURE_2D_ARRAY, target);
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D_ARRAY, image);
+
+        // Disable mipmapping
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        ASSERT_GL_NO_ERROR();
+
+        *outTargetTexture = target;
+    }
+
     void createEGLImageTargetTextureExternal(EGLImageKHR image, GLuint *outTargetTexture)
     {
         // Create a target texture from the image
@@ -348,6 +397,7 @@ class ImageTest : public ANGLETest
 
     void ValidationGLEGLImage_helper(const EGLint *attribs);
     void Source2DTarget2D_helper(const EGLint *attribs);
+    void Source2DTarget2DArray_helper(const EGLint *attribs);
     void Source2DTargetRenderbuffer_helper(const EGLint *attribs);
     void Source2DTargetExternal_helper(const EGLint *attribs);
     void Source2DTargetExternalESSL3_helper(const EGLint *attribs);
@@ -385,6 +435,12 @@ class ImageTest : public ANGLETest
     {
         verifyResultsTexture(texture, data, GL_TEXTURE_2D, mTextureProgram,
                              mTextureUniformLocation);
+    }
+
+    void verifyResults2DArray(GLuint texture, GLubyte data[4])
+    {
+        verifyResultsTexture(texture, data, GL_TEXTURE_2D_ARRAY, m2DArrayTextureProgram,
+                             m2DArrayTextureUniformLocation);
     }
 
     void verifyResultsExternal(GLuint texture, GLubyte data[4])
@@ -427,6 +483,8 @@ class ImageTest : public ANGLETest
     {
         return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kImageGLColorspaceExt);
     }
+
+    bool hasEglImageArrayExt() const { return IsGLExtensionEnabled(kEGLImageArrayExt); }
 
     bool hasOESExt() const { return IsGLExtensionEnabled(kOESExt); }
 
@@ -489,7 +547,9 @@ class ImageTest : public ANGLETest
         EGL_NONE,
     };
     GLuint mTextureProgram;
+    GLuint m2DArrayTextureProgram;
     GLint mTextureUniformLocation;
+    GLuint m2DArrayTextureUniformLocation;
 
     GLuint mTextureExternalProgram        = 0;
     GLint mTextureExternalUniformLocation = -1;
@@ -1162,6 +1222,46 @@ void ImageTest::Source2DTarget2D_helper(const EGLint *attribs)
 
     // Expect that the target texture has the same color as the source texture
     verifyResults2D(target, data);
+
+    // Clean up
+    glDeleteTextures(1, &source);
+    eglDestroyImageKHR(window->getDisplay(), image);
+    glDeleteTextures(1, &target);
+}
+
+// Testing source 2D texture, target 2D array texture
+TEST_P(ImageTest, Source2DTarget2DArray)
+{
+    Source2DTarget2DArray_helper(kDefaultAttribs);
+}
+
+// Testing source 2D texture with colorspace, target 2D array texture
+TEST_P(ImageTest, Source2DTarget2DArray_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    Source2DTarget2DArray_helper(kColorspaceAttribs);
+}
+void ImageTest::Source2DTarget2DArray_helper(const EGLint *attribs)
+{
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() ||
+                       !hasEglImageArrayExt());
+
+    GLubyte data[4] = {255, 0, 255, 255};
+
+    // Create the Image
+    GLuint source;
+    EGLImageKHR image;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, data, &source, &image);
+
+    // Create the target
+    GLuint target;
+    createEGLImageTargetTexture2DArray(image, &target);
+
+    // Expect that the target texture has the same color as the source texture
+    verifyResults2DArray(target, data);
 
     // Clean up
     glDeleteTextures(1, &source);
