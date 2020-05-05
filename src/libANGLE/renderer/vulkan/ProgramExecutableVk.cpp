@@ -22,6 +22,13 @@ namespace rx
 {
 namespace
 {
+constexpr gl::ShaderMap<vk::PipelineStage> kPipelineStageShaderMap = {
+    {gl::ShaderType::Vertex, vk::PipelineStage::VertexShader},
+    {gl::ShaderType::Fragment, vk::PipelineStage::FragmentShader},
+    {gl::ShaderType::Geometry, vk::PipelineStage::GeometryShader},
+    {gl::ShaderType::Compute, vk::PipelineStage::ComputeShader},
+};
+
 VkDeviceSize GetShaderBufferBindingSize(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding)
 {
     if (bufferBinding.getSize() != 0)
@@ -942,14 +949,12 @@ void ProgramExecutableVk::updateBuffersDescriptorSet(ContextVk *contextVk,
             // We set the SHADER_READ_BIT to be conservative.
             VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
             commandBufferHelper->bufferWrite(resourceUseList, accessFlags,
-                                             gl_vk::kPipelineStageShaderMap[shaderType],
-                                             &bufferHelper);
+                                             kPipelineStageShaderMap[shaderType], &bufferHelper);
         }
         else
         {
             commandBufferHelper->bufferRead(resourceUseList, VK_ACCESS_UNIFORM_READ_BIT,
-                                            gl_vk::kPipelineStageShaderMap[shaderType],
-                                            &bufferHelper);
+                                            kPipelineStageShaderMap[shaderType], &bufferHelper);
         }
 
         ++writeCount;
@@ -1022,7 +1027,7 @@ void ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
         // We set SHADER_READ_BIT to be conservative.
         commandBufferHelper->bufferWrite(resourceUseList,
                                          VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
-                                         gl_vk::kPipelineStageShaderMap[shaderType], &bufferHelper);
+                                         kPipelineStageShaderMap[shaderType], &bufferHelper);
 
         writtenBindings.set(binding);
     }

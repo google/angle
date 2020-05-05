@@ -79,5 +79,5 @@ More implementation details can be found in the `doc` directory:
 
 [VkDevice]: https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkDevice.html
 [VkQueue]: https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkQueue.html
-[CommandAPIs]: https://chromium.googlesource.com/angle/angle/+/aa09ca69e4173cb14261e39be3b7bdf56bbd3840/src/libANGLE/renderer/vulkan/ContextVk.h#579
+[CommandAPIs]: https://chromium.googlesource.com/angle/angle/+/df31624eaf3df986a0bdf3f58a87b79b0cc8db5c/src/libANGLE/renderer/vulkan/ContextVk.h#620
 

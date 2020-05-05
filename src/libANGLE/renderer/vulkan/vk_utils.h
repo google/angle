@@ -730,13 +730,6 @@ constexpr gl::ShaderMap<VkShaderStageFlagBits> kShaderStageMap = {
     {gl::ShaderType::Compute, VK_SHADER_STAGE_COMPUTE_BIT},
 };
 
-constexpr gl::ShaderMap<VkPipelineStageFlagBits> kPipelineStageShaderMap = {
-    {gl::ShaderType::Vertex, VK_PIPELINE_STAGE_VERTEX_SHADER_BIT},
-    {gl::ShaderType::Fragment, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT},
-    {gl::ShaderType::Geometry, VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT},
-    {gl::ShaderType::Compute, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT},
-};
-
 void GetOffset(const gl::Offset &glOffset, VkOffset3D *vkOffset);
 void GetExtent(const gl::Extents &glExtent, VkExtent3D *vkExtent);
 VkImageType GetImageType(gl::TextureType textureType);
