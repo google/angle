@@ -314,6 +314,11 @@ class Framebuffer final : public angle::ObserverInterface,
 
     bool hasValidDepthStencil() const;
 
+    // Returns the offset into the texture backing the default framebuffer's surface if any. Returns
+    // zero offset otherwise.  Offset is applied to scissor and viewport rects so that it applies to
+    // all rendering.
+    gl::Offset getTextureOffset() const;
+
     angle::Result discard(const Context *context, size_t count, const GLenum *attachments);
     angle::Result invalidate(const Context *context, size_t count, const GLenum *attachments);
     angle::Result invalidateSub(const Context *context,

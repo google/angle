@@ -1727,6 +1727,15 @@ bool Framebuffer::hasValidDepthStencil() const
     return mState.getDepthStencilAttachment() != nullptr;
 }
 
+gl::Offset Framebuffer::getTextureOffset() const
+{
+    if (isDefault() && getFirstColorAttachment()->getSurface())
+    {
+        return getFirstColorAttachment()->getSurface()->getTextureOffset();
+    }
+    return gl::Offset();
+}
+
 void Framebuffer::setAttachment(const Context *context,
                                 GLenum type,
                                 GLenum binding,
