@@ -16,6 +16,24 @@
       "revId": "312e65e126560baf0065f058855c3fed0e9fe08f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "280dad1a_e9739f80",
+        "filename": "scripts/generate_android_bp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-05-06T20:00:14Z",
+      "side": 1,
+      "message": "Ahhh dang it, I fixed it but it missed the push somehow.",
+      "parentUuid": "4da86f5b_89d138a5",
+      "revId": "312e65e126560baf0065f058855c3fed0e9fe08f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
