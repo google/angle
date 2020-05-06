@@ -18,7 +18,7 @@ VkResult InitAllocator(VkPhysicalDevice physicalDevice,
                        VkInstance instance,
                        VmaAllocator *pAllocator)
 {
-    VmaVulkanFunctions funcs;
+    VmaVulkanFunctions funcs                  = {};
     funcs.vkGetPhysicalDeviceProperties       = vkGetPhysicalDeviceProperties;
     funcs.vkGetPhysicalDeviceMemoryProperties = vkGetPhysicalDeviceMemoryProperties;
     funcs.vkAllocateMemory                    = vkAllocateMemory;
