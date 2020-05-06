@@ -24,8 +24,7 @@ ProgramExecutable::ProgramExecutable()
       mAttributesMask(0),
       mActiveSamplersMask(0),
       mActiveSamplerRefCounts{},
-      mActiveImagesMask(0),
-      mCanDrawWith(false)
+      mActiveImagesMask(0)
 {
     mActiveSamplerTypes.fill(TextureType::InvalidEnum);
     mActiveSamplerFormats.fill(SamplerFormat::InvalidEnum);
@@ -457,12 +456,6 @@ bool ProgramExecutable::linkValidateGlobalNames(InfoLog &infoLog) const
     }
 
     return true;
-}
-
-void ProgramExecutable::updateCanDrawWith()
-{
-    mCanDrawWith =
-        (hasLinkedShaderStage(ShaderType::Vertex) && hasLinkedShaderStage(ShaderType::Fragment));
 }
 
 }  // namespace gl

@@ -287,8 +287,6 @@ void ProgramPipeline::updateLinkedShaderStages()
             mState.mExecutable.setLinkedShaderStages(shaderType);
         }
     }
-
-    mState.mExecutable.updateCanDrawWith();
 }
 
 void ProgramPipeline::updateExecutableAttributes()
