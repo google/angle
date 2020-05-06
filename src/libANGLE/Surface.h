@@ -178,6 +178,11 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
                              const EGLint *timestamps,
                              EGLnsecsANDROID *values) const;
 
+    // Returns the offset into the texture backing the surface if specified via texture offset
+    // attributes (see EGL_ANGLE_d3d_texture_client_buffer extension). Returns zero offset
+    // otherwise.
+    const gl::Offset &getTextureOffset() const { return mTextureOffset; }
+
   protected:
     Surface(EGLint surfaceType,
             const egl::Config *config,
@@ -234,6 +239,8 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
 
     gl::Format mColorFormat;
     gl::Format mDSFormat;
+
+    gl::Offset mTextureOffset;
 
   private:
     Error destroyImpl(const Display *display);

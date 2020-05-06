@@ -14,6 +14,7 @@
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Query.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
@@ -1404,19 +1405,28 @@ angle::Result StateManager11::syncRasterizerState(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-void StateManager11::syncScissorRectangle(const gl::Rectangle &scissor, bool enabled)
+void StateManager11::syncScissorRectangle(const gl::Context *context)
 {
-    int modifiedScissorY = scissor.y;
+    const auto &glState          = context->getState();
+    gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
+    const gl::Rectangle &scissor = glState.getScissor();
+    const bool enabled           = glState.isScissorTestEnabled();
+
+    mCurScissorOffset = framebuffer->getSurfaceTextureOffset();
+
+    int scissorX = scissor.x + mCurScissorOffset.x;
+    int scissorY = scissor.y + mCurScissorOffset.y;
+
     if (mCurPresentPathFastEnabled)
     {
-        modifiedScissorY = mCurPresentPathFastColorBufferHeight - scissor.height - scissor.y;
+        scissorY = mCurPresentPathFastColorBufferHeight - scissor.height - scissor.y;
     }
 
     if (enabled)
     {
         D3D11_RECT rect;
-        int x       = scissor.x;
-        int y       = modifiedScissorY;
+        int x       = scissorX;
+        int y       = scissorY;
         rect.left   = std::max(0, x);
         rect.top    = std::max(0, y);
         rect.right  = x + std::max(0, scissor.width);
@@ -1459,10 +1469,14 @@ void StateManager11::syncViewport(const gl::Context *context)
     int dxViewportWidth    = 0;
     int dxViewportHeight   = 0;
 
-    dxViewportTopLeftX = gl::clamp(viewport.x, dxMinViewportBoundsX, dxMaxViewportBoundsX);
-    dxViewportTopLeftY = gl::clamp(viewport.y, dxMinViewportBoundsY, dxMaxViewportBoundsY);
-    dxViewportWidth    = gl::clamp(viewport.width, 0, dxMaxViewportBoundsX - dxViewportTopLeftX);
-    dxViewportHeight   = gl::clamp(viewport.height, 0, dxMaxViewportBoundsY - dxViewportTopLeftY);
+    mCurViewportOffset = framebuffer->getSurfaceTextureOffset();
+
+    dxViewportTopLeftX =
+        gl::clamp(viewport.x + mCurViewportOffset.x, dxMinViewportBoundsX, dxMaxViewportBoundsX);
+    dxViewportTopLeftY =
+        gl::clamp(viewport.y + mCurViewportOffset.y, dxMinViewportBoundsY, dxMaxViewportBoundsY);
+    dxViewportWidth  = gl::clamp(viewport.width, 0, dxMaxViewportBoundsX - dxViewportTopLeftX);
+    dxViewportHeight = gl::clamp(viewport.height, 0, dxMaxViewportBoundsY - dxViewportTopLeftY);
 
     D3D11_VIEWPORT dxViewport;
     dxViewport.TopLeftX = static_cast<float>(dxViewportTopLeftX);
@@ -1539,6 +1553,16 @@ void StateManager11::processFramebufferInvalidation(const gl::Context *context)
 
     gl::Framebuffer *fbo = context->getState().getDrawFramebuffer();
     ASSERT(fbo);
+
+    // Dirty scissor and viewport because surface texture offset might have changed.
+    if (mCurViewportOffset != fbo->getSurfaceTextureOffset())
+    {
+        mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+    }
+    if (mCurScissorOffset != fbo->getSurfaceTextureOffset())
+    {
+        mInternalDirtyBits.set(DIRTY_BIT_SCISSOR_STATE);
+    }
 
     // Disable the depth test/depth write if we are using a stencil-only attachment.
     // This is because ANGLE emulates stencil-only with D24S8 on D3D11 - we should neither read
@@ -2269,7 +2293,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                 syncViewport(context);
                 break;
             case DIRTY_BIT_SCISSOR_STATE:
-                syncScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
+                syncScissorRectangle(context);
                 break;
             case DIRTY_BIT_RASTERIZER_STATE:
                 ANGLE_TRY(syncRasterizerState(context, mode));

@@ -11,6 +11,7 @@
 
 #include <vector>
 
+#include "common/Color.h"
 #include "common/platform.h"
 #include "test_utils/ANGLETest.h"
 #include "util/EGLWindow.h"
@@ -852,7 +853,17 @@ TEST_P(EGLSurfaceTestD3D11, CreateDirectCompositionSurface)
     EGLConfig config;
     ASSERT_EGL_TRUE(EGLWindow::FindEGLConfig(mDisplay, configAttributes, &config));
 
-    const EGLint surfaceAttributes[] = {EGL_WIDTH, 64, EGL_HEIGHT, 64, EGL_NONE};
+    const EGLint surfaceAttributes[] = {EGL_WIDTH,
+                                        100,
+                                        EGL_HEIGHT,
+                                        100,
+                                        EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE,
+                                        EGL_TRUE,
+                                        EGL_TEXTURE_OFFSET_X_ANGLE,
+                                        updateOffset.x,
+                                        EGL_TEXTURE_OFFSET_Y_ANGLE,
+                                        updateOffset.y,
+                                        EGL_NONE};
 
     EGLClientBuffer buffer = reinterpret_cast<EGLClientBuffer>(texture.Get());
     mPbufferSurface = eglCreatePbufferFromClientBuffer(mDisplay, EGL_D3D_TEXTURE_ANGLE, buffer,
@@ -870,6 +881,136 @@ TEST_P(EGLSurfaceTestD3D11, CreateDirectCompositionSurface)
     drawWithProgram(program);
     EXPECT_GL_NO_ERROR();
     glDeleteProgram(program);
+}
+
+TEST_P(EGLSurfaceTestD3D11, CreateSurfaceWithTextureOffset)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_platform_angle_d3d"));
+    initializeDisplay();
+
+    const EGLint configAttributes[] = {
+        EGL_RED_SIZE,   8, EGL_GREEN_SIZE,   8, EGL_BLUE_SIZE,      8, EGL_ALPHA_SIZE, 8,
+        EGL_DEPTH_SIZE, 0, EGL_STENCIL_SIZE, 0, EGL_SAMPLE_BUFFERS, 0, EGL_NONE};
+
+    EGLConfig config;
+    ASSERT_EGL_TRUE(EGLWindow::FindEGLConfig(mDisplay, configAttributes, &config));
+
+    mConfig = config;
+    initializeContext();
+
+    EGLAttrib device       = 0;
+    EGLAttrib newEglDevice = 0;
+    ASSERT_EGL_TRUE(eglQueryDisplayAttribEXT(mDisplay, EGL_DEVICE_EXT, &newEglDevice));
+    ASSERT_EGL_TRUE(eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(newEglDevice),
+                                            EGL_D3D11_DEVICE_ANGLE, &device));
+    angle::ComPtr<ID3D11Device> d3d11Device(reinterpret_cast<ID3D11Device *>(device));
+    ASSERT_TRUE(!!d3d11Device);
+
+    constexpr UINT kTextureWidth  = 100;
+    constexpr UINT kTextureHeight = 100;
+    constexpr Color<uint8_t> kOpaqueBlack(0, 0, 0, 255);
+    std::vector<Color<uint8_t>> textureData(kTextureWidth * kTextureHeight, kOpaqueBlack);
+
+    D3D11_SUBRESOURCE_DATA initialData = {};
+    initialData.pSysMem                = textureData.data();
+    initialData.SysMemPitch            = kTextureWidth * sizeof(kOpaqueBlack);
+
+    D3D11_TEXTURE2D_DESC desc = {};
+    desc.Format               = DXGI_FORMAT_B8G8R8A8_UNORM;
+    desc.Width                = kTextureWidth;
+    desc.Height               = kTextureHeight;
+    desc.ArraySize            = 1;
+    desc.MipLevels            = 1;
+    desc.SampleDesc.Count     = 1;
+    desc.Usage                = D3D11_USAGE_DEFAULT;
+    desc.BindFlags            = D3D11_BIND_RENDER_TARGET;
+    angle::ComPtr<ID3D11Texture2D> texture;
+    HRESULT hr = d3d11Device->CreateTexture2D(&desc, &initialData, &texture);
+    ASSERT_TRUE(SUCCEEDED(hr));
+
+    angle::ComPtr<ID3D11DeviceContext> d3d11Context;
+    d3d11Device->GetImmediateContext(&d3d11Context);
+
+    // Specify a texture offset of (50, 50) when rendering to the pbuffer surface.
+    const EGLint surfaceAttributes[] = {EGL_WIDTH,
+                                        kTextureWidth,
+                                        EGL_HEIGHT,
+                                        kTextureHeight,
+                                        EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE,
+                                        EGL_TRUE,
+                                        EGL_TEXTURE_OFFSET_X_ANGLE,
+                                        50,
+                                        EGL_TEXTURE_OFFSET_Y_ANGLE,
+                                        50,
+                                        EGL_NONE};
+    EGLClientBuffer buffer           = reinterpret_cast<EGLClientBuffer>(texture.Get());
+    mPbufferSurface = eglCreatePbufferFromClientBuffer(mDisplay, EGL_D3D_TEXTURE_ANGLE, buffer,
+                                                       config, surfaceAttributes);
+    ASSERT_EGL_SUCCESS();
+
+    eglMakeCurrent(mDisplay, mPbufferSurface, mPbufferSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // glClear should only clear subrect at offset (50, 50) without explicit scissor.
+    glClearColor(0, 0, 1, 1);  // Blue
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_EQ(25, 25, 0, 0, 0, 255);
+    EXPECT_PIXEL_EQ(75, 75, 0, 0, 255, 255);
+    EXPECT_GL_NO_ERROR();
+
+    // Drawing with a shader should also update the same subrect only without explicit viewport.
+    GLuint program = createProgram();  // Red
+    ASSERT_NE(0u, program);
+    GLint positionLocation = glGetAttribLocation(program, angle::essl1_shaders::PositionAttrib());
+    glUseProgram(program);
+    const GLfloat vertices[] = {
+        -1.0f, 1.0f, 0.5f, -1.0f, -1.0f, 0.5f, 1.0f, -1.0f, 0.5f,
+        -1.0f, 1.0f, 0.5f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f,  0.5f,
+    };
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    EXPECT_PIXEL_EQ(25, 25, 0, 0, 0, 255);
+    EXPECT_PIXEL_EQ(75, 75, 255, 0, 0, 255);
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
+    EXPECT_GL_NO_ERROR();
+
+    // Blit framebuffer should also blit to the same subrect despite the dstX/Y arguments.
+    GLuint renderBuffer = 0;
+    glGenRenderbuffers(1u, &renderBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 50, 50);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint framebuffer = 0;
+    glGenFramebuffers(1u, &framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    glClearColor(0, 1, 0, 1);  // Green
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_EQ(25, 25, 0, 255, 0, 255);
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0u);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    glBlitFramebuffer(0, 0, 50, 50, 0, 0, 50, 50, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0u);
+    EXPECT_PIXEL_EQ(25, 25, 0, 0, 0, 255);
+    EXPECT_PIXEL_EQ(75, 75, 0, 255, 0, 255);
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteFramebuffers(1u, &framebuffer);
+    glDeleteRenderbuffers(1u, &renderBuffer);
+    EXPECT_GL_NO_ERROR();
 }
 
 TEST_P(EGLSurfaceTestD3D11, CreateSurfaceWithMSAA)

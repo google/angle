@@ -318,6 +318,11 @@ angle::Result Framebuffer11::blitImpl(const gl::Context *context,
 
                 const bool invertColorDest   = UsePresentPathFast(mRenderer, &drawBuffer);
                 gl::Rectangle actualDestArea = destArea;
+
+                const auto &surfaceTextureOffset = mState.getSurfaceTextureOffset();
+                actualDestArea.x                 = actualDestArea.x + surfaceTextureOffset.x;
+                actualDestArea.y                 = actualDestArea.y + surfaceTextureOffset.y;
+
                 if (invertColorDest)
                 {
                     RenderTarget11 *drawRenderTarget11 = GetAs<RenderTarget11>(drawRenderTarget);

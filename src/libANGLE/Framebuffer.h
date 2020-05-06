@@ -129,6 +129,8 @@ class FramebufferState final : angle::NonCopyable
         return mDepthBufferFeedbackLoop || mStencilBufferFeedbackLoop;
     }
 
+    const gl::Offset &getSurfaceTextureOffset() const { return mSurfaceTextureOffset; }
+
   private:
     const FramebufferAttachment *getWebGLDepthStencilAttachment() const;
     const FramebufferAttachment *getWebGLDepthAttachment() const;
@@ -177,6 +179,8 @@ class FramebufferState final : angle::NonCopyable
 
     bool mDefaultFramebufferReadAttachmentInitialized;
     FramebufferAttachment mDefaultFramebufferReadAttachment;
+
+    gl::Offset mSurfaceTextureOffset;
 };
 
 class Framebuffer final : public angle::ObserverInterface,
@@ -313,6 +317,11 @@ class Framebuffer final : public angle::ObserverInterface,
     }
 
     bool hasValidDepthStencil() const;
+
+    // Returns the offset into the texture backing the default framebuffer's surface if any. Returns
+    // zero offset otherwise.  The renderer will apply the offset to scissor and viewport rects used
+    // for draws, clears, and blits.
+    const gl::Offset &getSurfaceTextureOffset() const;
 
     angle::Result discard(const Context *context, size_t count, const GLenum *attachments);
     angle::Result invalidate(const Context *context, size_t count, const GLenum *attachments);

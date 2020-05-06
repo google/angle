@@ -43,10 +43,24 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
     clearParams.clearStencil     = false;
     clearParams.stencilValue     = state.getStencilClearValue();
     clearParams.stencilWriteMask = state.getDepthStencilState().stencilWritemask;
-    clearParams.scissorEnabled   = state.isScissorTestEnabled();
-    clearParams.scissor          = state.getScissor();
 
-    const gl::Framebuffer *framebufferObject = state.getDrawFramebuffer();
+    const auto *framebufferObject      = state.getDrawFramebuffer();
+    const gl::Extents &framebufferSize = framebufferObject->getFirstNonNullAttachment()->getSize();
+    const gl::Offset &surfaceTextureOffset = framebufferObject->getSurfaceTextureOffset();
+    if (state.isScissorTestEnabled())
+    {
+        clearParams.scissorEnabled = true;
+        clearParams.scissor        = state.getScissor();
+        clearParams.scissor.x      = clearParams.scissor.x + surfaceTextureOffset.x;
+        clearParams.scissor.y      = clearParams.scissor.y + surfaceTextureOffset.y;
+    }
+    else if (surfaceTextureOffset != gl::kOffsetZero)
+    {
+        clearParams.scissorEnabled = true;
+        clearParams.scissor        = gl::Rectangle(surfaceTextureOffset.x, surfaceTextureOffset.y,
+                                            framebufferSize.width, framebufferSize.height);
+    }
+
     const bool clearColor =
         (mask & GL_COLOR_BUFFER_BIT) && framebufferObject->hasEnabledDrawBuffer();
     ASSERT(blendStateArray.size() == gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
