@@ -46,7 +46,6 @@ enum class RestrictedTraceID
 }};
 
 using ReplayFunc = void (*)(uint32_t);
-using ResetFunc = void (*)();
 using SetupFunc = void (*)();
 using DecompressFunc = uint8_t *(*)(const std::vector<uint8_t> &);
 using SetBinaryDataDirFunc = void (*)(const char *);
@@ -72,18 +71,6 @@ inline void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
     switch (traceID)
     {{
 {replay_func_cases}
-        default:
-            fprintf(stderr, "Error in switch.\\n");
-            assert(0);
-            break;
-    }}
-}}
-
-inline void ResetReplay(RestrictedTraceID traceID)
-{{
-    switch (traceID)
-    {{
-{reset_func_cases}
         default:
             fprintf(stderr, "Error in switch.\\n");
             assert(0);
@@ -186,7 +173,6 @@ def gen_header(traces, header_file, format_args):
     format_args["trace_ids"] = ",\n".join(traces)
     format_args["trace_infos"] = ",\n".join(trace_infos)
     format_args["replay_func_cases"] = get_cases(traces, "ReplayContext1Frame", "frameIndex")
-    format_args["reset_func_cases"] = get_cases(traces, "ResetContext1Replay", "")
     format_args["setup_func_cases"] = get_cases(traces, "SetupContext1Replay", "")
     format_args["set_binary_data_dir_cases"] = get_cases(traces, "SetBinaryDataDir", "dataDir")
     format_args["decompress_callback_cases"] = get_cases(traces, "SetBinaryDataDecompressCallback",

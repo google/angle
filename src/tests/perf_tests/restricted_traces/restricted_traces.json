@@ -8,7 +8,6 @@
     ],
     "traces": [
         "manhattan_10",
-        "temple_run_300",
         "trex_200"
     ]
 }

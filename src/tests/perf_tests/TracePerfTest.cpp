@@ -188,8 +188,6 @@ void TracePerfTest::drawBenchmark()
         endInternalTraceEvent(frameName);
     }
 
-    ResetReplay(GetParam().testID);
-
     // Process any running queries once per iteration.
     for (size_t queryIndex = 0; queryIndex < mRunningQueries.size();)
     {
