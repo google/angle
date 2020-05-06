@@ -5059,6 +5059,14 @@ bool ValidateHint(const Context *context, GLenum target, GLenum mode)
         case GL_GENERATE_MIPMAP_HINT:
             break;
 
+        case GL_TEXTURE_FILTERING_HINT_CHROMIUM:
+            if (!context->getExtensions().textureFilteringCHROMIUM)
+            {
+                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                return false;
+            }
+            break;
+
         case GL_FRAGMENT_SHADER_DERIVATIVE_HINT:
             if (context->getClientVersion() < ES_3_0 &&
                 !context->getExtensions().standardDerivativesOES)

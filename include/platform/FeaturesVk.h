@@ -120,6 +120,10 @@ struct FeaturesVk : FeatureSetBase
         "supports_external_memory_fuchsia", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_FUCHSIA_external_memory extension", &members};
 
+    angle::Feature supportsFilteringPrecision = {
+        "supports_filtering_precision_google", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_GOOGLE_sampler_filtering_precision extension", &members};
+
     // Whether the VkDevice supports the VK_KHR_external_fence_capabilities extension.
     Feature supportsExternalFenceCapabilities = {
         "supports_external_fence_capabilities", FeatureCategory::VulkanFeatures,
