@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4da86f5b_89d138a5",
+        "filename": "scripts/generate_android_bp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-05-06T19:20:37Z",
+      "side": 1,
+      "message": "Looks like the line wrapping got missed here.   It can be cleaned up in the next CL for this file.",
+      "revId": "312e65e126560baf0065f058855c3fed0e9fe08f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
