@@ -70,6 +70,30 @@
       "revId": "df31624eaf3df986a0bdf3f58a87b79b0cc8db5c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce62318f_b8bb7c27",
+        "filename": "src/libANGLE/renderer/vulkan/README.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-05-06T00:21:51Z",
+      "side": 1,
+      "message": "Thanks for explanation. Will add it in next CL.",
+      "parentUuid": "1a50110a_232d402f",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 148
+      },
+      "revId": "df31624eaf3df986a0bdf3f58a87b79b0cc8db5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
