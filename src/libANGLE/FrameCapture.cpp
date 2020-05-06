@@ -2020,8 +2020,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     for (const auto &textureIter : textures)
     {
-        gl::TextureID id           = {textureIter.first};
-        const gl::Texture *texture = textureIter.second;
+        gl::TextureID id     = {textureIter.first};
+        gl::Texture *texture = textureIter.second;
 
         if (id.value == 0)
         {

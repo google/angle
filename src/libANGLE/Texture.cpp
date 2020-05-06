@@ -1985,8 +1985,13 @@ angle::Result Texture::getTexImage(const Context *context,
                                    GLint level,
                                    GLenum format,
                                    GLenum type,
-                                   void *pixels) const
+                                   void *pixels)
 {
+    if (hasAnyDirtyBit())
+    {
+        ANGLE_TRY(syncState(context));
+    }
+
     return mTexture->getTexImage(context, packState, packBuffer, target, level, format, type,
                                  pixels);
 }

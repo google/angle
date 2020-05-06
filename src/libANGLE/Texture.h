@@ -501,7 +501,7 @@ class Texture final : public RefCountObject<TextureID>,
                               GLint level,
                               GLenum format,
                               GLenum type,
-                              void *pixels) const;
+                              void *pixels);
 
     rx::TextureImpl *getImplementation() const { return mTexture; }
 
