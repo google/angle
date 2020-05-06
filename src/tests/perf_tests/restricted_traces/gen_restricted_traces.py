@@ -162,9 +162,17 @@ def get_cases(traces, function, args):
     return "\n".join(funcs)
 
 
+def get_header_name(trace):
+    return "%s/%s_capture_context1.h" % (trace, trace)
+
+
+def get_sha1_name(trace):
+    return "%s.tar.gz.sha1" % trace
+
+
 def gen_header(traces, header_file, format_args):
 
-    includes = ["#include \"%s/%s_capture_context1.h\"" % (trace, trace) for trace in traces]
+    includes = ["#include \"%s\"" % get_header_name(trace) for trace in traces]
     trace_infos = [
         "{RestrictedTraceID::%s, {%s}}" % (trace, get_trace_info(trace)) for trace in traces
     ]
@@ -195,9 +203,15 @@ def main():
     gni_file = 'restricted_traces_autogen.gni'
     header_file = 'restricted_traces_autogen.h'
 
+    json_data = read_json(json_file)
+    if 'traces' not in json_data:
+        print('Trace data missing traces key.')
+        return 1
+    traces = json_data['traces']
+
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = [json_file]
+        inputs = [json_file] + [get_sha1_name(trace) for trace in traces]
         outputs = [gni_file, header_file]
 
         if sys.argv[1] == 'inputs':
@@ -209,17 +223,11 @@ def main():
             return 1
         return 0
 
-    json_data = read_json(json_file)
-    if 'traces' not in json_data:
-        print('Trace data missing traces key.')
-        return 1
-
     format_args = {
         "script_name": __file__,
         "data_source_name": json_file,
     }
 
-    traces = json_data['traces']
     if not gen_gni(traces, gni_file, format_args):
         print('.gni file generation failed.')
         return 1
