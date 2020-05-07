@@ -14,11 +14,11 @@
 
 namespace angle
 {
-bool SavePNG(const char *fileName,
-             const char *title,
-             uint32_t width,
-             uint32_t height,
-             const std::vector<uint8_t> &data);
+bool SavePNGRGB(const char *fileName,
+                const char *title,
+                uint32_t width,
+                uint32_t height,
+                const std::vector<uint8_t> &rgbData);
 }  // namespace angle
 
 #endif  // UTIL_PNG_UTILS_H_

@@ -39,11 +39,11 @@ class ScopedFILE
 };
 }  // namespace
 
-bool SavePNG(const char *fileName,
-             const char *title,
-             uint32_t width,
-             uint32_t height,
-             const std::vector<uint8_t> &data)
+bool SavePNGRGB(const char *fileName,
+                const char *title,
+                uint32_t width,
+                uint32_t height,
+                const std::vector<uint8_t> &data)
 {
     ScopedFILE fp(fopen(fileName, "wb"));
     if (!fp.get())
@@ -78,7 +78,7 @@ bool SavePNG(const char *fileName,
     png_init_io(writeStruct, fp.get());
 
     // Write header (8 bit colour depth)
-    png_set_IHDR(writeStruct, infoStruct, width, height, 8, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE,
+    png_set_IHDR(writeStruct, infoStruct, width, height, 8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
                  PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
     // Set title
@@ -98,8 +98,8 @@ bool SavePNG(const char *fileName,
 
     png_write_info(writeStruct, infoStruct);
 
-    // RGBA 4-byte stride.
-    const uint32_t rowStride = width * 4;
+    // RGB 3-byte stride.
+    const uint32_t rowStride = width * 3;
     for (uint32_t row = 0; row < height; ++row)
     {
         uint32_t rowOffset = row * rowStride;

@@ -238,10 +238,7 @@ template("angle_perftests_common") {
       "perf_tests/third_party/perf/perf_test.cc",
       "perf_tests/third_party/perf/perf_test.h",
     ]
-    deps = [
-      "$angle_jsoncpp_dir:jsoncpp",
-      "$angle_root/util:angle_png_utils",
-    ]
+    deps = [ "$angle_jsoncpp_dir:jsoncpp" ]
     public_deps = [ "${invoker.test_utils}" ]
     public_configs += [ "${angle_root}:libANGLE_config" ]
   }
@@ -328,6 +325,7 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
       deps = [
         ":angle_perftests_shared",
         "$angle_root:angle_compression",
+        "$angle_root/util:angle_png_utils",
       ]
       suppressed_configs +=
           [ "$angle_root:constructor_and_destructor_warnings" ]

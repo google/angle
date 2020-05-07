@@ -85,6 +85,9 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     unsigned int getNumStepsPerformed() const { return mNumStepsPerformed; }
     void doRunLoop(double maxRunTime);
 
+    // Overriden in trace perf tests.
+    virtual void saveScreenshot(const std::string &screenshotName) {}
+
     std::string mName;
     std::string mBackend;
     std::string mStory;
@@ -153,8 +156,6 @@ class ANGLERenderTest : public ANGLEPerfTest
     void endGLTraceEvent(const char *name, double hostTimeSec);
 
     bool mIsTimestampQueryAvailable;
-
-    void saveScreenshotIfEnabled();
 
   private:
     void SetUp() override;
