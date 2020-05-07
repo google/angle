@@ -649,30 +649,38 @@ size_t MaxClientArraySize(const gl::AttribArray<size_t> &clientArraySizes)
 
 struct SaveFileHelper
 {
-    SaveFileHelper(const std::string &filePathIn, std::ios_base::openmode mode = std::ios::out)
-        : ofs(filePathIn, mode), filePath(filePathIn)
+  public:
+    // We always use ios::binary to avoid inconsistent line endings when captured on Linux vs Win.
+    SaveFileHelper(const std::string &filePathIn)
+        : mOfs(filePathIn, std::ios::binary | std::ios::out), mFilePath(filePathIn)
     {
-        if (!ofs.is_open())
+        if (!mOfs.is_open())
         {
             FATAL() << "Could not open " << filePathIn;
         }
     }
 
-    ~SaveFileHelper() { printf("Saved '%s'.\n", filePath.c_str()); }
+    ~SaveFileHelper() { printf("Saved '%s'.\n", mFilePath.c_str()); }
 
     template <typename T>
     SaveFileHelper &operator<<(const T &value)
     {
-        ofs << value;
-        if (ofs.bad())
+        mOfs << value;
+        if (mOfs.bad())
         {
-            FATAL() << "Error writing to " << filePath;
+            FATAL() << "Error writing to " << mFilePath;
         }
         return *this;
     }
 
-    std::ofstream ofs;
-    std::string filePath;
+    void write(const uint8_t *data, size_t size)
+    {
+        mOfs.write(reinterpret_cast<const char *>(data), size);
+    }
+
+  private:
+    std::ofstream mOfs;
+    std::string mFilePath;
 };
 
 std::string GetBinaryDataFilePath(bool compression,
@@ -697,7 +705,7 @@ void SaveBinaryData(bool compression,
     std::string binaryDataFileName = GetBinaryDataFilePath(compression, contextId, captureLabel);
     std::string dataFilepath       = outDir + binaryDataFileName;
 
-    SaveFileHelper saveData(dataFilepath, std::ios::binary);
+    SaveFileHelper saveData(dataFilepath);
 
     if (compression)
     {
@@ -717,11 +725,11 @@ void SaveBinaryData(bool compression,
             FATAL() << "Error compressing binary data: " << zResult;
         }
 
-        saveData.ofs.write(reinterpret_cast<const char *>(compressedData.data()), compressedSize);
+        saveData.write(compressedData.data(), compressedSize);
     }
     else
     {
-        saveData.ofs.write(reinterpret_cast<const char *>(binaryData.data()), binaryData.size());
+        saveData.write(binaryData.data(), binaryData.size());
     }
 }
 
