@@ -650,6 +650,12 @@ void OutputHLSL::header(TInfoSinkBase &out,
         mappedStructs = generateStructMapping(std140Structs);
     }
 
+    // Suppress some common warnings:
+    // 3556 : Integer divides might be much slower, try using uints if possible.
+    // 3571 : The pow(f, e) intrinsic function won't work for negative f, use abs(f) or
+    //        conditionally handle negative values if you expect them.
+    out << "#pragma warning( disable: 3556 3571 )\n";
+
     out << mStructureHLSL->structsHeader();
 
     mResourcesHLSL->uniformsHeader(out, mOutputType, mReferencedUniforms, mSymbolTable);
