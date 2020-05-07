@@ -623,14 +623,15 @@ class PipelineBarrier : angle::NonCopyable
     }
 
     // merge two barriers into one
-    void merge(const PipelineBarrier &other)
+    void merge(PipelineBarrier *other)
     {
-        mSrcStageMask |= other.mSrcStageMask;
-        mDstStageMask |= other.mDstStageMask;
-        mMemoryBarrierSrcAccess |= other.mMemoryBarrierSrcAccess;
-        mMemoryBarrierDstAccess |= other.mMemoryBarrierDstAccess;
-        mImageMemoryBarriers.insert(mImageMemoryBarriers.end(), other.mImageMemoryBarriers.begin(),
-                                    other.mImageMemoryBarriers.end());
+        mSrcStageMask |= other->mSrcStageMask;
+        mDstStageMask |= other->mDstStageMask;
+        mMemoryBarrierSrcAccess |= other->mMemoryBarrierSrcAccess;
+        mMemoryBarrierDstAccess |= other->mMemoryBarrierDstAccess;
+        mImageMemoryBarriers.insert(mImageMemoryBarriers.end(), other->mImageMemoryBarriers.begin(),
+                                    other->mImageMemoryBarriers.end());
+        other->reset();
     }
 
     void mergeMemoryBarrier(VkPipelineStageFlags srcStageMask,
@@ -775,11 +776,11 @@ class BufferHelper final : public Resource
     bool canAccumulateRead(ContextVk *contextVk, VkAccessFlags readAccessType);
     bool canAccumulateWrite(ContextVk *contextVk, VkAccessFlags writeAccessType);
 
-    void updateReadBarrier(VkAccessFlags readAccessType,
+    bool updateReadBarrier(VkAccessFlags readAccessType,
                            VkPipelineStageFlags readStage,
                            PipelineBarrier *barrier);
 
-    void updateWriteBarrier(VkAccessFlags writeAccessType,
+    bool updateWriteBarrier(VkAccessFlags writeAccessType,
                             VkPipelineStageFlags writeStage,
                             PipelineBarrier *barrier);
 
@@ -841,10 +842,6 @@ struct CommandBufferHelper : angle::NonCopyable
                     VkImageAspectFlags aspectFlags,
                     vk::ImageLayout imageLayout,
                     vk::ImageHelper *image);
-
-    void imageBarrier(VkPipelineStageFlags srcStageMask,
-                      VkPipelineStageFlags dstStageMask,
-                      const VkImageMemoryBarrier &imageMemoryBarrier);
 
     vk::CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
 
@@ -929,7 +926,8 @@ struct CommandBufferHelper : angle::NonCopyable
     void addCommandDiagnostics(ContextVk *contextVk);
 
     // General state (non-renderPass related)
-    vk::PipelineBarrier mPipelineBarrier;
+    PipelineBarrierArray mPipelineBarriers;
+    PipelineStagesMask mPipelineBarrierMask;
     vk::CommandBuffer mCommandBuffer;
 
     // RenderPass state
@@ -1278,6 +1276,10 @@ class ImageHelper final : public Resource, public angle::Subject
                               uint32_t newQueueFamilyIndex,
                               CommandBuffer *commandBuffer);
 
+    void updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
+                                ImageLayout newLayout,
+                                PipelineBarrier *barrier);
+
     // Performs an ownership transfer from an external instance or API.
     void acquireFromExternal(ContextVk *contextVk,
                              uint32_t externalQueueFamilyIndex,
@@ -1401,6 +1403,11 @@ class ImageHelper final : public Resource, public angle::Subject
             ImageUpdate image;
         };
     };
+
+    void initImageMemoryBarrierStruct(VkImageAspectFlags aspectMask,
+                                      ImageLayout newLayout,
+                                      uint32_t newQueueFamilyIndex,
+                                      VkImageMemoryBarrier *imageMemoryBarrier) const;
 
     // Generalized to accept both "primary" and "secondary" command buffers.
     template <typename CommandBufferT>

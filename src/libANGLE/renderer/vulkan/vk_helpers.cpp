@@ -84,8 +84,17 @@ struct ImageMemoryBarrierData
     //
     // Otherwise, some same-layout transitions require a memory barrier.
     bool sameLayoutTransitionRequiresBarrier;
+    // CommandBufferHelper tracks an array of PipelineBarriers. This indicates which array element
+    // this should be merged into. Right now we track individual barrier for every PipelineStage. If
+    // layout has a single stage mask bit, we use that stage as index. If layout has multiple stage
+    // mask bits, we pick the lowest stage as the index since it is the first stage that needs
+    // barrier.
+    PipelineStage barrierIndex;
 };
 
+constexpr VkPipelineStageFlags kAllShadersPipelineStageFlags =
+    VK_PIPELINE_STAGE_VERTEX_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT |
+    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
 // clang-format off
 constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemoryBarrierData = {
     {
@@ -99,6 +108,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: there's no data in the image to care about.
             0,
             false,
+            PipelineStage::InvalidEnum,
         },
     },
     {
@@ -112,6 +122,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_MEMORY_WRITE_BIT,
             false,
+            PipelineStage::InvalidEnum,
         },
     },
     {
@@ -125,6 +136,8 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: RAR and WAR don't need memory barrier.
             0,
             false,
+            // In case of multiple destination stages, We barrier the earliest stage
+            PipelineStage::TopOfPipe,
         },
     },
     {
@@ -138,6 +151,8 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_SHADER_WRITE_BIT,
             true,
+            // In case of multiple destination stages, We barrier the earliest stage
+            PipelineStage::TopOfPipe,
         },
     },
     {
@@ -151,6 +166,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: RAR and WAR don't need memory barrier.
             0,
             false,
+            PipelineStage::Transfer,
         },
     },
     {
@@ -164,6 +180,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_TRANSFER_WRITE_BIT,
             true,
+            PipelineStage::Transfer,
         },
     },
     {
@@ -177,6 +194,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: RAR and WAR don't need memory barrier.
             0,
             false,
+            PipelineStage::VertexShader,
         },
     },
     {
@@ -190,6 +208,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_SHADER_WRITE_BIT,
             true,
+            PipelineStage::VertexShader,
         },
     },
     {
@@ -203,6 +222,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: RAR and WAR don't need memory barrier.
             0,
             false,
+            PipelineStage::GeometryShader,
         },
     },
     {
@@ -216,6 +236,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_SHADER_WRITE_BIT,
             true,
+            PipelineStage::GeometryShader,
         },
     },
     {
@@ -229,6 +250,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: RAR and WAR don't need memory barrier.
             0,
             false,
+            PipelineStage::FragmentShader,
         },
     },
     {
@@ -242,6 +264,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_SHADER_WRITE_BIT,
             true,
+            PipelineStage::FragmentShader,
         },
     },
     {
@@ -255,6 +278,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: RAR and WAR don't need memory barrier.
             0,
             false,
+            PipelineStage::ComputeShader,
         },
     },
     {
@@ -268,32 +292,37 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_SHADER_WRITE_BIT,
             true,
+            vk::PipelineStage::ComputeShader,
         },
     },
     {
         ImageLayout::AllGraphicsShadersReadOnly,
         {
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-            VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,
-            VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,
+            kAllShadersPipelineStageFlags,
+            kAllShadersPipelineStageFlags,
             // Transition to: all reads must happen after barrier.
             VK_ACCESS_SHADER_READ_BIT,
             // Transition from: RAR and WAR don't need memory barrier.
             0,
             false,
+            // In case of multiple destination stages, We barrier the earliest stage
+            PipelineStage::VertexShader,
         },
     },
     {
         ImageLayout::AllGraphicsShadersReadWrite,
         {
             VK_IMAGE_LAYOUT_GENERAL,
-            VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,
-            VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,
+            kAllShadersPipelineStageFlags,
+            kAllShadersPipelineStageFlags,
             // Transition to: all reads and writes must happen after barrier.
             VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_SHADER_WRITE_BIT,
             true,
+            // In case of multiple destination stages, We barrier the earliest stage
+            PipelineStage::VertexShader,
         },
     },
     {
@@ -307,6 +336,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             true,
+            PipelineStage::ColorAttachmentOutput,
         },
     },
     {
@@ -320,6 +350,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             true,
+            PipelineStage::EarlyFragmentTest,
         },
     },
     {
@@ -338,6 +369,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             // Transition from: RAR and WAR don't need memory barrier.
             0,
             false,
+            PipelineStage::BottomOfPipe,
         },
     },
 };
@@ -471,7 +503,8 @@ VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout)
 
 // CommandBufferHelper implementation.
 CommandBufferHelper::CommandBufferHelper(bool hasRenderPass)
-    : mPipelineBarrier(),
+    : mPipelineBarriers(),
+      mPipelineBarrierMask(),
       mCounter(0),
       mClearValues{},
       mRenderPassStarted(false),
@@ -498,7 +531,10 @@ void CommandBufferHelper::bufferRead(vk::ResourceUseList *resourceUseList,
 {
     buffer->retain(resourceUseList);
     VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
-    buffer->updateReadBarrier(readAccessType, stageBits, &mPipelineBarrier);
+    if (buffer->updateReadBarrier(readAccessType, stageBits, &mPipelineBarriers[readStage]))
+    {
+        mPipelineBarrierMask.set(readStage);
+    }
 }
 
 void CommandBufferHelper::bufferWrite(vk::ResourceUseList *resourceUseList,
@@ -508,14 +544,10 @@ void CommandBufferHelper::bufferWrite(vk::ResourceUseList *resourceUseList,
 {
     buffer->retain(resourceUseList);
     VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[writeStage];
-    buffer->updateWriteBarrier(writeAccessType, stageBits, &mPipelineBarrier);
-}
-
-void CommandBufferHelper::imageBarrier(VkPipelineStageFlags srcStageMask,
-                                       VkPipelineStageFlags dstStageMask,
-                                       const VkImageMemoryBarrier &imageMemoryBarrier)
-{
-    mPipelineBarrier.mergeImageBarrier(srcStageMask, dstStageMask, imageMemoryBarrier);
+    if (buffer->updateWriteBarrier(writeAccessType, stageBits, &mPipelineBarriers[writeStage]))
+    {
+        mPipelineBarrierMask.set(writeStage);
+    }
 }
 
 void CommandBufferHelper::imageRead(vk::ResourceUseList *resourceUseList,
@@ -526,7 +558,11 @@ void CommandBufferHelper::imageRead(vk::ResourceUseList *resourceUseList,
     image->retain(resourceUseList);
     if (image->isLayoutChangeNecessary(imageLayout))
     {
-        image->changeLayout(aspectFlags, imageLayout, this);
+        PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
+        ASSERT(barrierIndex != PipelineStage::InvalidEnum);
+        PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
+        image->updateLayoutAndBarrier(aspectFlags, imageLayout, barrier);
+        mPipelineBarrierMask.set(barrierIndex);
     }
 }
 
@@ -536,12 +572,27 @@ void CommandBufferHelper::imageWrite(vk::ResourceUseList *resourceUseList,
                                      vk::ImageHelper *image)
 {
     image->retain(resourceUseList);
-    image->changeLayout(aspectFlags, imageLayout, this);
+    // Write always requires a barrier
+    PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
+    ASSERT(barrierIndex != PipelineStage::InvalidEnum);
+    PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
+    image->updateLayoutAndBarrier(aspectFlags, imageLayout, barrier);
+    mPipelineBarrierMask.set(barrierIndex);
 }
 
 void CommandBufferHelper::executeBarriers(vk::PrimaryCommandBuffer *primary)
 {
-    mPipelineBarrier.writeCommand(primary);
+    if (!mPipelineBarrierMask.any())
+    {
+        return;
+    }
+
+    for (PipelineStage pipelineStage : mPipelineBarrierMask)
+    {
+        PipelineBarrier &barrier = mPipelineBarriers[pipelineStage];
+        barrier.writeCommand(primary);
+    }
+    mPipelineBarrierMask.reset();
 }
 
 void CommandBufferHelper::beginRenderPass(const vk::Framebuffer &framebuffer,
@@ -679,7 +730,13 @@ void CommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
     std::ostringstream out;
 
     out << "Memory Barrier: ";
-    mPipelineBarrier.addDiagnosticsString(out);
+    for (PipelineBarrier &barrier : mPipelineBarriers)
+    {
+        if (!barrier.isEmpty())
+        {
+            barrier.addDiagnosticsString(out);
+        }
+    }
     out << "\\l";
 
     if (mIsRenderPassCommandBuffer)
@@ -2006,9 +2063,8 @@ void PipelineBarrier::addDiagnosticsString(std::ostringstream &out) const
 {
     if (mMemoryBarrierSrcAccess != 0 || mMemoryBarrierDstAccess != 0)
     {
-        out << "{"
-            << "Src: 0x" << std::hex << mMemoryBarrierSrcAccess << " -> Dst: 0x" << std::hex
-            << mMemoryBarrierDstAccess << "}";
+        out << "Src: 0x" << std::hex << mMemoryBarrierSrcAccess << " &rarr; Dst: 0x" << std::hex
+            << mMemoryBarrierDstAccess << std::endl;
     }
 }
 
@@ -2271,10 +2327,11 @@ bool BufferHelper::canAccumulateWrite(ContextVk *contextVk, VkAccessFlags writeA
     return false;
 }
 
-void BufferHelper::updateReadBarrier(VkAccessFlags readAccessType,
+bool BufferHelper::updateReadBarrier(VkAccessFlags readAccessType,
                                      VkPipelineStageFlags readStage,
                                      PipelineBarrier *barrier)
 {
+    bool barrierModified = false;
     // If there was a prior write and we are making a read that is either a new access type or from
     // a new stage, we need a barrier
     if (mCurrentWriteAccess != 0 && (((mCurrentReadAccess & readAccessType) != readAccessType) ||
@@ -2282,17 +2339,20 @@ void BufferHelper::updateReadBarrier(VkAccessFlags readAccessType,
     {
         barrier->mergeMemoryBarrier(mCurrentWriteStages, readStage, mCurrentWriteAccess,
                                     readAccessType);
+        barrierModified = true;
     }
 
     // Accumulate new read usage.
     mCurrentReadAccess |= readAccessType;
     mCurrentReadStages |= readStage;
+    return barrierModified;
 }
 
-void BufferHelper::updateWriteBarrier(VkAccessFlags writeAccessType,
+bool BufferHelper::updateWriteBarrier(VkAccessFlags writeAccessType,
                                       VkPipelineStageFlags writeStage,
                                       PipelineBarrier *barrier)
 {
+    bool barrierModified = false;
     // We don't need to check mCurrentReadStages here since if it is not zero, mCurrentReadAccess
     // must not be zero as well. stage is finer grain than accessType.
     ASSERT((!mCurrentReadStages && !mCurrentReadAccess) ||
@@ -2301,6 +2361,7 @@ void BufferHelper::updateWriteBarrier(VkAccessFlags writeAccessType,
     {
         barrier->mergeMemoryBarrier(mCurrentWriteStages | mCurrentReadStages, writeStage,
                                     mCurrentWriteAccess, writeAccessType);
+        barrierModified = true;
     }
 
     // Reset usages on the new write.
@@ -2308,6 +2369,7 @@ void BufferHelper::updateWriteBarrier(VkAccessFlags writeAccessType,
     mCurrentReadAccess  = 0;
     mCurrentWriteStages = writeStage;
     mCurrentReadStages  = 0;
+    return barrierModified;
 }
 
 // ImageHelper implementation.
@@ -2758,6 +2820,32 @@ void ImageHelper::setBaseAndMaxLevels(uint32_t baseLevel, uint32_t maxLevel)
     mMaxLevel  = maxLevel;
 }
 
+ANGLE_INLINE void ImageHelper::initImageMemoryBarrierStruct(
+    VkImageAspectFlags aspectMask,
+    ImageLayout newLayout,
+    uint32_t newQueueFamilyIndex,
+    VkImageMemoryBarrier *imageMemoryBarrier) const
+{
+    const ImageMemoryBarrierData &transitionFrom = kImageMemoryBarrierData[mCurrentLayout];
+    const ImageMemoryBarrierData &transitionTo   = kImageMemoryBarrierData[newLayout];
+
+    imageMemoryBarrier->sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    imageMemoryBarrier->srcAccessMask       = transitionFrom.srcAccessMask;
+    imageMemoryBarrier->dstAccessMask       = transitionTo.dstAccessMask;
+    imageMemoryBarrier->oldLayout           = transitionFrom.layout;
+    imageMemoryBarrier->newLayout           = transitionTo.layout;
+    imageMemoryBarrier->srcQueueFamilyIndex = mCurrentQueueFamilyIndex;
+    imageMemoryBarrier->dstQueueFamilyIndex = newQueueFamilyIndex;
+    imageMemoryBarrier->image               = mImage.getHandle();
+
+    // Transition the whole resource.
+    imageMemoryBarrier->subresourceRange.aspectMask     = aspectMask;
+    imageMemoryBarrier->subresourceRange.baseMipLevel   = 0;
+    imageMemoryBarrier->subresourceRange.levelCount     = mLevelCount;
+    imageMemoryBarrier->subresourceRange.baseArrayLayer = 0;
+    imageMemoryBarrier->subresourceRange.layerCount     = mLayerCount;
+}
+
 // Generalized to accept both "primary" and "secondary" command buffers.
 template <typename CommandBufferT>
 void ImageHelper::forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
@@ -2769,21 +2857,7 @@ void ImageHelper::forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
     const ImageMemoryBarrierData &transitionTo   = kImageMemoryBarrierData[newLayout];
 
     VkImageMemoryBarrier imageMemoryBarrier = {};
-    imageMemoryBarrier.sType                = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    imageMemoryBarrier.srcAccessMask        = transitionFrom.srcAccessMask;
-    imageMemoryBarrier.dstAccessMask        = transitionTo.dstAccessMask;
-    imageMemoryBarrier.oldLayout            = transitionFrom.layout;
-    imageMemoryBarrier.newLayout            = transitionTo.layout;
-    imageMemoryBarrier.srcQueueFamilyIndex  = mCurrentQueueFamilyIndex;
-    imageMemoryBarrier.dstQueueFamilyIndex  = newQueueFamilyIndex;
-    imageMemoryBarrier.image                = mImage.getHandle();
-
-    // Transition the whole resource.
-    imageMemoryBarrier.subresourceRange.aspectMask     = aspectMask;
-    imageMemoryBarrier.subresourceRange.baseMipLevel   = 0;
-    imageMemoryBarrier.subresourceRange.levelCount     = mLevelCount;
-    imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
-    imageMemoryBarrier.subresourceRange.layerCount     = mLayerCount;
+    initImageMemoryBarrierStruct(aspectMask, newLayout, newQueueFamilyIndex, &imageMemoryBarrier);
 
     commandBuffer->imageBarrier(transitionFrom.srcStageMask, transitionTo.dstStageMask,
                                 imageMemoryBarrier);
@@ -2791,11 +2865,32 @@ void ImageHelper::forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
 
-// Explicitly instantiate forceChangeLayoutAndQueue with CommandBufferHelper.
-template void ImageHelper::forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
-                                                     ImageLayout newLayout,
-                                                     uint32_t newQueueFamilyIndex,
-                                                     CommandBufferHelper *commandBuffer);
+void ImageHelper::updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
+                                         ImageLayout newLayout,
+                                         PipelineBarrier *barrier)
+{
+    if (newLayout == mCurrentLayout)
+    {
+        const ImageMemoryBarrierData &layoutData = kImageMemoryBarrierData[mCurrentLayout];
+        ASSERT(layoutData.sameLayoutTransitionRequiresBarrier);
+        // No layout change, only memory barrier is required
+        barrier->mergeMemoryBarrier(layoutData.srcStageMask, layoutData.dstStageMask,
+                                    layoutData.srcAccessMask, layoutData.dstAccessMask);
+    }
+    else
+    {
+        const ImageMemoryBarrierData &transitionFrom = kImageMemoryBarrierData[mCurrentLayout];
+        const ImageMemoryBarrierData &transitionTo   = kImageMemoryBarrierData[newLayout];
+
+        VkImageMemoryBarrier imageMemoryBarrier = {};
+        initImageMemoryBarrierStruct(aspectMask, newLayout, mCurrentQueueFamilyIndex,
+                                     &imageMemoryBarrier);
+
+        barrier->mergeImageBarrier(transitionFrom.srcStageMask, transitionTo.dstStageMask,
+                                   imageMemoryBarrier);
+        mCurrentLayout = newLayout;
+    }
+}
 
 void ImageHelper::clearColor(const VkClearColorValue &color,
                              uint32_t baseMipLevel,
