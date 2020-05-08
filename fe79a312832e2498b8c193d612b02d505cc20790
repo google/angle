@@ -177,6 +177,30 @@
       "revId": "fe79a312832e2498b8c193d612b02d505cc20790",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "360c0b5f_a16dab6d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2011,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-05-08T15:54:36Z",
+      "side": 1,
+      "message": "Sure, I will take care this in the next CL.",
+      "parentUuid": "6b515dc4_59d1fa1d",
+      "range": {
+        "startLine": 2011,
+        "startChar": 69,
+        "endLine": 2011,
+        "endChar": 75
+      },
+      "revId": "fe79a312832e2498b8c193d612b02d505cc20790",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
