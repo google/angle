@@ -81,6 +81,30 @@
       "revId": "fe79a312832e2498b8c193d612b02d505cc20790",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2d7de58_85cdc26f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2011,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-05-08T02:12:58Z",
+      "side": 1,
+      "message": "The diagnostics used to print a digraph in a dot file format, which is why `\u0026rarr;` was used. I guess that\u0027s not the case anymore? All those weird \"\\\\l\"s should then be converted to something sensible too.\n\nAlso, what\u0027s with the {}?",
+      "parentUuid": "a7eba07e_38897383",
+      "range": {
+        "startLine": 2011,
+        "startChar": 69,
+        "endLine": 2011,
+        "endChar": 75
+      },
+      "revId": "fe79a312832e2498b8c193d612b02d505cc20790",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
