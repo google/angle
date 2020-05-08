@@ -1,6 +1,6 @@
 # ANGLE Restricted Traces
 
-The files in this directory are traces of real applications.  We host them
+The files in this directory are traces of real applications. We host them
 internally because they may contain third party IP which we don't want
 to share publicly.
 
@@ -8,9 +8,6 @@ to share publicly.
 
 In order to compile and run with these, you must be granted access by Google,
 then authenticate with the cloud with your @google account:
-```
-gcloud auth login
-```
 ```
 download_from_google_storage --config
 <enter 0 for the project ID>
@@ -40,78 +37,50 @@ out/Release/angle_perftests --gtest_filter=TracePerfTest*
 
 ## Updating traces
 
-The Manhattan and TRex traces were captured on Windows with an Intel driver (due to better compressed texture support).
+The Manhattan and TRex traces were captured on Windows after building gfxbench from source. We run capture commands in git bash.
 
-Update START and END for each range.
+### Windows prep
 
-### Windows
-
-```
-cd gfxbench\out\install\vs2017-x64\lib
-python ..\..\..\..\scripts\refresh_angle_libs.py --verbose
-set TFW_PACKAGE_DIR=../../../build/vs2017-x64/testfw/tfw-dev
-set ANGLE_DEFAULT_PLATFORM=vulkan
-
-# TRex
-set START=200
-set END=210
-set LABEL=trex
-mkdir ..\..\..\..\..\angle\src\tests\perf_tests\restricted_traces\%LABEL%_%START%
-set ANGLE_CAPTURE_LABEL=%LABEL%_%START%
-set ANGLE_CAPTURE_FRAME_START=%START%
-set ANGLE_CAPTURE_FRAME_END=%END%
-set ANGLE_CAPTURE_OUT_DIR=..\..\..\..\..\angle\src\tests\perf_tests\restricted_traces\%LABEL%_%START%
-..\bin\testfw_app.exe -b ../../../build/vs2017-x64/testfw/tfw-dev --gfx egl -w 1920 -h 1080 -t gl_trex --ei -frame_step_time=40
-
-# Manhattan
-set START=10
-set END=20
-set LABEL=manhattan
-mkdir ..\..\..\..\..\angle\src\tests\perf_tests\restricted_traces\%LABEL%_%START%
-set ANGLE_CAPTURE_LABEL=%LABEL%_%START%
-set ANGLE_CAPTURE_FRAME_START=%START%
-set ANGLE_CAPTURE_FRAME_END=%END%
-set ANGLE_CAPTURE_OUT_DIR=..\..\..\..\..\angle\src\tests\perf_tests\restricted_traces\%LABEL%_%START%
-..\bin\testfw_app.exe -b ../../../build/vs2017-x64/testfw/tfw-dev --gfx egl -w 1920 -h 1080 -t gl_manhattan --ei -frame_step_time=40
-```
-
-### Linux
+Launch git bash via the 'git bash' command or via the start menu. Then run:
 
 ```
-cd gfxbench/out/install/linux/lib
-python ../../../../scripts/refresh_angle_libs.py --verbose
+export PLATFORM=vs2019-x64
+export TFW_PACKAGE_DIR=../../../build/vs2019-x64/testfw/tfw-dev
+export ANGLE_DEFAULT_PLATFORM=vulkan
+```
+
+### Linux prep
+
+```
 export PLATFORM=linux
+export LD_LIBRARY_PATH=.
 export TFW_PACKAGE_DIR=../../../build/linux/testfw_Release/tfw-dev
 export ANGLE_DEFAULT_PLATFORM=vulkan
-export LD_LIBRARY_PATH=.
+```
+
+### Capturing from gfxbench
+
+First start from the gfxbench source directory.
+
+```
+cd out/install/$PLATFORM/lib
+python ../../../../scripts/refresh_angle_libs.py
 
 # TRex
-export START=200
-export END=210
-export LABEL=trex
-mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}
-export ANGLE_CAPTURE_LABEL=${LABEL}_${START}
-export ANGLE_CAPTURE_FRAME_START=$START
-export ANGLE_CAPTURE_FRAME_END=$END
-export ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}
-../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_trex --ei -frame_step_time=40
+mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/trex_200
+ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/trex_200 ANGLE_CAPTURE_FRAME_START=200 ANGLE_CAPTURE_FRAME_END=210 ANGLE_CAPTURE_LABEL=trex_200 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_trex --ei -frame_step_time=40
 
 # Manhattan
-export START=10
-export END=20
-export LABEL=manhattan
-mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}
-export ANGLE_CAPTURE_LABEL=${LABEL}_${START}
-export ANGLE_CAPTURE_FRAME_START=$START
-export ANGLE_CAPTURE_FRAME_END=$END
-export ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/${LABEL}_${START}
-../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_manhattan --ei -frame_step_time=40
+mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/manhattan_10
+ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/manhattan_10 ANGLE_CAPTURE_FRAME_START=10 ANGLE_CAPTURE_FRAME_END=20 ANGLE_CAPTURE_LABEL=manhattan_10 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_manhattan --ei -frame_step_time=40
 ```
 
 ## Upload to the cloud
 
+Starting from you ANGLE root directory:
+
 ```
-cd ~/chromium/src/third_party/angle/src/tests/perf_tests/restricted_traces
+cd src/tests/perf_tests/restricted_traces
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive trex_200
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive manhattan_10
 ```
