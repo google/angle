@@ -105,6 +105,30 @@
       "revId": "fe79a312832e2498b8c193d612b02d505cc20790",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ba4f4d5_9392e7c9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2011,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-05-08T04:04:03Z",
+      "side": 1,
+      "message": "The {} is to wrap the barrier pair in one struct, since now you may have multiple of these. Apparently I am not aware this was designed for dot file format. I don\u0027t have strong opinion on this. I can remove \"\\\\l\" in next CL as well , or revert it back to unicode, but I am not sure how to represent the multiple pairs in that file format. If you ask my opinion, I think ascii is good enough since usually I just read the print out and manually interpret it when I have to debug it.",
+      "parentUuid": "d2d7de58_85cdc26f",
+      "range": {
+        "startLine": 2011,
+        "startChar": 69,
+        "endLine": 2011,
+        "endChar": 75
+      },
+      "revId": "fe79a312832e2498b8c193d612b02d505cc20790",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
