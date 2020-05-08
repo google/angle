@@ -327,7 +327,6 @@ class ContextVk : public ContextImpl, public vk::Context
     void onHostVisibleBufferWrite() { mIsAnyHostVisibleBufferWritten = true; }
 
     void invalidateCurrentTransformFeedbackBuffers();
-    void invalidateCurrentTransformFeedbackState();
     void onTransformFeedbackStateChanged();
 
     // When UtilsVk issues draw or dispatch calls, it binds descriptor sets that the context is not

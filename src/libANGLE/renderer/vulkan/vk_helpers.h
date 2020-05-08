@@ -890,7 +890,7 @@ struct CommandBufferHelper : angle::NonCopyable
 
     void beginTransformFeedback(size_t validBufferCount,
                                 const VkBuffer *counterBuffers,
-                                bool rebindBuffer);
+                                bool rebindBuffers);
 
     void invalidateRenderPassColorAttachment(size_t attachmentIndex)
     {

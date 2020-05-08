@@ -660,11 +660,11 @@ void CommandBufferHelper::beginRenderPass(const vk::Framebuffer &framebuffer,
 
 void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
                                                  const VkBuffer *counterBuffers,
-                                                 bool rebindBuffer)
+                                                 bool rebindBuffers)
 {
     ASSERT(mIsRenderPassCommandBuffer);
     mValidTransformFeedbackBufferCount = static_cast<uint32_t>(validBufferCount);
-    mRebindTransformFeedbackBuffers    = rebindBuffer;
+    mRebindTransformFeedbackBuffers    = rebindBuffers;
 
     for (size_t index = 0; index < validBufferCount; index++)
     {
