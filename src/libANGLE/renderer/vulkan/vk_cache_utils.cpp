@@ -1770,6 +1770,8 @@ void SamplerDesc::update(const gl::SamplerState &samplerState, bool stencilMode)
         mMinLod = 0.0f;
         mMaxLod = 0.25f;
     }
+
+    mReserved = 0;
 }
 
 VkSamplerCreateInfo SamplerDesc::unpack(ContextVk *contextVk) const
