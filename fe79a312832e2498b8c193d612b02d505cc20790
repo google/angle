@@ -129,6 +129,30 @@
       "revId": "fe79a312832e2498b8c193d612b02d505cc20790",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307538cd_201de8ea",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2011,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-05-08T04:42:31Z",
+      "side": 1,
+      "message": "No I agree, ASCII should be fine. There\u0027s no point in generating dot format as there is no graph.",
+      "parentUuid": "7ba4f4d5_9392e7c9",
+      "range": {
+        "startLine": 2011,
+        "startChar": 69,
+        "endLine": 2011,
+        "endChar": 75
+      },
+      "revId": "fe79a312832e2498b8c193d612b02d505cc20790",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
