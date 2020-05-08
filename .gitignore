@@ -50,12 +50,12 @@
 /third_party/spirv-headers/src
 /third_party/spirv-tools/src
 /third_party/SwiftShader
-/third_party/VulkanMemoryAllocator
 /third_party/VK-GL-CTS/src
 /third_party/vulkan-headers/src
 /third_party/vulkan-loader/src
 /third_party/vulkan-tools/src
 /third_party/vulkan-validation-layers/src
+/third_party/vulkan_memory_allocator
 /third_party/zlib
 /tools/clang
 /tools/flex-bison/linux/bison

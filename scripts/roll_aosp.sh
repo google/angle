@@ -13,7 +13,7 @@ deps=(
     "third_party/vulkan-headers/src"
     "third_party/jsoncpp"
     "third_party/jsoncpp/source"
-    "third_party/VulkanMemoryAllocator"
+    "third_party/vulkan_memory_allocator"
 )
 
 # Delete dep directories so that gclient can check them out
@@ -74,7 +74,7 @@ extra_removal_files=(
     # The jsoncpp OWNERS and VulkanMemoryAllocator file contains users that have not logged into
     # the Android gerrit so it fails to upload.
     "third_party/jsoncpp/OWNERS"
-    "third_party/VulkanMemoryAllocator/OWNERS"
+    "third_party/vulkan_memory_allocator/OWNERS"
 )
 
 for removal_file in ${extra_removal_files[@]}; do
