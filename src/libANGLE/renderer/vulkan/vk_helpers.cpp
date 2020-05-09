@@ -3720,7 +3720,9 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
             if (update.isUpdateToLayerLevel(layer, level))
             {
                 // On any data update, exit out. We'll need to do a full upload.
-                if (update.updateSource != UpdateSource::Clear || update.clear.layerCount != 1)
+                if (update.updateSource != UpdateSource::Clear ||
+                    (update.clear.layerCount != 1 &&
+                     !(update.clear.layerCount == VK_REMAINING_ARRAY_LAYERS && mLayerCount == 1)))
                 {
                     foundClear.reset();
                     break;
