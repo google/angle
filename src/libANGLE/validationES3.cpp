@@ -2808,7 +2808,14 @@ bool ValidateIndexedStateQuery(const Context *context, GLenum pname, GLuint inde
 
     if (length)
     {
-        *length = 1;
+        if (pname == GL_COLOR_WRITEMASK)
+        {
+            *length = 4;
+        }
+        else
+        {
+            *length = 1;
+        }
     }
 
     return true;
