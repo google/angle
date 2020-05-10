@@ -39,14 +39,13 @@ struct ClearParamsUniform
 
 struct BlitParamsUniform
 {
-    // 0: lower left, 1: lower right, 2: upper left, 3: upper right
-    float srcTexCoords[4][2];
+    // 0: lower left, 1: lower right, 2: upper left
+    float srcTexCoords[3][2];
     int srcLevel         = 0;
     uint8_t srcLuminance = 0;  // source texture is luminance texture
     uint8_t dstFlipY     = 0;
     uint8_t dstLuminance = 0;  // dest texture is luminace
-    uint8_t padding1;
-    float padding2[2];
+    uint8_t padding;
 };
 
 struct IndexConversionUniform
@@ -229,8 +228,8 @@ void RenderUtils::clearWithDraw(const gl::Context *context,
 
     setupClearWithDraw(context, cmdEncoder, overridedParams);
 
-    // Draw the screen aligned quad
-    cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 6);
+    // Draw the screen aligned triangle
+    cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 3);
 
     // Invalidate current context's state
     auto contextMtl = GetImpl(context);
@@ -247,8 +246,8 @@ void RenderUtils::blitWithDraw(const gl::Context *context,
     }
     setupBlitWithDraw(context, cmdEncoder, params);
 
-    // Draw the screen aligned quad
-    cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 6);
+    // Draw the screen aligned triangle
+    cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 3);
 
     // Invalidate current context's state
     ContextMtl *contextMtl = GetImpl(context);
@@ -474,26 +473,24 @@ void RenderUtils::setupBlitWithDrawUniformData(RenderCommandEncoder *cmdEncoder,
         std::swap(y0, y1);
     }
 
-    float u0 = (float)x0 / srcWidth;
-    float u1 = (float)x1 / srcWidth;
-    float v0 = (float)y0 / srcHeight;
-    float v1 = (float)y1 / srcHeight;
+    float u0 = static_cast<float>(x0) / srcWidth;
+    float u1 = static_cast<float>(x1) / srcWidth;
+    float v0 = static_cast<float>(y0) / srcHeight;
+    float v1 = static_cast<float>(y1) / srcHeight;
+    float du = static_cast<float>(x1 - x0) / srcWidth;
+    float dv = static_cast<float>(y1 - y0) / srcHeight;
 
     // lower left
     uniformParams.srcTexCoords[0][0] = u0;
     uniformParams.srcTexCoords[0][1] = v0;
 
     // lower right
-    uniformParams.srcTexCoords[1][0] = u1;
+    uniformParams.srcTexCoords[1][0] = u1 + du;
     uniformParams.srcTexCoords[1][1] = v0;
 
     // upper left
     uniformParams.srcTexCoords[2][0] = u0;
-    uniformParams.srcTexCoords[2][1] = v1;
-
-    // upper right
-    uniformParams.srcTexCoords[3][0] = u1;
-    uniformParams.srcTexCoords[3][1] = v1;
+    uniformParams.srcTexCoords[2][1] = v1 + dv;
 
     cmdEncoder->setVertexData(uniformParams, 0);
     cmdEncoder->setFragmentData(uniformParams, 0);

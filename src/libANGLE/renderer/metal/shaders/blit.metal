@@ -10,8 +10,8 @@
 
 struct BlitParams
 {
-    // 0: lower left, 1: lower right, 2: upper left, 3: upper right
-    float2 srcTexCoords[4];
+    // 0: lower left, 1: lower right, 2: upper left
+    float2 srcTexCoords[3];
     int srcLevel;
     bool srcLuminance; // source texture is luminance texture
     bool dstFlipViewportY;
@@ -28,8 +28,8 @@ vertex BlitVSOut blitVS(unsigned int vid [[ vertex_id ]],
                          constant BlitParams &options [[buffer(0)]])
 {
     BlitVSOut output;
-    output.position = float4(gCorners[vid], 0.0, 1.0);
-    output.texCoords = options.srcTexCoords[gTexcoordsIndices[vid]];
+    output.position  = float4(gCorners[vid], 0.0, 1.0);
+    output.texCoords = options.srcTexCoords[vid];
 
     if (!options.dstFlipViewportY)
     {
