@@ -120,8 +120,6 @@ class DisplayMtl : public DisplayImpl
         return mStateCache.getSamplerState(getMetalDevice(), desc);
     }
 
-    const mtl::TextureRef &getNullTexture(const gl::Context *context, gl::TextureType type);
-
     const mtl::Format &getPixelFormat(angle::FormatID angleFormatId) const
     {
         return mFormatTable.getPixelFormat(angleFormatId);
@@ -157,8 +155,6 @@ class DisplayMtl : public DisplayImpl
 
     // Built-in Shaders
     mtl::AutoObjCPtr<id<MTLLibrary>> mDefaultShaders = nil;
-
-    angle::PackedEnumMap<gl::TextureType, mtl::TextureRef> mNullTextures;
 
     mutable bool mCapsInitialized;
     mutable gl::TextureCapsMap mNativeTextureCaps;

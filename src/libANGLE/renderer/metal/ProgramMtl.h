@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/metal/mtl_command_buffer.h"
+#include "libANGLE/renderer/metal/mtl_glslang_utils.h"
 #include "libANGLE/renderer/metal/mtl_resources.h"
 #include "libANGLE/renderer/metal/mtl_state_cache.h"
 
@@ -130,10 +131,6 @@ class ProgramMtl : public ProgramImpl
     angle::Result linkImpl(const gl::Context *glContext,
                            const gl::ProgramLinkedResources &resources,
                            gl::InfoLog &infoLog);
-    angle::Result convertToMsl(const gl::Context *glContext,
-                               gl::ShaderType shaderType,
-                               gl::InfoLog &infoLog,
-                               std::vector<uint32_t> *sprivCode);
 
     angle::Result createMslShader(const gl::Context *glContext,
                                   gl::ShaderType shaderType,
@@ -157,6 +154,10 @@ class ProgramMtl : public ProgramImpl
     gl::ShaderBitSet mDefaultUniformBlocksDirty;
     gl::ShaderBitSet mSamplerBindingsDirty;
     gl::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
+
+    gl::ShaderMap<std::string> mTranslatedMslShader;
+
+    gl::ShaderMap<mtl::TranslatedShaderInfo> mMslShaderTranslateInfo;
 
     mtl::RenderPipelineCache mMetalRenderPipelineCache;
 };

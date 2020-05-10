@@ -121,6 +121,28 @@ void ContextMtl::onDestroy(const gl::Context *context)
 {
     mTriFanIndexBuffer.destroy(this);
     mLineLoopIndexBuffer.destroy(this);
+
+    mIncompleteTextures.onDestroy(context);
+    mIncompleteTexturesInitialized = false;
+}
+
+angle::Result ContextMtl::ensureIncompleteTexturesCreated(const gl::Context *context)
+{
+    if (ANGLE_LIKELY(mIncompleteTexturesInitialized))
+    {
+        return angle::Result::Continue;
+    }
+    constexpr gl::TextureType supportedTextureTypes[] = {gl::TextureType::_2D,
+                                                         gl::TextureType::CubeMap};
+    for (gl::TextureType texType : supportedTextureTypes)
+    {
+        gl::Texture *texture;
+        ANGLE_UNUSED_VARIABLE(texture);
+        ANGLE_TRY(mIncompleteTextures.getIncompleteTexture(context, texType, nullptr, &texture));
+    }
+    mIncompleteTexturesInitialized = true;
+
+    return angle::Result::Continue;
 }
 
 // Flush and finish.
@@ -518,6 +540,9 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                                     const gl::State::DirtyBits &bitMask)
 {
     const gl::State &glState = context->getState();
+
+    // Initialize incomplete texture set.
+    ANGLE_TRY(ensureIncompleteTexturesCreated(context));
 
     for (size_t dirtyBit : dirtyBits)
     {
@@ -1021,6 +1046,13 @@ const mtl::VertexFormat &ContextMtl::getVertexFormat(angle::FormatID angleFormat
                                                      bool tightlyPacked) const
 {
     return getDisplay()->getVertexFormat(angleFormatId, tightlyPacked);
+}
+
+angle::Result ContextMtl::getIncompleteTexture(const gl::Context *context,
+                                               gl::TextureType type,
+                                               gl::Texture **textureOut)
+{
+    return mIncompleteTextures.getIncompleteTexture(context, type, nullptr, textureOut);
 }
 
 void ContextMtl::endEncoding(mtl::RenderCommandEncoder *encoder)

@@ -95,10 +95,6 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
 
 void DisplayMtl::terminate()
 {
-    for (mtl::TextureRef &nullTex : mNullTextures)
-    {
-        nullTex.reset();
-    }
     mUtils.onDestroy();
     mCmdQueue.reset();
     mDefaultShaders  = nil;
@@ -380,45 +376,6 @@ const gl::Extensions &DisplayMtl::getNativeExtensions() const
     return mNativeExtensions;
 }
 
-const mtl::TextureRef &DisplayMtl::getNullTexture(const gl::Context *context, gl::TextureType type)
-{
-    // TODO(hqle): Use rx::IncompleteTextureSet.
-    ContextMtl *contextMtl = mtl::GetImpl(context);
-    if (!mNullTextures[type])
-    {
-        // initialize content with zeros
-        MTLRegion region           = MTLRegionMake2D(0, 0, 1, 1);
-        const uint8_t zeroPixel[4] = {0, 0, 0, 255};
-
-        const auto &rgbaFormat = getPixelFormat(angle::FormatID::R8G8B8A8_UNORM);
-
-        switch (type)
-        {
-            case gl::TextureType::_2D:
-                (void)(mtl::Texture::Make2DTexture(contextMtl, rgbaFormat, 1, 1, 1, false, false,
-                                                   &mNullTextures[type]));
-                mNullTextures[type]->replaceRegion(contextMtl, region, 0, 0, zeroPixel,
-                                                   sizeof(zeroPixel));
-                break;
-            case gl::TextureType::CubeMap:
-                (void)(mtl::Texture::MakeCubeTexture(contextMtl, rgbaFormat, 1, 1, false, false,
-                                                     &mNullTextures[type]));
-                for (int f = 0; f < 6; ++f)
-                {
-                    mNullTextures[type]->replaceRegion(contextMtl, region, 0, f, zeroPixel,
-                                                       sizeof(zeroPixel));
-                }
-                break;
-            default:
-                UNREACHABLE();
-                // NOTE(hqle): Support more texture types.
-        }
-        ASSERT(mNullTextures[type]);
-    }
-
-    return mNullTextures[type];
-}
-
 void DisplayMtl::ensureCapsInitialized() const
 {
     if (mCapsInitialized)
@@ -521,7 +478,7 @@ void DisplayMtl::ensureCapsInitialized() const
 
     // Note that we currently implement textures as combined image+samplers, so the limit is
     // the minimum of supported samplers and sampled images.
-    mNativeCaps.maxCombinedTextureImageUnits                         = mtl::kMaxShaderSamplers;
+    mNativeCaps.maxCombinedTextureImageUnits                         = mtl::kMaxGLSamplerBindings;
     mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Fragment] = mtl::kMaxShaderSamplers;
     mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]   = mtl::kMaxShaderSamplers;
 

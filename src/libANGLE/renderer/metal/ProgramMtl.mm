@@ -13,8 +13,6 @@
 
 #include <sstream>
 
-#include <spirv_msl.hpp>
-
 #include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/ProgramLinkedResources.h"
@@ -32,85 +30,6 @@ namespace
 {
 
 #define SHADER_ENTRY_NAME @"main0"
-
-spv::ExecutionModel ShaderTypeToSpvExecutionModel(gl::ShaderType shaderType)
-{
-    switch (shaderType)
-    {
-        case gl::ShaderType::Vertex:
-            return spv::ExecutionModelVertex;
-        case gl::ShaderType::Fragment:
-            return spv::ExecutionModelFragment;
-        default:
-            UNREACHABLE();
-            return spv::ExecutionModelMax;
-    }
-}
-
-// Some GLSL variables need 2 binding points in metal. For example,
-// glsl sampler will be converted to 2 metal objects: texture and sampler.
-// Thus we need to set 2 binding points for one glsl sampler variable.
-using BindingField = uint32_t spirv_cross::MSLResourceBinding::*;
-template <BindingField bindingField1, BindingField bindingField2 = bindingField1>
-angle::Result BindResources(spirv_cross::CompilerMSL *compiler,
-                            const spirv_cross::SmallVector<spirv_cross::Resource> &resources,
-                            gl::ShaderType shaderType)
-{
-    auto &compilerMsl = *compiler;
-
-    for (const spirv_cross::Resource &resource : resources)
-    {
-        spirv_cross::MSLResourceBinding resBinding;
-        resBinding.stage = ShaderTypeToSpvExecutionModel(shaderType);
-
-        if (compilerMsl.has_decoration(resource.id, spv::DecorationDescriptorSet))
-        {
-            resBinding.desc_set =
-                compilerMsl.get_decoration(resource.id, spv::DecorationDescriptorSet);
-        }
-
-        if (!compilerMsl.has_decoration(resource.id, spv::DecorationBinding))
-        {
-            continue;
-        }
-
-        resBinding.binding = compilerMsl.get_decoration(resource.id, spv::DecorationBinding);
-
-        uint32_t bindingPoint;
-        // NOTE(hqle): We use separate discrete binding point for now, in future, we should use
-        // one argument buffer for each descriptor set.
-        switch (resBinding.desc_set)
-        {
-            case 0:
-                // Use resBinding.binding as binding point.
-                bindingPoint = resBinding.binding;
-                break;
-            case mtl::kDriverUniformsBindingIndex:
-                bindingPoint = mtl::kDriverUniformsBindingIndex;
-                break;
-            case mtl::kDefaultUniformsBindingIndex:
-                // NOTE(hqle): Properly handle transform feedbacks and UBO binding once ES 3.0 is
-                // implemented.
-                bindingPoint = mtl::kDefaultUniformsBindingIndex;
-                break;
-            default:
-                // We don't support this descriptor set.
-                continue;
-        }
-
-        // bindingField can be buffer or texture, which will be translated to [[buffer(d)]] or
-        // [[texture(d)]] or [[sampler(d)]]
-        resBinding.*bindingField1 = bindingPoint;
-        if (bindingField1 != bindingField2)
-        {
-            resBinding.*bindingField2 = bindingPoint;
-        }
-
-        compilerMsl.add_msl_resource_binding(resBinding);
-    }
-
-    return angle::Result::Continue;
-}
 
 void InitDefaultUniformBlock(const std::vector<sh::Uniform> &uniforms,
                              gl::Shader *shader,
@@ -173,35 +92,6 @@ void UpdateDefaultUniformBlock(GLsizei count,
     }
 }
 
-void BindNullSampler(const gl::Context *glContext,
-                     mtl::RenderCommandEncoder *encoder,
-                     gl::ShaderType shaderType,
-                     gl::TextureType textureType,
-                     int bindingPoint)
-{
-    ContextMtl *contextMtl = mtl::GetImpl(glContext);
-
-    const mtl::TextureRef &nullTex =
-        contextMtl->getDisplay()->getNullTexture(glContext, textureType);
-
-    mtl::AutoObjCPtr<id<MTLSamplerState>> nullSampler =
-        contextMtl->getDisplay()->getStateCache().getNullSamplerState(contextMtl);
-
-    switch (shaderType)
-    {
-        case gl::ShaderType::Vertex:
-            encoder->setVertexTexture(nullTex, bindingPoint);
-            encoder->setVertexSamplerState(nullSampler, 0, 0, bindingPoint);
-            break;
-        case gl::ShaderType::Fragment:
-            encoder->setFragmentTexture(nullTex, bindingPoint);
-            encoder->setFragmentSamplerState(nullSampler, 0, 0, bindingPoint);
-            break;
-        default:
-            UNREACHABLE();
-    }
-}
-
 template <typename T>
 void ReadFromDefaultUniformBlock(int componentCount,
                                  uint32_t arrayIndex,
@@ -257,6 +147,15 @@ void ProgramMtl::reset(ContextMtl *context)
     for (auto &block : mDefaultUniformBlocks)
     {
         block.uniformLayout.clear();
+    }
+
+    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    {
+        for (mtl::SamplerBinding &binding :
+             mMslShaderTranslateInfo[shaderType].actualSamplerBindings)
+        {
+            binding.textureBinding = mtl::kMaxShaderSamplers;
+        }
     }
 
     mMetalRenderPipelineCache.clear();
@@ -322,10 +221,15 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
         shaderSources, variableInfoMap, &shaderCodes));
 
     // Convert spirv code to MSL
-    ANGLE_TRY(convertToMsl(glContext, gl::ShaderType::Vertex, infoLog,
-                           &shaderCodes[gl::ShaderType::Vertex]));
-    ANGLE_TRY(convertToMsl(glContext, gl::ShaderType::Fragment, infoLog,
-                           &shaderCodes[gl::ShaderType::Fragment]));
+    ANGLE_TRY(mtl::SpirvCodeToMsl(contextMtl, mState, &shaderCodes, &mMslShaderTranslateInfo,
+                                  &mTranslatedMslShader));
+
+    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    {
+        // Create actual Metal shader
+        ANGLE_TRY(
+            createMslShader(glContext, shaderType, infoLog, mTranslatedMslShader[shaderType]));
+    }
 
     return angle::Result::Continue;
 }
@@ -417,59 +321,6 @@ angle::Result ProgramMtl::initDefaultUniformBlocks(const gl::Context *glContext)
             mDefaultUniformBlocksDirty.set(shaderType);
         }
     }
-
-    return angle::Result::Continue;
-}
-
-angle::Result ProgramMtl::convertToMsl(const gl::Context *glContext,
-                                       gl::ShaderType shaderType,
-                                       gl::InfoLog &infoLog,
-                                       std::vector<uint32_t> *sprivCode)
-{
-    ContextMtl *contextMtl = mtl::GetImpl(glContext);
-
-    spirv_cross::CompilerMSL compilerMsl(std::move(*sprivCode));
-
-    spirv_cross::CompilerMSL::Options compOpt;
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    compOpt.platform = spirv_cross::CompilerMSL::Options::macOS;
-#else
-    compOpt.platform = spirv_cross::CompilerMSL::Options::iOS;
-#endif
-
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.0, 12))
-    {
-        // Use Metal 2.1
-        compOpt.set_msl_version(2, 1);
-    }
-    else
-    {
-        // Always use at least Metal 2.0.
-        compOpt.set_msl_version(2);
-    }
-
-    compilerMsl.set_msl_options(compOpt);
-
-    // Tell spirv-cross to map default & driver uniform blocks & samplers as we want
-    spirv_cross::ShaderResources mslRes = compilerMsl.get_shader_resources();
-
-    ANGLE_TRY(BindResources<&spirv_cross::MSLResourceBinding::msl_buffer>(
-        &compilerMsl, mslRes.uniform_buffers, shaderType));
-
-    ANGLE_TRY((BindResources<&spirv_cross::MSLResourceBinding::msl_sampler,
-                             &spirv_cross::MSLResourceBinding::msl_texture>(
-        &compilerMsl, mslRes.sampled_images, shaderType)));
-
-    // NOTE(hqle): spirv-cross uses exceptions to report error, what should we do here
-    // in case of error?
-    std::string translatedMsl = compilerMsl.compile();
-    if (translatedMsl.size() == 0)
-    {
-        ANGLE_MTL_CHECK(contextMtl, false, GL_INVALID_OPERATION);
-    }
-
-    // Create actual Metal shader
-    ANGLE_TRY(createMslShader(glContext, shaderType, infoLog, translatedMsl));
 
     return angle::Result::Continue;
 }
@@ -868,7 +719,8 @@ angle::Result ProgramMtl::updateTextures(const gl::Context *glContext,
                                          mtl::RenderCommandEncoder *cmdEncoder,
                                          bool forceUpdate)
 {
-    const auto &glState = glContext->getState();
+    ContextMtl *contextMtl = mtl::GetImpl(glContext);
+    const auto &glState    = glContext->getState();
 
     const gl::ActiveTexturesCache &completeTextures = glState.getActiveTexturesCache();
 
@@ -886,18 +738,26 @@ angle::Result ProgramMtl::updateTextures(const gl::Context *glContext,
 
             ASSERT(!samplerBinding.unreferenced);
 
+            const mtl::SamplerBinding &mslBinding =
+                mMslShaderTranslateInfo[shaderType].actualSamplerBindings[textureIndex];
+            if (mslBinding.textureBinding >= mtl::kMaxShaderSamplers)
+            {
+                // No binding assigned
+                continue;
+            }
+
+            gl::TextureType textureType = samplerBinding.textureType;
+
             for (uint32_t arrayElement = 0; arrayElement < samplerBinding.boundTextureUnits.size();
                  ++arrayElement)
             {
-                GLuint textureUnit    = samplerBinding.boundTextureUnits[arrayElement];
-                gl::Texture *texture  = completeTextures[textureUnit];
-                auto destBindingPoint = textureIndex + arrayElement;
+                GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
+                gl::Texture *texture = completeTextures[textureUnit];
+                uint32_t textureSlot = mslBinding.textureBinding + arrayElement;
+                uint32_t samplerSlot = mslBinding.samplerBinding + arrayElement;
                 if (!texture)
                 {
-                    BindNullSampler(glContext, cmdEncoder, shaderType, samplerBinding.textureType,
-                                    destBindingPoint);
-
-                    continue;
+                    ANGLE_TRY(contextMtl->getIncompleteTexture(glContext, textureType, &texture));
                 }
 
                 TextureMtl *textureMtl = mtl::GetImpl(texture);
@@ -905,12 +765,12 @@ angle::Result ProgramMtl::updateTextures(const gl::Context *glContext,
                 switch (shaderType)
                 {
                     case gl::ShaderType::Vertex:
-                        ANGLE_TRY(textureMtl->bindVertexShader(glContext, cmdEncoder,
-                                                               destBindingPoint, destBindingPoint));
+                        ANGLE_TRY(textureMtl->bindVertexShader(glContext, cmdEncoder, textureSlot,
+                                                               samplerSlot));
                         break;
                     case gl::ShaderType::Fragment:
-                        ANGLE_TRY(textureMtl->bindFragmentShader(
-                            glContext, cmdEncoder, destBindingPoint, destBindingPoint));
+                        ANGLE_TRY(textureMtl->bindFragmentShader(glContext, cmdEncoder, textureSlot,
+                                                                 samplerSlot));
                         break;
                     default:
                         UNREACHABLE();

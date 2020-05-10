@@ -112,6 +112,9 @@ constexpr uint32_t kUniformBufferSettingOffsetMinAlignment = 4;
 #endif
 constexpr uint32_t kIndexBufferOffsetAlignment = 4;
 
+// Front end binding limits
+constexpr uint32_t kMaxGLSamplerBindings = 2 * kMaxShaderSamplers;
+
 // Binding index start for vertex data buffers:
 constexpr uint32_t kVboBindingIndexStart = 0;
 
