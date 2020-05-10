@@ -97,7 +97,7 @@ void MemoryObjectVk::onDestroy(const gl::Context *context)
 
 angle::Result MemoryObjectVk::setDedicatedMemory(const gl::Context *context, bool dedicatedMemory)
 {
-    UNIMPLEMENTED();
+    mDedicatedMemory = dedicatedMemory;
     return angle::Result::Continue;
 }
 
@@ -204,7 +204,15 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
     VkMemoryRequirements externalMemoryRequirements;
     image->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);
 
-    void *importMemoryInfo                                             = nullptr;
+    void *importMemoryInfo                                    = nullptr;
+    VkMemoryDedicatedAllocateInfo memoryDedicatedAllocateInfo = {};
+    if (mDedicatedMemory)
+    {
+        memoryDedicatedAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR;
+        memoryDedicatedAllocateInfo.image = image->getImage().getHandle();
+        importMemoryInfo                  = &memoryDedicatedAllocateInfo;
+    }
+
     VkImportMemoryFdInfoKHR importMemoryFdInfo                         = {};
     VkImportMemoryZirconHandleInfoFUCHSIA importMemoryZirconHandleInfo = {};
     switch (mHandleType)
@@ -212,6 +220,7 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
         case gl::HandleType::OpaqueFd:
             ASSERT(mFd != kInvalidFd);
             importMemoryFdInfo.sType      = VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR;
+            importMemoryFdInfo.pNext      = importMemoryInfo;
             importMemoryFdInfo.handleType = ToVulkanHandleType(mHandleType);
             importMemoryFdInfo.fd         = dup(mFd);
             importMemoryInfo              = &importMemoryFdInfo;
@@ -220,6 +229,7 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
             ASSERT(mZirconHandle != ZX_HANDLE_INVALID);
             importMemoryZirconHandleInfo.sType =
                 VK_STRUCTURE_TYPE_TEMP_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA;
+            importMemoryZirconHandleInfo.pNext      = importMemoryInfo;
             importMemoryZirconHandleInfo.handleType = ToVulkanHandleType(mHandleType);
             ANGLE_TRY(
                 DuplicateZirconVmo(contextVk, mZirconHandle, &importMemoryZirconHandleInfo.handle));
