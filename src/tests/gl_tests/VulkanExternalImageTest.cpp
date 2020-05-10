@@ -108,11 +108,14 @@ TEST_P(VulkanExternalImageTest, ShouldImportMemoryOpaqueFd)
 
     {
         GLMemoryObject memoryObject;
+        GLint dedicatedMemory = GL_TRUE;
+        glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                     &dedicatedMemory);
         glImportMemoryFdEXT(memoryObject, deviceMemorySize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
 
         // Test that after calling glImportMemoryFdEXT, the parameters of the memory object cannot
         // be changed
-        GLint dedicatedMemory = GL_TRUE;
+        dedicatedMemory = GL_FALSE;
         glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
                                      &dedicatedMemory);
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
@@ -157,6 +160,8 @@ TEST_P(VulkanExternalImageTest, ShouldImportSemaphoreOpaqueFd)
 TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdRGBA8)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
+    // http://anglebug.com/4630
+    ANGLE_SKIP_TEST_IF(IsAndroid() && (IsPixel2() || IsPixel2XL()));
 
     VulkanExternalHelper helper;
     helper.initialize(isSwiftshader());
@@ -181,6 +186,9 @@ TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdRGBA8)
 
     {
         GLMemoryObject memoryObject;
+        GLint dedicatedMemory = GL_TRUE;
+        glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                     &dedicatedMemory);
         glImportMemoryFdEXT(memoryObject, deviceMemorySize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
 
         GLTexture texture;
@@ -231,6 +239,9 @@ TEST_P(VulkanExternalImageTest, ShouldClearZirconVmoRGBA8)
 
     {
         GLMemoryObject memoryObject;
+        GLint dedicatedMemory = GL_TRUE;
+        glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                     &dedicatedMemory);
         glImportMemoryZirconHandleANGLE(memoryObject, deviceMemorySize,
                                         GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE, vmo);
 
@@ -290,6 +301,9 @@ TEST_P(VulkanExternalImageTest, TextureFormatCompatChromiumFd)
 
         {
             GLMemoryObject memoryObject;
+            GLint dedicatedMemory = GL_TRUE;
+            glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                         &dedicatedMemory);
             glImportMemoryFdEXT(memoryObject, deviceMemorySize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
 
             GLTexture texture;
@@ -341,6 +355,9 @@ TEST_P(VulkanExternalImageTest, TextureFormatCompatChromiumZirconHandle)
 
         {
             GLMemoryObject memoryObject;
+            GLint dedicatedMemory = GL_TRUE;
+            glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                         &dedicatedMemory);
             glImportMemoryZirconHandleANGLE(memoryObject, deviceMemorySize,
                                             GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE, vmo);
 

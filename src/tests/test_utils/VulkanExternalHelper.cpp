@@ -346,15 +346,8 @@ bool VulkanExternalHelper::canCreateImageExternal(
 
     ASSERT(result == VK_SUCCESS);
 
-    constexpr VkExternalMemoryFeatureFlags kUnsupportedFeatures =
-        VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT;
     constexpr VkExternalMemoryFeatureFlags kRequiredFeatures =
         VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT | VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT;
-    if (externalImageFormatProperties.externalMemoryProperties.externalMemoryFeatures &
-        kUnsupportedFeatures)
-    {
-        return false;
-    }
     if ((externalImageFormatProperties.externalMemoryProperties.externalMemoryFeatures &
          kRequiredFeatures) != kRequiredFeatures)
     {
@@ -415,9 +408,14 @@ VkResult VulkanExternalHelper::createImage2DExternal(VkFormat format,
         /* .pNext = */ nullptr,
         /* .handleTypes = */ handleTypes,
     };
+    VkMemoryDedicatedAllocateInfoKHR memoryDedicatedAllocateInfo = {
+        /* .sType = */ VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR,
+        /* .pNext = */ &exportMemoryAllocateInfo,
+        /* .image = */ image,
+    };
     VkMemoryAllocateInfo memoryAllocateInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-        /* .pNext = */ &exportMemoryAllocateInfo,
+        /* .pNext = */ &memoryDedicatedAllocateInfo,
         /* .allocationSize = */ deviceMemorySize,
         /* .memoryTypeIndex = */ memoryTypeIndex,
     };
