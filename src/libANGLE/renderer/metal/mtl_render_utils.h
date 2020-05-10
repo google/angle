@@ -126,7 +126,6 @@ class RenderUtils : public Context, angle::NonCopyable
                      const char *function,
                      unsigned int line) override;
 
-    angle::Result initShaderLibrary();
     void initClearResources();
     void initBlitResources();
 
@@ -172,24 +171,20 @@ class RenderUtils : public Context, angle::NonCopyable
         const gl::Context *context,
         const IndexGenerationParams &params);
 
-    AutoObjCPtr<id<MTLLibrary>> mDefaultShaders = nil;
     RenderPipelineCache mClearRenderPipelineCache;
     RenderPipelineCache mBlitRenderPipelineCache;
     RenderPipelineCache mBlitPremultiplyAlphaRenderPipelineCache;
     RenderPipelineCache mBlitUnmultiplyAlphaRenderPipelineCache;
 
-    struct IndexConvesionPipelineCacheKey
-    {
-        gl::DrawElementsType srcType;
-        bool srcBufferOffsetAligned;
+    // Index generator compute pipelines:
+    //  - First dimension: index type.
+    //  - second dimension: source buffer's offset is aligned or not.
+    using IndexConversionPipelineArray =
+        std::array<std::array<AutoObjCPtr<id<MTLComputePipelineState>>, 2>,
+                   angle::EnumSize<gl::DrawElementsType>()>;
 
-        bool operator==(const IndexConvesionPipelineCacheKey &other) const;
-        bool operator<(const IndexConvesionPipelineCacheKey &other) const;
-    };
-    std::map<IndexConvesionPipelineCacheKey, AutoObjCPtr<id<MTLComputePipelineState>>>
-        mIndexConversionPipelineCaches;
-    std::map<IndexConvesionPipelineCacheKey, AutoObjCPtr<id<MTLComputePipelineState>>>
-        mTriFanFromElemArrayGeneratorPipelineCaches;
+    IndexConversionPipelineArray mIndexConversionPipelineCaches;
+    IndexConversionPipelineArray mTriFanFromElemArrayGeneratorPipelineCaches;
     AutoObjCPtr<id<MTLComputePipelineState>> mTriFanFromArraysGeneratorPipeline;
 };
 

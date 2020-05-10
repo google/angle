@@ -15,6 +15,8 @@
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/SurfaceMtl.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
+#include "libANGLE/renderer/metal/shaders/compiled/mtl_default_shaders.inc"
+#include "libANGLE/renderer/metal/shaders/mtl_default_shaders_src_autogen.inc"
 #include "platform/Platform.h"
 
 #include "EGL/eglext.h"
@@ -25,7 +27,11 @@ namespace rx
 bool IsMetalDisplayAvailable()
 {
     // We only support macos 10.13+ and 11 for now. Since they are requirements for Metal 2.0.
+#if TARGET_OS_SIMULATOR
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.13, 13.0, 13))
+#else
     if (ANGLE_APPLE_AVAILABLE_XCI(10.13, 13.0, 11))
+#endif
     {
         return true;
     }
@@ -81,6 +87,7 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
         }
 
         ANGLE_TRY(mFormatTable.initialize(this));
+        ANGLE_TRY(initializeShaderLibrary());
 
         return mUtils.initialize();
     }
@@ -94,6 +101,7 @@ void DisplayMtl::terminate()
     }
     mUtils.onDestroy();
     mCmdQueue.reset();
+    mDefaultShaders  = nil;
     mMetalDevice     = nil;
     mCapsInitialized = false;
 
@@ -672,6 +680,30 @@ void DisplayMtl::initializeFeatures()
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesMtl(platform, &mFeatures);
+}
+
+angle::Result DisplayMtl::initializeShaderLibrary()
+{
+    mtl::AutoObjCObj<NSError> err = nil;
+
+#if defined(ANGLE_MTL_DEBUG_INTERNAL_SHADERS)
+    mDefaultShaders = CreateShaderLibrary(getMetalDevice(), default_metallib_src,
+                                          sizeof(default_metallib_src), &err);
+#else
+    mDefaultShaders = CreateShaderLibraryFromBinary(getMetalDevice(), compiled_default_metallib,
+                                                    compiled_default_metallib_len, &err);
+#endif
+
+    if (err && !mDefaultShaders)
+    {
+        ANGLE_MTL_OBJC_SCOPE
+        {
+            ERR() << "Internal error: " << err.get().localizedDescription.UTF8String;
+        }
+        return angle::Result::Stop;
+    }
+
+    return angle::Result::Continue;
 }
 
 }  // namespace rx
