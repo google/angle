@@ -63,29 +63,30 @@ Resource::Resource(Resource *other) : mUsageRef(other->mUsageRef)
     ASSERT(mUsageRef);
 }
 
+void Resource::reset()
+{
+    mUsageRef->cmdBufferQueueSerial = 0;
+    resetCPUReadMemNeedSync();
+}
+
 bool Resource::isBeingUsedByGPU(Context *context) const
 {
     return context->cmdQueue().isResourceBeingUsedByGPU(this);
 }
 
+bool Resource::hasPendingWorks(Context *context) const
+{
+    return context->cmdQueue().resourceHasPendingWorks(this);
+}
+
 void Resource::setUsedByCommandBufferWithQueueSerial(uint64_t serial, bool writing)
 {
-    auto curSerial = mUsageRef->cmdBufferQueueSerial.load(std::memory_order_relaxed);
-    do
-    {
-        if (curSerial >= serial)
-        {
-            return;
-        }
-    } while (!mUsageRef->cmdBufferQueueSerial.compare_exchange_weak(
-        curSerial, serial, std::memory_order_release, std::memory_order_relaxed));
-
-    // NOTE(hqle): This is not thread safe, if multiple command buffers on multiple threads
-    // are writing to it.
     if (writing)
     {
-        mUsageRef->cpuReadMemDirty = true;
+        mUsageRef->cpuReadMemNeedSync = true;
     }
+
+    mUsageRef->cmdBufferQueueSerial = std::max(mUsageRef->cmdBufferQueueSerial, serial);
 }
 
 // Texture implemenetation
@@ -234,6 +235,8 @@ void Texture::syncContent(ContextMtl *context, mtl::BlitCommandEncoder *blitEnco
     if (blitEncoder)
     {
         blitEncoder->synchronizeResource(shared_from_this());
+
+        this->resetCPUReadMemNeedSync();
     }
 #endif
 }
@@ -244,12 +247,10 @@ void Texture::syncContent(ContextMtl *context)
     // Make sure GPU & CPU contents are synchronized.
     // NOTE: Only MacOS has separated storage for resource on CPU and GPU and needs explicit
     // synchronization
-    if (this->isCPUReadMemDirty())
+    if (this->isCPUReadMemNeedSync())
     {
         mtl::BlitCommandEncoder *blitEncoder = context->getBlitCommandEncoder();
         syncContent(context, blitEncoder);
-
-        this->resetCPUReadMemDirty();
     }
 #endif
 }

@@ -1087,7 +1087,7 @@ void ContextMtl::endEncoding(bool forceSaveRenderPassContent)
 
 void ContextMtl::flushCommandBufer()
 {
-    if (!mCmdBuffer.valid())
+    if (!mCmdBuffer.ready())
     {
         return;
     }
@@ -1098,7 +1098,7 @@ void ContextMtl::flushCommandBufer()
 
 void ContextMtl::present(const gl::Context *context, id<CAMetalDrawable> presentationDrawable)
 {
-    ensureCommandBufferValid();
+    ensureCommandBufferReady();
 
     // Always discard default FBO's depth stencil buffers at the end of the frame:
     if (mDrawFramebufferIsDefault && hasStartedRenderPass(mDrawFramebuffer))
@@ -1121,10 +1121,7 @@ angle::Result ContextMtl::finishCommandBuffer()
 {
     flushCommandBufer();
 
-    if (mCmdBuffer.valid())
-    {
-        mCmdBuffer.finish();
-    }
+    mCmdBuffer.finish();
 
     return angle::Result::Continue;
 }
@@ -1170,7 +1167,7 @@ mtl::RenderCommandEncoder *ContextMtl::getRenderCommandEncoder(const mtl::Render
 
     endEncoding(false);
 
-    ensureCommandBufferValid();
+    ensureCommandBufferReady();
 
     // Need to re-apply everything on next draw call.
     mDirtyBits.set();
@@ -1219,7 +1216,7 @@ mtl::BlitCommandEncoder *ContextMtl::getBlitCommandEncoder()
 
     endEncoding(true);
 
-    ensureCommandBufferValid();
+    ensureCommandBufferReady();
 
     return &mBlitEncoder.restart();
 }
@@ -1233,19 +1230,19 @@ mtl::ComputeCommandEncoder *ContextMtl::getComputeCommandEncoder()
 
     endEncoding(true);
 
-    ensureCommandBufferValid();
+    ensureCommandBufferReady();
 
     return &mComputeEncoder.restart();
 }
 
-void ContextMtl::ensureCommandBufferValid()
+void ContextMtl::ensureCommandBufferReady()
 {
-    if (!mCmdBuffer.valid())
+    if (!mCmdBuffer.ready())
     {
         mCmdBuffer.restart();
     }
 
-    ASSERT(mCmdBuffer.valid());
+    ASSERT(mCmdBuffer.ready());
 }
 
 void ContextMtl::updateViewport(FramebufferMtl *framebufferMtl,

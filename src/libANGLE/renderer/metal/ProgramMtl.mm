@@ -693,21 +693,8 @@ angle::Result ProgramMtl::commitUniforms(ContextMtl *context, mtl::RenderCommand
         {
             continue;
         }
-        switch (shaderType)
-        {
-            case gl::ShaderType::Vertex:
-                cmdEncoder->setVertexBytes(uniformBlock.uniformData.data(),
-                                           uniformBlock.uniformData.size(),
-                                           mtl::kDefaultUniformsBindingIndex);
-                break;
-            case gl::ShaderType::Fragment:
-                cmdEncoder->setFragmentBytes(uniformBlock.uniformData.data(),
-                                             uniformBlock.uniformData.size(),
-                                             mtl::kDefaultUniformsBindingIndex);
-                break;
-            default:
-                UNREACHABLE();
-        }
+        cmdEncoder->setBytes(shaderType, uniformBlock.uniformData.data(),
+                             uniformBlock.uniformData.size(), mtl::kDefaultUniformsBindingIndex);
 
         mDefaultUniformBlocksDirty.reset(shaderType);
     }
@@ -762,19 +749,8 @@ angle::Result ProgramMtl::updateTextures(const gl::Context *glContext,
 
                 TextureMtl *textureMtl = mtl::GetImpl(texture);
 
-                switch (shaderType)
-                {
-                    case gl::ShaderType::Vertex:
-                        ANGLE_TRY(textureMtl->bindVertexShader(glContext, cmdEncoder, textureSlot,
-                                                               samplerSlot));
-                        break;
-                    case gl::ShaderType::Fragment:
-                        ANGLE_TRY(textureMtl->bindFragmentShader(glContext, cmdEncoder, textureSlot,
-                                                                 samplerSlot));
-                        break;
-                    default:
-                        UNREACHABLE();
-                }
+                ANGLE_TRY(textureMtl->bindToShader(glContext, cmdEncoder, shaderType, textureSlot,
+                                                   samplerSlot));
             }  // for array elements
         }      // for sampler bindings
     }          // for shader types

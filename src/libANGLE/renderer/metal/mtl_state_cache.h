@@ -315,6 +315,8 @@ struct RenderPassDesc
     RenderPassDepthAttachmentDesc depthAttachment;
     RenderPassStencilAttachmentDesc stencilAttachment;
 
+    void convertToMetalDesc(MTLRenderPassDescriptor *objCDesc) const;
+
     // This will populate the RenderPipelineOutputDesc with default blend state and
     // MTLColorWriteMaskAll
     void populateRenderPipelineOutputDesc(RenderPipelineOutputDesc *outDesc) const;
@@ -333,8 +335,6 @@ struct RenderPassDesc
     uint32_t numColorAttachments = 0;
 };
 
-// convert to Metal object
-AutoObjCObj<MTLRenderPassDescriptor> ToMetalObj(const RenderPassDesc &desc);
 }  // namespace mtl
 }  // namespace rx
 

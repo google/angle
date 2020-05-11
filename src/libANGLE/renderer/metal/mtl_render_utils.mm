@@ -846,7 +846,7 @@ angle::Result IndexGeneratorUtils::convertIndexBufferGPU(ContextMtl *contextMtl,
 
     cmdEncoder->setData(uniform, 0);
     cmdEncoder->setBuffer(params.srcBuffer, 0, 1);
-    cmdEncoder->setBuffer(params.dstBuffer, params.dstOffset, 2);
+    cmdEncoder->setBufferForWrite(params.dstBuffer, params.dstOffset, 2);
 
     DispatchCompute(contextMtl, cmdEncoder, pipelineState, params.indexCount);
 
@@ -878,7 +878,7 @@ angle::Result IndexGeneratorUtils::generateTriFanBufferFromArrays(
     uniform.vertexCountFrom3rd = params.vertexCount - 2;
 
     cmdEncoder->setData(uniform, 0);
-    cmdEncoder->setBuffer(params.dstBuffer, params.dstOffset, 2);
+    cmdEncoder->setBufferForWrite(params.dstBuffer, params.dstOffset, 2);
 
     DispatchCompute(contextMtl, cmdEncoder, mTriFanFromArraysGeneratorPipeline,
                     uniform.vertexCountFrom3rd);
@@ -937,7 +937,7 @@ angle::Result IndexGeneratorUtils::generateTriFanBufferFromElementsArrayGPU(
 
     cmdEncoder->setData(uniform, 0);
     cmdEncoder->setBuffer(srcBuffer, 0, 1);
-    cmdEncoder->setBuffer(dstBuffer, dstOffset, 2);
+    cmdEncoder->setBufferForWrite(dstBuffer, dstOffset, 2);
 
     DispatchCompute(contextMtl, cmdEncoder, pipelineState, uniform.indexCount);
 

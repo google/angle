@@ -285,7 +285,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     mtl::ComputeCommandEncoder *getComputeCommandEncoder();
 
   private:
-    void ensureCommandBufferValid();
+    void ensureCommandBufferReady();
     angle::Result ensureIncompleteTexturesCreated(const gl::Context *context);
     angle::Result setupDraw(const gl::Context *context,
                             gl::PrimitiveMode mode,

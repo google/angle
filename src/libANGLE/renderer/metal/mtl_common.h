@@ -35,8 +35,12 @@
 
 #if !__has_feature(objc_arc)
 #    define ANGLE_MTL_AUTORELEASE autorelease
+#    define ANGLE_MTL_RETAIN retain
+#    define ANGLE_MTL_RELEASE release
 #else
 #    define ANGLE_MTL_AUTORELEASE self
+#    define ANGLE_MTL_RETAIN self
+#    define ANGLE_MTL_RELEASE self
 #endif
 
 #define ANGLE_MTL_UNUSED __attribute__((unused))

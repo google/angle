@@ -418,8 +418,8 @@ angle::Result TextureMtl::ensureTextureCreated(const gl::Context *context)
                 {
                     encoder = contextMtl->getBlitCommandEncoder();
                 }
-                encoder->copyTexture(mNativeTexture, layer, mip, mtlOrigin, mtlSize,
-                                     imageToTransfer, 0, 0, mtlOrigin);
+                encoder->copyTexture(imageToTransfer, 0, 0, mtlOrigin, mtlSize, mNativeTexture,
+                                     layer, mip, mtlOrigin);
             }
 
             imageToTransfer = nullptr;
@@ -828,42 +828,18 @@ angle::Result TextureMtl::syncState(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result TextureMtl::bindVertexShader(const gl::Context *context,
-                                           mtl::RenderCommandEncoder *cmdEncoder,
-                                           int textureSlotIndex,
-                                           int samplerSlotIndex)
+angle::Result TextureMtl::bindToShader(const gl::Context *context,
+                                       mtl::RenderCommandEncoder *cmdEncoder,
+                                       gl::ShaderType shaderType,
+                                       int textureSlotIndex,
+                                       int samplerSlotIndex)
 {
     ASSERT(mNativeTexture);
-    // ES 2.0: non power of two texture won't have any mipmap.
-    // We don't support OES_texture_npot atm.
+
     float maxLodClamp = FLT_MAX;
-    if (!mIsPow2)
-    {
-        maxLodClamp = 0;
-    }
 
-    cmdEncoder->setVertexTexture(mNativeTexture, textureSlotIndex);
-    cmdEncoder->setVertexSamplerState(mMetalSamplerState, 0, maxLodClamp, samplerSlotIndex);
-
-    return angle::Result::Continue;
-}
-
-angle::Result TextureMtl::bindFragmentShader(const gl::Context *context,
-                                             mtl::RenderCommandEncoder *cmdEncoder,
-                                             int textureSlotIndex,
-                                             int samplerSlotIndex)
-{
-    ASSERT(mNativeTexture);
-    // ES 2.0: non power of two texture won't have any mipmap.
-    // We don't support OES_texture_npot atm.
-    float maxLodClamp = FLT_MAX;
-    if (!mIsPow2)
-    {
-        maxLodClamp = 0;
-    }
-
-    cmdEncoder->setFragmentTexture(mNativeTexture, textureSlotIndex);
-    cmdEncoder->setFragmentSamplerState(mMetalSamplerState, 0, maxLodClamp, samplerSlotIndex);
+    cmdEncoder->setTexture(shaderType, mNativeTexture, textureSlotIndex);
+    cmdEncoder->setSamplerState(shaderType, mMetalSamplerState, 0, maxLodClamp, samplerSlotIndex);
 
     return angle::Result::Continue;
 }

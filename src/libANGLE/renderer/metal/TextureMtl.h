@@ -150,14 +150,11 @@ class TextureMtl : public TextureImpl
     // to the actual texture.
     angle::Result ensureTextureCreated(const gl::Context *context);
 
-    angle::Result bindVertexShader(const gl::Context *context,
-                                   mtl::RenderCommandEncoder *cmdEncoder,
-                                   int textureSlotIndex,
-                                   int samplerSlotIndex);
-    angle::Result bindFragmentShader(const gl::Context *context,
-                                     mtl::RenderCommandEncoder *cmdEncoder,
-                                     int textureSlotIndex,
-                                     int samplerSlotIndex);
+    angle::Result bindToShader(const gl::Context *context,
+                               mtl::RenderCommandEncoder *cmdEncoder,
+                               gl::ShaderType shaderType,
+                               int textureSlotIndex,
+                               int samplerSlotIndex);
 
     const mtl::Format &getFormat() const { return mFormat; }
 
