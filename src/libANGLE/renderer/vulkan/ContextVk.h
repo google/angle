@@ -12,6 +12,7 @@
 
 #include "common/PackedEnums.h"
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/OverlayVk.h"
 #include "libANGLE/renderer/vulkan/PersistentCommandPool.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -28,23 +29,6 @@ namespace rx
 class ProgramExecutableVk;
 class RendererVk;
 class WindowSurfaceVk;
-
-// The possible rotations of the surface/draw framebuffer, used for pre-rotating gl_Position
-// in the vertex shader.
-enum class SurfaceRotationType
-{
-    Identity,
-    Rotated90Degrees,
-    Rotated180Degrees,
-    Rotated270Degrees,
-    FlippedIdentity,
-    FlippedRotated90Degrees,
-    FlippedRotated180Degrees,
-    FlippedRotated270Degrees,
-
-    InvalidEnum,
-    EnumCount = InvalidEnum,
-};
 
 struct CommandBatch final : angle::NonCopyable
 {
