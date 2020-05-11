@@ -170,6 +170,30 @@
       "revId": "63406976ce36dd3d7ba27f09df05c5f11f01c895",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf482975_1b76547a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 970,
+      "author": {
+        "id": 1237274
+      },
+      "writtenOn": "2020-05-11T02:27:52Z",
+      "side": 1,
+      "message": "See crrev.com/c/2192496, but it turns out to be not quite useful in my opinion.",
+      "parentUuid": "f0f910ce_d48e5725",
+      "range": {
+        "startLine": 924,
+        "startChar": 0,
+        "endLine": 970,
+        "endChar": 1
+      },
+      "revId": "63406976ce36dd3d7ba27f09df05c5f11f01c895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
