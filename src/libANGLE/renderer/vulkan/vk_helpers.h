@@ -598,7 +598,7 @@ class PipelineBarrier : angle::NonCopyable
 
     bool isEmpty() const { return mImageMemoryBarriers.empty() && mMemoryBarrierSrcAccess == 0; }
 
-    void writeCommand(PrimaryCommandBuffer *primary)
+    void execute(PrimaryCommandBuffer *primary)
     {
         if (isEmpty())
         {
@@ -620,6 +620,22 @@ class PipelineBarrier : angle::NonCopyable
             static_cast<uint32_t>(mImageMemoryBarriers.size()), mImageMemoryBarriers.data());
 
         reset();
+    }
+
+    // Merge the other barrier into this one if this barrier's dependency also covers dependency of
+    // the other barrier. Returns true if we actually merged.
+    bool mergeIfDependencyStrongerThan(PipelineBarrier *other)
+    {
+        // If mDstStageMask already has the other's mDstStageMask bits, then merge it
+        bool doMerge = (mDstStageMask == (mDstStageMask | other->mDstStageMask)) ||
+                       // If my dependency is stronger then we can merge
+                       (gl::ScanReverse(mSrcStageMask) >= gl::ScanReverse(other->mSrcStageMask));
+
+        if (doMerge)
+        {
+            merge(other);
+        }
+        return doMerge;
     }
 
     // merge two barriers into one
