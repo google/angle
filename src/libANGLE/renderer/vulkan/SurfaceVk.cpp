@@ -29,6 +29,10 @@ namespace
 {
 angle::SubjectIndex kAnySurfaceImageSubjectIndex = 0;
 
+// Special value for currentExtent if surface size is determined by the
+// swapchain's extent. See VkSurfaceCapabilitiesKHR spec for more details.
+constexpr uint32_t kSurfaceSizedBySwapchain = 0xFFFFFFFFu;
+
 GLint GetSampleCount(const egl::Config *config)
 {
     GLint samples = 1;
@@ -563,9 +567,9 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     EGLAttrib attribWidth  = mState.attributes.get(EGL_WIDTH, 0);
     EGLAttrib attribHeight = mState.attributes.get(EGL_HEIGHT, 0);
 
-    if (mSurfaceCaps.currentExtent.width == 0xFFFFFFFFu)
+    if (mSurfaceCaps.currentExtent.width == kSurfaceSizedBySwapchain)
     {
-        ASSERT(mSurfaceCaps.currentExtent.height == 0xFFFFFFFFu);
+        ASSERT(mSurfaceCaps.currentExtent.height == kSurfaceSizedBySwapchain);
 
         width  = (attribWidth != 0) ? static_cast<uint32_t>(attribWidth) : windowSize.width;
         height = (attribHeight != 0) ? static_cast<uint32_t>(attribHeight) : windowSize.height;
@@ -990,9 +994,9 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
             uint32_t width  = mSurfaceCaps.currentExtent.width;
             uint32_t height = mSurfaceCaps.currentExtent.height;
 
-            if (width != 0xFFFFFFFFu)
+            if (width != kSurfaceSizedBySwapchain)
             {
-                ASSERT(height != 0xFFFFFFFFu);
+                ASSERT(height != kSurfaceSizedBySwapchain);
                 currentExtents.width  = width;
                 currentExtents.height = height;
             }
@@ -1446,12 +1450,20 @@ EGLint WindowSurfaceVk::getHeight() const
 egl::Error WindowSurfaceVk::getUserWidth(const egl::Display *display, EGLint *value) const
 {
     DisplayVk *displayVk = vk::GetImpl(display);
-    VkSurfaceCapabilitiesKHR surfaceCaps;
 
+    if (mSurfaceCaps.currentExtent.width == kSurfaceSizedBySwapchain)
+    {
+        // Surface has no intrinsic size; use current size.
+        *value = getWidth();
+        return egl::NoError();
+    }
+
+    VkSurfaceCapabilitiesKHR surfaceCaps;
     angle::Result result = getUserExtentsImpl(displayVk, &surfaceCaps);
     if (result == angle::Result::Continue)
     {
         // The EGL spec states that value is not written if there is an error
+        ASSERT(surfaceCaps.currentExtent.width != kSurfaceSizedBySwapchain);
         *value = static_cast<EGLint>(surfaceCaps.currentExtent.width);
     }
     return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
@@ -1460,12 +1472,20 @@ egl::Error WindowSurfaceVk::getUserWidth(const egl::Display *display, EGLint *va
 egl::Error WindowSurfaceVk::getUserHeight(const egl::Display *display, EGLint *value) const
 {
     DisplayVk *displayVk = vk::GetImpl(display);
-    VkSurfaceCapabilitiesKHR surfaceCaps;
 
+    if (mSurfaceCaps.currentExtent.height == kSurfaceSizedBySwapchain)
+    {
+        // Surface has no intrinsic size; use current size.
+        *value = getHeight();
+        return egl::NoError();
+    }
+
+    VkSurfaceCapabilitiesKHR surfaceCaps;
     angle::Result result = getUserExtentsImpl(displayVk, &surfaceCaps);
     if (result == angle::Result::Continue)
     {
         // The EGL spec states that value is not written if there is an error
+        ASSERT(surfaceCaps.currentExtent.height != kSurfaceSizedBySwapchain);
         *value = static_cast<EGLint>(surfaceCaps.currentExtent.height);
     }
     return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
