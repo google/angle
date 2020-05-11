@@ -140,11 +140,11 @@ VulkanExternalHelper::~VulkanExternalHelper()
     }
 }
 
-void VulkanExternalHelper::initialize(bool useSwiftshader)
+void VulkanExternalHelper::initialize(bool useSwiftshader, bool enableValidationLayers)
 {
     vk::ICD icd = useSwiftshader ? vk::ICD::SwiftShader : vk::ICD::Default;
 
-    vk::ScopedVkLoaderEnvironment scopedEnvironment(true /* enableValidationLayers */, icd);
+    vk::ScopedVkLoaderEnvironment scopedEnvironment(enableValidationLayers, icd);
 
     ASSERT(mInstance == VK_NULL_HANDLE);
     VkResult result = VK_SUCCESS;
@@ -183,13 +183,19 @@ void VulkanExternalHelper::initialize(bool useSwiftshader)
     uint32_t enabledInstanceExtensionCount =
         static_cast<uint32_t>(enabledInstanceExtensions.size());
 
+    std::vector<const char *> enabledLayerNames;
+    if (enableValidationLayers)
+    {
+        enabledLayerNames.push_back("VK_LAYER_KHRONOS_validation");
+    }
+
     VkInstanceCreateInfo instanceCreateInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
         /* .pNext = */ nullptr,
         /* .flags = */ 0,
         /* .pApplicationInfo = */ &applicationInfo,
-        /* .enabledLayerCount = */ 0,
-        /* .ppEnabledLayerNames = */ nullptr,
+        /* .enabledLayerCount = */ enabledLayerNames.size(),
+        /* .ppEnabledLayerNames = */ enabledLayerNames.data(),
         /* .enabledExtensionCount = */ enabledInstanceExtensionCount,
         /* .ppEnabledExtensionName = */ enabledInstanceExtensions.data(),
     };
@@ -528,7 +534,9 @@ bool VulkanExternalHelper::canCreateSemaphoreOpaqueFd() const
         /* .handleType = */ VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT,
     };
 
-    VkExternalSemaphoreProperties externalSemaphoreProperties = {};
+    VkExternalSemaphoreProperties externalSemaphoreProperties = {
+        /* .sType = */ VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES,
+    };
     vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(mPhysicalDevice, &externalSemaphoreInfo,
                                                       &externalSemaphoreProperties);
 

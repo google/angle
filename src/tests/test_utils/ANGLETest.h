@@ -338,6 +338,11 @@ class ANGLETestBase
         return mCurrentParams->isSwiftshader() || angle::IsSwiftshaderDevice();
     }
 
+    bool enableDebugLayers() const
+    {
+        return mCurrentParams->eglParameters.debugLayersEnabled != EGL_FALSE;
+    }
+
   protected:
     void ANGLETestSetUp();
     void ANGLETestTearDown();
