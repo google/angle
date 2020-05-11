@@ -701,8 +701,9 @@ void ClearValuesArray::store(uint32_t index,
     // We do this double if to handle the packed depth-stencil case.
     if ((aspectFlags & VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
     {
-        // Special case for stencil.
-        ASSERT(index == kClearValueDepthIndex);
+        // Ensure for packed DS we're writing to the depth index.
+        ASSERT(index == kClearValueDepthIndex ||
+               (index == kClearValueStencilIndex && aspectFlags == VK_IMAGE_ASPECT_STENCIL_BIT));
         mValues[kClearValueStencilIndex] = clearValue;
         mEnabled.set(kClearValueStencilIndex);
     }

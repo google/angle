@@ -157,6 +157,16 @@ class FramebufferVk : public FramebufferImpl
                             bool clearStencil,
                             const VkClearColorValue &clearColorValue,
                             const VkClearDepthStencilValue &clearDepthStencilValue);
+
+    angle::Result clearImmediatelyWithRenderPassOp(
+        ContextVk *contextVk,
+        const gl::Rectangle &clearArea,
+        gl::DrawBufferMask clearColorBuffers,
+        bool clearDepth,
+        bool clearStencil,
+        const VkClearColorValue &clearColorValue,
+        const VkClearDepthStencilValue &clearDepthStencilValue);
+
     angle::Result clearWithDraw(ContextVk *contextVk,
                                 const gl::Rectangle &clearArea,
                                 gl::DrawBufferMask clearColorBuffers,
@@ -186,6 +196,8 @@ class FramebufferVk : public FramebufferImpl
     VkImageAspectFlagBits getReadPixelsAspectFlags(GLenum format) const;
 
     angle::Result flushDeferredClears(ContextVk *contextVk, const gl::Rectangle &renderArea);
+    VkClearValue getCorrectedColorClearValue(size_t colorIndexGL,
+                                             const VkClearColorValue &clearColor) const;
 
     WindowSurfaceVk *mBackbuffer;
 
