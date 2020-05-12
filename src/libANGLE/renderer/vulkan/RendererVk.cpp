@@ -1706,6 +1706,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     // that can cause OOM and timeouts.
     ANGLE_FEATURE_CONDITION(&mFeatures, allocateNonZeroMemory, false);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, shadowBuffers, true);
+
     ANGLE_FEATURE_CONDITION(&mFeatures, persistentlyMappedBuffers, true);
 
     ANGLE_FEATURE_CONDITION(

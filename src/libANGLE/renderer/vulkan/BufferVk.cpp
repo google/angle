@@ -190,6 +190,11 @@ angle::Result BufferVk::initializeShadowBuffer(ContextVk *contextVk,
                                                gl::BufferBinding target,
                                                size_t size)
 {
+    if (!contextVk->getRenderer()->getFeatures().shadowBuffers.enabled)
+    {
+        return angle::Result::Continue;
+    }
+
     // For now, enable shadow buffers only for pixel unpack buffers.
     // If usecases present themselves, we can enable them for other buffer types.
     if (target == gl::BufferBinding::PixelUnpack)

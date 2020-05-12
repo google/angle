@@ -284,6 +284,14 @@ struct FeaturesVk : FeatureSetBase
         "Fill new allocations with non-zero values to flush out errors.", &members,
         "http://anglebug.com/4384"};
 
+    // Allocate a "shadow" buffer for GL buffer objects. For GPU-read only buffers
+    // glMap* latency can be reduced by maintaining a copy of the buffer which is
+    // writeable only by the CPU. We then return this shadow buffer on glMap* calls.
+    Feature shadowBuffers = {
+        "shadow_buffers", FeatureCategory::VulkanFeatures,
+        "Allocate a shadow buffer for GL buffer objects to reduce glMap* latency.", &members,
+        "http://anglebug.com/4339"};
+
     // Persistently map buffer memory until destroy, saves on map/unmap IOCTL overhead
     // for buffers that are updated frequently.
     Feature persistentlyMappedBuffers = {
