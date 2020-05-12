@@ -18,7 +18,6 @@
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
-#include "libANGLE/renderer/vulkan/vk_google_filtering_precision.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 #include <type_traits>
@@ -1775,7 +1774,7 @@ void SamplerDesc::update(const gl::SamplerState &samplerState, bool stencilMode)
     mReserved = 0;
 }
 
-angle::Result SamplerDesc::init(ContextVk *contextVk, vk::Sampler *sampler) const
+VkSamplerCreateInfo SamplerDesc::unpack(ContextVk *contextVk) const
 {
     const gl::Extensions &extensions = contextVk->getExtensions();
 
@@ -1800,23 +1799,7 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, vk::Sampler *sampler) cons
     createInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     createInfo.unnormalizedCoordinates = VK_FALSE;
 
-    // Note: because we don't detect changes to this hint (no dirty bit), if a sampler is created
-    // with the hint enabled, and then the hint gets disabled, the next render will do so with the
-    // hint enabled.
-    VkSamplerFilteringPrecisionGOOGLE filteringInfo = {};
-    GLenum hint = contextVk->getState().getTextureFilteringHint();
-    if (hint == GL_NICEST)
-    {
-        ASSERT(extensions.textureFilteringCHROMIUM);
-        filteringInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_FILTERING_PRECISION_GOOGLE;
-        filteringInfo.samplerFilteringPrecisionMode =
-            VK_SAMPLER_FILTERING_PRECISION_MODE_HIGH_GOOGLE;
-        vk::AddToPNextChain(&createInfo, &filteringInfo);
-    }
-
-    ANGLE_VK_TRY(contextVk, sampler->init(contextVk->getDevice(), createInfo));
-
-    return angle::Result::Continue;
+    return createInfo;
 }
 
 size_t SamplerDesc::hash() const
@@ -2175,8 +2158,10 @@ angle::Result SamplerCache::getSampler(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
+    VkSamplerCreateInfo createInfo = desc.unpack(contextVk);
+
     vk::Sampler sampler;
-    ANGLE_TRY(desc.init(contextVk, &sampler));
+    ANGLE_VK_TRY(contextVk, sampler.init(contextVk->getDevice(), createInfo));
 
     auto insertedItem = mPayload.emplace(desc, vk::RefCountedSampler(std::move(sampler)));
     vk::RefCountedSampler &insertedSampler = insertedItem.first->second;

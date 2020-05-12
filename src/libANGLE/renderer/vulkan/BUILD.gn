@@ -87,7 +87,6 @@ _vulkan_backend_sources = [
   "vk_format_table_autogen.cpp",
   "vk_format_utils.cpp",
   "vk_format_utils.h",
-  "vk_google_filtering_precision.h",
   "vk_helpers.cpp",
   "vk_helpers.h",
   "vk_internal_shaders_autogen.cpp",

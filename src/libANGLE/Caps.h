@@ -585,9 +585,6 @@ struct Extensions
     // GL_ANGLE_provoking_vertex
     bool provokingVertex = false;
 
-    // GL_CHROMIUM_texture_filtering_hint
-    bool textureFilteringCHROMIUM = false;
-
     // GL_CHROMIUM_lose_context
     bool loseContextCHROMIUM = false;
 
