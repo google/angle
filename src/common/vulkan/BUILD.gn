@@ -35,18 +35,6 @@ angle_source_set("vulkan") {
     data_deps += [ "$angle_root/third_party/vulkan-tools/src:VkICD_mock_icd" ]
   }
 
-  if (angle_enable_vulkan_validation_layers) {
-    defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]
-    if (is_fuchsia) {
-      data_deps += [ "//third_party/fuchsia-sdk:vulkan_validation" ]
-    } else {
-      data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_validation_layers" ]
-      if (!is_android) {
-        data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_gen_json_files" ]
-      }
-    }
-  }
-
   if (angle_enable_swiftshader) {
     import("$swiftshader_dir/src/Vulkan/vulkan.gni")
     _sws_icd = "./$swiftshader_icd_file_name"
@@ -60,5 +48,17 @@ angle_source_set("vulkan") {
       "$swiftshader_dir/src/Vulkan:icd_file",
       "$swiftshader_dir/src/Vulkan:swiftshader_libvulkan",
     ]
+  }
+}
+
+group("vulkan_validation_layers") {
+  data_deps = []
+  if (is_fuchsia) {
+    data_deps += [ "//third_party/fuchsia-sdk:vulkan_validation" ]
+  } else {
+    data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_validation_layers" ]
+    if (!is_android) {
+      data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_gen_json_files" ]
+    }
   }
 }

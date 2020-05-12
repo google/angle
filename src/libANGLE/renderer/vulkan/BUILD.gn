@@ -247,6 +247,13 @@ angle_source_set("angle_vulkan_backend") {
 
   data_deps = []
 
+  defines = []
+
+  if (angle_enable_vulkan_validation_layers) {
+    defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]
+    data_deps += [ "$angle_root/src/common/vulkan:vulkan_validation_layers" ]
+  }
+
   if (is_android) {
     libs += [ "vulkan" ]
   }
