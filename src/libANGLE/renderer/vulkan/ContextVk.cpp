@@ -517,7 +517,7 @@ angle::Result CommandQueue::finishToSerial(vk::Context *context, Serial serial, 
     {
         return angle::Result::Continue;
     }
-
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::finishToSerial");
     // Find the first batch with serial equal to or bigger than given serial (note that
     // the batch serials are unique, otherwise upper-bound would have been necessary).
     //
