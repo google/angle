@@ -439,15 +439,17 @@ angle::Result BlitGL::blitColorBufferWithShader(const gl::Context *context,
     {
         textureId = mScratchTextures[0];
 
-        GLenum format                 = readAttachment->getFormat().info->internalFormat;
+        const gl::InternalFormat &sourceInternalFormat       = *readAttachment->getFormat().info;
+        nativegl::CopyTexImageImageFormat copyTexImageFormat = nativegl::GetCopyTexImageImageFormat(
+            mFunctions, mFeatures, sourceInternalFormat.internalFormat, sourceInternalFormat.type);
         const FramebufferGL *sourceGL = GetImplAs<FramebufferGL>(source);
         mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceGL->getFramebufferID());
         mStateManager->bindTexture(gl::TextureType::_2D, textureId);
 
         ANGLE_GL_TRY_ALWAYS_CHECK(
-            context,
-            mFunctions->copyTexImage2D(GL_TEXTURE_2D, 0, format, inBoundsSource.x, inBoundsSource.y,
-                                       inBoundsSource.width, inBoundsSource.height, 0));
+            context, mFunctions->copyTexImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat,
+                                                inBoundsSource.x, inBoundsSource.y,
+                                                inBoundsSource.width, inBoundsSource.height, 0));
 
         // Translate sourceArea to be relative to the copied image.
         sourceArea.x -= inBoundsSource.x;
