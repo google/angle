@@ -140,6 +140,9 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
             vk::CommandBuffer *commandBuffer;
             ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
+            // Image should not be accessed while unowned.
+            ASSERT(!textureVk->getImage().hasStagedUpdates());
+
             // Queue ownership transfer and layout transition.
             image.acquireFromExternal(contextVk, VK_QUEUE_FAMILY_EXTERNAL, rendererQueueFamilyIndex,
                                       layout, commandBuffer);

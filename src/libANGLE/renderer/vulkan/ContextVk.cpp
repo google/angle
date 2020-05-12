@@ -4042,6 +4042,8 @@ angle::Result ContextVk::onBufferRead(VkAccessFlags readAccessType,
                                       vk::PipelineStage readStage,
                                       vk::BufferHelper *buffer)
 {
+    ASSERT(!buffer->isReleasedToExternal());
+
     ANGLE_TRY(endRenderPass());
 
     if (!buffer->canAccumulateRead(this, readAccessType))
@@ -4058,6 +4060,8 @@ angle::Result ContextVk::onBufferWrite(VkAccessFlags writeAccessType,
                                        vk::PipelineStage writeStage,
                                        vk::BufferHelper *buffer)
 {
+    ASSERT(!buffer->isReleasedToExternal());
+
     ANGLE_TRY(endRenderPass());
 
     if (!buffer->canAccumulateWrite(this, writeAccessType))
@@ -4074,6 +4078,8 @@ angle::Result ContextVk::onImageRead(VkImageAspectFlags aspectFlags,
                                      vk::ImageLayout imageLayout,
                                      vk::ImageHelper *image)
 {
+    ASSERT(!image->isReleasedToExternal());
+
     ANGLE_TRY(endRenderPass());
 
     if (image->isLayoutChangeNecessary(imageLayout))
@@ -4090,6 +4096,8 @@ angle::Result ContextVk::onImageWrite(VkImageAspectFlags aspectFlags,
                                       vk::ImageLayout imageLayout,
                                       vk::ImageHelper *image)
 {
+    ASSERT(!image->isReleasedToExternal());
+
     ANGLE_TRY(endRenderPass());
 
     // Barriers are always required for image writes.

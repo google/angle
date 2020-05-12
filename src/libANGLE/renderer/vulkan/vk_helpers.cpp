@@ -494,6 +494,15 @@ VkClearValue GetRobustResourceClearValue(const vk::Format &format)
     }
     return clearValue;
 }
+
+#if !defined(ANGLE_PLATFORM_MACOS) && !defined(ANGLE_PLATFORM_ANDROID)
+bool IsExternalQueueFamily(uint32_t queueFamilyIndex)
+{
+    return queueFamilyIndex == VK_QUEUE_FAMILY_EXTERNAL ||
+           queueFamilyIndex == VK_QUEUE_FAMILY_FOREIGN_EXT;
+}
+#endif
+
 }  // anonymous namespace
 
 VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout)
@@ -2343,6 +2352,16 @@ void BufferHelper::releaseToExternal(ContextVk *contextVk,
     changeQueue(externalQueueFamilyIndex, commandBuffer);
 }
 
+bool BufferHelper::isReleasedToExternal() const
+{
+#if !defined(ANGLE_PLATFORM_MACOS) && !defined(ANGLE_PLATFORM_ANDROID)
+    return IsExternalQueueFamily(mCurrentQueueFamilyIndex);
+#else
+    // TODO(anglebug.com/4635): Implement external memory barriers on Mac/Android.
+    return false;
+#endif
+}
+
 bool BufferHelper::canAccumulateRead(ContextVk *contextVk, VkAccessFlags readAccessType)
 {
     // We only need to start a new command buffer when we need a new barrier.
@@ -2839,6 +2858,16 @@ void ImageHelper::releaseToExternal(ContextVk *contextVk,
     ASSERT(mCurrentQueueFamilyIndex == rendererQueueFamilyIndex);
 
     changeLayoutAndQueue(getAspectFlags(), desiredLayout, externalQueueFamilyIndex, commandBuffer);
+}
+
+bool ImageHelper::isReleasedToExternal() const
+{
+#if !defined(ANGLE_PLATFORM_MACOS) && !defined(ANGLE_PLATFORM_ANDROID)
+    return IsExternalQueueFamily(mCurrentQueueFamilyIndex);
+#else
+    // TODO(anglebug.com/4635): Implement external memory barriers on Mac/Android.
+    return false;
+#endif
 }
 
 uint32_t ImageHelper::getBaseLevel()
