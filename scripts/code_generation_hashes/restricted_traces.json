@@ -4,11 +4,13 @@
   "src/tests/perf_tests/restricted_traces/manhattan_10.tar.gz.sha1":
     "b4d333cd5cf3977c339350be0a819928",
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
-    "ebdb00ee3c7c74832f586a83b4394486",
+    "c0a96b33aa1b88197e956d1848aa36b3",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.gni":
-    "54343c0c0a3a15f076516ad26f2ada5a",
+    "c098dd718bab70e9f09ef955ddfb6d05",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.h":
-    "e08aec5cfa97c2239e3cccc6afccb1b0",
+    "9caa6c37d60ca1d69a7d0d71749a88bb",
+  "src/tests/perf_tests/restricted_traces/temple_run_300.tar.gz.sha1":
+    "934983876ac5f3d9bc9b43698bb94b9d",
   "src/tests/perf_tests/restricted_traces/trex_200.tar.gz.sha1":
     "605cf71846da2309a002baa78abf28e1"
 }
