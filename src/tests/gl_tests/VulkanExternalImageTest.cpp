@@ -374,6 +374,252 @@ TEST_P(VulkanExternalImageTest, TextureFormatCompatChromiumZirconHandle)
     }
 }
 
+// Test creating and clearing RGBA8 texture in opaque fd with acquire/release.
+TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdWithSemaphores)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
+
+    VulkanExternalHelper helper;
+    helper.initialize(isSwiftshader(), enableDebugLayers());
+
+    VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+    ANGLE_SKIP_TEST_IF(
+        !helper.canCreateImageOpaqueFd(format, VK_IMAGE_TYPE_2D, VK_IMAGE_TILING_OPTIMAL));
+    ANGLE_SKIP_TEST_IF(!helper.canCreateSemaphoreOpaqueFd());
+
+    VkSemaphore vkAcquireSemaphore = VK_NULL_HANDLE;
+    VkResult result                = helper.createSemaphoreOpaqueFd(&vkAcquireSemaphore);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_TRUE(vkAcquireSemaphore != VK_NULL_HANDLE);
+
+    VkSemaphore vkReleaseSemaphore = VK_NULL_HANDLE;
+    result                         = helper.createSemaphoreOpaqueFd(&vkReleaseSemaphore);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_TRUE(vkReleaseSemaphore != VK_NULL_HANDLE);
+
+    int acquireSemaphoreFd = kInvalidFd;
+    result = helper.exportSemaphoreOpaqueFd(vkAcquireSemaphore, &acquireSemaphoreFd);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(acquireSemaphoreFd, kInvalidFd);
+
+    int releaseSemaphoreFd = kInvalidFd;
+    result = helper.exportSemaphoreOpaqueFd(vkReleaseSemaphore, &releaseSemaphoreFd);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(releaseSemaphoreFd, kInvalidFd);
+
+    VkImage image                 = VK_NULL_HANDLE;
+    VkDeviceMemory deviceMemory   = VK_NULL_HANDLE;
+    VkDeviceSize deviceMemorySize = 0;
+
+    VkExtent3D extent = {1, 1, 1};
+    result = helper.createImage2DOpaqueFd(format, extent, &image, &deviceMemory, &deviceMemorySize);
+    EXPECT_EQ(result, VK_SUCCESS);
+
+    int memoryFd = kInvalidFd;
+    result       = helper.exportMemoryOpaqueFd(deviceMemory, &memoryFd);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(memoryFd, kInvalidFd);
+
+    {
+        GLMemoryObject memoryObject;
+        GLint dedicatedMemory = GL_TRUE;
+        glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                     &dedicatedMemory);
+        glImportMemoryFdEXT(memoryObject, deviceMemorySize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, memoryFd);
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1, memoryObject, 0);
+
+        GLSemaphore glAcquireSemaphore;
+        glImportSemaphoreFdEXT(glAcquireSemaphore, GL_HANDLE_TYPE_OPAQUE_FD_EXT,
+                               acquireSemaphoreFd);
+
+        helper.releaseImageAndSignalSemaphore(image, VK_IMAGE_LAYOUT_UNDEFINED,
+                                              VK_IMAGE_LAYOUT_GENERAL, vkAcquireSemaphore);
+
+        const GLuint barrierTextures[] = {
+            texture,
+        };
+        constexpr uint32_t textureBarriersCount = std::extent<decltype(barrierTextures)>();
+        const GLenum textureSrcLayouts[]        = {
+            GL_LAYOUT_GENERAL_EXT,
+        };
+        constexpr uint32_t textureSrcLayoutsCount = std::extent<decltype(textureSrcLayouts)>();
+        static_assert(textureBarriersCount == textureSrcLayoutsCount,
+                      "barrierTextures and textureSrcLayouts must be the same length");
+        glWaitSemaphoreEXT(glAcquireSemaphore, 0, nullptr, textureBarriersCount, barrierTextures,
+                           textureSrcLayouts);
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+        glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        GLSemaphore glReleaseSemaphore;
+        glImportSemaphoreFdEXT(glReleaseSemaphore, GL_HANDLE_TYPE_OPAQUE_FD_EXT,
+                               releaseSemaphoreFd);
+
+        const GLenum textureDstLayouts[] = {
+            GL_LAYOUT_TRANSFER_SRC_EXT,
+        };
+        constexpr uint32_t textureDstLayoutsCount = std::extent<decltype(textureSrcLayouts)>();
+        static_assert(textureBarriersCount == textureDstLayoutsCount,
+                      "barrierTextures and textureDstLayouts must be the same length");
+        glSignalSemaphoreEXT(glReleaseSemaphore, 0, nullptr, textureBarriersCount, barrierTextures,
+                             textureDstLayouts);
+
+        helper.waitSemaphoreAndAcquireImage(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                            vkReleaseSemaphore);
+        uint8_t pixels[4];
+        VkOffset3D offset = {};
+        VkExtent3D extent = {1, 1, 1};
+        helper.readPixels(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, format, offset, extent,
+                          pixels, sizeof(pixels));
+
+        EXPECT_NEAR(0x80, pixels[0], 1);
+        EXPECT_NEAR(0x80, pixels[1], 1);
+        EXPECT_NEAR(0x80, pixels[2], 1);
+        EXPECT_NEAR(0x80, pixels[3], 1);
+    }
+
+    EXPECT_GL_NO_ERROR();
+
+    vkDeviceWaitIdle(helper.getDevice());
+    vkDestroyImage(helper.getDevice(), image, nullptr);
+    vkDestroySemaphore(helper.getDevice(), vkAcquireSemaphore, nullptr);
+    vkDestroySemaphore(helper.getDevice(), vkReleaseSemaphore, nullptr);
+    vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
+}
+
+// Test creating and clearing RGBA8 texture in zircon vmo with acquire/release.
+TEST_P(VulkanExternalImageTest, ShouldClearZirconVmoWithSemaphores)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_semaphore_fuchsia"));
+
+    VulkanExternalHelper helper;
+    helper.initialize(isSwiftshader(), enableDebugLayers());
+
+    VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+    ANGLE_SKIP_TEST_IF(
+        !helper.canCreateImageZirconVmo(format, VK_IMAGE_TYPE_2D, VK_IMAGE_TILING_OPTIMAL));
+    ANGLE_SKIP_TEST_IF(!helper.canCreateSemaphoreZirconEvent());
+
+    VkSemaphore vkAcquireSemaphore = VK_NULL_HANDLE;
+    VkResult result                = helper.createSemaphoreZirconEvent(&vkAcquireSemaphore);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_TRUE(vkAcquireSemaphore != VK_NULL_HANDLE);
+
+    VkSemaphore vkReleaseSemaphore = VK_NULL_HANDLE;
+    result                         = helper.createSemaphoreZirconEvent(&vkReleaseSemaphore);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_TRUE(vkReleaseSemaphore != VK_NULL_HANDLE);
+
+    zx_handle_t acquireSemaphoreHandle = ZX_HANDLE_INVALID;
+    result = helper.exportSemaphoreZirconEvent(vkAcquireSemaphore, &acquireSemaphoreHandle);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(acquireSemaphoreHandle, ZX_HANDLE_INVALID);
+
+    zx_handle_t releaseSemaphoreHandle = ZX_HANDLE_INVALID;
+    result = helper.exportSemaphoreZirconEvent(vkReleaseSemaphore, &releaseSemaphoreHandle);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(releaseSemaphoreHandle, ZX_HANDLE_INVALID);
+
+    VkImage image                 = VK_NULL_HANDLE;
+    VkDeviceMemory deviceMemory   = VK_NULL_HANDLE;
+    VkDeviceSize deviceMemorySize = 0;
+
+    VkExtent3D extent = {1, 1, 1};
+    result =
+        helper.createImage2DZirconVmo(format, extent, &image, &deviceMemory, &deviceMemorySize);
+    EXPECT_EQ(result, VK_SUCCESS);
+
+    zx_handle_t memoryHandle = ZX_HANDLE_INVALID;
+    result                   = helper.exportMemoryZirconVmo(deviceMemory, &memoryHandle);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(memoryHandle, ZX_HANDLE_INVALID);
+
+    {
+        GLMemoryObject memoryObject;
+        GLint dedicatedMemory = GL_TRUE;
+        glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                     &dedicatedMemory);
+        glImportMemoryZirconHandleANGLE(memoryObject, deviceMemorySize,
+                                        GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE, memoryHandle);
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1, memoryObject, 0);
+
+        GLSemaphore glAcquireSemaphore;
+        glImportSemaphoreZirconHandleANGLE(glAcquireSemaphore, GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE,
+                                           acquireSemaphoreHandle);
+
+        helper.releaseImageAndSignalSemaphore(image, VK_IMAGE_LAYOUT_UNDEFINED,
+                                              VK_IMAGE_LAYOUT_GENERAL, vkAcquireSemaphore);
+
+        const GLuint barrierTextures[] = {
+            texture,
+        };
+        constexpr uint32_t textureBarriersCount = std::extent<decltype(barrierTextures)>();
+        const GLenum textureSrcLayouts[]        = {
+            GL_LAYOUT_GENERAL_EXT,
+        };
+        constexpr uint32_t textureSrcLayoutsCount = std::extent<decltype(textureSrcLayouts)>();
+        static_assert(textureBarriersCount == textureSrcLayoutsCount,
+                      "barrierTextures and textureSrcLayouts must be the same length");
+        glWaitSemaphoreEXT(glAcquireSemaphore, 0, nullptr, textureBarriersCount, barrierTextures,
+                           textureSrcLayouts);
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+        glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        GLSemaphore glReleaseSemaphore;
+        glImportSemaphoreZirconHandleANGLE(glReleaseSemaphore, GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE,
+                                           releaseSemaphoreHandle);
+
+        const GLenum textureDstLayouts[] = {
+            GL_LAYOUT_TRANSFER_SRC_EXT,
+        };
+        constexpr uint32_t textureDstLayoutsCount = std::extent<decltype(textureSrcLayouts)>();
+        static_assert(textureBarriersCount == textureDstLayoutsCount,
+                      "barrierTextures and textureDstLayouts must be the same length");
+        glSignalSemaphoreEXT(glReleaseSemaphore, 0, nullptr, textureBarriersCount, barrierTextures,
+                             textureDstLayouts);
+
+        helper.waitSemaphoreAndAcquireImage(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                            vkReleaseSemaphore);
+        uint8_t pixels[4];
+        VkOffset3D offset = {};
+        VkExtent3D extent = {1, 1, 1};
+        helper.readPixels(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, format, offset, extent,
+                          pixels, sizeof(pixels));
+
+        EXPECT_NEAR(0x80, pixels[0], 1);
+        EXPECT_NEAR(0x80, pixels[1], 1);
+        EXPECT_NEAR(0x80, pixels[2], 1);
+        EXPECT_NEAR(0x80, pixels[3], 1);
+    }
+
+    EXPECT_GL_NO_ERROR();
+
+    vkDeviceWaitIdle(helper.getDevice());
+    vkDestroyImage(helper.getDevice(), image, nullptr);
+    vkDestroySemaphore(helper.getDevice(), vkAcquireSemaphore, nullptr);
+    vkDestroySemaphore(helper.getDevice(), vkReleaseSemaphore, nullptr);
+    vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(VulkanExternalImageTest);
