@@ -567,6 +567,19 @@ TEST_P(VulkanExternalImageTest, ShouldClearZirconVmoWithSemaphores)
     RunShouldClearWithSemaphoresTest<FuchsiaTraits>(isSwiftshader(), enableDebugLayers());
 }
 
+// Support for Zircon handle types is mandatory on Fuchsia.
+TEST_P(VulkanExternalImageTest, ShouldSupportExternalHandlesFuchsia)
+{
+    ANGLE_SKIP_TEST_IF(!IsFuchsia());
+    EXPECT_TRUE(EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
+    EXPECT_TRUE(EnsureGLExtensionEnabled("GL_ANGLE_semaphore_fuchsia"));
+    VulkanExternalHelper helper;
+    helper.initialize(isSwiftshader(), enableDebugLayers());
+    EXPECT_TRUE(helper.canCreateSemaphoreZirconEvent());
+    EXPECT_TRUE(helper.canCreateImageZirconVmo(VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TYPE_2D,
+                                               VK_IMAGE_TILING_OPTIMAL));
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(VulkanExternalImageTest);
