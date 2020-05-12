@@ -24,6 +24,7 @@ enum class RestrictedTraceID
 };
 
 using ReplayFunc           = void (*)(uint32_t);
+using ResetFunc            = void (*)();
 using SetupFunc            = void (*)();
 using DecompressFunc       = uint8_t *(*)(const std::vector<uint8_t> &);
 using SetBinaryDataDirFunc = void (*)(const char *);
@@ -55,6 +56,23 @@ inline void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
             break;
         case RestrictedTraceID::trex_200:
             trex_200::ReplayContext1Frame(frameIndex);
+            break;
+        default:
+            fprintf(stderr, "Error in switch.\n");
+            assert(0);
+            break;
+    }
+}
+
+inline void ResetReplay(RestrictedTraceID traceID)
+{
+    switch (traceID)
+    {
+        case RestrictedTraceID::manhattan_10:
+            manhattan_10::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::trex_200:
+            trex_200::ResetContext1Replay();
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
