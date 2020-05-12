@@ -1,12 +1,12 @@
 {
   "src/tests/perf_tests/restricted_traces/gen_restricted_traces.py":
-    "8e2db2332d1969209081b05fe4e8da79",
+    "ff51ca78ed52c33ddfcc4a7e795f217c",
   "src/tests/perf_tests/restricted_traces/manhattan_10.tar.gz.sha1":
     "b4d333cd5cf3977c339350be0a819928",
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
-    "b73081e6815268e7712599d83f4bfb7c",
+    "ebdb00ee3c7c74832f586a83b4394486",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.gni":
-    "00afbfd7987ff25af045af104477a680",
+    "54343c0c0a3a15f076516ad26f2ada5a",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.h":
     "d0b8cfda99009a6e042989ffa0ea3608",
   "src/tests/perf_tests/restricted_traces/trex_200.tar.gz.sha1":

@@ -303,9 +303,13 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
       defines = [ "ANGLE_TRACE_DATA_DIR=\"${_trace_data_path}\"" ]
       data = []
 
-      foreach(_test, angle_restricted_traces) {
+      foreach(_test_info, angle_restricted_traces) {
+        _test_and_ctx = []
+        _test_and_ctx = string_split(_test_info)
+        _test = _test_and_ctx[0]
+        _ctx = _test_and_ctx[1]
         _test_dir = "perf_tests/restricted_traces/${_test}"
-        _test_ctx = "${_test_dir}/${_test}_capture_context1"
+        _test_ctx = "${_test_dir}/${_test}_capture_context${_ctx}"
 
         # Similar to capture replay sample, use the file index for sources
         sources +=
@@ -319,7 +323,7 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
 
         defines +=
             [ "ANGLE_TRACE_DATA_DIR_${_test}=\"${_trace_data_path}/${_test}\"" ]
-        data += [ "${_test_dir}/${_test}_capture_context1.angledata.gz" ]
+        data += [ "${_test_dir}/${_test}_capture_context${_ctx}.angledata.gz" ]
       }
 
       deps = [

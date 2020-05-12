@@ -5,9 +5,10 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 #
-# A list of all restricted trace tests. Can be consumed by tests/BUILD.gn.
+# A list of all restricted trace tests, paired with their context.
+# Can be consumed by tests/BUILD.gn.
 
 angle_restricted_traces = [
-  "manhattan_10",
-  "trex_200",
+  "manhattan_10 1",
+  "trex_200 1",
 ]
