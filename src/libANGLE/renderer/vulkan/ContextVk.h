@@ -211,8 +211,8 @@ class ContextVk : public ContextImpl, public vk::Context
     // render area must be swapped.
     bool isRotatedAspectRatioForDrawFBO() const;
     bool isRotatedAspectRatioForReadFBO() const;
-    SurfaceRotationType getRotationDrawFramebuffer() const;
-    SurfaceRotationType getRotationReadFramebuffer() const;
+    SurfaceRotation getRotationDrawFramebuffer() const;
+    SurfaceRotation getRotationReadFramebuffer() const;
 
     void invalidateProgramBindingHelper(const gl::State &glState);
     angle::Result invalidateProgramExecutableHelper(const gl::Context *context);
@@ -801,8 +801,8 @@ class ContextVk : public ContextImpl, public vk::Context
     WindowSurfaceVk *mCurrentWindowSurface;
     // Records the current rotation of the surface (draw/read) framebuffer, derived from
     // mCurrentWindowSurface->getPreTransform().
-    SurfaceRotationType mCurrentRotationDrawFramebuffer;
-    SurfaceRotationType mCurrentRotationReadFramebuffer;
+    SurfaceRotation mCurrentRotationDrawFramebuffer;
+    SurfaceRotation mCurrentRotationReadFramebuffer;
 
     // Keep a cached pipeline description structure that can be used to query the pipeline cache.
     // Kept in a pointer so allocations can be aligned, and structs can be portably packed.

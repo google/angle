@@ -193,36 +193,36 @@ void ApplySampleCoverage(const gl::State &glState,
 //
 // Note: these are mat2's that are appropriately padded (4 floats per row).
 using PreRotationMatrixValues = std::array<float, 8>;
-constexpr angle::PackedEnumMap<rx::SurfaceRotationType,
+constexpr angle::PackedEnumMap<rx::SurfaceRotation,
                                PreRotationMatrixValues,
-                               angle::EnumSize<rx::SurfaceRotationType>()>
+                               angle::EnumSize<rx::SurfaceRotation>()>
     kPreRotationMatrices = {
-        {{rx::SurfaceRotationType::Identity, {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotationType::Rotated90Degrees,
+        {{rx::SurfaceRotation::Identity, {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotation::Rotated90Degrees,
           {{0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotationType::Rotated180Degrees,
+         {rx::SurfaceRotation::Rotated180Degrees,
           {{-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotationType::Rotated270Degrees,
+         {rx::SurfaceRotation::Rotated270Degrees,
           {{0.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotationType::FlippedIdentity,
+         {rx::SurfaceRotation::FlippedIdentity,
           {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotationType::FlippedRotated90Degrees,
+         {rx::SurfaceRotation::FlippedRotated90Degrees,
           {{0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotationType::FlippedRotated180Degrees,
+         {rx::SurfaceRotation::FlippedRotated180Degrees,
           {{-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotationType::FlippedRotated270Degrees,
+         {rx::SurfaceRotation::FlippedRotated270Degrees,
           {{0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}}}};
 
-bool IsRotatedAspectRatio(SurfaceRotationType rotation)
+bool IsRotatedAspectRatio(SurfaceRotation rotation)
 {
-    return ((rotation == SurfaceRotationType::Rotated90Degrees) ||
-            (rotation == SurfaceRotationType::Rotated270Degrees) ||
-            (rotation == SurfaceRotationType::FlippedRotated90Degrees) ||
-            (rotation == SurfaceRotationType::FlippedRotated270Degrees));
+    return ((rotation == SurfaceRotation::Rotated90Degrees) ||
+            (rotation == SurfaceRotation::Rotated270Degrees) ||
+            (rotation == SurfaceRotation::FlippedRotated90Degrees) ||
+            (rotation == SurfaceRotation::FlippedRotated270Degrees));
 }
 
-SurfaceRotationType DetermineSurfaceRotation(gl::Framebuffer *framebuffer,
-                                             WindowSurfaceVk *windowSurface)
+SurfaceRotation DetermineSurfaceRotation(gl::Framebuffer *framebuffer,
+                                         WindowSurfaceVk *windowSurface)
 {
     if (windowSurface && framebuffer->isDefault())
     {
@@ -230,29 +230,29 @@ SurfaceRotationType DetermineSurfaceRotation(gl::Framebuffer *framebuffer,
         {
             case VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR:
                 // Do not rotate gl_Position (surface matches the device's orientation):
-                return SurfaceRotationType::Identity;
+                return SurfaceRotation::Identity;
             case VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR:
                 // Rotate gl_Position 90 degrees:
-                return SurfaceRotationType::Rotated90Degrees;
+                return SurfaceRotation::Rotated90Degrees;
             case VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR:
                 // Rotate gl_Position 180 degrees:
-                return SurfaceRotationType::Rotated180Degrees;
+                return SurfaceRotation::Rotated180Degrees;
             case VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR:
                 // Rotate gl_Position 270 degrees:
-                return SurfaceRotationType::Rotated270Degrees;
+                return SurfaceRotation::Rotated270Degrees;
             default:
                 UNREACHABLE();
-                return SurfaceRotationType::Identity;
+                return SurfaceRotation::Identity;
         }
     }
     else
     {
         // Do not rotate gl_Position (offscreen framebuffer):
-        return SurfaceRotationType::Identity;
+        return SurfaceRotation::Identity;
     }
 }
 
-void RotateRectangle(const SurfaceRotationType rotation,
+void RotateRectangle(const SurfaceRotation rotation,
                      const bool flipY,
                      const int framebufferWidth,
                      const int framebufferHeight,
@@ -262,28 +262,28 @@ void RotateRectangle(const SurfaceRotationType rotation,
     // GLES's y-axis points up; Vulkan's points down.
     switch (rotation)
     {
-        case SurfaceRotationType::Identity:
+        case SurfaceRotation::Identity:
             // Do not rotate gl_Position (surface matches the device's orientation):
             outgoing->x     = incoming.x;
             outgoing->y     = flipY ? framebufferHeight - incoming.y - incoming.height : incoming.y;
             outgoing->width = incoming.width;
             outgoing->height = incoming.height;
             break;
-        case SurfaceRotationType::Rotated90Degrees:
+        case SurfaceRotation::Rotated90Degrees:
             // Rotate gl_Position 90 degrees:
             outgoing->x      = incoming.y;
             outgoing->y      = flipY ? incoming.x : framebufferWidth - incoming.x - incoming.width;
             outgoing->width  = incoming.height;
             outgoing->height = incoming.width;
             break;
-        case SurfaceRotationType::Rotated180Degrees:
+        case SurfaceRotation::Rotated180Degrees:
             // Rotate gl_Position 180 degrees:
             outgoing->x     = framebufferWidth - incoming.x - incoming.width;
             outgoing->y     = flipY ? incoming.y : framebufferHeight - incoming.y - incoming.height;
             outgoing->width = incoming.width;
             outgoing->height = incoming.height;
             break;
-        case SurfaceRotationType::Rotated270Degrees:
+        case SurfaceRotation::Rotated270Degrees:
             // Rotate gl_Position 270 degrees:
             outgoing->x      = framebufferHeight - incoming.y - incoming.height;
             outgoing->y      = flipY ? framebufferWidth - incoming.x - incoming.width : incoming.x;
@@ -622,8 +622,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mCurrentComputePipeline(nullptr),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
       mCurrentWindowSurface(nullptr),
-      mCurrentRotationDrawFramebuffer(SurfaceRotationType::Identity),
-      mCurrentRotationReadFramebuffer(SurfaceRotationType::Identity),
+      mCurrentRotationDrawFramebuffer(SurfaceRotation::Identity),
+      mCurrentRotationReadFramebuffer(SurfaceRotation::Identity),
       mVertexArray(nullptr),
       mDrawFramebuffer(nullptr),
       mProgram(nullptr),
@@ -2422,12 +2422,12 @@ bool ContextVk::isRotatedAspectRatioForReadFBO() const
     return IsRotatedAspectRatio(mCurrentRotationReadFramebuffer);
 }
 
-SurfaceRotationType ContextVk::getRotationDrawFramebuffer() const
+SurfaceRotation ContextVk::getRotationDrawFramebuffer() const
 {
     return mCurrentRotationDrawFramebuffer;
 }
 
-SurfaceRotationType ContextVk::getRotationReadFramebuffer() const
+SurfaceRotation ContextVk::getRotationReadFramebuffer() const
 {
     return mCurrentRotationReadFramebuffer;
 }

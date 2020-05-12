@@ -212,7 +212,7 @@ PackPixelsParams::PackPixelsParams()
       outputPitch(0),
       packBuffer(nullptr),
       offset(0),
-      orientation(SurfaceRotationType::Identity)
+      rotation(SurfaceRotation::Identity)
 {}
 
 PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
@@ -227,7 +227,7 @@ PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
       packBuffer(packBufferIn),
       reverseRowOrder(reverseRowOrderIn),
       offset(offsetIn),
-      orientation(SurfaceRotationType::Identity)
+      rotation(SurfaceRotation::Identity)
 {}
 
 void PackPixels(const PackPixelsParams &params,
@@ -244,9 +244,9 @@ void PackPixels(const PackPixelsParams &params,
     int destHeight        = params.area.height;
     int xAxisPitch        = 0;
     int yAxisPitch        = 0;
-    switch (params.orientation)
+    switch (params.rotation)
     {
-        case SurfaceRotationType::Identity:
+        case SurfaceRotation::Identity:
             // The source image is not rotated (i.e. matches the device's orientation), and may or
             // may not be y-flipped.  The image is row-major.  Each source row (one step along the
             // y-axis for each step in the dest y-axis) is inputPitch past the previous row.  Along
@@ -266,7 +266,7 @@ void PackPixels(const PackPixelsParams &params,
                 yAxisPitch = inputPitchIn;
             }
             break;
-        case SurfaceRotationType::Rotated90Degrees:
+        case SurfaceRotation::Rotated90Degrees:
             // The source image is rotated 90 degrees counter-clockwise.  Y-flip is always applied
             // to rotated images.  The image is column-major.  Each source column (one step along
             // the source x-axis for each step in the dest y-axis) is inputPitch past the previous
@@ -277,7 +277,7 @@ void PackPixels(const PackPixelsParams &params,
             destWidth  = params.area.height;
             destHeight = params.area.width;
             break;
-        case SurfaceRotationType::Rotated180Degrees:
+        case SurfaceRotation::Rotated180Degrees:
             // The source image is rotated 180 degrees.  Y-flip is always applied to rotated
             // images.  The image is row-major, but upside down.  Each source row (one step along
             // the y-axis for each step in the dest y-axis) is inputPitch after the previous row.
@@ -287,7 +287,7 @@ void PackPixels(const PackPixelsParams &params,
             yAxisPitch = inputPitchIn;
             source += sourceFormat.pixelBytes * (params.area.width - 1);
             break;
-        case SurfaceRotationType::Rotated270Degrees:
+        case SurfaceRotation::Rotated270Degrees:
             // The source image is rotated 270 degrees counter-clockwise (or 90 degrees clockwise).
             // Y-flip is always applied to rotated images.  The image is column-major, where each
             // column (one step in the source x-axis for one step in the dest y-axis) is inputPitch
@@ -306,7 +306,7 @@ void PackPixels(const PackPixelsParams &params,
             break;
     }
 
-    if (params.orientation == SurfaceRotationType::Identity && sourceFormat == *params.destFormat)
+    if (params.rotation == SurfaceRotation::Identity && sourceFormat == *params.destFormat)
     {
         // Direct copy possible
         for (int y = 0; y < params.area.height; ++y)

@@ -45,7 +45,7 @@ class ContextImpl;
 
 // The possible rotations of the surface/draw framebuffer, particularly for the Vulkan back-end on
 // Android.
-enum class SurfaceRotationType
+enum class SurfaceRotation
 {
     Identity,
     Rotated90Degrees,
@@ -111,7 +111,7 @@ struct PackPixelsParams
     gl::Buffer *packBuffer;
     bool reverseRowOrder;
     ptrdiff_t offset;
-    SurfaceRotationType orientation;
+    SurfaceRotation rotation;
 };
 
 void PackPixels(const PackPixelsParams &params,

@@ -471,29 +471,29 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
                                                    &outputSkipBytes));
 
     bool flipY = contextVk->isViewportFlipEnabledForReadFBO();
-    switch (params.orientation = contextVk->getRotationReadFramebuffer())
+    switch (params.rotation = contextVk->getRotationReadFramebuffer())
     {
-        case SurfaceRotationType::Identity:
+        case SurfaceRotation::Identity:
             // Do not rotate gl_Position (surface matches the device's orientation):
             if (flipY)
             {
                 params.area.y = fbRect.height - clippedArea.y - clippedArea.height;
             }
             break;
-        case SurfaceRotationType::Rotated90Degrees:
+        case SurfaceRotation::Rotated90Degrees:
             // Rotate gl_Position 90 degrees:
             params.area.x = clippedArea.y;
             params.area.y =
                 flipY ? clippedArea.x : fbRect.width - clippedArea.x - clippedArea.width;
             std::swap(params.area.width, params.area.height);
             break;
-        case SurfaceRotationType::Rotated180Degrees:
+        case SurfaceRotation::Rotated180Degrees:
             // Rotate gl_Position 180 degrees:
             params.area.x = fbRect.width - clippedArea.x - clippedArea.width;
             params.area.y =
                 flipY ? clippedArea.y : fbRect.height - clippedArea.y - clippedArea.height;
             break;
-        case SurfaceRotationType::Rotated270Degrees:
+        case SurfaceRotation::Rotated270Degrees:
             // Rotate gl_Position 270 degrees:
             params.area.x = fbRect.height - clippedArea.y - clippedArea.height;
             params.area.y =
