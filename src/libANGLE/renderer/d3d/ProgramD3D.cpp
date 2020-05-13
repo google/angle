@@ -963,14 +963,14 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
     if (memcmp(&identifier, &binaryDeviceIdentifier, sizeof(DeviceIdentifier)) != 0)
     {
         infoLog << "Invalid program binary, device configuration has changed.";
-        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
+        return nullptr;
     }
 
     int compileFlags = stream->readInt<int>();
     if (compileFlags != ANGLE_COMPILE_OPTIMIZATION_LEVEL)
     {
         infoLog << "Mismatched compilation flags.";
-        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
+        return nullptr;
     }
 
     for (int &index : mAttribLocationToD3DSemantic)
@@ -1033,7 +1033,7 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
+        return nullptr;
     }
 
     ASSERT(mD3DShaderStorageBlocks.empty());
@@ -1051,7 +1051,7 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
+        return nullptr;
     }
 
     ASSERT(mImage2DUniforms.empty());
@@ -1073,7 +1073,7 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
+        return nullptr;
     }
 
     const auto &linkedUniforms = mState.getUniforms();
@@ -1100,7 +1100,7 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
+        return nullptr;
     }
 
     ASSERT(mD3DUniformBlocks.empty());
