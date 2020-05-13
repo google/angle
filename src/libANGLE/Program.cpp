@@ -1866,12 +1866,41 @@ angle::Result Program::loadBinary(const Context *context,
         mDirtyBits.set(uniformBlockIndex);
     }
 
-    mLinkingState.reset(new LinkingState());
-    mLinkingState->linkingFromBinary = true;
-    mLinkingState->linkEvent         = mProgram->load(context, &stream, infoLog);
-    mLinkResolved                    = false;
+    // The rx::LinkEvent returned from ProgramImpl::load is a base class with multiple
+    // implementations. In some implementations, a background thread is used to compile the
+    // shaders. Any calls to the LinkEvent object, therefore, are racy and may interfere with
+    // the operation.
 
-    return angle::Result::Continue;
+    // We do not want to call LinkEvent::wait because that will cause the background thread
+    // to finish its task before returning, thus defeating the purpose of background compilation.
+    // We need to defer waiting on background compilation until the very last minute when we
+    // absolutely need the results, such as when the developer binds the program or queries
+    // for the completion status.
+
+    // If load returns nullptr, we know for sure that the binary is not compatible with the backend.
+    // The loaded binary could have been read from the on-disk shader cache and be corrupted or
+    // serialized with different revision and subsystem id than the currently loaded backend.
+    // Returning 'Incomplete' to the caller results in link happening using the original shader
+    // sources.
+    angle::Result result;
+    std::unique_ptr<LinkingState> linkingState;
+    std::unique_ptr<rx::LinkEvent> linkEvent = mProgram->load(context, &stream, infoLog);
+    if (linkEvent)
+    {
+        linkingState                    = std::make_unique<LinkingState>();
+        linkingState->linkingFromBinary = true;
+        linkingState->linkEvent         = std::move(linkEvent);
+        result                          = angle::Result::Continue;
+        mLinkResolved                   = false;
+    }
+    else
+    {
+        result        = angle::Result::Incomplete;
+        mLinkResolved = true;
+    }
+    mLinkingState = std::move(linkingState);
+
+    return result;
 #endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
 }
 
