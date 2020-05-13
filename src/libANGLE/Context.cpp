@@ -4782,6 +4782,9 @@ void Context::hint(GLenum target, GLenum mode)
         case GL_FOG_HINT:
             mState.gles1().setHint(target, mode);
             break;
+        case GL_TEXTURE_FILTERING_HINT_CHROMIUM:
+            mState.setTextureFilteringHint(mode);
+            break;
         default:
             UNREACHABLE();
             return;

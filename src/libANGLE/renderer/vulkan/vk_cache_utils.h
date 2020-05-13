@@ -609,7 +609,7 @@ class SamplerDesc final
 
     void update(const gl::SamplerState &samplerState, bool stencilMode);
     void reset();
-    VkSamplerCreateInfo unpack(ContextVk *contextVk) const;
+    angle::Result init(ContextVk *contextVk, vk::Sampler *sampler) const;
 
     size_t hash() const;
     bool operator==(const SamplerDesc &other) const;

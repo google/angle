@@ -32,6 +32,7 @@
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
+#include "libANGLE/renderer/vulkan/vk_google_filtering_precision.h"
 #include "libANGLE/trace.h"
 #include "platform/Platform.h"
 
@@ -1592,6 +1593,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsExternalMemoryFuchsia,
         ExtensionFound(VK_FUCHSIA_EXTERNAL_MEMORY_EXTENSION_NAME, deviceExtensionNames));
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsFilteringPrecision,
+        ExtensionFound(VK_GOOGLE_SAMPLER_FILTERING_PRECISION_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsExternalFenceCapabilities,
