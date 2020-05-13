@@ -5794,13 +5794,13 @@ void Context::drawArraysInstancedBaseInstance(PrimitiveMode mode,
                                               GLsizei instanceCount,
                                               GLuint baseInstance)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
-    Program *programObject = mState.getLinkedProgram(this);
-
     if (noopDraw(mode, count))
     {
         return;
     }
+
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject = mState.getLinkedProgram(this);
 
     const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
     if (hasBaseInstance)
@@ -5826,13 +5826,13 @@ void Context::drawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
                                                           GLint baseVertex,
                                                           GLuint baseInstance)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
-    Program *programObject = mState.getLinkedProgram(this);
-
     if (noopDraw(mode, count))
     {
         return;
     }
+
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject = mState.getLinkedProgram(this);
 
     const bool hasBaseVertex = programObject && programObject->hasBaseVertexUniform();
     if (hasBaseVertex)
