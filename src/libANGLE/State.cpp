@@ -599,7 +599,7 @@ ANGLE_INLINE void State::updateActiveTextureState(const Context *context,
                                                   const Sampler *sampler,
                                                   Texture *texture)
 {
-    if (!texture->isSamplerComplete(context, sampler))
+    if (!texture || !texture->isSamplerComplete(context, sampler))
     {
         mActiveTexturesCache.reset(textureIndex);
     }
@@ -618,7 +618,7 @@ ANGLE_INLINE void State::updateActiveTextureState(const Context *context,
         }
     }
 
-    if (mProgram)
+    if (texture && mProgram)
     {
         const SamplerState &samplerState =
             sampler ? sampler->getSamplerState() : texture->getSamplerState();
@@ -3179,12 +3179,11 @@ void State::onActiveTextureChange(const Context *context, size_t textureUnit)
 {
     if (mProgram)
     {
-        TextureType type = mExecutable->getActiveSamplerTypes()[textureUnit];
-        if (type != TextureType::InvalidEnum)
-        {
-            Texture *activeTexture = getTextureForActiveSampler(type, textureUnit);
-            updateActiveTexture(context, textureUnit, activeTexture);
-        }
+        TextureType type       = mExecutable->getActiveSamplerTypes()[textureUnit];
+        Texture *activeTexture = (type != TextureType::InvalidEnum)
+                                     ? getTextureForActiveSampler(type, textureUnit)
+                                     : nullptr;
+        updateActiveTexture(context, textureUnit, activeTexture);
     }
 }
 
@@ -3192,13 +3191,12 @@ void State::onActiveTextureStateChange(const Context *context, size_t textureUni
 {
     if (mProgram)
     {
-        TextureType type = mExecutable->getActiveSamplerTypes()[textureUnit];
-        if (type != TextureType::InvalidEnum)
-        {
-            Texture *activeTexture = getTextureForActiveSampler(type, textureUnit);
-            const Sampler *sampler = mSamplers[textureUnit].get();
-            updateActiveTextureState(context, textureUnit, sampler, activeTexture);
-        }
+        TextureType type       = mExecutable->getActiveSamplerTypes()[textureUnit];
+        Texture *activeTexture = (type != TextureType::InvalidEnum)
+                                     ? getTextureForActiveSampler(type, textureUnit)
+                                     : nullptr;
+        const Sampler *sampler = mSamplers[textureUnit].get();
+        updateActiveTextureState(context, textureUnit, sampler, activeTexture);
     }
 }
 

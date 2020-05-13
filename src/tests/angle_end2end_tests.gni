@@ -21,6 +21,7 @@ angle_end2end_tests_sources = [
   "egl_tests/EGLSurfaceTest.cpp",
   "egl_tests/EGLSurfacelessContextTest.cpp",
   "egl_tests/EGLSyncTest.cpp",
+  "gl_tests/ActiveTextureCacheTest.cpp",
   "gl_tests/AtomicCounterBufferTest.cpp",
   "gl_tests/AttributeLayoutTest.cpp",
   "gl_tests/BPTCCompressedTextureTest.cpp",
