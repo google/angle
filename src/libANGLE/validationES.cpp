@@ -757,6 +757,16 @@ bool ValidateDrawInstancedANGLE(const Context *context)
     const State &state                  = context->getState();
     const ProgramExecutable *executable = state.getProgramExecutable();
 
+    if (!executable)
+    {
+        // No executable means there is no Program/PPO bound, which is undefined behavior, but isn't
+        // an error.
+        context->getState().getDebug().insertMessage(
+            GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, 0, GL_DEBUG_SEVERITY_HIGH,
+            std::string("Attempting to draw without a program"), gl::LOG_WARN);
+        return true;
+    }
+
     const auto &attribs  = state.getVertexArray()->getVertexAttributes();
     const auto &bindings = state.getVertexArray()->getVertexBindings();
     for (size_t attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
