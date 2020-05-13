@@ -1329,10 +1329,6 @@ class ImageHelper final : public Resource, public angle::Subject
     // Returns true if the image is owned by an external API or instance.
     bool isReleasedToExternal() const;
 
-    // If the image is used externally to GL, its layout could be different from ANGLE's internal
-    // state.  This function is used to inform ImageHelper of an external layout change.
-    void onExternalLayoutChange(ImageLayout newLayout);
-
     uint32_t getBaseLevel();
     void setBaseAndMaxLevels(uint32_t baseLevel, uint32_t maxLevel);
 
