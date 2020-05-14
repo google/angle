@@ -175,7 +175,7 @@ angle::Result ContextMtl::drawTriFanArraysWithBaseVertex(const gl::Context *cont
         ANGLE_TRY(
             mtl::Buffer::MakeBuffer(this, indexBufferSize, nullptr, &mTriFanArraysIndexBuffer));
         ANGLE_TRY(getDisplay()->getUtils().generateTriFanBufferFromArrays(
-            context, {0, static_cast<uint32_t>(count), mTriFanArraysIndexBuffer, 0}));
+            this, {0, static_cast<uint32_t>(count), mTriFanArraysIndexBuffer, 0}));
     }
 
     ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::TriangleFan, first, count, instances,
@@ -203,8 +203,8 @@ angle::Result ContextMtl::drawTriFanArraysLegacy(const gl::Context *context,
     ANGLE_TRY(AllocateTriangleFanBufferFromPool(this, count, &mTriFanIndexBuffer, &genIdxBuffer,
                                                 &genIdxBufferOffset, &genIndicesCount));
     ANGLE_TRY(getDisplay()->getUtils().generateTriFanBufferFromArrays(
-        context, {static_cast<uint32_t>(first), static_cast<uint32_t>(count), genIdxBuffer,
-                  genIdxBufferOffset}));
+        this, {static_cast<uint32_t>(first), static_cast<uint32_t>(count), genIdxBuffer,
+               genIdxBufferOffset}));
 
     ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::TriangleFan, first, count, instances,
                         gl::DrawElementsType::InvalidEnum, reinterpret_cast<const void *>(0)));
@@ -314,7 +314,7 @@ angle::Result ContextMtl::drawTriFanElements(const gl::Context *context,
                                                     &genIdxBufferOffset, &genIndicesCount));
 
         ANGLE_TRY(getDisplay()->getUtils().generateTriFanBufferFromElementsArray(
-            context, {type, count, indices, genIdxBuffer, genIdxBufferOffset}));
+            this, {type, count, indices, genIdxBuffer, genIdxBufferOffset}));
 
         ANGLE_TRY(mTriFanIndexBuffer.commit(this));
 
@@ -1552,7 +1552,7 @@ angle::Result ContextMtl::genLineLoopLastSegment(const gl::Context *context,
     if (indexTypeOrNone == gl::DrawElementsType::InvalidEnum)
     {
         ANGLE_TRY(getDisplay()->getUtils().generateLineLoopLastSegment(
-            context, firstVertex, firstVertex + vertexOrIndexCount - 1, newBuffer, 0));
+            this, firstVertex, firstVertex + vertexOrIndexCount - 1, newBuffer, 0));
     }
     else
     {
@@ -1560,7 +1560,7 @@ angle::Result ContextMtl::genLineLoopLastSegment(const gl::Context *context,
         // taken into account
         ASSERT(firstVertex == 0);
         ANGLE_TRY(getDisplay()->getUtils().generateLineLoopLastSegmentFromElementsArray(
-            context, {indexTypeOrNone, vertexOrIndexCount, indices, newBuffer, 0}));
+            this, {indexTypeOrNone, vertexOrIndexCount, indices, newBuffer, 0}));
     }
 
     ANGLE_TRY(mLineLoopIndexBuffer.commit(this));

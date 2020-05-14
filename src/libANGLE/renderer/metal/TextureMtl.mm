@@ -1200,9 +1200,7 @@ angle::Result TextureMtl::copySubImageWithDraw(const gl::Context *context,
     blitParams.srcYFlipped  = framebufferMtl->flipY();
     blitParams.dstLuminance = internalFormat.isLUMA();
 
-    displayMtl->getUtils().blitWithDraw(context, cmdEncoder, blitParams);
-
-    return angle::Result::Continue;
+    return displayMtl->getUtils().blitWithDraw(context, cmdEncoder, blitParams);
 }
 
 angle::Result TextureMtl::copySubImageCPU(const gl::Context *context,

@@ -534,9 +534,7 @@ angle::Result FramebufferMtl::clearWithDraw(const gl::Context *context,
     // Start new render encoder if not already.
     mtl::RenderCommandEncoder *encoder = contextMtl->getRenderCommandEncoder(mRenderPassDesc);
 
-    display->getUtils().clearWithDraw(context, encoder, clearOpts);
-
-    return angle::Result::Continue;
+    return display->getUtils().clearWithDraw(context, encoder, clearOpts);
 }
 
 angle::Result FramebufferMtl::clearImpl(const gl::Context *context,
