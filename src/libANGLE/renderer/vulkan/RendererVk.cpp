@@ -128,6 +128,17 @@ constexpr const char *kSkippedMessages[] = {
     // https://issuetracker.google.com/issues/159493191
     "VUID-vkCmdDraw-None-02690",
     "VUID-vkCmdDrawIndexed-None-02690",
+    // Best Practices Skips issuetracker.google.com/156661359
+    "UNASSIGNED-BestPractices-vkCreateCommandPool-command-buffer-reset",
+    "UNASSIGNED-BestPractices-pipeline-stage-flags",
+    "UNASSIGNED-BestPractices-Error-Result",
+    "UNASSIGNED-BestPractices-vkAllocateMemory-small-allocation",
+    "UNASSIGNED-BestPractices-vkBindMemory-small-dedicated-allocation",
+    "UNASSIGNED-BestPractices-vkAllocateMemory-too-many-objects",
+    "UNASSIGNED-BestPractices-vkCreateDevice-deprecated-extension",
+    "UNASSIGNED-BestPractices-vkCreateRenderPass-image-requires-memory",
+    "UNASSIGNED-BestPractices-vkCreateGraphicsPipelines-too-many-instanced-vertex-buffers",
+    "UNASSIGNED-BestPractices-DrawState-ClearCmdBeforeDraw",
 };
 
 // Suppress validation errors that are known
@@ -697,6 +708,19 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         enabledInstanceExtensions.empty() ? nullptr : enabledInstanceExtensions.data();
     instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
     instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
+
+    if (mEnableValidationLayers)
+    {
+        // Enable best practices output which includes perfdoc layer
+        VkValidationFeatureEnableEXT enabledFeatures[] = {
+            VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT};
+        VkValidationFeaturesEXT validationFeatures = {};
+        validationFeatures.sType                   = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+        validationFeatures.enabledValidationFeatureCount = 1;
+        validationFeatures.pEnabledValidationFeatures    = enabledFeatures;
+        vk::AddToPNextChain(&instanceInfo, &validationFeatures);
+    }
+
     ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
 #if defined(ANGLE_SHARED_LIBVULKAN)
     // Load volk if we are linking dynamically
