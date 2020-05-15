@@ -46,6 +46,30 @@
       "revId": "85c86567c1eeb2aaa2ce256f3d1ecb607e21861c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "819f700a_add03971",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-15T19:52:48Z",
+      "side": 1,
+      "message": "Just an update that we confirmed offline that there doesn\u0027t seem to be another place this is necessary.",
+      "parentUuid": "056bce8a_a833669a",
+      "range": {
+        "startLine": 762,
+        "startChar": 2,
+        "endLine": 763,
+        "endChar": 20
+      },
+      "revId": "85c86567c1eeb2aaa2ce256f3d1ecb607e21861c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
