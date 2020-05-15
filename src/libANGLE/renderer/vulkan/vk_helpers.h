@@ -1296,7 +1296,8 @@ class ImageHelper final : public Resource, public angle::Subject
                               uint32_t newQueueFamilyIndex,
                               CommandBuffer *commandBuffer);
 
-    void updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
+    // Returns true if barrier has been generated
+    bool updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
                                 ImageLayout newLayout,
                                 PipelineBarrier *barrier);
 
@@ -1474,6 +1475,9 @@ class ImageHelper final : public Resource, public angle::Subject
     // Current state.
     ImageLayout mCurrentLayout;
     uint32_t mCurrentQueueFamilyIndex;
+    // For optimizing transition between different shader readonly layouts
+    ImageLayout mLastNonShaderReadOnlyLayout;
+    VkPipelineStageFlags mCurrentShaderReadStageMask;
 
     // Cached properties.
     uint32_t mBaseLevel;
