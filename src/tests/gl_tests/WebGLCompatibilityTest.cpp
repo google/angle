@@ -2028,6 +2028,69 @@ void main()
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test getIndexedParameter wrt GL_OES_draw_buffers_indexed.
+TEST_P(WebGLCompatibilityTest, DrawBuffersIndexedGetIndexedParameter)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionRequestable("GL_OES_draw_buffers_indexed"));
+
+    GLint value;
+    GLboolean data[4];
+
+    glGetIntegeri_v(GL_BLEND_EQUATION_RGB, 0, &value);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    glGetIntegeri_v(GL_BLEND_EQUATION_ALPHA, 0, &value);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    glGetIntegeri_v(GL_BLEND_SRC_RGB, 0, &value);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    glGetIntegeri_v(GL_BLEND_SRC_ALPHA, 0, &value);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    glGetIntegeri_v(GL_BLEND_DST_RGB, 0, &value);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    glGetIntegeri_v(GL_BLEND_DST_ALPHA, 0, &value);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    glGetBooleani_v(GL_COLOR_WRITEMASK, 0, data);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glRequestExtensionANGLE("GL_OES_draw_buffers_indexed");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_TRUE(IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    glDisable(GL_BLEND);
+    glEnableiOES(GL_BLEND, 0);
+    glBlendEquationSeparateiOES(0, GL_FUNC_ADD, GL_FUNC_SUBTRACT);
+    glBlendFuncSeparateiOES(0, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ZERO);
+    glColorMaskiOES(0, true, false, true, false);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(true, glIsEnablediOES(GL_BLEND, 0));
+    EXPECT_GL_NO_ERROR();
+    glGetIntegeri_v(GL_BLEND_EQUATION_RGB, 0, &value);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_FUNC_ADD, value);
+    glGetIntegeri_v(GL_BLEND_EQUATION_ALPHA, 0, &value);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_FUNC_SUBTRACT, value);
+    glGetIntegeri_v(GL_BLEND_SRC_RGB, 0, &value);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_SRC_ALPHA, value);
+    glGetIntegeri_v(GL_BLEND_SRC_ALPHA, 0, &value);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_ZERO, value);
+    glGetIntegeri_v(GL_BLEND_DST_RGB, 0, &value);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_ONE_MINUS_SRC_ALPHA, value);
+    glGetIntegeri_v(GL_BLEND_DST_ALPHA, 0, &value);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_ZERO, value);
+    glGetBooleani_v(GL_COLOR_WRITEMASK, 0, data);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(true, data[0]);
+    EXPECT_EQ(false, data[1]);
+    EXPECT_EQ(true, data[2]);
+    EXPECT_EQ(false, data[3]);
+}
+
 // Test that binding/querying uniforms and attributes with invalid names generates errors
 TEST_P(WebGLCompatibilityTest, InvalidAttributeAndUniformNames)
 {

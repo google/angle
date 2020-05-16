@@ -2690,6 +2690,11 @@ bool ValidateIndexedStateQuery(const Context *context, GLenum pname, GLuint inde
         case GL_BLEND_EQUATION_RGB:
         case GL_BLEND_EQUATION_ALPHA:
         case GL_COLOR_WRITEMASK:
+            if (!context->getExtensions().drawBuffersIndexedAny())
+            {
+                context->validationError(GL_INVALID_ENUM, kDrawBuffersIndexedExtensionNotAvailable);
+                return false;
+            }
             if (index >= static_cast<GLuint>(caps.maxDrawBuffers))
             {
                 context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
