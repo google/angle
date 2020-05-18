@@ -511,7 +511,7 @@ VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout)
 }
 
 // CommandBufferHelper implementation.
-CommandBufferHelper::CommandBufferHelper(bool hasRenderPass)
+CommandBufferHelper::CommandBufferHelper(bool hasRenderPass, bool mergeBarriers)
     : mPipelineBarriers(),
       mPipelineBarrierMask(),
       mCounter(0),
@@ -520,7 +520,8 @@ CommandBufferHelper::CommandBufferHelper(bool hasRenderPass)
       mTransformFeedbackCounterBuffers{},
       mValidTransformFeedbackBufferCount(0),
       mRebindTransformFeedbackBuffers(false),
-      mIsRenderPassCommandBuffer(hasRenderPass)
+      mIsRenderPassCommandBuffer(hasRenderPass),
+      mMergeBarriers(mergeBarriers)
 {}
 
 CommandBufferHelper::~CommandBufferHelper()
@@ -591,15 +592,30 @@ void CommandBufferHelper::imageWrite(vk::ResourceUseList *resourceUseList,
 
 void CommandBufferHelper::executeBarriers(vk::PrimaryCommandBuffer *primary)
 {
-    if (!mPipelineBarrierMask.any())
+    // make a local copy for faster access
+    PipelineStagesMask mask = mPipelineBarrierMask;
+    if (mask.none())
     {
         return;
     }
 
-    for (PipelineStage pipelineStage : mPipelineBarrierMask)
+    if (mMergeBarriers)
     {
-        PipelineBarrier &barrier = mPipelineBarriers[pipelineStage];
-        barrier.writeCommand(primary);
+        PipelineStagesMask::Iterator iter = mask.begin();
+        PipelineBarrier &barrier          = mPipelineBarriers[*iter];
+        for (++iter; iter != mask.end(); ++iter)
+        {
+            barrier.merge(&mPipelineBarriers[*iter]);
+        }
+        barrier.execute(primary);
+    }
+    else
+    {
+        for (PipelineStage pipelineStage : mask)
+        {
+            PipelineBarrier &barrier = mPipelineBarriers[pipelineStage];
+            barrier.execute(primary);
+        }
     }
     mPipelineBarrierMask.reset();
 }

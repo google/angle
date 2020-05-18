@@ -600,7 +600,7 @@ class PipelineBarrier : angle::NonCopyable
 
     bool isEmpty() const { return mImageMemoryBarriers.empty() && mMemoryBarrierSrcAccess == 0; }
 
-    void writeCommand(PrimaryCommandBuffer *primary)
+    void execute(PrimaryCommandBuffer *primary)
     {
         if (isEmpty())
         {
@@ -823,7 +823,7 @@ class BufferHelper final : public Resource
 struct CommandBufferHelper : angle::NonCopyable
 {
   public:
-    CommandBufferHelper(bool canHaveRenderPass);
+    CommandBufferHelper(bool canHaveRenderPass, bool mergeBarriers);
     ~CommandBufferHelper();
 
     // General Functions (non-renderPass specific)
@@ -950,6 +950,7 @@ struct CommandBufferHelper : angle::NonCopyable
     bool mRebindTransformFeedbackBuffers;
 
     const bool mIsRenderPassCommandBuffer;
+    const bool mMergeBarriers;
 };
 
 // Imagine an image going through a few layout transitions:

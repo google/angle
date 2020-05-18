@@ -308,6 +308,15 @@ struct FeaturesVk : FeatureSetBase
     Feature supportDepthStencilRenderingFeedbackLoops = {
         "support_depth_stencil_rendering_feedback_loops", FeatureCategory::VulkanFeatures,
         "Suport depth/stencil rendering feedback loops", &members, "http://anglebug.com/4490"};
+
+    // Desktop (at least NVIDIA) drivers prefer combining barriers into one vkCmdPipelineBarrier
+    // call over issuing multiple barrier calls with fine grained dependency information to have
+    // better performance. http://anglebug.com/4633
+    Feature preferAggregateBarrierCalls = {
+        "prefer_aggregate_barrier_calls", FeatureCategory::VulkanWorkarounds,
+        "Single barrier call is preferred over multiple calls with "
+        "fine grained pipeline stage dependency information",
+        &members, "http://anglebug.com/4633"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
