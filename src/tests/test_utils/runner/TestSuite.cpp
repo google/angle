@@ -10,6 +10,7 @@
 
 #include "common/debug.h"
 #include "common/platform.h"
+#include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "util/Timer.h"
 
@@ -421,9 +422,12 @@ std::string ParseTestSuiteName(const char *executable)
         return baseNameStart;
     }
 
-    const char *baseNameSuffix = strstr(baseNameStart, suffix);
-    ASSERT(baseNameSuffix == (baseNameStart + strlen(baseNameStart) - suffixLen));
-    return std::string(baseNameStart, baseNameSuffix);
+    if (!EndsWith(baseNameStart, suffix))
+    {
+        return baseNameStart;
+    }
+
+    return std::string(baseNameStart, baseNameStart + strlen(baseNameStart) - suffixLen);
 }
 
 bool GetTestResultsFromJSON(const js::Document &document, TestResults *resultsOut)
