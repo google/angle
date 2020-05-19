@@ -34,6 +34,24 @@
       "revId": "bbdee141b6d0c2343be90f5f6090adfa74b10f7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3220d1b_fa24ba4b",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-19T15:32:44Z",
+      "side": 1,
+      "message": "Note that your method would have a bug if the name of the test suite was test.suite.exe.",
+      "parentUuid": "43916c08_00abd1cd",
+      "revId": "bbdee141b6d0c2343be90f5f6090adfa74b10f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
