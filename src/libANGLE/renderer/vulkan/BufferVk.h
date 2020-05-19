@@ -139,6 +139,10 @@ class BufferVk : public BufferImpl
                                const uint8_t *data,
                                size_t size,
                                size_t offset);
+    angle::Result acquireAndUpdate(ContextVk *contextVk,
+                                   const uint8_t *data,
+                                   size_t size,
+                                   size_t offset);
     angle::Result setDataImpl(ContextVk *contextVk,
                               const uint8_t *data,
                               size_t size,

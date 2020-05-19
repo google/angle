@@ -9,6 +9,7 @@
 
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 
+#include "common/FixedVector.h"
 #include "common/debug.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -102,6 +103,13 @@ ANGLE_INLINE VkMemoryPropertyFlags GetPreferredMemoryType(gl::BufferBinding targ
             UNREACHABLE();
             return kHostCachedFlags;
     }
+}
+
+ANGLE_INLINE bool SubDataSizeMeetsThreshold(size_t subDataSize, size_t bufferSize)
+{
+    // A sub data update with size > 50% of buffer size meets the threshold
+    // to acquire a new BufferHelper from the pool.
+    return subDataSize > (bufferSize / 2);
 }
 }  // namespace
 
@@ -506,8 +514,52 @@ angle::Result BufferVk::stagedUpdate(ContextVk *contextVk,
 
     // Enqueue a copy command on the GPU.
     VkBufferCopy copyRegion = {stagingBufferOffset, offset, size};
-    ANGLE_TRY(mBuffer->copyFromBuffer(contextVk, mStagingBuffer.getCurrentBuffer(), copyRegion));
+    ANGLE_TRY(
+        mBuffer->copyFromBuffer(contextVk, mStagingBuffer.getCurrentBuffer(), 1, &copyRegion));
     mStagingBuffer.getCurrentBuffer()->retain(&contextVk->getResourceUseList());
+
+    return angle::Result::Continue;
+}
+
+angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
+                                         const uint8_t *data,
+                                         size_t size,
+                                         size_t offset)
+{
+    // Here we acquire a new BufferHelper and directUpdate() the new buffer.
+    // If the subData size was less than the buffer's size we additionally enqueue
+    // a GPU copy of the remaining regions from the old mBuffer to the new one.
+    vk::BufferHelper *src          = mBuffer;
+    size_t offsetAfterSubdata      = (offset + size);
+    bool updateRegionBeforeSubData = (offset > 0);
+    bool updateRegionAfterSubData  = (offsetAfterSubdata < static_cast<size_t>(mState.getSize()));
+
+    if (updateRegionBeforeSubData || updateRegionAfterSubData)
+    {
+        src->retain(&contextVk->getResourceUseList());
+    }
+
+    ANGLE_TRY(acquireBufferHelper(contextVk, size, &mBuffer));
+    ANGLE_TRY(directUpdate(contextVk, data, size, offset));
+
+    constexpr int kMaxCopyRegions = 2;
+    angle::FixedVector<VkBufferCopy, kMaxCopyRegions> copyRegions;
+
+    if (updateRegionBeforeSubData)
+    {
+        copyRegions.push_back({0, 0, offset});
+    }
+    if (updateRegionAfterSubData)
+    {
+        copyRegions.push_back({offsetAfterSubdata, offsetAfterSubdata,
+                               (static_cast<size_t>(mState.getSize()) - offsetAfterSubdata)});
+    }
+
+    if (!copyRegions.empty())
+    {
+        ANGLE_TRY(mBuffer->copyFromBuffer(contextVk, src, static_cast<uint32_t>(copyRegions.size()),
+                                          copyRegions.data()));
+    }
 
     return angle::Result::Continue;
 }
@@ -521,15 +573,14 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
     updateShadowBuffer(data, size, offset);
 
     // if the buffer is currently in use
-    //     if size matches mBuffer's size, acquire a new BufferHelper from the pool
+    //     if sub data size meets threshold, acquire a new BufferHelper from the pool
     //     else stage an update
     // else update the buffer directly
     if (mBuffer->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
     {
-        if (size == static_cast<size_t>(mState.getSize()))
+        if (SubDataSizeMeetsThreshold(size, static_cast<size_t>(mState.getSize())))
         {
-            ANGLE_TRY(acquireBufferHelper(contextVk, size, &mBuffer));
-            ANGLE_TRY(directUpdate(contextVk, data, size, offset));
+            ANGLE_TRY(acquireAndUpdate(contextVk, data, size, offset));
         }
         else
         {

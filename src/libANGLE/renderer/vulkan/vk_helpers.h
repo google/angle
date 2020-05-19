@@ -716,7 +716,8 @@ class BufferHelper final : public Resource
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(ContextVk *contextVk,
                                  BufferHelper *srcBuffer,
-                                 const VkBufferCopy &copyRegion);
+                                 uint32_t regionCount,
+                                 const VkBufferCopy *copyRegions);
 
     // Note: currently only one view is allowed.  If needs be, multiple views can be created
     // based on format.
