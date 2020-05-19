@@ -16,6 +16,24 @@
       "revId": "bbdee141b6d0c2343be90f5f6090adfa74b10f7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43916c08_00abd1cd",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-19T15:32:19Z",
+      "side": 1,
+      "message": "Thanks for making a patch! How about instead of using this new function we simply return baseNameStart if the suffix from GetExecutableExtension isn\u0027t found in the string?",
+      "parentUuid": "ad2ddf12_db1e67ce",
+      "revId": "bbdee141b6d0c2343be90f5f6090adfa74b10f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
