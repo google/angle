@@ -189,6 +189,7 @@ class RendererVk : angle::NonCopyable
     angle::Result queueSubmitOneOff(vk::Context *context,
                                     vk::PrimaryCommandBuffer &&primary,
                                     egl::ContextPriority priority,
+                                    const vk::Fence *fence,
                                     Serial *serialOut);
 
     angle::Result newSharedFence(vk::Context *context, vk::Shared<vk::Fence> *sharedFenceOut);

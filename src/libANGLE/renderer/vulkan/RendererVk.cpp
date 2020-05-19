@@ -1943,6 +1943,7 @@ angle::Result RendererVk::queueSubmit(vk::Context *context,
 angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
                                             vk::PrimaryCommandBuffer &&primary,
                                             egl::ContextPriority priority,
+                                            const vk::Fence *fence,
                                             Serial *serialOut)
 {
     VkSubmitInfo submitInfo       = {};
@@ -1950,7 +1951,7 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers    = primary.ptr();
 
-    ANGLE_TRY(queueSubmit(context, priority, submitInfo, nullptr, serialOut));
+    ANGLE_TRY(queueSubmit(context, priority, submitInfo, fence, serialOut));
 
     mPendingOneOffCommands.push_back({*serialOut, std::move(primary)});
 
