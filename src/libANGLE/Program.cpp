@@ -1244,7 +1244,6 @@ Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, Shad
       mProgram(factory->createProgram(mState)),
       mValidated(false),
       mLinked(false),
-      mLinkResolved(true),
       mDeleteStatus(false),
       mRefCount(0),
       mResourceManager(manager),
@@ -1282,25 +1281,25 @@ void Program::onDestroy(const Context *context)
 }
 ShaderProgramID Program::id() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mHandle;
 }
 
 void Program::setLabel(const Context *context, const std::string &label)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     mState.mLabel = label;
 }
 
 const std::string &Program::getLabel() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mLabel;
 }
 
 void Program::attachShader(const Context *context, Shader *shader)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ShaderType shaderType = shader->getType();
     ASSERT(shaderType != ShaderType::InvalidEnum);
 
@@ -1319,7 +1318,7 @@ void Program::attachShader(const Context *context, Shader *shader)
 
 void Program::detachShader(const Context *context, Shader *shader)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ShaderType shaderType = shader->getType();
     ASSERT(shaderType != ShaderType::InvalidEnum);
 
@@ -1341,7 +1340,7 @@ void Program::detachShader(const Context *context, Shader *shader)
 
 int Program::getAttachedShadersCount() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     int numAttachedShaders = 0;
     for (const Shader *shader : mState.mAttachedShaders)
     {
@@ -1356,19 +1355,19 @@ int Program::getAttachedShadersCount() const
 
 const Shader *Program::getAttachedShader(ShaderType shaderType) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.getAttachedShader(shaderType);
 }
 
 void Program::bindAttributeLocation(GLuint index, const char *name)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     mAttributeBindings.bindLocation(index, name);
 }
 
 void Program::bindUniformLocation(UniformLocation location, const char *name)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     mState.mUniformLocationBindings.bindLocation(location.value, name);
 }
 
@@ -1427,7 +1426,7 @@ angle::Result Program::link(const Context *context)
 // The code gets compiled into binaries.
 angle::Result Program::linkImpl(const Context *context)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     // Don't make any local variables pointing to anything within the ProgramExecutable, since
     // unlink() could make a new ProgramExecutable making any references/pointers invalid.
     const auto &data = context->getState();
@@ -1614,7 +1613,6 @@ angle::Result Program::linkImpl(const Context *context)
     mLinkingState->linkingFromBinary = false;
     mLinkingState->programHash       = programHash;
     mLinkingState->linkEvent = mProgram->link(context, mState.mExecutable->getResources(), infoLog);
-    mLinkResolved            = false;
 
     // Must be after mProgram->link() to avoid misleading the linker about output variables.
     mState.updateProgramInterfaceInputs();
@@ -1644,7 +1642,6 @@ void Program::resolveLinkImpl(const Context *context)
     angle::Result result = mLinkingState->linkEvent->wait(context);
 
     mLinked                                    = result == angle::Result::Continue;
-    mLinkResolved                              = true;
     std::unique_ptr<LinkingState> linkingState = std::move(mLinkingState);
     if (!mLinked)
     {
@@ -1868,7 +1865,7 @@ angle::Result Program::loadBinary(const Context *context,
                                   const void *binary,
                                   GLsizei length)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     unlink();
     InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
@@ -1919,12 +1916,10 @@ angle::Result Program::loadBinary(const Context *context,
         linkingState->linkingFromBinary = true;
         linkingState->linkEvent         = std::move(linkEvent);
         result                          = angle::Result::Continue;
-        mLinkResolved                   = false;
     }
     else
     {
-        result        = angle::Result::Incomplete;
-        mLinkResolved = true;
+        result = angle::Result::Incomplete;
     }
     mLinkingState = std::move(linkingState);
 
@@ -1938,7 +1933,7 @@ angle::Result Program::saveBinary(Context *context,
                                   GLsizei bufSize,
                                   GLsizei *length) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (binaryFormat)
     {
         *binaryFormat = GL_PROGRAM_BINARY_ANGLE;
@@ -1983,7 +1978,7 @@ angle::Result Program::saveBinary(Context *context,
 
 GLint Program::getBinaryLength(Context *context) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (!mLinked)
     {
         return 0;
@@ -2002,7 +1997,7 @@ GLint Program::getBinaryLength(Context *context) const
 
 void Program::setBinaryRetrievableHint(bool retrievable)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     // TODO(jmadill) : replace with dirty bits
     mProgram->setBinaryRetrievableHint(retrievable);
     mState.mBinaryRetrieveableHint = retrievable;
@@ -2010,13 +2005,13 @@ void Program::setBinaryRetrievableHint(bool retrievable)
 
 bool Program::getBinaryRetrievableHint() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mBinaryRetrieveableHint;
 }
 
 void Program::setSeparable(bool separable)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     // TODO(yunchao) : replace with dirty bits
     if (mState.mSeparable != separable)
     {
@@ -2027,7 +2022,7 @@ void Program::setSeparable(bool separable)
 
 bool Program::isSeparable() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mSeparable;
 }
 
@@ -2044,7 +2039,7 @@ unsigned int Program::getRefCount() const
 
 void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, ShaderProgramID *shaders) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     int total = 0;
 
     for (const Shader *shader : mState.mAttachedShaders)
@@ -2064,7 +2059,7 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, ShaderProgram
 
 GLuint Program::getAttributeLocation(const std::string &name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.getAttributeLocation(name);
 }
 
@@ -2075,7 +2070,7 @@ void Program::getActiveAttribute(GLuint index,
                                  GLenum *type,
                                  GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (!mLinked)
     {
         if (bufsize > 0)
@@ -2108,7 +2103,7 @@ void Program::getActiveAttribute(GLuint index,
 
 GLint Program::getActiveAttributeCount() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (!mLinked)
     {
         return 0;
@@ -2119,7 +2114,7 @@ GLint Program::getActiveAttributeCount() const
 
 GLint Program::getActiveAttributeMaxLength() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (!mLinked)
     {
         return 0;
@@ -2137,53 +2132,53 @@ GLint Program::getActiveAttributeMaxLength() const
 
 const std::vector<sh::ShaderVariable> &Program::getAttributes() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mExecutable->getProgramInputs();
 }
 
 const std::vector<SamplerBinding> &Program::getSamplerBindings() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mSamplerBindings;
 }
 
 const sh::WorkGroupSize &Program::getComputeShaderLocalSize() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mComputeShaderLocalSize;
 }
 
 PrimitiveMode Program::getGeometryShaderInputPrimitiveType() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mGeometryShaderInputPrimitiveType;
 }
 PrimitiveMode Program::getGeometryShaderOutputPrimitiveType() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mGeometryShaderOutputPrimitiveType;
 }
 GLint Program::getGeometryShaderInvocations() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mGeometryShaderInvocations;
 }
 GLint Program::getGeometryShaderMaxVertices() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mGeometryShaderMaxVertices;
 }
 
 const sh::ShaderVariable &Program::getInputResource(size_t index) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(index < mState.mExecutable->getProgramInputs().size());
     return mState.mExecutable->getProgramInputs()[index];
 }
 
 GLuint Program::getInputResourceIndex(const GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     const std::string nameString = StripLastArrayIndex(name);
 
     for (size_t index = 0; index < mState.mExecutable->getProgramInputs().size(); index++)
@@ -2284,7 +2279,7 @@ GLuint Program::getOutputResourceLocation(const GLchar *name) const
 
 GLuint Program::getOutputResourceIndex(const GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     const std::string nameString = StripLastArrayIndex(name);
 
     for (size_t index = 0; index < mState.mExecutable->getOutputVariables().size(); index++)
@@ -2301,13 +2296,13 @@ GLuint Program::getOutputResourceIndex(const GLchar *name) const
 
 size_t Program::getOutputResourceCount() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return (mLinked ? mState.mExecutable->getOutputVariables().size() : 0);
 }
 
 const std::vector<GLenum> &Program::getOutputVariableTypes() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mOutputVariableTypes;
 }
 
@@ -2341,7 +2336,7 @@ void Program::getInputResourceName(GLuint index,
                                    GLsizei *length,
                                    GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     getResourceName(getInputResourceName(index), bufSize, length, name);
 }
 
@@ -2350,7 +2345,7 @@ void Program::getOutputResourceName(GLuint index,
                                     GLsizei *length,
                                     GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     getResourceName(getOutputResourceName(index), bufSize, length, name);
 }
 
@@ -2359,7 +2354,7 @@ void Program::getUniformResourceName(GLuint index,
                                      GLsizei *length,
                                      GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(index < mState.mExecutable->getUniforms().size());
     getResourceName(mState.mExecutable->getUniforms()[index].name, bufSize, length, name);
 }
@@ -2369,7 +2364,7 @@ void Program::getBufferVariableResourceName(GLuint index,
                                             GLsizei *length,
                                             GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(index < mState.mBufferVariables.size());
     getResourceName(mState.mBufferVariables[index].name, bufSize, length, name);
 }
@@ -2388,7 +2383,7 @@ const std::string Program::getResourceName(const sh::ShaderVariable &resource) c
 
 const std::string Program::getInputResourceName(GLuint index) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     const sh::ShaderVariable &resource = getInputResource(index);
 
     return getResourceName(resource);
@@ -2396,7 +2391,7 @@ const std::string Program::getInputResourceName(GLuint index) const
 
 const std::string Program::getOutputResourceName(GLuint index) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     const sh::ShaderVariable &resource = getOutputResource(index);
 
     return getResourceName(resource);
@@ -2404,49 +2399,49 @@ const std::string Program::getOutputResourceName(GLuint index) const
 
 const sh::ShaderVariable &Program::getOutputResource(size_t index) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(index < mState.mExecutable->getOutputVariables().size());
     return mState.mExecutable->getOutputVariables()[index];
 }
 
 const ProgramBindings &Program::getAttributeBindings() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mAttributeBindings;
 }
 const ProgramAliasedBindings &Program::getUniformLocationBindings() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mUniformLocationBindings;
 }
 
 const gl::ProgramAliasedBindings &Program::getFragmentOutputLocations() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mFragmentOutputLocations;
 }
 
 const gl::ProgramAliasedBindings &Program::getFragmentOutputIndexes() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mFragmentOutputIndexes;
 }
 
 ComponentTypeMask Program::getDrawBufferTypeMask() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mDrawBufferTypeMask;
 }
 
 const std::vector<GLsizei> &Program::getTransformFeedbackStrides() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mExecutable->getTransformFeedbackStrides();
 }
 
 GLint Program::getFragDataLocation(const std::string &name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     GLint primaryLocation = GetVariableLocation(mState.mExecutable->getOutputVariables(),
                                                 mState.mExecutable->getOutputLocations(), name);
     if (primaryLocation != -1)
@@ -2459,7 +2454,7 @@ GLint Program::getFragDataLocation(const std::string &name) const
 
 GLint Program::getFragDataIndex(const std::string &name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (GetVariableLocation(mState.mExecutable->getOutputVariables(),
                             mState.mExecutable->getOutputLocations(), name) != -1)
     {
@@ -2480,7 +2475,7 @@ void Program::getActiveUniform(GLuint index,
                                GLenum *type,
                                GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (mLinked)
     {
         // index must be smaller than getActiveUniformCount()
@@ -2515,7 +2510,7 @@ void Program::getActiveUniform(GLuint index,
 
 GLint Program::getActiveUniformCount() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (mLinked)
     {
         return static_cast<GLint>(mState.mExecutable->getUniforms().size());
@@ -2528,13 +2523,13 @@ GLint Program::getActiveUniformCount() const
 
 size_t Program::getActiveBufferVariableCount() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mLinked ? mState.mBufferVariables.size() : 0;
 }
 
 GLint Program::getActiveUniformMaxLength() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     size_t maxLength = 0;
 
     if (mLinked)
@@ -2558,7 +2553,7 @@ GLint Program::getActiveUniformMaxLength() const
 
 bool Program::isValidUniformLocation(UniformLocation location) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(angle::IsValueInRangeForNumericType<GLint>(mState.mUniformLocations.size()));
     return (location.value >= 0 &&
             static_cast<size_t>(location.value) < mState.mUniformLocations.size() &&
@@ -2567,7 +2562,7 @@ bool Program::isValidUniformLocation(UniformLocation location) const
 
 const LinkedUniform &Program::getUniformByLocation(UniformLocation location) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(location.value >= 0 &&
            static_cast<size_t>(location.value) < mState.mUniformLocations.size());
     return mState.mExecutable->getUniforms()[mState.getUniformIndexFromLocation(location)];
@@ -2575,7 +2570,7 @@ const LinkedUniform &Program::getUniformByLocation(UniformLocation location) con
 
 const VariableLocation &Program::getUniformLocation(UniformLocation location) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(location.value >= 0 &&
            static_cast<size_t>(location.value) < mState.mUniformLocations.size());
     return mState.mUniformLocations[location.value];
@@ -2583,20 +2578,20 @@ const VariableLocation &Program::getUniformLocation(UniformLocation location) co
 
 const BufferVariable &Program::getBufferVariableByIndex(GLuint index) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(index < static_cast<size_t>(mState.mBufferVariables.size()));
     return mState.mBufferVariables[index];
 }
 
 UniformLocation Program::getUniformLocation(const std::string &name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return {GetVariableLocation(mState.mExecutable->getUniforms(), mState.mUniformLocations, name)};
 }
 
 GLuint Program::getUniformIndex(const std::string &name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.getUniformIndexFromName(name);
 }
 
@@ -2617,7 +2612,7 @@ bool Program::shouldIgnoreUniform(UniformLocation location) const
 
 void Program::setUniform1fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2630,7 +2625,7 @@ void Program::setUniform1fv(UniformLocation location, GLsizei count, const GLflo
 
 void Program::setUniform2fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2643,7 +2638,7 @@ void Program::setUniform2fv(UniformLocation location, GLsizei count, const GLflo
 
 void Program::setUniform3fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2656,7 +2651,7 @@ void Program::setUniform3fv(UniformLocation location, GLsizei count, const GLflo
 
 void Program::setUniform4fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2672,7 +2667,7 @@ void Program::setUniform1iv(Context *context,
                             GLsizei count,
                             const GLint *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2691,7 +2686,7 @@ void Program::setUniform1iv(Context *context,
 
 void Program::setUniform2iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2704,7 +2699,7 @@ void Program::setUniform2iv(UniformLocation location, GLsizei count, const GLint
 
 void Program::setUniform3iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2717,7 +2712,7 @@ void Program::setUniform3iv(UniformLocation location, GLsizei count, const GLint
 
 void Program::setUniform4iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2730,7 +2725,7 @@ void Program::setUniform4iv(UniformLocation location, GLsizei count, const GLint
 
 void Program::setUniform1uiv(UniformLocation location, GLsizei count, const GLuint *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2743,7 +2738,7 @@ void Program::setUniform1uiv(UniformLocation location, GLsizei count, const GLui
 
 void Program::setUniform2uiv(UniformLocation location, GLsizei count, const GLuint *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2756,7 +2751,7 @@ void Program::setUniform2uiv(UniformLocation location, GLsizei count, const GLui
 
 void Program::setUniform3uiv(UniformLocation location, GLsizei count, const GLuint *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2769,7 +2764,7 @@ void Program::setUniform3uiv(UniformLocation location, GLsizei count, const GLui
 
 void Program::setUniform4uiv(UniformLocation location, GLsizei count, const GLuint *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2785,7 +2780,7 @@ void Program::setUniformMatrix2fv(UniformLocation location,
                                   GLboolean transpose,
                                   const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2800,7 +2795,7 @@ void Program::setUniformMatrix3fv(UniformLocation location,
                                   GLboolean transpose,
                                   const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2815,7 +2810,7 @@ void Program::setUniformMatrix4fv(UniformLocation location,
                                   GLboolean transpose,
                                   const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2830,7 +2825,7 @@ void Program::setUniformMatrix2x3fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2845,7 +2840,7 @@ void Program::setUniformMatrix2x4fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2860,7 +2855,7 @@ void Program::setUniformMatrix3x2fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2875,7 +2870,7 @@ void Program::setUniformMatrix3x4fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2890,7 +2885,7 @@ void Program::setUniformMatrix4x2fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2905,7 +2900,7 @@ void Program::setUniformMatrix4x3fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
     {
         return;
@@ -2917,7 +2912,7 @@ void Program::setUniformMatrix4x3fv(UniformLocation location,
 
 GLuint Program::getSamplerUniformBinding(const VariableLocation &uniformLocation) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(uniformLocation.index);
     const std::vector<GLuint> &boundTextureUnits =
         mState.mSamplerBindings[samplerIndex].boundTextureUnits;
@@ -2926,7 +2921,7 @@ GLuint Program::getSamplerUniformBinding(const VariableLocation &uniformLocation
 
 GLuint Program::getImageUniformBinding(const VariableLocation &uniformLocation) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     GLuint imageIndex = mState.getImageIndexFromUniformIndex(uniformLocation.index);
     const std::vector<GLuint> &boundImageUnits = mState.mImageBindings[imageIndex].boundImageUnits;
     return boundImageUnits[uniformLocation.arrayIndex];
@@ -2934,7 +2929,7 @@ GLuint Program::getImageUniformBinding(const VariableLocation &uniformLocation) 
 
 void Program::getUniformfv(const Context *context, UniformLocation location, GLfloat *v) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     const VariableLocation &uniformLocation = mState.getUniformLocations()[location.value];
     const LinkedUniform &uniform            = mState.getUniforms()[uniformLocation.index];
 
@@ -2962,7 +2957,7 @@ void Program::getUniformfv(const Context *context, UniformLocation location, GLf
 
 void Program::getUniformiv(const Context *context, UniformLocation location, GLint *v) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     const VariableLocation &uniformLocation = mState.getUniformLocations()[location.value];
     const LinkedUniform &uniform            = mState.getUniforms()[uniformLocation.index];
 
@@ -2990,7 +2985,7 @@ void Program::getUniformiv(const Context *context, UniformLocation location, GLi
 
 void Program::getUniformuiv(const Context *context, UniformLocation location, GLuint *v) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     const VariableLocation &uniformLocation = mState.getUniformLocations()[location.value];
     const LinkedUniform &uniform            = mState.getUniforms()[uniformLocation.index];
 
@@ -3018,19 +3013,19 @@ void Program::getUniformuiv(const Context *context, UniformLocation location, GL
 
 void Program::flagForDeletion()
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     mDeleteStatus = true;
 }
 
 bool Program::isFlaggedForDeletion() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mDeleteStatus;
 }
 
 void Program::validate(const Caps &caps)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     mState.mExecutable->resetInfoLog();
     InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
@@ -3047,7 +3042,7 @@ void Program::validate(const Caps &caps)
 bool Program::validateSamplersImpl(InfoLog *infoLog, const Caps &caps)
 {
     const ProgramExecutable *executable = mState.mExecutable.get();
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
 
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
@@ -3074,7 +3069,7 @@ bool Program::validateSamplersImpl(InfoLog *infoLog, const Caps &caps)
 
 bool Program::isValidated() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mValidated;
 }
 
@@ -3083,7 +3078,7 @@ void Program::getActiveUniformBlockName(const GLuint blockIndex,
                                         GLsizei *length,
                                         GLchar *blockName) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     GetInterfaceBlockName(blockIndex, mState.mExecutable->getUniformBlocks(), bufSize, length,
                           blockName);
 }
@@ -3093,7 +3088,7 @@ void Program::getActiveShaderStorageBlockName(const GLuint blockIndex,
                                               GLsizei *length,
                                               GLchar *blockName) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     GetInterfaceBlockName(blockIndex, mState.mExecutable->getShaderStorageBlocks(), bufSize, length,
                           blockName);
 }
@@ -3120,45 +3115,45 @@ GLint Program::getActiveInterfaceBlockMaxNameLength(const std::vector<T> &resour
 
 GLint Program::getActiveUniformBlockMaxNameLength() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return getActiveInterfaceBlockMaxNameLength(mState.mExecutable->getUniformBlocks());
 }
 
 GLint Program::getActiveShaderStorageBlockMaxNameLength() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return getActiveInterfaceBlockMaxNameLength(mState.mExecutable->getShaderStorageBlocks());
 }
 
 GLuint Program::getUniformBlockIndex(const std::string &name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return GetInterfaceBlockIndex(mState.mExecutable->getUniformBlocks(), name);
 }
 
 GLuint Program::getShaderStorageBlockIndex(const std::string &name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return GetInterfaceBlockIndex(mState.mExecutable->getShaderStorageBlocks(), name);
 }
 
 const InterfaceBlock &Program::getUniformBlockByIndex(GLuint index) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(index < static_cast<GLuint>(mState.mExecutable->getActiveUniformBlockCount()));
     return mState.mExecutable->getUniformBlocks()[index];
 }
 
 const InterfaceBlock &Program::getShaderStorageBlockByIndex(GLuint index) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(index < static_cast<GLuint>(mState.mExecutable->getActiveShaderStorageBlockCount()));
     return mState.mExecutable->getShaderStorageBlocks()[index];
 }
 
 void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     mState.mExecutable->mUniformBlocks[uniformBlockIndex].binding = uniformBlockBinding;
     mState.mActiveUniformBlockBindings.set(uniformBlockIndex, uniformBlockBinding != 0);
     mDirtyBits.set(DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 + uniformBlockIndex);
@@ -3166,13 +3161,13 @@ void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBind
 
 GLuint Program::getUniformBlockBinding(GLuint uniformBlockIndex) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.getUniformBlockBinding(uniformBlockIndex);
 }
 
 GLuint Program::getShaderStorageBlockBinding(GLuint shaderStorageBlockIndex) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.getShaderStorageBlockBinding(shaderStorageBlockIndex);
 }
 
@@ -3180,7 +3175,7 @@ void Program::setTransformFeedbackVaryings(GLsizei count,
                                            const GLchar *const *varyings,
                                            GLenum bufferMode)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     mState.mTransformFeedbackVaryingNames.resize(count);
     for (GLsizei i = 0; i < count; i++)
     {
@@ -3197,7 +3192,7 @@ void Program::getTransformFeedbackVarying(GLuint index,
                                           GLenum *type,
                                           GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (mLinked)
     {
         ASSERT(index < mState.mExecutable->mLinkedTransformFeedbackVaryings.size());
@@ -3226,7 +3221,7 @@ void Program::getTransformFeedbackVarying(GLuint index,
 
 GLsizei Program::getTransformFeedbackVaryingCount() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (mLinked)
     {
         return static_cast<GLsizei>(mState.mExecutable->mLinkedTransformFeedbackVaryings.size());
@@ -3239,7 +3234,7 @@ GLsizei Program::getTransformFeedbackVaryingCount() const
 
 GLsizei Program::getTransformFeedbackVaryingMaxLength() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     if (mLinked)
     {
         GLsizei maxSize = 0;
@@ -3259,7 +3254,7 @@ GLsizei Program::getTransformFeedbackVaryingMaxLength() const
 
 GLenum Program::getTransformFeedbackBufferMode() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mExecutable->getTransformFeedbackBufferMode();
 }
 
@@ -3417,7 +3412,7 @@ bool Program::linkValidateShaders(InfoLog &infoLog)
 
 GLuint Program::getTransformFeedbackVaryingResourceIndex(const GLchar *name) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     for (GLuint tfIndex = 0; tfIndex < mState.mExecutable->mLinkedTransformFeedbackVaryings.size();
          ++tfIndex)
     {
@@ -3432,33 +3427,33 @@ GLuint Program::getTransformFeedbackVaryingResourceIndex(const GLchar *name) con
 
 const TransformFeedbackVarying &Program::getTransformFeedbackVaryingResource(GLuint index) const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(index < mState.mExecutable->mLinkedTransformFeedbackVaryings.size());
     return mState.mExecutable->mLinkedTransformFeedbackVaryings[index];
 }
 
 bool Program::hasDrawIDUniform() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mDrawIDLocation >= 0;
 }
 
 void Program::setDrawIDUniform(GLint drawid)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(mState.mDrawIDLocation >= 0);
     mProgram->setUniform1iv(mState.mDrawIDLocation, 1, &drawid);
 }
 
 bool Program::hasBaseVertexUniform() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mBaseVertexLocation >= 0;
 }
 
 void Program::setBaseVertexUniform(GLint baseVertex)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(mState.mBaseVertexLocation >= 0);
     if (baseVertex == mState.mCachedBaseVertex)
     {
@@ -3470,13 +3465,13 @@ void Program::setBaseVertexUniform(GLint baseVertex)
 
 bool Program::hasBaseInstanceUniform() const
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     return mState.mBaseInstanceLocation >= 0;
 }
 
 void Program::setBaseInstanceUniform(GLuint baseInstance)
 {
-    ASSERT(mLinkResolved);
+    ASSERT(!mLinkingState);
     ASSERT(mState.mBaseInstanceLocation >= 0);
     if (baseInstance == mState.mCachedBaseInstance)
     {
@@ -5101,7 +5096,7 @@ angle::Result Program::syncState(const Context *context)
 {
     if (mDirtyBits.any())
     {
-        ASSERT(mLinkResolved);
+        ASSERT(!mLinkingState);
         ANGLE_TRY(mProgram->syncState(context, mDirtyBits));
         mDirtyBits.reset();
     }
