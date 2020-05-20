@@ -1378,7 +1378,7 @@ void StateManager11::syncScissorRectangle(const gl::Context *context)
     const gl::Rectangle &scissor = glState.getScissor();
     const bool enabled           = glState.isScissorTestEnabled();
 
-    mCurScissorOffset = framebuffer->getTextureOffset();
+    mCurScissorOffset = framebuffer->getSurfaceTextureOffset();
 
     int scissorX = scissor.x + mCurScissorOffset.x;
     int scissorY = scissor.y + mCurScissorOffset.y;
@@ -1435,7 +1435,7 @@ void StateManager11::syncViewport(const gl::Context *context)
     int dxViewportWidth    = 0;
     int dxViewportHeight   = 0;
 
-    mCurViewportOffset = framebuffer->getTextureOffset();
+    mCurViewportOffset = framebuffer->getSurfaceTextureOffset();
 
     dxViewportTopLeftX =
         gl::clamp(viewport.x + mCurViewportOffset.x, dxMinViewportBoundsX, dxMaxViewportBoundsX);
@@ -1521,11 +1521,11 @@ void StateManager11::processFramebufferInvalidation(const gl::Context *context)
     ASSERT(fbo);
 
     // Dirty scissor and viewport because surface texture offset might have changed.
-    if (mCurViewportOffset != fbo->getTextureOffset())
+    if (mCurViewportOffset != fbo->getSurfaceTextureOffset())
     {
         mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
     }
-    if (mCurScissorOffset != fbo->getTextureOffset())
+    if (mCurScissorOffset != fbo->getSurfaceTextureOffset())
     {
         mInternalDirtyBits.set(DIRTY_BIT_SCISSOR_STATE);
     }

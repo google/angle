@@ -1863,6 +1863,10 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display,
                 {
                     return EglBadAttribute() << "<buftype> doesn't support setting texture offset";
                 }
+                if (value < 0)
+                {
+                    return EglBadAttribute() << "Texture offset cannot be negative";
+                }
                 break;
 
             default:

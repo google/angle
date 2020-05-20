@@ -803,6 +803,8 @@ Framebuffer::Framebuffer(const Context *context, egl::Surface *surface, egl::Sur
     }
     SetComponentTypeMask(getDrawbufferWriteType(0), 0, &mState.mDrawBufferTypeMask);
 
+    mState.mSurfaceTextureOffset = surface->getTextureOffset();
+
     // Ensure the backend has a chance to synchronize its content for a new backbuffer.
     mDirtyBits.set(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0);
 }
@@ -1725,13 +1727,9 @@ bool Framebuffer::hasValidDepthStencil() const
     return mState.getDepthStencilAttachment() != nullptr;
 }
 
-gl::Offset Framebuffer::getTextureOffset() const
+const gl::Offset &Framebuffer::getSurfaceTextureOffset() const
 {
-    if (isDefault() && getFirstColorAttachment()->getSurface())
-    {
-        return getFirstColorAttachment()->getSurface()->getTextureOffset();
-    }
-    return gl::Offset();
+    return mState.getSurfaceTextureOffset();
 }
 
 void Framebuffer::setAttachment(const Context *context,
