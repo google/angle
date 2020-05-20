@@ -824,11 +824,13 @@ class BufferHelper final : public Resource
 struct CommandBufferHelper : angle::NonCopyable
 {
   public:
-    CommandBufferHelper(bool canHaveRenderPass, bool mergeBarriers);
+    CommandBufferHelper();
     ~CommandBufferHelper();
 
     // General Functions (non-renderPass specific)
-    void initialize(angle::PoolAllocator *poolAllocator);
+    void initialize(angle::PoolAllocator *poolAllocator,
+                    bool canHaveRenderPass,
+                    bool mergeBarriers);
 
     void bufferRead(vk::ResourceUseList *resourceUseList,
                     VkAccessFlags readAccessType,
@@ -950,8 +952,8 @@ struct CommandBufferHelper : angle::NonCopyable
     uint32_t mValidTransformFeedbackBufferCount;
     bool mRebindTransformFeedbackBuffers;
 
-    const bool mIsRenderPassCommandBuffer;
-    const bool mMergeBarriers;
+    bool mIsRenderPassCommandBuffer;
+    bool mMergeBarriers;
 };
 
 // Imagine an image going through a few layout transitions:

@@ -511,7 +511,7 @@ VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout)
 }
 
 // CommandBufferHelper implementation.
-CommandBufferHelper::CommandBufferHelper(bool hasRenderPass, bool mergeBarriers)
+CommandBufferHelper::CommandBufferHelper()
     : mPipelineBarriers(),
       mPipelineBarrierMask(),
       mCounter(0),
@@ -520,8 +520,8 @@ CommandBufferHelper::CommandBufferHelper(bool hasRenderPass, bool mergeBarriers)
       mTransformFeedbackCounterBuffers{},
       mValidTransformFeedbackBufferCount(0),
       mRebindTransformFeedbackBuffers(false),
-      mIsRenderPassCommandBuffer(hasRenderPass),
-      mMergeBarriers(mergeBarriers)
+      mIsRenderPassCommandBuffer(false),
+      mMergeBarriers(false)
 {}
 
 CommandBufferHelper::~CommandBufferHelper()
@@ -529,9 +529,13 @@ CommandBufferHelper::~CommandBufferHelper()
     mFramebuffer.setHandle(VK_NULL_HANDLE);
 }
 
-void CommandBufferHelper::initialize(angle::PoolAllocator *poolAllocator)
+void CommandBufferHelper::initialize(angle::PoolAllocator *poolAllocator,
+                                     bool isRenderPassCommandBuffer,
+                                     bool mergeBarriers)
 {
     mCommandBuffer.initialize(poolAllocator);
+    mIsRenderPassCommandBuffer = isRenderPassCommandBuffer;
+    mMergeBarriers             = mergeBarriers;
 }
 
 void CommandBufferHelper::bufferRead(vk::ResourceUseList *resourceUseList,

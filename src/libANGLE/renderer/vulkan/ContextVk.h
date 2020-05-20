@@ -477,9 +477,9 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result endRenderPassAndGetCommandBuffer(vk::CommandBuffer **commandBufferOut)
     {
         // Only one command buffer should be active at a time
-        ASSERT(mOutsideRenderPassCommands.empty() || mRenderPassCommands.empty());
+        ASSERT(mOutsideRenderPassCommands->empty() || mRenderPassCommands->empty());
         ANGLE_TRY(endRenderPass());
-        *commandBufferOut = &mOutsideRenderPassCommands.getCommandBuffer();
+        *commandBufferOut = &mOutsideRenderPassCommands->getCommandBuffer();
         return angle::Result::Continue;
     }
 
@@ -490,12 +490,12 @@ class ContextVk : public ContextImpl, public vk::Context
                                           const vk::ClearValuesArray &clearValues,
                                           vk::CommandBuffer **commandBufferOut);
 
-    bool hasStartedRenderPass() const { return !mRenderPassCommands.empty(); }
+    bool hasStartedRenderPass() const { return !mRenderPassCommands->empty(); }
 
     vk::CommandBufferHelper &getStartedRenderPassCommands()
     {
         ASSERT(hasStartedRenderPass());
-        return mRenderPassCommands;
+        return *mRenderPassCommands;
     }
 
     egl::ContextPriority getContextPriority() const override { return mContextPriority; }
@@ -909,8 +909,14 @@ class ContextVk : public ContextImpl, public vk::Context
 
     // When the command graph is disabled we record commands completely linearly. We have plans to
     // reorder independent draws so that we can create fewer RenderPasses in some scenarios.
-    vk::CommandBufferHelper mOutsideRenderPassCommands;
-    vk::CommandBufferHelper mRenderPassCommands;
+    // Currently we just point the inside/outside RenderPass command buffers to respective fixed
+    //  command buffers in the mCommandBuffers array. In the near future when we move to a worker
+    //  thread there will a larger pool of command buffers and command buffer pointers will be
+    //  assigned from a queue based on availability.
+    constexpr static size_t kNumCommandBuffers = 2;
+    std::array<vk::CommandBufferHelper, kNumCommandBuffers> mCommandBuffers;
+    vk::CommandBufferHelper *mOutsideRenderPassCommands;
+    vk::CommandBufferHelper *mRenderPassCommands;
     vk::PrimaryCommandBuffer mPrimaryCommands;
     bool mHasPrimaryCommands;
 
