@@ -37,7 +37,7 @@ out/Release/angle_perftests --gtest_filter=TracePerfTest*
 
 ## Updating traces
 
-The Manhattan and TRex traces were captured on Windows after building gfxbench from source. We run capture commands in git bash.
+The GFXBench traces were captured on Windows after building gfxbench from source. We run capture commands in git bash.
 
 ### Windows prep
 
@@ -73,6 +73,10 @@ ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_trace
 # Manhattan
 mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/manhattan_10
 ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/manhattan_10 ANGLE_CAPTURE_FRAME_START=10 ANGLE_CAPTURE_FRAME_END=20 ANGLE_CAPTURE_LABEL=manhattan_10 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_manhattan --ei -frame_step_time=40
+
+# Egypt
+mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/egypt_1500
+ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/egypt_1500 ANGLE_CAPTURE_FRAME_START=1500 ANGLE_CAPTURE_FRAME_END=1510 ANGLE_CAPTURE_LABEL=egypt_1500 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_egypt --ei -frame_step_time=40
 ```
 
 ## Upload to the cloud
@@ -83,6 +87,7 @@ Starting from you ANGLE root directory:
 cd src/tests/perf_tests/restricted_traces
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive trex_200
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive manhattan_10
+upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive egypt_1500
 ```
 
 After uploading, add the sha1 files created by the upload and submit them with your changes.

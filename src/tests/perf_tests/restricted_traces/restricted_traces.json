@@ -7,6 +7,7 @@
         "restricted_traces.json: List of restricted trace tests in ANGLE."
     ],
     "traces": [
+        "egypt_1500",
         "manhattan_10",
         "temple_run_300",
         "trex_200"
