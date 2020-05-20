@@ -1307,7 +1307,7 @@ angle::Result ProgramD3D::loadBinaryShaderExecutables(d3d::Context *contextD3D,
             stream->readInt<unsigned int>(), gl::TextureType::_2D));
     }
 
-    initializeUniformStorage(mState.getProgramExecutable().getLinkedShaderStages());
+    initializeUniformStorage(mState.getExecutable().getLinkedShaderStages());
 
     dirtyAllUniforms();
 
@@ -2353,7 +2353,7 @@ const std::vector<D3DUBOCacheUseSB> &ProgramD3D::getShaderUniformBufferCacheUseS
 
 void ProgramD3D::dirtyAllUniforms()
 {
-    mShaderUniformsDirty = mState.getProgramExecutable().getLinkedShaderStages();
+    mShaderUniformsDirty = mState.getExecutable().getLinkedShaderStages();
 }
 
 void ProgramD3D::markUniformsClean()
@@ -3049,7 +3049,7 @@ void ProgramD3D::updateCachedInputLayout(Serial associatedSerial, const gl::Stat
 
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
     const gl::AttributesMask &attributesMask =
-        mState.getProgramExecutable().getActiveAttribLocationsMask();
+        mState.getExecutable().getActiveAttribLocationsMask();
 
     for (size_t locationIndex : attributesMask)
     {

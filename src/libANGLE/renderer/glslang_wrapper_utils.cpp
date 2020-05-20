@@ -1927,10 +1927,9 @@ void GlslangGetShaderSource(GlslangSourceOptions &options,
         }
     }
 
-    for (const gl::ShaderType shaderType :
-         programState.getProgramExecutable().getLinkedShaderStages())
+    for (const gl::ShaderType shaderType : programState.getExecutable().getLinkedShaderStages())
     {
-        GlslangAssignLocations(options, programState.getProgramExecutable(), shaderType,
+        GlslangAssignLocations(options, programState.getExecutable(), shaderType,
                                programInterfaceInfo, variableInfoMapOut);
     }
 }

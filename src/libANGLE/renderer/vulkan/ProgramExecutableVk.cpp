@@ -271,7 +271,7 @@ ProgramVk *ProgramExecutableVk::getShaderProgram(const gl::State &glState,
 {
     if (mProgram)
     {
-        const gl::ProgramExecutable &glExecutable = mProgram->getState().getProgramExecutable();
+        const gl::ProgramExecutable &glExecutable = mProgram->getState().getExecutable();
         if (glExecutable.hasLinkedShaderStage(shaderType))
         {
             return mProgram;
@@ -307,7 +307,7 @@ const gl::ProgramExecutable &ProgramExecutableVk::getGlExecutable()
     ASSERT(mProgram || mProgramPipeline);
     if (mProgram)
     {
-        return mProgram->getState().getProgramExecutable();
+        return mProgram->getState().getExecutable();
     }
     return mProgramPipeline->getState().getProgramExecutable();
 }
@@ -437,8 +437,7 @@ void ProgramExecutableVk::addImageDescriptorSetDesc(const gl::ProgramState &prog
         // The front-end always binds array image units sequentially.
         uint32_t arraySize = static_cast<uint32_t>(imageBinding.boundImageUnits.size());
 
-        for (const gl::ShaderType shaderType :
-             programState.getProgramExecutable().getLinkedShaderStages())
+        for (const gl::ShaderType shaderType : programState.getExecutable().getLinkedShaderStages())
         {
             if (!imageUniform.isActive(shaderType))
             {
@@ -492,8 +491,7 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(const gl::ProgramState &pr
             }
         }
 
-        for (const gl::ShaderType shaderType :
-             programState.getProgramExecutable().getLinkedShaderStages())
+        for (const gl::ShaderType shaderType : programState.getExecutable().getLinkedShaderStages())
         {
             if (!samplerUniform.isActive(shaderType))
             {
@@ -1187,7 +1185,7 @@ angle::Result ProgramExecutableVk::updateTransformFeedbackDescriptorSet(
     gl::ShaderMap<DefaultUniformBlock> &defaultUniformBlocks,
     ContextVk *contextVk)
 {
-    const gl::ProgramExecutable &executable = programState.getProgramExecutable();
+    const gl::ProgramExecutable &executable = programState.getExecutable();
     ASSERT(executable.hasTransformFeedbackOutput());
 
     ANGLE_TRY(allocateDescriptorSet(contextVk, kUniformsAndXfbDescriptorSetIndex));
@@ -1209,7 +1207,7 @@ void ProgramExecutableVk::updateTransformFeedbackDescriptorSetImpl(
 {
     const gl::State &glState                 = contextVk->getState();
     gl::TransformFeedback *transformFeedback = glState.getCurrentTransformFeedback();
-    const gl::ProgramExecutable &executable  = programState.getProgramExecutable();
+    const gl::ProgramExecutable &executable  = programState.getExecutable();
 
     if (!executable.hasTransformFeedbackOutput())
     {

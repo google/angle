@@ -308,12 +308,12 @@ class ProgramState final : angle::NonCopyable
         return mUniformLocationBindings;
     }
 
-    const ProgramExecutable &getProgramExecutable() const
+    const ProgramExecutable &getExecutable() const
     {
         ASSERT(mExecutable);
         return *mExecutable;
     }
-    ProgramExecutable &getProgramExecutable()
+    ProgramExecutable &getExecutable()
     {
         ASSERT(mExecutable);
         return *mExecutable;
@@ -809,8 +809,8 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     rx::Serial serial() const { return mSerial; }
 
-    const ProgramExecutable &getExecutable() const { return mState.getProgramExecutable(); }
-    ProgramExecutable &getExecutable() { return mState.getProgramExecutable(); }
+    const ProgramExecutable &getExecutable() const { return mState.getExecutable(); }
+    ProgramExecutable &getExecutable() { return mState.getExecutable(); }
 
     const char *validateDrawStates(const State &state, const gl::Extensions &extensions) const;
 
