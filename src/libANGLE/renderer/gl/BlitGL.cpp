@@ -398,7 +398,8 @@ angle::Result BlitGL::blitColorBufferWithShader(const gl::Context *context,
                                                 const gl::Framebuffer *dest,
                                                 const gl::Rectangle &sourceAreaIn,
                                                 const gl::Rectangle &destAreaIn,
-                                                GLenum filter)
+                                                GLenum filter,
+                                                bool writeAlpha)
 {
     ANGLE_TRY(initializeResources(context));
 
@@ -487,6 +488,9 @@ angle::Result BlitGL::blitColorBufferWithShader(const gl::Context *context,
     ScopedGLState scopedState;
     ANGLE_TRY(scopedState.enter(context, destArea, ScopedGLState::KEEP_SCISSOR));
     scopedState.willUseTextureUnit(context, 0);
+
+    // Set the write color mask to potentially not write alpha
+    mStateManager->setColorMask(true, true, true, writeAlpha);
 
     // Set uniforms
     mStateManager->activeTexture(0);

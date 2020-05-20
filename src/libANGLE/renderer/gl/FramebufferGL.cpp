@@ -767,6 +767,13 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
             needManualColorBlit || (destSRGB && functions->isAtMostGL(gl::Version(4, 1)));
     }
 
+    // If the destination has an emulated alpha channel, we need to blit with a shader with alpha
+    // writes disabled.
+    if (mHasEmulatedAlphaAttachment)
+    {
+        needManualColorBlit = true;
+    }
+
     // Enable FRAMEBUFFER_SRGB if needed
     stateManager->setFramebufferSRGBEnabledForFramebuffer(context, true, this);
 
@@ -775,7 +782,8 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
     {
         BlitGL *blitter = GetBlitGL(context);
         ANGLE_TRY(blitter->blitColorBufferWithShader(context, sourceFramebuffer, destFramebuffer,
-                                                     sourceArea, destArea, filter));
+                                                     sourceArea, destArea, filter,
+                                                     !mHasEmulatedAlphaAttachment));
         blitMask &= ~GL_COLOR_BUFFER_BIT;
     }
 
