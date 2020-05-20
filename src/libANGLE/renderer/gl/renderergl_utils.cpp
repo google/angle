@@ -1743,6 +1743,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
         IsLinux() && isAMD && isMesa && mesaVersion < (std::array<int, 3>{19, 3, 5}));
 
     ANGLE_FEATURE_CONDITION(features, disableTimestampQueries, IsLinux() && isVMWare);
+
+    ANGLE_FEATURE_CONDITION(features, encodeAndDecodeSRGBForGenerateMipmap,
+                            IsApple() && functions->standard == STANDARD_GL_DESKTOP);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
