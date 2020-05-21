@@ -34,6 +34,24 @@
       "revId": "258d94f61ed13040bbf7468ab456630e46b00d0f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68dee08a_a31e1b44",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1696,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-05-21T03:48:17Z",
+      "side": 1,
+      "message": "Sorry, it should look for GPU not platform.",
+      "parentUuid": "6b251a9f_8b3f8a24",
+      "revId": "258d94f61ed13040bbf7468ab456630e46b00d0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
