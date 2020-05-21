@@ -16,6 +16,24 @@
       "revId": "258d94f61ed13040bbf7468ab456630e46b00d0f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b251a9f_8b3f8a24",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1696,
+      "author": {
+        "id": 1323708
+      },
+      "writtenOn": "2020-05-21T02:21:09Z",
+      "side": 1,
+      "message": "Mali can also run a fake Linux which is different from Android, so this feature is also enabled on Mali Linux",
+      "parentUuid": "16bb23f5_552b940c",
+      "revId": "258d94f61ed13040bbf7468ab456630e46b00d0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
