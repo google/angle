@@ -4,9 +4,9 @@
 // found in the LICENSE file.
 //
 
-// DisplayOzone.cpp: Ozone implementation of egl::Display
+// DisplayGbm.cpp: Gbm implementation of egl::Display
 
-#include "libANGLE/renderer/gl/egl/ozone/DisplayOzone.h"
+#include "libANGLE/renderer/gl/egl/gbm/DisplayGbm.h"
 
 #include <fcntl.h>
 #include <poll.h>
@@ -29,7 +29,7 @@
 #include "libANGLE/renderer/gl/egl/ContextEGL.h"
 #include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 #include "libANGLE/renderer/gl/egl/FunctionsEGLDL.h"
-#include "libANGLE/renderer/gl/egl/ozone/SurfaceOzone.h"
+#include "libANGLE/renderer/gl/egl/gbm/SurfaceGbm.h"
 #include "platform/Platform.h"
 
 // ARM-specific extension needed to make Mali GPU behave - not in any
@@ -91,13 +91,13 @@ SwapControlData::SwapControlData()
     : targetSwapInterval(0), maxSwapInterval(-1), currentSwapInterval(-1)
 {}
 
-DisplayOzone::Buffer::Buffer(DisplayOzone *display,
-                             uint32_t useFlags,
-                             uint32_t gbmFormat,
-                             uint32_t drmFormat,
-                             uint32_t drmFormatFB,
-                             int depthBits,
-                             int stencilBits)
+DisplayGbm::Buffer::Buffer(DisplayGbm *display,
+                           uint32_t useFlags,
+                           uint32_t gbmFormat,
+                           uint32_t drmFormat,
+                           uint32_t drmFormatFB,
+                           int depthBits,
+                           int stencilBits)
     : mDisplay(display),
       mNative(nullptr),
       mWidth(0),
@@ -118,7 +118,7 @@ DisplayOzone::Buffer::Buffer(DisplayOzone *display,
       mTexture(0)
 {}
 
-DisplayOzone::Buffer::~Buffer()
+DisplayGbm::Buffer::~Buffer()
 {
     reset();
 
@@ -129,7 +129,7 @@ DisplayOzone::Buffer::~Buffer()
     mDSBuffer = 0;
 }
 
-void DisplayOzone::Buffer::reset()
+void DisplayGbm::Buffer::reset()
 {
     if (mHasDRMFB)
     {
@@ -167,7 +167,7 @@ void DisplayOzone::Buffer::reset()
     }
 }
 
-bool DisplayOzone::Buffer::resize(int32_t width, int32_t height)
+bool DisplayGbm::Buffer::resize(int32_t width, int32_t height)
 {
     if (mWidth == width && mHeight == height)
     {
@@ -231,24 +231,24 @@ bool DisplayOzone::Buffer::resize(int32_t width, int32_t height)
     return true;
 }
 
-bool DisplayOzone::Buffer::initialize(const NativeWindow *native)
+bool DisplayGbm::Buffer::initialize(const NativeWindow *native)
 {
     mNative = native;
     return createRenderbuffers() && resize(native->width, native->height);
 }
 
-bool DisplayOzone::Buffer::initialize(int width, int height)
+bool DisplayGbm::Buffer::initialize(int width, int height)
 {
     return createRenderbuffers() && resize(width, height);
 }
 
-void DisplayOzone::Buffer::bindTexImage()
+void DisplayGbm::Buffer::bindTexImage()
 {
     const FunctionsGL *gl = mDisplay->mRenderer->getFunctions();
     gl->eGLImageTargetTexture2DOES(GL_TEXTURE_2D, mImage);
 }
 
-GLuint DisplayOzone::Buffer::getTexture()
+GLuint DisplayGbm::Buffer::getTexture()
 {
     // TODO(fjhenigman) Try not to create a new texture every time.  That already works on Intel
     // and should work on Mali with proper fences.
@@ -266,7 +266,7 @@ GLuint DisplayOzone::Buffer::getTexture()
     return mTexture;
 }
 
-uint32_t DisplayOzone::Buffer::getDRMFB()
+uint32_t DisplayGbm::Buffer::getDRMFB()
 {
     if (!mHasDRMFB)
     {
@@ -287,7 +287,7 @@ uint32_t DisplayOzone::Buffer::getDRMFB()
     return mDRMFB;
 }
 
-GLuint DisplayOzone::Buffer::createGLFB(const gl::Context *context)
+GLuint DisplayGbm::Buffer::createGLFB(const gl::Context *context)
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
@@ -314,13 +314,13 @@ GLuint DisplayOzone::Buffer::createGLFB(const gl::Context *context)
     return framebuffer;
 }
 
-FramebufferGL *DisplayOzone::Buffer::framebufferGL(const gl::Context *context,
-                                                   const gl::FramebufferState &state)
+FramebufferGL *DisplayGbm::Buffer::framebufferGL(const gl::Context *context,
+                                                 const gl::FramebufferState &state)
 {
     return new FramebufferGL(state, createGLFB(context), true, false);
 }
 
-void DisplayOzone::Buffer::present(const gl::Context *context)
+void DisplayGbm::Buffer::present(const gl::Context *context)
 {
     if (mNative)
     {
@@ -332,7 +332,7 @@ void DisplayOzone::Buffer::present(const gl::Context *context)
     }
 }
 
-bool DisplayOzone::Buffer::createRenderbuffers()
+bool DisplayGbm::Buffer::createRenderbuffers()
 {
     const FunctionsGL *gl = mDisplay->mRenderer->getFunctions();
     StateManagerGL *sm    = mDisplay->mRenderer->getStateManager();
@@ -349,7 +349,7 @@ bool DisplayOzone::Buffer::createRenderbuffers()
     return true;
 }
 
-DisplayOzone::DisplayOzone(const egl::DisplayState &state)
+DisplayGbm::DisplayGbm(const egl::DisplayState &state)
     : DisplayEGL(state),
       mGBM(nullptr),
       mConnector(nullptr),
@@ -373,9 +373,9 @@ DisplayOzone::DisplayOzone(const egl::DisplayState &state)
       mDepthUniform(0)
 {}
 
-DisplayOzone::~DisplayOzone() {}
+DisplayGbm::~DisplayGbm() {}
 
-bool DisplayOzone::hasUsableScreen(int fd)
+bool DisplayGbm::hasUsableScreen(int fd)
 {
     drmModeResPtr resources = drmModeGetResources(fd);
     if (!resources)
@@ -429,7 +429,7 @@ bool DisplayOzone::hasUsableScreen(int fd)
     return false;
 }
 
-egl::Error DisplayOzone::initialize(egl::Display *display)
+egl::Error DisplayGbm::initialize(egl::Display *display)
 {
     int fd;
     char deviceName[30];
@@ -545,18 +545,18 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
     return DisplayGL::initialize(display);
 }
 
-void DisplayOzone::pageFlipHandler(int fd,
-                                   unsigned int sequence,
-                                   unsigned int tv_sec,
-                                   unsigned int tv_usec,
-                                   void *data)
+void DisplayGbm::pageFlipHandler(int fd,
+                                 unsigned int sequence,
+                                 unsigned int tv_sec,
+                                 unsigned int tv_usec,
+                                 void *data)
 {
-    DisplayOzone *display = reinterpret_cast<DisplayOzone *>(data);
-    uint64_t tv           = tv_sec;
+    DisplayGbm *display = reinterpret_cast<DisplayGbm *>(data);
+    uint64_t tv         = tv_sec;
     display->pageFlipHandler(sequence, tv * 1000000 + tv_usec);
 }
 
-void DisplayOzone::pageFlipHandler(unsigned int sequence, uint64_t tv)
+void DisplayGbm::pageFlipHandler(unsigned int sequence, uint64_t tv)
 {
     ASSERT(mPending);
     mUnused   = mScanning;
@@ -564,7 +564,7 @@ void DisplayOzone::pageFlipHandler(unsigned int sequence, uint64_t tv)
     mPending  = nullptr;
 }
 
-void DisplayOzone::presentScreen()
+void DisplayGbm::presentScreen()
 {
     if (!mCRTC)
     {
@@ -615,7 +615,7 @@ void DisplayOzone::presentScreen()
     }
 }
 
-GLuint DisplayOzone::makeShader(GLuint type, const char *src)
+GLuint DisplayGbm::makeShader(GLuint type, const char *src)
 {
     const FunctionsGL *gl = mRenderer->getFunctions();
     GLuint shader         = gl->createShader(type);
@@ -629,13 +629,13 @@ GLuint DisplayOzone::makeShader(GLuint type, const char *src)
     gl->getShaderiv(shader, GL_COMPILE_STATUS, &compiled);
     if (compiled != GL_TRUE)
     {
-        WARN() << "DisplayOzone shader compilation error: " << buf;
+        WARN() << "DisplayGbm shader compilation error: " << buf;
     }
 
     return shader;
 }
 
-void DisplayOzone::drawWithTexture(const gl::Context *context, Buffer *buffer)
+void DisplayGbm::drawWithTexture(const gl::Context *context, Buffer *buffer)
 {
     const FunctionsGL *gl = mRenderer->getFunctions();
     StateManagerGL *sm    = mRenderer->getStateManager();
@@ -767,7 +767,7 @@ void DisplayOzone::drawWithTexture(const gl::Context *context, Buffer *buffer)
     sm->deleteFramebuffer(fbo);
 }
 
-void DisplayOzone::drawBuffer(const gl::Context *context, Buffer *buffer)
+void DisplayGbm::drawBuffer(const gl::Context *context, Buffer *buffer)
 {
     if (!mDrawing)
     {
@@ -806,7 +806,7 @@ void DisplayOzone::drawBuffer(const gl::Context *context, Buffer *buffer)
     presentScreen();
 }
 
-void DisplayOzone::flushGL()
+void DisplayGbm::flushGL()
 {
     const FunctionsGL *gl = mRenderer->getFunctions();
     gl->flush();
@@ -836,7 +836,7 @@ void DisplayOzone::flushGL()
     }
 }
 
-void DisplayOzone::terminate()
+void DisplayGbm::terminate()
 {
     SafeDelete(mScanning);
     SafeDelete(mPending);
@@ -883,9 +883,9 @@ void DisplayOzone::terminate()
     }
 }
 
-SurfaceImpl *DisplayOzone::createWindowSurface(const egl::SurfaceState &state,
-                                               EGLNativeWindowType window,
-                                               const egl::AttributeMap &attribs)
+SurfaceImpl *DisplayGbm::createWindowSurface(const egl::SurfaceState &state,
+                                             EGLNativeWindowType window,
+                                             const egl::AttributeMap &attribs)
 {
     Buffer *buffer = new Buffer(this, GBM_BO_USE_RENDERING, GBM_FORMAT_ARGB8888,
                                 DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888, true, true);
@@ -893,11 +893,11 @@ SurfaceImpl *DisplayOzone::createWindowSurface(const egl::SurfaceState &state,
     {
         return nullptr;
     }
-    return new SurfaceOzone(state, buffer);
+    return new SurfaceGbm(state, buffer);
 }
 
-SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
-                                                const egl::AttributeMap &attribs)
+SurfaceImpl *DisplayGbm::createPbufferSurface(const egl::SurfaceState &state,
+                                              const egl::AttributeMap &attribs)
 {
     EGLAttrib width  = attribs.get(EGL_WIDTH, 0);
     EGLAttrib height = attribs.get(EGL_HEIGHT, 0);
@@ -907,27 +907,27 @@ SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
     {
         return nullptr;
     }
-    return new SurfaceOzone(state, buffer);
+    return new SurfaceGbm(state, buffer);
 }
 
-ContextImpl *DisplayOzone::createContext(const gl::State &state,
-                                         gl::ErrorSet *errorSet,
-                                         const egl::Config *configuration,
-                                         const gl::Context *shareContext,
-                                         const egl::AttributeMap &attribs)
+ContextImpl *DisplayGbm::createContext(const gl::State &state,
+                                       gl::ErrorSet *errorSet,
+                                       const egl::Config *configuration,
+                                       const gl::Context *shareContext,
+                                       const egl::AttributeMap &attribs)
 {
-    // All contexts on Ozone are virtualized and share the same renderer.
+    // All contexts on Gbm are virtualized and share the same renderer.
     return new ContextEGL(state, errorSet, mRenderer);
 }
 
-egl::Error DisplayOzone::makeCurrent(egl::Surface *drawSurface,
-                                     egl::Surface *readSurface,
-                                     gl::Context *context)
+egl::Error DisplayGbm::makeCurrent(egl::Surface *drawSurface,
+                                   egl::Surface *readSurface,
+                                   gl::Context *context)
 {
     return DisplayGL::makeCurrent(drawSurface, readSurface, context);
 }
 
-egl::ConfigSet DisplayOzone::generateConfigs()
+egl::ConfigSet DisplayGbm::generateConfigs()
 {
     egl::ConfigSet configs;
 
@@ -949,17 +949,17 @@ egl::ConfigSet DisplayOzone::generateConfigs()
     return configs;
 }
 
-bool DisplayOzone::isValidNativeWindow(EGLNativeWindowType window) const
+bool DisplayGbm::isValidNativeWindow(EGLNativeWindowType window) const
 {
     return true;
 }
 
-void DisplayOzone::setSwapInterval(EGLSurface drawable, SwapControlData *data)
+void DisplayGbm::setSwapInterval(EGLSurface drawable, SwapControlData *data)
 {
     ASSERT(data != nullptr);
 }
 
-void DisplayOzone::generateExtensions(egl::DisplayExtensions *outExtensions) const
+void DisplayGbm::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     DisplayEGL::generateExtensions(outExtensions);
 
@@ -967,11 +967,11 @@ void DisplayOzone::generateExtensions(egl::DisplayExtensions *outExtensions) con
     outExtensions->surfacelessContext = true;
 }
 
-class WorkerContextOzone final : public WorkerContext
+class WorkerContextGbm final : public WorkerContext
 {
   public:
-    WorkerContextOzone(EGLContext context, FunctionsEGL *functions);
-    ~WorkerContextOzone() override;
+    WorkerContextGbm(EGLContext context, FunctionsEGL *functions);
+    ~WorkerContextGbm() override;
 
     bool makeCurrent() override;
     void unmakeCurrent() override;
@@ -981,16 +981,16 @@ class WorkerContextOzone final : public WorkerContext
     FunctionsEGL *mFunctions;
 };
 
-WorkerContextOzone::WorkerContextOzone(EGLContext context, FunctionsEGL *functions)
+WorkerContextGbm::WorkerContextGbm(EGLContext context, FunctionsEGL *functions)
     : mContext(context), mFunctions(functions)
 {}
 
-WorkerContextOzone::~WorkerContextOzone()
+WorkerContextGbm::~WorkerContextGbm()
 {
     mFunctions->destroyContext(mContext);
 }
 
-bool WorkerContextOzone::makeCurrent()
+bool WorkerContextGbm::makeCurrent()
 {
     if (mFunctions->makeCurrent(EGL_NO_SURFACE, mContext) == EGL_FALSE)
     {
@@ -1000,14 +1000,14 @@ bool WorkerContextOzone::makeCurrent()
     return true;
 }
 
-void WorkerContextOzone::unmakeCurrent()
+void WorkerContextGbm::unmakeCurrent()
 {
     mFunctions->makeCurrent(EGL_NO_SURFACE, EGL_NO_CONTEXT);
 }
 
-WorkerContext *DisplayOzone::createWorkerContext(std::string *infoLog,
-                                                 EGLContext sharedContext,
-                                                 const native_egl::AttributeVector workerAttribs)
+WorkerContext *DisplayGbm::createWorkerContext(std::string *infoLog,
+                                               EGLContext sharedContext,
+                                               const native_egl::AttributeVector workerAttribs)
 {
     EGLContext context = mEGL->createContext(mConfig, sharedContext, workerAttribs.data());
     if (context == EGL_NO_CONTEXT)
@@ -1015,7 +1015,7 @@ WorkerContext *DisplayOzone::createWorkerContext(std::string *infoLog,
         *infoLog += "Unable to create the EGL context.";
         return nullptr;
     }
-    return new WorkerContextOzone(context, mEGL);
+    return new WorkerContextGbm(context, mEGL);
 }
 
 }  // namespace rx

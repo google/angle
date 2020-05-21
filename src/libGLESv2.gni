@@ -846,11 +846,11 @@ libangle_gl_egl_dl_sources = [
   "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
 ]
 
-libangle_gl_ozone_sources = [
-  "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
-  "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.h",
-  "src/libANGLE/renderer/gl/egl/ozone/SurfaceOzone.cpp",
-  "src/libANGLE/renderer/gl/egl/ozone/SurfaceOzone.h",
+libangle_gl_gbm_sources = [
+  "src/libANGLE/renderer/gl/egl/gbm/DisplayGbm.cpp",
+  "src/libANGLE/renderer/gl/egl/gbm/DisplayGbm.h",
+  "src/libANGLE/renderer/gl/egl/gbm/SurfaceGbm.cpp",
+  "src/libANGLE/renderer/gl/egl/gbm/SurfaceGbm.h",
 ]
 
 libangle_gl_egl_android_sources = [

@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// DisplayOzone.h: Ozone implementation of egl::Display
+// DisplayGbm.h: Gbm implementation of egl::Display
 
-#ifndef LIBANGLE_RENDERER_GL_EGL_OZONE_DISPLAYOZONE_H_
-#define LIBANGLE_RENDERER_GL_EGL_OZONE_DISPLAYOZONE_H_
+#ifndef LIBANGLE_RENDERER_GL_EGL_GBM_DISPLAYGBM_H_
+#define LIBANGLE_RENDERER_GL_EGL_GBM_DISPLAYGBM_H_
 
 #include <xf86drm.h>
 #include <xf86drmMode.h>
@@ -31,7 +31,7 @@ class FramebufferGL;
 class RendererEGL;
 
 // TODO(fjhenigman) Implement swap control.  The following struct will be used for that.
-// State-tracking data for the swap control to allow DisplayOzone to remember per
+// State-tracking data for the swap control to allow DisplayGbm to remember per
 // drawable information for swap control.
 struct SwapControlData final
 {
@@ -40,12 +40,12 @@ struct SwapControlData final
     // Set by the drawable
     int targetSwapInterval;
 
-    // DisplayOzone-side state-tracking
+    // DisplayGbm-side state-tracking
     int maxSwapInterval;
     int currentSwapInterval;
 };
 
-class DisplayOzone final : public DisplayEGL
+class DisplayGbm final : public DisplayEGL
 {
   public:
     struct NativeWindow
@@ -63,7 +63,7 @@ class DisplayOzone final : public DisplayEGL
     class Buffer final : angle::NonCopyable
     {
       public:
-        Buffer(DisplayOzone *display,
+        Buffer(DisplayGbm *display,
                uint32_t useFlags,
                uint32_t gbmFormat,
                uint32_t drmFormat,
@@ -89,7 +89,7 @@ class DisplayOzone final : public DisplayEGL
       private:
         bool createRenderbuffers();
 
-        DisplayOzone *mDisplay;
+        DisplayGbm *mDisplay;
         const NativeWindow *mNative;
         int mWidth;
         int mHeight;
@@ -109,8 +109,8 @@ class DisplayOzone final : public DisplayEGL
         GLuint mTexture;
     };
 
-    DisplayOzone(const egl::DisplayState &state);
-    ~DisplayOzone() override;
+    DisplayGbm(const egl::DisplayState &state);
+    ~DisplayGbm() override;
 
     egl::Error initialize(egl::Display *display) override;
     void terminate() override;
@@ -190,4 +190,4 @@ class DisplayOzone final : public DisplayEGL
 };
 }  // namespace rx
 
-#endif  // LIBANGLE_RENDERER_GL_EGL_OZONE_DISPLAYOZONE_H_
+#endif  // LIBANGLE_RENDERER_GL_EGL_GBM_DISPLAYGBM_H_

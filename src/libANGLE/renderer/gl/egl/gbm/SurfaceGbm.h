@@ -4,22 +4,22 @@
 // found in the LICENSE file.
 //
 
-// SurfaceOzone.h: Ozone implementation of egl::SurfaceGL
+// SurfaceGbm.h: Gbm implementation of egl::SurfaceGL
 
-#ifndef LIBANGLE_RENDERER_GL_EGL_OZONE_SURFACEOZONE_H_
-#define LIBANGLE_RENDERER_GL_EGL_OZONE_SURFACEOZONE_H_
+#ifndef LIBANGLE_RENDERER_GL_EGL_GBM_SURFACEGBM_H_
+#define LIBANGLE_RENDERER_GL_EGL_GBM_SURFACEGBM_H_
 
 #include "libANGLE/renderer/gl/SurfaceGL.h"
-#include "libANGLE/renderer/gl/egl/ozone/DisplayOzone.h"
+#include "libANGLE/renderer/gl/egl/gbm/DisplayGbm.h"
 
 namespace rx
 {
 
-class SurfaceOzone : public SurfaceGL
+class SurfaceGbm : public SurfaceGL
 {
   public:
-    SurfaceOzone(const egl::SurfaceState &state, DisplayOzone::Buffer *buffer);
-    ~SurfaceOzone() override;
+    SurfaceGbm(const egl::SurfaceState &state, DisplayGbm::Buffer *buffer);
+    ~SurfaceGbm() override;
 
     FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
                                               const gl::FramebufferState &state) override;
@@ -47,11 +47,11 @@ class SurfaceOzone : public SurfaceGL
     EGLint getSwapBehavior() const override;
 
   private:
-    DisplayOzone::Buffer *mBuffer;
+    DisplayGbm::Buffer *mBuffer;
 
     // TODO(fjhenigman) Implement swap control.  This will be used for that.
     SwapControlData mSwapControl;
 };
 }  // namespace rx
 
-#endif  // LIBANGLE_RENDERER_GL_EGL_OZONE_SURFACEOZONE_H_
+#endif  // LIBANGLE_RENDERER_GL_EGL_GBM_SURFACEGBM_H_

@@ -686,9 +686,9 @@ angle_source_set("libANGLE_base") {
     }
     if (ozone_platform_gbm) {
       configs += [ ":libdrm" ]
-      defines += [ "ANGLE_USE_OZONE" ]
+      defines += [ "ANGLE_USE_GBM" ]
       deps += [ "//third_party/minigbm" ]
-      sources += libangle_gl_ozone_sources
+      sources += libangle_gl_gbm_sources
     }
   }
 

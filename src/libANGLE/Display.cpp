@@ -55,8 +55,8 @@
 #    elif defined(ANGLE_PLATFORM_IOS)
 #        include "libANGLE/renderer/gl/eagl/DisplayEAGL.h"
 #    elif defined(ANGLE_PLATFORM_LINUX)
-#        if defined(ANGLE_USE_OZONE)
-#            include "libANGLE/renderer/gl/egl/ozone/DisplayOzone.h"
+#        if defined(ANGLE_USE_GBM)
+#            include "libANGLE/renderer/gl/egl/gbm/DisplayGbm.h"
 #        else
 #            include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 #            if defined(ANGLE_USE_X11)
@@ -187,7 +187,7 @@ EGLAttrib GetDisplayTypeFromEnvironment()
 #elif defined(ANGLE_ENABLE_VULKAN) && defined(ANGLE_PLATFORM_ANDROID)
     return EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;
 #elif defined(ANGLE_ENABLE_OPENGL)
-#    if defined(ANGLE_PLATFORM_ANDROID) || defined(ANGLE_USE_OZONE)
+#    if defined(ANGLE_PLATFORM_ANDROID) || defined(ANGLE_USE_GBM)
     return EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE;
 #    else
     return EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
@@ -285,8 +285,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
 #    if defined(ANGLE_PLATFORM_WINDOWS)
             impl = new rx::DisplayWGL(state);
 #    elif defined(ANGLE_PLATFORM_LINUX)
-#        if defined(ANGLE_USE_OZONE)
-            impl = new rx::DisplayOzone(state);
+#        if defined(ANGLE_USE_GBM)
+            impl = new rx::DisplayGbm(state);
 #        else
             if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_EGL_ANGLE)
             {
@@ -1420,7 +1420,7 @@ static ClientExtensions GenerateClientExtensions()
     extensions.x11Visual = true;
 #endif
 
-#if defined(ANGLE_PLATFORM_LINUX) && !defined(ANGLE_USE_OZONE)
+#if defined(ANGLE_PLATFORM_LINUX) && !defined(ANGLE_USE_GBM)
     extensions.platformANGLEDeviceTypeEGLANGLE = true;
 #endif
 

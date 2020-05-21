@@ -187,7 +187,7 @@ IGNORED_INCLUDES = {
     b'libANGLE/renderer/gl/eagl/DisplayEAGL.h',
     b'libANGLE/renderer/gl/egl/android/DisplayAndroid.h',
     b'libANGLE/renderer/gl/egl/DisplayEGL.h',
-    b'libANGLE/renderer/gl/egl/ozone/DisplayOzone.h',
+    b'libANGLE/renderer/gl/egl/gbm/DisplayGbm.h',
     b'libANGLE/renderer/gl/glx/DisplayGLX.h',
     b'libANGLE/renderer/gl/wgl/DisplayWGL.h',
     b'libANGLE/renderer/metal/DisplayMtl_api.h',
