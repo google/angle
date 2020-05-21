@@ -22,6 +22,30 @@
       "revId": "33cf03cdd8e8f1335976ccf752f046d6e1714081",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7013b547_fb04fbf2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1696,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-05-21T16:51:42Z",
+      "side": 1,
+      "message": "The whole reason that this shows perf gain on one GPU and perf loss on another is because GPU architecture, has nothing to do with OS.",
+      "parentUuid": "ead32cc1_e6b0b873",
+      "range": {
+        "startLine": 1696,
+        "startChar": 69,
+        "endLine": 1696,
+        "endChar": 78
+      },
+      "revId": "33cf03cdd8e8f1335976ccf752f046d6e1714081",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
