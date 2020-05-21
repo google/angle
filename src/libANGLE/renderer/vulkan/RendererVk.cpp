@@ -1693,7 +1693,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportDepthStencilRenderingFeedbackLoops, true);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferAggregateBarrierCalls, !IsAndroid());
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferAggregateBarrierCalls, isNvidia || isAMD || isIntel);
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);
