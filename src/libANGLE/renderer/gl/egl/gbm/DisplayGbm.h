@@ -30,21 +30,9 @@ namespace rx
 class FramebufferGL;
 class RendererEGL;
 
-// TODO(fjhenigman) Implement swap control.  The following struct will be used for that.
-// State-tracking data for the swap control to allow DisplayGbm to remember per
-// drawable information for swap control.
-struct SwapControlData final
-{
-    SwapControlData();
+struct SwapControlData;
 
-    // Set by the drawable
-    int targetSwapInterval;
-
-    // DisplayGbm-side state-tracking
-    int maxSwapInterval;
-    int currentSwapInterval;
-};
-
+// TODO(fjhenigman) Implement swap control.  The SwapControlData struct will be used for that.
 class DisplayGbm final : public DisplayEGL
 {
   public:

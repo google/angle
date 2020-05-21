@@ -36,6 +36,10 @@ using angle::CheckedNumeric;
 namespace rx
 {
 
+SwapControlData::SwapControlData()
+    : targetSwapInterval(0), maxSwapInterval(-1), currentSwapInterval(-1)
+{}
+
 VendorID GetVendorID(const FunctionsGL *functions)
 {
     std::string nativeVendorString(reinterpret_cast<const char *>(functions->getString(GL_VENDOR)));

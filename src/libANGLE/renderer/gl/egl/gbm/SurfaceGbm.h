@@ -11,6 +11,7 @@
 
 #include "libANGLE/renderer/gl/SurfaceGL.h"
 #include "libANGLE/renderer/gl/egl/gbm/DisplayGbm.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace rx
 {

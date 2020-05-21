@@ -22,19 +22,7 @@ namespace rx
 class FunctionsGLX;
 class WorkerContext;
 
-// State-tracking data for the swap control to allow DisplayGLX to remember per
-// drawable information for swap control.
-struct SwapControlData
-{
-    SwapControlData();
-
-    // Set by the drawable
-    int targetSwapInterval;
-
-    // DisplayGLX-side state-tracking
-    int maxSwapInterval;
-    int currentSwapInterval;
-};
+struct SwapControlData;
 
 class DisplayGLX : public DisplayGL
 {

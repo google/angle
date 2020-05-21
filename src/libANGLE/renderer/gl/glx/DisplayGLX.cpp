@@ -43,10 +43,6 @@ static int IgnoreX11Errors(Display *, XErrorEvent *)
     return 0;
 }
 
-SwapControlData::SwapControlData()
-    : targetSwapInterval(0), maxSwapInterval(-1), currentSwapInterval(-1)
-{}
-
 class FunctionsGLGLX : public FunctionsGL
 {
   public:
