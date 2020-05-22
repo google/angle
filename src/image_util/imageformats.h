@@ -751,7 +751,8 @@ struct D16
 
 struct D24X8
 {
-    uint32_t D;
+    uint32_t D : 24;
+    uint32_t X : 8;
 
     static void ReadDepthStencil(DepthStencil *dst, const D24X8 *src);
     static void WriteDepthStencil(D24X8 *dst, const DepthStencil *src);
