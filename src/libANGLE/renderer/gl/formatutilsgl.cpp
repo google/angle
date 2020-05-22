@@ -559,6 +559,27 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
                 }
             }
         }
+        else if ((internalFormat.internalFormat == GL_DEPTH_COMPONENT ||
+                  internalFormat.internalFormat == GL_DEPTH_STENCIL) &&
+                 !functions->hasGLESExtension("GL_OES_depth_texture"))
+        {
+            // Use ES 3.0 sized internal formats for depth/stencil textures when the driver doesn't
+            // advertise GL_OES_depth_texture, since it's likely the driver will reject unsized
+            // internal formats.
+            if (internalFormat.internalFormat == GL_DEPTH_COMPONENT &&
+                internalFormat.type == GL_UNSIGNED_INT &&
+                !functions->hasGLESExtension("GL_OES_depth32"))
+            {
+                // Best-effort attempt to provide as many bits as possible.
+                result = GL_DEPTH_COMPONENT24;
+                // Note: could also consider promoting GL_DEPTH_COMPONENT / GL_UNSIGNED_SHORT to a
+                // higher precision.
+            }
+            else
+            {
+                result = internalFormat.sizedInternalFormat;
+            }
+        }
     }
 
     return result;
