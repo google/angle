@@ -551,6 +551,13 @@
 3970 VULKAN NVIDIA : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
 3970 VULKAN NVIDIA : dEQP-GLES3.functional.polygon_offset.float32_factor_1_slope = FAIL
 
+// Transform Feedback
+4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array_element.interleaved.* = SKIP
+4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array_element.separate.* = SKIP
+4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array.interleaved.* = SKIP
+4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array.separate.* = SKIP
+4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.random.* = SKIP
+
 // Flat shading:
 3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
 
