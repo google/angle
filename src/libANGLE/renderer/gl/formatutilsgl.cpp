@@ -540,12 +540,24 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             // Workaround Adreno driver not supporting unsized EXT_texture_rg formats
             result = internalFormat.sizedInternalFormat;
         }
-        else if (features.unsizedsRGBReadPixelsDoesntTransform.enabled &&
-                 internalFormat.colorEncoding == GL_SRGB)
+        else if (internalFormat.colorEncoding == GL_SRGB)
         {
-            // Work around some Adreno driver bugs that don't read back SRGB data correctly when
-            // it's in unsized SRGB texture formats.
-            result = internalFormat.sizedInternalFormat;
+            if (features.unsizedsRGBReadPixelsDoesntTransform.enabled)
+            {
+                // Work around some Adreno driver bugs that don't read back SRGB data correctly when
+                // it's in unsized SRGB texture formats.
+                result = internalFormat.sizedInternalFormat;
+            }
+            else if (!functions->hasGLESExtension("GL_EXT_sRGB"))
+            {
+                // Unsized sRGB internal formats are unlikely to be supported by the
+                // driver. Transform them to sized internal formats.
+                if (internalFormat.internalFormat == GL_SRGB ||
+                    internalFormat.internalFormat == GL_SRGB_ALPHA_EXT)
+                {
+                    result = internalFormat.sizedInternalFormat;
+                }
+            }
         }
     }
 
@@ -585,14 +597,17 @@ static GLenum GetNativeFormat(const FunctionsGL *functions,
     }
     else if (functions->isAtLeastGLES(gl::Version(3, 0)))
     {
-        if (features.unsizedsRGBReadPixelsDoesntTransform.enabled)
+        // Transform sRGB formats to RGB if either the GLES driver doesn't support GL_EXT_sRGB, or
+        // to work around Adreno driver bugs reading back unsized sRGB texture data.
+        if (!functions->hasGLESExtension("GL_EXT_sRGB") ||
+            features.unsizedsRGBReadPixelsDoesntTransform.enabled)
         {
             if (format == GL_SRGB)
             {
                 result = GL_RGB;
             }
 
-            if (format == GL_SRGB_ALPHA)
+            if (format == GL_SRGB_ALPHA_EXT)
             {
                 result = GL_RGBA;
             }
