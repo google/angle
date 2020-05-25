@@ -667,6 +667,13 @@ void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
     }
 }
 
+void CommandBufferHelper::endTransformFeedback()
+{
+    ASSERT(mIsRenderPassCommandBuffer);
+    pauseTransformFeedbackIfStarted();
+    mValidTransformFeedbackBufferCount = 0;
+}
+
 angle::Result CommandBufferHelper::flushToPrimary(ContextVk *contextVk,
                                                   vk::PrimaryCommandBuffer *primary)
 {

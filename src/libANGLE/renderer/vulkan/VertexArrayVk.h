@@ -32,13 +32,13 @@ class VertexArrayVk : public VertexArrayImpl
                             gl::VertexArray::DirtyAttribBitsArray *attribBits,
                             gl::VertexArray::DirtyBindingBitsArray *bindingBits) override;
 
-    void updateActiveAttribInfo(ContextVk *contextVk);
+    angle::Result updateActiveAttribInfo(ContextVk *contextVk);
 
-    void updateDefaultAttrib(ContextVk *contextVk,
-                             size_t attribIndex,
-                             VkBuffer bufferHandle,
-                             vk::BufferHelper *buffer,
-                             uint32_t offset);
+    angle::Result updateDefaultAttrib(ContextVk *contextVk,
+                                      size_t attribIndex,
+                                      VkBuffer bufferHandle,
+                                      vk::BufferHelper *buffer,
+                                      uint32_t offset);
 
     angle::Result updateStreamedAttribs(const gl::Context *context,
                                         GLint firstVertex,
@@ -115,7 +115,7 @@ class VertexArrayVk : public VertexArrayImpl
     }
 
   private:
-    void setDefaultPackedInput(ContextVk *contextVk, size_t attribIndex);
+    angle::Result setDefaultPackedInput(ContextVk *contextVk, size_t attribIndex);
 
     angle::Result convertVertexBufferGPU(ContextVk *contextVk,
                                          BufferVk *srcBuffer,

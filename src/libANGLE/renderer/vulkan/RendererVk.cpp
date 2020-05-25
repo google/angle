@@ -1673,7 +1673,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
                             mIndexTypeUint8Features.indexTypeUint8 == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateTransformFeedback,
-                            (mFeatures.supportsTransformFeedbackExtension.enabled == VK_FALSE &&
+                            (!mFeatures.supportsTransformFeedbackExtension.enabled &&
                              mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, disableFifoPresentMode, IsLinux() && isIntel);

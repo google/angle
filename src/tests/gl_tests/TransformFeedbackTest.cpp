@@ -79,6 +79,8 @@ class TransformFeedbackTest : public TransformFeedbackTestBase
             essl1_shaders::vs::Simple(), essl1_shaders::fs::Red(), tfVaryings, bufferMode);
         ASSERT_NE(0u, mProgram);
     }
+
+    void setupOverrunTest(const std::vector<GLfloat> &vertices);
 };
 
 TEST_P(TransformFeedbackTest, ZeroSizedViewport)
@@ -1709,6 +1711,183 @@ TEST_P(TransformFeedbackTest, BufferOutOfMemory)
     glBeginTransformFeedback(GL_POINTS);
     glDrawArrays(GL_POINTS, 0, 5);
     glEndTransformFeedback();
+}
+
+void TransformFeedbackTest::setupOverrunTest(const std::vector<GLfloat> &vertices)
+{
+    std::vector<uint8_t> zeroData(mTransformFeedbackBufferSize, 0);
+
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+    glBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBufferSize, zeroData.data());
+
+    // Draw a simple points XFB.
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    glUseProgram(mProgram);
+
+    GLint positionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+
+    // First pass: draw 6 points to the XFB buffer
+    glEnable(GL_RASTERIZER_DISCARD);
+
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, vertices.data());
+    glEnableVertexAttribArray(positionLocation);
+
+    // Bind the buffer for transform feedback output and start transform feedback
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 6);
+}
+
+void VerifyVertexFloats(const GLfloat *mapPtrFloat,
+                        const std::vector<GLfloat> &vertices,
+                        size_t copies,
+                        size_t numFloats)
+{
+    for (size_t floatIndex = 0; floatIndex < vertices.size() * copies; ++floatIndex)
+    {
+        size_t vertIndex = floatIndex % vertices.size();
+        ASSERT_EQ(mapPtrFloat[floatIndex], vertices[vertIndex]) << "at float index " << floatIndex;
+    }
+
+    // The rest should be zero.
+    for (size_t floatIndex = vertices.size() * copies; floatIndex < numFloats; ++floatIndex)
+    {
+        ASSERT_EQ(mapPtrFloat[floatIndex], 0) << "at float index " << floatIndex;
+    }
+}
+
+// Tests that stopping XFB works as expected.
+TEST_P(TransformFeedbackTest, Overrun)
+{
+    const std::vector<GLfloat> vertices = {
+        -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
+        -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
+    };
+
+    setupOverrunTest(vertices);
+
+    glEndTransformFeedback();
+
+    // Draw a second time without XFB.
+    glDrawArrays(GL_POINTS, 0, 6);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify only the first data was output.
+    const void *mapPtr         = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                          mTransformFeedbackBufferSize, GL_MAP_READ_BIT);
+    const GLfloat *mapPtrFloat = reinterpret_cast<const float *>(mapPtr);
+
+    size_t numFloats = mTransformFeedbackBufferSize / sizeof(GLfloat);
+    VerifyVertexFloats(mapPtrFloat, vertices, 1, numFloats);
+}
+
+// Similar to the overrun test but with Pause instead of End.
+TEST_P(TransformFeedbackTest, OverrunWithPause)
+{
+    const std::vector<GLfloat> vertices = {
+        -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
+        -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
+    };
+
+    setupOverrunTest(vertices);
+
+    glPauseTransformFeedback();
+
+    // Draw a second time without XFB.
+    glDrawArrays(GL_POINTS, 0, 6);
+
+    glEndTransformFeedback();
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify only the first data was output.
+    const void *mapPtr         = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                          mTransformFeedbackBufferSize, GL_MAP_READ_BIT);
+    const GLfloat *mapPtrFloat = reinterpret_cast<const float *>(mapPtr);
+
+    size_t numFloats = mTransformFeedbackBufferSize / sizeof(GLfloat);
+    VerifyVertexFloats(mapPtrFloat, vertices, 1, numFloats);
+}
+
+// Similar to the overrun test but with Pause instead of End.
+TEST_P(TransformFeedbackTest, OverrunWithPauseAndResume)
+{
+    // Fails on Adreno Pixel 2 GL drivers. Not a supported configuration.
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAdreno() && IsAndroid());
+
+    // Fails on Windows Intel GL drivers. http://anglebug.com/4697
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
+
+    const std::vector<GLfloat> vertices = {
+        -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
+        -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
+    };
+
+    setupOverrunTest(vertices);
+
+    glPauseTransformFeedback();
+
+    // Draw a second time without XFB.
+    glDrawArrays(GL_POINTS, 0, 6);
+
+    // Draw a third time with XFB.
+    glResumeTransformFeedback();
+    glDrawArrays(GL_POINTS, 0, 6);
+
+    glEndTransformFeedback();
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify only the first and third data was output.
+    const void *mapPtr         = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                          mTransformFeedbackBufferSize, GL_MAP_READ_BIT);
+    const GLfloat *mapPtrFloat = reinterpret_cast<const float *>(mapPtr);
+
+    size_t numFloats = mTransformFeedbackBufferSize / sizeof(GLfloat);
+    VerifyVertexFloats(mapPtrFloat, vertices, 2, numFloats);
+}
+
+// Similar to the overrun Pause/Resume test but with more than one Pause and Resume.
+TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
+{
+    // Fails on Adreno Pixel 2 GL drivers. Not a supported configuration.
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAdreno() && IsAndroid());
+
+    // Fails on Windows Intel GL drivers. http://anglebug.com/4697
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
+
+    const std::vector<GLfloat> vertices = {
+        -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
+        -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
+    };
+
+    setupOverrunTest(vertices);
+
+    for (int iteration = 0; iteration < 2; ++iteration)
+    {
+        // Draw without XFB.
+        glPauseTransformFeedback();
+        glDrawArrays(GL_POINTS, 0, 6);
+
+        // Draw with XFB.
+        glResumeTransformFeedback();
+        glDrawArrays(GL_POINTS, 0, 6);
+    }
+
+    glEndTransformFeedback();
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify only the first and third data was output.
+    const void *mapPtr         = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                          mTransformFeedbackBufferSize, GL_MAP_READ_BIT);
+    const GLfloat *mapPtrFloat = reinterpret_cast<const float *>(mapPtr);
+
+    size_t numFloats = mTransformFeedbackBufferSize / sizeof(GLfloat);
+    VerifyVertexFloats(mapPtrFloat, vertices, 3, numFloats);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

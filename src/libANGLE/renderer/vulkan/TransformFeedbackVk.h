@@ -92,7 +92,6 @@ class TransformFeedbackVk : public TransformFeedbackImpl
     }
 
   private:
-    angle::Result onTransformFeedbackStateChanged(ContextVk *contextVk);
     void writeDescriptorSet(ContextVk *contextVk,
                             size_t xfbBufferCount,
                             VkDescriptorBufferInfo *pBufferInfo,

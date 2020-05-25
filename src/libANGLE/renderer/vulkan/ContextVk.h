@@ -298,31 +298,19 @@ class ContextVk : public ContextImpl, public vk::Context
 
     ANGLE_INLINE void invalidateVertexAndIndexBuffers()
     {
-        // TODO: Make the pipeline invalidate more fine-grained. Only need to dirty here if PSO
-        //  VtxInput state (stride, fmt, inputRate...) has changed. http://anglebug.com/3256
         invalidateCurrentGraphicsPipeline();
         mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
         mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
     }
 
-    ANGLE_INLINE void invalidateVertexBuffers()
-    {
-        mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-    }
+    angle::Result onVertexBufferChange(const vk::BufferHelper *vertexBuffer);
 
-    ANGLE_INLINE void onVertexAttributeChange(size_t attribIndex,
-                                              GLuint stride,
-                                              GLuint divisor,
-                                              angle::FormatID format,
-                                              GLuint relativeOffset)
-    {
-        invalidateCurrentGraphicsPipeline();
-        mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-        // Set divisor to 1 for attribs with emulated divisor
-        mGraphicsPipelineDesc->updateVertexInput(
-            &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex), stride,
-            divisor > mRenderer->getMaxVertexAttribDivisor() ? 1 : divisor, format, relativeOffset);
-    }
+    angle::Result onVertexAttributeChange(size_t attribIndex,
+                                          GLuint stride,
+                                          GLuint divisor,
+                                          angle::FormatID format,
+                                          GLuint relativeOffset,
+                                          const vk::BufferHelper *vertexBuffer);
 
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
@@ -331,6 +319,11 @@ class ContextVk : public ContextImpl, public vk::Context
 
     void invalidateCurrentTransformFeedbackBuffers();
     void onTransformFeedbackStateChanged();
+    angle::Result onBeginTransformFeedback(
+        size_t bufferCount,
+        const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers);
+    void onEndTransformFeedback();
+    angle::Result onPauseTransformFeedback();
 
     // When UtilsVk issues draw or dispatch calls, it binds descriptor sets that the context is not
     // aware of.  This function is called to make sure affected descriptor set bindings are dirtied
@@ -361,11 +354,7 @@ class ContextVk : public ContextImpl, public vk::Context
     }
     const gl::ActiveTextureArray<TextureVk *> &getActiveImages() const { return mActiveImages; }
 
-    void setIndexBufferDirty()
-    {
-        mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
-        mLastIndexBufferOffset = reinterpret_cast<const void *>(angle::DirtyPointer);
-    }
+    angle::Result onIndexBufferChange(const vk::BufferHelper *currentIndexBuffer);
 
     angle::Result flushImpl(const vk::Semaphore *semaphore);
     angle::Result finishImpl();
@@ -802,6 +791,12 @@ class ContextVk : public ContextImpl, public vk::Context
     // Pull an available CBH ptr from the CBH queue and set to specified hasRenderPass state
     void getNextAvailableCommandBuffer(vk::CommandBufferHelper **commandBuffer, bool hasRenderPass);
 
+    angle::Result endRenderPassIfTransformFeedbackBuffer(const vk::BufferHelper *buffer);
+
+    void populateTransformFeedbackBufferSet(
+        size_t bufferCount,
+        const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers);
+
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
 
@@ -937,6 +932,9 @@ class ContextVk : public ContextImpl, public vk::Context
     // Function recycleCommandBuffer() is public above
     bool mHasPrimaryCommands;
 
+    // Transform feedback buffers.
+    std::unordered_set<const vk::BufferHelper *> mCurrentTransformFeedbackBuffers;
+
     // Internal shader library.
     vk::ShaderLibrary mShaderLibrary;
     UtilsVk mUtils;
@@ -976,8 +974,50 @@ class ContextVk : public ContextImpl, public vk::Context
 
     egl::ContextPriority mContextPriority;
 
+    const vk::BufferHelper *mCurrentIndirectBuffer;
+
     std::vector<std::string> mCommandBufferDiagnostics;
 };
+
+ANGLE_INLINE angle::Result ContextVk::endRenderPassIfTransformFeedbackBuffer(
+    const vk::BufferHelper *buffer)
+{
+    if (!buffer || mCurrentTransformFeedbackBuffers.count(buffer) == 0)
+    {
+        return angle::Result::Continue;
+    }
+
+    return endRenderPass();
+}
+
+ANGLE_INLINE angle::Result ContextVk::onIndexBufferChange(
+    const vk::BufferHelper *currentIndexBuffer)
+{
+    mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+    mLastIndexBufferOffset = reinterpret_cast<const void *>(angle::DirtyPointer);
+    return endRenderPassIfTransformFeedbackBuffer(currentIndexBuffer);
+}
+
+ANGLE_INLINE angle::Result ContextVk::onVertexBufferChange(const vk::BufferHelper *vertexBuffer)
+{
+    mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
+    return endRenderPassIfTransformFeedbackBuffer(vertexBuffer);
+}
+
+ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex,
+                                                              GLuint stride,
+                                                              GLuint divisor,
+                                                              angle::FormatID format,
+                                                              GLuint relativeOffset,
+                                                              const vk::BufferHelper *vertexBuffer)
+{
+    invalidateCurrentGraphicsPipeline();
+    // Set divisor to 1 for attribs with emulated divisor
+    mGraphicsPipelineDesc->updateVertexInput(
+        &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex), stride,
+        divisor > mRenderer->getMaxVertexAttribDivisor() ? 1 : divisor, format, relativeOffset);
+    return onVertexBufferChange(vertexBuffer);
+}
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_
