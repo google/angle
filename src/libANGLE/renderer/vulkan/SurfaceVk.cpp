@@ -1631,6 +1631,8 @@ void WindowSurfaceVk::updateOverlay(ContextVk *contextVk) const
         overlay->getCountWidget(gl::WidgetId::VulkanValidationMessageCount)
             ->add(validationMessageCount);
     }
+
+    contextVk->updateOverlayOnPresent();
 }
 
 ANGLE_INLINE bool WindowSurfaceVk::overlayHasEnabledWidget(ContextVk *contextVk) const

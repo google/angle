@@ -1543,15 +1543,18 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
-                                     vk::PrimaryCommandBuffer &&commandBuffer)
+void ContextVk::updateOverlayOnPresent()
 {
     // Update overlay if active.
     gl::RunningGraphWidget *renderPassCount =
         mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassCount);
     renderPassCount->add(mRenderPassCommands->getAndResetCounter());
     renderPassCount->next();
+}
 
+angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
+                                     vk::PrimaryCommandBuffer &&commandBuffer)
+{
     if (vk::CommandBufferHelper::kEnableCommandStreamDiagnostics)
     {
         dumpCommandStreamDiagnostics();

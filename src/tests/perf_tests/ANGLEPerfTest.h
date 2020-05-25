@@ -155,6 +155,8 @@ class ANGLERenderTest : public ANGLEPerfTest
     void beginGLTraceEvent(const char *name, double hostTimeSec);
     void endGLTraceEvent(const char *name, double hostTimeSec);
 
+    void disableTestHarnessSwap() { mSwapEnabled = false; }
+
     bool mIsTimestampQueryAvailable;
 
   private:
@@ -172,6 +174,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     std::vector<const char *> mExtensionPrerequisites;
     angle::PlatformMethods mPlatformMethods;
     ConfigParameters mConfigParams;
+    bool mSwapEnabled;
 
     GLuint mTimestampQuery;
 

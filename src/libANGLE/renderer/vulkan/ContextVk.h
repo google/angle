@@ -524,6 +524,8 @@ class ContextVk : public ContextImpl, public vk::Context
     void beginOcclusionQuery(QueryVk *queryVk);
     void endOcclusionQuery(QueryVk *queryVk);
 
+    void updateOverlayOnPresent();
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t

@@ -409,7 +409,8 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
       mTestParams(testParams),
       mIsTimestampQueryAvailable(false),
       mGLWindow(nullptr),
-      mOSWindow(nullptr)
+      mOSWindow(nullptr),
+      mSwapEnabled(true)
 {
     // Force fast tests to make sure our slowest bots don't time out.
     if (OneFrame())
@@ -676,7 +677,10 @@ void ANGLERenderTest::step()
         // internal command queue to the GPU. This is enabled for null back-end
         // devices because some back-ends (e.g. Vulkan) also accumulate internal
         // command queues.
-        mGLWindow->swap();
+        if (mSwapEnabled)
+        {
+            mGLWindow->swap();
+        }
         mOSWindow->messageLoop();
 
 #if defined(ANGLE_ENABLE_ASSERTS)

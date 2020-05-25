@@ -111,6 +111,9 @@ TracePerfTest::TracePerfTest()
     {
         mSkipTest = true;
     }
+
+    // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
+    disableTestHarnessSwap();
 }
 
 void TracePerfTest::initializeBenchmark()
@@ -138,6 +141,7 @@ void TracePerfTest::initializeBenchmark()
 
     // Potentially slow. Can load a lot of resources.
     SetupReplay(params.testID);
+    glFinish();
 
     ASSERT_TRUE(mEndFrame > mStartFrame);
 
