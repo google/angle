@@ -24,6 +24,8 @@ TextureType TextureTargetToType(TextureTarget target)
         case TextureTarget::CubeMapPositiveY:
         case TextureTarget::CubeMapPositiveZ:
             return TextureType::CubeMap;
+        case TextureTarget::CubeMapArray:
+            return TextureType::CubeMapArray;
         case TextureTarget::External:
             return TextureType::External;
         case TextureTarget::Rectangle:
@@ -71,6 +73,8 @@ TextureTarget NonCubeTextureTypeToTarget(TextureType type)
             return TextureTarget::_2DMultisampleArray;
         case TextureType::_3D:
             return TextureTarget::_3D;
+        case TextureType::CubeMapArray:
+            return TextureTarget::CubeMapArray;
         case TextureType::VideoImage:
             return TextureTarget::VideoImage;
         default:
@@ -132,6 +136,12 @@ TextureType SamplerTypeToTextureType(GLenum samplerType)
         case GL_SAMPLER_CUBE_SHADOW:
             return TextureType::CubeMap;
 
+        case GL_SAMPLER_CUBE_MAP_ARRAY:
+        case GL_INT_SAMPLER_CUBE_MAP_ARRAY:
+        case GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY:
+        case GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW:
+            return TextureType::CubeMapArray;
+
         case GL_SAMPLER_2D_ARRAY:
         case GL_INT_SAMPLER_2D_ARRAY:
         case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
@@ -183,6 +193,7 @@ bool IsArrayTextureType(TextureType type)
     {
         case TextureType::_2DArray:
         case TextureType::_2DMultisampleArray:
+        case TextureType::CubeMapArray:
             return true;
         default:
             return false;

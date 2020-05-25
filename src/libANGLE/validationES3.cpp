@@ -492,6 +492,34 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             }
             break;
 
+        case TextureType::CubeMapArray:
+            if (!isSubImage && width != height)
+            {
+                context->validationError(GL_INVALID_VALUE, kCubemapFacesEqualDimensions);
+                return false;
+            }
+
+            if (width > (caps.maxCubeMapTextureSize >> level))
+            {
+                context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
+                return false;
+            }
+
+            if (width > (caps.max3DTextureSize >> level) ||
+                height > (caps.max3DTextureSize >> level) ||
+                depth > (caps.max3DTextureSize >> level))
+            {
+                context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
+                return false;
+            }
+
+            if (!isSubImage && depth % 6 != 0)
+            {
+                context->validationError(GL_INVALID_VALUE, kCubemapInvalidDepth);
+                return false;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;
@@ -1207,6 +1235,35 @@ bool ValidateES3TexStorageParametersBase(const Context *context,
         }
         break;
 
+        case TextureType::CubeMapArray:
+        {
+            if (width != height)
+            {
+                context->validationError(GL_INVALID_VALUE, kCubemapFacesEqualDimensions);
+                return false;
+            }
+
+            if (width > caps.maxCubeMapTextureSize)
+            {
+                context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
+                return false;
+            }
+
+            if (width > caps.max3DTextureSize || height > caps.max3DTextureSize ||
+                depth > caps.max3DTextureSize)
+            {
+                context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
+                return false;
+            }
+
+            if (depth % 6 != 0)
+            {
+                context->validationError(GL_INVALID_VALUE, kCubemapInvalidDepth);
+                return false;
+            }
+        }
+        break;
+
         default:
             UNREACHABLE();
             return false;
@@ -1412,6 +1469,22 @@ bool ValidateFramebufferTextureLayer(const Context *context,
                 }
 
                 if (layer >= caps.maxArrayTextureLayers)
+                {
+                    context->validationError(GL_INVALID_VALUE, kFramebufferTextureInvalidLayer);
+                    return false;
+                }
+            }
+            break;
+
+            case TextureType::CubeMapArray:
+            {
+                if (level > log2(caps.max3DTextureSize))
+                {
+                    context->validationError(GL_INVALID_VALUE, kFramebufferTextureInvalidMipLevel);
+                    return false;
+                }
+
+                if (layer >= caps.max3DTextureSize)
                 {
                     context->validationError(GL_INVALID_VALUE, kFramebufferTextureInvalidLayer);
                     return false;

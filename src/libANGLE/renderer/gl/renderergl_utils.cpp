@@ -1816,7 +1816,8 @@ bool UseTexImage2D(gl::TextureType textureType)
 bool UseTexImage3D(gl::TextureType textureType)
 {
     return textureType == gl::TextureType::_2DArray || textureType == gl::TextureType::_3D ||
-           textureType == gl::TextureType::_2DMultisampleArray;
+           textureType == gl::TextureType::_2DMultisampleArray ||
+           textureType == gl::TextureType::CubeMapArray;
 }
 
 GLenum GetTextureBindingQuery(gl::TextureType textureType)
@@ -1839,6 +1840,8 @@ GLenum GetTextureBindingQuery(gl::TextureType textureType)
             return GL_TEXTURE_BINDING_RECTANGLE;
         case gl::TextureType::CubeMap:
             return GL_TEXTURE_BINDING_CUBE_MAP;
+        case gl::TextureType::CubeMapArray:
+            return GL_TEXTURE_BINDING_CUBE_MAP_ARRAY_OES;
         default:
             UNREACHABLE();
             return 0;
