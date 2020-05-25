@@ -405,6 +405,8 @@ void Context::initialize()
 
     mState.initializeZeroTextures(this, mZeroTextures);
 
+    ANGLE_CONTEXT_TRY(mImplementation->initialize());
+
     bindVertexArray({0});
 
     if (getClientVersion() >= Version(3, 0))
@@ -496,8 +498,6 @@ void Context::initialize()
 
     mCopyImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
     mCopyImageDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
-
-    ANGLE_CONTEXT_TRY(mImplementation->initialize());
 
     // Initialize overlay after implementation is initialized.
     ANGLE_CONTEXT_TRY(mOverlay.init(this));

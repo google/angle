@@ -640,6 +640,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mEmulateSeamfulCubeMapSampling(false),
       mUseOldRewriteStructSamplers(false),
       mPoolAllocator(kDefaultPoolAllocatorPageSize, 1),
+      mOutsideRenderPassCommands(nullptr),
+      mRenderPassCommands(nullptr),
       mHasPrimaryCommands(false),
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
@@ -3683,6 +3685,7 @@ bool ContextVk::shouldFlush()
 
 bool ContextVk::hasRecordedCommands()
 {
+    ASSERT(mOutsideRenderPassCommands && mRenderPassCommands);
     return !mOutsideRenderPassCommands->empty() || !mRenderPassCommands->empty() ||
            mHasPrimaryCommands;
 }
