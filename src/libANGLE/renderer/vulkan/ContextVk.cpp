@@ -2472,13 +2472,8 @@ void ContextVk::updateSampleMask(const gl::State &glState)
     }
 }
 
-void ContextVk::updateViewport(FramebufferVk *framebufferVk,
-                               const gl::Rectangle &viewport,
-                               float nearPlane,
-                               float farPlane,
-                               bool invertViewport)
+gl::Rectangle ContextVk::getCorrectedViewport(const gl::Rectangle &viewport) const
 {
-    VkViewport vkViewport;
     const gl::Caps &caps                   = getCaps();
     const VkPhysicalDeviceLimits &limitsVk = mRenderer->getPhysicalDeviceProperties().limits;
     const int viewportBoundsRangeLow       = static_cast<int>(limitsVk.viewportBoundsRange[0]);
@@ -2494,10 +2489,11 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
     // VkPhysicalDeviceLimits::maxViewportDimensions[1]
     int correctedHeight = std::min<int>(viewport.height, caps.maxViewportHeight);
     correctedHeight     = std::max<int>(correctedHeight, 0);
-    // x and y must each be between viewportBoundsRange[0] and viewportBoundsRange[1], inclusive
-    int correctedX = std::min<int>(viewport.x, viewportBoundsRangeHigh);
+    // x and y must each be between viewportBoundsRange[0] and viewportBoundsRange[1], inclusive.
+    // Viewport size cannot be 0 so ensure there is always size for a 1x1 viewport
+    int correctedX = std::min<int>(viewport.x, viewportBoundsRangeHigh - 1);
     correctedX     = std::max<int>(correctedX, viewportBoundsRangeLow);
-    int correctedY = std::min<int>(viewport.y, viewportBoundsRangeHigh);
+    int correctedY = std::min<int>(viewport.y, viewportBoundsRangeHigh - 1);
     correctedY     = std::max<int>(correctedY, viewportBoundsRangeLow);
     // x + width must be less than or equal to viewportBoundsRange[1]
     if ((correctedX + correctedWidth) > viewportBoundsRangeHigh)
@@ -2510,12 +2506,23 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
         correctedHeight = viewportBoundsRangeHigh - correctedY;
     }
 
-    gl::Box fbDimensions = framebufferVk->getState().getDimensions();
-    gl::Rectangle correctedRect =
-        gl::Rectangle(correctedX, correctedY, correctedWidth, correctedHeight);
+    return gl::Rectangle(correctedX, correctedY, correctedWidth, correctedHeight);
+}
+
+void ContextVk::updateViewport(FramebufferVk *framebufferVk,
+                               const gl::Rectangle &viewport,
+                               float nearPlane,
+                               float farPlane,
+                               bool invertViewport)
+{
+
+    gl::Box fbDimensions        = framebufferVk->getState().getDimensions();
+    gl::Rectangle correctedRect = getCorrectedViewport(viewport);
     gl::Rectangle rotatedRect;
     RotateRectangle(getRotationDrawFramebuffer(), false, fbDimensions.width, fbDimensions.height,
                     correctedRect, &rotatedRect);
+
+    VkViewport vkViewport;
     gl_vk::GetViewport(rotatedRect, nearPlane, farPlane, invertViewport,
                        // If the surface is rotated 90/270 degrees, use the framebuffer's width
                        // instead of the height for calculating the final viewport.
@@ -2538,7 +2545,8 @@ angle::Result ContextVk::updateScissor(const gl::State &glState)
 
     // Clip the render area to the viewport.
     gl::Rectangle viewportClippedRenderArea;
-    gl::ClipRectangle(renderArea, glState.getViewport(), &viewportClippedRenderArea);
+    gl::ClipRectangle(renderArea, getCorrectedViewport(glState.getViewport()),
+                      &viewportClippedRenderArea);
 
     gl::Rectangle scissoredArea = ClipRectToScissor(getState(), viewportClippedRenderArea, false);
     gl::Rectangle rotatedScissoredArea;
