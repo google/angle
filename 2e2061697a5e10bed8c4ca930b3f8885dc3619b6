@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef724544_aac34d81",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-25T17:36:43Z",
+      "side": 1,
+      "message": "didn\u0027t notice this: also can you wrap this to 70 characters? we should make a presubmit that catches this.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 240
+      },
+      "revId": "2e2061697a5e10bed8c4ca930b3f8885dc3619b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
