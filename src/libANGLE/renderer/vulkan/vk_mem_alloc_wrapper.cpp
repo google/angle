@@ -16,6 +16,7 @@ namespace vma
 VkResult InitAllocator(VkPhysicalDevice physicalDevice,
                        VkDevice device,
                        VkInstance instance,
+                       uint32_t apiVersion,
                        VmaAllocator *pAllocator)
 {
     VmaVulkanFunctions funcs                  = {};
@@ -53,6 +54,7 @@ VkResult InitAllocator(VkPhysicalDevice physicalDevice,
     allocatorInfo.device                 = device;
     allocatorInfo.instance               = instance;
     allocatorInfo.pVulkanFunctions       = &funcs;
+    allocatorInfo.vulkanApiVersion       = apiVersion;
 
     return vmaCreateAllocator(&allocatorInfo, pAllocator);
 }

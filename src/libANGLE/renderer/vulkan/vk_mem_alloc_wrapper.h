@@ -20,6 +20,7 @@ namespace vma
 VkResult InitAllocator(VkPhysicalDevice physicalDevice,
                        VkDevice device,
                        VkInstance instance,
+                       uint32_t apiVersion,
                        VmaAllocator *pAllocator);
 
 void DestroyAllocator(VmaAllocator allocator);

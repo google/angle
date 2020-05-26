@@ -464,7 +464,10 @@ class Allocator : public WrappedObject<Allocator, VmaAllocator>
     Allocator() = default;
     void destroy();
 
-    VkResult init(VkPhysicalDevice physicalDevice, VkDevice device, VkInstance instance);
+    VkResult init(VkPhysicalDevice physicalDevice,
+                  VkDevice device,
+                  VkInstance instance,
+                  uint32_t apiVersion);
 
     // Initializes the buffer handle and memory allocation.
     VkResult createBuffer(const VkBufferCreateInfo &bufferCreateInfo,
@@ -1377,10 +1380,11 @@ ANGLE_INLINE void Allocator::destroy()
 
 ANGLE_INLINE VkResult Allocator::init(VkPhysicalDevice physicalDevice,
                                       VkDevice device,
-                                      VkInstance instance)
+                                      VkInstance instance,
+                                      uint32_t apiVersion)
 {
     ASSERT(!valid());
-    return vma::InitAllocator(physicalDevice, device, instance, &mHandle);
+    return vma::InitAllocator(physicalDevice, device, instance, apiVersion, &mHandle);
 }
 
 ANGLE_INLINE VkResult Allocator::createBuffer(const VkBufferCreateInfo &bufferCreateInfo,
