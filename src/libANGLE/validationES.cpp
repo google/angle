@@ -167,19 +167,12 @@ bool ValidReadPixelsUnsignedNormalizedDepthType(const Context *context,
 {
     bool supportsReadDepthNV = (context->getExtensions().readDepthNV && (info->depthBits > 0) &&
                                 (info->componentCount == 1));
-    bool isGLES31            = (context->getClientVersion() >= ES_3_1);
     switch (type)
     {
         case GL_UNSIGNED_SHORT:
-            return supportsReadDepthNV ||
-                   (isGLES31 && (info->sizedInternalFormat == GL_DEPTH_COMPONENT16));
         case GL_UNSIGNED_INT:
-            return supportsReadDepthNV ||
-                   (isGLES31 && ((info->sizedInternalFormat == GL_DEPTH_COMPONENT16) ||
-                                 (info->internalFormat == GL_DEPTH_COMPONENT24)));
         case GL_UNSIGNED_INT_24_8:
-            return supportsReadDepthNV ||
-                   (isGLES31 && (info->sizedInternalFormat == GL_DEPTH24_STENCIL8));
+            return supportsReadDepthNV;
         default:
             return false;
     }
