@@ -575,9 +575,6 @@ angle::Result CommandQueue::submitFrame(vk::Context *context,
                                         vk::PrimaryCommandBuffer &&commandBuffer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitFrame");
-    VkFenceCreateInfo fenceInfo = {};
-    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.flags             = 0;
 
     RendererVk *renderer = context->getRenderer();
     VkDevice device      = renderer->getDevice();
