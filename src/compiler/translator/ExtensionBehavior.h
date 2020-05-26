@@ -9,12 +9,13 @@
 #ifndef COMPILER_TRANSLATOR_EXTENSIONBEHAVIOR_H_
 #define COMPILER_TRANSLATOR_EXTENSIONBEHAVIOR_H_
 
+#include <cstdint>
 #include <map>
 
 namespace sh
 {
 
-enum class TExtension
+enum class TExtension : uint8_t
 {
     UNDEFINED,  // Special value used to indicate no extension.
 
@@ -46,7 +47,7 @@ enum class TExtension
     APPLE_clip_distance,
 };
 
-enum TBehavior
+enum TBehavior : uint8_t
 {
     EBhRequire,
     EBhEnable,
