@@ -896,7 +896,9 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
 
     // TODO(syoussefi): Once EGL_SWAP_BEHAVIOR_PRESERVED_BIT is supported, the contents of the old
     // swapchain need to carry over to the new one.  http://anglebug.com/2942
-    ANGLE_VK_TRY(context, vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &mSwapchain));
+    VkSwapchainKHR newSwapChain = VK_NULL_HANDLE;
+    ANGLE_VK_TRY(context, vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &newSwapChain));
+    mSwapchain            = newSwapChain;
     mSwapchainPresentMode = mDesiredSwapchainPresentMode;
 
     // Intialize the swapchain image views.
