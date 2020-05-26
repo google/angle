@@ -377,7 +377,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
     {
         float viewport[4];
 
-        float halfRenderAreaHeight;
+        float halfRenderArea[2];
+        float flipXY[2];
         float viewportYScale;
         float negViewportYScale;
 
@@ -388,7 +389,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
         uint32_t xfbActiveUnpaused;
         uint32_t xfbVerticesPerDraw;
         // NOTE: Explicit padding. Fill in with useful data when needed in the future.
-        int32_t padding[2];
+        int32_t padding[3];
 
         int32_t xfbBufferOffsets[4];
         uint32_t acbBufferOffsets[4];
@@ -399,6 +400,10 @@ class ContextMtl : public ContextImpl, public mtl::Context
         // Used to pre-rotate gl_Position for Vulkan swapchain images on Android (a mat2, which is
         // padded to the size of two vec4's).
         float preRotation[8];
+
+        // Used to pre-rotate gl_FragCoord for Vulkan swapchain images on Android (a mat2, which is
+        // padded to the size of two vec4's).
+        float fragRotation[8];
     };
 
     struct DefaultAttribute

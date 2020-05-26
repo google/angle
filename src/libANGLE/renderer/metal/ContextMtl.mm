@@ -1594,8 +1594,12 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context)
     mDriverUniforms.viewport[2] = glViewport.width;
     mDriverUniforms.viewport[3] = glViewport.height;
 
-    mDriverUniforms.halfRenderAreaHeight =
+    mDriverUniforms.halfRenderArea[0] =
+        static_cast<float>(mDrawFramebuffer->getState().getDimensions().width) * 0.5f;
+    mDriverUniforms.halfRenderArea[1] =
         static_cast<float>(mDrawFramebuffer->getState().getDimensions().height) * 0.5f;
+    mDriverUniforms.flipXY[0]         = 1.0f;
+    mDriverUniforms.flipXY[1]         = mDrawFramebuffer->flipY() ? -1.0f : 1.0f;
     mDriverUniforms.viewportYScale    = mDrawFramebuffer->flipY() ? -1.0f : 1.0f;
     mDriverUniforms.negViewportYScale = -mDriverUniforms.viewportYScale;
 
@@ -1615,6 +1619,16 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context)
     mDriverUniforms.preRotation[5] = 1.0f;
     mDriverUniforms.preRotation[6] = 0.0f;
     mDriverUniforms.preRotation[7] = 0.0f;
+
+    // Fill in a mat2 identity matrix, plus padding
+    mDriverUniforms.fragRotation[0] = 1.0f;
+    mDriverUniforms.fragRotation[1] = 0.0f;
+    mDriverUniforms.fragRotation[2] = 0.0f;
+    mDriverUniforms.fragRotation[3] = 0.0f;
+    mDriverUniforms.fragRotation[4] = 0.0f;
+    mDriverUniforms.fragRotation[5] = 1.0f;
+    mDriverUniforms.fragRotation[6] = 0.0f;
+    mDriverUniforms.fragRotation[7] = 0.0f;
 
     ASSERT(mRenderEncoder.valid());
     mRenderEncoder.setFragmentData(mDriverUniforms, mtl::kDriverUniformsBindingIndex);

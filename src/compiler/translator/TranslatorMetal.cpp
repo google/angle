@@ -35,7 +35,7 @@ namespace
 ANGLE_NO_DISCARD bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *compiler,
                                                                   TIntermBlock *root,
                                                                   TSymbolTable *symbolTable,
-                                                                  TIntermBinary *negViewportYScale)
+                                                                  TIntermBinary *negFlipY)
 {
     // Create a symbol reference to "gl_Position"
     const TVariable *position  = BuiltInVariable::gl_Position();
@@ -46,8 +46,8 @@ ANGLE_NO_DISCARD bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *com
     swizzleOffsetY.push_back(1);
     TIntermSwizzle *positionY = new TIntermSwizzle(positionRef, swizzleOffsetY);
 
-    // Create the expression "gl_Position.y * negViewportScaleY"
-    TIntermBinary *inverseY = new TIntermBinary(EOpMul, positionY->deepCopy(), negViewportYScale);
+    // Create the expression "gl_Position.y * negFlipY"
+    TIntermBinary *inverseY = new TIntermBinary(EOpMul, positionY->deepCopy(), negFlipY);
 
     // Create the assignment "gl_Position.y = gl_Position.y * negViewportScaleY
     TIntermTyped *positionYLHS = positionY->deepCopy();
@@ -81,11 +81,10 @@ bool TranslatorMetal::translate(TIntermBlock *root,
 
     if (getShaderType() == GL_VERTEX_SHADER)
     {
-        auto negViewportYScale = getDriverUniformNegViewportYScaleRef(driverUniforms);
+        auto negFlipY = getDriverUniformNegFlipYRef(driverUniforms);
 
         // Append gl_Position.y correction to main
-        if (!AppendVertexShaderPositionYCorrectionToMain(this, root, &getSymbolTable(),
-                                                         negViewportYScale))
+        if (!AppendVertexShaderPositionYCorrectionToMain(this, root, &getSymbolTable(), negFlipY))
         {
             return false;
         }
