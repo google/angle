@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "b79e0d54_33bc28ce",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-26T14:40:43Z",
+      "side": 1,
+      "message": "can you put this in string_utils.h and add a small test to string_utils_unittest?",
+      "range": {
+        "startLine": 404,
+        "startChar": 0,
+        "endLine": 410,
+        "endChar": 1
+      },
+      "revId": "4d31ab4290ad127f3de94ab5ba4a809bab10079d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f34a3749_5288333b",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-05-26T14:40:43Z",
+      "side": 1,
+      "message": "I think you can take out the #ifdef and just use the Windows case. You just will need to add a zero check to EndsWith, which wouldn\u0027t be harmful either.",
+      "range": {
+        "startLine": 432,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 6
+      },
+      "revId": "4d31ab4290ad127f3de94ab5ba4a809bab10079d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0a18bd74_6af435fa",
         "filename": "src/tests/test_utils/runner/TestSuite.cpp",
         "patchSetId": 4
