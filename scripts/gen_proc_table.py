@@ -37,11 +37,11 @@ template_cpp = """// GENERATED FILE - DO NOT EDIT.
 
 namespace {namespace}
 {{
-ProcEntry g_procTable[] = {{
+const ProcEntry g_procTable[] = {{
 {proc_data}
 }};
 
-size_t g_numProcs = {num_procs};
+const size_t g_numProcs = {num_procs};
 }}  // namespace {namespace}
 """
 

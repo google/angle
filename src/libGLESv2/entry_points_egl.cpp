@@ -1085,7 +1085,7 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY EGL_GetProcAddress(const ch
     FUNC_EVENT("const char *procname = \"%s\"", procname);
     Thread *thread = egl::GetCurrentThread();
 
-    ProcEntry *entry =
+    const ProcEntry *entry =
         std::lower_bound(&g_procTable[0], &g_procTable[g_numProcs], procname, CompareProc);
 
     thread->setSuccess();

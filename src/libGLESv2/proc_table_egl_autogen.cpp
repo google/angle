@@ -26,7 +26,7 @@
 
 namespace egl
 {
-ProcEntry g_procTable[] = {
+const ProcEntry g_procTable[] = {
     {"ANGLEGetDisplayPlatform", P(ANGLEGetDisplayPlatform)},
     {"ANGLEResetDisplayPlatform", P(ANGLEResetDisplayPlatform)},
     {"eglBindAPI", P(EGL_BindAPI)},
@@ -1518,5 +1518,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1424;
+const size_t g_numProcs = 1424;
 }  // namespace egl
