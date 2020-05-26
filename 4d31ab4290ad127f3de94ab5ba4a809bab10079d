@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a18bd74_6af435fa",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-05-26T05:37:24Z",
+      "side": 1,
+      "message": "I changed this line because previous code has problem with \".exe\" in test suite name, e.g., \"test.exe.test.exe\".",
+      "revId": "4d31ab4290ad127f3de94ab5ba4a809bab10079d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
