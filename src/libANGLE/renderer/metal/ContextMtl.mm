@@ -1598,10 +1598,10 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context)
         static_cast<float>(mDrawFramebuffer->getState().getDimensions().width) * 0.5f;
     mDriverUniforms.halfRenderArea[1] =
         static_cast<float>(mDrawFramebuffer->getState().getDimensions().height) * 0.5f;
-    mDriverUniforms.flipXY[0]         = 1.0f;
-    mDriverUniforms.flipXY[1]         = mDrawFramebuffer->flipY() ? -1.0f : 1.0f;
-    mDriverUniforms.viewportYScale    = mDrawFramebuffer->flipY() ? -1.0f : 1.0f;
-    mDriverUniforms.negViewportYScale = -mDriverUniforms.viewportYScale;
+    mDriverUniforms.flipXY[0]    = 1.0f;
+    mDriverUniforms.flipXY[1]    = mDrawFramebuffer->flipY() ? -1.0f : 1.0f;
+    mDriverUniforms.negFlipXY[0] = mDriverUniforms.flipXY[0];
+    mDriverUniforms.negFlipXY[1] = -mDriverUniforms.flipXY[1];
 
     mDriverUniforms.enabledClipDistances = mState.getEnabledClipDistances().bits();
 

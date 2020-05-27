@@ -30,7 +30,7 @@ class TranslatorVulkan : public TCompiler
                                     PerformanceDiagnostics *perfDiagnostics) override;
     bool shouldFlattenPragmaStdglInvariantAll() override;
 
-    TIntermBinary *getDriverUniformNegFlipYRef(const TVariable *driverUniforms) const;
+    TIntermSwizzle *getDriverUniformNegFlipYRef(const TVariable *driverUniforms) const;
     TIntermBinary *getDriverUniformDepthRangeReservedFieldRef(
         const TVariable *driverUniforms) const;
     // Subclass can call this method to transform the AST before writing the final output.

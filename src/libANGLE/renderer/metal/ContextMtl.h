@@ -379,8 +379,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
         float halfRenderArea[2];
         float flipXY[2];
-        float viewportYScale;
-        float negViewportYScale;
+        float negFlipXY[2];
 
         // 32 bits for 32 clip distances
         uint32_t enabledClipDistances;

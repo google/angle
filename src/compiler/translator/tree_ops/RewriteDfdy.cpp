@@ -25,16 +25,16 @@ class Traverser : public TIntermTraverser
     ANGLE_NO_DISCARD static bool Apply(TCompiler *compiler,
                                        TIntermNode *root,
                                        const TSymbolTable &symbolTable,
-                                       TIntermBinary *viewportYScale);
+                                       TIntermSwizzle *viewportYScale);
 
   private:
-    Traverser(TIntermBinary *viewportYScale, TSymbolTable *symbolTable);
+    Traverser(TIntermSwizzle *viewportYScale, TSymbolTable *symbolTable);
     bool visitUnary(Visit visit, TIntermUnary *node) override;
 
-    TIntermBinary *mViewportYScale = nullptr;
+    TIntermSwizzle *mViewportYScale = nullptr;
 };
 
-Traverser::Traverser(TIntermBinary *viewportYScale, TSymbolTable *symbolTable)
+Traverser::Traverser(TIntermSwizzle *viewportYScale, TSymbolTable *symbolTable)
     : TIntermTraverser(true, false, false, symbolTable), mViewportYScale(viewportYScale)
 {}
 
@@ -42,7 +42,7 @@ Traverser::Traverser(TIntermBinary *viewportYScale, TSymbolTable *symbolTable)
 bool Traverser::Apply(TCompiler *compiler,
                       TIntermNode *root,
                       const TSymbolTable &symbolTable,
-                      TIntermBinary *viewportYScale)
+                      TIntermSwizzle *viewportYScale)
 {
     TSymbolTable *pSymbolTable = const_cast<TSymbolTable *>(&symbolTable);
     Traverser traverser(viewportYScale, pSymbolTable);
@@ -81,7 +81,7 @@ bool RewriteDfdy(TCompiler *compiler,
                  TIntermNode *root,
                  const TSymbolTable &symbolTable,
                  int shaderVersion,
-                 TIntermBinary *viewportYScale)
+                 TIntermSwizzle *viewportYScale)
 {
     // dFdy is only valid in GLSL 3.0 and later.
     if (shaderVersion < 300)
