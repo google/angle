@@ -492,7 +492,6 @@ def main():
         'defaults': ['ANGLE_java_defaults'],
         'static_libs': ['ANGLE_library'],
         'manifest': 'src/android_system_settings/src/com/android/angle/AndroidManifest.xml',
-        'required': ['privapp_whitelist_com.android.angle'],
     }))
 
     output = [
