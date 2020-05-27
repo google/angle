@@ -152,68 +152,12 @@ bool ProgramPipelineState::hasTextures() const
     return false;
 }
 
-bool ProgramPipelineState::hasUniformBuffers() const
-{
-    for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
-    {
-        const Program *shaderProgram = getShaderProgram(shaderType);
-        if (shaderProgram && shaderProgram->getState().hasUniformBuffers())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool ProgramPipelineState::hasStorageBuffers() const
-{
-    for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
-    {
-        const Program *shaderProgram = getShaderProgram(shaderType);
-        if (shaderProgram && shaderProgram->getState().hasStorageBuffers())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool ProgramPipelineState::hasAtomicCounterBuffers() const
-{
-    for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
-    {
-        const Program *shaderProgram = getShaderProgram(shaderType);
-        if (shaderProgram && shaderProgram->getState().hasAtomicCounterBuffers())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool ProgramPipelineState::hasImages() const
 {
     for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
     {
         const Program *shaderProgram = getShaderProgram(shaderType);
         if (shaderProgram && shaderProgram->getState().hasImages())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool ProgramPipelineState::hasTransformFeedbackOutput() const
-{
-    for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
-    {
-        const Program *shaderProgram = getShaderProgram(shaderType);
-        if (shaderProgram && shaderProgram->getState().hasTransformFeedbackOutput())
         {
             return true;
         }
@@ -311,6 +255,21 @@ void ProgramPipeline::updateExecutableAttributes()
     mState.mExecutable->mAttributesMask            = vertexExecutable.mAttributesMask;
 }
 
+void ProgramPipeline::updateTransformFeedbackMembers()
+{
+    Program *vertexProgram = getShaderProgram(gl::ShaderType::Vertex);
+
+    if (!vertexProgram)
+    {
+        return;
+    }
+
+    const ProgramExecutable &vertexExecutable     = vertexProgram->getExecutable();
+    mState.mExecutable->mTransformFeedbackStrides = vertexExecutable.mTransformFeedbackStrides;
+    mState.mExecutable->mLinkedTransformFeedbackVaryings =
+        vertexExecutable.mLinkedTransformFeedbackVaryings;
+}
+
 void ProgramPipeline::updateExecutableTextures()
 {
     for (const ShaderType shaderType : mState.mExecutable->getLinkedShaderStages())
@@ -327,15 +286,62 @@ void ProgramPipeline::updateExecutableTextures()
     }
 }
 
+void ProgramPipeline::updateHasBuffers()
+{
+    // Need to check all of the shader stages, not just linked, so we handle Compute correctly.
+    for (const gl::ShaderType shaderType : kAllGraphicsShaderTypes)
+    {
+        const Program *shaderProgram = getShaderProgram(shaderType);
+        if (shaderProgram)
+        {
+            const ProgramExecutable &executable = shaderProgram->getExecutable();
+
+            if (executable.hasUniformBuffers())
+            {
+                mState.mExecutable->mPipelineHasGraphicsUniformBuffers = true;
+            }
+            if (executable.hasStorageBuffers())
+            {
+                mState.mExecutable->mPipelineHasGraphicsStorageBuffers = true;
+            }
+            if (executable.hasAtomicCounterBuffers())
+            {
+                mState.mExecutable->mPipelineHasGraphicsAtomicCounterBuffers = true;
+            }
+        }
+    }
+
+    const Program *computeProgram = getShaderProgram(ShaderType::Compute);
+    if (computeProgram)
+    {
+        const ProgramExecutable &executable = computeProgram->getExecutable();
+
+        if (executable.hasUniformBuffers())
+        {
+            mState.mExecutable->mPipelineHasComputeUniformBuffers = true;
+        }
+        if (executable.hasStorageBuffers())
+        {
+            mState.mExecutable->mPipelineHasComputeStorageBuffers = true;
+        }
+        if (executable.hasAtomicCounterBuffers())
+        {
+            mState.mExecutable->mPipelineHasComputeAtomicCounterBuffers = true;
+        }
+    }
+}
+
 void ProgramPipeline::updateExecutable()
 {
     mState.mExecutable->reset();
 
     // Vertex Shader ProgramExecutable properties
     updateExecutableAttributes();
+    updateTransformFeedbackMembers();
 
     // All Shader ProgramExecutable properties
     updateExecutableTextures();
+    updateHasBuffers();
 }
 
 ProgramMergedVaryings ProgramPipeline::getMergedVaryings() const

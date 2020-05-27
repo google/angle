@@ -1118,11 +1118,6 @@ Shader *ProgramState::getAttachedShader(ShaderType shaderType) const
     return mAttachedShaders[shaderType];
 }
 
-size_t ProgramState::getTransformFeedbackBufferCount() const
-{
-    return mExecutable->mTransformFeedbackStrides.size();
-}
-
 GLuint ProgramState::getUniformIndexFromName(const std::string &name) const
 {
     return GetResourceIndexFromName(mExecutable->mUniforms, name);

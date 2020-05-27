@@ -68,11 +68,7 @@ class ProgramPipelineState final : angle::NonCopyable
 
     bool hasDefaultUniforms() const;
     bool hasTextures() const;
-    bool hasUniformBuffers() const;
-    bool hasStorageBuffers() const;
-    bool hasAtomicCounterBuffers() const;
     bool hasImages() const;
-    bool hasTransformFeedbackOutput() const;
 
   private:
     void useProgramStage(const Context *context, ShaderType shaderType, Program *shaderProgram);
@@ -127,10 +123,6 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public L
 
     void useProgramStages(const Context *context, GLbitfield stages, Program *shaderProgram);
 
-    void updateExecutableAttributes();
-    void updateExecutableTextures();
-    void updateExecutable();
-
     Program *getShaderProgram(ShaderType shaderType) const { return mState.mPrograms[shaderType]; }
 
     ProgramMergedVaryings getMergedVaryings() const;
@@ -168,6 +160,11 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public L
 
   private:
     void updateLinkedShaderStages();
+    void updateExecutableAttributes();
+    void updateTransformFeedbackMembers();
+    void updateExecutableTextures();
+    void updateHasBuffers();
+    void updateExecutable();
 
     std::unique_ptr<rx::ProgramPipelineImpl> mProgramPipelineImpl;
 

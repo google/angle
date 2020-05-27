@@ -279,9 +279,6 @@ class ProgramState final : angle::NonCopyable
         return mExecutable->getAtomicCounterBuffers();
     }
 
-    // Count the number of uniform and storage buffer declarations, counting arrays as one.
-    size_t getTransformFeedbackBufferCount() const;
-
     GLuint getUniformIndexFromName(const std::string &name) const;
     GLuint getUniformIndexFromLocation(UniformLocation location) const;
     Optional<GLuint> getSamplerIndex(UniformLocation location) const;
@@ -321,14 +318,7 @@ class ProgramState final : angle::NonCopyable
 
     bool hasDefaultUniforms() const { return !getDefaultUniformRange().empty(); }
     bool hasTextures() const { return !getSamplerBindings().empty(); }
-    bool hasUniformBuffers() const { return !getUniformBlocks().empty(); }
-    bool hasStorageBuffers() const { return !getShaderStorageBlocks().empty(); }
-    bool hasAtomicCounterBuffers() const { return !getAtomicCounterBuffers().empty(); }
     bool hasImages() const { return !getImageBindings().empty(); }
-    bool hasTransformFeedbackOutput() const
-    {
-        return !getLinkedTransformFeedbackVaryings().empty();
-    }
     bool hasEarlyFragmentTestsOptimization() const { return mEarlyFramentTestsOptimization; }
 
     bool isShaderMarkedForDetach(gl::ShaderType shaderType) const
