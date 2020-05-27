@@ -108,6 +108,12 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports the VK_ANDROID_external_memory_android_hardware_buffer extension",
         &members};
 
+    // Whether the VkDevice supports the VK_GGP_frame_token extension, on which
+    // the EGL_ANGLE_swap_with_frame_token extension can be layered.
+    Feature supportsGGPFrameToken = {"supports_ggp_frame_token", FeatureCategory::VulkanFeatures,
+                                     "VkDevice supports the VK_GGP_frame_token extension",
+                                     &members};
+
     // Whether the VkDevice supports the VK_KHR_external_memory_fd extension, on which the
     // GL_EXT_memory_object_fd extension can be layered.
     Feature supportsExternalMemoryFd = {
