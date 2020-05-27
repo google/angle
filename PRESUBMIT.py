@@ -28,6 +28,105 @@ _PRIMARY_EXPORT_TARGETS = [
 ]
 
 
+def _CheckCommitMessageFormatting(input_api, output_api):
+
+    def _IsLineBlank(line):
+        return line.isspace() or line == ""
+
+    def _PopBlankLines(lines, reverse=False):
+        if reverse:
+            while len(lines) > 0 and _IsLineBlank(lines[-1]):
+                lines.pop()
+        else:
+            while len(lines) > 0 and _IsLineBlank(lines[0]):
+                lines.pop(0)
+
+    whitelist_strings = ['Revert "', 'Roll ']
+    summary_linelength_warning_lower_limit = 65
+    summary_linelength_warning_upper_limit = 70
+    description_linelength_limit = 71
+
+    if input_api.change.issue:
+        git_output = input_api.gerrit.GetChangeDescription(input_api.change.issue)
+    else:
+        git_output = subprocess.check_output(["git", "log", "-n", "1", "--pretty=format:%B"])
+    commit_msg_lines = git_output.splitlines()
+    _PopBlankLines(commit_msg_lines, True)
+    _PopBlankLines(commit_msg_lines, False)
+    if len(commit_msg_lines) > 0:
+        for whitelist_string in whitelist_strings:
+            if commit_msg_lines[0].startswith(whitelist_string):
+                return []
+    errors = []
+    if git_output.find("\t") != -1:
+        errors.append(output_api.PresubmitError("Tabs are not allowed in commit message."))
+
+    # get rid of the last paragraph, which we assume to always be the tags
+    last_paragraph_line_count = 0
+    while len(commit_msg_lines) > 0 and not _IsLineBlank(commit_msg_lines[-1]):
+        last_paragraph_line_count += 1
+        commit_msg_lines.pop()
+    if last_paragraph_line_count == 0:
+        errors.append(
+            output_api.PresubmitError(
+                "Please ensure that there are tags (e.g., Bug:, Test:) in your description."))
+    if len(commit_msg_lines) > 0:
+        # pop the blank line between tag paragraph and description body
+        commit_msg_lines.pop()
+    if len(commit_msg_lines) > 0 and _IsLineBlank(commit_msg_lines[-1]):
+        errors.append(
+            output_api.PresubmitError('Please ensure that there exists only 1 blank line '
+                                      'between tags and description body.'))
+        # pop all the remaining blank lines between tag and description body
+        _PopBlankLines(commit_msg_lines, True)
+    if len(commit_msg_lines) == 0:
+        errors.append(
+            output_api.PresubmitError('Please ensure that your description summary'
+                                      ' and description body are not blank.'))
+        return errors
+
+    if summary_linelength_warning_lower_limit <= len(commit_msg_lines[0]) \
+     <= summary_linelength_warning_upper_limit:
+        errors.append(
+            output_api.PresubmitPromptWarning(
+                "Your description summary should be on one line of " +
+                str(summary_linelength_warning_lower_limit - 1) + " or less characters."))
+    elif len(commit_msg_lines[0]) > summary_linelength_warning_upper_limit:
+        errors.append(
+            output_api.PresubmitError(
+                "Please ensure that your description summary is on one line of " +
+                str(summary_linelength_warning_lower_limit - 1) + " or less characters."))
+    commit_msg_lines.pop(0)  # get rid of description summary
+    if len(commit_msg_lines) == 0:
+        return errors
+    if not _IsLineBlank(commit_msg_lines[0]):
+        errors.append(
+            output_api.PresubmitError('Please ensure the summary is only 1 line and '
+                                      ' there is 1 blank line between the summary '
+                                      'and description body.'))
+    else:
+        commit_msg_lines.pop(0)  # pop first blank line
+        if len(commit_msg_lines) == 0:
+            return errors
+        if _IsLineBlank(commit_msg_lines[0]):
+            errors.append(
+                output_api.PresubmitError('Please ensure that there exists only 1 blank line '
+                                          'between description summary and description body.'))
+            # pop all the remaining blank lines between description summary and description body
+            _PopBlankLines(commit_msg_lines)
+
+    # loop through description body
+    while len(commit_msg_lines) > 0:
+        if len(commit_msg_lines[0]) > description_linelength_limit:
+            errors.append(
+                output_api.PresubmitError(
+                    "Please ensure that your description body is wrapped to " +
+                    str(description_linelength_limit) + " characters or less."))
+            return errors
+        commit_msg_lines.pop(0)
+    return errors
+
+
 def _CheckChangeHasBugField(input_api, output_api):
     """Requires that the changelist have a Bug: field from a known project."""
     bugs = input_api.change.BugsFromDescription()
@@ -240,6 +339,7 @@ def CheckChangeOnUpload(input_api, output_api):
     results.extend(
         input_api.canned_checks.CheckPatchFormatted(
             input_api, output_api, result_factory=output_api.PresubmitError))
+    results.extend(_CheckCommitMessageFormatting(input_api, output_api))
     return results
 
 
