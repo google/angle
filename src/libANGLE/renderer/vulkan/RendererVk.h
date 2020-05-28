@@ -256,6 +256,8 @@ class RendererVk : angle::NonCopyable
     }
     void waitForWorkerThreadIdle() { mCommandProcessor.waitForWorkComplete(); }
 
+    vk::BufferHelper &getNullBuffer() { return mTheNullBuffer; }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -379,6 +381,9 @@ class RendererVk : angle::NonCopyable
     vk::Allocator mAllocator;
     SamplerCache mSamplerCache;
     vk::ActiveHandleCounter mActiveHandleCounts;
+
+    // Vulkan does not allow binding a null vertex buffer. We use a dummy as a placeholder.
+    vk::BufferHelper mTheNullBuffer;
 };
 
 }  // namespace rx

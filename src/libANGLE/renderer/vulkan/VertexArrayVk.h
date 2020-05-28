@@ -158,9 +158,6 @@ class VertexArrayVk : public VertexArrayImpl
     Optional<size_t> mLineLoopBufferLastIndex;
     bool mDirtyLineLoopTranslation;
 
-    // Vulkan does not allow binding a null vertex buffer. We use a dummy as a placeholder.
-    vk::BufferHelper mTheNullBuffer;
-
     // Track client and/or emulated attribs that we have to stream their buffer contents
     gl::AttributesMask mStreamingVertexAttribsMask;
 };

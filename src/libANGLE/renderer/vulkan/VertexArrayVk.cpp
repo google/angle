@@ -123,16 +123,12 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk, const gl::VertexArrayState &s
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    VkBufferCreateInfo createInfo = {};
-    createInfo.sType              = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    createInfo.size               = 16;
-    createInfo.usage              = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    (void)mTheNullBuffer.init(contextVk, createInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+    vk::BufferHelper &nullBuffer = renderer->getNullBuffer();
 
-    mCurrentArrayBufferHandles.fill(mTheNullBuffer.getBuffer().getHandle());
+    mCurrentArrayBufferHandles.fill(nullBuffer.getBuffer().getHandle());
     mCurrentArrayBufferOffsets.fill(0);
     mCurrentArrayBufferRelativeOffsets.fill(0);
-    mCurrentArrayBuffers.fill(&mTheNullBuffer);
+    mCurrentArrayBuffers.fill(&nullBuffer);
 
     mDynamicVertexData.init(renderer, vk::kVertexBufferUsageFlags, vk::kVertexBufferAlignment,
                             kDynamicVertexDataSize, true);
@@ -154,8 +150,6 @@ void VertexArrayVk::destroy(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
 
     RendererVk *renderer = contextVk->getRenderer();
-
-    mTheNullBuffer.release(renderer);
 
     mDynamicVertexData.release(renderer);
     mDynamicIndexData.release(renderer);
@@ -557,9 +551,9 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                                              size_t attribIndex,
                                              bool bufferOnly)
 {
+    RendererVk *renderer = contextVk->getRenderer();
     if (attrib.enabled)
     {
-        RendererVk *renderer           = contextVk->getRenderer();
         const vk::Format &vertexFormat = renderer->getFormat(attrib.format->id);
 
         GLuint stride;
@@ -621,9 +615,10 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
             {
                 if (bufferVk->getSize() == 0)
                 {
-                    mCurrentArrayBuffers[attribIndex] = &mTheNullBuffer;
-                    mCurrentArrayBufferHandles[attribIndex] =
-                        mTheNullBuffer.getBuffer().getHandle();
+                    vk::BufferHelper &nullBuffer = renderer->getNullBuffer();
+
+                    mCurrentArrayBuffers[attribIndex]       = &nullBuffer;
+                    mCurrentArrayBufferHandles[attribIndex] = nullBuffer.getBuffer().getHandle();
                     mCurrentArrayBufferOffsets[attribIndex] = 0;
                     stride                                  = 0;
                 }
@@ -644,8 +639,9 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         }
         else
         {
-            mCurrentArrayBuffers[attribIndex]       = &mTheNullBuffer;
-            mCurrentArrayBufferHandles[attribIndex] = mTheNullBuffer.getBuffer().getHandle();
+            vk::BufferHelper &nullBuffer            = renderer->getNullBuffer();
+            mCurrentArrayBuffers[attribIndex]       = &nullBuffer;
+            mCurrentArrayBufferHandles[attribIndex] = nullBuffer.getBuffer().getHandle();
             mCurrentArrayBufferOffsets[attribIndex] = 0;
             // Client side buffer will be transfered to a tightly packed buffer later
             stride = vertexFormat.actualBufferFormat().pixelBytes;
@@ -675,8 +671,9 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         contextVk->invalidateDefaultAttribute(attribIndex);
 
         // These will be filled out by the ContextVk.
-        mCurrentArrayBuffers[attribIndex]               = &mTheNullBuffer;
-        mCurrentArrayBufferHandles[attribIndex]         = mTheNullBuffer.getBuffer().getHandle();
+        vk::BufferHelper &nullBuffer                    = renderer->getNullBuffer();
+        mCurrentArrayBuffers[attribIndex]               = &nullBuffer;
+        mCurrentArrayBufferHandles[attribIndex]         = nullBuffer.getBuffer().getHandle();
         mCurrentArrayBufferOffsets[attribIndex]         = 0;
         mCurrentArrayBufferStrides[attribIndex]         = 0;
         mCurrentArrayBufferRelativeOffsets[attribIndex] = 0;
