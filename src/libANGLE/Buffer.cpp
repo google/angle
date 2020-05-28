@@ -87,7 +87,17 @@ angle::Result Buffer::bufferData(Context *context,
         dataForImpl = scratchBuffer->data();
     }
 
-    ANGLE_TRY(mImpl->setData(context, target, dataForImpl, size, usage));
+    if (mImpl->setData(context, target, dataForImpl, size, usage) == angle::Result::Stop)
+    {
+        // If setData fails, the buffer contents are undefined. Set a zero size to indicate that.
+        mIndexRangeCache.clear();
+        mState.mSize = 0;
+
+        // Notify when storage changes.
+        onStateChange(angle::SubjectMessage::SubjectChanged);
+
+        return angle::Result::Stop;
+    }
 
     mIndexRangeCache.clear();
     mState.mUsage = usage;
