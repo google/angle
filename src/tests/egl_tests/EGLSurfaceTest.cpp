@@ -731,6 +731,147 @@ TEST_P(EGLPreRotationSurfaceTest, OrientedWindowWithDraw)
     testDrawingAndReadPixels();
 }
 
+// Use dFdx() and dFdy() and still provide a predictable pattern for testing pre-rotation
+// In this case, the color values will be the following: (dFdx(v_data.x), dFdy(v_data.y), 0, 1).
+// To help make this meaningful for pre-rotation, the derivatives will vary in the four corners of
+// the window:
+//
+//  +------------+------------+      +--------+--------+
+//  | (  0, 219) | (239, 249) |      | Green  | Yellow |
+//  +------------+------------+  OR  +--------+--------+
+//  | (  0,   0) | (229,   0) |      | Black  |  Red   |
+//  +------------+------------+      +--------+--------+
+TEST_P(EGLPreRotationSurfaceTest, OrientedWindowWithDerivativeDraw)
+{
+    // http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
+
+    // Flaky on Linux SwANGLE http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
+
+    // To aid in debugging, we want this window visible
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithRGBA8888Config();
+    initializeContext();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Init program
+    constexpr char kVS[] =
+        "#version 300 es\n"
+        "in highp vec2 position;\n"
+        "in highp vec2 redGreen;\n"
+        "out highp vec2 v_data;\n"
+        "void main() {\n"
+        "  gl_Position = vec4(position, 0, 1);\n"
+        "  v_data = redGreen;\n"
+        "}";
+
+    constexpr char kFS[] =
+        "#version 300 es\n"
+        "in highp vec2 v_data;\n"
+        "out highp vec4 FragColor;\n"
+        "void main() {\n"
+        "  FragColor = vec4(dFdx(v_data.x), dFdy(v_data.y), 0, 1);\n"
+        "}";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    GLint positionLocation = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLocation);
+
+    GLint redGreenLocation = glGetAttribLocation(program, "redGreen");
+    ASSERT_NE(-1, redGreenLocation);
+
+    GLuint indexBuffer;
+    glGenBuffers(1, &indexBuffer);
+
+    GLuint vertexArray;
+    glGenVertexArrays(1, &vertexArray);
+
+    std::vector<GLuint> vertexBuffers(2);
+    glGenBuffers(2, &vertexBuffers[0]);
+
+    glBindVertexArray(vertexArray);
+
+    std::vector<GLushort> indices = {// 4 squares each made up of 6 vertices:
+                                     // 1st square, in the upper-left part of window
+                                     0, 1, 2, 2, 3, 0,
+                                     // 2nd square, in the upper-right part of window
+                                     4, 5, 6, 6, 7, 4,
+                                     // 3rd square, in the lower-left part of window
+                                     8, 9, 10, 10, 11, 8,
+                                     // 4th square, in the lower-right part of window
+                                     12, 13, 14, 14, 15, 12};
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indices.size(), &indices[0],
+                 GL_STATIC_DRAW);
+
+    std::vector<GLfloat> positionData = {// 4 squares each made up of quad vertices
+                                         // 1st square, in the upper-left part of window
+                                         -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+                                         // 2nd square, in the upper-right part of window
+                                         0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+                                         // 3rd square, in the lower-left part of window
+                                         -1.0f, 0.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+                                         // 4th square, in the lower-right part of window
+                                         0.0f, 0.0f, 0.0f, -1.0f, 1.0f, -1.0f, 1.0f, 0.0f};
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffers[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * positionData.size(), &positionData[0],
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+
+    std::vector<GLfloat> redGreenData = {// green(0,110), black(0,0), red(115,0), yellow(120,125)
+                                         // 4 squares each made up of 4 pairs of half-color values:
+                                         // 1st square, in the upper-left part of window
+                                         0.0f, 110.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 110.0f,
+                                         // 2nd square, in the upper-right part of window
+                                         0.0f, 125.0f, 0.0f, 0.0f, 120.0f, 0.0f, 120.0f, 125.0f,
+                                         // 3rd square, in the lower-left part of window
+                                         0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                                         // 4th square, in the lower-right part of window
+                                         0.0f, 0.0f, 0.0f, 0.0f, 115.0f, 0.0f, 115.0f, 0.0f};
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffers[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * redGreenData.size(), &redGreenData[0],
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(redGreenLocation, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2, nullptr);
+    glEnableVertexAttribArray(redGreenLocation);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Draw and check the 4 corner pixels, to ensure we're getting the expected "colors"
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, nullptr);
+    GLColor expectedPixelLowerLeft(0, 0, 0, 255);
+    GLColor expectedPixelLowerRight(229, 0, 0, 255);
+    GLColor expectedPixelUpperLeft(0, 219, 0, 255);
+    GLColor expectedPixelUpperRight(239, 249, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, expectedPixelLowerLeft);
+    EXPECT_PIXEL_COLOR_EQ(mSize - 1, 0, expectedPixelLowerRight);
+    EXPECT_PIXEL_COLOR_EQ(0, mSize - 1, expectedPixelUpperLeft);
+    EXPECT_PIXEL_COLOR_EQ(mSize - 1, mSize - 1, expectedPixelUpperRight);
+    ASSERT_GL_NO_ERROR();
+
+    // Make the image visible
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+
+    // Draw again and check the 4 center pixels, to ensure we're getting the expected "colors"
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, nullptr);
+    EXPECT_PIXEL_COLOR_EQ((mSize / 2) - 1, (mSize / 2) - 1, expectedPixelLowerLeft);
+    EXPECT_PIXEL_COLOR_EQ((mSize / 2) - 1, (mSize / 2), expectedPixelUpperLeft);
+    EXPECT_PIXEL_COLOR_EQ((mSize / 2), (mSize / 2) - 1, expectedPixelLowerRight);
+    EXPECT_PIXEL_COLOR_EQ((mSize / 2), (mSize / 2), expectedPixelUpperRight);
+    ASSERT_GL_NO_ERROR();
+}
+
 // A slight variation of EGLPreRotationSurfaceTest, where the initial window size is 400x300, yet
 // the drawing is still 256x256.  In addition, gl_FragCoord is used in a "clever" way, as the color
 // of the 256x256 drawing area, which reproduces an interesting pre-rotation case from the
