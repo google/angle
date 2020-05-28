@@ -98,7 +98,7 @@ void CaptureGetProgramInterfaceiv_params(const State &glState,
                                          GLint *params,
                                          ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
 void CaptureGetProgramPipelineInfoLog_length(const State &glState,

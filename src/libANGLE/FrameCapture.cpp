@@ -18,6 +18,7 @@
 
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/ResourceMap.h"
@@ -1593,6 +1594,7 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 }
                 break;
             }
+            case GL_BOOL:
             case GL_UNSIGNED_INT:
             {
                 std::vector<GLuint> uniformBuffer(uniformSize);
@@ -2587,6 +2589,20 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         }
     }
 
+    // Capture Sync Objects
+    const gl::SyncManager &syncs = apiState.getSyncManagerForCapture();
+    for (const auto &syncIter : syncs)
+    {
+        GLsync syncID  = reinterpret_cast<GLsync>(syncIter.first);
+        gl::Sync *sync = syncIter.second;
+
+        if (!sync)
+        {
+            continue;
+        }
+        cap(CaptureFenceSync(replayState, true, sync->getCondition(), sync->getFlags(), syncID));
+    }
+
     // Capture GL Context states.
     // TODO(http://anglebug.com/3662): Complete state capture.
     auto capCap = [cap, &replayState](GLenum capEnum, bool capValue) {
@@ -2844,14 +2860,6 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     if (apiState.isDitherEnabled())
     {
         capCap(GL_DITHER, apiState.isDitherEnabled());
-    }
-
-    const gl::SyncManager &syncs = apiState.getSyncManagerForCapture();
-    for (const auto &syncIter : syncs)
-    {
-        // TODO: Create existing sync objects (http://anglebug.com/3662)
-        (void)syncIter;
-        UNIMPLEMENTED();
     }
 
     // Allow the replayState object to be destroyed conveniently.
