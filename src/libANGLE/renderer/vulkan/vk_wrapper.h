@@ -28,6 +28,8 @@ namespace vk
 // DescriptorSet
 
 #define ANGLE_HANDLE_TYPES_X(FUNC) \
+    FUNC(Allocation)               \
+    FUNC(Allocator)                \
     FUNC(Buffer)                   \
     FUNC(BufferView)               \
     FUNC(CommandPool)              \
@@ -46,8 +48,7 @@ namespace vk
     FUNC(RenderPass)               \
     FUNC(Sampler)                  \
     FUNC(Semaphore)                \
-    FUNC(ShaderModule)             \
-    FUNC(Allocation)
+    FUNC(ShaderModule)
 
 #define ANGLE_COMMA_SEP_FUNC(TYPE) TYPE,
 
@@ -457,23 +458,39 @@ class DeviceMemory final : public WrappedObject<DeviceMemory, VkDeviceMemory>
     void unmap(VkDevice device) const;
 };
 
+class Allocator : public WrappedObject<Allocator, VmaAllocator>
+{
+  public:
+    Allocator() = default;
+    void destroy();
+
+    VkResult init(VkPhysicalDevice physicalDevice, VkDevice device, VkInstance instance);
+
+    // Initializes the buffer handle and memory allocation.
+    VkResult createBuffer(const VkBufferCreateInfo &bufferCreateInfo,
+                          VkMemoryPropertyFlags requiredFlags,
+                          VkMemoryPropertyFlags preferredFlags,
+                          bool persistentlyMappedBuffers,
+                          uint32_t *memoryTypeIndexOut,
+                          Buffer *bufferOut,
+                          Allocation *allocationOut) const;
+
+    void getMemoryTypeProperties(uint32_t memoryTypeIndex, VkMemoryPropertyFlags *flagsOut) const;
+};
+
 class Allocation final : public WrappedObject<Allocation, VmaAllocation>
 {
   public:
     Allocation() = default;
-    void destroy(VmaAllocator allocator);
+    void destroy(const Allocator &allocator);
 
-    VkResult createBufferAndMemory(VmaAllocator allocator,
-                                   const VkBufferCreateInfo *pBufferCreateInfo,
-                                   VkMemoryPropertyFlags requiredFlags,
-                                   VkMemoryPropertyFlags preferredFlags,
-                                   bool persistentlyMappedBuffers,
-                                   Buffer *buffer,
-                                   VkMemoryPropertyFlags *pMemPropertyOut);
-    VkResult map(VmaAllocator allocator, uint8_t **mapPointer) const;
-    void unmap(VmaAllocator allocator) const;
-    void flush(VmaAllocator allocator, VkDeviceSize offset, VkDeviceSize size);
-    void invalidate(VmaAllocator allocator, VkDeviceSize offset, VkDeviceSize size);
+    VkResult map(const Allocator &allocator, uint8_t **mapPointer) const;
+    void unmap(const Allocator &allocator) const;
+    void flush(const Allocator &allocator, VkDeviceSize offset, VkDeviceSize size);
+    void invalidate(const Allocator &allocator, VkDeviceSize offset, VkDeviceSize size);
+
+  private:
+    friend class Allocator;
 };
 
 class RenderPass final : public WrappedObject<RenderPass, VkRenderPass>
@@ -501,6 +518,9 @@ class Buffer final : public WrappedObject<Buffer, VkBuffer>
     VkResult init(VkDevice device, const VkBufferCreateInfo &createInfo);
     VkResult bindMemory(VkDevice device, const DeviceMemory &deviceMemory);
     void getMemoryRequirements(VkDevice device, VkMemoryRequirements *memoryRequirementsOut);
+
+  private:
+    friend class Allocator;
 };
 
 class BufferView final : public WrappedObject<BufferView, VkBufferView>
@@ -1340,61 +1360,83 @@ ANGLE_INLINE void DeviceMemory::unmap(VkDevice device) const
     vkUnmapMemory(device, mHandle);
 }
 
-// Allocation implementation.
-ANGLE_INLINE void Allocation::destroy(VmaAllocator allocator)
+// Allocator implementation.
+ANGLE_INLINE void Allocator::destroy()
 {
     if (valid())
     {
-        vma::FreeMemory(allocator, mHandle);
+        vma::DestroyAllocator(mHandle);
         mHandle = VK_NULL_HANDLE;
     }
 }
 
-ANGLE_INLINE VkResult Allocation::createBufferAndMemory(VmaAllocator allocator,
-                                                        const VkBufferCreateInfo *pBufferCreateInfo,
-                                                        VkMemoryPropertyFlags requiredFlags,
-                                                        VkMemoryPropertyFlags preferredFlags,
-                                                        bool persistentlyMappedBuffers,
-                                                        Buffer *buffer,
-                                                        VkMemoryPropertyFlags *pMemPropertyOut)
+ANGLE_INLINE VkResult Allocator::init(VkPhysicalDevice physicalDevice,
+                                      VkDevice device,
+                                      VkInstance instance)
 {
     ASSERT(!valid());
-    VkResult result;
-    uint32_t memoryTypeIndex;
-    VkBuffer bufferHandle;
-    result =
-        vma::CreateBuffer(allocator, pBufferCreateInfo, requiredFlags, preferredFlags,
-                          persistentlyMappedBuffers, &memoryTypeIndex, &bufferHandle, &mHandle);
-    vma::GetMemoryTypeProperties(allocator, memoryTypeIndex, pMemPropertyOut);
-    buffer->setHandle(bufferHandle);
-
-    return result;
+    return vma::InitAllocator(physicalDevice, device, instance, &mHandle);
 }
 
-ANGLE_INLINE VkResult Allocation::map(VmaAllocator allocator, uint8_t **mapPointer) const
+ANGLE_INLINE VkResult Allocator::createBuffer(const VkBufferCreateInfo &bufferCreateInfo,
+                                              VkMemoryPropertyFlags requiredFlags,
+                                              VkMemoryPropertyFlags preferredFlags,
+                                              bool persistentlyMappedBuffers,
+                                              uint32_t *memoryTypeIndexOut,
+                                              Buffer *bufferOut,
+                                              Allocation *allocationOut) const
 {
     ASSERT(valid());
-    return vma::MapMemory(allocator, mHandle, (void **)mapPointer);
+    ASSERT(bufferOut && !bufferOut->valid());
+    ASSERT(allocationOut && !allocationOut->valid());
+    return vma::CreateBuffer(mHandle, &bufferCreateInfo, requiredFlags, preferredFlags,
+                             persistentlyMappedBuffers, memoryTypeIndexOut, &bufferOut->mHandle,
+                             &allocationOut->mHandle);
 }
 
-ANGLE_INLINE void Allocation::unmap(VmaAllocator allocator) const
+ANGLE_INLINE void Allocator::getMemoryTypeProperties(uint32_t memoryTypeIndex,
+                                                     VkMemoryPropertyFlags *flagsOut) const
 {
     ASSERT(valid());
-    vma::UnmapMemory(allocator, mHandle);
+    vma::GetMemoryTypeProperties(mHandle, memoryTypeIndex, flagsOut);
 }
 
-ANGLE_INLINE void Allocation::flush(VmaAllocator allocator, VkDeviceSize offset, VkDeviceSize size)
+// Allocation implementation.
+ANGLE_INLINE void Allocation::destroy(const Allocator &allocator)
+{
+    if (valid())
+    {
+        vma::FreeMemory(allocator.getHandle(), mHandle);
+        mHandle = VK_NULL_HANDLE;
+    }
+}
+
+ANGLE_INLINE VkResult Allocation::map(const Allocator &allocator, uint8_t **mapPointer) const
 {
     ASSERT(valid());
-    vma::FlushAllocation(allocator, mHandle, offset, size);
+    return vma::MapMemory(allocator.getHandle(), mHandle, (void **)mapPointer);
 }
 
-ANGLE_INLINE void Allocation::invalidate(VmaAllocator allocator,
+ANGLE_INLINE void Allocation::unmap(const Allocator &allocator) const
+{
+    ASSERT(valid());
+    vma::UnmapMemory(allocator.getHandle(), mHandle);
+}
+
+ANGLE_INLINE void Allocation::flush(const Allocator &allocator,
+                                    VkDeviceSize offset,
+                                    VkDeviceSize size)
+{
+    ASSERT(valid());
+    vma::FlushAllocation(allocator.getHandle(), mHandle, offset, size);
+}
+
+ANGLE_INLINE void Allocation::invalidate(const Allocator &allocator,
                                          VkDeviceSize offset,
                                          VkDeviceSize size)
 {
     ASSERT(valid());
-    vma::InvalidateAllocation(allocator, mHandle, offset, size);
+    vma::InvalidateAllocation(allocator.getHandle(), mHandle, offset, size);
 }
 
 // RenderPass implementation.

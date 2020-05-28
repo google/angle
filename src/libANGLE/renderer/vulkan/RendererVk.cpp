@@ -505,7 +505,7 @@ void RendererVk::onDestroy()
     mPipelineCache.destroy(mDevice);
     mSamplerCache.destroy(this);
 
-    vma::DestroyAllocator(mAllocator);
+    mAllocator.destroy();
 
     if (mGlslangInitialized)
     {
@@ -825,7 +825,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     }
 
     // Create VMA allocator
-    ANGLE_VK_TRY(displayVk, vma::InitAllocator(mPhysicalDevice, mDevice, mInstance, &mAllocator));
+    ANGLE_VK_TRY(displayVk, mAllocator.init(mPhysicalDevice, mDevice, mInstance));
 
     // Store the physical device memory properties so we can find the right memory pools.
     mMemoryProperties.init(mPhysicalDevice);

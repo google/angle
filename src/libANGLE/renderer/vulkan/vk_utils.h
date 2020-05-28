@@ -317,8 +317,8 @@ class StagingBuffer final : angle::NonCopyable
     size_t mSize;
 };
 
-angle::Result InitMappableAllocation(VmaAllocator allocator,
-                                     Allocation *allcation,
+angle::Result InitMappableAllocation(const vk::Allocator &allocator,
+                                     Allocation *allocation,
                                      VkDeviceSize size,
                                      int value,
                                      VkMemoryPropertyFlags memoryPropertyFlags);

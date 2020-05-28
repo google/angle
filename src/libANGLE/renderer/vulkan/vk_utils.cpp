@@ -409,16 +409,18 @@ angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUs
     createInfo.queueFamilyIndexCount = 0;
     createInfo.pQueueFamilyIndices   = nullptr;
 
-    VkMemoryPropertyFlags memoryPropertyOutFlags;
     VkMemoryPropertyFlags preferredFlags = 0;
     VkMemoryPropertyFlags requiredFlags =
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
-    mAllocation.createBufferAndMemory(
-        context->getRenderer()->getAllocator(), &createInfo, requiredFlags, preferredFlags,
-        context->getRenderer()->getFeatures().persistentlyMappedBuffers.enabled, &mBuffer,
-        &memoryPropertyOutFlags);
+    RendererVk *renderer           = context->getRenderer();
+    const vk::Allocator &allocator = renderer->getAllocator();
 
+    uint32_t memoryTypeIndex = 0;
+    ANGLE_VK_TRY(context,
+                 allocator.createBuffer(createInfo, requiredFlags, preferredFlags,
+                                        renderer->getFeatures().persistentlyMappedBuffers.enabled,
+                                        &memoryTypeIndex, &mBuffer, &mAllocation));
     mSize = static_cast<size_t>(size);
     return angle::Result::Continue;
 }
@@ -441,7 +443,7 @@ void StagingBuffer::collectGarbage(RendererVk *renderer, Serial serial)
     renderer->collectGarbage(std::move(sharedUse), std::move(garbageList));
 }
 
-angle::Result InitMappableAllocation(VmaAllocator allocator,
+angle::Result InitMappableAllocation(const vk::Allocator &allocator,
                                      Allocation *allocation,
                                      VkDeviceSize size,
                                      int value,
@@ -653,7 +655,7 @@ void GarbageObject::destroy(RendererVk *renderer)
             vkDestroyQueryPool(device, (VkQueryPool)mHandle, nullptr);
             break;
         case HandleType::Allocation:
-            vma::FreeMemory(renderer->getAllocator(), (VmaAllocation)mHandle);
+            vma::FreeMemory(renderer->getAllocator().getHandle(), (VmaAllocation)mHandle);
             break;
         default:
             UNREACHABLE();

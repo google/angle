@@ -2151,10 +2151,14 @@ angle::Result BufferHelper::init(Context *context,
     VkMemoryPropertyFlags preferredFlags =
         (memoryPropertyFlags & (~VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
 
-    mAllocation.createBufferAndMemory(
-        renderer->getAllocator(), createInfo, requiredFlags, preferredFlags,
-        renderer->getFeatures().persistentlyMappedBuffers.enabled, &mBuffer, &mMemoryPropertyFlags);
+    const vk::Allocator &allocator = renderer->getAllocator();
+    uint32_t memoryTypeIndex       = 0;
+    ANGLE_VK_TRY(context,
+                 allocator.createBuffer(*createInfo, requiredFlags, preferredFlags,
+                                        renderer->getFeatures().persistentlyMappedBuffers.enabled,
+                                        &memoryTypeIndex, &mBuffer, &mAllocation));
 
+    allocator.getMemoryTypeProperties(memoryTypeIndex, &mMemoryPropertyFlags);
     mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
 
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)
@@ -2172,8 +2176,8 @@ angle::Result BufferHelper::init(Context *context,
             // Can map the memory.
             // Pick an arbitrary value to initialize non-zero memory for sanitization.
             constexpr int kNonZeroInitValue = 55;
-            ANGLE_TRY(InitMappableAllocation(renderer->getAllocator(), &mAllocation, mSize,
-                                             kNonZeroInitValue, mMemoryPropertyFlags));
+            ANGLE_TRY(InitMappableAllocation(allocator, &mAllocation, mSize, kNonZeroInitValue,
+                                             mMemoryPropertyFlags));
         }
     }
 
