@@ -1275,9 +1275,10 @@ void GenerateCaps(const FunctionsGL *functions,
 
     extensions->eglSyncOES = functions->hasGLESExtension("GL_OES_EGL_sync");
 
-    if (functions->isAtLeastGL(gl::Version(3, 3)) ||
-        functions->hasGLExtension("GL_ARB_timer_query") ||
-        functions->hasGLESExtension("GL_EXT_disjoint_timer_query"))
+    if (!features.disableTimestampQueries.enabled &&
+        (functions->isAtLeastGL(gl::Version(3, 3)) ||
+         functions->hasGLExtension("GL_ARB_timer_query") ||
+         functions->hasGLESExtension("GL_EXT_disjoint_timer_query")))
     {
         extensions->disjointTimerQuery = true;
 
@@ -1550,6 +1551,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     bool isIntel    = IsIntel(vendor);
     bool isNvidia   = IsNvidia(vendor);
     bool isQualcomm = IsQualcomm(vendor);
+    bool isVMWare   = IsVMWare(vendor);
 
     std::array<int, 3> mesaVersion = {0, 0, 0};
     bool isMesa                    = IsMesa(functions, &mesaVersion);
@@ -1735,6 +1737,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(
         features, disableSemaphoreFd,
         IsLinux() && isAMD && isMesa && mesaVersion < (std::array<int, 3>{19, 3, 5}));
+
+    ANGLE_FEATURE_CONDITION(features, disableTimestampQueries, IsLinux() && isVMWare);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

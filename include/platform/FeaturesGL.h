@@ -436,6 +436,11 @@ struct FeaturesGL : FeatureSetBase
     Feature disableSemaphoreFd = {"disable_semaphore_fd", FeatureCategory::OpenGLWorkarounds,
                                   "Disable GL_EXT_semaphore_fd extension", &members,
                                   "https://crbug.com/1046462"};
+
+    // GL_EXT_disjoint_timer_query doesn't work properly with Linux VMWare drivers.
+    Feature disableTimestampQueries = {
+        "disable_timestamp_queries", FeatureCategory::OpenGLWorkarounds,
+        "Disable GL_EXT_disjoint_timer_query extension", &members, "https://crbug.com/811661"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
