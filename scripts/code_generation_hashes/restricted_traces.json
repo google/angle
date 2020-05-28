@@ -6,11 +6,13 @@
   "src/tests/perf_tests/restricted_traces/manhattan_10.tar.gz.sha1":
     "b4d333cd5cf3977c339350be0a819928",
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
-    "ed50690d8fd713ad6ed7908af3e70b7e",
+    "a0ecf2482bfcbd61575909fce8bc252a",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.gni":
-    "2e5d0ed5afca04a7a38eb5bec4259008",
+    "026949dc612a6293f29f19d7453e368b",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.h":
-    "2b831956463e2c30d6116c17b89743fa",
+    "5a8c9505c6dec35e9e266bc81549e829",
+  "src/tests/perf_tests/restricted_traces/subway_surfer_500.tar.gz.sha1":
+    "a7d9e6db6a74b9a927677f7b91307316",
   "src/tests/perf_tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "934983876ac5f3d9bc9b43698bb94b9d",
   "src/tests/perf_tests/restricted_traces/trex_200.tar.gz.sha1":

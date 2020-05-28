@@ -13,4 +13,5 @@ angle_restricted_traces = [
   "manhattan_10 1",
   "temple_run_300 3",
   "trex_200 1",
+  "subway_surfer_500 4",
 ]
