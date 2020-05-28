@@ -245,12 +245,12 @@ deps = {
 
   'third_party/catapult': {
     'url': '{chromium_git}/catapult.git@{catapult_revision}',
-    'condition': 'not build_with_chromium',
+    'condition': 'checkout_android and not build_with_chromium',
   },
 
   'third_party/android_ndk': {
     'url': '{chromium_git}/android_ndk.git@27c0a8d090c666a50e40fceb4ee5b40b1a2d3f87',
-    'condition': 'not build_with_chromium',
+    'condition': 'checkout_android and not build_with_chromium',
   },
 }
 
