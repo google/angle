@@ -685,7 +685,7 @@ class BufferHelper final : public Resource
     BufferHelper();
     ~BufferHelper() override;
 
-    angle::Result init(ContextVk *contextVk,
+    angle::Result init(Context *context,
                        const VkBufferCreateInfo &createInfo,
                        VkMemoryPropertyFlags memoryPropertyFlags);
     void destroy(RendererVk *renderer);

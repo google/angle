@@ -244,11 +244,6 @@ class RendererVk : angle::NonCopyable
 
     void onCompletedSerial(Serial serial);
 
-    bool shouldCleanupGarbage()
-    {
-        return (mSharedGarbage.size() > mGarbageCollectionFlushThreshold);
-    }
-
     bool enableDebugUtils() const { return mEnableDebugUtils; }
 
     SamplerCache &getSamplerCache() { return mSamplerCache; }

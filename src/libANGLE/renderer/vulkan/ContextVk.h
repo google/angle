@@ -368,7 +368,6 @@ class ContextVk : public ContextImpl, public vk::Context
 
     void insertWaitSemaphore(const vk::Semaphore *waitSemaphore);
 
-    bool shouldFlush();
     angle::Result flushImpl(const vk::Semaphore *semaphore);
     angle::Result finishImpl();
 

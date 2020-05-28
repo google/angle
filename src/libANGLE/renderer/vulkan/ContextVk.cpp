@@ -3743,11 +3743,6 @@ void ContextVk::insertWaitSemaphore(const vk::Semaphore *waitSemaphore)
     mWaitSemaphores.push_back(waitSemaphore->getHandle());
 }
 
-bool ContextVk::shouldFlush()
-{
-    return getRenderer()->shouldCleanupGarbage();
-}
-
 bool ContextVk::hasRecordedCommands()
 {
     ASSERT(mOutsideRenderPassCommands && mRenderPassCommands);

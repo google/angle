@@ -2126,19 +2126,11 @@ BufferHelper::BufferHelper()
 
 BufferHelper::~BufferHelper() = default;
 
-angle::Result BufferHelper::init(ContextVk *contextVk,
+angle::Result BufferHelper::init(Context *context,
                                  const VkBufferCreateInfo &requestedCreateInfo,
                                  VkMemoryPropertyFlags memoryPropertyFlags)
 {
-    RendererVk *renderer = contextVk->getRenderer();
-
-    // TODO: Remove with anglebug.com/2162: Vulkan: Implement device memory sub-allocation
-    // Check if we have too many resources allocated already and need to free some before allocating
-    // more and (possibly) exceeding the device's limits.
-    if (contextVk->shouldFlush())
-    {
-        ANGLE_TRY(contextVk->flushImpl(nullptr));
-    }
+    RendererVk *renderer = context->getRenderer();
 
     mSize = requestedCreateInfo.size;
 
@@ -2163,7 +2155,7 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
         renderer->getAllocator(), createInfo, requiredFlags, preferredFlags,
         renderer->getFeatures().persistentlyMappedBuffers.enabled, &mBuffer, &mMemoryPropertyFlags);
 
-    mCurrentQueueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
+    mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
 
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)
     {
@@ -2173,7 +2165,7 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
         if ((mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) == 0 &&
             (requestedCreateInfo.usage & VK_BUFFER_USAGE_TRANSFER_DST_BIT) != 0)
         {
-            ANGLE_TRY(initializeNonZeroMemory(contextVk, createInfo->size));
+            ANGLE_TRY(initializeNonZeroMemory(context, createInfo->size));
         }
         else if ((mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
         {
