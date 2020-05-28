@@ -35,6 +35,13 @@ VkResult CreateBuffer(VmaAllocator allocator,
                       VkBuffer *pBuffer,
                       VmaAllocation *pAllocation);
 
+VkResult FindMemoryTypeIndexForBufferInfo(VmaAllocator allocator,
+                                          const VkBufferCreateInfo *pBufferCreateInfo,
+                                          VkMemoryPropertyFlags requiredFlags,
+                                          VkMemoryPropertyFlags preferredFlags,
+                                          bool persistentlyMappedBuffers,
+                                          uint32_t *pMemoryTypeIndexOut);
+
 void GetMemoryTypeProperties(VmaAllocator allocator,
                              uint32_t memoryTypeIndex,
                              VkMemoryPropertyFlags *pFlags);

@@ -90,6 +90,22 @@ VkResult CreateBuffer(VmaAllocator allocator,
     return result;
 }
 
+VkResult FindMemoryTypeIndexForBufferInfo(VmaAllocator allocator,
+                                          const VkBufferCreateInfo *pBufferCreateInfo,
+                                          VkMemoryPropertyFlags requiredFlags,
+                                          VkMemoryPropertyFlags preferredFlags,
+                                          bool persistentlyMappedBuffers,
+                                          uint32_t *pMemoryTypeIndexOut)
+{
+    VmaAllocationCreateInfo allocationCreateInfo = {};
+    allocationCreateInfo.requiredFlags           = requiredFlags;
+    allocationCreateInfo.preferredFlags          = preferredFlags;
+    allocationCreateInfo.flags = (persistentlyMappedBuffers) ? VMA_ALLOCATION_CREATE_MAPPED_BIT : 0;
+
+    return vmaFindMemoryTypeIndexForBufferInfo(allocator, pBufferCreateInfo, &allocationCreateInfo,
+                                               pMemoryTypeIndexOut);
+}
+
 void GetMemoryTypeProperties(VmaAllocator allocator,
                              uint32_t memoryTypeIndex,
                              VkMemoryPropertyFlags *pFlags)

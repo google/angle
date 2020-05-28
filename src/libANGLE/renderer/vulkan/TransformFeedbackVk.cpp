@@ -61,10 +61,25 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
     {
         const gl::OffsetBindingPointer<gl::Buffer> &binding = mState.getIndexedBuffer(bufferIndex);
         ASSERT(binding.get());
-        mBufferHelpers[bufferIndex] = &vk::GetImpl(binding.get())->getBuffer();
+
+        BufferVk *bufferVk = vk::GetImpl(binding.get());
+
+        if (bufferVk->isBufferValid())
+        {
+            mBufferHelpers[bufferIndex] = &bufferVk->getBuffer();
+            mBufferOffsets[bufferIndex] = binding.getOffset();
+            mBufferSizes[bufferIndex]   = gl::GetBoundBufferAvailableSize(binding);
+        }
+        else
+        {
+            // This can happen in error conditions.
+            vk::BufferHelper &nullBuffer = contextVk->getRenderer()->getNullBuffer();
+            mBufferHelpers[bufferIndex]  = &nullBuffer;
+            mBufferOffsets[bufferIndex]  = 0;
+            mBufferSizes[bufferIndex]    = nullBuffer.getSize();
+        }
+
         mBufferHandles[bufferIndex] = mBufferHelpers[bufferIndex]->getBuffer().getHandle();
-        mBufferOffsets[bufferIndex] = binding.getOffset();
-        mBufferSizes[bufferIndex]   = gl::GetBoundBufferAvailableSize(binding);
 
         if (contextVk->getFeatures().supportsTransformFeedbackExtension.enabled)
         {

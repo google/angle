@@ -219,7 +219,6 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
 
     const GLfloat vertices[] = {
         -1.0f, 1.0f, 0.5f, -1.0f, -1.0f, 0.5f, 1.0f, -1.0f, 0.5f,
-
         -1.0f, 1.0f, 0.5f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f,  0.5f,
     };
 
@@ -1669,6 +1668,47 @@ TEST_P(TransformFeedbackTest, EndWithDifferentProgramContextSwitch)
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
     eglDestroyContext(display, context2);
     ASSERT_GL_NO_ERROR();
+}
+
+// Test an out of memory event.
+TEST_P(TransformFeedbackTest, BufferOutOfMemory)
+{
+    // The GL back-end throws an internal error that we can't deal with in this test.
+    ANGLE_SKIP_TEST_IF(IsOpenGL());
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Set the program's transform feedback varyings (just gl_Position)
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+
+    GLint positionLocation   = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+    const GLfloat vertices[] = {-1.0f, -0.5f, 0.0f, 0.5f, 1.0f};
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Draw normally.
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 5);
+    glEndTransformFeedback();
+    ASSERT_GL_NO_ERROR();
+
+    // Attempt to generate OOM and begin XFB.
+    constexpr GLsizeiptr kLargeSize = std::numeric_limits<GLsizeiptr>::max();
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, kLargeSize, nullptr, GL_STATIC_DRAW);
+
+    // It's not spec guaranteed to return OOM here.
+    GLenum err = glGetError();
+    EXPECT_TRUE(err == GL_NO_ERROR || err == GL_OUT_OF_MEMORY);
+
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 5);
+    glEndTransformFeedback();
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

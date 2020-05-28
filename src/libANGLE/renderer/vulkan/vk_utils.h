@@ -292,6 +292,12 @@ class MemoryProperties final : angle::NonCopyable
                                             uint32_t *indexOut) const;
     void destroy();
 
+    VkDeviceSize getHeapSizeForMemoryType(uint32_t memoryType) const
+    {
+        uint32_t heapIndex = mMemoryProperties.memoryTypes[memoryType].heapIndex;
+        return mMemoryProperties.memoryHeaps[heapIndex].size;
+    }
+
   private:
     VkPhysicalDeviceMemoryProperties mMemoryProperties;
 };

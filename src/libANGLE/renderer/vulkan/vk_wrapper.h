@@ -476,6 +476,11 @@ class Allocator : public WrappedObject<Allocator, VmaAllocator>
                           Allocation *allocationOut) const;
 
     void getMemoryTypeProperties(uint32_t memoryTypeIndex, VkMemoryPropertyFlags *flagsOut) const;
+    VkResult findMemoryTypeIndexForBufferInfo(const VkBufferCreateInfo &bufferCreateInfo,
+                                              VkMemoryPropertyFlags requiredFlags,
+                                              VkMemoryPropertyFlags preferredFlags,
+                                              bool persistentlyMappedBuffers,
+                                              uint32_t *memoryTypeIndexOut) const;
 };
 
 class Allocation final : public WrappedObject<Allocation, VmaAllocation>
@@ -1399,6 +1404,19 @@ ANGLE_INLINE void Allocator::getMemoryTypeProperties(uint32_t memoryTypeIndex,
 {
     ASSERT(valid());
     vma::GetMemoryTypeProperties(mHandle, memoryTypeIndex, flagsOut);
+}
+
+ANGLE_INLINE VkResult
+Allocator::findMemoryTypeIndexForBufferInfo(const VkBufferCreateInfo &bufferCreateInfo,
+                                            VkMemoryPropertyFlags requiredFlags,
+                                            VkMemoryPropertyFlags preferredFlags,
+                                            bool persistentlyMappedBuffers,
+                                            uint32_t *memoryTypeIndexOut) const
+{
+    ASSERT(valid());
+    return vma::FindMemoryTypeIndexForBufferInfo(mHandle, &bufferCreateInfo, requiredFlags,
+                                                 preferredFlags, persistentlyMappedBuffers,
+                                                 memoryTypeIndexOut);
 }
 
 // Allocation implementation.

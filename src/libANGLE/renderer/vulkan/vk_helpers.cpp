@@ -2152,11 +2152,22 @@ angle::Result BufferHelper::init(Context *context,
         (memoryPropertyFlags & (~VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
 
     const vk::Allocator &allocator = renderer->getAllocator();
-    uint32_t memoryTypeIndex       = 0;
-    ANGLE_VK_TRY(context,
-                 allocator.createBuffer(*createInfo, requiredFlags, preferredFlags,
-                                        renderer->getFeatures().persistentlyMappedBuffers.enabled,
-                                        &memoryTypeIndex, &mBuffer, &mAllocation));
+    bool persistentlyMapped        = renderer->getFeatures().persistentlyMappedBuffers.enabled;
+
+    // Check that the allocation is not too large.
+    uint32_t memoryTypeIndex = 0;
+    ANGLE_VK_TRY(context, allocator.findMemoryTypeIndexForBufferInfo(
+                              *createInfo, requiredFlags, preferredFlags, persistentlyMapped,
+                              &memoryTypeIndex));
+
+    VkDeviceSize heapSize =
+        renderer->getMemoryProperties().getHeapSizeForMemoryType(memoryTypeIndex);
+
+    ANGLE_VK_CHECK(context, createInfo->size <= heapSize, VK_ERROR_OUT_OF_DEVICE_MEMORY);
+
+    ANGLE_VK_TRY(context, allocator.createBuffer(*createInfo, requiredFlags, preferredFlags,
+                                                 persistentlyMapped, &memoryTypeIndex, &mBuffer,
+                                                 &mAllocation));
 
     allocator.getMemoryTypeProperties(memoryTypeIndex, &mMemoryPropertyFlags);
     mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
