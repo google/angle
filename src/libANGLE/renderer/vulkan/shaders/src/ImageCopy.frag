@@ -89,6 +89,10 @@ void main()
         srcValue.rgb /= srcValue.a;
     }
 
+#if SrcIsFloat && !DestIsFloat
+    srcValue *= 255.0;
+#endif
+
     // Convert value to destination type.
     DestType destValue = DestType(srcValue);
 

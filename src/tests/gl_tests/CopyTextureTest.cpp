@@ -1939,8 +1939,6 @@ TEST_P(CopyTextureTestES3, ES3FloatFormats)
 TEST_P(CopyTextureTestES3, ES3UintFormats)
 {
     ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL() && IsIntel());
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     if (!checkExtensions())
     {
