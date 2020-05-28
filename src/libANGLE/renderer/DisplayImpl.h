@@ -51,6 +51,13 @@ struct ConfigDesc;
 class DeviceImpl;
 class StreamProducerImpl;
 
+class ShareGroupImpl : angle::NonCopyable
+{
+  public:
+    ShareGroupImpl() {}
+    virtual ~ShareGroupImpl() {}
+};
+
 class DisplayImpl : public EGLImplFactory
 {
   public:

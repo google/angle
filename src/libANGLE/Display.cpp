@@ -421,6 +421,31 @@ static constexpr uint32_t kScratchBufferLifetime = 64u;
 
 }  // anonymous namespace
 
+// ShareGroup
+ShareGroup::ShareGroup(rx::EGLImplFactory *factory)
+    : mRefCount(1), mImplementation(factory->createShareGroup())
+{}
+
+ShareGroup::~ShareGroup()
+{
+    SafeDelete(mImplementation);
+}
+
+void ShareGroup::addRef()
+{
+    // This is protected by global lock, so no atomic is required
+    mRefCount++;
+}
+
+void ShareGroup::release(const gl::Context *context)
+{
+    if (--mRefCount == 0)
+    {
+        delete this;
+    }
+}
+
+// DisplayState
 DisplayState::DisplayState(EGLNativeDisplayType nativeDisplayId)
     : label(nullptr), featuresAllDisabled(false), displayId(nativeDisplayId)
 {}

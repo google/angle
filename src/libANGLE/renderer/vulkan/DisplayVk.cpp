@@ -153,11 +153,16 @@ ImageImpl *DisplayVk::createImage(const egl::ImageState &state,
     return new ImageVk(state, context);
 }
 
-rx::ContextImpl *DisplayVk::createContext(const gl::State &state,
-                                          gl::ErrorSet *errorSet,
-                                          const egl::Config *configuration,
-                                          const gl::Context *shareContext,
-                                          const egl::AttributeMap &attribs)
+ShareGroupImpl *DisplayVk::createShareGroup()
+{
+    return new ShareGroupVk();
+}
+
+ContextImpl *DisplayVk::createContext(const gl::State &state,
+                                      gl::ErrorSet *errorSet,
+                                      const egl::Config *configuration,
+                                      const gl::Context *shareContext,
+                                      const egl::AttributeMap &attribs)
 {
     return new ContextVk(state, errorSet, mRenderer);
 }

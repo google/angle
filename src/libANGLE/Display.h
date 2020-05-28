@@ -36,7 +36,9 @@ class TextureManager;
 namespace rx
 {
 class DisplayImpl;
-}
+class EGLImplFactory;
+class ShareGroupImpl;
+}  // namespace rx
 
 namespace egl
 {
@@ -60,6 +62,25 @@ struct DisplayState final : private angle::NonCopyable
     std::vector<std::string> featureOverridesDisabled;
     bool featuresAllDisabled;
     EGLNativeDisplayType displayId;
+};
+
+class ShareGroup final : angle::NonCopyable
+{
+  public:
+    ShareGroup(rx::EGLImplFactory *factory);
+
+    void addRef();
+
+    void release(const gl::Context *context);
+
+    rx::ShareGroupImpl *getImplementation() const { return mImplementation; }
+
+  protected:
+    ~ShareGroup();
+
+  private:
+    size_t mRefCount;
+    rx::ShareGroupImpl *mImplementation;
 };
 
 // Constant coded here as a sanity limit.

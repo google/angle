@@ -306,6 +306,7 @@ ANGLE_INLINE void ActiveTexturesCache::set(ContextID contextID,
 }
 
 State::State(const State *shareContextState,
+             egl::ShareGroup *shareGroup,
              TextureManager *shareTextures,
              const OverlayType *overlay,
              const EGLenum clientType,
@@ -320,6 +321,7 @@ State::State(const State *shareContextState,
       mClientType(clientType),
       mContextPriority(contextPriority),
       mClientVersion(clientVersion),
+      mShareGroup(shareGroup),
       mBufferManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mBufferManager)),
       mShaderProgramManager(
           AllocateOrGetSharedResourceManager(shareContextState, &State::mShaderProgramManager)),

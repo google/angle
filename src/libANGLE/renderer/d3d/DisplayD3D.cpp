@@ -225,6 +225,11 @@ ExternalImageSiblingImpl *DisplayD3D::createExternalImageSibling(const gl::Conte
     return mRenderer->createExternalImageSibling(context, target, buffer, attribs);
 }
 
+ShareGroupImpl *DisplayD3D::createShareGroup()
+{
+    return new ShareGroupD3D();
+}
+
 egl::Error DisplayD3D::makeCurrent(egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)

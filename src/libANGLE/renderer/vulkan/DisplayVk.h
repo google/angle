@@ -18,6 +18,11 @@ namespace rx
 {
 class RendererVk;
 
+class ShareGroupVk : public ShareGroupImpl
+{
+  private:
+};
+
 class DisplayVk : public DisplayImpl, public vk::Context
 {
   public:
@@ -96,6 +101,8 @@ class DisplayVk : public DisplayImpl, public vk::Context
     void populateFeatureList(angle::FeatureList *features) override;
 
     bool isRobustResourceInitEnabled() const override;
+
+    ShareGroupImpl *createShareGroup() override;
 
   protected:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;

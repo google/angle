@@ -30,6 +30,11 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/angletypes.h"
 
+namespace egl
+{
+class ShareGroup;
+}  // namespace egl
+
 namespace gl
 {
 class BufferManager;
@@ -85,6 +90,7 @@ class State : angle::NonCopyable
 {
   public:
     State(const State *shareContextState,
+          egl::ShareGroup *shareGroup,
           TextureManager *shareTextures,
           const OverlayType *overlay,
           const EGLenum clientType,
@@ -111,6 +117,7 @@ class State : angle::NonCopyable
     const TextureCapsMap &getTextureCaps() const { return mTextureCaps; }
     const Extensions &getExtensions() const { return mExtensions; }
     const Limitations &getLimitations() const { return mLimitations; }
+    egl::ShareGroup *getShareGroup() const { return mShareGroup; }
 
     bool isWebGL() const { return mExtensions.webglCompatibility; }
 
@@ -852,6 +859,8 @@ class State : angle::NonCopyable
     TextureCapsMap mTextureCaps;
     Extensions mExtensions;
     Limitations mLimitations;
+
+    egl::ShareGroup *mShareGroup;
 
     // Resource managers.
     BufferManager *mBufferManager;
