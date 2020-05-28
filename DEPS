@@ -49,7 +49,7 @@ vars = {
   'spirv_tools_revision': '8dfdbeff84f3e058ca33a08755ab47bc572a1c50',
 
   # Current revision of Khronos Vulkan-Headers.
-  'vulkan_headers_revision': '9250d5ae8f50202005233dc0512a1d460c8b4833',
+  'vulkan_headers_revision': '09531f27933bf04bffde9074acb302e026e8f181',
 
   # Current revision of Khronos Vulkan-Loader.
   'vulkan_loader_revision': '006586926adece57adea3e006140b5df19826371',
@@ -58,7 +58,7 @@ vars = {
   'vulkan_tools_revision': '2bc4fcd9eba505d867cc83cdc4401e427399ed8f',
 
   # Current revision of Khronos Vulkan-ValidationLayers.
-  'vulkan_validation_revision': '424cdd54fe806c0ce3b1f2789243b9fd9090453f',
+  'vulkan_validation_revision': 'afe55126be2d5ec59c76a3e3e5fab65f635caf7c',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
