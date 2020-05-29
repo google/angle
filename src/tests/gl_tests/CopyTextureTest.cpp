@@ -1822,8 +1822,6 @@ TEST_P(CopyTextureTestES3, ES3FloatFormats)
     }
 
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_color_buffer_float"));
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     auto testOutput = [this](GLuint texture, const GLColor32F &expectedColor) {
         constexpr char kVS[] =
