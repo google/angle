@@ -1109,8 +1109,7 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
             vk::ImageHelper *image         = &textureVk->getImage();
             const vk::ImageView *imageView = nullptr;
 
-            ANGLE_TRY(textureVk->getStorageImageView(contextVk, (binding.layered == GL_TRUE),
-                                                     binding.level, binding.layer, &imageView));
+            ANGLE_TRY(textureVk->getStorageImageView(contextVk, binding, &imageView));
 
             // Note: binding.access is unused because it is implied by the shader.
 

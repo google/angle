@@ -1075,16 +1075,17 @@ class ImageHelper final : public Resource, public angle::Subject
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
                                      uint32_t layerCount) const;
-    angle::Result initLayerImageViewImpl(Context *context,
-                                         gl::TextureType textureType,
-                                         VkImageAspectFlags aspectMask,
-                                         const gl::SwizzleState &swizzleMap,
-                                         ImageView *imageViewOut,
-                                         uint32_t baseMipLevel,
-                                         uint32_t levelCount,
-                                         uint32_t baseArrayLayer,
-                                         uint32_t layerCount,
-                                         VkFormat imageFormat) const;
+    angle::Result initAliasedLayerImageView(Context *context,
+                                            gl::TextureType textureType,
+                                            VkImageAspectFlags aspectMask,
+                                            const gl::SwizzleState &swizzleMap,
+                                            ImageView *imageViewOut,
+                                            uint32_t baseMipLevel,
+                                            uint32_t levelCount,
+                                            uint32_t baseArrayLayer,
+                                            uint32_t layerCount,
+                                            VkImageUsageFlags imageUsageFlags,
+                                            VkFormat imageViewFormat) const;
     angle::Result initImageView(Context *context,
                                 gl::TextureType textureType,
                                 VkImageAspectFlags aspectMask,
@@ -1472,6 +1473,19 @@ class ImageHelper final : public Resource, public angle::Subject
     void prependSubresourceUpdate(SubresourceUpdate &&update);
     void resetCachedProperties();
 
+    angle::Result initLayerImageViewImpl(
+        Context *context,
+        gl::TextureType textureType,
+        VkImageAspectFlags aspectMask,
+        const gl::SwizzleState &swizzleMap,
+        ImageView *imageViewOut,
+        uint32_t baseMipLevel,
+        uint32_t levelCount,
+        uint32_t baseArrayLayer,
+        uint32_t layerCount,
+        VkFormat imageFormat,
+        const VkImageViewUsageCreateInfo *imageViewUsageCreateInfo) const;
+
     // Vulkan objects.
     Image mImage;
     DeviceMemory mDeviceMemory;
@@ -1571,7 +1585,8 @@ class ImageViewHelper : angle::NonCopyable
                                     uint32_t baseLevel,
                                     uint32_t levelCount,
                                     uint32_t baseLayer,
-                                    uint32_t layerCount);
+                                    uint32_t layerCount,
+                                    VkImageUsageFlags imageUsageFlags);
 
     // Creates a view with all layers of the level.
     angle::Result getLevelDrawImageView(ContextVk *contextVk,
@@ -1579,6 +1594,8 @@ class ImageViewHelper : angle::NonCopyable
                                         const ImageHelper &image,
                                         uint32_t level,
                                         uint32_t layer,
+                                        VkImageUsageFlags imageUsageFlags,
+                                        VkFormat vkImageFormat,
                                         const ImageView **imageViewOut);
 
     // Creates a view with a single layer of the level.

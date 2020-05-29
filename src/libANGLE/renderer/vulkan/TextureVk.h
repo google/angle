@@ -178,9 +178,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // A special view used for texture copies that shouldn't perform swizzle.
     const vk::ImageView &getCopyImageViewAndRecordUse(ContextVk *contextVk) const;
     angle::Result getStorageImageView(ContextVk *contextVk,
-                                      bool allLayers,
-                                      size_t level,
-                                      size_t singleLayer,
+                                      const gl::ImageUnit &binding,
                                       const vk::ImageView **imageViewOut);
 
     const vk::Sampler &getSampler() const

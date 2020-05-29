@@ -1632,6 +1632,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     // Create a new image if the storage state is enabled for the first time.
     if (dirtyBits.test(gl::Texture::DIRTY_BIT_BOUND_AS_IMAGE))
     {
+        mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+
         // Recreate the image to include storage bit if needed.
         if (!(mImageUsageFlags & VK_IMAGE_USAGE_STORAGE_BIT))
         {
@@ -1806,20 +1808,23 @@ angle::Result TextureVk::getLevelLayerImageView(ContextVk *contextVk,
 }
 
 angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
-                                             bool allLayers,
-                                             size_t level,
-                                             size_t singleLayer,
+                                             const gl::ImageUnit &binding,
                                              const vk::ImageView **imageViewOut)
 {
-    if (!allLayers)
+    angle::FormatID formatID = angle::Format::InternalFormatToID(binding.format);
+    const vk::Format &format = contextVk->getRenderer()->getFormat(formatID);
+
+    if (binding.layered != GL_TRUE)
     {
-        return getLevelLayerImageView(contextVk, level, singleLayer, imageViewOut);
+        return getLevelLayerImageView(contextVk, binding.level, binding.layer, imageViewOut);
     }
 
-    uint32_t nativeLevel = getNativeImageLevel(static_cast<uint32_t>(level));
+    uint32_t nativeLevel = getNativeImageLevel(static_cast<uint32_t>(binding.level));
     uint32_t nativeLayer = getNativeImageLayer(0);
-    return mImageViews.getLevelDrawImageView(contextVk, mState.getType(), *mImage, nativeLevel,
-                                             nativeLayer, imageViewOut);
+    return mImageViews.getLevelDrawImageView(
+        contextVk, mState.getType(), *mImage, nativeLevel, nativeLayer,
+        VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, format.vkImageFormat,
+        imageViewOut);
 }
 
 angle::Result TextureVk::initImage(ContextVk *contextVk,
@@ -1870,9 +1875,9 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
 
     if ((mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0)
     {
-        ANGLE_TRY(mImageViews.initSRGBReadViews(contextVk, mState.getType(), *mImage, format,
-                                                formatSwizzle, readSwizzle, baseLevel, levelCount,
-                                                baseLayer, layerCount));
+        ANGLE_TRY(mImageViews.initSRGBReadViews(
+            contextVk, mState.getType(), *mImage, format, formatSwizzle, readSwizzle, baseLevel,
+            levelCount, baseLayer, layerCount, mImageUsageFlags & ~VK_IMAGE_USAGE_STORAGE_BIT));
     }
 
     return angle::Result::Continue;
