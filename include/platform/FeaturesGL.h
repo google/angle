@@ -448,6 +448,11 @@ struct FeaturesGL : FeatureSetBase
         "decode_encode_srgb_for_generatemipmap", FeatureCategory::OpenGLWorkarounds,
         "Decode and encode before generateMipmap for srgb format textures.", &members,
         "http://anglebug.com/4646"};
+
+    Feature emulateCopyTexImage2DFromRenderbuffers = {
+        "emulate_copyteximage2d_from_renderbuffers", FeatureCategory::OpenGLWorkarounds,
+        "CopyTexImage2D spuriously returns errors on iOS when copying from renderbuffers.",
+        &members, "https://anglebug.com/4674"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
