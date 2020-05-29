@@ -10,6 +10,7 @@
 #ifndef ANGLE_RESTRICTED_TRACES_H_
 #define ANGLE_RESTRICTED_TRACES_H_
 
+#include "candy_crush_500/candy_crush_500_capture_context2.h"
 #include "egypt_1500/egypt_1500_capture_context1.h"
 #include "manhattan_10/manhattan_10_capture_context1.h"
 #include "subway_surfer_500/subway_surfer_500_capture_context4.h"
@@ -25,6 +26,7 @@ enum class RestrictedTraceID
     temple_run_300,
     trex_200,
     subway_surfer_500,
+    candy_crush_500,
     InvalidEnum,
     EnumCount = InvalidEnum
 };
@@ -55,7 +57,9 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {trex_200::kReplayFrameStart, trex_200::kReplayFrameEnd, "trex_200"}},
     {RestrictedTraceID::subway_surfer_500,
      {subway_surfer_500::kReplayFrameStart, subway_surfer_500::kReplayFrameEnd,
-      "subway_surfer_500"}}};
+      "subway_surfer_500"}},
+    {RestrictedTraceID::candy_crush_500,
+     {candy_crush_500::kReplayFrameStart, candy_crush_500::kReplayFrameEnd, "candy_crush_500"}}};
 
 using DecompressCallback        = uint8_t *(*)(const std::vector<uint8_t> &);
 using FramebufferChangeCallback = void (*)(void *userData, GLenum target, GLuint framebuffer);
@@ -78,6 +82,9 @@ inline void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
             break;
         case RestrictedTraceID::subway_surfer_500:
             subway_surfer_500::ReplayContext4Frame(frameIndex);
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::ReplayContext2Frame(frameIndex);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -105,6 +112,9 @@ inline void ResetReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::subway_surfer_500:
             subway_surfer_500::ResetContext4Replay();
             break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::ResetContext2Replay();
+            break;
         default:
             fprintf(stderr, "Error in switch.\n");
             assert(0);
@@ -130,6 +140,9 @@ inline void SetupReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::subway_surfer_500:
             subway_surfer_500::SetupContext4Replay();
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::SetupContext2Replay();
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -157,6 +170,9 @@ inline void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::subway_surfer_500:
             subway_surfer_500::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::SetBinaryDataDir(dataDir);
+            break;
         default:
             fprintf(stderr, "Error in switch.\n");
             assert(0);
@@ -182,6 +198,9 @@ inline void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, Decompres
             break;
         case RestrictedTraceID::subway_surfer_500:
             subway_surfer_500::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::SetBinaryDataDecompressCallback(callback);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -210,6 +229,9 @@ inline void SetFramebufferChangeCallback(RestrictedTraceID traceID,
             break;
         case RestrictedTraceID::subway_surfer_500:
             subway_surfer_500::SetFramebufferChangeCallback(userData, callback);
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::SetFramebufferChangeCallback(userData, callback);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
