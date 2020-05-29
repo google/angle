@@ -7,7 +7,6 @@
 // utilities.cpp: Conversion functions and other utility routines.
 
 #include "common/utilities.h"
-#include <GLSLANG/ShaderVars.h>
 #include "GLES3/gl3.h"
 #include "common/mathutil.h"
 #include "common/platform.h"
@@ -912,40 +911,6 @@ bool SamplerNameContainsNonZeroArrayElement(const std::string &name)
         start++;
     }
     return false;
-}
-
-const sh::ShaderVariable *FindShaderVarField(const sh::ShaderVariable &var,
-                                             const std::string &fullName,
-                                             GLuint *fieldIndexOut)
-{
-    if (var.fields.empty())
-    {
-        return nullptr;
-    }
-    size_t pos = fullName.find_first_of(".");
-    if (pos == std::string::npos)
-    {
-        return nullptr;
-    }
-    std::string topName = fullName.substr(0, pos);
-    if (topName != var.name)
-    {
-        return nullptr;
-    }
-    std::string fieldName = fullName.substr(pos + 1);
-    if (fieldName.empty())
-    {
-        return nullptr;
-    }
-    for (size_t field = 0; field < var.fields.size(); ++field)
-    {
-        if (var.fields[field].name == fieldName)
-        {
-            *fieldIndexOut = static_cast<GLuint>(field);
-            return &var.fields[field];
-        }
-    }
-    return nullptr;
 }
 
 unsigned int ArraySizeProduct(const std::vector<unsigned int> &arraySizes)

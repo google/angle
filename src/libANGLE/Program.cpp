@@ -425,7 +425,7 @@ const sh::ShaderVariable *FindOutputVaryingOrField(const ProgramMergedVaryings &
             break;
         }
         GLuint fieldIndex = 0;
-        var               = FindShaderVarField(*varying, name, &fieldIndex);
+        var               = varying->findField(name, &fieldIndex);
         if (var != nullptr)
         {
             break;
@@ -4383,7 +4383,7 @@ void Program::gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyi
             else if (varying->isStruct())
             {
                 GLuint fieldIndex = 0;
-                const auto *field = FindShaderVarField(*varying, tfVaryingName, &fieldIndex);
+                const auto *field = varying->findField(tfVaryingName, &fieldIndex);
                 if (field != nullptr)
                 {
                     mState.mExecutable->mLinkedTransformFeedbackVaryings.emplace_back(*field,
