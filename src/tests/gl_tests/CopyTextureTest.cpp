@@ -867,8 +867,6 @@ constexpr GLenum kCopyTextureVariationsDstFormats[] = {GL_RGB, GL_RGBA, GL_BGRA_
 
 TEST_P(CopyTextureVariationsTest, CopyTexture)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     testCopyTexture(GL_TEXTURE_2D, std::get<1>(GetParam()), std::get<2>(GetParam()),
                     std::get<3>(GetParam()), std::get<4>(GetParam()), std::get<5>(GetParam()));
 }
