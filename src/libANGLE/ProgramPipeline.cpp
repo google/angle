@@ -124,20 +124,6 @@ bool ProgramPipelineState::usesShaderProgram(ShaderProgramID programId) const
     return false;
 }
 
-bool ProgramPipelineState::hasDefaultUniforms() const
-{
-    for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
-    {
-        const Program *shaderProgram = getShaderProgram(shaderType);
-        if (shaderProgram && shaderProgram->getState().hasDefaultUniforms())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool ProgramPipelineState::hasTextures() const
 {
     for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
@@ -286,7 +272,7 @@ void ProgramPipeline::updateExecutableTextures()
     }
 }
 
-void ProgramPipeline::updateHasBuffers()
+void ProgramPipeline::updateHasBooleans()
 {
     // Need to check all of the shader stages, not just linked, so we handle Compute correctly.
     for (const gl::ShaderType shaderType : kAllGraphicsShaderTypes)
@@ -308,6 +294,10 @@ void ProgramPipeline::updateHasBuffers()
             {
                 mState.mExecutable->mPipelineHasGraphicsAtomicCounterBuffers = true;
             }
+            if (executable.hasDefaultUniforms())
+            {
+                mState.mExecutable->mPipelineHasGraphicsDefaultUniforms = true;
+            }
         }
     }
 
@@ -328,6 +318,10 @@ void ProgramPipeline::updateHasBuffers()
         {
             mState.mExecutable->mPipelineHasComputeAtomicCounterBuffers = true;
         }
+        if (executable.hasDefaultUniforms())
+        {
+            mState.mExecutable->mPipelineHasComputeDefaultUniforms = true;
+        }
     }
 }
 
@@ -341,7 +335,7 @@ void ProgramPipeline::updateExecutable()
 
     // All Shader ProgramExecutable properties
     updateExecutableTextures();
-    updateHasBuffers();
+    updateHasBooleans();
 }
 
 ProgramMergedVaryings ProgramPipeline::getMergedVaryings() const

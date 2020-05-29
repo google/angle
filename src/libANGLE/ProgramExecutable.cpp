@@ -27,6 +27,7 @@ ProgramExecutable::ProgramExecutable()
       mActiveImagesMask(0),
       mCanDrawWith(false),
       mTransformFeedbackBufferMode(GL_INTERLEAVED_ATTRIBS),
+      mDefaultUniformRange(0, 0),
       mSamplerUniformRange(0, 0),
       mImageUniformRange(0, 0),
       mPipelineHasGraphicsUniformBuffers(false),
@@ -34,7 +35,9 @@ ProgramExecutable::ProgramExecutable()
       mPipelineHasGraphicsStorageBuffers(false),
       mPipelineHasComputeStorageBuffers(false),
       mPipelineHasGraphicsAtomicCounterBuffers(false),
-      mPipelineHasComputeAtomicCounterBuffers(false)
+      mPipelineHasComputeAtomicCounterBuffers(false),
+      mPipelineHasGraphicsDefaultUniforms(false),
+      mPipelineHasComputeDefaultUniforms(false)
 {
     reset();
 }
@@ -63,6 +66,7 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mTransformFeedbackStrides(other.mTransformFeedbackStrides),
       mTransformFeedbackBufferMode(other.mTransformFeedbackBufferMode),
       mUniforms(other.mUniforms),
+      mDefaultUniformRange(other.mDefaultUniformRange),
       mSamplerUniformRange(other.mSamplerUniformRange),
       mUniformBlocks(other.mUniformBlocks),
       mAtomicCounterBuffers(other.mAtomicCounterBuffers),
@@ -73,7 +77,9 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mPipelineHasGraphicsStorageBuffers(other.mPipelineHasGraphicsStorageBuffers),
       mPipelineHasComputeStorageBuffers(other.mPipelineHasComputeStorageBuffers),
       mPipelineHasGraphicsAtomicCounterBuffers(other.mPipelineHasGraphicsAtomicCounterBuffers),
-      mPipelineHasComputeAtomicCounterBuffers(other.mPipelineHasComputeAtomicCounterBuffers)
+      mPipelineHasComputeAtomicCounterBuffers(other.mPipelineHasComputeAtomicCounterBuffers),
+      mPipelineHasGraphicsDefaultUniforms(other.mPipelineHasGraphicsDefaultUniforms),
+      mPipelineHasComputeDefaultUniforms(other.mPipelineHasComputeDefaultUniforms)
 {
     reset();
 }
@@ -110,6 +116,8 @@ void ProgramExecutable::reset()
     mPipelineHasComputeStorageBuffers        = false;
     mPipelineHasGraphicsAtomicCounterBuffers = false;
     mPipelineHasComputeAtomicCounterBuffers  = false;
+    mPipelineHasGraphicsDefaultUniforms      = false;
+    mPipelineHasComputeDefaultUniforms       = false;
 }
 
 void ProgramExecutable::load(gl::BinaryInputStream *stream)
@@ -131,6 +139,8 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
     mPipelineHasComputeStorageBuffers        = stream->readBool();
     mPipelineHasGraphicsAtomicCounterBuffers = stream->readBool();
     mPipelineHasComputeAtomicCounterBuffers  = stream->readBool();
+    mPipelineHasGraphicsDefaultUniforms      = stream->readBool();
+    mPipelineHasComputeDefaultUniforms       = stream->readBool();
 }
 
 void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
@@ -151,6 +161,8 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     stream->writeInt(static_cast<bool>(mPipelineHasComputeStorageBuffers));
     stream->writeInt(static_cast<bool>(mPipelineHasGraphicsAtomicCounterBuffers));
     stream->writeInt(static_cast<bool>(mPipelineHasComputeAtomicCounterBuffers));
+    stream->writeInt(static_cast<bool>(mPipelineHasGraphicsDefaultUniforms));
+    stream->writeInt(static_cast<bool>(mPipelineHasComputeDefaultUniforms));
 }
 
 const ProgramState *ProgramExecutable::getProgramState(ShaderType shaderType) const
@@ -223,16 +235,10 @@ AttributesMask ProgramExecutable::getAttributesMask() const
     return mAttributesMask;
 }
 
-// TODO: http://anglebug.com/4520: Needs  mDefaultUniformRange moved to ProgramExecutable
 bool ProgramExecutable::hasDefaultUniforms() const
 {
-    ASSERT(mProgramState || mProgramPipelineState);
-    if (mProgramState)
-    {
-        return mProgramState->hasDefaultUniforms();
-    }
-
-    return mProgramPipelineState->hasDefaultUniforms();
+    return !getDefaultUniformRange().empty() ||
+           (isCompute() ? mPipelineHasComputeDefaultUniforms : mPipelineHasGraphicsDefaultUniforms);
 }
 
 // TODO: http://anglebug.com/4520: Needs  mSamplerBindings moved to ProgramExecutable

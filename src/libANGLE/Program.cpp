@@ -1080,7 +1080,6 @@ ProgramState::ProgramState()
     : mLabel(),
       mAttachedShaders{},
       mAttachedShadersMarkedForDetach{},
-      mDefaultUniformRange(0, 0),
       mAtomicCounterUniformRange(0, 0),
       mBinaryRetrieveableHint(false),
       mSeparable(false),
@@ -3751,7 +3750,7 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
     }
 
     // Whatever is left constitutes the default uniforms.
-    mState.mDefaultUniformRange = RangeUI(0, low);
+    mState.mExecutable->mDefaultUniformRange = RangeUI(0, low);
 }
 
 bool Program::linkAtomicCounterBuffers()
@@ -5488,7 +5487,8 @@ angle::Result Program::deserialize(const Context *context,
 
     unsigned int defaultUniformRangeLow  = stream.readInt<unsigned int>();
     unsigned int defaultUniformRangeHigh = stream.readInt<unsigned int>();
-    mState.mDefaultUniformRange          = RangeUI(defaultUniformRangeLow, defaultUniformRangeHigh);
+    mState.mExecutable->mDefaultUniformRange =
+        RangeUI(defaultUniformRangeLow, defaultUniformRangeHigh);
 
     unsigned int samplerRangeLow             = stream.readInt<unsigned int>();
     unsigned int samplerRangeHigh            = stream.readInt<unsigned int>();

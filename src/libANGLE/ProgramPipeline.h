@@ -66,7 +66,6 @@ class ProgramPipelineState final : angle::NonCopyable
 
     bool usesShaderProgram(ShaderProgramID program) const;
 
-    bool hasDefaultUniforms() const;
     bool hasTextures() const;
     bool hasImages() const;
 
@@ -163,7 +162,7 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public L
     void updateExecutableAttributes();
     void updateTransformFeedbackMembers();
     void updateExecutableTextures();
-    void updateHasBuffers();
+    void updateHasBooleans();
     void updateExecutable();
 
     std::unique_ptr<rx::ProgramPipelineImpl> mProgramPipelineImpl;

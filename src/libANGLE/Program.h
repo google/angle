@@ -261,7 +261,7 @@ class ProgramState final : angle::NonCopyable
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
     const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const { return mComputeShaderLocalSize; }
-    const RangeUI &getDefaultUniformRange() const { return mDefaultUniformRange; }
+    const RangeUI &getDefaultUniformRange() const { return mExecutable->getDefaultUniformRange(); }
     const RangeUI &getSamplerUniformRange() const { return mExecutable->getSamplerUniformRange(); }
     const RangeUI &getImageUniformRange() const { return mExecutable->getImageUniformRange(); }
     const RangeUI &getAtomicCounterUniformRange() const { return mAtomicCounterUniformRange; }
@@ -316,7 +316,6 @@ class ProgramState final : angle::NonCopyable
         return *mExecutable;
     }
 
-    bool hasDefaultUniforms() const { return !getDefaultUniformRange().empty(); }
     bool hasTextures() const { return !getSamplerBindings().empty(); }
     bool hasImages() const { return !getImageBindings().empty(); }
     bool hasEarlyFragmentTestsOptimization() const { return mEarlyFramentTestsOptimization; }
@@ -358,7 +357,6 @@ class ProgramState final : angle::NonCopyable
 
     std::vector<VariableLocation> mUniformLocations;
     std::vector<BufferVariable> mBufferVariables;
-    RangeUI mDefaultUniformRange;
     RangeUI mAtomicCounterUniformRange;
 
     // An array of the samplers that are used by the program

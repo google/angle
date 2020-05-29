@@ -221,6 +221,7 @@ class ProgramExecutable
     const std::vector<VariableLocation> &getOutputLocations() const { return mOutputLocations; }
     const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
     const std::vector<InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
+    const RangeUI &getDefaultUniformRange() const { return mDefaultUniformRange; }
     const RangeUI &getSamplerUniformRange() const { return mSamplerUniformRange; }
     const RangeUI &getImageUniformRange() const { return mImageUniformRange; }
     const std::vector<TransformFeedbackVarying> &getLinkedTransformFeedbackVaryings() const
@@ -352,6 +353,7 @@ class ProgramExecutable
     // inner array of an array of arrays. Names and mapped names of uniforms that are arrays include
     // [0] in the end. This makes implementation of queries simpler.
     std::vector<LinkedUniform> mUniforms;
+    RangeUI mDefaultUniformRange;
     RangeUI mSamplerUniformRange;
     std::vector<InterfaceBlock> mUniformBlocks;
     std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
@@ -366,6 +368,8 @@ class ProgramExecutable
     bool mPipelineHasComputeStorageBuffers;
     bool mPipelineHasGraphicsAtomicCounterBuffers;
     bool mPipelineHasComputeAtomicCounterBuffers;
+    bool mPipelineHasGraphicsDefaultUniforms;
+    bool mPipelineHasComputeDefaultUniforms;
 
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedOutputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;
