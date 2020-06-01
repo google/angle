@@ -46,6 +46,30 @@
       "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2574f3fc_e2301fa4",
+        "filename": "src/image_util/imageformats.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1835,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T14:42:34Z",
+      "side": 1,
+      "message": "I followed the same pattern as D24S8, but yes the second comes more naturally to me.\n\nIt\u0027s not clear to me why the former fails though, \"memory order\" could mean big or little endian, so there is no correct answer to which should come first. Are we reinterpretting raw data to this struct?",
+      "parentUuid": "158b425a_05b430ad",
+      "range": {
+        "startLine": 1835,
+        "startChar": 21,
+        "endLine": 1835,
+        "endChar": 38
+      },
+      "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
