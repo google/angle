@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48bc596b_98316384",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T16:41:57Z",
+      "side": 1,
+      "message": "typo: GLSLANG",
+      "range": {
+        "startLine": 9,
+        "startChar": 145,
+        "endLine": 9,
+        "endChar": 152
+      },
+      "revId": "78d5b09b526702dc5510ee2ec48502d930e2f7f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61dcd6c1_61cbd979",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T16:41:57Z",
+      "side": 1,
+      "message": "Redundant. Already included by Program.h",
+      "revId": "78d5b09b526702dc5510ee2ec48502d930e2f7f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d05e87a_626dd00d",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T16:41:57Z",
+      "side": 1,
+      "message": "Redundant. ShaderLang.h already includes this.",
+      "revId": "78d5b09b526702dc5510ee2ec48502d930e2f7f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5468a98e_cbc10826",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T16:41:57Z",
+      "side": 1,
+      "message": "Redundant. Included by VaryingPacking.h",
+      "revId": "78d5b09b526702dc5510ee2ec48502d930e2f7f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
