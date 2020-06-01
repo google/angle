@@ -4160,8 +4160,8 @@ angle::Result ContextVk::flushAndBeginRenderPass(
     if (isRotatedAspectRatioForDrawFBO())
     {
         // The surface is rotated 90/270 degrees.  This changes the aspect ratio of
-        // the surface.  Swap the width and height of the renderArea.
-        // TODO(ianelliott): handle small viewport/scissor cases.  http://anglebug.com/4431
+        // the surface.  Swap the x and y axis of the renderArea.
+        std::swap(rotatedRenderArea.x, rotatedRenderArea.y);
         std::swap(rotatedRenderArea.width, rotatedRenderArea.height);
     }
 
