@@ -3592,6 +3592,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         gl::Texture *texture        = textures[textureUnit];
         gl::Sampler *sampler        = mState.getSampler(static_cast<uint32_t>(textureUnit));
         gl::TextureType textureType = textureTypes[textureUnit];
+        ASSERT(textureType != gl::TextureType::InvalidEnum);
 
         // Null textures represent incomplete textures.
         if (texture == nullptr)

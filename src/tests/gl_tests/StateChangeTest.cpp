@@ -1449,6 +1449,56 @@ void main()
     GLuint mTexture     = 0;
 };
 
+class ImageES31PPO
+{
+  protected:
+    ImageES31PPO() : mComputeProg(0), mPipeline(0) {}
+
+    void bindProgramPipeline(const GLchar *computeString)
+    {
+        mComputeProg = glCreateShaderProgramv(GL_COMPUTE_SHADER, 1, &computeString);
+        ASSERT_NE(mComputeProg, 0u);
+
+        // Generate a program pipeline and attach the programs to their respective stages
+        glGenProgramPipelines(1, &mPipeline);
+        EXPECT_GL_NO_ERROR();
+        glUseProgramStages(mPipeline, GL_COMPUTE_SHADER_BIT, mComputeProg);
+        EXPECT_GL_NO_ERROR();
+        glBindProgramPipeline(mPipeline);
+        EXPECT_GL_NO_ERROR();
+        glActiveShaderProgram(mPipeline, mComputeProg);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    GLuint mComputeProg;
+    GLuint mPipeline;
+};
+
+class SimpleStateChangeTestComputeES31PPO : public ImageES31PPO, public SimpleStateChangeTest
+{
+  protected:
+    SimpleStateChangeTestComputeES31PPO() : ImageES31PPO(), SimpleStateChangeTest() {}
+
+    void testTearDown() override
+    {
+        if (mFramebuffer != 0)
+        {
+            glDeleteFramebuffers(1, &mFramebuffer);
+            mFramebuffer = 0;
+        }
+
+        if (mTexture != 0)
+        {
+            glDeleteTextures(1, &mTexture);
+            mTexture = 0;
+        }
+        glDeleteProgramPipelines(1, &mPipeline);
+    }
+
+    GLuint mFramebuffer = 0;
+    GLuint mTexture     = 0;
+};
+
 constexpr char kSimpleVertexShader[] = R"(attribute vec2 position;
 attribute vec4 color;
 varying vec4 vColor;
@@ -3425,6 +3475,60 @@ TEST_P(SimpleStateChangeTestComputeES31, DispatchImageTextureAThenTextureBThenTe
     ASSERT_GL_NO_ERROR();
 }
 
+// Copied from SimpleStateChangeTestComputeES31::DeleteImageTextureInUse
+// Tests that deleting an in-flight image texture does not immediately delete the resource.
+TEST_P(SimpleStateChangeTestComputeES31PPO, DeleteImageTextureInUse)
+{
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    glGenFramebuffers(1, &mFramebuffer);
+    glGenTextures(1, &mTexture);
+
+    glBindTexture(GL_TEXTURE_2D, mTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=2, local_size_y=2) in;
+layout (rgba8, binding = 0) readonly uniform highp image2D srcImage;
+layout (rgba8, binding = 1) writeonly uniform highp image2D dstImage;
+void main()
+{
+imageStore(dstImage, ivec2(gl_LocalInvocationID.xy),
+           imageLoad(srcImage, ivec2(gl_LocalInvocationID.xy)));
+})";
+
+    bindProgramPipeline(kCS);
+
+    glBindImageTexture(1, mTexture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
+
+    ASSERT_GL_NO_ERROR();
+
+    std::array<GLColor, 4> colors = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+    GLTexture texRead;
+    glBindTexture(GL_TEXTURE_2D, texRead);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(0, texRead, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+    texRead.reset();
+
+    std::array<GLColor, 4> results;
+    glReadPixels(0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, results.data());
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < 4; i++)
+    {
+        EXPECT_EQ(colors[i], results[i]);
+    }
+}
+
 static constexpr char kColorVS[] = R"(attribute vec2 position;
 attribute vec4 color;
 varying vec4 vColor;
@@ -4731,6 +4835,7 @@ ANGLE_INSTANTIATE_TEST_ES2(SimpleStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES3(SimpleStateChangeTestES3);
 ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestComputeES31);
+ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestComputeES31PPO);
 ANGLE_INSTANTIATE_TEST_ES3(ValidationStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2ValidationStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES31(ValidationStateChangeTestES31);

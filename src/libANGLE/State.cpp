@@ -567,7 +567,9 @@ void State::reset(const Context *context)
     mExecutable = nullptr;
 
     if (mTransformFeedback.get())
+    {
         mTransformFeedback->onBindingChanged(context, false);
+    }
     mTransformFeedback.set(context, nullptr);
 
     for (QueryType type : angle::AllEnums<QueryType>())
@@ -629,7 +631,7 @@ ANGLE_INLINE void State::updateActiveTextureState(const Context *context,
         }
     }
 
-    if (texture && mProgram)
+    if (texture && mExecutable)
     {
         const SamplerState &samplerState =
             sampler ? sampler->getSamplerState() : texture->getSamplerState();
@@ -1539,7 +1541,9 @@ void State::invalidateTexture(TextureType type)
 void State::setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler)
 {
     if (mSamplers[textureUnit].get() == sampler)
+    {
         return;
+    }
 
     mSamplers[textureUnit].set(context, sampler);
     mDirtyBits.set(DIRTY_BIT_SAMPLER_BINDINGS);
@@ -3368,22 +3372,43 @@ void State::setImageUnit(const Context *context,
     onImageStateChange(context, unit);
 }
 
+void State::updatePPOActiveTextures()
+{
+    // TODO(http://anglebug.com/4559): Use the Subject/Observer pattern for
+    // Programs in PPOs so we can remove this.
+    if (!mProgram)
+    {
+        // There is no Program bound, so we are updating the textures for a separable Program.
+        // Only that Program's Executable has been updated so far, so we need to update the
+        // Executable for each of the PPO's in case the Program is in there as well.
+        for (ResourceMap<ProgramPipeline, ProgramPipelineID>::Iterator ppoIterator =
+                 mProgramPipelineManager->begin();
+             ppoIterator != mProgramPipelineManager->end(); ++ppoIterator)
+        {
+            ProgramPipeline *pipeline = ppoIterator->second;
+            pipeline->updateExecutableTextures();
+        }
+    }
+}
+
 // Handle a dirty texture event.
 void State::onActiveTextureChange(const Context *context, size_t textureUnit)
 {
-    if (mProgram)
+    if (mExecutable)
     {
         TextureType type       = mExecutable->getActiveSamplerTypes()[textureUnit];
         Texture *activeTexture = (type != TextureType::InvalidEnum)
                                      ? getTextureForActiveSampler(type, textureUnit)
                                      : nullptr;
         updateActiveTexture(context, textureUnit, activeTexture);
+
+        updatePPOActiveTextures();
     }
 }
 
 void State::onActiveTextureStateChange(const Context *context, size_t textureUnit)
 {
-    if (mProgram)
+    if (mExecutable)
     {
         TextureType type       = mExecutable->getActiveSamplerTypes()[textureUnit];
         Texture *activeTexture = (type != TextureType::InvalidEnum)
@@ -3396,7 +3421,7 @@ void State::onActiveTextureStateChange(const Context *context, size_t textureUni
 
 void State::onImageStateChange(const Context *context, size_t unit)
 {
-    if (mProgram)
+    if (mExecutable)
     {
         const ImageUnit &image = mImageUnits[unit];
 
@@ -3414,6 +3439,8 @@ void State::onImageStateChange(const Context *context, size_t unit)
         {
             mDirtyObjects.set(DIRTY_OBJECT_IMAGES_INIT);
         }
+
+        updatePPOActiveTextures();
     }
 }
 

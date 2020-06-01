@@ -818,6 +818,8 @@ class State : angle::NonCopyable
     angle::Result syncProgram(const Context *context);
     angle::Result syncProgramPipeline(const Context *context);
 
+    void updatePPOActiveTextures();
+
     using DirtyObjectHandler = angle::Result (State::*)(const Context *context);
     static constexpr DirtyObjectHandler kDirtyObjectHandlers[DIRTY_OBJECT_MAX] = {
         &State::syncTexturesInit,    &State::syncImagesInit,      &State::syncReadAttachments,

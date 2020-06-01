@@ -157,11 +157,12 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public L
     angle::Result syncState(const Context *context);
     void setDirtyBit(DirtyBitType dirtyBitType) { mDirtyBits.set(dirtyBitType); }
 
+    void updateExecutableTextures();
+
   private:
     void updateLinkedShaderStages();
     void updateExecutableAttributes();
     void updateTransformFeedbackMembers();
-    void updateExecutableTextures();
     void updateHasBooleans();
     void updateExecutable();
 
