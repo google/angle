@@ -526,7 +526,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
 
     // Read back the requested region of the source texture
     uint8_t *sourceData = nullptr;
-    gl::Box area(0, 0, 0, sourceArea.width, sourceArea.height, 1);
+    gl::Box area(sourceArea.x, sourceArea.y, 0, sourceArea.width, sourceArea.height, 1);
     ANGLE_TRY(
         source->copyImageDataToBufferAndGetData(contextVk, sourceLevel, 1, area, &sourceData));
 

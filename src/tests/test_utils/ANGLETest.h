@@ -142,6 +142,7 @@ struct GLColor32F
     GLfloat R, G, B, A;
 };
 
+static constexpr GLColor32F kFloatBlack = {0.0f, 0.0f, 0.0f, 1.0f};
 static constexpr GLColor32F kFloatRed   = {1.0f, 0.0f, 0.0f, 1.0f};
 static constexpr GLColor32F kFloatGreen = {0.0f, 1.0f, 0.0f, 1.0f};
 static constexpr GLColor32F kFloatBlue  = {0.0f, 0.0f, 1.0f, 1.0f};
