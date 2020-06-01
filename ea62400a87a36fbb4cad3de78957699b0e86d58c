@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bef8af8a_a3532235",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-01T14:58:51Z",
+      "side": 1,
+      "message": "formatting wise the subject should be short (~65 chars). If you run git cl presubmit it should warn you about this.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 240
+      },
+      "revId": "ea62400a87a36fbb4cad3de78957699b0e86d58c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da53fcc6_609e9ed6",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-01T14:58:51Z",
+      "side": 1,
+      "message": "can you also tick ShaderLang.h\u0027s version?",
+      "revId": "ea62400a87a36fbb4cad3de78957699b0e86d58c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c7b01d9_b6edf0d9",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-01T14:58:51Z",
+      "side": 1,
+      "message": "instead of importing the GL headers, can you replace this with a uint32_t output?",
+      "range": {
+        "startLine": 128,
+        "startChar": 49,
+        "endLine": 128,
+        "endChar": 56
+      },
+      "revId": "ea62400a87a36fbb4cad3de78957699b0e86d58c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e86a91c1_baca683c",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-01T14:58:51Z",
+      "side": 1,
+      "message": "because this is now scoped to sh::ShaderVariable, \u0027ShaderVariable::findShaderVarField\u0027 is redundant. How about \u0027ShaderVariable::findField\u0027?",
+      "range": {
+        "startLine": 285,
+        "startChar": 42,
+        "endLine": 285,
+        "endChar": 60
+      },
+      "revId": "ea62400a87a36fbb4cad3de78957699b0e86d58c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
