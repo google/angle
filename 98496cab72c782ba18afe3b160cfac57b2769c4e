@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12e97e50_5c85d5ac",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/ImageCopy.frag",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T15:35:25Z",
+      "side": 1,
+      "message": "This looks incomplete. What about copy to `int` instead of `uint`? What about copy from `[u]int` to `float`?",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 6
+      },
+      "revId": "98496cab72c782ba18afe3b160cfac57b2769c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
