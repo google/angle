@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ebc5a90_ef6e4afe",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T20:18:23Z",
+      "side": 1,
+      "message": "If you ever revisit this, you can use `GLBuffer` from gl_raii.h to avoid Gen and Destroy (which is also missing).\n\nSame for `vertexArray` and `vertexBuffers`.",
+      "range": {
+        "startLine": 791,
+        "startChar": 4,
+        "endLine": 791,
+        "endChar": 10
+      },
+      "revId": "9bb7dd8a9a9dc06f9d1b3d197f3cbf1a1fb203bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3697f122_76b16157",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 855,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T20:18:23Z",
+      "side": 1,
+      "message": "Where do these numbers come from? Correct me if I\u0027m wrong, but is the window 64x64 here? So each square is 32x32 right? The redGreen values are quite large floating point numbers, so are these based on these values getting interpolated over many pixels? I can\u0027t get the math to add up with these numbers.\n\nWould be good to have these calculated based on the 110/115/120/125 constants set above, so it\u0027s clear how they are derived.",
+      "range": {
+        "startLine": 852,
+        "startChar": 0,
+        "endLine": 855,
+        "endChar": 54
+      },
+      "revId": "9bb7dd8a9a9dc06f9d1b3d197f3cbf1a1fb203bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
