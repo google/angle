@@ -279,7 +279,8 @@ angle::Result SyncHelperNativeFence::serverWait(ContextVk *contextVk)
     ANGLE_TRY(contextVk->flushImpl(nullptr));
 
     // Add semaphore to next submit job.
-    contextVk->insertWaitSemaphore(&waitSemaphore.get());
+    contextVk->addWaitSemaphore(waitSemaphore.get().getHandle(),
+                                VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
     contextVk->addGarbage(&waitSemaphore.get());  // This releases the handle.
     return angle::Result::Continue;
 }

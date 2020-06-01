@@ -366,12 +366,10 @@ class ContextVk : public ContextImpl, public vk::Context
         mLastIndexBufferOffset = reinterpret_cast<const void *>(angle::DirtyPointer);
     }
 
-    void insertWaitSemaphore(const vk::Semaphore *waitSemaphore);
-
     angle::Result flushImpl(const vk::Semaphore *semaphore);
     angle::Result finishImpl();
 
-    void addWaitSemaphore(VkSemaphore semaphore);
+    void addWaitSemaphore(VkSemaphore semaphore, VkPipelineStageFlags stageMask);
 
     const vk::CommandPool &getCommandPool() const;
 
