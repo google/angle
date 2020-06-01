@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a8bf9f9f_db4236d0",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-01T15:09:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "def8dd51_c74cb192",
+      "range": {
+        "startLine": 200,
+        "startChar": 43,
+        "endLine": 200,
+        "endChar": 79
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "87538cad_241967b9",
         "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "51557904_a330a5b1",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-01T15:09:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87538cad_241967b9",
+      "range": {
+        "startLine": 307,
+        "startChar": 6,
+        "endLine": 307,
+        "endChar": 7
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb629be9_3edba953",
         "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2020-06-01T14:13:22Z",
       "side": 1,
       "message": "Note: here are more ideas for improvements to this perf test.",
+      "range": {
+        "startLine": 310,
+        "startChar": 0,
+        "endLine": 315,
+        "endChar": 97
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bebd74a_62f8b401",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-01T15:09:02Z",
+      "side": 1,
+      "message": "yeah, i tried enabling the texture transfer part but then i had to also add a dummy sampler to the shaders just to enable flushing of staged updates on these textures. outside renderpass buffer copies were much simpler",
+      "parentUuid": "cb629be9_3edba953",
       "range": {
         "startLine": 310,
         "startChar": 0,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "ff36a4e7_7f255366",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-01T15:09:02Z",
+      "side": 1,
+      "message": "Done, renamed to texture copy to be specific",
+      "parentUuid": "c038ed48_172bd9a2",
+      "range": {
+        "startLine": 325,
+        "startChar": 21,
+        "endLine": 325,
+        "endChar": 29
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "538624eb_27eac23a",
         "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
         "patchSetId": 7
@@ -114,6 +210,30 @@
       "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "354a43f7_4193ba86",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-01T15:09:02Z",
+      "side": 1,
+      "message": "Done, renamed to copy to be generic",
+      "parentUuid": "538624eb_27eac23a",
+      "range": {
+        "startLine": 344,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 72
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
