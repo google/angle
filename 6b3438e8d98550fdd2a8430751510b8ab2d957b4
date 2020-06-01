@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "def8dd51_c74cb192",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T14:13:22Z",
+      "side": 1,
+      "message": "Just add a `kBufferSize`. No need to shoehorn the buffer size in the array of image sizes.",
+      "range": {
+        "startLine": 200,
+        "startChar": 43,
+        "endLine": 200,
+        "endChar": 79
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87538cad_241967b9",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T14:13:22Z",
+      "side": 1,
+      "message": "Nit: Add \"- \" to make it a list item (a la markdown), like the item above.",
+      "range": {
+        "startLine": 307,
+        "startChar": 6,
+        "endLine": 307,
+        "endChar": 7
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb629be9_3edba953",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T14:13:22Z",
+      "side": 1,
+      "message": "Note: here are more ideas for improvements to this perf test.",
+      "range": {
+        "startLine": 310,
+        "startChar": 0,
+        "endLine": 315,
+        "endChar": 97
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c038ed48_172bd9a2",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T14:13:22Z",
+      "side": 1,
+      "message": "Maybe change this to \"image copy\" then.",
+      "range": {
+        "startLine": 325,
+        "startChar": 21,
+        "endLine": 325,
+        "endChar": 29
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "538624eb_27eac23a",
+        "filename": "src/tests/perf_tests/VulkanBarriersPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T14:13:22Z",
+      "side": 1,
+      "message": "Redundant. The scenario with \"Transfer\" is already covering this. Also, those are just examples to be generalized (dispatch is also not mentioned), so you can drop this.",
+      "range": {
+        "startLine": 344,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 72
+      },
+      "revId": "6b3438e8d98550fdd2a8430751510b8ab2d957b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
