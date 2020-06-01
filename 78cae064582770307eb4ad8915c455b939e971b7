@@ -124,6 +124,24 @@
       "revId": "78cae064582770307eb4ad8915c455b939e971b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67f870ad_d64fc9c0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3440,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-01T14:51:00Z",
+      "side": 1,
+      "message": "We can definitely remove them in a separate CL to keep things simple. Changing to swizzle may in fact be better for shader performance, because fewer uniforms need to be loaded from memory, saving both a memory access and (potentially) reducing register pressure.",
+      "parentUuid": "faa64016_89075291",
+      "revId": "78cae064582770307eb4ad8915c455b939e971b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
