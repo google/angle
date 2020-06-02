@@ -368,9 +368,6 @@ class FramebufferTest_ES3 : public ANGLETest
 // Covers invalidating an incomplete framebuffer. This should be a no-op, but should not error.
 TEST_P(FramebufferTest_ES3, InvalidateIncomplete)
 {
-    // TODO: anglebug.com/3971
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLFramebuffer framebuffer;
     GLRenderbuffer renderbuffer;
 

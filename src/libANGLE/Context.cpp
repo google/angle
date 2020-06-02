@@ -4068,17 +4068,17 @@ void Context::invalidateFramebuffer(GLenum target,
                                     GLsizei numAttachments,
                                     const GLenum *attachments)
 {
-    // Only sync the FBO
-    ANGLE_CONTEXT_TRY(mState.syncDirtyObject(this, target));
-
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
+    // No-op incomplete FBOs.
     if (!framebuffer->isComplete(this))
     {
         return;
     }
 
+    // Only sync the FBO
+    ANGLE_CONTEXT_TRY(mState.syncDirtyObject(this, target));
     ANGLE_CONTEXT_TRY(framebuffer->invalidate(this, numAttachments, attachments));
 }
 
