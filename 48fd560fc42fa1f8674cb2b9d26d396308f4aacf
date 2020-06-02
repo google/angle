@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6825c14d_b02c69ea",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-02T16:28:06Z",
+      "side": 1,
+      "message": "I thought it\u0027s the fashion of ANGLE code as existing EndsWith() used \"const auto\":) I just changed them all to \"const size_t\".",
+      "parentUuid": "bd48db06_b4a196b3",
+      "range": {
+        "startLine": 183,
+        "startChar": 10,
+        "endLine": 183,
+        "endChar": 15
+      },
+      "revId": "48fd560fc42fa1f8674cb2b9d26d396308f4aacf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a0bbdc6f_cd4a2304",
         "filename": "src/common/string_utils.cpp",
         "patchSetId": 5
