@@ -139,7 +139,13 @@ VulkanBarriersPerfBenchmark::VulkanBarriersPerfBenchmark()
       mPositionLoc(-1),
       mTexCoordLoc(-1),
       mSamplerLoc(-1)
-{}
+{
+    // Skip this test on our outdated perf bots. http://crbug.com/1090139
+    if (IsNVIDIA() && IsWindows())
+    {
+        mSkipTest = true;
+    }
+}
 
 constexpr char kVS[] = R"(attribute vec4 a_position;
 attribute vec2 a_texCoord;
