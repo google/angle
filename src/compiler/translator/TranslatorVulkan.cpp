@@ -996,9 +996,9 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
 
         {
             TIntermBinary *flipXY       = CreateDriverUniformRef(driverUniforms, kFlipXY);
-            TVector<int> swizzleOffsetY = {1};
-            TIntermSwizzle *flipY       = new TIntermSwizzle(flipXY, swizzleOffsetY);
-            if (!RewriteDfdy(this, root, getSymbolTable(), getShaderVersion(), flipY))
+            TIntermBinary *fragRotation = CreateDriverUniformRef(driverUniforms, kFragRotation);
+            if (!RewriteDfdy(this, root, getSymbolTable(), getShaderVersion(), flipXY,
+                             fragRotation))
             {
                 return false;
             }

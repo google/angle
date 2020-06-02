@@ -20,14 +20,16 @@ namespace sh
 
 class TCompiler;
 class TIntermNode;
-class TIntermSwizzle;
+class TIntermBinary;
+class TIntermTyped;
 class TSymbolTable;
 
 ANGLE_NO_DISCARD bool RewriteDfdy(TCompiler *compiler,
                                   TIntermNode *root,
                                   const TSymbolTable &symbolTable,
                                   int shaderVersion,
-                                  TIntermSwizzle *viewportYScale);
+                                  TIntermBinary *flipXY,
+                                  TIntermTyped *fragRotation);
 
 }  // namespace sh
 
