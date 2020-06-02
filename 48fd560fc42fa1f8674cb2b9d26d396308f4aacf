@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0bbdc6f_cd4a2304",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-02T06:45:43Z",
+      "side": 1,
+      "message": "I changed size() to length() for consistency.",
+      "revId": "48fd560fc42fa1f8674cb2b9d26d396308f4aacf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8094c1b_7519ff27",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-02T06:45:43Z",
+      "side": 1,
+      "message": "Changed memcmp to strncmp to be consistent with BeginsWith().",
+      "revId": "48fd560fc42fa1f8674cb2b9d26d396308f4aacf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54a9f105_c1f4ec3f",
+        "filename": "src/common/string_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-02T06:45:43Z",
+      "side": 1,
+      "message": "I added this one so that unittest can be in same format as BeginsWith().",
+      "revId": "48fd560fc42fa1f8674cb2b9d26d396308f4aacf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a02c1212_14da0b18",
+        "filename": "src/common/string_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-02T06:45:43Z",
+      "side": 1,
+      "message": "Fixed a typo here.",
+      "revId": "48fd560fc42fa1f8674cb2b9d26d396308f4aacf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

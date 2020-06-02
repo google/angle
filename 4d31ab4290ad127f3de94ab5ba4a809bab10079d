@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ceb45663_0841a111",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-02T06:45:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b79e0d54_33bc28ce",
+      "range": {
+        "startLine": 404,
+        "startChar": 0,
+        "endLine": 410,
+        "endChar": 1
+      },
+      "revId": "4d31ab4290ad127f3de94ab5ba4a809bab10079d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f34a3749_5288333b",
         "filename": "src/tests/test_utils/runner/TestSuite.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2020-05-26T14:40:43Z",
       "side": 1,
       "message": "I think you can take out the #ifdef and just use the Windows case. You just will need to add a zero check to EndsWith, which wouldn\u0027t be harmful either.",
+      "range": {
+        "startLine": 432,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 6
+      },
+      "revId": "4d31ab4290ad127f3de94ab5ba4a809bab10079d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "559124df_80dd49fa",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-02T06:45:43Z",
+      "side": 1,
+      "message": "I took out #ifdef in the patchset 5. However, I don\u0027t understand your meaning about \"zero check in EndsWith\". If you mean suffix may be \"\", the code right above this already handles it. If you mean baseNameStart may be \"\", we should assert it at the beginning of the code.",
+      "parentUuid": "f34a3749_5288333b",
       "range": {
         "startLine": 432,
         "startChar": 0,
