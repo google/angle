@@ -94,6 +94,30 @@
       "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3d68c6f8_7b89f26c",
+        "filename": "src/image_util/imageformats.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1835,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-02T14:34:39Z",
+      "side": 1,
+      "message": "Hmm, we don\u0027t actually test on any big-endian systems, so there\u0027s probably a bug there.\n\nStill, it doesn\u0027t make sense that D24S8 and D24X8 have a different order of the members. I wonder if you could write a test for both those formats to try to establish what ordering (at least on little-endian, which is all we have now) is correct for either of them?",
+      "parentUuid": "97d4425a_dc8fc1e4",
+      "range": {
+        "startLine": 1835,
+        "startChar": 21,
+        "endLine": 1835,
+        "endChar": 38
+      },
+      "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
