@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "bd48db06_b4a196b3",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-02T15:28:54Z",
+      "side": 1,
+      "message": "nit: can you omit auto for these simple types to make it easier to read for future devs?\n\nFor more info see https://google.github.io/styleguide/cppguide.html#Type_deduction",
+      "range": {
+        "startLine": 183,
+        "startChar": 10,
+        "endLine": 183,
+        "endChar": 15
+      },
+      "revId": "48fd560fc42fa1f8674cb2b9d26d396308f4aacf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a0bbdc6f_cd4a2304",
         "filename": "src/common/string_utils.cpp",
         "patchSetId": 5
