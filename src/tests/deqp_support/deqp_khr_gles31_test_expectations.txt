@@ -2,35 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// This file contains a list of defective dEQP conformance tests. The expected
-// format is:
-//  {BUG#} {MODIFIERS} : {TEST_NAME} = {PASS,FAIL,FLAKY,TIMEOUT,SKIP}
-//
-// MODIFIERS can be a combination of the below list, combined with a logical AND:
-//  WIN XP VISTA WIN7 WIN8 WIN10
-//  MAC LEOPARD SNOWLEOPARD LION MOUNTAINLION MAVERICKS YOSEMITE ELCAPITAN SIERRA HIGHSIERRA MOJAVE
-//  LINUX CHROMEOS ANDROID
-//  NVIDIA AMD INTEL
-//  DEBUG RELEASE
-//  D3D9 D3D11 OPENGL GLES VULKAN
-//  NEXUS5X PIXEL2ORXL
-//  QUADROP400
-//
-//
-// TEST_NAME can be a specific test name, or have a '*' in the end, which
-// indicates a prefix matching.
-//
-// Examples:
-// fails on both windows and mac (crash)
-//  91530 WIN : context_lost_restored = SKIP
-//  91530 MAC : context_lost_restored = SKIP
-// fails on windows using NVIDIA GPUs
-//  91533 WIN NVIDIA : gl_min_uniforms = FAIL
-// fails on Nexus5X with GLES backend (hangs)
-//  91531 NEXUS5X GLES : conformance_more_* = SKIP
+// See README.md for format.
 
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
-
 
 ////
 //// Failures blocking an official GLES 3.1 conformance run on SwiftShader
@@ -68,30 +42,9 @@
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
 
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.r8i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.r16i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.r32i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.rg8i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.rg16i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.rg32i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.rgb8i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.rgb16i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.rgb32i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.rgba8i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.rgba16i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage2d.rgba32i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.r8i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.r16i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.r32i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.rg8i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.rg16i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.rg32i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.rgb8i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.rgb16i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.rgb32i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.rgba8i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.rgba16i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage3d.rgba32i* = FAIL
+4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage*d.r*8i* = FAIL
+4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage*d.r*16i* = FAIL
+4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage*d.r*32i* = FAIL
 
 ////
 //// Desktop Vulkan expectations
