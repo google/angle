@@ -123,8 +123,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID_Undefined",
     // http://anglebug.com/3078
     "UNASSIGNED-CoreValidation-Shader-InterfaceTypeMismatch",
-    // http://anglebug.com/4510
-    "VUID-vkQueuePresentKHR-pWaitSemaphores-03268",
     // http://anglebug.com/4583
     "VUID-VkGraphicsPipelineCreateInfo-blendEnable-02023",
 };
