@@ -118,6 +118,30 @@
       "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "884a691b_c1e71ff3",
+        "filename": "src/image_util/imageformats.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1835,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-06-03T05:53:37Z",
+      "side": 1,
+      "message": "I can do that, no problem. At the moment I\u0027m on leave, so I only read and respond to emails now. I will return in about 3 weeks, and can take a look at it then.\n\nI\u0027ll dig into bitfield layout guarantees a bit as well.\n\nThe general advice I\u0027ve heard is to not use bitfields, though. Especially when you care about the memory layout, since that\u0027s not defined by the standard if I understand correctly.\n\nShould ANGLE be written such that it can run on both big-endian and little-endian systems?\nI think it\u0027s generally considered safe to just assume little-endian these days.",
+      "parentUuid": "3d68c6f8_7b89f26c",
+      "range": {
+        "startLine": 1835,
+        "startChar": 21,
+        "endLine": 1835,
+        "endChar": 38
+      },
+      "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
