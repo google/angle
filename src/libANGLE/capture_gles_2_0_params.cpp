@@ -398,7 +398,7 @@ void CaptureGetProgramInfoLog_infoLog(const State &glState,
                                       GLchar *infoLog,
                                       ParamCapture *paramCapture)
 {
-    gl::Program *programObj = GetLinkedProgramForCapture(glState, program);
+    gl::Program *programObj = GetProgramForCapture(glState, program);
     ASSERT(programObj);
     paramCapture->readBufferSizeBytes = programObj->getExecutable().getInfoLogLength() + 1;
 }

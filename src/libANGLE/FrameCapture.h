@@ -333,7 +333,7 @@ void CaptureMemory(const void *source, size_t size, ParamCapture *paramCapture);
 void CaptureString(const GLchar *str, ParamCapture *paramCapture);
 void CaptureStringLimit(const GLchar *str, uint32_t limit, ParamCapture *paramCapture);
 
-gl::Program *GetLinkedProgramForCapture(const gl::State &glState, gl::ShaderProgramID handle);
+gl::Program *GetProgramForCapture(const gl::State &glState, gl::ShaderProgramID handle);
 
 // For GetIntegerv, GetFloatv, etc.
 void CaptureGetParameter(const gl::State &glState,
