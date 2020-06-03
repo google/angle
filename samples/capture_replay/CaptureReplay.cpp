@@ -61,8 +61,7 @@ class CaptureReplaySample : public SampleApplication
     {
         // Compute the current frame, looping from kReplayFrameStart to kReplayFrameEnd.
         uint32_t frame =
-            kReplayFrameStart + (mCurrentFrame % (kReplayFrameEnd - kReplayFrameStart));
-
+            kReplayFrameStart + (mCurrentFrame % ((kReplayFrameEnd - kReplayFrameStart) + 1));
         if (mPreviousFrame > frame)
         {
             ResetContextReplay();

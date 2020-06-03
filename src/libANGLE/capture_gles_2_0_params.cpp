@@ -307,7 +307,7 @@ void CaptureGetAttachedShaders_count(const State &glState,
                                      ShaderProgramID *shaders,
                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetAttachedShaders_shadersPacked(const State &glState,
@@ -318,7 +318,7 @@ void CaptureGetAttachedShaders_shadersPacked(const State &glState,
                                              ShaderProgramID *shaders,
                                              ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(ShaderProgramID) * maxCount;
 }
 
 void CaptureGetAttribLocation_name(const State &glState,
@@ -346,7 +346,7 @@ void CaptureGetBufferParameteriv_params(const State &glState,
                                         GLint *params,
                                         ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = 8;
 }
 
 void CaptureGetFloatv_data(const State &glState,
@@ -423,7 +423,7 @@ void CaptureGetRenderbufferParameteriv_params(const State &glState,
                                               GLint *params,
                                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetShaderInfoLog_length(const State &glState,

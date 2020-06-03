@@ -932,7 +932,7 @@ void WriteCppReplayIndexFiles(bool compression,
               "callback);\n";
     header << "void OnFramebufferChange(GLenum target, GLuint framebuffer);\n";
     header << "\n";
-    for (uint32_t frameIndex = frameStart; frameIndex < frameEnd; ++frameIndex)
+    for (uint32_t frameIndex = frameStart; frameIndex <= frameEnd; ++frameIndex)
     {
         header << "void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
     }
@@ -963,11 +963,14 @@ void WriteCppReplayIndexFiles(bool compression,
     source << "void UpdateResourceMap(ResourceMap *resourceMap, GLuint id, GLsizei "
               "readBufferOffset)\n";
     source << "{\n";
-    source << "    GLuint returnedID;\n";
-    std::string captureNamespace = !captureLabel.empty() ? captureLabel + "::" : "";
-    source << "    memcpy(&returnedID, &" << captureNamespace
-           << "gReadBuffer[readBufferOffset], sizeof(GLuint));\n";
-    source << "    (*resourceMap)[id] = returnedID;\n";
+    if (readBufferSize > 0)
+    {
+        source << "    GLuint returnedID;\n";
+        std::string captureNamespace = !captureLabel.empty() ? captureLabel + "::" : "";
+        source << "    memcpy(&returnedID, &" << captureNamespace
+               << "gReadBuffer[readBufferOffset], sizeof(GLuint));\n";
+        source << "    (*resourceMap)[id] = returnedID;\n";
+    }
     source << "}\n";
     source << "\n";
     source << "DecompressCallback gDecompressCallback;\n";
@@ -1041,7 +1044,7 @@ void WriteCppReplayIndexFiles(bool compression,
     source << "{\n";
     source << "    switch (frameIndex)\n";
     source << "    {\n";
-    for (uint32_t frameIndex = frameStart; frameIndex < frameEnd; ++frameIndex)
+    for (uint32_t frameIndex = frameStart; frameIndex <= frameEnd; ++frameIndex)
     {
         source << "        case " << frameIndex << ":\n";
         source << "            ReplayContext" << static_cast<int>(contextId) << "Frame"
