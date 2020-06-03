@@ -142,6 +142,30 @@
       "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79267a4f_64d6e796",
+        "filename": "src/image_util/imageformats.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1835,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-03T13:56:55Z",
+      "side": 1,
+      "message": "No problem. Yes, reinterpreting to bitfield does not have standard-defined behavior, but compilers+architectures can define the behavior, so it\u0027s not an issue if all the platforms ANGLE runs on have this behavior defined.\n\nWe have made similar decisions elsewhere based on the fact that ANGLE only runs on little-endian platforms, so no big deal.",
+      "parentUuid": "884a691b_c1e71ff3",
+      "range": {
+        "startLine": 1835,
+        "startChar": 21,
+        "endLine": 1835,
+        "endChar": 38
+      },
+      "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
