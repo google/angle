@@ -467,6 +467,11 @@ bool ValidateVertexShaderAttributeTypeMatch(const Context *context)
     const Program *program = context->getActiveLinkedProgram();
     const VertexArray *vao = context->getState().getVertexArray();
 
+    if (!program)
+    {
+        return false;
+    }
+
     unsigned long stateCurrentValuesTypeBits = glState.getCurrentValuesTypeMask().to_ulong();
     unsigned long vaoAttribTypeBits          = vao->getAttributesTypeMask().to_ulong();
     unsigned long vaoAttribEnabledMask       = vao->getAttributesMask().to_ulong();
@@ -475,10 +480,10 @@ bool ValidateVertexShaderAttributeTypeMatch(const Context *context)
     vaoAttribTypeBits = (vaoAttribEnabledMask & vaoAttribTypeBits);
     vaoAttribTypeBits |= (~vaoAttribEnabledMask & stateCurrentValuesTypeBits);
 
-    return program &&
-           ValidateComponentTypeMasks(
-               program->getExecutable().getAttributesTypeMask().to_ulong(), vaoAttribTypeBits,
-               program->getExecutable().getAttributesMask().to_ulong(), 0xFFFF);
+    const ProgramExecutable &executable = program->getExecutable();
+    return ValidateComponentTypeMasks(executable.getAttributesTypeMask().to_ulong(),
+                                      vaoAttribTypeBits, executable.getAttributesMask().to_ulong(),
+                                      0xFFFF);
 }
 
 bool IsCompatibleDrawModeWithGeometryShader(PrimitiveMode drawMode,
