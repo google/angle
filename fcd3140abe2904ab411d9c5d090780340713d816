@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "cace46c2_1c3a1ab8",
+        "filename": "src/tests/deqp_support/deqp_khr_gles31_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-06-03T16:59:01Z",
+      "side": 1,
+      "message": "Good to know, this would come in handy in future suppressions.\nThanks for implementing!",
+      "parentUuid": "fc7fb4bb_1b4b24a7",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 0
+      },
+      "revId": "fcd3140abe2904ab411d9c5d090780340713d816",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7dc95ad4_ea035c92",
         "filename": "src/tests/deqp_support/deqp_khr_gles31_test_expectations.txt",
         "patchSetId": 3
