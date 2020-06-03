@@ -20,7 +20,7 @@
 #include "libGLESv2/entry_points_gles_3_1_autogen.h"
 #include "libGLESv2/entry_points_gles_3_2_autogen.h"
 #include "libGLESv2/entry_points_gles_ext_autogen.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 
 #define P(FUNC) reinterpret_cast<__eglMustCastToProperFunctionPointerType>(FUNC)
 

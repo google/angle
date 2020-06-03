@@ -176,6 +176,7 @@ libangle_includes = [
   "include/platform/FeaturesVk.h",
   "include/platform/FrontendFeatures.h",
   "include/platform/Platform.h",
+  "include/platform/PlatformMethods.h",
   "include/vulkan/vulkan_fuchsia_ext.h",
 ]
 

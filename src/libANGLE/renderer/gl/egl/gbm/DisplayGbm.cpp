@@ -30,7 +30,7 @@
 #include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 #include "libANGLE/renderer/gl/egl/FunctionsEGLDL.h"
 #include "libANGLE/renderer/gl/egl/gbm/SurfaceGbm.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 
 // ARM-specific extension needed to make Mali GPU behave - not in any
 // published header file.

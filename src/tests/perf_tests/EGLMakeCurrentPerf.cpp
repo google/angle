@@ -10,7 +10,7 @@
 #include "ANGLEPerfTest.h"
 #include "common/platform.h"
 #include "common/system_utils.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
 

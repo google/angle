@@ -13,7 +13,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/histogram_macros.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 
 namespace egl
 {

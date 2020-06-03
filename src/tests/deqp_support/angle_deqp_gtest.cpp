@@ -20,7 +20,7 @@
 #include "common/platform.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 #include "tests/test_expectations/GPUTestConfig.h"
 #include "tests/test_expectations/GPUTestExpectationsParser.h"
 #include "util/test_utils.h"

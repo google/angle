@@ -24,8 +24,7 @@
 #include "libANGLE/renderer/gl/wgl/RendererWGL.h"
 #include "libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
-
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 
 #include <EGL/eglext.h>
 #include <sstream>

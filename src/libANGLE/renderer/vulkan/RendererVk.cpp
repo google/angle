@@ -34,7 +34,7 @@
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "libANGLE/renderer/vulkan/vk_google_filtering_precision.h"
 #include "libANGLE/trace.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 
 // Consts
 namespace

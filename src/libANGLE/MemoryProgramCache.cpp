@@ -19,7 +19,7 @@
 #include "libANGLE/Uniform.h"
 #include "libANGLE/histogram_macros.h"
 #include "libANGLE/renderer/ProgramImpl.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 
 namespace gl
 {

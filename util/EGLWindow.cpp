@@ -13,7 +13,7 @@
 #include <string.h>
 
 #include "common/system_utils.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 #include "util/OSWindow.h"
 
 // ConfigParameters implementation.

@@ -16,7 +16,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
 #include "test_utils/angle_test_platform.h"

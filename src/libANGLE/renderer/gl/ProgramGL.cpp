@@ -24,7 +24,7 @@
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "platform/FeaturesGL.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 
 namespace rx
 {
