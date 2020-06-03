@@ -594,6 +594,7 @@ angle_source_set("libANGLE_base") {
     ":translator",
   ]
   deps = [
+    ":angle_compression",
     ":angle_image_util",
     ":includes",
   ]

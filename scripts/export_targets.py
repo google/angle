@@ -223,6 +223,7 @@ IGNORED_DIRECTORIES = {
     '//third_party/vulkan-loader',
     '//third_party/vulkan-tools',
     '//third_party/vulkan-validation-layers',
+    '//third_party/zlib',
 }
 
 def has_all_includes(target_name: str, descs: dict) -> bool:
