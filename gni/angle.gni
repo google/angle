@@ -91,6 +91,12 @@ declare_args() {
 }
 
 declare_args() {
+  # By default, ANGLE is using a thread pool for parallel compilation.
+  # Activating the delegate worker results in posting the tasks using the
+  # embedder API. In Chromium code base, it results in sending tasks to the
+  # worker thread pool.
+  angle_delegate_workers = build_with_chromium
+
   angle_enable_d3d9 = is_win && !angle_is_winuwp
   angle_enable_d3d11 = is_win
   angle_enable_gl =

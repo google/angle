@@ -12,13 +12,13 @@
 
 #include "libANGLE/trace.h"
 
-#if (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
+#if (ANGLE_DELEGATE_WORKERS == ANGLE_ENABLED) || (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
 #    include <condition_variable>
 #    include <future>
 #    include <mutex>
 #    include <queue>
 #    include <thread>
-#endif  // (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
+#endif  // (ANGLE_DELEGATE_WORKERS == ANGLE_ENABLED) || (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
 
 namespace angle
 {
@@ -320,11 +320,13 @@ std::shared_ptr<WorkerThreadPool> WorkerThreadPool::Create(bool multithreaded)
     std::shared_ptr<WorkerThreadPool> pool(nullptr);
 
 #if (ANGLE_DELEGATE_WORKERS == ANGLE_ENABLED)
-    if (multithreaded)
+    const bool hasPostWorkerTaskImpl = ANGLEPlatformCurrent()->postWorkerTask;
+    if (hasPostWorkerTaskImpl && multithreaded)
     {
         pool = std::shared_ptr<WorkerThreadPool>(new DelegateWorkerPool());
     }
-#elif (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
+#endif
+#if (!pool && ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
     if (multithreaded)
     {
         pool = std::shared_ptr<WorkerThreadPool>(

@@ -504,6 +504,9 @@ config("angle_backend_config") {
   if (angle_enable_null) {
     defines += [ "ANGLE_ENABLE_NULL" ]
   }
+  if (angle_delegate_workers) {
+    defines += [ "ANGLE_DELEGATE_WORKERS" ]
+  }
 
   configs = []
 

@@ -247,16 +247,11 @@ inline void DefaultCacheProgram(PlatformMethods *platform,
                                 const uint8_t *programBytes)
 {}
 
-using PostWorkerTaskCallback = void (*)(void *userData);
-using PostWorkerTaskFunc     = void (*)(PlatformMethods *platform,
+using PostWorkerTaskCallback                       = void (*)(void *userData);
+using PostWorkerTaskFunc                           = void (*)(PlatformMethods *platform,
                                     PostWorkerTaskCallback callback,
                                     void *userData);
-inline void DefaultPostWorkerTask(PlatformMethods *platform,
-                                  PostWorkerTaskCallback callback,
-                                  void *userData)
-{
-    callback(userData);
-}
+constexpr PostWorkerTaskFunc DefaultPostWorkerTask = nullptr;
 
 // Platform methods are enumerated here once.
 #define ANGLE_PLATFORM_OP(OP)                                    \
@@ -326,7 +321,6 @@ ANGLE_PLATFORM_EXPORT bool ANGLE_APIENTRY ANGLEGetDisplayPlatform(angle::EGLDisp
 // Sets the platform methods back to their defaults.
 // If display is not valid, behaviour is undefined.
 ANGLE_PLATFORM_EXPORT void ANGLE_APIENTRY ANGLEResetDisplayPlatform(angle::EGLDisplayType display);
-
 }  // extern "C"
 
 namespace angle
