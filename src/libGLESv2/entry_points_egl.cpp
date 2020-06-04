@@ -1027,13 +1027,25 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformWindowSurface(EGLDisplay dpy,
                ", "
                "const EGLint* attrib_list = 0x%016" PRIxPTR,
                (uintptr_t)dpy, (uintptr_t)config, (uintptr_t)native_window, (uintptr_t)attrib_list);
+
     Thread *thread        = egl::GetCurrentThread();
     egl::Display *display = static_cast<egl::Display *>(dpy);
 
-    UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglCreatePlatformWindowSurface unimplemented.", GetDebug(),
-                     "eglCreatePlatformWindowSurface", GetDisplayIfValid(display));
-    return EGL_NO_SURFACE;
+    Config *configuration = static_cast<Config *>(config);
+    // Use reinterpret_cast since native_window could be a pointer or an actual value.
+    EGLNativeWindowType win = reinterpret_cast<EGLNativeWindowType>(native_window);
+    AttributeMap attributes = AttributeMap::CreateFromAttribArray(attrib_list);
+
+    ANGLE_EGL_TRY_RETURN(thread,
+                         ValidateCreateWindowSurface(display, configuration, win, attributes),
+                         "eglCreateWindowSurface", GetDisplayIfValid(display), EGL_NO_SURFACE);
+
+    egl::Surface *surface = nullptr;
+    ANGLE_EGL_TRY_RETURN(thread,
+                         display->createWindowSurface(configuration, win, attributes, &surface),
+                         "eglCreateWindowSurface", GetDisplayIfValid(display), EGL_NO_SURFACE);
+
+    return static_cast<EGLSurface>(surface);
 }
 
 EGLSurface EGLAPIENTRY EGL_CreatePlatformPixmapSurface(EGLDisplay dpy,
