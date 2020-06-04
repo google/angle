@@ -1533,12 +1533,20 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
         const gl::UniformTypeInfo *typeInfo = uniform.typeInfo;
         int uniformSize                     = uniformCount * typeInfo->componentCount;
 
+        // For arrayed uniforms, we'll need to increment a read location
+        gl::UniformLocation readLoc = uniformLoc;
+
         switch (typeInfo->componentType)
         {
             case GL_FLOAT:
             {
                 std::vector<GLfloat> uniformBuffer(uniformSize);
-                program->getUniformfv(context, uniformLoc, uniformBuffer.data());
+                for (int index = 0; index < uniformCount; index++, readLoc.value++)
+                {
+                    program->getUniformfv(
+                        context, readLoc,
+                        static_cast<GLfloat *>(uniformBuffer.data() + index * sizeof(GLfloat)));
+                }
                 switch (typeInfo->type)
                 {
                     // Note: All matrix uniforms are populated without transpose
@@ -1612,7 +1620,12 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
             case GL_INT:
             {
                 std::vector<GLint> uniformBuffer(uniformSize);
-                program->getUniformiv(context, uniformLoc, uniformBuffer.data());
+                for (int index = 0; index < uniformCount; index++, readLoc.value++)
+                {
+                    program->getUniformiv(
+                        context, readLoc,
+                        static_cast<GLint *>(uniformBuffer.data() + index * sizeof(GLint)));
+                }
                 switch (typeInfo->componentCount)
                 {
                     case 4:
@@ -1641,7 +1654,12 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
             case GL_UNSIGNED_INT:
             {
                 std::vector<GLuint> uniformBuffer(uniformSize);
-                program->getUniformuiv(context, uniformLoc, uniformBuffer.data());
+                for (int index = 0; index < uniformCount; index++, readLoc.value++)
+                {
+                    program->getUniformuiv(
+                        context, readLoc,
+                        static_cast<GLuint *>(uniformBuffer.data() + index * sizeof(GLuint)));
+                }
                 switch (typeInfo->componentCount)
                 {
                     case 4:
