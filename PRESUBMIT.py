@@ -117,13 +117,16 @@ def _CheckCommitMessageFormatting(input_api, output_api):
 
     # loop through description body
     while len(commit_msg_lines) > 0:
-        if len(commit_msg_lines[0]) > description_linelength_limit:
+        line = commit_msg_lines.pop(0)
+        # lines starting with 4 spaces or lines without space(urls) are exempt from length check
+        if line.startswith("    ") or " " not in line:
+            continue
+        if len(line) > description_linelength_limit:
             errors.append(
                 output_api.PresubmitError(
                     "Please ensure that your description body is wrapped to " +
                     str(description_linelength_limit) + " characters or less."))
             return errors
-        commit_msg_lines.pop(0)
     return errors
 
 
