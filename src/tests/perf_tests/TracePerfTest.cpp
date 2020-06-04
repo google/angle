@@ -182,7 +182,7 @@ void TracePerfTest::drawBenchmark()
 
     startGpuTimer();
 
-    for (uint32_t frame = mStartFrame; frame < mEndFrame; ++frame)
+    for (uint32_t frame = mStartFrame; frame <= mEndFrame; ++frame)
     {
         char frameName[32];
         sprintf(frameName, "Frame %u", frame);
