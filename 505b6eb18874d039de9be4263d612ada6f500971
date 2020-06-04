@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4dfd3902_381324d4",
+        "filename": "PRESUBMIT.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-04T18:24:47Z",
+      "side": 1,
+      "message": "I\u0027ll follow up in the monorail issue - we need to include a more informative error message when users run into this warning.",
+      "range": {
+        "startLine": 127,
+        "startChar": 45,
+        "endLine": 127,
+        "endChar": 57
+      },
+      "revId": "505b6eb18874d039de9be4263d612ada6f500971",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
