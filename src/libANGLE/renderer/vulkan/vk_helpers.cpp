@@ -3973,6 +3973,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         if (mBaseLevel > 0)
         {
             // We need to shift the miplevel in the update to fall into the vkiamge
+            updateMipLevel -= mBaseLevel;
             if (update.updateSource == UpdateSource::Clear)
             {
                 update.clear.levelIndex -= mBaseLevel;
@@ -4012,6 +4013,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
         if (update.updateSource == UpdateSource::Clear)
         {
+            ASSERT(updateMipLevel == update.clear.levelIndex);
             clear(update.clear.aspectFlags, update.clear.value, updateMipLevel, updateBaseLayer,
                   updateLayerCount, commandBuffer);
         }
