@@ -23,6 +23,7 @@
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/trace.h"
 #include "platform/FeaturesGL.h"
 #include "platform/PlatformMethods.h"
 
@@ -59,6 +60,7 @@ std::unique_ptr<LinkEvent> ProgramGL::load(const gl::Context *context,
                                            gl::BinaryInputStream *stream,
                                            gl::InfoLog &infoLog)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::load");
     preLink();
 
     // Read the binary format, size and blob
@@ -135,7 +137,12 @@ class ProgramGL::LinkTask final : public angle::Closure
     LinkTask(LinkImplFunctor &&functor) : mLinkImplFunctor(functor), mFallbackToMainContext(false)
     {}
 
-    void operator()() override { mFallbackToMainContext = mLinkImplFunctor(mInfoLog); }
+    void operator()() override
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::LinkTask::run");
+        mFallbackToMainContext = mLinkImplFunctor(mInfoLog);
+    }
+
     bool fallbackToMainContext() { return mFallbackToMainContext; }
     const std::string &getInfoLog() { return mInfoLog; }
 
@@ -159,6 +166,8 @@ class ProgramGL::LinkEventNativeParallel final : public LinkEvent
 
     angle::Result wait(const gl::Context *context) override
     {
+        ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::LinkEventNativeParallel::wait");
+
         GLint linkStatus = GL_FALSE;
         mFunctions->getProgramiv(mProgramID, GL_LINK_STATUS, &linkStatus);
         if (linkStatus == GL_TRUE)
@@ -196,6 +205,8 @@ class ProgramGL::LinkEventGL final : public LinkEvent
 
     angle::Result wait(const gl::Context *context) override
     {
+        ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::LinkEventGL::wait");
+
         mWaitableEvent->wait();
         return mPostLinkImplFunctor(mLinkTask->fallbackToMainContext(), mLinkTask->getInfoLog());
     }
@@ -212,6 +223,8 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::link");
+
     preLink();
 
     if (mState.getAttachedShader(gl::ShaderType::Compute))
