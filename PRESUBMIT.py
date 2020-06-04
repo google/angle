@@ -44,7 +44,7 @@ def _CheckCommitMessageFormatting(input_api, output_api):
     whitelist_strings = ['Revert "', 'Roll ']
     summary_linelength_warning_lower_limit = 65
     summary_linelength_warning_upper_limit = 70
-    description_linelength_limit = 71
+    description_linelength_limit = 72
 
     if input_api.change.issue:
         git_output = input_api.gerrit.GetChangeDescription(input_api.change.issue)
