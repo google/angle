@@ -46,6 +46,30 @@
       "revId": "6bf560129bf859aed377d72308918f4632ed445b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebeb8679_c2dcf6a7",
+        "filename": "src/tests/gl_tests/VulkanFramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-06-05T20:26:19Z",
+      "side": 1,
+      "message": "Ok, and a couple things work together towards the incompleteness:\n- Mipmap completion only applies if the minification filtering parameters use mipmaps. If it does not, then the texture is always mipmap complete.\n- The initial value of GL_TEXTURE_MIN_FILTER is GL_NEAREST_MIPMAP_LINEAR.\n\nAs for sampling from the texture, it seems that\u0027s conditional:\n- However, if you pair this object with a sampler who\u0027s min filter is GL_LINEAR or GL_NEAREST, then that texture image unit will be mipmap complete.\n- Similarly, if a texture uses an integer Image Format, and the paired sampler only uses nearest filtering, the texture will be image format complete.",
+      "parentUuid": "59651019_ccd77b5c",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 57
+      },
+      "revId": "6bf560129bf859aed377d72308918f4632ed445b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
