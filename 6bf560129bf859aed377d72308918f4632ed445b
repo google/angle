@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a781e99_daa58d3d",
+        "filename": "src/tests/gl_tests/VulkanFramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-06-05T19:41:42Z",
+      "side": 1,
+      "message": "Is the expectation that the texture sizes for each mip level matches exactly to what you\u0027ve specified (2x2, 5x8) since it\u0027s not mip complete?\n\nIf so, rather than peering into ANGLE itself, can you do something like checking the width/height of the various mip levels to see if they match what was specified?\n\nhttps://stackoverflow.com/q/9572414\nhttps://stackoverflow.com/a/15186380",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 57
+      },
+      "revId": "6bf560129bf859aed377d72308918f4632ed445b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
