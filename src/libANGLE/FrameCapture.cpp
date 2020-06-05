@@ -475,7 +475,7 @@ void WriteCppReplayForCall(const CallCapture &call,
             callOut << ", ";
         }
 
-        if (param.arrayClientPointerIndex != -1)
+        if (param.arrayClientPointerIndex != -1 && param.value.voidConstPointerVal != nullptr)
         {
             callOut << "gClientArrays[" << param.arrayClientPointerIndex << "]";
         }
