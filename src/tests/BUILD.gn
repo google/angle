@@ -403,7 +403,6 @@ if (build_angle_gles1_conform_tests) {
       "$gles1_conform_root/conform/conformshell",
       "$gles1_conform_root/ctk",
       "$gles1_conform_root/fixed",
-      "$gles1_conform_root/include",
       "$gles1_conform_root/platform",
     ]
 
@@ -752,10 +751,7 @@ if (build_angle_gles1_conform_tests) {
       ":angle_gles1_primtest_no_gtest",
     ]
 
-    include_dirs = [
-      ".",
-      "$gles1_conform_root/conform",
-    ]
+    include_dirs = [ "$gles1_conform_root/conform" ]
 
     sources = [
       "gles1_conformance_tests/PrimtestTests.cpp",
