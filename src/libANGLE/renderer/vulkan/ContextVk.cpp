@@ -586,6 +586,8 @@ egl::ContextPriority GetContextPriority(const gl::State &state)
 ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk *renderer)
     : ContextImpl(state, errorSet),
       vk::Context(renderer),
+      mGraphicsDirtyBitHandlers{},
+      mComputeDirtyBitHandlers{},
       mRenderPassCommandBuffer(nullptr),
       mCurrentGraphicsPipeline(nullptr),
       mCurrentComputePipeline(nullptr),
