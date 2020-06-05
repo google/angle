@@ -76,6 +76,19 @@ angle::Result Buffer::bufferData(Context *context,
 {
     const void *dataForImpl = data;
 
+    if (mState.isMapped())
+    {
+        // Per the OpenGL ES 3.0 spec, buffers are implicity unmapped when a call to
+        // BufferData happens on a mapped buffer:
+        //
+        //     If any portion of the buffer object is mapped in the current context or any context
+        //     current to another thread, it is as though UnmapBuffer (see section 2.10.3) is
+        //     executed in each such context prior to deleting the existing data store.
+        //
+        GLboolean dontCare = GL_FALSE;
+        ANGLE_TRY(unmap(context, &dontCare));
+    }
+
     // If we are using robust resource init, make sure the buffer starts cleared.
     // Note: the Context is checked for nullptr because of some testing code.
     // TODO(jmadill): Investigate lazier clearing.
