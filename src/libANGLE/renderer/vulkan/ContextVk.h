@@ -316,7 +316,8 @@ class ContextVk : public ContextImpl, public vk::Context
                                               angle::FormatID format,
                                               GLuint relativeOffset)
     {
-        invalidateVertexAndIndexBuffers();
+        invalidateCurrentGraphicsPipeline();
+        mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
         // Set divisor to 1 for attribs with emulated divisor
         mGraphicsPipelineDesc->updateVertexInput(
             &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex), stride,
