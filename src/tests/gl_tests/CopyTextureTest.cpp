@@ -1682,7 +1682,7 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
         return;
     }
     // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsAndroid() || IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
     auto testOutput = [this](GLuint texture, const GLColor &expectedColor) {
         constexpr char kVS[] =
