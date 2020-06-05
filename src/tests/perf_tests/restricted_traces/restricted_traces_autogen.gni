@@ -9,10 +9,11 @@
 # Can be consumed by tests/BUILD.gn.
 
 angle_restricted_traces = [
+  "angry_birds_2_1500 3",
+  "candy_crush_500 2",
   "egypt_1500 1",
   "manhattan_10 1",
+  "subway_surfer_500 4",
   "temple_run_300 3",
   "trex_200 1",
-  "subway_surfer_500 4",
-  "candy_crush_500 2",
 ]

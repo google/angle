@@ -10,6 +10,7 @@
 #ifndef ANGLE_RESTRICTED_TRACES_H_
 #define ANGLE_RESTRICTED_TRACES_H_
 
+#include "angry_birds_2_1500/angry_birds_2_1500_capture_context3.h"
 #include "candy_crush_500/candy_crush_500_capture_context2.h"
 #include "egypt_1500/egypt_1500_capture_context1.h"
 #include "manhattan_10/manhattan_10_capture_context1.h"
@@ -21,12 +22,13 @@ namespace angle
 {
 enum class RestrictedTraceID
 {
+    angry_birds_2_1500,
+    candy_crush_500,
     egypt_1500,
     manhattan_10,
+    subway_surfer_500,
     temple_run_300,
     trex_200,
-    subway_surfer_500,
-    candy_crush_500,
     InvalidEnum,
     EnumCount = InvalidEnum
 };
@@ -47,19 +49,22 @@ struct TraceInfo
 };
 
 constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
+    {RestrictedTraceID::angry_birds_2_1500,
+     {angry_birds_2_1500::kReplayFrameStart, angry_birds_2_1500::kReplayFrameEnd,
+      "angry_birds_2_1500"}},
+    {RestrictedTraceID::candy_crush_500,
+     {candy_crush_500::kReplayFrameStart, candy_crush_500::kReplayFrameEnd, "candy_crush_500"}},
     {RestrictedTraceID::egypt_1500,
      {egypt_1500::kReplayFrameStart, egypt_1500::kReplayFrameEnd, "egypt_1500"}},
     {RestrictedTraceID::manhattan_10,
      {manhattan_10::kReplayFrameStart, manhattan_10::kReplayFrameEnd, "manhattan_10"}},
-    {RestrictedTraceID::temple_run_300,
-     {temple_run_300::kReplayFrameStart, temple_run_300::kReplayFrameEnd, "temple_run_300"}},
-    {RestrictedTraceID::trex_200,
-     {trex_200::kReplayFrameStart, trex_200::kReplayFrameEnd, "trex_200"}},
     {RestrictedTraceID::subway_surfer_500,
      {subway_surfer_500::kReplayFrameStart, subway_surfer_500::kReplayFrameEnd,
       "subway_surfer_500"}},
-    {RestrictedTraceID::candy_crush_500,
-     {candy_crush_500::kReplayFrameStart, candy_crush_500::kReplayFrameEnd, "candy_crush_500"}}};
+    {RestrictedTraceID::temple_run_300,
+     {temple_run_300::kReplayFrameStart, temple_run_300::kReplayFrameEnd, "temple_run_300"}},
+    {RestrictedTraceID::trex_200,
+     {trex_200::kReplayFrameStart, trex_200::kReplayFrameEnd, "trex_200"}}};
 
 using DecompressCallback        = uint8_t *(*)(const std::vector<uint8_t> &);
 using FramebufferChangeCallback = void (*)(void *userData, GLenum target, GLuint framebuffer);
@@ -68,23 +73,26 @@ inline void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
 {
     switch (traceID)
     {
+        case RestrictedTraceID::angry_birds_2_1500:
+            angry_birds_2_1500::ReplayContext3Frame(frameIndex);
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::ReplayContext1Frame(frameIndex);
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::subway_surfer_500:
+            subway_surfer_500::ReplayContext4Frame(frameIndex);
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::ReplayContext3Frame(frameIndex);
             break;
         case RestrictedTraceID::trex_200:
             trex_200::ReplayContext1Frame(frameIndex);
-            break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::ReplayContext4Frame(frameIndex);
-            break;
-        case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::ReplayContext2Frame(frameIndex);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -97,23 +105,26 @@ inline void ResetReplay(RestrictedTraceID traceID)
 {
     switch (traceID)
     {
+        case RestrictedTraceID::angry_birds_2_1500:
+            angry_birds_2_1500::ResetContext3Replay();
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::ResetContext2Replay();
+            break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::ResetContext1Replay();
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ResetContext1Replay();
             break;
+        case RestrictedTraceID::subway_surfer_500:
+            subway_surfer_500::ResetContext4Replay();
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::ResetContext3Replay();
             break;
         case RestrictedTraceID::trex_200:
             trex_200::ResetContext1Replay();
-            break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::ResetContext4Replay();
-            break;
-        case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::ResetContext2Replay();
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -126,23 +137,26 @@ inline void SetupReplay(RestrictedTraceID traceID)
 {
     switch (traceID)
     {
+        case RestrictedTraceID::angry_birds_2_1500:
+            angry_birds_2_1500::SetupContext3Replay();
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::SetupContext2Replay();
+            break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetupContext1Replay();
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetupContext1Replay();
             break;
+        case RestrictedTraceID::subway_surfer_500:
+            subway_surfer_500::SetupContext4Replay();
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetupContext3Replay();
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetupContext1Replay();
-            break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::SetupContext4Replay();
-            break;
-        case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::SetupContext2Replay();
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -155,23 +169,26 @@ inline void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
 {
     switch (traceID)
     {
+        case RestrictedTraceID::angry_birds_2_1500:
+            angry_birds_2_1500::SetBinaryDataDir(dataDir);
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetBinaryDataDir(dataDir);
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::subway_surfer_500:
+            subway_surfer_500::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetBinaryDataDir(dataDir);
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetBinaryDataDir(dataDir);
-            break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::SetBinaryDataDir(dataDir);
-            break;
-        case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::SetBinaryDataDir(dataDir);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -184,23 +201,26 @@ inline void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, Decompres
 {
     switch (traceID)
     {
+        case RestrictedTraceID::angry_birds_2_1500:
+            angry_birds_2_1500::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::SetBinaryDataDecompressCallback(callback);
+            break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDecompressCallback(callback);
             break;
+        case RestrictedTraceID::subway_surfer_500:
+            subway_surfer_500::SetBinaryDataDecompressCallback(callback);
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetBinaryDataDecompressCallback(callback);
-            break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::SetBinaryDataDecompressCallback(callback);
-            break;
-        case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::SetBinaryDataDecompressCallback(callback);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -215,23 +235,26 @@ inline void SetFramebufferChangeCallback(RestrictedTraceID traceID,
 {
     switch (traceID)
     {
+        case RestrictedTraceID::angry_birds_2_1500:
+            angry_birds_2_1500::SetFramebufferChangeCallback(userData, callback);
+            break;
+        case RestrictedTraceID::candy_crush_500:
+            candy_crush_500::SetFramebufferChangeCallback(userData, callback);
+            break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetFramebufferChangeCallback(userData, callback);
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetFramebufferChangeCallback(userData, callback);
             break;
+        case RestrictedTraceID::subway_surfer_500:
+            subway_surfer_500::SetFramebufferChangeCallback(userData, callback);
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetFramebufferChangeCallback(userData, callback);
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetFramebufferChangeCallback(userData, callback);
-            break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::SetFramebufferChangeCallback(userData, callback);
-            break;
-        case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::SetFramebufferChangeCallback(userData, callback);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
