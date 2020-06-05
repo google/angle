@@ -60,6 +60,13 @@ enum class SurfaceRotation
     EnumCount = InvalidEnum,
 };
 
+void RotateRectangle(const SurfaceRotation rotation,
+                     const bool flipY,
+                     const int framebufferWidth,
+                     const int framebufferHeight,
+                     const gl::Rectangle &incoming,
+                     gl::Rectangle *outgoing);
+
 using MipGenerationFunction = void (*)(size_t sourceWidth,
                                        size_t sourceHeight,
                                        size_t sourceDepth,

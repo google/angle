@@ -268,50 +268,6 @@ SurfaceRotation DetermineSurfaceRotation(gl::Framebuffer *framebuffer,
     }
 }
 
-void RotateRectangle(const SurfaceRotation rotation,
-                     const bool flipY,
-                     const int framebufferWidth,
-                     const int framebufferHeight,
-                     const gl::Rectangle &incoming,
-                     gl::Rectangle *outgoing)
-{
-    // GLES's y-axis points up; Vulkan's points down.
-    switch (rotation)
-    {
-        case SurfaceRotation::Identity:
-            // Do not rotate gl_Position (surface matches the device's orientation):
-            outgoing->x     = incoming.x;
-            outgoing->y     = flipY ? framebufferHeight - incoming.y - incoming.height : incoming.y;
-            outgoing->width = incoming.width;
-            outgoing->height = incoming.height;
-            break;
-        case SurfaceRotation::Rotated90Degrees:
-            // Rotate gl_Position 90 degrees:
-            outgoing->x      = incoming.y;
-            outgoing->y      = flipY ? incoming.x : framebufferWidth - incoming.x - incoming.width;
-            outgoing->width  = incoming.height;
-            outgoing->height = incoming.width;
-            break;
-        case SurfaceRotation::Rotated180Degrees:
-            // Rotate gl_Position 180 degrees:
-            outgoing->x     = framebufferWidth - incoming.x - incoming.width;
-            outgoing->y     = flipY ? incoming.y : framebufferHeight - incoming.y - incoming.height;
-            outgoing->width = incoming.width;
-            outgoing->height = incoming.height;
-            break;
-        case SurfaceRotation::Rotated270Degrees:
-            // Rotate gl_Position 270 degrees:
-            outgoing->x      = framebufferHeight - incoming.y - incoming.height;
-            outgoing->y      = flipY ? framebufferWidth - incoming.x - incoming.width : incoming.x;
-            outgoing->width  = incoming.height;
-            outgoing->height = incoming.width;
-            break;
-        default:
-            UNREACHABLE();
-            break;
-    }
-}
-
 // Should not generate a copy with modern C++.
 EventName GetTraceEventName(const char *title, uint32_t counter)
 {
@@ -4161,16 +4117,7 @@ angle::Result ContextVk::flushAndBeginRenderPass(
     vk::CommandBuffer *outsideRenderPassCommandBuffer;
     ANGLE_TRY(endRenderPassAndGetCommandBuffer(&outsideRenderPassCommandBuffer));
 
-    gl::Rectangle rotatedRenderArea = renderArea;
-    if (isRotatedAspectRatioForDrawFBO())
-    {
-        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of
-        // the surface.  Swap the x and y axis of the renderArea.
-        std::swap(rotatedRenderArea.x, rotatedRenderArea.y);
-        std::swap(rotatedRenderArea.width, rotatedRenderArea.height);
-    }
-
-    mRenderPassCommands->beginRenderPass(framebuffer, rotatedRenderArea, renderPassDesc,
+    mRenderPassCommands->beginRenderPass(framebuffer, renderArea, renderPassDesc,
                                          renderPassAttachmentOps, clearValues, commandBufferOut);
     return angle::Result::Continue;
 }
