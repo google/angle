@@ -16,7 +16,6 @@
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
-#include "libANGLE/trace.h"
 
 namespace rx
 {
@@ -37,7 +36,6 @@ class TranslateTaskD3D : public angle::Closure
 
     void operator()() override
     {
-        ANGLE_TRACE_EVENT1("gpu.angle", "TranslateTask::run", "source", mSource);
         std::vector<const char *> srcStrings;
         if (!mSourcePath.empty())
         {

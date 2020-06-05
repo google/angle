@@ -10,8 +10,6 @@
 
 #include "libANGLE/WorkerThread.h"
 
-#include "libANGLE/trace.h"
-
 #if (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
 #    include <condition_variable>
 #    include <future>
@@ -90,7 +88,7 @@ class AsyncWaitableEvent final : public WaitableEvent
     friend class AsyncWorkerPool;
     void setFuture(std::future<void> &&future);
 
-    // To block wait() when the task is still in queue to be run.
+    // To block wait() when the task is stil in queue to be run.
     // Also to protect the concurrent accesses from both main thread and
     // background threads to the member fields.
     std::mutex mMutex;
@@ -107,7 +105,6 @@ void AsyncWaitableEvent::setFuture(std::future<void> &&future)
 
 void AsyncWaitableEvent::wait()
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "AsyncWaitableEvent::wait");
     {
         std::unique_lock<std::mutex> lock(mMutex);
         mCondition.wait(lock, [this] { return !mIsPending; });
@@ -189,10 +186,7 @@ void AsyncWorkerPool::checkToRunPendingTasks()
         auto closure  = task.second;
 
         auto future = std::async(std::launch::async, [closure, this] {
-            {
-                ANGLE_TRACE_EVENT0("gpu.angle", "AsyncWorkerPool::RunTask");
-                (*closure)();
-            }
+            (*closure)();
             {
                 std::lock_guard<std::mutex> lock(mMutex);
                 ASSERT(mRunningThreads != 0);

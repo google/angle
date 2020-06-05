@@ -13,7 +13,6 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
-#include "libANGLE/trace.h"
 #include "platform/FeaturesGL.h"
 
 #include <iostream>
@@ -39,7 +38,6 @@ class TranslateTaskGL : public angle::Closure
 
     void operator()() override
     {
-        ANGLE_TRACE_EVENT1("gpu.angle", "TranslateTaskGL::run", "source", mSource);
         const char *source = mSource.c_str();
         mResult            = sh::Compile(mHandle, &source, 1, mOptions);
         if (mResult)
