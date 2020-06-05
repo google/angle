@@ -1182,6 +1182,60 @@ TEST_P(CopyTextureTest, CopyToMipmap)
     }
 }
 
+// Test that copying outside the mipmap range works
+TEST_P(CopyTextureTest, CopyOutsideMipmap)
+{
+    if (!checkExtensions())
+    {
+        return;
+    }
+
+    // http://anglebug.com/4716
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    // Failing on older drivers.  http://anglebug.com/4718
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsOpenGL());
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(program);
+    GLint textureLoc = glGetUniformLocation(program, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLoc);
+    glUniform1i(textureLoc, 0);
+
+    GLTexture textures[2];
+
+    // Create two single-mip textures.
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Commit texture 0
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    drawQuad(program, std::string(essl1_shaders::PositionAttrib()), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Copy texture 1 into mip 1 of texture 0.  This mip is outside the range of the image allocated
+    // for texture 0.
+    glCopyTextureCHROMIUM(textures[1], 0, GL_TEXTURE_2D, textures[0], 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                          false, false, false);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw with texture 0 again
+    drawQuad(program, std::string(essl1_shaders::PositionAttrib()), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Test that copying from an RGBA8 texture to RGBA4 results in exactly 4-bit precision in the result
 TEST_P(CopyTextureTest, DownsampleRGBA4444)
 {

@@ -417,7 +417,7 @@ class Texture2DTestES3 : public Texture2DTest
 class Texture2DBaseMaxTestES3 : public ANGLETest
 {
   protected:
-    static constexpr size_t kMip0Size   = 8;
+    static constexpr size_t kMip0Size   = 13;
     static constexpr uint32_t kMipCount = 4;
 
     Texture2DBaseMaxTestES3() : ANGLETest(), mTextureLocation(0), mLodLocation(0)
@@ -432,8 +432,8 @@ class Texture2DBaseMaxTestES3 : public ANGLETest
 
     static constexpr size_t getMipDataSize(size_t mip0Size, size_t mip)
     {
-        ASSERT(mip0Size % (1ull << mip) == 0);
-        return mip0Size * mip0Size / (1ull << (2 * mip));
+        size_t mipSize = std::max<size_t>(1u, mip0Size >> mip);
+        return mipSize * mipSize;
     }
 
     static constexpr size_t getTotalMipDataSize(size_t mip0Size)
@@ -469,7 +469,8 @@ class Texture2DBaseMaxTestES3 : public ANGLETest
         return offset;
     }
 
-    void fillMipData(GLColor *data, size_t mip0Size, const GLColor mipColors[kMipCount])
+    template <typename colorType = GLColor>
+    void fillMipData(colorType *data, size_t mip0Size, const colorType mipColors[kMipCount])
     {
         for (size_t mip = 0; mip < kMipCount; ++mip)
         {
@@ -1788,6 +1789,40 @@ TEST_P(Texture2DTest, ZeroSizedUploads)
     EXPECT_GL_NO_ERROR();
 }
 
+TEST_P(Texture2DTest, DefineMultipleLevelsWithoutMipmapping)
+{
+    setUpProgram();
+
+    constexpr size_t kImageSize = 256;
+    std::array<GLColor, kImageSize * kImageSize> kMipColors[2];
+
+    std::fill(kMipColors[0].begin(), kMipColors[0].end(), GLColor::red);
+    std::fill(kMipColors[1].begin(), kMipColors[1].end(), GLColor::green);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kImageSize, kImageSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kMipColors[0].data());
+    EXPECT_GL_NO_ERROR();
+
+    // Draw so the image is created.
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+
+    // Define level 1 of the texture.
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, kImageSize, kImageSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kMipColors[1].data());
+    EXPECT_GL_NO_ERROR();
+
+    // Draw again.
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[0][0]);
+}
+
 // Test drawing with two texture types, to trigger an ANGLE bug in validation
 TEST_P(TextureCubeTest, CubeMapBug)
 {
@@ -2553,10 +2588,10 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     // Mip 1 is green.  Verify this.
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[1]);
 
-    // http://anglebug.com/4696
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+    // http://anglebug.com/4709
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && (IsIntel() || IsAMD()) && IsWindows());
 
     // Add mip 0 and rebase the mip chain.
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
@@ -2578,6 +2613,9 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
+    // http://anglebug.com/4704
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Mip 0 data seems to have disappeared in this configuration! http://anglebug.com/4698
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsLinux());
 
@@ -2587,6 +2625,12 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
 // Test that changing the base level of a texture multiple times preserves the data.
 TEST_P(Texture2DBaseMaxTestES3, PingPongBaseLevel)
 {
+    // http://anglebug.com/4710
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    // http://anglebug.com/4711
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAMD() && IsWindows());
+
     // http://anglebug.com/4701
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
 
@@ -2680,6 +2724,93 @@ TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
         EXPECT_PIXEL_COLOR_EQ(w, 0, kNewMipColors[lod]);
         EXPECT_PIXEL_COLOR_EQ(0, h, kNewMipColors[lod]);
         EXPECT_PIXEL_COLOR_EQ(w, h, kNewMipColors[lod]);
+    }
+}
+
+// Test that incompatibly redefining a level then redefining it back to its original size works.
+TEST_P(Texture2DBaseMaxTestES3, IncompatiblyRedefineLevelThenRevert)
+{
+    initTest();
+
+    // Test that all mips have the expected data initially (this makes sure the texture image is
+    // created already).
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+    }
+
+    // Redefine Mip 1 to be larger.
+    constexpr size_t kLargeMip1Size = getMipDataSize(kMip0Size * 2, 1);
+    std::array<GLColor, kLargeMip1Size> interimMipData;
+    std::fill(interimMipData.data(), interimMipData.data() + kLargeMip1Size, GLColor::yellow);
+
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 interimMipData.data());
+
+    // Redefine Mip 1 back to its original size.
+    constexpr size_t kNormalMip1Size = getMipDataSize(kMip0Size, 1);
+    std::array<GLColor, kLargeMip1Size> newMipData;
+    std::fill(newMipData.data(), newMipData.data() + kNormalMip1Size, GLColor::cyan);
+
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kMip0Size / 2, kMip0Size / 2, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, newMipData.data());
+
+    // Verify texture colors.
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, lod == 1 ? GLColor::cyan : kMipColors[lod]);
+    }
+}
+
+// Test that redefining every level of a texture to another format works.  The format uses more
+// bits per component, to ensure alignment requirements for the new format are taken into account.
+TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
+{
+    initTest();
+
+    // Test that all mips have the expected data initially (this makes sure the texture image is
+    // created already).
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+    }
+
+    const GLColor32F kNewMipColors[kMipCount] = {
+        GLColor32F(1.0, 1.0, 0.0, 1.0f),
+        GLColor32F(1.0, 0.0, 1.0, 1.0f),
+        GLColor32F(0.0, 1.0, 1.0, 1.0f),
+        GLColor32F(1.0, 1.0, 1.0, 1.0f),
+    };
+
+    std::array<GLColor32F, getTotalMipDataSize(kMip0Size)> newMipData;
+    fillMipData(newMipData.data(), kMip0Size, kNewMipColors);
+
+    // Redefine every level with the new format.
+    for (size_t mip = 0; mip < kMipCount; ++mip)
+    {
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA32F, kMip0Size >> mip, kMip0Size >> mip, 0, GL_RGBA,
+                     GL_FLOAT, newMipData.data() + getMipDataOffset(kMip0Size, mip));
+    }
+
+    // Verify texture colors.
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, "position", 0.5f);
+
+        GLColor32F mipColor32F = kNewMipColors[lod];
+        GLColor mipColor(static_cast<GLubyte>(std::roundf(mipColor32F.R * 255)),
+                         static_cast<GLubyte>(std::roundf(mipColor32F.G * 255)),
+                         static_cast<GLubyte>(std::roundf(mipColor32F.B * 255)),
+                         static_cast<GLubyte>(std::roundf(mipColor32F.A * 255)));
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, mipColor);
     }
 }
 

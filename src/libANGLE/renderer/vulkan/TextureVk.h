@@ -152,22 +152,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
 
-    ANGLE_INLINE bool isFastUnpackPossible(const vk::Format &vkFormat, size_t offset)
-    {
-        // Conditions to determine if fast unpacking is possible
-        // 1. Image must be well defined to unpack directly to it
-        //    TODO(http://anglebug.com/3777) Create and stage a temp image instead
-        // 2. Can't perform a fast copy for emulated formats
-        // 3. vkCmdCopyBufferToImage requires byte offset to be a multiple of 4
-        if (mImage->valid() && (vkFormat.intendedFormatID == vkFormat.actualImageFormatID) &&
-            ((offset & (kBufferOffsetMultiple - 1)) == 0))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     const vk::ImageHelper &getImage() const
     {
         ASSERT(mImage && mImage->valid());
@@ -247,9 +231,16 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                         uint32_t imageLayerOffset,
                         uint32_t imageBaseLevel,
                         bool selfOwned);
-    void updateImageHelper(ContextVk *contextVk, const vk::Format &internalFormat);
+    void updateImageHelper(ContextVk *contextVk, size_t imageCopyBufferAlignment);
 
-    angle::Result redefineImage(const gl::Context *context,
+    // Redefine a mip level of the texture.  If the new size and format don't match the allocated
+    // image, the image may be released.  When redefining a mip of a multi-level image, updates are
+    // forced to be staged, as another mip of the image may be bound to a framebuffer.  For example,
+    // assume texture has two mips, and framebuffer is bound to mip 0.  Redefining mip 1 to an
+    // incompatible size shouldn't affect the framebuffer, especially if the redefinition comes from
+    // something like glCopyTexSubImage2D() (which simultaneously is reading from said framebuffer,
+    // i.e. mip 0 of the texture).
+    angle::Result redefineLevel(const gl::Context *context,
                                 const gl::ImageIndex &index,
                                 const vk::Format &format,
                                 const gl::Extents &size);
@@ -387,6 +378,10 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // Update base and max levels, and re-create image if needed.
     angle::Result updateBaseMaxLevels(ContextVk *contextVk, GLuint baseLevel, GLuint maxLevel);
 
+    bool isFastUnpackPossible(const vk::Format &vkFormat, size_t offset) const;
+
+    bool shouldUpdateBeStaged(uint32_t textureLevelIndexGL) const;
+
     // We monitor the staging buffer and set dirty bits if the staging buffer changes. Note that we
     // support changes in the staging buffer even outside the TextureVk class.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
@@ -432,6 +427,18 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     // Additional image create flags
     VkImageCreateFlags mImageCreateFlags;
+
+    // If an image level is incompatibly redefined, the image lives through the call that did this
+    // (i.e. set and copy levels), because the image may be used by the framebuffer in the very same
+    // call.  As a result, updates to this redefined level are staged (in both the call that
+    // redefines it, and any future calls such as subimage updates).  This bitset flags redefined
+    // levels so that their updates will be force-staged until image is recreated.
+    //
+    // In common cases with mipmapped textures, the base/max level would need adjusting as the
+    // texture is no longer mip-complete.  However, if every level is redefined such that at the end
+    // the image becomes mip-complete again, no reinitialization of the image is done.  This bitset
+    // is additionally used to ensure the image is recreated in the next syncState, if not already.
+    gl::TexLevelMask mRedefinedLevels;
 
     angle::ObserverBinding mImageObserverBinding;
 };

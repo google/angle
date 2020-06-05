@@ -634,6 +634,8 @@ using StorageBuffersMask = angle::BitSet<IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFE
 template <typename T>
 using TexLevelArray = std::array<T, IMPLEMENTATION_MAX_TEXTURE_LEVELS>;
 
+using TexLevelMask = angle::BitSet<IMPLEMENTATION_MAX_TEXTURE_LEVELS>;
+
 enum class ComponentType
 {
     Float       = 0,

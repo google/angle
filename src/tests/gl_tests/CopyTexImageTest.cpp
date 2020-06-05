@@ -485,7 +485,7 @@ TEST_P(CopyTexImageTest, CopyTexSubImageToNonCubeCompleteDestination)
 // Deleting textures after copying to them. http://anglebug.com/4267
 TEST_P(CopyTexImageTest, DeleteAfterCopyingToTextures)
 {
-    // Asserts on Vulkan backend. http://anglebug.com/4274
+    // Vulkan does not support copying from a texture to itself. http://anglebug.com/2914
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     GLTexture texture;

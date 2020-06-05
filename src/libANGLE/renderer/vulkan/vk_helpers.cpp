@@ -935,7 +935,7 @@ void DynamicBuffer::initWithFlags(RendererVk *renderer,
         mSize = std::min<size_t>(mSize, 0x1000);
     }
 
-    updateAlignment(renderer, alignment);
+    requireAlignment(renderer, alignment);
 }
 
 DynamicBuffer::~DynamicBuffer()
@@ -1147,31 +1147,39 @@ void DynamicBuffer::destroy(RendererVk *renderer)
     }
 }
 
-void DynamicBuffer::updateAlignment(RendererVk *renderer, size_t alignment)
+void DynamicBuffer::requireAlignment(RendererVk *renderer, size_t alignment)
 {
     ASSERT(alignment > 0);
 
-    size_t atomSize =
-        static_cast<size_t>(renderer->getPhysicalDeviceProperties().limits.nonCoherentAtomSize);
+    size_t prevAlignment = mAlignment;
 
-    // We need lcm(alignment, atomSize).  Usually, one divides the other so std::max() could be used
-    // instead.  Only known case where this assumption breaks is for 3-component types with 16- or
-    // 32-bit channels, so that's special-cased to avoid a full-fledged lcm implementation.
-
-    if (gl::isPow2(alignment))
+    // If alignment was never set, initialize it with the atom size limit.
+    if (prevAlignment == 0)
     {
-        ASSERT(alignment % atomSize == 0 || atomSize % alignment == 0);
-        ASSERT(gl::isPow2(atomSize));
+        prevAlignment =
+            static_cast<size_t>(renderer->getPhysicalDeviceProperties().limits.nonCoherentAtomSize);
+        ASSERT(gl::isPow2(prevAlignment));
+    }
 
-        alignment = std::max(alignment, atomSize);
+    // We need lcm(prevAlignment, alignment).  Usually, one divides the other so std::max() could be
+    // used instead.  Only known case where this assumption breaks is for 3-component types with
+    // 16- or 32-bit channels, so that's special-cased to avoid a full-fledged lcm implementation.
+
+    if (gl::isPow2(prevAlignment * alignment))
+    {
+        ASSERT(alignment % prevAlignment == 0 || prevAlignment % alignment == 0);
+
+        alignment = std::max(prevAlignment, alignment);
     }
     else
     {
-        ASSERT(gl::isPow2(atomSize));
-        ASSERT(alignment % 3 == 0);
-        ASSERT(gl::isPow2(alignment / 3));
+        ASSERT(prevAlignment % 3 != 0 || gl::isPow2(prevAlignment / 3));
+        ASSERT(alignment % 3 != 0 || gl::isPow2(alignment / 3));
 
-        alignment = std::max(alignment / 3, atomSize) * 3;
+        prevAlignment = prevAlignment % 3 == 0 ? prevAlignment / 3 : prevAlignment;
+        alignment     = alignment % 3 == 0 ? alignment / 3 : alignment;
+
+        alignment = std::max(prevAlignment, alignment) * 3;
     }
 
     // If alignment has changed, make sure the next allocation is done at an aligned offset.
@@ -2485,12 +2493,11 @@ void ImageHelper::resetCachedProperties()
 }
 
 void ImageHelper::initStagingBuffer(RendererVk *renderer,
-                                    const Format &format,
+                                    size_t imageCopyBufferAlignment,
                                     VkBufferUsageFlags usageFlags,
                                     size_t initialSize)
 {
-    mStagingBuffer.init(renderer, usageFlags, format.getImageCopyBufferAlignment(), initialSize,
-                        true);
+    mStagingBuffer.init(renderer, usageFlags, imageCopyBufferAlignment, initialSize, true);
 }
 
 angle::Result ImageHelper::init(Context *context,
@@ -2833,12 +2840,21 @@ VkImageLayout ImageHelper::getCurrentLayout() const
     return kImageMemoryBarrierData[mCurrentLayout].layout;
 }
 
-gl::Extents ImageHelper::getLevelExtents2D(uint32_t level) const
+gl::Extents ImageHelper::getLevelExtents(uint32_t level) const
 {
+    // Level 0 should be the size of the extents, after that every time you increase a level
+    // you shrink the extents by half.
     uint32_t width  = std::max(mExtents.width >> level, 1u);
     uint32_t height = std::max(mExtents.height >> level, 1u);
 
-    return gl::Extents(width, height, 1);
+    return gl::Extents(width, height, mExtents.depth);
+}
+
+gl::Extents ImageHelper::getLevelExtents2D(uint32_t level) const
+{
+    gl::Extents extents = getLevelExtents(level);
+    extents.depth       = 1;
+    return extents;
 }
 
 bool ImageHelper::isLayoutChangeNecessary(ImageLayout newLayout) const
@@ -2900,11 +2916,6 @@ bool ImageHelper::isReleasedToExternal() const
     // TODO(anglebug.com/4635): Implement external memory barriers on Mac/Android.
     return false;
 #endif
-}
-
-uint32_t ImageHelper::getBaseLevel()
-{
-    return mBaseLevel;
 }
 
 void ImageHelper::setBaseAndMaxLevels(uint32_t baseLevel, uint32_t maxLevel)
@@ -3102,15 +3113,6 @@ void ImageHelper::clear(VkImageAspectFlags aspectFlags,
 
         clearColor(value.color, mipLevel, 1, baseArrayLayer, layerCount, commandBuffer);
     }
-}
-
-gl::Extents ImageHelper::getSize(const gl::ImageIndex &index) const
-{
-    GLint mipLevel = index.getLevelIndex();
-    // Level 0 should be the size of the extents, after that every time you increase a level
-    // you shrink the extents by half.
-    return gl::Extents(std::max(1u, mExtents.width >> mipLevel),
-                       std::max(1u, mExtents.height >> mipLevel), mExtents.depth);
 }
 
 Serial ImageHelper::getAssignSerial(ContextVk *contextVk)
@@ -3896,7 +3898,7 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
     }
 
     uint32_t levelVK = levelGL - mBaseLevel;
-    return flushStagedUpdates(contextVk, levelVK, levelVK + 1, layer, layer + 1, commandBuffer);
+    return flushStagedUpdates(contextVk, levelVK, levelVK + 1, layer, layer + 1, {}, commandBuffer);
 }
 
 angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
@@ -3904,6 +3906,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                                               uint32_t levelVKEnd,
                                               uint32_t layerStart,
                                               uint32_t layerEnd,
+                                              gl::TexLevelMask skipLevelsMask,
                                               CommandBuffer *commandBuffer)
 {
     if (mSubresourceUpdates.empty())
@@ -3968,16 +3971,21 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         const bool areUpdateLayersOutsideRange =
             updateBaseLayer + updateLayerCount <= layerStart || updateBaseLayer >= layerEnd;
 
-        if (isUpdateLevelOutsideRange || areUpdateLayersOutsideRange)
+        uint32_t updateMipLevelVK = updateMipLevelGL - mBaseLevel;
+
+        // Additionally, if updates to this level are specifically asked to be skipped, skip them.
+        // This can happen when recreating an image that has been partially incompatibly redefined,
+        // in which case only updates to the levels that haven't been redefined should be flushed.
+        if (isUpdateLevelOutsideRange || areUpdateLayersOutsideRange ||
+            skipLevelsMask.test(updateMipLevelVK))
         {
             updatesToKeep.emplace_back(update);
             continue;
         }
 
-        uint32_t updateMipLevelVK = updateMipLevelGL - mBaseLevel;
         if (mBaseLevel > 0)
         {
-            // We need to shift the miplevel in the update to fall into the vkiamge
+            // We need to shift the miplevel in the update to fall into the Vulkan image.
             if (update.updateSource == UpdateSource::Clear)
             {
                 update.clear.levelIndex -= mBaseLevel;
@@ -4062,7 +4070,7 @@ angle::Result ImageHelper::flushAllStagedUpdates(ContextVk *contextVk)
     // Clear the image.
     CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
-    return flushStagedUpdates(contextVk, 0, mLevelCount, 0, mLayerCount, commandBuffer);
+    return flushStagedUpdates(contextVk, 0, mLevelCount, 0, mLayerCount, {}, commandBuffer);
 }
 
 bool ImageHelper::isUpdateStaged(uint32_t levelGL, uint32_t layer)
