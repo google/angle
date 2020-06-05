@@ -261,6 +261,10 @@ angle_source_set("angle_vulkan_backend") {
     libs += [ "vulkan" ]
   }
 
+  if (is_fuchsia) {
+    public_deps += [ "$angle_root/src/common/fuchsia_egl:backend" ]
+  }
+
   # Include generated shaders.
   import("vk_internal_shaders_autogen.gni")
   sources += angle_vulkan_internal_shaders
