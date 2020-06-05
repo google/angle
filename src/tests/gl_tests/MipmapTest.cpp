@@ -1218,9 +1218,6 @@ TEST_P(MipmapTestES3, GenerateMipmapBaseLevelOutOfRange)
 // be clamped, so the call doesn't generate an error.
 TEST_P(MipmapTestES3, GenerateMipmapBaseLevelOutOfRangeImmutableTexture)
 {
-    // TODO(cnorthrop): Interacts with immutable texture supprt: http://anglebug.com/3950
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     glBindTexture(GL_TEXTURE_2D, mTexture);
 
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);

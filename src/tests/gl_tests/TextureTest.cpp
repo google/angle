@@ -4014,10 +4014,9 @@ TEST_P(TextureLimitsTest, MaxFragmentTextures)
 TEST_P(TextureLimitsTest, MaxCombinedTextures)
 {
     // TODO(timvp): http://anglebug.com/3570
-    // Currently only fails on SwiftShader but we don't have an IsSwiftShader().
     // max per-stage sampled image bindings count (32) exceeds device
     // maxPerStageDescriptorSampledImages limit (16)
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
 
     GLint vertexTextures = mMaxVertexTextures;
 
@@ -5807,9 +5806,6 @@ TEST_P(Texture2DTestES3, GenerateMipmapAndBaseLevelLUMA)
 // this led to not sampling your texture data when minification occurred.
 TEST_P(Texture2DTestES3, MinificationWithSamplerNoMipmapping)
 {
-    // TODO: Triage this failure on Vulkan: http://anglebug.com/3950
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kVS[] =
         "#version 300 es\n"
         "out vec2 texcoord;\n"
