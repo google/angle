@@ -37,7 +37,9 @@ ProgramExecutable::ProgramExecutable()
       mPipelineHasGraphicsAtomicCounterBuffers(false),
       mPipelineHasComputeAtomicCounterBuffers(false),
       mPipelineHasGraphicsDefaultUniforms(false),
-      mPipelineHasComputeDefaultUniforms(false)
+      mPipelineHasComputeDefaultUniforms(false),
+      mPipelineHasGraphicsTextures(false),
+      mPipelineHasComputeTextures(false)
 {
     reset();
 }
@@ -79,7 +81,9 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mPipelineHasGraphicsAtomicCounterBuffers(other.mPipelineHasGraphicsAtomicCounterBuffers),
       mPipelineHasComputeAtomicCounterBuffers(other.mPipelineHasComputeAtomicCounterBuffers),
       mPipelineHasGraphicsDefaultUniforms(other.mPipelineHasGraphicsDefaultUniforms),
-      mPipelineHasComputeDefaultUniforms(other.mPipelineHasComputeDefaultUniforms)
+      mPipelineHasComputeDefaultUniforms(other.mPipelineHasComputeDefaultUniforms),
+      mPipelineHasGraphicsTextures(other.mPipelineHasGraphicsTextures),
+      mPipelineHasComputeTextures(other.mPipelineHasComputeTextures)
 {
     reset();
 }
@@ -109,6 +113,7 @@ void ProgramExecutable::reset()
     mAtomicCounterBuffers.clear();
     mOutputVariables.clear();
     mOutputLocations.clear();
+    mSamplerBindings.clear();
 
     mPipelineHasGraphicsUniformBuffers       = false;
     mPipelineHasComputeUniformBuffers        = false;
@@ -118,6 +123,8 @@ void ProgramExecutable::reset()
     mPipelineHasComputeAtomicCounterBuffers  = false;
     mPipelineHasGraphicsDefaultUniforms      = false;
     mPipelineHasComputeDefaultUniforms       = false;
+    mPipelineHasGraphicsTextures             = false;
+    mPipelineHasComputeTextures              = false;
 }
 
 void ProgramExecutable::load(gl::BinaryInputStream *stream)
@@ -141,6 +148,8 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
     mPipelineHasComputeAtomicCounterBuffers  = stream->readBool();
     mPipelineHasGraphicsDefaultUniforms      = stream->readBool();
     mPipelineHasComputeDefaultUniforms       = stream->readBool();
+    mPipelineHasGraphicsTextures             = stream->readBool();
+    mPipelineHasComputeTextures              = stream->readBool();
 }
 
 void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
@@ -163,6 +172,8 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     stream->writeInt(static_cast<bool>(mPipelineHasComputeAtomicCounterBuffers));
     stream->writeInt(static_cast<bool>(mPipelineHasGraphicsDefaultUniforms));
     stream->writeInt(static_cast<bool>(mPipelineHasComputeDefaultUniforms));
+    stream->writeInt(static_cast<bool>(mPipelineHasGraphicsTextures));
+    stream->writeInt(static_cast<bool>(mPipelineHasComputeTextures));
 }
 
 const ProgramState *ProgramExecutable::getProgramState(ShaderType shaderType) const
@@ -241,16 +252,10 @@ bool ProgramExecutable::hasDefaultUniforms() const
            (isCompute() ? mPipelineHasComputeDefaultUniforms : mPipelineHasGraphicsDefaultUniforms);
 }
 
-// TODO: http://anglebug.com/4520: Needs  mSamplerBindings moved to ProgramExecutable
 bool ProgramExecutable::hasTextures() const
 {
-    ASSERT(mProgramState || mProgramPipelineState);
-    if (mProgramState)
-    {
-        return mProgramState->hasTextures();
-    }
-
-    return mProgramPipelineState->hasTextures();
+    return !getSamplerBindings().empty() ||
+           (isCompute() ? mPipelineHasComputeTextures : mPipelineHasGraphicsTextures);
 }
 
 // TODO: http://anglebug.com/3570: Remove mHas*UniformBuffers once PPO's have valid data in

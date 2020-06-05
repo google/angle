@@ -66,7 +66,6 @@ class ProgramPipelineState final : angle::NonCopyable
 
     bool usesShaderProgram(ShaderProgramID program) const;
 
-    bool hasTextures() const;
     bool hasImages() const;
 
   private:

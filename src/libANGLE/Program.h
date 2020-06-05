@@ -258,7 +258,10 @@ class ProgramState final : angle::NonCopyable
         return mExecutable->getShaderStorageBlocks();
     }
     const std::vector<BufferVariable> &getBufferVariables() const { return mBufferVariables; }
-    const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
+    const std::vector<SamplerBinding> &getSamplerBindings() const
+    {
+        return mExecutable->getSamplerBindings();
+    }
     const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const { return mComputeShaderLocalSize; }
     const RangeUI &getDefaultUniformRange() const { return mExecutable->getDefaultUniformRange(); }
@@ -316,7 +319,6 @@ class ProgramState final : angle::NonCopyable
         return *mExecutable;
     }
 
-    bool hasTextures() const { return !getSamplerBindings().empty(); }
     bool hasImages() const { return !getImageBindings().empty(); }
     bool hasEarlyFragmentTestsOptimization() const { return mEarlyFramentTestsOptimization; }
 
@@ -358,9 +360,6 @@ class ProgramState final : angle::NonCopyable
     std::vector<VariableLocation> mUniformLocations;
     std::vector<BufferVariable> mBufferVariables;
     RangeUI mAtomicCounterUniformRange;
-
-    // An array of the samplers that are used by the program
-    std::vector<SamplerBinding> mSamplerBindings;
 
     // An array of the images that are used by the program
     std::vector<ImageBinding> mImageBindings;
@@ -704,7 +703,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     Optional<bool> getCachedValidateSamplersResult() { return mCachedValidateSamplersResult; }
     void setCachedValidateSamplersResult(bool result) { mCachedValidateSamplersResult = result; }
 
-    const std::vector<SamplerBinding> &getSamplerBindings() const;
     const std::vector<ImageBinding> &getImageBindings() const
     {
         ASSERT(!mLinkingState);

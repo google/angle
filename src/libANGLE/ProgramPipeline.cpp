@@ -124,20 +124,6 @@ bool ProgramPipelineState::usesShaderProgram(ShaderProgramID programId) const
     return false;
 }
 
-bool ProgramPipelineState::hasTextures() const
-{
-    for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
-    {
-        const Program *shaderProgram = getShaderProgram(shaderType);
-        if (shaderProgram && shaderProgram->getState().hasTextures())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool ProgramPipelineState::hasImages() const
 {
     for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
@@ -298,6 +284,10 @@ void ProgramPipeline::updateHasBooleans()
             {
                 mState.mExecutable->mPipelineHasGraphicsDefaultUniforms = true;
             }
+            if (executable.hasTextures())
+            {
+                mState.mExecutable->mPipelineHasGraphicsTextures = true;
+            }
         }
     }
 
@@ -321,6 +311,10 @@ void ProgramPipeline::updateHasBooleans()
         if (executable.hasDefaultUniforms())
         {
             mState.mExecutable->mPipelineHasComputeDefaultUniforms = true;
+        }
+        if (executable.hasTextures())
+        {
+            mState.mExecutable->mPipelineHasComputeTextures = true;
         }
     }
 }
