@@ -416,6 +416,15 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
             return;
         }
 
+        if (sourceFormat == GL_LUMINANCE || sourceFormat == GL_LUMINANCE_ALPHA ||
+            sourceFormat == GL_ALPHA || destFormat == GL_LUMINANCE ||
+            destFormat == GL_LUMINANCE_ALPHA || destFormat == GL_ALPHA)
+        {
+            // Old drivers buggy with optimized ImageCopy shader given LUMA textures.
+            // http://anglebug.com/4721
+            ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsVulkan());
+        }
+
         size_t colorCount;
         uint8_t componentCount;
         const uint8_t *srcColors = getSourceColors(sourceFormat, &colorCount, &componentCount);
@@ -469,6 +478,15 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
         if (!checkExtensions(sourceFormat, destFormat))
         {
             return;
+        }
+
+        if (sourceFormat == GL_LUMINANCE || sourceFormat == GL_LUMINANCE_ALPHA ||
+            sourceFormat == GL_ALPHA || destFormat == GL_LUMINANCE ||
+            destFormat == GL_LUMINANCE_ALPHA || destFormat == GL_ALPHA)
+        {
+            // Old drivers buggy with optimized ImageCopy shader given LUMA textures.
+            // http://anglebug.com/4721
+            ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsVulkan());
         }
 
         size_t colorCount;
