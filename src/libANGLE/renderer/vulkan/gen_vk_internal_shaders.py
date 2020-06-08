@@ -214,9 +214,14 @@ def gen_shader_include(shader):
     return '#include "libANGLE/renderer/vulkan/%s"' % slash(shader)
 
 
-def get_shader_variations(shader):
+def get_variations_path(shader):
     variation_file = shader + '.json'
-    if not os.path.exists(variation_file):
+    return variation_file if os.path.exists(variation_file) else None
+
+
+def get_shader_variations(shader):
+    variation_file = get_variations_path(shader)
+    if variation_file is None:
         # If there is no variation file, assume none.
         return ({}, [])
 
@@ -622,7 +627,11 @@ def main():
     if print_inputs:
         glslang_binaries = [get_linux_glslang_exe_path(), get_win_glslang_exe_path()]
         glslang_binary_hashes = [path + '.sha1' for path in glslang_binaries]
-        print(",".join(input_shaders + glslang_binary_hashes))
+        input_shaders_variations = [get_variations_path(shader) for shader in input_shaders]
+        input_shaders_variations = [
+            variations for variations in input_shaders_variations if variations is not None
+        ]
+        print(",".join(input_shaders + input_shaders_variations + glslang_binary_hashes))
         return 0
 
     # STEP 1: Call glslang to generate the internal shaders into small .inc files.
