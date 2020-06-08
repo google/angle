@@ -34,6 +34,24 @@
       "revId": "36a7be047481b720f80ef73c2e385affce94928e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e1010e8_8909cd0c",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-08T15:37:43Z",
+      "side": 1,
+      "message": "I renamed it to \"EndsWithSuffix()\" in patchset 9.",
+      "parentUuid": "38f2793e_ccfadba8",
+      "revId": "36a7be047481b720f80ef73c2e385affce94928e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
