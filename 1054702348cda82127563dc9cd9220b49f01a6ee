@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6ecbaab2_ae38939e",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-08T10:25:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d5f971_501e3b8a",
+      "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "255f3cf0_d78d0483",
         "filename": "src/common/string_utils.cpp",
         "patchSetId": 6
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "4bda7417_ebc94a33",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-08T10:25:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "255f3cf0_d78d0483",
+      "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50f1dece_1ff4906a",
         "filename": "src/common/string_utils.cpp",
         "patchSetId": 6
@@ -50,6 +86,24 @@
       "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df915a1d_dee9903f",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-08T10:25:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50f1dece_1ff4906a",
+      "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -73,6 +127,30 @@
       "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "beaa17df_0b2df80e",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-08T10:25:33Z",
+      "side": 1,
+      "message": "Thanks for the suggestion, which really make the code more neat! In patchset7, I reused EndsWith(const char *str, const char *suffix) to make the implementation clean.",
+      "parentUuid": "fa6d2730_148fe16c",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 69
+      },
+      "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
