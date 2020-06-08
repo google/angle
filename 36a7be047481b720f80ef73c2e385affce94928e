@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60a24878_558084c0",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-06-08T12:49:03Z",
+      "side": 1,
+      "message": "As namespace angle and anonymous namespace have functions with same name, if I call EndsWith() directly, I will get below error:\n\n../../src/common/string_utils.cpp(203,12): error: no matching function for call to \u0027EndsWith\u0027\n    return EndsWith(str, strlen(str), suffix, strlen(suffix));\n           ^~~~~~~~\n../../src/common/string_utils.cpp(201,6): note: candidate function not viable: requires 2 arguments, but 4 were provided\nbool EndsWith(const char *str, const char *suffix)\n     ^\n../../src/common/string_utils.cpp(196,6): note: candidate function not viable: requires 2 arguments, but 4 were provided\nbool EndsWith(const std::string \u0026str, const char *suffix)\n     ^\n../../src/common/string_utils.cpp(191,6): note: candidate function not viable: requires 2 arguments, but 4 were provided\nbool EndsWith(const std::string \u0026str, const std::string \u0026suffix)\n     ^\n1 error generated.\n\nSo I used \"::\" to call anonymous namespace. Another option is to change the function name in anonymous namespace.",
+      "revId": "36a7be047481b720f80ef73c2e385affce94928e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
