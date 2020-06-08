@@ -16,6 +16,24 @@
       "revId": "36a7be047481b720f80ef73c2e385affce94928e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38f2793e_ccfadba8",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-08T14:56:11Z",
+      "side": 1,
+      "message": "Either is fine. A different name would make searching (by grep, and in your brain) easier, so I have a slight preference for that.",
+      "parentUuid": "60a24878_558084c0",
+      "revId": "36a7be047481b720f80ef73c2e385affce94928e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
