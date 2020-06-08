@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76d5f971_501e3b8a",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-08T07:58:41Z",
+      "side": 1,
+      "message": "We use {} even for single line blocks.",
+      "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "255f3cf0_d78d0483",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-08T07:58:41Z",
+      "side": 1,
+      "message": "{}",
+      "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50f1dece_1ff4906a",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-08T07:58:41Z",
+      "side": 1,
+      "message": "{}",
+      "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa6d2730_148fe16c",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-08T07:58:41Z",
+      "side": 1,
+      "message": "To avoid all the duplication, you can add a private (in an anonymous namespace in top of the file) function like:\n\n    bool EndsWith(const char *str, size_t strLen, const char *suffix, size_t suffixLen)\n    {\n        return suffixLen \u003c\u003d strLen \u0026\u0026 strncmp(str + strLen - suffixLen, suffix, suffixLen) \u003d\u003d 0;\n    }\n\nand then turn all these three functions to call that:\n\n    bool EndsWith(const std::string \u0026str, const std::string \u0026suffix)\n    {\n        return EndsWith(str.c_str(), str.length(), suffix.c_str(), suffix.length());\n    }\n    \n    bool EndsWith(const std::string \u0026str, const char *suffix)\n    {\n        return EndsWith(str.c_str(), str.length(), suffix, strlen(suffix));\n    }\n    \n    bool EndsWith(const char *str, const char *suffix)\n    {\n        return EndsWith(str, strlen(str), suffix, strlen(suffix));\n    }",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 69
+      },
+      "revId": "1054702348cda82127563dc9cd9220b49f01a6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
