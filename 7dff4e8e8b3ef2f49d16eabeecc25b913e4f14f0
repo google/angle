@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7454eb5_d2c630ad",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-08T10:31:33Z",
+      "side": 1,
+      "message": "While I don\u0027t like the triple overload, I assumed the point was to avoid either strlen() on std::string (where the size is already known), or allocation/copy to std::string given a C string.\n\nIf that optimization was really necessary, this is incurring a penalty by calling strlen() unnecessarily. That\u0027s why I suggested using a helper function for EndsWith :)",
+      "range": {
+        "startLine": 161,
+        "startChar": 0,
+        "endLine": 174,
+        "endChar": 1
+      },
+      "revId": "7dff4e8e8b3ef2f49d16eabeecc25b913e4f14f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
