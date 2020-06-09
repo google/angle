@@ -1199,8 +1199,8 @@ angle::Result TextureVk::copyAndStageImageSubresource(ContextVk *contextVk,
                                                       const gl::ImageDesc &desc,
                                                       bool ignoreLayerCount,
                                                       uint32_t currentLayer,
-                                                      uint32_t sourceMipLevel,
-                                                      uint32_t stagingDstMipLevel)
+                                                      uint32_t srcLevelVk,
+                                                      uint32_t dstLevelGL)
 {
     const gl::Extents &baseLevelExtents = desc.size;
 
@@ -1221,9 +1221,9 @@ angle::Result TextureVk::copyAndStageImageSubresource(ContextVk *contextVk,
     vk::BufferHelper *stagingBuffer                   = nullptr;
     vk::StagingBufferOffsetArray stagingBufferOffsets = {0, 0};
     size_t bufferSize                                 = 0;
-    ANGLE_TRY(mImage->copyImageDataToBuffer(contextVk, sourceMipLevel, layerCount, currentLayer,
-                                            area, &stagingBuffer, &bufferSize,
-                                            &stagingBufferOffsets, nullptr));
+    ANGLE_TRY(mImage->copyImageDataToBuffer(contextVk, srcLevelVk, layerCount, currentLayer, area,
+                                            &stagingBuffer, &bufferSize, &stagingBufferOffsets,
+                                            nullptr));
 
     // Stage an update to the new image
     ASSERT(stagingBuffer);
@@ -1238,7 +1238,7 @@ angle::Result TextureVk::copyAndStageImageSubresource(ContextVk *contextVk,
         bufferImageHeight = std::max(bufferImageHeight, desc.format.info->compressedBlockHeight);
     }
     ANGLE_TRY(mImage->stageSubresourceUpdateFromBuffer(
-        contextVk, bufferSize, stagingDstMipLevel, currentLayer, layerCount, bufferRowLength,
+        contextVk, bufferSize, dstLevelGL, currentLayer, layerCount, bufferRowLength,
         bufferImageHeight, updatedExtents, offset, stagingBuffer, stagingBufferOffsets));
 
     return angle::Result::Continue;
@@ -1305,47 +1305,31 @@ angle::Result TextureVk::respecifyImageAttributesAndLevels(ContextVk *contextVk,
                                              mImage->getLayerCount(), commandBuffer));
     }
 
-    bool baseLevelChanged = baseLevel != previousBaseLevel;
-
     // After flushing, track the new levels (they are used in the flush, hence the wait)
     mImage->setBaseAndMaxLevels(baseLevel, maxLevel);
 
     // Next, back up any data we need to preserve by staging it as updates to the new image.
 
-    // Stage updates for all levels in the GL texture, while preserving the data in the vkImage.
-    // This ensures we propagate all the current image data, even as max level moves around.
-    uint32_t updateCount =
-        std::max<GLuint>(mState.getMipmapMaxLevel() + 1, mImage->getLevelCount());
+    // Preserve the data in the Vulkan image.  GL texture's staged updates that correspond to levels
+    // outside the range of the Vulkan image will remain intact.
 
     // The staged updates won't be applied until the image has the requisite mip levels
     for (uint32_t layer = 0; layer < mImage->getLayerCount(); layer++)
     {
-        for (uint32_t level = 0; level < updateCount; level++)
+        for (uint32_t levelVK = 0; levelVK < mImage->getLevelCount(); levelVK++)
         {
-            if (mImage->isUpdateStaged(level, layer))
-            {
-                // If there is still an update staged for the surface at the designated
-                // layer/level, we don't need to propagate any data from this image.
-                // This can happen for original texture levels that have never fit into
-                // the vkImage due to base/max level, and for vkImage data that has been
-                // staged by previous calls to respecifyImageAttributesAndLevels that didn't fit
-                // into the new vkImage.
-                continue;
-            }
+            // Vulkan level 0 previously aligned with whatever the base level was.
+            uint32_t levelGL = levelVK + previousBaseLevel;
+
+            ASSERT(!mImage->isUpdateStaged(levelGL, layer));
 
             // Pull data from the current image and stage it as an update for the new image
 
             // First we populate the staging buffer with current level data
             const gl::ImageDesc &desc =
-                mState.getImageDesc(gl::TextureTypeToTarget(mState.getType(), layer), level);
+                mState.getImageDesc(gl::TextureTypeToTarget(mState.getType(), layer), levelGL);
 
-            // We need to adjust the source Vulkan level to reflect the previous base level.
-            // vk level 0 previously aligned with whatever the base level was.
-            uint32_t srcLevelVK = baseLevelChanged ? level - previousBaseLevel : level;
-            ASSERT(srcLevelVK <= mImage->getLevelCount());
-
-            ANGLE_TRY(
-                copyAndStageImageSubresource(contextVk, desc, true, layer, srcLevelVK, level));
+            ANGLE_TRY(copyAndStageImageSubresource(contextVk, desc, true, layer, levelVK, levelGL));
         }
     }
 

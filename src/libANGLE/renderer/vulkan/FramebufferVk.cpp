@@ -1700,10 +1700,10 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
                                             void *pixels)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "FramebufferVk::readPixelsImpl");
-    uint32_t level = renderTarget->getLevelIndex();
-    uint32_t layer = renderTarget->getLayerIndex();
+    uint32_t levelGL = renderTarget->getLevelIndex();
+    uint32_t layer   = renderTarget->getLayerIndex();
     return renderTarget->getImage().readPixels(contextVk, area, packPixelsParams, copyAspectFlags,
-                                               level, layer, pixels, &mReadPixelBuffer);
+                                               levelGL, layer, pixels, &mReadPixelBuffer);
 }
 
 gl::Extents FramebufferVk::getReadImageExtents() const

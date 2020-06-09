@@ -356,8 +356,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                                const gl::ImageDesc &desc,
                                                bool ignoreLayerCount,
                                                uint32_t currentLayer,
-                                               uint32_t sourceLevel,
-                                               uint32_t stagingDstMipLevel);
+                                               uint32_t srcLevelVk,
+                                               uint32_t dstLevelGL);
     angle::Result initImageViews(ContextVk *contextVk,
                                  const vk::Format &format,
                                  const bool sized,

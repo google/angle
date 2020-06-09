@@ -2412,11 +2412,6 @@ TEST_P(Texture2DTestES3, FramebufferTextureChangingBaselevel)
 // preserves the other mips' data.
 TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
 {
-    // Affected by two bugs:
-    // - http://anglebug.com/4695
-    // - http://anglebug.com/4696
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // http://anglebug.com/4699
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
 
@@ -2441,6 +2436,9 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
 
     // Mip 1 is green.  Verify this.
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // http://anglebug.com/4696
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     // Add mip 0 and rebase the mip chain.
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,

@@ -3246,14 +3246,14 @@ void ImageHelper::resolve(ImageHelper *dest,
 }
 
 void ImageHelper::removeStagedUpdates(ContextVk *contextVk,
-                                      uint32_t levelIndex,
+                                      uint32_t levelIndexGL,
                                       uint32_t layerIndex)
 {
     // Find any staged updates for this index and removes them from the pending list.
     for (size_t index = 0; index < mSubresourceUpdates.size();)
     {
         auto update = mSubresourceUpdates.begin() + index;
-        if (update->isUpdateToLayerLevel(layerIndex, levelIndex))
+        if (update->isUpdateToLayerLevel(layerIndex, levelIndexGL))
         {
             update->release(contextVk->getRenderer());
             mSubresourceUpdates.erase(update);
@@ -3556,7 +3556,7 @@ angle::Result ImageHelper::stageSubresourceUpdateAndGetData(ContextVk *contextVk
 
 angle::Result ImageHelper::stageSubresourceUpdateFromBuffer(ContextVk *contextVk,
                                                             size_t allocationSize,
-                                                            uint32_t mipLevel,
+                                                            uint32_t mipLevelGL,
                                                             uint32_t baseArrayLayer,
                                                             uint32_t layerCount,
                                                             uint32_t bufferRowLength,
@@ -3574,7 +3574,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromBuffer(ContextVk *contextVk
     copy[0].bufferRowLength                 = bufferRowLength;
     copy[0].bufferImageHeight               = bufferImageHeight;
     copy[0].imageSubresource.aspectMask     = getAspectFlags();
-    copy[0].imageSubresource.mipLevel       = mipLevel;
+    copy[0].imageSubresource.mipLevel       = mipLevelGL;
     copy[0].imageSubresource.baseArrayLayer = baseArrayLayer;
     copy[0].imageSubresource.layerCount     = layerCount;
     copy[0].imageOffset                     = offset;
@@ -3589,7 +3589,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromBuffer(ContextVk *contextVk
         copy[1].bufferRowLength                 = bufferRowLength;
         copy[1].bufferImageHeight               = bufferImageHeight;
         copy[1].imageSubresource.aspectMask     = VK_IMAGE_ASPECT_STENCIL_BIT;
-        copy[1].imageSubresource.mipLevel       = mipLevel;
+        copy[1].imageSubresource.mipLevel       = mipLevelGL;
         copy[1].imageSubresource.baseArrayLayer = baseArrayLayer;
         copy[1].imageSubresource.layerCount     = layerCount;
         copy[1].imageOffset                     = offset;
@@ -3847,7 +3847,7 @@ angle::Result ImageHelper::allocateStagingMemory(ContextVk *contextVk,
 }
 
 angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
-                                                               uint32_t level,
+                                                               uint32_t levelGL,
                                                                uint32_t layer,
                                                                CommandBuffer *commandBuffer,
                                                                ClearValuesArray *deferredClears,
@@ -3862,7 +3862,7 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
         {
             SubresourceUpdate &update = mSubresourceUpdates[updateIndex];
 
-            if (update.isUpdateToLayerLevel(layer, level))
+            if (update.isUpdateToLayerLevel(layer, levelGL))
             {
                 // On any data update, exit out. We'll need to do a full upload.
                 if (update.updateSource != UpdateSource::Clear ||
@@ -3888,19 +3888,20 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
             deferredClears->store(deferredClearIndex, update.aspectFlags, update.value);
 
             // We process the updates again to erase any clears for this level.
-            removeStagedUpdates(contextVk, level, layer);
+            removeStagedUpdates(contextVk, levelGL, layer);
             return angle::Result::Continue;
         }
 
         // Otherwise we proceed with a normal update.
     }
 
-    return flushStagedUpdates(contextVk, level, level + 1, layer, layer + 1, commandBuffer);
+    uint32_t levelVK = levelGL - mBaseLevel;
+    return flushStagedUpdates(contextVk, levelVK, levelVK + 1, layer, layer + 1, commandBuffer);
 }
 
 angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
-                                              uint32_t levelStart,
-                                              uint32_t levelEnd,
+                                              uint32_t levelVKStart,
+                                              uint32_t levelVKEnd,
                                               uint32_t layerStart,
                                               uint32_t layerEnd,
                                               CommandBuffer *commandBuffer)
@@ -3909,6 +3910,9 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     {
         return angle::Result::Continue;
     }
+
+    const uint32_t levelGLStart = levelVKStart + mBaseLevel;
+    const uint32_t levelGLEnd   = levelVKEnd + mBaseLevel;
 
     ANGLE_TRY(mStagingBuffer.flush(contextVk));
 
@@ -3933,12 +3937,12 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                (update.updateSource == UpdateSource::Image && update.image.image != nullptr &&
                 update.image.image->valid()));
 
-        uint32_t updateMipLevel;
+        uint32_t updateMipLevelGL;
         uint32_t updateBaseLayer;
         uint32_t updateLayerCount;
         if (update.updateSource == UpdateSource::Clear)
         {
-            updateMipLevel   = update.clear.levelIndex;
+            updateMipLevelGL = update.clear.levelIndex;
             updateBaseLayer  = update.clear.layerIndex;
             updateLayerCount = update.clear.layerCount;
             if (updateLayerCount == static_cast<uint32_t>(gl::ImageIndex::kEntireLevel))
@@ -3949,16 +3953,16 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         else
         {
             const VkImageSubresourceLayers &dstSubresource = update.dstSubresource();
-            updateMipLevel                                 = dstSubresource.mipLevel;
+            updateMipLevelGL                               = dstSubresource.mipLevel;
             updateBaseLayer                                = dstSubresource.baseArrayLayer;
             updateLayerCount                               = dstSubresource.layerCount;
             ASSERT(updateLayerCount != static_cast<uint32_t>(gl::ImageIndex::kEntireLevel));
         }
 
         // If the update level is not within the requested range, skip the update.
-        const bool isUpdateLevelOutsideRange =
-            updateMipLevel < (levelStart + mBaseLevel) ||
-            (updateMipLevel >= (levelEnd + mBaseLevel) || updateMipLevel > mMaxLevel);
+        const bool isUpdateLevelOutsideRange = updateMipLevelGL < levelGLStart ||
+                                               updateMipLevelGL >= levelGLEnd ||
+                                               updateMipLevelGL > mMaxLevel;
 
         // If the update layers don't intersect the requested layers, skip the update.
         const bool areUpdateLayersOutsideRange =
@@ -3970,10 +3974,10 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             continue;
         }
 
+        uint32_t updateMipLevelVK = updateMipLevelGL - mBaseLevel;
         if (mBaseLevel > 0)
         {
             // We need to shift the miplevel in the update to fall into the vkiamge
-            updateMipLevel -= mBaseLevel;
             if (update.updateSource == UpdateSource::Clear)
             {
                 update.clear.levelIndex -= mBaseLevel;
@@ -3998,7 +4002,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         {
             const uint64_t subresourceHashRange = angle::Bit<uint64_t>(updateLayerCount) - 1;
             const uint32_t subresourceHashOffset =
-                (updateMipLevel * mLayerCount + updateBaseLayer) % kMaxParallelSubresourceUpload;
+                (updateMipLevelVK * mLayerCount + updateBaseLayer) % kMaxParallelSubresourceUpload;
             const uint64_t subresourceHash =
                 ANGLE_ROTL64(subresourceHashRange, subresourceHashOffset);
 
@@ -4013,8 +4017,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
         if (update.updateSource == UpdateSource::Clear)
         {
-            ASSERT(updateMipLevel == update.clear.levelIndex);
-            clear(update.clear.aspectFlags, update.clear.value, updateMipLevel, updateBaseLayer,
+            ASSERT(updateMipLevelVK == update.clear.levelIndex);
+            clear(update.clear.aspectFlags, update.clear.value, updateMipLevelVK, updateBaseLayer,
                   updateLayerCount, commandBuffer);
         }
         else if (update.updateSource == UpdateSource::Buffer)
@@ -4061,7 +4065,7 @@ angle::Result ImageHelper::flushAllStagedUpdates(ContextVk *contextVk)
     return flushStagedUpdates(contextVk, 0, mLevelCount, 0, mLayerCount, commandBuffer);
 }
 
-bool ImageHelper::isUpdateStaged(uint32_t level, uint32_t layer)
+bool ImageHelper::isUpdateStaged(uint32_t levelGL, uint32_t layer)
 {
     // Check to see if any updates are staged for the given level and layer
 
@@ -4072,25 +4076,25 @@ bool ImageHelper::isUpdateStaged(uint32_t level, uint32_t layer)
 
     for (SubresourceUpdate &update : mSubresourceUpdates)
     {
-        uint32_t updateMipLevel;
+        uint32_t updateMipLevelGL;
         uint32_t updateBaseLayer;
         uint32_t updateLayerCount;
 
         if (update.updateSource == UpdateSource::Clear)
         {
-            updateMipLevel   = update.clear.levelIndex;
+            updateMipLevelGL = update.clear.levelIndex;
             updateBaseLayer  = update.clear.layerIndex;
             updateLayerCount = update.clear.layerCount;
         }
         else
         {
             const VkImageSubresourceLayers &dstSubresource = update.dstSubresource();
-            updateMipLevel                                 = dstSubresource.mipLevel;
+            updateMipLevelGL                               = dstSubresource.mipLevel;
             updateBaseLayer                                = dstSubresource.baseArrayLayer;
             updateLayerCount                               = dstSubresource.layerCount;
         }
 
-        if (updateMipLevel == level)
+        if (updateMipLevelGL == levelGL)
         {
             if (layer >= updateBaseLayer && layer < (updateBaseLayer + updateLayerCount))
             {
@@ -4234,7 +4238,7 @@ angle::Result ImageHelper::GetReadPixelsParams(ContextVk *contextVk,
 angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
                                                  const gl::PixelPackState &packState,
                                                  gl::Buffer *packBuffer,
-                                                 uint32_t level,
+                                                 uint32_t levelGL,
                                                  uint32_t layer,
                                                  GLenum format,
                                                  GLenum type,
@@ -4271,9 +4275,10 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
     PackPixelsParams params;
     GLuint outputSkipBytes = 0;
 
-    uint32_t width  = std::max(1u, mExtents.width >> level);
-    uint32_t height = std::max(1u, mExtents.height >> level);
-    uint32_t depth  = std::max(1u, mExtents.depth >> level);
+    const uint32_t levelVK = levelGL - mBaseLevel;
+    const uint32_t width   = std::max(1u, mExtents.width >> levelVK);
+    const uint32_t height  = std::max(1u, mExtents.height >> levelVK);
+    const uint32_t depth   = std::max(1u, mExtents.depth >> levelVK);
     gl::Rectangle area(0, 0, width, height);
 
     ANGLE_TRY(GetReadPixelsParams(contextVk, packState, packBuffer, format, type, area, area,
@@ -4289,7 +4294,7 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
         // Depth > 1 means this is a 3D texture and we need to copy all layers
         for (layer = 0; layer < depth; layer++)
         {
-            ANGLE_TRY(readPixels(contextVk, area, params, aspectFlags, level, layer,
+            ANGLE_TRY(readPixels(contextVk, area, params, aspectFlags, levelGL, layer,
                                  static_cast<uint8_t *>(pixels) + outputSkipBytes,
                                  &stagingBuffer.get()));
 
@@ -4298,7 +4303,7 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
     }
     else
     {
-        ANGLE_TRY(readPixels(contextVk, area, params, aspectFlags, level, layer,
+        ANGLE_TRY(readPixels(contextVk, area, params, aspectFlags, levelGL, layer,
                              static_cast<uint8_t *>(pixels) + outputSkipBytes,
                              &stagingBuffer.get()));
     }
@@ -4310,7 +4315,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
                                       const gl::Rectangle &area,
                                       const PackPixelsParams &packPixelsParams,
                                       VkImageAspectFlagBits copyAspectFlags,
-                                      uint32_t level,
+                                      uint32_t levelGL,
                                       uint32_t layer,
                                       void *pixels,
                                       DynamicBuffer *stagingBuffer)
@@ -4326,7 +4331,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
     ImageHelper *src = this;
 
-    ASSERT(!isUpdateStaged(level, layer));
+    ASSERT(!isUpdateStaged(levelGL, layer));
 
     if (isMultisampled)
     {
@@ -4359,7 +4364,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
     VkImageSubresourceLayers srcSubresource = {};
     srcSubresource.aspectMask               = copyAspectFlags;
-    srcSubresource.mipLevel                 = level;
+    srcSubresource.mipLevel                 = levelGL - mBaseLevel;
     srcSubresource.baseArrayLayer           = layer;
     srcSubresource.layerCount               = 1;
 
@@ -4398,8 +4403,6 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
         // Make the resolved image the target of buffer copy.
         src                           = &resolvedImage.get();
-        level                         = 0;
-        layer                         = 0;
         srcOffset                     = {0, 0, 0};
         srcSubresource.baseArrayLayer = 0;
         srcSubresource.layerCount     = 1;
@@ -4508,15 +4511,15 @@ void ImageHelper::SubresourceUpdate::release(RendererVk *renderer)
 }
 
 bool ImageHelper::SubresourceUpdate::isUpdateToLayerLevel(uint32_t layerIndex,
-                                                          uint32_t levelIndex) const
+                                                          uint32_t levelIndexGL) const
 {
     if (updateSource == UpdateSource::Clear)
     {
-        return clear.levelIndex == levelIndex && clear.layerIndex == layerIndex;
+        return clear.levelIndex == levelIndexGL && clear.layerIndex == layerIndex;
     }
 
     const VkImageSubresourceLayers &dst = dstSubresource();
-    return dst.baseArrayLayer == layerIndex && dst.mipLevel == levelIndex;
+    return dst.baseArrayLayer == layerIndex && dst.mipLevel == levelIndexGL;
 }
 
 void ImageHelper::appendSubresourceUpdate(SubresourceUpdate &&update)

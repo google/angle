@@ -1164,7 +1164,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void resolve(ImageHelper *dest, const VkImageResolve &region, CommandBuffer *commandBuffer);
 
     // Data staging
-    void removeStagedUpdates(ContextVk *contextVk, uint32_t levelIndex, uint32_t layerIndex);
+    void removeStagedUpdates(ContextVk *contextVk, uint32_t levelIndexGL, uint32_t layerIndex);
 
     angle::Result stageSubresourceUpdateImpl(ContextVk *contextVk,
                                              const gl::ImageIndex &index,
@@ -1198,7 +1198,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     angle::Result stageSubresourceUpdateFromBuffer(ContextVk *contextVk,
                                                    size_t allocationSize,
-                                                   uint32_t mipLevel,
+                                                   uint32_t mipLevelGL,
                                                    uint32_t baseArrayLayer,
                                                    uint32_t layerCount,
                                                    uint32_t bufferRowLength,
@@ -1246,7 +1246,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Flush staged updates for a single subresource. Can optionally take a parameter to defer
     // clears to a subsequent RenderPass load op.
     angle::Result flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
-                                                      uint32_t level,
+                                                      uint32_t levelGL,
                                                       uint32_t layer,
                                                       CommandBuffer *commandBuffer,
                                                       ClearValuesArray *deferredClears,
@@ -1267,7 +1267,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // as with renderbuffers or surface images.
     angle::Result flushAllStagedUpdates(ContextVk *contextVk);
 
-    bool isUpdateStaged(uint32_t level, uint32_t layer);
+    bool isUpdateStaged(uint32_t levelGL, uint32_t layer);
     bool hasStagedUpdates() const { return !mSubresourceUpdates.empty(); }
 
     // changeLayout automatically skips the layout change if it's unnecessary.  This function can be
@@ -1346,7 +1346,7 @@ class ImageHelper final : public Resource, public angle::Subject
     angle::Result readPixelsForGetImage(ContextVk *contextVk,
                                         const gl::PixelPackState &packState,
                                         gl::Buffer *packBuffer,
-                                        uint32_t level,
+                                        uint32_t levelGL,
                                         uint32_t layer,
                                         GLenum format,
                                         GLenum type,
@@ -1356,7 +1356,7 @@ class ImageHelper final : public Resource, public angle::Subject
                              const gl::Rectangle &area,
                              const PackPixelsParams &packPixelsParams,
                              VkImageAspectFlagBits copyAspectFlags,
-                             uint32_t level,
+                             uint32_t levelGL,
                              uint32_t layer,
                              void *pixels,
                              DynamicBuffer *stagingBuffer);
@@ -1411,11 +1411,12 @@ class ImageHelper final : public Resource, public angle::Subject
 
         const VkImageSubresourceLayers &dstSubresource() const
         {
+            // Note: destination mip level includes base level.
             ASSERT(updateSource == UpdateSource::Buffer || updateSource == UpdateSource::Image);
             return updateSource == UpdateSource::Buffer ? buffer.copyRegion.imageSubresource
                                                         : image.copyRegion.dstSubresource;
         }
-        bool isUpdateToLayerLevel(uint32_t layerIndex, uint32_t levelIndex) const;
+        bool isUpdateToLayerLevel(uint32_t layerIndex, uint32_t levelIndexGL) const;
 
         UpdateSource updateSource;
         union

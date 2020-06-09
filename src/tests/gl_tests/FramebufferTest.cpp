@@ -464,9 +464,6 @@ TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevels)
 
 TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevelsReadBack)
 {
-    // http://anglebug.com/4695
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
