@@ -41,7 +41,7 @@ def _CheckCommitMessageFormatting(input_api, output_api):
             while len(lines) > 0 and _IsLineBlank(lines[0]):
                 lines.pop(0)
 
-    whitelist_strings = ['Revert "', 'Roll ']
+    whitelist_strings = ['Revert "', 'Roll ', 'Reland ']
     summary_linelength_warning_lower_limit = 65
     summary_linelength_warning_upper_limit = 70
     description_linelength_limit = 72
@@ -51,6 +51,9 @@ def _CheckCommitMessageFormatting(input_api, output_api):
     else:
         git_output = subprocess.check_output(["git", "log", "-n", "1", "--pretty=format:%B"])
     commit_msg_lines = git_output.splitlines()
+    commit_msg_line_numbers = {}
+    for i in range(len(commit_msg_lines)):
+        commit_msg_line_numbers[commit_msg_lines[i]] = i + 1
     _PopBlankLines(commit_msg_lines, True)
     _PopBlankLines(commit_msg_lines, False)
     if len(commit_msg_lines) > 0:
@@ -124,8 +127,10 @@ def _CheckCommitMessageFormatting(input_api, output_api):
         if len(line) > description_linelength_limit:
             errors.append(
                 output_api.PresubmitError(
-                    "Please ensure that your description body is wrapped to " +
-                    str(description_linelength_limit) + " characters or less."))
+                    'Line ' + str(commit_msg_line_numbers[line]) + ' is too long.\n' + '"' + line +
+                    '"\n' + 'Please wrap it to ' + str(description_linelength_limit) +
+                    ' characters. ' +
+                    "Lines without spaces or lines starting with 4 spaces are exempt."))
             return errors
     return errors
 
