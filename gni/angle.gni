@@ -363,10 +363,7 @@ template("angle_test") {
     if (invoker.main != "") {
       sources = [ "${invoker.main}.cpp" ]
     }
-    data = invoker.data + [
-             "src/tests/test_utils/runner/run_gtest_angle_test.py",
-             "//testing/xvfb.py",
-           ]
+    data = invoker.data + [ "//testing/xvfb.py" ]
 
     if (is_linux && !is_component_build) {
       # Set rpath to find shared libs in a non-component build.
