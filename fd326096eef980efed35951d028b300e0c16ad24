@@ -22,6 +22,53 @@
       "revId": "fd326096eef980efed35951d028b300e0c16ad24",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5b3506d_a8f598c3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-10T15:32:11Z",
+      "side": 1,
+      "message": "Try editing it locally here too. I think the presubmit is a bit messed up right now. We might have to disable it while we fix it.",
+      "parentUuid": "989852ab_0fe58bb1",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 156
+      },
+      "revId": "fd326096eef980efed35951d028b300e0c16ad24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d91ce58e_4c00104e",
+        "filename": "src/libANGLE/renderer/vulkan/BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-10T15:32:11Z",
+      "side": 1,
+      "message": "I thought vulkan_backend should inherit this angle_vulkan_entry_points which uses fuchsia_egl. What happens if you remove this?",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 0
+      },
+      "revId": "fd326096eef980efed35951d028b300e0c16ad24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
