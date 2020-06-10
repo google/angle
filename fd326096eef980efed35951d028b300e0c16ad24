@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "def3964a_35d782b6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1426222
+      },
+      "writtenOn": "2020-06-10T21:45:44Z",
+      "side": 1,
+      "message": "I\u0027ve edited the description here as directed and will currently mark this as resolved as I see that the tests are down.",
+      "parentUuid": "f5b3506d_a8f598c3",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 156
+      },
+      "revId": "fd326096eef980efed35951d028b300e0c16ad24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d91ce58e_4c00104e",
         "filename": "src/libANGLE/renderer/vulkan/BUILD.gn",
         "patchSetId": 7
@@ -69,6 +93,30 @@
       "revId": "fd326096eef980efed35951d028b300e0c16ad24",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78bd5718_98b54aa6",
+        "filename": "src/libANGLE/renderer/vulkan/BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1426222
+      },
+      "writtenOn": "2020-06-10T21:45:44Z",
+      "side": 1,
+      "message": "When I previously made a changelist mirroring this one but without having this particuklar addition to public deps it failed in the windows build in the following manner: https://ci.chromium.org/p/chromium/builders/try/fuchsia-angle-rel/6815?",
+      "parentUuid": "d91ce58e_4c00104e",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 0
+      },
+      "revId": "fd326096eef980efed35951d028b300e0c16ad24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
