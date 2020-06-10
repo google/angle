@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "989852ab_0fe58bb1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-10T02:51:31Z",
+      "side": 1,
+      "message": "Presubmit is failing due to missing wrapping (please update your local repo to top-of-tree, so you get the presubmit check locally)",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 156
+      },
+      "revId": "fd326096eef980efed35951d028b300e0c16ad24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
