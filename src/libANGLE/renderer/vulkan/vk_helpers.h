@@ -1123,6 +1123,7 @@ class ImageHelper final : public Resource, public angle::Subject
     const Image &getImage() const { return mImage; }
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
 
+    void setTilingMode(VkImageTiling tilingMode) { mTilingMode = tilingMode; }
     VkImageType getType() const { return mImageType; }
     const VkExtent3D &getExtents() const { return mExtents; }
     uint32_t getLayerCount() const { return mLayerCount; }
@@ -1474,6 +1475,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Image properties.
     VkImageType mImageType;
+    VkImageTiling mTilingMode;
     VkExtent3D mExtents;
     const Format *mFormat;
     GLint mSamples;

@@ -2451,6 +2451,7 @@ ImageHelper::ImageHelper(ImageHelper &&other)
     : mImage(std::move(other.mImage)),
       mDeviceMemory(std::move(other.mDeviceMemory)),
       mImageType(other.mImageType),
+      mTilingMode(other.mTilingMode),
       mExtents(other.mExtents),
       mFormat(other.mFormat),
       mSamples(other.mSamples),
@@ -2482,6 +2483,7 @@ void ImageHelper::resetCachedProperties()
     mFormat                      = nullptr;
     mSamples                     = 1;
     mSerial                      = rx::kZeroSerial;
+    mTilingMode                  = VK_IMAGE_TILING_OPTIMAL;
     mCurrentLayout               = ImageLayout::Undefined;
     mCurrentQueueFamilyIndex     = std::numeric_limits<uint32_t>::max();
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
@@ -2559,7 +2561,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     imageInfo.mipLevels             = mipLevels;
     imageInfo.arrayLayers           = mLayerCount;
     imageInfo.samples               = gl_vk::GetSamples(samples);
-    imageInfo.tiling                = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.tiling                = mTilingMode;
     imageInfo.usage                 = usage;
     imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.queueFamilyIndexCount = 0;

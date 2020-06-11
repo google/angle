@@ -14,8 +14,24 @@
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
+#include <android/hardware_buffer.h>
+
 namespace rx
 {
+
+namespace
+{
+VkImageTiling AhbDescUsageToVkImageTiling(AHardwareBuffer_Desc *ahbDescription)
+{
+    if ((ahbDescription->usage & AHARDWAREBUFFER_USAGE_CPU_READ_MASK) != 0 ||
+        (ahbDescription->usage & AHARDWAREBUFFER_USAGE_CPU_WRITE_MASK) != 0)
+    {
+        return VK_IMAGE_TILING_LINEAR;
+    }
+
+    return VK_IMAGE_TILING_OPTIMAL;
+}
+}  // namespace
 
 HardwareBufferImageSiblingVkAndroid::HardwareBufferImageSiblingVkAndroid(EGLClientBuffer buffer)
     : mBuffer(buffer),
@@ -98,6 +114,10 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     ANGLE_VK_TRY(displayVk, vkGetAndroidHardwareBufferPropertiesANDROID(device, hardwareBuffer,
                                                                         &bufferProperties));
 
+    AHardwareBuffer_Desc ahbDescription;
+    AHardwareBuffer_describe(hardwareBuffer, &ahbDescription);
+    VkImageTiling imageTilingMode = AhbDescUsageToVkImageTiling(&ahbDescription);
+
     const vk::Format &vkFormat       = renderer->getFormat(internalFormat);
     const angle::Format &imageFormat = vkFormat.actualImageFormat();
     bool isDepthOrStencilFormat      = imageFormat.depthBits > 0 || imageFormat.stencilBits > 0;
@@ -126,6 +146,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     gl_vk::GetExtent(mSize, &vkExtents);
 
     mImage = new vk::ImageHelper();
+    mImage->setTilingMode(imageTilingMode);
     ANGLE_TRY(mImage->initExternal(
         displayVk, gl::TextureType::_2D, vkExtents, vkFormat, 1, usage, vk::kVkImageCreateFlagsNone,
         vk::ImageLayout::ExternalPreInitialized, &externalMemoryImageCreateInfo, 0, 0, 1, 1));
