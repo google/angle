@@ -483,35 +483,15 @@ class Texture2DBaseMaxTestES3 : public ANGLETest
     void initTest()
     {
         // Set up program to sample from specific lod level.
-        constexpr char kVS[] = R"(#version 300 es
-out vec2 texCoord;
-in vec4 position;
-void main()
-{
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-    texCoord = position.xy * 0.5 + 0.5;
-})";
-
-        constexpr char kFS[] = R"(#version 300 es
-precision mediump float;
-out vec4 fragColor;
-in vec2 texCoord;
-uniform float lod;
-uniform sampler2D s;
-void main()
-{
-    fragColor = textureLod(s, texCoord, lod);
-})";
-
-        mProgram.makeRaster(kVS, kFS);
+        mProgram.makeRaster(essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
         ASSERT(mProgram.valid());
 
         glUseProgram(mProgram);
 
-        mTextureLocation = glGetUniformLocation(mProgram, "s");
+        mTextureLocation = glGetUniformLocation(mProgram, essl3_shaders::Texture2DUniform());
         ASSERT_NE(-1, mTextureLocation);
 
-        mLodLocation = glGetUniformLocation(mProgram, "lod");
+        mLodLocation = glGetUniformLocation(mProgram, essl3_shaders::LodUniform());
         ASSERT_NE(-1, mLodLocation);
 
         // Set up texture with a handful of lods.
@@ -2646,7 +2626,7 @@ TEST_P(Texture2DBaseMaxTestES3, PingPongBaseLevel)
             for (uint32_t lod = 0; lod < kMipCount - base; ++lod)
             {
                 setLodUniform(lod);
-                drawQuad(mProgram, "position", 0.5f);
+                drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
                 EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[base + lod]);
             }
         }
@@ -2658,7 +2638,7 @@ TEST_P(Texture2DBaseMaxTestES3, PingPongBaseLevel)
             for (uint32_t lod = 0; lod < kMipCount - base; ++lod)
             {
                 setLodUniform(lod);
-                drawQuad(mProgram, "position", 0.5f);
+                drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
                 EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[base + lod]);
             }
         }
@@ -2676,7 +2656,7 @@ TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
     for (uint32_t lod = 0; lod < kMipCount; ++lod)
     {
         setLodUniform(lod);
-        drawQuad(mProgram, "position", 0.5f);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
         EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
     }
 
@@ -2719,7 +2699,7 @@ TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
     for (uint32_t lod = 0; lod < kMipCount; ++lod)
     {
         setLodUniform(lod);
-        drawQuad(mProgram, "position", 0.5f);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
         EXPECT_PIXEL_COLOR_EQ(0, 0, kSubImageMipColors[lod]);
         EXPECT_PIXEL_COLOR_EQ(w, 0, kNewMipColors[lod]);
         EXPECT_PIXEL_COLOR_EQ(0, h, kNewMipColors[lod]);
@@ -2737,7 +2717,7 @@ TEST_P(Texture2DBaseMaxTestES3, IncompatiblyRedefineLevelThenRevert)
     for (uint32_t lod = 0; lod < kMipCount; ++lod)
     {
         setLodUniform(lod);
-        drawQuad(mProgram, "position", 0.5f);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
         EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
     }
 
@@ -2761,7 +2741,7 @@ TEST_P(Texture2DBaseMaxTestES3, IncompatiblyRedefineLevelThenRevert)
     for (uint32_t lod = 0; lod < kMipCount; ++lod)
     {
         setLodUniform(lod);
-        drawQuad(mProgram, "position", 0.5f);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
         EXPECT_PIXEL_COLOR_EQ(0, 0, lod == 1 ? GLColor::cyan : kMipColors[lod]);
     }
 }
@@ -2777,7 +2757,7 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
     for (uint32_t lod = 0; lod < kMipCount; ++lod)
     {
         setLodUniform(lod);
-        drawQuad(mProgram, "position", 0.5f);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
         EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
     }
 
@@ -2802,7 +2782,7 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
     for (uint32_t lod = 0; lod < kMipCount; ++lod)
     {
         setLodUniform(lod);
-        drawQuad(mProgram, "position", 0.5f);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
 
         GLColor32F mipColor32F = kNewMipColors[lod];
         GLColor mipColor(static_cast<GLubyte>(std::roundf(mipColor32F.R * 255)),
