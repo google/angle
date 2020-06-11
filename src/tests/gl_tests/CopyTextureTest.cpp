@@ -2300,6 +2300,50 @@ TEST_P(CopyTextureTestES3, CopyBetweenMips)
     EXPECT_PIXEL_COLOR_EQ(w, h, kMip0InitColor[4 * 0 + 2]);
 }
 
+// Test that swizzle on source texture does not affect the copy.
+TEST_P(CopyTextureTestES3, SwizzleOnSource)
+{
+    const GLColor kSourceColor = GLColor(31, 73, 146, 228);
+
+    // Create image with swizzle.  If swizzle is mistakenly applied, resulting color would be
+    // kSourceColor.gbar
+    GLTexture sourceTexture;
+    glBindTexture(GL_TEXTURE_2D, sourceTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &kSourceColor);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_ALPHA);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED);
+
+    GLTexture destTexture;
+    glBindTexture(GL_TEXTURE_2D, destTexture);
+
+    // Note: flipY is used to avoid direct transfer between textures and force a draw-based path.
+    glCopyTextureCHROMIUM(sourceTexture, 0, GL_TEXTURE_2D, destTexture, 0, GL_RGBA8,
+                          GL_UNSIGNED_BYTE, true, false, false);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the copy.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(program);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, destTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLint textureLocation = glGetUniformLocation(program, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLocation);
+    glUniform1i(textureLocation, 0);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kSourceColor);
+}
+
 #ifdef Bool
 // X11 craziness.
 #    undef Bool

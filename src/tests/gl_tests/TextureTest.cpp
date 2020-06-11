@@ -2431,7 +2431,7 @@ TEST_P(Texture2DTestES3, TextureImplPropogatesDirtyBits)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
     // D3D Debug device reports an error. http://anglebug.com/3501
     ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
-    // TODO(cnorthrop): Needs triage on Vulkan backend. http://anglebug.com/3950
+    // Support copy from levels outside the image range. http://anglebug.com/4733
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     // The workaround in the GL backend required to trigger this bug generates driver warning

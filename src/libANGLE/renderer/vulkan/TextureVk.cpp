@@ -584,7 +584,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
         return copySubImageImplWithDraw(
             contextVk, offsetImageIndex, destOffset, destVkFormat, sourceLevel, sourceArea, false,
             unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha, &source->getImage(),
-            &source->getFetchImageViewAndRecordUse(contextVk));
+            &source->getCopyImageViewAndRecordUse(contextVk));
     }
 
     if (sourceLevel != 0)
@@ -1751,6 +1751,20 @@ const vk::ImageView &TextureVk::getFetchImageViewAndRecordUse(ContextVk *context
                                             : mImageViews.getReadImageView());
 }
 
+const vk::ImageView &TextureVk::getCopyImageViewAndRecordUse(ContextVk *contextVk) const
+{
+    ASSERT(mImage->valid());
+
+    mImageViews.retain(&contextVk->getResourceUseList());
+
+    if (mState.getSRGBOverride() == gl::SrgbOverride::Enabled)
+    {
+        return mImageViews.getNonLinearCopyImageView();
+    }
+
+    return mImageViews.getCopyImageView();
+}
+
 angle::Result TextureVk::getLevelLayerImageView(ContextVk *contextVk,
                                                 size_t level,
                                                 size_t layer,
@@ -1819,21 +1833,20 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
 {
     ASSERT(mImage != nullptr && mImage->valid());
 
-    // TODO(cnorthrop): May be missing non-zero base level http://anglebug.com/3948
     uint32_t baseLevel = getNativeImageLevel(0);
     uint32_t baseLayer = getNativeImageLayer(0);
 
-    gl::SwizzleState mappedSwizzle;
-    MapSwizzleState(contextVk, format, sized, mState.getSwizzleState(), &mappedSwizzle);
+    gl::SwizzleState formatSwizzle = GetFormatSwizzle(contextVk, format, sized);
+    gl::SwizzleState readSwizzle   = ApplySwizzle(formatSwizzle, mState.getSwizzleState());
 
-    ANGLE_TRY(mImageViews.initReadViews(contextVk, mState.getType(), *mImage, format, mappedSwizzle,
-                                        baseLevel, levelCount, baseLayer, layerCount));
+    ANGLE_TRY(mImageViews.initReadViews(contextVk, mState.getType(), *mImage, format, formatSwizzle,
+                                        readSwizzle, baseLevel, levelCount, baseLayer, layerCount));
 
     if ((mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0)
     {
         ANGLE_TRY(mImageViews.initSRGBReadViews(contextVk, mState.getType(), *mImage, format,
-                                                mappedSwizzle, baseLevel, levelCount, baseLayer,
-                                                layerCount));
+                                                formatSwizzle, readSwizzle, baseLevel, levelCount,
+                                                baseLayer, layerCount));
     }
 
     return angle::Result::Continue;

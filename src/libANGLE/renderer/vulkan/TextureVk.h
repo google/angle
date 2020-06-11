@@ -175,6 +175,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // A special view for cube maps as a 2D array, used with shaders that do texelFetch() and for
     // seamful cube map emulation.
     const vk::ImageView &getFetchImageViewAndRecordUse(ContextVk *contextVk) const;
+    // A special view used for texture copies that shouldn't perform swizzle.
+    const vk::ImageView &getCopyImageViewAndRecordUse(ContextVk *contextVk) const;
     angle::Result getStorageImageView(ContextVk *contextVk,
                                       bool allLayers,
                                       size_t level,

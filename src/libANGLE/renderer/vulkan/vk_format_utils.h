@@ -163,11 +163,14 @@ bool HasNonRenderableTextureFormatSupport(RendererVk *renderer, VkFormat vkForma
 // calculation is listed in the Vulkan spec at the end of the section 'Vertex Input Description'.
 size_t GetVertexInputAlignment(const vk::Format &format);
 
-void MapSwizzleState(const ContextVk *contextVk,
-                     const vk::Format &format,
-                     const bool sized,
-                     const gl::SwizzleState &swizzleState,
-                     gl::SwizzleState *swizzleStateOut);
+// Get the swizzle state based on format's requirements and emulations.
+gl::SwizzleState GetFormatSwizzle(const ContextVk *contextVk,
+                                  const vk::Format &format,
+                                  const bool sized);
+
+// Apply application's swizzle to the swizzle implied by format as received from GetFormatSwizzle.
+gl::SwizzleState ApplySwizzle(const gl::SwizzleState &formatSwizzle,
+                              const gl::SwizzleState &toApply);
 
 namespace vk
 {

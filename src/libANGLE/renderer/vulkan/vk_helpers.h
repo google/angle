@@ -1519,6 +1519,8 @@ class ImageViewHelper : angle::NonCopyable
     const ImageView &getNonLinearReadImageView() const { return mNonLinearReadImageView; }
     const ImageView &getLinearFetchImageView() const { return mLinearFetchImageView; }
     const ImageView &getNonLinearFetchImageView() const { return mNonLinearFetchImageView; }
+    const ImageView &getLinearCopyImageView() const { return mLinearCopyImageView; }
+    const ImageView &getNonLinearCopyImageView() const { return mNonLinearCopyImageView; }
     const ImageView &getStencilReadImageView() const { return mStencilReadImageView; }
 
     const ImageView &getReadImageView() const
@@ -1529,6 +1531,11 @@ class ImageViewHelper : angle::NonCopyable
     const ImageView &getFetchImageView() const
     {
         return mLinearColorspace ? mLinearFetchImageView : mNonLinearFetchImageView;
+    }
+
+    const ImageView &getCopyImageView() const
+    {
+        return mLinearColorspace ? mLinearCopyImageView : mNonLinearCopyImageView;
     }
 
     // Used when initialized RenderTargets.
@@ -1544,7 +1551,8 @@ class ImageViewHelper : angle::NonCopyable
                                 gl::TextureType viewType,
                                 const ImageHelper &image,
                                 const Format &format,
-                                const gl::SwizzleState &swizzleState,
+                                const gl::SwizzleState &formatSwizzle,
+                                const gl::SwizzleState &readSwizzle,
                                 uint32_t baseLevel,
                                 uint32_t levelCount,
                                 uint32_t baseLayer,
@@ -1555,7 +1563,8 @@ class ImageViewHelper : angle::NonCopyable
                                     gl::TextureType viewType,
                                     const ImageHelper &image,
                                     const Format &format,
-                                    const gl::SwizzleState &swizzleState,
+                                    const gl::SwizzleState &formatSwizzle,
+                                    const gl::SwizzleState &readSwizzle,
                                     uint32_t baseLevel,
                                     uint32_t levelCount,
                                     uint32_t baseLayer,
@@ -1585,6 +1594,10 @@ class ImageViewHelper : angle::NonCopyable
     {
         return mLinearColorspace ? mLinearFetchImageView : mNonLinearFetchImageView;
     }
+    ImageView &getCopyImageView()
+    {
+        return mLinearColorspace ? mLinearCopyImageView : mNonLinearCopyImageView;
+    }
 
     // Lifetime.
     SharedResourceUse mUse;
@@ -1594,6 +1607,8 @@ class ImageViewHelper : angle::NonCopyable
     ImageView mNonLinearReadImageView;
     ImageView mLinearFetchImageView;
     ImageView mNonLinearFetchImageView;
+    ImageView mLinearCopyImageView;
+    ImageView mNonLinearCopyImageView;
     ImageView mStencilReadImageView;
 
     bool mLinearColorspace;

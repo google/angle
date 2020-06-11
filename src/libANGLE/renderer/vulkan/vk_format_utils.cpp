@@ -334,22 +334,22 @@ GLenum GetSwizzleStateComponent(const gl::SwizzleState &swizzleState, GLenum com
     }
 }
 
-// Places the swizzle obtained by applying second after first into out.
-void ComposeSwizzleState(const gl::SwizzleState &first,
-                         const gl::SwizzleState &second,
-                         gl::SwizzleState *out)
+gl::SwizzleState ApplySwizzle(const gl::SwizzleState &formatSwizzle,
+                              const gl::SwizzleState &toApply)
 {
-    out->swizzleRed   = GetSwizzleStateComponent(first, second.swizzleRed);
-    out->swizzleGreen = GetSwizzleStateComponent(first, second.swizzleGreen);
-    out->swizzleBlue  = GetSwizzleStateComponent(first, second.swizzleBlue);
-    out->swizzleAlpha = GetSwizzleStateComponent(first, second.swizzleAlpha);
+    gl::SwizzleState result;
+
+    result.swizzleRed   = GetSwizzleStateComponent(formatSwizzle, toApply.swizzleRed);
+    result.swizzleGreen = GetSwizzleStateComponent(formatSwizzle, toApply.swizzleGreen);
+    result.swizzleBlue  = GetSwizzleStateComponent(formatSwizzle, toApply.swizzleBlue);
+    result.swizzleAlpha = GetSwizzleStateComponent(formatSwizzle, toApply.swizzleAlpha);
+
+    return result;
 }
 
-void MapSwizzleState(const ContextVk *contextVk,
-                     const vk::Format &format,
-                     const bool sized,
-                     const gl::SwizzleState &swizzleState,
-                     gl::SwizzleState *swizzleStateOut)
+gl::SwizzleState GetFormatSwizzle(const ContextVk *contextVk,
+                                  const vk::Format &format,
+                                  const bool sized)
 {
     const angle::Format &angleFormat = format.intendedFormat();
 
@@ -401,6 +401,7 @@ void MapSwizzleState(const ContextVk *contextVk,
             }
         }
     }
-    ComposeSwizzleState(internalSwizzle, swizzleState, swizzleStateOut);
+
+    return internalSwizzle;
 }
 }  // namespace rx
