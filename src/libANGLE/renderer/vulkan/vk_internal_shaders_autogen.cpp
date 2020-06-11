@@ -72,15 +72,6 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000005.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000006.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000007.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000008.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000009.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000A.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000B.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000C.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000D.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000E.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000F.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000010.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000001.inc"
@@ -212,15 +203,6 @@ constexpr ShaderBlob kConvertVertex_comp_shaders[] = {
     {kConvertVertex_comp_00000005, sizeof(kConvertVertex_comp_00000005)},
     {kConvertVertex_comp_00000006, sizeof(kConvertVertex_comp_00000006)},
     {kConvertVertex_comp_00000007, sizeof(kConvertVertex_comp_00000007)},
-    {kConvertVertex_comp_00000008, sizeof(kConvertVertex_comp_00000008)},
-    {kConvertVertex_comp_00000009, sizeof(kConvertVertex_comp_00000009)},
-    {kConvertVertex_comp_0000000A, sizeof(kConvertVertex_comp_0000000A)},
-    {kConvertVertex_comp_0000000B, sizeof(kConvertVertex_comp_0000000B)},
-    {kConvertVertex_comp_0000000C, sizeof(kConvertVertex_comp_0000000C)},
-    {kConvertVertex_comp_0000000D, sizeof(kConvertVertex_comp_0000000D)},
-    {kConvertVertex_comp_0000000E, sizeof(kConvertVertex_comp_0000000E)},
-    {kConvertVertex_comp_0000000F, sizeof(kConvertVertex_comp_0000000F)},
-    {kConvertVertex_comp_00000010, sizeof(kConvertVertex_comp_00000010)},
 };
 constexpr ShaderBlob kFullScreenQuad_vert_shaders[] = {
     {kFullScreenQuad_vert_00000000, sizeof(kFullScreenQuad_vert_00000000)},

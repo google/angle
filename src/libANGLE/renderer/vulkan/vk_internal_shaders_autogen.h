@@ -98,25 +98,16 @@ namespace ConvertVertex_comp
 {
 enum Conversion
 {
-    kSintToSint          = 0x00000000,
-    kUintToUint          = 0x00000001,
-    kSintToFloat         = 0x00000002,
-    kUintToFloat         = 0x00000003,
-    kSnormToFloat        = 0x00000004,
-    kUnormToFloat        = 0x00000005,
-    kFixedToFloat        = 0x00000006,
-    kFloatToFloat        = 0x00000007,
-    kA2BGR10SintToSint   = 0x00000008,
-    kA2BGR10UintToUint   = 0x00000009,
-    kA2BGR10SintToFloat  = 0x0000000A,
-    kA2BGR10UintToFloat  = 0x0000000B,
-    kA2BGR10SnormToFloat = 0x0000000C,
-    kRGB10A2SintToFloat  = 0x0000000D,
-    kRGB10A2UintToFloat  = 0x0000000E,
-    kRGB10A2SnormToFloat = 0x0000000F,
-    kRGB10A2UnormToFloat = 0x00000010,
+    kSintToSint   = 0x00000000,
+    kUintToUint   = 0x00000001,
+    kSintToFloat  = 0x00000002,
+    kUintToFloat  = 0x00000003,
+    kSnormToFloat = 0x00000004,
+    kUnormToFloat = 0x00000005,
+    kFixedToFloat = 0x00000006,
+    kFloatToFloat = 0x00000007,
 };
-constexpr size_t kArrayLen = 0x00000011;
+constexpr size_t kArrayLen = 0x00000008;
 }  // namespace ConvertVertex_comp
 
 namespace FullScreenQuad_vert

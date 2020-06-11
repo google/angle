@@ -14,16 +14,6 @@
         "SnormToFloat",
         "UnormToFloat",
         "FixedToFloat",
-        "FloatToFloat",
-        "A2BGR10SintToSint",
-        "A2BGR10UintToUint",
-        "A2BGR10SintToFloat",
-        "A2BGR10UintToFloat",
-        "A2BGR10SnormToFloat",
-        "RGB10A2SintToFloat",
-        "RGB10A2UintToFloat",
-        "RGB10A2SnormToFloat",
-        "RGB10A2UnormToFloat"
+        "FloatToFloat"
     ]
 }
-

@@ -296,6 +296,9 @@ class UtilsVk : angle::NonCopyable
         uint32_t Bd             = 0;
         uint32_t Sd             = 0;
         uint32_t Ed             = 0;
+        uint32_t isSrcHDR       = 0;
+        uint32_t isSrcA2BGR10   = 0;
+        uint32_t _padding[2]    = {};
     };
 
     struct ImageClearShaderParams

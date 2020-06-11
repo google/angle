@@ -74,18 +74,12 @@ uint32_t GetBufferUtilsFlags(size_t dispatchSize, const vk::Format &format)
 
 uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 {
-    bool srcIsSint  = params.srcFormat->isSint();
-    bool srcIsUint  = params.srcFormat->isUint();
-    bool srcIsSnorm = params.srcFormat->isSnorm();
-    bool srcIsUnorm = params.srcFormat->isUnorm();
-    bool srcIsFixed = params.srcFormat->isFixed;
-    bool srcIsFloat = params.srcFormat->isFloat();
-    bool srcIsA2BGR10 =
-        params.srcFormat->vertexAttribType == gl::VertexAttribType::UnsignedInt2101010 ||
-        params.srcFormat->vertexAttribType == gl::VertexAttribType::Int2101010;
-    bool srcIsRGB10A2 =
-        params.srcFormat->vertexAttribType == gl::VertexAttribType::UnsignedInt1010102 ||
-        params.srcFormat->vertexAttribType == gl::VertexAttribType::Int1010102;
+    bool srcIsSint      = params.srcFormat->isSint();
+    bool srcIsUint      = params.srcFormat->isUint();
+    bool srcIsSnorm     = params.srcFormat->isSnorm();
+    bool srcIsUnorm     = params.srcFormat->isUnorm();
+    bool srcIsFixed     = params.srcFormat->isFixed;
+    bool srcIsFloat     = params.srcFormat->isFloat();
     bool srcIsHalfFloat = params.srcFormat->isVertexTypeHalfFloat();
 
     bool destIsSint      = params.destFormat->isSint();
@@ -113,57 +107,7 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 
     uint32_t flags = 0;
 
-    if (srcIsA2BGR10)
-    {
-        if (srcIsSint && destIsSint)
-        {
-            flags |= ConvertVertex_comp::kA2BGR10SintToSint;
-        }
-        else if (srcIsUint && destIsUint)
-        {
-            flags |= ConvertVertex_comp::kA2BGR10UintToUint;
-        }
-        else if (srcIsSint)
-        {
-            flags |= ConvertVertex_comp::kA2BGR10SintToFloat;
-        }
-        else if (srcIsUint)
-        {
-            flags |= ConvertVertex_comp::kA2BGR10UintToFloat;
-        }
-        else if (srcIsSnorm)
-        {
-            flags |= ConvertVertex_comp::kA2BGR10SnormToFloat;
-        }
-        else
-        {
-            UNREACHABLE();
-        }
-    }
-    else if (srcIsRGB10A2)
-    {
-        if (srcIsSint)
-        {
-            flags |= ConvertVertex_comp::kRGB10A2SintToFloat;
-        }
-        else if (srcIsUint)
-        {
-            flags |= ConvertVertex_comp::kRGB10A2UintToFloat;
-        }
-        else if (srcIsSnorm)
-        {
-            flags |= ConvertVertex_comp::kRGB10A2SnormToFloat;
-        }
-        else if (srcIsUnorm)
-        {
-            flags |= ConvertVertex_comp::kRGB10A2UnormToFloat;
-        }
-        else
-        {
-            UNREACHABLE();
-        }
-    }
-    else if (srcIsHalfFloat && destIsHalfFloat)
+    if (srcIsHalfFloat && destIsHalfFloat)
     {
         // Note that HalfFloat conversion uses the same shader as Uint.
         flags |= ConvertVertex_comp::kUintToUint;
@@ -1115,6 +1059,16 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
     shaderParams.outputCount = shaderParams.componentCount / shaderParams.Ed;
     shaderParams.srcOffset   = static_cast<uint32_t>(params.srcOffset);
     shaderParams.destOffset  = static_cast<uint32_t>(params.destOffset);
+
+    bool isSrcA2BGR10 =
+        params.srcFormat->vertexAttribType == gl::VertexAttribType::UnsignedInt2101010 ||
+        params.srcFormat->vertexAttribType == gl::VertexAttribType::Int2101010;
+    bool isSrcRGB10A2 =
+        params.srcFormat->vertexAttribType == gl::VertexAttribType::UnsignedInt1010102 ||
+        params.srcFormat->vertexAttribType == gl::VertexAttribType::Int1010102;
+
+    shaderParams.isSrcHDR     = isSrcA2BGR10 || isSrcRGB10A2;
+    shaderParams.isSrcA2BGR10 = isSrcA2BGR10;
 
     uint32_t flags = GetConvertVertexFlags(params);
 
