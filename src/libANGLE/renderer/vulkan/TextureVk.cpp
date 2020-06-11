@@ -671,8 +671,12 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
         Set3DBaseArrayLayerAndLayerCount(&srcSubresource);
     }
 
+    // Perform self-copies through a staging buffer.
+    // TODO: optimize to copy directly if possible.  http://anglebug.com/4719
+    bool isSelfCopy = mImage == srcImage;
+
     // If destination is valid, copy the source directly into it.
-    if (mImage->valid() && !shouldUpdateBeStaged(level))
+    if (mImage->valid() && !shouldUpdateBeStaged(level) && !isSelfCopy)
     {
         // Make sure any updates to the image are already flushed.
         ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
@@ -761,8 +765,12 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
     uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : 0;
     uint32_t layerCount = index.getLayerCount();
 
+    // Perform self-copies through a staging buffer.
+    // TODO: optimize to copy directly if possible.  http://anglebug.com/4719
+    bool isSelfCopy = mImage == srcImage;
+
     // If destination is valid, copy the source directly into it.
-    if (mImage->valid() && !shouldUpdateBeStaged(level))
+    if (mImage->valid() && !shouldUpdateBeStaged(level) && !isSelfCopy)
     {
         // Make sure any updates to the image are already flushed.
         ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));

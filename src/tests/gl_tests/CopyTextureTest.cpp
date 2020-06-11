@@ -2204,6 +2204,102 @@ TEST_P(CopyTextureTestES3, CopySubTextureOffsetNonRenderableFloat)
     testCopy(GL_RGB9_E5, GL_RGB, GL_FLOAT);
 }
 
+// Test that copying from one mip to another works
+TEST_P(CopyTextureTestES3, CopyBetweenMips)
+{
+    if (!checkExtensions())
+    {
+        return;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    GLint textureLoc = glGetUniformLocation(program, essl3_shaders::Texture2DUniform());
+    GLint lodLoc     = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, textureLoc);
+    ASSERT_NE(-1, lodLoc);
+    glUniform1i(textureLoc, 0);
+    glUniform1f(lodLoc, 0);
+
+    GLTexture texture;
+
+    // Create a texture with 3 mips.  Mip0 will contain an image as follows:
+    //
+    //     G G B G
+    //     G R R G
+    //     G R R G
+    //     G G G G
+    //
+    // The 2x2 red square and 1x1 blue square will be copied to the other mips.
+    const GLColor kMip0InitColor[4 * 4] = {
+        GLColor::green, GLColor::green, GLColor::blue,  GLColor::green,
+        GLColor::green, GLColor::red,   GLColor::red,   GLColor::green,
+        GLColor::green, GLColor::red,   GLColor::red,   GLColor::green,
+        GLColor::green, GLColor::green, GLColor::green, GLColor::green,
+    };
+    const GLColor kMipOtherInitColor[4] = {
+        GLColor::black,
+        GLColor::black,
+        GLColor::black,
+        GLColor::black,
+    };
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, kMip0InitColor);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, kMipOtherInitColor);
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kMipOtherInitColor);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Commit texture
+    glUniform1f(lodLoc, 0);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMip0InitColor[0]);
+
+    glUniform1f(lodLoc, 1);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMipOtherInitColor[0]);
+
+    glUniform1f(lodLoc, 2);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMipOtherInitColor[0]);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Copy from mip 0 to mip 1.  The level is not redefined, so a direct copy can potentially be
+    // done.
+    glCopySubTextureCHROMIUM(texture, 0, GL_TEXTURE_2D, texture, 1, 0, 0, 1, 1, 2, 2, false, false,
+                             false);
+    EXPECT_GL_NO_ERROR();
+
+    // Copy from mip 0 to mip 2.  Again, the level is not redefined.
+    glCopySubTextureCHROMIUM(texture, 0, GL_TEXTURE_2D, texture, 2, 0, 0, 2, 0, 1, 1, false, false,
+                             false);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify mips 1 and 2.
+    int w = getWindowWidth() - 1;
+    int h = getWindowHeight() - 1;
+
+    glUniform1f(lodLoc, 1);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMip0InitColor[4 * 1 + 1]);
+    EXPECT_PIXEL_COLOR_EQ(w, 0, kMip0InitColor[4 * 1 + 2]);
+    EXPECT_PIXEL_COLOR_EQ(0, h, kMip0InitColor[4 * 2 + 1]);
+    EXPECT_PIXEL_COLOR_EQ(w, h, kMip0InitColor[4 * 2 + 2]);
+
+    glUniform1f(lodLoc, 2);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMip0InitColor[4 * 0 + 2]);
+    EXPECT_PIXEL_COLOR_EQ(w, 0, kMip0InitColor[4 * 0 + 2]);
+    EXPECT_PIXEL_COLOR_EQ(0, h, kMip0InitColor[4 * 0 + 2]);
+    EXPECT_PIXEL_COLOR_EQ(w, h, kMip0InitColor[4 * 0 + 2]);
+}
+
 #ifdef Bool
 // X11 craziness.
 #    undef Bool

@@ -2721,9 +2721,6 @@ void main() {
 // Based on the WebGL test conformance/textures/misc/texture-copying-feedback-loops.html
 TEST_P(WebGLCompatibilityTest, TextureCopyingFeedbackLoops)
 {
-    // Vulkan does not support copying from a texture to itself. http://anglebug.com/2914
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture.get());
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
