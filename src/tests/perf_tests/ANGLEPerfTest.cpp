@@ -348,11 +348,9 @@ std::string RenderTestParams::backend() const
     {
         case angle::GLESDriverType::AngleEGL:
             break;
+        case angle::GLESDriverType::SystemWGL:
         case angle::GLESDriverType::SystemEGL:
             strstr << "_native";
-            break;
-        case angle::GLESDriverType::SystemWGL:
-            strstr << "_wgl";
             break;
         default:
             assert(0);

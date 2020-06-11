@@ -104,10 +104,18 @@ class TracePerfTest : public ANGLERenderTest, public ::testing::WithParamInterfa
 TracePerfTest::TracePerfTest()
     : ANGLERenderTest("TracePerf", GetParam()), mStartFrame(0), mEndFrame(0)
 {
-    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
-    if (IsWindows() && IsIntel() &&
-        GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
-        GetParam().testID == RestrictedTraceID::manhattan_10)
+    const TracePerfParams &param = GetParam();
+
+    // TODO: http://anglebug.com/4533 This fails after the upgrade to the 26.20.100.7870 driver.
+    if (IsWindows() && IsIntel() && param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
+        param.testID == RestrictedTraceID::manhattan_10)
+    {
+        mSkipTest = true;
+    }
+
+    // TODO: http://anglebug.com/4731 Fails on older Intel drivers. Passes in newer.
+    if (IsWindows() && IsIntel() && param.driver != GLESDriverType::AngleEGL &&
+        param.testID == RestrictedTraceID::angry_birds_2_1500)
     {
         mSkipTest = true;
     }
@@ -361,7 +369,7 @@ using P = TracePerfParams;
 
 std::vector<P> gTestsWithID =
     CombineWithValues({P()}, AllEnums<RestrictedTraceID>(), CombineTestID);
-std::vector<P> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {Vulkan<P>, EGL<P>});
+std::vector<P> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {Vulkan<P>, Native<P>});
 ANGLE_INSTANTIATE_TEST_ARRAY(TracePerfTest, gTestsWithRenderer);
 
 }  // anonymous namespace

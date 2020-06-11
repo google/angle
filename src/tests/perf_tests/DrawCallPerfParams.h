@@ -85,6 +85,16 @@ ParamsT EGL(const ParamsT &in)
     out.driver  = angle::GLESDriverType::SystemEGL;
     return out;
 }
+
+template <typename ParamsT>
+ParamsT Native(const ParamsT &in)
+{
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    return WGL(in);
+#else
+    return EGL(in);
+#endif
+}
 }  // namespace params
 
 #endif  // TESTS_PERF_TESTS_DRAW_CALL_PERF_PARAMS_H_
