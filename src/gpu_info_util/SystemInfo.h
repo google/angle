@@ -126,6 +126,15 @@ void GetDualGPUInfo(SystemInfo *info);
 void PrintSystemInfo(const SystemInfo &info);
 
 VersionInfo ParseNvidiaDriverVersion(uint32_t version);
+
+#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+// Helper to get the active GPU ID from a given Core Graphics display ID.
+uint64_t GetGpuIDFromDisplayID(uint32_t displayID);
+
+// Helper to get the active GPU ID from an OpenGL display mask.
+uint64_t GetGpuIDFromOpenGLDisplayMask(uint32_t displayMask);
+#endif
+
 }  // namespace angle
 
 #endif  // GPU_INFO_UTIL_SYSTEM_INFO_H_

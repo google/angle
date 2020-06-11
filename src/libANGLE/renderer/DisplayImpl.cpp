@@ -34,6 +34,11 @@ const egl::DisplayExtensions &DisplayImpl::getExtensions() const
     return mExtensions;
 }
 
+egl::Error DisplayImpl::handleGPUSwitch()
+{
+    return egl::NoError();
+}
+
 egl::Error DisplayImpl::validateClientBuffer(const egl::Config *configuration,
                                              EGLenum buftype,
                                              EGLClientBuffer clientBuffer,

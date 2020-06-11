@@ -608,6 +608,11 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     Program *getActiveLinkedProgram() const;
 
+    // EGL_ANGLE_power_preference implementation.
+    egl::Error releaseHighPowerGPU();
+    egl::Error reacquireHighPowerGPU();
+    void onGPUSwitch();
+
   private:
     void initialize();
 

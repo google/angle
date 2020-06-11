@@ -87,6 +87,8 @@ namespace egl
 namespace
 {
 
+constexpr angle::SubjectIndex kGPUSwitchedSubjectIndex = 0;
+
 typedef std::map<EGLNativeWindowType, Surface *> WindowSurfaceMap;
 // Get a map of all EGL window surfaces to validate that no window has more than one EGL surface
 // associated with it.
@@ -633,6 +635,7 @@ Display *Display::GetDisplayFromDevice(Device *device, const AttributeMap &attri
 Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice)
     : mState(displayId),
       mImplementation(nullptr),
+      mGPUSwitchedBinding(this, kGPUSwitchedSubjectIndex),
       mAttributeMap(),
       mConfigSet(),
       mContextSet(),
@@ -694,6 +697,16 @@ EGLLabelKHR Display::getLabel() const
     return mState.label;
 }
 
+void Display::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
+{
+    ASSERT(index == kGPUSwitchedSubjectIndex);
+    ASSERT(message == angle::SubjectMessage::SubjectChanged);
+    for (ContextSet::iterator ctx = mContextSet.begin(); ctx != mContextSet.end(); ctx++)
+    {
+        (*ctx)->onGPUSwitch();
+    }
+}
+
 void Display::setupDisplayPlatform(rx::DisplayImpl *impl)
 {
     ASSERT(!mInitialized);
@@ -723,6 +736,7 @@ void Display::setupDisplayPlatform(rx::DisplayImpl *impl)
     mState.featureOverridesDisabled = EGLStringArrayToStringVector(featuresForceDisabled);
     mState.featuresAllDisabled =
         static_cast<bool>(mAttributeMap.get(EGL_FEATURE_ALL_DISABLED_ANGLE, 0));
+    mImplementation->addObserver(&mGPUSwitchedBinding);
 }
 
 void Display::updateAttribsFromEnvironment(const AttributeMap &attribMap)
@@ -1870,6 +1884,11 @@ void Display::returnScratchBufferImpl(angle::ScratchBuffer scratchBuffer,
 {
     std::lock_guard<std::mutex> lock(mScratchBufferMutex);
     bufferVector->push_back(std::move(scratchBuffer));
+}
+
+egl::Error Display::handleGPUSwitch()
+{
+    return mImplementation->handleGPUSwitch();
 }
 
 }  // namespace egl

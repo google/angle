@@ -23,6 +23,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/LoggingAnnotator.h"
 #include "libANGLE/MemoryProgramCache.h"
+#include "libANGLE/Observer.h"
 #include "libANGLE/Version.h"
 #include "platform/Feature.h"
 #include "platform/FrontendFeatures.h"
@@ -86,13 +87,18 @@ class ShareGroup final : angle::NonCopyable
 // Constant coded here as a sanity limit.
 constexpr EGLAttrib kProgramCacheSizeAbsoluteMax = 0x4000000;
 
-class Display final : public LabeledObject, angle::NonCopyable
+class Display final : public LabeledObject,
+                      public angle::ObserverInterface,
+                      public angle::NonCopyable
 {
   public:
     ~Display() override;
 
     void setLabel(EGLLabelKHR label) override;
     EGLLabelKHR getLabel() const override;
+
+    // Observer implementation.
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
     Error initialize();
     Error terminate(const Thread *thread);
@@ -240,6 +246,8 @@ class Display final : public LabeledObject, angle::NonCopyable
     angle::ScratchBuffer requestZeroFilledBuffer();
     void returnZeroFilledBuffer(angle::ScratchBuffer zeroFilledBuffer);
 
+    egl::Error handleGPUSwitch();
+
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
@@ -261,6 +269,7 @@ class Display final : public LabeledObject, angle::NonCopyable
 
     DisplayState mState;
     rx::DisplayImpl *mImplementation;
+    angle::ObserverBinding mGPUSwitchedBinding;
 
     AttributeMap mAttributeMap;
 

@@ -453,6 +453,11 @@ struct FeaturesGL : FeatureSetBase
         "emulate_copyteximage2d_from_renderbuffers", FeatureCategory::OpenGLWorkarounds,
         "CopyTexImage2D spuriously returns errors on iOS when copying from renderbuffers.",
         &members, "https://anglebug.com/4674"};
+
+    Feature disableGPUSwitchingSupport = {
+        "disable_gpu_switching_support", FeatureCategory::OpenGLWorkarounds,
+        "Disable GPU switching support (use only the low-power GPU) on older MacBook Pros.",
+        &members, "https://crbug.com/1091824"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

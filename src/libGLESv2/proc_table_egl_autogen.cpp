@@ -80,6 +80,7 @@ const ProcEntry g_procTable[] = {
     {"eglGetSyncAttrib", P(EGL_GetSyncAttrib)},
     {"eglGetSyncAttribKHR", P(EGL_GetSyncAttribKHR)},
     {"eglGetSyncValuesCHROMIUM", P(EGL_GetSyncValuesCHROMIUM)},
+    {"eglHandleGPUSwitchANGLE", P(EGL_HandleGPUSwitchANGLE)},
     {"eglInitialize", P(EGL_Initialize)},
     {"eglLabelObjectKHR", P(EGL_LabelObjectKHR)},
     {"eglMakeCurrent", P(EGL_MakeCurrent)},
@@ -102,7 +103,9 @@ const ProcEntry g_procTable[] = {
     {"eglQueryStringiANGLE", P(EGL_QueryStringiANGLE)},
     {"eglQuerySurface", P(EGL_QuerySurface)},
     {"eglQuerySurfacePointerANGLE", P(EGL_QuerySurfacePointerANGLE)},
+    {"eglReacquireHighPowerGPUANGLE", P(EGL_ReacquireHighPowerGPUANGLE)},
     {"eglReleaseDeviceANGLE", P(EGL_ReleaseDeviceANGLE)},
+    {"eglReleaseHighPowerGPUANGLE", P(EGL_ReleaseHighPowerGPUANGLE)},
     {"eglReleaseTexImage", P(EGL_ReleaseTexImage)},
     {"eglReleaseThread", P(EGL_ReleaseThread)},
     {"eglSetBlobCacheFuncsANDROID", P(EGL_SetBlobCacheFuncsANDROID)},
@@ -1518,5 +1521,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1424;
+const size_t g_numProcs = 1427;
 }  // namespace egl

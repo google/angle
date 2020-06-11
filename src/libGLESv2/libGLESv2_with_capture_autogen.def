@@ -1664,6 +1664,11 @@ EXPORTS
     EGL_QueryDisplayAttribANGLE
     EGL_QueryStringiANGLE
 
+    ; EGL_ANGLE_power_preference
+    EGL_HandleGPUSwitchANGLE
+    EGL_ReacquireHighPowerGPUANGLE
+    EGL_ReleaseHighPowerGPUANGLE
+
     ; EGL_ANGLE_program_cache_control
     EGL_ProgramCacheGetAttribANGLE
     EGL_ProgramCachePopulateANGLE
