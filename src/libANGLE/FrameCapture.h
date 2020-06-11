@@ -496,4 +496,19 @@ void WriteParamValueReplay(std::ostream &os, const CallCapture &call, T value)
 }
 }  // namespace angle
 
+template <typename T>
+void CaptureTextureAndSamplerParameter_params(GLenum pname,
+                                              const T *param,
+                                              angle::ParamCapture *paramCapture)
+{
+    if (pname == GL_TEXTURE_BORDER_COLOR)
+    {
+        CaptureMemory(param, sizeof(T) * 4, paramCapture);
+    }
+    else
+    {
+        CaptureMemory(param, sizeof(T), paramCapture);
+    }
+}
+
 #endif  // LIBANGLE_FRAME_CAPTURE_H_

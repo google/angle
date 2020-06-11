@@ -515,7 +515,9 @@ void CaptureGetTexParameterfv_params(const State &glState,
                                      GLfloat *params,
                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // page 190 https://www.khronos.org/registry/OpenGL/specs/es/3.2/es_spec_3.2.pdf
+    // TEXTURE_BORDER_COLOR: 4 floats, ints, uints
+    paramCapture->readBufferSizeBytes = sizeof(GLfloat) * 4;
 }
 
 void CaptureGetTexParameteriv_params(const State &glState,
@@ -525,10 +527,9 @@ void CaptureGetTexParameteriv_params(const State &glState,
                                      GLint *params,
                                      ParamCapture *paramCapture)
 {
-    if (params)
-    {
-        paramCapture->readBufferSizeBytes = sizeof(GLint);
-    }
+    // page 190 https://www.khronos.org/registry/OpenGL/specs/es/3.2/es_spec_3.2.pdf
+    // TEXTURE_BORDER_COLOR: 4 floats, ints, uints
+    paramCapture->readBufferSizeBytes = sizeof(GLint) * 4;
 }
 
 void CaptureGetUniformLocation_name(const State &glState,
@@ -714,7 +715,7 @@ void CaptureTexParameterfv_params(const State &glState,
                                   const GLfloat *params,
                                   ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureTextureAndSamplerParameter_params<GLfloat>(pname, params, paramCapture);
 }
 
 void CaptureTexParameteriv_params(const State &glState,
@@ -724,7 +725,7 @@ void CaptureTexParameteriv_params(const State &glState,
                                   const GLint *params,
                                   ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureTextureAndSamplerParameter_params<GLint>(pname, params, paramCapture);
 }
 
 void CaptureTexSubImage2D_pixels(const State &glState,
