@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_GL_GLX_DISPLAYGLX_H_
 
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "common/Optional.h"
@@ -122,6 +123,7 @@ class DisplayGLX : public DisplayGL
     XVisualInfo *mVisuals;
     glx::Context mContext;
     glx::Context mSharedContext;
+    std::unordered_map<std::thread::id, glx::Context> mCurrentContexts;
     // A pbuffer the context is current on during ANGLE initialization
     glx::Pbuffer mDummyPbuffer;
 

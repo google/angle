@@ -257,6 +257,8 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     }
     ASSERT(mContext);
 
+    mCurrentContexts[std::this_thread::get_id()] = mContext;
+
     // FunctionsGL and DisplayGL need to make a few GL calls, for example to
     // query the version of the context so we need to make the context current.
     // glXMakeCurrent requires a GLXDrawable so we create a temporary Pbuffer
@@ -352,6 +354,8 @@ void DisplayGLX::terminate()
     }
     mWorkerPbufferPool.clear();
 
+    mCurrentContexts.clear();
+
     if (mContext)
     {
         mGLX.destroyContext(mContext);
@@ -378,15 +382,25 @@ egl::Error DisplayGLX::makeCurrent(egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {
-    glx::Drawable drawable =
+    glx::Drawable newDrawable =
         (drawSurface ? GetImplAs<SurfaceGLX>(drawSurface)->getDrawable() : mDummyPbuffer);
-    if (drawable != mCurrentDrawable)
+    glx::Context newContext = mContext;
+    // If the thread calling makeCurrent does not have the correct context current (either mContext
+    // or 0), we need to set it current.
+    if (!context)
     {
-        if (mGLX.makeCurrent(drawable, mContext) != True)
+        newDrawable = 0;
+        newContext  = 0;
+    }
+    if (newDrawable != mCurrentDrawable ||
+        newContext != mCurrentContexts[std::this_thread::get_id()])
+    {
+        if (mGLX.makeCurrent(newDrawable, newContext) != True)
         {
             return egl::EglContextLost() << "Failed to make the GLX context current";
         }
-        mCurrentDrawable = drawable;
+        mCurrentContexts[std::this_thread::get_id()] = newContext;
+        mCurrentDrawable                             = newDrawable;
     }
 
     return DisplayGL::makeCurrent(drawSurface, readSurface, context);
@@ -739,11 +753,6 @@ egl::ConfigSet DisplayGLX::generateConfigs()
 
 bool DisplayGLX::testDeviceLost()
 {
-    if (mHasARBCreateContextRobustness)
-    {
-        return mRenderer->getResetStatus() != gl::GraphicsResetStatus::NoError;
-    }
-
     return false;
 }
 
