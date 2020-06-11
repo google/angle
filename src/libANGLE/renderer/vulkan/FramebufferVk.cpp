@@ -1593,6 +1593,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
             packedClearValues.store(currentAttachmentCount, VK_IMAGE_ASPECT_COLOR_BIT,
                                     kUninitializedClearValue);
         }
+        renderPassAttachmentOps.setStencilOps(currentAttachmentCount,
+                                              VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                              VK_ATTACHMENT_STORE_OP_DONT_CARE);
 
         ANGLE_TRY(colorRenderTarget->onColorDraw(contextVk));
 
@@ -1646,22 +1649,18 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         }
 
         const vk::Format &format = depthStencilRenderTarget->getImageFormat();
-        if (format.hasEmulatedImageChannels())
+        // If the format we picked has stencil but user did not ask for it due to hardware
+        // limitations, use DONT_CARE for load/store. The same logic for depth follows.
+        if (format.intendedFormat().stencilBits == 0)
         {
-            // If the format we picked has stencil but user did not ask for it due to hardware
-            // limitations, use DONT_CARE for load/store. The same logic for depth follows.
-            if (format.intendedFormat().stencilBits == 0)
-            {
-                stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-                stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-            }
-            if (format.intendedFormat().depthBits == 0)
-            {
-                depthLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-                depthStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-            }
+            stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
         }
-
+        if (format.intendedFormat().depthBits == 0)
+        {
+            depthLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            depthStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        }
         renderPassAttachmentOps.setOps(currentAttachmentCount, depthLoadOp, depthStoreOp);
         renderPassAttachmentOps.setStencilOps(currentAttachmentCount, stencilLoadOp,
                                               stencilStoreOp);
