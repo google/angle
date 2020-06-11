@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f4f124ec_27e6a506",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2012,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-11T21:32:27Z",
+      "side": 1,
+      "message": "if it becomes a fall-through, wouldn\u0027t that defeat the purpose of having a dedicated subjectMessage which is handled differently?",
+      "parentUuid": "ea9f820a_049a022f",
+      "range": {
+        "startLine": 2007,
+        "startChar": 0,
+        "endLine": 2012,
+        "endChar": 9
+      },
+      "revId": "e2e8663a1f82611428211ae92666c8a1c7d5375a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "945f9d28_e8437cdf",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "fa027eb9_877ca66f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1235,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-11T21:32:27Z",
+      "side": 1,
+      "message": "Done, reusing existing state seems to have made this check unecessary",
+      "parentUuid": "945f9d28_e8437cdf",
+      "range": {
+        "startLine": 1235,
+        "startChar": 9,
+        "endLine": 1235,
+        "endChar": 33
+      },
+      "revId": "e2e8663a1f82611428211ae92666c8a1c7d5375a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ac86acfb_2669c35f",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6
@@ -68,6 +116,30 @@
       "revId": "e2e8663a1f82611428211ae92666c8a1c7d5375a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39972e1a_a93b9dd6",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-11T21:32:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ac86acfb_2669c35f",
+      "range": {
+        "startLine": 827,
+        "startChar": 4,
+        "endLine": 827,
+        "endChar": 17
+      },
+      "revId": "e2e8663a1f82611428211ae92666c8a1c7d5375a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
