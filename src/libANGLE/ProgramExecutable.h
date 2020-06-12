@@ -151,7 +151,12 @@ class ProgramExecutable
         return isCompute() ? mLinkedComputeShaderStages.count()
                            : mLinkedGraphicsShaderStages.count();
     }
-    bool isCompute() const;
+
+    // A PPO can have both graphics and compute programs attached, so
+    // we don't know if the PPO is a 'graphics' or 'compute' PPO until the
+    // actual draw/dispatch call.
+    bool isCompute() const { return mIsCompute; }
+    void setIsCompute(bool isCompute) { mIsCompute = isCompute; }
 
     const AttributesMask &getActiveAttribLocationsMask() const
     {
@@ -210,8 +215,6 @@ class ProgramExecutable
         ASSERT(!mProgramState && !mProgramPipelineState);
         mProgramPipelineState = state;
     }
-
-    void setIsCompute(bool isComputeIn);
 
     void updateCanDrawWith();
     bool hasVertexAndFragmentShader() const { return mCanDrawWith; }
@@ -384,6 +387,8 @@ class ProgramExecutable
     bool mPipelineHasComputeTextures;
     bool mPipelineHasGraphicsImages;
     bool mPipelineHasComputeImages;
+
+    bool mIsCompute;
 
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedOutputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;

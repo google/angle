@@ -41,7 +41,8 @@ ProgramExecutable::ProgramExecutable()
       mPipelineHasGraphicsTextures(false),
       mPipelineHasComputeTextures(false),
       mPipelineHasGraphicsImages(false),
-      mPipelineHasComputeImages(false)
+      mPipelineHasComputeImages(false),
+      mIsCompute(false)
 {
     reset();
 }
@@ -87,7 +88,8 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mPipelineHasGraphicsTextures(other.mPipelineHasGraphicsTextures),
       mPipelineHasComputeTextures(other.mPipelineHasComputeTextures),
       mPipelineHasGraphicsImages(other.mPipelineHasGraphicsImages),
-      mPipelineHasComputeImages(other.mPipelineHasComputeImages)
+      mPipelineHasComputeImages(other.mPipelineHasComputeImages),
+      mIsCompute(other.mIsCompute)
 {
     reset();
 }
@@ -144,6 +146,7 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
 
     mLinkedGraphicsShaderStages = ShaderBitSet(stream->readInt<uint8_t>());
     mLinkedComputeShaderStages  = ShaderBitSet(stream->readInt<uint8_t>());
+    mIsCompute                  = stream->readBool();
 
     mPipelineHasGraphicsUniformBuffers       = stream->readBool();
     mPipelineHasComputeUniformBuffers        = stream->readBool();
@@ -168,6 +171,7 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
 
     stream->writeInt(mLinkedGraphicsShaderStages.bits());
     stream->writeInt(mLinkedComputeShaderStages.bits());
+    stream->writeInt(static_cast<bool>(mIsCompute));
 
     stream->writeInt(static_cast<bool>(mPipelineHasGraphicsUniformBuffers));
     stream->writeInt(static_cast<bool>(mPipelineHasComputeUniformBuffers));
@@ -195,30 +199,6 @@ const ProgramState *ProgramExecutable::getProgramState(ShaderType shaderType) co
     }
 
     return nullptr;
-}
-
-bool ProgramExecutable::isCompute() const
-{
-    ASSERT(mProgramState || mProgramPipelineState);
-
-    if (mProgramState)
-    {
-        return mProgramState->isCompute();
-    }
-
-    return mProgramPipelineState->isCompute();
-}
-
-void ProgramExecutable::setIsCompute(bool isComputeIn)
-{
-    // A Program can only either be graphics or compute, but never both, so it can answer
-    // isCompute() based on which shaders it has. However, a PPO can have both graphics and compute
-    // programs attached, so we don't know if the PPO is a 'graphics' or 'compute' PPO until the
-    // actual draw/dispatch call, which is why only PPOs need to record the type of call here.
-    if (mProgramPipelineState)
-    {
-        mProgramPipelineState->setIsCompute(isComputeIn);
-    }
 }
 
 int ProgramExecutable::getInfoLogLength() const

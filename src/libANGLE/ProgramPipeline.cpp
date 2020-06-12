@@ -24,7 +24,6 @@ namespace gl
 
 ProgramPipelineState::ProgramPipelineState()
     : mLabel(),
-      mIsCompute(false),
       mActiveShaderProgram(nullptr),
       mValid(false),
       mHasBeenBound(false),
@@ -116,20 +115,6 @@ bool ProgramPipelineState::usesShaderProgram(ShaderProgramID programId) const
     for (const Program *program : mPrograms)
     {
         if (program && (program->id() == programId))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool ProgramPipelineState::hasImages() const
-{
-    for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
-    {
-        const Program *shaderProgram = getShaderProgram(shaderType);
-        if (shaderProgram && shaderProgram->getState().hasImages())
         {
             return true;
         }
