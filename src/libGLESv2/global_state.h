@@ -9,6 +9,7 @@
 #ifndef LIBGLESV2_GLOBALSTATE_H_
 #define LIBGLESV2_GLOBALSTATE_H_
 
+#include "common/tls.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/Thread.h"
@@ -45,6 +46,15 @@ ANGLE_INLINE Context *GetGlobalContext()
     {
         return gSingleThreadedContext;
     }
+    else
+    {
+        Context *context;
+        bool fastTlsResult = GetContextFromAndroidOpenGLTLSSlot(&context);
+        if (fastTlsResult)
+        {
+            return context;
+        }
+    }
 
     egl::Thread *thread = egl::GetCurrentThread();
     return thread->getContext();
@@ -55,6 +65,18 @@ ANGLE_INLINE Context *GetValidGlobalContext()
     if (gSingleThreadedContext && !gSingleThreadedContext->isContextLost())
     {
         return gSingleThreadedContext;
+    }
+    else if (!gSingleThreadedContext)
+    {
+        Context *context;
+        bool fastTlsResult = GetContextFromAndroidOpenGLTLSSlot(&context);
+        if (fastTlsResult)
+        {
+            if (context && !context->isContextLost())
+            {
+                return context;
+            }
+        }
     }
 
     egl::Thread *thread = egl::GetCurrentThread();
