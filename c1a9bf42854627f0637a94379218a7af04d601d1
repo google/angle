@@ -70,6 +70,30 @@
       "revId": "c1a9bf42854627f0637a94379218a7af04d601d1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d6cad46_fa4ad096",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T20:33:47Z",
+      "side": 1,
+      "message": "\u003e I\u0027m thinking this is the same root cause as http://anglebug.com/4736\n\nit is, with a debugger attached i see that being the case. It pulls out the bad framebuffer object because the serial matches",
+      "parentUuid": "6b7ade26_e7919b9e",
+      "range": {
+        "startLine": 1216,
+        "startChar": 24,
+        "endLine": 1216,
+        "endChar": 48
+      },
+      "revId": "c1a9bf42854627f0637a94379218a7af04d601d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
