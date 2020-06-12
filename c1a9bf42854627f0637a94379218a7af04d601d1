@@ -22,6 +22,30 @@
       "revId": "c1a9bf42854627f0637a94379218a7af04d601d1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab696571_a637957b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T18:09:49Z",
+      "side": 1,
+      "message": "the problem is not with the cache getting a new entry, it is that the old framebuffervk object is not removed from the cache. On subsequent draw with the older attachment, we retrieve the framebuffervk object and since it is in the cache we assume it is correct/valid and try to draw with it. This is the validation error we get in such a scenario \"VkImageView 0x9fe8bd0000000038[] is not a valid VkImageView handle\" -\n\nNote: Google Test filter \u003d ImageRespecificationTest.ImageTarget2DOESSwitch*Vulkan\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n[----------] Global test environment set-up.\n[----------] 1 test from ImageRespecificationTest\n[ RUN      ] ImageRespecificationTest.ImageTarget2DOESSwitch/ES3_Vulkan\n../../src/tests/test_utils/ANGLETest.cpp(60): error: DebugUtilsMessenger(307): [ VUID-VkRenderPassBeginInfo-framebuffer-parameter ] Validation Error: [ VUID-VkRenderPassBeginInfo-framebuffer-parameter ] Object 0: handle \u003d 0x9dde870000000082, type \u003d VK_OBJECT_TYPE_RENDER_PASS; Object 1: handle \u003d 0xb09e9c0000000039, type \u003d VK_OBJECT_TYPE_FRAMEBUFFER; Object 2: handle \u003d 0x9fe8bd0000000038, type \u003d VK_OBJECT_TYPE_IMAGE_VIEW; | MessageID \u003d 0xe02fa864 | vkCmdBeginRenderPass(): VkFramebuffer 0xb09e9c0000000039[] pAttachments[0] \u003d VkImageView 0x9fe8bd0000000038[] is not a valid VkImageView handle The Vulkan spec states: framebuffer must be a valid VkFramebuffer handle (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkRenderPassBeginInfo-framebuffer-parameter)\n                            Object: 0x9dde870000000082 (type \u003d Render Pass(18))\n                            Object: 0xb09e9c0000000039 (type \u003d Framebuffer(24))\n                            Object: 0x9fe8bd0000000038 (type \u003d Image View(14))",
+      "parentUuid": "68df071f_0698e44c",
+      "range": {
+        "startLine": 1216,
+        "startChar": 24,
+        "endLine": 1216,
+        "endChar": 48
+      },
+      "revId": "c1a9bf42854627f0637a94379218a7af04d601d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
