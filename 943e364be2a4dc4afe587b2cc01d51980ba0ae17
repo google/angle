@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e0dc137_ec12ff7c",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-12T20:05:07Z",
+      "side": 1,
+      "message": "you shouldn\u0027t define a double underscore symbol like __get_tls() as they are reserved. see https://en.cppreference.com/w/cpp/language/identifiers . We should rename this to ANGLE_ANDROID_GET_GL_TLS or something similar.",
+      "range": {
+        "startLine": 41,
+        "startChar": 16,
+        "endLine": 41,
+        "endChar": 25
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b740480_7835235e",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-12T20:05:07Z",
+      "side": 1,
+      "message": "nit: comments need to be updated to c++ style. Also if this code was copied/pasted please ensure the licenses are compatible.",
+      "range": {
+        "startLine": 56,
+        "startChar": 12,
+        "endLine": 56,
+        "endChar": 13
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c264498_f141f3b2",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-12T20:05:07Z",
+      "side": 1,
+      "message": "you can omit this.",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 38
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d024b58_dbc99263",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-12T20:05:07Z",
+      "side": 1,
+      "message": "we should call this kAndroidOpenGLTlsSlot. \"Context\" isn\u0027t the right term.",
+      "range": {
+        "startLine": 95,
+        "startChar": 19,
+        "endLine": 95,
+        "endChar": 34
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a85f7ce9_2420a577",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-12T20:05:07Z",
+      "side": 1,
+      "message": "similarly, kUseAndroidOpenGLTlsSlot",
+      "range": {
+        "startLine": 97,
+        "startChar": 12,
+        "endLine": 97,
+        "endChar": 30
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecd870fe_a60caf73",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-12T20:05:07Z",
+      "side": 1,
+      "message": "bool \u003d\u003d true is redundantly redundant.",
+      "range": {
+        "startLine": 101,
+        "startChar": 8,
+        "endLine": 101,
+        "endChar": 34
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1be3ca8f_0b733685",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-12T20:05:07Z",
+      "side": 1,
+      "message": "similarly, GetContextFromAndroidOpenGLTLSSlot\n\nyou can pre-declare gl::Context and avoid using void **.",
+      "range": {
+        "startLine": 110,
+        "startChar": 18,
+        "endLine": 110,
+        "endChar": 35
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db1ca520_77ca003c",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-12T20:05:07Z",
+      "side": 1,
+      "message": "I would make this explicit: SetUseAndroidOpenGLTlsSlot",
+      "range": {
+        "startLine": 122,
+        "startChar": 5,
+        "endLine": 122,
+        "endChar": 20
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
