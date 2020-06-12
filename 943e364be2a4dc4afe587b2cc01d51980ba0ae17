@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "39b6f088_2c62ff46",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T21:08:32Z",
+      "side": 1,
+      "message": "copy-paste from here -\u003e https://cs.android.com/android/platform/superproject/+/master:bionic/libc/platform/bionic/tls.h;l\u003d30\n\nif you want, i can add this reference as a comment to the code",
+      "parentUuid": "4e0dc137_ec12ff7c",
+      "range": {
+        "startLine": 41,
+        "startChar": 16,
+        "endLine": 41,
+        "endChar": 25
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6b740480_7835235e",
         "filename": "src/common/tls.h",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2020-06-12T20:05:07Z",
       "side": 1,
       "message": "nit: comments need to be updated to c++ style. Also if this code was copied/pasted please ensure the licenses are compatible.",
+      "range": {
+        "startLine": 56,
+        "startChar": 12,
+        "endLine": 56,
+        "endChar": 13
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19d45938_4d54194d",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T21:08:32Z",
+      "side": 1,
+      "message": "copy-paste from here -\u003e https://cs.android.com/android/platform/superproject/+/master:bionic/libc/platform/bionic/tls.h;l\u003d30\n\nif you want, i can add this reference as a comment to the code",
+      "parentUuid": "6b740480_7835235e",
       "range": {
         "startLine": 56,
         "startChar": 12,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8e420550_64bf7c84",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T21:08:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c264498_f141f3b2",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 38
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d024b58_dbc99263",
         "filename": "src/common/tls.h",
         "patchSetId": 8
@@ -91,6 +163,30 @@
       "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94275a44_7dad0ab0",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T21:08:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d024b58_dbc99263",
+      "range": {
+        "startLine": 95,
+        "startChar": 19,
+        "endLine": 95,
+        "endChar": 34
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "9ad6c66d_7a87799e",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T21:08:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a85f7ce9_2420a577",
+      "range": {
+        "startLine": 97,
+        "startChar": 12,
+        "endLine": 97,
+        "endChar": 30
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ecd870fe_a60caf73",
         "filename": "src/common/tls.h",
         "patchSetId": 8
@@ -137,6 +257,30 @@
       "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b2367ce_9a5c468a",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T21:08:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecd870fe_a60caf73",
+      "range": {
+        "startLine": 101,
+        "startChar": 8,
+        "endLine": 101,
+        "endChar": 34
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "a6fdd05e_af26618f",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T21:08:32Z",
+      "side": 1,
+      "message": "Done, kinda. Dont want to touch the ASM code, so will have one static_cast in here but not anywhere else",
+      "parentUuid": "1be3ca8f_0b733685",
+      "range": {
+        "startLine": 110,
+        "startChar": 18,
+        "endLine": 110,
+        "endChar": 35
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db1ca520_77ca003c",
         "filename": "src/common/tls.h",
         "patchSetId": 8
@@ -183,6 +351,30 @@
       "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ed667ff_f7b07ee9",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-12T21:08:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db1ca520_77ca003c",
+      "range": {
+        "startLine": 122,
+        "startChar": 5,
+        "endLine": 122,
+        "endChar": 20
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
