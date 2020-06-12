@@ -1655,8 +1655,9 @@ void Program::resolveLinkImpl(const Context *context)
     ASSERT(mLinked);
 
     // Mark implementation-specific unreferenced uniforms as ignored.
-    mProgram->markUnusedUniformLocations(
-        &mState.mUniformLocations, &mState.mExecutable->mSamplerBindings, &mState.mImageBindings);
+    mProgram->markUnusedUniformLocations(&mState.mUniformLocations,
+                                         &mState.mExecutable->mSamplerBindings,
+                                         &mState.mExecutable->mImageBindings);
 
     // Must be called after markUnusedUniformLocations.
     postResolveLink(context);
@@ -1720,11 +1721,6 @@ void ProgramState::updateActiveSamplers()
 {
     mExecutable->mActiveSamplerRefCounts.fill(0);
     mExecutable->updateActiveSamplers(*this);
-}
-
-void ProgramState::updateActiveImages()
-{
-    mExecutable->updateActiveImages(mImageBindings);
 }
 
 void ProgramState::updateProgramInterfaceInputs()
@@ -1835,7 +1831,6 @@ void Program::unlink()
     mState.mDrawBufferTypeMask.reset();
     mState.mActiveOutputVariables.reset();
     mState.mComputeShaderLocalSize.fill(1);
-    mState.mImageBindings.clear();
     mState.mNumViews                          = -1;
     mState.mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
     mState.mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
@@ -2910,7 +2905,8 @@ GLuint Program::getImageUniformBinding(const VariableLocation &uniformLocation) 
 {
     ASSERT(!mLinkingState);
     GLuint imageIndex = mState.getImageIndexFromUniformIndex(uniformLocation.index);
-    const std::vector<GLuint> &boundImageUnits = mState.mImageBindings[imageIndex].boundImageUnits;
+    const std::vector<GLuint> &boundImageUnits =
+        mState.mExecutable->mImageBindings[imageIndex].boundImageUnits;
     return boundImageUnits[uniformLocation.arrayIndex];
 }
 
@@ -3709,12 +3705,12 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
         auto &imageUniform = mState.mExecutable->getUniforms()[imageIndex];
         if (imageUniform.binding == -1)
         {
-            mState.mImageBindings.emplace_back(
+            mState.mExecutable->mImageBindings.emplace_back(
                 ImageBinding(imageUniform.getBasicTypeElementCount()));
         }
         else
         {
-            mState.mImageBindings.emplace_back(
+            mState.mExecutable->mImageBindings.emplace_back(
                 ImageBinding(imageUniform.binding, imageUniform.getBasicTypeElementCount(), false));
         }
 
@@ -5510,7 +5506,7 @@ angle::Result Program::deserialize(const Context *context,
         {
             imageBinding.boundImageUnits[i] = stream.readInt<unsigned int>();
         }
-        mState.mImageBindings.emplace_back(imageBinding);
+        mState.mExecutable->mImageBindings.emplace_back(imageBinding);
     }
 
     unsigned int atomicCounterRangeLow  = stream.readInt<unsigned int>();
@@ -5536,7 +5532,7 @@ angle::Result Program::deserialize(const Context *context,
 void Program::postResolveLink(const gl::Context *context)
 {
     mState.updateActiveSamplers();
-    mState.updateActiveImages();
+    mState.mExecutable->updateActiveImages();
 
     setUniformValuesFromBindingQualifiers();
 

@@ -39,7 +39,9 @@ ProgramExecutable::ProgramExecutable()
       mPipelineHasGraphicsDefaultUniforms(false),
       mPipelineHasComputeDefaultUniforms(false),
       mPipelineHasGraphicsTextures(false),
-      mPipelineHasComputeTextures(false)
+      mPipelineHasComputeTextures(false),
+      mPipelineHasGraphicsImages(false),
+      mPipelineHasComputeImages(false)
 {
     reset();
 }
@@ -83,7 +85,9 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mPipelineHasGraphicsDefaultUniforms(other.mPipelineHasGraphicsDefaultUniforms),
       mPipelineHasComputeDefaultUniforms(other.mPipelineHasComputeDefaultUniforms),
       mPipelineHasGraphicsTextures(other.mPipelineHasGraphicsTextures),
-      mPipelineHasComputeTextures(other.mPipelineHasComputeTextures)
+      mPipelineHasComputeTextures(other.mPipelineHasComputeTextures),
+      mPipelineHasGraphicsImages(other.mPipelineHasGraphicsImages),
+      mPipelineHasComputeImages(other.mPipelineHasComputeImages)
 {
     reset();
 }
@@ -114,6 +118,7 @@ void ProgramExecutable::reset()
     mOutputVariables.clear();
     mOutputLocations.clear();
     mSamplerBindings.clear();
+    mImageBindings.clear();
 
     mPipelineHasGraphicsUniformBuffers       = false;
     mPipelineHasComputeUniformBuffers        = false;
@@ -279,16 +284,10 @@ bool ProgramExecutable::hasAtomicCounterBuffers() const
                         : mPipelineHasGraphicsAtomicCounterBuffers);
 }
 
-// TODO: http://anglebug.com/4520: Needs  mImageBindings moved to ProgramExecutable
 bool ProgramExecutable::hasImages() const
 {
-    ASSERT(mProgramState || mProgramPipelineState);
-    if (mProgramState)
-    {
-        return mProgramState->hasImages();
-    }
-
-    return mProgramPipelineState->hasImages();
+    return !getImageBindings().empty() ||
+           (isCompute() ? mPipelineHasComputeImages : mPipelineHasGraphicsImages);
 }
 
 void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
@@ -328,14 +327,15 @@ void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
     }
 }
 
-void ProgramExecutable::updateActiveImages(std::vector<ImageBinding> &imageBindings)
+void ProgramExecutable::updateActiveImages()
 {
-    const bool compute = isCompute() ? true : false;
-    for (uint32_t imageIndex = 0; imageIndex < imageBindings.size(); ++imageIndex)
+    for (uint32_t imageIndex = 0; imageIndex < mImageBindings.size(); ++imageIndex)
     {
-        const gl::ImageBinding &imageBinding = imageBindings[imageIndex];
+        const gl::ImageBinding &imageBinding = mImageBindings[imageIndex];
         if (imageBinding.unreferenced)
+        {
             continue;
+        }
 
         uint32_t uniformIndex = mProgramState->getUniformIndexFromImageIndex(imageIndex);
         const gl::LinkedUniform &imageUniform = mProgramState->getUniforms()[uniformIndex];
@@ -343,10 +343,14 @@ void ProgramExecutable::updateActiveImages(std::vector<ImageBinding> &imageBindi
         for (GLint imageUnit : imageBinding.boundImageUnits)
         {
             mActiveImagesMask.set(imageUnit);
-            if (compute)
+            if (isCompute())
+            {
                 mActiveImageShaderBits[imageUnit].set(gl::ShaderType::Compute);
+            }
             else
+            {
                 mActiveImageShaderBits[imageUnit] = shaderBits;
+            }
         }
     }
 }

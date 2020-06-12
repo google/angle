@@ -222,6 +222,7 @@ class ProgramExecutable
     const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
     const std::vector<InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
+    const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
     const RangeUI &getDefaultUniformRange() const { return mDefaultUniformRange; }
     const RangeUI &getSamplerUniformRange() const { return mSamplerUniformRange; }
     const RangeUI &getImageUniformRange() const { return mImageUniformRange; }
@@ -298,7 +299,7 @@ class ProgramExecutable
     friend class ProgramState;
 
     void updateActiveSamplers(const ProgramState &programState);
-    void updateActiveImages(std::vector<ImageBinding> &imageBindings);
+    void updateActiveImages();
 
     // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
     void setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex,
@@ -364,6 +365,9 @@ class ProgramExecutable
     // An array of the samplers that are used by the program
     std::vector<SamplerBinding> mSamplerBindings;
 
+    // An array of the images that are used by the program
+    std::vector<ImageBinding> mImageBindings;
+
     // TODO: http://anglebug.com/3570: Remove mPipelineHas*UniformBuffers once PPO's have valid data
     // in mUniformBlocks
     bool mPipelineHasGraphicsUniformBuffers;
@@ -376,6 +380,8 @@ class ProgramExecutable
     bool mPipelineHasComputeDefaultUniforms;
     bool mPipelineHasGraphicsTextures;
     bool mPipelineHasComputeTextures;
+    bool mPipelineHasGraphicsImages;
+    bool mPipelineHasComputeImages;
 
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedOutputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;

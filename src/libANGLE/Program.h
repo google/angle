@@ -262,7 +262,10 @@ class ProgramState final : angle::NonCopyable
     {
         return mExecutable->getSamplerBindings();
     }
-    const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
+    const std::vector<ImageBinding> &getImageBindings() const
+    {
+        return mExecutable->getImageBindings();
+    }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const { return mComputeShaderLocalSize; }
     const RangeUI &getDefaultUniformRange() const { return mExecutable->getDefaultUniformRange(); }
     const RangeUI &getSamplerUniformRange() const { return mExecutable->getSamplerUniformRange(); }
@@ -337,7 +340,6 @@ class ProgramState final : angle::NonCopyable
 
     void updateTransformFeedbackStrides();
     void updateActiveSamplers();
-    void updateActiveImages();
     void updateProgramInterfaceInputs();
     void updateProgramInterfaceOutputs();
 
@@ -360,9 +362,6 @@ class ProgramState final : angle::NonCopyable
     std::vector<VariableLocation> mUniformLocations;
     std::vector<BufferVariable> mBufferVariables;
     RangeUI mAtomicCounterUniformRange;
-
-    // An array of the images that are used by the program
-    std::vector<ImageBinding> mImageBindings;
 
     // EXT_blend_func_extended secondary outputs (ones with index 1) in ESSL 3.00 shaders.
     std::vector<VariableLocation> mSecondaryOutputLocations;
@@ -706,7 +705,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     const std::vector<ImageBinding> &getImageBindings() const
     {
         ASSERT(!mLinkingState);
-        return mState.mImageBindings;
+        return mState.mExecutable->getImageBindings();
     }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const;
     PrimitiveMode getGeometryShaderInputPrimitiveType() const;

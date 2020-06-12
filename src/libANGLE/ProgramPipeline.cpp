@@ -288,6 +288,10 @@ void ProgramPipeline::updateHasBooleans()
             {
                 mState.mExecutable->mPipelineHasGraphicsTextures = true;
             }
+            if (executable.hasImages())
+            {
+                mState.mExecutable->mPipelineHasGraphicsImages = true;
+            }
         }
     }
 
@@ -315,6 +319,10 @@ void ProgramPipeline::updateHasBooleans()
         if (executable.hasTextures())
         {
             mState.mExecutable->mPipelineHasComputeTextures = true;
+        }
+        if (executable.hasImages())
+        {
+            mState.mExecutable->mPipelineHasComputeImages = true;
         }
     }
 }
