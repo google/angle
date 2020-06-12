@@ -193,7 +193,7 @@ void TransformFeedbackVk::initDescriptorSet(ContextVk *contextVk,
     if (!contextVk->getFeatures().emulateTransformFeedback.enabled)
         return;
 
-    gl::TransformFeedbackBuffersArray<VkDescriptorBufferInfo> descriptorBufferInfo;
+    VkDescriptorBufferInfo *descriptorBufferInfo = &contextVk->allocBufferInfos(xfbBufferCount);
 
     for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
@@ -203,7 +203,7 @@ void TransformFeedbackVk::initDescriptorSet(ContextVk *contextVk,
         bufferInfo.range                   = VK_WHOLE_SIZE;
     }
 
-    writeDescriptorSet(contextVk, xfbBufferCount, descriptorBufferInfo.data(), descSet);
+    writeDescriptorSet(contextVk, xfbBufferCount, descriptorBufferInfo, descSet);
 }
 
 void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
@@ -221,7 +221,7 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
     ASSERT(programState.getTransformFeedbackBufferMode() != GL_INTERLEAVED_ATTRIBS ||
            xfbBufferCount == 1);
 
-    gl::TransformFeedbackBuffersArray<VkDescriptorBufferInfo> descriptorBufferInfo;
+    VkDescriptorBufferInfo *descriptorBufferInfo = &contextVk->allocBufferInfos(xfbBufferCount);
 
     // Update buffer descriptor binding info for output buffers
     for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
@@ -235,7 +235,7 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
         ASSERT(bufferInfo.range != 0);
     }
 
-    writeDescriptorSet(contextVk, xfbBufferCount, descriptorBufferInfo.data(), descSet);
+    writeDescriptorSet(contextVk, xfbBufferCount, descriptorBufferInfo, descSet);
 }
 
 void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
@@ -281,25 +281,22 @@ void TransformFeedbackVk::writeDescriptorSet(ContextVk *contextVk,
                                              VkDescriptorBufferInfo *pBufferInfo,
                                              VkDescriptorSet descSet) const
 {
-    VkDevice device                   = contextVk->getDevice();
     ProgramExecutableVk *executableVk = contextVk->getExecutable();
     ShaderMapInterfaceVariableInfoMap variableInfoMap =
         executableVk->getShaderInterfaceVariableInfoMap();
     const std::string bufferName      = GetXfbBufferName(0);
     ShaderInterfaceVariableInfo &info = variableInfoMap[gl::ShaderType::Vertex][bufferName];
 
-    VkWriteDescriptorSet writeDescriptorInfo = {};
-    writeDescriptorInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeDescriptorInfo.dstSet               = descSet;
-    writeDescriptorInfo.dstBinding           = info.binding;
-    writeDescriptorInfo.dstArrayElement      = 0;
-    writeDescriptorInfo.descriptorCount      = static_cast<uint32_t>(xfbBufferCount);
-    writeDescriptorInfo.descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-    writeDescriptorInfo.pImageInfo           = nullptr;
-    writeDescriptorInfo.pBufferInfo          = pBufferInfo;
-    writeDescriptorInfo.pTexelBufferView     = nullptr;
-
-    vkUpdateDescriptorSets(device, 1, &writeDescriptorInfo, 0, nullptr);
+    VkWriteDescriptorSet &writeDescriptorInfo = contextVk->allocWriteInfo();
+    writeDescriptorInfo.sType                 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeDescriptorInfo.dstSet                = descSet;
+    writeDescriptorInfo.dstBinding            = info.binding;
+    writeDescriptorInfo.dstArrayElement       = 0;
+    writeDescriptorInfo.descriptorCount       = static_cast<uint32_t>(xfbBufferCount);
+    writeDescriptorInfo.descriptorType        = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    writeDescriptorInfo.pImageInfo            = nullptr;
+    writeDescriptorInfo.pBufferInfo           = pBufferInfo;
+    writeDescriptorInfo.pTexelBufferView      = nullptr;
 }
 
 }  // namespace rx

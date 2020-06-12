@@ -832,9 +832,9 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
         return;
     }
 
-    DefaultUniformBlock &uniformBlock = defaultUniformBlocks[shaderType];
-    VkDescriptorBufferInfo bufferInfo;
-    VkWriteDescriptorSet writeInfo;
+    DefaultUniformBlock &uniformBlock  = defaultUniformBlocks[shaderType];
+    VkWriteDescriptorSet &writeInfo    = contextVk->allocWriteInfo();
+    VkDescriptorBufferInfo &bufferInfo = contextVk->allocBufferInfo();
 
     if (!uniformBlock.uniformData.empty())
     {
@@ -862,10 +862,6 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
     writeInfo.pImageInfo       = nullptr;
     writeInfo.pBufferInfo      = &bufferInfo;
     writeInfo.pTexelBufferView = nullptr;
-
-    VkDevice device = contextVk->getDevice();
-
-    vkUpdateDescriptorSets(device, 1, &writeInfo, 0, nullptr);
 }
 
 void ProgramExecutableVk::updateBuffersDescriptorSet(ContextVk *contextVk,
@@ -890,10 +886,6 @@ void ProgramExecutableVk::updateBuffersDescriptorSet(ContextVk *contextVk,
         gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS >=
             gl::IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS,
         "The descriptor arrays here would have inadequate size for uniform buffer objects");
-
-    gl::StorageBuffersArray<VkDescriptorBufferInfo> descriptorBufferInfo;
-    gl::StorageBuffersArray<VkWriteDescriptorSet> writeDescriptorInfo;
-    uint32_t writeCount = 0;
 
     // Write uniform or storage buffers.
     const gl::State &glState = contextVk->getState();
@@ -933,8 +925,8 @@ void ProgramExecutableVk::updateBuffersDescriptorSet(ContextVk *contextVk,
                       "VkDeviceSize too small");
         ASSERT(bufferBinding.getSize() >= 0);
 
-        VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[writeCount];
-        VkWriteDescriptorSet &writeInfo    = writeDescriptorInfo[writeCount];
+        VkDescriptorBufferInfo &bufferInfo = contextVk->allocBufferInfo();
+        VkWriteDescriptorSet &writeInfo    = contextVk->allocWriteInfo();
 
         BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
@@ -955,13 +947,7 @@ void ProgramExecutableVk::updateBuffersDescriptorSet(ContextVk *contextVk,
             commandBufferHelper->bufferRead(resourceUseList, VK_ACCESS_UNIFORM_READ_BIT,
                                             kPipelineStageShaderMap[shaderType], &bufferHelper);
         }
-
-        ++writeCount;
     }
-
-    VkDevice device = contextVk->getDevice();
-
-    vkUpdateDescriptorSets(device, writeCount, writeDescriptorInfo.data(), 0, nullptr);
 }
 
 void ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
@@ -990,8 +976,6 @@ void ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
         return;
     }
 
-    gl::AtomicCounterBuffersArray<VkDescriptorBufferInfo> descriptorBufferInfo;
-    gl::AtomicCounterBuffersArray<VkWriteDescriptorSet> writeDescriptorInfo;
     gl::AtomicCounterBufferMask writtenBindings;
 
     RendererVk *rendererVk = contextVk->getRenderer();
@@ -1011,8 +995,8 @@ void ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
             continue;
         }
 
-        VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[binding];
-        VkWriteDescriptorSet &writeInfo    = writeDescriptorInfo[binding];
+        VkDescriptorBufferInfo &bufferInfo = contextVk->allocBufferInfo();
+        VkWriteDescriptorSet &writeInfo    = contextVk->allocWriteInfo();
 
         BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
@@ -1033,31 +1017,28 @@ void ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
 
     // Bind the empty buffer to every array slot that's unused.
     mEmptyBuffer.retain(&contextVk->getResourceUseList());
+    size_t count                        = (~writtenBindings).count();
+    VkDescriptorBufferInfo *bufferInfos = &contextVk->allocBufferInfos(count);
+    VkWriteDescriptorSet *writeInfos    = &contextVk->allocWriteInfos(count);
+    size_t writeCount                   = 0;
     for (size_t binding : ~writtenBindings)
     {
-        VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[binding];
-        VkWriteDescriptorSet &writeInfo    = writeDescriptorInfo[binding];
+        bufferInfos[writeCount].buffer = mEmptyBuffer.getBuffer().getHandle();
+        bufferInfos[writeCount].offset = 0;
+        bufferInfos[writeCount].range  = VK_WHOLE_SIZE;
 
-        bufferInfo.buffer = mEmptyBuffer.getBuffer().getHandle();
-        bufferInfo.offset = 0;
-        bufferInfo.range  = VK_WHOLE_SIZE;
-
-        writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        writeInfo.pNext            = nullptr;
-        writeInfo.dstSet           = descriptorSet;
-        writeInfo.dstBinding       = info.binding;
-        writeInfo.dstArrayElement  = static_cast<uint32_t>(binding);
-        writeInfo.descriptorCount  = 1;
-        writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-        writeInfo.pImageInfo       = nullptr;
-        writeInfo.pBufferInfo      = &bufferInfo;
-        writeInfo.pTexelBufferView = nullptr;
+        writeInfos[writeCount].sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        writeInfos[writeCount].pNext            = nullptr;
+        writeInfos[writeCount].dstSet           = descriptorSet;
+        writeInfos[writeCount].dstBinding       = info.binding;
+        writeInfos[writeCount].dstArrayElement  = static_cast<uint32_t>(binding);
+        writeInfos[writeCount].descriptorCount  = 1;
+        writeInfos[writeCount].descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        writeInfos[writeCount].pImageInfo       = nullptr;
+        writeInfos[writeCount].pBufferInfo      = &bufferInfos[writeCount];
+        writeInfos[writeCount].pTexelBufferView = nullptr;
+        writeCount++;
     }
-
-    VkDevice device = contextVk->getDevice();
-
-    vkUpdateDescriptorSets(device, gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS,
-                           writeDescriptorInfo.data(), 0, nullptr);
 }
 
 angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
@@ -1077,10 +1058,6 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
     VkDescriptorSet descriptorSet = mDescriptorSets[kShaderResourceDescriptorSetIndex];
 
     const gl::ActiveTextureArray<TextureVk *> &activeImages = contextVk->getActiveImages();
-
-    gl::ImagesArray<VkDescriptorImageInfo> descriptorImageInfo;
-    gl::ImagesArray<VkWriteDescriptorSet> writeDescriptorInfo;
-    uint32_t writeCount = 0;
 
     // Write images.
     for (uint32_t imageIndex = 0; imageIndex < imageBindings.size(); ++imageIndex)
@@ -1117,8 +1094,8 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
             // TODO(syoussefi): Support image data reinterpretation by using binding.format.
             // http://anglebug.com/3563
 
-            VkDescriptorImageInfo &imageInfo = descriptorImageInfo[writeCount];
-            VkWriteDescriptorSet &writeInfo  = writeDescriptorInfo[writeCount];
+            VkDescriptorImageInfo &imageInfo = contextVk->allocImageInfo();
+            VkWriteDescriptorSet &writeInfo  = contextVk->allocWriteInfo();
 
             imageInfo.sampler     = VK_NULL_HANDLE;
             imageInfo.imageView   = imageView->getHandle();
@@ -1134,14 +1111,8 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
             writeInfo.pImageInfo       = &imageInfo;
             writeInfo.pBufferInfo      = nullptr;
             writeInfo.pTexelBufferView = nullptr;
-
-            ++writeCount;
         }
     }
-
-    VkDevice device = contextVk->getDevice();
-
-    vkUpdateDescriptorSets(device, writeCount, writeDescriptorInfo.data(), 0, nullptr);
 
     return angle::Result::Continue;
 }
@@ -1267,10 +1238,6 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
 
     VkDescriptorSet descriptorSet = mDescriptorSets[kTextureDescriptorSetIndex];
 
-    gl::ActiveTextureArray<VkDescriptorImageInfo> descriptorImageInfo;
-    gl::ActiveTextureArray<VkWriteDescriptorSet> writeDescriptorInfo;
-    uint32_t writeCount = 0;
-
     const gl::ActiveTextureArray<vk::TextureUnit> &activeTextures = contextVk->getActiveTextures();
 
     bool emulateSeamfulCubeMapSampling = contextVk->emulateSeamfulCubeMapSampling();
@@ -1312,6 +1279,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
                 mappedSamplerNameToArrayOffset[mappedSamplerName] += arraySize;
             }
 
+            VkDescriptorImageInfo *imageInfos = &contextVk->allocImageInfos(arraySize);
+            VkWriteDescriptorSet *writeInfos  = &contextVk->allocWriteInfos(arraySize);
             for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
             {
                 GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
@@ -1320,26 +1289,24 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
 
                 vk::ImageHelper &image = textureVk->getImage();
 
-                VkDescriptorImageInfo &imageInfo = descriptorImageInfo[writeCount];
-
                 // Use bound sampler object if one present, otherwise use texture's sampler
                 const vk::Sampler &sampler =
                     (samplerVk != nullptr) ? samplerVk->getSampler() : textureVk->getSampler();
 
-                imageInfo.sampler     = sampler.getHandle();
-                imageInfo.imageLayout = image.getCurrentLayout();
+                imageInfos[arrayElement].sampler     = sampler.getHandle();
+                imageInfos[arrayElement].imageLayout = image.getCurrentLayout();
 
                 if (emulateSeamfulCubeMapSampling)
                 {
                     // If emulating seamful cubemapping, use the fetch image view.  This is
                     // basically the same image view as read, except it's a 2DArray view for
                     // cube maps.
-                    imageInfo.imageView =
+                    imageInfos[arrayElement].imageView =
                         textureVk->getFetchImageViewAndRecordUse(contextVk).getHandle();
                 }
                 else
                 {
-                    imageInfo.imageView =
+                    imageInfos[arrayElement].imageView =
                         textureVk->getReadImageViewAndRecordUse(contextVk).getHandle();
                 }
 
@@ -1350,29 +1317,19 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
                         : GlslangGetMappedSamplerName(samplerUniform.name);
                 ShaderInterfaceVariableInfo &info = variableInfoMap[samplerName];
 
-                VkWriteDescriptorSet &writeInfo = writeDescriptorInfo[writeCount];
-
-                writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                writeInfo.pNext            = nullptr;
-                writeInfo.dstSet           = descriptorSet;
-                writeInfo.dstBinding       = info.binding;
-                writeInfo.dstArrayElement  = arrayOffset + arrayElement;
-                writeInfo.descriptorCount  = 1;
-                writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                writeInfo.pImageInfo       = &imageInfo;
-                writeInfo.pBufferInfo      = nullptr;
-                writeInfo.pTexelBufferView = nullptr;
-
-                ++writeCount;
+                writeInfos[arrayElement].sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                writeInfos[arrayElement].pNext           = nullptr;
+                writeInfos[arrayElement].dstSet          = descriptorSet;
+                writeInfos[arrayElement].dstBinding      = info.binding;
+                writeInfos[arrayElement].dstArrayElement = arrayOffset + arrayElement;
+                writeInfos[arrayElement].descriptorCount = 1;
+                writeInfos[arrayElement].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+                writeInfos[arrayElement].pImageInfo     = &imageInfos[arrayElement];
+                writeInfos[arrayElement].pBufferInfo    = nullptr;
+                writeInfos[arrayElement].pTexelBufferView = nullptr;
             }
         }
     }
-
-    VkDevice device = contextVk->getDevice();
-
-    ASSERT(writeCount > 0);
-
-    vkUpdateDescriptorSets(device, writeCount, writeDescriptorInfo.data(), 0, nullptr);
 
     mTextureDescriptorsCache.emplace(texturesDesc, descriptorSet);
 

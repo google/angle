@@ -47,6 +47,12 @@ namespace rx
 
 namespace
 {
+// For DesciptorSetUpdates
+constexpr size_t kDescriptorBufferInfosInitialSize = 8;
+constexpr size_t kDescriptorImageInfosInitialSize  = 4;
+constexpr size_t kDescriptorWriteInfosInitialSize =
+    kDescriptorBufferInfosInitialSize + kDescriptorImageInfosInitialSize;
+
 // For shader uniforms such as gl_DepthRange and the viewport size.
 struct GraphicsDriverUniforms
 {
@@ -620,7 +626,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mPrimaryBufferCounter(0),
       mRenderPassCounter(0),
       mContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
-      mCurrentIndirectBuffer(nullptr)
+      mCurrentIndirectBuffer(nullptr),
+      mBufferInfos(),
+      mImageInfos(),
+      mWriteInfos()
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
@@ -709,6 +718,11 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
 
     mPipelineDirtyBitsMask.set();
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
+
+    // Reserve reasonable amount of spaces so that for majority of apps we don't need to grow at all
+    mBufferInfos.reserve(kDescriptorBufferInfosInitialSize);
+    mImageInfos.reserve(kDescriptorImageInfosInitialSize);
+    mWriteInfos.reserve(kDescriptorWriteInfosInitialSize);
 }
 
 ContextVk::~ContextVk() = default;
@@ -934,6 +948,10 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // command buffer will still be valid for the duration of this API call.
     *commandBufferOut = mRenderPassCommandBuffer;
     ASSERT(*commandBufferOut);
+
+    // Create a local object to ensure we flush the descriptor updates to device when we leave this
+    // function
+    ScopedDescriptorSetUpdates descriptorSetUpdates(this);
 
     if (mProgram && mProgram->dirtyUniforms())
     {
@@ -1162,6 +1180,10 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context,
     ANGLE_TRY(flushOutsideRenderPassCommands());
     ANGLE_TRY(endRenderPass());
     *commandBufferOut = &mOutsideRenderPassCommands->getCommandBuffer();
+
+    // Create a local object to ensure we flush the descriptor updates to device when we leave this
+    // function
+    ScopedDescriptorSetUpdates descriptorSetUpdates(this);
 
     if (mProgram && mProgram->dirtyUniforms())
     {
@@ -3600,23 +3622,21 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
         &driverUniforms->descriptorPoolBinding, &driverUniforms->descriptorSet));
 
     // Update the driver uniform descriptor set.
-    VkDescriptorBufferInfo bufferInfo = {};
-    bufferInfo.buffer                 = buffer;
-    bufferInfo.offset                 = 0;
-    bufferInfo.range                  = driverUniformsSize;
+    VkDescriptorBufferInfo &bufferInfo = allocBufferInfo();
+    bufferInfo.buffer                  = buffer;
+    bufferInfo.offset                  = 0;
+    bufferInfo.range                   = driverUniformsSize;
 
-    VkWriteDescriptorSet writeInfo = {};
-    writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeInfo.dstSet               = driverUniforms->descriptorSet;
-    writeInfo.dstBinding           = 0;
-    writeInfo.dstArrayElement      = 0;
-    writeInfo.descriptorCount      = 1;
-    writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-    writeInfo.pImageInfo           = nullptr;
-    writeInfo.pTexelBufferView     = nullptr;
-    writeInfo.pBufferInfo          = &bufferInfo;
-
-    vkUpdateDescriptorSets(getDevice(), 1, &writeInfo, 0, nullptr);
+    VkWriteDescriptorSet &writeInfo = allocWriteInfo();
+    writeInfo.sType                 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfo.dstSet                = driverUniforms->descriptorSet;
+    writeInfo.dstBinding            = 0;
+    writeInfo.dstArrayElement       = 0;
+    writeInfo.descriptorCount       = 1;
+    writeInfo.descriptorType        = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+    writeInfo.pImageInfo            = nullptr;
+    writeInfo.pTexelBufferView      = nullptr;
+    writeInfo.pBufferInfo           = &bufferInfo;
 
     return angle::Result::Continue;
 }
@@ -4472,6 +4492,76 @@ void ContextVk::endOcclusionQuery(QueryVk *queryVk)
 bool ContextVk::isRobustResourceInitEnabled() const
 {
     return mState.isRobustResourceInitEnabled();
+}
+
+VkDescriptorBufferInfo &ContextVk::allocBufferInfos(size_t count)
+{
+    return allocInfos<VkDescriptorBufferInfo, &VkWriteDescriptorSet::pBufferInfo>(&mBufferInfos,
+                                                                                  count);
+}
+
+VkDescriptorImageInfo &ContextVk::allocImageInfos(size_t count)
+{
+    return allocInfos<VkDescriptorImageInfo, &VkWriteDescriptorSet::pImageInfo>(&mImageInfos,
+                                                                                count);
+}
+
+template <typename T, const T *VkWriteDescriptorSet::*pInfo>
+T &ContextVk::allocInfos(std::vector<T> *mInfos, size_t count)
+{
+    size_t oldSize = mInfos->size();
+    size_t newSize = oldSize + count;
+    if (newSize > mInfos->capacity())
+    {
+        // If we have reached capacity, grow the storage and patch the descriptor set with new
+        // buffer info pointer
+        growCapacity<T, pInfo>(mInfos, newSize);
+    }
+    mInfos->resize(newSize);
+    return (*mInfos)[oldSize];
+}
+
+template <typename T, const T *VkWriteDescriptorSet::*pInfo>
+void ContextVk::growCapacity(std::vector<T> *mInfos, size_t newSize)
+{
+    const T *const oldInfoStart = mInfos->empty() ? nullptr : &(*mInfos)[0];
+    size_t newCapacity          = std::max(mInfos->capacity() << 1, newSize);
+    mInfos->reserve(newCapacity);
+
+    if (oldInfoStart)
+    {
+        // patch mWriteInfo with new BufferInfo/ImageInfo pointers
+        for (VkWriteDescriptorSet &set : mWriteInfos)
+        {
+            if (set.*pInfo)
+            {
+                size_t index = set.*pInfo - oldInfoStart;
+                set.*pInfo   = &(*mInfos)[index];
+            }
+        }
+    }
+}
+
+// ScopedDescriptorSetUpdates
+ANGLE_INLINE ContextVk::ScopedDescriptorSetUpdates::ScopedDescriptorSetUpdates(ContextVk *contextVk)
+    : mContextVk(contextVk)
+{}
+
+ANGLE_INLINE ContextVk::ScopedDescriptorSetUpdates::~ScopedDescriptorSetUpdates()
+{
+    if (mContextVk->mWriteInfos.empty())
+    {
+        ASSERT(mContextVk->mBufferInfos.empty());
+        ASSERT(mContextVk->mImageInfos.empty());
+        return;
+    }
+
+    vkUpdateDescriptorSets(mContextVk->getDevice(),
+                           static_cast<uint32_t>(mContextVk->mWriteInfos.size()),
+                           mContextVk->mWriteInfos.data(), 0, nullptr);
+    mContextVk->mWriteInfos.clear();
+    mContextVk->mBufferInfos.clear();
+    mContextVk->mImageInfos.clear();
 }
 
 }  // namespace rx
