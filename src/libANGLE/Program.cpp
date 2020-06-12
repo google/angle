@@ -1097,8 +1097,6 @@ ProgramState::ProgramState()
       mExecutable(new ProgramExecutable())
 {
     mComputeShaderLocalSize.fill(1);
-
-    mExecutable->setProgramState(this);
 }
 
 ProgramState::~ProgramState()
@@ -1552,7 +1550,9 @@ angle::Result Program::linkImpl(const Context *context)
             return angle::Result::Continue;
         }
 
-        if (!mState.mExecutable->linkValidateGlobalNames(infoLog))
+        gl::ShaderMap<const gl::ProgramState *> programStates;
+        fillProgramStateMap(&programStates);
+        if (!mState.mExecutable->linkValidateGlobalNames(infoLog, programStates))
         {
             return angle::Result::Continue;
         }
@@ -1610,7 +1610,7 @@ angle::Result Program::linkImpl(const Context *context)
     // later linkProgram() that could fail.
     if (mState.mSeparable)
     {
-        mState.mExecutable->saveLinkedStateInfo();
+        mState.mExecutable->saveLinkedStateInfo(mState);
         mLinkingState->linkedExecutable = mState.mExecutable;
     }
 
@@ -5548,6 +5548,19 @@ void Program::postResolveLink(const gl::Context *context)
     {
         mState.mBaseVertexLocation   = getUniformLocation("gl_BaseVertex").value;
         mState.mBaseInstanceLocation = getUniformLocation("gl_BaseInstance").value;
+    }
+}
+
+void Program::fillProgramStateMap(ShaderMap<const ProgramState *> *programStatesOut)
+{
+    for (ShaderType shaderType : AllShaderTypes())
+    {
+        (*programStatesOut)[shaderType] = nullptr;
+        if (mState.getExecutable().hasLinkedShaderStage(shaderType) ||
+            mState.getAttachedShader(shaderType))
+        {
+            (*programStatesOut)[shaderType] = &mState;
+        }
     }
 }
 

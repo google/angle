@@ -822,6 +822,8 @@ class Program final : angle::NonCopyable, public LabeledObject
                                             int vertexShaderVersion,
                                             InfoLog &infoLog);
 
+    void fillProgramStateMap(ShaderMap<const ProgramState *> *programStatesOut);
+
   private:
     struct LinkingState;
 

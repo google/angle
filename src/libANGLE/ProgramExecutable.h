@@ -110,8 +110,6 @@ class ProgramExecutable
     void save(gl::BinaryOutputStream *stream) const;
     void load(gl::BinaryInputStream *stream);
 
-    const ProgramState *getProgramState(ShaderType shaderType) const;
-
     int getInfoLogLength() const;
     InfoLog &getInfoLog() { return mInfoLog; }
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const;
@@ -202,19 +200,8 @@ class ProgramExecutable
     // Count the number of uniform and storage buffer declarations, counting arrays as one.
     size_t getTransformFeedbackBufferCount() const { return mTransformFeedbackStrides.size(); }
 
-    bool linkValidateGlobalNames(InfoLog &infoLog) const;
-
-    // TODO: http://anglebug.com/4520: Remove mProgramState/mProgramPipelineState
-    void setProgramState(ProgramState *state)
-    {
-        ASSERT(!mProgramState && !mProgramPipelineState);
-        mProgramState = state;
-    }
-    void setProgramPipelineState(ProgramPipelineState *state)
-    {
-        ASSERT(!mProgramState && !mProgramPipelineState);
-        mProgramPipelineState = state;
-    }
+    bool linkValidateGlobalNames(InfoLog &infoLog,
+                                 const ShaderMap<const ProgramState *> &programStates) const;
 
     void updateCanDrawWith();
     bool hasVertexAndFragmentShader() const { return mCanDrawWith; }
@@ -285,7 +272,7 @@ class ProgramExecutable
         return *mResources;
     }
 
-    void saveLinkedStateInfo();
+    void saveLinkedStateInfo(const ProgramState &state);
     std::vector<sh::ShaderVariable> getLinkedOutputVaryings(ShaderType shaderType)
     {
         return mLinkedOutputVaryings[shaderType];
@@ -309,10 +296,6 @@ class ProgramExecutable
     // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
     void setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex,
                                                std::vector<SamplerBinding> &samplerBindings);
-
-    // TODO: http://anglebug.com/4520: Remove mProgramState/mProgramPipelineState
-    ProgramState *mProgramState;
-    ProgramPipelineState *mProgramPipelineState;
 
     InfoLog mInfoLog;
 

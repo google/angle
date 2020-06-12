@@ -29,8 +29,6 @@ ProgramPipelineState::ProgramPipelineState()
       mHasBeenBound(false),
       mExecutable(new ProgramExecutable())
 {
-    mExecutable->setProgramPipelineState(this);
-
     for (const ShaderType shaderType : gl::AllShaderTypes())
     {
         mPrograms[shaderType] = nullptr;
@@ -471,7 +469,9 @@ angle::Result ProgramPipeline::link(const Context *context)
             return angle::Result::Stop;
         }
 
-        if (!mState.mExecutable->linkValidateGlobalNames(infoLog))
+        gl::ShaderMap<const gl::ProgramState *> programStates;
+        fillProgramStateMap(&programStates);
+        if (!mState.mExecutable->linkValidateGlobalNames(infoLog, programStates))
         {
             return angle::Result::Stop;
         }
@@ -618,6 +618,20 @@ angle::Result ProgramPipeline::syncState(const Context *context)
     }
 
     return angle::Result::Continue;
+}
+
+void ProgramPipeline::fillProgramStateMap(ShaderMap<const ProgramState *> *programStatesOut)
+{
+    for (ShaderType shaderType : AllShaderTypes())
+    {
+        (*programStatesOut)[shaderType] = nullptr;
+
+        Program *program = getShaderProgram(shaderType);
+        if (program)
+        {
+            (*programStatesOut)[shaderType] = &program->getState();
+        }
+    }
 }
 
 }  // namespace gl

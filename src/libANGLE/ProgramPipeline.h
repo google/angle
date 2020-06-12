@@ -148,6 +148,8 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public L
 
     void updateExecutableTextures();
 
+    void fillProgramStateMap(gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
+
   private:
     void updateLinkedShaderStages();
     void updateExecutableAttributes();

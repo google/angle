@@ -17,9 +17,7 @@ namespace gl
 {
 
 ProgramExecutable::ProgramExecutable()
-    : mProgramState(nullptr),
-      mProgramPipelineState(nullptr),
-      mMaxActiveAttribLocation(0),
+    : mMaxActiveAttribLocation(0),
       mAttributesTypeMask(0),
       mAttributesMask(0),
       mActiveSamplersMask(0),
@@ -48,9 +46,7 @@ ProgramExecutable::ProgramExecutable()
 }
 
 ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
-    : mProgramState(other.mProgramState),
-      mProgramPipelineState(other.mProgramPipelineState),
-      mLinkedGraphicsShaderStages(other.mLinkedGraphicsShaderStages),
+    : mLinkedGraphicsShaderStages(other.mLinkedGraphicsShaderStages),
       mLinkedComputeShaderStages(other.mLinkedComputeShaderStages),
       mActiveAttribLocationsMask(other.mActiveAttribLocationsMask),
       mMaxActiveAttribLocation(other.mMaxActiveAttribLocation),
@@ -183,22 +179,6 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     stream->writeInt(static_cast<bool>(mPipelineHasComputeDefaultUniforms));
     stream->writeInt(static_cast<bool>(mPipelineHasGraphicsTextures));
     stream->writeInt(static_cast<bool>(mPipelineHasComputeTextures));
-}
-
-const ProgramState *ProgramExecutable::getProgramState(ShaderType shaderType) const
-{
-    if (mProgramState &&
-        (hasLinkedShaderStage(shaderType) || mProgramState->getAttachedShader(shaderType)))
-    {
-        return mProgramState;
-    }
-    else if (mProgramPipelineState && (hasLinkedShaderStage(shaderType) ||
-                                       mProgramPipelineState->getShaderProgram(shaderType)))
-    {
-        return &mProgramPipelineState->getShaderProgram(shaderType)->getState();
-    }
-
-    return nullptr;
 }
 
 int ProgramExecutable::getInfoLogLength() const
@@ -385,7 +365,9 @@ void ProgramExecutable::setSamplerUniformTextureTypeAndFormat(
     mActiveSamplerFormats[textureUnitIndex] = foundFormat;
 }
 
-bool ProgramExecutable::linkValidateGlobalNames(InfoLog &infoLog) const
+bool ProgramExecutable::linkValidateGlobalNames(
+    InfoLog &infoLog,
+    const ShaderMap<const ProgramState *> &programStates) const
 {
     std::unordered_map<std::string, const sh::ShaderVariable *> uniformMap;
     using BlockAndFieldPair = std::pair<const sh::InterfaceBlock *, const sh::ShaderVariable *>;
@@ -393,7 +375,7 @@ bool ProgramExecutable::linkValidateGlobalNames(InfoLog &infoLog) const
 
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {
-        const ProgramState *programState = getProgramState(shaderType);
+        const ProgramState *programState = programStates[shaderType];
         if (!programState)
         {
             continue;
@@ -473,7 +455,7 @@ bool ProgramExecutable::linkValidateGlobalNames(InfoLog &infoLog) const
     }
 
     // Validate no uniform names conflict with attribute names
-    const ProgramState *programState = getProgramState(ShaderType::Vertex);
+    const ProgramState *programState = programStates[ShaderType::Vertex];
     if (programState)
     {
         Shader *vertexShader = programState->getAttachedShader(ShaderType::Vertex);
@@ -510,14 +492,11 @@ void ProgramExecutable::updateCanDrawWith()
         (hasLinkedShaderStage(ShaderType::Vertex) && hasLinkedShaderStage(ShaderType::Fragment));
 }
 
-void ProgramExecutable::saveLinkedStateInfo()
+void ProgramExecutable::saveLinkedStateInfo(const ProgramState &state)
 {
-    // Only a Program's linked data needs to be saved, not a ProgramPipeline's
-    ASSERT(mProgramState);
-
     for (ShaderType shaderType : getLinkedShaderStages())
     {
-        Shader *shader = mProgramState->getAttachedShader(shaderType);
+        Shader *shader = state.getAttachedShader(shaderType);
         ASSERT(shader);
         mLinkedOutputVaryings[shaderType] = shader->getOutputVaryings();
         mLinkedInputVaryings[shaderType]  = shader->getInputVaryings();
