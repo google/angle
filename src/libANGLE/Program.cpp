@@ -1172,12 +1172,6 @@ GLuint ProgramState::getImageIndexFromUniformIndex(GLuint uniformIndex) const
     return uniformIndex - mExecutable->mImageUniformRange.low();
 }
 
-GLuint ProgramState::getUniformIndexFromImageIndex(GLuint imageIndex) const
-{
-    ASSERT(imageIndex < mExecutable->mImageUniformRange.length());
-    return imageIndex + mExecutable->mImageUniformRange.low();
-}
-
 GLuint ProgramState::getAttributeLocation(const std::string &name) const
 {
     for (const sh::ShaderVariable &attribute : mExecutable->mProgramInputs)
@@ -5532,7 +5526,7 @@ angle::Result Program::deserialize(const Context *context,
 void Program::postResolveLink(const gl::Context *context)
 {
     mState.updateActiveSamplers();
-    mState.mExecutable->updateActiveImages();
+    mState.mExecutable->updateActiveImages(getExecutable());
 
     setUniformValuesFromBindingQualifiers();
 

@@ -179,7 +179,7 @@ class ProgramExecutableVk
         const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,
         const gl::ShaderType shaderType,
         vk::DescriptorSetLayoutDesc *descOut);
-    void addImageDescriptorSetDesc(const gl::ProgramState &programState,
+    void addImageDescriptorSetDesc(const gl::ProgramExecutable &executable,
                                    vk::DescriptorSetLayoutDesc *descOut);
     void addTextureDescriptorSetDesc(const gl::ProgramState &programState,
                                      bool useOldRewriteStructSamplers,
@@ -202,7 +202,7 @@ class ProgramExecutableVk
                                                  ContextVk *contextVk,
                                                  vk::ResourceUseList *resourceUseList,
                                                  vk::CommandBufferHelper *commandBufferHelper);
-    angle::Result updateImagesDescriptorSet(const gl::ProgramState &programState,
+    angle::Result updateImagesDescriptorSet(const gl::ProgramExecutable &executable,
                                             const gl::ShaderType shaderType,
                                             ContextVk *contextVk);
 

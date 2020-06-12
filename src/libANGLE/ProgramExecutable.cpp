@@ -290,6 +290,12 @@ bool ProgramExecutable::hasImages() const
            (isCompute() ? mPipelineHasComputeImages : mPipelineHasGraphicsImages);
 }
 
+GLuint ProgramExecutable::getUniformIndexFromImageIndex(GLuint imageIndex) const
+{
+    ASSERT(imageIndex < mImageUniformRange.length());
+    return imageIndex + mImageUniformRange.low();
+}
+
 void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
 {
     const std::vector<SamplerBinding> &samplerBindings = programState.getSamplerBindings();
@@ -327,7 +333,7 @@ void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
     }
 }
 
-void ProgramExecutable::updateActiveImages()
+void ProgramExecutable::updateActiveImages(const ProgramExecutable &executable)
 {
     for (uint32_t imageIndex = 0; imageIndex < mImageBindings.size(); ++imageIndex)
     {
@@ -337,8 +343,8 @@ void ProgramExecutable::updateActiveImages()
             continue;
         }
 
-        uint32_t uniformIndex = mProgramState->getUniformIndexFromImageIndex(imageIndex);
-        const gl::LinkedUniform &imageUniform = mProgramState->getUniforms()[uniformIndex];
+        uint32_t uniformIndex = executable.getUniformIndexFromImageIndex(imageIndex);
+        const gl::LinkedUniform &imageUniform = executable.getUniforms()[uniformIndex];
         const ShaderBitSet shaderBits         = imageUniform.activeShaders();
         for (GLint imageUnit : imageBinding.boundImageUnits)
         {

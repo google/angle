@@ -421,23 +421,22 @@ void ProgramExecutableVk::addAtomicCounterBufferDescriptorSetDesc(
                     gl_vk::kShaderStageMap[shaderType]);
 }
 
-void ProgramExecutableVk::addImageDescriptorSetDesc(const gl::ProgramState &programState,
+void ProgramExecutableVk::addImageDescriptorSetDesc(const gl::ProgramExecutable &executable,
                                                     vk::DescriptorSetLayoutDesc *descOut)
 {
-    const std::vector<gl::ImageBinding> &imageBindings = programState.getImageBindings();
-    const std::vector<gl::LinkedUniform> &uniforms     = programState.getUniforms();
+    const std::vector<gl::ImageBinding> &imageBindings = executable.getImageBindings();
+    const std::vector<gl::LinkedUniform> &uniforms     = executable.getUniforms();
 
     for (uint32_t imageIndex = 0; imageIndex < imageBindings.size(); ++imageIndex)
     {
         const gl::ImageBinding &imageBinding = imageBindings[imageIndex];
-
-        uint32_t uniformIndex = programState.getUniformIndexFromImageIndex(imageIndex);
+        uint32_t uniformIndex                = executable.getUniformIndexFromImageIndex(imageIndex);
         const gl::LinkedUniform &imageUniform = uniforms[uniformIndex];
 
         // The front-end always binds array image units sequentially.
         uint32_t arraySize = static_cast<uint32_t>(imageBinding.boundImageUnits.size());
 
-        for (const gl::ShaderType shaderType : programState.getExecutable().getLinkedShaderStages())
+        for (const gl::ShaderType shaderType : executable.getLinkedShaderStages())
         {
             if (!imageUniform.isActive(shaderType))
             {
@@ -687,7 +686,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(const gl::Context *glCon
     {
         const gl::ProgramState *programState = programStates[shaderType];
         ASSERT(programState);
-        addImageDescriptorSetDesc(*programState, &resourcesSetDesc);
+        addImageDescriptorSetDesc(programState->getExecutable(), &resourcesSetDesc);
     }
 
     ANGLE_TRY(renderer->getDescriptorSetLayout(
@@ -1060,13 +1059,14 @@ void ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
                            writeDescriptorInfo.data(), 0, nullptr);
 }
 
-angle::Result ProgramExecutableVk::updateImagesDescriptorSet(const gl::ProgramState &programState,
-                                                             const gl::ShaderType shaderType,
-                                                             ContextVk *contextVk)
+angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
+    const gl::ProgramExecutable &executable,
+    const gl::ShaderType shaderType,
+    ContextVk *contextVk)
 {
     const gl::State &glState                           = contextVk->getState();
-    const std::vector<gl::ImageBinding> &imageBindings = programState.getImageBindings();
-    const std::vector<gl::LinkedUniform> &uniforms     = programState.getUniforms();
+    const std::vector<gl::ImageBinding> &imageBindings = executable.getImageBindings();
+    const std::vector<gl::LinkedUniform> &uniforms     = executable.getUniforms();
 
     if (imageBindings.empty())
     {
@@ -1085,7 +1085,7 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(const gl::ProgramSt
     for (uint32_t imageIndex = 0; imageIndex < imageBindings.size(); ++imageIndex)
     {
         const gl::ImageBinding &imageBinding = imageBindings[imageIndex];
-        uint32_t uniformIndex = programState.getUniformIndexFromImageIndex(imageIndex);
+        uint32_t uniformIndex                = executable.getUniformIndexFromImageIndex(imageIndex);
         const gl::LinkedUniform &imageUniform = uniforms[uniformIndex];
 
         if (!imageUniform.isActive(shaderType))
@@ -1171,7 +1171,8 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
                                    VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
         updateAtomicCounterBuffersDescriptorSet(*programState, shaderType, contextVk,
                                                 resourceUseList, commandBufferHelper);
-        angle::Result status = updateImagesDescriptorSet(*programState, shaderType, contextVk);
+        angle::Result status =
+            updateImagesDescriptorSet(programState->getExecutable(), shaderType, contextVk);
         if (status != angle::Result::Continue)
         {
             return status;

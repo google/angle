@@ -274,6 +274,8 @@ class ProgramExecutable
         return static_cast<GLuint>(mShaderStorageBlocks.size());
     }
 
+    GLuint getUniformIndexFromImageIndex(GLuint imageIndex) const;
+
     gl::ProgramLinkedResources &getResources() const
     {
         ASSERT(mResources);
@@ -299,7 +301,7 @@ class ProgramExecutable
     friend class ProgramState;
 
     void updateActiveSamplers(const ProgramState &programState);
-    void updateActiveImages();
+    void updateActiveImages(const ProgramExecutable &executable);
 
     // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
     void setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex,
