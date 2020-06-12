@@ -57,11 +57,52 @@ layout(push_constant) uniform PushConstants {
     // Whether destination is emulated luminance/alpha.
     bool destHasLuminance;
     bool destIsAlpha;
+    // Whether source or destination are sRGB.  They are brought to linear space for alpha
+    // premultiply/unmultiply, as well as to ensure the copy doesn't change values due to sRGB
+    // transformation.
+    bool srcIsSRGB;
+    bool destIsSRGB;
     // Bits 0~3 tell whether R,G,B or A exist in destination, but as a result of format emulation.
     // Bit 0 is ignored, because R is always present.  For B and G, the result is set to 0 and for
     // A, the result is set to 1.
     int destDefaultChannelsMask;
 } params;
+
+#if SrcIsFloat
+float linearToSRGB(float linear)
+{
+    // sRGB transform: y = sRGB(x) where x is linear and y is the sRGB encoding:
+    //
+    //    x <= 0.0031308: y = x * 12.92
+    //    o.w.          : y = 1.055 * x^(1/2.4) - 0.055
+    if (linear <= 0.0031308)
+    {
+        return linear * 12.92;
+    }
+    else
+    {
+        return pow(linear, (1.0f / 2.4f)) * 1.055f - 0.055f;
+    }
+}
+#endif
+
+#if DestIsFloat
+float sRGBToLinear(float sRGB)
+{
+    // sRGB inverse transform: x = sRGB^(-1)(y) where x is linear and y is the sRGB encoding:
+    //
+    //    y <= 0.04045: x = y / 12.92
+    //    o.w.          : x = ((y + 0.055) / 1.055)^(2.4)
+    if (sRGB <= 0.04045)
+    {
+        return sRGB / 12.92;
+    }
+    else
+    {
+        return pow((sRGB + 0.055f) / 1.055f, 2.4f);
+    }
+}
+#endif
 
 void main()
 {
@@ -72,12 +113,29 @@ void main()
     // If flipping Y, srcOffset would contain the opposite y coordinate, so we can
     // simply reverse the direction in which y grows.
     if (params.flipY)
+    {
         srcSubImageCoords.y = -srcSubImageCoords.y;
+    }
 
 #if SrcIsArray
     SrcType srcValue = texelFetch(src, ivec3(params.srcOffset + srcSubImageCoords, params.srcLayer), params.srcMip);
 #else
     SrcType srcValue = texelFetch(src, params.srcOffset + srcSubImageCoords, params.srcMip);
+#endif
+
+    // Note: sRGB formats are unorm, so SrcIsFloat must be necessarily set
+#if SrcIsFloat
+    if (params.srcIsSRGB)
+    {
+        // If src is sRGB, then texelFetch has performed an sRGB->linear transformation.  We need to
+        // undo that to get back to the original values in the texture.  This is done to avoid
+        // creating a non-sRGB view of the texture, which would require recreating it with the
+        // VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT flag.
+
+        srcValue.r = linearToSRGB(srcValue.r);
+        srcValue.g = linearToSRGB(srcValue.g);
+        srcValue.b = linearToSRGB(srcValue.b);
+    }
 #endif
 
     if (params.premultiplyAlpha)
@@ -95,6 +153,25 @@ void main()
 
     // Convert value to destination type.
     DestType destValue = DestType(srcValue);
+
+#if !SrcIsFloat && DestIsFloat
+    destValue /= 255.0;
+#endif
+
+    // Note: sRGB formats are unorm, so DestIsFloat must be necessarily set
+#if DestIsFloat
+    if (params.destIsSRGB)
+    {
+        // If dest is sRGB, then export will perform a linear->sRGB transformation.  We need to
+        // preemptively undo that so the values will be exported unchanged.This is done to avoid
+        // creating a non-sRGB view of the texture, which would require recreating it with the
+        // VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT flag.
+
+        destValue.r = sRGBToLinear(destValue.r);
+        destValue.g = sRGBToLinear(destValue.g);
+        destValue.b = sRGBToLinear(destValue.b);
+    }
+#endif
 
     // If dest is luminance/alpha, it's implemented with R or RG.  Do the appropriate swizzle.
     if (params.destHasLuminance)

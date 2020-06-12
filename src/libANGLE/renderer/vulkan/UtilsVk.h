@@ -321,6 +321,8 @@ class UtilsVk : angle::NonCopyable
         uint32_t unmultiplyAlpha         = 0;
         uint32_t destHasLuminance        = 0;
         uint32_t destIsAlpha             = 0;
+        uint32_t srcIsSRGB               = 0;
+        uint32_t destIsSRGB              = 0;
         uint32_t destDefaultChannelsMask = 0;
     };
 

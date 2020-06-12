@@ -1645,6 +1645,20 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     shaderParams.destOffset[0]           = params.destOffset[0];
     shaderParams.destOffset[1]           = params.destOffset[1];
 
+    shaderParams.srcIsSRGB =
+        gl::GetSizedInternalFormatInfo(srcFormat.internalFormat).colorEncoding == GL_SRGB;
+    shaderParams.destIsSRGB =
+        gl::GetSizedInternalFormatInfo(dstFormat.internalFormat).colorEncoding == GL_SRGB;
+
+    // If both src and dest are sRGB, and there is no alpha multiplication/division necessary, then
+    // the shader can work with sRGB data and pretend they are linear.
+    if (shaderParams.srcIsSRGB && shaderParams.destIsSRGB && !shaderParams.premultiplyAlpha &&
+        !shaderParams.unmultiplyAlpha)
+    {
+        shaderParams.srcIsSRGB  = false;
+        shaderParams.destIsSRGB = false;
+    }
+
     ASSERT(!(params.srcFlipY && params.destFlipY));
     if (params.srcFlipY)
     {

@@ -601,8 +601,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
                                             sourceLevel, 0, sourceArea, &source->getImage());
     }
 
-    bool forceCPUPath =
-        (destFormat.colorEncoding == GL_SRGB) || ForceCPUPathForCopy(renderer, *mImage);
+    bool forceCPUPath = ForceCPUPathForCopy(renderer, *mImage);
 
     // If it's possible to perform the copy with a draw call, do that.
     if (CanCopyWithDraw(renderer, sourceVkFormat, srcTilingMode, destVkFormat, destTilingMode) &&
