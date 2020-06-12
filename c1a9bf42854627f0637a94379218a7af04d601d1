@@ -46,6 +46,30 @@
       "revId": "c1a9bf42854627f0637a94379218a7af04d601d1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b7ade26_e7919b9e",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-12T20:19:26Z",
+      "side": 1,
+      "message": "So the root cause is that the desc does not properly describe the VkFramebuffer. If it did, it wouldn\u0027t try to pull out a bad one. I\u0027m thinking this is the same root cause as http://anglebug.com/4736. Thanks for filing that. I haven\u0027t yet downloading this and proved locally that\u0027s the case.",
+      "parentUuid": "ab696571_a637957b",
+      "range": {
+        "startLine": 1216,
+        "startChar": 24,
+        "endLine": 1216,
+        "endChar": 48
+      },
+      "revId": "c1a9bf42854627f0637a94379218a7af04d601d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
