@@ -21,10 +21,10 @@ namespace rx
 
 namespace
 {
-VkImageTiling AhbDescUsageToVkImageTiling(AHardwareBuffer_Desc *ahbDescription)
+VkImageTiling AhbDescUsageToVkImageTiling(const AHardwareBuffer_Desc &ahbDescription)
 {
-    if ((ahbDescription->usage & AHARDWAREBUFFER_USAGE_CPU_READ_MASK) != 0 ||
-        (ahbDescription->usage & AHARDWAREBUFFER_USAGE_CPU_WRITE_MASK) != 0)
+    if ((ahbDescription.usage & AHARDWAREBUFFER_USAGE_CPU_READ_MASK) != 0 ||
+        (ahbDescription.usage & AHARDWAREBUFFER_USAGE_CPU_WRITE_MASK) != 0)
     {
         return VK_IMAGE_TILING_LINEAR;
     }
@@ -85,6 +85,43 @@ egl::Error HardwareBufferImageSiblingVkAndroid::initialize(const egl::Display *d
     return angle::ToEGL(initImpl(displayVk), displayVk, EGL_BAD_PARAMETER);
 }
 
+// Map AHB usage flags to VkImageUsageFlags using this table from the Vulkan spec
+// https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/chap10.html#memory-external-android-hardware-buffer-usage
+VkImageUsageFlags AhbDescUsageToVkImageUsage(const AHardwareBuffer_Desc &ahbDescription,
+                                             bool isDepthOrStencilFormat)
+{
+    VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+
+    if ((ahbDescription.usage & AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE) != 0)
+    {
+        usage |= VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+    }
+
+    if ((ahbDescription.usage & AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER) != 0)
+    {
+        if (isDepthOrStencilFormat)
+        {
+            usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        }
+        else
+        {
+            usage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        }
+    }
+
+    if ((ahbDescription.usage & AHARDWAREBUFFER_USAGE_GPU_CUBE_MAP) != 0)
+    {
+        usage |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+    }
+
+    if ((ahbDescription.usage & AHARDWAREBUFFER_USAGE_PROTECTED_CONTENT) != 0)
+    {
+        usage |= VK_IMAGE_CREATE_PROTECTED_BIT;
+    }
+
+    return usage;
+}
+
 angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk)
 {
     RendererVk *renderer = displayVk->getRenderer();
@@ -114,19 +151,8 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     ANGLE_VK_TRY(displayVk, vkGetAndroidHardwareBufferPropertiesANDROID(device, hardwareBuffer,
                                                                         &bufferProperties));
 
-    AHardwareBuffer_Desc ahbDescription;
-    AHardwareBuffer_describe(hardwareBuffer, &ahbDescription);
-    VkImageTiling imageTilingMode = AhbDescUsageToVkImageTiling(&ahbDescription);
-
-    const vk::Format &vkFormat       = renderer->getFormat(internalFormat);
-    const angle::Format &imageFormat = vkFormat.actualImageFormat();
-    bool isDepthOrStencilFormat      = imageFormat.depthBits > 0 || imageFormat.stencilBits > 0;
-    const VkImageUsageFlags usage =
-        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-        VK_IMAGE_USAGE_SAMPLED_BIT |
-        (imageFormat.redBits > 0 ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT : 0) |
-        (isDepthOrStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0);
-
+    const vk::Format &vkFormat             = renderer->getFormat(internalFormat);
+    const angle::Format &imageFormat       = vkFormat.actualImageFormat();
     VkExternalFormatANDROID externalFormat = {};
     externalFormat.sType                   = VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID;
     externalFormat.externalFormat          = 0;
@@ -146,6 +172,16 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     gl_vk::GetExtent(mSize, &vkExtents);
 
     mImage = new vk::ImageHelper();
+
+    // Query AHB description and do the following -
+    // 1. Derive VkImageTiling mode based on AHB usage flags
+    // 2. Map AHB usage flags to VkImageUsageFlags
+    AHardwareBuffer_Desc ahbDescription;
+    AHardwareBuffer_describe(hardwareBuffer, &ahbDescription);
+    VkImageTiling imageTilingMode = AhbDescUsageToVkImageTiling(ahbDescription);
+    VkImageUsageFlags usage       = AhbDescUsageToVkImageUsage(
+        ahbDescription, (imageFormat.depthBits > 0 || imageFormat.stencilBits > 0));
+
     mImage->setTilingMode(imageTilingMode);
     ANGLE_TRY(mImage->initExternal(
         displayVk, gl::TextureType::_2D, vkExtents, vkFormat, 1, usage, vk::kVkImageCreateFlagsNone,
