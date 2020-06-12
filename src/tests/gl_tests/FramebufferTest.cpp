@@ -464,6 +464,11 @@ TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevels)
 
 TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevelsReadBack)
 {
+#if defined(ADDRESS_SANITIZER)
+    // http://anglebug.com/4737
+    ANGLE_SKIP_TEST_IF(IsOSX());
+#endif
+
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
