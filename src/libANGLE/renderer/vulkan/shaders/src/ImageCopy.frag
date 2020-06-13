@@ -24,10 +24,14 @@
 #error "Not all source formats are accounted for"
 #endif
 
-#if SrcIsArray
-#define SRC_RESOURCE_NAME texture2DArray
-#else
+#if SrcIs2D
 #define SRC_RESOURCE_NAME texture2D
+#elif SrcIs2DArray
+#define SRC_RESOURCE_NAME texture2DArray
+#elif SrcIs3D
+#define SRC_RESOURCE_NAME texture3D
+#else
+#error "Not all source types are accounted for"
 #endif
 
 #if DestIsFloat
@@ -117,10 +121,12 @@ void main()
         srcSubImageCoords.y = -srcSubImageCoords.y;
     }
 
-#if SrcIsArray
+#if SrcIs2D
+    SrcType srcValue = texelFetch(src, params.srcOffset + srcSubImageCoords, params.srcMip);
+#elif SrcIs2DArray || SrcIs3D
     SrcType srcValue = texelFetch(src, ivec3(params.srcOffset + srcSubImageCoords, params.srcLayer), params.srcMip);
 #else
-    SrcType srcValue = texelFetch(src, params.srcOffset + srcSubImageCoords, params.srcMip);
+#error "Not all source types are accounted for"
 #endif
 
     // Note: sRGB formats are unorm, so SrcIsFloat must be necessarily set

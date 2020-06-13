@@ -182,10 +182,65 @@ class CopyTexture3DTest : public ANGLETest
 
         if (renderType == GL_RGBA8)
         {
+            uint32_t tolerance = 1;
+            // The destination formats may be emulated, so the precision may be higher than
+            // required.  Increase the tolerance to 2^(8-width) / 2.  8 is for the 8-bit format
+            // used for emulation, and divide by 2 because the value is expected to round to
+            // nearest.
+            switch (destType)
+            {
+                case GL_UNSIGNED_SHORT_5_6_5:
+                    tolerance = 4;
+                    break;
+                case GL_UNSIGNED_SHORT_5_5_5_1:
+                    tolerance = 4;
+                    break;
+                case GL_UNSIGNED_SHORT_4_4_4_4:
+                    tolerance = 8;
+                    break;
+                default:
+                    break;
+            }
+            switch (destInternalFormat)
+            {
+                case GL_RGB565:
+                    tolerance = 4;
+                    break;
+                case GL_RGB5_A1:
+                    tolerance = 4;
+                    break;
+                case GL_RGBA4:
+                    tolerance = 8;
+                    break;
+                default:
+                    break;
+            }
+
+            // If destination is SNORM, values in between representable values could round either
+            // way.
+            switch (destInternalFormat)
+            {
+                case GL_R8_SNORM:
+                case GL_RG8_SNORM:
+                case GL_RGB8_SNORM:
+                case GL_RGBA8_SNORM:
+                    tolerance *= 2;
+                    break;
+                default:
+                    break;
+            }
+
+            if (tolerance != 1 && (IsNVIDIA() || IsAndroid()) && IsVulkan())
+            {
+                // Note: on Nvidia/Vulkan, the round is not done to nearest in all cases, so bring
+                // the tolerance to the full-range of precision.  http://anglebug.com/4742
+                tolerance *= 2;
+            }
+
             GLColor actual;
             glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &actual.R);
             EXPECT_GL_NO_ERROR();
-            EXPECT_COLOR_NEAR(expectedColor, actual, 1);
+            EXPECT_COLOR_NEAR(expectedColor, actual, tolerance);
             return;
         }
         else if (renderType == GL_RGBA32F)
@@ -655,15 +710,15 @@ void CopyTexture3DTest::testUnsignedByteFormats(const GLenum testTarget)
                  GLColor(244, 148, 78, 255));
         testCopy(testTarget, kColorPreAlpha, GL_SRGB8, GL_UNSIGNED_BYTE, false, true, false,
                  GLColor(31, 19, 11, 255));
-        testCopy(testTarget, kColorUnAlpha, GL_SRGB8, GL_UNSIGNED_BYTE, false, false, true,
-                 GLColor(52, 253, 53, 255));
+        testCopy(testTarget, GLColor(100, 150, 200, 210), GL_SRGB8, GL_UNSIGNED_BYTE, false, false,
+                 true, GLColor(49, 120, 228, 255));
 
         testCopy(testTarget, kColorNoAlpha, GL_SRGB8_ALPHA8, GL_UNSIGNED_BYTE, false, false, false,
                  GLColor(244, 148, 78, 100));
         testCopy(testTarget, kColorPreAlpha, GL_SRGB8_ALPHA8, GL_UNSIGNED_BYTE, false, true, false,
                  GLColor(31, 19, 11, 100));
-        testCopy(testTarget, kColorUnAlpha, GL_SRGB8_ALPHA8, GL_UNSIGNED_BYTE, false, false, true,
-                 GLColor(52, 253, 53, 100));
+        testCopy(testTarget, GLColor(100, 150, 200, 210), GL_SRGB8_ALPHA8, GL_UNSIGNED_BYTE, false,
+                 false, true, GLColor(49, 120, 228, 210));
 
         testCopy(testTarget, GLColor(250, 200, 150, 200), GL_RGB5_A1, GL_UNSIGNED_BYTE, false,
                  false, false, GLColor(247, 198, 148, 255));
@@ -768,14 +823,19 @@ void CopyTexture3DTest::testFloatFormats(const GLenum testTarget)
                      GLColor(227, 217, 161, 255));
         }
 
-        if (floatType != GL_UNSIGNED_INT_10F_11F_11F_REV)
+        // TODO: Vulkan's CPU-path implementation doesn't handle 2DArray textures correctly yet.
+        // http://anglebug.com/4744
+        if (!(IsVulkan() && testTarget == GL_TEXTURE_2D_ARRAY))
         {
-            testCopy(testTarget, kColor, GL_RGB9_E5, floatType, false, false, false,
-                     GLColor(210, 200, 148, 255));
-            testCopy(testTarget, kColor, GL_RGB9_E5, floatType, false, true, false,
-                     GLColor(192, 184, 138, 255));
-            testCopy(testTarget, kColor, GL_RGB9_E5, floatType, false, false, true,
-                     GLColor(227, 217, 161, 255));
+            if (floatType != GL_UNSIGNED_INT_10F_11F_11F_REV)
+            {
+                testCopy(testTarget, kColor, GL_RGB9_E5, floatType, false, false, false,
+                         GLColor(210, 200, 148, 255));
+                testCopy(testTarget, kColor, GL_RGB9_E5, floatType, false, true, false,
+                         GLColor(192, 184, 138, 255));
+                testCopy(testTarget, kColor, GL_RGB9_E5, floatType, false, false, true,
+                         GLColor(227, 217, 161, 255));
+            }
         }
     }
 
@@ -808,6 +868,9 @@ void CopyTexture3DTest::testFloatFormats(const GLenum testTarget)
 TEST_P(Texture3DCopy, FloatFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
+
+    // http://anglebug.com/4756
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     testFloatFormats(GL_TEXTURE_3D);
 }
@@ -877,6 +940,10 @@ void CopyTexture3DTest::testIntFormats(const GLenum testTarget)
 TEST_P(Texture3DCopy, IntFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
+
+    // Vulkan multiplies source by 255 unconditionally, which is wrong for signed integer formats.
+    // http://anglebug.com/4741
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr char kFS[] =
         "#version 300 es\n"
@@ -999,6 +1066,10 @@ void CopyTexture3DTest::testUintFormats(const GLenum testTarget)
 TEST_P(Texture3DCopy, UintFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
+
+    // Vulkan multiplies source by 255 unconditionally, which is wrong for non-8-bit integer
+    // formats.  http://anglebug.com/4741
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr char kFS[] =
         "#version 300 es\n"
@@ -1153,6 +1224,9 @@ TEST_P(Texture2DArrayCopy, OffsetSubCopy)
     int width  = getWindowWidth() - 1;
     int height = getWindowHeight() - 1;
 
+    // http://anglebug.com/TODO
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
+
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(width, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(0, height, GLColor::green);
@@ -1221,6 +1295,9 @@ TEST_P(Texture2DArrayCopy, FlipY)
     EXPECT_GL_NO_ERROR();
     drawQuad(mProgram, "position", 1.0f);
 
+    // http://anglebug.com/TODO
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
+
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(0, height, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(width, 0, GLColor::green);
@@ -1233,6 +1310,10 @@ TEST_P(Texture2DArrayCopy, UnsizedFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
 
+    // TODO: Vulkan's CPU-path implementation doesn't handle 2DArray textures correctly yet.
+    // http://anglebug.com/4744
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel());
+
     testUnsizedFormats(GL_TEXTURE_2D_ARRAY);
 }
 
@@ -1241,6 +1322,10 @@ TEST_P(Texture2DArrayCopy, UnsizedFormats)
 TEST_P(Texture2DArrayCopy, SnormFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
+
+    // TODO: Vulkan's CPU-path implementation doesn't handle 2DArray textures correctly yet.
+    // http://anglebug.com/4744
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsIntel() || isSwiftshader() || IsAndroid()));
 
     testSnormFormats(GL_TEXTURE_2D_ARRAY);
 }
@@ -1254,6 +1339,10 @@ TEST_P(Texture2DArrayCopy, UnsignedByteFormats)
     // Flay on Windows D3D11. http://anglebug.com/2896
     ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
 
+    // TODO: Vulkan's CPU-path implementation doesn't handle 2DArray textures correctly yet.
+    // http://anglebug.com/4744
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsIntel() || IsAndroid()));
+
     testUnsignedByteFormats(GL_TEXTURE_2D_ARRAY);
 }
 
@@ -1263,6 +1352,10 @@ TEST_P(Texture2DArrayCopy, FloatFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
 
+    // TODO: Vulkan's CPU-path implementation doesn't handle 2DArray textures correctly yet.
+    // http://anglebug.com/4744
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsIntel() || IsAndroid()));
+
     testFloatFormats(GL_TEXTURE_2D_ARRAY);
 }
 
@@ -1271,6 +1364,10 @@ TEST_P(Texture2DArrayCopy, FloatFormats)
 TEST_P(Texture2DArrayCopy, IntFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
+
+    // Vulkan multiplies source by 255 unconditionally, which is wrong for signed integer formats.
+    // http://anglebug.com/4741
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr char kFS[] =
         "#version 300 es\n"
@@ -1297,6 +1394,10 @@ TEST_P(Texture2DArrayCopy, IntFormats)
 TEST_P(Texture2DArrayCopy, UintFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
+
+    // Vulkan multiplies source by 255 unconditionally, which is wrong for non-8-bit integer
+    // formats.  http://anglebug.com/4741
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr char kFS[] =
         "#version 300 es\n"

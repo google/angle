@@ -437,7 +437,7 @@ uint32_t GetImageLayerCountForView(const ImageHelper &image)
 ImageView *GetLevelImageView(ImageViewVector *imageViews, uint32_t level, uint32_t levelCount)
 {
     // Lazily allocate the storage for image views. We allocate the full level count because we
-    // don't want to trigger any std::vecotr reallocations. Reallocations could invalidate our
+    // don't want to trigger any std::vector reallocations. Reallocations could invalidate our
     // view pointers.
     if (imageViews->empty())
     {
@@ -4152,7 +4152,7 @@ bool ImageHelper::isUpdateStaged(uint32_t levelGL, uint32_t layer)
 }
 
 angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
-                                                 size_t sourceLevel,
+                                                 size_t sourceLevelGL,
                                                  uint32_t layerCount,
                                                  uint32_t baseLayer,
                                                  const gl::Box &sourceArea,
@@ -4193,6 +4193,8 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     ANGLE_TRY(contextVk->onBufferTransferWrite(*bufferOut));
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
+    uint32_t sourceLevelVk = static_cast<uint32_t>(sourceLevelGL) - mBaseLevel;
+
     VkBufferImageCopy regions[2] = {};
     // Default to non-combined DS case
     regions[0].bufferOffset                    = (*bufferOffsetsOut)[0];
@@ -4207,7 +4209,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     regions[0].imageSubresource.aspectMask     = aspectFlags;
     regions[0].imageSubresource.baseArrayLayer = baseLayer;
     regions[0].imageSubresource.layerCount     = layerCount;
-    regions[0].imageSubresource.mipLevel       = static_cast<uint32_t>(sourceLevel);
+    regions[0].imageSubresource.mipLevel       = sourceLevelVk;
 
     if (isCombinedDepthStencilFormat())
     {
@@ -4238,7 +4240,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
         regions[1].imageSubresource.aspectMask     = VK_IMAGE_ASPECT_STENCIL_BIT;
         regions[1].imageSubresource.baseArrayLayer = baseLayer;
         regions[1].imageSubresource.layerCount     = layerCount;
-        regions[1].imageSubresource.mipLevel       = static_cast<uint32_t>(sourceLevel);
+        regions[1].imageSubresource.mipLevel       = sourceLevelVk;
         commandBuffer->copyImageToBuffer(mImage, getCurrentLayout(),
                                          (*bufferOut)->getBuffer().getHandle(), 1, &regions[1]);
     }

@@ -118,6 +118,27 @@ angle::Result RenderTargetVk::getImageView(ContextVk *contextVk,
                                                    imageViewOut);
 }
 
+angle::Result RenderTargetVk::getAndRetainCopyImageView(ContextVk *contextVk,
+                                                        const vk::ImageView **imageViewOut) const
+{
+    retainImageViews(contextVk);
+
+    const vk::ImageViewHelper *imageViews = mImageViews;
+    const vk::ImageView &copyView         = imageViews->getCopyImageView();
+
+    // If the source of render target is the texture, this will always be valid.  This is also where
+    // 3D or 2DArray images could be the source of the render target.
+    if (copyView.valid())
+    {
+        *imageViewOut = &copyView;
+        return angle::Result::Continue;
+    }
+
+    // Otherwise, this must come from the surface, in which case the image is 2D, so the image view
+    // used to draw is just as good for fetching.
+    return getImageView(contextVk, imageViewOut);
+}
+
 const vk::Format &RenderTargetVk::getImageFormat() const
 {
     ASSERT(mImage && mImage->valid());

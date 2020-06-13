@@ -57,11 +57,15 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageHelper &getImage();
     const vk::ImageHelper &getImage() const;
 
-    // getImageForRead will also transition the resource to the given layout.
     vk::ImageHelper *getImageForWrite(ContextVk *contextVk) const;
 
     // For cube maps we use single-level single-layer 2D array views.
     angle::Result getImageView(ContextVk *contextVk, const vk::ImageView **imageViewOut) const;
+
+    // For 3D textures, the 2D view created for render target is invalid to read from.  The
+    // following will return a view to the whole image (for all types, including 3D and 2DArray).
+    angle::Result getAndRetainCopyImageView(ContextVk *contextVk,
+                                            const vk::ImageView **imageViewOut) const;
 
     const vk::Format &getImageFormat() const;
     gl::Extents getExtents() const;

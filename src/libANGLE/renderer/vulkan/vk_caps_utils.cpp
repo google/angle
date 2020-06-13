@@ -84,6 +84,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.framebufferBlit        = true;
     mNativeExtensions.framebufferMultisample = true;
     mNativeExtensions.copyTexture            = true;
+    mNativeExtensions.copyTexture3d          = true;
     mNativeExtensions.copyCompressedTexture  = true;
     mNativeExtensions.debugMarker            = true;
     mNativeExtensions.robustness =

@@ -1297,7 +1297,7 @@ angle::Result Texture::copyTexture(Context *context,
                                     unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source));
 
     const auto &sourceDesc =
-        source->mState.getImageDesc(NonCubeTextureTypeToTarget(source->getType()), 0);
+        source->mState.getImageDesc(NonCubeTextureTypeToTarget(source->getType()), sourceLevel);
     const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat, type);
     mState.setImageDesc(
         target, level,

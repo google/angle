@@ -1674,7 +1674,18 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     }
 
     uint32_t flags = GetImageCopyFlags(srcFormat, dstFormat);
-    flags |= src->getLayerCount() > 1 ? ImageCopy_frag::kSrcIsArray : 0;
+    if (src->getType() == VK_IMAGE_TYPE_3D)
+    {
+        flags |= ImageCopy_frag::kSrcIs3D;
+    }
+    else if (src->getLayerCount() > 1)
+    {
+        flags |= ImageCopy_frag::kSrcIs2DArray;
+    }
+    else
+    {
+        flags |= ImageCopy_frag::kSrcIs2D;
+    }
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
