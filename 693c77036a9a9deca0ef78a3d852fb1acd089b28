@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "49279ec4_1e822957",
+        "filename": "src/libANGLE/renderer/d3d/VertexBuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-15T18:34:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "69519bdb_4cdb6a2d",
+      "range": {
+        "startLine": 195,
+        "startChar": 9,
+        "endLine": 196,
+        "endChar": 67
+      },
+      "revId": "693c77036a9a9deca0ef78a3d852fb1acd089b28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "938a680e_85c2912f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 5
