@@ -285,6 +285,24 @@
       "revId": "cf3646866fc1687e3bd72acb3eb79a601d6c67b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "262247fa_164ee283",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1578,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-06-15T15:06:43Z",
+      "side": 1,
+      "message": "You would have needed a test that generates an error in a previous EGL call and you would observe that the error persists after calling this function.",
+      "parentUuid": "309a0cb5_57e0f6f9",
+      "revId": "cf3646866fc1687e3bd72acb3eb79a601d6c67b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
