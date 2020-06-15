@@ -377,6 +377,7 @@ template("angle_test") {
     if (is_android) {
       if (build_with_chromium) {
         use_native_activity = true
+        configs -= [ "//build/config/android:hide_all_but_jni" ]
       } else {
         use_raw_android_executable = true
       }
