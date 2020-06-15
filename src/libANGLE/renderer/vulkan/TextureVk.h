@@ -388,6 +388,11 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // support changes in the staging buffer even outside the TextureVk class.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
+    ANGLE_INLINE VkImageTiling getTilingMode()
+    {
+        return (mImage->valid()) ? mImage->getTilingMode() : VK_IMAGE_TILING_OPTIMAL;
+    }
+
     bool mOwnsImage;
 
     gl::TextureType mImageNativeType;
