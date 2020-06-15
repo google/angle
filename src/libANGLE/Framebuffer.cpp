@@ -263,10 +263,10 @@ angle::Result InitAttachment(const Context *context, FramebufferAttachment *atta
     return angle::Result::Continue;
 }
 
-bool IsColorMaskedOut(const BlendStateExt &blendStateExt, const GLint drawbuffer)
+bool IsColorMaskedOut(const BlendState &blend)
 {
-    ASSERT(static_cast<size_t>(drawbuffer) < blendStateExt.mMaxDrawBuffers);
-    return blendStateExt.getColorMaskIndexed(static_cast<size_t>(drawbuffer)) == 0;
+    return (!blend.colorMaskRed && !blend.colorMaskGreen && !blend.colorMaskBlue &&
+            !blend.colorMaskAlpha);
 }
 
 bool IsDepthMaskedOut(const DepthStencilState &depthStencil)
@@ -284,7 +284,9 @@ bool IsClearBufferMaskedOut(const Context *context, GLenum buffer, GLint drawbuf
     switch (buffer)
     {
         case GL_COLOR:
-            return IsColorMaskedOut(context->getState().getBlendStateExt(), drawbuffer);
+            ASSERT(static_cast<size_t>(drawbuffer) <
+                   context->getState().getBlendStateArray().size());
+            return IsColorMaskedOut(context->getState().getBlendStateArray()[drawbuffer]);
         case GL_DEPTH:
             return IsDepthMaskedOut(context->getState().getDepthStencilState());
         case GL_STENCIL:

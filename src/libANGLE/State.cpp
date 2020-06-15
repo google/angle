@@ -710,10 +710,13 @@ void State::setStencilClearValue(int stencil)
 
 void State::setColorMask(bool red, bool green, bool blue, bool alpha)
 {
-    mBlendState.colorMaskRed   = red;
-    mBlendState.colorMaskGreen = green;
-    mBlendState.colorMaskBlue  = blue;
-    mBlendState.colorMaskAlpha = alpha;
+    for (BlendState &blendState : mBlendStateArray)
+    {
+        blendState.colorMaskRed   = red;
+        blendState.colorMaskGreen = green;
+        blendState.colorMaskBlue  = blue;
+        blendState.colorMaskAlpha = alpha;
+    }
 
     mBlendStateExt.setColorMask(red, green, blue, alpha);
     mDirtyBits.set(DIRTY_BIT_COLOR_MASK);
@@ -721,24 +724,42 @@ void State::setColorMask(bool red, bool green, bool blue, bool alpha)
 
 void State::setColorMaskIndexed(bool red, bool green, bool blue, bool alpha, GLuint index)
 {
+    ASSERT(index < mBlendStateArray.size());
+    mBlendStateArray[index].colorMaskRed   = red;
+    mBlendStateArray[index].colorMaskGreen = green;
+    mBlendStateArray[index].colorMaskBlue  = blue;
+    mBlendStateArray[index].colorMaskAlpha = alpha;
+
     mBlendStateExt.setColorMaskIndexed(index, red, green, blue, alpha);
     mDirtyBits.set(DIRTY_BIT_COLOR_MASK);
 }
 
 bool State::allActiveDrawBufferChannelsMasked() const
 {
-    // Compare current color mask with all-disabled color mask, while ignoring disabled draw
-    // buffers.
-    return (mBlendStateExt.compareColorMask(0) & mDrawFramebuffer->getDrawBufferMask()).none();
+    for (size_t drawBufferIndex : mDrawFramebuffer->getDrawBufferMask())
+    {
+        const BlendState &blendState = mBlendStateArray[drawBufferIndex];
+        if (blendState.colorMaskRed || blendState.colorMaskGreen || blendState.colorMaskBlue ||
+            blendState.colorMaskAlpha)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool State::anyActiveDrawBufferChannelMasked() const
 {
-    // Compare current color mask with all-enabled color mask, while ignoring disabled draw
-    // buffers.
-    return (mBlendStateExt.compareColorMask(mBlendStateExt.mMaxColorMask) &
-            mDrawFramebuffer->getDrawBufferMask())
-        .any();
+    for (size_t drawBufferIndex : mDrawFramebuffer->getDrawBufferMask())
+    {
+        const BlendState &blendState = mBlendStateArray[drawBufferIndex];
+        if (!(blendState.colorMaskRed && blendState.colorMaskGreen && blendState.colorMaskBlue &&
+              blendState.colorMaskAlpha))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 void State::setDepthMask(bool mask)
@@ -804,24 +825,31 @@ void State::setDepthRange(float zNear, float zFar)
 
 void State::setBlend(bool enabled)
 {
-    mBlendState.blend = enabled;
-
+    for (BlendState &blendState : mBlendStateArray)
+    {
+        blendState.blend = enabled;
+    }
     mBlendStateExt.setEnabled(enabled);
     mDirtyBits.set(DIRTY_BIT_BLEND_ENABLED);
 }
 
 void State::setBlendIndexed(bool enabled, GLuint index)
 {
+    ASSERT(index < mBlendStateArray.size());
+    mBlendStateArray[index].blend = enabled;
     mBlendStateExt.setEnabledIndexed(index, enabled);
     mDirtyBits.set(DIRTY_BIT_BLEND_ENABLED);
 }
 
 void State::setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha, GLenum destAlpha)
 {
-    mBlendState.sourceBlendRGB   = sourceRGB;
-    mBlendState.destBlendRGB     = destRGB;
-    mBlendState.sourceBlendAlpha = sourceAlpha;
-    mBlendState.destBlendAlpha   = destAlpha;
+    for (BlendState &blendState : mBlendStateArray)
+    {
+        blendState.sourceBlendRGB   = sourceRGB;
+        blendState.destBlendRGB     = destRGB;
+        blendState.sourceBlendAlpha = sourceAlpha;
+        blendState.destBlendAlpha   = destAlpha;
+    }
 
     if (mNoSimultaneousConstantColorAndAlphaBlendFunc)
     {
@@ -854,6 +882,12 @@ void State::setBlendFactorsIndexed(GLenum sourceRGB,
                                    GLenum destAlpha,
                                    GLuint index)
 {
+    ASSERT(index < mBlendStateArray.size());
+    mBlendStateArray[index].sourceBlendRGB   = sourceRGB;
+    mBlendStateArray[index].destBlendRGB     = destRGB;
+    mBlendStateArray[index].sourceBlendAlpha = sourceAlpha;
+    mBlendStateArray[index].destBlendAlpha   = destAlpha;
+
     if (mNoSimultaneousConstantColorAndAlphaBlendFunc)
     {
         mBlendFuncConstantColorDrawBuffers.set(index, hasConstantColor(sourceRGB, destRGB));
@@ -889,8 +923,11 @@ void State::setBlendColor(float red, float green, float blue, float alpha)
 
 void State::setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
 {
-    mBlendState.blendEquationRGB   = rgbEquation;
-    mBlendState.blendEquationAlpha = alphaEquation;
+    for (BlendState &blendState : mBlendStateArray)
+    {
+        blendState.blendEquationRGB   = rgbEquation;
+        blendState.blendEquationAlpha = alphaEquation;
+    }
 
     mBlendStateExt.setEquations(rgbEquation, alphaEquation);
     mDirtyBits.set(DIRTY_BIT_BLEND_EQUATIONS);
@@ -898,6 +935,10 @@ void State::setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
 
 void State::setBlendEquationIndexed(GLenum rgbEquation, GLenum alphaEquation, GLuint index)
 {
+    ASSERT(index < mBlendStateArray.size());
+    mBlendStateArray[index].blendEquationRGB   = rgbEquation;
+    mBlendStateArray[index].blendEquationAlpha = alphaEquation;
+
     mBlendStateExt.setEquationsIndexed(index, rgbEquation, alphaEquation);
     mDirtyBits.set(DIRTY_BIT_BLEND_EQUATIONS);
 }
@@ -2168,16 +2209,12 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
             *params = mDepthStencil.depthMask;
             break;
         case GL_COLOR_WRITEMASK:
-        {
             // non-indexed get returns the state of draw buffer zero
-            bool r, g, b, a;
-            mBlendStateExt.getColorMaskIndexed(0, &r, &g, &b, &a);
-            params[0] = r;
-            params[1] = g;
-            params[2] = b;
-            params[3] = a;
+            params[0] = mBlendStateArray[0].colorMaskRed;
+            params[1] = mBlendStateArray[0].colorMaskGreen;
+            params[2] = mBlendStateArray[0].colorMaskBlue;
+            params[3] = mBlendStateArray[0].colorMaskAlpha;
             break;
-        }
         case GL_CULL_FACE:
             *params = mRasterizer.cullFace;
             break;
@@ -2204,7 +2241,7 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
             break;
         case GL_BLEND:
             // non-indexed get returns the state of draw buffer zero
-            *params = mBlendStateExt.mEnabledMask.test(0);
+            *params = mBlendStateArray[0].blend;
             break;
         case GL_DITHER:
             *params = mRasterizer.dither;
@@ -2514,22 +2551,22 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             break;
         case GL_BLEND_SRC_RGB:
             // non-indexed get returns the state of draw buffer zero
-            *params = mBlendStateExt.getSrcColorIndexed(0);
+            *params = mBlendStateArray[0].sourceBlendRGB;
             break;
         case GL_BLEND_SRC_ALPHA:
-            *params = mBlendStateExt.getSrcAlphaIndexed(0);
+            *params = mBlendStateArray[0].sourceBlendAlpha;
             break;
         case GL_BLEND_DST_RGB:
-            *params = mBlendStateExt.getDstColorIndexed(0);
+            *params = mBlendStateArray[0].destBlendRGB;
             break;
         case GL_BLEND_DST_ALPHA:
-            *params = mBlendStateExt.getDstAlphaIndexed(0);
+            *params = mBlendStateArray[0].destBlendAlpha;
             break;
         case GL_BLEND_EQUATION_RGB:
-            *params = mBlendStateExt.getEquationColorIndexed(0);
+            *params = mBlendStateArray[0].blendEquationRGB;
             break;
         case GL_BLEND_EQUATION_ALPHA:
-            *params = mBlendStateExt.getEquationAlphaIndexed(0);
+            *params = mBlendStateArray[0].blendEquationAlpha;
             break;
         case GL_STENCIL_WRITEMASK:
             *params = CastMaskValue(mDepthStencil.stencilWritemask);
@@ -2787,10 +2824,10 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             break;
         case GL_BLEND_SRC:
             // non-indexed get returns the state of draw buffer zero
-            *params = mBlendStateExt.getSrcColorIndexed(0);
+            *params = mBlendStateArray[0].sourceBlendRGB;
             break;
         case GL_BLEND_DST:
-            *params = mBlendStateExt.getDstColorIndexed(0);
+            *params = mBlendStateArray[0].destBlendRGB;
             break;
         case GL_PERSPECTIVE_CORRECTION_HINT:
         case GL_POINT_SMOOTH_HINT:
@@ -2856,28 +2893,28 @@ void State::getIntegeri_v(GLenum target, GLuint index, GLint *data) const
     switch (target)
     {
         case GL_BLEND_SRC_RGB:
-            ASSERT(static_cast<size_t>(index) < mBlendStateExt.mMaxDrawBuffers);
-            *data = mBlendStateExt.getSrcColorIndexed(index);
+            ASSERT(static_cast<size_t>(index) < mBlendStateArray.size());
+            *data = mBlendStateArray[index].sourceBlendRGB;
             break;
         case GL_BLEND_SRC_ALPHA:
-            ASSERT(static_cast<size_t>(index) < mBlendStateExt.mMaxDrawBuffers);
-            *data = mBlendStateExt.getSrcAlphaIndexed(index);
+            ASSERT(static_cast<size_t>(index) < mBlendStateArray.size());
+            *data = mBlendStateArray[index].sourceBlendAlpha;
             break;
         case GL_BLEND_DST_RGB:
-            ASSERT(static_cast<size_t>(index) < mBlendStateExt.mMaxDrawBuffers);
-            *data = mBlendStateExt.getDstColorIndexed(index);
+            ASSERT(static_cast<size_t>(index) < mBlendStateArray.size());
+            *data = mBlendStateArray[index].destBlendRGB;
             break;
         case GL_BLEND_DST_ALPHA:
-            ASSERT(static_cast<size_t>(index) < mBlendStateExt.mMaxDrawBuffers);
-            *data = mBlendStateExt.getDstAlphaIndexed(index);
+            ASSERT(static_cast<size_t>(index) < mBlendStateArray.size());
+            *data = mBlendStateArray[index].destBlendAlpha;
             break;
         case GL_BLEND_EQUATION_RGB:
-            ASSERT(static_cast<size_t>(index) < mBlendStateExt.mMaxDrawBuffers);
-            *data = mBlendStateExt.getEquationColorIndexed(index);
+            ASSERT(static_cast<size_t>(index) < mBlendStateArray.size());
+            *data = mBlendStateArray[index].blendEquationRGB;
             break;
         case GL_BLEND_EQUATION_ALPHA:
-            ASSERT(static_cast<size_t>(index) < mBlendStateExt.mMaxDrawBuffers);
-            *data = mBlendStateExt.getEquationAlphaIndexed(index);
+            ASSERT(static_cast<size_t>(index) < mBlendStateArray.size());
+            *data = mBlendStateArray[index].blendEquationAlpha;
             break;
         case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
             ASSERT(static_cast<size_t>(index) < mTransformFeedback->getIndexedBufferCount());
@@ -2988,16 +3025,12 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data) const
     switch (target)
     {
         case GL_COLOR_WRITEMASK:
-        {
-            ASSERT(static_cast<size_t>(index) < mBlendStateExt.mMaxDrawBuffers);
-            bool r, g, b, a;
-            mBlendStateExt.getColorMaskIndexed(index, &r, &g, &b, &a);
-            data[0] = r;
-            data[1] = g;
-            data[2] = b;
-            data[3] = a;
+            ASSERT(static_cast<size_t>(index) < mBlendStateArray.size());
+            data[0] = mBlendStateArray[index].colorMaskRed;
+            data[1] = mBlendStateArray[index].colorMaskGreen;
+            data[2] = mBlendStateArray[index].colorMaskBlue;
+            data[3] = mBlendStateArray[index].colorMaskAlpha;
             break;
-        }
         case GL_IMAGE_BINDING_LAYERED:
             ASSERT(static_cast<size_t>(index) < mImageUnits.size());
             *data = mImageUnits[index].layered;
