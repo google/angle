@@ -19,6 +19,11 @@
 #define USE_SYSTEM_ZLIB
 #include "compression_utils_portable.h"
 
+#define ANGLE_MACRO_STRINGIZE_AUX(a) #a
+#define ANGLE_MACRO_STRINGIZE(a) ANGLE_MACRO_STRINGIZE_AUX(a)
+#define ANGLE_MACRO_CONCAT_AUX(a, b) a##b
+#define ANGLE_MACRO_CONCAT(a, b) ANGLE_MACRO_CONCAT_AUX(a, b)
+
 namespace angle
 {
 
