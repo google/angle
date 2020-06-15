@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "26d8aee4_4d5c3546",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-15T15:24:33Z",
+      "side": 1,
+      "message": "Link is good, also please change the double underscore as requested. Especially if it\u0027s copy pasted we shouldn\u0027t use the same name.",
+      "parentUuid": "39b6f088_2c62ff46",
+      "range": {
+        "startLine": 41,
+        "startChar": 16,
+        "endLine": 41,
+        "endChar": 25
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6b740480_7835235e",
         "filename": "src/common/tls.h",
         "patchSetId": 8
