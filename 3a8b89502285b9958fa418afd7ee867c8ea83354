@@ -1,0 +1,354 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a77b27d_47349fdd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "Can you add a line with Test: and include how you run this test?",
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfe09496_5c26884c",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3859,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "Rather than const_cast, you can update serializeState to accept a const context.",
+      "range": {
+        "startLine": 3859,
+        "startChar": 23,
+        "endLine": 3859,
+        "endChar": 33
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43688915_5bb4971a",
+        "filename": "src/libANGLE/FrameCapture.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "I don\u0027t think you need to add anything to FrameCapture for the test script.  Let\u0027s defer adding these in this CL.",
+      "range": {
+        "startLine": 300,
+        "startChar": 9,
+        "endLine": 300,
+        "endChar": 23
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e887d8d_18eeb3b8",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "2020",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f85a4764_e53073fd",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "These preprocessor macros are common with the sample.  Can we move them to frame_capture_utils.h?",
+      "range": {
+        "startLine": 18,
+        "startChar": 8,
+        "endLine": 18,
+        "endChar": 33
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1cdb205_d8dafb44",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "whitespace",
+      "range": {
+        "startLine": 106,
+        "startChar": 67,
+        "endLine": 106,
+        "endChar": 68
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e9adff9_103a9214",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "2020",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "055cc924_9f618e79",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "Based",
+      "range": {
+        "startLine": 27,
+        "startChar": 3,
+        "endLine": 27,
+        "endChar": 8
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d67e9ef4_063638ff",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "Need a license header in here and a description of the file.",
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5682eeb6_abe9987a",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "Can you add a block of comments in here that replicate what you put in the CL message?\n\nAlso, can you add a description of what pass/fail for the script might mean?  I\u0027m guessing that every test must run, capture, compile, and replay without error to pass the test.",
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2f189cc_04809067",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "We\u0027ll want this to be flexible since we all put our own flavor on the directory names.  Okay to have this as default, but can it be a parameter?",
+      "range": {
+        "startLine": 47,
+        "startChar": 23,
+        "endLine": 47,
+        "endChar": 28
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "965b592f_045f6d4b",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "Can you bring the definition of this down closer to the use?",
+      "range": {
+        "startLine": 75,
+        "startChar": 11,
+        "endLine": 75,
+        "endChar": 30
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a42de555_1c6a8dcd",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "This is a bit confusing.  Can you provide an example here for why this is needed?",
+      "range": {
+        "startLine": 84,
+        "startChar": 12,
+        "endLine": 84,
+        "endChar": 31
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7f7140c_dd940fd8",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "This function is just running the test, nothing specific for capturing.  Can we just name it Run?  That or move the assignment of ANGLE_CAPTURE_ENABLED into the function.",
+      "range": {
+        "startLine": 91,
+        "startChar": 26,
+        "endLine": 91,
+        "endChar": 40
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fe13fc2_d9a6ad2a",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "Can you also move the assignment of this value down to easily see it?",
+      "range": {
+        "startLine": 92,
+        "startChar": 11,
+        "endLine": 92,
+        "endChar": 39
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86b07c64_fd75b2c3",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-15T22:28:50Z",
+      "side": 1,
+      "message": "This is interesting. Current we only create captures for applications that render frames. Unrelated to this CL, but we might want to add an extension that allows starting and ending captures for smaller sequences.",
+      "range": {
+        "startLine": 97,
+        "startChar": 19,
+        "endLine": 97,
+        "endChar": 73
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
