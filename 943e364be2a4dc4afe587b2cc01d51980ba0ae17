@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "906da6d8_730f3db0",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-15T15:52:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26d8aee4_4d5c3546",
+      "range": {
+        "startLine": 41,
+        "startChar": 16,
+        "endLine": 41,
+        "endChar": 25
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b740480_7835235e",
         "filename": "src/common/tls.h",
         "patchSetId": 8
@@ -117,6 +141,30 @@
       "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5022116_1647e687",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-15T15:52:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19d45938_4d54194d",
+      "range": {
+        "startLine": 56,
+        "startChar": 12,
+        "endLine": 56,
+        "endChar": 13
+      },
+      "revId": "943e364be2a4dc4afe587b2cc01d51980ba0ae17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
