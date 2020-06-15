@@ -438,6 +438,9 @@ egl::ConfigSet DisplayEGL::generateConfigs()
                                    &config.colorComponentType, "EGL_EXT_pixel_format_float",
                                    EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
 
+        // Pixmaps are not supported on EGL, make sure the config doesn't expose them.
+        config.surfaceType &= ~EGL_PIXMAP_BIT;
+
         if (config.colorBufferType == EGL_RGB_BUFFER)
         {
             ASSERT(config.colorComponentType == EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
