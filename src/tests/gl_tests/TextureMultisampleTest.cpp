@@ -358,6 +358,10 @@ TEST_P(TextureMultisampleTest, ValidateTextureStorageMultisampleParameters)
 TEST_P(TextureMultisampleTest, MaxIntegerSamples)
 {
     ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
+
+    // Fixed in recent mesa.  http://crbug.com/1071142
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux() && (IsIntel() || IsAMD()));
+
     GLint maxIntegerSamples;
     glGetIntegerv(GL_MAX_INTEGER_SAMPLES, &maxIntegerSamples);
     EXPECT_GE(maxIntegerSamples, 1);

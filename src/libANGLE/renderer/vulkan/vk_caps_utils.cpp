@@ -217,11 +217,8 @@ void RendererVk::ensureCapsInitialized() const
         limitsVk.sampledImageColorSampleCounts & vk_gl::kSupportedSampleCounts;
     mNativeCaps.maxDepthTextureSamples =
         limitsVk.sampledImageDepthSampleCounts & vk_gl::kSupportedSampleCounts;
-    // TODO (ianelliott): Should mask this with vk_gl::kSupportedSampleCounts, but it causes
-    // end2end test failures with SwiftShader because SwiftShader returns a sample count of 1 in
-    // sampledImageIntegerSampleCounts.
-    // See: http://anglebug.com/4197
-    mNativeCaps.maxIntegerSamples = limitsVk.sampledImageIntegerSampleCounts;
+    mNativeCaps.maxIntegerSamples =
+        limitsVk.sampledImageIntegerSampleCounts & vk_gl::kSupportedSampleCounts;
 
     mNativeCaps.maxVertexAttributes     = LimitToInt(limitsVk.maxVertexInputAttributes);
     mNativeCaps.maxVertexAttribBindings = LimitToInt(limitsVk.maxVertexInputBindings);
