@@ -34,6 +34,24 @@
       "revId": "c8489cea4d70a46ac6da2bb576444ff13681460f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c419f380_3428b528",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-06-16T17:23:28Z",
+      "side": 1,
+      "message": "Oh, interesting.   Good to know.",
+      "parentUuid": "eceba75f_dec2b882",
+      "revId": "c8489cea4d70a46ac6da2bb576444ff13681460f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
