@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "baf8626f_80dd5547",
+        "filename": "samples/capture_replay/CaptureReplay.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-16T17:35:38Z",
+      "side": 1,
+      "message": "I won\u0027t get hung up on this, but this code is a bit ugly.  I don\u0027t immediately see a way to move it to helpers, and I don\u0027t think we should move to shared defines (i.e. just use ANGLE_CAPTURE_REPLAY_HEADER in both files).",
+      "parentUuid": "bdb98625_22895161",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "3427109e812eeffe4978732fa71ce7017d11fec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79a7763a_1f95ebd7",
         "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
         "patchSetId": 8
@@ -151,6 +175,30 @@
       "revId": "3427109e812eeffe4978732fa71ce7017d11fec9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e0d1b44_ff332b44",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-16T17:35:38Z",
+      "side": 1,
+      "message": "Can you also update the commit message to match?",
+      "parentUuid": "fc1357c2_4ec9c69b",
+      "range": {
+        "startLine": 10,
+        "startChar": 1,
+        "endLine": 10,
+        "endChar": 11
+      },
+      "revId": "3427109e812eeffe4978732fa71ce7017d11fec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     },
     {
       "key": {
