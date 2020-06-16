@@ -340,8 +340,7 @@ angle_static_library("angle_gpu_info_util") {
 
   if (is_fuchsia) {
     sources += libangle_gpu_info_util_fuchsia_sources
-    deps +=
-        [ "$angle_root/src/libANGLE/renderer/vulkan:angle_vulkan_entry_points" ]
+    deps += [ "$angle_root/src/common/vulkan:angle_vulkan_entry_points" ]
   }
 
   if (is_win) {

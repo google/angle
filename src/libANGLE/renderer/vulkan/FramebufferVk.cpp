@@ -12,6 +12,7 @@
 #include <array>
 
 #include "common/debug.h"
+#include "common/vulkan/vk_headers.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/formatutils.h"
@@ -23,7 +24,6 @@
 #include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
-#include "libANGLE/renderer/vulkan/vk_headers.h"
 #include "libANGLE/trace.h"
 
 namespace rx

@@ -12,7 +12,7 @@
 
 #include "common/Optional.h"
 #include "common/angleutils.h"
-#include "libANGLE/renderer/vulkan/vk_headers.h"
+#include "common/vulkan/vk_headers.h"
 
 namespace angle
 {

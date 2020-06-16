@@ -12,7 +12,7 @@
 #define LIBANGLE_RENDERER_VULKAN_SECONDARYCOMMANDBUFFERVK_H_
 
 #include "common/PoolAlloc.h"
-#include "libANGLE/renderer/vulkan/vk_headers.h"
+#include "common/vulkan/vk_headers.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
 
 namespace rx

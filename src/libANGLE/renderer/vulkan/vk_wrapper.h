@@ -11,8 +11,8 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_WRAPPER_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_WRAPPER_H_
 
+#include "common/vulkan/vk_headers.h"
 #include "libANGLE/renderer/renderer_utils.h"
-#include "libANGLE/renderer/vulkan/vk_headers.h"
 #include "libANGLE/renderer/vulkan/vk_mem_alloc_wrapper.h"
 #include "libANGLE/trace.h"
 

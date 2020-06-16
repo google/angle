@@ -178,10 +178,7 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
         "test_utils/VulkanExternalHelper.cpp",
         "test_utils/VulkanExternalHelper.h",
       ]
-      deps += [
-        "$angle_root/src/common/vulkan",
-        "$angle_root/src/libANGLE/renderer/vulkan:angle_vulkan_entry_points",
-      ]
+      deps += [ "$angle_root/src/common/vulkan" ]
     }
 
     if (is_fuchsia) {
@@ -217,9 +214,7 @@ if (is_win || is_linux || is_mac || is_android) {
 
     if (angle_enable_vulkan) {
       sources += angle_white_box_tests_vulkan_sources
-      deps += [
-        "$angle_root/src/libANGLE/renderer/vulkan:angle_vulkan_entry_points",
-      ]
+      deps += [ "$angle_root/src/common/vulkan:angle_vulkan_entry_points" ]
     }
   }
 }
@@ -278,7 +273,7 @@ if (is_win || is_linux || is_android || is_mac) {
       sources += angle_white_box_perf_tests_vulkan_sources
       deps += [
         "$angle_glslang_dir:glslang_sources",
-        "$angle_root/src/libANGLE/renderer/vulkan:angle_vulkan_entry_points",
+        "$angle_root/src/common/vulkan:angle_vulkan_entry_points",
       ]
     }
   }

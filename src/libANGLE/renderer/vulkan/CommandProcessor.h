@@ -16,7 +16,7 @@
 #include <queue>
 #include <thread>
 
-#include "libANGLE/renderer/vulkan/vk_headers.h"
+#include "common/vulkan/vk_headers.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 namespace rx
