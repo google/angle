@@ -576,6 +576,44 @@ TEST_P(MipmapTest, GenerateMipmapFromInitDataThenRender)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::blue);
 }
 
+// Test that generating mipmaps, then modifying the base level and generating mipmaps again works.
+TEST_P(MipmapTest, GenerateMipmapAfterModifyingBaseLevel)
+{
+    uint32_t width  = getWindowWidth();
+    uint32_t height = getWindowHeight();
+
+    const std::vector<GLColor> kInitData(width * height, GLColor::blue);
+
+    // Pass in initial data so the texture is blue.
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kInitData.data());
+
+    // Then generate the mips.
+    glGenerateMipmap(GL_TEXTURE_2D);
+    ASSERT_GL_NO_ERROR();
+
+    // Enable mipmaps.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+
+    // Draw and make sure the second mip is blue.  This is to make sure the texture image is
+    // allocated.
+    clearAndDrawQuad(m2DProgram, getWindowWidth() / 2, getWindowHeight() / 2);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, kInitData[0]);
+
+    // Modify mip 0 without redefining it.
+    const std::vector<GLColor> kModifyData(width * height, GLColor::green);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kModifyData.data());
+
+    // Generate the mips again, which should update all levels to the new (green) color.
+    glGenerateMipmap(GL_TEXTURE_2D);
+    ASSERT_GL_NO_ERROR();
+
+    clearAndDrawQuad(m2DProgram, getWindowWidth() / 2, getWindowHeight() / 2);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, kModifyData[0]);
+}
+
 // This test ensures that mips are correctly generated from a rendered image.
 // In particular, on D3D11 Feature Level 9_3, the clear call will be performed on the zero-level
 // texture, rather than the mipped one. The test ensures that the zero-level texture is correctly

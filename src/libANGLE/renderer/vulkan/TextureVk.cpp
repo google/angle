@@ -1344,55 +1344,36 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
 
     const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
 
-    // Some data is pending, or the image has not been defined at all yet
-    if (!mImage->valid())
-    {
-        // Let's initialize the image so we can generate the next levels.
-        if (mImage->hasStagedUpdates())
-        {
-            ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::FullMipChain));
-            ASSERT(mImage->valid());
-            needRedefineImage = false;
-        }
-        else
-        {
-            // There is nothing to generate if there is nothing uploaded so far.
-            return angle::Result::Continue;
-        }
-    }
+    // The image should already be allocated by a prior syncState.
+    ASSERT(mImage->valid());
+
+    // If base level has changed, the front-end should have called syncState already.
+    ASSERT(mImage->getBaseLevel() == mState.getEffectiveBaseLevel());
 
     // Check whether the image is already full mipmap
-    if (mImage->getLevelCount() == getMipLevelCount(ImageMipLevels::FullMipChain) &&
-        mImage->getBaseLevel() == mState.getEffectiveBaseLevel())
+    if (mImage->getLevelCount() == getMipLevelCount(ImageMipLevels::FullMipChain))
     {
         needRedefineImage = false;
     }
 
+    // Only staged update here can be the robust resource init.
+    ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+
     if (needRedefineImage)
     {
-        // Flush update if needed.
-        if (mImage->hasStagedUpdates())
-        {
-            vk::CommandBuffer *commandBuffer = nullptr;
-            mImage->retain(&contextVk->getResourceUseList());
-            ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
-            ANGLE_TRY(mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0),
-                                                 mImage->getLevelCount(), getNativeImageLayer(0),
-                                                 mImage->getLayerCount(), {}, commandBuffer));
-        }
-
         // Redefine the images with mipmaps.
         // Copy image to the staging buffer and stage an update to the new one.
         ANGLE_TRY(copyAndStageImageSubresource(contextVk, baseLevelDesc, false,
                                                getNativeImageLayer(0), 0, mImage->getBaseLevel()));
 
-        // Release the origin image and recreate it with new mipmap counts.
+        // Release the original image and recreate it with new mipmap counts.
         releaseImage(contextVk);
 
         mImage->retain(&contextVk->getResourceUseList());
 
         ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::FullMipChain));
     }
+
     // Check if the image supports blit. If it does, we can do the mipmap generation on the gpu
     // only.
     if (renderer->hasImageFormatFeatureBits(mImage->getFormat().vkImageFormat, kBlitFeatureFlags))
