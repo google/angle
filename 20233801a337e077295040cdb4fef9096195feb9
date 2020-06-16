@@ -22,6 +22,30 @@
       "revId": "20233801a337e077295040cdb4fef9096195feb9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44e83d7e_24481fb9",
+        "filename": "src/common/tls.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-06-16T21:34:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72564c17_739a92de",
+      "range": {
+        "startLine": 106,
+        "startChar": 12,
+        "endLine": 106,
+        "endChar": 36
+      },
+      "revId": "20233801a337e077295040cdb4fef9096195feb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
