@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72564c17_739a92de",
+        "filename": "src/common/tls.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-16T18:43:10Z",
+      "side": 1,
+      "message": "Nit: this should probably be called `gUseAndroidOpenGLTlsSlot` as it\u0027s not a constant.",
+      "range": {
+        "startLine": 106,
+        "startChar": 12,
+        "endLine": 106,
+        "endChar": 36
+      },
+      "revId": "20233801a337e077295040cdb4fef9096195feb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
