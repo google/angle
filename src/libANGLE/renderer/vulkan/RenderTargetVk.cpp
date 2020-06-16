@@ -58,18 +58,15 @@ void RenderTargetVk::reset()
     mContentDefined = false;
 }
 
-vk::AttachmentSerial RenderTargetVk::getAssignSerial(ContextVk *contextVk)
+Serial RenderTargetVk::getAssignImageViewSerial(ContextVk *contextVk)
 {
-    ASSERT(mImage && mImage->valid());
-    vk::AttachmentSerial attachmentSerial;
+    ASSERT(mImageViews);
     ASSERT(mLayerIndex < std::numeric_limits<uint16_t>::max());
     ASSERT(mLevelIndex < std::numeric_limits<uint16_t>::max());
-    Serial imageSerial = mImage->getAssignSerial(contextVk);
-    ASSERT(imageSerial.getValue() < std::numeric_limits<uint32_t>::max());
-    SetBitField(attachmentSerial.layer, mLayerIndex);
-    SetBitField(attachmentSerial.level, mLevelIndex);
-    SetBitField(attachmentSerial.imageSerial, imageSerial.getValue());
-    return attachmentSerial;
+
+    Serial imageViewSerial = mImageViews->getAssignSerial(contextVk, mLevelIndex, mLayerIndex);
+    ASSERT(imageViewSerial.getValue() < std::numeric_limits<uint32_t>::max());
+    return imageViewSerial;
 }
 
 angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk)

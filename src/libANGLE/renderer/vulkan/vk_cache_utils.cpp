@@ -1667,7 +1667,7 @@ FramebufferDesc::~FramebufferDesc()                            = default;
 FramebufferDesc::FramebufferDesc(const FramebufferDesc &other) = default;
 FramebufferDesc &FramebufferDesc::operator=(const FramebufferDesc &other) = default;
 
-void FramebufferDesc::update(uint32_t index, AttachmentSerial serial)
+void FramebufferDesc::update(uint32_t index, Serial serial)
 {
     ASSERT(index < kMaxFramebufferAttachments);
     mSerials[index] = serial;
@@ -1675,13 +1675,12 @@ void FramebufferDesc::update(uint32_t index, AttachmentSerial serial)
 
 size_t FramebufferDesc::hash() const
 {
-    return angle::ComputeGenericHash(&mSerials,
-                                     sizeof(AttachmentSerial) * kMaxFramebufferAttachments);
+    return angle::ComputeGenericHash(&mSerials, sizeof(Serial) * kMaxFramebufferAttachments);
 }
 
 void FramebufferDesc::reset()
 {
-    memset(&mSerials, 0, sizeof(AttachmentSerial) * kMaxFramebufferAttachments);
+    memset(&mSerials, 0, sizeof(Serial) * kMaxFramebufferAttachments);
 }
 
 bool FramebufferDesc::operator==(const FramebufferDesc &other) const
@@ -1692,9 +1691,9 @@ bool FramebufferDesc::operator==(const FramebufferDesc &other) const
 uint32_t FramebufferDesc::attachmentCount() const
 {
     uint32_t count = 0;
-    for (const AttachmentSerial &serial : mSerials)
+    for (const Serial &serial : mSerials)
     {
-        if (serial.imageSerial != 0)
+        if (serial.valid())
         {
             count++;
         }

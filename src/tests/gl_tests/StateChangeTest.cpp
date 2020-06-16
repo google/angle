@@ -4953,9 +4953,6 @@ void main()
 // Verify that a swizzle on an active sampler is handled appropriately
 TEST_P(ImageRespecificationTest, Swizzle)
 {
-    // TODO: Fix FramebufferVk caching logic (http://anglebug.com/4651)
-    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
-
     GLubyte data[] = {1, 64, 128, 200};
     GLColor expectedData(data[0], data[1], data[2], data[3]);
 
@@ -5006,9 +5003,6 @@ TEST_P(ImageRespecificationTest, Swizzle)
 // the Framebuffer that has the texture as a color attachment is recreated before next use.
 TEST_P(ImageRespecificationTest, ImageTarget2DOESSwitch)
 {
-    // TODO: Fix FramebufferVk caching logic (http://anglebug.com/4651)
-    ANGLE_SKIP_TEST_IF(isVulkanRenderer());
-
     // This is the specific problem on the Vulkan backend and needs some extensions
     ANGLE_SKIP_TEST_IF(
         !IsGLExtensionEnabled("GL_OES_EGL_image_external") ||
