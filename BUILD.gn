@@ -141,6 +141,7 @@ config("extra_warnings") {
       "-Wfloat-conversion",
       "-Winconsistent-missing-destructor-override",
       "-Wmissing-field-initializers",
+      "-Wnewline-eof",
       "-Wnon-virtual-dtor",
       "-Wredundant-parens",
       "-Wshadow-field",
