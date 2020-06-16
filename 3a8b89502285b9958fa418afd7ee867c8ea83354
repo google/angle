@@ -577,6 +577,30 @@
     },
     {
       "key": {
+        "uuid": "d555eed6_08007dbc",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-16T16:29:57Z",
+      "side": 1,
+      "message": "Can you include that in the comments?",
+      "parentUuid": "0a0bf277_23087755",
+      "range": {
+        "startLine": 84,
+        "startChar": 12,
+        "endLine": 84,
+        "endChar": 31
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7f7140c_dd940fd8",
         "filename": "src/tests/run_tests_with_framecapture.py",
         "patchSetId": 6
@@ -706,6 +730,30 @@
       "side": 1,
       "message": "I thought we only capture applications that have GL calls? Do you mean we also want to capture EGL calls as well?",
       "parentUuid": "86b07c64_fd75b2c3",
+      "range": {
+        "startLine": 97,
+        "startChar": 19,
+        "endLine": 97,
+        "endChar": 73
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2606b67_6313fd46",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-16T16:29:57Z",
+      "side": 1,
+      "message": "I\u0027m referring to GL calls, but some content makes GL calls without rendering frames.  Specifically, I\u0027m seeing games upload textures on separate contexts that don\u0027t render.  We don\u0027t handle those with FrameCapture currently.  I would guess there are end2end tests that do that.",
+      "parentUuid": "e096a1cd_11937d2b",
       "range": {
         "startLine": 97,
         "startChar": 19,

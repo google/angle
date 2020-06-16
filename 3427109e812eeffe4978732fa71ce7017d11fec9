@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be83ab90_6675d186",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-16T16:29:57Z",
+      "side": 1,
+      "message": "Just listing the script name is sufficient:\nrun_tests_with_framecapture.py",
+      "revId": "3427109e812eeffe4978732fa71ce7017d11fec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f3a6683_dbee661e",
+        "filename": "samples/capture_replay/CaptureReplay.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-16T16:29:57Z",
+      "side": 1,
+      "message": "I think all of this can move to a util?",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "3427109e812eeffe4978732fa71ce7017d11fec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79a7763a_1f95ebd7",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-16T16:29:57Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 90
+      },
+      "revId": "3427109e812eeffe4978732fa71ce7017d11fec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "765d25bd_4c667caa",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-16T16:29:57Z",
+      "side": 1,
+      "message": "For consistency, can you capitalize each sentence in this section, even though they are partial?  It helps separate commands from prose.  Same for the commit message.",
+      "range": {
+        "startLine": 10,
+        "startChar": 1,
+        "endLine": 10,
+        "endChar": 11
+      },
+      "revId": "3427109e812eeffe4978732fa71ce7017d11fec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40485eff_39e1f53c",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-06-16T16:29:57Z",
+      "side": 1,
+      "message": "Forward slash to match the impl: out/Debug",
+      "range": {
+        "startLine": 21,
+        "startChar": 82,
+        "endLine": 21,
+        "endChar": 91
+      },
+      "revId": "3427109e812eeffe4978732fa71ce7017d11fec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
