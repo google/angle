@@ -384,7 +384,7 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
     for (size_t i = 0; i < setSizesCount; ++i)
     {
         descriptorSetDesc.update(currentBinding, setSizes[i].type, setSizes[i].descriptorCount,
-                                 descStages);
+                                 descStages, nullptr);
         currentBinding += setSizes[i].descriptorCount;
     }
 

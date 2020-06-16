@@ -450,6 +450,8 @@ RendererVk::RendererVk()
 
 RendererVk::~RendererVk()
 {
+    mAllocator.release();
+    mPipelineCache.release();
     ASSERT(mSharedGarbage.empty());
 }
 

@@ -393,7 +393,8 @@ void ProgramExecutableVk::addInterfaceBlockDescriptorSetDesc(
         const std::string blockName             = block.mappedName;
         const ShaderInterfaceVariableInfo &info = mVariableInfoMap[shaderType][blockName];
 
-        descOut->update(info.binding, descType, arraySize, gl_vk::kShaderStageMap[shaderType]);
+        descOut->update(info.binding, descType, arraySize, gl_vk::kShaderStageMap[shaderType],
+                        nullptr);
     }
 }
 
@@ -418,7 +419,7 @@ void ProgramExecutableVk::addAtomicCounterBufferDescriptorSetDesc(
     // A single storage buffer array is used for all stages for simplicity.
     descOut->update(info.binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
                     gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS,
-                    gl_vk::kShaderStageMap[shaderType]);
+                    gl_vk::kShaderStageMap[shaderType], nullptr);
 }
 
 void ProgramExecutableVk::addImageDescriptorSetDesc(const gl::ProgramExecutable &executable,
@@ -447,8 +448,8 @@ void ProgramExecutableVk::addImageDescriptorSetDesc(const gl::ProgramExecutable 
             GetImageNameWithoutIndices(&name);
             ShaderInterfaceVariableInfo &info = mVariableInfoMap[shaderType][name];
             VkShaderStageFlags activeStages   = gl_vk::kShaderStageMap[shaderType];
-            descOut->update(info.binding, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, arraySize,
-                            activeStages);
+            descOut->update(info.binding, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, arraySize, activeStages,
+                            nullptr);
         }
     }
 }
@@ -501,7 +502,7 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(const gl::ProgramState &pr
             VkShaderStageFlags activeStages   = gl_vk::kShaderStageMap[shaderType];
 
             descOut->update(info.binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
-                            activeStages);
+                            activeStages, nullptr);
         }
     }
 }
@@ -645,7 +646,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(const gl::Context *glCon
         }
 
         uniformsAndXfbSetDesc.update(info.binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1,
-                                     gl_vk::kShaderStageMap[shaderType]);
+                                     gl_vk::kShaderStageMap[shaderType], nullptr);
         mNumDefaultUniformDescriptors++;
     }
     bool hasVertexShader = glExecutable.hasLinkedShaderStage(gl::ShaderType::Vertex);
