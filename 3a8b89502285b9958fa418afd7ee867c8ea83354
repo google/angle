@@ -763,6 +763,30 @@
       "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54bc855d_b440e183",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "It\u0027s probably better to check for existence of the output file than checking the stdout. Seems fine to skip if the output files don\u0027t exist. However the stdout might change.",
+      "parentUuid": "e096a1cd_11937d2b",
+      "range": {
+        "startLine": 97,
+        "startChar": 19,
+        "endLine": 97,
+        "endChar": 73
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

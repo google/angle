@@ -1,0 +1,567 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6afb1da_96cdd944",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "nit: file-level comment",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 0
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f70e1d59_cf71de3f",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "nit: please follow these guidelines for include ordering:\n\nhttps://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 37
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afff2a94_906cf056",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "you can omit this. you probably copy pasted it over.",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 19
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b9260a2_505a3fe3",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "you should enforce the Vulkan back-end. c/r won\u0027t work as well on other back-ends.",
+      "range": {
+        "startLine": 101,
+        "startChar": 21,
+        "endLine": 101,
+        "endChar": 33
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5062d273_eb539676",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "please include a bug link for TODOs.",
+      "range": {
+        "startLine": 133,
+        "startChar": 12,
+        "endLine": 133,
+        "endChar": 20
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09d4bbea_55cb9d7e",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "note that your script doesn\u0027t currently seem to restrict to GLES 2.0.",
+      "range": {
+        "startLine": 134,
+        "startChar": 36,
+        "endLine": 134,
+        "endChar": 37
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6e39e5b_6eb9dd79",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "nit: can you make the values into named constants?",
+      "range": {
+        "startLine": 134,
+        "startChar": 26,
+        "endLine": 134,
+        "endChar": 29
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "309b3657_9a922278",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "nit: you don\u0027t technically need a separate header file, you can put this in the cpp.",
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61451bdd_35a509d4",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "nit: how about naming this capture_replay_tests.py?",
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d67b09c2_ce1c85de",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "nit: formatting oddity: can put a space between # and the first non-space character",
+      "range": {
+        "startLine": 10,
+        "startChar": 1,
+        "endLine": 10,
+        "endChar": 12
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bce52f0_b8da9971",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "nit: frame capture - two words.",
+      "range": {
+        "startLine": 11,
+        "startChar": 44,
+        "endLine": 11,
+        "endChar": 57
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebe30f56_8362ad61",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "also return a non-zero exit code if there were any unexpected failures.",
+      "range": {
+        "startLine": 16,
+        "startChar": 26,
+        "endLine": 16,
+        "endChar": 72
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01250e56_f64294fc",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "update this",
+      "range": {
+        "startLine": 19,
+        "startChar": 17,
+        "endLine": 19,
+        "endChar": 44
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bb769c4_46bc1b01",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "probably should use another staging directory. out/Debug is a folder where you might not want to mess with the GN args.",
+      "range": {
+        "startLine": 21,
+        "startChar": 82,
+        "endLine": 21,
+        "endChar": 91
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18023ef2_4ae8d535",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "can you put all these extra messages behind an optional --verbose/-v flag (off by default)?",
+      "range": {
+        "startLine": 41,
+        "startChar": 8,
+        "endLine": 41,
+        "endChar": 61
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a9aea60_8d621949",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "use_goma is pretty specific to a particular dev\u0027s computer. maybe make that another option instead of an always-on setting.",
+      "range": {
+        "startLine": 46,
+        "startChar": 28,
+        "endLine": 46,
+        "endChar": 42
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f04449be_f234425c",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "grammar nit: \u0027Ran replay of\u0027 or \u0027Replayed\u0027",
+      "range": {
+        "startLine": 54,
+        "startChar": 15,
+        "endLine": 54,
+        "endChar": 31
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e892df59_6a70f88d",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "probably should uncaps this as it is no longer the global constant.",
+      "range": {
+        "startLine": 65,
+        "startChar": 9,
+        "endLine": 65,
+        "endChar": 20
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "270fd0dc_e68ae411",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "same with these guys, CAPS is for globals AFAIK",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 8
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ad9763c_5c3e588a",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "same comment here. maybe add a helper for running GN.",
+      "range": {
+        "startLine": 80,
+        "startChar": 24,
+        "endLine": 80,
+        "endChar": 32
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14e595a3_7ddae3ed",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "and a helper for autoninja.",
+      "range": {
+        "startLine": 84,
+        "startChar": 21,
+        "endLine": 84,
+        "endChar": 31
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "120aa4d1_b8392004",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "we should enforce the Vulkan back-end. C/R won\u0027t work as well otherwise and you\u0027ll end up doing a bunch of repeated work.",
+      "range": {
+        "startLine": 88,
+        "startChar": 60,
+        "endLine": 88,
+        "endChar": 76
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d269f72d_58efe413",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "maybe make a helper function that takes the output and returns an array of test names.",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 59
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc1b7814_f7d65b83",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "nit: BUILD_DIR or GN_DIR. technically we link and run as well as compile.",
+      "range": {
+        "startLine": 128,
+        "startChar": 4,
+        "endLine": 128,
+        "endChar": 23
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3e52042_4e6244f9",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-16T19:06:54Z",
+      "side": 1,
+      "message": "having an argument to run a subset of tests would be very helpful for development.",
+      "range": {
+        "startLine": 129,
+        "startChar": 22,
+        "endLine": 129,
+        "endChar": 36
+      },
+      "revId": "39df50dadceee1420a1e938e8d45bc03c40a6ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
