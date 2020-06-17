@@ -811,6 +811,30 @@
       "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "375ad640_818fb6d8",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "Good point. I guess either way is a bit fragile. I\u0027m fine with the stdout as long as we realize we might have to change it if we change the stdout. Alternately you could write your replay to a directory and remove it with each new test.",
+      "parentUuid": "ec17f81a_30cecbd0",
+      "range": {
+        "startLine": 97,
+        "startChar": 19,
+        "endLine": 97,
+        "endChar": 73
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

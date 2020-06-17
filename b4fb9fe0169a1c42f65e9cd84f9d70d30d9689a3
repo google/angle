@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a6c2039_dfdeb5e3",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 19
+      },
+      "lineNbr": 1351,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "can omit this.",
+      "range": {
+        "startLine": 1351,
+        "startChar": 25,
+        "endLine": 1351,
+        "endChar": 46
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09dd4a28_f9fa1280",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "nit: suggest making a log function somewhere that checks verbose implicitly.",
+      "range": {
+        "startLine": 110,
+        "startChar": 12,
+        "endLine": 111,
+        "endChar": 69
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1838335_a4d9f8c2",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "relative to ANGLE folder is more specific since you set the CWD to the ANGLE folder",
+      "range": {
+        "startLine": 147,
+        "startChar": 69,
+        "endLine": 147,
+        "endChar": 87
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7449caa5_a0ecb73d",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "you can clean this up just using\n\n if :\n    test_exec +\u003d \".exe\"\n    .. etc\n\nand removing the _with_ext. It\u0027s ok to pass the extension to ninja.",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 157,
+        "endChar": 42
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15ee6d91_64028ac8",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "Can you make this only print one line on a successful test?",
+      "range": {
+        "startLine": 174,
+        "startChar": 8,
+        "endLine": 174,
+        "endChar": 23
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e1a169f_46b97ff1",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "nit: didn\u0027t",
+      "range": {
+        "startLine": 186,
+        "startChar": 49,
+        "endLine": 186,
+        "endChar": 57
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d74427fc_a61f9117",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "shouldn\u0027t this have no quotes?",
+      "range": {
+        "startLine": 196,
+        "startChar": 46,
+        "endLine": 196,
+        "endChar": 51
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b8a68f9_304b83ca",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "False? Maybe use a Python boolean for the setting instead of a string.",
+      "range": {
+        "startLine": 197,
+        "startChar": 47,
+        "endLine": 197,
+        "endChar": 52
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46011d4e_df3e9361",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "maybe default \u003d *ES2_Vulkan",
+      "range": {
+        "startLine": 198,
+        "startChar": 52,
+        "endLine": 198,
+        "endChar": 53
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81be9b43_36b15f8a",
+        "filename": "src/tests/capture_replay_tests/BUILD.gn",
+        "patchSetId": 19
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "please include a file-level comment.",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 0
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6d2af78_0bf73704",
+        "filename": "src/tests/capture_replay_tests/BUILD.gn",
+        "patchSetId": 19
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "I\u0027d suggest calling this capture_replay_tests and making it an empty group if !angle_build_capture_replay_tests",
+      "range": {
+        "startLine": 16,
+        "startChar": 20,
+        "endLine": 16,
+        "endChar": 39
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a6a5e1c_f86f7c0f",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTest.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-17T15:12:43Z",
+      "side": 1,
+      "message": "use http://anglebug.com/4759",
+      "range": {
+        "startLine": 148,
+        "startChar": 24,
+        "endLine": 148,
+        "endChar": 34
+      },
+      "revId": "b4fb9fe0169a1c42f65e9cd84f9d70d30d9689a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
