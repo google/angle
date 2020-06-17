@@ -684,11 +684,12 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
             SetXfbInfo(variableInfoMapOut, xfbVaryingName, bufferIndex, currentOffset,
                        currentStride);
         }
-        else if (!tfVarying.isArray() || tfVarying.arrayIndex == 0)
+        else if (!tfVarying.isArray() || tfVarying.arrayIndex == GL_INVALID_INDEX)
         {
             // Note: capturing individual array elements using the Vulkan transform feedback
             // extension is not supported, and it unlikely to be ever supported (on the contrary, it
             // may be removed from the GLES spec).  http://anglebug.com/4140
+            // ANGLE should support capturing the whole array.
 
             // Find the varying with this name.  If a struct is captured, we would be iterating over
             // its fields, and the name of the varying is found through parentStructMappedName.  Not

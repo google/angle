@@ -529,8 +529,6 @@
 // Transform Feedback
 4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array_element.interleaved.* = SKIP
 4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array_element.separate.* = SKIP
-4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array.interleaved.* = SKIP
-4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array.separate.* = SKIP
 4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.random.* = SKIP
 
 // Flat shading:

@@ -1404,6 +1404,88 @@ void main() {
     ASSERT_EQ(0u, mProgram);
 }
 
+// Test transform feedback can capture the whole array
+TEST_P(TransformFeedbackTestES31, CaptureArray)
+{
+    constexpr char kVS[] = R"(#version 310 es
+        in vec4 a_position;
+        in float a_varA;
+        in float a_varB1;
+        in float a_varB2;
+        out float v_varA[1];
+        out float v_varB[2];
+        void main()
+        {
+            gl_Position = a_position;
+            gl_PointSize = 1.0;
+            v_varA[0] = a_varA;
+            v_varB[0] = a_varB1;
+            v_varB[1] = a_varB2;
+        })";
+
+    constexpr char kFS[] = R"(#version 310 es
+        precision mediump float;
+        in float v_varA[1];
+        in float v_varB[2];
+        out vec4 fragColor;
+        void main()
+        {
+            vec4 res = vec4(0.0);
+            res += vec4(v_varA[0]);
+            res += vec4(v_varB[0]);
+            res += vec4(v_varB[1]);
+            fragColor = res;
+        })";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("v_varA");
+    tfVaryings.push_back("v_varB");
+
+    mProgram = CompileProgramWithTransformFeedback(kVS, kFS, tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_NE(0u, mProgram);
+
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(float) * 3 * 6, nullptr, GL_STREAM_DRAW);
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    GLint varA = glGetAttribLocation(mProgram, "a_varA");
+    ASSERT_NE(-1, varA);
+    GLint varB1 = glGetAttribLocation(mProgram, "a_varB1");
+    ASSERT_NE(-1, varB1);
+    GLint varB2 = glGetAttribLocation(mProgram, "a_varB2");
+    ASSERT_NE(-1, varB2);
+
+    std::array<float, 3> data = {24.0f, 48.0f, 128.0f};
+
+    glVertexAttribPointer(varA, 1, GL_FLOAT, GL_FALSE, 0, &data[0]);
+    glEnableVertexAttribArray(varA);
+    glVertexAttribPointer(varB1, 1, GL_FLOAT, GL_FALSE, 0, &data[1]);
+    glEnableVertexAttribArray(varB1);
+    glVertexAttribPointer(varB2, 1, GL_FLOAT, GL_FALSE, 0, &data[2]);
+    glEnableVertexAttribArray(varB2);
+
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuad(mProgram, "a_position", 0.5f);
+    glEndTransformFeedback();
+    glUseProgram(0);
+    ASSERT_GL_NO_ERROR();
+
+    void *mappedBuffer =
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float) * 3 * 6, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedBuffer);
+
+    float *mappedFloats             = static_cast<float *>(mappedBuffer);
+    std::array<float, 3> mappedData = {mappedFloats[0], mappedFloats[1], mappedFloats[2]};
+    EXPECT_EQ(data, mappedData);
+
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that nonexistent transform feedback varyings don't assert when linking.
 TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVarying)
 {
