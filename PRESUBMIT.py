@@ -374,9 +374,7 @@ def CheckChangeOnUpload(input_api, output_api):
     results.extend(
         input_api.canned_checks.CheckPatchFormatted(
             input_api, output_api, result_factory=output_api.PresubmitError))
-    #TODO(nguyenmh): Renable commit message formatting once stable
-    #https://bugs.chromium.org/p/angleproject/issues/detail?id=4715
-    #results.extend(_CheckCommitMessageFormatting(input_api, output_api))
+    results.extend(_CheckCommitMessageFormatting(input_api, output_api))
     return results
 
 
