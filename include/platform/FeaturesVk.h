@@ -122,11 +122,11 @@ struct FeaturesVk : FeatureSetBase
 
     // Whether the VkDevice supports the VK_FUCHSIA_external_memory
     // extension, on which the GL_ANGLE_memory_object_fuchsia extension can be layered.
-    angle::Feature supportsExternalMemoryFuchsia = {
+    Feature supportsExternalMemoryFuchsia = {
         "supports_external_memory_fuchsia", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_FUCHSIA_external_memory extension", &members};
 
-    angle::Feature supportsFilteringPrecision = {
+    Feature supportsFilteringPrecision = {
         "supports_filtering_precision_google", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_GOOGLE_sampler_filtering_precision extension", &members};
 
@@ -171,6 +171,12 @@ struct FeaturesVk : FeatureSetBase
     Feature supportsShaderStencilExport = {
         "supports_shader_stencil_export", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_EXT_shader_stencil_export extension", &members};
+
+    // Whether the VkDevice supports the VK_KHR_sampler_ycbcr_conversion extension, which is needed
+    // to support Ycbcr conversion with external images.
+    Feature supportsYUVSamplerConversion = {
+        "supports_yuv_sampler_conversion", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_sampler_ycbcr_conversion extension", &members};
 
     // Where VK_EXT_transform_feedback is not support, an emulation path is used.
     // http://anglebug.com/3205

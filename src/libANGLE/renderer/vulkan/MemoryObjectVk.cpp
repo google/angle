@@ -245,7 +245,7 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
 
     VkMemoryPropertyFlags flags = 0;
     ANGLE_TRY(image->initExternalMemory(contextVk, renderer->getMemoryProperties(),
-                                        externalMemoryRequirements, importMemoryInfo,
+                                        externalMemoryRequirements, nullptr, importMemoryInfo,
                                         renderer->getQueueFamilyIndex(), flags));
 
     return angle::Result::Continue;

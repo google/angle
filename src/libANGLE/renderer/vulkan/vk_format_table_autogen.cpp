@@ -1145,7 +1145,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::NONE:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_NONE;
+            actualImageFormatID          = angle::FormatID::NONE;
+            vkImageFormat                = VK_FORMAT_UNDEFINED;
+            imageInitializerFunction     = nullptr;
+            actualBufferFormatID         = angle::FormatID::NONE;
+            vkBufferFormat               = VK_FORMAT_UNDEFINED;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_BLOCK:

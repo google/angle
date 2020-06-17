@@ -413,7 +413,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // reallocated independently of |mImage| on state changes.
     vk::ImageViewHelper mImageViews;
 
-    // |mSampler| contains the relevant Vulkan sampler states reprensenting the OpenGL Texture
+    // |mSampler| contains the relevant Vulkan sampler states representing the OpenGL Texture
     // sampling states for the Texture.
     vk::BindingPointer<vk::Sampler> mSampler;
 

@@ -189,6 +189,13 @@ size_t Format::getImageCopyBufferAlignment() const
     return alignment;
 }
 
+size_t Format::getValidImageCopyBufferAlignment() const
+{
+    constexpr size_t kMinimumAlignment = 16;
+    return (intendedFormatID == angle::FormatID::NONE) ? kMinimumAlignment
+                                                       : getImageCopyBufferAlignment();
+}
+
 bool Format::hasEmulatedImageChannels() const
 {
     const angle::Format &angleFmt   = intendedFormat();

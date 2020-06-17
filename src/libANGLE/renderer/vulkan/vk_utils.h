@@ -482,6 +482,12 @@ class BindingPointer final : angle::NonCopyable
 
     ~BindingPointer() { reset(); }
 
+    BindingPointer(BindingPointer &&other)
+    {
+        set(other.mRefCounted);
+        other.reset();
+    }
+
     void set(RefCounted<T> *refCounted)
     {
         if (mRefCounted)
@@ -685,6 +691,7 @@ void InitDebugUtilsEXTFunctions(VkInstance instance);
 void InitDebugReportEXTFunctions(VkInstance instance);
 void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance);
 void InitTransformFeedbackEXTFunctions(VkDevice device);
+void InitSamplerYcbcrKHRFunctions(VkDevice device);
 
 #    if defined(ANGLE_PLATFORM_FUCHSIA)
 // VK_FUCHSIA_imagepipe_surface

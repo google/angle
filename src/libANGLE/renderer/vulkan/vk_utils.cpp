@@ -775,6 +775,10 @@ PFN_vkImportFenceFdKHR vkImportFenceFdKHR = nullptr;
 PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR
     vkGetPhysicalDeviceExternalSemaphorePropertiesKHR = nullptr;
 
+// VK_KHR_sampler_ycbcr_conversion
+PFN_vkCreateSamplerYcbcrConversionKHR vkCreateSamplerYcbcrConversionKHR   = nullptr;
+PFN_vkDestroySamplerYcbcrConversionKHR vkDestroySamplerYcbcrConversionKHR = nullptr;
+
 #    if defined(ANGLE_PLATFORM_FUCHSIA)
 // VK_FUCHSIA_imagepipe_surface
 PFN_vkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIA = nullptr;
@@ -833,6 +837,13 @@ void InitTransformFeedbackEXTFunctions(VkDevice device)
     GET_DEVICE_FUNC(vkCmdBeginQueryIndexedEXT);
     GET_DEVICE_FUNC(vkCmdEndQueryIndexedEXT);
     GET_DEVICE_FUNC(vkCmdDrawIndirectByteCountEXT);
+}
+
+// VK_KHR_sampler_ycbcr_conversion
+void InitSamplerYcbcrKHRFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCreateSamplerYcbcrConversionKHR);
+    GET_DEVICE_FUNC(vkDestroySamplerYcbcrConversionKHR);
 }
 
 #    if defined(ANGLE_PLATFORM_FUCHSIA)

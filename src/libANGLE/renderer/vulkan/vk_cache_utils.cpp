@@ -14,6 +14,7 @@
 #include "common/vulkan/vk_google_filtering_precision.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/VertexAttribute.h"
+#include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -1741,9 +1742,11 @@ SamplerDesc::SamplerDesc(const SamplerDesc &other) = default;
 
 SamplerDesc &SamplerDesc::operator=(const SamplerDesc &rhs) = default;
 
-SamplerDesc::SamplerDesc(const gl::SamplerState &samplerState, bool stencilMode)
+SamplerDesc::SamplerDesc(const gl::SamplerState &samplerState,
+                         bool stencilMode,
+                         uint64_t externalFormat)
 {
-    update(samplerState, stencilMode);
+    update(samplerState, stencilMode, externalFormat);
 }
 
 void SamplerDesc::reset()
@@ -1752,6 +1755,7 @@ void SamplerDesc::reset()
     mMaxAnisotropy  = 0.0f;
     mMinLod         = 0.0f;
     mMaxLod         = 0.0f;
+    mExternalFormat = 0;
     mMagFilter      = 0;
     mMinFilter      = 0;
     mMipmapMode     = 0;
@@ -1760,15 +1764,22 @@ void SamplerDesc::reset()
     mAddressModeW   = 0;
     mCompareEnabled = 0;
     mCompareOp      = 0;
-    mReserved       = 0;
+    mReserved[0]    = 0;
+    mReserved[1]    = 0;
+    mReserved[2]    = 0;
 }
 
-void SamplerDesc::update(const gl::SamplerState &samplerState, bool stencilMode)
+void SamplerDesc::update(const gl::SamplerState &samplerState,
+                         bool stencilMode,
+                         uint64_t externalFormat)
 {
     mMipLodBias    = 0.0f;
     mMaxAnisotropy = samplerState.getMaxAnisotropy();
     mMinLod        = samplerState.getMinLod();
     mMaxLod        = samplerState.getMaxLod();
+
+    // GL has no notion of external format, this must be provided from metadata from the image
+    mExternalFormat = externalFormat;
 
     bool compareEnable    = samplerState.getCompareMode() == GL_COMPARE_REF_TO_TEXTURE;
     VkCompareOp compareOp = gl_vk::GetCompareOp(samplerState.getCompareFunc());
@@ -1799,7 +1810,9 @@ void SamplerDesc::update(const gl::SamplerState &samplerState, bool stencilMode)
         mMaxLod = 0.25f;
     }
 
-    mReserved = 0;
+    mReserved[0] = 0;
+    mReserved[1] = 0;
+    mReserved[2] = 0;
 }
 
 angle::Result SamplerDesc::init(ContextVk *contextVk, vk::Sampler *sampler) const
@@ -1839,6 +1852,25 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, vk::Sampler *sampler) cons
         filteringInfo.samplerFilteringPrecisionMode =
             VK_SAMPLER_FILTERING_PRECISION_MODE_HIGH_GOOGLE;
         vk::AddToPNextChain(&createInfo, &filteringInfo);
+    }
+
+    VkSamplerYcbcrConversionInfo yuvConversionInfo = {};
+    if (mExternalFormat)
+    {
+        ASSERT((contextVk->getRenderer()->getFeatures().supportsYUVSamplerConversion.enabled));
+        yuvConversionInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
+        yuvConversionInfo.pNext = nullptr;
+        yuvConversionInfo.conversion =
+            contextVk->getRenderer()->getYuvConversionCache().getYuvConversionFromExternalFormat(
+                mExternalFormat);
+        vk::AddToPNextChain(&createInfo, &yuvConversionInfo);
+
+        // Vulkan spec requires these settings:
+        createInfo.addressModeU            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        createInfo.addressModeV            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        createInfo.addressModeW            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        createInfo.anisotropyEnable        = VK_FALSE;
+        createInfo.unnormalizedCoordinates = VK_FALSE;
     }
 
     ANGLE_VK_TRY(contextVk, sampler->init(contextVk->getDevice(), createInfo));
@@ -2165,6 +2197,73 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     pipelineLayoutOut->set(&insertedLayout);
 
     return angle::Result::Continue;
+}
+
+// YuvConversionCache implementation
+SamplerYcbcrConversionCache::SamplerYcbcrConversionCache() = default;
+
+SamplerYcbcrConversionCache::~SamplerYcbcrConversionCache()
+{
+    ASSERT(mPayload.empty());
+}
+
+void SamplerYcbcrConversionCache::destroy(RendererVk *renderer)
+{
+    VkDevice device = renderer->getDevice();
+
+    for (auto &iter : mPayload)
+    {
+        vk::RefCountedSamplerYcbcrConversion &yuvSampler = iter.second;
+        ASSERT(!yuvSampler.isReferenced());
+        yuvSampler.get().destroy(device);
+
+        renderer->getActiveHandleCounts().onDeallocate(vk::HandleType::SamplerYcbcrConversion);
+    }
+
+    mPayload.clear();
+}
+
+angle::Result SamplerYcbcrConversionCache::getYuvConversion(
+    vk::Context *context,
+    uint64_t externalFormat,
+    const VkSamplerYcbcrConversionCreateInfo &yuvConversionCreateInfo,
+    vk::BindingPointer<vk::SamplerYcbcrConversion> *yuvConversionOut)
+{
+    const auto iter = mPayload.find(externalFormat);
+    if (iter != mPayload.end())
+    {
+        vk::RefCountedSamplerYcbcrConversion &yuvConversion = iter->second;
+        yuvConversionOut->set(&yuvConversion);
+        return angle::Result::Continue;
+    }
+
+    vk::SamplerYcbcrConversion wrappedYuvConversion;
+    ANGLE_VK_TRY(context, wrappedYuvConversion.init(context->getDevice(), yuvConversionCreateInfo));
+
+    auto insertedItem = mPayload.emplace(
+        externalFormat, vk::RefCountedSamplerYcbcrConversion(std::move(wrappedYuvConversion)));
+    vk::RefCountedSamplerYcbcrConversion &insertedYuvConversion = insertedItem.first->second;
+    yuvConversionOut->set(&insertedYuvConversion);
+
+    context->getRenderer()->getActiveHandleCounts().onAllocate(
+        vk::HandleType::SamplerYcbcrConversion);
+
+    return angle::Result::Continue;
+}
+
+VkSamplerYcbcrConversion SamplerYcbcrConversionCache::getYuvConversionFromExternalFormat(
+    uint64_t externalFormat) const
+{
+    const auto iter = mPayload.find(externalFormat);
+    if (iter != mPayload.end())
+    {
+        const vk::RefCountedSamplerYcbcrConversion &yuvConversion = iter->second;
+        return yuvConversion.get().getHandle();
+    }
+
+    // Should never get here if we have a valid externalFormat.
+    UNREACHABLE();
+    return VK_NULL_HANDLE;
 }
 
 // SamplerCache implementation.

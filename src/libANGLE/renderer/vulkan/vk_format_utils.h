@@ -84,6 +84,7 @@ struct Format final : private angle::NonCopyable
 
     // Returns buffer alignment for image-copy operations (to or from a buffer).
     size_t getImageCopyBufferAlignment() const;
+    size_t getValidImageCopyBufferAlignment() const;
 
     // Returns true if the Image format has more channels than the ANGLE format.
     bool hasEmulatedImageChannels() const;

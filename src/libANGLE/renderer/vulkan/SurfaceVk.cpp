@@ -210,9 +210,9 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initializeWithExternalMemory(
     image.getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);
 
     VkMemoryPropertyFlags flags = 0;
-    ANGLE_TRY(image.initExternalMemory(displayVk, renderer->getMemoryProperties(),
-                                       externalMemoryRequirements, &importMemoryHostPointerInfo,
-                                       VK_QUEUE_FAMILY_EXTERNAL, flags));
+    ANGLE_TRY(image.initExternalMemory(
+        displayVk, renderer->getMemoryProperties(), externalMemoryRequirements, nullptr,
+        &importMemoryHostPointerInfo, VK_QUEUE_FAMILY_EXTERNAL, flags));
 
     return angle::Result::Continue;
 }

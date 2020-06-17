@@ -64,6 +64,10 @@ extern PFN_vkImportFenceFdKHR vkImportFenceFdKHR;
 extern PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR
     vkGetPhysicalDeviceExternalSemaphorePropertiesKHR;
 
+// VK_KHR_sampler_ycbcr_conversion
+extern PFN_vkCreateSamplerYcbcrConversionKHR vkCreateSamplerYcbcrConversionKHR;
+extern PFN_vkDestroySamplerYcbcrConversionKHR vkDestroySamplerYcbcrConversionKHR;
+
 #    if defined(ANGLE_PLATFORM_FUCHSIA)
 // VK_FUCHSIA_imagepipe_surface
 extern PFN_vkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIA;

@@ -1060,12 +1060,14 @@ class ImageHelper final : public Resource, public angle::Subject
     angle::Result initMemory(Context *context,
                              const MemoryProperties &memoryProperties,
                              VkMemoryPropertyFlags flags);
-    angle::Result initExternalMemory(Context *context,
-                                     const MemoryProperties &memoryProperties,
-                                     const VkMemoryRequirements &memoryRequirements,
-                                     const void *extraAllocationInfo,
-                                     uint32_t currentQueueFamilyIndex,
-                                     VkMemoryPropertyFlags flags);
+    angle::Result initExternalMemory(
+        Context *context,
+        const MemoryProperties &memoryProperties,
+        const VkMemoryRequirements &memoryRequirements,
+        const VkSamplerYcbcrConversionCreateInfo *samplerYcbcrConversionCreateInfo,
+        const void *extraAllocationInfo,
+        uint32_t currentQueueFamilyIndex,
+        VkMemoryPropertyFlags flags);
     angle::Result initLayerImageView(Context *context,
                                      gl::TextureType textureType,
                                      VkImageAspectFlags aspectMask,
@@ -1387,6 +1389,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                       GLuint *inputSkipBytes);
 
     void onWrite() { mCurrentSingleClearValue.reset(); }
+    bool hasImmutableSampler() { return mExternalFormat != 0; }
+    uint64_t getExternalFormat() const { return mExternalFormat; }
 
   private:
     enum class UpdateSource
@@ -1522,6 +1526,10 @@ class ImageHelper final : public Resource, public angle::Subject
     // For optimizing transition between different shader readonly layouts
     ImageLayout mLastNonShaderReadOnlyLayout;
     VkPipelineStageFlags mCurrentShaderReadStageMask;
+
+    // For imported images
+    vk::BindingPointer<vk::SamplerYcbcrConversion> mYuvConversionSampler;
+    uint64_t mExternalFormat;
 
     // Cached properties.
     uint32_t mBaseLevel;

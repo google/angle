@@ -2469,6 +2469,8 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mCurrentQueueFamilyIndex(other.mCurrentQueueFamilyIndex),
       mLastNonShaderReadOnlyLayout(other.mLastNonShaderReadOnlyLayout),
       mCurrentShaderReadStageMask(other.mCurrentShaderReadStageMask),
+      mYuvConversionSampler(std::move(other.mYuvConversionSampler)),
+      mExternalFormat(other.mExternalFormat),
       mBaseLevel(other.mBaseLevel),
       mMaxLevel(other.mMaxLevel),
       mLayerCount(other.mLayerCount),
@@ -2503,6 +2505,7 @@ void ImageHelper::resetCachedProperties()
     mLayerCount                  = 0;
     mLevelCount                  = 0;
     mCurrentSingleClearValue.reset();
+    mExternalFormat = 0;
 }
 
 void ImageHelper::initStagingBuffer(RendererVk *renderer,
@@ -2581,6 +2584,9 @@ angle::Result ImageHelper::initExternal(Context *context,
     imageInfo.initialLayout         = kImageMemoryBarrierData[initialLayout].layout;
 
     mCurrentLayout = initialLayout;
+
+    mYuvConversionSampler.reset();
+    mExternalFormat = 0;
 
     ANGLE_VK_TRY(context, mImage.init(context->getDevice(), imageInfo));
 
@@ -2736,18 +2742,34 @@ angle::Result ImageHelper::initMemory(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result ImageHelper::initExternalMemory(Context *context,
-                                              const MemoryProperties &memoryProperties,
-                                              const VkMemoryRequirements &memoryRequirements,
-                                              const void *extraAllocationInfo,
-                                              uint32_t currentQueueFamilyIndex,
+angle::Result ImageHelper::initExternalMemory(
+    Context *context,
+    const MemoryProperties &memoryProperties,
+    const VkMemoryRequirements &memoryRequirements,
+    const VkSamplerYcbcrConversionCreateInfo *samplerYcbcrConversionCreateInfo,
+    const void *extraAllocationInfo,
+    uint32_t currentQueueFamilyIndex,
 
-                                              VkMemoryPropertyFlags flags)
+    VkMemoryPropertyFlags flags)
 {
     // TODO(jmadill): Memory sub-allocation. http://anglebug.com/2162
     ANGLE_TRY(AllocateImageMemoryWithRequirements(context, flags, memoryRequirements,
                                                   extraAllocationInfo, &mImage, &mDeviceMemory));
     mCurrentQueueFamilyIndex = currentQueueFamilyIndex;
+
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+    if (samplerYcbcrConversionCreateInfo)
+    {
+        const VkExternalFormatANDROID *vkExternalFormat =
+            reinterpret_cast<const VkExternalFormatANDROID *>(
+                samplerYcbcrConversionCreateInfo->pNext);
+        ASSERT(vkExternalFormat->sType == VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID);
+        mExternalFormat = vkExternalFormat->externalFormat;
+
+        ANGLE_TRY(context->getRenderer()->getYuvConversionCache().getYuvConversion(
+            context, mExternalFormat, *samplerYcbcrConversionCreateInfo, &mYuvConversionSampler));
+    }
+#endif
     return angle::Result::Continue;
 }
 
@@ -2797,9 +2819,8 @@ angle::Result ImageHelper::initLayerImageViewImpl(
     viewInfo.image                 = mImage.getHandle();
     viewInfo.viewType              = gl_vk::GetImageViewType(textureType);
     viewInfo.format                = imageFormat;
-    ASSERT(viewInfo.format != VK_FORMAT_UNDEFINED);
 
-    if (swizzleMap.swizzleRequired())
+    if (swizzleMap.swizzleRequired() && !mYuvConversionSampler.valid())
     {
         viewInfo.components.r = gl_vk::GetSwizzle(swizzleMap.swizzleRed);
         viewInfo.components.g = gl_vk::GetSwizzle(swizzleMap.swizzleGreen);
@@ -2821,6 +2842,15 @@ angle::Result ImageHelper::initLayerImageViewImpl(
 
     viewInfo.pNext = imageViewUsageCreateInfo;
 
+    VkSamplerYcbcrConversionInfo yuvConversionInfo = {};
+    if (mYuvConversionSampler.valid())
+    {
+        ASSERT((context->getRenderer()->getFeatures().supportsYUVSamplerConversion.enabled));
+        yuvConversionInfo.sType      = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
+        yuvConversionInfo.pNext      = nullptr;
+        yuvConversionInfo.conversion = mYuvConversionSampler.get().getHandle();
+        vk::AddToPNextChain(&viewInfo, &yuvConversionInfo);
+    }
     ANGLE_VK_TRY(context, imageViewOut->init(context->getDevice(), viewInfo));
     return angle::Result::Continue;
 }
