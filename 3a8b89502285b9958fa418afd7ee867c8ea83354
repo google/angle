@@ -787,6 +787,30 @@
       "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec17f81a_30cecbd0",
+        "filename": "src/tests/run_tests_with_framecapture.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1423953
+      },
+      "writtenOn": "2020-06-17T13:51:18Z",
+      "side": 1,
+      "message": "The problem with that is that the output files of previous tests are already there. What do you think if I delete the files after I compiled?",
+      "parentUuid": "54bc855d_b440e183",
+      "range": {
+        "startLine": 97,
+        "startChar": 19,
+        "endLine": 97,
+        "endChar": 73
+      },
+      "revId": "3a8b89502285b9958fa418afd7ee867c8ea83354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
