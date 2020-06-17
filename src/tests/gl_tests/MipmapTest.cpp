@@ -576,6 +576,35 @@ TEST_P(MipmapTest, GenerateMipmapFromInitDataThenRender)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::blue);
 }
 
+// Test that generating mipmap after the image is already created for a single level works.
+TEST_P(MipmapTest, GenerateMipmapAfterSingleLevelDraw)
+{
+    uint32_t width  = getWindowWidth();
+    uint32_t height = getWindowHeight();
+
+    const std::vector<GLColor> kInitData(width * height, GLColor::blue);
+
+    // Pass in initial data so the texture is blue.
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kInitData.data());
+
+    // Make sure the texture image is created.
+    clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, kInitData[0]);
+
+    // Then generate the mips.
+    glGenerateMipmap(GL_TEXTURE_2D);
+    ASSERT_GL_NO_ERROR();
+
+    // Enable mipmaps.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+
+    // Draw and make sure the second mip is blue.
+    clearAndDrawQuad(m2DProgram, getWindowWidth() / 2, getWindowHeight() / 2);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, kInitData[0]);
+}
+
 // Test that generating mipmaps, then modifying the base level and generating mipmaps again works.
 TEST_P(MipmapTest, GenerateMipmapAfterModifyingBaseLevel)
 {

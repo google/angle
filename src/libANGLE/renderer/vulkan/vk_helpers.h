@@ -1170,7 +1170,10 @@ class ImageHelper final : public Resource, public angle::Subject
     void resolve(ImageHelper *dest, const VkImageResolve &region, CommandBuffer *commandBuffer);
 
     // Data staging
-    void removeStagedUpdates(ContextVk *contextVk, uint32_t levelIndexGL, uint32_t layerIndex);
+    void removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
+                                              uint32_t levelIndexGL,
+                                              uint32_t layerIndex);
+    void removeStagedUpdates(ContextVk *contextVk, uint32_t levelGLStart, uint32_t levelGLEnd);
 
     angle::Result stageSubresourceUpdateImpl(ContextVk *contextVk,
                                              const gl::ImageIndex &index,

@@ -621,7 +621,7 @@ angle::Result IncompleteTextureSet::getIncompleteTexture(
                                  GL_UNSIGNED_BYTE, color));
     }
 
-    ANGLE_TRY(t->syncState(context));
+    ANGLE_TRY(t->syncState(context, gl::TextureCommand::Other));
 
     mIncompleteTextures[type].set(context, t.release());
     *textureOut = mIncompleteTextures[type].get();

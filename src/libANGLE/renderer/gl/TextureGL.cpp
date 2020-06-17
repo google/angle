@@ -1382,7 +1382,8 @@ GLint TextureGL::getNativeID() const
 }
 
 angle::Result TextureGL::syncState(const gl::Context *context,
-                                   const gl::Texture::DirtyBits &dirtyBits)
+                                   const gl::Texture::DirtyBits &dirtyBits,
+                                   gl::TextureCommand source)
 {
     if (dirtyBits.none() && mLocalDirtyBits.none())
     {

@@ -1156,7 +1156,7 @@ angle::Result TextureVk::redefineLevel(const gl::Context *context,
         // override them with this call.
         uint32_t levelIndexGL = index.getLevelIndex();
         uint32_t layerIndex   = index.hasLayer() ? index.getLayerIndex() : 0;
-        mImage->removeStagedUpdates(contextVk, levelIndexGL, layerIndex);
+        mImage->removeSingleSubresourceStagedUpdates(contextVk, levelIndexGL, layerIndex);
 
         if (mImage->valid())
         {
@@ -1338,11 +1338,8 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
 
 angle::Result TextureVk::generateMipmap(const gl::Context *context)
 {
-    ContextVk *contextVk   = vk::GetImpl(context);
-    RendererVk *renderer   = contextVk->getRenderer();
-    bool needRedefineImage = true;
-
-    const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
 
     // The image should already be allocated by a prior syncState.
     ASSERT(mImage->valid());
@@ -1350,29 +1347,8 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
     // If base level has changed, the front-end should have called syncState already.
     ASSERT(mImage->getBaseLevel() == mState.getEffectiveBaseLevel());
 
-    // Check whether the image is already full mipmap
-    if (mImage->getLevelCount() == getMipLevelCount(ImageMipLevels::FullMipChain))
-    {
-        needRedefineImage = false;
-    }
-
-    // Only staged update here can be the robust resource init.
-    ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
-
-    if (needRedefineImage)
-    {
-        // Redefine the images with mipmaps.
-        // Copy image to the staging buffer and stage an update to the new one.
-        ANGLE_TRY(copyAndStageImageSubresource(contextVk, baseLevelDesc, false,
-                                               getNativeImageLayer(0), 0, mImage->getBaseLevel()));
-
-        // Release the original image and recreate it with new mipmap counts.
-        releaseImage(contextVk);
-
-        mImage->retain(&contextVk->getResourceUseList());
-
-        ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::FullMipChain));
-    }
+    // Only staged update here is the robust resource init if any.
+    ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::FullMipChain));
 
     // Check if the image supports blit. If it does, we can do the mipmap generation on the gpu
     // only.
@@ -1668,7 +1644,8 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
 }
 
 angle::Result TextureVk::syncState(const gl::Context *context,
-                                   const gl::Texture::DirtyBits &dirtyBits)
+                                   const gl::Texture::DirtyBits &dirtyBits,
+                                   gl::TextureCommand source)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -1679,21 +1656,25 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     if (dirtyBits.test(gl::Texture::DIRTY_BIT_BOUND_AS_IMAGE))
     {
         mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
-
-        // Recreate the image to include storage bit if needed.
-        if (!(mImageUsageFlags & VK_IMAGE_USAGE_STORAGE_BIT))
-        {
-            mImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
-        }
+        mImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
     }
 
     if (dirtyBits.test(gl::Texture::DIRTY_BIT_SRGB_OVERRIDE))
     {
-        if (!(mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) &&
-            mState.getSRGBOverride() != gl::SrgbOverride::Default)
+        if (mState.getSRGBOverride() != gl::SrgbOverride::Default)
         {
             mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
         }
+    }
+
+    // Before redefining the image for any reason, check to see if it's about to go through mipmap
+    // generation.  In that case, drop every staged change for the subsequent mips after base, and
+    // make sure the image is created with the complete mipchain.
+    bool isGenerateMipmap = source == gl::TextureCommand::GenerateMipmap;
+    if (isGenerateMipmap)
+    {
+        mImage->removeStagedUpdates(contextVk, mState.getEffectiveBaseLevel() + 1,
+                                    mState.getEffectiveMaxLevel());
     }
 
     // Set base and max level before initializing the image
@@ -1715,12 +1696,34 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         ANGLE_TRY(respecifyImageAttributes(contextVk));
     }
 
+    // If generating mipmaps and the image is not full-mip already, make sure it's recreated to the
+    // correct levels.
+    if (isGenerateMipmap && mImage->valid() &&
+        mImage->getLevelCount() != getMipLevelCount(ImageMipLevels::FullMipChain))
+    {
+        // Redefine the image with mipmaps.
+        const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+
+        // Copy image to the staging buffer and stage an update to the new one.
+        ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+        ANGLE_TRY(copyAndStageImageSubresource(contextVk, baseLevelDesc, false,
+                                               getNativeImageLayer(0), 0, mImage->getBaseLevel()));
+
+        // Release the original image so it can be recreated with the new mipmap counts.
+        releaseImage(contextVk);
+
+        mImage->retain(&contextVk->getResourceUseList());
+    }
+
     // Initialize the image storage and flush the pixel buffer.
-    ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+    ANGLE_TRY(ensureImageInitialized(contextVk, isGenerateMipmap ? ImageMipLevels::FullMipChain
+                                                                 : ImageMipLevels::EnabledLevels));
 
     // Mask out the IMPLEMENTATION dirty bit to avoid unnecessary syncs.
     gl::Texture::DirtyBits localBits = dirtyBits;
     localBits.reset(gl::Texture::DIRTY_BIT_IMPLEMENTATION);
+    localBits.reset(gl::Texture::DIRTY_BIT_BASE_LEVEL);
+    localBits.reset(gl::Texture::DIRTY_BIT_MAX_LEVEL);
 
     if (localBits.none() && mSampler.valid())
     {
@@ -1739,20 +1742,16 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA) ||
         localBits.test(gl::Texture::DIRTY_BIT_SRGB_OVERRIDE))
     {
-        if (mImage && mImage->valid())
-        {
-            // We use a special layer count here to handle EGLImages. They might only be
-            // looking at one layer of a cube or 2D array texture.
-            uint32_t layerCount =
-                mState.getType() == gl::TextureType::_2D ? 1 : mImage->getLayerCount();
+        // We use a special layer count here to handle EGLImages. They might only be
+        // looking at one layer of a cube or 2D array texture.
+        uint32_t layerCount =
+            mState.getType() == gl::TextureType::_2D ? 1 : mImage->getLayerCount();
 
-            mImageViews.release(renderer);
-            const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+        mImageViews.release(renderer);
+        const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
 
-            ANGLE_TRY(initImageViews(contextVk, mImage->getFormat(),
-                                     baseLevelDesc.format.info->sized, mImage->getLevelCount(),
-                                     layerCount));
-        }
+        ANGLE_TRY(initImageViews(contextVk, mImage->getFormat(), baseLevelDesc.format.info->sized,
+                                 mImage->getLevelCount(), layerCount));
     }
 
     vk::SamplerDesc samplerDesc(mState.getSamplerState(), mState.isStencilMode());

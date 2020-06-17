@@ -3333,15 +3333,39 @@ void ImageHelper::resolve(ImageHelper *dest,
                                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 }
 
-void ImageHelper::removeStagedUpdates(ContextVk *contextVk,
-                                      uint32_t levelIndexGL,
-                                      uint32_t layerIndex)
+void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
+                                                       uint32_t levelIndexGL,
+                                                       uint32_t layerIndex)
 {
     // Find any staged updates for this index and removes them from the pending list.
     for (size_t index = 0; index < mSubresourceUpdates.size();)
     {
         auto update = mSubresourceUpdates.begin() + index;
         if (update->isUpdateToLayerLevel(layerIndex, levelIndexGL))
+        {
+            update->release(contextVk->getRenderer());
+            mSubresourceUpdates.erase(update);
+        }
+        else
+        {
+            index++;
+        }
+    }
+}
+
+void ImageHelper::removeStagedUpdates(ContextVk *contextVk,
+                                      uint32_t levelGLStart,
+                                      uint32_t levelGLEnd)
+{
+    // Remove all updates to levels [start, end].
+    for (size_t index = 0; index < mSubresourceUpdates.size();)
+    {
+        auto update               = mSubresourceUpdates.begin() + index;
+        uint32_t updateMipLevelGL = update->updateSource == UpdateSource::Clear
+                                        ? update->clear.levelIndex
+                                        : update->dstSubresource().mipLevel;
+
+        if (updateMipLevelGL >= levelGLStart && updateMipLevelGL <= levelGLEnd)
         {
             update->release(contextVk->getRenderer());
             mSubresourceUpdates.erase(update);
@@ -3976,7 +4000,7 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
             deferredClears->store(deferredClearIndex, update.aspectFlags, update.value);
 
             // We process the updates again to erase any clears for this level.
-            removeStagedUpdates(contextVk, levelGL, layer);
+            removeSingleSubresourceStagedUpdates(contextVk, levelGL, layer);
             return angle::Result::Continue;
         }
 

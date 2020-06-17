@@ -1501,10 +1501,7 @@ angle::Result Texture::generateMipmap(Context *context)
         return angle::Result::Continue;
     }
 
-    if (hasAnyDirtyBit())
-    {
-        ANGLE_TRY(syncState(context));
-    }
+    ANGLE_TRY(syncState(context, TextureCommand::GenerateMipmap));
 
     // Clear the base image(s) immediately if needed
     if (context->isRobustResourceInitEnabled())
@@ -1526,7 +1523,7 @@ angle::Result Texture::generateMipmap(Context *context)
 
     ANGLE_TRY(mTexture->generateMipmap(context));
 
-    // Propagate the format and size of the bsae mip to the smaller ones. Cube maps are guaranteed
+    // Propagate the format and size of the base mip to the smaller ones. Cube maps are guaranteed
     // to have faces of the same size and format so any faces can be picked.
     const ImageDesc &baseImageInfo = mState.getImageDesc(mState.getBaseImageTarget(), baseLevel);
     mState.setImageDescChain(baseLevel, maxLevel, baseImageInfo.size, baseImageInfo.format,
@@ -1787,10 +1784,10 @@ GLuint Texture::getNativeID() const
     return mTexture->getNativeID();
 }
 
-angle::Result Texture::syncState(const Context *context)
+angle::Result Texture::syncState(const Context *context, TextureCommand source)
 {
-    ASSERT(hasAnyDirtyBit());
-    ANGLE_TRY(mTexture->syncState(context, mDirtyBits));
+    ASSERT(hasAnyDirtyBit() || source == TextureCommand::GenerateMipmap);
+    ANGLE_TRY(mTexture->syncState(context, mDirtyBits, source));
     mDirtyBits.reset();
     return angle::Result::Continue;
 }
@@ -2006,7 +2003,7 @@ angle::Result Texture::getTexImage(const Context *context,
 {
     if (hasAnyDirtyBit())
     {
-        ANGLE_TRY(syncState(context));
+        ANGLE_TRY(syncState(context, TextureCommand::Other));
     }
 
     return mTexture->getTexImage(context, packState, packBuffer, target, level, format, type,
