@@ -446,9 +446,10 @@ def compile_variation(glslang_path, compile_queue, shader_file, shader_basename,
         glslang_preprocessor_output_args.append(shader_file)  # Input GLSL shader
 
         glslang_args += ['-V']  # Output mode is Vulkan
-        glslang_args += ['-Os']
+        glslang_args += ['-Os']  # Optimize by default.
+        glslang_args += ['-g0']  # Strip debug info to save on binary size.
         glslang_args += ['--variable-name', get_var_name(output_name)]  # C-style variable name
-        glslang_args += variation_extra_args
+        glslang_args += variation_extra_args  # Add other flags, or override -Os or -g0
         glslang_args += ['-o', output_path]  # Output file
         glslang_args.append(shader_file)  # Input GLSL shader
 
