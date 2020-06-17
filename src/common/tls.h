@@ -116,18 +116,6 @@ ANGLE_INLINE bool SetContextToAndroidOpenGLTLSSlot(gl::Context *value)
     return false;
 }
 
-ANGLE_INLINE bool GetContextFromAndroidOpenGLTLSSlot(gl::Context **value)
-{
-#if defined(ANGLE_PLATFORM_ANDROID)
-    if (gUseAndroidOpenGLTlsSlot)
-    {
-        *value = static_cast<gl::Context *>(ANGLE_ANDROID_GET_GL_TLS()[kAndroidOpenGLTlsSlot]);
-        return true;
-    }
-#endif
-    return false;
-}
-
 void SetUseAndroidOpenGLTlsSlot(bool platformTypeVulkan);
 
 // TODO(kbr): for POSIX platforms this will have to be changed to take

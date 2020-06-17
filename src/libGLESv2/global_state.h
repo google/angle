@@ -42,18 +42,17 @@ extern Context *gSingleThreadedContext;
 
 ANGLE_INLINE Context *GetGlobalContext()
 {
+#if defined(ANGLE_PLATFORM_ANDROID)
+    // TODO: Replace this branch with a compile time flag (http://anglebug.com/4764)
+    if (gUseAndroidOpenGLTlsSlot)
+    {
+        return static_cast<gl::Context *>(ANGLE_ANDROID_GET_GL_TLS()[kAndroidOpenGLTlsSlot]);
+    }
+#endif
+
     if (gSingleThreadedContext)
     {
         return gSingleThreadedContext;
-    }
-    else
-    {
-        Context *context;
-        bool fastTlsResult = GetContextFromAndroidOpenGLTLSSlot(&context);
-        if (fastTlsResult)
-        {
-            return context;
-        }
     }
 
     egl::Thread *thread = egl::GetCurrentThread();
@@ -62,21 +61,22 @@ ANGLE_INLINE Context *GetGlobalContext()
 
 ANGLE_INLINE Context *GetValidGlobalContext()
 {
+#if defined(ANGLE_PLATFORM_ANDROID)
+    // TODO: Replace this branch with a compile time flag (http://anglebug.com/4764)
+    if (gUseAndroidOpenGLTlsSlot)
+    {
+        Context *context =
+            static_cast<gl::Context *>(ANGLE_ANDROID_GET_GL_TLS()[kAndroidOpenGLTlsSlot]);
+        if (context && !context->isContextLost())
+        {
+            return context;
+        }
+    }
+#endif
+
     if (gSingleThreadedContext && !gSingleThreadedContext->isContextLost())
     {
         return gSingleThreadedContext;
-    }
-    else if (!gSingleThreadedContext)
-    {
-        Context *context;
-        bool fastTlsResult = GetContextFromAndroidOpenGLTLSSlot(&context);
-        if (fastTlsResult)
-        {
-            if (context && !context->isContextLost())
-            {
-                return context;
-            }
-        }
     }
 
     egl::Thread *thread = egl::GetCurrentThread();
