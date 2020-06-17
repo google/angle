@@ -1149,6 +1149,62 @@ TEST_P(MipmapTestES3, GenerateMipmapBaseLevel)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::blue);
 }
 
+// Test that generating mipmaps doesn't discard updates staged to out-of-range mips.
+TEST_P(MipmapTestES3, GenerateMipmapPreservesOutOfRangeMips)
+{
+    // http://anglebug.com/4782
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && (IsAMD() || IsIntel()));
+
+    constexpr GLint kTextureSize = 16;
+    const std::vector<GLColor> kLevel0Data(kTextureSize * kTextureSize, GLColor::red);
+    const std::vector<GLColor> kLevel1Data(kTextureSize * kTextureSize, GLColor::green);
+    const std::vector<GLColor> kLevel6Data(kTextureSize * kTextureSize, GLColor::blue);
+
+    // Initialize a 16x16 RGBA8 texture with red, green and blue for levels 0, 1 and 6 respectively.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kTextureSize, kTextureSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel0Data.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, kTextureSize, kTextureSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel1Data.data());
+    glTexImage2D(GL_TEXTURE_2D, 6, GL_RGBA, kTextureSize, kTextureSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel6Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Set base level to 1, and generate mipmaps.  Levels 1 through 5 will be green.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the mips are all green.
+    for (int mip = 0; mip < 5; ++mip)
+    {
+        int scale = 1 << mip;
+        clearAndDrawQuad(m2DProgram, getWindowWidth() / scale, getWindowHeight() / scale);
+        EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / scale / 2, getWindowHeight() / scale / 2,
+                              kLevel1Data[0]);
+    }
+
+    // Verify that level 0 is red.  TODO: setting MAX_LEVEL should be unnecessary, but is needed to
+    // work around a bug in the Vulkan backend.  http://anglebug.com/4780
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, kLevel0Data[0]);
+
+    // Verify that level 6 is blue.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 6);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 6);
+
+    clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, kLevel6Data[0]);
+}
+
 // Create a cube map with levels 0-2, call GenerateMipmap with base level 1 so that level 0 stays
 // the same, and then sample levels 0 and 2.
 // GLES 3.0.4 section 3.8.10:
