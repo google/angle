@@ -273,6 +273,7 @@ class FrameCapture final : angle::NonCopyable
 
     void captureCall(const gl::Context *context, CallCapture &&call);
     void onEndFrame(const gl::Context *context);
+    void onMakeCurrent(const egl::Surface *drawSurface);
     bool enabled() const { return mEnabled; }
 
     bool isCapturing() const;
@@ -317,6 +318,8 @@ class FrameCapture final : angle::NonCopyable
     uint32_t mFrameIndex;
     uint32_t mFrameStart;
     uint32_t mFrameEnd;
+    EGLint mDrawSurfaceWidth  = 0;
+    EGLint mDrawSurfaceHeight = 0;
     gl::AttribArray<size_t> mClientArraySizes;
     size_t mReadBufferSize;
     HasResourceTypeMap mHasResourceType;

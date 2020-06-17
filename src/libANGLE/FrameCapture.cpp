@@ -24,6 +24,7 @@
 #include "libANGLE/Query.h"
 #include "libANGLE/ResourceMap.h"
 #include "libANGLE/Shader.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/capture_gles_2_0_autogen.h"
 #include "libANGLE/capture_gles_3_0_autogen.h"
@@ -913,6 +914,8 @@ void WriteCppReplayIndexFiles(bool compression,
                               const std::string &captureLabel,
                               uint32_t frameStart,
                               uint32_t frameEnd,
+                              EGLint drawSurfaceWidth,
+                              EGLint drawSurfaceHeight,
                               size_t readBufferSize,
                               const gl::AttribArray<size_t> &clientArraySizes,
                               const HasResourceTypeMap &hasResourceType)
@@ -956,6 +959,8 @@ void WriteCppReplayIndexFiles(bool compression,
     header << "\n";
     header << "constexpr uint32_t kReplayFrameStart = " << frameStart << ";\n";
     header << "constexpr uint32_t kReplayFrameEnd = " << frameEnd << ";\n";
+    header << "constexpr EGLint kReplayDrawSurfaceWidth = " << drawSurfaceWidth << ";\n";
+    header << "constexpr EGLint kReplayDrawSurfaceHeight = " << drawSurfaceHeight << ";\n";
     header << "\n";
     header << "void SetupContext" << static_cast<int>(contextId) << "Replay();\n";
     header << "void ReplayContext" << static_cast<int>(contextId)
@@ -3858,8 +3863,8 @@ void FrameCapture::onEndFrame(const gl::Context *context)
         if (mFrameIndex == mFrameEnd)
         {
             WriteCppReplayIndexFiles(mCompression, mOutDirectory, context->id(), mCaptureLabel,
-                                     mFrameStart, mFrameEnd, mReadBufferSize, mClientArraySizes,
-                                     mHasResourceType);
+                                     mFrameStart, mFrameEnd, mDrawSurfaceWidth, mDrawSurfaceHeight,
+                                     mReadBufferSize, mClientArraySizes, mHasResourceType);
 
             if (!mBinaryData.empty())
             {
@@ -3893,6 +3898,14 @@ void FrameCapture::onEndFrame(const gl::Context *context)
         CaptureMidExecutionSetup(context, &mSetupCalls, &mResourceTracker, mCachedShaderSources,
                                  mCachedProgramSources, mCachedTextureLevelData, this);
     }
+}
+
+void FrameCapture::onMakeCurrent(const egl::Surface *drawSurface)
+{
+    // Track the width and height of the draw surface as provided to makeCurrent
+    // TODO (b/159238311): Track this per context. Right now last one wins.
+    mDrawSurfaceWidth  = drawSurface->getWidth();
+    mDrawSurfaceHeight = drawSurface->getHeight();
 }
 
 DataCounters::DataCounters() = default;
