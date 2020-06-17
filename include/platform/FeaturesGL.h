@@ -458,6 +458,12 @@ struct FeaturesGL : FeatureSetBase
         "disable_gpu_switching_support", FeatureCategory::OpenGLWorkarounds,
         "Disable GPU switching support (use only the low-power GPU) on older MacBook Pros.",
         &members, "https://crbug.com/1091824"};
+
+    // KHR_parallel_shader_compile fails TSAN on Linux, so we avoid using it with this workaround.
+    Feature disableNativeParallelCompile = {
+        "disable_native_parallel_compile", FeatureCategory::OpenGLWorkarounds,
+        "Do not use native KHR_parallel_shader_compile even when available.", &members,
+        "http://crbug.com/1094869"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

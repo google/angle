@@ -445,6 +445,12 @@ unsigned int RendererGL::getMaxWorkerContexts()
 
 bool RendererGL::hasNativeParallelCompile()
 {
+#ifdef THREAD_SANITIZER
+    if (mFeatures.disableNativeParallelCompile)
+    {
+        return false;
+    }
+#endif
     return mFunctions->maxShaderCompilerThreadsKHR != nullptr ||
            mFunctions->maxShaderCompilerThreadsARB != nullptr;
 }
