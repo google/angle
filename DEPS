@@ -422,11 +422,8 @@ hooks = [
     'name': 'restricted_traces',
     'pattern': '\\.sha1',
     'condition': 'checkout_angle_internal',
-    'action': [ 'download_from_google_storage',
-                '--directory',
-                '--recursive',
-                '--extract',
-                '--bucket', 'chrome-angle-capture-binaries',
+    'action': [ 'python',
+                'src/tests/perf_tests/restricted_traces/download_restricted_traces.py',
                 'src/tests/perf_tests/restricted_traces',
     ]
   }
