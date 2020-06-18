@@ -1661,9 +1661,9 @@ bool ValidateReadBuffer(const Context *context, GLenum src)
     {
         GLuint drawBuffer = static_cast<GLuint>(src - GL_COLOR_ATTACHMENT0);
 
-        if (drawBuffer >= static_cast<GLuint>(context->getCaps().maxDrawBuffers))
+        if (drawBuffer >= static_cast<GLuint>(context->getCaps().maxColorAttachments))
         {
-            context->validationError(GL_INVALID_OPERATION, kExceedsMaxDrawBuffers);
+            context->validationError(GL_INVALID_OPERATION, kExceedsMaxColorAttachments);
             return false;
         }
     }
