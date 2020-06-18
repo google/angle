@@ -122,6 +122,13 @@ GenerateMipmapBenchmarkBase::GenerateMipmapBenchmarkBase(const char *benchmarkNa
     {
         mSkipTest = true;
     }
+
+    // Fails on Windows7 NVIDIA Vulkan, presumably due to old drivers. http://crbug.com/1096510
+    if (IsWindows7() && IsNVIDIA() &&
+        GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+    {
+        mSkipTest = true;
+    }
 }
 
 void GenerateMipmapBenchmarkBase::initializeBenchmark()

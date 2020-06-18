@@ -140,8 +140,8 @@ VulkanBarriersPerfBenchmark::VulkanBarriersPerfBenchmark()
       mTexCoordLoc(-1),
       mSamplerLoc(-1)
 {
-    // Skip this test on our outdated perf bots. http://crbug.com/1090139
-    if (IsNVIDIA() && IsWindows())
+    // Fails on Windows7 NVIDIA Vulkan, presumably due to old drivers. http://crbug.com/1096510
+    if (IsNVIDIA() && IsWindows7())
     {
         mSkipTest = true;
     }
