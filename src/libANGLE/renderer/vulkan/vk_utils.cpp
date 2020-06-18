@@ -36,6 +36,10 @@ namespace rx
 {
 namespace
 {
+// Pick an arbitrary value to initialize non-zero memory for sanitization.  Note that 0x3F3F3F3F
+// as float is about 0.75.
+constexpr int kNonZeroInitValue = 0x3F;
+
 VkImageUsageFlags GetStagingBufferUsageFlags(vk::StagingUsage usage)
 {
     switch (usage)
@@ -60,9 +64,6 @@ angle::Result FindAndAllocateCompatibleMemory(vk::Context *context,
                                               const void *extraAllocationInfo,
                                               vk::DeviceMemory *deviceMemoryOut)
 {
-    // Pick an arbitrary value to initialize non-zero memory for sanitization.
-    constexpr int kNonZeroInitValue = 55;
-
     VkDevice device = context->getDevice();
 
     uint32_t memoryTypeIndex = 0;
@@ -422,6 +423,15 @@ angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUs
                                         renderer->getFeatures().persistentlyMappedBuffers.enabled,
                                         &memoryTypeIndex, &mBuffer, &mAllocation));
     mSize = static_cast<size_t>(size);
+
+    // Wipe memory to an invalid value when the 'allocateNonZeroMemory' feature is enabled. The
+    // invalid values ensures our testing doesn't assume zero-initialized memory.
+    if (renderer->getFeatures().allocateNonZeroMemory.enabled)
+    {
+        ANGLE_TRY(vk::InitMappableAllocation(context, allocator, &mAllocation, size,
+                                             kNonZeroInitValue, requiredFlags));
+    }
+
     return angle::Result::Continue;
 }
 
@@ -443,14 +453,15 @@ void StagingBuffer::collectGarbage(RendererVk *renderer, Serial serial)
     renderer->collectGarbage(std::move(sharedUse), std::move(garbageList));
 }
 
-angle::Result InitMappableAllocation(const vk::Allocator &allocator,
+angle::Result InitMappableAllocation(Context *context,
+                                     const vk::Allocator &allocator,
                                      Allocation *allocation,
                                      VkDeviceSize size,
                                      int value,
                                      VkMemoryPropertyFlags memoryPropertyFlags)
 {
     uint8_t *mapPointer;
-    allocation->map(allocator, &mapPointer);
+    ANGLE_VK_TRY(context, allocation->map(allocator, &mapPointer));
     memset(mapPointer, value, static_cast<size_t>(size));
 
     if ((memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) == 0)
