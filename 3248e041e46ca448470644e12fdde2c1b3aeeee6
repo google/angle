@@ -16,6 +16,24 @@
       "revId": "3248e041e46ca448470644e12fdde2c1b3aeeee6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb3e212_519c6bcb",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2073,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2020-06-19T05:24:04Z",
+      "side": 1,
+      "message": "mDepthBufferFeedbackLoop is updated in Framebuffer::onSubjectStateChange function. When the texture binding is changed, this observer function is called. So it is okay now.",
+      "parentUuid": "df0b8a1e_c431c759",
+      "revId": "3248e041e46ca448470644e12fdde2c1b3aeeee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
